@@ -61,15 +61,31 @@ data Literal
 
 data RecFlag = Rec | NonRec deriving (Show)
 
+data Decl
+  = Decl RecFlag Pat Expr
+  deriving (Show)
+
 data Expr
   = Var Var
   | Lam Var Expr
   | App Expr Expr
+  | Bop Bop Expr Expr
   | Lit Literal
   | Let RecFlag Pat Expr Expr
   | Ite Expr Expr Expr
   | Seq Expr Expr -- TODO: do we actually need this for the student examples?
   | Case Expr [Alt]
+  | Cons Expr Expr
+  | Nil
+  | Tuple [Expr]
+  deriving (Show)
+
+data Bop
+  = Eq | Neq
+  | Lt | Le
+  | Gt | Ge
+  | Plus  | Minus  | Times  | Div
+  | FPlus | FMinus | FTimes | FDiv
   deriving (Show)
 
 type Alt = (Pat, Expr)
@@ -90,6 +106,12 @@ instance Exception [Char]
 -- Evaluation
 ----------------------------------------------------------------------
 
+evalDecl :: MonadThrow m => Decl -> Env -> m Env
+evalDecl decl env = case decl of
+  Decl NonRec (FunPat f vs) e -> do
+    c <- eval (mkCurried vs e) env
+    return (insertEnv f c env)
+
 eval :: MonadThrow m => Expr -> Env -> m Value
 eval expr env = case expr of
   Var v ->
@@ -100,6 +122,10 @@ eval expr env = case expr of
     v1 <- eval e1 env
     v2 <- eval e2 env
     evalApp v1 v2
+  Bop b e1 e2 -> do
+    v1 <- eval e1 env
+    v2 <- eval e2 env
+    evalBop b v1 v2
   Lit l -> return (litValue l)
   Let NonRec (FunPat f vs) e b -> do
     c <- eval (mkCurried vs e) env
@@ -119,15 +145,52 @@ eval expr env = case expr of
   Case e as -> do
     v <- eval e env
     evalAlts v as env
-
-mkCurried :: [Var] -> Expr -> Expr
-mkCurried [v]    e = Lam v e
-mkCurried (v:vs) e = Lam v (mkCurried vs e)
+  Cons e es -> do
+    v     <- eval e env
+    VL vs <- eval es env
+    return (VL (v : vs))
+  Nil -> return (VL [])
+  Tuple es -> do
+    vs <- mapM (`eval` env) es
+    return (VT (length vs) vs)
 
 evalApp :: MonadThrow m => Value -> Value -> m Value
 evalApp f a = case f of
   VC env v e -> eval e (insertEnv v a env)
   _          -> throwM "tried to apply a non-function"
+
+evalBop :: MonadThrow m
+        => Bop -> Value -> Value -> m Value
+evalBop Eq  v1 v2 = VB <$> eqVal v1 v2
+evalBop Neq v1 v2 = VB . not <$> eqVal v1 v2
+evalBop Lt  v1 v2 = VB <$> ltVal v1 v2
+evalBop Le  v1 v2 = (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
+evalBop Gt  v1 v2 = VB <$> gtVal v1 v2
+evalBop Ge  v1 v2 = (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
+evalBop Plus v1 v2 = VI <$> plusVal v1 v2
+
+eqVal (VI x) (VI y) = return (x == y)
+eqVal (VD x) (VD y) = return (x == y)
+eqVal (VB x) (VB y) = return (x == y)
+eqVal VU     VU     = return True
+eqVal (VL x) (VL y) = and <$> zipWithM eqVal x y
+eqVal (VT i x) (VT j y)
+  | i == j
+  = and <$> zipWithM eqVal x y
+eqVal x y
+  = throwM "cannot check incompatible types for equality"
+
+ltVal (VI x) (VI y) = return (x < y)
+ltVal (VD x) (VD y) = return (x < y)
+ltVal x      y      = throwM "cannot compare ordering of non-numeric types"
+
+gtVal (VI x) (VI y) = return (x > y)
+gtVal (VD x) (VD y) = return (x > y)
+gtVal x      y      = throwM "cannot compare ordering of non-numeric types"
+
+
+plusVal (VI i) (VI j) = return (i+j)
+plusVal _      _      = throwM "+ can only be applied to ints"
 
 litValue :: Literal -> Value
 litValue (LI i) = VI i
@@ -165,6 +228,13 @@ matchLit (VB b1) (LB b2) = b1 == b2
 matchLit VU      LU      = True
 matchLit _       _       = False
 
+mkCurried :: [Var] -> Expr -> Expr
+mkCurried [v]    e = Lam v e
+mkCurried (v:vs) e = Lam v (mkCurried vs e)
+
+mkList :: [Expr] -> Expr
+mkList = foldr Cons Nil
+
 ----------------------------------------------------------------------
 -- Parsing
 ----------------------------------------------------------------------
@@ -176,6 +246,8 @@ idStyle = emptyIdents { _styleReserved
                           , "match", "with", "fun", "function"
                           , "true", "false"
                           ]
+                      , _styleLetter
+                        = _styleLetter emptyIdents <|> char '.'
                       }
 
 opStyle :: IdentifierStyle Parser
@@ -195,6 +267,15 @@ reserved = reserve idStyle
 reservedOp :: String -> Parser ()
 reservedOp = reserve idStyle
 
+decl :: Parser Decl
+decl = do reserved "let"
+          r <- Rec <$ reserved "rec" <|> return NonRec
+          p <- pat
+          reservedOp "="
+          e <- expr
+          reservedOp ";;"
+          return (Decl r p e)
+
 expr :: Parser Expr
 expr =   buildExpressionParser table compound
      <?> "expression"
@@ -205,13 +286,13 @@ compound =   let_ <|> ite <|> app
 
 let_ :: Parser Expr
 let_ = do reserved "let"
-          b <- Rec <$ reserved "rec" <|> return NonRec
+          r <- Rec <$ reserved "rec" <|> return NonRec
           p <- pat
           reservedOp "="
           e <- expr
           reserved "in"
           body <- expr
-          return (Let b p e body)
+          return (Let r p e body)
 
 pat :: Parser Pat
 pat =   WildPat <$ reserved "_"
@@ -244,9 +325,11 @@ app = do f    <- term
       <?> "function application"
 
 term :: Parser Expr
-term =   parens expr
-     <|> Lit <$> literal
+term =   Lit <$> literal
      <|> Var <$> var
+     <|> mkList <$> listOf expr
+     <|> Tuple <$> try (tupleOf expr)
+     <|> parens expr
      <?> "simple expression"
 
 var :: Parser Var
@@ -255,6 +338,7 @@ var = identifier
 literal :: Parser Literal
 literal =   either (LI . fromInteger) LD <$> try integerOrDouble
         <|> LB <$> bool
+        <|> LU <$ reservedOp "()"
         <?> "literal"
 
 bool :: Parser Bool
@@ -263,18 +347,19 @@ bool =   True  <$ reserved "true"
      <?> "boolean"
 
 table :: [[Operator Parser Expr]]
-table  = [ [ binary "*"  AssocLeft, binary "/"  AssocLeft
-           , binary "*." AssocLeft, binary "/." AssocLeft
+table  = [ [ binary "=" Eq AssocNone, binary "<>" Neq AssocNone ]
+         , [ binary "*"  Times  AssocLeft, binary "/"  Div  AssocLeft
+           , binary "*." FTimes AssocLeft, binary "/." FDiv AssocLeft
            ]
-         , [ binary "+"  AssocLeft, binary "-"  AssocLeft
-           , binary "+." AssocLeft, binary "-." AssocLeft
+         , [ binary "+"  Plus  AssocLeft, binary "-"   Minus  AssocLeft
+           , binary "+." FPlus AssocLeft, binary "-."  FMinus AssocLeft
            ]
          ]
 
-binary :: String -> Assoc -> Operator Parser Expr
-binary name = Infix (mkOp <* reservedOp name)
+binary :: String -> Bop -> Assoc -> Operator Parser Expr
+binary name bop = Infix (mkOp <* reservedOp name)
   where
-  mkOp = return $ \e1 e2 -> (App (App (Var name) e1) e2)
+  mkOp = return $ Bop bop 
 -- prefix  name fun       = Prefix (fun <* reservedOp name)
 -- postfix name fun       = Postfix (fun <* reservedOp name)
 
@@ -292,3 +377,18 @@ tupleOf p = parens (p `sepBy` comma)
 evalString :: MonadThrow m => String -> m Value
 evalString s = case parseString expr mempty s of
   Success e -> eval e emptyEnv
+
+badProg :: String
+badProg = unlines [ "let f lst ="
+                  , "  let rec loop lst x y dir acc ="
+                  , "    if lst = [] then"
+                  , "      acc"
+                  , "    else"
+                  , "      ()"
+                  , "  in"
+                  , "  List.rev (loop lst 0.0 0.0 0.0 [(0.0,0.0)])"
+                  , ";;"
+                  ]
+
+zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
+zipWithM f as bs = sequence (zipWith f as bs)
