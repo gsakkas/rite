@@ -318,7 +318,6 @@ match = do reserved "match"
            e <- expr
            reserved "with"
            as <- many alt
-           reserved "end"
            return (Case e as)
       <?> "match"
 
@@ -330,10 +329,6 @@ alt = do reservedOp "|"
          return (p,e)
 
 pat :: Parser Pat
--- pat =   ConsPat <$> (simplePat <* reservedOp "::") <*> pat
---     <|> simplePat
---     <?> "pattern"
-
 pat = buildExpressionParser [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]] simplePat
 
 simplePat :: Parser Pat
@@ -433,7 +428,6 @@ badProg = unlines [ "let f lst ="
                   , "  in"
                   , "  match loop lst [(0.0,0.0)] with"
                   , "    | h :: t -> h"
-                  , "  end"
                   , ";;"
                   ]
 
