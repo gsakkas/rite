@@ -23,6 +23,7 @@ library
                      , containers >= 0.5
                      , exceptions >= 0.8
                      , parsers >=0.12
+                     , transformers >= 0.4
                      , trifecta >=1.5
                      , unordered-containers >= 0.2
   hs-source-dirs:      src

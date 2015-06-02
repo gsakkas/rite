@@ -1,10 +1,14 @@
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE PartialTypeSignatures #-}
 module NanoML where
 
 import Control.Applicative
 import Control.Monad.Catch hiding (try)
+import Control.Monad.IO.Class
 import qualified Data.HashSet as HashSet
+import Data.Functor
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -47,17 +51,19 @@ instance Exception UnboundVariable
 data Value
   = VI Int
   | VD Double
+  | VS String
   | VB Bool
   | VU
   | VL [Value]
-  | VT Int [Value] -- VT sz:Nat (ListN Value sz)
-  | VC (Maybe Var) Env Var Expr
+  | VT Int [Value] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+  | VC (Maybe Var) Env Pat Expr
   deriving (Show)
 
 data Literal
   = LI Int
   | LD Double
   | LB Bool
+  | LS String
   | LU
   deriving (Show)
 
@@ -69,7 +75,7 @@ data Decl
 
 data Expr
   = Var Var
-  | Lam Var Expr
+  | Lam Pat Expr
   | App Expr Expr
   | Bop Bop Expr Expr
   | Lit Literal
@@ -81,6 +87,23 @@ data Expr
   | Nil
   | Tuple [Expr]
   deriving (Show)
+
+data ExprF f
+  = VarF Var
+  | LamF Var f
+  | AppF f f
+  | BopF Bop f f
+  | LitF Literal
+  | LetF RecFlag Pat f f
+  | IteF f f f
+  | SeqF f f -- TODO: do we actually need this for the student examples?
+  | CaseF f [(Pat, ExprF f)]
+  | ConsF f f
+  | NilF
+  | TupleF [f]
+  deriving (Show, Functor)
+
+--type LocExpr = Fix ExprF Careted
 
 data Bop
   = Eq | Neq
@@ -98,7 +121,7 @@ data Pat
   | ConsPat Pat Pat
   | ListPat [Pat]
   | TuplePat [Pat]
-  | FunPat Var [Var] -- TODO: should this be `[Pat]`?
+  | FunPat Var [Pat] -- TODO: should this be `[Pat]`?
   | WildPat
   deriving (Show)
 
@@ -110,12 +133,15 @@ instance Exception [Char]
 
 evalDecl :: MonadThrow m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
-  Decl NonRec (FunPat f vs) e -> do
-    c <- eval (mkCurried vs e) env
+  Decl Rec (FunPat f ps) e -> do
+    c <- setClosureName f <$> eval (mkCurried ps e) env
+    return (insertEnv f c env)
+  Decl NonRec (FunPat f ps) e -> do
+    c <- eval (mkCurried ps e) env
     return (insertEnv f c env)
 
 eval :: MonadThrow m => Expr -> Env -> m Value
-eval expr env = case expr of
+eval expr env = traceShow expr $ case expr of
   Var v ->
     lookupEnv v env
   Lam v e ->
@@ -129,11 +155,11 @@ eval expr env = case expr of
     v2 <- eval e2 env
     evalBop b v1 v2
   Lit l -> return (litValue l)
-  Let Rec (FunPat f vs) e b -> do
-    c <- setClosureName f <$> eval (mkCurried vs e) env
+  Let Rec (FunPat f ps) e b -> do
+    c <- setClosureName f <$> eval (mkCurried ps e) env
     eval b (insertEnv f c env)
-  Let NonRec (FunPat f vs) e b -> do
-    c <- eval (mkCurried vs e) env
+  Let NonRec (FunPat f ps) e b -> do
+    c <- eval (mkCurried ps e) env
     eval b (insertEnv f c env)
   Let NonRec p e b ->
     eval (Case e [(p,b)]) env
@@ -161,10 +187,12 @@ eval expr env = case expr of
 
 evalApp :: MonadThrow m => Value -> Value -> m Value
 evalApp f a = case f of
-  VC Nothing env v e
-    -> eval e (insertEnv v a env)
-  VC (Just me) env v e
-    -> eval e (insertEnv v a (insertEnv me f env))
+  VC Nothing env p e -> do
+    Just pat_env <- matchPat a p
+    eval e (joinEnv pat_env env)
+  VC (Just me) env p e -> do
+    Just pat_env <- matchPat a p
+    eval e (joinEnv pat_env (insertEnv me f env))
   _ -> throwM "tried to apply a non-function"
 
 evalBop :: MonadThrow m
@@ -176,6 +204,9 @@ evalBop Le  v1 v2 = (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
 evalBop Gt  v1 v2 = VB <$> gtVal v1 v2
 evalBop Ge  v1 v2 = (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
 evalBop Plus v1 v2 = VI <$> plusVal v1 v2
+evalBop Minus v1 v2 = VI <$> minusVal v1 v2
+evalBop Times v1 v2 = VI <$> timesVal v1 v2
+evalBop Div v1 v2 = VI <$> divVal v1 v2
 
 eqVal (VI x) (VI y) = return (x == y)
 eqVal (VD x) (VD y) = return (x == y)
@@ -186,7 +217,7 @@ eqVal (VT i x) (VT j y)
   | i == j
   = and <$> zipWithM eqVal x y
 eqVal x y
-  = throwM "cannot check incompatible types for equality"
+  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
 
 ltVal (VI x) (VI y) = return (x < y)
 ltVal (VD x) (VD y) = return (x < y)
@@ -199,43 +230,54 @@ gtVal x      y      = throwM "cannot compare ordering of non-numeric types"
 plusVal (VI i) (VI j) = return (i+j)
 plusVal _      _      = throwM "+ can only be applied to ints"
 
+minusVal (VI i) (VI j) = return (i-j)
+minusVal _      _      = throwM "- can only be applied to ints"
+
+timesVal (VI i) (VI j) = return (i*j)
+timesVal _      _      = throwM "* can only be applied to ints"
+
+divVal (VI i) (VI j) = return (i `div` j)
+divVal _      _      = throwM "/ can only be applied to ints"
+
+
 litValue :: Literal -> Value
 litValue (LI i) = VI i
 litValue (LD d) = VD d
 litValue (LB b) = VB b
+litValue (LS s) = VS s
 litValue LU     = VU
 
 evalAlts :: MonadThrow m => Value -> [Alt] -> Env -> m Value
 evalAlts _ [] _
   = throwM "no matching pattern"
 evalAlts v ((p,e):as) env
-  = case matchPat v p of
+  = matchPat v p >>= \case
       Nothing  -> evalAlts v as env
       Just bnd -> eval e (joinEnv bnd env)
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
-matchPat :: Value -> Pat -> Maybe Env
+matchPat :: MonadThrow m => Value -> Pat -> m (Maybe Env)
 -- FIXME: should be MonadThrow m => m (Maybe Env) so we can throw exception on ill-typed pattern match
 matchPat v p = case p of
   VarPat var ->
-    Just (insertEnv var v emptyEnv)
+    return $ Just (insertEnv var v emptyEnv)
   LitPat lit ->
-    if matchLit v lit then Just emptyEnv else Nothing
+    return $ if matchLit v lit then Just emptyEnv else Nothing
   ConsPat p ps -> do
     (x,xs) <- unconsVal v
-    env1   <- matchPat x p
-    env2   <- matchPat xs ps
-    return (joinEnv env1 env2)
+    Just env1 <- matchPat x p
+    Just env2 <- matchPat xs ps
+    return $ Just (joinEnv env1 env2)
   ListPat ps -> throwM "matchPat.ListPat"
   TuplePat ps -> throwM "matchPat.TuplePat"
   FunPat _ _ -> throwM "cannot pattern-match on function"
   WildPat ->
-    Just emptyEnv
+    return $ Just emptyEnv
 
-unconsVal :: Value -> Maybe (Value, Value)
-unconsVal (VL (x:xs)) = Just (x, VL xs)
-unconsVal _           = Nothing
+unconsVal :: MonadThrow m => Value -> m (Value, Value)
+unconsVal (VL (x:xs)) = return (x, VL xs)
+unconsVal _           = throwM "type error: uncons can only be applied to lists"
 
 matchLit :: Value -> Literal -> Bool
 matchLit (VI i1) (LI i2) = i1 == i2
@@ -244,9 +286,9 @@ matchLit (VB b1) (LB b2) = b1 == b2
 matchLit VU      LU      = True
 matchLit _       _       = False
 
-mkCurried :: [Var] -> Expr -> Expr
-mkCurried [v]    e = Lam v e
-mkCurried (v:vs) e = Lam v (mkCurried vs e)
+mkCurried :: [Pat] -> Expr -> Expr
+mkCurried [p]    e = Lam p e
+mkCurried (p:ps) e = Lam p (mkCurried ps e)
 
 setClosureName :: Var -> Value -> Value
 setClosureName f (VC _ r v e) = VC (Just f) r v e
@@ -287,7 +329,8 @@ reservedOp :: String -> Parser ()
 reservedOp = reserve idStyle
 
 decl :: Parser Decl
-decl = do reserved "let"
+decl = do whiteSpace
+          reserved "let"
           r <- Rec <$ reserved "rec" <|> return NonRec
           p <- pat
           reservedOp "="
@@ -341,10 +384,10 @@ simplePat =   WildPat <$ reserved "_"
 
 funVarPat :: Parser Pat
 funVarPat = do v  <- identifier
-               vs <- try $ many identifier
-               if null vs
+               ps <- try $ many pat
+               if null ps
                  then return (VarPat v)
-                 else return (FunPat v vs)
+                 else return (FunPat v ps)
 
 ite :: Parser Expr
 ite = do reserved "if"
@@ -375,6 +418,7 @@ var = identifier
 literal :: Parser Literal
 literal =   either (LI . fromInteger) LD <$> try integerOrDouble
         <|> LB <$> bool
+        <|> LS <$> stringLiteral
         <|> LU <$ reservedOp "()"
         <?> "literal"
 
@@ -407,7 +451,11 @@ listOf :: Parser a -> Parser [a]
 listOf p = brackets (p `sepBy` semi)
 
 tupleOf :: Parser a -> Parser [a]
-tupleOf p = parens (p `sepBy` comma)
+tupleOf p = parens $ do
+  -- make sure we get at least two elemets in the tuple
+  x  <- p <* comma
+  xs <- p `sepBy1` comma
+  return (x:xs)
 
 
 ----------------------------------------------------------------------
@@ -417,6 +465,15 @@ tupleOf p = parens (p `sepBy` comma)
 evalString :: MonadThrow m => String -> m Value
 evalString s = case parseString expr mempty s of
   Success e -> eval e emptyEnv
+
+facProg :: String
+facProg = unlines [ "let rec fac n ="
+                  , "  if n = 0 then"
+                  , "    1"
+                  , "  else"
+                  , "    n * fac (n - 1)"
+                  , ";;"
+                  ]
 
 badProg :: String
 badProg = unlines [ "let f lst ="
@@ -433,3 +490,9 @@ badProg = unlines [ "let f lst ="
 
 zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
 zipWithM f as bs = sequence (zipWith f as bs)
+
+parseTopLevel :: String -> Result [Decl]
+parseTopLevel = parseString (many decl <* eof) mempty
+
+parseTopLevelFile :: MonadIO m => FilePath -> m (Result [Decl])
+parseTopLevelFile = parseFromFileEx (many decl <* eof)
