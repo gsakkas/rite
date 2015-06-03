@@ -377,13 +377,21 @@ match = do reserved "match"
 
 alt :: Parser Alt
 alt = do reservedOp "|"
-         p <- pat
+         p <- altPat
          reservedOp "->"
          e <- expr
          return (p,e)
 
 pat :: Parser Pat
-pat = buildExpressionParser [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]] simplePat
+pat = buildExpressionParser [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]] letPat
+
+altPat :: Parser Pat
+altPat = buildExpressionParser [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]]
+       $ simplePat <|> VarPat <$> identifier
+
+letPat :: Parser Pat
+letPat =    simplePat
+        <|> funVarPat
 
 simplePat :: Parser Pat
 simplePat =   WildPat <$ reserved "_"
@@ -391,7 +399,6 @@ simplePat =   WildPat <$ reserved "_"
           <|> ListPat <$> listOf pat
           <|> TuplePat <$> tupleOf pat
           <|> parens pat
-          <|> funVarPat
 
 funVarPat :: Parser Pat
 funVarPat = do v  <- identifier
@@ -428,14 +435,14 @@ var = identifier
 
 literal :: Parser Literal
 literal =   LD <$> try stupidOcamlDouble
-        <|> either (LI . fromInteger) LD <$> integerOrDouble
+        <|> either (LI . fromInteger) LD <$> try integerOrDouble
         <|> LB <$> bool
         <|> LS <$> stringLiteral
         <|> LU <$ reservedOp "()"
         <?> "literal"
 
 stupidOcamlDouble :: Parser Double
-stupidOcamlDouble = fromInteger <$> decimal <* char '.' <* someSpace
+stupidOcamlDouble = token $ fromInteger <$> decimal <* char '.'
 
 bool :: Parser Bool
 bool =   True  <$ reserved "true"
