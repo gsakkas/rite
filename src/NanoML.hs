@@ -5,6 +5,7 @@
 module NanoML where
 
 import Control.Applicative
+import Control.Monad
 import Control.Monad.Catch hiding (try)
 import Control.Monad.IO.Class
 import qualified Data.HashSet as HashSet
@@ -13,6 +14,8 @@ import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Typeable
+import System.Directory
+import System.FilePath
 import Text.Parser.Expression
 import Text.Parser.Token.Style
 import Text.Trifecta
@@ -110,7 +113,7 @@ data Bop
   | Lt | Le
   | Gt | Ge
   | Plus  | Minus  | Times  | Div
-  | FPlus | FMinus | FTimes | FDiv
+  | FPlus | FMinus | FTimes | FDiv | FExp
   deriving (Show)
 
 type Alt = (Pat, Expr)
@@ -326,7 +329,7 @@ reserved :: String -> Parser ()
 reserved = reserve idStyle
 
 reservedOp :: String -> Parser ()
-reservedOp = reserve idStyle
+reservedOp = reserve opStyle
 
 decl :: Parser Decl
 decl = do whiteSpace
@@ -343,7 +346,7 @@ expr =   buildExpressionParser table compound
      <?> "expression"
 
 compound :: Parser Expr
-compound =   let_ <|> ite <|> match <|> app
+compound =   let_ <|> lam <|> ite <|> match <|> app
          <?> "compound expression"
 
 let_ :: Parser Expr
@@ -355,6 +358,14 @@ let_ = do reserved "let"
           reserved "in"
           body <- expr
           return (Let r p e body)
+
+lam :: Parser Expr
+lam = do reserved "fun"
+         p  <- pat
+         ps <- many pat
+         reservedOp "->"
+         b <- expr
+         return $ Lam p (mkCurried ps b)
 
 match :: Parser Expr
 match = do reserved "match"
@@ -416,11 +427,15 @@ var :: Parser Var
 var = identifier
 
 literal :: Parser Literal
-literal =   either (LI . fromInteger) LD <$> try integerOrDouble
+literal =   LD <$> try stupidOcamlDouble
+        <|> either (LI . fromInteger) LD <$> integerOrDouble
         <|> LB <$> bool
         <|> LS <$> stringLiteral
         <|> LU <$ reservedOp "()"
         <?> "literal"
+
+stupidOcamlDouble :: Parser Double
+stupidOcamlDouble = fromInteger <$> decimal <* char '.' <* someSpace
 
 bool :: Parser Bool
 bool =   True  <$ reserved "true"
@@ -428,21 +443,33 @@ bool =   True  <$ reserved "true"
      <?> "boolean"
 
 table :: [[Operator Parser Expr]]
-table  = [ [ binary "=" Eq AssocNone, binary "<>" Neq AssocNone ]
-         , [ binary "*"  Times  AssocLeft, binary "/"  Div  AssocLeft
-           , binary "*." FTimes AssocLeft, binary "/." FDiv AssocLeft
-           ]
-         , [ binary "+"  Plus  AssocLeft, binary "-"   Minus  AssocLeft
-           , binary "+." FPlus AssocLeft, binary "-."  FMinus AssocLeft
-           ]
-         , [ infix_ "::" Cons AssocRight ]
-         ]
+table  =
+  [
+    [ binary "**" FExp AssocRight ]
+  , [ binary "*"  Times  AssocLeft, binary "/"  Div  AssocLeft
+    , binary "*." FTimes AssocLeft, binary "/." FDiv AssocLeft
+    ]
+  , [ binary "+"  Plus  AssocLeft, binary "-"   Minus  AssocLeft
+    , binary "+." FPlus AssocLeft, binary "-."  FMinus AssocLeft
+    ]
+  , [ infix_ "::" Cons AssocRight ]
+  , [ infix_ "@" (mkBinApp (Var "@")) AssocRight
+    , infix_ "^" (mkBinApp (Var "^")) AssocRight
+    ]
+  , [ binary "=" Eq AssocNone, binary "<>" Neq AssocNone
+    , binary "<" Lt AssocNone, binary "<=" Le AssocNone
+    , binary ">" Gt AssocNone, binary ">=" Ge AssocNone
+    ]
+  ]
 
 binary :: String -> Bop -> Assoc -> Operator Parser Expr
 binary name bop = Infix (Bop bop <$ reservedOp name)
 
 infix_ :: String -> (Expr -> Expr -> Expr) -> Assoc -> Operator Parser Expr
 infix_ name op = Infix (op <$ reservedOp name)
+
+mkBinApp :: Expr -> Expr -> Expr -> Expr
+mkBinApp f e1 e2 = App (App f e1) e2
 
 -- prefix  name fun       = Prefix (fun <* reservedOp name)
 -- postfix name fun       = Postfix (fun <* reservedOp name)
@@ -488,11 +515,26 @@ badProg = unlines [ "let f lst ="
                   , ";;"
                   ]
 
-zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
-zipWithM f as bs = sequence (zipWith f as bs)
+-- zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
+-- zipWithM f as bs = sequence (zipWith f as bs)
 
 parseTopLevel :: String -> Result [Decl]
 parseTopLevel = parseString (many decl <* eof) mempty
 
 parseTopLevelFile :: MonadIO m => FilePath -> m (Result [Decl])
 parseTopLevelFile = parseFromFileEx (many decl <* eof)
+
+testParser :: IO ()
+testParser = do
+  let dir = "../yunounderstand/data/sp14/prog/unify"
+  mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
+          <$> getDirectoryContents dir
+  forM_ mls $ \ml -> do
+    r <- parseTopLevelFile (dir </> ml)
+    case r of
+      Success _ -> return ()
+      Failure _ -> print ml >> print r >> error "die"
+
+ignoredMLs :: [String]
+ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
+             ]
