@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PartialTypeSignatures #-}
-module NanoML where
+module NanoML.Types where
 
 import Control.Applicative
 import Control.Monad
@@ -76,7 +76,8 @@ data Literal
 data RecFlag = Rec | NonRec deriving (Show)
 
 data Decl
-  = Decl RecFlag Pat Expr
+  = DFun RecFlag Pat Expr
+  | DTyp TypeDecl
   deriving (Show)
 
 data Expr
@@ -147,9 +148,24 @@ data Type
   | TTup [Type]
   deriving (Show)
 
+data TypeDecl
+  = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
+  deriving (Show)
+
+data TypeRhs
+  = Alias Type
+  | Alg   [DataDecl]
+  deriving (Show)
+
+data DataDecl
+  = DataDecl { dCon :: DCon, dArgs :: [Type] }
+  deriving (Show)
+
 type TVar = String
 
 type TCon = String
+
+type DCon = String
 
 instance Exception [Char]
 
@@ -159,10 +175,10 @@ instance Exception [Char]
 
 evalDecl :: MonadThrow m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
-  Decl Rec (FunPat f ps) e -> do
+  DFun Rec (FunPat f ps) e -> do
     c <- setClosureName f <$> eval (mkCurried ps e) env
     return (insertEnv f c env)
-  Decl NonRec (FunPat f ps) e -> do
+  DFun NonRec (FunPat f ps) e -> do
     c <- eval (mkCurried ps e) env
     return (insertEnv f c env)
 
@@ -321,8 +337,21 @@ mkCurried p e = error $ "mkCurried: " ++ show p ++ " " ++ show e
 setClosureName :: Var -> Value -> Value
 setClosureName f (VF _ r v e) = VF (Just f) r v e
 
+mkInfix :: Expr -> Expr -> Expr -> Expr
+mkInfix x op y = mkApps op [x,y]
+
+mkApps :: Expr -> [Expr] -> Expr
+mkApps = foldl' App
+
 mkList :: [Expr] -> Expr
 mkList = foldr Cons Nil
+
+mkFunction :: [Alt] -> Expr
+mkFunction alts = Lam (VarPat "$x") (Case (Var "$x") alts)
+
+mkTApps :: Type -> [Type] -> Type
+mkTApps = foldl' TApp
+
 
 ----------------------------------------------------------------------
 -- Parsing
@@ -397,7 +426,7 @@ decl = do reserved "let"
           reservedOp "="
           e <- expr
           reservedOp ";;"
-          return (Decl r p e)
+          return (DFun r p e)
 
 expr :: Parser Expr
 expr =   buildExpressionParser table compound
