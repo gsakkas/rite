@@ -76,7 +76,7 @@ data Literal
 data RecFlag = Rec | NonRec deriving (Show)
 
 data Decl
-  = DFun RecFlag Pat Expr
+  = DFun RecFlag [(Pat,Expr)]
   | DTyp TypeDecl
   deriving (Show)
 
@@ -87,7 +87,7 @@ data Expr
   | Bop Bop Expr Expr
   | Uop Uop Expr
   | Lit Literal
-  | Let RecFlag Pat Expr Expr
+  | Let RecFlag [(Pat,Expr)] Expr
   | Ite Expr Expr Expr
   | Seq Expr Expr -- TODO: do we actually need this for the student examples?
   | Case Expr [Alt]
@@ -134,6 +134,7 @@ data Pat
   = VarPat Var
   | LitPat Literal
   | ConsPat Pat Pat
+  | ConPat Var Pat
   | ListPat [Pat]
   | TuplePat [Pat]
   | FunPat Var [Pat] -- TODO: should this be `[Pat]`?
@@ -174,13 +175,13 @@ instance Exception [Char]
 ----------------------------------------------------------------------
 
 evalDecl :: MonadThrow m => Decl -> Env -> m Env
-evalDecl decl env = case decl of
-  DFun Rec (FunPat f ps) e -> do
-    c <- setClosureName f <$> eval (mkCurried ps e) env
-    return (insertEnv f c env)
-  DFun NonRec (FunPat f ps) e -> do
-    c <- eval (mkCurried ps e) env
-    return (insertEnv f c env)
+evalDecl decl env = undefined -- case decl of
+  -- DFun Rec (FunPat f ps) e -> do
+  --   c <- setClosureName f <$> eval (mkCurried ps e) env
+  --   return (insertEnv f c env)
+  -- DFun NonRec (FunPat f ps) e -> do
+  --   c <- eval (mkCurried ps e) env
+  --   return (insertEnv f c env)
 
 eval :: MonadThrow m => Expr -> Env -> m Value
 eval expr env = traceShow expr $ case expr of
@@ -197,14 +198,14 @@ eval expr env = traceShow expr $ case expr of
     v2 <- eval e2 env
     evalBop b v1 v2
   Lit l -> return (litValue l)
-  Let Rec (FunPat f ps) e b -> do
-    c <- setClosureName f <$> eval (mkCurried ps e) env
-    eval b (insertEnv f c env)
-  Let NonRec (FunPat f ps) e b -> do
-    c <- eval (mkCurried ps e) env
-    eval b (insertEnv f c env)
-  Let NonRec p e b ->
-    eval (Case e [(p,Nothing,b)]) env
+  -- Let Rec (FunPat f ps) e b -> do
+  --   c <- setClosureName f <$> eval (mkCurried ps e) env
+  --   eval b (insertEnv f c env)
+  -- Let NonRec (FunPat f ps) e b -> do
+  --   c <- eval (mkCurried ps e) env
+  --   eval b (insertEnv f c env)
+  -- Let NonRec p e b ->
+  --   eval (Case e [(p,Nothing,b)]) env
   Ite eb et ef -> do
     vb <- eval eb env
     case vb of
@@ -352,263 +353,266 @@ mkFunction alts = Lam (VarPat "$x") (Case (Var "$x") alts)
 mkTApps :: Type -> [Type] -> Type
 mkTApps = foldl' TApp
 
+mkUMinus :: Var -> Expr -> Expr
+mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))
+mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
 
 ----------------------------------------------------------------------
 -- Parsing
 ----------------------------------------------------------------------
 
-idStyle :: IdentifierStyle Parser
-idStyle = emptyIdents { _styleReserved
-                        = HashSet.fromList
-                          [ "let", "rec", "in", "if", "then", "else"
-                          , "match", "with", "end", "fun", "function"
-                          , "true", "false"
-                          ]
-                      , _styleLetter
-                        = _styleLetter emptyIdents <|> char '.'
-                      }
+-- idStyle :: IdentifierStyle Parser
+-- idStyle = emptyIdents { _styleReserved
+--                         = HashSet.fromList
+--                           [ "let", "rec", "in", "if", "then", "else"
+--                           , "match", "with", "end", "fun", "function"
+--                           , "true", "false"
+--                           ]
+--                       , _styleLetter
+--                         = _styleLetter emptyIdents <|> char '.'
+--                       }
 
-opStyle :: IdentifierStyle Parser
-opStyle = IdentifierStyle
-          { _styleName     = "operator"
-          , _styleStart    = _styleLetter opStyle
-          , _styleLetter   = oneOf ":!#$%&*+./<=>?@\\^|-~,;"
-          , _styleReserved = HashSet.fromList [ "|", "->", ",", ";", ";;" ]
-          , _styleHighlight = Operator
-          , _styleReservedHighlight = ReservedOperator
-          }
+-- opStyle :: IdentifierStyle Parser
+-- opStyle = IdentifierStyle
+--           { _styleName     = "operator"
+--           , _styleStart    = _styleLetter opStyle
+--           , _styleLetter   = oneOf ":!#$%&*+./<=>?@\\^|-~,;"
+--           , _styleReserved = HashSet.fromList [ "|", "->", ",", ";", ";;" ]
+--           , _styleHighlight = Operator
+--           , _styleReservedHighlight = ReservedOperator
+--           }
 
-mystyleLetter :: Parser Char
-mystyleLetter = _styleLetter emptyOps <|> oneOf ",;"
+-- mystyleLetter :: Parser Char
+-- mystyleLetter = _styleLetter emptyOps <|> oneOf ",;"
 
-identifier :: Parser Var
-identifier =  ident idStyle
-          <|> try (parens (ident opStyle))
+-- identifier :: Parser Var
+-- identifier =  ident idStyle
+--           <|> try (parens (ident opStyle))
 
-reserved :: String -> Parser ()
-reserved = reserve idStyle
+-- reserved :: String -> Parser ()
+-- reserved = reserve idStyle
 
-reservedOp :: String -> Parser ()
-reservedOp = reserve opStyle
+-- reservedOp :: String -> Parser ()
+-- reservedOp = reserve opStyle
 
-type_ = do reserved "type"
-           t <- identifier
-           reservedOp "="
-           cs <- many cnstr
-           reservedOp ";;"
+-- type_ = do reserved "type"
+--            t <- identifier
+--            reservedOp "="
+--            cs <- many cnstr
+--            reservedOp ";;"
 
-cnstr = do reservedOp "|"
-           c <- identifier
-           (do reserved "of"
-               e <- typeExpr
-               return ()
-            <|> return ())
+-- cnstr = do reservedOp "|"
+--            c <- identifier
+--            (do reserved "of"
+--                e <- typeExpr
+--                return ()
+--             <|> return ())
 
-typeExpr =   -- TTup <$> tupleOf typeExpr
-             typeApp <|> typeTerm
+-- typeExpr =   -- TTup <$> tupleOf typeExpr
+--              typeApp <|> typeTerm
 
-typeTerm =   parens typeExpr
-         <|> TVar <$> typeVar
-         <|> TCon <$> typeCon
+-- typeTerm =   parens typeExpr
+--          <|> TVar <$> typeVar
+--          <|> TCon <$> typeCon
 
-typeApp = do as <- try (tupleOf typeTerm) <|> fmap pure typeTerm
-             c  <- typeCon
-             return (foldl' TApp (TCon c) as)
+-- typeApp = do as <- try (tupleOf typeTerm) <|> fmap pure typeTerm
+--              c  <- typeCon
+--              return (foldl' TApp (TCon c) as)
 
-typeCon = identifier
+-- typeCon = identifier
 
-typeVar = char '\'' *> identifier
+-- typeVar = char '\'' *> identifier
 
-decl :: Parser Decl
-decl = do reserved "let"
-          r <- Rec <$ reserved "rec" <|> return NonRec
-          p <- pat
-          reservedOp "="
-          e <- expr
-          reservedOp ";;"
-          return (DFun r p e)
+-- decl :: Parser Decl
+-- decl = do reserved "let"
+--           r <- Rec <$ reserved "rec" <|> return NonRec
+--           p <- pat
+--           reservedOp "="
+--           e <- expr
+--           reservedOp ";;"
+--           return (DFun r [(p,e)])
 
-expr :: Parser Expr
-expr =   buildExpressionParser table compound
-     <?> "expression"
+-- expr :: Parser Expr
+-- expr =   buildExpressionParser table compound
+--      <?> "expression"
 
-compound :: Parser Expr
-compound =   let_ <|> lam <|> func <|> ite <|> match <|> app
-         <?> "compound expression"
+-- compound :: Parser Expr
+-- compound =   let_ <|> lam <|> func <|> ite <|> match <|> app
+--          <?> "compound expression"
 
-let_ :: Parser Expr
-let_ = do reserved "let"
-          r <- Rec <$ reserved "rec" <|> return NonRec
-          p <- pat
-          reservedOp "="
-          e <- expr
-          reserved "in"
-          body <- expr
-          return (Let r p e body)
+-- let_ :: Parser Expr
+-- let_ = do reserved "let"
+--           r <- Rec <$ reserved "rec" <|> return NonRec
+--           p <- pat
+--           reservedOp "="
+--           e <- expr
+--           reserved "in"
+--           body <- expr
+--           return (Let r [(p,e)] body)
 
-lam :: Parser Expr
-lam = do reserved "fun"
-         p  <- pat
-         ps <- many pat
-         reservedOp "->"
-         b <- expr
-         return (mkCurried (p:ps) b)
+-- lam :: Parser Expr
+-- lam = do reserved "fun"
+--          p  <- pat
+--          ps <- many pat
+--          reservedOp "->"
+--          b <- expr
+--          return (mkCurried (p:ps) b)
 
-func :: Parser Expr
-func = do reserved "function"
-          as <- many alt
-          return $ Lam (VarPat "$x") (Case (Var "$x") as)
+-- func :: Parser Expr
+-- func = do reserved "function"
+--           as <- many alt
+--           return $ Lam (VarPat "$x") (Case (Var "$x") as)
 
-match :: Parser Expr
-match = do reserved "match"
-           e <- expr
-           reserved "with"
-           as <- many alt
-           return (Case e as)
-      <?> "match"
+-- match :: Parser Expr
+-- match = do reserved "match"
+--            e <- expr
+--            reserved "with"
+--            as <- many alt
+--            return (Case e as)
+--       <?> "match"
 
-alt :: Parser Alt
-alt = do reservedOp "|"
-         p <- altPat
-         g <- Just <$> (reserved "when" *> expr) <|> pure Nothing
-         reservedOp "->"
-         e <- expr
-         return (p, g, e)
+-- alt :: Parser Alt
+-- alt = do reservedOp "|"
+--          p <- altPat
+--          g <- Just <$> (reserved "when" *> expr) <|> pure Nothing
+--          reservedOp "->"
+--          e <- expr
+--          return (p, g, e)
 
-pat :: Parser Pat
-pat = buildExpressionParser
-        [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]]
-        (simplePat funVarPat)
-   <?> "pattern"
+-- pat :: Parser Pat
+-- pat = buildExpressionParser
+--         [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]]
+--         (simplePat funVarPat)
+--    <?> "pattern"
 
-altPat :: Parser Pat
-altPat = buildExpressionParser
-           [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]]
-           (simplePat (VarPat <$> identifier))
-      <?> "pattern"
+-- altPat :: Parser Pat
+-- altPat = buildExpressionParser
+--            [[ Infix (ConsPat <$ reservedOp "::") AssocRight ]]
+--            (simplePat (VarPat <$> identifier))
+--       <?> "pattern"
 
-simplePat :: Parser Pat -> Parser Pat
-simplePat var =   WildPat <$ reserved "_"
-              <|> LitPat <$> literal
-              <|> ListPat <$> listOf pat
-              <|> TuplePat <$> try (tupleOf pat)
-              <|> var
-              <|> parens pat
+-- simplePat :: Parser Pat -> Parser Pat
+-- simplePat var =   WildPat <$ reserved "_"
+--               <|> LitPat <$> literal
+--               <|> ListPat <$> listOf pat
+--               <|> TuplePat <$> try (tupleOf pat)
+--               <|> var
+--               <|> parens pat
 
-funVarPat :: Parser Pat
-funVarPat = do v  <- var
-               ps <- try $ many pat
-               if null ps
-                 then return (VarPat v)
-                 else return (FunPat v ps)
+-- funVarPat :: Parser Pat
+-- funVarPat = do v  <- var
+--                ps <- try $ many pat
+--                if null ps
+--                  then return (VarPat v)
+--                  else return (FunPat v ps)
 
-ite :: Parser Expr
-ite = do reserved "if"
-         b <- expr
-         reserved "then"
-         t <- expr
-         -- students like to misue if-then (without the else..)
-         e <- reserved "else" *> expr <|> return (Lit LU)
-         return (Ite b t e)
+-- ite :: Parser Expr
+-- ite = do reserved "if"
+--          b <- expr
+--          reserved "then"
+--          t <- expr
+--          -- students like to misue if-then (without the else..)
+--          e <- reserved "else" *> expr <|> return (Lit LU)
+--          return (Ite b t e)
 
-app :: Parser Expr
-app = do f    <- term
-         args <- many term
-         return (foldl' App f args)
-      <?> "function application"
+-- app :: Parser Expr
+-- app = do f    <- term
+--          args <- many term
+--          return (foldl' App f args)
+--       <?> "function application"
 
-term :: Parser Expr
-term =   Lit <$> literal
-     <|> Var <$> var
-     <|> mkList <$> listOf expr
-     <|> Tuple <$> try (tupleOf expr)
-     <|> parens expr
-     <?> "simple expression"
+-- term :: Parser Expr
+-- term =   Lit <$> literal
+--      <|> Var <$> var
+--      <|> mkList <$> listOf expr
+--      <|> Tuple <$> try (tupleOf expr)
+--      <|> parens expr
+--      <?> "simple expression"
 
-var :: Parser Var
-var = identifier
+-- var :: Parser Var
+-- var = identifier
 
-literal :: Parser Literal
-literal =   LD <$> try stupidOcamlDouble
-        <|> either (LI . fromInteger) LD <$> try integerOrDouble
-        <|> LB <$> bool
-        <|> LC <$> charLiteral
-        <|> LS <$> stringLiteral
-        <|> LU <$ reservedOp "()"
+-- literal :: Parser Literal
+-- literal =   LD <$> try stupidOcamlDouble
+--         <|> either (LI . fromInteger) LD <$> try integerOrDouble
+--         <|> LB <$> bool
+--         <|> LC <$> charLiteral
+--         <|> LS <$> stringLiteral
+--         <|> LU <$ reservedOp "()"
         
 
-stupidOcamlDouble :: Parser Double
-stupidOcamlDouble = token $ fromInteger <$> decimal <* char '.'
+-- stupidOcamlDouble :: Parser Double
+-- stupidOcamlDouble = token $ fromInteger <$> decimal <* char '.'
 
-bool :: Parser Bool
-bool =   True  <$ reserved "true"
-     <|> False <$ reserved "false"
-     <?> "boolean"
+-- bool :: Parser Bool
+-- bool =   True  <$ reserved "true"
+--      <|> False <$ reserved "false"
+--      <?> "boolean"
 
-table :: [[Operator Parser Expr]]
-table  =
-  [ [ prefix "-"  Neg, prefix "-." FNeg ]
-  , [ binary "**" FExp AssocRight ]
-  , [ binary "*"  Times  AssocLeft, binary "/"  Div  AssocLeft
-    , binary "*." FTimes AssocLeft, binary "/." FDiv AssocLeft
-    ]
-  , [ binary "+"  Plus  AssocLeft, binary "-"   Minus  AssocLeft
-    , binary "+." FPlus AssocLeft, binary "-."  FMinus AssocLeft
-    ]
-  , [ infix_ "::" Cons AssocRight ]
-  , [ infix_ "@" (mkBinApp (Var "@")) AssocRight
-    , infix_ "^" (mkBinApp (Var "^")) AssocRight
-    ]
-  , [ binary "=" Eq AssocLeft, binary "==" Eq AssocLeft {- TODO: not quite right -}
-    , binary "<>" Neq AssocLeft, binary "!=" Neq AssocLeft {- TODO: also not quite right -}
-    , binary "<" Lt AssocLeft, binary "<=" Le AssocLeft
-    , binary ">" Gt AssocLeft, binary ">=" Ge AssocLeft
-    ]
-  , [ binary "&&" And AssocLeft ]
-  , [ binary "||" Or  AssocLeft ]
---  , [ infix_ "," mkTuple AssocRight ]
-  , [ infix_ ";" Seq AssocRight ]
-  ]
+-- table :: [[Operator Parser Expr]]
+-- table  =
+--   [ [ prefix "-"  Neg, prefix "-." FNeg ]
+--   , [ binary "**" FExp AssocRight ]
+--   , [ binary "*"  Times  AssocLeft, binary "/"  Div  AssocLeft
+--     , binary "*." FTimes AssocLeft, binary "/." FDiv AssocLeft
+--     ]
+--   , [ binary "+"  Plus  AssocLeft, binary "-"   Minus  AssocLeft
+--     , binary "+." FPlus AssocLeft, binary "-."  FMinus AssocLeft
+--     ]
+--   , [ infix_ "::" Cons AssocRight ]
+--   , [ infix_ "@" (mkBinApp (Var "@")) AssocRight
+--     , infix_ "^" (mkBinApp (Var "^")) AssocRight
+--     ]
+--   , [ binary "=" Eq AssocLeft, binary "==" Eq AssocLeft {- TODO: not quite right -}
+--     , binary "<>" Neq AssocLeft, binary "!=" Neq AssocLeft {- TODO: also not quite right -}
+--     , binary "<" Lt AssocLeft, binary "<=" Le AssocLeft
+--     , binary ">" Gt AssocLeft, binary ">=" Ge AssocLeft
+--     ]
+--   , [ binary "&&" And AssocLeft ]
+--   , [ binary "||" Or  AssocLeft ]
+-- --  , [ infix_ "," mkTuple AssocRight ]
+--   , [ infix_ ";" Seq AssocRight ]
+--   ]
 
-binary :: String -> Bop -> Assoc -> Operator Parser Expr
-binary name bop = Infix (Bop bop <$ reservedOp name)
+-- binary :: String -> Bop -> Assoc -> Operator Parser Expr
+-- binary name bop = Infix (Bop bop <$ reservedOp name)
 
-infix_ :: String -> (Expr -> Expr -> Expr) -> Assoc -> Operator Parser Expr
-infix_ name op = Infix (op <$ reservedOp name)
+-- infix_ :: String -> (Expr -> Expr -> Expr) -> Assoc -> Operator Parser Expr
+-- infix_ name op = Infix (op <$ reservedOp name)
 
-prefix :: String -> Uop -> Operator Parser Expr
-prefix name op = Prefix (Uop op <$ reservedOp name)
+-- prefix :: String -> Uop -> Operator Parser Expr
+-- prefix name op = Prefix (Uop op <$ reservedOp name)
 
-mkBinApp :: Expr -> Expr -> Expr -> Expr
-mkBinApp f e1 e2 = App (App f e1) e2
+-- mkBinApp :: Expr -> Expr -> Expr -> Expr
+-- mkBinApp f e1 e2 = App (App f e1) e2
 
-mkTuple :: Expr -> Expr -> Expr
-mkTuple x (Tuple xs) = Tuple (x:xs)
-mkTuple x y = Tuple [x,y]
+-- mkTuple :: Expr -> Expr -> Expr
+-- mkTuple x (Tuple xs) = Tuple (x:xs)
+-- mkTuple x y = Tuple [x,y]
 
--- postfix name fun       = Postfix (fun <* reservedOp name)
+-- -- postfix name fun       = Postfix (fun <* reservedOp name)
 
-listOf :: Parser a -> Parser [a]
-listOf p = brackets (p `sepBy` semi)
+-- listOf :: Parser a -> Parser [a]
+-- listOf p = brackets (p `sepBy` semi)
 
-tupleOf = gtupleOf ","
-ttupleOf = gtupleOf "*"
+-- tupleOf = gtupleOf ","
+-- ttupleOf = gtupleOf "*"
 
-gtupleOf :: String -> Parser a -> Parser [a]
-gtupleOf sep p = parens $ do
-  -- make sure we get at least two elemets in the tuple
-  x  <- p <* reservedOp sep
-  xs <- p `sepBy1` reservedOp sep
-  return (x:xs)
+-- gtupleOf :: String -> Parser a -> Parser [a]
+-- gtupleOf sep p = parens $ do
+--   -- make sure we get at least two elemets in the tuple
+--   x  <- p <* reservedOp sep
+--   xs <- p `sepBy1` reservedOp sep
+--   return (x:xs)
 
 
 ----------------------------------------------------------------------
 -- Utilities
 ----------------------------------------------------------------------
 
-evalString :: MonadThrow m => String -> m Value
-evalString s = case parseString expr mempty s of
-  Success e -> eval e emptyEnv
+-- evalString :: MonadThrow m => String -> m Value
+-- evalString s = case parseString expr mempty s of
+--   Success e -> eval e emptyEnv
 
 facProg :: String
 facProg = unlines [ "let rec fac n ="
@@ -635,33 +639,59 @@ badProg = unlines [ "let f lst ="
 -- zipWithM :: Monad m => (a -> b -> m c) -> [a] -> [b] -> m [c]
 -- zipWithM f as bs = sequence (zipWith f as bs)
 
-parseTopLevel :: String -> Result [Decl]
-parseTopLevel = parseString (many decl <* eof) mempty
+-- parseTopLevel :: String -> Result [Decl]
+-- parseTopLevel = parseString (many decl <* eof) mempty
 
-parseTopLevelFile :: MonadIO m => FilePath -> m (Result [Decl])
-parseTopLevelFile = parseFromFileEx (many decl <* eof)
+-- parseTopLevelFile :: MonadIO m => FilePath -> m (Result [Decl])
+-- parseTopLevelFile = parseFromFileEx (many decl <* eof)
 
-testParser :: IO ()
-testParser = do
-  let dir = "../yunounderstand/data/sp14/prog/unify"
-  mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
-          <$> getDirectoryContents dir
-  forM_ mls $ \ml -> do
-    r <- parseTopLevelFile (dir </> ml)
-    case r of
-      Success _ -> return ()
-      Failure _ -> print ml >> print r -- >> error "die"
+-- testParser :: IO ()
+-- testParser = do
+--   let dir = "../yunounderstand/data/sp14/prog/unify"
+--   mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
+--           <$> getDirectoryContents dir
+--   forM_ mls $ \ml -> do
+--     r <- parseTopLevelFile (dir </> ml)
+--     case r of
+--       Success _ -> return ()
+--       Failure _ -> print ml >> print r -- >> error "die"
 
 ignoredMLs :: [String]
 ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
-             , "prog0103.ml" -- uses if-then (meant for effects)
-             , "prog0104.ml" -- uses if-then (meant for effects)
-             , "prog0107.ml" -- uses if-then (meant for effects)
-             , "prog0291.ml" -- uses if-then (meant for effects)
-             , "prog1257.ml" -- uses if-then (meant for effects)
-             , "prog1258.ml" -- uses if-then (meant for effects)
-             , "prog1259.ml" -- uses if-then (meant for effects)
-             , "prog1260.ml" -- uses if-then (meant for effects)
+             , "prog0582.ml" -- uses ?
+             , "prog0583.ml" -- uses ?
+             , "prog0584.ml" -- uses ?
+             , "prog1123.ml" -- uses try
              , "prog1261.ml" -- uses n..m range operator
              , "prog1270.ml" -- uses printf
+             , "prog2916.ml" -- uses list.rev (record selector)
+             , "prog2918.ml" -- uses list.rev (record selector)
+             , "prog3003.ml" -- uses sepList.map (record selector)
+             , "prog3158.ml" -- accidental type annot (let sumList (1 : int list))
+             , "prog3160.ml" -- accidental type annot (let sumList (l : int list))
+             , "prog3164.ml" -- array index xs.(0)
+             , "prog3165.ml" -- array index xs.(0)
+             , "prog3223.ml" -- deref (!)
+             , "prog3644.ml" -- deref (!)
+             , "prog3645.ml" -- deref (!)
+             , "prog3646.ml" -- deref (!)
+             , "prog3647.ml" -- deref (!)
+             , "prog3648.ml" -- deref (!)
+             , "prog3649.ml" -- deref (!)
+             , "prog3695.ml" -- record selector
+             , "prog3816.ml" -- optional param (~l)
+             , "prog4000.ml" -- postfix !
+             , "prog4105.ml" -- "or" pattern (1|2)
+             , "prog4169.ml" -- deref (!)
+             , "prog4170.ml" -- deref (!)
+             , "prog4171.ml" -- deref (!)
+             , "prog4480.ml" -- uses ?
+             , "prog4481.ml" -- uses ?
+             , "prog4484.ml" -- uses ?
+             , "prog4485.ml" -- uses ?
+             , "prog4486.ml" -- uses ?
+             , "prog4501.ml" -- uses ?
+             , "prog4557.ml" -- uses ?
+             , "prog4720.ml" -- uses ?
+             , "prog4722.ml" -- uses ?
              ]

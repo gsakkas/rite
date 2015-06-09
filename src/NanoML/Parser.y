@@ -1,6 +1,11 @@
 {
 module NanoML.Parser where
 
+import Control.Monad
+import Data.List
+import System.Directory
+import System.FilePath
+
 import NanoML.Lexer
 import NanoML.Types
 }
@@ -8,6 +13,7 @@ import NanoML.Types
 %name unsafeParseTopForm TopForm
 %name unsafeParseExpr SeqExpr
 %name unsafeParseLiteral Literal
+%name unsafeParsePattern Pattern
 %name unsafeParseType Type
 
 %tokentype { Token }
@@ -19,6 +25,7 @@ import NanoML.Types
 %token
 
 ident   { TokId $$ }
+con     { TokCon $$ }
 string  { TokString $$ }
 char    { TokChar $$ }
 int     { TokInt $$ }
@@ -61,6 +68,7 @@ float   { TokFloat $$ }
 ";;"       { TokSemiSemi }
 "->"       { TokArrow }
 '.'        { TokDot }
+".["       { TokDotLBrack }
 '*'        { TokStar }
 '\''       { TokTick }
 ':'        { TokColon }
@@ -69,6 +77,8 @@ float   { TokFloat $$ }
 "()"       { TokUnit }
 '='        { TokEq }
 '_'        { TokUnderscore }
+'-'        { TokMinus }
+"-."       { TokMinusDot }
 infix0     { TokInfixOp0 $$ }
 infix1     { TokInfixOp1 $$ }
 infix2     { TokInfixOp2 $$ }
@@ -90,16 +100,21 @@ infix4     { TokInfixOp4 $$ }
 %nonassoc below_COMMA
 %left     ','
 %right    "->"
-%right    "||"
+%right    "||" "or"
 %right    "&&"
 %nonassoc below_INFIX
-%left  infix0
+%left  infix0 '='
 %right infix1
 %nonassoc below_LBRACKETAT
 %right "::"
-%left  infix2
-%left  infix3
+%left  infix2 '-' "-."
+%left  infix3 '*'
 %right infix4
+%nonassoc unary_minus
+%nonassoc constr
+%nonassoc constr_app
+%nonassoc below_DOT
+%nonassoc '.'
 %nonassoc below_TOP
 %nonassoc "begin" char "false" float int '[' ident '(' string "true"
 
@@ -111,24 +126,29 @@ TopForm :: { [Decl] }
 : TopFormList            { reverse $1 }
 
 TopFormList :: { [Decl] }
-: {- empty -}            { [] }
-| Decl ";;"              { [$1] }
-| TopFormList ";;" Decl  { $3 : $1 }
+: {- empty -}                 { [] }
+| Decl ";;" TopFormList       { $1 : $3 }
+| Decl TopFormList            { $1 : $2 }
+-- | TopFormList ";;" Decl ";;"  { $3 : $1 }
 
 Decl :: { Decl }
-: "let" RecFlag LetBinding     { DFun $2 (fst $3) (snd $3) }
+: "let" RecFlag LetBindings    { DFun $2 $3 }
 | "type" TypeDecl              { DTyp $2 }
 
+LetBindings :: { [(Pat,Expr)] }
+: LetBinding                    { [$1] }
+| LetBindings "and" LetBinding  { $3 : $1 }
+
 LetBinding :: { (Pat, Expr) }
-: ident FunBinding   { (VarPat $1, $2) }
-| Pattern '=' Expr   { ($1, $3) }
+: ValIdent FunBinding   { (VarPat $1, $2) }
+| Pattern '=' SeqExpr   { ($1, $3) }
 
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
 | SimplePattern FunBinding { Lam $1 $2 }
 
 TypeDecl :: { TypeDecl }
-: MaybeTyVars ident '=' TypeRhs  { TypeDecl $2 $1 $4 }
+: MaybeTyVars ValIdent '=' TypeRhs  { TypeDecl $2 $1 $4 }
 
 MaybeTyVars :: { [TVar] }
 : {- empty -}                 { [] }
@@ -144,14 +164,14 @@ TyVar :: { TVar }
 
 TypeRhs :: { TypeRhs }
 : Type                        { Alias $1 }
-| DataDecls                   { Alg (reverse $1) }
+| MaybePipe DataDecls         { Alg (reverse $2) }
 
 DataDecls :: { [DataDecl] }
 : DataDecl                    { [$1] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: ident DataArgs              { DataDecl $1 (reverse $2) }
+: ConIdent DataArgs              { DataDecl $1 (reverse $2) }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }
@@ -160,16 +180,22 @@ DataArgs :: { [Type] }
 -- Patterns
 
 Pattern :: { Pat }
-: SimplePattern        { $1 }
-| Pattern "::" Pattern { ConsPat $1 $3 }
-| PatternCommaList     { TuplePat (reverse $1) }
+: SimplePattern         { $1 }
+| Pattern "as" ValIdent { $1 } -- FIXME: do i need to implement the alias?
+| PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
+| ConIdent Pattern %prec constr_app      { ConPat $1 $2 }
+| Pattern "::" Pattern                   { ConsPat $1 $3 }
 
 SimplePattern :: { Pat }
-: ident                   { VarPat $1 }
-| '_'                     { WildPat }
+: ValIdent  %prec below_INFIX  { VarPat $1 }
+| SimplePatternNotIdent        { $1 }
+
+SimplePatternNotIdent :: { Pat }
+: '_'                     { WildPat }
 | Literal                 { LitPat $1 }
 | '[' PatternSemiList ']' { ListPat (reverse $2) }
 | '(' Pattern ')'         { $2 }
+| ConLongIdent            { ConPat $1 (TuplePat []) }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
@@ -189,26 +215,37 @@ SeqExpr :: { Expr }
 Expr :: { Expr }
 : SimpleExpr      %prec below_TOP           { $1 }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
-| "let" RecFlag LetBinding "in" SeqExpr     { Let $2 (fst $3) (snd $3) $5 }
+| "let" RecFlag LetBindings "in" SeqExpr     { Let $2 $3 $5 }
 | "function" MaybePipe AltList              { mkFunction $3 }
-| "fun" SimplePattern Expr                  { Lam $2 $3 }
+| "fun" SimplePattern "->" Expr             { Lam $2 $4 }
 | "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (reverse $1) }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite $2 $4 $6 }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
+| SimpleExpr ".[" SeqExpr ']'               { mkApps (Var "String.get") [$1, $3] }
 | Expr "::" Expr                            { Cons $1 $3 }
+| Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
+| Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
+| Expr "or" Expr                            { mkInfix $1 (Var "||") $3 }
 | Expr infix0 Expr                          { mkInfix $1 (Var $2) $3 }
+| Expr '='    Expr                          { mkInfix $1 (Var "=") $3 }
 | Expr infix1 Expr                          { mkInfix $1 (Var $2) $3 }
+| Expr '-'    Expr                          { mkInfix $1 (Var "-") $3 }
+| Expr "-."   Expr                          { mkInfix $1 (Var "-.") $3 }
 | Expr infix2 Expr                          { mkInfix $1 (Var $2) $3 }
 | Expr infix3 Expr                          { mkInfix $1 (Var $2) $3 }
+| Expr '*'    Expr                          { mkInfix $1 (Var "*") $3 }
 | Expr infix4 Expr                          { mkInfix $1 (Var $2) $3 }
+| Subtractive Expr %prec unary_minus        { mkUMinus $1 $2 }
 
 SimpleExpr :: { Expr }
-: ident                 { Var $1 }
+: ValLongIdent          { Var $1 }
+| ConLongIdent %prec constr  { Var $1 }
 | Literal               { Lit $1 }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
 | '[' ExprSemiList ']'  { mkList (reverse $2) }
+| "[]"                  { mkList [] }
 
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }
@@ -216,7 +253,7 @@ SimpleExprList :: { [Expr] }
 
 ExprCommaList :: { [Expr] }
 : ExprCommaList ',' Expr   { $3 : $1 }
-| Expr ',' Expr            { [$1, $3] }
+| Expr ',' Expr            { [$3, $1] }
 
 ExprSemiList :: { [Expr] }
 : Expr                    { [$1] }
@@ -239,6 +276,10 @@ Literal :: { Literal }
 | "true"    { LB True }
 | "false"   { LB False }
 
+Subtractive :: { Var }
+: '-'          { "-" }
+| "-."         { "-." }
+
 -- Types
 
 Type :: { Type }
@@ -259,15 +300,43 @@ SimpleType :: { Type }
 
 SimpleType2 :: { Type }
 : '\'' ident                   { TVar $2 }
-| ident                        { TCon $1 }
-| SimpleType2 ident            { TApp (TCon $2) $1 }
-| '(' TypeCommaList ')' ident  { mkTApps (TCon $4) (reverse $2) }
+| ValLongIdent                 { TCon $1 }
+| SimpleType2 ValLongIdent            { TApp (TCon $2) $1 }
+| '(' TypeCommaList ')' ValLongIdent  { mkTApps (TCon $4) (reverse $2) }
 
 TypeCommaList :: { [Type] }
 : Type                         { [$1] }
 | TypeCommaList ',' Type       { $3 : $1 }
 
 -- Misc
+
+ValIdent :: { Var }
+: ident              { $1 }
+| '(' Operator ')'   { $2 }
+
+ValLongIdent :: { Var }
+: ValIdent           { $1 }
+| ModLongIdent '.' ValIdent { $1 ++ "." ++ $3 }
+
+ConLongIdent :: { Var }
+: ModLongIdent %prec below_DOT { $1 }
+| "[]"                         { "[]" }
+| "()"                         { "()" }
+
+ModLongIdent :: { Var }
+: con                    { $1 }
+| ModLongIdent '.' con   { $1 ++ "." ++ $3 }
+
+Operator :: { Var }
+: infix0             { $1 }
+| infix1             { $1 }
+| infix2             { $1 }
+| infix3             { $1 }
+| infix4             { $1 }
+| '*'                { "*" }
+| '='                { "=" }
+| '-'                { "-" }
+| "-."               { "-." }
 
 RecFlag :: { RecFlag }
 : {- empty -} { NonRec }
@@ -277,6 +346,8 @@ MaybePipe :: { () }
 : {- empty -}      { () }
 | '|'              { () }
 
+ConIdent :: { Var }
+: con     { $1 }
 
 {
 
@@ -287,11 +358,23 @@ parseError t = do
       ++ " at line " ++ show line
       ++ ", column " ++ show (column - 1)
 
--- successfully parse or let the string as is
-safeParse parser s = either (const (Left s)) Right (runAlex s parser)
+safeParse parser s = runAlex s parser
 
 parseTopForm = safeParse unsafeParseTopForm
 parseExpr    = safeParse unsafeParseExpr
 parseLiteral = safeParse unsafeParseLiteral
+parsePattern = safeParse unsafeParsePattern
 parseType    = safeParse unsafeParseType
+
+testParser :: IO ()
+testParser = do
+  let dir = "../yunounderstand/data/sp14/prog/unify"
+  mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
+          <$> getDirectoryContents dir
+  forM_ mls $ \ml -> do
+    r <- parseTopForm <$> readFile (dir </> ml)
+    case r of
+      Right _ -> return ()
+      Left _ -> print ml >> print r >> error "die"
+
 }

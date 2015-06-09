@@ -16,9 +16,10 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     NanoML.Types
+  exposed-modules:     NanoML
                      , NanoML.Lexer
                      , NanoML.Parser
+                     , NanoML.Types
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <5

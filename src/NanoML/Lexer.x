@@ -6,6 +6,8 @@ module NanoML.Lexer where
 
 $digit = 0-9
 $alpha = [a-zA-Z]
+$lower = [a-z]
+$upper = [A-Z]
 $symbol = [\! \$ \% \& \* \+ \- \. \/ \: \< \= \> \? \@ \^ \| \~]
 
 
@@ -30,6 +32,8 @@ tokens :-
   \=            { tok TokEq }
   \*            { tok TokStar }
   \'            { tok TokTick }
+  \-            { tok TokMinus }
+  \-\.          { tok TokMinusDot }
 
 --  (\=|\=\=)     { tok TokEq }
 --  (\<\>|\!\=)   { tok TokNe }
@@ -50,7 +54,7 @@ tokens :-
   \|\|          { tok TokLOr }
   \|            { tok TokPipe }
   \.            { tok TokDot }
-
+  \.\[          { tok TokDotLBrack }
 
   "and"         { tok TokAnd }
   "as"          { tok TokAs }
@@ -64,7 +68,7 @@ tokens :-
   "in"          { tok TokIn }
   "let"         { tok TokLet }
   "match"       { tok TokMatch }
-  "mod"         { tok TokMod }
+--  "mod"         { tok TokMod }
   "of"          { tok TokOf }
   "or"          { tok TokOr }
   "rec"         { tok TokRec }
@@ -79,12 +83,14 @@ tokens :-
   [\@ \^]             $symbol* { tokS TokInfixOp1 }
   [\+ \-]             $symbol* { tokS TokInfixOp2 }
   [\* \/ \%]          $symbol* { tokS TokInfixOp3 }
+  "mod"                        { tokS TokInfixOp3 }
   \*\*                $symbol* { tokS TokInfixOp4 }
 
 
-  ($alpha | \_) [$alpha $digit \_ \' \.]* { tokS TokId }
-  \" $printable* \" { tokS TokString }
-  \' $printable \' { tokS TokChar }
+  ($lower | \_) [$alpha $digit \_ \']* { tokS TokId }
+  ($upper | \_) [$alpha $digit \_ \']* { tokS TokCon }
+  \" ($printable # [\"])* \" { tokS TokString }
+  \' ($printable # [\']) \' { tokS TokChar }
   $printable { tokS TokUnknown }
 
 {
@@ -96,6 +102,7 @@ tokS t (_, _, _, str) len = return (t (take len str))
 
 data Token
   = TokId String
+  | TokCon String
   | TokString String
   | TokChar String
   | TokInt String
@@ -139,6 +146,7 @@ data Token
   | TokMinusDot
   | TokArrow
   | TokDot
+  | TokDotLBrack
   | TokDotDot
   | TokColon
   | TokComma

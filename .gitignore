@@ -16,3 +16,4 @@ cabal.sandbox.config
 *.hp
 /src/NanoML/Lexer.hs
 /src/NanoML/Parser.hs
+/TAGS
