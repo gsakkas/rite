@@ -3,5 +3,6 @@ module NanoML
   , module NanoML.Types
   ) where
 
+import NanoML.Misc
 import NanoML.Parser
 import NanoML.Types
