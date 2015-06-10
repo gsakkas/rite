@@ -113,10 +113,10 @@ infix4     { TokInfixOp4 $$ }
 %nonassoc unary_minus
 %nonassoc constr
 %nonassoc constr_app
+%nonassoc below_SHARP
 %nonassoc below_DOT
 %nonassoc '.'
-%nonassoc below_TOP
-%nonassoc "begin" char "false" float int '[' ident '(' string "true"
+%nonassoc "begin" char con "false" float int '[' ident '(' string "true"
 
 %%
 
@@ -129,11 +129,12 @@ TopFormList :: { [Decl] }
 : {- empty -}                 { [] }
 | Decl ";;" TopFormList       { $1 : $3 }
 | Decl TopFormList            { $1 : $2 }
--- | TopFormList ";;" Decl ";;"  { $3 : $1 }
 
 Decl :: { Decl }
 : "let" RecFlag LetBindings    { DFun $2 $3 }
 | "type" TypeDecl              { DTyp $2 }
+-- FIXME: should technically be list of type decls to handle mutually
+-- recursive types, but we dont need them for the homeworks
 
 LetBindings :: { [(Pat,Expr)] }
 : LetBinding                    { [$1] }
@@ -148,7 +149,7 @@ FunBinding :: { Expr }
 | SimplePattern FunBinding { Lam $1 $2 }
 
 TypeDecl :: { TypeDecl }
-: MaybeTyVars ValIdent '=' TypeRhs  { TypeDecl $2 $1 $4 }
+: MaybeTyVars ident '=' TypeRhs  { TypeDecl $2 $1 $4 }
 
 MaybeTyVars :: { [TVar] }
 : {- empty -}                 { [] }
@@ -163,15 +164,16 @@ TyVar :: { TVar }
 : '\'' ident                  { $2 }
 
 TypeRhs :: { TypeRhs }
-: Type                        { Alias $1 }
-| MaybePipe DataDecls         { Alg (reverse $2) }
+: Type              { Alias $1 }
+| DataDecls         { Alg (reverse $1) }
+| '|' DataDecls     { Alg (reverse $2) }
 
 DataDecls :: { [DataDecl] }
 : DataDecl                    { [$1] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: ConIdent DataArgs              { DataDecl $1 (reverse $2) }
+: con DataArgs              { DataDecl $1 (reverse $2) }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }
@@ -183,7 +185,7 @@ Pattern :: { Pat }
 : SimplePattern         { $1 }
 | Pattern "as" ValIdent { $1 } -- FIXME: do i need to implement the alias?
 | PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
-| ConIdent Pattern %prec constr_app      { ConPat $1 $2 }
+| con Pattern      %prec constr_app      { ConPat $1 $2 }
 | Pattern "::" Pattern                   { ConsPat $1 $3 }
 
 SimplePattern :: { Pat }
@@ -213,7 +215,7 @@ SeqExpr :: { Expr }
 | Expr ';' SeqExpr           { Seq $1 $3 }
 
 Expr :: { Expr }
-: SimpleExpr      %prec below_TOP           { $1 }
+: SimpleExpr      %prec below_SHARP         { $1 }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
 | "let" RecFlag LetBindings "in" SeqExpr     { Let $2 $3 $5 }
 | "function" MaybePipe AltList              { mkFunction $3 }
@@ -245,7 +247,6 @@ SimpleExpr :: { Expr }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
 | '[' ExprSemiList ']'  { mkList (reverse $2) }
-| "[]"                  { mkList [] }
 
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }
@@ -272,7 +273,6 @@ Literal :: { Literal }
 | char      { LC (read $1) }
 | int       { LI (read $1) }
 | float     { LD (read $1) }
-| "()"      { LU }
 | "true"    { LB True }
 | "false"   { LB False }
 
@@ -295,14 +295,14 @@ TypeList :: { [Type] }
 | TypeList '*' SimpleType               { $3 : $1 }
 
 SimpleType :: { Type }
-: SimpleType2           %prec below_TOP { $1 }
-| '(' TypeCommaList ')' %prec below_TOP { case $2 of { [a] -> a } }
+: SimpleType2           %prec below_SHARP { $1 }
+| '(' TypeCommaList ')' %prec below_SHARP { case $2 of { [a] -> a } }
 
 SimpleType2 :: { Type }
-: '\'' ident                   { TVar $2 }
-| ValLongIdent                 { TCon $1 }
-| SimpleType2 ValLongIdent            { TApp (TCon $2) $1 }
-| '(' TypeCommaList ')' ValLongIdent  { mkTApps (TCon $4) (reverse $2) }
+: '\'' ident                       { TVar $2 }
+| LongIdent                        { TCon $1 }
+| SimpleType2 LongIdent            { TApp (TCon $2) $1 }
+| '(' TypeCommaList ')' LongIdent  { mkTApps (TCon $4) (reverse $2) }
 
 TypeCommaList :: { [Type] }
 : Type                         { [$1] }
@@ -315,8 +315,12 @@ ValIdent :: { Var }
 | '(' Operator ')'   { $2 }
 
 ValLongIdent :: { Var }
-: ValIdent           { $1 }
+: ValIdent                  { $1 }
 | ModLongIdent '.' ValIdent { $1 ++ "." ++ $3 }
+
+LongIdent :: { Var }
+: ident                  { $1 }
+| ModLongIdent '.' ident { $1 ++ "." ++ $3 }
 
 ConLongIdent :: { Var }
 : ModLongIdent %prec below_DOT { $1 }
@@ -345,9 +349,6 @@ RecFlag :: { RecFlag }
 MaybePipe :: { () }
 : {- empty -}      { () }
 | '|'              { () }
-
-ConIdent :: { Var }
-: con     { $1 }
 
 {
 
