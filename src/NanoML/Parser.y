@@ -123,7 +123,7 @@ infix4     { TokInfixOp4 $$ }
 -- Declarations
 
 TopForm :: { [Decl] }
-: TopFormList            { reverse $1 }
+: TopFormList            { $1 }
 
 TopFormList :: { [Decl] }
 : {- empty -}                 { [] }
@@ -292,7 +292,7 @@ SimpleTypeOrTuple :: { Type }
 
 TypeList :: { [Type] }
 : SimpleType   %prec below_LBRACKETAT   { [$1] }
-| TypeList '*' Type                     { $3 : $1 }
+| TypeList '*' SimpleType               { $3 : $1 }
 
 SimpleType :: { Type }
 : SimpleType2           %prec below_TOP { $1 }
@@ -366,15 +366,14 @@ parseLiteral = safeParse unsafeParseLiteral
 parsePattern = safeParse unsafeParsePattern
 parseType    = safeParse unsafeParseType
 
-testParser :: IO ()
+testParser :: IO [Prog]
 testParser = do
   let dir = "../yunounderstand/data/sp14/prog/unify"
   mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
           <$> getDirectoryContents dir
-  forM_ mls $ \ml -> do
+  forM mls $ \ml -> do
     r <- parseTopForm <$> readFile (dir </> ml)
     case r of
-      Right _ -> return ()
+      Right p -> return p
       Left _ -> print ml >> print r >> error "die"
-
 }

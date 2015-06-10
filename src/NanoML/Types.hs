@@ -75,6 +75,8 @@ data Literal
 
 data RecFlag = Rec | NonRec deriving (Show)
 
+type Prog = [Decl]
+
 data Decl
   = DFun RecFlag [(Pat,Expr)]
   | DTyp TypeDecl
@@ -137,7 +139,7 @@ data Pat
   | ConPat Var Pat
   | ListPat [Pat]
   | TuplePat [Pat]
-  | FunPat Var [Pat] -- TODO: should this be `[Pat]`?
+--  | FunPat Var [Pat] -- TODO: should this be `[Pat]`?
   | WildPat
   deriving (Show)
 
@@ -314,7 +316,7 @@ matchPat v p = case p of
     return $ Just (joinEnv env1 env2)
   ListPat ps -> throwM "matchPat.ListPat"
   TuplePat ps -> throwM "matchPat.TuplePat"
-  FunPat _ _ -> throwM "cannot pattern-match on function"
+--  FunPat _ _ -> throwM "cannot pattern-match on function"
   WildPat ->
     return $ Just emptyEnv
 
@@ -695,3 +697,29 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog4720.ml" -- uses ?
              , "prog4722.ml" -- uses ?
              ]
+
+-- knownFuncs :: [Var]
+-- knownFuncs = [ "sumList"
+--              , "digitsOfInt"
+--              , "additivePersistence"
+--              , "digitalRoot"
+--              , "listReverse"
+--              , "palindrome"
+--              , "assoc"
+--              , "removeDuplicates"
+--              , "wwhile"
+--              , "fixpoint"
+--              , "exprToString"
+--              , "eval"
+--              , "build"
+--              , "sqsum"
+--              , "pipe"
+--              , "sepConcat"
+--              , "stringOfList"
+--              , "clone"
+--              , "padZero"
+--              , "removeZero"
+--              , "bigAdd"
+--              , "mulByDigit"
+--              , "bigMul"
+--              ]
