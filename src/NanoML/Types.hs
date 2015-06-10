@@ -358,6 +358,8 @@ mkTApps = foldl' TApp
 mkUMinus :: Var -> Expr -> Expr
 mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))
 mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
+mkUMinus "-"  e            = mkApps (Var "-")  [Lit (LI 0), e]
+mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
 
 ----------------------------------------------------------------------
 -- Parsing
