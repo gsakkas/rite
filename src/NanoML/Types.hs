@@ -31,22 +31,26 @@ import Text.Printf
 
 type Var = String
 
-type Env = Map Var Value
+newtype Env = Env (Map Var Value)
+
+instance Monoid Env where
+  mempty  = baseEnv
+  mappend = joinEnv
 
 insertEnv :: Var -> Value -> Env -> Env
-insertEnv = Map.insert
+insertEnv var val (Env env) = Env (Map.insert var val env)
 
 -- | Left-biased union of environments.
 joinEnv :: Env -> Env -> Env
-joinEnv = Map.union
+joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
 lookupEnv :: MonadThrow m => Var -> Env -> m Value
-lookupEnv v env = case Map.lookup v env of
+lookupEnv v (Env env) = case Map.lookup v env of
   Nothing -> throwM (UnboundVariable v)
   Just x  -> return x
 
 emptyEnv :: Env
-emptyEnv = Map.empty
+emptyEnv = Env Map.empty
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div)
@@ -55,13 +59,13 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div)
            ]
 
 baseEnv :: Env
-baseEnv = Map.fromList . map (second mkBopFun) $ primBops
+baseEnv = Env . Map.fromList . map (second mkBopFun) $ primBops
 
 mkBopFun :: Bop -> Value
 mkBopFun bop = VF $ Func (VarPat "x")
                          (Lam (VarPat "y")
                               (Bop bop (Var "x") (Var "y")))
-                         mempty
+                         emptyEnv
 
 data UnboundVariable
   = UnboundVariable Var

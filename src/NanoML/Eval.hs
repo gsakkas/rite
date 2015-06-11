@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
 module NanoML.Eval where
 
@@ -15,38 +16,36 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-evalDecl :: (MonadThrow m, MonadFix m) => Decl -> Env -> m Env
+type MonadEval m = (MonadThrow m, MonadFix m)
+
+evalDecl :: MonadEval m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
   DFun Rec    binds -> evalRecBinds binds env
   DFun NonRec binds -> evalNonRecBinds binds env
 
-evalRecBinds :: (MonadThrow m, MonadFix m) => [(Pat,Expr)] -> Env -> m Env
-evalRecBinds binds env = mfix $ \fenv -> foldM (evalBind fenv) env binds
-  where
-  evalBind fenv env (p,e) = do
-    v    <- eval e fenv
-    Just benv <- matchPat v p
-    return (joinEnv benv env)
+evalRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
+evalRecBinds binds env = mfix $ \fenv -> foldr joinEnv env <$> evalBinds binds fenv
 
-evalNonRecBinds = undefined
+evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
+evalNonRecBinds binds env = foldr joinEnv env <$> evalBinds binds env
 
-  -- DFun Rec (FunPat f ps) e -> do
-  --   c <- setClosureName f <$> eval (mkCurried ps e) env
-  --   return (insertEnv f c env)
-  -- DFun NonRec (FunPat f ps) e -> do
-  --   c <- eval (mkCurried ps e) env
-  --   return (insertEnv f c env)
+evalBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m [Env]
+evalBinds binds env = mapM (`evalBind` env) binds
 
-eval :: MonadThrow m => Expr -> Env -> m Value
-eval expr env = traceShow expr $ case expr of
+-- | @evalBind (p,e) env@ returns the environment matched by @p@
+evalBind :: MonadEval m => (Pat,Expr) -> Env -> m Env
+evalBind (p,e) env = do
+  v <- eval e env
+  matchPat v p >>= \case
+    Nothing  -> throwM "pattern-match failed"
+    Just env -> return env
+
+eval :: MonadEval m => Expr -> Env -> m Value
+eval expr env = case expr of
   Var v ->
     lookupEnv v env
   Lam v e ->
     return (VF (Func v e env))
-  -- App (App f e1) e2 | isPrimOp f -> do
-  --   v1 <- eval e1 env
-  --   v2 <- eval e2 env
-  --   evalPrimOp f v1 v2
   App e1 e2 -> do
     v1 <- eval e1 env
     v2 <- eval e2 env
@@ -56,14 +55,12 @@ eval expr env = traceShow expr $ case expr of
     v2 <- eval e2 env
     evalBop b v1 v2
   Lit l -> return (litValue l)
-  -- Let Rec (FunPat f ps) e b -> do
-  --   c <- setClosureName f <$> eval (mkCurried ps e) env
-  --   eval b (insertEnv f c env)
-  -- Let NonRec (FunPat f ps) e b -> do
-  --   c <- eval (mkCurried ps e) env
-  --   eval b (insertEnv f c env)
-  -- Let NonRec p e b ->
-  --   eval (Case e [(p,Nothing,b)]) env
+  Let Rec binds body -> do
+    env <- evalRecBinds binds env
+    eval body env
+  Let NonRec binds body -> do
+    env <- evalNonRecBinds binds env
+    eval body env
   Ite eb et ef -> do
     vb <- eval eb env
     case vb of
@@ -74,8 +71,8 @@ eval expr env = traceShow expr $ case expr of
     eval e1 env >> eval e2 env
   Case e as -> do
     v <- eval e env
-    traceM $ "matching: " ++ show v
-    traceM $ "against:  " ++ show as
+    -- traceM $ "matching: " ++ show v
+    -- traceM $ "against:  " ++ show as
     evalAlts v as env
   Cons e es -> do
     v     <- eval e env
@@ -86,20 +83,14 @@ eval expr env = traceShow expr $ case expr of
     vs <- mapM (`eval` env) es
     return (VT (length vs) vs)
 
-evalApp :: MonadThrow m => Value -> Value -> m Value
+evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = case f of
   VF (Func p e env) -> do
     Just pat_env <- matchPat a p
     eval e (joinEnv pat_env env)
-  -- VF (Just me) env p e -> do
-  --   Just pat_env <- matchPat a p
-  --   eval e (joinEnv pat_env (insertEnv me f env))
   _ -> throwM "tried to apply a non-function"
 
--- isPrimOp :: Var -> Bool
--- isPrimOp f = f `elem` ["+", "-", "*", "/", "="]
-
-evalBop :: MonadThrow m
+evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
 evalBop Eq    v1 v2 = VB <$> eqVal v1 v2
 evalBop Neq   v1 v2 = VB . not <$> eqVal v1 v2
@@ -143,7 +134,6 @@ timesVal _      _      = throwM "* can only be applied to ints"
 divVal (VI i) (VI j) = return (i `div` j)
 divVal _      _      = throwM "/ can only be applied to ints"
 
-
 litValue :: Literal -> Value
 litValue (LI i) = VI i
 litValue (LD d) = VD d
@@ -151,7 +141,7 @@ litValue (LB b) = VB b
 litValue (LS s) = VS s
 litValue LU     = VU
 
-evalAlts :: MonadThrow m => Value -> [Alt] -> Env -> m Value
+evalAlts :: MonadEval m => Value -> [Alt] -> Env -> m Value
 evalAlts _ [] _
   = throwM "no matching pattern"
 evalAlts v ((p,g,e):as) env
@@ -161,8 +151,8 @@ evalAlts v ((p,g,e):as) env
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
-matchPat :: MonadThrow m => Value -> Pat -> m (Maybe Env)
--- FIXME: should be MonadThrow m => m (Maybe Env) so we can throw exception on ill-typed pattern match
+matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
+-- NOTE: should be MonadEval m => m (Maybe Env) so we can throw exception on ill-typed pattern match
 matchPat v p = case p of
   VarPat var ->
     return $ Just (insertEnv var v emptyEnv)
@@ -175,11 +165,10 @@ matchPat v p = case p of
     return $ Just (joinEnv env1 env2)
   ListPat ps -> throwM "matchPat.ListPat"
   TuplePat ps -> throwM "matchPat.TuplePat"
---  FunPat _ _ -> throwM "cannot pattern-match on function"
   WildPat ->
     return $ Just emptyEnv
 
-unconsVal :: MonadThrow m => Value -> m (Value, Value)
+unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs)) = return (x, VL xs)
 unconsVal _           = throwM "type error: uncons can only be applied to lists"
 

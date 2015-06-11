@@ -13,8 +13,8 @@ $symbol = [\! \$ \% \& \* \+ \- \. \/ \: \< \= \> \? \@ \^ \| \~]
 
 tokens :-
   $white+       ;
-  \-? $digit+       { tokS TokInt }
-  \-? $digit+ \. $digit* { tokS (TokFloat . (++"0")) }
+  $digit+       { tokS TokInt }
+  $digit+ \. $digit* { tokS (TokFloat . (++"0")) }
   \(            { tok TokLParen }
   \)            { tok TokRParen }
   \{            { tok TokLBrace }
