@@ -17,6 +17,7 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     NanoML
+                     , NanoML.Eval
                      , NanoML.Lexer
                      , NanoML.Parser
                      , NanoML.Types

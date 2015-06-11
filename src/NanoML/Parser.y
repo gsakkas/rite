@@ -367,14 +367,4 @@ parseLiteral = safeParse unsafeParseLiteral
 parsePattern = safeParse unsafeParsePattern
 parseType    = safeParse unsafeParseType
 
-testParser :: IO [Prog]
-testParser = do
-  let dir = "../yunounderstand/data/sp14/prog/unify"
-  mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
-          <$> getDirectoryContents dir
-  forM mls $ \ml -> do
-    r <- parseTopForm <$> readFile (dir </> ml)
-    case r of
-      Right p -> return p
-      Left _ -> print ml >> print r >> error "die"
 }
