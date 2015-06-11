@@ -182,6 +182,7 @@ tINT = "int"
 tFLOAT = "float"
 tCHAR = "char"
 tSTRING = "string"
+tBOOL = "bool"
 tLIST = "list"
 tUNIT = "()"
 

@@ -5,6 +5,9 @@ import Test.QuickCheck
 import NanoML.Types
 
 
+genArgs :: Type -> Gen [Expr]
+genArgs ty = mapM genExpr (argTys ty)
+
 genExpr :: Type -> Gen Expr
 genExpr ty = case ty of
   -- NOTE: instantiate all tyvars indescriminately with `int`
@@ -18,10 +21,12 @@ genExpr ty = case ty of
       -> Lit . LC <$> arbitrary
     | t == tSTRING
       -> Lit . LS <$> arbitrary
+    | t == tBOOL
+      -> Lit . LB <$> arbitrary
     | t == tUNIT
       -> return (Var "()")
     | otherwise
-      -> error "non-primitive type"
+      -> error $ "non-primitive type: " ++ show ty
   TApp (TCon "list") t -> sized (genList t)
   TTup ts -> Tuple <$> mapM genExpr ts
   _ :-> to -> Lam WildPat <$> genExpr to

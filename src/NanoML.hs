@@ -5,6 +5,7 @@ module NanoML
 
 import Control.Monad
 import qualified Data.Map as Map
+import Data.Maybe
 import Test.QuickCheck
 
 import NanoML.Eval
@@ -20,7 +21,6 @@ check decls = do
   case last decls of
     DFun _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
-        -> do args <- mapM (generate . genExpr) (argTys t)
-              eval (mkApps (Var f) args) env
-              putStrLn "Done!"
+        -> verboseCheck $ forAll (genArgs t) $ \args ->
+                          isJust (eval (mkApps (Var f) args) env)
     _ -> putStrLn "Done!"
