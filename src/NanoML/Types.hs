@@ -1,26 +1,14 @@
-{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 module NanoML.Types where
 
-import Control.Applicative
 import Control.Arrow
-import Control.Monad
 import Control.Monad.Catch hiding (try)
-import Control.Monad.IO.Class
-import qualified Data.HashSet as HashSet
-import Data.Functor
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Typeable
-import System.Directory
-import System.FilePath
-import Text.Parser.Expression
-import Text.Parser.Token.Highlight
-import Text.Parser.Token.Style
-import Text.Trifecta
 
 import Debug.Trace
 import Text.Printf
@@ -54,12 +42,24 @@ emptyEnv = Env Map.empty
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div)
+           ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
            ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
            ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
            ]
 
+primVars :: [(Var, Value)]
+primVars = [ ("[]", VL [])
+           , ("::", VF (Func (VarPat "x")
+                             (Lam (VarPat "xs")
+                                  (Cons (Var "x") (Var "xs")))
+                             emptyEnv))
+           , ("()", VU)
+           ]
+
 baseEnv :: Env
-baseEnv = Env . Map.fromList . map (second mkBopFun) $ primBops
+baseEnv = Env . Map.fromList
+        $  map (second mkBopFun) primBops
+        ++ primVars
 
 mkBopFun :: Bop -> Value
 mkBopFun bop = VF $ Func (VarPat "x")
@@ -81,7 +81,7 @@ data Value
   | VU
   | VL [Value]
   | VT Int [Value] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
-  | VF Func --  (Maybe Var) Env Pat Expr
+  | VF Func
   deriving (Show)
 
 data Func
@@ -126,22 +126,22 @@ data Expr
   | Tuple [Expr]
   deriving (Show)
 
-data ExprF f
-  = VarF Var
-  | LamF Var f
-  | AppF f f
-  | BopF Bop f f
-  | LitF Literal
-  | LetF RecFlag Pat f f
-  | IteF f f f
-  | SeqF f f -- TODO: do we actually need this for the student examples?
-  | CaseF f [(Pat, ExprF f)]
-  | ConsF f f
-  | NilF
-  | TupleF [f]
-  deriving (Show, Functor)
+-- data ExprF f
+--   = VarF Var
+--   | LamF Var f
+--   | AppF f f
+--   | BopF Bop f f
+--   | LitF Literal
+--   | LetF RecFlag Pat f f
+--   | IteF f f f
+--   | SeqF f f -- TODO: do we actually need this for the student examples?
+--   | CaseF f [(Pat, ExprF f)]
+--   | ConsF f f
+--   | NilF
+--   | TupleF [f]
+--   deriving (Show, Functor)
 
---type LocExpr = Fix ExprF Careted
+-- type LocExpr = Fix ExprF Careted
 
 data Uop
   = Neg | FNeg
@@ -167,7 +167,6 @@ data Pat
   | ConPat Var Pat
   | ListPat [Pat]
   | TuplePat [Pat]
---  | FunPat Var [Pat] -- TODO: should this be `[Pat]`?
   | WildPat
   deriving (Show)
 
@@ -178,6 +177,17 @@ data Type
   | Type :-> Type
   | TTup [Type]
   deriving (Show)
+
+tINT = "int"
+tFLOAT = "float"
+tCHAR = "char"
+tSTRING = "string"
+tLIST = "list"
+tUNIT = "()"
+
+argTys :: Type -> [Type]
+argTys (i :-> o) = i : argTys o
+argTys _         = []
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
@@ -211,9 +221,6 @@ mkCurried [p]    e = Lam p e
 mkCurried (p:ps) e = Lam p (mkCurried ps e)
 mkCurried p e = error $ "mkCurried: " ++ show p ++ " " ++ show e
 
--- setClosureName :: Var -> Value -> Value
--- setClosureName f (VF _ r v e) = VF (Just f) r v e
-
 mkInfix :: Expr -> Expr -> Expr -> Expr
 mkInfix x op y = mkApps op [x,y]
 
@@ -234,39 +241,3 @@ mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))
 mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
 mkUMinus "-"  e            = mkApps (Var "-")  [Lit (LI 0), e]
 mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
-
-
-----------------------------------------------------------------------
--- Utilities
-----------------------------------------------------------------------
-
--- evalString :: MonadThrow m => String -> m Value
--- evalString s = case parseString expr mempty s of
---   Success e -> eval e emptyEnv
-
-
--- knownFuncs :: [Var]
--- knownFuncs = [ "sumList"
---              , "digitsOfInt"
---              , "additivePersistence"
---              , "digitalRoot"
---              , "listReverse"
---              , "palindrome"
---              , "assoc"
---              , "removeDuplicates"
---              , "wwhile"
---              , "fixpoint"
---              , "exprToString"
---              , "eval"
---              , "build"
---              , "sqsum"
---              , "pipe"
---              , "sepConcat"
---              , "stringOfList"
---              , "clone"
---              , "padZero"
---              , "removeZero"
---              , "bigAdd"
---              , "mulByDigit"
---              , "bigMul"
---              ]

@@ -18,13 +18,15 @@ cabal-version:       >=1.10
 library
   exposed-modules:     NanoML
                      , NanoML.Eval
+                     , NanoML.Gen
                      , NanoML.Lexer
                      , NanoML.Parser
                      , NanoML.Types
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.7 && <5
+  build-depends:       QuickCheck >= 2.8
                      , array
+                     , base >=4.7 && <5
                      , containers >= 0.5
                      , directory
                      , exceptions >= 0.8

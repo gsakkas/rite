@@ -164,9 +164,14 @@ matchPat v p = case p of
     Just env2 <- matchPat xs ps
     return $ Just (joinEnv env1 env2)
   ListPat ps -> throwM "matchPat.ListPat"
-  TuplePat ps -> throwM "matchPat.TuplePat"
+  TuplePat ps
+    | VT n vs <- v
+    , length ps == n
+      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+           <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
+  _ -> throwM (printf "type error: tried to match %s against %s" (show v) (show p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs)) = return (x, VL xs)

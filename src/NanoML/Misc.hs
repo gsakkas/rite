@@ -1,9 +1,13 @@
 module NanoML.Misc where
 
 import Control.Arrow
+import Control.Monad
 import Data.Either
+import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
+import System.Directory
+import System.FilePath
 
 import NanoML.Parser
 import NanoML.Types
@@ -23,9 +27,10 @@ knownFuncs = Map.fromList . map (second (fromRight . parseType)) $
   , ("removeDuplicates", "'a list -> 'a list")
   , ("wwhile", "('a -> 'a * bool) * 'a -> 'a")
   , ("fixpoint", "('a -> 'a) * 'a -> 'a")
-  , ("exprToString", "expr -> string")
-  , ("eval", "expr * float * float -> float")
-  , ("build", "((int * int -> int) * int) -> expr")
+  -- TODO: add support for user-defined ADTs
+  -- , ("exprToString", "expr -> string")
+  -- , ("eval", "expr * float * float -> float")
+  -- , ("build", "((int * int -> int) * int) -> expr")
   , ("doRandomGray", "int * int * int -> unit")
   , ("doRandomColor", "int * int * int -> unit")
   , ("sqsum", "int list -> int")
