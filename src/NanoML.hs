@@ -21,25 +21,25 @@ import NanoML.Types
 
 
 check :: Prog -> IO (Maybe Result)
-check decls = do
-  -- TODO: this should go inside the quickcheck property..
-  env <- foldM (flip evalDecl) baseEnv decls
-  case last decls of
+check prog =
+  case last prog of
     DFun _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
-        -> Just <$> checkFunc f t env
+        -> Just <$> checkFunc f t prog
     _ -> return Nothing
 
-checkFunc :: Var -> Type -> Env -> IO Result
-checkFunc f t env = quickCheckResult -- (stdArgs { chatty = False })
-                  $ forAll (genArgs t)
-                  $ \args -> ioProperty $ do
-                     mv <- timeout sec $ eval (mkApps (Var f) args) env
-                     case mv of
-                       Nothing -> throwM "Timed out (perhaps infinite recursion?)"
-                       Just v  -> return (checkType v (resTy t))
+checkFunc :: Var -> Type -> Prog -> IO Result
+checkFunc f t prog = quickCheckResult -- (stdArgs { chatty = False })
+                   $ forAll (genArgs t)
+                   $ \args -> within sec $ isSafe $ do
+                       env <- foldM (flip evalDecl) baseEnv prog
+                       v   <- eval (mkApps (Var f) args) env
+                       v `checkType` resTy t
 
-  where sec = 100000
+  where
+  sec = 100000
+  isSafe (Just True) = True
+  isSafe _           = False
 
 checkType :: Value -> Type -> Bool
 checkType v t = case t of
