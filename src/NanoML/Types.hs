@@ -34,14 +34,14 @@ joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
 lookupEnv :: MonadThrow m => Var -> Env -> m Value
 lookupEnv v (Env env) = case Map.lookup v env of
-  Nothing -> throwM (UnboundVariable v)
+  Nothing -> error $ "unbound variable: " ++ v -- throwM (UnboundVariable v)
   Just x  -> return x
 
 emptyEnv :: Env
 emptyEnv = Env Map.empty
 
 primBops :: [(Var, Bop)]
-primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div)
+primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
            ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
            ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
@@ -49,12 +49,34 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div)
 
 primVars :: [(Var, Value)]
 primVars = [ ("[]", VL [])
-           , ("::", VF (Func (VarPat "x")
-                             (Lam (VarPat "xs")
-                                  (Cons (Var "x") (Var "xs")))
+           , ("::", VF (Func (mkLams [VarPat "x", VarPat "xs"]
+                                     (Cons (Var "x") (Var "xs")))
                              emptyEnv))
            , ("()", VU)
+           , ("List.fold_left"
+             ,mkRec "List.fold_left"
+                    (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" (TuplePat [])
+                              ,Nothing
+                              ,Var "b")
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,mkApps (Var "List.fold_left")
+                                      [Var "f"
+                                      ,mkApps (Var "f") [Var "b",Var "y"]
+                                      ,Var "ys"
+                                      ]
+                              )
+                             ]))
+             )
            ]
+
+mkRec :: Var -> Expr -> Value
+mkRec f lam = func
+  where
+  func = VF (Func lam env)
+  env  = insertEnv f func baseEnv
 
 baseEnv :: Env
 baseEnv = Env . Map.fromList
@@ -62,9 +84,8 @@ baseEnv = Env . Map.fromList
         ++ primVars
 
 mkBopFun :: Bop -> Value
-mkBopFun bop = VF $ Func (VarPat "x")
-                         (Lam (VarPat "y")
-                              (Bop bop (Var "x") (Var "y")))
+mkBopFun bop = VF $ Func (mkLams [VarPat "x", VarPat "y"]
+                                 (Bop bop (Var "x") (Var "y")))
                          emptyEnv
 
 data UnboundVariable
@@ -85,12 +106,12 @@ data Value
   deriving (Show)
 
 data Func
-  = Func Pat Expr Env
+  = Func Expr Env
 
 -- NOTE: we can NEVER print the captured environment since recursive
 -- functions will refer to themselves
 instance Show Func where
-  showsPrec p (Func pat expr _) = showsPrec p expr
+  showsPrec p (Func expr _) = showsPrec p expr
 
 data Literal
   = LI Int
@@ -152,7 +173,7 @@ data Bop
   | Lt | Le
   | Gt | Ge
   | And | Or
-  | Plus  | Minus  | Times  | Div
+  | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
   deriving (Show)
 
@@ -231,6 +252,11 @@ mkInfix x op y = mkApps op [x,y]
 
 mkApps :: Expr -> [Expr] -> Expr
 mkApps = foldl' App
+
+mkLams :: [Pat] -> Expr -> Expr
+mkLams ps e = case ps of
+  []   -> e
+  p:ps -> Lam p (mkLams ps e)
 
 mkList :: [Expr] -> Expr
 mkList = foldr Cons Nil

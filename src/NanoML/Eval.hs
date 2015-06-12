@@ -22,7 +22,7 @@ evalDecl :: MonadEval m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
   DFun Rec    binds -> evalRecBinds binds env
   DFun NonRec binds -> evalNonRecBinds binds env
-  DTyp _            -> throwM "type declarations are not yet supported"
+  DTyp _            -> error "type declarations are not yet supported"
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
 evalRecBinds binds env = mfix $ \fenv -> foldr joinEnv env <$> evalBinds binds fenv
@@ -46,7 +46,7 @@ eval expr env = case expr of
   Var v ->
     lookupEnv v env
   Lam v e ->
-    return (VF (Func v e env))
+    return (VF (Func expr env))
   App e1 e2 -> do
     v1 <- eval e1 env
     v2 <- eval e2 env
@@ -86,7 +86,7 @@ eval expr env = case expr of
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = case f of
-  VF (Func p e env) -> do
+  VF (Func (Lam p e) env) -> do
     Just pat_env <- matchPat a p
     eval e (joinEnv pat_env env)
   _ -> throwM "tried to apply a non-function"
@@ -103,6 +103,7 @@ evalBop Plus  v1 v2 = plusVal v1 v2
 evalBop Minus v1 v2 = minusVal v1 v2
 evalBop Times v1 v2 = timesVal v1 v2
 evalBop Div   v1 v2 = divVal v1 v2
+evalBop Mod   v1 v2 = modVal v1 v2
 evalBop FPlus  v1 v2 = plusVal v1 v2
 evalBop FMinus v1 v2 = minusVal v1 v2
 evalBop FTimes v1 v2 = timesVal v1 v2
@@ -144,6 +145,9 @@ divVal (VI i) (VI j) = return $ VI (i `div` j)
 divVal (VD i) (VD j) = return $ VD (i / j)
 divVal _      _      = throwM "/ can only be applied to ints"
 
+modVal (VI i) (VI j) = return $ VI (i `mod` j)
+modVal _      _      = throwM "mod can only be applied to ints"
+
 litValue :: Literal -> Value
 litValue (LI i) = VI i
 litValue (LD d) = VD d
@@ -157,7 +161,11 @@ evalAlts _ [] _
 evalAlts v ((p,g,e):as) env
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as env
-      Just bnd -> eval e (joinEnv bnd env)
+      Just bnd -> do let newenv = joinEnv bnd env
+                     b <- eval g newenv
+                     if b
+                       then eval e newenv
+                       else evalAlts v as env
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
@@ -173,7 +181,7 @@ matchPat v p = case p of
     Just env1 <- matchPat x p
     Just env2 <- matchPat xs ps
     return $ Just (joinEnv env1 env2)
-  ListPat ps -> throwM "matchPat.ListPat"
+  ListPat ps -> error "matchPat.ListPat"
   TuplePat ps
     | VT n vs <- v
     , length ps == n
