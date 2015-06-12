@@ -22,6 +22,7 @@ evalDecl :: MonadEval m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
   DFun Rec    binds -> evalRecBinds binds env
   DFun NonRec binds -> evalNonRecBinds binds env
+  DTyp _            -> throwM "type declarations are not yet supported"
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
 evalRecBinds binds env = mfix $ \fenv -> foldr joinEnv env <$> evalBinds binds fenv
@@ -98,10 +99,15 @@ evalBop Lt    v1 v2 = VB <$> ltVal v1 v2
 evalBop Le    v1 v2 = (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
 evalBop Gt    v1 v2 = VB <$> gtVal v1 v2
 evalBop Ge    v1 v2 = (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
-evalBop Plus  v1 v2 = VI <$> plusVal v1 v2
-evalBop Minus v1 v2 = VI <$> minusVal v1 v2
-evalBop Times v1 v2 = VI <$> timesVal v1 v2
-evalBop Div   v1 v2 = VI <$> divVal v1 v2
+evalBop Plus  v1 v2 = plusVal v1 v2
+evalBop Minus v1 v2 = minusVal v1 v2
+evalBop Times v1 v2 = timesVal v1 v2
+evalBop Div   v1 v2 = divVal v1 v2
+evalBop FPlus  v1 v2 = plusVal v1 v2
+evalBop FMinus v1 v2 = minusVal v1 v2
+evalBop FTimes v1 v2 = timesVal v1 v2
+evalBop FDiv   v1 v2 = divVal v1 v2
+
 
 eqVal (VI x) (VI y) = return (x == y)
 eqVal (VD x) (VD y) = return (x == y)
@@ -122,16 +128,20 @@ gtVal (VI x) (VI y) = return (x > y)
 gtVal (VD x) (VD y) = return (x > y)
 gtVal x      y      = throwM "cannot compare ordering of non-numeric types"
 
-plusVal (VI i) (VI j) = return (i+j)
+plusVal (VI i) (VI j) = return $ VI (i+j)
+plusVal (VD i) (VD j) = return $ VD (i+j)
 plusVal _      _      = throwM "+ can only be applied to ints"
 
-minusVal (VI i) (VI j) = return (i-j)
+minusVal (VI i) (VI j) = return $ VI (i-j)
+minusVal (VD i) (VD j) = return $ VD (i-j)
 minusVal _      _      = throwM "- can only be applied to ints"
 
-timesVal (VI i) (VI j) = return (i*j)
+timesVal (VI i) (VI j) = return $ VI (i*j)
+timesVal (VD i) (VD j) = return $ VD (i*j)
 timesVal _      _      = throwM "* can only be applied to ints"
 
-divVal (VI i) (VI j) = return (i `div` j)
+divVal (VI i) (VI j) = return $ VI (i `div` j)
+divVal (VD i) (VD j) = return $ VD (i / j)
 divVal _      _      = throwM "/ can only be applied to ints"
 
 litValue :: Literal -> Value

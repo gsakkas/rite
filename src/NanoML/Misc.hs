@@ -73,6 +73,8 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog0583.ml" -- uses ?
              , "prog0584.ml" -- uses ?
              , "prog1123.ml" -- uses try
+             , "prog1126.ml" -- blackhole
+             , "prog1127.ml" -- blackhole
              , "prog1261.ml" -- uses n..m range operator
              , "prog1270.ml" -- uses printf
              , "prog2916.ml" -- uses list.rev (record selector)

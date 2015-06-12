@@ -190,6 +190,10 @@ argTys :: Type -> [Type]
 argTys (i :-> o) = i : argTys o
 argTys _         = []
 
+resTy :: Type -> Type
+resTy (_ :-> o) = resTy o
+resTy t         = t
+
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
   deriving (Show)
