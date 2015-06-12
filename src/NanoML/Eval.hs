@@ -162,10 +162,12 @@ evalAlts v ((p,g,e):as) env
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as env
       Just bnd -> do let newenv = joinEnv bnd env
-                     b <- eval g newenv
-                     if b
-                       then eval e newenv
-                       else evalAlts v as env
+                     case g of
+                      Nothing -> eval e newenv
+                      Just g  ->
+                        eval g newenv >>= \case
+                          VB True  -> eval e newenv
+                          VB False -> evalAlts v as env
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
@@ -189,6 +191,11 @@ matchPat v p = case p of
            <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
+  ConPat "[]" _
+    | VL [] <- v
+      -> return (Just emptyEnv)
+    | VL _ <- v
+      -> return Nothing
   _ -> throwM (printf "type error: tried to match %s against %s" (show v) (show p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
