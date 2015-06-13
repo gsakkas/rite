@@ -1,10 +1,15 @@
+{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE RankNTypes #-}
 module NanoML.Types where
 
 import Control.Arrow
-import Control.Monad.Catch hiding (try)
+import Control.Monad
+import Control.Monad.Catch
+import Control.Monad.Fix
+import Data.Char
 import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -16,6 +21,8 @@ import Text.Printf
 ----------------------------------------------------------------------
 -- Core Types
 ----------------------------------------------------------------------
+
+type MonadEval m = (MonadThrow m, MonadFix m)
 
 type Var = String
 
@@ -39,6 +46,10 @@ lookupEnv v (Env env) = case Map.lookup v env of
 
 emptyEnv :: Env
 emptyEnv = Env Map.empty
+
+----------------------------------------------------------------------
+-- Primitives
+----------------------------------------------------------------------
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
@@ -70,7 +81,144 @@ primVars = [ ("[]", VL [])
                               )
                              ]))
              )
+           , ("List.fold_right"
+             ,mkRec "List.fold_right"
+                    (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" (TuplePat [])
+                              ,Nothing
+                              ,Var "b")
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,mkApps (Var "f")
+                                      [Var "y"
+                                      ,mkApps (Var "List.fold_right")
+                                              [Var "f",Var "b", Var "ys"]
+                                      ]
+                              )
+                             ]))
+             )
+           , ("List.map"
+             ,mkRec "List.map"
+                    (mkLams [VarPat "f", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" (TuplePat [])
+                              ,Nothing
+                              ,Var "[]")
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Cons (App (Var "f") (Var "y"))
+                                    (mkApps (Var "List.map")
+                                            [Var "f"
+                                            ,Var "ys"
+                                            ])
+                              )
+                             ]))
+             )
+           , ("**", mkPrim2Fun $ P2 pexp)
+           , ("@", mkPrim2Fun $ P2 pappend)
+           , ("^", mkPrim2Fun $ P2 pconcat)
+           , ("&&", mkPrim2Fun $ P2 pand)
+           , ("&", mkPrim2Fun $ P2 pand)
+           , ("||", mkPrim2Fun $ P2 por)
+           , ("not", mkPrim1Fun $ P1 pnot)
+           , ("fst", mkPrim1Fun $ P1 pfst)
+           , ("snd", mkPrim1Fun $ P1 psnd)
+           , ("failwith", mkPrim1Fun $ P1 pfailwith)
+           , ("List.append", mkPrim2Fun $ P2 pappend)
+           , ("List.combine", mkPrim2Fun $ P2 plist_combine)
+           , ("List.hd", mkPrim1Fun $ P1 plist_hd)
+           , ("List.length", mkPrim1Fun $ P1 plist_length)
+           , ("List.mem", mkPrim2Fun $ P2 plist_mem)
+           , ("List.rev", mkPrim1Fun $ P1 plist_rev)
+           , ("List.split", mkPrim1Fun $ P1 plist_split)
+           , ("List.tl", mkPrim1Fun $ P1 plist_tl)
+           , ("String.get", mkPrim2Fun $ P2 pstring_get)
+           , ("String.length", mkPrim1Fun $ P1 pstring_length)
+           , ("int_of_char", mkPrim1Fun $ P1 pint_of_char)
+           , ("int_of_float", mkPrim1Fun $ P1 pint_of_float)
+           , ("float_of_int", mkPrim1Fun $ P1 pfloat_of_int)
+           , ("string_of_int", mkPrim1Fun $ P1 pstring_of_int)
+           , ("abs", mkPrim1Fun $ P1 pabs)
+           , ("log10", mkPrim1Fun $ P1 plog10)
            ]
+
+pfailwith :: MonadEval m => Value -> m Value
+pfailwith (VS s) = throwM s
+
+pfst :: MonadEval m => Value -> m Value
+pfst (VT 2 [x,_]) = return x
+
+psnd :: MonadEval m => Value -> m Value
+psnd (VT 2 [_,y]) = return y
+
+pand :: MonadEval m => Value -> Value -> m Value
+pand (VB x) (VB y) = return (VB (x && y))
+
+por :: MonadEval m => Value -> Value -> m Value
+por (VB x) (VB y) = return (VB (x || y))
+
+pnot :: MonadEval m => Value -> m Value
+pnot (VB x) = return (VB (not x))
+
+pabs :: MonadEval m => Value -> m Value
+pabs (VI i) = return (VI (abs i))
+
+pexp :: MonadEval m => Value -> Value -> m Value
+pexp (VD i) (VD j) = return (VD (i ** j))
+
+plog10 :: MonadEval m => Value -> m Value
+plog10 (VD x) = return (VD (log x))
+
+pint_of_char :: MonadEval m => Value -> m Value
+pint_of_char (VC c) = return (VI (ord c))
+
+pint_of_float :: MonadEval m => Value -> m Value
+pint_of_float (VD d) = return (VI (truncate d))
+
+pfloat_of_int :: MonadEval m => Value -> m Value
+pfloat_of_int (VI i) = return (VD (fromIntegral i))
+
+pstring_of_int :: MonadEval m => Value -> m Value
+pstring_of_int (VI i) = return (VS (show i))
+
+pstring_get :: MonadEval m => Value -> Value -> m Value
+pstring_get (VS s) (VI i) = return (VC (s !! i))
+
+pstring_length :: MonadEval m => Value -> m Value
+pstring_length (VS s) = return (VI (length s))
+
+plist_combine :: MonadEval m => Value -> Value -> m Value
+plist_combine (VL xs) (VL ys)
+  | length xs == length ys
+  = return (VL (zipWith (\x y -> VT 2 [x,y]) xs ys))
+
+plist_split :: MonadEval m => Value -> m Value
+plist_split (VL xs) = return (VT (length xs) [VL as, VL bs])
+  where
+  (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
+
+plist_mem :: MonadEval m => Value -> Value -> m Value
+plist_mem x (VL xs) = VB <$> allM (`eqVal` x) xs
+
+plist_length :: MonadEval m => Value -> m Value
+plist_length (VL s) = return (VI (length s))
+
+plist_rev :: MonadEval m => Value -> m Value
+plist_rev (VL xs) = return (VL (reverse xs))
+
+plist_hd :: MonadEval m => Value -> m Value
+plist_hd (VL (x:_)) = return x
+
+plist_tl :: MonadEval m => Value -> m Value
+plist_tl (VL (_:xs)) = return (VL xs)
+
+pappend :: MonadEval m => Value -> Value -> m Value
+pappend (VL xs) (VL ys) = return (VL (xs ++ ys))
+
+pconcat :: MonadEval m => Value -> Value -> m Value
+pconcat (VS xs) (VS ys) = return (VS (xs ++ ys))
+
 
 mkRec :: Var -> Expr -> Value
 mkRec f lam = func
@@ -86,6 +234,16 @@ baseEnv = Env . Map.fromList
 mkBopFun :: Bop -> Value
 mkBopFun bop = VF $ Func (mkLams [VarPat "x", VarPat "y"]
                                  (Bop bop (Var "x") (Var "y")))
+                         emptyEnv
+
+mkPrim1Fun :: Prim1 -> Value
+mkPrim1Fun f = VF $ Func (mkLams [VarPat "x"]
+                                 (Prim1 f (Var "x")))
+                         emptyEnv
+
+mkPrim2Fun :: Prim2 -> Value
+mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
+                                 (Prim2 f (Var "x") (Var "y")))
                          emptyEnv
 
 data UnboundVariable
@@ -145,7 +303,16 @@ data Expr
   | Cons Expr Expr
   | Nil
   | Tuple [Expr]
+  | Prim1 Prim1 Expr
+  | Prim2 Prim2 Expr Expr
   deriving (Show)
+
+newtype Prim1 = P1 (forall m. MonadEval m => Value -> m Value)
+instance Show Prim1 where
+  show _ = "<prim>"
+newtype Prim2 = P2 (forall m. MonadEval m => Value -> Value -> m Value)
+instance Show Prim2 where
+  show _ = "<prim>"
 
 -- data ExprF f
 --   = VarF Var
@@ -272,3 +439,19 @@ mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))
 mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
 mkUMinus "-"  e            = mkApps (Var "-")  [Lit (LI 0), e]
 mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
+
+eqVal (VI x) (VI y) = return (x == y)
+eqVal (VD x) (VD y) = return (x == y)
+eqVal (VB x) (VB y) = return (x == y)
+eqVal VU     VU     = return True
+eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
+eqVal (VT i x) (VT j y)
+  | i == j
+  = and <$> zipWithM eqVal x y
+eqVal x y
+  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
+
+
+allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
+allM f []     = return True
+allM f (x:xs) = (&&) <$> f x <*> allM f xs

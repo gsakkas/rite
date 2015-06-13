@@ -16,7 +16,7 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type MonadEval m = (MonadThrow m, MonadFix m)
+--type MonadEval m = (MonadThrow m, MonadFix m)
 
 evalDecl :: MonadEval m => Decl -> Env -> m Env
 evalDecl decl env = case decl of
@@ -83,6 +83,13 @@ eval expr env = case expr of
   Tuple es -> do
     vs <- mapM (`eval` env) es
     return (VT (length vs) vs)
+  Prim1 (P1 f) e -> do
+    v <- eval e env
+    f v
+  Prim2 (P2 f) e1 e2 -> do
+    v1 <- eval e1 env
+    v2 <- eval e2 env
+    f v1 v2
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = case f of
@@ -110,16 +117,6 @@ evalBop FTimes v1 v2 = timesVal v1 v2
 evalBop FDiv   v1 v2 = divVal v1 v2
 
 
-eqVal (VI x) (VI y) = return (x == y)
-eqVal (VD x) (VD y) = return (x == y)
-eqVal (VB x) (VB y) = return (x == y)
-eqVal VU     VU     = return True
-eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
-eqVal (VT i x) (VT j y)
-  | i == j
-  = and <$> zipWithM eqVal x y
-eqVal x y
-  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
 
 ltVal (VI x) (VI y) = return (x < y)
 ltVal (VD x) (VD y) = return (x < y)
