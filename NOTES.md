@@ -33,3 +33,9 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - of remaining 2419:
     - average of 2 tests needed to trigger runtime exception
 
+- OCaml primitives are listed in
+  - `bytecomp/lambda.mli`
+  - `bytecomp/translcore.ml`
+  - `external f : t = "prim"` defines primitive wrapper
+  - stdlib implemented with many `external`
+    - should implement actual primitives, then load stdlib from source
