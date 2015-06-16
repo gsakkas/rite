@@ -8,6 +8,7 @@ import Control.Monad.Fix
 import Text.Printf
 
 import NanoML.Parser
+import NanoML.Pretty
 import NanoML.Types
 
 import Debug.Trace
@@ -72,8 +73,6 @@ eval expr env = case expr of
     eval e1 env >> eval e2 env
   Case e as -> do
     v <- eval e env
-    -- traceM $ "matching: " ++ show v
-    -- traceM $ "against:  " ++ show as
     evalAlts v as env
   Cons e es -> do
     v     <- eval e env
@@ -193,7 +192,8 @@ matchPat v p = case p of
       -> return (Just emptyEnv)
     | VL _ <- v
       -> return Nothing
-  _ -> throwM (printf "type error: tried to match %s against %s" (show v) (show p) :: String)
+  _ -> throwM (printf "type error: tried to match %s against %s"
+                      (show $ pretty v) (show $ pretty p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs)) = return (x, VL xs)

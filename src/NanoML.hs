@@ -12,6 +12,7 @@ import           Data.Maybe
 import           System.IO.Unsafe
 import           System.Timeout
 import           Test.QuickCheck
+import           Test.QuickCheck.Monadic
 
 import           NanoML.Eval
 import           NanoML.Gen
@@ -32,14 +33,14 @@ check prog =
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckResult -- (stdArgs { chatty = False })
                    $ forAll (genArgs t)
-                   $ \args -> within sec $ isSafe $ do
+                   $ \args -> counterexample (show . pretty $ mkApps (Var f) args)
+                     $ within sec $ monadicIO $ run $ do
+                       -- FIXME: using monadicIO is ugly when eval is pure..
                        env <- foldM (flip evalDecl) baseEnv prog
                        v   <- eval (mkApps (Var f) args) env
-                       return $ v `checkType` resTy t
+                       assert $ v `checkType` resTy t
   where
   sec = 500000
-  isSafe (Just True) = True
-  isSafe _           = False
 
 -- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
 

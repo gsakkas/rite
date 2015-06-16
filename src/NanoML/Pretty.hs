@@ -1,4 +1,4 @@
-module NanoML.Pretty where
+module NanoML.Pretty (pretty, prettyProg, hsep) where
 
 import Prelude hiding ( (<$>) )
 import Data.List
