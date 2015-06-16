@@ -5,19 +5,20 @@ module NanoML
   , check
   ) where
 
-import Control.Monad
-import Control.Monad.Catch
-import qualified Data.Map as Map
-import Data.Maybe
-import System.IO.Unsafe
-import System.Timeout
-import Test.QuickCheck
+import           Control.Monad
+import           Control.Monad.Catch
+import qualified Data.Map            as Map
+import           Data.Maybe
+import           System.IO.Unsafe
+import           System.Timeout
+import           Test.QuickCheck
 
-import NanoML.Eval
-import NanoML.Gen
-import NanoML.Misc
-import NanoML.Parser
-import NanoML.Types
+import           NanoML.Eval
+import           NanoML.Gen
+import           NanoML.Misc
+import           NanoML.Parser
+import           NanoML.Pretty
+import           NanoML.Types
 
 
 check :: Prog -> IO (Maybe Result)
@@ -35,7 +36,6 @@ checkFunc f t prog = quickCheckResult -- (stdArgs { chatty = False })
                        env <- foldM (flip evalDecl) baseEnv prog
                        v   <- eval (mkApps (Var f) args) env
                        return $ v `checkType` resTy t
-
   where
   sec = 500000
   isSafe (Just True) = True
@@ -89,5 +89,3 @@ isTupleOf _  _         = False
 
 isFunc (VF {}) = True
 isFunc _       = False
-
-

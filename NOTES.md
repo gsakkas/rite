@@ -1,4 +1,3 @@
-
 ```
 ghci> let rs = map fromJust . filter isJust $ results
 rs :: [(FilePath, Result)]
