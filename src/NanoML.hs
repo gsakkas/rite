@@ -13,6 +13,8 @@ import           System.IO.Unsafe
 import           System.Timeout
 import           Test.QuickCheck
 import           Test.QuickCheck.Monadic
+import           Test.QuickCheck.Property hiding (Result)
+import           Text.Printf
 
 import           NanoML.Eval
 import           NanoML.Gen
@@ -22,26 +24,38 @@ import           NanoML.Pretty
 import           NanoML.Types
 
 
-check :: Prog -> IO (Maybe Result)
+check :: Prog -> IO ()
 check prog =
   case last prog of
     DFun _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
-        -> Just <$> checkFunc f t prog
-    _ -> return Nothing
+        -> do x:y:zs <- lines . output <$> checkFunc f t prog
+              -- NOTE: there doesn't seem to be an easy way to make QC
+              -- not output the Show instance of the counterexample,
+              -- so just extract that (2nd) line..
+              putStrLn $ unlines (x:zs)
+    _ -> printf "I don't (yet) know how to check\n%s\n" (show $ prettyProg prog)
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = True })
+checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                    $ forAll (genArgs t)
-                   $ \args -> counterexample (show . pretty $ mkApps (Var f) args)
-                     $ within sec $ monadicIO $ do
-                       v <- run $ do
-                         -- FIXME: using monadicIO is ugly when eval is pure..
-                         env <- foldM (flip evalDecl) baseEnv prog
-                         eval (mkApps (Var f) args) env
-                       assert $ v `checkType` resTy t
+                   $ \args -> -- counterexample (show . pretty $ mkApps (Var f) args)
+                     within sec $ addTrace $ runEval $ do
+                       env <- foldM (flip evalDecl) baseEnv prog
+                       v   <- eval (mkApps (Var f) args) env
+                       v `assertType` resTy t
   where
-  sec = 500000
+  sec = 5000000
+  --addTrace :: Either (SomeException, [Expr]) Bool -> Result
+  addTrace (Right x) = property succeeded
+  addTrace (Left (e,t)) = counterexample (unlines $ map (show . pretty) t)
+                          $ exception "*** Exception" e
+  assertType :: Value -> Type -> Eval Bool
+  assertType v t
+    | v `checkType` t = return True
+    | otherwise       = throwM $ (printf "%s does not have type %s"
+                                  (show $ pretty v) (show t)
+                                  :: String)
 
 -- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
 

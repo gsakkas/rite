@@ -1,10 +1,13 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
 module NanoML.Eval where
 
 import Control.Monad
 import Control.Monad.Catch
+import Control.Monad.Catch.Pure
 import Control.Monad.Fix
+import Control.Monad.Writer hiding (Alt)
 import Text.Printf
 
 import NanoML.Parser
@@ -16,6 +19,13 @@ import Debug.Trace
 ----------------------------------------------------------------------
 -- Evaluation
 ----------------------------------------------------------------------
+
+type Eval a = CatchT (Writer [Expr]) a
+
+runEval :: Eval a -> Either (SomeException, [Expr]) a
+runEval x = case runWriter (runCatchT x) of
+  (Left e, tr) -> Left (e, tr)
+  (Right v, _) -> Right v
 
 --type MonadEval m = (MonadThrow m, MonadFix m)
 
@@ -42,8 +52,12 @@ evalBind (p,e) env = do
     Nothing  -> throwM "pattern-match failed"
     Just env -> return env
 
+-- | evaluate an 'Expr' and discard the enclosed log if successful
+logExpr :: MonadEval m => Expr -> m a -> m a
+logExpr expr m = censor (const mempty) (tell [expr] >> m)
+
 eval :: MonadEval m => Expr -> Env -> m Value
-eval expr env = case expr of
+eval expr env = logExpr expr $ case expr of
   Var v ->
     lookupEnv v env
   Lam v e ->
@@ -91,7 +105,7 @@ eval expr env = case expr of
     f v1 v2
 
 evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp f a = case f of
+evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
   VF (Func (Lam p e) env) -> do
     Just pat_env <- matchPat a p
     eval e (joinEnv pat_env env)
@@ -99,21 +113,22 @@ evalApp f a = case f of
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
-evalBop Eq    v1 v2 = VB <$> eqVal v1 v2
-evalBop Neq   v1 v2 = VB . not <$> eqVal v1 v2
-evalBop Lt    v1 v2 = VB <$> ltVal v1 v2
-evalBop Le    v1 v2 = (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
-evalBop Gt    v1 v2 = VB <$> gtVal v1 v2
-evalBop Ge    v1 v2 = (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
-evalBop Plus  v1 v2 = plusVal v1 v2
-evalBop Minus v1 v2 = minusVal v1 v2
-evalBop Times v1 v2 = timesVal v1 v2
-evalBop Div   v1 v2 = divVal v1 v2
-evalBop Mod   v1 v2 = modVal v1 v2
-evalBop FPlus  v1 v2 = plusVal v1 v2
-evalBop FMinus v1 v2 = minusVal v1 v2
-evalBop FTimes v1 v2 = timesVal v1 v2
-evalBop FDiv   v1 v2 = divVal v1 v2
+evalBop bop v1 v2 = logExpr (Bop bop (Val v1) (Val v2)) $ case bop of
+  Eq     -> VB <$> eqVal v1 v2
+  Neq    -> VB . not <$> eqVal v1 v2
+  Lt     -> VB <$> ltVal v1 v2
+  Le     -> (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
+  Gt     -> VB <$> gtVal v1 v2
+  Ge     -> (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
+  Plus   -> plusVal v1 v2
+  Minus  -> minusVal v1 v2
+  Times  -> timesVal v1 v2
+  Div    -> divVal v1 v2
+  Mod    -> modVal v1 v2
+  FPlus  -> plusVal v1 v2
+  FMinus -> minusVal v1 v2
+  FTimes -> timesVal v1 v2
+  FDiv   -> divVal v1 v2
 
 
 

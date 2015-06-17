@@ -19,7 +19,7 @@ parensIf True  = parens
 parensIf False = id
 
 instance Pretty Value where
-  pretty v = case v of
+  prettyPrec z v = case v of
     VI i -> pretty i
     VD d -> pretty d
     VC c -> pretty c
@@ -28,7 +28,8 @@ instance Pretty Value where
     VU   -> text "()"
     VL l -> brackets $ encloseSep lbracket rbracket semi $ map pretty l
     VT _ xs -> parens $ hcat $ intersperse comma $ map pretty xs
-    VF _ -> text "<fun>"
+    VF (Func e _) -> prettyPrec z e
+
 
 instance Pretty Literal where
   pretty l = case l of
@@ -76,6 +77,30 @@ instance Pretty Expr where
     Tuple xs -> parens $ hcat $ intersperse comma $ map pretty xs
     Prim1 p x -> parens (text (show p) <+> pretty x)
     Prim2 p x y -> parens (text (show p) <+> pretty x <+> pretty y)
+    Val v -> prettyPrec z v
+    Bop bop x y -> parensIf (z > zb) $
+                   prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
+      where zb = opPrec undefined
+
+instance Pretty Bop where
+  pretty Eq = text "=#"
+  pretty Neq = text "<>#"
+  pretty Lt = text "<#"
+  pretty Le = text "<=#"
+  pretty Gt = text ">#"
+  pretty Ge = text ">=#"
+  pretty And = text "&&#"
+  pretty Or = text "||#"
+  pretty Plus = text "+#"
+  pretty Minus = text "-#"
+  pretty Times = text "*#"
+  pretty Div = text "/#"
+  pretty Mod = text "mod#"
+  pretty FPlus = text "+.#"
+  pretty FMinus = text "-.#"
+  pretty FTimes = text "*.#"
+  pretty FDiv = text "/.#"
+  pretty FExp = text "exp#"
 
 isInfix :: Var -> Bool
 isInfix = all (`elem` "!$%&*+-./:<=>?@^|~")

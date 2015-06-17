@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PartialTypeSignatures #-}
@@ -9,6 +10,7 @@ import Control.Arrow
 import Control.Monad
 import Control.Monad.Catch
 import Control.Monad.Fix
+import Control.Monad.Writer hiding (Alt)
 import Data.Char
 import Data.List
 import Data.Map (Map)
@@ -22,7 +24,7 @@ import Text.Printf
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = (MonadThrow m, MonadFix m)
+type MonadEval m = (MonadThrow m, MonadFix m, MonadWriter [Expr] m)
 
 type Var = String
 
@@ -39,9 +41,9 @@ insertEnv var val (Env env) = Env (Map.insert var val env)
 joinEnv :: Env -> Env -> Env
 joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
-lookupEnv :: MonadThrow m => Var -> Env -> m Value
-lookupEnv v (Env env) = case Map.lookup v env of
-  Nothing -> error $ "unbound variable: " ++ v -- throwM (UnboundVariable v)
+lookupEnv :: MonadEval m => Var -> Env -> m Value
+lookupEnv v (Env env) = tell [Var v] >> case Map.lookup v env of
+  Nothing -> throwM (UnboundVariable v)
   Just x  -> return x
 
 emptyEnv :: Env
@@ -305,6 +307,7 @@ data Expr
   | Tuple [Expr]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
+  | Val Value -- embed a value inside an Expr for ease of tracing
   deriving (Show)
 
 newtype Prim1 = P1 (forall m. MonadEval m => Value -> m Value)
@@ -448,8 +451,9 @@ eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
 eqVal (VT i x) (VT j y)
   | i == j
   = and <$> zipWithM eqVal x y
-eqVal x y
-  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
+eqVal _ _
+  = return False
+--  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
 
 
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
