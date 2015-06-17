@@ -48,10 +48,10 @@ eval expr env = case expr of
     lookupEnv v env
   Lam v e ->
     return (VF (Func expr env))
-  App e1 e2 -> do
-    v1 <- eval e1 env
-    v2 <- eval e2 env
-    evalApp v1 v2
+  App f args -> do
+    vf    <- eval f env
+    vargs <- mapM (`eval` env) args
+    foldM evalApp vf vargs
   Bop b e1 e2 -> do
     v1 <- eval e1 env
     v2 <- eval e2 env

@@ -7,7 +7,7 @@ module NanoML
 
 import           Control.Monad
 import           Control.Monad.Catch
-import qualified Data.Map            as Map
+import qualified Data.Map                as Map
 import           Data.Maybe
 import           System.IO.Unsafe
 import           System.Timeout
@@ -31,13 +31,14 @@ check prog =
     _ -> return Nothing
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckResult -- (stdArgs { chatty = False })
+checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = True })
                    $ forAll (genArgs t)
                    $ \args -> counterexample (show . pretty $ mkApps (Var f) args)
-                     $ within sec $ monadicIO $ run $ do
-                       -- FIXME: using monadicIO is ugly when eval is pure..
-                       env <- foldM (flip evalDecl) baseEnv prog
-                       v   <- eval (mkApps (Var f) args) env
+                     $ within sec $ monadicIO $ do
+                       v <- run $ do
+                         -- FIXME: using monadicIO is ugly when eval is pure..
+                         env <- foldM (flip evalDecl) baseEnv prog
+                         eval (mkApps (Var f) args) env
                        assert $ v `checkType` resTy t
   where
   sec = 500000

@@ -107,7 +107,7 @@ primVars = [ ("[]", VL [])
                               ,Var "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Cons (App (Var "f") (Var "y"))
+                              ,Cons (mkApps (Var "f") [Var "y"])
                                     (mkApps (Var "List.map")
                                             [Var "f"
                                             ,Var "ys"
@@ -292,7 +292,7 @@ data Decl
 data Expr
   = Var Var
   | Lam Pat Expr
-  | App Expr Expr
+  | App Expr [Expr]
   | Bop Bop Expr Expr
   | Uop Uop Expr
   | Lit Literal
@@ -418,7 +418,7 @@ mkInfix :: Expr -> Expr -> Expr -> Expr
 mkInfix x op y = mkApps op [x,y]
 
 mkApps :: Expr -> [Expr] -> Expr
-mkApps = foldl' App
+mkApps = App
 
 mkLams :: [Pat] -> Expr -> Expr
 mkLams ps e = case ps of
