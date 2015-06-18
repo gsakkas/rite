@@ -39,6 +39,8 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - stdlib implemented with many `external`
     - should implement actual primitives, then load stdlib from source
 
+[ ] ADTs
+
 [ ] extend interpreter with "fail safe"
   - when program would go wrong, e.g. int + bool
   - just return one, e.g. int
