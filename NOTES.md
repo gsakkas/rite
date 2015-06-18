@@ -39,17 +39,17 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - stdlib implemented with many `external`
     - should implement actual primitives, then load stdlib from source
 
-- extend interpreter with "fail safe"
+[ ] extend interpreter with "fail safe"
   - when program would go wrong, e.g. int + bool
   - just return one, e.g. int
   - count number of places where program goes wrong picking one vs other
 
-- from symptom to cause
+[ ] from symptom to cause
   - simplify counterexample trace
 
-- collect sample outputs to webpage (with trace)
+[X] collect sample outputs to webpage (with trace)
 
-- look at physical subtyping
+[ ] look at physical subtyping
   - (similar to soft typing)
   - also discriminative union types
 
