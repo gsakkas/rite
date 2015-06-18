@@ -9,6 +9,7 @@ import           Control.Monad
 import           Control.Monad.Catch
 import qualified Data.Map                as Map
 import           Data.Maybe
+import           Data.Typeable
 import           System.IO.Unsafe
 import           System.Timeout
 import           Test.QuickCheck
@@ -53,9 +54,21 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
   assertType :: Value -> Type -> Eval Bool
   assertType v t
     | v `checkType` t = return True
-    | otherwise       = throwM $ (printf "%s does not have type %s"
-                                  (show $ pretty v) (show t)
-                                  :: String)
+    | otherwise       = throwM $ OutputTypeMismatch v t
+
+data OutputTypeMismatch
+  = OutputTypeMismatch Value Type
+  deriving Typeable
+instance Show OutputTypeMismatch where
+  show (OutputTypeMismatch v t) = printf "return value %s is not of type %s"
+                                  (render $ pretty v) (render $ pretty $ varToInt t)
+instance Exception OutputTypeMismatch
+
+varToInt (TVar _)     = TCon tINT
+varToInt (TCon c)     = TCon c
+varToInt (TTup ts)    = TTup (map varToInt ts)
+varToInt (TApp t1 t2) = TApp (varToInt t1) (varToInt t2)
+varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 -- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
 

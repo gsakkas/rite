@@ -155,3 +155,14 @@ var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
 
 render :: Doc -> String
 render d = displayS (renderSmart 0.5 72 d) ""
+
+
+instance Pretty Type where
+  prettyPrec z t = case t of
+    TVar v -> squote <> text v
+    TCon c -> text c
+    TApp t1 t2 -> pretty t2 <+> pretty t1
+    TTup ts -> parens $ hsep $ intersperse (text "*") $ map pretty ts
+    ti :-> to -> parensIf (z > zf) $
+                 prettyPrec (zf+1) ti <+> text "->" <+> prettyPrec zf to
+      where zf = 5

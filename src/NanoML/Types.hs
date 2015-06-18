@@ -257,6 +257,7 @@ data UnboundVariable
   deriving (Show, Typeable)
 instance Exception UnboundVariable
 
+
 data Value
   = VI Int
   | VD Double
@@ -372,6 +373,8 @@ data Type
   | Type :-> Type
   | TTup [Type]
   deriving (Show)
+
+infixr :->
 
 tINT = "int"
 tFLOAT = "float"
