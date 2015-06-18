@@ -16,6 +16,7 @@ import Data.List
 import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Typeable
+import Text.PrettyPrint.ANSI.Leijen (Doc)
 
 import Debug.Trace
 import Text.Printf
@@ -24,7 +25,7 @@ import Text.Printf
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = (MonadThrow m, MonadFix m, MonadWriter [Expr] m)
+type MonadEval m = (MonadThrow m, MonadFix m, MonadWriter [Doc] m)
 
 type Var = String
 
@@ -42,9 +43,12 @@ joinEnv :: Env -> Env -> Env
 joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
 lookupEnv :: MonadEval m => Var -> Env -> m Value
-lookupEnv v (Env env) = tell [Var v] >> case Map.lookup v env of
+lookupEnv v (Env env) = case Map.lookup v env of
   Nothing -> throwM (UnboundVariable v)
   Just x  -> return x
+
+toListEnv :: Env -> [(Var,Value)]
+toListEnv (Env e) = Map.toList e
 
 emptyEnv :: Env
 emptyEnv = Env Map.empty

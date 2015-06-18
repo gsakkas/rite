@@ -1,7 +1,7 @@
-module NanoML.Pretty (pretty, prettyProg, hsep) where
+module NanoML.Pretty (pretty, prettyProg, hsep, vsep, Doc, render, (==>), (=:)) where
 
 import Prelude hiding ( (<$>) )
-import Data.List
+import Data.List hiding (group)
 import Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty)
 import qualified Text.PrettyPrint.ANSI.Leijen as PP
 
@@ -43,8 +43,8 @@ instance Pretty Literal where
 instance Pretty Expr where
   prettyPrec z e = case e of
     Var v -> text v
-    Lam p e -> parensIf (z > zl) $
-               text "fun" <+> pretty p <+> text "->" </> nest 2 (pretty e)
+    Lam p e -> group $ parensIf (z > zl) $ nest 2 $
+               text "fun" <+> pretty p <+> text "->" <$> pretty e
       where zl = 5
     App (Var f) [x, y]
       | isInfix f
@@ -55,13 +55,14 @@ instance Pretty Expr where
                 prettyPrec za f <+> hsep (map (prettyPrec (za+1)) xs)
       where za = 26
     Lit l -> pretty l
-    Let r bnds body -> parensIf (z > zl) $
+    Let r bnds body -> group $ parensIf (z > zl) $
                        align $ text "let" <> pretty r <+> prettyBinds bnds
-                               <+> text "in" </> pretty body
+                               <+> text "in" <$> pretty body
       where zl = 4
-    Ite b t f -> parensIf (z > zi) $
-                 text "if" <+> pretty b </> text "then" <+> pretty t
-                                        </> text "else" <+> pretty f
+    Ite b t f -> group $ parensIf (z > zi) $ align $
+                 text "if"   <+> pretty b <$>
+                 text "then" <+> pretty t <$>
+                 text "else" <+> pretty f
       where zi = 7
     Seq x y -> parensIf (z > zs) $
                prettyPrec (zs+1) x <> semi </> prettyPrec (zs+1) y
@@ -123,7 +124,7 @@ instance Pretty Pat where
     TuplePat l -> parens $ hcat $ intersperse comma $ map pretty l
     WildPat -> text "_"
 
-prettyBind (p, e) = pretty p <+> text "=" <+> nest 2 (pretty e)
+prettyBind (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> pretty e
 
 prettyBinds [b] = prettyBind b
 prettyBinds (b:bs) = prettyBind b <$> text "and" <+> prettyBinds bs
@@ -148,3 +149,9 @@ instance Pretty Double where
 
 instance Pretty Char where
   pretty = PP.pretty
+
+expr ==> val = nest 2 $ pretty expr <$> (text "==>" <+> pretty val)
+var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
+
+render :: Doc -> String
+render d = displayS (renderSmart 0.5 72 d) ""

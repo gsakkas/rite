@@ -48,7 +48,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
   sec = 5000000
   --addTrace :: Either (SomeException, [Expr]) Bool -> Result
   addTrace (Right x) = property succeeded
-  addTrace (Left (e,t)) = counterexample (unlines $ map (show . pretty) t)
+  addTrace (Left (e,t)) = counterexample (render $ vsep t)
                           $ exception "*** Exception" e
   assertType :: Value -> Type -> Eval Bool
   assertType v t

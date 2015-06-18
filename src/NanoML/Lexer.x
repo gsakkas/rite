@@ -1,4 +1,5 @@
 {
+{-# OPTIONS_GHC -fno-warn-tabs #-}
 module NanoML.Lexer where
 }
 

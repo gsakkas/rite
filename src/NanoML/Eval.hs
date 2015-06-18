@@ -20,9 +20,9 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval a = CatchT (Writer [Expr]) a
+type Eval a = CatchT (Writer [Doc]) a
 
-runEval :: Eval a -> Either (SomeException, [Expr]) a
+runEval :: Eval a -> Either (SomeException, [Doc]) a
 runEval x = case runWriter (runCatchT x) of
   (Left e, tr) -> Left (e, tr)
   (Right v, _) -> Right v
@@ -46,15 +46,26 @@ evalBinds binds env = mapM (`evalBind` env) binds
 
 -- | @evalBind (p,e) env@ returns the environment matched by @p@
 evalBind :: MonadEval m => (Pat,Expr) -> Env -> m Env
-evalBind (p,e) env = do
+evalBind (p,e) env = logEnv $ do
   v <- eval e env
   matchPat v p >>= \case
     Nothing  -> throwM "pattern-match failed"
     Just env -> return env
 
--- | evaluate an 'Expr' and discard the enclosed log if successful
-logExpr :: MonadEval m => Expr -> m a -> m a
-logExpr expr m = censor (const mempty) (tell [expr] >> m)
+logEnv :: MonadEval m => m Env -> m Env
+logEnv m = mycensor (\env w -> mkLog env) m
+  where
+  mkLog env = map (uncurry (=:)) (toListEnv env)
+
+logExpr :: MonadEval m => Expr -> m Value -> m Value
+logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
+-- TODO: instead of discarding, replace with fully reduced value, e.g.
+--   1 + 1 ==> 2
+
+mycensor :: MonadWriter w m => (a -> w -> w) -> m a -> m a
+mycensor f m = pass $ do
+    a <- m
+    return (a, f a)
 
 eval :: MonadEval m => Expr -> Env -> m Value
 eval expr env = logExpr expr $ case expr of

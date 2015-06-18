@@ -158,3 +158,10 @@ testParser = do
     case r of
       Right p -> return (ml, p)
       Left _ -> print ml >> print r >> error "die"
+
+parseFile :: FilePath -> IO Prog
+parseFile f = do
+  r <- parseTopForm <$> readFile f
+  case r of
+   Right p -> return p
+   Left e  -> error (show e)

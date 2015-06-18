@@ -52,3 +52,17 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
 - look at physical subtyping
   - (similar to soft typing)
   - also discriminative union types
+
+```
+  fun (f,b) ->
+    let f = fun b -> (x,y) in
+    if y = true then wwhile (f,x) else x
+==>
+  fun (f,b) ->
+    let f = fun b -> (x,y) in
+    if y = true then wwhile (f,x) else x
+
+wwhile := fun (f,b) ->
+            let f = fun b -> (x,y) in
+            if y = true then wwhile (f,x) else x
+```
