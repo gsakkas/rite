@@ -57,7 +57,16 @@ logEnv m = mycensor (\env w -> mkLog env) m
   where
   mkLog env = map (uncurry (=:)) (toListEnv env)
 
+logMaybeEnv :: MonadEval m => m (Maybe Env) -> m (Maybe Env)
+logMaybeEnv m = mycensor (\env w -> mkLog env) m
+  where
+  mkLog (Just env) = map (uncurry (=:)) (toListEnv env)
+  mkLog _          = []
+
 logExpr :: MonadEval m => Expr -> m Value -> m Value
+logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
+logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
+logExpr Nil     m = mycensor (\v w -> []) (tell [pretty Nil] >> m)
 logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
 -- TODO: instead of discarding, replace with fully reduced value, e.g.
 --   1 + 1 ==> 2
@@ -195,7 +204,7 @@ evalAlts v ((p,g,e):as) env
 -- pattern.
 matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
 -- NOTE: should be MonadEval m => m (Maybe Env) so we can throw exception on ill-typed pattern match
-matchPat v p = case p of
+matchPat v p = logMaybeEnv $ case p of
   VarPat var ->
     return $ Just (insertEnv var v emptyEnv)
   LitPat lit ->

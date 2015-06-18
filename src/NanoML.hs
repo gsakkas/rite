@@ -9,6 +9,7 @@ import           Control.Monad
 import           Control.Monad.Catch
 import qualified Data.Map                as Map
 import           Data.Maybe
+import           Data.List
 import           Data.Typeable
 import           System.IO.Unsafe
 import           System.Timeout
@@ -49,7 +50,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
   sec = 5000000
   --addTrace :: Either (SomeException, [Expr]) Bool -> Result
   addTrace (Right x) = property succeeded
-  addTrace (Left (e,t)) = counterexample (render $ vsep t)
+  addTrace (Left (e,t)) = counterexample (render $ vsep $ intersperse mempty t)
                           $ exception "*** Exception" e
   assertType :: Value -> Type -> Eval Bool
   assertType v t

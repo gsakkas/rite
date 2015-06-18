@@ -1,4 +1,6 @@
-module NanoML.Pretty (pretty, prettyProg, hsep, vsep, Doc, render, (==>), (=:)) where
+module NanoML.Pretty
+  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest)
+  where
 
 import Prelude hiding ( (<$>) )
 import Data.List hiding (group)
@@ -26,7 +28,7 @@ instance Pretty Value where
     VS s -> text $ show s
     VB b -> text (if b then "true" else "false")
     VU   -> text "()"
-    VL l -> brackets $ encloseSep lbracket rbracket semi $ map pretty l
+    VL l -> brackets $ hcat $ intersperse semi $ map pretty l
     VT _ xs -> parens $ hcat $ intersperse comma $ map pretty xs
     VF (Func e _) -> prettyPrec z e
 
