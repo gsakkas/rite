@@ -45,8 +45,8 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                    $ forAll (genArgs t)
                    $ \args -> -- counterexample (show . pretty $ mkApps (Var f) args)
                      within sec $ ioProperty $ fmap addTrace $ runEval $ do
-                       env <- foldM (flip evalDecl) baseEnv prog
-                       v   <- eval (mkApps (Var f) args) env
+                       mapM_ evalDecl prog
+                       v   <- eval (mkApps (Var f) args)
                        v `assertType` resTy t
   where
   sec = 5000000

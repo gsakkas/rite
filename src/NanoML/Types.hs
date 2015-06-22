@@ -10,6 +10,7 @@ import Control.Arrow
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
+import Control.Monad.State
 import Control.Monad.Writer hiding (Alt)
 import Data.Char
 import Data.List
@@ -25,9 +26,27 @@ import Text.Printf
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = (MonadError String m, MonadFix m, MonadWriter [Doc] m, MonadIO m)
+type MonadEval m = ( MonadError String m, MonadWriter [Doc] m
+                   , MonadState EvalState m
+                   , MonadFix m, MonadIO m
+                   )
 
 type Var = String
+
+data EvalState
+  = EvalState { stVarEnv  :: Env
+              , stTypeEnv :: Map TCon [DataDecl]
+              , stStore   :: Env
+              }
+
+initState :: EvalState
+initState = EvalState { stVarEnv = baseEnv
+                      , stTypeEnv = Map.empty
+                      , stStore = emptyEnv
+                      }
+
+setVarEnv :: MonadEval m => Env -> m ()
+setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
 
 newtype Env = Env (Map Var Value)
 
@@ -52,6 +71,14 @@ toListEnv (Env e) = Map.toList e
 
 emptyEnv :: Env
 emptyEnv = Env Map.empty
+
+withEnv :: MonadEval m => m a -> Env -> m a
+m `withEnv` env = do
+  st <- get
+  setVarEnv env
+  a <- m
+  put st
+  return a
 
 ----------------------------------------------------------------------
 -- Primitives

@@ -6,6 +6,7 @@ module NanoML.Eval where
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
+import Control.Monad.State
 import Control.Monad.Writer hiding (Alt)
 import Text.Printf
 
@@ -19,34 +20,38 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval = ExceptT String (WriterT [Doc] IO)
+type Eval = ExceptT String (WriterT [Doc] (StateT EvalState IO))
 
 runEval :: Eval a -> IO (Either (String, [Doc]) a)
-runEval x = runWriterT (runExceptT x) >>= \case
+runEval x = evalStateT (runWriterT (runExceptT x)) initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
 --type MonadEval m = (MonadThrow m, MonadFix m)
 
-evalDecl :: MonadEval m => Decl -> Env -> m Env
-evalDecl decl env = case decl of
-  DFun Rec    binds -> evalRecBinds binds env
-  DFun NonRec binds -> evalNonRecBinds binds env
+evalDecl :: MonadEval m => Decl -> m ()
+evalDecl decl = case decl of
+  DFun Rec    binds -> evalRecBinds binds >>= setVarEnv
+  DFun NonRec binds -> evalNonRecBinds binds >>= setVarEnv
   DTyp _            -> error "type declarations are not yet supported"
 
-evalRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
-evalRecBinds binds env = mfix $ \fenv -> foldr joinEnv env <$> evalBinds binds fenv
+evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
+evalRecBinds binds = do
+  env <- gets stVarEnv
+  mfix $ \fenv -> setVarEnv fenv >> foldr joinEnv env <$> evalBinds binds
 
-evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m Env
-evalNonRecBinds binds env = foldr joinEnv env <$> evalBinds binds env
+evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
+evalNonRecBinds binds = do
+  env <- gets stVarEnv
+  foldr joinEnv env <$> evalBinds binds
 
-evalBinds :: MonadEval m => [(Pat,Expr)] -> Env -> m [Env]
-evalBinds binds env = mapM (`evalBind` env) binds
+evalBinds :: MonadEval m => [(Pat,Expr)] -> m [Env]
+evalBinds binds = mapM evalBind binds
 
 -- | @evalBind (p,e) env@ returns the environment matched by @p@
-evalBind :: MonadEval m => (Pat,Expr) -> Env -> m Env
-evalBind (p,e) env = logEnv $ do
-  v <- eval e env
+evalBind :: MonadEval m => (Pat,Expr) -> m Env
+evalBind (p,e) = logEnv $ do
+  v <- eval e
   matchPat v p >>= \case
     Nothing  -> throwError "pattern-match failed"
     Just env -> return env
@@ -65,69 +70,71 @@ logMaybeEnv m = mycensor (\env w -> mkLog env) m
 logExpr :: MonadEval m => Expr -> m Value -> m Value
 logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
 logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
+logExpr (Lam p e) m = mycensor (\v w -> []) (tell [pretty (Lam p e)] >> m)
+logExpr (Val v) m = mycensor (\v w -> []) (tell [pretty (Val v)] >> m)
 logExpr Nil     m = mycensor (\v w -> []) (tell [pretty Nil] >> m)
 logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
--- TODO: instead of discarding, replace with fully reduced value, e.g.
---   1 + 1 ==> 2
 
 mycensor :: MonadWriter w m => (a -> w -> w) -> m a -> m a
 mycensor f m = pass $ do
     a <- m
     return (a, f a)
 
-eval :: MonadEval m => Expr -> Env -> m Value
-eval expr env = logExpr expr $ case expr of
+eval :: MonadEval m => Expr -> m Value
+eval expr = logExpr expr $ case expr of
   Var v ->
-    lookupEnv v env
+    lookupEnv v =<< gets stVarEnv
   Lam v e ->
-    return (VF (Func expr env))
+    VF . Func expr <$> gets stVarEnv
   App f args -> do
-    vf    <- eval f env
-    vargs <- mapM (`eval` env) args
+    vf    <- eval f
+    vargs <- mapM eval args
+    -- FIXME: this appears to be discarding bindings introduced by the
+    -- function application
     foldM evalApp vf vargs
   Bop b e1 e2 -> do
-    v1 <- eval e1 env
-    v2 <- eval e2 env
+    v1 <- eval e1
+    v2 <- eval e2
     evalBop b v1 v2
   Lit l -> return (litValue l)
   Let Rec binds body -> do
-    env <- evalRecBinds binds env
-    eval body env
+    env <- evalRecBinds binds
+    eval body `withEnv` env
   Let NonRec binds body -> do
-    env <- evalNonRecBinds binds env
-    eval body env
+    env <- evalNonRecBinds binds
+    eval body `withEnv` env
   Ite eb et ef -> do
-    vb <- eval eb env
+    vb <- eval eb
     case vb of
-      VB True  -> eval et env
-      VB False -> eval ef env
+      VB True  -> eval et
+      VB False -> eval ef
       _        -> throwError "if-then-else given a non-boolean"
   Seq e1 e2 ->
-    eval e1 env >> eval e2 env
+    eval e1 >> eval e2
   Case e as -> do
-    v <- eval e env
-    evalAlts v as env
+    v <- eval e
+    evalAlts v as
   Cons e es -> do
-    v     <- eval e env
-    VL vs <- eval es env
+    v     <- eval e
+    VL vs <- eval es
     return (VL (v : vs))
   Nil -> return (VL [])
   Tuple es -> do
-    vs <- mapM (`eval` env) es
+    vs <- mapM eval es
     return (VT (length vs) vs)
   Prim1 (P1 f) e -> do
-    v <- eval e env
+    v <- eval e
     f v
   Prim2 (P2 f) e1 e2 -> do
-    v1 <- eval e1 env
-    v2 <- eval e2 env
+    v1 <- eval e1
+    v2 <- eval e2
     f v1 v2
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
   VF (Func (Lam p e) env) -> do
     Just pat_env <- matchPat a p
-    eval e (joinEnv pat_env env)
+    eval e `withEnv` joinEnv pat_env env
   _ -> throwError "tried to apply a non-function"
 
 evalBop :: MonadEval m
@@ -186,19 +193,19 @@ litValue (LC c) = VC c
 litValue (LS s) = VS s
 litValue LU     = VU
 
-evalAlts :: MonadEval m => Value -> [Alt] -> Env -> m Value
-evalAlts _ [] _
+evalAlts :: MonadEval m => Value -> [Alt] -> m Value
+evalAlts _ []
   = throwError "no matching pattern"
-evalAlts v ((p,g,e):as) env
+evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
-      Nothing  -> evalAlts v as env
-      Just bnd -> do let newenv = joinEnv bnd env
+      Nothing  -> evalAlts v as
+      Just bnd -> do newenv <- joinEnv bnd <$> gets stVarEnv
                      case g of
-                      Nothing -> eval e newenv
+                      Nothing -> eval e `withEnv` newenv
                       Just g  ->
-                        eval g newenv >>= \case
-                          VB True  -> eval e newenv
-                          VB False -> evalAlts v as env
+                        eval g `withEnv` newenv >>= \case
+                          VB True  -> eval e `withEnv` newenv
+                          VB False -> evalAlts v as
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
