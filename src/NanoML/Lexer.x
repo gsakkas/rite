@@ -1,6 +1,8 @@
 {
 {-# OPTIONS_GHC -fno-warn-tabs #-}
 module NanoML.Lexer where
+
+import Data.Char
 }
 
 %wrapper "monad"
@@ -16,6 +18,9 @@ tokens :-
   $white+       ;
   $digit+       { tokS TokInt }
   $digit+ \. $digit* { tokS (TokFloat . (++"0")) }
+
+ "(*"           { nested_comment }
+
   \(            { tok TokLParen }
   \)            { tok TokRParen }
   \{            { tok TokLBrace }
@@ -174,6 +179,29 @@ data Token
   | TokUnknown String
   | TokEOF
   deriving (Eq,Show)
+
+nested_comment :: AlexInput -> Int -> Alex Token
+nested_comment _ _ = do
+  input <- alexGetInput
+  go 1 input
+  where go 0 input = do alexSetInput input; alexMonadScan
+	go n input = do
+          case alexGetByte input of
+	    Nothing  -> err input
+	    Just (c,input) -> do
+              case chr (fromIntegral c) of
+	    	'*' -> do
+                  case alexGetByte input of
+		    Nothing  -> err input
+                    Just (41,input) -> go (n-1) input
+                    Just (c,input)  -> go n input
+	     	'\123' -> do
+                  case alexGetByte input of
+		    Nothing  -> err input
+                    Just (c,input) | c == fromIntegral (ord '*') -> go (n+1) input
+		    Just (c,input)   -> go n input
+	    	c -> go n input
+        err input = do alexSetInput input; lexError "error in nested comment"  
 
 getPos :: AlexPosn -> (Int, Int)
 getPos (AlexPn _ line column) = (line, column)

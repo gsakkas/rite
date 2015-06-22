@@ -8,7 +8,7 @@ module NanoML.Types where
 
 import Control.Arrow
 import Control.Monad
-import Control.Monad.Catch
+import Control.Monad.Except
 import Control.Monad.Fix
 import Control.Monad.Writer hiding (Alt)
 import Data.Char
@@ -25,7 +25,7 @@ import Text.Printf
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = (MonadThrow m, MonadFix m, MonadWriter [Doc] m)
+type MonadEval m = (MonadError String m, MonadFix m, MonadWriter [Doc] m, MonadIO m)
 
 type Var = String
 
@@ -44,7 +44,7 @@ joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
 lookupEnv :: MonadEval m => Var -> Env -> m Value
 lookupEnv v (Env env) = case Map.lookup v env of
-  Nothing -> throwM (UnboundVariable v)
+  Nothing -> throwError (show $ UnboundVariable v)
   Just x  -> return x
 
 toListEnv :: Env -> [(Var,Value)]
@@ -121,6 +121,23 @@ primVars = [ ("[]", VL [])
                               )
                              ]))
              )
+           , ("List.iter"
+             ,mkRec "List.iter"
+                    (mkLams [VarPat "f", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" (TuplePat [])
+                              ,Nothing
+                              ,Var "[]")
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Seq (mkApps (Var "f") [Var "y"])
+                                   (mkApps (Var "List.iter")
+                                           [Var "f"
+                                           ,Var "ys"
+                                           ])
+                              )
+                             ]))
+             )
            , ("**", mkPrim2Fun $ P2 pexp)
            , ("@", mkPrim2Fun $ P2 pappend)
            , ("^", mkPrim2Fun $ P2 pconcat)
@@ -141,16 +158,21 @@ primVars = [ ("[]", VL [])
            , ("List.tl", mkPrim1Fun $ P1 plist_tl)
            , ("String.get", mkPrim2Fun $ P2 pstring_get)
            , ("String.length", mkPrim1Fun $ P1 pstring_length)
+           , ("print_string", mkPrim1Fun $ P1 pprint_string)
            , ("int_of_char", mkPrim1Fun $ P1 pint_of_char)
            , ("int_of_float", mkPrim1Fun $ P1 pint_of_float)
            , ("float_of_int", mkPrim1Fun $ P1 pfloat_of_int)
            , ("string_of_int", mkPrim1Fun $ P1 pstring_of_int)
            , ("abs", mkPrim1Fun $ P1 pabs)
            , ("log10", mkPrim1Fun $ P1 plog10)
+           , ("compare", mkPrim2Fun $ P2 pcompare)
            ]
 
 pfailwith :: MonadEval m => Value -> m Value
-pfailwith (VS s) = throwM s
+pfailwith (VS s) = throwError s
+
+pcompare :: MonadEval m => Value -> Value -> m Value
+pcompare = cmpVal
 
 pfst :: MonadEval m => Value -> m Value
 pfst (VT 2 [x,_]) = return x
@@ -193,6 +215,9 @@ pstring_get (VS s) (VI i) = return (VC (s !! i))
 
 pstring_length :: MonadEval m => Value -> m Value
 pstring_length (VS s) = return (VI (length s))
+
+pprint_string :: MonadEval m => Value -> m Value
+pprint_string (VS s) = liftIO $ putStr s >> return VU
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
 plist_combine (VL xs) (VL ys)
@@ -255,8 +280,6 @@ mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
 data UnboundVariable
   = UnboundVariable Var
   deriving (Show, Typeable)
-instance Exception UnboundVariable
-
 
 data Value
   = VI Int
@@ -411,8 +434,6 @@ type TCon = String
 
 type DCon = String
 
-instance Exception [Char]
-
 
 ----------------------------------------------------------------------
 -- Utilities
@@ -453,15 +474,38 @@ mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
 eqVal (VI x) (VI y) = return (x == y)
 eqVal (VD x) (VD y) = return (x == y)
 eqVal (VB x) (VB y) = return (x == y)
+eqVal (VC x) (VC y) = return (x == y)
+eqVal (VS x) (VS y) = return (x == y)
 eqVal VU     VU     = return True
 eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
 eqVal (VT i x) (VT j y)
   | i == j
   = and <$> zipWithM eqVal x y
-eqVal _ _
-  = return False
---  = throwM (printf "cannot check incompatible types for equality: (%s) (%s)" (show x) (show y) :: String)
+eqVal (VF x) (VF y) = throwError "cannot compare functions"
+eqVal x y
+  -- = return False
+  = throwError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
 
+cmpVal (VI x) (VI y) = return (cmp x y)
+cmpVal (VD x) (VD y) = return (cmp x y)
+cmpVal (VB x) (VB y) = return (cmp x y)
+cmpVal (VC x) (VC y) = return (cmp x y)
+cmpVal (VS x) (VS y) = return (cmp x y)
+cmpVal VU     VU     = return (VI 0)
+cmpVal (VL x) (VL y) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM cmpVal x y
+cmpVal (VT i x) (VT j y)
+  | i == j
+  = cmpAnd <$> zipWithM cmpVal x y
+cmpVal (VF x) (VF y) = throwError "cannot compare functions"
+cmpVal x y
+  -- = return False
+  = throwError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+
+cmp x y = VI $ fromEnum (compare x y) - 1
+
+cmpAnd []        = VI 0
+cmpAnd (VI 0:xs) = cmpAnd xs
+cmpAnd (x:xs)    = x
 
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM f []     = return True

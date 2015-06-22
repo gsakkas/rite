@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
@@ -5,8 +6,9 @@ module NanoML
   , check
   ) where
 
+import           Control.Exception
 import           Control.Monad
-import           Control.Monad.Catch
+import           Control.Monad.Except
 import qualified Data.Map                as Map
 import           Data.Maybe
 import           Data.List
@@ -42,7 +44,7 @@ checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                    $ forAll (genArgs t)
                    $ \args -> -- counterexample (show . pretty $ mkApps (Var f) args)
-                     within sec $ addTrace $ runEval $ do
+                     within sec $ ioProperty $ fmap addTrace $ runEval $ do
                        env <- foldM (flip evalDecl) baseEnv prog
                        v   <- eval (mkApps (Var f) args) env
                        v `assertType` resTy t
@@ -51,11 +53,13 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
   --addTrace :: Either (SomeException, [Expr]) Bool -> Result
   addTrace (Right x) = property succeeded
   addTrace (Left (e,t)) = counterexample (render $ vsep $ intersperse mempty t)
-                          $ exception "*** Exception" e
+                          $ exception "*** Exception" (SomeException e)
   assertType :: Value -> Type -> Eval Bool
   assertType v t
     | v `checkType` t = return True
-    | otherwise       = throwM $ OutputTypeMismatch v t
+    | otherwise       = throwError $ show $ OutputTypeMismatch v t
+
+instance Exception [Char]
 
 data OutputTypeMismatch
   = OutputTypeMismatch Value Type
@@ -63,7 +67,6 @@ data OutputTypeMismatch
 instance Show OutputTypeMismatch where
   show (OutputTypeMismatch v t) = printf "return value %s is not of type %s"
                                   (render $ pretty v) (render $ pretty $ varToInt t)
-instance Exception OutputTypeMismatch
 
 varToInt (TVar _)     = TCon tINT
 varToInt (TCon c)     = TCon c

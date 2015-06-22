@@ -4,8 +4,7 @@
 module NanoML.Eval where
 
 import Control.Monad
-import Control.Monad.Catch
-import Control.Monad.Catch.Pure
+import Control.Monad.Except
 import Control.Monad.Fix
 import Control.Monad.Writer hiding (Alt)
 import Text.Printf
@@ -20,12 +19,12 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval a = CatchT (Writer [Doc]) a
+type Eval = ExceptT String (WriterT [Doc] IO)
 
-runEval :: Eval a -> Either (SomeException, [Doc]) a
-runEval x = case runWriter (runCatchT x) of
-  (Left e, tr) -> Left (e, tr)
-  (Right v, _) -> Right v
+runEval :: Eval a -> IO (Either (String, [Doc]) a)
+runEval x = runWriterT (runExceptT x) >>= \case
+  (Left e, tr) -> return $ Left (e, tr)
+  (Right v, _) -> return $ Right v
 
 --type MonadEval m = (MonadThrow m, MonadFix m)
 
@@ -49,7 +48,7 @@ evalBind :: MonadEval m => (Pat,Expr) -> Env -> m Env
 evalBind (p,e) env = logEnv $ do
   v <- eval e env
   matchPat v p >>= \case
-    Nothing  -> throwM "pattern-match failed"
+    Nothing  -> throwError "pattern-match failed"
     Just env -> return env
 
 logEnv :: MonadEval m => m Env -> m Env
@@ -102,7 +101,7 @@ eval expr env = logExpr expr $ case expr of
     case vb of
       VB True  -> eval et env
       VB False -> eval ef env
-      _        -> throwM "if-then-else given a non-boolean"
+      _        -> throwError "if-then-else given a non-boolean"
   Seq e1 e2 ->
     eval e1 env >> eval e2 env
   Case e as -> do
@@ -129,7 +128,7 @@ evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
   VF (Func (Lam p e) env) -> do
     Just pat_env <- matchPat a p
     eval e (joinEnv pat_env env)
-  _ -> throwM "tried to apply a non-function"
+  _ -> throwError "tried to apply a non-function"
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
@@ -154,41 +153,42 @@ evalBop bop v1 v2 = logExpr (Bop bop (Val v1) (Val v2)) $ case bop of
 
 ltVal (VI x) (VI y) = return (x < y)
 ltVal (VD x) (VD y) = return (x < y)
-ltVal x      y      = throwM "cannot compare ordering of non-numeric types"
+ltVal x      y      = throwError "cannot compare ordering of non-numeric types"
 
 gtVal (VI x) (VI y) = return (x > y)
 gtVal (VD x) (VD y) = return (x > y)
-gtVal x      y      = throwM "cannot compare ordering of non-numeric types"
+gtVal x      y      = throwError "cannot compare ordering of non-numeric types"
 
 plusVal (VI i) (VI j) = return $ VI (i+j)
 plusVal (VD i) (VD j) = return $ VD (i+j)
-plusVal _      _      = throwM "+ can only be applied to ints"
+plusVal _      _      = throwError "+ can only be applied to ints"
 
 minusVal (VI i) (VI j) = return $ VI (i-j)
 minusVal (VD i) (VD j) = return $ VD (i-j)
-minusVal _      _      = throwM "- can only be applied to ints"
+minusVal _      _      = throwError "- can only be applied to ints"
 
 timesVal (VI i) (VI j) = return $ VI (i*j)
 timesVal (VD i) (VD j) = return $ VD (i*j)
-timesVal _      _      = throwM "* can only be applied to ints"
+timesVal _      _      = throwError "* can only be applied to ints"
 
 divVal (VI i) (VI j) = return $ VI (i `div` j)
 divVal (VD i) (VD j) = return $ VD (i / j)
-divVal _      _      = throwM "/ can only be applied to ints"
+divVal _      _      = throwError "/ can only be applied to ints"
 
 modVal (VI i) (VI j) = return $ VI (i `mod` j)
-modVal _      _      = throwM "mod can only be applied to ints"
+modVal _      _      = throwError "mod can only be applied to ints"
 
 litValue :: Literal -> Value
 litValue (LI i) = VI i
 litValue (LD d) = VD d
 litValue (LB b) = VB b
+litValue (LC c) = VC c
 litValue (LS s) = VS s
 litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> Env -> m Value
 evalAlts _ [] _
-  = throwM "no matching pattern"
+  = throwError "no matching pattern"
 evalAlts v ((p,g,e):as) env
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as env
@@ -227,12 +227,15 @@ matchPat v p = logMaybeEnv $ case p of
       -> return (Just emptyEnv)
     | VL _ <- v
       -> return Nothing
-  _ -> throwM (printf "type error: tried to match %s against %s"
+  ConPat "()" _
+    | VU <- v
+      -> return (Just emptyEnv)
+  _ -> throwError (printf "type error: tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs)) = return (x, VL xs)
-unconsVal _           = throwM "type error: uncons can only be applied to lists"
+unconsVal _           = throwError "type error: uncons can only be applied to lists"
 
 matchLit :: Value -> Literal -> Bool
 matchLit (VI i1) (LI i2) = i1 == i2
