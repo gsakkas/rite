@@ -4,6 +4,7 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE RecordWildCards #-}
 module NanoML.Types where
 
 import Control.Arrow
@@ -47,6 +48,18 @@ initState = EvalState { stVarEnv = baseEnv
 
 setVarEnv :: MonadEval m => Env -> m ()
 setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
+
+addType :: MonadEval m => TCon -> [DataDecl] -> m ()
+addType tcon dcons = modify' $ \ s ->
+  s { stTypeEnv = Map.insert tcon dcons (stTypeEnv s) }
+
+lookupDataCon :: MonadEval m => DCon -> m [Type]
+lookupDataCon dc = do
+  dcons <- concat <$> gets stTypeEnv
+  case find (\dcon -> dc == dCon dcon ) dcons of
+    Nothing -> throwError $ "unknown data constructor: " ++ dc
+    Just DataDecl {..} -> return dArgs
+
 
 newtype Env = Env (Map Var Value)
 
@@ -317,6 +330,7 @@ data Value
   | VU
   | VL [Value]
   | VT Int [Value] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+  | VA DCon [Value]
   | VF Func
   deriving (Show)
 
@@ -360,6 +374,7 @@ data Expr
   | Cons Expr Expr
   | Nil
   | Tuple [Expr]
+  | ConApp DCon Expr
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
@@ -477,6 +492,9 @@ mkInfix x op y = mkApps op [x,y]
 
 mkApps :: Expr -> [Expr] -> Expr
 mkApps = App
+
+mkConApp :: DCon -> Expr -> Expr
+mkConApp = ConApp
 
 mkLams :: [Pat] -> Expr -> Expr
 mkLams ps e = case ps of

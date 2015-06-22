@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE RecordWildCards #-}
 module NanoML.Eval where
 
 import Control.Monad
@@ -27,13 +28,18 @@ runEval x = evalStateT (runWriterT (runExceptT x)) initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
---type MonadEval m = (MonadThrow m, MonadFix m)
+evalString :: MonadEval m => String -> m Value
+evalString s = case parseExpr s of
+  Left e  -> throwError e
+  Right e -> eval e
 
 evalDecl :: MonadEval m => Decl -> m ()
 evalDecl decl = case decl of
-  DFun Rec    binds -> evalRecBinds binds >>= setVarEnv
-  DFun NonRec binds -> evalNonRecBinds binds >>= setVarEnv
-  DTyp _            -> error "type declarations are not yet supported"
+  DFun Rec    binds  -> evalRecBinds binds >>= setVarEnv
+  DFun NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
+  DTyp TypeDecl {..} -> case tyRhs of
+    Alg ds  -> addType tyCon ds
+    Alias _ -> return () -- we really don't care about aliases
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do
@@ -84,7 +90,7 @@ eval :: MonadEval m => Expr -> m Value
 eval expr = logExpr expr $ case expr of
   Var v ->
     lookupEnv v =<< gets stVarEnv
-  Lam v e ->
+  Lam _ _ ->
     VF . Func expr <$> gets stVarEnv
   App f args -> do
     vf    <- eval f
@@ -122,6 +128,9 @@ eval expr = logExpr expr $ case expr of
   Tuple es -> do
     vs <- mapM eval es
     return (VT (length vs) vs)
+  ConApp dc e -> do
+    v <- eval e
+    evalConApp dc v
   Prim1 (P1 f) e -> do
     v <- eval e
     f v
@@ -136,6 +145,22 @@ evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
     Just pat_env <- matchPat a p
     eval e `withEnv` joinEnv pat_env env
   _ -> throwError "tried to apply a non-function"
+
+evalConApp :: MonadEval m => DCon -> Value -> m Value
+evalConApp dc v = do
+  args <- lookupDataCon dc
+  case v of
+    VT n vs -> do
+      unless (length args == n) $
+        throwError (printf "%s expects %d arguments, but was given %d"
+                           dc (length args) n)
+      return (VA dc vs)
+    _ -> do
+      unless (length args == 1) $
+        throwError (printf "%s expects %d arguments, but was given %d"
+                           dc (length args) (1::Int))
+      return (VA dc [v])
+
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
@@ -221,7 +246,11 @@ matchPat v p = logMaybeEnv $ case p of
     Just env1 <- matchPat x p
     Just env2 <- matchPat xs ps
     return $ Just (joinEnv env1 env2)
-  ListPat ps -> error "matchPat.ListPat"
+  ListPat ps
+    | VL vs <- v
+    , length ps == length vs
+      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+           <$> zipWithM matchPat vs ps
   TuplePat ps
     | VT n vs <- v
     , length ps == n
@@ -229,14 +258,20 @@ matchPat v p = logMaybeEnv $ case p of
            <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
-  ConPat "[]" _
+  ConPat "[]" (TuplePat [])
     | VL [] <- v
       -> return (Just emptyEnv)
     | VL _ <- v
       -> return Nothing
-  ConPat "()" _
+  ConPat "()" (TuplePat [])
     | VU <- v
       -> return (Just emptyEnv)
+  ConPat dc (TuplePat ps)
+    | VA c vs <- v
+    , dc == c
+    , length ps == length vs
+      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+           <$> zipWithM matchPat vs ps
   _ -> throwError (printf "type error: tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
 

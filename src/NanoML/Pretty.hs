@@ -30,6 +30,8 @@ instance Pretty Value where
     VU   -> text "()"
     VL l -> brackets $ hcat $ intersperse semi $ map pretty l
     VT _ xs -> parens $ hcat $ intersperse comma $ map pretty xs
+    VA d [x] -> text d <+> pretty x
+    VA d xs -> text d <+> parens (hcat $ intersperse comma $ map pretty xs)
     VF (Func e _) -> prettyPrec z e
 
 
@@ -77,6 +79,9 @@ instance Pretty Expr where
     Cons x xs -> parensIf (z > zc) $
                  prettyPrec (zc+1) x <+> text "::" <+> prettyPrec (zc+1) xs
       where zc = 20
+    ConApp c e -> parensIf (z > zc) $
+                  text c <+> prettyPrec (zc+1) e
+      where zc = 26
     Tuple xs -> parens $ hcat $ intersperse comma $ map pretty xs
     Prim1 p x -> parens (text (show p) <+> pretty x)
     Prim2 p x y -> parens (text (show p) <+> pretty x <+> pretty y)

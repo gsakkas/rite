@@ -217,7 +217,8 @@ SeqExpr :: { Expr }
 Expr :: { Expr }
 : SimpleExpr      %prec below_SHARP         { $1 }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
-| "let" RecFlag LetBindings "in" SeqExpr     { Let $2 $3 $5 }
+| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 $2 }
+| "let" RecFlag LetBindings "in" SeqExpr    { Let $2 $3 $5 }
 | "function" MaybePipe AltList              { mkFunction $3 }
 | "fun" SimplePattern "->" Expr             { Lam $2 $4 }
 | "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
@@ -242,7 +243,7 @@ Expr :: { Expr }
 
 SimpleExpr :: { Expr }
 : ValLongIdent          { Var $1 }
-| ConLongIdent %prec constr  { Var $1 }
+| ConLongIdent %prec constr  { mkConApp $1 (Tuple []) }
 | Literal               { Lit $1 }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
