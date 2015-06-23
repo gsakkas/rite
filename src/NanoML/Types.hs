@@ -8,6 +8,7 @@
 module NanoML.Types where
 
 import Control.Arrow
+import Control.Exception
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
@@ -27,12 +28,35 @@ import Text.Printf
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = ( MonadError String m, MonadWriter [Doc] m
+type MonadEval m = ( MonadError NanoError m, MonadWriter [Doc] m
                    , MonadState EvalState m
                    , MonadFix m, MonadIO m
                    )
 
 type Var = String
+
+data NanoError
+  = MLException Value
+  | UnboundVariable Var
+  | TypeError String -- TODO:
+  | ParseError String
+  | OutputTypeMismatch Value Type
+  deriving (Show, Typeable)
+
+instance Exception NanoError
+
+varToInt (TVar _)     = TCon tINT
+varToInt (TCon c)     = TCon c
+varToInt (TTup ts)    = TTup (map varToInt ts)
+varToInt (TApp t1 t2) = TApp (varToInt t1) (varToInt t2)
+varToInt (ti :-> to)  = varToInt ti :-> varToInt to
+
+
+typeError :: MonadEval m => String -> m a
+typeError = throwError . TypeError
+
+outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
+outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
 data EvalState
   = EvalState { stVarEnv  :: Env
@@ -42,7 +66,7 @@ data EvalState
 
 initState :: EvalState
 initState = EvalState { stVarEnv = baseEnv
-                      , stTypeEnv = Map.empty
+                      , stTypeEnv = baseTypeEnv
                       , stStore = emptyEnv
                       }
 
@@ -53,11 +77,15 @@ addType :: MonadEval m => TCon -> [DataDecl] -> m ()
 addType tcon dcons = modify' $ \ s ->
   s { stTypeEnv = Map.insert tcon dcons (stTypeEnv s) }
 
+extendType :: MonadEval m => TCon -> DataDecl -> m ()
+extendType tcon dcon = modify' $ \ s ->
+  s { stTypeEnv = Map.adjust (dcon:) tcon (stTypeEnv s) }
+
 lookupDataCon :: MonadEval m => DCon -> m [Type]
 lookupDataCon dc = do
   dcons <- concat <$> gets stTypeEnv
   case find (\dcon -> dc == dCon dcon ) dcons of
-    Nothing -> throwError $ "unknown data constructor: " ++ dc
+    Nothing -> typeError ("unknown data constructor: " ++ dc)
     Just DataDecl {..} -> return dArgs
 
 
@@ -76,7 +104,7 @@ joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
 
 lookupEnv :: MonadEval m => Var -> Env -> m Value
 lookupEnv v (Env env) = case Map.lookup v env of
-  Nothing -> throwError (show $ UnboundVariable v)
+  Nothing -> throwError (UnboundVariable v)
   Just x  -> return x
 
 toListEnv :: Env -> [(Var,Value)]
@@ -97,6 +125,18 @@ m `withEnv` env = do
 -- Primitives
 ----------------------------------------------------------------------
 
+baseTypeEnv = Map.fromList [ ("()", [DataDecl "()" []])
+                           , ("list", [ DataDecl "[]" []
+                                      , DataDecl "::" [ TVar "a"
+                                                      , TApp (TCon "list") (TVar "a")
+                                                      ]
+                                      ])
+                           , ("option", [ DataDecl "None" []
+                                        , DataDecl "Some" [ TVar "a" ]
+                                        ])
+                           , ("exn", [])
+                           ]
+
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
@@ -107,14 +147,14 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
 primVars :: [(Var, Value)]
 primVars = [ ("[]", VL [])
            , ("::", VF (Func (mkLams [VarPat "x", VarPat "xs"]
-                                     (Cons (Var "x") (Var "xs")))
+                                     (mkConApp "::" [Var "x", Var "xs"]))
                              emptyEnv))
            , ("()", VU)
            , ("List.fold_left"
              ,mkRec "List.fold_left"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" (TuplePat [])
+                             [(ConPat "[]" []
                               ,Nothing
                               ,Var "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -131,7 +171,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.fold_right"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" (TuplePat [])
+                             [(ConPat "[]" []
                               ,Nothing
                               ,Var "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -148,16 +188,18 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.map"
                     (mkLams [VarPat "f", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" (TuplePat [])
+                             [(ConPat "[]" []
                               ,Nothing
                               ,Var "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Cons (mkApps (Var "f") [Var "y"])
-                                    (mkApps (Var "List.map")
-                                            [Var "f"
-                                            ,Var "ys"
-                                            ])
+                              ,mkConApp "::"
+                                [ mkApps (Var "f") [Var "y"]
+                                , mkApps (Var "List.map")
+                                         [Var "f"
+                                         ,Var "ys"
+                                         ]
+                                ]
                               )
                              ]))
              )
@@ -165,7 +207,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.iter"
                     (mkLams [VarPat "f", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" (TuplePat [])
+                             [(ConPat "[]" []
                               ,Nothing
                               ,Var "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -206,10 +248,12 @@ primVars = [ ("[]", VL [])
            , ("abs", mkPrim1Fun $ P1 pabs)
            , ("log10", mkPrim1Fun $ P1 plog10)
            , ("compare", mkPrim2Fun $ P2 pcompare)
+           , ("raise", mkPrim1Fun $ P1 praise)
+           , ("Printexc.to_string", mkPrim1Fun $ P1 pprintexc_to_string)
            ]
 
 pfailwith :: MonadEval m => Value -> m Value
-pfailwith (VS s) = throwError s
+pfailwith (VS s) = throwError $ MLException $ VS s
 
 pcompare :: MonadEval m => Value -> Value -> m Value
 pcompare = cmpVal
@@ -290,6 +334,11 @@ pappend (VL xs) (VL ys) = return (VL (xs ++ ys))
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS xs) (VS ys) = return (VS (xs ++ ys))
 
+praise :: MonadEval m => Value -> m Value
+praise x@(VA {}) = throwError (MLException x)
+
+pprintexc_to_string :: MonadEval m => Value -> m Value
+pprintexc_to_string x@(VA {}) = return $ VS $ show x
 
 mkRec :: Var -> Expr -> Value
 mkRec f lam = func
@@ -316,10 +365,6 @@ mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
                                  (Prim2 f (Var "x") (Var "y")))
                          emptyEnv
-
-data UnboundVariable
-  = UnboundVariable Var
-  deriving (Show, Typeable)
 
 data Value
   = VI Int
@@ -357,7 +402,8 @@ type Prog = [Decl]
 
 data Decl
   = DFun RecFlag [(Pat,Expr)]
-  | DTyp TypeDecl
+  | DTyp [TypeDecl]
+  | DExn DataDecl
   deriving (Show)
 
 data Expr
@@ -371,10 +417,9 @@ data Expr
   | Ite Expr Expr Expr
   | Seq Expr Expr -- TODO: do we actually need this for the student examples?
   | Case Expr [Alt]
-  | Cons Expr Expr
-  | Nil
   | Tuple [Expr]
-  | ConApp DCon Expr
+  | ConApp DCon [Expr]
+  | Try Expr [Alt]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
@@ -425,10 +470,12 @@ data Pat
   = VarPat Var
   | LitPat Literal
   | ConsPat Pat Pat
-  | ConPat Var Pat
+  | ConPat Var [Pat]
   | ListPat [Pat]
   | TuplePat [Pat]
   | WildPat
+  | OrPat Pat Pat
+  | AsPat Pat Var
   deriving (Show)
 
 data Type
@@ -493,7 +540,7 @@ mkInfix x op y = mkApps op [x,y]
 mkApps :: Expr -> [Expr] -> Expr
 mkApps = App
 
-mkConApp :: DCon -> Expr -> Expr
+mkConApp :: DCon -> [Expr] -> Expr
 mkConApp = ConApp
 
 mkLams :: [Pat] -> Expr -> Expr
@@ -502,7 +549,7 @@ mkLams ps e = case ps of
   p:ps -> Lam p (mkLams ps e)
 
 mkList :: [Expr] -> Expr
-mkList = foldr Cons Nil
+mkList = foldr (\h t -> mkConApp "::" [h,t]) (mkConApp "[]" [])
 
 mkFunction :: [Alt] -> Expr
 mkFunction alts = Lam (VarPat "$x") (Case (Var "$x") alts)
@@ -526,10 +573,12 @@ eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
 eqVal (VT i x) (VT j y)
   | i == j
   = and <$> zipWithM eqVal x y
-eqVal (VF x) (VF y) = throwError "cannot compare functions"
+eqVal (VF x) (VF y) = typeError "cannot compare functions"
+eqVal (VA c1 vs1) (VA c2 vs2)
+  = ((c1 == c2) &&) <$> eqVal (VL vs1) (VL vs2)
 eqVal x y
   -- = return False
-  = throwError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+  = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
 
 cmpVal (VI x) (VI y) = return (cmp x y)
 cmpVal (VD x) (VD y) = return (cmp x y)
@@ -541,10 +590,12 @@ cmpVal (VL x) (VL y) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM cmpVa
 cmpVal (VT i x) (VT j y)
   | i == j
   = cmpAnd <$> zipWithM cmpVal x y
-cmpVal (VF x) (VF y) = throwError "cannot compare functions"
+cmpVal (VF x) (VF y) = typeError "cannot compare functions"
+cmpVal (VA c1 vs1) (VA c2 vs2)
+  = cmpAnd <$> zipWithM cmpVal vs1 vs2 -- FIXME: compare datacons too..
 cmpVal x y
   -- = return False
-  = throwError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+  = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
 
 cmp x y = VI $ fromEnum (compare x y) - 1
 

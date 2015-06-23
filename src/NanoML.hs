@@ -57,22 +57,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
   assertType :: Value -> Type -> Eval Bool
   assertType v t
     | v `checkType` t = return True
-    | otherwise       = throwError $ show $ OutputTypeMismatch v t
-
-instance Exception [Char]
-
-data OutputTypeMismatch
-  = OutputTypeMismatch Value Type
-  deriving Typeable
-instance Show OutputTypeMismatch where
-  show (OutputTypeMismatch v t) = printf "return value %s is not of type %s"
-                                  (render $ pretty v) (render $ pretty $ varToInt t)
-
-varToInt (TVar _)     = TCon tINT
-varToInt (TCon c)     = TCon c
-varToInt (TTup ts)    = TTup (map varToInt ts)
-varToInt (TApp t1 t2) = TApp (varToInt t1) (varToInt t2)
-varToInt (ti :-> to)  = varToInt ti :-> varToInt to
+    | otherwise       = outputTypeMismatchError v t
 
 -- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
 

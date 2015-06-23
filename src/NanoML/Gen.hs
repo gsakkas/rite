@@ -32,7 +32,7 @@ genExpr ty = case ty of
   _ :-> to -> Lam WildPat <$> genExpr to
 
 genList :: Type -> Int -> Gen Expr
-genList _ 0 = return Nil
+genList _ 0 = return (mkConApp "[]" [])
 genList t n = do x  <- genExpr t
                  xs <- genList t (n-1)
-                 return (Cons x xs)
+                 return (mkConApp "::" [x,xs])

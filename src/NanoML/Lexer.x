@@ -67,6 +67,7 @@ tokens :-
   "begin"       { tok TokBegin }
   "else"        { tok TokElse }
   "end"         { tok TokEnd }
+  "exception"   { tok TokException }
   "false"       { tok TokFalse }
   "fun"         { tok TokFun }
   "function"    { tok TokFunction }
@@ -74,12 +75,12 @@ tokens :-
   "in"          { tok TokIn }
   "let"         { tok TokLet }
   "match"       { tok TokMatch }
---  "mod"         { tok TokMod }
   "of"          { tok TokOf }
   "or"          { tok TokOr }
   "rec"         { tok TokRec }
   "then"        { tok TokThen }
   "true"        { tok TokTrue }
+  "try"         { tok TokTry }
   "type"        { tok TokType }
   "when"        { tok TokWhen }
   "with"        { tok TokWith }
@@ -97,7 +98,6 @@ tokens :-
   ($upper | \_) [$alpha $digit \_ \']* { tokS TokCon }
   \" ($printable # [\"])* \" { tokS TokString }
   \' ($printable # [\']) \' { tokS TokChar }
-  $printable { tokS TokUnknown }
 
 {
 tok :: Token -> AlexInput -> Int -> Alex Token
@@ -126,6 +126,7 @@ data Token
   | TokBegin
   | TokElse
   | TokEnd
+  | TokException
   | TokFalse
   | TokFun
   | TokFunction
@@ -139,6 +140,7 @@ data Token
   | TokRec
   | TokThen
   | TokTrue
+  | TokTry
   | TokType
   | TokWhen
   | TokWith 
@@ -176,7 +178,6 @@ data Token
   | TokInfixOp3 String
   | TokInfixOp4 String
 
-  | TokUnknown String
   | TokEOF
   deriving (Eq,Show)
 
@@ -193,9 +194,9 @@ nested_comment _ _ = do
 	    	'*' -> do
                   case alexGetByte input of
 		    Nothing  -> err input
-                    Just (41,input) -> go (n-1) input
-                    Just (c,input)  -> go n input
-	     	'\123' -> do
+                    Just (c,input) | c == fromIntegral (ord ')') -> go (n-1) input
+                    Just (c,input)   -> go n input
+	     	'(' -> do
                   case alexGetByte input of
 		    Nothing  -> err input
                     Just (c,input) | c == fromIntegral (ord '*') -> go (n+1) input

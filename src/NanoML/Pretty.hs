@@ -1,3 +1,6 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.Pretty
   (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest)
   where
@@ -75,14 +78,18 @@ instance Pretty Expr where
                    text "match" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt alts)
       where zc = 5
-    Nil -> text "[]"
-    Cons x xs -> parensIf (z > zc) $
-                 prettyPrec (zc+1) x <+> text "::" <+> prettyPrec (zc+1) xs
-      where zc = 20
-    ConApp c e -> parensIf (z > zc) $
-                  text c <+> prettyPrec (zc+1) e
+    -- Nil -> text "[]"
+    -- Cons x xs -> parensIf (z > zc) $
+    --              prettyPrec (zc+1) x <+> text "::" <+> prettyPrec (zc+1) xs
+    --   where zc = 20
+    ConApp c es -> parensIf (z > zc) $
+                   text c <+> prettyTuple es
       where zc = 26
-    Tuple xs -> parens $ hcat $ intersperse comma $ map pretty xs
+    Tuple xs -> prettyTuple xs
+    Try e ps -> parensIf (z > zt) $
+                   text "try" <+> pretty e <+> text "with"
+                     <$> vsep (map prettyAlt ps)
+      where zt = 5
     Prim1 p x -> parens (text (show p) <+> pretty x)
     Prim2 p x y -> parens (text (show p) <+> pretty x <+> pretty y)
     Val v -> prettyPrec z v
@@ -125,11 +132,18 @@ instance Pretty Pat where
     VarPat v -> text v
     LitPat l -> pretty l
     ConsPat x xs -> pretty x <+> text "::" <+> pretty xs
-    ConPat c (TuplePat []) -> text c
-    ConPat c p -> text c <+> pretty p
+    ConPat c [] -> text c
+    ConPat c [p] -> text c <+> pretty p
+    ConPat c ps -> text c <+> prettyTuple ps
     ListPat l -> brackets $ encloseSep lbracket rbracket semi $ map pretty l
-    TuplePat l -> parens $ hcat $ intersperse comma $ map pretty l
+    TuplePat l -> prettyTuple l
     WildPat -> text "_"
+    OrPat p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
+
+prettyTuple [] = empty
+prettyTuple [x] = pretty x
+prettyTuple xs = parens $ hcat $ intersperse comma $ map pretty xs
+prettyTypeTuple xs = parens $ hsep $ intersperse (text "*") $ map pretty xs
 
 prettyBind (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> pretty e
 
@@ -143,10 +157,32 @@ prettyAlt (p, g, e) = text "|" <+> pretty p
 instance Pretty Decl where
   pretty d = case d of
     DFun r bnds -> text "let" <> pretty r <+> prettyBinds bnds <+> text ";;"
+    DTyp tdecls -> text "type" <+> prettyTypeDecls tdecls
+    DExn decl   -> text "exception" <+> pretty decl
+
+prettyTypeDecls [b]    = pretty b
+prettyTypeDecls (b:bs) = pretty b <$> text "and" <+> prettyTypeDecls bs
+
+
+instance Pretty TypeDecl where
+  pretty TypeDecl {..} = group $ prettyTuple tyVars <+> text tyCon <+> text "=" <$>
+                                 pretty tyRhs
+
+instance Pretty TypeRhs where
+  pretty (Alias t) = pretty t
+  pretty (Alg ds)  = vsep (map ((text "|" <+>) . pretty) ds)
+
+instance Pretty DataDecl where
+  pretty DataDecl {..} = case dArgs of
+    []  -> text dCon
+    [t] -> text dCon <+> text "of" <+> pretty t
+    ts  -> text dCon <+> text "of" <+> prettyTypeTuple ts
 
 prettyProg :: Prog -> Doc
 prettyProg = vsep . map pretty
 
+instance Pretty TVar where
+  pretty = text
 
 instance Pretty Int where
   pretty = PP.pretty

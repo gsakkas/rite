@@ -43,6 +43,7 @@ float   { TokFloat $$ }
 "begin"    { TokBegin }
 "else"     { TokElse }
 "end"      { TokEnd }
+"exception" { TokException }
 "false"    { TokFalse }
 "fun"      { TokFun }
 "function" { TokFunction }
@@ -56,6 +57,7 @@ float   { TokFloat $$ }
 "rec"      { TokRec }
 "then"     { TokThen }
 "true"     { TokTrue }
+"try"      { TokTry }
 "type"     { TokType }
 "when"     { TokWhen }
 "with"     { TokWith }
@@ -131,10 +133,9 @@ TopFormList :: { [Decl] }
 | Decl TopFormList            { $1 : $2 }
 
 Decl :: { Decl }
-: "let" RecFlag LetBindings    { DFun $2 $3 }
-| "type" TypeDecl              { DTyp $2 }
--- FIXME: should technically be list of type decls to handle mutually
--- recursive types, but we dont need them for the homeworks
+: "let" RecFlag LetBindings    { DFun $2 (reverse $3) }
+| "type" TypeDecls             { DTyp (reverse $2) }
+| "exception" DataDecl         { DExn $2 }
 
 LetBindings :: { [(Pat,Expr)] }
 : LetBinding                    { [$1] }
@@ -147,6 +148,10 @@ LetBinding :: { (Pat, Expr) }
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
 | SimplePattern FunBinding { Lam $1 $2 }
+
+TypeDecls :: { [TypeDecl] }
+: TypeDecl                  { [$1] }
+| TypeDecls "and" TypeDecl  { $3 : $1 }
 
 TypeDecl :: { TypeDecl }
 : MaybeTyVars ident '=' TypeRhs  { TypeDecl $2 $1 $4 }
@@ -183,10 +188,11 @@ DataArgs :: { [Type] }
 
 Pattern :: { Pat }
 : SimplePattern         { $1 }
-| Pattern "as" ValIdent { $1 } -- FIXME: do i need to implement the alias?
+| Pattern "as" ValIdent { AsPat $1 $3 }
 | PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
-| con Pattern      %prec constr_app      { ConPat $1 $2 }
+| con Pattern      %prec constr_app      { ConPat $1 (case $2 of { TuplePat ps -> ps; _ -> [$2] }) }
 | Pattern "::" Pattern                   { ConsPat $1 $3 }
+| Pattern '|' Pattern                    { OrPat $1 $3 }
 
 SimplePattern :: { Pat }
 : ValIdent  %prec below_INFIX  { VarPat $1 }
@@ -197,7 +203,7 @@ SimplePatternNotIdent :: { Pat }
 | Literal                 { LitPat $1 }
 | '[' PatternSemiList ']' { ListPat (reverse $2) }
 | '(' Pattern ')'         { $2 }
-| ConLongIdent            { ConPat $1 (TuplePat []) }
+| ConLongIdent            { ConPat $1 [] }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
@@ -217,16 +223,17 @@ SeqExpr :: { Expr }
 Expr :: { Expr }
 : SimpleExpr      %prec below_SHARP         { $1 }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
-| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 $2 }
-| "let" RecFlag LetBindings "in" SeqExpr    { Let $2 $3 $5 }
+| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 (case $2 of { Tuple xs -> xs; _ -> [$2] }) }
+| "let" RecFlag LetBindings "in" SeqExpr    { Let $2 (reverse $3) $5 }
 | "function" MaybePipe AltList              { mkFunction $3 }
 | "fun" SimplePattern "->" Expr             { Lam $2 $4 }
 | "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
+| "try" SeqExpr "with" MaybePipe AltList    { Try $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (reverse $1) }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite $2 $4 $6 }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
 | SimpleExpr ".[" SeqExpr ']'               { mkApps (Var "String.get") [$1, $3] }
-| Expr "::" Expr                            { Cons $1 $3 }
+| Expr "::" Expr                            { mkConApp "::" [$1, $3] }
 | Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
 | Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
 | Expr "or" Expr                            { mkInfix $1 (Var "||") $3 }
@@ -243,11 +250,11 @@ Expr :: { Expr }
 
 SimpleExpr :: { Expr }
 : ValLongIdent          { Var $1 }
-| ConLongIdent %prec constr  { mkConApp $1 (Tuple []) }
+| ConLongIdent %prec constr  { mkConApp $1 [] }
 | Literal               { Lit $1 }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
-| '[' ExprSemiList ']'  { mkList (reverse $2) }
+| '[' ExprSemiList MaybeSemi ']'  { mkList (reverse $2) }
 
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }
@@ -325,8 +332,8 @@ LongIdent :: { Var }
 
 ConLongIdent :: { Var }
 : ModLongIdent %prec below_DOT { $1 }
-| "[]"                         { "[]" }
-| "()"                         { "()" }
+| '[' ']'                      { "[]" }
+| '(' ')'                      { "()" }
 
 ModLongIdent :: { Var }
 : con                    { $1 }
@@ -350,6 +357,10 @@ RecFlag :: { RecFlag }
 MaybePipe :: { () }
 : {- empty -}      { () }
 | '|'              { () }
+
+MaybeSemi :: { () }
+: {- empty -}      { () }
+| ';'              { () }
 
 {
 

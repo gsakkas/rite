@@ -21,25 +21,30 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval = ExceptT String (WriterT [Doc] (StateT EvalState IO))
+type Eval = ExceptT NanoError (WriterT [Doc] (StateT EvalState IO))
 
-runEval :: Eval a -> IO (Either (String, [Doc]) a)
+runEval :: Eval a -> IO (Either (NanoError, [Doc]) a)
 runEval x = evalStateT (runWriterT (runExceptT x)) initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
 evalString :: MonadEval m => String -> m Value
 evalString s = case parseExpr s of
-  Left e  -> throwError e
+  Left e  -> throwError (ParseError e)
   Right e -> eval e
 
 evalDecl :: MonadEval m => Decl -> m ()
 evalDecl decl = case decl of
   DFun Rec    binds  -> evalRecBinds binds >>= setVarEnv
   DFun NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
-  DTyp TypeDecl {..} -> case tyRhs of
+  DTyp decls -> mapM_ evalTypeDecl decls
+  DExn decl -> extendType "exn" decl
+
+evalTypeDecl :: MonadEval m => TypeDecl -> m ()
+evalTypeDecl TypeDecl {..} = case tyRhs of
     Alg ds  -> addType tyCon ds
     Alias _ -> return () -- we really don't care about aliases
+
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do
@@ -59,7 +64,7 @@ evalBind :: MonadEval m => (Pat,Expr) -> m Env
 evalBind (p,e) = logEnv $ do
   v <- eval e
   matchPat v p >>= \case
-    Nothing  -> throwError "pattern-match failed"
+    Nothing  -> typeError "pattern-match failed"
     Just env -> return env
 
 logEnv :: MonadEval m => m Env -> m Env
@@ -78,7 +83,7 @@ logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
 logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
 logExpr (Lam p e) m = mycensor (\v w -> []) (tell [pretty (Lam p e)] >> m)
 logExpr (Val v) m = mycensor (\v w -> []) (tell [pretty (Val v)] >> m)
-logExpr Nil     m = mycensor (\v w -> []) (tell [pretty Nil] >> m)
+logExpr e@(ConApp "[]" []) m = mycensor (\v w -> []) (tell [pretty e] >> m)
 logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
 
 mycensor :: MonadWriter w m => (a -> w -> w) -> m a -> m a
@@ -102,6 +107,9 @@ eval expr = logExpr expr $ case expr of
     v1 <- eval e1
     v2 <- eval e2
     evalBop b v1 v2
+  Uop u e -> do
+    v <- eval e
+    evalUop u v
   Lit l -> return (litValue l)
   Let Rec binds body -> do
     env <- evalRecBinds binds
@@ -114,23 +122,38 @@ eval expr = logExpr expr $ case expr of
     case vb of
       VB True  -> eval et
       VB False -> eval ef
-      _        -> throwError "if-then-else given a non-boolean"
+      _        -> typeError "if-then-else given a non-boolean"
   Seq e1 e2 ->
     eval e1 >> eval e2
   Case e as -> do
     v <- eval e
     evalAlts v as
-  Cons e es -> do
-    v     <- eval e
-    VL vs <- eval es
-    return (VL (v : vs))
-  Nil -> return (VL [])
+  -- Cons e es -> do
+  --   v     <- eval e
+  --   liftIO $ print expr
+  --   vs <- eval es
+  --   liftIO $ print vs
+  --   VL vs <- eval es
+  --   return (VL (v : vs))
   Tuple es -> do
     vs <- mapM eval es
     return (VT (length vs) vs)
-  ConApp dc e -> do
-    v <- eval e
-    evalConApp dc v
+  ConApp "()" [] -> return VU
+  ConApp "[]" [] -> return (VL [])
+  ConApp "::" [h,t] -> do
+    vh <- eval h
+    VL vt <- eval t
+    return (VL (vh:vt))
+  ConApp dc es -> do
+    vs <- mapM eval es
+    evalConApp dc vs
+  Try e alts -> do
+    env <- gets stVarEnv
+    eval e `catchError` \e -> do
+      setVarEnv env
+      case e of
+        MLException ex -> evalAlts ex alts
+        _              -> throwError e
   Prim1 (P1 f) e -> do
     v <- eval e
     f v
@@ -138,28 +161,22 @@ eval expr = logExpr expr $ case expr of
     v1 <- eval e1
     v2 <- eval e2
     f v1 v2
+  Val v -> return v
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
   VF (Func (Lam p e) env) -> do
     Just pat_env <- matchPat a p
     eval e `withEnv` joinEnv pat_env env
-  _ -> throwError "tried to apply a non-function"
+  _ -> typeError "tried to apply a non-function"
 
-evalConApp :: MonadEval m => DCon -> Value -> m Value
-evalConApp dc v = do
+evalConApp :: MonadEval m => DCon -> [Value] -> m Value
+evalConApp dc vs = do
   args <- lookupDataCon dc
-  case v of
-    VT n vs -> do
-      unless (length args == n) $
-        throwError (printf "%s expects %d arguments, but was given %d"
-                           dc (length args) n)
-      return (VA dc vs)
-    _ -> do
-      unless (length args == 1) $
-        throwError (printf "%s expects %d arguments, but was given %d"
-                           dc (length args) (1::Int))
-      return (VA dc [v])
+  unless (length args == length vs) $
+    typeError (printf "%s expects %d arguments, but was given %d"
+                      dc (length args) (length vs))
+  return (VA dc vs)
 
 
 evalBop :: MonadEval m
@@ -181,34 +198,37 @@ evalBop bop v1 v2 = logExpr (Bop bop (Val v1) (Val v2)) $ case bop of
   FTimes -> timesVal v1 v2
   FDiv   -> divVal v1 v2
 
+evalUop :: MonadEval m => Uop -> Value -> m Value
+evalUop Neg (VI i) = return (VI (negate i))
+evalUop FNeg (VD d) = return (VD (negate d))
 
 
 ltVal (VI x) (VI y) = return (x < y)
 ltVal (VD x) (VD y) = return (x < y)
-ltVal x      y      = throwError "cannot compare ordering of non-numeric types"
+ltVal x      y      = typeError "cannot compare ordering of non-numeric types"
 
 gtVal (VI x) (VI y) = return (x > y)
 gtVal (VD x) (VD y) = return (x > y)
-gtVal x      y      = throwError "cannot compare ordering of non-numeric types"
+gtVal x      y      = typeError "cannot compare ordering of non-numeric types"
 
 plusVal (VI i) (VI j) = return $ VI (i+j)
 plusVal (VD i) (VD j) = return $ VD (i+j)
-plusVal _      _      = throwError "+ can only be applied to ints"
+plusVal _      _      = typeError "+ can only be applied to ints"
 
 minusVal (VI i) (VI j) = return $ VI (i-j)
 minusVal (VD i) (VD j) = return $ VD (i-j)
-minusVal _      _      = throwError "- can only be applied to ints"
+minusVal _      _      = typeError "- can only be applied to ints"
 
 timesVal (VI i) (VI j) = return $ VI (i*j)
 timesVal (VD i) (VD j) = return $ VD (i*j)
-timesVal _      _      = throwError "* can only be applied to ints"
+timesVal _      _      = typeError "* can only be applied to ints"
 
 divVal (VI i) (VI j) = return $ VI (i `div` j)
 divVal (VD i) (VD j) = return $ VD (i / j)
-divVal _      _      = throwError "/ can only be applied to ints"
+divVal _      _      = typeError "/ can only be applied to ints"
 
 modVal (VI i) (VI j) = return $ VI (i `mod` j)
-modVal _      _      = throwError "mod can only be applied to ints"
+modVal _      _      = typeError "mod can only be applied to ints"
 
 litValue :: Literal -> Value
 litValue (LI i) = VI i
@@ -220,7 +240,7 @@ litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
-  = throwError "no matching pattern"
+  = typeError "no matching pattern"
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
@@ -249,35 +269,41 @@ matchPat v p = logMaybeEnv $ case p of
   ListPat ps
     | VL vs <- v
     , length ps == length vs
-      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
            <$> zipWithM matchPat vs ps
   TuplePat ps
     | VT n vs <- v
     , length ps == n
-      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
            <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
-  ConPat "[]" (TuplePat [])
+  ConPat "[]" []
     | VL [] <- v
       -> return (Just emptyEnv)
     | VL _ <- v
       -> return Nothing
-  ConPat "()" (TuplePat [])
+  ConPat "()" []
     | VU <- v
       -> return (Just emptyEnv)
-  ConPat dc (TuplePat ps)
+  ConPat dc ps
     | VA c vs <- v
     , dc == c
     , length ps == length vs
-      -> fmap (foldr1 joinEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
            <$> zipWithM matchPat vs ps
-  _ -> throwError (printf "type error: tried to match %s against %s"
+    | VA c vs <- v
+    , dc /= c
+      -> return Nothing
+  AsPat p x -> do
+    Just env <- matchPat v p
+    return (Just (insertEnv x v env))
+  _ -> typeError (printf "type error: tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs)) = return (x, VL xs)
-unconsVal _           = throwError "type error: uncons can only be applied to lists"
+unconsVal _           = typeError "type error: uncons can only be applied to lists"
 
 matchLit :: Value -> Literal -> Bool
 matchLit (VI i1) (LI i2) = i1 == i2
