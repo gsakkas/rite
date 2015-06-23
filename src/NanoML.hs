@@ -38,7 +38,15 @@ check prog =
               -- not output the Show instance of the counterexample,
               -- so just extract that (2nd) line..
               putStrLn $ unlines (x:zs)
+    DFun _ [(WildPat, e)]
+        -> putStrLn . output =<< runProg prog
     _ -> printf "I don't (yet) know how to check\n%s\n" (show $ prettyProg prog)
+
+runProg :: Prog -> IO Result
+runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
+             $ within sec $ ioProperty $ fmap addTrace $ runEval $ do
+                 mapM evalDecl prog
+                 -- liftIO $ putStrLn $ render $ pretty $ last vs
 
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
@@ -49,15 +57,17 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                        v   <- eval (mkApps (Var f) args)
                        v `assertType` resTy t
   where
-  sec = 5000000
   --addTrace :: Either (SomeException, [Expr]) Bool -> Result
-  addTrace (Right x) = property succeeded
-  addTrace (Left (e,t)) = counterexample (render $ vsep $ intersperse mempty t)
-                          $ exception "*** Exception" (SomeException e)
   assertType :: Value -> Type -> Eval Bool
   assertType v t
     | v `checkType` t = return True
     | otherwise       = outputTypeMismatchError v t
+
+sec = 5000000
+
+addTrace (Right x) = property succeeded
+addTrace (Left (e,t)) = counterexample (render $ vsep $ intersperse mempty t)
+                      $ exception "*** Exception" (SomeException e)
 
 -- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
 

@@ -139,6 +139,7 @@ instance Pretty Pat where
     TuplePat l -> prettyTuple l
     WildPat -> text "_"
     OrPat p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
+    AsPat p v -> pretty p <+> text "as" <+> text v
 
 prettyTuple [] = empty
 prettyTuple [x] = pretty x

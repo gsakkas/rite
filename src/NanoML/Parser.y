@@ -75,8 +75,6 @@ float   { TokFloat $$ }
 '\''       { TokTick }
 ':'        { TokColon }
 "::"       { TokCons }
-"[]"       { TokNil }
-"()"       { TokUnit }
 '='        { TokEq }
 '_'        { TokUnderscore }
 '-'        { TokMinus }
@@ -225,7 +223,7 @@ Expr :: { Expr }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
 | ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 (case $2 of { Tuple xs -> xs; _ -> [$2] }) }
 | "let" RecFlag LetBindings "in" SeqExpr    { Let $2 (reverse $3) $5 }
-| "function" MaybePipe AltList              { mkFunction $3 }
+| "function" MaybePipe AltList              { mkFunction (reverse $3) }
 | "fun" SimplePattern "->" Expr             { Lam $2 $4 }
 | "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
 | "try" SeqExpr "with" MaybePipe AltList    { Try $2 (reverse $5) }

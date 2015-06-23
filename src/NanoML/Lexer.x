@@ -32,8 +32,6 @@ tokens :-
   \:\:          { tok TokCons }
   \;            { tok TokSemi }
   \;\;          { tok TokSemiSemi }
-  \[\]          { tok TokNil }
-  \(\)          { tok TokUnit }
 
   \=            { tok TokEq }
   \*            { tok TokStar }
@@ -169,8 +167,6 @@ data Token
   | TokUnderscore
   | TokPipe
   | TokCons
-  | TokNil
-  | TokUnit
 
   | TokInfixOp0 String
   | TokInfixOp1 String
