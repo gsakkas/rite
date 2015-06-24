@@ -1,4 +1,6 @@
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE RecordWildCards   #-}
 module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
@@ -9,9 +11,9 @@ module NanoML
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
-import qualified Data.Map                as Map
-import           Data.Maybe
 import           Data.List
+import qualified Data.Map                 as Map
+import           Data.Maybe
 import           Data.Typeable
 import           System.IO.Unsafe
 import           System.Timeout
@@ -28,68 +30,81 @@ import           NanoML.Pretty
 import           NanoML.Types
 
 
-check :: Prog -> IO ()
+check :: Prog -> IO (Maybe Result)
 check prog =
   case last prog of
     DFun _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
-        -> do x:y:zs <- lines . output <$> checkFunc f t prog
+        -> do r <- checkFunc f t prog
+              let x:xs = lines $ output r
               -- NOTE: there doesn't seem to be an easy way to make QC
               -- not output the Show instance of the counterexample,
               -- so just extract that (2nd) line..
-              putStrLn $ unlines (x:zs)
+              putStr $ unlines (x : safeTail xs)
+              return $ Just r
     DFun _ [(WildPat, e)]
-        -> putStrLn . output =<< runProg prog
-    _ -> printf "I don't (yet) know how to check\n%s\n" (show $ prettyProg prog)
+        -> do r <- runProg prog
+              putStr $ output r
+              return $ Just r
+    _ -> do printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
+            return Nothing
+
+safeTail [] = []
+safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ ioProperty $ fmap addTrace $ runEval $ do
+             $ within sec $ ioProperty $ fmap addTrace $ runEval loudOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
+
+loudOpts = NanoOpts { enablePrint = True }
+quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                    $ forAll (genArgs t)
-                   $ \args -> -- counterexample (show . pretty $ mkApps (Var f) args)
-                     within sec $ ioProperty $ fmap addTrace $ runEval $ do
+                   $ \args -> counterexample (show . pretty $ mkApps (Var f) args) $
+                     within sec $ ioProperty $ fmap addTrace $ runEval quietOpts $ do
                        mapM_ evalDecl prog
-                       v   <- eval (mkApps (Var f) args)
-                       v `assertType` resTy t
-  where
-  --addTrace :: Either (SomeException, [Expr]) Bool -> Result
-  assertType :: Value -> Type -> Eval Bool
-  assertType v t
-    | v `checkType` t = return True
-    | otherwise       = outputTypeMismatchError v t
+                       v <- eval (mkApps (Var f) args)
+                       b <- v `checkType` resTy t
+                       if b
+                         then return True
+                         else outputTypeMismatchError v t
 
 sec = 5000000
 
 addTrace (Right x) = property succeeded
-addTrace (Left (e,t)) = counterexample (render $ vsep $ intersperse mempty t)
-                      $ exception "*** Exception" (SomeException e)
+addTrace (Left (e,t)) = -- counterexample (render $ vsep $ intersperse mempty t) $
+                        property $
+                        exception "*** Exception" (SomeException e)
 
--- fmap (filter isJust) $ forM progs $ \(f,p) -> check p >>= \r -> maybe (return Nothing) (\r -> putStrLn (f++"\n") >> return (Just (f,r))) r
+checkAll = testParser >>= mapM (\(f,p) -> putStrLn ("\n" ++ f) >> check p >>= \r -> maybe (return Nothing) (\r -> return (Just (f,r))) r)
 
-checkType :: Value -> Type -> Bool
+checkType :: MonadEval m => Value -> Type -> m Bool
 checkType v t = case t of
-  TVar _ -> isInt v
+  TVar _ -> return $ isInt v
   TCon t
     | t == tINT
-      -> isInt v
+      -> return $ isInt v
     | t == tFLOAT
-      -> isFloat v
+      -> return $ isFloat v
     | t == tCHAR
-      -> isChar v
+      -> return $ isChar v
     | t == tSTRING
-      -> isString v
+      -> return $ isString v
     | t == tBOOL
-      -> isBool v
+      -> return $ isBool v
     | t == tUNIT
-      -> isUnit v
-  TApp (TCon "list") t -> isListOf t v
-  TTup ts -> isTupleOf ts v
-  _ :-> to -> isFunc v
+      -> return $ isUnit v
+  TApp "list" [t] -> v `isListOf` t
+  TApp c ts -> (v `isAlgOf` c) ts
+  TTup ts -> v `isTupleOf` ts
+  _ :-> to -> return $ isFunc v
+
+
+isInt, isFloat, isChar, isString, isBool, isUnit :: Value -> Bool
 
 isInt (VI {}) = True
 isInt _       = False
@@ -109,11 +124,28 @@ isBool _       = False
 isUnit VU = True
 isUnit _  = False
 
-isListOf t (VL vs) = all (`checkType` t) vs
-isListOf _ _       = False
+isAlgOf :: MonadEval m => Value -> TCon -> [Type] -> m Bool
+isAlgOf v tc ts = do
+  TypeDecl {..} <- lookupType tc
+  case tyRhs of
+    Alias ty
+      -> v `checkType` ty
+    Alg ds
+      | VA dc vs <- v
+        -> case find (\d -> dc == dCon d ) ds of
+             Nothing -> return False
+             Just DataDecl {..} -> allM (uncurry checkType)
+                                        (zip vs (map (subst (zip tyVars ts)) dArgs))
+      | otherwise -> return False
 
-isTupleOf ts (VT n vs) = n == length ts && and (zipWith checkType vs ts)
-isTupleOf _  _         = False
+isListOf (VL vs) t = allM (`checkType` t) vs
+isListOf _ _       = return False
+
+isTupleOf (VT n vs) ts
+  | length ts == length vs
+  = allM (uncurry checkType) (zip vs ts)
+isTupleOf _  _
+  = return False
 
 isFunc (VF {}) = True
 isFunc _       = False

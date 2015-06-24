@@ -1,16 +1,16 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.Pretty
   (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest)
   where
 
-import Prelude hiding ( (<$>) )
-import Data.List hiding (group)
-import Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty)
+import           Data.List                    hiding (group)
+import           Prelude                      hiding ((<$>))
+import           Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty)
 import qualified Text.PrettyPrint.ANSI.Leijen as PP
 
-import NanoML.Types
+import           NanoML.Types
 
 class Pretty a where
   pretty :: a -> Doc
@@ -144,7 +144,10 @@ instance Pretty Pat where
 prettyTuple [] = empty
 prettyTuple [x] = pretty x
 prettyTuple xs = parens $ hcat $ intersperse comma $ map pretty xs
+
 prettyTypeTuple xs = parens $ hsep $ intersperse (text "*") $ map pretty xs
+
+prettyTypeArgs = prettyTuple
 
 prettyBind (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> pretty e
 
@@ -205,7 +208,7 @@ instance Pretty Type where
   prettyPrec z t = case t of
     TVar v -> squote <> text v
     TCon c -> text c
-    TApp t1 t2 -> pretty t2 <+> pretty t1
+    TApp t ts -> prettyTypeArgs ts <+> pretty t
     TTup ts -> parens $ hsep $ intersperse (text "*") $ map pretty ts
     ti :-> to -> parensIf (z > zf) $
                  prettyPrec (zf+1) ti <+> text "->" <+> prettyPrec zf to

@@ -307,8 +307,8 @@ SimpleType :: { Type }
 SimpleType2 :: { Type }
 : '\'' ident                       { TVar $2 }
 | LongIdent                        { TCon $1 }
-| SimpleType2 LongIdent            { TApp (TCon $2) $1 }
-| '(' TypeCommaList ')' LongIdent  { mkTApps (TCon $4) (reverse $2) }
+| SimpleType2 LongIdent            { mkTApps $2 [$1] }
+| '(' TypeCommaList ')' LongIdent  { mkTApps $4 (reverse $2) }
 
 TypeCommaList :: { [Type] }
 : Type                         { [$1] }

@@ -55,6 +55,20 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - (similar to soft typing)
   - also discriminative union types
 
+[ ] dig up extra benchmarks from other "locating type error papers"
+  - andrew myers
+  - dan grossman
+
+[ ] configurable failure options
+  - heterogeneous equality vs. homogeneous
+  - check ADT arguments at application site
+
+[ ] add post-hoc generalization a la smartcheck
+
+[ ] go backwards from crash
+  - where did value `x` come from?
+  - PSE (ESP done backwards) dump checker
+
 ```
   fun (f,b) ->
     let f = fun b -> (x,y) in

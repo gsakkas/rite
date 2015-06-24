@@ -1,39 +1,48 @@
-{-# LANGUAGE ConstraintKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE PartialTypeSignatures #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RankNTypes            #-}
+{-# LANGUAGE RecordWildCards       #-}
 module NanoML.Types where
 
-import Control.Arrow
-import Control.Exception
-import Control.Monad
-import Control.Monad.Except
-import Control.Monad.Fix
-import Control.Monad.State
-import Control.Monad.Writer hiding (Alt)
-import Data.Char
-import Data.List
-import Data.Map (Map)
-import qualified Data.Map as Map
-import Data.Typeable
-import Text.PrettyPrint.ANSI.Leijen (Doc)
+import           Control.Arrow
+import           Control.Exception
+import           Control.Monad
+import           Control.Monad.Except
+import           Control.Monad.Fix
+import           Control.Monad.Reader
+import           Control.Monad.State
+import           Control.Monad.Writer         hiding (Alt)
+import           Data.Char
+import           Data.List
+import           Data.Map                     (Map)
+import qualified Data.Map                     as Map
+import           Data.Maybe
+import           Data.Typeable
+import           Text.PrettyPrint.ANSI.Leijen (Doc)
 
-import Debug.Trace
-import Text.Printf
+import           Debug.Trace
+import           Text.Printf
 
 ----------------------------------------------------------------------
 -- Core Types
 ----------------------------------------------------------------------
 
-type MonadEval m = ( MonadError NanoError m, MonadWriter [Doc] m
+type MonadEval m = ( MonadError NanoError m
+                   , MonadReader NanoOpts m
+                   , MonadWriter [Doc] m
                    , MonadState EvalState m
                    , MonadFix m, MonadIO m
                    )
 
 type Var = String
+
+data NanoOpts
+  = NanoOpts { enablePrint :: Bool -- ^ Should we actually print things to stdout?
+             }
+  deriving Show
 
 data NanoError
   = MLException Value
@@ -48,7 +57,7 @@ instance Exception NanoError
 varToInt (TVar _)     = TCon tINT
 varToInt (TCon c)     = TCon c
 varToInt (TTup ts)    = TTup (map varToInt ts)
-varToInt (TApp t1 t2) = TApp (varToInt t1) (varToInt t2)
+varToInt (TApp c ts)  = TApp c (map varToInt ts)
 varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
@@ -60,34 +69,68 @@ outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
 data EvalState
   = EvalState { stVarEnv  :: Env
-              , stTypeEnv :: Map TCon [DataDecl]
+              , stTypeEnv :: Map TCon TypeDecl
+              , stDataEnv :: Map DCon DataDecl
               , stStore   :: Env
               }
 
 initState :: EvalState
 initState = EvalState { stVarEnv = baseEnv
                       , stTypeEnv = baseTypeEnv
+                      , stDataEnv = baseDataEnv
                       , stStore = emptyEnv
                       }
 
 setVarEnv :: MonadEval m => Env -> m ()
 setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
 
-addType :: MonadEval m => TCon -> [DataDecl] -> m ()
-addType tcon dcons = modify' $ \ s ->
-  s { stTypeEnv = Map.insert tcon dcons (stTypeEnv s) }
+addType :: MonadEval m => TypeDecl -> m ()
+addType td@TypeDecl {..} = modify' $ \ s ->
+  s { stTypeEnv = Map.insert tyCon td (stTypeEnv s)
+    , stDataEnv = Map.union dcons (stDataEnv s) }
+  where
+  dcons = case tyRhs of
+    Alias _ -> mempty
+    Alg dds -> Map.fromList [(dCon,dd) | dd@DataDecl {..} <- dds]
 
 extendType :: MonadEval m => TCon -> DataDecl -> m ()
-extendType tcon dcon = modify' $ \ s ->
-  s { stTypeEnv = Map.adjust (dcon:) tcon (stTypeEnv s) }
+extendType tcon ddecl = modify' $ \ s ->
+  s { stTypeEnv = Map.adjust addDDecl tcon (stTypeEnv s)
+    , stDataEnv = Map.insert (dCon ddecl) ddecl (stDataEnv s)
+    }
+  where
+  addDDecl TypeDecl {..} = case tyRhs of
+    Alias _ -> error $ "cannot extend type alias: " ++ tcon
+    Alg ds  -> let tyRhs = Alg (ddecl:ds) in TypeDecl {..}
+
+lookupType :: MonadEval m => TCon -> m TypeDecl
+lookupType tcon = do
+  tys <- gets stTypeEnv
+  case Map.lookup tcon tys of
+    Nothing -> typeError ("unknown type: " ++ tcon)
+    Just t -> return t
+
+-- lookupTypeDataCon :: MonadEval m => TCon -> DCon -> m [Type]
+-- lookupTypeDataCon tcon dcon = do
+--   ds <- lookupType tcon
+--   case find (\d -> dcon == dCon d ) ds of
+--     Nothing -> typeError (dcon ++ " is not a constructor of " ++ tcon)
+--     Just DataDecl {..} -> return dArgs
 
 lookupDataCon :: MonadEval m => DCon -> m [Type]
 lookupDataCon dc = do
-  dcons <- concat <$> gets stTypeEnv
-  case find (\dcon -> dc == dCon dcon ) dcons of
+  dcons <- gets stDataEnv
+  case Map.lookup dc dcons of
     Nothing -> typeError ("unknown data constructor: " ++ dc)
     Just DataDecl {..} -> return dArgs
 
+subst :: [(TVar, Type)] -> Type -> Type
+subst su t = case t of
+  TVar x -> fromMaybe t (lookup x su)
+  TCon _ -> t
+  TApp c ts -> TApp c (map (subst su) ts)
+  ti :-> to -> subst su ti :-> subst su to
+  TTup ts -> TTup (map (subst su) ts)
 
 newtype Env = Env (Map Var Value)
 
@@ -125,17 +168,22 @@ m `withEnv` env = do
 -- Primitives
 ----------------------------------------------------------------------
 
-baseTypeEnv = Map.fromList [ ("()", [DataDecl "()" []])
-                           , ("list", [ DataDecl "[]" []
-                                      , DataDecl "::" [ TVar "a"
-                                                      , TApp (TCon "list") (TVar "a")
-                                                      ]
-                                      ])
-                           , ("option", [ DataDecl "None" []
-                                        , DataDecl "Some" [ TVar "a" ]
-                                        ])
-                           , ("exn", [])
-                           ]
+baseTypeEnv = Map.fromList
+  [ ("()",     TypeDecl "()"     []    (Alg [DataDecl "()" []]))
+  , ("list",   TypeDecl "list"   ["a"] (Alg [dNil, dCons]))
+  , ("option", TypeDecl "option" ["a"] (Alg [dNone, dSome]))
+  , ("exn",    TypeDecl "exn"    []    (Alg []))
+  ]
+
+baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
+                                         Alias _ -> []
+                                         Alg ds -> [(dCon d, d) | d <- ds])
+                           $ Map.elems baseTypeEnv
+
+dNil = DataDecl "[]" []
+dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
+dNone = DataDecl "None" []
+dSome = DataDecl "Some" [ TVar "a" ]
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
@@ -169,7 +217,7 @@ primVars = [ ("[]", VL [])
              )
            , ("List.fold_right"
              ,mkRec "List.fold_right"
-                    (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
+                    (mkLams [VarPat "f", VarPat "xs", VarPat "b"]
                             (Case (Var "xs")
                              [(ConPat "[]" []
                               ,Nothing
@@ -301,7 +349,11 @@ pstring_length :: MonadEval m => Value -> m Value
 pstring_length (VS s) = return (VI (length s))
 
 pprint_string :: MonadEval m => Value -> m Value
-pprint_string (VS s) = liftIO $ putStr s >> return VU
+pprint_string (VS s) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStr s
+  return VU
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
 plist_combine (VL xs) (VL ys)
@@ -311,6 +363,8 @@ plist_combine (VL xs) (VL ys)
 plist_split :: MonadEval m => Value -> m Value
 plist_split (VL xs) = return (VT (length xs) [VL as, VL bs])
   where
+  -- FIXME: these list functions really shouldn't be primitives,
+  -- introduces nasty laziness issues..
   (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
 
 plist_mem :: MonadEval m => Value -> Value -> m Value
@@ -481,7 +535,7 @@ data Pat
 data Type
   = TVar TVar
   | TCon TCon
-  | TApp Type Type
+  | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
   deriving (Show)
@@ -554,8 +608,8 @@ mkList = foldr (\h t -> mkConApp "::" [h,t]) (mkConApp "[]" [])
 mkFunction :: [Alt] -> Expr
 mkFunction alts = Lam (VarPat "$x") (Case (Var "$x") alts)
 
-mkTApps :: Type -> [Type] -> Type
-mkTApps = foldl' TApp
+mkTApps :: TCon -> [Type] -> Type
+mkTApps = TApp
 
 mkUMinus :: Var -> Expr -> Expr
 mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))

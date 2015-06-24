@@ -7,8 +7,7 @@ module NanoML.Eval where
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
-import Control.Monad.State
-import Control.Monad.Writer hiding (Alt)
+import Control.Monad.RWS   hiding (Alt)
 import Text.Printf
 
 import NanoML.Parser
@@ -21,10 +20,12 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval = ExceptT NanoError (WriterT [Doc] (StateT EvalState IO))
+type Eval = ExceptT NanoError (RWST NanoOpts [Doc] EvalState IO)
 
-runEval :: Eval a -> IO (Either (NanoError, [Doc]) a)
-runEval x = evalStateT (runWriterT (runExceptT x)) initState >>= \case
+            -- (WriterT [Doc] (StateT EvalState IO))
+
+runEval :: NanoOpts -> Eval a -> IO (Either (NanoError, [Doc]) a)
+runEval opts x = evalRWST (runExceptT x) opts initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
@@ -37,14 +38,8 @@ evalDecl :: MonadEval m => Decl -> m ()
 evalDecl decl = case decl of
   DFun Rec    binds  -> evalRecBinds binds >>= setVarEnv
   DFun NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
-  DTyp decls -> mapM_ evalTypeDecl decls
+  DTyp decls -> mapM_ addType decls
   DExn decl -> extendType "exn" decl
-
-evalTypeDecl :: MonadEval m => TypeDecl -> m ()
-evalTypeDecl TypeDecl {..} = case tyRhs of
-    Alg ds  -> addType tyCon ds
-    Alias _ -> return () -- we really don't care about aliases
-
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do

@@ -1,16 +1,17 @@
 module NanoML.Misc where
 
-import Control.Arrow
-import Control.Monad
-import Data.Either
-import Data.List
-import Data.Map (Map)
-import qualified Data.Map as Map
-import System.Directory
-import System.FilePath
+import           Control.Arrow
+import           Control.Monad
+import           Data.Either
+import           Data.List
+import           Data.Map         (Map)
+import qualified Data.Map         as Map
+import           System.Directory
+import           System.FilePath
+import           System.IO.Unsafe
 
-import NanoML.Parser
-import NanoML.Types
+import           NanoML.Parser
+import           NanoML.Types
 
 fromRight :: Either a b -> b
 fromRight (Right b) = b
@@ -27,12 +28,11 @@ knownFuncs = Map.fromList . map (second (fromRight . parseType)) $
   , ("removeDuplicates", "'a list -> 'a list")
   , ("wwhile", "('a -> 'a * bool) * 'a -> 'a")
   , ("fixpoint", "('a -> 'a) * 'a -> 'a")
-  -- TODO: add support for user-defined ADTs
-  -- , ("exprToString", "expr -> string")
-  -- , ("eval", "expr * float * float -> float")
-  -- , ("build", "((int * int -> int) * int) -> expr")
-  -- , ("doRandomGray", "int * int * int -> unit")
-  -- , ("doRandomColor", "int * int * int -> unit")
+  , ("exprToString", "expr -> string")
+  , ("eval", "expr * float * float -> float")
+  , ("build", "((int * int -> int) * int) -> expr")
+  , ("doRandomGray", "int * int * int -> unit")
+  , ("doRandomColor", "int * int * int -> unit")
   , ("sqsum", "int list -> int")
   , ("pipe", "('a -> 'a) list -> ('a -> 'a)")
   , ("sepConcat", "string -> string list -> string")
@@ -153,10 +153,15 @@ testParser = do
   let dir = "../yunounderstand/data/sp14/prog/unify"
   mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
           <$> getDirectoryContents dir
-  forM mls $ \ml -> do
+  parseAll dir mls
+
+parseAll dir [] = return []
+parseAll dir (ml:mls) = do
     r <- parseTopForm <$> readFile (dir </> ml)
     case r of
-      Right p -> return (ml, p)
+      Right p -> do
+        mls <- unsafeInterleaveIO (parseAll dir mls)
+        return $ (ml, p) : mls
       Left _ -> print ml >> print r >> error "die"
 
 parseFile :: FilePath -> IO Prog

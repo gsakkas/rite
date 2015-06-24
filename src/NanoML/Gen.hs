@@ -1,8 +1,8 @@
 module NanoML.Gen where
 
-import Test.QuickCheck
+import           Test.QuickCheck
 
-import NanoML.Types
+import           NanoML.Types
 
 
 genArgs :: Type -> Gen [Expr]
@@ -27,9 +27,12 @@ genExpr ty = case ty of
       -> return (Var "()")
     | otherwise
       -> error $ "non-primitive type: " ++ show ty
-  TApp (TCon "list") t -> sized (genList t)
+  TApp c ts -> sized (genADT c ts)
   TTup ts -> Tuple <$> mapM genExpr ts
   _ :-> to -> Lam WildPat <$> genExpr to
+
+genADT :: TCon -> [Type] -> Int -> Gen Expr
+genADT = undefined
 
 genList :: Type -> Int -> Gen Expr
 genList _ 0 = return (mkConApp "[]" [])
