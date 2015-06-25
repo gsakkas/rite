@@ -11,6 +11,8 @@ module NanoML
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
+import           Control.Monad.State
+import           Control.Monad.Writer
 import           Data.List
 import qualified Data.Map                 as Map
 import           Data.Maybe
@@ -63,15 +65,21 @@ quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
-                   $ forAll (genArgs t)
-                   $ \args -> counterexample (show . pretty $ mkApps (Var f) args) $
-                     within sec $ ioProperty $ fmap addTrace $ runEval quietOpts $ do
-                       mapM_ evalDecl prog
+                   $ within sec $ monadicIO $ do
+                     (st, log) <- run $ runEvalLog quietOpts $
+                                    mapM_ evalDecl prog >> get
+                     args <- pick (genArgs t $ stTypeEnv st)
+                     monitor $ counterexample (show . pretty $ mkApps (Var f) args)
+                     r <- run $ runEval quietOpts $ do
+                       put st; tell log -- first of all, restore the state and log
                        v <- eval (mkApps (Var f) args)
                        b <- v `checkType` resTy t
                        if b
                          then return True
                          else outputTypeMismatchError v t
+                     case r of
+                       Right _ -> return ()
+                       Left (e,t) -> fail $ show e
 
 sec = 5000000
 

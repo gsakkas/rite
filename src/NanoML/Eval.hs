@@ -29,6 +29,11 @@ runEval opts x = evalRWST (runExceptT x) opts initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
+runEvalLog :: NanoOpts -> Eval a -> IO (a, [Doc])
+runEvalLog opts x = evalRWST (runExceptT x) opts initState >>= \case
+  (Left e, tr) -> error $ show e
+  (Right v, tr) -> return (v, tr)
+
 evalString :: MonadEval m => String -> m Value
 evalString s = case parseExpr s of
   Left e  -> throwError (ParseError e)

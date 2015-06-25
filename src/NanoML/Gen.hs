@@ -1,15 +1,21 @@
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RecordWildCards  #-}
 module NanoML.Gen where
 
+import           Data.Map        (Map)
+import qualified Data.Map        as Map
+import           Data.Maybe
 import           Test.QuickCheck
 
 import           NanoML.Types
 
+type TypeEnv = Map TCon TypeDecl
 
-genArgs :: Type -> Gen [Expr]
-genArgs ty = mapM genExpr (argTys ty)
+genArgs :: Type -> TypeEnv -> Gen [Expr]
+genArgs ty e = mapM (`genExpr` e) (argTys ty)
 
-genExpr :: Type -> Gen Expr
-genExpr ty = case ty of
+genExpr :: Type -> TypeEnv -> Gen Expr
+genExpr ty e = case ty of
   -- NOTE: instantiate all tyvars indescriminately with `int`
   TVar _ -> Lit . LI <$> arbitrary
   TCon t
@@ -26,16 +32,31 @@ genExpr ty = case ty of
     | t == tUNIT
       -> return (Var "()")
     | otherwise
-      -> error $ "non-primitive type: " ++ show ty
-  TApp c ts -> sized (genADT c ts)
-  TTup ts -> Tuple <$> mapM genExpr ts
-  _ :-> to -> Lam WildPat <$> genExpr to
+      -> sized (genADT t [] e)
+--  TApp "list" [t] -> sized (genList t e)
+  TApp c ts -> sized (genADT c ts e)
+  TTup ts -> Tuple <$> mapM (`genExpr` e) ts
+  _ :-> to -> Lam WildPat <$> (`genExpr` e) to
 
-genADT :: TCon -> [Type] -> Int -> Gen Expr
-genADT = undefined
+genADT :: TCon -> [Type] -> TypeEnv -> Int -> Gen Expr
+genADT c ts e n = do
+  let Just TypeDecl {..} = Map.lookup c e
+  case tyRhs of
+    Alias ty -> genExpr ty e
+    Alg dds  -> oneof (mapMaybe (genDataDecl tyVars) dds)
+  where
+  genDataDecl tvs DataDecl {..}
+    | n <= 0 && not (null dArgs) && any isRec dArgs
+    = Nothing
+    | otherwise
+    = Just $ ConApp dCon <$> mapM (resize (n-1) . (`genExpr` e) . subst (zip tvs ts))
+                                  dArgs
+  isRec (TCon t)   = t == c
+  isRec (TApp t _) = t == c
+  isRec _          = False
 
-genList :: Type -> Int -> Gen Expr
-genList _ 0 = return (mkConApp "[]" [])
-genList t n = do x  <- genExpr t
-                 xs <- genList t (n-1)
-                 return (mkConApp "::" [x,xs])
+-- genList :: Type -> TypeEnv -> Int -> Gen Expr
+-- genList _ e 0 = return (mkConApp "[]" [])
+-- genList t e n = do x  <- genExpr t e
+--                    xs <- genList t e (n-1)
+--                    return (mkConApp "::" [x,xs])
