@@ -79,7 +79,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
                          else outputTypeMismatchError v t
                      case r of
                        Right _ -> return ()
-                       Left (e,t) -> fail $ show e
+                       Left (e,t) -> fail $ "*** Exception: " ++ show e
 
 sec = 5000000
 
