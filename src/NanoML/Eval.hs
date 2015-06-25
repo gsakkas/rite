@@ -4,6 +4,7 @@
 {-# LANGUAGE RecordWildCards #-}
 module NanoML.Eval where
 
+import Control.Exception
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
@@ -142,8 +143,10 @@ eval expr = logExpr expr $ case expr of
   ConApp "[]" [] -> return (VL [])
   ConApp "::" [h,t] -> do
     vh <- eval h
-    VL vt <- eval t
-    return (VL (vh:vt))
+    vt <- eval t
+    case vt of
+      VL vt -> return (VL (vh:vt))
+      _     -> typeError $ ":: expects a list, was given: " ++ show (pretty vt)
   ConApp dc es -> do
     vs <- mapM eval es
     evalConApp dc vs
@@ -154,13 +157,22 @@ eval expr = logExpr expr $ case expr of
       case e of
         MLException ex -> evalAlts ex alts
         _              -> throwError e
-  Prim1 (P1 f) e -> do
+  Prim1 (P1 p f) e -> do
     v <- eval e
-    f v
-  Prim2 (P2 f) e1 e2 -> do
+    x <- liftIO $ try $ evaluate (f v)
+    case x of
+      Right x -> x
+      Left (PatternMatchFail _) ->
+        typeError $ printf "invalid argument to %s: %s" p (show $ pretty v)
+  Prim2 (P2 p f) e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
-    f v1 v2
+    x <- liftIO $ try $ evaluate (f v1 v2)
+    case x of
+      Right x -> x
+      Left (PatternMatchFail _) ->
+        typeError $ printf "invalid arguments to %s: %s, %s"
+                           p (show $ pretty v1) (show $ pretty v2)
   Val v -> return v
 
 evalApp :: MonadEval m => Value -> Value -> m Value
@@ -263,9 +275,11 @@ matchPat v p = logMaybeEnv $ case p of
     return $ if matchLit v lit then Just emptyEnv else Nothing
   ConsPat p ps -> do
     (x,xs) <- unconsVal v
-    Just env1 <- matchPat x p
-    Just env2 <- matchPat xs ps
-    return $ Just (joinEnv env1 env2)
+    menv1 <- matchPat x p
+    menv2 <- matchPat xs ps
+    case (menv1, menv2) of
+      (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
+      _                      -> return Nothing
   ListPat ps
     | VL vs <- v
     , length ps == length vs

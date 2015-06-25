@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE RecordWildCards   #-}
 module NanoML
   ( module NanoML.Parser
@@ -56,7 +57,7 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ ioProperty $ fmap addTrace $ runEval loudOpts $ do
+             $ within sec $ nanoCheck $ run $ runEval loudOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
 
@@ -65,28 +66,25 @@ quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
-                   $ within sec $ monadicIO $ do
+                   $ within sec $ nanoCheck $ do
                      (st, log) <- run $ runEvalLog quietOpts $
                                     mapM_ evalDecl prog >> get
                      args <- pick (genArgs t $ stTypeEnv st)
                      monitor $ counterexample (show . pretty $ mkApps (Var f) args)
-                     r <- run $ runEval quietOpts $ do
+                     run $ runEval quietOpts $ do
                        put st; tell log -- first of all, restore the state and log
                        v <- eval (mkApps (Var f) args)
                        b <- v `checkType` resTy t
                        if b
                          then return True
                          else outputTypeMismatchError v t
-                     case r of
-                       Right _ -> return ()
-                       Left (e,t) -> fail $ "*** Exception: " ++ show e
 
 sec = 5000000
 
-addTrace (Right x) = property succeeded
-addTrace (Left (e,t)) = -- counterexample (render $ vsep $ intersperse mempty t) $
-                        property $
-                        exception "*** Exception" (SomeException e)
+nanoCheck m = monadicIO $ m >>= \case
+  Right x    -> return ()
+  Left (e,t) -> -- counterexample (render $ vsep $ intersperse mempty t) $
+                fail $ "*** Exception: " ++ show e
 
 checkAll = testParser >>= mapM (\(f,p) -> putStrLn ("\n" ++ f) >> check p >>= \r -> maybe (return Nothing) (\r -> return (Just (f,r))) r)
 
@@ -106,6 +104,8 @@ checkType v t = case t of
       -> return $ isBool v
     | t == tUNIT
       -> return $ isUnit v
+    | otherwise
+      -> (v `isAlgOf` t) []
   TApp "list" [t] -> v `isListOf` t
   TApp c ts -> (v `isAlgOf` c) ts
   TTup ts -> v `isTupleOf` ts
