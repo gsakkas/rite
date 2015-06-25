@@ -6,7 +6,7 @@ module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
   , module NanoML.Eval
-  , check
+  , check, checkAll
   ) where
 
 import           Control.Exception
@@ -65,7 +65,7 @@ loudOpts = NanoOpts { enablePrint = True }
 quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False })
+checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10 })
                    $ within sec $ nanoCheck $ do
                      (st, log) <- run $ runEvalLog quietOpts $
                                     mapM_ evalDecl prog >> get

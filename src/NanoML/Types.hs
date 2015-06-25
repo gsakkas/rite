@@ -198,6 +198,16 @@ primVars = [ ("[]", VL [])
                                      (mkConApp "::" [Var "x", Var "xs"]))
                              emptyEnv))
            , ("()", VU)
+           , ("min_float", VD 0.0) -- FIXME: this is bogus, how do i get the max Double?
+           , ("max_float", VD 0.0) -- FIXME: this is bogus, how do i get the max Double?
+           , ("max"
+             ,mkNonRec $ mkLams [VarPat "x", VarPat "y"]
+                                (Ite (mkApps (Var ">=") [Var "x", Var "y"])
+                                     (Var "x") (Var "y")))
+           , ("min"
+             ,mkNonRec $ mkLams [VarPat "x", VarPat "y"]
+                                (Ite (mkApps (Var "<=") [Var "x", Var "y"])
+                                     (Var "x") (Var "y")))
            , ("List.fold_left"
              ,mkRec "List.fold_left"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
@@ -288,13 +298,32 @@ primVars = [ ("[]", VL [])
            , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl)
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length)
+           , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int)
            , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
            , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char)
            , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float)
+           , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string)
+           , ("float", mkPrim1Fun $ P1 "float" pfloat)
            , ("float_of_int", mkPrim1Fun $ P1 "float_of_int" pfloat_of_int)
+           , ("float_of_string", mkPrim1Fun $ P1 "float_of_string" pfloat_of_string)
            , ("string_of_int", mkPrim1Fun $ P1 "string_of_int" pstring_of_int)
+           , ("string_of_float", mkPrim1Fun $ P1 "string_of_float" pstring_of_float)
            , ("abs", mkPrim1Fun $ P1 "abs" pabs)
+           , ("abs_float", mkPrim1Fun $ P1 "abs_float" pabs_float)
+           , ("exp", mkPrim2Fun $ P2 "exp" pexp)
+           , ("log", mkPrim1Fun $ P1 "log" plog)
            , ("log10", mkPrim1Fun $ P1 "log10" plog10)
+           , ("mod_float", mkPrim2Fun $ P2 "mod_float" pmod_float)
+           , ("modf", mkPrim1Fun $ P1 "modf" pmodf)
+           , ("sqrt", mkPrim1Fun $ P1 "sqrt" psqrt)
+           , ("acos", mkPrim1Fun $ P1 "acos" pacos)
+           , ("asin", mkPrim1Fun $ P1 "asin" pasin)
+           , ("atan", mkPrim1Fun $ P1 "atan" patan)
+           , ("cos", mkPrim1Fun $ P1 "cos" pcos)
+           , ("sin", mkPrim1Fun $ P1 "sin" psin)
+           , ("tan", mkPrim1Fun $ P1 "tan" ptan)
+           , ("tanh", mkPrim1Fun $ P1 "tanh" ptanh)
+           , ("truncate", mkPrim1Fun $ P1 "truncate" ptruncate)
            , ("compare", mkPrim2Fun $ P2 "compare" pcompare)
            , ("raise", mkPrim1Fun $ P1 "raise" praise)
            , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string)
@@ -324,14 +353,57 @@ pnot (VB x) = return (VB (not x))
 pabs :: MonadEval m => Value -> m Value
 pabs (VI i) = return (VI (abs i))
 
+pabs_float :: MonadEval m => Value -> m Value
+pabs_float (VD i) = return (VD (abs i))
+
+pmod_float :: MonadEval m => Value -> Value -> m Value
+pmod_float (VD i) (VD j) = return (VD (i - (fromInteger $ floor (i / j)) * j))
+
 pexp :: MonadEval m => Value -> Value -> m Value
 pexp (VD i) (VD j) = return (VD (i ** j))
 
+plog :: MonadEval m => Value -> m Value
+plog (VD x) = return (VD (log x))
+
 plog10 :: MonadEval m => Value -> m Value
-plog10 (VD x) = return (VD (log x))
+plog10 (VD x) = return (VD (logBase 10 x))
+
+pmodf :: MonadEval m => Value -> m Value
+pmodf (VD x) = let (n,d) = properFraction x
+               in return (VT 2 [VD d, VD (fromInteger n)])
+
+psqrt :: MonadEval m => Value -> m Value
+psqrt (VD i) = return (VD (sqrt i))
+
+pacos :: MonadEval m => Value -> m Value
+pacos (VD i) = return (VD (acos i))
+
+pasin :: MonadEval m => Value -> m Value
+pasin (VD i) = return (VD (asin i))
+
+patan :: MonadEval m => Value -> m Value
+patan (VD i) = return (VD (atan i))
+
+pcos :: MonadEval m => Value -> m Value
+pcos (VD i) = return (VD (cos i))
+
+psin :: MonadEval m => Value -> m Value
+psin (VD i) = return (VD (sin i))
+
+ptan :: MonadEval m => Value -> m Value
+ptan (VD i) = return (VD (tan i))
+
+ptanh :: MonadEval m => Value -> m Value
+ptanh (VD i) = return (VD (tanh i))
+
+ptruncate :: MonadEval m => Value -> m Value
+ptruncate (VD i) = return (VI (truncate i))
 
 pint_of_char :: MonadEval m => Value -> m Value
 pint_of_char (VC c) = return (VI (ord c))
+
+pint_of_string :: MonadEval m => Value -> m Value
+pint_of_string (VS s) = return (VI (read s))
 
 pint_of_float :: MonadEval m => Value -> m Value
 pint_of_float (VD d) = return (VI (truncate d))
@@ -339,8 +411,17 @@ pint_of_float (VD d) = return (VI (truncate d))
 pfloat_of_int :: MonadEval m => Value -> m Value
 pfloat_of_int (VI i) = return (VD (fromIntegral i))
 
+pfloat :: MonadEval m => Value -> m Value
+pfloat = pfloat_of_int
+
+pfloat_of_string :: MonadEval m => Value -> m Value
+pfloat_of_string (VS s) = return (VD (read s))
+
 pstring_of_int :: MonadEval m => Value -> m Value
 pstring_of_int (VI i) = return (VS (show i))
+
+pstring_of_float :: MonadEval m => Value -> m Value
+pstring_of_float (VD i) = return (VS (show i))
 
 pstring_get :: MonadEval m => Value -> Value -> m Value
 pstring_get (VS s) (VI i) = return (VC (s !! i))
@@ -353,6 +434,13 @@ pprint_string (VS s) = do
   opts <- ask
   when (enablePrint opts) $
     liftIO $ putStr s
+  return VU
+
+pprint_int :: MonadEval m => Value -> m Value
+pprint_int (VI i) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStr $ show i
   return VU
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
@@ -393,6 +481,12 @@ praise x@(VA {}) = throwError (MLException x)
 
 pprintexc_to_string :: MonadEval m => Value -> m Value
 pprintexc_to_string x@(VA {}) = return $ VS $ show x
+
+mkNonRec :: Expr -> Value
+mkNonRec lam = func
+  where
+  func = VF (Func lam env)
+  env  = baseEnv
 
 mkRec :: Var -> Expr -> Value
 mkRec f lam = func
