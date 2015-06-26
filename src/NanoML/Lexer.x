@@ -17,7 +17,10 @@ $symbol = [\! \$ \% \& \* \+ \- \. \/ \: \< \= \> \? \@ \^ \| \~]
 tokens :-
   $white+       ;
   $digit+       { tokS TokInt }
+  $digit+ [eE] [\-\+]? $digit+ { tokS TokFloat }
   $digit+ \. $digit* { tokS (TokFloat . (++"0")) }
+  $digit+ \. $digit* [eE] [\-\+]? $digit+ { tokS (TokFloat . mkExp) }
+
 
  "(*"           { nested_comment }
 
@@ -103,6 +106,9 @@ tok t _ _ = return t
 
 tokS :: (String -> Token) -> AlexInput -> Int -> Alex Token
 tokS t (_, _, _, str) len = return (t (take len str))
+
+mkExp :: String -> String
+mkExp s = let (d,f) = break (=='.') s in d ++ ".0" ++ drop 1 f
 
 data Token
   = TokId String
