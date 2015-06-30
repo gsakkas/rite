@@ -3,6 +3,8 @@
 module NanoML.Lexer where
 
 import Data.Char
+
+import Debug.Trace
 }
 
 %wrapper "monad"
@@ -196,13 +198,13 @@ nested_comment _ _ = do
 	    	'*' -> do
                   case alexGetByte input of
 		    Nothing  -> err input
-                    Just (c,input) | c == fromIntegral (ord ')') -> go (n-1) input
-                    Just (c,input)   -> go n input
+                    Just (c,input') | c == fromIntegral (ord ')') -> go (n-1) input'
+                    Just (c,input')   -> go n input
 	     	'(' -> do
                   case alexGetByte input of
 		    Nothing  -> err input
-                    Just (c,input) | c == fromIntegral (ord '*') -> go (n+1) input
-		    Just (c,input)   -> go n input
+                    Just (c,input') | c == fromIntegral (ord '*') -> go (n+1) input'
+		    Just (c,input')   -> go n input
 	    	c -> go n input
         err input = do alexSetInput input; lexError "error in nested comment"  
 
@@ -226,7 +228,7 @@ lexError s = do
 
 alexEOF = return TokEOF
 
-showPosn (AlexPn _ line col) = show line ++ ':': show col
+showPosn (AlexPn _ line col) = show line ++ ':' : show col
 
 alexScanTokens :: String -> Either String [Token]
 alexScanTokens input = runAlex input gather

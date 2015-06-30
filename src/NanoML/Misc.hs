@@ -1,6 +1,7 @@
 module NanoML.Misc where
 
 import           Control.Arrow
+import           Control.DeepSeq
 import           Control.Monad
 import           Data.Either
 import           Data.List
@@ -43,6 +44,37 @@ knownFuncs = Map.fromList . map (second (fromRight . parseType)) $
   , ("bigAdd", "int list -> int list -> int list")
   , ("mulByDigit", "int -> int list -> int list")
   , ("bigMul", "int list -> int list -> int list")
+
+    -- SEMINAL benchmarks
+    -- NOTE: i'm guessing the types here based on the definitions and context
+  , ("titlecase", "string -> string")
+  , ("reverse", "string -> string")
+--  , ("reverseHelp", "string -> string")
+  , ("prnt", "'a lst -> ()")
+  , ("append", "'a lst -> 'a lst -> 'a lst")
+  , ("map", "(char -> char) -> string -> string") -- NOTE: non-standard type
+--  , ("mapHelp", "string -> string")
+  , ("lookup", "heap -> string -> int")
+  , ("update", "heap -> string -> int -> heap")
+  , ("interp_e", "heap -> exp -> int")
+  , ("makePoly", "int -> float -> move")
+  , ("interp_s", "heap -> stmt -> heap")
+  , ("interpLarge", "move list -> (float*float) list")
+  , ("interpSmall", "move list -> (float*float) list")
+  , ("foo", "move list -> int")
+  , ("interpTrans", "move list -> float->float->float-> (float * float) list * float")
+  , ("print_heap", "heap -> ()")
+  , ("print_elt", "heap_elt -> ()")
+  , ("lookup_raw", "heap -> string -> heapElement")
+  , ("lookup_var", "heap -> string -> int")
+  , ("test", "stmt -> ()")
+  , ("interp_prog", "stmt -> int")
+  , ("interp", "(env -> (string list) option -> env) -> env -> exp -> exp")
+  , ("computeFreeVars", "exp -> (exp * string list)")
+  , ("print_prog", "exp -> string")
+  , ("print_array", "string list -> ()")
+  , ("printExp", "exp -> ()")
+  , ("printEnv", "env -> ()")
   ]
 
 facProg :: String
@@ -344,21 +376,25 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog4839.ml" -- uses printf
              ]
 
-testParser :: IO [(FilePath, Prog)]
-testParser = do
-  let dir = "../yunounderstand/data/sp14/prog/unify"
+type Err = String
+
+parseAllIn :: FilePath -> IO [(FilePath, Maybe Err, Prog)]
+parseAllIn dir = do
+--  let dir = "../yunounderstand/data/sp14/prog/unify"
   mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
           <$> getDirectoryContents dir
   parseAll dir mls
 
 parseAll dir [] = return []
 parseAll dir (ml:mls) = do
-    r <- parseTopForm <$> readFile (dir </> ml)
+    r <- parseTopForm . force <$> readFile (dir </> ml)
     case r of
       Right p -> do
-        mls <- unsafeInterleaveIO (parseAll dir mls)
-        return $ (ml, p) : mls
-      Left _ -> print ml >> print r >> error "die"
+        b <- doesFileExist (dir </> ml <.> "err")
+        err <- if b then Just <$> readFile (dir </> ml <.> "err") else return Nothing
+        mls <- parseAll dir mls
+        return $ (ml, err, p) : mls
+      Left _ -> print ml >> print r >> parseAll dir mls
 
 parseFile :: FilePath -> IO Prog
 parseFile f = do

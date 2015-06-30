@@ -61,7 +61,7 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
 
 [ ] configurable failure options
   - heterogeneous equality vs. homogeneous
-  - check ADT arguments at application site
+  - check ADT arguments at application site (IMPORTANT FOR SEMINAL)
 
 [ ] add post-hoc generalization a la smartcheck
 

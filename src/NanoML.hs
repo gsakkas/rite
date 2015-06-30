@@ -23,7 +23,9 @@ import           System.Timeout
 import           Test.QuickCheck
 import           Test.QuickCheck.Monadic
 import           Test.QuickCheck.Property hiding (Result)
+import           Test.SmartCheck
 import           Text.Printf
+import           Text.Regex.TDFA
 
 import           NanoML.Eval
 import           NanoML.Gen
@@ -32,11 +34,13 @@ import           NanoML.Parser
 import           NanoML.Pretty
 import           NanoML.Types
 
+import Debug.Trace
 
-check :: Prog -> IO (Maybe Result)
-check prog =
+
+check :: Maybe Err -> Prog -> IO (Maybe Result)
+check err prog =
   case last prog of
-    DFun _ [(VarPat f, Lam {})]
+    DFun _ _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
         -> do r <- checkFunc f t prog
               let x:xs = lines $ output r
@@ -45,19 +49,47 @@ check prog =
               -- so just extract that (2nd) line..
               putStr $ unlines (x : safeTail xs)
               return $ Just r
-    DFun _ [(WildPat, e)]
+    _ | Just err <- err
+      , Just (_,_,_,[l,c])
+        <- err =~~ "line ([0-9]+), characters ([0-9]+)"
+           :: Maybe (String,String,String,[String])
+      , Just (f,d) <- traceShow (l,c) $ findDecl prog (read l) (read c)
+      , Just t <- traceShow f $ Map.lookup f knownFuncs
+        -> do traceShowM t
+              r <- checkFunc f t prog
+              let x:xs = lines $ output r
+              -- NOTE: there doesn't seem to be an easy way to make QC
+              -- not output the Show instance of the counterexample,
+              -- so just extract that (2nd) line..
+              putStr $ unlines (x : safeTail xs)
+              return $ Just r
+    DFun _ _ [(WildPat, _)]
+        -> do r <- runProg prog
+              putStr $ output r
+              return $ Just r
+    DFun _ _ [(VarPat _, _)]
         -> do r <- runProg prog
               putStr $ output r
               return $ Just r
     _ -> do printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
             return Nothing
 
+findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl)
+findDecl prog l c = do
+  d <- find (surrounds l c . getSrcSpan) prog
+  case d of
+    DFun _ _ [(VarPat f, Lam {})] -> Just (f,d)
+    _                             -> Nothing
+
+surrounds l c (SrcSpan sl sc el ec)
+  = sl <= l && l < el
+
 safeTail [] = []
 safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ nanoCheck $ run $ runEval loudOpts $ do
+             $ within sec $ nanoCheck $ run $ runEval quietOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
 
@@ -65,28 +97,42 @@ loudOpts = NanoOpts { enablePrint = True }
 quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10 })
+checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 100 })
                    $ within sec $ nanoCheck $ do
-                     (st, log) <- run $ runEvalLog quietOpts $
-                                    mapM_ evalDecl prog >> get
-                     args <- pick (genArgs t $ stTypeEnv st)
-                     monitor $ counterexample (show . pretty $ mkApps (Var f) args)
-                     run $ runEval quietOpts $ do
-                       put st; tell log -- first of all, restore the state and log
-                       v <- eval (mkApps (Var f) args)
-                       b <- v `checkType` resTy t
-                       if b
-                         then return True
-                         else outputTypeMismatchError v t
+                     (x, st, log) <- run $ runEvalFull quietOpts $ mapM_ evalDecl prog
+                     case x of
+                       Right _ -> continue st log
+                       -- Left (MLException _) -> continue st log
+                       Left e
+                         | Env env <- stVarEnv st
+                         , Just _ <- Map.lookup f env
+                           -- if evaluation aborts after the function we want to test
+                           -- has been defined, we can go ahead and test it!
+                           -> continue st log
+                         | otherwise -> return (Left (e, log))
+  where
+  continue st log = do
+    args <- pick (genArgs t $ stTypeEnv st)
+    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
+    run $ runEval quietOpts $ do
+      put st; tell log -- first of all, restore the state and log
+      v <- eval (mkApps (Var f) args)
+      b <- v `checkType` resTy t
+      if b
+        then return ()
+        else outputTypeMismatchError v t
 
 sec = 5000000
 
 nanoCheck m = monadicIO $ m >>= \case
   Right x    -> return ()
-  Left (e,t) -> -- counterexample (render $ vsep $ intersperse mempty t) $
-                fail $ "*** Exception: " ++ show e
+--  Left (MLException _, t) -> return ()
+  Left (e, t) -> -- counterexample (render $ vsep $ intersperse mempty t) $
+                 fail $ "*** Exception: " ++ show e
 
-checkAll = testParser >>= mapM (\(f,p) -> putStrLn ("\n" ++ f) >> check p >>= \r -> maybe (return Nothing) (\r -> return (Just (f,r))) r)
+checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
+
+checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> return (Just (f,r))) r)
 
 checkType :: MonadEval m => Value -> Type -> m Bool
 checkType v t = case t of

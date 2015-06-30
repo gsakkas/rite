@@ -24,16 +24,19 @@ library
                      , NanoML.Types
   -- other-modules:
   -- other-extensions:
-  build-depends:       QuickCheck >= 2.8
+  build-depends:       QuickCheck
+                     , smartcheck
                      , ansi-wl-pprint >= 0.6
                      , array
                      , base >=4.7 && <5
                      , containers >= 0.5
+                     , deepseq
                      , directory
                      , exceptions >= 0.8
                      , filepath
                      , mtl >= 2.2
                      , parsers >=0.12
+                     , regex-tdfa >= 1.2
                      , transformers >= 0.4
                      , trifecta >=1.5
                      , unordered-containers >= 0.2

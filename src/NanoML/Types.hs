@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
@@ -21,6 +22,8 @@ import           Data.Map                     (Map)
 import qualified Data.Map                     as Map
 import           Data.Maybe
 import           Data.Typeable
+import           GHC.Generics
+import           Test.SmartCheck
 import           Text.PrettyPrint.ANSI.Leijen (Doc)
 
 import           Debug.Trace
@@ -172,7 +175,7 @@ baseTypeEnv = Map.fromList
   [ ("()",     TypeDecl "()"     []    (Alg [DataDecl "()" []]))
   , ("list",   TypeDecl "list"   ["a"] (Alg [dNil, dCons]))
   , ("option", TypeDecl "option" ["a"] (Alg [dNone, dSome]))
-  , ("exn",    TypeDecl "exn"    []    (Alg []))
+  , ("exn",    TypeDecl "exn"    []    (Alg [dNot_found, dMatch_failure]))
   ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
@@ -184,6 +187,8 @@ dNil = DataDecl "[]" []
 dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
 dNone = DataDecl "None" []
 dSome = DataDecl "Some" [ TVar "a" ]
+dNot_found = DataDecl "Not_found" []
+dMatch_failure = DataDecl "Match_failure" []
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
@@ -242,6 +247,36 @@ primVars = [ ("[]", VL [])
                               )
                              ]))
              )
+           , ("List.assoc"
+             ,mkRec "List.assoc"
+                    (mkLams [VarPat "z", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" []
+                              ,Nothing
+                              ,App (Var "raise") [ConApp "Not_found" []])
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Ite (App (Var "=") [Var "z", App (Var "fst") [Var "y"]])
+                                   (App (Var "snd") [Var "y"])
+                                   (App (Var "List.assoc") [Var "z", Var "ys"])
+                              )
+                             ]))
+             )
+           , ("List.filter"
+             ,mkRec "List.filter"
+                    (mkLams [VarPat "f", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" []
+                              ,Nothing
+                              ,ConApp "[]" [])
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Ite (App (Var "f") [Var "y"])
+                                   (ConApp "::" [Var "y", App (Var "List.filter") [Var "f", Var "ys"]])
+                                   (App (Var "List.filter") [Var "f", Var "ys"])
+                              )
+                             ]))
+             )
            , ("List.map"
              ,mkRec "List.map"
                     (mkLams [VarPat "f", VarPat "xs"]
@@ -288,6 +323,7 @@ primVars = [ ("[]", VL [])
            , ("fst", mkPrim1Fun $ P1 "fst" pfst)
            , ("snd", mkPrim1Fun $ P1 "snd" psnd)
            , ("failwith", mkPrim1Fun $ P1 "failwith" pfailwith)
+           , ("Char.escaped", mkPrim1Fun $ P1 "Char.escaped" pchar_escaped)
            , ("List.append", mkPrim2Fun $ P2 "List.append" pappend)
            , ("List.combine", mkPrim2Fun $ P2 "List.combine" plist_combine)
            , ("List.hd", mkPrim1Fun $ P1 "List.hd" plist_hd)
@@ -298,8 +334,10 @@ primVars = [ ("[]", VL [])
            , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl)
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length)
+           , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char)
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int)
            , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
+           , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline)
            , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char)
            , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float)
            , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string)
@@ -423,6 +461,9 @@ pstring_of_int (VI i) = return (VS (show i))
 pstring_of_float :: MonadEval m => Value -> m Value
 pstring_of_float (VD i) = return (VS (show i))
 
+-- pstring_concat :: MonadEval m => Value -> Value -> m Value
+-- pstring_concat (VS s) (VL xs) = return (VL ())
+
 pstring_get :: MonadEval m => Value -> Value -> m Value
 pstring_get (VS s) (VI i) = return (VC (s !! i))
 
@@ -436,12 +477,29 @@ pprint_string (VS s) = do
     liftIO $ putStr s
   return VU
 
+pprint_endline :: MonadEval m => Value -> m Value
+pprint_endline (VS s) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStrLn s
+  return VU
+
 pprint_int :: MonadEval m => Value -> m Value
 pprint_int (VI i) = do
   opts <- ask
   when (enablePrint opts) $
     liftIO $ putStr $ show i
   return VU
+
+pprint_char :: MonadEval m => Value -> m Value
+pprint_char (VC c) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStr $ [c]
+  return VU
+
+pchar_escaped :: MonadEval m => Value -> m Value
+pchar_escaped (VC c) = return (VS (showLitChar c ""))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
 plist_combine (VL xs) (VL ys)
@@ -525,10 +583,11 @@ data Value
   | VT Int [Value] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
   | VA DCon [Value]
   | VF Func
-  deriving (Show)
+  deriving (Show, Generic)
 
 data Func
   = Func Expr Env
+  deriving (Generic)
 
 -- NOTE: we can NEVER print the captured environment since recursive
 -- functions will refer to themselves
@@ -542,17 +601,30 @@ data Literal
   | LC Char
   | LS String
   | LU
-  deriving (Show)
+  deriving (Show, Generic)
 
-data RecFlag = Rec | NonRec deriving (Show)
+data RecFlag = Rec | NonRec deriving (Show, Generic)
+
+data SrcSpan = SrcSpan
+  { srcSpanStartLine :: !Int
+  , srcSpanStartCol  :: !Int
+  , srcSpanEndLine   :: !Int
+  , srcSpanEndCol    :: !Int
+  } deriving (Show, Generic)
 
 type Prog = [Decl]
 
 data Decl
-  = DFun RecFlag [(Pat,Expr)]
-  | DTyp [TypeDecl]
-  | DExn DataDecl
-  deriving (Show)
+  = DFun SrcSpan RecFlag [(Pat,Expr)]
+  | DTyp SrcSpan [TypeDecl]
+  | DExn SrcSpan DataDecl
+  deriving (Show, Generic)
+
+getSrcSpan :: Decl -> SrcSpan
+getSrcSpan d = case d of
+  DFun ss _ _ -> ss
+  DTyp ss _ -> ss
+  DExn ss _ -> ss
 
 data Expr
   = Var Var
@@ -571,7 +643,9 @@ data Expr
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
-  deriving (Show)
+  deriving (Show, Generic)
+
+-- instance SubTypes Expr
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value)
 instance Show Prim1 where

@@ -30,10 +30,8 @@ runEval opts x = evalRWST (runExceptT x) opts initState >>= \case
   (Left e, tr) -> return $ Left (e, tr)
   (Right v, _) -> return $ Right v
 
-runEvalLog :: NanoOpts -> Eval a -> IO (a, [Doc])
-runEvalLog opts x = evalRWST (runExceptT x) opts initState >>= \case
-  (Left e, tr) -> error $ show e
-  (Right v, tr) -> return (v, tr)
+runEvalFull :: NanoOpts -> Eval a -> IO (Either NanoError a, EvalState, [Doc])
+runEvalFull opts x = runRWST (runExceptT x) opts initState
 
 evalString :: MonadEval m => String -> m Value
 evalString s = case parseExpr s of
@@ -42,10 +40,10 @@ evalString s = case parseExpr s of
 
 evalDecl :: MonadEval m => Decl -> m ()
 evalDecl decl = case decl of
-  DFun Rec    binds  -> evalRecBinds binds >>= setVarEnv
-  DFun NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
-  DTyp decls -> mapM_ addType decls
-  DExn decl -> extendType "exn" decl
+  DFun _ Rec    binds  -> evalRecBinds binds >>= setVarEnv
+  DFun _ NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
+  DTyp _ decls -> mapM_ addType decls
+  DExn _ decl -> extendType "exn" decl
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do
@@ -65,7 +63,7 @@ evalBind :: MonadEval m => (Pat,Expr) -> m Env
 evalBind (p,e) = logEnv $ do
   v <- eval e
   matchPat v p >>= \case
-    Nothing  -> typeError "pattern-match failed"
+    Nothing  -> throwError $ MLException (VA "Match_failure" [])
     Just env -> return env
 
 logEnv :: MonadEval m => m Env -> m Env
@@ -252,7 +250,7 @@ litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
-  = typeError "no matching pattern"
+  = throwError $ MLException (VA "Match_failure" [])
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as

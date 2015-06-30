@@ -131,9 +131,12 @@ TopFormList :: { [Decl] }
 | Decl TopFormList            { $1 : $2 }
 
 Decl :: { Decl }
-: "let" RecFlag LetBindings    { DFun $2 (reverse $3) }
-| "type" TypeDecls             { DTyp (reverse $2) }
-| "exception" DataDecl         { DExn $2 }
+: GetPosition "let" RecFlag  LetBindings GetPosition
+  { locDecl $1 $5 (\s -> DFun s $3 (reverse $4)) }
+| GetPosition "type" TypeDecls GetPosition
+  { locDecl $1 $4 (\s -> DTyp s (reverse $3)) }
+| GetPosition "exception" DataDecl GetPosition
+  { locDecl $1 $4 (\s -> DExn s $3) }
 
 LetBindings :: { [(Pat,Expr)] }
 : LetBinding                    { [$1] }
@@ -145,7 +148,11 @@ LetBinding :: { (Pat, Expr) }
 
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
+| TypeConstraint '=' SeqExpr { $3 }
 | SimplePattern FunBinding { Lam $1 $2 }
+
+TypeConstraint :: { Type }
+: ':' Type { $2 }
 
 TypeDecls :: { [TypeDecl] }
 : TypeDecl                  { [$1] }
@@ -201,6 +208,7 @@ SimplePatternNotIdent :: { Pat }
 | Literal                 { LitPat $1 }
 | '[' PatternSemiList ']' { ListPat (reverse $2) }
 | '(' Pattern ')'         { $2 }
+| '(' Pattern ':' Type ')'{ $2 }
 | ConLongIdent            { ConPat $1 [] }
 
 PatternCommaList :: { [Pat] }
@@ -224,13 +232,12 @@ Expr :: { Expr }
 | ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 (case $2 of { Tuple xs -> xs; _ -> [$2] }) }
 | "let" RecFlag LetBindings "in" SeqExpr    { Let $2 (reverse $3) $5 }
 | "function" MaybePipe AltList              { mkFunction (reverse $3) }
-| "fun" SimplePattern "->" Expr             { Lam $2 $4 }
+| "fun" SimplePattern FunDef                { Lam $2 $3 }
 | "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
 | "try" SeqExpr "with" MaybePipe AltList    { Try $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (reverse $1) }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite $2 $4 $6 }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
-| SimpleExpr ".[" SeqExpr ']'               { mkApps (Var "String.get") [$1, $3] }
 | Expr "::" Expr                            { mkConApp "::" [$1, $3] }
 | Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
 | Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
@@ -250,8 +257,10 @@ SimpleExpr :: { Expr }
 : ValLongIdent          { Var $1 }
 | ConLongIdent %prec constr  { mkConApp $1 [] }
 | Literal               { Lit $1 }
+| SimpleExpr ".[" SeqExpr ']'     { mkApps (Var "String.get") [$1, $3] }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
+| "begin" "end"         { Var "()" }
 | '[' ExprSemiList MaybeSemi ']'  { mkList (reverse $2) }
 
 SimpleExprList :: { [Expr] }
@@ -273,6 +282,10 @@ AltList :: { [Alt] }
 Alt :: { Alt }
 : Pattern "->" SeqExpr                 { ($1, Nothing, $3) }
 | Pattern "when" SeqExpr "->" SeqExpr  { ($1, Just $3, $5) }
+
+FunDef :: { Expr }
+: "->" SeqExpr          { $2 }
+| SimplePattern FunDef  { Lam $1 $2 }
 
 Literal :: { Literal }
 : string    { LS (read $1) }
@@ -307,6 +320,7 @@ SimpleType :: { Type }
 SimpleType2 :: { Type }
 : '\'' ident                       { TVar $2 }
 | LongIdent                        { TCon $1 }
+| '(' ')'                          { TCon "()" }
 | SimpleType2 LongIdent            { mkTApps $2 [$1] }
 | '(' TypeCommaList ')' LongIdent  { mkTApps $4 (reverse $2) }
 
@@ -360,7 +374,13 @@ MaybeSemi :: { () }
 : {- empty -}      { () }
 | ';'              { () }
 
+GetPosition :: { (Int, Int) }
+: {- empty -}      {% getPosition }
+
 {
+
+locDecl :: (Int,Int) -> (Int,Int) -> (SrcSpan -> Decl) -> Decl
+locDecl (sl,sc) (el,ec) f = f (SrcSpan sl sc el ec)
 
 parseError :: Token -> Alex a
 parseError t = do

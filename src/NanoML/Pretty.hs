@@ -160,9 +160,9 @@ prettyAlt (p, g, e) = text "|" <+> pretty p
 
 instance Pretty Decl where
   pretty d = case d of
-    DFun r bnds -> text "let" <> pretty r <+> prettyBinds bnds <+> text ";;"
-    DTyp tdecls -> text "type" <+> prettyTypeDecls tdecls
-    DExn decl   -> text "exception" <+> pretty decl
+    DFun _ r bnds -> text "let" <> pretty r <+> prettyBinds bnds <+> text ";;"
+    DTyp _ tdecls -> text "type" <+> prettyTypeDecls tdecls
+    DExn _ decl   -> text "exception" <+> pretty decl
 
 prettyTypeDecls [b]    = pretty b
 prettyTypeDecls (b:bs) = pretty b <$> text "and" <+> prettyTypeDecls bs
