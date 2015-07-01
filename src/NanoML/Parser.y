@@ -183,11 +183,11 @@ DataDecls :: { [DataDecl] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: con DataArgs              { DataDecl $1 (reverse $2) }
+: con DataArgs              { DataDecl $1 $2 }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }
-| "of" TypeList               { reverse $2 }
+| "of" SimpleTypeOrTuple      { case $2 of { TTup ts -> ts; _ -> [$2] } }
 
 -- Patterns
 
