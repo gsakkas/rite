@@ -27,7 +27,7 @@ instance Pretty Value where
   prettyPrec z v = case v of
     VI i -> pretty i
     VD d -> pretty d
-    VC c -> pretty c
+    VC c -> text $ "'" ++ [c] ++ "'"
     VS s -> text $ show s
     VB b -> text (if b then "true" else "false")
     VU   -> text "()"
