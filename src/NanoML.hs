@@ -40,15 +40,8 @@ import Debug.Trace
 check :: Maybe Err -> Prog -> IO (Maybe Result)
 check err prog =
   case last prog of
-    DFun _ _ [(VarPat f, Lam {})]
-      | Just t <- Map.lookup f knownFuncs
-        -> do r <- checkFunc f t prog
-              let x:xs = lines $ output r
-              -- NOTE: there doesn't seem to be an easy way to make QC
-              -- not output the Show instance of the counterexample,
-              -- so just extract that (2nd) line..
-              putStr $ unlines (x : safeTail xs)
-              return $ Just r
+    -- NOTE: it's crucial that we prioritize the case where ocaml has
+    -- told us where the type error is
     _ | Just err <- err
       , Just (_,_,_,[l,c])
         <- err =~~ "line ([0-9]+), characters ([0-9]+)"
@@ -57,6 +50,15 @@ check err prog =
       , Just t <- traceShow f $ Map.lookup f knownFuncs
         -> do traceShowM t
               r <- checkFunc f t prog
+              let x:xs = lines $ output r
+              -- NOTE: there doesn't seem to be an easy way to make QC
+              -- not output the Show instance of the counterexample,
+              -- so just extract that (2nd) line..
+              putStr $ unlines (x : safeTail xs)
+              return $ Just r
+    DFun _ _ [(VarPat f, Lam {})]
+      | Just t <- Map.lookup f knownFuncs
+        -> do r <- checkFunc f t prog
               let x:xs = lines $ output r
               -- NOTE: there doesn't seem to be an easy way to make QC
               -- not output the Show instance of the counterexample,

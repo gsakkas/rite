@@ -69,8 +69,24 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - where did value `x` come from?
   - PSE (ESP done backwards) dump checker
 
-[ ] for 4 seminal programs that don't crash
-  - WHY??
+[X] for seminal programs that don't crash, WHY??
+  - 20060305-21:49:26-9fc379ff0ebf471cca400f4c3b144205.seminal.ml
+    - just need a type for `mapHelp` so we actually generate inputs
+  - 20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
+    - used if-then instead of if-then-else, type mismatch between [] and ()
+  - 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
+    20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
+    - datacon name shadowing
+    - we should probably forbid shadowing datacons, even though ocaml allows it..
+  - 20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
+    - partially applied function, so we don't reduce anything, need to supply extra arg
+  - 20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
+    20060321-16:05:32-9fac1c5709dc4756677dea761359bb07.seminal.ml
+    20060321-18:07:56-3c4adbec38600fff622eabc0dbcae305.seminal.ml
+    - not checking types of arguments to datacons
+  - 20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
+    - type mismatch in result of match, () vs string
+    - value is discarded though (with ;) so it can't go wrong
 
 [ ] a few concrete examples of programs that crash at ML level
 
@@ -105,6 +121,7 @@ let interpSmall (movelist : move list) : (float*float) list =
     - keep log of tests that threw MLException
       - may indicate that type error is unreachable
   
+
 
 ```
   fun (f,b) ->

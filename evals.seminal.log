@@ -1,6 +1,3 @@
-λ> :r
-[8 of 8] Compiling NanoML           ( /Users/gridaphobe/Source/nanoml/src/NanoML.hs, interpreted )
-Ok, modules loaded: NanoML, NanoML.Parser, NanoML.Types, NanoML.Eval, NanoML.Gen, NanoML.Misc, NanoML.Pretty, NanoML.Lexer.
 λ> results <- checkAllFrom "data/seminal/"
 "20060302-08:37:20-b8c86c351fe390ea1b61a078bd334bcb.seminal.ml"
 Left "unexpected token TokIn at line 1, column 15"
@@ -283,8 +280,8 @@ reverse ""
 ("13","2")
 "reverse"
 TCon "string" :-> TCon "string"
-*** Failed! *** Exception: UnboundVariable "<-" (after 4 tests): 
-reverse "\223\161}"
+*** Failed! *** Exception: UnboundVariable "<-" (after 3 tests): 
+reverse "\197"
 
 20060303-20:46:42-1b35868bafe72205ea7e97084a3529eb.seminal.ml
 ("5","21")
@@ -315,8 +312,8 @@ append (Null ) (Null )
 ("19","23")
 "map"
 (TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")
-*** Failed! *** Exception: OutputTypeMismatch VU ((TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")) (after 2 tests): 
-map (fun _ -> B) "\162"
+*** Failed! *** Exception: OutputTypeMismatch VU ((TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")) (after 4 tests): 
+map (fun _ -> Ù) "\248kb"
 
 20060303-22:00:40-01a5cb3bf91aa2112c2a6c4201763826.seminal.ml
 ("23","20")
@@ -336,7 +333,7 @@ map (fun _ -> B) "\162"
 "map"
 (TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")
 *** Failed! *** Exception: OutputTypeMismatch (VL []) ((TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")) (after 1 test): 
-map (fun _ -> 8) ""
+map (fun _ -> ±) ""
 
 20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
 ("22","15")
@@ -344,1085 +341,103 @@ map (fun _ -> 8) ""
 +++ OK, passed 1 tests.
 
 20060311-23:38:59-d8f33461447ecf33f137a33374ccfae1.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
+("21","39")
+"lookup"
+TCon "heap" :-> (TCon "string" :-> TCon "int")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VA "IntEntry" [VS "",VI (-1)]]) (TCon "heap" :-> (TCon "string" :-> TCon "int")) (after 34 tests): 
+lookup (:: (HeapEntry ("",:: (IntEntry ("",-1),[] )),:: (IntEntry ("",0),:: (HeapEntry ("",[] ),[] )))) ""
 
 20060311-23:47:13-bb5548edde7545872f33b6b15649642f.seminal.ml
+("20","44")
+"lookup"
+TCon "heap" :-> (TCon "string" :-> TCon "int")
 *** Failed! *** Exception: OutputTypeMismatch (VL []) (TCon "heap" :-> (TCon "string" :-> TCon "int")) (after 1 test): 
 lookup ([] ) ""
 
 20060312-00:01:00-e429466fc820ac64a608a8302289bcb7.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int 0,""))
+("20","17")
+"lookup"
+TCon "heap" :-> (TCon "string" :-> TCon "int")
+*** Failed! *** Exception: TypeError "type error: tried to match (\"\\147\",HeapEntry []) against IntEntry (str1,i)" (after 7 tests): 
+lookup (:: (("\147",HeapEntry [] ),:: (("",HeapEntry [] ),[] ))) "\f"
 
 20060312-00:02:53-b5e4fbb55ad62a0991139e6650717758.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"C\\139yU\" against Int i" (after 6 tests): 
-interp_prog (Assign (Int 3,"C\139yU"))
+("23","39")
+"update"
+TCon "heap" :-> (TCon "string" :-> (TCon "int" :-> TCon "heap"))
+*** Failed! *** Exception: TypeError "IntEntry expects 1 arguments, but was given 2" (after 1 test): 
+update ([] ) "" 0
 
 20060312-00:03:36-75e554ed461a798f3b14545e2dfb6e02.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
+("27","23")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
+*** Failed! *** Exception: TypeError "* can only be applied to ints" (after 4 tests): 
+interp_e (:: (("",IntEntry -1),:: (("h",IntEntry 0),[] ))) (Times (Var "",Var "L"))
 
 20060313-20:23:36-95bbcfafa3a38ccac06f556bd50a04cc.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int -2,""))
+("29","16")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
+*** Failed! *** Exception: OutputTypeMismatch (VA "IntEntry" [VI 0]) (TCon "heap" :-> (TCon "exp" :-> TCon "int")) (after 1 test): 
+interp_e ([] ) (Int 0)
 
 20060313-22:34:26-a82a6e4c5612542497388ac707e1afcf.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 2 tests): 
-interp_prog (Assign (Heap [] ,""))
+("30","22")
+*** Failed! Exception: '<<timeout>>' (after 30 tests): 
 
 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\\163\\230\" against Int i" (after 6 tests): 
-interp_prog (Assign (Heap [] ,"\163\230"))
+("35","22")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
++++ OK, passed 100 tests.
 
 20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 2 tests): 
-interp_prog (Assign (Heap [] ,""))
+("35","22")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
++++ OK, passed 100 tests.
 
 20060316-15:04:22-646d45fc661ea972e495854dafda19d7.seminal.ml
 ("19","48")
 "makePoly"
 TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
+*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
 
 20060316-17:28:56-cb82b8e194910fe2ced3aab54f0a7577.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"V+y\\145\\237\" against Int i" (after 9 tests): 
-interp_prog (Seq (Assign (Var "\FS\r2c\209","V+y\145\237"),If (Skip ,Saveheap "",Times (Var "",Var "L\177\SYNB"))))
+("53","33")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
+interp_s ([] ) (Saveheap "")
 
 20060316-17:48:30-214ae1ff72fdc57fe9fcb9d441c5126a.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 4 tests): 
-interp_prog (Skip )
-
-20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int 1,""))
-
-20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int 1,""))
-
-20060316-18:53:54-be762b624eb6b35410f5e00547f2a579.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
-("106","19")
-+++ OK, passed 1 tests.
-
-20060316-23:07:58-2378bc775661a7c89604be96966c4259.seminal.ml
-("15","48")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060316-23:15:56-8740564a90852da99c1d1bd7bef8897e.seminal.ml
-("29","40")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060316-23:16:56-c5c2fe4b8bf744437e4adaf36529464b.seminal.ml
-("34","61")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060317-20:59:10-62548773f8854de2f4ec54a035814283.seminal.ml
-("35","43")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060317-20:59:44-36ef05a00938aacce23d0d13a4c3a945.seminal.ml
-("41","49")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060317-21:37:11-096a01551f7cdd335b3d20437b761729.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL [VA \"For\" [VL [],VI 1]]) (VI 0)" (after 5 tests): 
-interpLarge (:: (Home ,:: (For (:: (For ([] ,1),[] ),-1),:: (Home ,[] ))))
-
-20060317-22:27:21-c75f0b5055a771be100553afb174be0d.seminal.ml
-*** Failed! *** Exception: TypeError "invalid argument to List.rev: ()" (after 1 test): 
-interpLarge ([] )
-
-20060317-22:27:40-749212b202dba76c8efe1df72c2fa36c.seminal.ml
-("71","46")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
-("50","48")
-+++ OK, passed 1 tests.
-
-20060319-13:26:52-dfb16e91c8f77833a400015941114cd0.seminal.ml
-("39","18")
-"interp_s"
-TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: OutputTypeMismatch (VA "Skip" []) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 1 test): 
-interp_s ([] ) (Restoreheap [] )
-
-20060319-13:43:18-06b44c2851b0cf81bcb54bfa7f1abe36.seminal.ml
-("40","33")
-"interp_s"
-TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VA "Heap" [VL []]]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 1 test): 
-interp_s ([] ) (SaveHeap "")
-
-20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml
-("23","23")
+("42","16")
 "interp_e"
 TCon "heap" :-> (TCon "exp" :-> TCon "int")
-*** Failed! *** Exception: TypeError "+ can only be applied to ints" (after 2 tests): 
-interp_e ([] ) (Plus (Var "",Var ""))
+*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "heap" :-> (TCon "exp" :-> TCon "int")) (after 1 test): 
+interp_e ([] ) (Int 0)
 
-20060319-14:52:14-bd3d537e5d622471db44fef57470b962.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (SaveHeap "")
-
-20060319-15:07:50-8f39f32b5a36e11a9464ad6fec165b06.seminal.ml
-("43","23")
+20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
+("57","6")
 "interp_s"
 TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 1 test): 
-interp_s ([] ) (RestoreHeap "")
+*** Failed! *** Exception: TypeError "type error: tried to match \"\" against HeapInt i" (after 2 tests): 
+interp_s ([] ) (Restoreheap "")
 
-20060319-18:31:02-58a2a6ce864ad7931326ad63f6ecd7dc.seminal.ml
-*** Failed! *** Exception: TypeError "* can only be applied to ints" (after 1 test): 
-
-20060319-18:48:20-a64278e668714e05e9749ccd7ca65773.seminal.ml
-("54","32")
-*** Failed! *** Exception: TypeError "type error: tried to match fun len ->\n  For (sides,:: (Forward len,:: (Turn pi2 /. float_of_int sides,[] ))) against []" (after 1 test): 
-
-20060319-18:49:00-0ea44925eea84a1e4d0c6ce516154075.seminal.ml
-("55","23")
-*** Failed! *** Exception: TypeError "type error: uncons can only be applied to lists" (after 1 test): 
-
-20060319-19:23:28-3cc736accbce3e21a783db2d0f187c96.seminal.ml
-("18","18")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060319-19:25:12-f00bf018aea70324f68ac0ba0f808cae.seminal.ml
-("18","18")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060319-19:42:18-5f0bde7ab1d576545f4d89f88dab34e9.seminal.ml
-("49","11")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060319-19:49:56-1687e8b7d88c855ff1225445c6cbd4e3.seminal.ml
+20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
 ("41","16")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060319-20:05:30-6fc146372dae315728baa58e4bee26df.seminal.ml
-("39","16")
-"foo"
-TApp "list" [TCon "move"] :-> TCon "int"
-*** Failed! *** Exception: TypeError "invalid argument to string_of_int: \"1\"" (after 1 test): 
-
-20060319-20:09:28-2e71af609448d8c60fd4e0273e9ff9bd.seminal.ml
-("58","4")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060319-20:12:50-9e05cf3ce7d3e32b370b305e43ceb96e.seminal.ml
-("59","11")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "invalid argument to List.rev: ([],0.0,0.0,0.0)" (after 1 test): 
-
-20060319-20:22:42-d63e90715d3fa73c6f01d82b97c2c2b9.seminal.ml
-("51","21")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VD 0.0) (VI 2)" (after 1 test): 
-
-20060319-20:25:40-ab4845a572308a5afc057b8957487498.seminal.ml
-("61","8")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "invalid argument to List.rev: (fun x ->\n  fun y ->\n    fun dir ->\n      fun acc ->\n        match interpSmallStep movelist x y dir with\n        | (newList,newX,newY,newDir) -> if x <> newX\n                                        then print_string \"x doesnt match\"\n                                        else (); (if y <> newY\n                                                  then print_string \"y doesnt match\"\n                                                  else ();\n        (loop newList,newX,newY,newDir,acc)),2.0,0.0,0.0,[(0.0,0.0)])" (after 1 test): 
-
-20060319-20:31:44-c7d3dae870ff326c6e2fd8bf9e61eaac.seminal.ml
-("87","24")
-*** Failed! *** Exception: TypeError "type error: tried to match (Home (),Home ()) against Home" (after 1 test): 
-
-20060319-20:33:22-bcfa231f83876c0dc43b07ef583566dd.seminal.ml
-("63","16")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VD 0.0,VD 0.0],VL [VT 2 [VD 0.0,VD 0.0]]]) (TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]) (after 10 tests): 
-interpSmall (:: (Home ,:: (Home ,[] )))
-
-20060319-20:50:52-35197c77367f54669cee073b06fe3d9f.seminal.ml
-("70","39")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "invalid argument to List.rev: ()" (after 1 test): 
-
-20060319-20:54:18-c6f1941f5de39e516e26f06cc990b9ca.seminal.ml
-("84","31")
-*** Failed! *** Exception: TypeError "* can only be applied to ints" (after 1 test): 
-
-20060319-21:34:00-e26e787a429e0f90295aee0f257622a1.seminal.ml
-("109","22")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060320-21:58:04-f7044a0bdc8cde607fca13b12e891e22.seminal.ml
-("86","37")
-*** Failed! *** Exception: TypeError "+ can only be applied to ints" (after 1 test): 
-
-20060320-22:38:06-708bc29e217c4928054fc822a3c96238.seminal.ml
-("33","9")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "cannot compare ordering of non-numeric types" (after 4 tests): 
-interpLarge (:: (Home ,:: (For ([] ,0),[] )))
-
-20060321-14:46:28-05145270d2aab43fd3bd842cc07baf1c.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VS "") (TCon "heap" :-> TCon "()") (after 1 test): 
-print_heap ([] )
-
-20060321-14:59:04-b1275c5a9b0b11add3e4dd1a9b0bf13c.seminal.ml
-("50","23")
-"print_heap"
-TCon "heap" :-> TCon "()"
-*** Failed! *** Exception: TypeError "type error: tried to match [(\"a\",0);(\"b\",1);(\"c\",2)] against (str,i)" (after 1 test): 
-
-20060321-15:25:48-2255f168a336d2981038c536d51364a3.seminal.ml
-("22","23")
 "interp_e"
 TCon "heap" :-> (TCon "exp" :-> TCon "int")
-*** Failed! *** Exception: TypeError "type error: tried to match Complex (\"\\237\\\"\",[Complex (\"N\",[])]) against (s,i)" (after 6 tests): 
-interp_e (:: (Complex ("\237\"",:: (Complex ("N",[] ),[] )),[] )) (Times (Var "",Var "]"))
-
-20060321-15:34:36-8c2ed57505ebdb3c66f90b66ae3e8b87.seminal.ml
-("37","27")
-"interp_s"
-TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 3 tests): 
-interp_s ([] ) (Seq (Seq (Skip ,Assign (Int 1,"")),While (Skip ,Var "")))
-
-20060321-16:03:46-b0d9a3963e06527effc0d63025a8d667.seminal.ml
-("72","19")
-*** Failed! *** Exception: TypeError "type error: tried to match (\"a\",0) against Complex_elt (s,hp)" (after 1 test): 
-
-20060321-16:05:32-9fac1c5709dc4756677dea761359bb07.seminal.ml
-("63","53")
-*** Failed! *** Exception: TypeError "Simple_elt expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-17:27:50-28fab13e4dbcd9ee742bdff83acf1462.seminal.ml
-("86","4")
-"print_elt"
-TCon "heap_elt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
-("85","24")
-"print_elt"
-TCon "heap_elt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-17:40:30-9d28fd9356cc4ade9bdd5c09496600fa.seminal.ml
-("94","36")
-"print_heap"
-TCon "heap" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-17:41:14-5ad417e97b8ab19fbfb89db95c99c846.seminal.ml
-("94","25")
-"print_heap"
-TCon "heap" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-17:57:34-7409001b9d9b81b4015c0221ea72118a.seminal.ml
-("114","19")
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-18:07:56-3c4adbec38600fff622eabc0dbcae305.seminal.ml
-("112","34")
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-19:13:54-3266bbae2ef5c3a941538a6481a5e5d5.seminal.ml
-("112","31")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060321-20:20:44-5df57b343df5a403116c396481a3d568.seminal.ml
-("19","30")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-*** Failed! *** Exception: TypeError "- can only be applied to ints" (after 1 test): 
-
-20060321-21:38:22-dde7db6405ce5ba9ae626405e061c4a3.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 5 tests): 
-interpLarge (:: (For ([] ,2),[] ))
-
-20060321-22:08:35-80305c5562a7971b78c8db75d01d0fd0.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 2 tests): 
-interpLarge (:: (For ([] ,0),[] ))
-
-20060322-00:21:12-0ccd603b43d0ef97d3e539c3f0925073.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 3 tests): 
-interpLarge (:: (Turn 0.0,:: (For ([] ,-1),[] )))
-
-20060322-00:47:36-635d92e5e80fdb07be8405858041dcbd.seminal.ml
-*** Failed! *** Exception: TypeError "* can only be applied to ints" (after 1 test): 
-interpLarge ([] )
-
-20060322-01:15:12-8f2c701fedc5409bb06ec8282652a352.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL [VA \"Turn\" [VD 2.06044387613758],VA \"Forward\" [VD 3.1891276640836144],VA \"Home\" []]) (VI 0)" (after 7 tests): 
-interpLarge (:: (For (:: (Turn 2.06044387613758,:: (Forward 3.1891276640836144,:: (Home ,[] ))),0),:: (Forward 0.8239727854113513,:: (For ([] ,2),:: (Forward -1.2755372953813058,[] )))))
-
-20060322-02:34:06-a881a82dd5534a442bf71f2fcd057d33.seminal.ml
-*** Failed! *** Exception: TypeError "- can only be applied to ints" (after 6 tests): 
-interpLarge (:: (For (:: (Turn -2.263179176619654,[] ),2),[] ))
-
-20060322-13:34:44-8717549412aa814d6b0771c1f94c17fb.seminal.ml
-("12","22")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060322-13:40:08-aefea9de8bb3118803308ceeadaec76e.seminal.ml
-("19","24")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060322-14:52:42-79d266181ace652898dfea63f34d1e95.seminal.ml
-("41","37")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-15:04:54-ac4a1848657627cfd6df53804ad2c8f5.seminal.ml
-("43","32")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-15:37:30-cccd2d578960e5ca742dca45d4bd04e4.seminal.ml
-("52","30")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml
-("71","11")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-16:38:10-626e570c3d6f0bf644688095ee05e7aa.seminal.ml
-("63","25")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-16:59:16-2aaeed2af3e729eac5c7ce6df6aa8bab.seminal.ml
-("73","30")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-19:48:26-8031f6467e8fc7179ce5fd1072500ce0.seminal.ml
-("12","16")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060322-20:07:20-8a106f89f15ecfb4570c9918256c0e5a.seminal.ml
-("22","18")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-20:08:36-a8f43066cc9b2fd09808dd2eb10c07f9.seminal.ml
-("22","39")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-20:42:10-898d93a908e3393e99cf3e0027384a19.seminal.ml
-("30","19")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060322-20:53:12-8240b6c0f1e8fb463aae7ab123a6ad8d.seminal.ml
-("56","16")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060323-08:35:44-95aa68925746f2cfecd00300845fb947.seminal.ml
-("90","10")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-+++ OK, passed 1000 tests.
-
-20060323-08:43:40-4ea7768a439a9c9693ab1dd8a5a3e1ae.seminal.ml
-("103","18")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-+++ OK, passed 1000 tests.
-
-20060323-09:29:18-4d4687569f144490d021a1f614083ab6.seminal.ml
-("117","23")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-+++ OK, passed 1000 tests.
-
-20060323-10:36:10-23f563f30054417a24188e71c358a86b.seminal.ml
-("107","39")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-+++ OK, passed 1000 tests.
-
-20060323-13:43:52-9b3c922faea5332ae7dcbdd3542cf6bb.seminal.ml
-("136","40")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
-("57","20")
-"interpSmall"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060323-15:47:38-bdbf194565202f6e6e0fcc814a9c01e7.seminal.ml
-("110","33")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-+++ OK, passed 1000 tests.
-
-20060323-22:59:04-39ece06ece66c8dc880ee10675819a09.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (SaveHeap "")
-
-20060323-22:59:38-e7c2c654f54054eb7c19d03cfec68e3b.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060323-23:05:28-8208a05059a4335cea94c878a710ddd0.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (SaveHeap "")
-
-20060323-23:11:28-c24ddccacfbcdc668613ca92ad083c49.seminal.ml
-("67","50")
-*** Failed! *** Exception: TypeError "Heap expects 1 arguments, but was given 2" (after 1 test): 
-
-20060323-23:12:42-0cdc8336167ed8e67ba5a2f8e22bed49.seminal.ml
-("65","54")
-"test"
-TCon "stmt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "Heap expects 1 arguments, but was given 2" (after 1 test): 
-
-20060323-23:27:42-7911ad31a60a0c09a7cb35ea3b402363.seminal.ml
-("9","51")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060323-23:34:54-e5657a429599e48a5306fa79011f83cd.seminal.ml
-("11","70")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060323-23:58:10-8a98128ae553a921e83e0e588be1843b.seminal.ml
-("34","30")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060324-19:51:52-4c4952762d71314d3fdcccdf6da3c0f2.seminal.ml
-("111","11")
-*** Failed! *** Exception: TypeError "/ can only be applied to ints" (after 1 test): 
-
-20060324-22:00:17-ecdfe52e272243e86b6b7a8128d95dd3.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 2 tests): 
-interp_prog (Seq (Assign (Var "",""),RestoreHeap ""))
-
-20060324-22:00:33-db93e113469e7bb804bada46ace29e7a.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against Int _" (after 2 tests): 
-interp_prog (RestoreHeap "")
-
-20060324-22:01:55-60f7617e7e801a26ea584bcc86751861.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "Int" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (SaveHeap "")
-
-20060324-22:04:48-ca1773b81b82f426df3e9e7e4632b399.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "StoredInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (Skip )
-
-20060324-22:07:48-d2b75cb83836da475118ae658501a5ca.seminal.ml
-("104","45")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060324-22:08:00-d2df9ba9c697ee7e1b27b4b952dcdd4a.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int 2,""))
-
-20060324-22:24:46-8ab05dd4986d17d763e509d04ea02fde.seminal.ml
-("145","5")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060324-22:33:45-794856d6d57de6aec959bc9221c45eb6.seminal.ml
-("14","34")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-+++ OK, passed 1000 tests.
-
-20060324-22:37:56-14013c68b574056a18cf98eb43cf3811.seminal.ml
-("85","13")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against []" (after 13 tests): 
-interpTrans (:: (For ([] ,0),[] )) 0.8288309025892577 -2.2937339253080946 1.3378794771749984
-
-20060324-22:39:30-c619291e201e563ad9550d8cd7acb5f0.seminal.ml
-("86","24")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against []" (after 4 tests): 
-interpTrans (:: (Forward 4.994047883404816,:: (For ([] ,0),:: (Forward -0.5497884285139305,[] )))) -1.7191744797126853 -3.6697932099928225 2.22973434888816
-
-20060324-22:39:43-eebf94185c695dc23122f1f8a3b05347.seminal.ml
-("21","59")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060324-22:45:51-9b07192b0a6d5857aee50032d33ab030.seminal.ml
-("26","36")
-"interpLarge"
-TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-+++ OK, passed 1000 tests.
-
-20060324-22:46:18-435497b4fd7d69acd543ff31eea2fb72.seminal.ml
-("88","12")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against []" (after 4 tests): 
-interpTrans (:: (Home ,:: (For ([] ,0),:: (Forward -0.36741509310443354,[] )))) 1.6274012015875217 -2.6281405395257016 3.600545793529249
-
-20060324-22:53:08-18b6d1fa1b4022dcf41a6276b9ca9fc9.seminal.ml
-("92","22")
-"interpTrans"
-TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 1 against []" (after 9 tests): 
-interpTrans (:: (For (:: (Home ,[] ),6),:: (Forward -9.187759783964836,:: (Forward 3.117011772275635,:: (Forward -1.2969642566722508,:: (For ([] ,1),[] )))))) 0.5869262983558307 -1.2869090613602066 -4.081655886337603
-
-20060324-22:57:22-f4d3fc8cbafcab94ceae8ce7d40c51a5.seminal.ml
-("145","23")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
-
-20060324-23:04:56-f1d095019a8df3560f887b998e607db5.seminal.ml
-+++ OK, passed 1000 tests.
-
-20060325-09:30:54-e182e9092714cced8953b2f5b29145da.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060325-09:41:54-7dbacbbb2d533f44a1db48037fe31cbd.seminal.ml
-("70","18")
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against []" (after 1 test): 
-
-20060328-14:00:48-8da9cf0dfa8df41870d6ee216a089637.seminal.ml
-("75","4")
-"interp"
-(TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060329-19:32:13-413085166cad1985799707383569fe55.seminal.ml
-("175","25")
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060401-08:09:20-9b97df096c7b5d2aa43c35e50188230c.seminal.ml
-("47","13")
-"interp"
-(TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-+++ OK, passed 1000 tests.
-
-20060403-20:09:44-6a44548eed87d4b6e6201e799844d20c.seminal.ml
-("203","27")
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060403-20:43:16-b07f4d13cabbbd98858efb4e21fb2f2e.seminal.ml
-("77","7")
-"computeFreeVars"
-TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060403-21:25:44-455f9320f05e875d718926bbafb03dd9.seminal.ml
-("78","63")
-"computeFreeVars"
-TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060403-21:35:06-110b4ff4ab239ddf2024c924f7b24c81.seminal.ml
-("124","16")
-*** Failed! Exception: '<<timeout>>' (after 1 test): 
-
-20060403-23:29:52-92f0c4405907a1f677168b5773c9c0a9.seminal.ml
-("55","15")
-"interp"
-(TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-+++ OK, passed 1000 tests.
-
-20060403-23:30:42-935cb5f8947224ca15c05bc1b31c5394.seminal.ml
-("55","15")
-"interp"
-(TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-*** Failed! *** Exception: TypeError "+ can only be applied to ints" (after 1 test): 
-
-20060403-23:31:40-acb953a7a447b99f3a44d62c523c0ade.seminal.ml
-("55","15")
-"interp"
-(TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-+++ OK, passed 1000 tests.
-
-20060404-22:13:52-137af8b879346e055957a720071ea44e.seminal.ml
-("139","23")
-*** Failed! Exception: 'user interrupt' (after 1 test): 
-
-20060404-22:15:04-5f68f13050763ebfd26af1dc16f0ea9f.seminal.ml
-("140","10")
-Interrupted.
-Restarting process ...
-Hello, Haskell!
-If I break, you can:
-  1. Restart:           M-x haskell-process-restart
-  2. Configure logging: C-h v haskell-process-log (useful for debugging)
-  3. General config:    M-x customize-mode
-  4. Hide these tips:   C-h v haskell-process-show-debug-tips
-Restarting process ...
-The next big Haskell project is about to start!
-If I break, you can:
-  1. Restart:           M-x haskell-process-restart
-  2. Configure logging: C-h v haskell-process-log (useful for debugging)
-  3. General config:    M-x customize-mode
-  4. Hide these tips:   C-h v haskell-process-show-debug-tips
-λ> results <- checkAllFrom "data/seminal/"
-"20060302-08:37:20-b8c86c351fe390ea1b61a078bd334bcb.seminal.ml"
-Left "unexpected token TokIn at line 1, column 15"
-"20060302-18:51:58-07c030b8599493d2dad778213c2451af.seminal.ml"
-Left "unexpected token TokDot at line 12, column 30"
-"20060305-22:14:52-12016d8b3cdc445959e85885bbc00c77.seminal.ml"
-Left "unexpected token TokDot at line 35, column 11"
-"20060305-22:23:52-2cddd39a2e0ba2ddb9831a32c8c470f4.seminal.ml"
-Left "unexpected token TokDot at line 35, column 11"
-"20060305-22:25:00-bfad48a8bb7388bdd92708919b46cbb2.seminal.ml"
-Left "unexpected token TokDot at line 35, column 11"
-"20060306-08:28:18-863fd9c993226acc0132a40c3f5d3b7e.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-08:32:58-cadc6088100ec722ce0c8ab60e81a45a.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-08:33:16-ec35aa1715ccf5f5b7fff55effcc06f0.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-08:37:02-47b330576eb70ab4b956307ff1978ccc.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-08:46:54-c09bb5fa4ade9b9834ebc0e95c303f20.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-09:32:26-9dfb57b0785b1229719704e079d51228.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060306-09:54:52-94bacf5a48d35fd1aa367bc565cc4abd.seminal.ml"
-Left "unexpected token TokDot at line 34, column 11"
-"20060308-15:14:15-b4673217f9f876ace714063f276c1cb7.seminal.ml"
-Left "unexpected token TokDot at line 51, column 22"
-"20060308-15:14:55-8b55587ab02b2e74f5be9a1620ad164b.seminal.ml"
-Left "unexpected token TokDot at line 51, column 22"
-"20060308-16:27:14-d2561594acb510c00ce747e7e54b07de.seminal.ml"
-Left "unexpected token TokDot at line 66, column 28"
-"20060308-16:43:26-9fc4f621ad5235ecb0a0bfe70ddbac27.seminal.ml"
-Left "unexpected token TokDot at line 66, column 28"
-"20060308-17:49:12-350bb6231959f879ee62f44461de9e70.seminal.ml"
-Left "unexpected token TokDot at line 90, column 28"
-"20060308-17:58:24-ba6b10619bc62fead2d1d1fc3e4bcfc0.seminal.ml"
-Left "unexpected token TokDot at line 90, column 28"
-"20060308-18:17:57-53a3b527552c251aa1421ce37caa859c.seminal.ml"
-Left "unexpected token TokDot at line 91, column 28"
-"20060308-19:14:09-035509263a843a367f5130529c008817.seminal.ml"
-Left "unexpected token TokDot at line 101, column 28"
-"20060308-19:19:12-06937106ff3926fe3963a0e5d3b99347.seminal.ml"
-Left "unexpected token TokDot at line 103, column 28"
-"20060308-19:36:26-98875b907492a273c971c6c3494ccbbc.seminal.ml"
-Left "unexpected token TokDot at line 107, column 28"
-"20060308-19:58:35-73bc04d94b0b091a44df19c1baaf55f3.seminal.ml"
-Left "unexpected token TokDot at line 117, column 28"
-"20060319-22:34:04-69a3d06e7473a44a841727a7bc995e4d.seminal.ml"
-Left "unexpected token TokIn at line 1, column 15"
-"20060321-21:07:58-0ebbcafc7586fac16a56ba7b103f69f7.seminal.ml"
-Left "unexpected token TokLBrace at line 11, column 14"
-"20060321-21:29:28-0b780c5b4ffcfe2968cb8e73cefa3897.seminal.ml"
-Left "unexpected token TokLBrace at line 11, column 14"
-"20060322-08:30:28-3f81c07149bfccbd0e3179bdf8a9aadd.seminal.ml"
-Left "unexpected token TokIn at line 1, column 15"
-"20060322-15:33:54-702b0150ab82b8d3fe04d50824f66378.seminal.ml"
-Left "unexpected token TokDot at line 90, column 22"
-"20060322-15:37:15-a3b57f848696e7fb4e0c7b52ec319871.seminal.ml"
-Left "unexpected token TokDot at line 90, column 22"
-"20060322-15:37:56-7674fa2cf2a648a9e414034e5ffccee5.seminal.ml"
-Left "unexpected token TokDot at line 90, column 22"
-"20060323-16:46:00-99a4dfd320923a6e786e35326d72280c.seminal.ml"
-Left "unexpected token TokMinus at line 125, column 13"
-"20060323-16:46:40-3a2db0aab4cec751ce06a6163c6a0997.seminal.ml"
-Left "unexpected token TokMinus at line 125, column 13"
-"20060323-16:53:28-5eb5ae97e73aab35aca11490ff920390.seminal.ml"
-Left "unexpected token TokMinus at line 125, column 13"
-"20060323-17:18:26-1bf4fc01326e093960cc57ae9a5f103b.seminal.ml"
-Left "unexpected token TokMinus at line 129, column 13"
-"20060323-17:29:24-d7203127fc75715cee8a22185e150384.seminal.ml"
-Left "unexpected token TokMinus at line 129, column 13"
-"20060323-17:33:44-58be7bcdf9f4bd84f0e8595e2e98e45e.seminal.ml"
-Left "unexpected token TokMinus at line 129, column 13"
-"20060323-17:33:52-51c48edc0bc2623b785d08afb1344a7d.seminal.ml"
-Left "unexpected token TokMinus at line 129, column 13"
-"20060323-17:42:56-fde71158703a08ba423540e01ef09474.seminal.ml"
-Left "unexpected token TokMinus at line 128, column 13"
-"20060323-17:43:30-1b93c486fae4bb533744e65e09c11cdc.seminal.ml"
-Left "unexpected token TokMinus at line 128, column 13"
-"20060323-17:53:24-a64241aa861dc6d7d3671fc0eed904ec.seminal.ml"
-Left "unexpected token TokMinus at line 135, column 13"
-"20060323-18:18:26-dcbd6b61400ff0cc8088df3b9bf9ec58.seminal.ml"
-Left "unexpected token TokMinus at line 143, column 13"
-"20060323-18:20:56-215cf04f284998f18aa9a297f6c69cae.seminal.ml"
-Left "unexpected token TokMinus at line 144, column 13"
-"20060323-18:23:06-e8617e33234ad0d0b1db0cca97888631.seminal.ml"
-Left "unexpected token TokMinus at line 145, column 13"
-"20060323-18:45:02-8c83180cdb55405fceb028edc3b8e52f.seminal.ml"
-Left "unexpected token TokMinus at line 156, column 13"
-"20060323-20:07:14-1ff99f5b5d1579e4b5f2712f7687bb64.seminal.ml"
-Left "unexpected token TokDot at line 127, column 22"
-"20060323-20:16:12-f769124d67c2d8b1ba60882729d52b66.seminal.ml"
-Left "unexpected token TokDot at line 127, column 22"
-"20060323-21:30:30-8708affd60c03e76b1b80f206b86f42a.seminal.ml"
-Left "unexpected token TokDot at line 125, column 22"
-"20060323-21:50:16-0a01d9e97b5fb61deca9c42f7b87e874.seminal.ml"
-Left "unexpected token TokMinus at line 149, column 13"
-"20060323-22:04:56-2161ca6d347b52d7dbd370350b463115.seminal.ml"
-Left "unexpected token TokMinus at line 146, column 13"
-"20060323-22:20:22-4e5f88ae07be062df109ed5701cbef33.seminal.ml"
-Left "unexpected token TokMinus at line 156, column 13"
-"20060323-22:43:36-a87f4de68f6bf8428673d8b8bab3f579.seminal.ml"
-Left "unexpected token TokMinus at line 160, column 13"
-"20060324-10:21:08-1099c20635149bf4c21dae977b473fa7.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-11:54:50-493d658d01a1323b9f1da1c0ae811325.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-11:55:50-f2f7f0e7c9ad0f9553a24b4cb7d4a247.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-11:58:26-d434312dfde528e7d5f0dc87a9807aeb.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-11:59:18-bf001761f7012c241e4087c39d2e9776.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-12:01:30-c9e982702b75e6ace803eee5f5d31401.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060324-19:59:26-89f2326d390889b438f85e767726a3c5.seminal.ml"
-Left "unexpected token TokMinus at line 151, column 13"
-"20060324-20:36:24-68e526075e57827da7dad3c70b4b8d6a.seminal.ml"
-Left "unexpected token TokMinus at line 163, column 17"
-"20060324-20:42:22-82e990cb0822742ed266ee2df00e23e6.seminal.ml"
-Left "unexpected token TokMinus at line 166, column 23"
-"20060324-20:45:28-232a876d350ebc97006824843fc62110.seminal.ml"
-Left "unexpected token TokLBrace at line 10, column 14"
-"20060408-22:49:00-d7677aecaf225da83dfe298659b3af98.seminal.ml"
-Left "unexpected token TokId \"print_newline\" at line 161, column 16"
-"20060408-22:49:39-62b3d2f60005e371eb26262ca86f49d7.seminal.ml"
-Left "unexpected token TokId \"print_newline\" at line 161, column 16"
-"20060408-23:28:03-17cf64e920a8226ad7e5c78cd6217862.seminal.ml"
-Left "unexpected token TokId \"print_endline\" at line 176, column 15"
-"20060409-15:05:26-8ff60256917627e3357b0b8561216a84.seminal.ml"
-Left "lexical error at line 294, column 42"
-"20060414-10:15:40-92278a7bf8def4c58490ade009db5dcc.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060414-11:06:26-2e8f9d56c3e7c006332210cfc11dfc40.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060414-12:08:08-1367481ed6b8e079d84ec7b99d06d824.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060414-18:56:18-975364d5af6fc324097b99df4af18792.seminal.ml"
-Left "unexpected token TokLBrace at line 9, column 14"
-"20060415-22:25:48-14e1c11a58d9c3801bb7bab54912b31c.seminal.ml"
-Left "lexical error at line 41, column 56"
-"20060416-13:23:38-0530e1eaf713b518ff0e7e7a832ea50c.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060416-13:29:12-8de255153d5663cbcb8fad71f8dc4724.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060416-23:25:44-e7cce69a55cf521059786e569bdc1318.seminal.ml"
-Left "lexical error at line 41, column 56"
-"20060417-09:09:48-c1254f26855289d18929c3dffb68cc3d.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060417-22:20:54-16c6772d6fdb93e703aea2128369c509.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060417-22:41:48-01a73c5b831c09060fa52a6d35b70d63.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060418-22:05:32-39fdd837557bc77c42f640f2b57c4bb7.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060419-09:13:18-d2a4e8e4cefed9ee58f028d6ea15e910.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060419-09:24:44-b0e52bafc8fad4bc05a7ec92466c8a96.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060419-09:34:18-a751dc69b7fc8ed0ed2f3150f8f781e9.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060419-09:39:12-1b59d618af2b6777b32b06872235a1a5.seminal.ml"
-Left "lexical error at line 40, column 48"
-"20060420-11:57:34-64faf25cf828b203532860f001bbe336.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-12:58:02-dac428f4bb4abd4e1e1c736857e38c88.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-13:26:40-295f6dadefdff9931a5b54c5f40a9631.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-13:38:24-ef3f2b6607c05aa2a3d64cc30f7e5587.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-13:46:42-6b7b9df433faea187437ee73710fed1e.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-13:48:52-2d8bd63819a740a8529923125a96d7de.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-14:37:50-f4603d9b9411817f0e5686e3dc20bc8c.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-14:42:50-174cee33963e34fe367d8a7099d076f7.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-14:53:50-33f59721c84171a9a81162de2a236e18.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-15:02:38-395fc7642049c949d9b40cf19e356a18.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-15:03:22-2f62bf710968390e0ca81dcbaf9ac350.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-15:04:44-224ca4c8f96b2c6dcf0e1f035d8fdb0b.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060420-15:15:34-f3de90b032b1ab0acc55ba351230021b.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-12:48:26-f3359f667b5a1876fd310f0292d7b57c.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-12:55:30-220009617aefd214b090b47a5f324eff.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-17:21:10-79fe2fbff99827a5b1379ba48f931116.seminal.ml"
-Left "unexpected token TokLBrace at line 9, column 14"
-"20060421-17:38:10-9fedad806a399da07f601d1c08599c98.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-17:41:02-0838d2deac55fab6e99ca6a22f996fb7.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-18:24:24-ea21fd9a34b5cd724b1843a65c7ba4b1.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-18:54:48-531e81fe22a5c558cbd10d537c0e7a3f.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-18:59:42-4693f912b79c1f8595120782f5618bfc.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060421-19:09:48-c6e8c52f60ef4537806fbfce51ccfd37.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060422-14:27:16-f2f2d7b30c2ee14f630e6f99b177e544.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060422-14:32:10-515422d7b51cfe948920ecc7a6ce6025.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060422-14:34:46-6f7ee1ff7b2f1840f25b0b2ac4a619a1.seminal.ml"
-Left "lexical error at line 41, column 48"
-"20060422-14:36:42-0f5feccefb217a4914f337274357c84a.seminal.ml"
-Left "lexical error at line 41, column 48"
-
-20060302-11:44:52-24ef771985d7d045ba7b08750298e016.seminal.ml
-("116","35")
-"titlecase"
-TCon "string" :-> TCon "string"
-*** Failed! *** Exception: UnboundVariable "src" (after 1 test): 
-
-20060302-17:13:10-a8f4767ee6e6a7cde277182e105bfabc.seminal.ml
-("5","12")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: t" (after 1 test): 
-
-20060302-17:24:50-0043a91b08c0d77c155551e167ad8e89.seminal.ml
-("5","7")
-"reverse"
-TCon "string" :-> TCon "string"
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VU) (VS \"test\")" (after 1 test): 
-
-20060302-17:25:04-7cc4ff612923f8094e8eb5f72b0e1f2c.seminal.ml
-("8","18")
-*** Failed! *** Exception: TypeError "invalid argument to print_char: \"test\"" (after 1 test): 
-
-20060302-17:41:14-78b119ef8daf7487521aecd4d482c13c.seminal.ml
-("9","20")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: ()" (after 1 test): 
-
-20060302-17:56:00-27ff2306cdb017964c28aea1d4f4f156.seminal.ml
-("13","20")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: false" (after 1 test): 
-
-20060302-17:59:30-23a435cfd9bc233c44ea620d0de3c444.seminal.ml
-("2","2")
-"reverseHelp"
-*** Failed! *** Exception: TypeError "+ can only be applied to ints" (after 1 test): 
-
-20060302-19:07:08-0c9a74768b1ce28cda245bf0300484f0.seminal.ml
-("3","4")
-"reverseHelp"
-*** Failed! *** Exception: TypeError "tried to apply a non-function" (after 1 test): 
-
-20060302-19:14:56-24471d7711961e7e9bd5c4e991485f01.seminal.ml
-("5","4")
-"reverseHelp"
-*** Failed! *** Exception: TypeError "invalid arguments to ^: \"a\", ()" (after 1 test): 
-
-20060302-19:21:02-d5696c8c12ef82896f4e7eced60e32c8.seminal.ml
-("5","13")
-"reverseHelp"
-*** Failed! *** Exception: TypeError "invalid argument to print_string: fun newStr ->\n  let revStr =\n    Char.escaped (String.get str place) in\n  let currPlace = place - 1 in\n  if place > 0\n  then revStr ^ reverseHelp currPlace str\n  else revStr" (after 1 test): 
-
-20060302-21:10:04-38dc8291e8c39612a75396c81f0ca005.seminal.ml
-("12","9")
-"reverse"
-TCon "string" :-> TCon "string"
-*** Failed! *** Exception: TypeError "unknown data constructor: Null" (after 1 test): 
-reverse ""
-
-20060302-21:11:18-9acb449819ae09c9d5f0d8926e89c41d.seminal.ml
-("13","2")
-"reverse"
-TCon "string" :-> TCon "string"
-*** Failed! *** Exception: TypeError "unknown data constructor: Null" (after 1 test): 
-reverse ""
-
-20060302-21:24:02-246ce61683ae0484e1606c781c19f80f.seminal.ml
-("13","2")
-"reverse"
-TCon "string" :-> TCon "string"
-*** Failed! *** Exception: UnboundVariable "<-" (after 4 tests): 
-reverse "\203"
-
-20060303-20:46:42-1b35868bafe72205ea7e97084a3529eb.seminal.ml
-("5","21")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: Cons (3,Null ())" (after 1 test): 
-
-20060303-20:51:08-b1062ae1e521cf11892c663425a3dda8.seminal.ml
-("8","24")
-"prnt"
-TApp "lst" [TVar "a"] :-> TCon "()"
-*** Failed! *** Exception: TypeError "invalid argument to print_string: 3" (after 1 test): 
-
-20060303-20:53:58-e021a562c275370c34ca3ba963367424.seminal.ml
-("11","16")
-*** Failed! *** Exception: TypeError "type error: tried to match [\"a\"] against Null" (after 1 test): 
-
-20060303-20:55:22-064afe0d9316ae21541c6f1171f85982.seminal.ml
-("13","15")
-*** Failed! *** Exception: TypeError "type error: tried to match [3] against Null" (after 1 test): 
-
-20060303-20:59:18-cec313538dab60fdbdbd549d4dfc8c22.seminal.ml
-("11","22")
-"append"
-TApp "lst" [TVar "a"] :-> (TApp "lst" [TVar "a"] :-> TApp "lst" [TVar "a"])
-*** Failed! *** Exception: TypeError "tried to apply a non-function" (after 1 test): 
-append (Null ) (Null )
-
-20060303-21:49:20-2bc1510b76bf11ac93785858fe7225ee.seminal.ml
-("19","23")
-"map"
-(TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")
-*** Failed! *** Exception: OutputTypeMismatch VU ((TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")) (after 2 tests): 
-map (fun _ -> ) "\169"
-
-20060303-22:00:40-01a5cb3bf91aa2112c2a6c4201763826.seminal.ml
-("23","20")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: fun x -> 2 + 3" (after 1 test): 
-
-20060305-20:46:34-89ba339c95f447a2829dad7d635f79f0.seminal.ml
-("23","25")
-*** Failed! *** Exception: TypeError "invalid argument to print_string: fun str ->\n  match str with\n  | [] -> [] \n  | hd :: tl -> :: (f hd,map f tl)" (after 1 test): 
-
-20060305-21:49:26-9fc379ff0ebf471cca400f4c3b144205.seminal.ml
-("21","6")
-"mapHelp"
-+++ OK, passed 1 tests.
-
-20060305-21:54:22-225f629e0d1a262f23af4cbcfa099317.seminal.ml
-("27","25")
-"map"
-(TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")
-*** Failed! *** Exception: OutputTypeMismatch (VL []) ((TCon "char" :-> TCon "char") :-> (TCon "string" :-> TCon "string")) (after 1 test): 
-map (fun _ -> E) ""
-
-20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
-("22","15")
-"mapHelp"
-+++ OK, passed 1 tests.
-
-20060311-23:38:59-d8f33461447ecf33f137a33374ccfae1.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 3 tests): 
-interp_prog (Seq (Seq (Assign (Var "",""),Skip ),Skip ))
-
-20060311-23:47:13-bb5548edde7545872f33b6b15649642f.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VL []) (TCon "heap" :-> (TCon "string" :-> TCon "int")) (after 1 test): 
-lookup ([] ) ""
-
-20060312-00:01:00-e429466fc820ac64a608a8302289bcb7.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060312-00:02:53-b5e4fbb55ad62a0991139e6650717758.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060312-00:03:36-75e554ed461a798f3b14545e2dfb6e02.seminal.ml
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 2 tests): 
-interp_prog (While (Skip ,Int -1))
-
-20060313-20:23:36-95bbcfafa3a38ccac06f556bd50a04cc.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060313-22:34:26-a82a6e4c5612542497388ac707e1afcf.seminal.ml
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 3 tests): 
-interp_prog (If (RestoreHeap "",Skip ,Plus (Int -1,Heap [] )))
-
-20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Heap [] ,""))
-
-20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 4 tests): 
-interp_prog (If (Skip ,If (SaveHeap "",Skip ,Heap [] ),Var "\f"))
-
-20060316-15:04:22-646d45fc661ea972e495854dafda19d7.seminal.ml
-("19","48")
-"makePoly"
-TCon "int" :-> (TCon "float" :-> TCon "move")
-*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
-
-20060316-17:28:56-cb82b8e194910fe2ced3aab54f0a7577.seminal.ml
-*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
-interp_prog (Restoreheap "")
-
-20060316-17:48:30-214ae1ff72fdc57fe9fcb9d441c5126a.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Var "",""))
-
-20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 2 tests): 
-interp_prog (If (Assign (Var "",""),Saveheap "",Var ""))
-
-20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (Restoreheap "")
+*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "heap" :-> (TCon "exp" :-> TCon "int")) (after 1 test): 
+interp_e ([] ) (Var "")
 
 20060316-18:53:54-be762b624eb6b35410f5e00547f2a579.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "HInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (Skip )
+("53","35")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VA "Int" [VI 2]]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 1 test): 
+interp_s ([] ) (Assign ("",Int 2))
 
 20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
 ("106","19")
@@ -1459,10 +474,16 @@ TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 *** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
 
 20060317-21:37:11-096a01551f7cdd335b3d20437b761729.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL [VA \"For\" [VL [],VI 0],VA \"Home\" []]) (VI 0)" (after 6 tests): 
-interpLarge (:: (Turn 1.443538438506109,:: (For (:: (For ([] ,0),:: (Home ,[] )),-1),[] )))
+("21","52")
+"makePoly"
+TCon "int" :-> (TCon "float" :-> TCon "move")
+*** Failed! *** Exception: TypeError "/ can only be applied to ints" (after 1 test): 
+makePoly 0 0.0
 
 20060317-22:27:21-c75f0b5055a771be100553afb174be0d.seminal.ml
+("49","14")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 *** Failed! *** Exception: TypeError "invalid argument to List.rev: ()" (after 1 test): 
 interpLarge ([] )
 
@@ -1470,7 +491,7 @@ interpLarge ([] )
 ("71","46")
 "interpSmall"
 TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "invalid argument to List.rev: ()" (after 1 test): 
 
 20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
 ("50","48")
@@ -1487,28 +508,32 @@ interp_s ([] ) (Restoreheap [] )
 ("40","33")
 "interp_s"
 TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 2 tests): 
-interp_s ([] ) (If (Assign (Var "",""),SaveHeap "",Int -1))
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "\b",VA "Heap" [VL [VT 2 [VS "4\200",VI 1]]]],VT 2 [VS "4\200",VI 1]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 4 tests): 
+interp_s (:: (("4\200",1),[] )) (SaveHeap "\b")
 
 20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml
 ("23","23")
 "interp_e"
 TCon "heap" :-> (TCon "exp" :-> TCon "int")
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "heap" :-> (TCon "exp" :-> TCon "int")) (after 5 tests): 
-interp_e (:: (("U[",-2),:: (("1\132",2),[] ))) (Var "\NAK;\153")
+*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "heap" :-> (TCon "exp" :-> TCon "int")) (after 1 test): 
+interp_e ([] ) (Var "")
 
 20060319-14:52:14-bd3d537e5d622471db44fef57470b962.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "HeapInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (RestoreHeap "")
+("37","33")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "\b##P",VI 0],VT 2 [VS "",VI 0],VT 2 [VS "C",VI (-2)],VT 2 [VS "'e6\214",VA "Heap" [VL [VT 2 [VS "\SYN#\RS",VA "HeapInt" [VI 2]]]]]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 7 tests): 
+interp_s (:: (("'e6\214",Heap :: (("\SYN#\RS",HeapInt 2),[] )),[] )) (Seq (Seq (Assign ("C",Int -2),Assign ("",Var "}")),Assign ("\b##P",Var "Q")))
 
 20060319-15:07:50-8f39f32b5a36e11a9464ad6fec165b06.seminal.ml
 ("43","23")
 "interp_s"
 TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 2 tests): 
-interp_s ([] ) (While (RestoreHeap "",Int 1))
+*** Failed! *** Exception: TypeError ":: expects a list, was given: HeapInt 0" (after 4 tests): 
+interp_s (:: ((" ",HeapInt 1),[] )) (Seq (RestoreHeap "",Seq (SaveHeap "",RestoreHeap "")))
 
 20060319-18:31:02-58a2a6ce864ad7931326ad63f6ecd7dc.seminal.ml
+("6","14")
 *** Failed! *** Exception: TypeError "* can only be applied to ints" (after 1 test): 
 
 20060319-18:48:20-a64278e668714e05e9749ccd7ca65773.seminal.ml
@@ -1598,7 +623,8 @@ TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 ("109","22")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 3 tests): 
+interpTrans (:: (For (0,[] ),:: (For (-1,[] ),[] ))) 0.8040594014372082 -0.7489045897452581 5.240131328710988
 
 20060320-21:58:04-f7044a0bdc8cde607fca13b12e891e22.seminal.ml
 ("86","37")
@@ -1608,10 +634,13 @@ TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" 
 ("33","9")
 "interpLarge"
 TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
-*** Failed! *** Exception: TypeError "cannot compare ordering of non-numeric types" (after 17 tests): 
-interpLarge (:: (For ([] ,2),[] ))
+*** Failed! *** Exception: TypeError "type error: tried to match [(0.0,0.0)] against Home" (after 14 tests): 
+interpLarge (:: (For (1,:: (Turn -1.0603191409976283,[] )),[] ))
 
 20060321-14:46:28-05145270d2aab43fd3bd842cc07baf1c.seminal.ml
+("48","20")
+"print_heap"
+TCon "heap" :-> TCon "()"
 *** Failed! *** Exception: OutputTypeMismatch (VS "") (TCon "heap" :-> TCon "()") (after 1 test): 
 print_heap ([] )
 
@@ -1625,15 +654,15 @@ TCon "heap" :-> TCon "()"
 ("22","23")
 "interp_e"
 TCon "heap" :-> (TCon "exp" :-> TCon "int")
-*** Failed! *** Exception: TypeError "type error: tried to match Complex (\"\",[]) against (s,i)" (after 3 tests): 
-interp_e (:: (Complex ("",[] ),[] )) (Plus (Plus (Var "",Int 1),Var ""))
+*** Failed! *** Exception: TypeError "type error: tried to match Complex (\"4\",[Complex (\"\",[]);Complex (\"\",[])]) against (s,i)" (after 5 tests): 
+interp_e (:: (Complex ("4",:: (Complex ("",[] ),:: (Complex ("",[] ),[] ))),[] )) (Var "\210")
 
 20060321-15:34:36-8c2ed57505ebdb3c66f90b66ae3e8b87.seminal.ml
 ("37","27")
 "interp_s"
 TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
-*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 2 tests): 
-interp_s (:: (Complex_elt ("",[] ),[] )) (If (Skip ,Assign (Int 1,""),Int 1))
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VI 2],VT 2 [VS "",VI 0]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 2 tests): 
+interp_s ([] ) (Seq (Assign ("",Int 0),Assign ("",Int 2)))
 
 20060321-16:03:46-b0d9a3963e06527effc0d63025a8d667.seminal.ml
 ("72","19")
@@ -1641,45 +670,49 @@ interp_s (:: (Complex_elt ("",[] ),[] )) (If (Skip ,Assign (Int 1,""),Int 1))
 
 20060321-16:05:32-9fac1c5709dc4756677dea761359bb07.seminal.ml
 ("63","53")
-*** Failed! *** Exception: TypeError "Simple_elt expects 1 arguments, but was given 2" (after 1 test): 
++++ OK, passed 1 tests.
 
 20060321-17:27:50-28fab13e4dbcd9ee742bdff83acf1462.seminal.ml
 ("86","4")
 "print_elt"
 TCon "heap_elt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 1 test): 
+print_elt (I ("",0))
 
 20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
 ("85","24")
 "print_elt"
 TCon "heap_elt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
++++ OK, passed 100 tests.
 
 20060321-17:40:30-9d28fd9356cc4ade9bdd5c09496600fa.seminal.ml
 ("94","36")
 "print_heap"
 TCon "heap" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: OutputTypeMismatch (VS "") (TCon "heap" :-> TCon "()") (after 1 test): 
+print_heap ([] )
 
 20060321-17:41:14-5ad417e97b8ab19fbfb89db95c99c846.seminal.ml
 ("94","25")
 "print_heap"
 TCon "heap" :-> TCon "()"
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: OutputTypeMismatch (VS "") (TCon "heap" :-> TCon "()") (after 1 test): 
+print_heap ([] )
 
 20060321-17:57:34-7409001b9d9b81b4015c0221ea72118a.seminal.ml
 ("114","19")
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "type error: uncons can only be applied to lists" (after 1 test): 
 
 20060321-18:07:56-3c4adbec38600fff622eabc0dbcae305.seminal.ml
 ("112","34")
-*** Failed! *** Exception: TypeError "I expects 1 arguments, but was given 2" (after 1 test): 
++++ OK, passed 1 tests.
 
 20060321-19:13:54-3266bbae2ef5c3a941538a6481a5e5d5.seminal.ml
 ("112","31")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "type error: uncons can only be applied to lists" (after 4 tests): 
+interpTrans (:: (Turn -5.030466588608869,[] )) -0.10624678968682373 1.5363022272611218 8.748163080918363
 
 20060321-20:20:44-5df57b343df5a403116c396481a3d568.seminal.ml
 ("19","30")
@@ -1688,28 +721,45 @@ TCon "int" :-> (TCon "float" :-> TCon "move")
 *** Failed! *** Exception: TypeError "- can only be applied to ints" (after 1 test): 
 
 20060321-21:38:22-dde7db6405ce5ba9ae626405e061c4a3.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 7 tests): 
-interpLarge (:: (For ([] ,1),[] ))
+("33","10")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
+*** Failed! *** Exception: TypeError "cannot compare ordering of non-numeric types" (after 2 tests): 
+interpLarge (:: (Forward -0.9299292007196799,[] ))
 
 20060321-22:08:35-80305c5562a7971b78c8db75d01d0fd0.seminal.ml
-*** Failed! *** Exception: MLException (VA "InvalidAngle" []) (after 2 tests): 
-interpLarge (:: (Forward 2.376887809989519,[] ))
+("34","8")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
+*** Failed! *** Exception: MLException (VA "InvalidAngle" []) (after 22 tests): 
+interpLarge (:: (Forward -5.5679009127711905e-2,[] ))
 
 20060322-00:21:12-0ccd603b43d0ef97d3e539c3f0925073.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 2 tests): 
-interpLarge (:: (For ([] ,-1),[] ))
+("30","43")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
+*** Failed! *** Exception: MLException (VA "InvalidAngle" []) (after 4 tests): 
+interpLarge (:: (Forward -1.763860178705295,[] ))
 
 20060322-00:47:36-635d92e5e80fdb07be8405858041dcbd.seminal.ml
+("27","16")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 *** Failed! *** Exception: TypeError "* can only be applied to ints" (after 1 test): 
 interpLarge ([] )
 
 20060322-01:15:12-8f2c701fedc5409bb06ec8282652a352.seminal.ml
-*** Failed! *** Exception: TypeError "cannot compare incompatible types: (VL []) (VI 0)" (after 2 tests): 
-interpLarge (:: (For ([] ,1),[] ))
+("15","14")
+"makePoly"
+TCon "int" :-> (TCon "float" :-> TCon "move")
+*** Failed! Exception: '<<timeout>>' (after 2 tests): 
 
 20060322-02:34:06-a881a82dd5534a442bf71f2fcd057d33.seminal.ml
-*** Failed! *** Exception: TypeError "- can only be applied to ints" (after 18 tests): 
-interpLarge (:: (For ([] ,-3),[] ))
+("39","33")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
+*** Failed! *** Exception: UnboundVariable "List.nth" (after 5 tests): 
+interpLarge (:: (Forward -1.6667906824422367,:: (For (0,:: (For (-1,[] ),[] )),[] )))
 
 20060322-13:34:44-8717549412aa814d6b0771c1f94c17fb.seminal.ml
 ("12","22")
@@ -1815,7 +865,7 @@ TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" 
 
 20060323-13:43:52-9b3c922faea5332ae7dcbdd3542cf6bb.seminal.ml
 ("136","40")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "+ can only be applied to ints" (after 1 test): 
 
 20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
 ("57","20")
@@ -1830,26 +880,35 @@ TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" 
 *** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
 
 20060323-22:59:04-39ece06ece66c8dc880ee10675819a09.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (Assign (Int -1,""))
+("17","34")
+"lookup_raw"
+TCon "heap" :-> (TCon "string" :-> TCon "heapElement")
+*** Failed! *** Exception: OutputTypeMismatch (VI 0) (TCon "heap" :-> (TCon "string" :-> TCon "heapElement")) (after 1 test): 
+lookup_raw ([] ) ""
 
 20060323-22:59:38-e7c2c654f54054eb7c19d03cfec68e3b.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (Assign (Int -1,""))
+("22","4")
+"lookup_var"
+TCon "heap" :-> (TCon "string" :-> TCon "int")
+*** Failed! *** Exception: TypeError "type error: tried to match Heap (\"\",[]) against Heap _" (after 52 tests): 
+lookup_var (:: (Heap ("",[] ),[] )) ""
 
 20060323-23:05:28-8208a05059a4335cea94c878a710ddd0.seminal.ml
-*** Failed! *** Exception: UnboundVariable "lookup" (after 1 test): 
-interp_prog (SaveHeap "")
+("53","26")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: TypeError "type error: tried to match VarElement (\"\",0) against VarElement _" (after 5 tests): 
+interp_s ([] ) (RestoreHeap "")
 
 20060323-23:11:28-c24ddccacfbcdc668613ca92ad083c49.seminal.ml
 ("67","50")
-*** Failed! *** Exception: TypeError "Heap expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "type error: tried to match 1 against Int i" (after 1 test): 
 
 20060323-23:12:42-0cdc8336167ed8e67ba5a2f8e22bed49.seminal.ml
 ("65","54")
 "test"
 TCon "stmt" :-> TCon "()"
-*** Failed! *** Exception: TypeError "Heap expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: UnboundVariable "print_newline" (after 1 test): 
 
 20060323-23:27:42-7911ad31a60a0c09a7cb35ea3b402363.seminal.ml
 ("9","51")
@@ -1874,34 +933,50 @@ TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 *** Failed! *** Exception: TypeError "/ can only be applied to ints" (after 1 test): 
 
 20060324-22:00:17-ecdfe52e272243e86b6b7a8128d95dd3.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against Int _" (after 2 tests): 
-interp_prog (Seq (RestoreHeap "",Assign (Var "","")))
+("38","33")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VI 0]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 2 tests): 
+interp_s ([] ) (Assign ("",Var ""))
 
 20060324-22:00:33-db93e113469e7bb804bada46ace29e7a.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int 0,""))
+("25","29")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
+*** Failed! *** Exception: TypeError "type error: tried to match 0 against Int2 v" (after 5 tests): 
+interp_e ([] ) (Plus (Var "",Times (Plus (Plus (Var "",Var ""),Int 0),Plus (Times (Int -1,Int -1),Int 0))))
 
 20060324-22:01:55-60f7617e7e801a26ea584bcc86751861.seminal.ml
+("25","29")
+"interp_e"
+TCon "heap" :-> (TCon "exp" :-> TCon "int")
 *** Failed! *** Exception: MLException (VA "Match_failure" []) (after 1 test): 
-interp_prog (RestoreHeap "")
+interp_e ([] ) (Var "")
 
 20060324-22:04:48-ca1773b81b82f426df3e9e7e4632b399.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "StoredInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (RestoreHeap "")
+("37","33")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VL []]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 2 tests): 
+interp_s ([] ) (Seq (SaveHeap "",Skip ))
 
 20060324-22:07:48-d2b75cb83836da475118ae658501a5ca.seminal.ml
 ("104","45")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: UnboundVariable "List.nth" (after 50 tests): 
+interpTrans (:: (Turn 0.10245154818761466,:: (For (-5,[] ),:: (For (5,:: (Home ,:: (Forward 16.07524435468833,:: (Turn 2.199625992845573,:: (For (0,[] ),[] ))))),[] )))) -11.55453239540229 6.851801637397735 1003.3727622147111
 
 20060324-22:08:00-d2df9ba9c697ee7e1b27b4b952dcdd4a.seminal.ml
-*** Failed! *** Exception: OutputTypeMismatch (VA "StoredInt" [VI 0]) (TCon "stmt" :-> TCon "int") (after 1 test): 
-interp_prog (RestoreHeap "")
+("42","33")
+"interp_s"
+TCon "heap" :-> (TCon "stmt" :-> TCon "heap")
+*** Failed! *** Exception: OutputTypeMismatch (VL [VT 2 [VS "",VL []]]) (TCon "heap" :-> (TCon "stmt" :-> TCon "heap")) (after 2 tests): 
+interp_s ([] ) (SaveHeap "")
 
 20060324-22:24:46-8ab05dd4986d17d763e509d04ea02fde.seminal.ml
 ("145","5")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: UnboundVariable "List.nth" (after 1 test): 
 
 20060324-22:33:45-794856d6d57de6aec959bc9221c45eb6.seminal.ml
 ("14","34")
@@ -1913,15 +988,13 @@ TCon "int" :-> (TCon "float" :-> TCon "move")
 ("85","13")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 2 against []" (after 7 tests): 
-interpTrans (:: (Home ,:: (For (:: (Home ,[] ),2),[] ))) 19.876844032372322 6.3564811025438415 1540.1277523317842
+*** Failed! Exception: '<<timeout>>' (after 9 tests): 
 
 20060324-22:39:30-c619291e201e563ad9550d8cd7acb5f0.seminal.ml
 ("86","24")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 0 against []" (after 4 tests): 
-interpTrans (:: (Home ,:: (For ([] ,0),[] ))) -1.1883056979232274 0.18173694690187833 5.530614219996191e-3
+*** Failed! Exception: '<<timeout>>' (after 8 tests): 
 
 20060324-22:39:43-eebf94185c695dc23122f1f8a3b05347.seminal.ml
 ("21","59")
@@ -1939,27 +1012,31 @@ TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
 ("88","12")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match 2 against []" (after 7 tests): 
-interpTrans (:: (Forward -14.894830188222036,:: (Turn -1.2856263530374348,:: (For (:: (Turn 0.0,:: (For ([] ,1),[] )),2),[] )))) -5.367455509671841 -3.3226963383060224 -5.636676957648292
+*** Failed! Exception: '<<timeout>>' (after 16 tests): 
 
 20060324-22:53:08-18b6d1fa1b4022dcf41a6276b9ca9fc9.seminal.ml
 ("92","22")
 "interpTrans"
 TApp "list" [TCon "move"] :-> (TCon "float" :-> (TCon "float" :-> (TCon "float" :-> TTup [TApp "list" [TTup [TCon "float",TCon "float"]],TCon "float"])))
-*** Failed! *** Exception: TypeError "type error: tried to match -1 against []" (after 3 tests): 
-interpTrans (:: (Forward 0.0,:: (For ([] ,-1),[] ))) -1.9258229046553228 -4.967008276873755 0.7761468730470056
+*** Failed! Exception: '<<timeout>>' (after 56 tests): 
 
 20060324-22:57:22-f4d3fc8cbafcab94ceae8ce7d40c51a5.seminal.ml
 ("145","23")
-*** Failed! *** Exception: TypeError "For expects 1 arguments, but was given 2" (after 1 test): 
+*** Failed! *** Exception: TypeError "type error: uncons can only be applied to lists" (after 1 test): 
 
 20060324-23:04:56-f1d095019a8df3560f887b998e607db5.seminal.ml
-*** Failed! *** Exception: MLException (VA "Unimplemented" []) (after 1 test): 
-interpTrans ([] ) 0.0 0.0 0.0
+("27","60")
+"interpLarge"
+TApp "list" [TCon "move"] :-> TApp "list" [TTup [TCon "float",TCon "float"]]
+*** Failed! *** Exception: TypeError "* can only be applied to ints" (after 3 tests): 
+interpLarge (:: (Turn 0.0,:: (Turn -0.4526606132641883,[] )))
 
 20060325-09:30:54-e182e9092714cced8953b2f5b29145da.seminal.ml
-*** Failed! *** Exception: TypeError "type error: tried to match \"\" against Int i" (after 1 test): 
-interp_prog (Assign (Int -2,""))
+("54","19")
+"interp_prog"
+TCon "stmt" :-> TCon "int"
+*** Failed! *** Exception: MLException (VA "Match_failure" []) (after 1 test): 
+interp_prog (Assign ("",Var ""))
 
 20060325-09:41:54-7dbacbbb2d533f44a1db48037fe31cbd.seminal.ml
 ("70","18")
@@ -2049,9 +1126,9 @@ TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
 ("48","8")
 "interp"
 (TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
-*** Failed! *** Exception: OutputTypeMismatch VU ((TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))) (after 1 test): 
+*** Failed! *** Exception: MLException (VA "Not_found" []) (after 1 test): 
 interp (fun _ ->
-  fun _ -> [] ) ([] ) (Int -1)
+  fun _ -> [] ) ([] ) (Var "")
 
 20060406-11:17:50-f3fec0a8ebf80f9b609a4bd6698f4c33.seminal.ml
 ("52","4")
@@ -2123,8 +1200,8 @@ TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
 ("108","13")
 "computeFreeVars"
 TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
-*** Failed! *** Exception: MLException (VA "BadSourceProgram" []) (after 2 tests): 
-computeFreeVars (First Int 1)
+*** Failed! *** Exception: TypeError "type error: tried to match Lam (\"\",Var \"\",[]) against (e1,lst)" (after 3 tests): 
+computeFreeVars (Lam ("",Lam ("",Var "",Some [] ),Some [] ))
 
 20060407-14:09:40-7804fcbc75f8b1ecc35cb5f0b73b61e1.seminal.ml
 ("117","21")
@@ -2204,7 +1281,7 @@ TCon "exp" :-> TTup [TCon "exp",TApp "list" [TCon "string"]]
 (TCon "env" :-> (TApp "option" [TApp "list" [TCon "string"]] :-> TCon "env")) :-> (TCon "env" :-> (TCon "exp" :-> TCon "exp"))
 *** Failed! *** Exception: TypeError "type error: tried to match [] against Var s" (after 1 test): 
 interp (fun _ ->
-  fun _ -> [] ) ([] ) (Int 1)
+  fun _ -> [] ) ([] ) (Int 0)
 
 20060409-00:07:29-26092bf6b0d197a7cad0d4c6a3b795e6.seminal.ml
 ("164","10")
@@ -2217,24 +1294,24 @@ it :: Int
 fs :: [(FilePath, Result)]
 ss :: [(FilePath, Result)]
 λ> length fs
-181
+176
 it :: Int
 λ> length ss
-4
+9
 it :: Int
 λ> length (filter (("Unbound" `isInfixOf`) . Test.QuickCheck.reason . snd) fs)
-5
+6
 it :: Int
 λ> length (filter (("timeout" `isInfixOf`) . Test.QuickCheck.reason . snd) fs)
-28
+34
 it :: Int
 λ> length (filter (("MLException" `isInfixOf`) . Test.QuickCheck.reason . snd) fs)
-53
+49
 it :: Int
-λ> 4 / (181 - 5 - 28 - 53)
-4.2105263157894736e-2
+λ> 9 / (176 - 6 - 34 - 49)
+0.10344827586206896
 it :: Fractional a => a
-λ> 181 - 5 - 28 - 53
-95
+λ> (176 - 6 - 34 - 49)
+87
 it :: Num a => a
 λ> 
