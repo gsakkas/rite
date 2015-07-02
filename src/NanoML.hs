@@ -17,7 +17,7 @@ import           Control.Monad.Writer
 import           Data.List
 import qualified Data.Map                 as Map
 import           Data.Maybe
-import           Data.Typeable
+import           Data.Typeable (Typeable)
 import           System.IO.Unsafe
 import           System.Timeout
 import           Test.QuickCheck
@@ -91,17 +91,14 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ nanoCheck $ run $ runEval quietOpts $ do
+             $ within sec $ nanoCheck $ run $ runEval stdOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
-
-loudOpts = NanoOpts { enablePrint = True }
-quietOpts = NanoOpts { enablePrint = False }
 
 checkFunc :: Var -> Type -> Prog -> IO Result
 checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 100 })
                    $ within sec $ nanoCheck $ do
-                     (x, st, log) <- run $ runEvalFull quietOpts $ mapM_ evalDecl prog
+                     (x, st, log) <- run $ runEvalFull stdOpts $ mapM_ evalDecl prog
                      case x of
                        Right _ -> continue st log
                        -- Left (MLException _) -> continue st log
@@ -116,7 +113,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 1
   continue st log = do
     args <- pick (genArgs t $ stTypeEnv st)
     monitor $ counterexample (show . pretty $ mkApps (Var f) args)
-    run $ runEval quietOpts $ do
+    run $ runEval stdOpts $ do
       put st; tell log -- first of all, restore the state and log
       v <- eval (mkApps (Var f) args)
       b <- v `checkType` resTy t
@@ -137,71 +134,72 @@ checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
 checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> return (Just (f,r))) r)
 
 checkType :: MonadEval m => Value -> Type -> m Bool
-checkType v t = case t of
-  TVar _ -> return $ isInt v
-  TCon t
-    | t == tINT
-      -> return $ isInt v
-    | t == tFLOAT
-      -> return $ isFloat v
-    | t == tCHAR
-      -> return $ isChar v
-    | t == tSTRING
-      -> return $ isString v
-    | t == tBOOL
-      -> return $ isBool v
-    | t == tUNIT
-      -> return $ isUnit v
-    | otherwise
-      -> (v `isAlgOf` t) []
-  TApp "list" [t] -> v `isListOf` t
-  TApp c ts -> (v `isAlgOf` c) ts
-  TTup ts -> v `isTupleOf` ts
-  _ :-> to -> return $ isFunc v
+checkType v t = unify t (typeOf v) >> return True
+  -- case t of
+  -- TVar _ -> return $ isInt v
+  -- TCon t
+  --   | t == tINT
+  --     -> return $ isInt v
+  --   | t == tFLOAT
+  --     -> return $ isFloat v
+  --   | t == tCHAR
+  --     -> return $ isChar v
+  --   | t == tSTRING
+  --     -> return $ isString v
+  --   | t == tBOOL
+  --     -> return $ isBool v
+  --   | t == tUNIT
+  --     -> return $ isUnit v
+  --   | otherwise
+  --     -> (v `isAlgOf` t) []
+  -- TApp "list" [t] -> v `isListOf` t
+  -- TApp c ts -> (v `isAlgOf` c) ts
+  -- TTup ts -> v `isTupleOf` ts
+  -- _ :-> to -> return $ isFunc v
 
 
-isInt, isFloat, isChar, isString, isBool, isUnit :: Value -> Bool
+-- isInt, isFloat, isChar, isString, isBool, isUnit :: Value -> Bool
 
-isInt (VI {}) = True
-isInt _       = False
+-- isInt (VI {}) = True
+-- isInt _       = False
 
-isFloat (VD {}) = True
-isFloat _       = False
+-- isFloat (VD {}) = True
+-- isFloat _       = False
 
-isChar (VC {}) = True
-isChar _       = False
+-- isChar (VC {}) = True
+-- isChar _       = False
 
-isString (VS {}) = True
-isString _       = False
+-- isString (VS {}) = True
+-- isString _       = False
 
-isBool (VB {}) = True
-isBool _       = False
+-- isBool (VB {}) = True
+-- isBool _       = False
 
-isUnit VU = True
-isUnit _  = False
+-- isUnit VU = True
+-- isUnit _  = False
 
-isAlgOf :: MonadEval m => Value -> TCon -> [Type] -> m Bool
-isAlgOf v tc ts = do
-  TypeDecl {..} <- lookupType tc
-  case tyRhs of
-    Alias ty
-      -> v `checkType` ty
-    Alg ds
-      | VA dc vs <- v
-        -> case find (\d -> dc == dCon d ) ds of
-             Nothing -> return False
-             Just DataDecl {..} -> allM (uncurry checkType)
-                                        (zip vs (map (subst (zip tyVars ts)) dArgs))
-      | otherwise -> return False
+-- isAlgOf :: MonadEval m => Value -> TCon -> [Type] -> m Bool
+-- isAlgOf v tc ts = do
+--   TypeDecl {..} <- lookupType tc
+--   case tyRhs of
+--     Alias ty
+--       -> v `checkType` ty
+--     Alg ds
+--       | VA dc vs t <- v
+--         -> case find (\d -> dc == dCon d ) ds of
+--              Nothing -> return False
+--              Just DataDecl {..} -> allM (uncurry checkType)
+--                                         (zip vs (map (subst (zip tyVars ts)) dArg))
+--       | otherwise -> return False
 
-isListOf (VL vs) t = allM (`checkType` t) vs
-isListOf _ _       = return False
+-- isListOf (VL vs t) t' = return (t == t')
+-- isListOf _ _          = return False
 
-isTupleOf (VT n vs) ts
-  | length ts == length vs
-  = allM (uncurry checkType) (zip vs ts)
-isTupleOf _  _
-  = return False
+-- isTupleOf (VT n vs ts) ts' = return (ts == ts')
+--   --  length ts == length vs
+--   -- = allM (uncurry checkType) (zip vs ts)
+-- isTupleOf _  _
+--   = return False
 
-isFunc (VF {}) = True
-isFunc _       = False
+-- isFunc (VF {}) = True
+-- isFunc _       = False

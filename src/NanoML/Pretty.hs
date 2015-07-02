@@ -31,10 +31,10 @@ instance Pretty Value where
     VS s -> text $ show s
     VB b -> text (if b then "true" else "false")
     VU   -> text "()"
-    VL l -> brackets $ hcat $ intersperse semi $ map pretty l
-    VT _ xs -> parens $ hcat $ intersperse comma $ map pretty xs
-    VA d [x] -> text d <+> pretty x
-    VA d xs -> text d <+> parens (hcat $ intersperse comma $ map pretty xs)
+    VL l _ -> brackets $ hcat $ intersperse semi $ map pretty l
+    VT _ xs _ -> parens $ hcat $ intersperse comma $ map pretty xs
+    VA d Nothing _ -> text d
+    VA d (Just x) _ -> text d <+> pretty x
     VF (Func e _) -> prettyPrec z e
 
 
@@ -82,8 +82,9 @@ instance Pretty Expr where
     -- Cons x xs -> parensIf (z > zc) $
     --              prettyPrec (zc+1) x <+> text "::" <+> prettyPrec (zc+1) xs
     --   where zc = 20
-    ConApp c es -> parensIf (z > zc) $
-                   text c <+> prettyTuple es
+    ConApp c Nothing -> text c
+    ConApp c (Just e) -> parensIf (z > zc) $
+                         text c <+> pretty e
       where zc = 26
     Tuple xs -> prettyTuple xs
     Try e ps -> parensIf (z > zt) $
@@ -132,9 +133,8 @@ instance Pretty Pat where
     VarPat v -> text v
     LitPat l -> pretty l
     ConsPat x xs -> pretty x <+> text "::" <+> pretty xs
-    ConPat c [] -> text c
-    ConPat c [p] -> text c <+> pretty p
-    ConPat c ps -> text c <+> prettyTuple ps
+    ConPat c Nothing -> text c
+    ConPat c (Just p) -> text c <+> pretty p
     ListPat l -> brackets $ encloseSep lbracket rbracket semi $ map pretty l
     TuplePat l -> prettyTuple l
     WildPat -> text "_"
@@ -143,11 +143,12 @@ instance Pretty Pat where
 
 prettyTuple [] = empty
 prettyTuple [x] = pretty x
-prettyTuple xs = parens $ hcat $ intersperse comma $ map pretty xs
+prettyTuple xs = parens $ hsep $ intersperse comma $ map pretty xs
 
 prettyTypeTuple xs = parens $ hsep $ intersperse (text "*") $ map pretty xs
 
-prettyTypeArgs = prettyTuple
+prettyTypeArgs [] = empty
+prettyTypeArgs as = prettyTuple as <+> empty
 
 prettyBind (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> pretty e
 
@@ -177,10 +178,9 @@ instance Pretty TypeRhs where
   pretty (Alg ds)  = vsep (map ((text "|" <+>) . pretty) ds)
 
 instance Pretty DataDecl where
-  pretty DataDecl {..} = case dArgs of
-    []  -> text dCon
-    [t] -> text dCon <+> text "of" <+> pretty t
-    ts  -> text dCon <+> text "of" <+> prettyTypeTuple ts
+  pretty DataDecl {..} = case dArg of
+    Nothing -> text dCon
+    Just t  -> text dCon <+> text "of" <+> pretty t
 
 prettyProg :: Prog -> Doc
 prettyProg = vsep . map pretty
@@ -208,7 +208,7 @@ instance Pretty Type where
   prettyPrec z t = case t of
     TVar v -> squote <> text v
     TCon c -> text c
-    TApp t ts -> prettyTypeArgs ts <+> pretty t
+    TApp t ts -> prettyTypeArgs ts <> pretty t
     TTup ts -> parens $ hsep $ intersperse (text "*") $ map pretty ts
     ti :-> to -> parensIf (z > zf) $
                  prettyPrec (zf+1) ti <+> text "->" <+> prettyPrec zf to

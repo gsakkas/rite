@@ -183,11 +183,11 @@ DataDecls :: { [DataDecl] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: con DataArgs              { DataDecl $1 $2 }
+: con DataArgs              { DataDecl $1 $2 undefined }
 
-DataArgs :: { [Type] }
-: {- empty -}                 { [] }
-| "of" SimpleTypeOrTuple      { case $2 of { TTup ts -> ts; _ -> [$2] } }
+DataArgs :: { Maybe Type }
+: {- empty -}                 { Nothing }
+| "of" SimpleTypeOrTuple      { Just $2 }
 
 -- Patterns
 
@@ -195,7 +195,7 @@ Pattern :: { Pat }
 : SimplePattern         { $1 }
 | Pattern "as" ValIdent { AsPat $1 $3 }
 | PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
-| con Pattern      %prec constr_app      { ConPat $1 (case $2 of { TuplePat ps -> ps; _ -> [$2] }) }
+| con Pattern      %prec constr_app      { ConPat $1 (Just $2) }
 | Pattern "::" Pattern                   { ConsPat $1 $3 }
 | Pattern '|' Pattern                    { OrPat $1 $3 }
 
@@ -209,7 +209,7 @@ SimplePatternNotIdent :: { Pat }
 | '[' PatternSemiList ']' { ListPat (reverse $2) }
 | '(' Pattern ')'         { $2 }
 | '(' Pattern ':' Type ')'{ $2 }
-| ConLongIdent            { ConPat $1 [] }
+| ConLongIdent            { ConPat $1 Nothing }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
@@ -229,7 +229,7 @@ SeqExpr :: { Expr }
 Expr :: { Expr }
 : SimpleExpr      %prec below_SHARP         { $1 }
 | SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
-| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 (case $2 of { Tuple xs -> xs; _ -> [$2] }) }
+| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 [$2] }
 | "let" RecFlag LetBindings "in" SeqExpr    { Let $2 (reverse $3) $5 }
 | "function" MaybePipe AltList              { mkFunction (reverse $3) }
 | "fun" SimplePattern FunDef                { Lam $2 $3 }

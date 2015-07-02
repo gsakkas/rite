@@ -21,7 +21,7 @@ import           Data.List
 import           Data.Map                     (Map)
 import qualified Data.Map                     as Map
 import           Data.Maybe
-import           Data.Typeable
+import           Data.Typeable (Typeable)
 import           GHC.Generics
 import           Test.SmartCheck
 import           Text.PrettyPrint.ANSI.Leijen (Doc)
@@ -42,10 +42,15 @@ type MonadEval m = ( MonadError NanoError m
 
 type Var = String
 
-data NanoOpts
-  = NanoOpts { enablePrint :: Bool -- ^ Should we actually print things to stdout?
-             }
-  deriving Show
+data NanoOpts = NanoOpts
+  { enablePrint           :: Bool -- ^ Should we actually print things to stdout?
+  , checkDataCons         :: Bool -- ^ Should we check that datacon args have the proper type?
+  , heterogeneousEquality :: Bool -- ^ Should we allow equality comparison between different types?
+  } deriving Show
+
+stdOpts, loudOpts :: NanoOpts
+stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False }
+loudOpts = stdOpts { enablePrint = True }
 
 data NanoError
   = MLException Value
@@ -70,19 +75,20 @@ typeError = throwError . TypeError
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
-data EvalState
-  = EvalState { stVarEnv  :: Env
-              , stTypeEnv :: Map TCon TypeDecl
-              , stDataEnv :: Map DCon DataDecl
-              , stStore   :: Env
-              }
+data EvalState = EvalState
+  { stVarEnv  :: Env
+  , stTypeEnv :: Map TCon TypeDecl
+  , stDataEnv :: Map DCon DataDecl
+  , stStore   :: Env
+  }
 
 initState :: EvalState
-initState = EvalState { stVarEnv = baseEnv
-                      , stTypeEnv = baseTypeEnv
-                      , stDataEnv = baseDataEnv
-                      , stStore = emptyEnv
-                      }
+initState = EvalState
+  { stVarEnv = baseEnv
+  , stTypeEnv = baseTypeEnv
+  , stDataEnv = baseDataEnv
+  , stStore = emptyEnv
+  }
 
 setVarEnv :: MonadEval m => Env -> m ()
 setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
@@ -90,21 +96,33 @@ setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
 addType :: MonadEval m => TypeDecl -> m ()
 addType td@TypeDecl {..} = modify' $ \ s ->
   s { stTypeEnv = Map.insert tyCon td (stTypeEnv s)
-    , stDataEnv = Map.union dcons (stDataEnv s) }
+    , stDataEnv = Map.union (Map.fromList dds') (stDataEnv s) }
   where
-  dcons = case tyRhs of
+  td' = td { tyRhs = tyRhs' }
+  tyRhs' = case tyRhs of
+    Alias _ -> tyRhs
+    Alg _   -> Alg $ map snd dds'
+  dds' = case tyRhs of
     Alias _ -> mempty
-    Alg dds -> Map.fromList [(dCon,dd) | dd@DataDecl {..} <- dds]
+    Alg dds -> [(dCon, dd { dType = td' }) | dd@DataDecl {..} <- dds]
+  -- dcons = case tyRhs of
+  --   Alias _ -> mempty
+  --   Alg dds -> Map.fromList [(dCon,dd) | dd@DataDecl {..} <- dds]
 
 extendType :: MonadEval m => TCon -> DataDecl -> m ()
-extendType tcon ddecl = modify' $ \ s ->
-  s { stTypeEnv = Map.adjust addDDecl tcon (stTypeEnv s)
-    , stDataEnv = Map.insert (dCon ddecl) ddecl (stDataEnv s)
-    }
-  where
-  addDDecl TypeDecl {..} = case tyRhs of
+extendType tcon ddecl = do
+  td@TypeDecl {..} <- lookupType tcon
+  case tyRhs of
     Alias _ -> error $ "cannot extend type alias: " ++ tcon
-    Alg ds  -> let tyRhs = Alg (ddecl:ds) in TypeDecl {..}
+    Alg dds -> addType (td { tyRhs = Alg (ddecl : dds) })
+-- extendType tcon ddecl = modify' $ \ s ->
+--   s { stTypeEnv = Map.adjust addDDecl tcon (stTypeEnv s)
+--     , stDataEnv = Map.insert (dCon ddecl) ddecl (stDataEnv s)
+--     }
+--   where
+--   addDDecl TypeDecl {..} = case tyRhs of
+--     Alias _ -> error $ "cannot extend type alias: " ++ tcon
+--     Alg ds  -> let tyRhs = Alg (ddecl:ds) in TypeDecl {..}
 
 lookupType :: MonadEval m => TCon -> m TypeDecl
 lookupType tcon = do
@@ -120,12 +138,12 @@ lookupType tcon = do
 --     Nothing -> typeError (dcon ++ " is not a constructor of " ++ tcon)
 --     Just DataDecl {..} -> return dArgs
 
-lookupDataCon :: MonadEval m => DCon -> m [Type]
+lookupDataCon :: MonadEval m => DCon -> m DataDecl
 lookupDataCon dc = do
   dcons <- gets stDataEnv
   case Map.lookup dc dcons of
     Nothing -> typeError ("unknown data constructor: " ++ dc)
-    Just DataDecl {..} -> return dArgs
+    Just d  -> return d
 
 subst :: [(TVar, Type)] -> Type -> Type
 subst su t = case t of
@@ -171,24 +189,33 @@ m `withEnv` env = do
 -- Primitives
 ----------------------------------------------------------------------
 
-baseTypeEnv = Map.fromList
-  [ ("()",     TypeDecl "()"     []    (Alg [DataDecl "()" []]))
-  , ("list",   TypeDecl "list"   ["a"] (Alg [dNil, dCons]))
-  , ("option", TypeDecl "option" ["a"] (Alg [dNone, dSome]))
-  , ("exn",    TypeDecl "exn"    []    (Alg [dNot_found, dMatch_failure]))
-  ]
+baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
+  [ tUnit, tList, tOption, tExn ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
                                          Alias _ -> []
                                          Alg ds -> [(dCon d, d) | d <- ds])
                            $ Map.elems baseTypeEnv
 
-dNil = DataDecl "[]" []
-dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
-dNone = DataDecl "None" []
-dSome = DataDecl "Some" [ TVar "a" ]
-dNot_found = DataDecl "Not_found" []
-dMatch_failure = DataDecl "Match_failure" []
+mkTypeDecl :: TCon -> [TVar] -> (TypeDecl -> TypeRhs) -> TypeDecl
+mkTypeDecl tyCon tyVars mkRhs = let td = TypeDecl tyCon tyVars (mkRhs td) in td
+
+mkAlgRhs :: [TypeDecl -> DataDecl] -> TypeDecl -> TypeRhs
+mkAlgRhs rhss td = Alg $ map ($td) rhss
+
+tUnit   = mkTypeDecl "()"     []    (mkAlgRhs [dUnit])
+tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
+tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
+tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dNot_found, dMatch_failure, dInvalid_argument])
+
+dUnit = DataDecl "()" Nothing
+dNil = DataDecl "[]" Nothing
+dCons = DataDecl "::" (Just (TTup [ TVar "a", TApp "list" [TVar "a"] ]))
+dNone = DataDecl "None" Nothing
+dSome = DataDecl "Some" (Just (TVar "a"))
+dNot_found = DataDecl "Not_found" Nothing
+dMatch_failure = DataDecl "Match_failure" Nothing
+dInvalid_argument = DataDecl "Invalid_argument" (Just (TCon "string"))
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
@@ -198,7 +225,7 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ]
 
 primVars :: [(Var, Value)]
-primVars = [ ("[]", VL [])
+primVars = [ ("[]", VL [] (TVar "a"))
            , ("::", VF (Func (mkLams [VarPat "x", VarPat "xs"]
                                      (mkConApp "::" [Var "x", Var "xs"]))
                              emptyEnv))
@@ -217,7 +244,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.fold_left"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
                               ,Var "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -234,7 +261,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.fold_right"
                     (mkLams [VarPat "f", VarPat "xs", VarPat "b"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
                               ,Var "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -251,9 +278,9 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.assoc"
                     (mkLams [VarPat "z", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
-                              ,App (Var "raise") [ConApp "Not_found" []])
+                              ,App (Var "raise") [mkConApp "Not_found" []])
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
                               ,Ite (App (Var "=") [Var "z", App (Var "fst") [Var "y"]])
@@ -266,13 +293,13 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.filter"
                     (mkLams [VarPat "f", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
-                              ,ConApp "[]" [])
+                              ,mkConApp "[]" [])
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
                               ,Ite (App (Var "f") [Var "y"])
-                                   (ConApp "::" [Var "y", App (Var "List.filter") [Var "f", Var "ys"]])
+                                   (mkConApp "::" [Var "y", App (Var "List.filter") [Var "f", Var "ys"]])
                                    (App (Var "List.filter") [Var "f", Var "ys"])
                               )
                              ]))
@@ -281,7 +308,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.map"
                     (mkLams [VarPat "f", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
                               ,Var "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -300,7 +327,7 @@ primVars = [ ("[]", VL [])
              ,mkRec "List.iter"
                     (mkLams [VarPat "f", VarPat "xs"]
                             (Case (Var "xs")
-                             [(ConPat "[]" []
+                             [(ConPat "[]" Nothing
                               ,Nothing
                               ,Var "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
@@ -329,6 +356,7 @@ primVars = [ ("[]", VL [])
            , ("List.hd", mkPrim1Fun $ P1 "List.hd" plist_hd)
            , ("List.length", mkPrim1Fun $ P1 "List.length" plist_length)
            , ("List.mem", mkPrim2Fun $ P2 "List.mem" plist_mem)
+           , ("List.nth", mkPrim2Fun $ P2 "List.nth" plist_nth)
            , ("List.rev", mkPrim1Fun $ P1 "List.rev" plist_rev)
            , ("List.split", mkPrim1Fun $ P1 "List.split" plist_split)
            , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl)
@@ -338,6 +366,7 @@ primVars = [ ("[]", VL [])
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int)
            , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
            , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline)
+           , ("print_newline", mkPrim1Fun $ P1 "print_newline" pprint_newline)
            , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char)
            , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float)
            , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string)
@@ -374,10 +403,10 @@ pcompare :: MonadEval m => Value -> Value -> m Value
 pcompare = cmpVal
 
 pfst :: MonadEval m => Value -> m Value
-pfst (VT 2 [x,_]) = return x
+pfst (VT 2 [x,_] _) = return x
 
 psnd :: MonadEval m => Value -> m Value
-psnd (VT 2 [_,y]) = return y
+psnd (VT 2 [_,y] _) = return y
 
 pand :: MonadEval m => Value -> Value -> m Value
 pand (VB x) (VB y) = return (VB (x && y))
@@ -408,7 +437,7 @@ plog10 (VD x) = return (VD (logBase 10 x))
 
 pmodf :: MonadEval m => Value -> m Value
 pmodf (VD x) = let (n,d) = properFraction x
-               in return (VT 2 [VD d, VD (fromInteger n)])
+               in return (VT 2 [VD d, VD (fromInteger n)] [TCon tFLOAT, TCon tFLOAT])
 
 psqrt :: MonadEval m => Value -> m Value
 psqrt (VD i) = return (VD (sqrt i))
@@ -484,6 +513,13 @@ pprint_endline (VS s) = do
     liftIO $ putStrLn s
   return VU
 
+pprint_newline :: MonadEval m => Value -> m Value
+pprint_newline (VS s) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStrLn ""
+  return VU
+
 pprint_int :: MonadEval m => Value -> m Value
 pprint_int (VI i) = do
   opts <- ask
@@ -502,34 +538,47 @@ pchar_escaped :: MonadEval m => Value -> m Value
 pchar_escaped (VC c) = return (VS (showLitChar c ""))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
-plist_combine (VL xs) (VL ys)
-  | length xs == length ys
-  = return (VL (zipWith (\x y -> VT 2 [x,y]) xs ys))
+plist_combine (VL xs tx) (VL ys ty)
+  | tx == ty
+  = if length xs == length ys
+    then return (VL (zipWith (\x y -> VT 2 [x,y] [tx, ty]) xs ys) (TTup [tx,ty]))
+    else throwError (MLException (mkExn "Invalid_argument" [VS "List.combine"]))
+  | otherwise = typeError $ printf "(%s) (%s)" (show tx) (show ty)
+
+plist_nth :: MonadEval m => Value -> Value -> m Value
+plist_nth (VL xs _) (VI n)
+  | n >= 0 && n < length xs
+  = return (xs !! n)
+  | otherwise
+  = throwError (MLException (mkExn "Invalid_argument" [VS "List.nth"]))
 
 plist_split :: MonadEval m => Value -> m Value
-plist_split (VL xs) = return (VT (length xs) [VL as, VL bs])
+plist_split (VL xs (TTup [ta, tb]))
+  = return (VT (length xs) [VL as ta, VL bs tb] [ta, tb])
   where
   -- FIXME: these list functions really shouldn't be primitives,
   -- introduces nasty laziness issues..
-  (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
+  (as, bs) = unzip . map (\(VT _ [a,b] _) -> (a,b)) $ xs
 
 plist_mem :: MonadEval m => Value -> Value -> m Value
-plist_mem x (VL xs) = VB <$> allM (`eqVal` x) xs
+plist_mem x (VL xs t) = VB <$> allM (`eqVal` x) xs
 
 plist_length :: MonadEval m => Value -> m Value
-plist_length (VL s) = return (VI (length s))
+plist_length (VL s _) = return (VI (length s))
 
 plist_rev :: MonadEval m => Value -> m Value
-plist_rev (VL xs) = return (VL (reverse xs))
+plist_rev (VL xs t) = return (VL (reverse xs) t)
 
 plist_hd :: MonadEval m => Value -> m Value
-plist_hd (VL (x:_)) = return x
+plist_hd (VL (x:_) _) = return x
 
 plist_tl :: MonadEval m => Value -> m Value
-plist_tl (VL (_:xs)) = return (VL xs)
+plist_tl (VL (_:xs) t) = return (VL xs t)
 
 pappend :: MonadEval m => Value -> Value -> m Value
-pappend (VL xs) (VL ys) = return (VL (xs ++ ys))
+pappend (VL xs tx) (VL ys ty)
+  | tx == ty  = return (VL (xs ++ ys) tx)
+  | otherwise = typeError $ printf "(%s) (%s)" (show tx) (show ty)
 
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS xs) (VS ys) = return (VS (xs ++ ys))
@@ -579,9 +628,9 @@ data Value
   | VS String
   | VB Bool
   | VU
-  | VL [Value]
-  | VT Int [Value] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
-  | VA DCon [Value]
+  | VL [Value] Type
+  | VT Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+  | VA DCon (Maybe Value) Type
   | VF Func
   deriving (Show, Generic)
 
@@ -638,7 +687,7 @@ data Expr
   | Seq Expr Expr -- TODO: do we actually need this for the student examples?
   | Case Expr [Alt]
   | Tuple [Expr]
-  | ConApp DCon [Expr]
+  | ConApp DCon (Maybe Expr)
   | Try Expr [Alt]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
@@ -692,7 +741,7 @@ data Pat
   = VarPat Var
   | LitPat Literal
   | ConsPat Pat Pat
-  | ConPat Var [Pat]
+  | ConPat Var (Maybe Pat)
   | ListPat [Pat]
   | TuplePat [Pat]
   | WildPat
@@ -706,7 +755,7 @@ data Type
   | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
-  deriving (Show)
+  deriving (Show, Eq)
 
 infixr :->
 
@@ -717,6 +766,7 @@ tSTRING = "string"
 tBOOL = "bool"
 tLIST = "list"
 tUNIT = "()"
+tEXN = "exn"
 
 argTys :: Type -> [Type]
 argTys (i :-> o) = i : argTys o
@@ -736,8 +786,12 @@ data TypeRhs
   deriving (Show)
 
 data DataDecl
-  = DataDecl { dCon :: DCon, dArgs :: [Type] }
+  = DataDecl { dCon :: DCon, dArg :: Maybe Type, dType :: TypeDecl }
   deriving (Show)
+
+typeDeclType TypeDecl {..} = TApp tyCon $ map TVar tyVars
+
+typeDataCons TypeDecl { tyRhs = Alg ds } = ds
 
 type TVar = String
 
@@ -745,6 +799,66 @@ type TCon = String
 
 type DCon = String
 
+
+unifyVal :: MonadEval m => Type -> Value -> m [(TVar, Type)]
+unifyVal (TVar a) v
+  = return [(a, typeOf v)] -- FIXME: occur check
+unifyVal (TCon "int") (VI _)
+  = return []
+unifyVal (TCon "float") (VD _)
+  = return []
+unifyVal (TCon "char") (VC _)
+  = return []
+unifyVal (TCon "string") (VS _)
+  = return []
+unifyVal (TCon "bool") (VB _)
+  = return []
+unifyVal (TCon "()") VU
+  = return []
+unifyVal (TApp "list" [t]) (VL _ vt)
+  = unify t vt
+unifyVal (TApp _ ts) (VA _ _ (TApp _ vts))
+  = mconcat <$> zipWithM unify ts vts
+unifyVal (ti :-> to) (VF _)
+  = return []
+unifyVal (TTup ts) (VT _ _ vts)
+  = mconcat <$> zipWithM unify ts vts
+
+unify :: MonadEval m => Type -> Type -> m [(TVar, Type)]
+unify (TVar a) t = unifyVar a t
+unify t (TVar a) = unifyVar a t
+unify (TCon x) (TCon y)
+  | x == y
+  = return []
+unify (xi :-> xo) (yi :-> yo)
+  = mappend <$> unify xi yi <*> unify xo yo
+unify (TTup xs) (TTup ys)
+  = mconcat <$> zipWithM unify xs ys
+unify (TApp xc xts) (TApp yc yts)
+  | xc == yc
+  = mconcat <$> zipWithM unify xts yts
+unify x y
+  = typeError $ printf "could not match %s against %s" (show x) (show y)
+
+unifyVar :: Monad m => TVar -> Type -> m [(TVar, Type)]
+unifyVar a t
+  | t == TVar a = return []
+  -- FIXME: occurs check
+  | otherwise   = return [(a,t)]
+
+typeOf :: Value -> Type
+typeOf v = case v of
+  VI _ -> TCon tINT
+  VD _ -> TCon tFLOAT
+  VC _ -> TCon tCHAR
+  VS _ -> TCon tSTRING
+  VB _ -> TCon tBOOL
+  VU   -> TCon tUNIT
+  VL _ t -> TApp tLIST [t]
+  VT _ _ ts -> TTup ts
+  VA _ _ t -> t
+  VF _ -> TVar "a" :-> TVar "b"
+  -- VF _ -> error "typeOf: <<function>>"
 
 ----------------------------------------------------------------------
 -- Utilities
@@ -763,7 +877,9 @@ mkApps :: Expr -> [Expr] -> Expr
 mkApps = App
 
 mkConApp :: DCon -> [Expr] -> Expr
-mkConApp = ConApp
+mkConApp c []  = ConApp c Nothing
+mkConApp c [e] = ConApp c (Just e)
+mkConApp c es  = ConApp c (Just (Tuple es))
 
 mkLams :: [Pat] -> Expr -> Expr
 mkLams ps e = case ps of
@@ -785,19 +901,29 @@ mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
 mkUMinus "-"  e            = mkApps (Var "-")  [Lit (LI 0), e]
 mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
 
+mkExn :: DCon -> [Value] -> Value
+mkExn dcon []   = VA dcon Nothing (TCon tEXN)
+mkExn dcon [a]  = VA dcon (Just a) (TCon tEXN)
+mkExn dcon args = VA dcon (Just (VT (length args) args (map typeOf args)))
+                     (TCon tEXN)
+
 eqVal (VI x) (VI y) = return (x == y)
 eqVal (VD x) (VD y) = return (x == y)
 eqVal (VB x) (VB y) = return (x == y)
 eqVal (VC x) (VC y) = return (x == y)
 eqVal (VS x) (VS y) = return (x == y)
 eqVal VU     VU     = return True
-eqVal (VL x) (VL y) = and . ((length x == length y) :) <$> zipWithM eqVal x y
-eqVal (VT i x) (VT j y)
+eqVal (VL x _) (VL y _) = and . ((length x == length y) :) <$> zipWithM eqVal x y
+eqVal (VT i x _) (VT j y _)
   | i == j
   = and <$> zipWithM eqVal x y
 eqVal (VF x) (VF y) = typeError "cannot compare functions"
-eqVal (VA c1 vs1) (VA c2 vs2)
-  = ((c1 == c2) &&) <$> eqVal (VL vs1) (VL vs2)
+eqVal (VA c1 Nothing t1) (VA c2 Nothing t2)
+  | c1 == c2 = return True
+  | t1 == t2 = return False
+eqVal (VA c1 (Just v1) t1) (VA c2 (Just v2) t2)
+  | c1 == c2 = eqVal v1 v2
+  | t1 == t2 = return False
 eqVal x y
   -- = return False
   = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
@@ -808,13 +934,24 @@ cmpVal (VB x) (VB y) = return (cmp x y)
 cmpVal (VC x) (VC y) = return (cmp x y)
 cmpVal (VS x) (VS y) = return (cmp x y)
 cmpVal VU     VU     = return (VI 0)
-cmpVal (VL x) (VL y) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM cmpVal x y
-cmpVal (VT i x) (VT j y)
+cmpVal (VL x _) (VL y _) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM cmpVal x y
+cmpVal (VT i x _) (VT j y _)
   | i == j
   = cmpAnd <$> zipWithM cmpVal x y
 cmpVal (VF x) (VF y) = typeError "cannot compare functions"
-cmpVal (VA c1 vs1) (VA c2 vs2)
-  = cmpAnd <$> zipWithM cmpVal vs1 vs2 -- FIXME: compare datacons too..
+cmpVal x@(VA c1 v1 _) y@(VA c2 v2 _) = do
+  dd1 <- lookupDataCon c2
+  dd2 <- lookupDataCon c2
+  unless (tyCon (dType dd1) == tyCon (dType dd2)) $
+    typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+  let dcs = map dCon . typeDataCons . dType $ dd1
+  case compare (fromJust (elemIndex c1 dcs)) (fromJust (elemIndex c2 dcs)) of
+    LT -> return (VI (-1))
+    GT -> return (VI 1)
+    EQ -> case (v1, v2) of
+      (Nothing, Nothing) -> return (VI 0)
+      (Just v1, Just v2) -> cmpVal v1 v2
+  -- = cmpAnd <$> zipWithM cmpVal vs1 vs2 -- FIXME: compare datacons too..
 cmpVal x y
   -- = return False
   = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)

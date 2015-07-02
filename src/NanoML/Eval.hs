@@ -63,7 +63,7 @@ evalBind :: MonadEval m => (Pat,Expr) -> m Env
 evalBind (p,e) = logEnv $ do
   v <- eval e
   matchPat v p >>= \case
-    Nothing  -> throwError $ MLException (VA "Match_failure" [])
+    Nothing  -> throwError $ MLException (mkExn "Match_failure" [])
     Just env -> return env
 
 logEnv :: MonadEval m => m Env -> m Env
@@ -82,7 +82,7 @@ logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
 logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
 logExpr (Lam p e) m = mycensor (\v w -> []) (tell [pretty (Lam p e)] >> m)
 logExpr (Val v) m = mycensor (\v w -> []) (tell [pretty (Val v)] >> m)
-logExpr e@(ConApp "[]" []) m = mycensor (\v w -> []) (tell [pretty e] >> m)
+logExpr e@(ConApp "[]" Nothing) m = mycensor (\v w -> []) (tell [pretty e] >> m)
 logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
 
 mycensor :: MonadWriter w m => (a -> w -> w) -> m a -> m a
@@ -127,27 +127,24 @@ eval expr = logExpr expr $ case expr of
   Case e as -> do
     v <- eval e
     evalAlts v as
-  -- Cons e es -> do
-  --   v     <- eval e
-  --   liftIO $ print expr
-  --   vs <- eval es
-  --   liftIO $ print vs
-  --   VL vs <- eval es
-  --   return (VL (v : vs))
   Tuple es -> do
     vs <- mapM eval es
-    return (VT (length vs) vs)
-  ConApp "()" [] -> return VU
-  ConApp "[]" [] -> return (VL [])
-  ConApp "::" [h,t] -> do
+    return (VT (length vs) vs (map typeOf vs))
+  ConApp "()" Nothing -> return VU
+  ConApp "[]" Nothing -> return (VL [] (TVar "a"))
+  ConApp "::" (Just (Tuple [h,t])) -> do
     vh <- eval h
     vt <- eval t
     case vt of
-      VL vt -> return (VL (vh:vt))
-      _     -> typeError $ ":: expects a list, was given: " ++ show (pretty vt)
-  ConApp dc es -> do
-    vs <- mapM eval es
-    evalConApp dc vs
+      VL vt t -> do
+        su <- unify t (typeOf vh)
+        return (VL (vh:vt) (subst su t))
+      _       -> typeError $ ":: expects a list, was given: " ++ show (pretty vt)
+  ConApp dc Nothing -> do
+    evalConApp dc Nothing
+  ConApp dc (Just e) -> do
+    v <- eval e
+    evalConApp dc (Just v)
   Try e alts -> do
     env <- gets stVarEnv
     eval e `catchError` \e -> do
@@ -180,13 +177,24 @@ evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
     eval e `withEnv` joinEnv pat_env env
   _ -> typeError "tried to apply a non-function"
 
-evalConApp :: MonadEval m => DCon -> [Value] -> m Value
-evalConApp dc vs = do
-  args <- lookupDataCon dc
-  unless (length args == length vs) $
-    typeError (printf "%s expects %d arguments, but was given %d"
-                      dc (length args) (length vs))
-  return (VA dc vs)
+evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
+evalConApp dc v = do
+  dd <- lookupDataCon dc
+  -- unless (length args == length vs) $
+  --   typeError (printf "%s expects %d arguments, but was given %d"
+  --                     dc (length args) (length vs))
+  case (dArg dd, v) of
+    (Nothing, Nothing) -> return (VA dc v (typeDeclType $ dType dd))
+    (Just a,  Just v)  -> do
+      su <- unify a (typeOf v)
+      let t = subst su $ typeDeclType $ dType dd
+      return (VA dc (Just v) t)
+    (Nothing, Just v) ->
+      typeError (printf "%s was given unexpected arugment: %s"
+                        dc (show v))
+    (Just t, Nothing) ->
+      typeError (printf "%s is missing expected arugment of type: %s"
+                        dc (show t))
 
 
 evalBop :: MonadEval m
@@ -250,7 +258,7 @@ litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
-  = throwError $ MLException (VA "Match_failure" [])
+  = throwError $ MLException (mkExn "Match_failure" [])
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
@@ -279,32 +287,35 @@ matchPat v p = logMaybeEnv $ case p of
       (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
       _                      -> return Nothing
   ListPat ps
-    | VL vs <- v
+    | VL vs t <- v
     , length ps == length vs
       -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
            <$> zipWithM matchPat vs ps
   TuplePat ps
-    | VT n vs <- v
+    | VT n vs ts <- v
     , length ps == n
       -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
            <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
-  ConPat "[]" []
-    | VL [] <- v
+  ConPat "[]" Nothing
+    | VL [] t <- v
       -> return (Just emptyEnv)
-    | VL _ <- v
+    | VL _ t <- v
       -> return Nothing
-  ConPat "()" []
+  ConPat "()" Nothing
     | VU <- v
       -> return (Just emptyEnv)
-  ConPat dc ps
-    | VA c vs <- v
+  ConPat dc p
+    | VA c v t <- v
     , dc == c
-    , length ps == length vs
-      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
-           <$> zipWithM matchPat vs ps
-    | VA c vs <- v
+--    , length ps == length vs
+      -> case (v,p) of
+          (Nothing, Nothing) -> return (Just mempty)
+          (Just v, Just p) -> matchPat v p
+      -- fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+      --      <$> zipWithM matchPat vs ps
+    | VA c vs t <- v
     , dc /= c
       -> return Nothing
   AsPat p x -> do
@@ -314,8 +325,8 @@ matchPat v p = logMaybeEnv $ case p of
                       (show $ pretty v) (show $ pretty p) :: String)
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
-unconsVal (VL (x:xs)) = return (x, VL xs)
-unconsVal _           = typeError "type error: uncons can only be applied to lists"
+unconsVal (VL (x:xs) t) = return (x, VL xs t)
+unconsVal _             = typeError "type error: uncons can only be applied to lists"
 
 matchLit :: Value -> Literal -> Bool
 matchLit (VI i1) (LI i2) = i1 == i2
@@ -323,3 +334,8 @@ matchLit (VD d1) (LD d2) = d1 == d2
 matchLit (VB b1) (LB b2) = b1 == b2
 matchLit VU      LU      = True
 matchLit _       _       = False
+
+
+testEval :: String -> IO ()
+testEval s = let Right e = parseExpr s
+             in print =<< runEval stdOpts (eval e)

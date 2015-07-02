@@ -62,6 +62,8 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
 [ ] configurable failure options
   - heterogeneous equality vs. homogeneous
   - check ADT arguments at application site (IMPORTANT FOR SEMINAL)
+    - need to carry fully instantiated type around with values
+      (type-carrying operational semantics)
 
 [ ] add post-hoc generalization a la smartcheck
 
@@ -121,6 +123,12 @@ let interpSmall (movelist : move list) : (float*float) list =
     - keep log of tests that threw MLException
       - may indicate that type error is unreachable
   
+[ ] don't try to specialize datacons with multiple arguments, just let them be tuples...
+```
+# type ('a,'b) myoption = Mynone | Mysome of ('a * 'b);;
+# let Mysome x = Mysome (1,2);;
+val x : int * int = (1, 2)
+```
 
 
 ```

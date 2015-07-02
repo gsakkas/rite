@@ -46,13 +46,16 @@ genADT c ts e n = do
     Alg dds  -> oneof (mapMaybe (genDataDecl tyVars) dds)
   where
   genDataDecl tvs DataDecl {..}
-    | n <= 0 && not (null dArgs) && any isRec dArgs
-    = Nothing
-    | otherwise
-    = Just $ ConApp dCon <$> mapM (resize (n-1) . (`genExpr` e) . subst (zip tvs ts))
-                                  dArgs
+    | Nothing <- dArg
+    = Just $ return $ mkConApp dCon []
+    | Just dArg <- dArg
+    = if n <= 0 && isRec dArg
+      then Nothing
+      else Just $ ConApp dCon . Just <$>
+           (resize (n-1) . (`genExpr` e) . subst (zip tvs ts)) dArg
   isRec (TCon t)   = t == c
   isRec (TApp t _) = t == c
+  isRec (TTup ts)  = any isRec ts
   isRec _          = False
 
 -- genList :: Type -> TypeEnv -> Int -> Gen Expr
