@@ -190,7 +190,7 @@ m `withEnv` env = do
 ----------------------------------------------------------------------
 
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
-  [ tUnit, tList, tOption, tExn ]
+  [ tInt, tFloat, tBool, tChar, tString, tUnit, tList, tOption, tExn ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
                                          Alias _ -> []
@@ -203,6 +203,11 @@ mkTypeDecl tyCon tyVars mkRhs = let td = TypeDecl tyCon tyVars (mkRhs td) in td
 mkAlgRhs :: [TypeDecl -> DataDecl] -> TypeDecl -> TypeRhs
 mkAlgRhs rhss td = Alg $ map ($td) rhss
 
+tInt    = mkTypeDecl "int"    []    (mkAlgRhs [])
+tFloat  = mkTypeDecl "float"  []    (mkAlgRhs [])
+tBool   = mkTypeDecl "bool"   []    (mkAlgRhs [])
+tChar   = mkTypeDecl "char"   []    (mkAlgRhs [])
+tString = mkTypeDecl "string" []    (mkAlgRhs [])
 tUnit   = mkTypeDecl "()"     []    (mkAlgRhs [dUnit])
 tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])

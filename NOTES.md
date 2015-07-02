@@ -55,7 +55,7 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - (similar to soft typing)
   - also discriminative union types
 
-[ ] dig up extra benchmarks from other "locating type error papers"
+[X] dig up extra benchmarks from other "locating type error papers"
   - andrew myers
   - dan grossman
 
@@ -76,19 +76,18 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
     - just need a type for `mapHelp` so we actually generate inputs
   - 20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
     - used if-then instead of if-then-else, type mismatch between [] and ()
-  - 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
-    20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
-    - datacon name shadowing
-    - we should probably forbid shadowing datacons, even though ocaml allows it..
   - 20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
     - partially applied function, so we don't reduce anything, need to supply extra arg
-  - 20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
-    20060321-16:05:32-9fac1c5709dc4756677dea761359bb07.seminal.ml
-    20060321-18:07:56-3c4adbec38600fff622eabc0dbcae305.seminal.ml
-    - not checking types of arguments to datacons
   - 20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
     - type mismatch in result of match, () vs string
     - value is discarded though (with ;) so it can't go wrong
+
+  - USED TO PASS, BUT NO LONGER DO
+    - 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
+      20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
+      - datacon name shadowing
+      - we should probably forbid shadowing datacons, even though ocaml allows it..
+
 
 [ ] a few concrete examples of programs that crash at ML level
 
@@ -117,6 +116,7 @@ let interpSmall (movelist : move list) : (float*float) list =
       - wrap `raise Foo` in a thunk
       - when is thunk forced? (maybe when part of primitive application?)
       - this won't help the example above. are there actual benchmarks where it would?
+    - IDEA: replace `raise Foo` with random value of expected type
   - ml exceptions are uninteresting, they don't signify a type error
     - don't kill test harness on first MLException
       - may only be thrown on a particular branch

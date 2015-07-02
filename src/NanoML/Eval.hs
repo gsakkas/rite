@@ -279,9 +279,12 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
 matchPat v p = logMaybeEnv $ case p of
   VarPat var ->
     return $ Just (insertEnv var v emptyEnv)
-  LitPat lit ->
-    return $ if matchLit v lit then Just emptyEnv else Nothing
-  ConsPat p ps -> do
+  LitPat lit -> do
+    b <- matchLit v lit
+    return $ if b then Just mempty else Nothing
+  ConsPat p ps
+    | VL [] _ <- v -> return Nothing
+    | otherwise -> do
     (x,xs) <- unconsVal v
     menv1 <- matchPat x p
     menv2 <- matchPat xs ps
@@ -337,14 +340,17 @@ unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs) t) = return (x, VL xs t)
 unconsVal _             = typeError "type error: uncons can only be applied to lists"
 
-matchLit :: Value -> Literal -> Bool
-matchLit (VI i1) (LI i2) = i1 == i2
-matchLit (VD d1) (LD d2) = d1 == d2
-matchLit (VB b1) (LB b2) = b1 == b2
-matchLit VU      LU      = True
-matchLit _       _       = False
+matchLit :: MonadEval m => Value -> Literal -> m Bool
+matchLit (VI i1) (LI i2) = return $ i1 == i2
+matchLit (VD d1) (LD d2) = return $ d1 == d2
+matchLit (VB b1) (LB b2) = return $ b1 == b2
+matchLit (VC c1) (LC c2) = return $ c1 == c2
+matchLit (VS s1) (LS s2) = return $ s1 == s2
+matchLit VU      LU      = return True
+matchLit v       l       = typeError (printf "type error: tried to match %s against %s"
+                                      (show $ pretty v) (show $ pretty l) :: String)
 
 
 testEval :: String -> IO ()
 testEval s = let Right e = parseExpr s
-             in print . fmap pretty =<< runEval stdOpts (eval e)
+             in print =<< runEval stdOpts (eval e)

@@ -51,8 +51,12 @@ genADT c ts e n = do
     | n <= 0 && any isRec dArgs
     = Nothing
     | otherwise
-    = Just $ ConApp dCon . Just . Tuple
-          <$> mapM (resize (n-1) . (`genExpr` e) . subst (zip tvs ts)) dArgs
+    = Just $ do
+      vs <- mapM (resize (n-1) . (`genExpr` e) . subst (zip tvs ts)) dArgs
+      let v = case dArgs of
+            [_] -> head vs
+            _   -> Tuple vs
+      return $ ConApp dCon $ Just $ v
   isRec (TCon t)    = t == c
   isRec (TApp t ts) = t == c || any isRec ts
   isRec (TTup ts)   = any isRec ts
