@@ -180,22 +180,25 @@ evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
-  -- unless (length args == length vs) $
-  --   typeError (printf "%s expects %d arguments, but was given %d"
-  --                     dc (length args) (length vs))
-  case (dArg dd, v) of
-    (Nothing, Nothing) -> return (VA dc v (typeDeclType $ dType dd))
-    (Just a,  Just v)  -> do
+  case (dArgs dd, v) of
+    ([], Nothing) ->
+      return (VA dc v (typeDeclType $ dType dd))
+    ([a],  Just v) -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
       return (VA dc (Just v) t)
-    (Nothing, Just v) ->
-      typeError (printf "%s was given unexpected arugment: %s"
-                        dc (show v))
-    (Just t, Nothing) ->
-      typeError (printf "%s is missing expected arugment of type: %s"
-                        dc (show t))
-
+    (as,  Just (VT n vs ts))
+      | length as == n -> do
+        su <- mconcat <$> zipWithM unify as ts
+        let t = subst su $ typeDeclType $ dType dd
+        return (VA dc v t)
+    (as, _) -> do
+      let nArgs = case v of
+            Nothing         -> 0
+            Just (VT n _ _) -> n
+            Just _          -> 1
+      typeError (printf "%s expects %d arguments, but was given %d"
+                        dc (length as) nArgs)
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
@@ -338,4 +341,4 @@ matchLit _       _       = False
 
 testEval :: String -> IO ()
 testEval s = let Right e = parseExpr s
-             in print =<< runEval stdOpts (eval e)
+             in print . fmap pretty =<< runEval stdOpts (eval e)

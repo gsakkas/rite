@@ -178,9 +178,9 @@ instance Pretty TypeRhs where
   pretty (Alg ds)  = vsep (map ((text "|" <+>) . pretty) ds)
 
 instance Pretty DataDecl where
-  pretty DataDecl {..} = case dArg of
-    Nothing -> text dCon
-    Just t  -> text dCon <+> text "of" <+> pretty t
+  pretty DataDecl {..} = case dArgs of
+    []  -> text dCon
+    ts  -> text dCon <+> text "of" <+> hsep (intersperse (text "*") $ map pretty ts)
 
 prettyProg :: Prog -> Doc
 prettyProg = vsep . map pretty

@@ -185,9 +185,9 @@ DataDecls :: { [DataDecl] }
 DataDecl :: { DataDecl }
 : con DataArgs              { DataDecl $1 $2 undefined }
 
-DataArgs :: { Maybe Type }
-: {- empty -}                 { Nothing }
-| "of" SimpleTypeOrTuple      { Just $2 }
+DataArgs :: { [Type] }
+: {- empty -}                 { [] }
+| "of" TypeList               { $2 }
 
 -- Patterns
 

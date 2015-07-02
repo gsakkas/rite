@@ -208,14 +208,14 @@ tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
 tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dNot_found, dMatch_failure, dInvalid_argument])
 
-dUnit = DataDecl "()" Nothing
-dNil = DataDecl "[]" Nothing
-dCons = DataDecl "::" (Just (TTup [ TVar "a", TApp "list" [TVar "a"] ]))
-dNone = DataDecl "None" Nothing
-dSome = DataDecl "Some" (Just (TVar "a"))
-dNot_found = DataDecl "Not_found" Nothing
-dMatch_failure = DataDecl "Match_failure" Nothing
-dInvalid_argument = DataDecl "Invalid_argument" (Just (TCon "string"))
+dUnit = DataDecl "()" []
+dNil = DataDecl "[]" []
+dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
+dNone = DataDecl "None" []
+dSome = DataDecl "Some" [TVar "a"]
+dNot_found = DataDecl "Not_found" []
+dMatch_failure = DataDecl "Match_failure" []
+dInvalid_argument = DataDecl "Invalid_argument" [TCon "string"]
 
 primBops :: [(Var, Bop)]
 primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
@@ -786,7 +786,7 @@ data TypeRhs
   deriving (Show)
 
 data DataDecl
-  = DataDecl { dCon :: DCon, dArg :: Maybe Type, dType :: TypeDecl }
+  = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
 
 typeDeclType TypeDecl {..} = TApp tyCon $ map TVar tyVars
