@@ -7,6 +7,8 @@ import           Data.Either
 import           Data.List
 import           Data.Map         (Map)
 import qualified Data.Map         as Map
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
 import           System.Directory
 import           System.FilePath
 import           System.IO.Unsafe
@@ -374,6 +376,7 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog4836.ml" -- uses printf
              , "prog4837.ml" -- uses printf
              , "prog4839.ml" -- uses printf
+             , "20060302-21:24:02-246ce61683ae0484e1606c781c19f80f.seminal.ml" -- uses instance variable assignment
              ]
 
 type Err = String
@@ -387,18 +390,23 @@ parseAllIn dir = do
 
 parseAll dir [] = return []
 parseAll dir (ml:mls) = do
-    r <- parseTopForm . force <$> readFile (dir </> ml)
+    r <- parseTopForm <$> readFileStrict (dir </> ml)
     case r of
       Right p -> do
         b <- doesFileExist (dir </> ml <.> "err")
-        err <- if b then Just <$> readFile (dir </> ml <.> "err") else return Nothing
+        err <- if b
+               then Just <$> readFileStrict (dir </> ml <.> "err")
+               else return Nothing
         mls <- parseAll dir mls
         return $ (ml, err, p) : mls
       Left _ -> print ml >> print r >> parseAll dir mls
 
 parseFile :: FilePath -> IO Prog
 parseFile f = do
-  r <- parseTopForm <$> readFile f
+  r <- parseTopForm <$> readFileStrict f
   case r of
    Right p -> return p
    Left e  -> error (show e)
+
+readFileStrict :: FilePath -> IO String
+readFileStrict = fmap T.unpack . TIO.readFile

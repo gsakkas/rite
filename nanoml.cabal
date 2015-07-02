@@ -37,6 +37,7 @@ library
                      , mtl >= 2.2
                      , parsers >=0.12
                      , regex-tdfa >= 1.2
+                     , text >= 1.2
                      , transformers >= 0.4
                      , trifecta >=1.5
                      , unordered-containers >= 0.2

@@ -51,7 +51,6 @@ float   { TokFloat $$ }
 "in"       { TokIn }
 "let"      { TokLet }
 "match"    { TokMatch }
-"mod"      { TokMod }
 "of"       { TokOf }
 "or"       { TokOr }
 "rec"      { TokRec }
@@ -69,14 +68,19 @@ float   { TokFloat $$ }
 ';'        { TokSemi }
 ";;"       { TokSemiSemi }
 "->"       { TokArrow }
+"<-"       { TokBackArrow }
 '.'        { TokDot }
-".["       { TokDotLBrack }
+".."       { TokDotDot }
 '*'        { TokStar }
 '\''       { TokTick }
+'!'        { TokBang }
 ':'        { TokColon }
+":="       { TokColonEq }
 "::"       { TokCons }
 '='        { TokEq }
 '_'        { TokUnderscore }
+'+'        { TokPlus }
+"+."       { TokPlusDot }
 '-'        { TokMinus }
 "-."       { TokMinusDot }
 infix0     { TokInfixOp0 $$ }
@@ -95,6 +99,8 @@ infix4     { TokInfixOp4 $$ }
 %nonassoc "and"
 %nonassoc "then"
 %nonassoc "else"
+%nonassoc "<-"
+%nonassoc ":="
 %nonassoc "as"
 %left     '|'
 %nonassoc below_COMMA
@@ -107,7 +113,7 @@ infix4     { TokInfixOp4 $$ }
 %right infix1
 %nonassoc below_LBRACKETAT
 %right "::"
-%left  infix2 '-' "-."
+%left  infix2 '+' "+." '-' "-."
 %left  infix3 '*'
 %right infix4
 %nonassoc unary_minus
@@ -116,19 +122,25 @@ infix4     { TokInfixOp4 $$ }
 %nonassoc below_SHARP
 %nonassoc below_DOT
 %nonassoc '.'
-%nonassoc "begin" char con "false" float int '[' ident '(' string "true"
+%nonassoc '!' "begin" char con "false" float int '{' '[' ident '(' string "true"
 
 %%
 
 -- Declarations
 
 TopForm :: { [Decl] }
-: TopFormList            { $1 }
+: Structure                         { $1 }
 
-TopFormList :: { [Decl] }
-: {- empty -}                 { [] }
-| Decl ";;" TopFormList       { $1 : $3 }
-| Decl TopFormList            { $1 : $2 }
+Structure :: { [Decl] }
+: GetPosition SeqExpr GetPosition DeclList 
+  { locDecl $1 $3 (\s -> DEvl s $2) : $4 }
+| DeclList
+  { $1 }
+
+DeclList :: { [Decl] }
+: {- empty -}              { [] }
+| ";;" Structure           { $2 }
+| Decl DeclList            { $1 : $2 }
 
 Decl :: { Decl }
 : GetPosition "let" RecFlag  LetBindings GetPosition
@@ -175,8 +187,16 @@ TyVar :: { TVar }
 
 TypeRhs :: { TypeRhs }
 : Type              { Alias $1 }
+| '{' LabelDecls MaybeSemi '}' { TRec (reverse $2) }
 | DataDecls         { Alg (reverse $1) }
 | '|' DataDecls     { Alg (reverse $2) }
+
+LabelDecls :: { [Field] }
+: LabelDecl                     { [$1] }
+| LabelDecls ';' LabelDecl      { $3 : $1 }
+
+LabelDecl :: { Field }
+: Label ':' Type              { ($1, $3) }
 
 DataDecls :: { [DataDecl] }
 : DataDecl                    { [$1] }
@@ -204,12 +224,13 @@ SimplePattern :: { Pat }
 | SimplePatternNotIdent        { $1 }
 
 SimplePatternNotIdent :: { Pat }
-: '_'                     { WildPat }
-| Literal                 { LitPat $1 }
-| '[' PatternSemiList ']' { ListPat (reverse $2) }
-| '(' Pattern ')'         { $2 }
-| '(' Pattern ':' Type ')'{ $2 }
-| ConLongIdent            { ConPat $1 Nothing }
+: '_'                               { WildPat }
+| SignedLiteral                     { LitPat $1 }
+| SignedLiteral ".." SignedLiteral  { IntervalPat $1 $3 }
+| '[' PatternSemiList ']'           { ListPat (reverse $2) }
+| '(' Pattern ')'                   { $2 }
+| '(' Pattern ':' Type ')'          { $2 }
+| ConLongIdent                      { ConPat $1 Nothing }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
@@ -239,12 +260,19 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite $2 $4 $6 }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
 | Expr "::" Expr                            { mkConApp "::" [$1, $3] }
+| '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp "::" [$5, $7] }
+| SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
+| SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
+| SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
+| Expr ":=" Expr                            { mkInfix $1 (Var ":=") $3 }
 | Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
 | Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
 | Expr "or" Expr                            { mkInfix $1 (Var "||") $3 }
 | Expr infix0 Expr                          { mkInfix $1 (Var $2) $3 }
 | Expr '='    Expr                          { mkInfix $1 (Var "=") $3 }
 | Expr infix1 Expr                          { mkInfix $1 (Var $2) $3 }
+| Expr '+'    Expr                          { mkInfix $1 (Var "+") $3 }
+| Expr "+."   Expr                          { mkInfix $1 (Var "+.") $3 }
 | Expr '-'    Expr                          { mkInfix $1 (Var "-") $3 }
 | Expr "-."   Expr                          { mkInfix $1 (Var "-.") $3 }
 | Expr infix2 Expr                          { mkInfix $1 (Var $2) $3 }
@@ -257,7 +285,10 @@ SimpleExpr :: { Expr }
 : ValLongIdent          { Var $1 }
 | ConLongIdent %prec constr  { mkConApp $1 [] }
 | Literal               { Lit $1 }
-| SimpleExpr ".[" SeqExpr ']'     { mkApps (Var "String.get") [$1, $3] }
+| SimpleExpr '.' '[' SeqExpr ']'     { mkApps (Var "String.get") [$1, $4] }
+| SimpleExpr '.' '(' SeqExpr ')'     { mkApps (Var "Array.get")  [$1, $4] }
+| SimpleExpr '.' LongIdent        { Field $1 $3 }
+| '!' SimpleExpr        { mkApps (Var "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
 | "begin" SeqExpr "end" { $2 }
 | "begin" "end"         { Var "()" }
@@ -295,6 +326,13 @@ Literal :: { Literal }
 | "true"    { LB True }
 | "false"   { LB False }
 
+SignedLiteral :: { Literal }
+: Literal   { $1 }
+| '-' int   { LI (read ('-' : $2)) }
+| '-' float { LD (read ('-' : $2)) }
+| '+' int   { LI (read $2) }
+| '+' float { LD (read $2) }
+
 Subtractive :: { Var }
 : '-'          { "-" }
 | "-."         { "-." }
@@ -330,6 +368,9 @@ TypeCommaList :: { [Type] }
 
 -- Misc
 
+Label :: { String }
+: ident              { $1 }
+
 ValIdent :: { Var }
 : ident              { $1 }
 | '(' Operator ')'   { $2 }
@@ -357,10 +398,15 @@ Operator :: { Var }
 | infix2             { $1 }
 | infix3             { $1 }
 | infix4             { $1 }
-| '*'                { "*" }
-| '='                { "=" }
+| '!'                { "!" }
+| ":="               { ":=" }
+| '+'                { "+" }
+| "+."               { "+." }
 | '-'                { "-" }
 | "-."               { "-." }
+| '*'                { "*" }
+| '='                { "=" }
+
 
 RecFlag :: { RecFlag }
 : {- empty -} { NonRec }

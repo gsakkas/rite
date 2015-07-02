@@ -42,6 +42,7 @@ evalDecl :: MonadEval m => Decl -> m ()
 evalDecl decl = case decl of
   DFun _ Rec    binds  -> evalRecBinds binds >>= setVarEnv
   DFun _ NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
+  DEvl _ expr -> void $ eval expr
   DTyp _ decls -> mapM_ addType decls
   DExn _ decl -> extendType "exn" decl
 

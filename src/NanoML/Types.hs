@@ -208,6 +208,7 @@ tFloat  = mkTypeDecl "float"  []    (mkAlgRhs [])
 tBool   = mkTypeDecl "bool"   []    (mkAlgRhs [])
 tChar   = mkTypeDecl "char"   []    (mkAlgRhs [])
 tString = mkTypeDecl "string" []    (mkAlgRhs [])
+tArray  = mkTypeDecl "array"  ["a"] (mkAlgRhs [])
 tUnit   = mkTypeDecl "()"     []    (mkAlgRhs [dUnit])
 tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
@@ -670,6 +671,7 @@ type Prog = [Decl]
 
 data Decl
   = DFun SrcSpan RecFlag [(Pat,Expr)]
+  | DEvl SrcSpan Expr
   | DTyp SrcSpan [TypeDecl]
   | DExn SrcSpan DataDecl
   deriving (Show, Generic)
@@ -689,10 +691,14 @@ data Expr
   | Lit Literal
   | Let RecFlag [(Pat,Expr)] Expr
   | Ite Expr Expr Expr
-  | Seq Expr Expr -- TODO: do we actually need this for the student examples?
+  | Seq Expr Expr
   | Case Expr [Alt]
   | Tuple [Expr]
   | ConApp DCon (Maybe Expr)
+  | Record [(String,Expr)]
+  | Field Expr String
+  | SetField Expr String Expr
+  | Array [Expr]
   | Try Expr [Alt]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
@@ -745,6 +751,7 @@ type Guard = Maybe Expr
 data Pat
   = VarPat Var
   | LitPat Literal
+  | IntervalPat Literal Literal
   | ConsPat Pat Pat
   | ConPat Var (Maybe Pat)
   | ListPat [Pat]
@@ -788,7 +795,10 @@ data TypeDecl
 data TypeRhs
   = Alias Type
   | Alg   [DataDecl]
+  | TRec  [Field]
   deriving (Show)
+
+type Field = (String, Type)
 
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }

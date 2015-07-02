@@ -15,6 +15,22 @@ $lower = [a-z]
 $upper = [A-Z]
 $symbol = [\! \$ \% \& \* \+ \- \. \/ \: \< \= \> \? \@ \^ \| \~]
 
+-- copied from Alex's sample Haskell lexer
+$whitechar = [ \t\n\r\f\v]
+$special   = [\(\)\,\;\[\]\`\{\}]
+$graphic   = [$lower $upper $symbol $digit $special \_\:\"\']
+
+@decimal     = $digit+
+
+$cntrl   = [$upper \@\[\\\]\^\_]
+@ascii   = \^ $cntrl | NUL | SOH | STX | ETX | EOT | ENQ | ACK
+	 | BEL | BS | HT | LF | VT | FF | CR | SO | SI | DLE
+	 | DC1 | DC2 | DC3 | DC4 | NAK | SYN | ETB | CAN | EM
+	 | SUB | ESC | FS | GS | RS | US | SP | DEL
+$charesc = [abfnrtv\\\"\'\&]
+@escape  = \\ ($charesc | @ascii | @decimal)
+@gap     = $whitechar+
+@string  = $graphic # [\"\\] | " " | @escape | @gap
 
 tokens :-
   $white+       ;
@@ -32,8 +48,10 @@ tokens :-
   \}            { tok TokRBrace }
   \[            { tok TokLBrack }
   \]            { tok TokRBrack }
-  (\-\>)        { tok TokArrow }
+  \-\>          { tok TokArrow }
+  \<\-          { tok TokBackArrow }
   \:            { tok TokColon }
+  \:=           { tok TokColonEq }
   \:\:          { tok TokCons }
   \;            { tok TokSemi }
   \;\;          { tok TokSemiSemi }
@@ -41,29 +59,20 @@ tokens :-
   \=            { tok TokEq }
   \*            { tok TokStar }
   \'            { tok TokTick }
+  \+            { tok TokPlus }
+  \+\.          { tok TokPlusDot }
   \-            { tok TokMinus }
   \-\.          { tok TokMinusDot }
-
---  (\=|\=\=)     { tok TokEq }
---  (\<\>|\!\=)   { tok TokNe }
---  \<            { tok TokLt }
---  \>            { tok TokGt }
---  \<\=          { tok TokLe }
---  \>\=          { tok TokGe }
+  \!            { tok TokBang }
 
   \_            { tok TokUnderscore }
   \,            { tok TokComma }
-
---  \+            { tok TokPlus }
---  \/            { tok TokDiv }
---  \-            { tok TokMinus }
---  \*            { tok TokStar }
 
   \&\&          { tok TokLAnd }
   \|\|          { tok TokLOr }
   \|            { tok TokPipe }
   \.            { tok TokDot }
-  \.\[          { tok TokDotLBrack }
+  \.\.          { tok TokDotDot }
 
   "and"         { tok TokAnd }
   "as"          { tok TokAs }
@@ -99,7 +108,8 @@ tokens :-
 
   ($lower | \_) [$alpha $digit \_ \']* { tokS TokId }
   ($upper | \_) [$alpha $digit \_ \']* { tokS TokCon }
-  \" ($printable # [\"])* \" { tokS TokString }
+ 
+  \" @string* \"            { tokS TokString }
   \' ($printable # [\']) \' { tokS TokChar }
 
 {
@@ -140,7 +150,6 @@ data Token
   | TokIn
   | TokLet
   | TokMatch
-  | TokMod
   | TokOf
   | TokOr
   | TokRec
@@ -156,13 +165,18 @@ data Token
   | TokTick
   | TokStar
   | TokPlus
+  | TokPlusDot
   | TokMinus
   | TokMinusDot
   | TokArrow
+  | TokBackArrow
+  | TokBang
   | TokDot
   | TokDotLBrack
+  | TokDotLParen
   | TokDotDot
   | TokColon
+  | TokColonEq
   | TokComma
   | TokSemi
   | TokSemiSemi
