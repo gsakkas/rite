@@ -789,7 +789,11 @@ data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
 
-typeDeclType TypeDecl {..} = TApp tyCon $ map TVar tyVars
+typeDeclType TypeDecl {..}
+  | null tyVars
+  = TCon tyCon
+  | otherwise
+  = TApp tyCon $ map TVar tyVars
 
 typeDataCons TypeDecl { tyRhs = Alg ds } = ds
 
@@ -800,29 +804,29 @@ type TCon = String
 type DCon = String
 
 
-unifyVal :: MonadEval m => Type -> Value -> m [(TVar, Type)]
-unifyVal (TVar a) v
-  = return [(a, typeOf v)] -- FIXME: occur check
-unifyVal (TCon "int") (VI _)
-  = return []
-unifyVal (TCon "float") (VD _)
-  = return []
-unifyVal (TCon "char") (VC _)
-  = return []
-unifyVal (TCon "string") (VS _)
-  = return []
-unifyVal (TCon "bool") (VB _)
-  = return []
-unifyVal (TCon "()") VU
-  = return []
-unifyVal (TApp "list" [t]) (VL _ vt)
-  = unify t vt
-unifyVal (TApp _ ts) (VA _ _ (TApp _ vts))
-  = mconcat <$> zipWithM unify ts vts
-unifyVal (ti :-> to) (VF _)
-  = return []
-unifyVal (TTup ts) (VT _ _ vts)
-  = mconcat <$> zipWithM unify ts vts
+-- unifyVal :: MonadEval m => Type -> Value -> m [(TVar, Type)]
+-- unifyVal (TVar a) v
+--   = return [(a, typeOf v)] -- FIXME: occur check
+-- unifyVal (TCon "int") (VI _)
+--   = return []
+-- unifyVal (TCon "float") (VD _)
+--   = return []
+-- unifyVal (TCon "char") (VC _)
+--   = return []
+-- unifyVal (TCon "string") (VS _)
+--   = return []
+-- unifyVal (TCon "bool") (VB _)
+--   = return []
+-- unifyVal (TCon "()") VU
+--   = return []
+-- unifyVal (TApp "list" [t]) (VL _ vt)
+--   = unify t vt
+-- unifyVal (TApp _ ts) (VA _ _ (TApp _ vts))
+--   = mconcat <$> zipWithM unify ts vts
+-- unifyVal (ti :-> to) (VF _)
+--   = return []
+-- unifyVal (TTup ts) (VT _ _ vts)
+--   = mconcat <$> zipWithM unify ts vts
 
 unify :: MonadEval m => Type -> Type -> m [(TVar, Type)]
 unify (TVar a) t = unifyVar a t
@@ -830,6 +834,8 @@ unify t (TVar a) = unifyVar a t
 unify (TCon x) (TCon y)
   | x == y
   = return []
+unify (TCon x) t = unifyAlias x [] t
+unify t (TCon x) = unifyAlias x [] t
 unify (xi :-> xo) (yi :-> yo)
   = mappend <$> unify xi yi <*> unify xo yo
 unify (TTup xs) (TTup ys)
@@ -837,6 +843,8 @@ unify (TTup xs) (TTup ys)
 unify (TApp xc xts) (TApp yc yts)
   | xc == yc
   = mconcat <$> zipWithM unify xts yts
+unify (TApp c ts) t = unifyAlias c ts t
+unify t (TApp c ts) = unifyAlias c ts t
 unify x y
   = typeError $ printf "could not match %s against %s" (show x) (show y)
 
@@ -845,6 +853,12 @@ unifyVar a t
   | t == TVar a = return []
   -- FIXME: occurs check
   | otherwise   = return [(a,t)]
+
+unifyAlias c ts t = do
+  TypeDecl {..} <- lookupType c
+  case tyRhs of
+    Alias t' -> unify t (subst (zip tyVars ts) t')
+    Alg _ -> typeError $ printf "could not match %s against %s" (show (TCon c)) (show t)
 
 typeOf :: Value -> Type
 typeOf v = case v of
@@ -907,26 +921,28 @@ mkExn dcon [a]  = VA dcon (Just a) (TCon tEXN)
 mkExn dcon args = VA dcon (Just (VT (length args) args (map typeOf args)))
                      (TCon tEXN)
 
-eqVal (VI x) (VI y) = return (x == y)
-eqVal (VD x) (VD y) = return (x == y)
-eqVal (VB x) (VB y) = return (x == y)
-eqVal (VC x) (VC y) = return (x == y)
-eqVal (VS x) (VS y) = return (x == y)
-eqVal VU     VU     = return True
-eqVal (VL x _) (VL y _) = and . ((length x == length y) :) <$> zipWithM eqVal x y
-eqVal (VT i x _) (VT j y _)
-  | i == j
-  = and <$> zipWithM eqVal x y
-eqVal (VF x) (VF y) = typeError "cannot compare functions"
-eqVal (VA c1 Nothing t1) (VA c2 Nothing t2)
-  | c1 == c2 = return True
-  | t1 == t2 = return False
-eqVal (VA c1 (Just v1) t1) (VA c2 (Just v2) t2)
-  | c1 == c2 = eqVal v1 v2
-  | t1 == t2 = return False
-eqVal x y
-  -- = return False
-  = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+-- eqVal (VI x) (VI y) = return (x == y)
+-- eqVal (VD x) (VD y) = return (x == y)
+-- eqVal (VB x) (VB y) = return (x == y)
+-- eqVal (VC x) (VC y) = return (x == y)
+-- eqVal (VS x) (VS y) = return (x == y)
+-- eqVal VU     VU     = return True
+-- eqVal (VL x _) (VL y _) = and . ((length x == length y) :) <$> zipWithM eqVal x y
+-- eqVal (VT i x _) (VT j y _)
+--   | i == j
+--   = and <$> zipWithM eqVal x y
+-- eqVal (VF x) (VF y) = typeError "cannot compare functions"
+-- eqVal (VA c1 Nothing t1) (VA c2 Nothing t2)
+--   | c1 == c2 = return True
+--   | t1 == t2 = return False
+-- eqVal (VA c1 (Just v1) t1) (VA c2 (Just v2) t2)
+--   | c1 == c2 = eqVal v1 v2
+--   | t1 == t2 = return False
+-- eqVal x y
+--   -- = return False
+--   = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+
+eqVal x y = (\(VI x) -> x == 0) <$> cmpVal x y
 
 cmpVal (VI x) (VI y) = return (cmp x y)
 cmpVal (VD x) (VD y) = return (cmp x y)
@@ -951,7 +967,6 @@ cmpVal x@(VA c1 v1 _) y@(VA c2 v2 _) = do
     EQ -> case (v1, v2) of
       (Nothing, Nothing) -> return (VI 0)
       (Just v1, Just v2) -> cmpVal v1 v2
-  -- = cmpAnd <$> zipWithM cmpVal vs1 vs2 -- FIXME: compare datacons too..
 cmpVal x y
   -- = return False
   = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)

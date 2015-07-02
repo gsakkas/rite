@@ -6,7 +6,7 @@ module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
   , module NanoML.Eval
-  , check, checkAll
+  , check, checkAll, runProg
   ) where
 
 import           Control.Exception
@@ -91,7 +91,7 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ nanoCheck $ run $ runEval stdOpts $ do
+             $ within sec $ nanoCheck $ run $ runEval loudOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
 
@@ -126,8 +126,8 @@ sec = 5000000
 nanoCheck m = monadicIO $ m >>= \case
   Right x    -> return ()
 --  Left (MLException _, t) -> return ()
-  Left (e, t) -> -- counterexample (render $ vsep $ intersperse mempty t) $
-                 fail $ "*** Exception: " ++ show e
+  Left (e, t) -> fail $ "*** Exception: " ++ show e
+--                      ++ "\n" ++ (render $ vsep $ intersperse mempty t)
 
 checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
 

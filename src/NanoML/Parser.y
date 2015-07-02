@@ -187,7 +187,7 @@ DataDecl :: { DataDecl }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }
-| "of" TypeList               { $2 }
+| "of" TypeList               { (reverse $2) }
 
 -- Patterns
 
