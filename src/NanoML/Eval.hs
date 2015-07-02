@@ -276,7 +276,6 @@ evalAlts v ((p,g,e):as)
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
 matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
--- NOTE: should be MonadEval m => m (Maybe Env) so we can throw exception on ill-typed pattern match
 matchPat v p = logMaybeEnv $ case p of
   VarPat var ->
     return $ Just (insertEnv var v emptyEnv)
@@ -309,23 +308,30 @@ matchPat v p = logMaybeEnv $ case p of
   ConPat "()" Nothing
     | VU <- v
       -> return (Just emptyEnv)
-  ConPat dc p
-    | VA c v t <- v
-    , dc == c
---    , length ps == length vs
-      -> case (v,p) of
+  ConPat dc p'
+    | VA c v' t <- v -> do
+        -- FIXME: this is confusing
+        dd <- lookupDataCon dc
+        unless (c `elem` map dCon (typeDataCons (dType dd))) err
+        unless (safeMatch (dArgs dd) p') err
+        if dc /= c
+          then return Nothing
+          else case (p', v') of
           (Nothing, Nothing) -> return (Just mempty)
-          (Just v, Just p) -> matchPat v p
-      -- fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
-      --      <$> zipWithM matchPat vs ps
-    | VA c vs t <- v
-    , dc /= c
-      -> return Nothing
+          (Just p,  Nothing) -> err
+          (Nothing, Just p)  -> err
+          (Just p,  Just v)  -> matchPat v p
   AsPat p x -> do
     Just env <- matchPat v p
     return (Just (insertEnv x v env))
-  _ -> typeError (printf "type error: tried to match %s against %s"
+  _ -> err
+  where err = typeError (printf "type error: tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
+
+safeMatch [] Nothing = True
+safeMatch [t] (Just p) = True
+safeMatch ts (Just (TuplePat ps)) = True
+safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs) t) = return (x, VL xs t)
