@@ -264,9 +264,10 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
 | Expr "::" Expr                            { mkConApp "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp "::" [$5, $7] }
-| SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
-| SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
-| SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
+-- NOTE: imperative features disabled
+-- | SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
+-- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
+-- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
 | Expr ":=" Expr                            { mkInfix $1 (Var ":=") $3 }
 | Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
 | Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
