@@ -194,7 +194,7 @@ m `withEnv` env = do
 ----------------------------------------------------------------------
 
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
-  [ tInt, tFloat, tBool, tChar, tString, tUnit, tList, tOption, tExn ]
+  [ tInt, tFloat, tBool, tChar, tString, tArray, tUnit, tList, tOption, tExn ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
                                          Alias _ -> []
@@ -650,9 +650,12 @@ data MValue
   = V Value
   | R (IORef Value)
 
+mvalue :: MValue -> Value
+mvalue (V v) = v
+mvalue (R r) = unsafePerformIO $ readIORef r
+
 instance Show MValue where
-  show (V v) = show v
-  show (R x) = show $ unsafePerformIO $ readIORef x
+  show = show . mvalue
 
 data Func
   = Func Expr Env
@@ -710,7 +713,7 @@ data Expr
   | Case Expr [Alt]
   | Tuple [Expr]
   | ConApp DCon (Maybe Expr)
-  | Record [Field]
+  | Record [(String, Expr)]
   | Field Expr String
   | SetField Expr String Expr
   | Array [Expr]

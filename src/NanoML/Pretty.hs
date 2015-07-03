@@ -6,8 +6,9 @@ module NanoML.Pretty
   where
 
 import           Data.List                    hiding (group)
+import qualified Data.Vector                  as Vector
 import           Prelude                      hiding ((<$>))
-import           Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty)
+import           Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty, list)
 import qualified Text.PrettyPrint.ANSI.Leijen as PP
 
 import           NanoML.Types
@@ -31,12 +32,23 @@ instance Pretty Value where
     VS s -> text $ show s
     VB b -> text (if b then "true" else "false")
     VU   -> text "()"
-    VL l _ -> brackets $ hcat $ intersperse semi $ map pretty l
-    VT _ xs _ -> parens $ hcat $ intersperse comma $ map pretty xs
+    VL l _ -> list l
+    VT _ xs _ -> tuple xs
     VA d Nothing _ -> text d
     VA d (Just x) _ -> text d <+> pretty x
+    VR fs _ -> record fs
+    VV vs _ -> array $ Vector.toList vs
     VF (Func e _) -> prettyPrec z e
 
+list xs = text "[" <> (hcat $ intersperse semi $ map pretty xs) <> text "]"
+array xs = text "[|" <> (hcat $ intersperse semi $ map pretty xs) <> text "|]"
+tuple xs = text "(" <> (hcat $ intersperse comma $ map pretty xs) <> text ")"
+record xs = text "{" <> (hcat $ intersperse semi $ map prettyField xs) <> text "}"
+
+prettyField (f,x) = text f <+> text "=" <+> pretty x
+
+instance Pretty MValue where
+  pretty = pretty . mvalue
 
 instance Pretty Literal where
   pretty l = case l of
@@ -78,15 +90,12 @@ instance Pretty Expr where
                    text "match" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt alts)
       where zc = 5
-    -- Nil -> text "[]"
-    -- Cons x xs -> parensIf (z > zc) $
-    --              prettyPrec (zc+1) x <+> text "::" <+> prettyPrec (zc+1) xs
-    --   where zc = 20
+    Tuple xs -> prettyTuple xs
     ConApp c Nothing -> text c
     ConApp c (Just e) -> parensIf (z > zc) $
                          text c <+> pretty e
       where zc = 26
-    Tuple xs -> prettyTuple xs
+    Array es -> array es
     Try e ps -> parensIf (z > zt) $
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
@@ -128,14 +137,19 @@ instance Pretty RecFlag where
   pretty Rec = text " rec"
   pretty _   = empty
 
+instance Pretty MutFlag where
+  pretty Mut = text "mutable "
+  pretty _   = empty
+
 instance Pretty Pat where
   pretty p = case p of
     VarPat v -> text v
     LitPat l -> pretty l
+    IntervalPat l h -> pretty l <+> text ".." <+> pretty h
     ConsPat x xs -> pretty x <+> text "::" <+> pretty xs
     ConPat c Nothing -> text c
     ConPat c (Just p) -> text c <+> pretty p
-    ListPat l -> brackets $ encloseSep lbracket rbracket semi $ map pretty l
+    ListPat l -> list l
     TuplePat l -> prettyTuple l
     WildPat -> text "_"
     OrPat p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
