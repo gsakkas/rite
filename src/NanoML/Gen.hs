@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE TupleSections    #-}
 module NanoML.Gen where
 
 import           Data.Map        (Map)
@@ -34,6 +35,7 @@ genExpr ty e = case ty of
     | otherwise
       -> sized (genADT t [] e)
 --  TApp "list" [t] -> sized (genList t e)
+  TApp "array" [t] -> sized (fmap Array . flip vectorOf (genExpr t e))
   TApp c ts -> sized (genADT c ts e)
   TTup ts -> Tuple <$> mapM (`genExpr` e) ts
   _ :-> to -> Lam WildPat <$> (`genExpr` e) to
@@ -44,6 +46,7 @@ genADT c ts e n = do
   case tyRhs of
     Alias ty -> genExpr ty e
     Alg dds  -> oneof (mapMaybe (genDataDecl tyVars) dds)
+    TRec flds -> Record <$> mapM genField flds
   where
   genDataDecl tvs DataDecl {..}
     | [] <- dArgs
@@ -61,6 +64,8 @@ genADT c ts e n = do
   isRec (TApp t ts) = t == c || any isRec ts
   isRec (TTup ts)   = any isRec ts
   isRec _           = False
+
+  genField (f, _, t) = (f,) <$> resize (n-1) (genExpr t e)
 
 -- genList :: Type -> TypeEnv -> Int -> Gen Expr
 -- genList _ e 0 = return (mkConApp "[]" [])
