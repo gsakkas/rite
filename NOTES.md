@@ -59,11 +59,12 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
   - andrew myers
   - dan grossman
 
-[ ] configurable failure options
+[X] configurable failure options
   - heterogeneous equality vs. homogeneous
   - check ADT arguments at application site (IMPORTANT FOR SEMINAL)
     - need to carry fully instantiated type around with values
       (type-carrying operational semantics)
+  - STILL NEED TO MAKE IT CONFIGURABLE
 
 [ ] add post-hoc generalization a la smartcheck
 
@@ -92,6 +93,9 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
 [ ] a few concrete examples of programs that crash at ML level
 
 [ ] add extra language features for seminal benchmarks
+  - records
+  - references
+  - arrays
 
 [ ] keep going after MLExceptions
   - ml exceptions are annoying, because they can prevent access to the ill-typed code, e.g.

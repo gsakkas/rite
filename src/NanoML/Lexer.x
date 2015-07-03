@@ -87,7 +87,10 @@ tokens :-
   "in"          { tok TokIn }
   "let"         { tok TokLet }
   "match"       { tok TokMatch }
+  "module"      { tok TokModule }
+  "mutable"     { tok TokMutable }
   "of"          { tok TokOf }
+  "open"        { tok TokOpen }
   "or"          { tok TokOr }
   "rec"         { tok TokRec }
   "then"        { tok TokThen }
@@ -150,7 +153,10 @@ data Token
   | TokIn
   | TokLet
   | TokMatch
+  | TokModule
+  | TokMutable
   | TokOf
+  | TokOpen
   | TokOr
   | TokRec
   | TokThen

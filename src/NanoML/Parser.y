@@ -51,7 +51,10 @@ float   { TokFloat $$ }
 "in"       { TokIn }
 "let"      { TokLet }
 "match"    { TokMatch }
+"module"   { TokModule }
+"mutable"  { TokMutable }
 "of"       { TokOf }
+"open"     { TokOpen }
 "or"       { TokOr }
 "rec"      { TokRec }
 "then"     { TokThen }
@@ -196,7 +199,7 @@ LabelDecls :: { [Field] }
 | LabelDecls ';' LabelDecl      { $3 : $1 }
 
 LabelDecl :: { Field }
-: Label ':' Type              { ($1, $3) }
+: MutFlag Label ':' Type              { ($2, $1, $4) }
 
 DataDecls :: { [DataDecl] }
 : DataDecl                    { [$1] }
@@ -411,6 +414,10 @@ Operator :: { Var }
 RecFlag :: { RecFlag }
 : {- empty -} { NonRec }
 | "rec"       { Rec }
+
+MutFlag :: { MutFlag }
+: {- empty -} { NonMut }
+| "mutable"   { Mut }
 
 MaybePipe :: { () }
 : {- empty -}      { () }

@@ -17,12 +17,16 @@ import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import           Data.Char
+import           Data.IORef
 import           Data.List
 import           Data.Map                     (Map)
 import qualified Data.Map                     as Map
 import           Data.Maybe
 import           Data.Typeable (Typeable)
+import           Data.Vector                  (Vector)
+import qualified Data.Vector                  as Vector
 import           GHC.Generics
+import           System.IO.Unsafe
 import           Test.SmartCheck
 import           Text.PrettyPrint.ANSI.Leijen (Doc)
 
@@ -637,8 +641,18 @@ data Value
   | VL [Value] Type
   | VT Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
   | VA DCon (Maybe Value) Type
+  | VR [(String, MValue)] Type
+  | VV (Vector Value) Type
   | VF Func
   deriving (Show, Generic)
+
+data MValue
+  = V Value
+  | R (IORef Value)
+
+instance Show MValue where
+  show (V v) = show v
+  show (R x) = show $ unsafePerformIO $ readIORef x
 
 data Func
   = Func Expr Env
@@ -659,6 +673,7 @@ data Literal
   deriving (Show, Generic)
 
 data RecFlag = Rec | NonRec deriving (Show, Generic)
+data MutFlag = Mut | NonMut deriving (Show, Generic)
 
 data SrcSpan = SrcSpan
   { srcSpanStartLine :: !Int
@@ -695,7 +710,7 @@ data Expr
   | Case Expr [Alt]
   | Tuple [Expr]
   | ConApp DCon (Maybe Expr)
-  | Record [(String,Expr)]
+  | Record [Field]
   | Field Expr String
   | SetField Expr String Expr
   | Array [Expr]
@@ -779,6 +794,7 @@ tBOOL = "bool"
 tLIST = "list"
 tUNIT = "()"
 tEXN = "exn"
+tREF = "ref"
 
 argTys :: Type -> [Type]
 argTys (i :-> o) = i : argTys o
@@ -798,7 +814,7 @@ data TypeRhs
   | TRec  [Field]
   deriving (Show)
 
-type Field = (String, Type)
+type Field = (String, MutFlag, Type)
 
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
@@ -886,7 +902,7 @@ typeOf v = case v of
   VL _ t -> TApp tLIST [t]
   VT _ _ ts -> TTup ts
   VA _ _ t -> t
-  VF _ -> TVar "a" :-> TVar "b"
+  VF _ -> TVar "a" :-> TVar "b" -- TODO
   -- VF _ -> error "typeOf: <<function>>"
 
 ----------------------------------------------------------------------
