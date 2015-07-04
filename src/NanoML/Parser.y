@@ -37,6 +37,8 @@ float   { TokFloat $$ }
 '}'     { TokRBrace }
 '['     { TokLBrack }
 ']'     { TokRBrack }
+"[|"    { TokLBrackPipe }
+"|]"    { TokRBrackPipe }
 
 "and"      { TokAnd }
 "as"       { TokAs }
@@ -264,8 +266,8 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
 | Expr "::" Expr                            { mkConApp "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp "::" [$5, $7] }
+| SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
 -- NOTE: imperative features disabled
--- | SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
 -- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
 | Expr ":=" Expr                            { mkInfix $1 (Var ":=") $3 }
@@ -294,6 +296,8 @@ SimpleExpr :: { Expr }
 | SimpleExpr '.' LongIdent        { Field $1 $3 }
 | '!' SimpleExpr        { mkApps (Var "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
+| "[|" ExprSemiList MaybeSemi "|]" { Array (reverse $2) }
+| '{' RecordExpr '}'    { Record $2 }
 | "begin" SeqExpr "end" { $2 }
 | "begin" "end"         { Var "()" }
 | '[' ExprSemiList MaybeSemi ']'  { mkList (reverse $2) }
@@ -301,6 +305,17 @@ SimpleExpr :: { Expr }
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }
 | SimpleExprList SimpleExpr   { $2 : $1 }
+
+RecordExpr :: { [(String, Expr)] }
+: LabelExprList               { $1 }
+
+LabelExprList :: { [(String, Expr)] }
+: LabelExpr                     { [$1] }
+| LabelExpr ';' LabelExprList   { $1 : $3 }
+| LabelExpr ';'                 { [$1] }
+
+LabelExpr :: { (String,Expr) }
+: LongIdent '=' Expr            { ($1, $3) }
 
 ExprCommaList :: { [Expr] }
 : ExprCommaList ',' Expr   { $3 : $1 }

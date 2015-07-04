@@ -80,10 +80,10 @@ outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
 data EvalState = EvalState
-  { stVarEnv  :: Env
-  , stTypeEnv :: Map TCon TypeDecl
-  , stDataEnv :: Map DCon DataDecl
-  , stStore   :: Env
+  { stVarEnv   :: !Env
+  , stTypeEnv  :: !(Map TCon TypeDecl)
+  , stDataEnv  :: !(Map DCon DataDecl)
+  , stFieldEnv :: !(Map String TypeDecl)
   }
 
 initState :: EvalState
@@ -91,7 +91,7 @@ initState = EvalState
   { stVarEnv = baseEnv
   , stTypeEnv = baseTypeEnv
   , stDataEnv = baseDataEnv
-  , stStore = emptyEnv
+  , stFieldEnv = baseFieldEnv
   }
 
 setVarEnv :: MonadEval m => Env -> m ()
@@ -100,18 +100,20 @@ setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
 addType :: MonadEval m => TypeDecl -> m ()
 addType td@TypeDecl {..} = modify' $ \ s ->
   s { stTypeEnv = Map.insert tyCon td (stTypeEnv s)
-    , stDataEnv = Map.union (Map.fromList dds') (stDataEnv s) }
+    , stDataEnv = Map.union (Map.fromList dds') (stDataEnv s)
+    , stFieldEnv = Map.union (Map.fromList flds) (stFieldEnv s)
+    }
   where
   td' = td { tyRhs = tyRhs' }
   tyRhs' = case tyRhs of
-    Alias _ -> tyRhs
-    Alg _   -> Alg $ map snd dds'
+    Alg _ -> Alg $ map snd dds'
+    _     -> tyRhs
   dds' = case tyRhs of
-    Alias _ -> mempty
     Alg dds -> [(dCon, dd { dType = td' }) | dd@DataDecl {..} <- dds]
-  -- dcons = case tyRhs of
-  --   Alias _ -> mempty
-  --   Alg dds -> Map.fromList [(dCon,dd) | dd@DataDecl {..} <- dds]
+    _       -> mempty
+  flds = case tyRhs of
+    TRec flds -> [(f, td) | (f, _, _) <- flds]
+    _         -> mempty
 
 extendType :: MonadEval m => TCon -> DataDecl -> m ()
 extendType tcon ddecl = do
@@ -119,14 +121,6 @@ extendType tcon ddecl = do
   case tyRhs of
     Alias _ -> error $ "cannot extend type alias: " ++ tcon
     Alg dds -> addType (td { tyRhs = Alg (ddecl : dds) })
--- extendType tcon ddecl = modify' $ \ s ->
---   s { stTypeEnv = Map.adjust addDDecl tcon (stTypeEnv s)
---     , stDataEnv = Map.insert (dCon ddecl) ddecl (stDataEnv s)
---     }
---   where
---   addDDecl TypeDecl {..} = case tyRhs of
---     Alias _ -> error $ "cannot extend type alias: " ++ tcon
---     Alg ds  -> let tyRhs = Alg (ddecl:ds) in TypeDecl {..}
 
 lookupType :: MonadEval m => TCon -> m TypeDecl
 lookupType tcon = do
@@ -135,18 +129,18 @@ lookupType tcon = do
     Nothing -> typeError ("unknown type: " ++ tcon)
     Just t -> return t
 
--- lookupTypeDataCon :: MonadEval m => TCon -> DCon -> m [Type]
--- lookupTypeDataCon tcon dcon = do
---   ds <- lookupType tcon
---   case find (\d -> dcon == dCon d ) ds of
---     Nothing -> typeError (dcon ++ " is not a constructor of " ++ tcon)
---     Just DataDecl {..} -> return dArgs
-
 lookupDataCon :: MonadEval m => DCon -> m DataDecl
 lookupDataCon dc = do
   dcons <- gets stDataEnv
   case Map.lookup dc dcons of
     Nothing -> typeError ("unknown data constructor: " ++ dc)
+    Just d  -> return d
+
+lookupField :: MonadEval m => String -> m TypeDecl
+lookupField fld = do
+  flds <- gets stFieldEnv
+  case Map.lookup fld flds of
+    Nothing -> typeError ("unknown record field: " ++ fld)
     Just d  -> return d
 
 subst :: [(TVar, Type)] -> Type -> Type
@@ -194,12 +188,19 @@ m `withEnv` env = do
 ----------------------------------------------------------------------
 
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
-  [ tInt, tFloat, tBool, tChar, tString, tArray, tUnit, tList, tOption, tExn ]
+  [ tInt, tFloat, tBool, tChar, tString, tArray
+  , tUnit, tList, tOption, tExn, tRef
+  ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
-                                         Alias _ -> []
-                                         Alg ds -> [(dCon d, d) | d <- ds])
+                                         Alg ds -> [(dCon d, d) | d <- ds]
+                                         _ -> [])
                            $ Map.elems baseTypeEnv
+
+baseFieldEnv = Map.fromList $ concatMap (\td@TypeDecl {..} -> case tyRhs of
+                                          TRec flds -> [(f, td) | (f,_,_) <- flds]
+                                          _ -> [])
+                            $ Map.elems baseTypeEnv
 
 mkTypeDecl :: TCon -> [TVar] -> (TypeDecl -> TypeRhs) -> TypeDecl
 mkTypeDecl tyCon tyVars mkRhs = let td = TypeDecl tyCon tyVars (mkRhs td) in td
@@ -217,6 +218,7 @@ tUnit   = mkTypeDecl "()"     []    (mkAlgRhs [dUnit])
 tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
 tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dNot_found, dMatch_failure, dInvalid_argument])
+tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
 
 dUnit = DataDecl "()" []
 dNil = DataDecl "[]" []
@@ -250,6 +252,10 @@ primVars = [ ("[]", VL [] (TVar "a"))
              ,mkNonRec $ mkLams [VarPat "x", VarPat "y"]
                                 (Ite (mkApps (Var "<=") [Var "x", Var "y"])
                                      (Var "x") (Var "y")))
+           , ("!", mkNonRec $ mkLams [VarPat "x"] (Field (Var "x") "contents"))
+           , (":=", mkNonRec $ mkLams [VarPat "x", VarPat "v"]
+                                      (SetField (Var "x") "contents" (Var "v")))
+           , ("ref", mkNonRec $ mkLams [VarPat "x"] (Record [("contents", Var "x")]))
            , ("List.fold_left"
              ,mkRec "List.fold_left"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
@@ -599,6 +605,22 @@ praise x@(VA {}) = throwError (MLException x)
 pprintexc_to_string :: MonadEval m => Value -> m Value
 pprintexc_to_string x@(VA {}) = return $ VS $ show x
 
+getField :: MonadEval m => Value -> String -> m Value
+getField x@(VR fs _) f = case lookup f fs of
+  Just (V v) -> return v
+  Just (R x) -> liftIO $ readIORef x
+  Nothing    -> typeError $ printf "record %s does not have a field '%s'"
+                                   (show x) f
+getField x f = typeError $ printf "%s is not a record" (show x)
+
+setField :: MonadEval m => Value -> String -> Value -> m ()
+setField x@(VR fs _) f v = case lookup f fs of
+  Just (R x) -> liftIO $ writeIORef x v
+  Just (V v) -> typeError $ printf "field '%s' is not mutable" f
+  Nothing    -> typeError $ printf "record %s does not have a field '%s'"
+                                   (show x) f
+setField x _ _ = typeError $ printf "%s is not a record" (show x)
+
 mkNonRec :: Expr -> Value
 mkNonRec lam = func
   where
@@ -795,6 +817,7 @@ tCHAR = "char"
 tSTRING = "string"
 tBOOL = "bool"
 tLIST = "list"
+tARRAY = "array"
 tUNIT = "()"
 tEXN = "exn"
 tREF = "ref"
@@ -892,7 +915,7 @@ unifyAlias c ts t = do
   TypeDecl {..} <- lookupType c
   case tyRhs of
     Alias t' -> unify t (subst (zip tyVars ts) t')
-    Alg _ -> typeError $ printf "could not match %s against %s" (show (TCon c)) (show t)
+    _ -> typeError $ printf "could not match %s against %s" (show (TCon c)) (show t)
 
 typeOf :: Value -> Type
 typeOf v = case v of
@@ -905,6 +928,8 @@ typeOf v = case v of
   VL _ t -> TApp tLIST [t]
   VT _ _ ts -> TTup ts
   VA _ _ t -> t
+  VR _ t -> t
+  VV _ t -> TApp tARRAY [t]
   VF _ -> TVar "a" :-> TVar "b" -- TODO
   -- VF _ -> error "typeOf: <<function>>"
 

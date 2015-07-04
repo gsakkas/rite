@@ -48,6 +48,8 @@ tokens :-
   \}            { tok TokRBrace }
   \[            { tok TokLBrack }
   \]            { tok TokRBrack }
+  \[\|          { tok TokLBrackPipe }
+  \|\]          { tok TokRBrackPipe }
   \-\>          { tok TokArrow }
   \<\-          { tok TokBackArrow }
   \:            { tok TokColon }
@@ -139,6 +141,8 @@ data Token
   | TokRBrace
   | TokLBrack
   | TokRBrack
+  | TokLBrackPipe
+  | TokRBrackPipe
 
   | TokAnd
   | TokAs

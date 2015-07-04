@@ -1,3 +1,5 @@
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
@@ -9,8 +11,12 @@ import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
 import Control.Monad.RWS   hiding (Alt)
+import Data.IORef
+import Data.Maybe
+import qualified Data.Vector as Vector
 import Text.Printf
 
+import NanoML.Misc
 import NanoML.Parser
 import NanoML.Pretty
 import NanoML.Types
@@ -22,8 +28,6 @@ import Debug.Trace
 ----------------------------------------------------------------------
 
 type Eval = ExceptT NanoError (RWST NanoOpts [Doc] EvalState IO)
-
-            -- (WriterT [Doc] (StateT EvalState IO))
 
 runEval :: NanoOpts -> Eval a -> IO (Either (NanoError, [Doc]) a)
 runEval opts x = evalRWST (runExceptT x) opts initState >>= \case
@@ -146,6 +150,34 @@ eval expr = logExpr expr $ case expr of
   ConApp dc (Just e) -> do
     v <- eval e
     evalConApp dc (Just v)
+  Record flds -> do
+    td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
+    unless (all (`elem` map fst3 fs) (map fst flds)) $
+      typeError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
+    unless (all (`elem` map fst flds) (map fst3 fs)) $
+      typeError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
+    (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
+      let e = fromJust $ lookup f flds
+      v <- eval e
+      su <- unify t (typeOf v)
+      case m of
+        NonMut -> return ((f,V v), su)
+        Mut -> liftIO (newIORef v) >>= \x -> return ((f, R x), su)
+    let t = subst (mconcat sus) $ typeDeclType td
+    return (VR vs t)
+  Field e f -> do
+    v <- eval e
+    getField v f
+  SetField r f e -> do
+    vr <- eval r
+    v  <- eval e
+    setField vr f v
+    return VU
+  Array [] -> return (VV Vector.empty (TVar "a"))
+  Array es -> do
+    (v:vs) <- mapM eval es
+    mapM_ (unify (typeOf v) . typeOf) vs
+    return (VV (Vector.fromList (v:vs)) (typeOf v))
   Try e alts -> do
     env <- gets stVarEnv
     eval e `catchError` \e -> do
