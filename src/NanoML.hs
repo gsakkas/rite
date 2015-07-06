@@ -112,7 +112,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 1
   where
   continue st log = do
     args <- pick (genArgs t $ stTypeEnv st)
-    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
+--    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
     run $ runEval stdOpts $ do
       put st; tell log -- first of all, restore the state and log
       v <- eval (mkApps (Var f) args)
@@ -121,7 +121,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 1
         then return ()
         else outputTypeMismatchError v t
 
-sec = 5000000
+sec = 1000000 * 60
 
 nanoCheck m = monadicIO $ m >>= \case
   Right x    -> return ()
