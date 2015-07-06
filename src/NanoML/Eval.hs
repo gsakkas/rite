@@ -315,6 +315,9 @@ matchPat v p = logMaybeEnv $ case p of
   LitPat lit -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
+  IntervalPat lo hi -> do
+    VB b <- eval (mkApps (Var "&&") [mkApps (Var ">=") [Val v, Lit lo], mkApps (Var "<=") [Val v, Lit hi]])
+    return $ if b then Just mempty else Nothing
   ConsPat p ps
     | VL [] _ <- v -> return Nothing
     | otherwise -> do
