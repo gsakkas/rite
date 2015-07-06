@@ -10,6 +10,8 @@ import           Test.QuickCheck
 
 import           NanoML.Types
 
+import Debug.Trace
+
 type TypeEnv = Map TCon TypeDecl
 
 genArgs :: Type -> TypeEnv -> Gen [Expr]

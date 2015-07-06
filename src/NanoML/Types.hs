@@ -214,10 +214,10 @@ tBool   = mkTypeDecl "bool"   []    (mkAlgRhs [])
 tChar   = mkTypeDecl "char"   []    (mkAlgRhs [])
 tString = mkTypeDecl "string" []    (mkAlgRhs [])
 tArray  = mkTypeDecl "array"  ["a"] (mkAlgRhs [])
-tUnit   = mkTypeDecl "()"     []    (mkAlgRhs [dUnit])
+tUnit   = mkTypeDecl "unit"   []    (mkAlgRhs [dUnit])
 tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
-tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dNot_found, dMatch_failure, dInvalid_argument])
+tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument])
 tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
 
 dUnit = DataDecl "()" []
@@ -225,6 +225,7 @@ dNil = DataDecl "[]" []
 dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
 dNone = DataDecl "None" []
 dSome = DataDecl "Some" [TVar "a"]
+dFailure = DataDecl "Failure" []
 dNot_found = DataDecl "Not_found" []
 dMatch_failure = DataDecl "Match_failure" []
 dInvalid_argument = DataDecl "Invalid_argument" [TCon "string"]
@@ -305,6 +306,36 @@ primVars = [ ("[]", VL [] (TVar "a"))
                               )
                              ]))
              )
+           , ("List.exists"
+             ,mkRec "List.exists"
+                    (mkLams [VarPat "f", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" Nothing
+                              ,Nothing
+                              ,Lit (LB False))
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Ite (App (Var "f") [Var "y"])
+                                   (Lit (LB True))
+                                   (App (Var "List.exists") [Var "f", Var "ys"])
+                              )
+                             ]))
+             )
+           , ("List.for_all"
+             ,mkRec "List.for_all"
+                    (mkLams [VarPat "f", VarPat "xs"]
+                            (Case (Var "xs")
+                             [(ConPat "[]" Nothing
+                              ,Nothing
+                              ,Lit (LB True))
+                             ,(ConsPat (VarPat "y") (VarPat "ys")
+                              ,Nothing
+                              ,Ite (App (Var "not") [App (Var "f") [Var "y"]])
+                                   (Lit (LB False))
+                                   (App (Var "List.for_all") [Var "f", Var "ys"])
+                              )
+                             ]))
+             )
            , ("List.filter"
              ,mkRec "List.filter"
                     (mkLams [VarPat "f", VarPat "xs"]
@@ -356,6 +387,7 @@ primVars = [ ("[]", VL [] (TVar "a"))
                               )
                              ]))
              )
+           , ("Sys.argv", VV (Vector.fromList [VS "foo", VS "bar", VS "qux"]) (TCon "string"))
            , ("**", mkPrim2Fun $ P2 "exp" pexp)
            , ("@", mkPrim2Fun $ P2 "@" pappend)
            , ("^", mkPrim2Fun $ P2 "^" pconcat)
@@ -366,7 +398,12 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("fst", mkPrim1Fun $ P1 "fst" pfst)
            , ("snd", mkPrim1Fun $ P1 "snd" psnd)
            , ("failwith", mkPrim1Fun $ P1 "failwith" pfailwith)
+           , ("Array.get", mkPrim2Fun $ P2 "Array.get" parray_get)
+           , ("Char.code", mkPrim1Fun $ P1 "Char.code" pchar_code)
+           , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare)
            , ("Char.escaped", mkPrim1Fun $ P1 "Char.escaped" pchar_escaped)
+           , ("Char.lowercase", mkPrim1Fun $ P1 "Char.lowercase" pchar_lowercase)
+           , ("Char.uppercase", mkPrim1Fun $ P1 "Char.uppercase" pchar_uppercase)
            , ("List.append", mkPrim2Fun $ P2 "List.append" pappend)
            , ("List.combine", mkPrim2Fun $ P2 "List.combine" plist_combine)
            , ("List.hd", mkPrim1Fun $ P1 "List.hd" plist_hd)
@@ -376,10 +413,13 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("List.rev", mkPrim1Fun $ P1 "List.rev" plist_rev)
            , ("List.split", mkPrim1Fun $ P1 "List.split" plist_split)
            , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl)
+           , ("String.create", mkPrim1Fun $ P1 "String.create" pstring_create)
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length)
+           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make)
            , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char)
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int)
+           , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float)
            , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
            , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline)
            , ("print_newline", mkPrim1Fun $ P1 "print_newline" pprint_newline)
@@ -389,6 +429,7 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("float", mkPrim1Fun $ P1 "float" pfloat)
            , ("float_of_int", mkPrim1Fun $ P1 "float_of_int" pfloat_of_int)
            , ("float_of_string", mkPrim1Fun $ P1 "float_of_string" pfloat_of_string)
+           , ("string_of_bool", mkPrim1Fun $ P1 "string_of_bool" pstring_of_bool)
            , ("string_of_int", mkPrim1Fun $ P1 "string_of_int" pstring_of_int)
            , ("string_of_float", mkPrim1Fun $ P1 "string_of_float" pstring_of_float)
            , ("abs", mkPrim1Fun $ P1 "abs" pabs)
@@ -413,7 +454,7 @@ primVars = [ ("[]", VL [] (TVar "a"))
            ]
 
 pfailwith :: MonadEval m => Value -> m Value
-pfailwith (VS s) = throwError $ MLException $ VS s
+pfailwith (VS s) = throwError $ MLException (mkExn "Failure" [VS s])
 
 pcompare :: MonadEval m => Value -> Value -> m Value
 pcompare = cmpVal
@@ -506,14 +547,34 @@ pstring_of_int (VI i) = return (VS (show i))
 pstring_of_float :: MonadEval m => Value -> m Value
 pstring_of_float (VD i) = return (VS (show i))
 
+pstring_of_bool :: MonadEval m => Value -> m Value
+pstring_of_bool (VB b) = return (VS (if b then "true" else "false"))
+
 -- pstring_concat :: MonadEval m => Value -> Value -> m Value
 -- pstring_concat (VS s) (VL xs) = return (VL ())
 
 pstring_get :: MonadEval m => Value -> Value -> m Value
-pstring_get (VS s) (VI i) = return (VC (s !! i))
+pstring_get (VS s) (VI i)
+  | i >= 0 && i < length s
+  = return (VC (s !! i))
+  | otherwise
+  = throwError $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
 
 pstring_length :: MonadEval m => Value -> m Value
 pstring_length (VS s) = return (VI (length s))
+
+pstring_create :: MonadEval m => Value -> m Value
+pstring_create (VI n) = return (VS (replicate n '\NUL'))
+
+pstring_make :: MonadEval m => Value -> Value -> m Value
+pstring_make (VI n) (VC c) = return (VS (replicate n c))
+
+parray_get :: MonadEval m => Value -> Value -> m Value
+parray_get (VV a _) (VI i)
+  | i >= 0 && i < Vector.length a
+  = return (a Vector.! i)
+  | otherwise
+  = throwError $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
 
 pprint_string :: MonadEval m => Value -> m Value
 pprint_string (VS s) = do
@@ -543,6 +604,13 @@ pprint_int (VI i) = do
     liftIO $ putStr $ show i
   return VU
 
+pprint_float :: MonadEval m => Value -> m Value
+pprint_float (VD f) = do
+  opts <- ask
+  when (enablePrint opts) $
+    liftIO $ putStr $ show f
+  return VU
+
 pprint_char :: MonadEval m => Value -> m Value
 pprint_char (VC c) = do
   opts <- ask
@@ -550,8 +618,20 @@ pprint_char (VC c) = do
     liftIO $ putStr $ [c]
   return VU
 
+pchar_code :: MonadEval m => Value -> m Value
+pchar_code (VC c) = return (VI (ord c))
+
+pchar_compare :: MonadEval m => Value -> Value -> m Value
+pchar_compare (VC c1) (VC c2) = cmpVal (VC c1) (VC c2)
+
 pchar_escaped :: MonadEval m => Value -> m Value
 pchar_escaped (VC c) = return (VS (showLitChar c ""))
+
+pchar_lowercase :: MonadEval m => Value -> m Value
+pchar_lowercase (VC c) = return (VC (toLower c))
+
+pchar_uppercase :: MonadEval m => Value -> m Value
+pchar_uppercase (VC c) = return (VC (toUpper c))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
 plist_combine (VL xs tx) (VL ys ty)
@@ -666,6 +746,7 @@ data Value
   | VR [(String, MValue)] Type
   | VV (Vector Value) Type
   | VF Func
+  | VH -- ^ A "hole" that will be filled in later, on demand.
   deriving (Show, Generic)
 
 data MValue
@@ -719,6 +800,7 @@ data Decl
 getSrcSpan :: Decl -> SrcSpan
 getSrcSpan d = case d of
   DFun ss _ _ -> ss
+  DEvl ss _ -> ss
   DTyp ss _ -> ss
   DExn ss _ -> ss
 
@@ -818,7 +900,7 @@ tSTRING = "string"
 tBOOL = "bool"
 tLIST = "list"
 tARRAY = "array"
-tUNIT = "()"
+tUNIT = "unit"
 tEXN = "exn"
 tREF = "ref"
 
@@ -874,7 +956,7 @@ type DCon = String
 --   = return []
 -- unifyVal (TCon "bool") (VB _)
 --   = return []
--- unifyVal (TCon "()") VU
+-- unifyVal (TCon "unit") VU
 --   = return []
 -- unifyVal (TApp "list" [t]) (VL _ vt)
 --   = unify t vt

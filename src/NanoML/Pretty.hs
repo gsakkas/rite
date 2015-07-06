@@ -40,10 +40,10 @@ instance Pretty Value where
     VV vs _ -> array $ Vector.toList vs
     VF (Func e _) -> prettyPrec z e
 
-list xs = text "[" <> (hcat $ intersperse semi $ map pretty xs) <> text "]"
-array xs = text "[|" <> (hcat $ intersperse semi $ map pretty xs) <> text "|]"
-tuple xs = text "(" <> (hcat $ intersperse comma $ map pretty xs) <> text ")"
-record xs = text "{" <> (hcat $ intersperse semi $ map prettyField xs) <> text "}"
+list xs = text "[" <> (hsep $ intersperse semi $ map pretty xs) <> text "]"
+array xs = text "[|" <> (hsep $ intersperse semi $ map pretty xs) <> text "|]"
+tuple xs = text "(" <> (hsep $ intersperse comma $ map pretty xs) <> text ")"
+record xs = text "{" <> (hsep $ intersperse semi $ map prettyField xs) <> text "}"
 
 prettyField (f,x) = text f <+> text "=" <+> pretty x
 
@@ -92,9 +92,15 @@ instance Pretty Expr where
       where zc = 5
     Tuple xs -> prettyTuple xs
     ConApp c Nothing -> text c
+    ConApp "::" (Just (Tuple [hd,tl])) -> parensIf (z > zc) $
+                                          prettyPrec (zc+1) hd <+> text "::" <+> prettyPrec (zc+1) tl
+      where zc = 26
     ConApp c (Just e) -> parensIf (z > zc) $
                          text c <+> pretty e
       where zc = 26
+    Record flds -> record flds
+    Field e f -> pretty e <> char '.' <> text f
+    SetField e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
     Array es -> array es
     Try e ps -> parensIf (z > zt) $
                    text "try" <+> pretty e <+> text "with"
