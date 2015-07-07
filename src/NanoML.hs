@@ -25,7 +25,7 @@ import           Test.QuickCheck.Monadic
 import           Test.QuickCheck.Property hiding (Result)
 import           Test.SmartCheck
 import           Text.Printf
-import           Text.Regex.TDFA
+import           Text.Regex.TDFA ( (=~~) )
 
 import           NanoML.Eval
 import           NanoML.Gen
@@ -46,10 +46,10 @@ check err prog =
       , Just (_,_,_,[l,c])
         <- err =~~ "line ([0-9]+), characters ([0-9]+)"
            :: Maybe (String,String,String,[String])
-      , Just (f,d) <- traceShow (l,c) $ findDecl prog (read l) (read c)
+      , Just (f,d,p) <- traceShow (l,c) $ findDecl prog (read l) (read c)
       , Just t <- traceShow f $ Map.lookup f knownFuncs
         -> do traceShowM t
-              r <- checkFunc f t prog
+              r <- checkFunc f t p
               let x:xs = lines $ output r
               -- NOTE: there doesn't seem to be an easy way to make QC
               -- not output the Show instance of the counterexample,
@@ -76,12 +76,15 @@ check err prog =
     _ -> do printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
             return Nothing
 
-findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl)
+findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl,Prog)
 findDecl prog l c = do
   d <- find (surrounds l c . getSrcSpan) prog
   case d of
-    DFun _ _ [(VarPat f, Lam {})] -> Just (f,d)
+    DFun _ _ [(VarPat f, Lam {})] -> Just (f,d, takeWhile (before l c . getSrcSpan) prog)
     _                             -> Nothing
+
+before l c (SrcSpan sl sc el ec)
+  = l >= sl
 
 surrounds l c (SrcSpan sl sc el ec)
   = sl <= l && l < el
@@ -103,11 +106,11 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 1
                        Right _ -> continue st log
                        -- Left (MLException _) -> continue st log
                        Left e
-                         | Env env <- stVarEnv st
-                         , Just _ <- Map.lookup f env
-                           -- if evaluation aborts after the function we want to test
-                           -- has been defined, we can go ahead and test it!
-                           -> continue st log
+                         --  Env env <- stVarEnv st
+                         -- , Just _ <- Map.lookup f env
+                         --   -- if evaluation aborts after the function we want to test
+                         --   -- has been defined, we can go ahead and test it!
+                         --   -> continue st log
                          | otherwise -> return (Left (e, log))
   where
   continue st log = do
