@@ -46,35 +46,34 @@ check err prog =
       , Just (_,_,_,[l,c])
         <- err =~~ "line ([0-9]+), characters ([0-9]+)"
            :: Maybe (String,String,String,[String])
-      , Just (f,d,p) <- traceShow (l,c) $ findDecl prog (read l) (read c)
-      , Just t <- traceShow f $ Map.lookup f knownFuncs
-        -> do traceShowM t
-              r <- checkFunc f t p
-              let x:xs = lines $ output r
-              -- NOTE: there doesn't seem to be an easy way to make QC
-              -- not output the Show instance of the counterexample,
-              -- so just extract that (2nd) line..
-              putStr $ unlines (x : safeTail xs)
+      , Just (f,d,p) <- findDecl prog (read l) (read c)
+      , Just t <- Map.lookup f knownFuncs
+        -> do r <- checkFunc f t p
+              printResult r
               return $ Just r
     DFun _ _ [(VarPat f, Lam {})]
       | Just t <- Map.lookup f knownFuncs
         -> do r <- checkFunc f t prog
-              let x:xs = lines $ output r
-              -- NOTE: there doesn't seem to be an easy way to make QC
-              -- not output the Show instance of the counterexample,
-              -- so just extract that (2nd) line..
-              putStr $ unlines (x : safeTail xs)
+              printResult r
               return $ Just r
     DFun _ _ [(WildPat, _)]
         -> do r <- runProg prog
-              putStr $ output r
+              printResult r
               return $ Just r
     DFun _ _ [(VarPat _, _)]
         -> do r <- runProg prog
-              putStr $ output r
+              printResult r
               return $ Just r
     _ -> do printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
             return Nothing
+
+printResult Failure {..} = do
+  let x:xs = lines output
+  -- NOTE: there doesn't seem to be an easy way to make QC
+  -- not output the Show instance of the counterexample,
+  -- so just extract that (2nd) line..
+  putStr $ unlines (x : safeTail xs)
+printResult r = putStr $ output r
 
 findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl,Prog)
 findDecl prog l c = do
@@ -94,12 +93,12 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ nanoCheck $ run $ runEval loudOpts $ do
+             $ within sec $ nanoCheck $ run $ runEval stdOpts $ do
                  mapM evalDecl prog
                  -- liftIO $ putStrLn $ render $ pretty $ last vs
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 100 })
+checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 1000 })
                    $ within sec $ nanoCheck $ do
                      (x, st, log) <- run $ runEvalFull stdOpts $ mapM_ evalDecl prog
                      case x of
@@ -115,7 +114,7 @@ checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 1
   where
   continue st log = do
     args <- pick (genArgs t $ stTypeEnv st)
---    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
+    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
     run $ runEval stdOpts $ do
       put st; tell log -- first of all, restore the state and log
       v <- eval (mkApps (Var f) args)

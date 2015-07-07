@@ -92,7 +92,7 @@ ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (leng
 
 [ ] a few concrete examples of programs that crash at ML level
 
-[ ] add extra language features for seminal benchmarks
+[X] add extra language features for seminal benchmarks
   - records
   - references
   - arrays
@@ -127,12 +127,14 @@ let interpSmall (movelist : move list) : (float*float) list =
     - keep log of tests that threw MLException
       - may indicate that type error is unreachable
   
-[ ] don't try to specialize datacons with multiple arguments, just let them be tuples...
+[X] don't try to specialize datacons with multiple arguments, just let them be tuples...
 ```
 # type ('a,'b) myoption = Mynone | Mysome of ('a * 'b);;
 # let Mysome x = Mysome (1,2);;
 val x : int * int = (1, 2)
 ```
+  - turns out OCaml distinguishes between datacons that take multiple
+    args vs a tuple, we just have to mimic the behavior..
 
 
 ```
