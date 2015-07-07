@@ -635,11 +635,10 @@ pchar_uppercase (VC c) = return (VC (toUpper c))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
 plist_combine (VL xs tx) (VL ys ty)
-  | tx == ty
-  = if length xs == length ys
-    then return (VL (zipWith (\x y -> VT 2 [x,y] [tx, ty]) xs ys) (TTup [tx,ty]))
-    else throwError (MLException (mkExn "Invalid_argument" [VS "List.combine"]))
-  | otherwise = typeError $ printf "(%s) (%s)" (show tx) (show ty)
+  | length xs == length ys
+  = return (VL (zipWith (\x y -> VT 2 [x,y] [tx, ty]) xs ys) (TTup [tx,ty]))
+  | otherwise
+  = throwError (MLException (mkExn "Invalid_argument" [VS "List.combine"]))
 
 plist_nth :: MonadEval m => Value -> Value -> m Value
 plist_nth (VL xs _) (VI n)
@@ -672,9 +671,9 @@ plist_tl :: MonadEval m => Value -> m Value
 plist_tl (VL (_:xs) t) = return (VL xs t)
 
 pappend :: MonadEval m => Value -> Value -> m Value
-pappend (VL xs tx) (VL ys ty)
-  | tx == ty  = return (VL (xs ++ ys) tx)
-  | otherwise = typeError $ printf "(%s) (%s)" (show tx) (show ty)
+pappend (VL xs tx) (VL ys ty) = do
+  su <- unify tx ty
+  return (VL (xs ++ ys) (subst su tx))
 
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS xs) (VS ys) = return (VS (xs ++ ys))
@@ -889,7 +888,7 @@ data Type
   | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
-  deriving (Show, Eq)
+  deriving (Show) -- NOTE: explicitly not an instance of Eq since we want to unify
 
 infixr :->
 
@@ -989,7 +988,7 @@ unify x y
 
 unifyVar :: Monad m => TVar -> Type -> m [(TVar, Type)]
 unifyVar a t
-  | t == TVar a = return []
+  | TVar b <- t, a == b = return []
   -- FIXME: occurs check
   | otherwise   = return [(a,t)]
 
