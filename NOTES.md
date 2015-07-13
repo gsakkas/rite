@@ -1,28 +1,3 @@
-```
-ghci> let rs = map fromJust . filter isJust $ results
-rs :: [(FilePath, Result)]
-ghci> length rs
-2584
-ghci> let (ss, fs) = partition (isSuccess . snd) rs
-fs :: [(FilePath, Result)]
-ss :: [(FilePath, Result)]
-ghci> length fs
-2510
-it :: Int
-ghci> length ss
-74
-it :: Int
-ghci> length (filter (("unbound" `isInfixOf`) . reason . snd) fs)
-91
-it :: Int
-ghci> let interesting = filter (not . ("unbound" `isInfixOf`) . reason . snd) fs
-interesting :: [(FilePath, Result)]
-ghci> length interesting
-2419
-ghci> fromIntegral (sum (map (numTests . snd) interesting)) / fromIntegral (length interesting)
-2.0400992145514674
-```
-
 2584 bad programs with known types
 
 - 74 do not fail dynamically
@@ -136,6 +111,19 @@ val x : int * int = (1, 2)
   - turns out OCaml distinguishes between datacons that take multiple
     args vs a tuple, we just have to mimic the behavior..
 
+[ ] Just evaluate the crash
+  - Given a program trace, remove everything that is not related to the crash
+  - RELATED: use lazy-smallcheck style holes for function arguments and exceptions
+    - iterative refinement of input vs post-hoc generalization from multiple witnesses
+
+[ ] visualizations
+  - todd millstein interactive d3.js
+  - plt-redex??
+
+[ ] generate tree of reductions
+  - given an input term, return all possible sequences of reductions
+  - find shortest path that goes wrong
+  - interactive visualization to choose path
 
 ```
   fun (f,b) ->
