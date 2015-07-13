@@ -17,6 +17,8 @@ import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import           Data.Char
+import           Data.IntMap                  (IntMap)
+import qualified Data.IntMap                  as IntMap
 import           Data.IORef
 import           Data.List
 import           Data.Map                     (Map)
@@ -83,7 +85,9 @@ data EvalState = EvalState
   , stTypeEnv  :: !(Map TCon TypeDecl)
   , stDataEnv  :: !(Map DCon DataDecl)
   , stFieldEnv :: !(Map String TypeDecl)
-  }
+  , stFresh    :: !Ref
+  , stStore    :: !(IntMap (MutFlag, Value))
+  } deriving Show
 
 initState :: EvalState
 initState = EvalState
@@ -91,7 +95,18 @@ initState = EvalState
   , stTypeEnv = baseTypeEnv
   , stDataEnv = baseDataEnv
   , stFieldEnv = baseFieldEnv
+  , stFresh = 0
+  , stStore = mempty
   }
+
+-- | An index into the store.
+type Ref = Int
+
+fresh :: MonadEval m => m Ref
+fresh = do
+  i <- gets stFresh
+  modify' $ \ s -> s { stFresh = 1 + stFresh s }
+  return i
 
 setVarEnv :: MonadEval m => Env -> m ()
 setVarEnv env = modify' $ \ s -> s { stVarEnv = env }
@@ -142,6 +157,12 @@ lookupField fld = do
     Nothing -> typeError ("unknown record field: " ++ fld)
     Just d  -> return d
 
+readStore :: MonadEval m => Ref -> m (MutFlag, Value)
+readStore i = (IntMap.! i) <$> gets stStore
+
+writeStore :: MonadEval m => Ref -> (MutFlag,Value) -> m ()
+writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
+
 subst :: [(TVar, Type)] -> Type -> Type
 subst su t = case t of
   TVar x -> fromMaybe t (lookup x su)
@@ -150,7 +171,7 @@ subst su t = case t of
   ti :-> to -> subst su ti :-> subst su to
   TTup ts -> TTup (map (subst su) ts)
 
-newtype Env = Env (Map Var Value)
+newtype Env = Env (Map Var Value) deriving Show
 
 instance Monoid Env where
   mempty  = baseEnv
@@ -685,18 +706,20 @@ pprintexc_to_string x@(VA {}) = return $ VS $ show x
 
 getField :: MonadEval m => Value -> String -> m Value
 getField x@(VR fs _) f = case lookup f fs of
-  Just (V v) -> return v
-  Just (R x) -> liftIO $ readIORef x
-  Nothing    -> typeError $ printf "record %s does not have a field '%s'"
-                                   (show x) f
+  Just i  -> snd <$> readStore i
+  Nothing -> typeError $ printf "record %s does not have a field '%s'"
+                                (show x) f
 getField x f = typeError $ printf "%s is not a record" (show x)
 
 setField :: MonadEval m => Value -> String -> Value -> m ()
 setField x@(VR fs _) f v = case lookup f fs of
-  Just (R x) -> liftIO $ writeIORef x v
-  Just (V v) -> typeError $ printf "field '%s' is not mutable" f
   Nothing    -> typeError $ printf "record %s does not have a field '%s'"
                                    (show x) f
+  Just i -> do
+    (m, _) <- readStore i
+    case m of
+      Mut -> writeStore i (m,v)
+      _   -> typeError $ printf "field '%s' is not mutable" f
 setField x _ _ = typeError $ printf "%s is not a record" (show x)
 
 mkNonRec :: Expr -> Value
@@ -732,31 +755,20 @@ mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
                          emptyEnv
 
 data Value
-  = VI Int
-  | VD Double
-  | VC Char
-  | VS String
-  | VB Bool
+  = VI !Int
+  | VD !Double
+  | VC !Char
+  | VS !String
+  | VB !Bool
   | VU
   | VL [Value] Type
-  | VT Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+  | VT !Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
   | VA DCon (Maybe Value) Type
-  | VR [(String, MValue)] Type
+  | VR [(String, Ref)] Type
   | VV (Vector Value) Type
   | VF Func
-  | VH -- ^ A "hole" that will be filled in later, on demand.
+  | VH !Ref (Maybe Type) -- ^ A "hole" that will be filled in later, on demand.
   deriving (Show, Generic)
-
-data MValue
-  = V Value
-  | R (IORef Value)
-
-mvalue :: MValue -> Value
-mvalue (V v) = v
-mvalue (R r) = unsafePerformIO $ readIORef r
-
-instance Show MValue where
-  show = show . mvalue
 
 data Func
   = Func Expr Env
@@ -825,31 +837,12 @@ data Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
   deriving (Show, Generic)
 
--- instance SubTypes Expr
-
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value)
 instance Show Prim1 where
   show (P1 v _) = v
 data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value)
 instance Show Prim2 where
   show (P2 v _) = v
-
--- data ExprF f
---   = VarF Var
---   | LamF Var f
---   | AppF f f
---   | BopF Bop f f
---   | LitF Literal
---   | LetF RecFlag Pat f f
---   | IteF f f f
---   | SeqF f f -- TODO: do we actually need this for the student examples?
---   | CaseF f [(Pat, ExprF f)]
---   | ConsF f f
---   | NilF
---   | TupleF [f]
---   deriving (Show, Functor)
-
--- type LocExpr = Fix ExprF Careted
 
 data Uop
   = Neg | FNeg
@@ -926,12 +919,14 @@ data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
 
+typeDeclType :: TypeDecl -> Type
 typeDeclType TypeDecl {..}
   | null tyVars
   = TCon tyCon
   | otherwise
   = TApp tyCon $ map TVar tyVars
 
+typeDataCons :: TypeDecl -> [DataDecl]
 typeDataCons TypeDecl { tyRhs = Alg ds } = ds
 
 type TVar = String
@@ -940,30 +935,6 @@ type TCon = String
 
 type DCon = String
 
-
--- unifyVal :: MonadEval m => Type -> Value -> m [(TVar, Type)]
--- unifyVal (TVar a) v
---   = return [(a, typeOf v)] -- FIXME: occur check
--- unifyVal (TCon "int") (VI _)
---   = return []
--- unifyVal (TCon "float") (VD _)
---   = return []
--- unifyVal (TCon "char") (VC _)
---   = return []
--- unifyVal (TCon "string") (VS _)
---   = return []
--- unifyVal (TCon "bool") (VB _)
---   = return []
--- unifyVal (TCon "unit") VU
---   = return []
--- unifyVal (TApp "list" [t]) (VL _ vt)
---   = unify t vt
--- unifyVal (TApp _ ts) (VA _ _ (TApp _ vts))
---   = mconcat <$> zipWithM unify ts vts
--- unifyVal (ti :-> to) (VF _)
---   = return []
--- unifyVal (TTup ts) (VT _ _ vts)
---   = mconcat <$> zipWithM unify ts vts
 
 unify :: MonadEval m => Type -> Type -> m [(TVar, Type)]
 unify (TVar a) t = unifyVar a t
@@ -991,6 +962,7 @@ unifyVar a t
   -- FIXME: occurs check
   | otherwise   = return [(a,t)]
 
+unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> m [(TVar, Type)]
 unifyAlias c ts t = do
   TypeDecl {..} <- lookupType c
   case tyRhs of
@@ -1011,6 +983,8 @@ typeOf v = case v of
   VR _ t -> t
   VV _ t -> TApp tARRAY [t]
   VF _ -> TVar "a" :-> TVar "b" -- TODO
+  VH _ Nothing -> TVar "a"
+  VH _ (Just t) -> t
   -- VF _ -> error "typeOf: <<function>>"
 
 ----------------------------------------------------------------------
