@@ -27,11 +27,10 @@ import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
 import           GHC.Generics
 import           System.IO.Unsafe
-import           Test.SmartCheck
 import           Text.PrettyPrint.ANSI.Leijen (Doc)
+import           Text.Printf
 
 import           Debug.Trace
-import           Text.Printf
 
 ----------------------------------------------------------------------
 -- Core Types

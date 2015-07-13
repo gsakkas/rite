@@ -23,7 +23,6 @@ import           System.Timeout
 import           Test.QuickCheck
 import           Test.QuickCheck.Monadic
 import           Test.QuickCheck.Property hiding (Result)
-import           Test.SmartCheck
 import           Text.Printf
 import           Text.Regex.TDFA ( (=~~) )
 
