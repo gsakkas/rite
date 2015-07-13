@@ -872,6 +872,7 @@ data Pat
   | WildPat
   | OrPat Pat Pat
   | AsPat Pat Var
+  | ConstraintPat Pat Type
   deriving (Show)
 
 data Type

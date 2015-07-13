@@ -234,7 +234,7 @@ SimplePatternNotIdent :: { Pat }
 | SignedLiteral ".." SignedLiteral  { IntervalPat $1 $3 }
 | '[' PatternSemiList ']'           { ListPat (reverse $2) }
 | '(' Pattern ')'                   { $2 }
-| '(' Pattern ':' Type ')'          { $2 }
+| '(' Pattern ':' Type ')'          { ConstraintPat $2 $4 }
 | ConLongIdent                      { ConPat $1 Nothing }
 
 PatternCommaList :: { [Pat] }
