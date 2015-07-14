@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns      #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase        #-}
@@ -28,7 +29,6 @@ import           System.Timeout
 import           Text.Printf
 import "regex-tdfa" Text.Regex.TDFA ( (=~~) )
 
-import           Test.QuickCheck.GenT
 import           NanoML.Eval
 import           NanoML.Gen
 import           NanoML.Misc
@@ -104,7 +104,7 @@ checkFunc f t prog = go (Success 0) 0
   where
   go r@(Failure {}) _ = return r
   go (Success 1000) _ = return (Success 1000)
-  go (Success n) m    = do
+  go (Success n) !m   = do
     r <- within n sec $ nanoCheck n m stdOpts $ do
       mapM_ evalDecl prog
       env <- gets stTypeEnv
@@ -149,7 +149,7 @@ checkFunc f t prog = go (Success 0) 0
   --       else outputTypeMismatchError v t
 
 
-sec = 1000000 * 10
+sec = 1000000 * 60
 
 within n s x = do
   m <- timeout s x

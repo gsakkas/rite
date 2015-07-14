@@ -54,8 +54,8 @@ data NanoOpts = NanoOpts
   { enablePrint           :: Bool -- ^ Should we actually print things to stdout?
   , checkDataCons         :: Bool -- ^ Should we check that datacon args have the proper type?
   , heterogeneousEquality :: Bool -- ^ Should we allow equality comparison between different types?
-  , seed                  :: Int -- ^ Random seed
-  , size                  :: Int -- ^ Maximum size of generated values
+  , seed                  :: !Int -- ^ Random seed
+  , size                  :: !Int -- ^ Maximum size of generated values
   } deriving Show
 
 stdOpts, loudOpts :: NanoOpts
@@ -65,11 +65,11 @@ stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEqu
 loudOpts = stdOpts { enablePrint = True }
 
 data Result
-  = Success { numTests :: Int }
-  | Failure { numTests :: Int
-            , usedSeed :: Int
-            , usedSize :: Int
-            , counterExample :: Doc
+  = Success { numTests :: !Int }
+  | Failure { numTests :: !Int
+            , usedSeed :: !Int
+            , usedSize :: !Int
+            , counterExample :: !Doc
             }
   deriving Show
 
