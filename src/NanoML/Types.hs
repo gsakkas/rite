@@ -18,12 +18,11 @@ import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import           Data.Char
-import           Data.IntMap                  (IntMap)
-import qualified Data.IntMap                  as IntMap
-import           Data.IORef
+import           Data.IntMap.Strict           (IntMap)
+import qualified Data.IntMap.Strict           as IntMap
 import           Data.List
-import           Data.Map                     (Map)
-import qualified Data.Map                     as Map
+import           Data.Map.Strict              (Map)
+import qualified Data.Map.Strict              as Map
 import           Data.Maybe
 import           Data.Typeable (Typeable)
 import           Data.Vector                  (Vector)
