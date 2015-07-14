@@ -2,7 +2,7 @@
 {-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.Pretty
-  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest)
+  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest, text)
   where
 
 import           Data.List                    hiding (group)
@@ -46,9 +46,6 @@ tuple xs = text "(" <> (hsep $ intersperse comma $ map pretty xs) <> text ")"
 record xs = text "{" <> (hsep $ intersperse semi $ map prettyField xs) <> text "}"
 
 prettyField (f,x) = text f <+> text "=" <+> pretty x
-
-instance Pretty MValue where
-  pretty = pretty . mvalue
 
 instance Pretty Literal where
   pretty l = case l of
@@ -228,7 +225,7 @@ render d = displayS (renderSmart 0.5 72 d) ""
 instance Pretty Type where
   prettyPrec z t = case t of
     TVar v -> squote <> text v
-    TCon c -> text c
+--    TCon c -> text c
     TApp t ts -> prettyTypeArgs ts <> pretty t
     TTup ts -> parens $ hsep $ intersperse (text "*") $ map pretty ts
     ti :-> to -> parensIf (z > zf) $

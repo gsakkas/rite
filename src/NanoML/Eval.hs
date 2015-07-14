@@ -1,24 +1,32 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module NanoML.Eval where
 
 import Control.Exception
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Fix
+import Control.Monad.Random
 import Control.Monad.RWS   hiding (Alt)
 import Data.IORef
 import Data.Maybe
 import qualified Data.Vector as Vector
+import System.IO.Unsafe
 import Text.Printf
 
+-- import Test.QuickCheck.Gen
+-- import Test.QuickCheck.GenT
 import NanoML.Misc
 import NanoML.Parser
 import NanoML.Pretty
+import NanoML.Prim
 import NanoML.Types
 
 import Debug.Trace
@@ -27,15 +35,36 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-type Eval = ExceptT NanoError (RWST NanoOpts [Doc] EvalState IO)
+newtype Eval a = Eval (RandT StdGen (ExceptT NanoError (RWS NanoOpts [Doc] EvalState)) a)
+  deriving (Functor, Applicative, Monad, MonadRandom, MonadFix, MonadError NanoError
+           ,MonadReader NanoOpts, MonadState EvalState, MonadWriter [Doc])
 
-runEval :: NanoOpts -> Eval a -> IO (Either (NanoError, [Doc]) a)
-runEval opts x = evalRWST (runExceptT x) opts initState >>= \case
-  (Left e, tr) -> return $ Left (e, tr)
-  (Right v, _) -> return $ Right v
+instance MonadError e m => MonadError e (RandT g m) where
+  throwError = lift . throwError
+  catchError m f = liftRandT (\g -> runRandT m g `catchError` \e ->
+                                    runRandT (f e) g)
 
-runEvalFull :: NanoOpts -> Eval a -> IO (Either NanoError a, EvalState, [Doc])
-runEvalFull opts x = runRWST (runExceptT x) opts initState
+runEval :: NanoOpts -> Eval a -> Either (NanoError, [Doc]) a
+runEval opts (Eval x) = run x
+  where
+  stdGen = mkStdGen (seed opts)
+  run x = case evalRWS (runExceptT (evalRandT x stdGen)) opts initState of
+    (Left e, tr) -> Left (e, tr)
+    (Right v, _) -> Right v
+
+initState :: EvalState
+initState = EvalState
+  { stVarEnv = baseEnv
+  , stTypeEnv = baseTypeEnv
+  , stDataEnv = baseDataEnv
+  , stFieldEnv = baseFieldEnv
+  , stFresh = 0
+  , stStore = mempty
+  , stArgs = []
+  }
+
+-- runEvalFull :: NanoOpts -> Eval a -> Gen (Either NanoError a, EvalState, [Doc])
+-- runEvalFull opts (Eval x) = runRWST (runExceptT x) opts initState
 
 evalString :: MonadEval m => String -> m Value
 evalString s = case parseExpr s of
@@ -160,9 +189,9 @@ eval expr = logExpr expr $ case expr of
       let e = fromJust $ lookup f flds
       v <- eval e
       su <- unify t (typeOf v)
-      case m of
-        NonMut -> return ((f,V v), su)
-        Mut -> liftIO (newIORef v) >>= \x -> return ((f, R x), su)
+      i <- fresh
+      writeStore i (m,v)
+      return ((f,i),su)
     let t = subst (mconcat sus) $ typeDeclType td
     return (VR vs t)
   Field e f -> do
@@ -187,16 +216,14 @@ eval expr = logExpr expr $ case expr of
         _              -> throwError e
   Prim1 (P1 p f) e -> do
     v <- eval e
-    x <- liftIO $ try $ evaluate (f v)
-    case x of
+    case unsafePerformIO $ try $ evaluate $ f v of
       Right x -> x
       Left (PatternMatchFail _) ->
         typeError $ printf "invalid argument to %s: %s" p (show $ pretty v)
   Prim2 (P2 p f) e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
-    x <- liftIO $ try $ evaluate (f v1 v2)
-    case x of
+    case unsafePerformIO $ try $ evaluate $ f v1 v2 of
       Right x -> x
       Left (PatternMatchFail _) ->
         typeError $ printf "invalid arguments to %s: %s, %s"
@@ -257,13 +284,21 @@ evalUop Neg (VI i) = return (VI (negate i))
 evalUop FNeg (VD d) = return (VD (negate d))
 
 
-ltVal (VI x) (VI y) = return (x < y)
-ltVal (VD x) (VD y) = return (x < y)
-ltVal x      y      = typeError "cannot compare ordering of non-numeric types"
+-- ltVal (VI x) (VI y) = return (x < y)
+-- ltVal (VD x) (VD y) = return (x < y)
+-- ltVal x      y      = typeError "cannot compare ordering of non-numeric types"
 
-gtVal (VI x) (VI y) = return (x > y)
-gtVal (VD x) (VD y) = return (x > y)
-gtVal x      y      = typeError "cannot compare ordering of non-numeric types"
+-- gtVal (VI x) (VI y) = return (x > y)
+-- gtVal (VD x) (VD y) = return (x > y)
+-- gtVal x      y      = typeError "cannot compare ordering of non-numeric types"
+
+ltVal x y = do
+  VI i <- cmpVal x y
+  return (i == (-1))
+
+gtVal x y = do
+  VI i <- cmpVal x y
+  return (i == 1)
 
 plusVal (VI i) (VI j) = return $ VI (i+j)
 plusVal (VD i) (VD j) = return $ VD (i+j)
@@ -363,6 +398,9 @@ matchPat v p = logMaybeEnv $ case p of
   AsPat p x -> do
     Just env <- matchPat v p
     return (Just (insertEnv x v env))
+  ConstraintPat p t -> do
+    su <- unify t (typeOf v)
+    matchPat v p
   _ -> err
   where err = typeError (printf "type error: tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
@@ -370,6 +408,7 @@ matchPat v p = logMaybeEnv $ case p of
 safeMatch [] Nothing = True
 safeMatch [t] (Just p) = True
 safeMatch ts (Just (TuplePat ps)) = True
+safeMatch ts (Just WildPat) = True
 safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
@@ -386,7 +425,6 @@ matchLit VU      LU      = return True
 matchLit v       l       = typeError (printf "type error: tried to match %s against %s"
                                       (show $ pretty v) (show $ pretty l) :: String)
 
-
 testEval :: String -> IO ()
 testEval s = let Right e = parseExpr s
-             in print =<< runEval stdOpts (eval e)
+             in print $ runEval stdOpts (eval e)

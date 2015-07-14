@@ -1,17 +1,19 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE PackageImports    #-}
 {-# LANGUAGE RecordWildCards   #-}
 module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
   , module NanoML.Eval
-  , check, checkAll, runProg
+  , check, checkAll, checkAllFrom, runProg
   ) where
 
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
+import           Control.Monad.Random
 import           Control.Monad.State
 import           Control.Monad.Writer
 import           Data.List
@@ -20,16 +22,17 @@ import           Data.Maybe
 import           Data.Typeable (Typeable)
 import           System.IO.Unsafe
 import           System.Timeout
-import           Test.QuickCheck
-import           Test.QuickCheck.Monadic
-import           Test.QuickCheck.Property hiding (Result)
+-- import           Test.QuickCheck
+-- import           Test.QuickCheck.Monadic
+-- import           Test.QuickCheck.Property hiding (Result)
 import           Text.Printf
-import           Text.Regex.TDFA ( (=~~) )
+import "regex-tdfa" Text.Regex.TDFA ( (=~~) )
 
+import           Test.QuickCheck.GenT
 import           NanoML.Eval
 import           NanoML.Gen
 import           NanoML.Misc
-import           NanoML.Parser
+import           NanoML.Parser hiding (read)
 import           NanoML.Pretty
 import           NanoML.Types
 
@@ -45,7 +48,7 @@ check err prog =
       , Just (_,_,_,[l,c])
         <- err =~~ "line ([0-9]+), characters ([0-9]+)"
            :: Maybe (String,String,String,[String])
-      , Just (f,d,p) <- findDecl prog (read l) (read c)
+      , Just (f,d,p) <- traceShow (l,c) findDecl prog (read l) (read c)
       , Just t <- Map.lookup f knownFuncs
         -> do r <- checkFunc f t p
               printResult r
@@ -67,12 +70,10 @@ check err prog =
             return Nothing
 
 printResult Failure {..} = do
-  let x:xs = lines output
-  -- NOTE: there doesn't seem to be an easy way to make QC
-  -- not output the Show instance of the counterexample,
-  -- so just extract that (2nd) line..
-  putStr $ unlines (x : safeTail xs)
-printResult r = putStr $ output r
+  printf "*** Failed after %d tests:\n" numTests
+  print counterExample
+printResult Success {..} =
+  printf "+++ OK, passed %d tests.\n" numTests
 
 findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl,Prog)
 findDecl prog l c = do
@@ -91,44 +92,86 @@ safeTail [] = []
 safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
-runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
-             $ within sec $ nanoCheck $ run $ runEval stdOpts $ do
-                 mapM evalDecl prog
-                 -- liftIO $ putStrLn $ render $ pretty $ last vs
+runProg prog = within 0 sec $ nanoCheck 0 0 stdOpts $ do
+                 mapM_ evalDecl prog
+-- runProg prog = quickCheckWithResult (stdArgs { chatty = False, maxSuccess = 1 })
+--              $ within sec $ fmap nanoCheck $ runEval stdOpts $ do
+--                  mapM_ evalDecl prog
+--                  -- liftIO $ putStrLn $ render $ pretty $ last vs
 
 checkFunc :: Var -> Type -> Prog -> IO Result
-checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 1000 })
-                   $ within sec $ nanoCheck $ do
-                     (x, st, log) <- run $ runEvalFull stdOpts $ mapM_ evalDecl prog
-                     case x of
-                       Right _ -> continue st log
-                       -- Left (MLException _) -> continue st log
-                       Left e
-                         --  Env env <- stVarEnv st
-                         -- , Just _ <- Map.lookup f env
-                         --   -- if evaluation aborts after the function we want to test
-                         --   -- has been defined, we can go ahead and test it!
-                         --   -> continue st log
-                         | otherwise -> return (Left (e, log))
+checkFunc f t prog = go (Success 0) 0
   where
-  continue st log = do
-    args <- pick (genArgs t $ stTypeEnv st)
-    monitor $ counterexample (show . pretty $ mkApps (Var f) args)
-    run $ runEval stdOpts $ do
-      put st; tell log -- first of all, restore the state and log
-      v <- eval (mkApps (Var f) args)
+  go r@(Failure {}) _ = return r
+  go (Success 1000) _ = return (Success 1000)
+  go (Success n) m    = do
+    r <- within n sec $ nanoCheck n m stdOpts $ do
+      mapM_ evalDecl prog
+      env <- gets stTypeEnv
+      args <- genArgs t env
+      rememberArgs args
+      v <- eval (mkApps (Var f) (map Val args))
       b <- v `checkType` resTy t
-      if b
-        then return ()
-        else outputTypeMismatchError v t
+      unless b $ outputTypeMismatchError v t
+    go r (m+1 `mod` 10)
+                        
+    
+-- checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 1000 })
+--                    $ within sec $ fmap nanoCheck $ runEval stdOpts $ do
+--                      mapM_ evalDecl prog
+--                      env <- gets stTypeEnv
+--                      args <- liftGen (genArgs t env)
+--                      v <- eval (mkApps (Var f) args)
+--                      b <- v `checkType` resTy t
+--                      unless b $ outputTypeMismatchError v t
+                     
+  --                    (x, st, log) <- run $ runEvalFull stdOpts $ mapM_ evalDecl prog
+  --                    case x of
+  --                      Right _ -> continue st log
+  --                      -- Left (MLException _) -> continue st log
+  --                      Left e
+  --                        --  Env env <- stVarEnv st
+  --                        -- , Just _ <- Map.lookup f env
+  --                        --   -- if evaluation aborts after the function we want to test
+  --                        --   -- has been defined, we can go ahead and test it!
+  --                        --   -> continue st log
+  --                        | otherwise -> return (Left (e, log))
+  -- where
+  -- continue st log = do
+  --   args <- pick (genArgs t $ stTypeEnv st)
+  --   monitor $ counterexample (show . pretty $ mkApps (Var f) args)
+  --   run $ runEval stdOpts $ do
+  --     put st; tell log -- first of all, restore the state and log
+  --     v <- eval (mkApps (Var f) args)
+  --     b <- v `checkType` resTy t
+  --     if b
+  --       then return ()
+  --       else outputTypeMismatchError v t
 
-sec = 1000000 * 60
 
-nanoCheck m = monadicIO $ m >>= \case
-  Right x    -> monitor (collect "no error") >> return ()
-  Left (MLException e, t) -> monitor (collect "MLException") >> return ()
-  Left (e, t) -> monitor (collect "failure") >> (fail $ "*** Exception: " ++ show e)
---                      ++ "\n" ++ (render $ vsep $ intersperse mempty t)
+sec = 1000000 * 10
+
+within n s x = do
+  m <- timeout s x
+  return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>")) m
+
+nanoCheck :: Int -> Int -> NanoOpts -> Eval () -> IO Result
+nanoCheck numSuccess maxSize opts x = do
+  seed <- getRandom
+  let opts' = opts { seed = seed, size = maxSize }
+  x <- evaluate $ runEval opts' x
+  return $ case x of
+    Left (MLException e, t) -> Success (numSuccess + 1)
+    Left (e, tr) -> Failure (numSuccess + 1) seed maxSize
+                            (vcat (text (show e) : []{-tr-}))
+    Right _      -> Success (numSuccess + 1)
+
+-- nanoCheck :: Either (NanoError, [Doc]) a -> Property
+-- nanoCheck m = case m of
+--   Right x    -> collect "no error" $ property True
+--   Left (MLException e, t) -> collect "MLException" $ property True
+--   Left (e, t) -> collect "failure" $ counterexample ("*** Exception: " ++ show e) $ property False
+-- --                      ++ "\n" ++ (render $ vsep $ intersperse mempty t)
 
 checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
 

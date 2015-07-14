@@ -382,6 +382,7 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog4837.ml" -- uses printf
              , "prog4839.ml" -- uses printf
              , "20060302-21:24:02-246ce61683ae0484e1606c781c19f80f.seminal.ml" -- uses instance variable assignment
+             , "20060322-01:15:12-8f2c701fedc5409bb06ec8282652a352.seminal.ml" -- memory leak??
              ]
 
 type Err = String

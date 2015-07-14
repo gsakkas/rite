@@ -347,8 +347,8 @@ Literal :: { Literal }
 
 SignedLiteral :: { Literal }
 : Literal   { $1 }
-| '-' int   { LI (read ('-' : $2)) }
-| '-' float { LD (read ('-' : $2)) }
+| '-' int   { LI (negate (read $2)) }
+| '-' float { LD (negate (read $2)) }
 | '+' int   { LI (read $2) }
 | '+' float { LD (read $2) }
 
@@ -376,8 +376,8 @@ SimpleType :: { Type }
 
 SimpleType2 :: { Type }
 : '\'' ident                       { TVar $2 }
-| LongIdent                        { TCon $1 }
-| '(' ')'                          { TCon "()" }
+| LongIdent                        { tCon $1 }
+| '(' ')'                          { tCon tUNIT }
 | SimpleType2 LongIdent            { mkTApps $2 [$1] }
 | '(' TypeCommaList ')' LongIdent  { mkTApps $4 (reverse $2) }
 
