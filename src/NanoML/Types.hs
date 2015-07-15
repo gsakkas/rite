@@ -414,9 +414,18 @@ unify (xi :-> xo) (yi :-> yo)
   = mappend <$> unify xi yi <*> unify xo yo
 unify (TTup xs) (TTup ys)
   = mconcat <$> zipWithM unify xs ys
-unify (TApp xc xts) (TApp yc yts)
+unify x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
   = mconcat <$> zipWithM unify xts yts
+  | otherwise
+  = do xt <- lookupType xc
+       yt <- lookupType yc
+       case (tyRhs xt, tyRhs yt) of
+         (Alias tx, Alias ty) -> unify (subst (zip (tyVars xt) xts) tx)
+                                       (subst (zip (tyVars yt) yts) ty)
+         (Alias t, _) -> unify (subst (zip (tyVars xt) xts) t) y
+         (_, Alias t) -> unify x (subst (zip (tyVars yt) yts) t)
+         _ -> typeError $ printf "could not match %s against %s" (show x) (show y)
 unify x@(TApp c ts) y = unifyAlias c ts y x
 unify x y@(TApp c ts) = unifyAlias c ts x y
 unify x y
