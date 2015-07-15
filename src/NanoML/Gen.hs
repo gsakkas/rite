@@ -41,18 +41,14 @@ genValue ty env = case ty of
       -> return VU
     | otherwise
       -> sized (genADT t [] env)
-  TApp "list" [t] -> sized (genList t env)
+  TApp "list" [t] -> genList t env
   TApp "array" [t] -> sized (fmap (flip VV t . Vector.fromList) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
   TTup ts -> (\x -> VT (length ts) x ts) <$> mapM (flip genValue env) ts
   _ :-> to -> VF . flip Func mempty . Lam WildPat <$> (fmap Val . flip genValue env) to
 
-genList :: MonadEval m => Type -> TypeEnv -> Int -> m Value
-genList t env 0 = return (VL [] t)
-genList t env n = do
-  x <- resize (n-1) $ genValue t env
-  VL xs _ <- genList t env (n-1)
-  return (VL (x:xs) t)
+genList :: MonadEval m => Type -> TypeEnv -> m Value
+genList t env = flip VL t <$> listOf (genValue t env)
 
 genADT :: MonadEval m => TCon -> [Type] -> TypeEnv -> Int -> m Value
 genADT c ts e n = do
@@ -73,7 +69,9 @@ genADT c ts e n = do
     = Nothing
     | otherwise
     = Just $ do
-      vs <- mapM (resize (prev n) . (`genValue` e) . subst (zip tvs ts)) dArgs
+      ns <- replicateM (length dArgs) (getRandomR (0, prev n))
+      vs <- zipWithM (\n d -> resize n . (`genValue` e) . subst (zip tvs ts) $ d)
+                     ns dArgs
       let v = case dArgs of
             [_] -> head vs
             _   -> VT (length vs) vs ts
@@ -85,7 +83,8 @@ genADT c ts e n = do
   isRec _           = False
 
   genField (f, m, t) = do
-    v <- resize (prev n) (genValue t e)
+    n' <- getRandomR (0, prev n)
+    v <- resize n' (genValue t e)
     i <- fresh
     writeStore i (m,v)
     return (f,i)

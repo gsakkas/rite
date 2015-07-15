@@ -119,7 +119,7 @@ checkFunc f t prog = go (Success 0) 0
       -- traceShowM v
       b <- v `checkType` resTy t
       unless b $ outputTypeMismatchError v t
-    go r ((m+1) `mod` 10)
+    go r ((m+1) `mod` 5)
                         
     
 -- checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 1000 })
