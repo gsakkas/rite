@@ -215,10 +215,6 @@ m `withEnv` env = do
   put st
   return a
 
-----------------------------------------------------------------------
--- Primitives
-----------------------------------------------------------------------
-
 data Value
   = VI !Int
   | VD !Double
@@ -302,12 +298,12 @@ data Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
   deriving (Show, Generic)
 
-data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value)
+data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
-  show (P1 v _) = v
-data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value)
+  show (P1 v _ _) = v
+data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value) Type Type
 instance Show Prim2 where
-  show (P2 v _) = v
+  show (P2 v _ _ _) = v
 
 data Uop
   = Neg | FNeg

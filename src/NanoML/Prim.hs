@@ -5,12 +5,15 @@ module NanoML.Prim where
 
 import Control.Arrow
 import Control.Monad.Except
+import Control.Monad.Random
+import Control.Monad.Reader
 import Data.Char
 import qualified Data.Map as Map
 import qualified Data.Vector as Vector
 import Text.Printf
 import Text.Read
 
+import NanoML.Gen
 import NanoML.Types
 
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
@@ -214,74 +217,74 @@ primVars = [ ("[]", VL [] (TVar "a"))
                              ]))
              )
            , ("Sys.argv", VV (Vector.fromList [VS "foo", VS "bar", VS "qux"]) (tCon "string"))
-           , ("**", mkPrim2Fun $ P2 "exp" pexp)
-           , ("@", mkPrim2Fun $ P2 "@" pappend)
-           , ("^", mkPrim2Fun $ P2 "^" pconcat)
-           , ("&&", mkPrim2Fun $ P2 "&&" pand)
-           , ("&", mkPrim2Fun $ P2 "&" pand)
-           , ("||", mkPrim2Fun $ P2 "||" por)
-           , ("not", mkPrim1Fun $ P1 "not" pnot)
-           , ("fst", mkPrim1Fun $ P1 "fst" pfst)
-           , ("snd", mkPrim1Fun $ P1 "snd" psnd)
-           , ("failwith", mkPrim1Fun $ P1 "failwith" pfailwith)
-           , ("Array.get", mkPrim2Fun $ P2 "Array.get" parray_get)
-           , ("Char.code", mkPrim1Fun $ P1 "Char.code" pchar_code)
-           , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare)
-           , ("Char.escaped", mkPrim1Fun $ P1 "Char.escaped" pchar_escaped)
-           , ("Char.lowercase", mkPrim1Fun $ P1 "Char.lowercase" pchar_lowercase)
-           , ("Char.uppercase", mkPrim1Fun $ P1 "Char.uppercase" pchar_uppercase)
-           , ("List.append", mkPrim2Fun $ P2 "List.append" pappend)
-           , ("List.combine", mkPrim2Fun $ P2 "List.combine" plist_combine)
-           , ("List.hd", mkPrim1Fun $ P1 "List.hd" plist_hd)
-           , ("List.length", mkPrim1Fun $ P1 "List.length" plist_length)
-           , ("List.mem", mkPrim2Fun $ P2 "List.mem" plist_mem)
-           , ("List.nth", mkPrim2Fun $ P2 "List.nth" plist_nth)
-           , ("List.rev", mkPrim1Fun $ P1 "List.rev" plist_rev)
-           , ("List.split", mkPrim1Fun $ P1 "List.split" plist_split)
-           , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl)
-           , ("String.create", mkPrim1Fun $ P1 "String.create" pstring_create)
-           , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get)
-           , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length)
-           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make)
-           , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char)
-           , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int)
-           , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float)
-           , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
-           , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline)
-           , ("print_newline", mkPrim1Fun $ P1 "print_newline" pprint_newline)
-           , ("char_of_int", mkPrim1Fun $ P1 "char_of_int" pchar_of_int)
-           , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char)
-           , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float)
-           , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string)
-           , ("float", mkPrim1Fun $ P1 "float" pfloat)
-           , ("float_of_int", mkPrim1Fun $ P1 "float_of_int" pfloat_of_int)
-           , ("float_of_string", mkPrim1Fun $ P1 "float_of_string" pfloat_of_string)
-           , ("string_of_bool", mkPrim1Fun $ P1 "string_of_bool" pstring_of_bool)
-           , ("string_of_int", mkPrim1Fun $ P1 "string_of_int" pstring_of_int)
-           , ("string_of_float", mkPrim1Fun $ P1 "string_of_float" pstring_of_float)
-           , ("abs", mkPrim1Fun $ P1 "abs" pabs)
-           , ("abs_float", mkPrim1Fun $ P1 "abs_float" pabs_float)
-           , ("exp", mkPrim2Fun $ P2 "exp" pexp)
-           , ("log", mkPrim1Fun $ P1 "log" plog)
-           , ("log10", mkPrim1Fun $ P1 "log10" plog10)
-           , ("mod_float", mkPrim2Fun $ P2 "mod_float" pmod_float)
-           , ("modf", mkPrim1Fun $ P1 "modf" pmodf)
-           , ("sqrt", mkPrim1Fun $ P1 "sqrt" psqrt)
-           , ("acos", mkPrim1Fun $ P1 "acos" pacos)
-           , ("asin", mkPrim1Fun $ P1 "asin" pasin)
-           , ("atan", mkPrim1Fun $ P1 "atan" patan)
-           , ("cos", mkPrim1Fun $ P1 "cos" pcos)
-           , ("sin", mkPrim1Fun $ P1 "sin" psin)
-           , ("tan", mkPrim1Fun $ P1 "tan" ptan)
-           , ("tanh", mkPrim1Fun $ P1 "tanh" ptanh)
-           , ("truncate", mkPrim1Fun $ P1 "truncate" ptruncate)
-           , ("compare", mkPrim2Fun $ P2 "compare" pcompare)
-           , ("raise", mkPrim1Fun $ P1 "raise" praise)
-           , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string)
+           , ("**", mkPrim2Fun $ P2 "exp" pexp tF tF)
+           , ("@", mkPrim2Fun $ P2 "@" pappend (tL a) (tL a))
+           , ("^", mkPrim2Fun $ P2 "^" pconcat tS tS)
+           , ("&&", mkPrim2Fun $ P2 "&&" pand tB tB)
+           , ("&", mkPrim2Fun $ P2 "&" pand tB tB)
+           , ("||", mkPrim2Fun $ P2 "||" por tB tB)
+           , ("not", mkPrim1Fun $ P1 "not" pnot tB)
+           , ("fst", mkPrim1Fun $ P1 "fst" pfst (tT a b))
+           , ("snd", mkPrim1Fun $ P1 "snd" psnd (tT a b))
+           , ("failwith", mkPrim1Fun $ P1 "failwith" pfailwith tS)
+           , ("Array.get", mkPrim2Fun $ P2 "Array.get" parray_get (tA a) tI)
+           , ("Char.code", mkPrim1Fun $ P1 "Char.code" pchar_code tC)
+           , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare tC tC)
+           , ("Char.escaped", mkPrim1Fun $ P1 "Char.escaped" pchar_escaped tC)
+           , ("Char.lowercase", mkPrim1Fun $ P1 "Char.lowercase" pchar_lowercase tC)
+           , ("Char.uppercase", mkPrim1Fun $ P1 "Char.uppercase" pchar_uppercase tC)
+           , ("List.append", mkPrim2Fun $ P2 "List.append" pappend (tL a) (tL a))
+           , ("List.combine", mkPrim2Fun $ P2 "List.combine" plist_combine (tL a) (tL b))
+           , ("List.hd", mkPrim1Fun $ P1 "List.hd" plist_hd (tL a))
+           , ("List.length", mkPrim1Fun $ P1 "List.length" plist_length (tL a))
+           , ("List.mem", mkPrim2Fun $ P2 "List.mem" plist_mem a (tL a))
+           , ("List.nth", mkPrim2Fun $ P2 "List.nth" plist_nth (tL a) tI)
+           , ("List.rev", mkPrim1Fun $ P1 "List.rev" plist_rev (tL a))
+           , ("List.split", mkPrim1Fun $ P1 "List.split" plist_split (tL (tT a b)))
+           , ("List.tl", mkPrim1Fun $ P1 "List.tl" plist_tl (tL a))
+           , ("String.create", mkPrim1Fun $ P1 "String.create" pstring_create tI)
+           , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get tS tI)
+           , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length tS)
+           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tS tC)
+           , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char tC)
+           , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int tI)
+           , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float tF)
+           , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string tS)
+           , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline tS)
+           , ("print_newline", mkPrim1Fun $ P1 "print_newline" pprint_newline tU)
+           , ("char_of_int", mkPrim1Fun $ P1 "char_of_int" pchar_of_int tI)
+           , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char tC)
+           , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float tF)
+           , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string tS)
+           , ("float", mkPrim1Fun $ P1 "float" pfloat tI)
+           , ("float_of_int", mkPrim1Fun $ P1 "float_of_int" pfloat_of_int tI)
+           , ("float_of_string", mkPrim1Fun $ P1 "float_of_string" pfloat_of_string tS)
+           , ("string_of_bool", mkPrim1Fun $ P1 "string_of_bool" pstring_of_bool tB)
+           , ("string_of_int", mkPrim1Fun $ P1 "string_of_int" pstring_of_int tI)
+           , ("string_of_float", mkPrim1Fun $ P1 "string_of_float" pstring_of_float tF)
+           , ("abs", mkPrim1Fun $ P1 "abs" pabs tI)
+           , ("abs_float", mkPrim1Fun $ P1 "abs_float" pabs_float tF)
+           , ("exp", mkPrim2Fun $ P2 "exp" pexp tF tF)
+           , ("log", mkPrim1Fun $ P1 "log" plog tF)
+           , ("log10", mkPrim1Fun $ P1 "log10" plog10 tF)
+           , ("mod_float", mkPrim2Fun $ P2 "mod_float" pmod_float tF tF)
+           , ("modf", mkPrim1Fun $ P1 "modf" pmodf tF)
+           , ("sqrt", mkPrim1Fun $ P1 "sqrt" psqrt tF)
+           , ("acos", mkPrim1Fun $ P1 "acos" pacos tF)
+           , ("asin", mkPrim1Fun $ P1 "asin" pasin tF)
+           , ("atan", mkPrim1Fun $ P1 "atan" patan tF)
+           , ("cos", mkPrim1Fun $ P1 "cos" pcos tF)
+           , ("sin", mkPrim1Fun $ P1 "sin" psin tF)
+           , ("tan", mkPrim1Fun $ P1 "tan" ptan tF)
+           , ("tanh", mkPrim1Fun $ P1 "tanh" ptanh tF)
+           , ("truncate", mkPrim1Fun $ P1 "truncate" ptruncate tF)
+           , ("compare", mkPrim2Fun $ P2 "compare" pcompare a a)
+           , ("raise", mkPrim1Fun $ P1 "raise" praise tE)
+           , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string tE)
            ]
 
 pfailwith :: MonadEval m => Value -> m Value
-pfailwith (VS s) = throwError $ MLException (mkExn "Failure" [VS s])
+pfailwith (VS s) = maybeThrow $ MLException (mkExn "Failure" [VS s])
 
 pcompare :: MonadEval m => Value -> Value -> m Value
 pcompare = cmpVal
@@ -567,3 +570,25 @@ mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
                                  (Prim2 f (Var "x") (Var "y")))
                          emptyEnv
+
+tI = tCon tINT
+tF = tCon tFLOAT
+tC = tCon tCHAR
+tS = tCon tSTRING
+tB = tCon tBOOL
+tU = tCon tUNIT
+tA t = mkTApps tARRAY [t]
+tL t = mkTApps tLIST [t]
+tE = tCon tEXN
+a = TVar "a"
+b = TVar "b"
+tT x y = TTup [x,y]
+
+
+maybeThrow :: MonadEval m => NanoError -> m Value
+maybeThrow err = do
+  b <- getRandom
+  r <- asks exceptionRecovery
+  unless (r && b) $ throwError err
+  r <- fresh
+  return (VH r Nothing)
