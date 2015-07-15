@@ -21,9 +21,9 @@ main = do
   printf "    %d due to an unbound variable or datacon\n"
     (length (filter (becauseOf "Unbound") fs) +
      length (filter (becauseOf "unknown") fs))
-  printf "    %d due to an output-type-mismatch"
+  printf "    %d due to an output-type-mismatch\n"
     (length (filter (becauseOf "OutputType") fs))
-  printf "    %d due to a type error (%02.02f %%)"
+  printf "    %d due to a type error (%02.02f %%)\n"
     (length (filter (becauseOf "TypeError") fs))
     ((fromIntegral (length (filter (becauseOf "TypeError") fs))
       / fromIntegral (length ss + length fs) :: Double)

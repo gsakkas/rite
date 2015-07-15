@@ -15,6 +15,7 @@ import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.Random
+import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer
 import           Data.List
@@ -106,14 +107,19 @@ checkFunc f t prog = go (Success 0) 0
   go (Success 1000) _ = return (Success 1000)
   go (Success n) !m   = do
     r <- within n sec $ nanoCheck n m stdOpts $ do
+      -- s <- asks size
+      -- traceM $ printf "size=%d" s
       mapM_ evalDecl prog
       env <- gets stTypeEnv
+      -- traceShowM "generating args"
       args <- genArgs t env
+      -- traceShowM (pretty $ VT 0 args [])
       rememberArgs args
       v <- eval (mkApps (Var f) (map Val args))
+      -- traceShowM v
       b <- v `checkType` resTy t
       unless b $ outputTypeMismatchError v t
-    go r (m+1 `mod` 10)
+    go r ((m+1) `mod` 10)
                         
     
 -- checkFunc f t prog = quickCheckWithResult (stdArgs { chatty = False, maxSize = 10, maxSuccess = 1000 })

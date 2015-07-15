@@ -73,7 +73,7 @@ genADT c ts e n = do
     = Nothing
     | otherwise
     = Just $ do
-      vs <- mapM (resize (n-1) . (`genValue` e) . subst (zip tvs ts)) dArgs
+      vs <- mapM (resize (prev n) . (`genValue` e) . subst (zip tvs ts)) dArgs
       let v = case dArgs of
             [_] -> head vs
             _   -> VT (length vs) vs ts
@@ -85,10 +85,12 @@ genADT c ts e n = do
   isRec _           = False
 
   genField (f, m, t) = do
-    v <- resize (n-1) (genValue t e)
+    v <- resize (prev n) (genValue t e)
     i <- fresh
     writeStore i (m,v)
     return (f,i)
+
+prev n = max 0 (n-1)
 
 listOf :: MonadEval m => m a -> m [a]
 listOf g = sized $ \s -> do
@@ -106,4 +108,5 @@ sized :: MonadEval m => (Int -> m a) -> m a
 sized f = asks size >>= f
 
 resize :: MonadEval m => Int -> m a -> m a
+resize s | s < 0 = error "resize: negative size"
 resize s = local (\o -> o { size = s })
