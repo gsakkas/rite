@@ -249,6 +249,7 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("print_string", mkPrim1Fun $ P1 "print_string" pprint_string)
            , ("print_endline", mkPrim1Fun $ P1 "print_endline" pprint_endline)
            , ("print_newline", mkPrim1Fun $ P1 "print_newline" pprint_newline)
+           , ("char_of_int", mkPrim1Fun $ P1 "char_of_int" pchar_of_int)
            , ("int_of_char", mkPrim1Fun $ P1 "int_of_char" pint_of_char)
            , ("int_of_float", mkPrim1Fun $ P1 "int_of_float" pint_of_float)
            , ("int_of_string", mkPrim1Fun $ P1 "int_of_string" pint_of_string)
@@ -348,6 +349,9 @@ ptanh (VD i) = return (VD (tanh i))
 
 ptruncate :: MonadEval m => Value -> m Value
 ptruncate (VD i) = return (VI (truncate i))
+
+pchar_of_int :: MonadEval m => Value -> m Value
+pchar_of_int (VI i) = return (VC (chr i))
 
 pint_of_char :: MonadEval m => Value -> m Value
 pint_of_char (VC c) = return (VI (ord c))
