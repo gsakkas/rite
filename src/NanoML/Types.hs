@@ -60,7 +60,7 @@ data NanoOpts = NanoOpts
 
 stdOpts, loudOpts :: NanoOpts
 stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False
-                   , seed = 1234567, size = 10, exceptionRecovery = False
+                   , seed = 1234567, size = 10, exceptionRecovery = True
                    }
 loudOpts = stdOpts { enablePrint = True }
 

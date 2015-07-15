@@ -140,7 +140,7 @@ nanoCheck numSuccess maxSize opts x = do
             [] -> mempty
             f:args -> pretty (mkApps f args)
       in Failure (numSuccess + 1) seed maxSize
-                 (vcat (text (show e) : invoc : tr))
+                 (vcat (text (show e) : invoc : []))
     (Right _, _, _) -> Success (numSuccess + 1)
 
 fetchArg' st (Val v) = Val (fetchArg st v)
