@@ -35,10 +35,12 @@ instance Pretty Value where
     VL l _ -> list l
     VT _ xs _ -> tuple xs
     VA d Nothing _ -> text d
-    VA d (Just x) _ -> text d <+> pretty x
+    VA d (Just x) _ -> parensIf (z>za) $ text d <+> pretty x
+      where za = 26
     VR fs _ -> record fs
     VV vs _ -> array $ Vector.toList vs
     VF (Func e _) -> prettyPrec z e
+    VH _ _ -> text "_"
 
 list xs = text "[" <> (hsep $ intersperse semi $ map pretty xs) <> text "]"
 array xs = text "[|" <> (hsep $ intersperse semi $ map pretty xs) <> text "|]"
