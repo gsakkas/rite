@@ -362,7 +362,7 @@ pint_of_char (VC c) = return (VI (ord c))
 pint_of_string :: MonadEval m => Value -> m Value
 pint_of_string (VS s) = case readMaybe s of
   Just i  -> return (VI i)
-  Nothing -> throwError $ MLException (mkExn "Failure" [VS "int_of_string"])
+  Nothing -> maybeThrow $ MLException (mkExn "Failure" [VS "int_of_string"])
 
 pint_of_float :: MonadEval m => Value -> m Value
 pint_of_float (VD d) = return (VI (truncate d))
@@ -376,7 +376,7 @@ pfloat = pfloat_of_int
 pfloat_of_string :: MonadEval m => Value -> m Value
 pfloat_of_string (VS s) = case readMaybe s of
   Just d  -> return (VD d)
-  Nothing -> throwError $ MLException (mkExn "Failure" [VS "float_of_string"])
+  Nothing -> maybeThrow $ MLException (mkExn "Failure" [VS "float_of_string"])
 
 pstring_of_int :: MonadEval m => Value -> m Value
 pstring_of_int (VI i) = return (VS (show i))
@@ -395,7 +395,7 @@ pstring_get (VS s) (VI i)
   | i >= 0 && i < length s
   = return (VC (s !! i))
   | otherwise
-  = throwError $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
+  = maybeThrow $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
 
 pstring_length :: MonadEval m => Value -> m Value
 pstring_length (VS s) = return (VI (length s))
@@ -411,7 +411,7 @@ parray_get (VV a _) (VI i)
   | i >= 0 && i < Vector.length a
   = return (a Vector.! i)
   | otherwise
-  = throwError $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
+  = maybeThrow $ MLException $ mkExn "Invalid_argument" [VS "index out of bounds"]
 
 pprint_string :: MonadEval m => Value -> m Value
 pprint_string (VS s) = do
@@ -475,14 +475,14 @@ plist_combine (VL xs tx) (VL ys ty)
   | length xs == length ys
   = return (VL (zipWith (\x y -> VT 2 [x,y] [tx, ty]) xs ys) (TTup [tx,ty]))
   | otherwise
-  = throwError (MLException (mkExn "Invalid_argument" [VS "List.combine"]))
+  = maybeThrow (MLException (mkExn "Invalid_argument" [VS "List.combine"]))
 
 plist_nth :: MonadEval m => Value -> Value -> m Value
 plist_nth (VL xs _) (VI n)
   | n >= 0 && n < length xs
   = return (xs !! n)
   | otherwise
-  = throwError (MLException (mkExn "Invalid_argument" [VS "List.nth"]))
+  = maybeThrow (MLException (mkExn "Invalid_argument" [VS "List.nth"]))
 
 plist_split :: MonadEval m => Value -> m Value
 plist_split (VL xs (TTup [ta, tb]))
@@ -516,7 +516,7 @@ pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS xs) (VS ys) = return (VS (xs ++ ys))
 
 praise :: MonadEval m => Value -> m Value
-praise x@(VA {}) = throwError (MLException x)
+praise x@(VA {}) = maybeThrow (MLException x)
 
 pprintexc_to_string :: MonadEval m => Value -> m Value
 pprintexc_to_string x@(VA {}) = return $ VS $ show x

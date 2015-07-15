@@ -55,11 +55,12 @@ data NanoOpts = NanoOpts
   , heterogeneousEquality :: Bool -- ^ Should we allow equality comparison between different types?
   , seed                  :: !Int -- ^ Random seed
   , size                  :: !Int -- ^ Maximum size of generated values
+  , exceptionRecovery     :: Bool -- ^ Should we "recover" from exceptions by generating a random value?
   } deriving Show
 
 stdOpts, loudOpts :: NanoOpts
 stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False
-                   , seed = 1234567, size = 10
+                   , seed = 1234567, size = 10, exceptionRecovery = False
                    }
 loudOpts = stdOpts { enablePrint = True }
 
@@ -105,10 +106,10 @@ data EvalState = EvalState
   , stFieldEnv :: !(Map String TypeDecl)
   , stFresh    :: !Ref
   , stStore    :: !(IntMap (MutFlag, Value))
-  , stArgs     :: ![Value]
+  , stArgs     :: ![Expr]
   } deriving Show
 
-rememberArgs :: MonadEval m => [Value] -> m ()
+rememberArgs :: MonadEval m => [Expr] -> m ()
 rememberArgs args = modify' $ \s -> s { stArgs = args }
 
 -- | An index into the store.
@@ -168,6 +169,9 @@ lookupField fld = do
   case Map.lookup fld flds of
     Nothing -> typeError ("unknown record field: " ++ fld)
     Just d  -> return d
+
+lookupStore :: MonadEval m => Ref -> m (Maybe (MutFlag, Value))
+lookupStore i = IntMap.lookup i <$> gets stStore
 
 readStore :: MonadEval m => Ref -> m (MutFlag, Value)
 readStore i = (IntMap.! i) <$> gets stStore
@@ -457,6 +461,16 @@ typeOf v = case v of
   VH _ Nothing -> TVar "a"
   VH _ (Just t) -> t
   -- VF _ -> error "typeOf: <<function>>"
+
+typeOfLit :: Literal -> Type
+typeOfLit l = case l of
+  LI _ -> tCon tINT
+  LD _ -> tCon tFLOAT
+  LC _ -> tCon tCHAR
+  LS _ -> tCon tSTRING
+  LB _ -> tCon tBOOL
+  LU   -> tCon tUNIT
+  
 
 ----------------------------------------------------------------------
 -- Utilities

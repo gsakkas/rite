@@ -21,8 +21,7 @@ import qualified Data.Vector as Vector
 import System.IO.Unsafe
 import Text.Printf
 
--- import Test.QuickCheck.Gen
--- import Test.QuickCheck.GenT
+import NanoML.Gen
 import NanoML.Misc
 import NanoML.Monad
 import NanoML.Parser
@@ -139,11 +138,9 @@ eval expr = logExpr expr $ case expr of
   ConApp "::" (Just (Tuple [h,t])) -> do
     vh <- eval h
     vt <- eval t
-    case vt of
-      VL vt t -> do
-        su <- unify t (typeOf vh)
-        return (VL (vh:vt) (subst su t))
-      _       -> typeError $ ":: expects a list, was given: " ++ show (pretty vt)
+    force vt (tL (typeOf vh)) $ \(VL vt t) -> do
+      su <- unify t (typeOf vh)
+      return (VL (vh:vt) (subst su t))
   ConApp dc Nothing -> do
     evalConApp dc Nothing
   ConApp dc (Just e) -> do
@@ -158,10 +155,11 @@ eval expr = logExpr expr $ case expr of
     (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
       let e = fromJust $ lookup f flds
       v <- eval e
-      su <- unify t (typeOf v)
-      i <- fresh
-      writeStore i (m,v)
-      return ((f,i),su)
+      force v t $ \v -> do
+        su <- unify t (typeOf v)
+        i <- fresh
+        writeStore i (m,v)
+        return ((f,i),su)
     let t = subst (mconcat sus) $ typeDeclType td
     return (VR vs t)
   Field e f -> do
@@ -183,22 +181,44 @@ eval expr = logExpr expr $ case expr of
       setVarEnv env
       case e of
         MLException ex -> evalAlts ex alts
-        _              -> throwError e
-  Prim1 (P1 p f) e -> do
+        _              -> maybeThrow e
+  Prim1 (P1 p f t) e -> do
     v <- eval e
-    case unsafePerformIO $ try $ evaluate $ f v of
-      Right x -> x
-      Left (PatternMatchFail _) ->
-        typeError $ printf "invalid argument to %s: %s" p (show $ pretty v)
-  Prim2 (P2 p f) e1 e2 -> do
+    force v t $ \v -> f v
+  Prim2 (P2 p f t1 t2) e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
-    case unsafePerformIO $ try $ evaluate $ f v1 v2 of
-      Right x -> x
-      Left (PatternMatchFail _) ->
-        typeError $ printf "invalid arguments to %s: %s, %s"
-                           p (show $ pretty v1) (show $ pretty v2)
+    forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2
   Val v -> return v
+
+force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
+force x (TVar {}) k = k x -- delay instantiation until we have a concrete type
+force (VH r _) t k = do
+  lookupStore r >>= \case
+    Just (_,v) -> do
+      unify (typeOf v) t
+      k v
+    Nothing -> do
+      env <- gets stTypeEnv
+      v <- genValue t env
+      writeStore r (NonMut,v)
+      k v
+force v t k = do
+  unify (typeOf v) t
+  k v
+
+forces :: MonadEval m => [(Value,Type)] -> ([Value] -> m a) -> m a
+forces vts k = go vts []
+  where
+  go []          vs = k (reverse vs)
+  go ((v,t):vts) vs = force v t (\v -> go vts (v:vs))
+
+forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
+forceSame x@(VH {}) y@(VH {}) k =
+  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
+forceSame x@(VH {}) y k = force x (typeOf y) $ \x -> k x y
+forceSame x y@(VH {}) k = force y (typeOf x) $ \y -> k x y
+forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
@@ -213,12 +233,12 @@ evalConApp dc v = do
   case (dArgs dd, v) of
     ([], Nothing) ->
       return (VA dc v (typeDeclType $ dType dd))
-    ([a],  Just v) -> do
+    ([a],  Just v) -> force v a $ \v -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
       return (VA dc (Just v) t)
     (as,  Just (VT n vs ts))
-      | length as == n -> do
+      | length as == n -> forces (zip vs ts) $ \vs -> do
         su <- mconcat <$> zipWithM unify as ts
         let t = subst su $ typeDeclType $ dType dd
         return (VA dc v t)
@@ -233,25 +253,25 @@ evalConApp dc v = do
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
 evalBop bop v1 v2 = logExpr (Bop bop (Val v1) (Val v2)) $ case bop of
-  Eq     -> VB <$> eqVal v1 v2
-  Neq    -> VB . not <$> eqVal v1 v2
-  Lt     -> VB <$> ltVal v1 v2
-  Le     -> (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
-  Gt     -> VB <$> gtVal v1 v2
-  Ge     -> (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
-  Plus   -> plusVal v1 v2
-  Minus  -> minusVal v1 v2
-  Times  -> timesVal v1 v2
-  Div    -> divVal v1 v2
-  Mod    -> modVal v1 v2
-  FPlus  -> plusVal v1 v2
-  FMinus -> minusVal v1 v2
-  FTimes -> timesVal v1 v2
-  FDiv   -> divVal v1 v2
+  Eq     -> forceSame v1 v2 $ \v1 v2 -> VB <$> eqVal v1 v2
+  Neq    -> forceSame v1 v2 $ \v1 v2 -> VB . not <$> eqVal v1 v2
+  Lt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> ltVal v1 v2
+  Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
+  Gt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> gtVal v1 v2
+  Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
+  Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> plusVal v1 v2
+  Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> minusVal v1 v2
+  Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> timesVal v1 v2
+  Div    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> divVal v1 v2
+  Mod    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> modVal v1 v2
+  FPlus  -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> plusVal v1 v2
+  FMinus -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> minusVal v1 v2
+  FTimes -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> timesVal v1 v2
+  FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> divVal v1 v2
 
 evalUop :: MonadEval m => Uop -> Value -> m Value
-evalUop Neg (VI i) = return (VI (negate i))
-evalUop FNeg (VD d) = return (VD (negate d))
+evalUop Neg  v = force v (tCon tINT) $ \(VI i) -> return (VI (negate i))
+evalUop FNeg v = force v (tCon tFLOAT) $ \(VD d) -> return (VD (negate d))
 
 
 -- ltVal (VI x) (VI y) = return (x < y)
@@ -299,7 +319,7 @@ litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
-  = throwError $ MLException (mkExn "Match_failure" [])
+  = maybeThrow $ MLException (mkExn "Match_failure" [])
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
@@ -317,46 +337,42 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
 matchPat v p = logMaybeEnv $ case p of
   VarPat var ->
     return $ Just (insertEnv var v emptyEnv)
-  LitPat lit -> do
+  LitPat lit -> force v (typeOfLit lit) $ \v -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
-  IntervalPat lo hi -> do
+  IntervalPat lo hi -> force v (typeOfLit lo) $ \v -> do
     VB b <- eval (mkApps (Var "&&") [mkApps (Var ">=") [Val v, Lit lo], mkApps (Var "<=") [Val v, Lit hi]])
     return $ if b then Just mempty else Nothing
-  ConsPat p ps
-    | VL [] _ <- v -> return Nothing
-    | otherwise -> do
-    (x,xs) <- unconsVal v
-    menv1 <- matchPat x p
-    menv2 <- matchPat xs ps
-    case (menv1, menv2) of
-      (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
-      _                      -> return Nothing
-  ListPat ps
-    | VL vs t <- v
-    , length ps == length vs
-      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
-           <$> zipWithM matchPat vs ps
-  TuplePat ps
-    | VT n vs ts <- v
-    , length ps == n
-      -> fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
-           <$> zipWithM matchPat vs ps
+  ConsPat p ps -> force v (tL a) $ \v -> do
+    case v of
+      VL [] _ -> return Nothing
+      VL _ _ -> do
+        (x,xs) <- unconsVal v
+        menv1 <- matchPat x p
+        menv2 <- matchPat xs ps
+        case (menv1, menv2) of
+         (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
+         _                      -> return Nothing
+  ListPat ps -> force v (tL a) $ \(VL vs _) -> do
+    if length ps /= length vs
+      then return Nothing
+      else fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+             <$> zipWithM matchPat vs ps
+  TuplePat ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs _) -> do
+    fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+       <$> zipWithM matchPat vs ps
   WildPat ->
     return $ Just emptyEnv
-  ConPat "[]" Nothing
-    | VL [] t <- v
-      -> return (Just emptyEnv)
-    | VL _ t <- v
-      -> return Nothing
-  ConPat "()" Nothing
-    | VU <- v
-      -> return (Just emptyEnv)
-  ConPat dc p'
-    | VA c v' t <- v -> do
-        -- FIXME: this is confusing
-        dd <- lookupDataCon dc
-        unless (c `elem` map dCon (typeDataCons (dType dd))) err
+  ConPat "[]" Nothing -> force v (tL a) $ \(VL vs _) ->
+    case vs of
+      [] -> return (Just emptyEnv)
+      _  -> return Nothing
+  ConPat "()" Nothing -> force v tU $ \v ->
+    return (Just emptyEnv)
+  ConPat dc p' -> do
+    -- FIXME: this is confusing
+    dd <- lookupDataCon dc
+    force v (typeDeclType $ dType dd) $ \(VA c v' t) -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing
@@ -368,8 +384,7 @@ matchPat v p = logMaybeEnv $ case p of
   AsPat p x -> do
     Just env <- matchPat v p
     return (Just (insertEnv x v env))
-  ConstraintPat p t -> do
-    su <- unify t (typeOf v)
+  ConstraintPat p t -> force v t $ \v -> do
     matchPat v p
   _ -> err
   where err = typeError (printf "type error: tried to match %s against %s"
@@ -394,6 +409,7 @@ matchLit (VS s1) (LS s2) = return $ s1 == s2
 matchLit VU      LU      = return True
 matchLit v       l       = typeError (printf "type error: tried to match %s against %s"
                                       (show $ pretty v) (show $ pretty l) :: String)
+
 
 testEval :: String -> IO ()
 testEval s = let Right e = parseExpr s

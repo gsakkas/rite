@@ -24,8 +24,9 @@ genArgs ty env = mapM (flip genValue env) (argTys ty)
 
 genValue :: MonadEval m => Type -> TypeEnv -> m Value
 genValue ty env = case ty of
-  -- NOTE: instantiate all tyvars indescriminately with `int`
-  TVar _ -> VI <$> sized (\s -> getRandomR (-s, s))
+  TVar _ -> do
+    r <- fresh
+    return (VH r Nothing)
   TApp t []
     | t == tINT
       -> VI <$> sized (\s -> getRandomR (-s, s))
