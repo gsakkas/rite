@@ -417,8 +417,8 @@ unify (TTup xs) (TTup ys)
 unify (TApp xc xts) (TApp yc yts)
   | xc == yc
   = mconcat <$> zipWithM unify xts yts
-unify (TApp c ts) t = unifyAlias c ts t
-unify t (TApp c ts) = unifyAlias c ts t
+unify x@(TApp c ts) y = unifyAlias c ts y x
+unify x y@(TApp c ts) = unifyAlias c ts x y
 unify x y
   = typeError $ printf "could not match %s against %s" (show x) (show y)
 
@@ -428,12 +428,12 @@ unifyVar a t
   -- FIXME: occurs check
   | otherwise   = return [(a,t)]
 
-unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> m [(TVar, Type)]
-unifyAlias c ts t = do
+unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m [(TVar, Type)]
+unifyAlias c ts x y = do
   TypeDecl {..} <- lookupType c
   case tyRhs of
-    Alias t' -> unify t (subst (zip tyVars ts) t')
-    _ -> typeError $ printf "could not match %s against %s" (show (tCon c)) (show t)
+    Alias t -> unify x (subst (zip tyVars ts) t)
+    _ -> typeError $ printf "could not match %s against %s" (show x) (show y)
 
 typeOf :: Value -> Type
 typeOf v = case v of
