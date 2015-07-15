@@ -21,6 +21,7 @@ library
                      , NanoML.Gen
                      , NanoML.Lexer
                      , NanoML.Misc
+                     , NanoML.Monad
                      , NanoML.Parser
                      , NanoML.Pretty
                      , NanoML.Prim

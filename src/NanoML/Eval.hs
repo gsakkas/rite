@@ -6,8 +6,8 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module NanoML.Eval where
+{-# LANGUAGE RecordWildCards #-}
+module NanoML.Eval (module NanoML.Eval, module NanoML.Monad) where
 
 import Control.Exception
 import Control.Monad
@@ -24,6 +24,7 @@ import Text.Printf
 -- import Test.QuickCheck.Gen
 -- import Test.QuickCheck.GenT
 import NanoML.Misc
+import NanoML.Monad
 import NanoML.Parser
 import NanoML.Pretty
 import NanoML.Prim
@@ -34,37 +35,6 @@ import Debug.Trace
 ----------------------------------------------------------------------
 -- Evaluation
 ----------------------------------------------------------------------
-
-newtype Eval a = Eval (RandT StdGen (ExceptT NanoError (RWS NanoOpts [Doc] EvalState)) a)
-  deriving (Functor, Applicative, Monad, MonadRandom, MonadFix, MonadError NanoError
-           ,MonadReader NanoOpts, MonadState EvalState, MonadWriter [Doc])
-
-instance MonadError e m => MonadError e (RandT g m) where
-  throwError = lift . throwError
-  catchError m f = liftRandT (\g -> runRandT m g `catchError` \e ->
-                                    runRandT (f e) g)
-
-runEval :: NanoOpts -> Eval a -> Either (NanoError, [Doc]) a
-runEval opts (Eval x) = run x
-  where
-  stdGen = mkStdGen (seed opts)
-  run x = case evalRWS (runExceptT (evalRandT x stdGen)) opts initState of
-    (Left e, tr) -> Left (e, tr)
-    (Right v, _) -> Right v
-
-initState :: EvalState
-initState = EvalState
-  { stVarEnv = baseEnv
-  , stTypeEnv = baseTypeEnv
-  , stDataEnv = baseDataEnv
-  , stFieldEnv = baseFieldEnv
-  , stFresh = 0
-  , stStore = mempty
-  , stArgs = []
-  }
-
--- runEvalFull :: NanoOpts -> Eval a -> Gen (Either NanoError a, EvalState, [Doc])
--- runEvalFull opts (Eval x) = runRWST (runExceptT x) opts initState
 
 evalString :: MonadEval m => String -> m Value
 evalString s = case parseExpr s of
