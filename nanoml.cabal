@@ -33,6 +33,7 @@ library
                      , ansi-wl-pprint >= 0.6
                      , array
                      , base >=4.7 && <5
+                     , bytestring >= 0.10
                      , containers >= 0.5
                      , deepseq
                      , directory

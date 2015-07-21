@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns   #-}
 {-# LANGUAGE BangPatterns     #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -7,20 +8,28 @@ module NanoML.Step where
 
 import Control.Monad.Except
 import Control.Monad.State
+import qualified Data.Aeson as Aeson
+import qualified Data.ByteString.Lazy as LBS
 import qualified Data.IntMap as IntMap
 import qualified Data.Map as Map
 import Data.Maybe
+import Data.Monoid hiding (Alt)
 import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
 import Text.Printf
 
 import NanoML.Eval
 import NanoML.Misc
+import NanoML.Parser
 import NanoML.Pretty
 import NanoML.Prim
 import NanoML.Types
 
 import Debug.Trace
+
+writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
+                                ("var trace = " <> Aeson.encode obj)
+  where obj = Aeson.object [ "code" Aeson..= p, "trace" Aeson..= tr ]
 
 runStep opts x = case runEvalFull opts x of
   (_, st, _) -> stTrace st
@@ -269,8 +278,9 @@ concatMapM f xs = liftM concat (mapM f xs)
 
 
 addEvent :: MonadEval m => Expr -> m ()
-addEvent expr = do
-  let line = 1
+addEvent expr
+  | Just loc <- getSrcSpanMaybe expr = do
+  let line = srcSpanStartLine loc
   let event = "step_line"
   let stdout = ""
   let func_name = "<top-level>"
@@ -291,3 +301,4 @@ addEvent expr = do
                   , evt_event = event
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
+addEvent _ = return ()

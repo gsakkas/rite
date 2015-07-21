@@ -346,15 +346,15 @@ evalAlts v ((p,g,e):as)
 -- pattern.
 matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
 matchPat v p = logMaybeEnv $ case p of
-  VarPat var ->
+  VarPat _ var ->
     return $ Just (insertEnv var v emptyEnv)
-  LitPat lit -> force v (typeOfLit lit) $ \v -> do
+  LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
-  IntervalPat lo hi -> force v (typeOfLit lo) $ \v -> do
+  IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v -> do
     VB b <- eval (mkApps Nothing (Var Nothing "&&") [mkApps Nothing (Var Nothing ">=") [Val v, Lit Nothing lo], mkApps Nothing (Var Nothing "<=") [Val v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
-  ConsPat p ps -> force v (tL a) $ \v -> do
+  ConsPat _ p ps -> force v (tL a) $ \v -> do
     case v of
       VL [] _ -> return Nothing
       VL _ _ -> do
@@ -364,23 +364,23 @@ matchPat v p = logMaybeEnv $ case p of
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
          _                      -> return Nothing
-  ListPat ps -> force v (tL a) $ \(VL vs _) -> do
+  ListPat _ ps -> force v (tL a) $ \(VL vs _) -> do
     if length ps /= length vs
       then return Nothing
       else fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
              <$> zipWithM matchPat vs ps
-  TuplePat ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs _) -> do
+  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs _) -> do
     fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
        <$> zipWithM matchPat vs ps
-  WildPat ->
+  WildPat _ ->
     return $ Just emptyEnv
-  ConPat "[]" Nothing -> force v (tL a) $ \(VL vs _) ->
+  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL vs _) ->
     case vs of
       [] -> return (Just emptyEnv)
       _  -> return Nothing
-  ConPat "()" Nothing -> force v tU $ \v ->
+  ConPat _ "()" Nothing -> force v tU $ \v ->
     return (Just emptyEnv)
-  ConPat dc p' -> do
+  ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
     force v (typeDeclType $ dType dd) $ \(VA c v' t) -> do
@@ -392,10 +392,10 @@ matchPat v p = logMaybeEnv $ case p of
           (Just p,  Nothing) -> err
           (Nothing, Just p)  -> err
           (Just p,  Just v)  -> matchPat v p
-  AsPat p x -> do
+  AsPat _ p x -> do
     Just env <- matchPat v p
     return (Just (insertEnv x v env))
-  ConstraintPat p t -> force v t $ \v -> do
+  ConstraintPat _ p t -> force v t $ \v -> do
     matchPat v p
   _ -> err
   where err = typeError (printf "type error: tried to match %s against %s"
@@ -403,8 +403,8 @@ matchPat v p = logMaybeEnv $ case p of
 
 safeMatch [] Nothing = True
 safeMatch [t] (Just p) = True
-safeMatch ts (Just (TuplePat ps)) = True
-safeMatch ts (Just WildPat) = True
+safeMatch ts (Just (TuplePat _ ps)) = True
+safeMatch ts (Just (WildPat _)) = True
 safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)

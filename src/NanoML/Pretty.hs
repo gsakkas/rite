@@ -150,17 +150,17 @@ instance Pretty MutFlag where
 
 instance Pretty Pat where
   pretty p = case p of
-    VarPat v -> text v
-    LitPat l -> pretty l
-    IntervalPat l h -> pretty l <+> text ".." <+> pretty h
-    ConsPat x xs -> pretty x <+> text "::" <+> pretty xs
-    ConPat c Nothing -> text c
-    ConPat c (Just p) -> text c <+> pretty p
-    ListPat l -> list l
-    TuplePat l -> prettyTuple l
-    WildPat -> text "_"
-    OrPat p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
-    AsPat p v -> pretty p <+> text "as" <+> text v
+    VarPat _ v -> text v
+    LitPat _ l -> pretty l
+    IntervalPat _ l h -> pretty l <+> text ".." <+> pretty h
+    ConsPat _ x xs -> pretty x <+> text "::" <+> pretty xs
+    ConPat _ c Nothing -> text c
+    ConPat _ c (Just p) -> text c <+> pretty p
+    ListPat _ l -> list l
+    TuplePat _ l -> prettyTuple l
+    WildPat _ -> text "_"
+    OrPat _ p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
+    AsPat _ p v -> pretty p <+> text "as" <+> text v
 
 prettyTuple [] = empty
 prettyTuple [x] = pretty x

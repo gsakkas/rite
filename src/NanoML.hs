@@ -56,16 +56,16 @@ check err prog =
         -> do r <- checkDecl f p
               printResult r
               return $ Just r
-    DFun _ _ [(VarPat f, Lam {})]
+    DFun _ _ [(VarPat _ f, Lam {})]
       -- Just t <- Map.lookup f knownFuncs
         -> do r <- checkDecl f prog
               printResult r
               return $ Just r
-    DFun _ _ [(WildPat, _)]
+    DFun _ _ [(WildPat _, _)]
         -> do r <- runProg prog
               printResult r
               return $ Just r
-    DFun _ _ [(VarPat _, _)]
+    DFun _ _ [(VarPat _ _, _)]
         -> do r <- runProg prog
               printResult r
               return $ Just r
@@ -86,8 +86,8 @@ findDecl :: Prog -> Int -> Int -> Maybe (Var,Decl,Prog)
 findDecl prog l c = do
   d <- find (surrounds l c . getSrcSpan) prog
   case d of
-    DFun _ _ [(VarPat f, Lam {})] -> Just (f,d, takeWhile (before l c . getSrcSpan) prog)
-    _                             -> Nothing
+    DFun _ _ [(VarPat _ f, Lam {})] -> Just (f,d, takeWhile (before l c . getSrcSpan) prog)
+    _                               -> Nothing
 
 before l c (SrcSpan sl sc el ec)
   = l >= sl

@@ -294,23 +294,23 @@ getSrcSpan d = case d of
 type MSrcSpan = Maybe SrcSpan
 
 data Expr
-  = Var MSrcSpan Var
-  | Lam MSrcSpan Pat Expr
-  | App MSrcSpan Expr [Expr]
-  | Bop MSrcSpan Bop Expr Expr
-  | Uop MSrcSpan Uop Expr
-  | Lit MSrcSpan Literal
-  | Let MSrcSpan RecFlag [(Pat,Expr)] Expr
-  | Ite MSrcSpan Expr Expr Expr
-  | Seq MSrcSpan Expr Expr
-  | Case MSrcSpan Expr [Alt]
-  | Tuple MSrcSpan [Expr]
-  | ConApp MSrcSpan DCon (Maybe Expr)
-  | Record MSrcSpan [(String, Expr)]
-  | Field MSrcSpan Expr String
-  | SetField MSrcSpan Expr String Expr
-  | Array MSrcSpan [Expr]
-  | Try MSrcSpan Expr [Alt]
+  = Var !MSrcSpan Var
+  | Lam !MSrcSpan Pat Expr
+  | App !MSrcSpan Expr [Expr]
+  | Bop !MSrcSpan Bop Expr Expr
+  | Uop !MSrcSpan Uop Expr
+  | Lit !MSrcSpan Literal
+  | Let !MSrcSpan RecFlag [(Pat,Expr)] Expr
+  | Ite !MSrcSpan Expr Expr Expr
+  | Seq !MSrcSpan Expr Expr
+  | Case !MSrcSpan Expr [Alt]
+  | Tuple !MSrcSpan [Expr]
+  | ConApp !MSrcSpan DCon (Maybe Expr)
+  | Record !MSrcSpan [(String, Expr)]
+  | Field !MSrcSpan Expr String
+  | SetField !MSrcSpan Expr String Expr
+  | Array !MSrcSpan [Expr]
+  | Try !MSrcSpan Expr [Alt]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
@@ -337,6 +337,8 @@ getSrcSpanExprMaybe expr = case expr of
   SetField ms _ _ _ -> ms
   Array ms _ -> ms
   Try ms _ _ -> ms
+  With _ e -> getSrcSpanExprMaybe e
+  Replace _ e -> getSrcSpanExprMaybe e
   _ -> Nothing
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
@@ -364,21 +366,32 @@ type Alt = (Pat, Guard, Expr)
 type Guard = Maybe Expr
 
 data Pat
-  = VarPat Var
-  | LitPat Literal
-  | IntervalPat Literal Literal
-  | ConsPat Pat Pat
-  | ConPat Var (Maybe Pat)
-  | ListPat [Pat]
-  | TuplePat [Pat]
-  | WildPat
-  | OrPat Pat Pat
-  | AsPat Pat Var
-  | ConstraintPat Pat Type
+  = VarPat !MSrcSpan Var
+  | LitPat !MSrcSpan Literal
+  | IntervalPat !MSrcSpan Literal Literal
+  | ConsPat !MSrcSpan Pat Pat
+  | ConPat !MSrcSpan Var (Maybe Pat)
+  | ListPat !MSrcSpan [Pat]
+  | TuplePat !MSrcSpan [Pat]
+  | WildPat !MSrcSpan
+  | OrPat !MSrcSpan Pat Pat
+  | AsPat !MSrcSpan Pat Var
+  | ConstraintPat !MSrcSpan Pat Type
   deriving (Show)
 
 getSrcSpanPatMaybe :: Pat -> MSrcSpan
-getSrcSpanPatMaybe pat = Nothing
+getSrcSpanPatMaybe pat = case pat of
+  VarPat ms _ -> ms
+  LitPat ms _ -> ms
+  IntervalPat ms _ _ -> ms
+  ConsPat ms _ _ -> ms
+  ConPat ms _ _ -> ms
+  ListPat ms _ -> ms
+  TuplePat ms _ -> ms
+  WildPat ms -> ms
+  OrPat ms _ _ -> ms
+  AsPat ms _ _ -> ms
+  ConstraintPat ms _ _ -> ms
 
 data Type
   = TVar TVar
@@ -543,7 +556,7 @@ mkList :: [Expr] -> Expr
 mkList = foldr (\h t -> mkConApp Nothing "::" [h,t]) (mkConApp Nothing "[]" [])
 
 mkFunction :: MSrcSpan -> [Alt] -> Expr
-mkFunction ms alts = Lam ms (VarPat "$x")
+mkFunction ms alts = Lam ms (VarPat ms "$x")
                          (Case ms (Var ms "$x") alts)
 
 mkTApps :: TCon -> [Type] -> Type

@@ -162,13 +162,13 @@ LetBindings :: { [(Pat,Expr)] }
 | LetBindings "and" LetBinding  { $3 : $1 }
 
 LetBinding :: { (Pat, Expr) }
-: ValIdent FunBinding   { (VarPat (getVal $1), $2) }
+: ValIdent FunBinding   { (VarPat (getSrcSpanMaybe $1) (getVal $1), $2) }
 | Pattern '=' SeqExpr   { ($1, $3) }
 
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
 | TypeConstraint '=' SeqExpr { $3 }
-| SimplePattern FunBinding { Lam Nothing {- (mergeLocated $1 $2) -} $1 $2 }
+| SimplePattern FunBinding { Lam (mergeLocated $1 $2) $1 $2 }
 
 TypeConstraint :: { Type }
 : ':' Type { $2 }
@@ -220,24 +220,24 @@ DataArgs :: { [Type] }
 
 Pattern :: { Pat }
 : SimplePattern         { $1 }
-| Pattern "as" ValIdent { AsPat $1 (getVal $3) }
-| PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
-| con Pattern      %prec constr_app      { ConPat (getCon $1) (Just $2) }
-| Pattern "::" Pattern                   { ConsPat $1 $3 }
-| Pattern '|' Pattern                    { OrPat $1 $3 }
+| Pattern "as" ValIdent { AsPat (mergeLocated $1 $3) $1 (getVal $3) }
+| PatternCommaList %prec below_COMMA     { TuplePat (mergeLocated (last $1) (head $1)) (reverse $1) }
+| con Pattern      %prec constr_app      { ConPat (mergeLocated $1 $2) (getCon $1) (Just $2) }
+| Pattern "::" Pattern                   { ConsPat (mergeLocated $1 $3) $1 $3 }
+| Pattern '|' Pattern                    { OrPat (mergeLocated $1 $3) $1 $3 }
 
 SimplePattern :: { Pat }
-: ValIdent  %prec below_INFIX  { VarPat (getVal $1) }
+: ValIdent  %prec below_INFIX  { VarPat (getSrcSpanMaybe $1) (getVal $1) }
 | SimplePatternNotIdent        { $1 }
 
 SimplePatternNotIdent :: { Pat }
-: '_'                               { WildPat }
-| SignedLiteral                     { LitPat (getVal $1) }
-| SignedLiteral ".." SignedLiteral  { IntervalPat (getVal $1) (getVal $3) }
-| '[' PatternSemiList ']'           { ListPat (reverse $2) }
+: '_'                               { WildPat (getSrcSpanMaybe $1) }
+| SignedLiteral                     { LitPat (getSrcSpanMaybe $1) (getVal $1) }
+| SignedLiteral ".." SignedLiteral  { IntervalPat (mergeLocated $1 $3) (getVal $1) (getVal $3) }
+| '[' PatternSemiList ']'           { ListPat (mergeLocated $1 $3) (reverse $2) }
 | '(' Pattern ')'                   { $2 }
-| '(' Pattern ':' Type ')'          { ConstraintPat $2 $4 }
-| ConLongIdent                      { ConPat (getVal $1) Nothing }
+| '(' Pattern ':' Type ')'          { ConstraintPat (mergeLocated $1 $5) $2 $4 }
+| ConLongIdent                      { ConPat (getSrcSpanMaybe $1) (getVal $1) Nothing }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
