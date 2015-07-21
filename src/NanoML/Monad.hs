@@ -87,4 +87,5 @@ initState = EvalState
   , stFresh = 0
   , stStore = mempty
   , stArgs = []
+  , stTrace = mempty
   }

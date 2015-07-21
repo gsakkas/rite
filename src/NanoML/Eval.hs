@@ -69,24 +69,29 @@ evalBind (p,e) = logEnv $ do
     Nothing  -> throwError $ MLException (mkExn "Match_failure" [])
     Just env -> return env
 
+
+
 logEnv :: MonadEval m => m Env -> m Env
-logEnv m = mycensor (\env w -> mkLog env) m
-  where
-  mkLog env = map (uncurry (=:)) (toListEnv env)
+logEnv = id
+-- logEnv m = mycensor (\env w -> mkLog env) m
+--   where
+--   mkLog env = map (uncurry (=:)) (toListEnv env)
 
 logMaybeEnv :: MonadEval m => m (Maybe Env) -> m (Maybe Env)
-logMaybeEnv m = mycensor (\env w -> mkLog env) m
-  where
-  mkLog (Just env) = map (uncurry (=:)) (toListEnv env)
-  mkLog _          = []
+logMaybeEnv = id
+-- logMaybeEnv m = mycensor (\env w -> mkLog env) m
+--   where
+--   mkLog (Just env) = map (uncurry (=:)) (toListEnv env)
+--   mkLog _          = []
 
 logExpr :: MonadEval m => Expr -> m Value -> m Value
-logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
-logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
-logExpr (Lam p e) m = mycensor (\v w -> []) (tell [pretty (Lam p e)] >> m)
-logExpr (Val v) m = mycensor (\v w -> []) (tell [pretty (Val v)] >> m)
-logExpr e@(ConApp "[]" Nothing) m = mycensor (\v w -> []) (tell [pretty e] >> m)
-logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
+logExpr _ = id
+-- logExpr (Var v) m = mycensor (\v w -> []) (tell [pretty (Var v)] >> m)
+-- logExpr (Lit l) m = mycensor (\v w -> []) (tell [pretty (Lit l)] >> m)
+-- logExpr (Lam p e) m = mycensor (\v w -> []) (tell [pretty (Lam p e)] >> m)
+-- logExpr (Val v) m = mycensor (\v w -> []) (tell [pretty (Val v)] >> m)
+-- logExpr e@(ConApp "[]" Nothing) m = mycensor (\v w -> []) (tell [pretty e] >> m)
+-- logExpr expr m = mycensor (\v w -> [expr ==> v]) (tell [pretty expr] >> m)
 
 mycensor :: MonadWriter w m => (a -> w -> w) -> m a -> m a
 mycensor f m = pass $ do
@@ -231,13 +236,19 @@ evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
   case (dArgs dd, v) of
-    ([], Nothing) ->
-      return (VA dc v (typeDeclType $ dType dd))
-    ([a],  Just v) -> force v a $ \v -> do
+    ([], Nothing)
+      | dc == "()" -> return VU
+      | dc == "[]" -> return (VL [] (TVar "a"))
+      | otherwise  -> return (VA dc v (typeDeclType $ dType dd))
+    ([a], Just v) -> force v a $ \v -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
       return (VA dc (Just v) t)
     (as,  Just (VT n vs ts))
+      | dc == "::"
+      , [vh, VL vt t] <- vs -> do
+        su <- unify (typeOf vh) t
+        return (VL (vh : vt) (subst su t))
       | length as == n -> forces (zip vs ts) $ \vs -> do
         su <- mconcat <$> zipWithM unify as ts
         let t = subst su $ typeDeclType $ dType dd

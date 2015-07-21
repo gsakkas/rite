@@ -24,6 +24,7 @@ import           Data.List
 import           Data.Map.Strict              (Map)
 import qualified Data.Map.Strict              as Map
 import           Data.Maybe
+import           Data.Sequence                (Seq)
 import           Data.Typeable (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
@@ -107,6 +108,7 @@ data EvalState = EvalState
   , stFresh    :: !Ref
   , stStore    :: !(IntMap (MutFlag, Value))
   , stArgs     :: ![Expr]
+  , stTrace    :: !(Seq Event)
   } deriving Show
 
 rememberArgs :: MonadEval m => [Expr] -> m ()
@@ -213,11 +215,16 @@ emptyEnv = Env Map.empty
 
 withEnv :: MonadEval m => m a -> Env -> m a
 m `withEnv` env = do
-  st <- get
+  penv <- gets stVarEnv
   setVarEnv env
   a <- m
-  put st
+  setVarEnv penv
   return a
+
+withExtendedEnv :: MonadEval m => m a -> Env -> m a
+m `withExtendedEnv` env = do
+  genv <- gets stVarEnv
+  m `withEnv` (joinEnv genv env)
 
 data Value
   = VI !Int
@@ -300,6 +307,8 @@ data Expr
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
+  | With Env Expr
+  | Replace Env Expr
   deriving (Show, Generic)
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
@@ -581,3 +590,52 @@ cmpAnd (x:xs)    = x
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM f []     = return True
 allM f (x:xs) = (&&) <$> f x <*> allM f xs
+
+
+----------------------------------------------------------------------
+-- traces
+----------------------------------------------------------------------
+
+-- {
+--   "code": "x = 5\ny = 10\nz = x + y\n\n", 
+--   "trace": [
+--     {
+--       "ordered_globals": [], 
+--       "stdout": "", 
+--       "func_name": "<module>", 
+--       "stack_to_render": [], 
+--       "globals": {}, 
+--       "heap": {}, 
+--       "line": 1, 
+--       "event": "step_line"
+--     }, 
+--     {
+--       "ordered_globals": [
+--         "x"
+--       ], 
+--       "stdout": "", 
+--       "func_name": "<module>", 
+--       "stack_to_render": [], 
+--       "globals": {
+--         "x": 5
+--       }, 
+--       "heap": {}, 
+--       "line": 2, 
+--       "event": "step_line"
+--     }, ...
+--   ]
+-- }
+
+data Event = Event
+  { evt_ordered_globals :: ![Var]
+  , evt_stdout :: !String
+  , evt_func_name :: !Var
+  , evt_stack_to_render :: ![Scope]
+  , evt_globals :: !(Map Var Value)
+  , evt_heap :: !(Map Ref Value)
+  , evt_line :: !Int
+  , evt_event :: !String
+  } deriving Show
+
+data Scope = Scope
+  deriving Show

@@ -111,6 +111,8 @@ instance Pretty Expr where
     Bop bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec undefined
+    With env e -> prettyPrec z e
+    Replace env e -> prettyPrec z e
 
 instance Pretty Bop where
   pretty Eq = text "=#"
