@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
 module NanoML.Types where
@@ -17,6 +18,7 @@ import           Control.Monad.Random
 import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
+import qualified Data.Aeson                   as Aeson
 import           Data.Char
 import           Data.IntMap.Strict           (IntMap)
 import qualified Data.IntMap.Strict           as IntMap
@@ -25,6 +27,7 @@ import           Data.Map.Strict              (Map)
 import qualified Data.Map.Strict              as Map
 import           Data.Maybe
 import           Data.Sequence                (Seq)
+import qualified Data.Sequence                as Seq
 import           Data.Typeable (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
@@ -257,7 +260,6 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
-  | LU
   deriving (Show, Generic)
 
 data RecFlag = Rec | NonRec deriving (Show, Generic)
@@ -269,6 +271,9 @@ data SrcSpan = SrcSpan
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
   } deriving (Show, Generic)
+
+joinSrcSpan x y = SrcSpan (srcSpanStartLine x) (srcSpanStartCol x)
+                          (srcSpanEndLine y)   (srcSpanEndCol y)
 
 type Prog = [Decl]
 
@@ -286,30 +291,53 @@ getSrcSpan d = case d of
   DTyp ss _ -> ss
   DExn ss _ -> ss
 
+type MSrcSpan = Maybe SrcSpan
+
 data Expr
-  = Var Var
-  | Lam Pat Expr
-  | App Expr [Expr]
-  | Bop Bop Expr Expr
-  | Uop Uop Expr
-  | Lit Literal
-  | Let RecFlag [(Pat,Expr)] Expr
-  | Ite Expr Expr Expr
-  | Seq Expr Expr
-  | Case Expr [Alt]
-  | Tuple [Expr]
-  | ConApp DCon (Maybe Expr)
-  | Record [(String, Expr)]
-  | Field Expr String
-  | SetField Expr String Expr
-  | Array [Expr]
-  | Try Expr [Alt]
+  = Var MSrcSpan Var
+  | Lam MSrcSpan Pat Expr
+  | App MSrcSpan Expr [Expr]
+  | Bop MSrcSpan Bop Expr Expr
+  | Uop MSrcSpan Uop Expr
+  | Lit MSrcSpan Literal
+  | Let MSrcSpan RecFlag [(Pat,Expr)] Expr
+  | Ite MSrcSpan Expr Expr Expr
+  | Seq MSrcSpan Expr Expr
+  | Case MSrcSpan Expr [Alt]
+  | Tuple MSrcSpan [Expr]
+  | ConApp MSrcSpan DCon (Maybe Expr)
+  | Record MSrcSpan [(String, Expr)]
+  | Field MSrcSpan Expr String
+  | SetField MSrcSpan Expr String Expr
+  | Array MSrcSpan [Expr]
+  | Try MSrcSpan Expr [Alt]
   | Prim1 Prim1 Expr
   | Prim2 Prim2 Expr Expr
   | Val Value -- embed a value inside an Expr for ease of tracing
   | With Env Expr
   | Replace Env Expr
   deriving (Show, Generic)
+
+getSrcSpanExprMaybe :: Expr -> MSrcSpan
+getSrcSpanExprMaybe expr = case expr of
+  Var ms _ -> ms
+  Lam ms _ _ -> ms
+  App ms _ _ -> ms
+  Bop ms _ _ _ -> ms
+  Uop ms _ _ -> ms
+  Lit ms _ -> ms
+  Let ms _ _ _ -> ms
+  Ite ms _ _ _ -> ms
+  Seq ms _ _ -> ms
+  Case ms _ _ -> ms
+  Tuple ms _ -> ms
+  ConApp ms _ _ -> ms
+  Record ms _ -> ms
+  Field ms _ _ -> ms
+  SetField ms _ _ _ -> ms
+  Array ms _ -> ms
+  Try ms _ _ -> ms
+  _ -> Nothing
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
@@ -348,6 +376,9 @@ data Pat
   | AsPat Pat Var
   | ConstraintPat Pat Type
   deriving (Show)
+
+getSrcSpanPatMaybe :: Pat -> MSrcSpan
+getSrcSpanPatMaybe pat = Nothing
 
 data Type
   = TVar TVar
@@ -478,7 +509,7 @@ typeOfLit l = case l of
   LC _ -> tCon tCHAR
   LS _ -> tCon tSTRING
   LB _ -> tCon tBOOL
-  LU   -> tCon tUNIT
+  -- LU   -> tCon tUNIT
   
 
 ----------------------------------------------------------------------
@@ -487,40 +518,42 @@ typeOfLit l = case l of
 
 {-@ mkCurried :: ListNE Pat -> Expr -> Expr @-}
 mkCurried :: [Pat] -> Expr -> Expr
-mkCurried [p]    e = Lam p e
-mkCurried (p:ps) e = Lam p (mkCurried ps e)
+mkCurried [p]    e = Lam (mergeLocated p e) p e
+mkCurried (p:ps) e = Lam (mergeLocated p e) p (mkCurried ps e)
 mkCurried p e = error $ "mkCurried: " ++ show p ++ " " ++ show e
 
-mkInfix :: Expr -> Expr -> Expr -> Expr
-mkInfix x op y = mkApps op [x,y]
+mkInfix :: MSrcSpan -> Expr -> Expr -> Expr -> Expr
+mkInfix ms x op y = mkApps ms op [x,y]
 
-mkApps :: Expr -> [Expr] -> Expr
+mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr
 mkApps = App
 
-mkConApp :: DCon -> [Expr] -> Expr
-mkConApp c []  = ConApp c Nothing
-mkConApp c [e] = ConApp c (Just e)
-mkConApp c es  = ConApp c (Just (Tuple es))
+mkConApp :: MSrcSpan -> DCon -> [Expr] -> Expr
+mkConApp ms c []  = ConApp ms c Nothing
+mkConApp ms c [e] = ConApp ms c (Just e)
+mkConApp ms c es  = ConApp ms c (Just (Tuple ms' es))
+  where ms' = mergeLocated (head es) (last es)
 
 mkLams :: [Pat] -> Expr -> Expr
 mkLams ps e = case ps of
   []   -> e
-  p:ps -> Lam p (mkLams ps e)
+  p:ps -> Lam (mergeLocated p e) p (mkLams ps e)
 
 mkList :: [Expr] -> Expr
-mkList = foldr (\h t -> mkConApp "::" [h,t]) (mkConApp "[]" [])
+mkList = foldr (\h t -> mkConApp Nothing "::" [h,t]) (mkConApp Nothing "[]" [])
 
-mkFunction :: [Alt] -> Expr
-mkFunction alts = Lam (VarPat "$x") (Case (Var "$x") alts)
+mkFunction :: MSrcSpan -> [Alt] -> Expr
+mkFunction ms alts = Lam ms (VarPat "$x")
+                         (Case ms (Var ms "$x") alts)
 
 mkTApps :: TCon -> [Type] -> Type
 mkTApps = TApp
 
-mkUMinus :: Var -> Expr -> Expr
-mkUMinus "-"  (Lit (LI i)) = Lit (LI (- i))
-mkUMinus "-." (Lit (LD d)) = Lit (LD (- d))
-mkUMinus "-"  e            = mkApps (Var "-")  [Lit (LI 0), e]
-mkUMinus "-." e            = mkApps (Var "-.") [Lit (LD 0), e]
+mkUMinus :: MSrcSpan -> Var -> Expr -> Expr
+mkUMinus ms "-"  (Lit _ (LI i)) = Lit ms (LI (- i))
+mkUMinus ms "-." (Lit _ (LD d)) = Lit ms (LD (- d))
+mkUMinus ms "-"  e              = Uop ms Neg e
+mkUMinus ms "-." e              = Uop ms FNeg e
 
 mkExn :: DCon -> [Value] -> Value
 mkExn dcon []   = VA dcon Nothing (tCon tEXN)
@@ -591,6 +624,24 @@ allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM f []     = return True
 allM f (x:xs) = (&&) <$> f x <*> allM f xs
 
+data Loc a = L (Maybe SrcSpan) a
+
+getVal (L _ x) = x
+
+instance Located (Loc a) where
+  getSrcSpanMaybe (L s _) = s
+
+class Located a where
+  getSrcSpanMaybe :: a -> Maybe SrcSpan
+
+instance Located Expr where
+  getSrcSpanMaybe = getSrcSpanExprMaybe
+
+instance Located Pat where
+  getSrcSpanMaybe = getSrcSpanPatMaybe
+
+mergeLocated x y = joinSrcSpan <$> getSrcSpanMaybe x <*> getSrcSpanMaybe y
+
 
 ----------------------------------------------------------------------
 -- traces
@@ -632,10 +683,33 @@ data Event = Event
   , evt_func_name :: !Var
   , evt_stack_to_render :: ![Scope]
   , evt_globals :: !(Map Var Value)
-  , evt_heap :: !(Map Ref Value)
+  , evt_heap :: !(IntMap Value)
   , evt_line :: !Int
   , evt_event :: !String
   } deriving Show
 
 data Scope = Scope
   deriving Show
+
+instance Aeson.ToJSON Event where
+  toJSON Event {..} = Aeson.object
+    [ "ordered_globals" Aeson..= Aeson.toJSON evt_ordered_globals
+    , "stdout"          Aeson..= Aeson.toJSON evt_stdout
+    , "func_name"       Aeson..= Aeson.toJSON evt_func_name
+    , "stack_to_render" Aeson..= Aeson.toJSON evt_stack_to_render
+    , "globals"         Aeson..= Aeson.toJSON evt_globals
+    , "heap"            Aeson..= Aeson.toJSON evt_heap
+    , "line"            Aeson..= Aeson.toJSON evt_line
+    , "event"           Aeson..= Aeson.toJSON evt_event
+    ]
+
+instance Aeson.ToJSON Scope where
+  toJSON _ = Aeson.object []
+
+instance Aeson.ToJSON Value where
+  toJSON (VI i) = Aeson.toJSON i
+  toJSON (VD d) = Aeson.toJSON d
+  toJSON (VB b) = Aeson.toJSON b
+  toJSON (VC c) = Aeson.toJSON c
+  toJSON (VS s) = Aeson.toJSON s
+  toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)

@@ -56,59 +56,59 @@ instance Pretty Literal where
     LC c -> pretty c
     LS s -> text $ show s
     LB b -> text (if b then "true" else "false")
-    LU   -> text "()"
+--    LU   -> text "()"
 
 instance Pretty Expr where
   prettyPrec z e = case e of
-    Var v -> text v
-    Lam p e -> group $ parensIf (z > zl) $ nest 2 $
+    Var _ v -> text v
+    Lam _ p e -> group $ parensIf (z > zl) $ nest 2 $
                text "fun" <+> pretty p <+> text "->" <$> pretty e
       where zl = 5
-    App (Var f) [x, y]
+    App _ (Var _ f) [x, y]
       | isInfix f
         -> parensIf (z > zf) $
            prettyPrec (zf+1) x <+> text f <+> prettyPrec (zf+1) y
       where zf = opPrec f
-    App f xs -> parensIf (z > za) $
+    App _ f xs -> parensIf (z > za) $
                 prettyPrec za f <+> hsep (map (prettyPrec (za+1)) xs)
       where za = 26
-    Lit l -> pretty l
-    Let r bnds body -> group $ parensIf (z > zl) $
+    Lit _ l -> pretty l
+    Let _ r bnds body -> group $ parensIf (z > zl) $
                        align $ text "let" <> pretty r <+> prettyBinds bnds
                                <+> text "in" <$> pretty body
       where zl = 4
-    Ite b t f -> group $ parensIf (z > zi) $ align $
+    Ite _ b t f -> group $ parensIf (z > zi) $ align $
                  text "if"   <+> pretty b <$>
                  text "then" <+> pretty t <$>
                  text "else" <+> pretty f
       where zi = 7
-    Seq x y -> parensIf (z > zs) $
+    Seq _ x y -> parensIf (z > zs) $
                prettyPrec (zs+1) x <> semi </> prettyPrec (zs+1) y
       where zs = 3
-    Case e alts -> parensIf (z > zc) $
+    Case _ e alts -> parensIf (z > zc) $
                    text "match" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt alts)
       where zc = 5
-    Tuple xs -> prettyTuple xs
-    ConApp c Nothing -> text c
-    ConApp "::" (Just (Tuple [hd,tl])) -> parensIf (z > zc) $
+    Tuple _ xs -> prettyTuple xs
+    ConApp _ c Nothing -> text c
+    ConApp _ "::" (Just (Tuple _ [hd,tl])) -> parensIf (z > zc) $
                                           prettyPrec (zc+1) hd <+> text "::" <+> prettyPrec (zc+1) tl
       where zc = 26
-    ConApp c (Just e) -> parensIf (z > zc) $
+    ConApp _ c (Just e) -> parensIf (z > zc) $
                          text c <+> pretty e
       where zc = 26
-    Record flds -> record flds
-    Field e f -> pretty e <> char '.' <> text f
-    SetField e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
-    Array es -> array es
-    Try e ps -> parensIf (z > zt) $
+    Record _ flds -> record flds
+    Field _ e f -> pretty e <> char '.' <> text f
+    SetField _ e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
+    Array _ es -> array es
+    Try _ e ps -> parensIf (z > zt) $
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
       where zt = 5
     Prim1 p x -> parens (text (show p) <+> pretty x)
     Prim2 p x y -> parens (text (show p) <+> pretty x <+> pretty y)
     Val v -> prettyPrec z v
-    Bop bop x y -> parensIf (z > zb) $
+    Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec undefined
     With env e -> prettyPrec z e

@@ -1,6 +1,8 @@
 {
 module NanoML.Parser where
 
+import Prelude hiding ( getChar )
+
 import Control.Monad
 import Data.List
 import System.Directory
@@ -16,83 +18,83 @@ import NanoML.Types
 %name unsafeParsePattern Pattern
 %name unsafeParseType Type
 
-%tokentype { Token }
-%lexer { lexWrap } { TokEOF }
+%tokentype { LToken }
+%lexer { lexWrap } { LToken _ TokEOF }
 %monad { Alex }
 %error { parseError }
 
 
 %token
 
-ident   { TokId $$ }
-con     { TokCon $$ }
-string  { TokString $$ }
-char    { TokChar $$ }
-int     { TokInt $$ }
-float   { TokFloat $$ }
+ident   { LToken _ (TokId _) }
+con     { LToken _ (TokCon _) }
+string  { LToken _ (TokString _) }
+char    { LToken _ (TokChar _) }
+int     { LToken _ (TokInt _) }
+float   { LToken _ (TokFloat _) }
 
-'('     { TokLParen }
-')'     { TokRParen }
-'{'     { TokLBrace }
-'}'     { TokRBrace }
-'['     { TokLBrack }
-']'     { TokRBrack }
-"[|"    { TokLBrackPipe }
-"|]"    { TokRBrackPipe }
+'('     { LToken _ TokLParen }
+')'     { LToken _ TokRParen }
+'{'     { LToken _ TokLBrace }
+'}'     { LToken _ TokRBrace }
+'['     { LToken _ TokLBrack }
+']'     { LToken _ TokRBrack }
+"[|"    { LToken _ TokLBrackPipe }
+"|]"    { LToken _ TokRBrackPipe }
 
-"and"      { TokAnd }
-"as"       { TokAs }
-"begin"    { TokBegin }
-"else"     { TokElse }
-"end"      { TokEnd }
-"exception" { TokException }
-"false"    { TokFalse }
-"fun"      { TokFun }
-"function" { TokFunction }
-"if"       { TokIf }
-"in"       { TokIn }
-"let"      { TokLet }
-"match"    { TokMatch }
-"module"   { TokModule }
-"mutable"  { TokMutable }
-"of"       { TokOf }
-"open"     { TokOpen }
-"or"       { TokOr }
-"rec"      { TokRec }
-"then"     { TokThen }
-"true"     { TokTrue }
-"try"      { TokTry }
-"type"     { TokType }
-"when"     { TokWhen }
-"with"     { TokWith }
+"and"      { LToken _ TokAnd }
+"as"       { LToken _ TokAs }
+"begin"    { LToken _ TokBegin }
+"else"     { LToken _ TokElse }
+"end"      { LToken _ TokEnd }
+"exception"{ LToken _ TokException }
+"false"    { LToken _ TokFalse }
+"fun"      { LToken _ TokFun }
+"function" { LToken _ TokFunction }
+"if"       { LToken _ TokIf }
+"in"       { LToken _ TokIn }
+"let"      { LToken _ TokLet }
+"match"    { LToken _ TokMatch }
+"module"   { LToken _ TokModule }
+"mutable"  { LToken _ TokMutable }
+"of"       { LToken _ TokOf }
+"open"     { LToken _ TokOpen }
+"or"       { LToken _ TokOr }
+"rec"      { LToken _ TokRec }
+"then"     { LToken _ TokThen }
+"true"     { LToken _ TokTrue }
+"try"      { LToken _ TokTry }
+"type"     { LToken _ TokType }
+"when"     { LToken _ TokWhen }
+"with"     { LToken _ TokWith }
 
-"&&"       { TokLAnd }
-"||"       { TokLOr }
-'|'        { TokPipe }
-','        { TokComma }
-';'        { TokSemi }
-";;"       { TokSemiSemi }
-"->"       { TokArrow }
-"<-"       { TokBackArrow }
-'.'        { TokDot }
-".."       { TokDotDot }
-'*'        { TokStar }
-'\''       { TokTick }
-'!'        { TokBang }
-':'        { TokColon }
-":="       { TokColonEq }
-"::"       { TokCons }
-'='        { TokEq }
-'_'        { TokUnderscore }
-'+'        { TokPlus }
-"+."       { TokPlusDot }
-'-'        { TokMinus }
-"-."       { TokMinusDot }
-infix0     { TokInfixOp0 $$ }
-infix1     { TokInfixOp1 $$ }
-infix2     { TokInfixOp2 $$ }
-infix3     { TokInfixOp3 $$ }
-infix4     { TokInfixOp4 $$ }
+"&&"       { LToken _ TokLAnd }
+"||"       { LToken _ TokLOr }
+'|'        { LToken _ TokPipe }
+','        { LToken _ TokComma }
+';'        { LToken _ TokSemi }
+";;"       { LToken _ TokSemiSemi }
+"->"       { LToken _ TokArrow }
+"<-"       { LToken _ TokBackArrow }
+'.'        { LToken _ TokDot }
+".."       { LToken _ TokDotDot }
+'*'        { LToken _ TokStar }
+'\''       { LToken _ TokTick }
+'!'        { LToken _ TokBang }
+':'        { LToken _ TokColon }
+":="       { LToken _ TokColonEq }
+"::"       { LToken _ TokCons }
+'='        { LToken _ TokEq }
+'_'        { LToken _ TokUnderscore }
+'+'        { LToken _ TokPlus }
+"+."       { LToken _ TokPlusDot }
+'-'        { LToken _ TokMinus }
+"-."       { LToken _ TokMinusDot }
+infix0     { LToken _ (TokInfixOp0 _) }
+infix1     { LToken _ (TokInfixOp1 _) }
+infix2     { LToken _ (TokInfixOp2 _) }
+infix3     { LToken _ (TokInfixOp3 _) }
+infix4     { LToken _ (TokInfixOp4 _) }
 
 
 -- low precedence
@@ -160,13 +162,13 @@ LetBindings :: { [(Pat,Expr)] }
 | LetBindings "and" LetBinding  { $3 : $1 }
 
 LetBinding :: { (Pat, Expr) }
-: ValIdent FunBinding   { (VarPat $1, $2) }
+: ValIdent FunBinding   { (VarPat (getVal $1), $2) }
 | Pattern '=' SeqExpr   { ($1, $3) }
 
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
 | TypeConstraint '=' SeqExpr { $3 }
-| SimplePattern FunBinding { Lam $1 $2 }
+| SimplePattern FunBinding { Lam Nothing {- (mergeLocated $1 $2) -} $1 $2 }
 
 TypeConstraint :: { Type }
 : ':' Type { $2 }
@@ -176,7 +178,7 @@ TypeDecls :: { [TypeDecl] }
 | TypeDecls "and" TypeDecl  { $3 : $1 }
 
 TypeDecl :: { TypeDecl }
-: MaybeTyVars ident '=' TypeRhs  { TypeDecl $2 $1 $4 }
+: MaybeTyVars ident '=' TypeRhs  { TypeDecl (getId $2) $1 $4 }
 
 MaybeTyVars :: { [TVar] }
 : {- empty -}                 { [] }
@@ -188,7 +190,7 @@ TyVarList :: { [TVar] }
 | TyVarList ',' TyVar         { $3 : $1 }
 
 TyVar :: { TVar }
-: '\'' ident                  { $2 }
+: '\'' ident                  { (getId $2) }
 
 TypeRhs :: { TypeRhs }
 : Type              { Alias $1 }
@@ -208,7 +210,7 @@ DataDecls :: { [DataDecl] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: con DataArgs              { DataDecl $1 $2 undefined }
+: con DataArgs              { DataDecl (getCon $1) $2 undefined }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }
@@ -218,24 +220,24 @@ DataArgs :: { [Type] }
 
 Pattern :: { Pat }
 : SimplePattern         { $1 }
-| Pattern "as" ValIdent { AsPat $1 $3 }
+| Pattern "as" ValIdent { AsPat $1 (getVal $3) }
 | PatternCommaList %prec below_COMMA     { TuplePat (reverse $1) }
-| con Pattern      %prec constr_app      { ConPat $1 (Just $2) }
+| con Pattern      %prec constr_app      { ConPat (getCon $1) (Just $2) }
 | Pattern "::" Pattern                   { ConsPat $1 $3 }
 | Pattern '|' Pattern                    { OrPat $1 $3 }
 
 SimplePattern :: { Pat }
-: ValIdent  %prec below_INFIX  { VarPat $1 }
+: ValIdent  %prec below_INFIX  { VarPat (getVal $1) }
 | SimplePatternNotIdent        { $1 }
 
 SimplePatternNotIdent :: { Pat }
 : '_'                               { WildPat }
-| SignedLiteral                     { LitPat $1 }
-| SignedLiteral ".." SignedLiteral  { IntervalPat $1 $3 }
+| SignedLiteral                     { LitPat (getVal $1) }
+| SignedLiteral ".." SignedLiteral  { IntervalPat (getVal $1) (getVal $3) }
 | '[' PatternSemiList ']'           { ListPat (reverse $2) }
 | '(' Pattern ')'                   { $2 }
 | '(' Pattern ':' Type ')'          { ConstraintPat $2 $4 }
-| ConLongIdent                      { ConPat $1 Nothing }
+| ConLongIdent                      { ConPat (getVal $1) Nothing }
 
 PatternCommaList :: { [Pat] }
 : PatternCommaList ',' Pattern  { $3 : $1 }
@@ -250,56 +252,56 @@ PatternSemiList :: { [Pat] }
 SeqExpr :: { Expr }
 : Expr     %prec below_SEMI  { $1 }
 | Expr ';'                   { $1 }
-| Expr ';' SeqExpr           { Seq $1 $3 }
+| Expr ';' SeqExpr           { Seq (mergeLocated $1 $3) $1 $3 }
 
 Expr :: { Expr }
 : SimpleExpr      %prec below_SHARP         { $1 }
-| SimpleExpr SimpleExprList                 { mkApps $1 (reverse $2) }
-| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp $1 [$2] }
-| "let" RecFlag LetBindings "in" SeqExpr    { Let $2 (reverse $3) $5 }
-| "function" MaybePipe AltList              { mkFunction (reverse $3) }
-| "fun" SimplePattern FunDef                { Lam $2 $3 }
-| "match" SeqExpr "with" MaybePipe AltList  { Case $2 (reverse $5) }
-| "try" SeqExpr "with" MaybePipe AltList    { Try $2 (reverse $5) }
-| ExprCommaList   %prec below_COMMA         { Tuple (reverse $1) }
-| "if" SeqExpr "then" Expr "else" Expr      { Ite $2 $4 $6 }
-| "if" SeqExpr "then" Expr                  { Ite $2 $4 (Lit LU) }
-| Expr "::" Expr                            { mkConApp "::" [$1, $3] }
-| '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp "::" [$5, $7] }
-| SimpleExpr '.' LongIdent "<-" Expr        { SetField $1 $3 $5 }
+| SimpleExpr SimpleExprList                 { mkApps (mergeLocated $1 (head $2)) $1 (reverse $2) }
+| ConLongIdent SimpleExpr %prec below_SHARP { mkConApp (mergeLocated $1 $2) (getVal $1) [$2] }
+| "let" RecFlag LetBindings "in" SeqExpr    { Let (mergeLocated $1 $5) $2 (reverse $3) $5 }
+| "function" MaybePipe AltList              { mkFunction (mergeLocated $1 (thd3 (head $3))) (reverse $3) }
+| "fun" SimplePattern FunDef                { Lam (mergeLocated $1 $3) $2 $3 }
+| "match" SeqExpr "with" MaybePipe AltList  { Case (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
+| "try" SeqExpr "with" MaybePipe AltList    { Try (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
+| ExprCommaList   %prec below_COMMA         { Tuple (mergeLocated (last $1) (head $1)) (reverse $1) }
+| "if" SeqExpr "then" Expr "else" Expr      { Ite (mergeLocated $1 $6) $2 $4 $6 }
+| "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (Var (mergeLocated $1 $4) "()") }
+| Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
+| '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
+| SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
 -- NOTE: imperative features disabled
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
 -- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
-| Expr ":=" Expr                            { mkInfix $1 (Var ":=") $3 }
-| Expr "&&" Expr                            { mkInfix $1 (Var "&&") $3 }
-| Expr "||" Expr                            { mkInfix $1 (Var "||") $3 }
-| Expr "or" Expr                            { mkInfix $1 (Var "||") $3 }
-| Expr infix0 Expr                          { mkInfix $1 (Var $2) $3 }
-| Expr '='    Expr                          { mkInfix $1 (Var "=") $3 }
-| Expr infix1 Expr                          { mkInfix $1 (Var $2) $3 }
-| Expr '+'    Expr                          { mkInfix $1 (Var "+") $3 }
-| Expr "+."   Expr                          { mkInfix $1 (Var "+.") $3 }
-| Expr '-'    Expr                          { mkInfix $1 (Var "-") $3 }
-| Expr "-."   Expr                          { mkInfix $1 (Var "-.") $3 }
-| Expr infix2 Expr                          { mkInfix $1 (Var $2) $3 }
-| Expr infix3 Expr                          { mkInfix $1 (Var $2) $3 }
-| Expr '*'    Expr                          { mkInfix $1 (Var "*") $3 }
-| Expr infix4 Expr                          { mkInfix $1 (Var $2) $3 }
-| Subtractive Expr %prec unary_minus        { mkUMinus $1 $2 }
+| Expr ":=" Expr                            { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) ":=") $3 }
+| Expr "&&" Expr                            { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "&&") $3 }
+| Expr "||" Expr                            { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "||") $3 }
+| Expr "or" Expr                            { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "||") $3 }
+| Expr infix0 Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) (getInfix0 $2)) $3 }
+| Expr '='    Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "=") $3 }
+| Expr infix1 Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) (getInfix1 $2)) $3 }
+| Expr '+'    Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "+") $3 }
+| Expr "+."   Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "+.") $3 }
+| Expr '-'    Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "-") $3 }
+| Expr "-."   Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "-.") $3 }
+| Expr infix2 Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) (getInfix2 $2)) $3 }
+| Expr infix3 Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) (getInfix3 $2)) $3 }
+| Expr '*'    Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) "*") $3 }
+| Expr infix4 Expr                          { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) (getInfix4 $2)) $3 }
+| Subtractive Expr %prec unary_minus        { mkUMinus (mergeLocated $1 $2) (getVal $1) $2 }
 
 SimpleExpr :: { Expr }
-: ValLongIdent          { Var $1 }
-| ConLongIdent %prec constr  { mkConApp $1 [] }
-| Literal               { Lit $1 }
-| SimpleExpr '.' '[' SeqExpr ']'     { mkApps (Var "String.get") [$1, $4] }
-| SimpleExpr '.' '(' SeqExpr ')'     { mkApps (Var "Array.get")  [$1, $4] }
-| SimpleExpr '.' LongIdent        { Field $1 $3 }
-| '!' SimpleExpr        { mkApps (Var "!") [$2] }
+: ValLongIdent          { Var (getSrcSpanMaybe $1) (getVal $1) }
+| ConLongIdent %prec constr  { mkConApp (getSrcSpanMaybe $1) (getVal $1) [] }
+| Literal               { Lit (getSrcSpanMaybe $1) (getVal $1) }
+| SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var Nothing "String.get") [$1, $4] }
+| SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var Nothing "Array.get")  [$1, $4] }
+| SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
+| '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
-| "[|" ExprSemiList MaybeSemi "|]" { Array (reverse $2) }
-| '{' RecordExpr '}'    { Record $2 }
+| "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) }
+| '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 }
 | "begin" SeqExpr "end" { $2 }
-| "begin" "end"         { Var "()" }
+| "begin" "end"         { Var (mergeLocated $1 $2) "()" }
 | '[' ExprSemiList MaybeSemi ']'  { mkList (reverse $2) }
 
 SimpleExprList :: { [Expr] }
@@ -315,7 +317,7 @@ LabelExprList :: { [(String, Expr)] }
 | LabelExpr ';'                 { [$1] }
 
 LabelExpr :: { (String,Expr) }
-: LongIdent '=' Expr            { ($1, $3) }
+: LongIdent '=' Expr            { (getVal $1, $3) }
 
 ExprCommaList :: { [Expr] }
 : ExprCommaList ',' Expr   { $3 : $1 }
@@ -335,26 +337,26 @@ Alt :: { Alt }
 
 FunDef :: { Expr }
 : "->" SeqExpr          { $2 }
-| SimplePattern FunDef  { Lam $1 $2 }
+| SimplePattern FunDef  { Lam (mergeLocated $1 $2) $1 $2 }
 
-Literal :: { Literal }
-: string    { LS (read $1) }
-| char      { LC (read $1) }
-| int       { LI (read $1) }
-| float     { LD (read $1) }
-| "true"    { LB True }
-| "false"   { LB False }
+Literal :: { Loc Literal }
+: string    { L (getSrcSpanMaybe $1) (LS (read (getString $1))) }
+| char      { L (getSrcSpanMaybe $1) (LC (read (getChar $1))) }
+| int       { L (getSrcSpanMaybe $1) (LI (read (getInt $1))) }
+| float     { L (getSrcSpanMaybe $1) (LD (read (getFloat $1))) }
+| "true"    { L (getSrcSpanMaybe $1) (LB True) }
+| "false"   { L (getSrcSpanMaybe $1) (LB False) }
 
-SignedLiteral :: { Literal }
+SignedLiteral :: { Loc Literal }
 : Literal   { $1 }
-| '-' int   { LI (negate (read $2)) }
-| '-' float { LD (negate (read $2)) }
-| '+' int   { LI (read $2) }
-| '+' float { LD (read $2) }
+| '-' int   { L (mergeLocated $1 $2) (LI (negate (read (getInt $2)))) }
+| '-' float { L (mergeLocated $1 $2) (LD (negate (read (getFloat $2)))) }
+| '+' int   { L (mergeLocated $1 $2) (LI (read (getInt $2))) }
+| '+' float { L (mergeLocated $1 $2) (LD (read (getFloat $2))) }
 
-Subtractive :: { Var }
-: '-'          { "-" }
-| "-."         { "-." }
+Subtractive :: { Loc Var }
+: '-'          { L (getSrcSpanMaybe $1) "-" }
+| "-."         { L (getSrcSpanMaybe $1) "-." }
 
 -- Types
 
@@ -375,11 +377,11 @@ SimpleType :: { Type }
 | '(' TypeCommaList ')' %prec below_SHARP { case $2 of { [a] -> a } }
 
 SimpleType2 :: { Type }
-: '\'' ident                       { TVar $2 }
-| LongIdent                        { tCon $1 }
+: '\'' ident                       { TVar (getId $2) }
+| LongIdent                        { tCon (getVal $1) }
 | '(' ')'                          { tCon tUNIT }
-| SimpleType2 LongIdent            { mkTApps $2 [$1] }
-| '(' TypeCommaList ')' LongIdent  { mkTApps $4 (reverse $2) }
+| SimpleType2 LongIdent            { mkTApps (getVal $2) [$1] }
+| '(' TypeCommaList ')' LongIdent  { mkTApps (getVal $4) (reverse $2) }
 
 TypeCommaList :: { [Type] }
 : Type                         { [$1] }
@@ -388,43 +390,43 @@ TypeCommaList :: { [Type] }
 -- Misc
 
 Label :: { String }
-: ident              { $1 }
+: ident              { getId $1 }
 
-ValIdent :: { Var }
-: ident              { $1 }
-| '(' Operator ')'   { $2 }
+ValIdent :: { Loc Var }
+: ident              { L (getSrcSpanMaybe $1) (getId $1) }
+| '(' Operator ')'   { L (mergeLocated $1 $3) (getVal $2) }
 
-ValLongIdent :: { Var }
+ValLongIdent :: { Loc Var }
 : ValIdent                  { $1 }
-| ModLongIdent '.' ValIdent { $1 ++ "." ++ $3 }
+| ModLongIdent '.' ValIdent { L (mergeLocated $1 $3) (getVal $1 ++ "." ++ getVal $3) }
 
-LongIdent :: { Var }
-: ident                  { $1 }
-| ModLongIdent '.' ident { $1 ++ "." ++ $3 }
+LongIdent :: { Loc Var }
+: ident                  { L (getSrcSpanMaybe $1) (getId $1) }
+| ModLongIdent '.' ident { L (mergeLocated $1 $3) (getVal $1 ++ "." ++ getId $3) }
 
-ConLongIdent :: { Var }
+ConLongIdent :: { Loc Var }
 : ModLongIdent %prec below_DOT { $1 }
-| '[' ']'                      { "[]" }
-| '(' ')'                      { "()" }
+| '[' ']'                      { L (mergeLocated $1 $2) "[]" }
+| '(' ')'                      { L (mergeLocated $1 $2) "()" }
 
-ModLongIdent :: { Var }
-: con                    { $1 }
-| ModLongIdent '.' con   { $1 ++ "." ++ $3 }
+ModLongIdent :: { Loc Var }
+: con                    { L (getSrcSpanMaybe $1) (getCon $1) }
+| ModLongIdent '.' con   { L (mergeLocated $1 $3) (getVal $1 ++ "." ++ getCon $3) }
 
-Operator :: { Var }
-: infix0             { $1 }
-| infix1             { $1 }
-| infix2             { $1 }
-| infix3             { $1 }
-| infix4             { $1 }
-| '!'                { "!" }
-| ":="               { ":=" }
-| '+'                { "+" }
-| "+."               { "+." }
-| '-'                { "-" }
-| "-."               { "-." }
-| '*'                { "*" }
-| '='                { "=" }
+Operator :: { Loc Var }
+: infix0             { L (getSrcSpanMaybe $1) (getInfix0 $1) }
+| infix1             { L (getSrcSpanMaybe $1) (getInfix1 $1) }
+| infix2             { L (getSrcSpanMaybe $1) (getInfix2 $1) }
+| infix3             { L (getSrcSpanMaybe $1) (getInfix3 $1) }
+| infix4             { L (getSrcSpanMaybe $1) (getInfix4 $1) }
+| '!'                { L (getSrcSpanMaybe $1) "!" }
+| ":="               { L (getSrcSpanMaybe $1) ":=" }
+| '+'                { L (getSrcSpanMaybe $1) "+" }
+| "+."               { L (getSrcSpanMaybe $1) "+." }
+| '-'                { L (getSrcSpanMaybe $1) "-" }
+| "-."               { L (getSrcSpanMaybe $1) "-." }
+| '*'                { L (getSrcSpanMaybe $1) "*" }
+| '='                { L (getSrcSpanMaybe $1) "=" }
 
 
 RecFlag :: { RecFlag }
@@ -451,8 +453,8 @@ GetPosition :: { (Int, Int) }
 locDecl :: (Int,Int) -> (Int,Int) -> (SrcSpan -> Decl) -> Decl
 locDecl (sl,sc) (el,ec) f = f (SrcSpan sl sc el ec)
 
-parseError :: Token -> Alex a
-parseError t = do
+parseError :: LToken -> Alex a
+parseError (LToken _ t) = do
     (line, column) <- getPosition
     alexError $ "unexpected token " ++ show t
       ++ " at line " ++ show line
@@ -466,4 +468,6 @@ parseLiteral = safeParse unsafeParseLiteral
 parsePattern = safeParse unsafeParsePattern
 parseType    = safeParse unsafeParseType
 
+
+thd3 (_,_,c) = c
 }

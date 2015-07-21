@@ -7,7 +7,10 @@ module NanoML.Step where
 
 import Control.Monad.Except
 import Control.Monad.State
+import qualified Data.IntMap as IntMap
+import qualified Data.Map as Map
 import Data.Maybe
+import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
 import Text.Printf
 
@@ -19,8 +22,11 @@ import NanoML.Types
 
 import Debug.Trace
 
+runStep opts x = case runEvalFull opts x of
+  (_, st, _) -> stTrace st
+
 stepAll expr = do
-  traceShowM $ pretty expr
+  --traceShowM $ pretty expr
   expr' <- step expr
   if isVal expr'
      then return expr'
@@ -28,7 +34,7 @@ stepAll expr = do
 
 stepAllProg [] = return ()
 stepAllProg (d:p) = do
-  traceShowM $ pretty d
+  --traceShowM $ pretty d
   md <- stepDecl d
   case md of
     Nothing -> stepAllProg p
@@ -52,7 +58,7 @@ stepDecl decl = case decl of
 
 
 step :: MonadEval m => Expr -> m Expr
-step expr = case expr of
+step expr = addEvent expr >> case expr of
   Val v -> return expr
   With env e -> do
     e' <- step e `withExtendedEnv` env
@@ -64,21 +70,21 @@ step expr = case expr of
     return $ if isVal e'
              then e'
              else Replace env e'
-  Var v -> 
+  Var ms v -> 
     fmap Val . lookupEnv v =<< gets stVarEnv
-  Lam _ _ -> 
+  Lam ms _ _ -> 
     Val . VF . Func expr <$> gets stVarEnv
-  App f args -> stepOne (f:args)
-                  (\(f:args) -> stepApp f args)
-                  (\(f:args) -> return $ App f args)
-  Bop b e1 e2 -> stepOne [e1,e2]
+  App ms f args -> stepOne (f:args)
+                  (\(f:args) -> stepApp ms f args)
+                  (\(f:args) -> return $ App ms f args)
+  Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> stepBop b v1 v2)
-                   (\[e1,e2] -> return $ Bop b e1 e2)
-  Uop u e
+                   (\[e1,e2] -> return $ Bop ms b e1 e2)
+  Uop ms u e
     | isVal e   -> stepUop u e
-    | otherwise -> Uop u <$> step e
-  Lit l -> return (Val (litValue l))
-  Let Rec binds body -> do
+    | otherwise -> Uop ms u <$> step e
+  Lit ms l -> return (Val (litValue l))
+  Let ms Rec binds body -> do
     env <- evalRecBinds binds
     return $ With env body
     -- let (ps, es) = unzip binds
@@ -87,35 +93,35 @@ step expr = case expr of
     --   (\vs -> do fenv <- foldr joinEnv env <$> zipWithM matchPat vs ps
     --              )
     --   (\es -> return $ Let Rec (zip ps es) body)
-  Let NonRec binds body -> do
+  Let ms NonRec binds body -> do
     let (ps, es) = unzip binds
     env <- gets stVarEnv
     stepOne es
       (\vs -> flip With body <$> evalNonRecBinds (zip ps vs))
-      (\es -> return $ Let NonRec (zip ps es) body)
-  Ite b t f
+      (\es -> return $ Let ms NonRec (zip ps es) body)
+  Ite ms b t f
     | Val b <- b
       -> case b of
           VB True  -> return t
           VB False -> return f
     | otherwise
       -> do b <- step b
-            return $ Ite b t f
-  Seq e1 e2
+            return $ Ite ms b t f
+  Seq ms e1 e2
     | isVal e1  -> return e2
-    | otherwise -> flip Seq e2 <$> step e1
-  Case e as
+    | otherwise -> (\e1 -> Seq ms e1 e2) <$> step e1
+  Case ms e as
     | isVal e   -> stepAlts e as
-    | otherwise -> flip Case as <$> step e
-  Tuple es -> stepOne es
+    | otherwise -> (\e -> Case ms e as) <$> step e
+  Tuple ms es -> stepOne es
                 (\vs -> return . Val $ VT (length vs) (map unVal vs) (map (typeOf . unVal) vs))
-                (\es -> return $ Tuple es)
-  ConApp dc Nothing -> do
+                (\es -> return $ Tuple ms es)
+  ConApp ms dc Nothing -> do
     Val <$> evalConApp dc Nothing
-  ConApp dc (Just e)
+  ConApp ms dc (Just e)
     | Val v <- e -> Val <$> evalConApp dc (Just v)
-    | otherwise  -> ConApp dc . Just <$> step e
-  Record flds
+    | otherwise  -> ConApp ms dc . Just <$> step e
+  Record ms flds
     | all (isVal . snd) flds -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
       (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
@@ -136,23 +142,23 @@ step expr = case expr of
       let (fs, es) = unzip flds
       stepOne es
         (error "step.Record: impossible")
-        (\es -> return $ Record $ zip fs es)
-  Field e f
+        (\es -> return $ Record ms $ zip fs es)
+  Field ms e f
     | Val v <- e -> Val <$> getField v f
-  SetField r f e -> stepOne [r,e]
+  SetField ms r f e -> stepOne [r,e]
                       (\[Val vr, Val ve] -> setField vr f ve >> return (Val VU))
-                      (\[r,e] -> return $ SetField r f e)
-  Array [] -> return $ Val (VV Vector.empty (TVar "a"))
-  Array es -> stepOne es
+                      (\[r,e] -> return $ SetField ms r f e)
+  Array ms [] -> return $ Val (VV Vector.empty (TVar "a"))
+  Array ms es -> stepOne es
                 (\(map unVal -> (v:vs)) -> do
                     mapM_ (unify (typeOf v) . typeOf) vs
                     return (Val (VV (Vector.fromList (v:vs)) (typeOf v))))
-                (\es -> return $ Array es)
-  Try e alts
+                (\es -> return $ Array ms es)
+  Try ms e alts
     | isVal e   -> return e
     | otherwise -> do
         env <- gets stVarEnv
-        flip Try alts <$> step e `catchError` \e -> do
+        (\e -> Try ms e alts) <$> step e `catchError` \e -> do
           setVarEnv env
           case e of
             MLException ex -> stepAlts (Val ex) alts
@@ -166,17 +172,17 @@ step expr = case expr of
       (\[e1,e2] -> return (Prim2 p e1 e2))
   _ -> error (show expr)
 
-stepApp :: MonadEval m => Expr -> [Expr] -> m Expr
-stepApp (Val f) (Val v : es) = case f of
-  VF (Func (Lam p e) env) -> do
+stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
+stepApp ms (Val f) (Val v : es) = case f of
+  VF (Func (Lam _ p e) env) -> do
     Just pat_env <- matchPat v p
     -- pushEnv env
     -- pushEnv pat_env
     return . Replace env . With pat_env $ case es of
       [] -> e
-      _  -> App e es
+      _  -> App ms e es
   _ -> typeError $ printf "'%s' is not a function" (show f)
-stepApp f es = error (show (f:es))
+stepApp _ f es = error (show (f:es))
 
 -- stepApp (Val f) (map unVal -> vs) = do
 --   let (ps, e, env) = gatherLams f
@@ -253,10 +259,35 @@ spanVals xs = let (vs,es) = span isVal xs
               in (map unVal vs, es)
 
 gatherLams :: Value -> ([Pat], Expr, Env)
-gatherLams (VF (Func (Lam p e) env)) = go [p] e
+gatherLams (VF (Func (Lam _ p e) env)) = go [p] e
   where
-  go ps (Lam p e) = go (p:ps) e
-  go ps e         = (reverse ps, e, env)
+  go ps (Lam _ p e) = go (p:ps) e
+  go ps e           = (reverse ps, e, env)
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f xs = liftM concat (mapM f xs)
+
+
+addEvent :: MonadEval m => Expr -> m ()
+addEvent expr = do
+  let line = 1
+  let event = "step_line"
+  let stdout = ""
+  let func_name = "<top-level>"
+  Env env <- gets stVarEnv
+  let Env benv = baseEnv
+  let env' = Map.difference env benv
+  let ordered_globals = map fst $ Map.toList env'
+  let globals = env'
+  let heap = IntMap.empty
+  let stack = []
+  let evt = Event { evt_ordered_globals = ordered_globals
+                  , evt_stdout = stdout
+                  , evt_func_name = func_name
+                  , evt_stack_to_render = stack
+                  , evt_globals = globals
+                  , evt_heap = heap
+                  , evt_line = line
+                  , evt_event = event
+                  }
+  modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }

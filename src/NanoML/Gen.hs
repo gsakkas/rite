@@ -46,7 +46,7 @@ genValue ty env = case ty of
   TApp "array" [t] -> sized (fmap (flip VV t . Vector.fromList) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
   TTup ts -> (\x -> VT (length ts) x ts) <$> mapM (flip genValue env) ts
-  _ :-> to -> VF . flip Func mempty . Lam WildPat <$> (fmap Val . flip genValue env) to
+  _ :-> to -> VF . flip Func mempty . Lam Nothing WildPat <$> (fmap Val . flip genValue env) to
 
 genList :: MonadEval m => Type -> TypeEnv -> m Value
 genList t env = flip VL t <$> listOf (genValue t env)

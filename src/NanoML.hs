@@ -110,7 +110,7 @@ checkDecl f prog = go (Success 0) 0
   go (Success n) !m   = do
     r <- within n sec $ nanoCheck n m stdOpts $ do
       mapM_ evalDecl prog
-      to (Var f) [Var f]
+      to (Var Nothing f) [Var Nothing f]
     go r ((m+1) `mod` 5)
 
   to e args = do
@@ -119,7 +119,7 @@ checkDecl f prog = go (Success 0) 0
     case v of
       VF _ -> do
         arg <- flip VH Nothing <$> fresh
-        to (mkApps (Val v) [Val arg]) (args ++ [Val arg])
+        to (mkApps Nothing (Val v) [Val arg]) (args ++ [Val arg])
       _ -> return ()
 
 sec = 1000000 * 60
@@ -138,7 +138,7 @@ nanoCheck numSuccess maxSize opts x = do
     (Left e, st, tr) ->
       let invoc = case map (fetchArg' (stStore st)) (stArgs st) of
             [] -> mempty
-            f:args -> pretty (mkApps f args)
+            f:args -> pretty (mkApps Nothing f args)
       in Failure (numSuccess + 1) seed maxSize
                  (vcat (text (show e) : invoc : []))
     (Right _, _, _) -> Success (numSuccess + 1)

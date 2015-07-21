@@ -66,39 +66,52 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
            ]
 
+varD = Var Nothing
+iteD = Ite Nothing
+mkConAppD = mkConApp Nothing
+mkAppsD = mkApps Nothing
+fieldD = Field Nothing
+setFieldD = SetField Nothing
+recordD = Record Nothing
+caseD = Case Nothing
+bopD = Bop Nothing
+appD = App Nothing
+seqD = Seq Nothing
+litD = Lit Nothing
+
 primVars :: [(Var, Value)]
 primVars = [ ("[]", VL [] (TVar "a"))
            , ("::", VF (Func (mkLams [VarPat "x", VarPat "xs"]
-                                     (mkConApp "::" [Var "x", Var "xs"]))
+                                     (mkConAppD "::" [varD "x", varD "xs"]))
                              emptyEnv))
            , ("()", VU)
            , ("min_float", VD 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max_float", VD 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max"
              ,mkNonRec $ mkLams [VarPat "x", VarPat "y"]
-                                (Ite (mkApps (Var ">=") [Var "x", Var "y"])
-                                     (Var "x") (Var "y")))
+                                (iteD (mkAppsD (varD ">=") [varD "x", varD "y"])
+                                     (varD "x") (varD "y")))
            , ("min"
              ,mkNonRec $ mkLams [VarPat "x", VarPat "y"]
-                                (Ite (mkApps (Var "<=") [Var "x", Var "y"])
-                                     (Var "x") (Var "y")))
-           , ("!", mkNonRec $ mkLams [VarPat "x"] (Field (Var "x") "contents"))
+                                (iteD (mkAppsD (varD "<=") [varD "x", varD "y"])
+                                     (varD "x") (varD "y")))
+           , ("!", mkNonRec $ mkLams [VarPat "x"] (fieldD (varD "x") "contents"))
            , (":=", mkNonRec $ mkLams [VarPat "x", VarPat "v"]
-                                      (SetField (Var "x") "contents" (Var "v")))
-           , ("ref", mkNonRec $ mkLams [VarPat "x"] (Record [("contents", Var "x")]))
+                                      (setFieldD (varD "x") "contents" (varD "v")))
+           , ("ref", mkNonRec $ mkLams [VarPat "x"] (recordD [("contents", varD "x")]))
            , ("List.fold_left"
              ,mkRec "List.fold_left"
                     (mkLams [VarPat "f", VarPat "b", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Var "b")
+                              ,varD "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,mkApps (Var "List.fold_left")
-                                      [Var "f"
-                                      ,mkApps (Var "f") [Var "b",Var "y"]
-                                      ,Var "ys"
+                              ,mkAppsD (varD "List.fold_left")
+                                      [varD "f"
+                                      ,mkAppsD (varD "f") [varD "b",varD "y"]
+                                      ,varD "ys"
                                       ]
                               )
                              ]))
@@ -106,16 +119,16 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("List.fold_right"
              ,mkRec "List.fold_right"
                     (mkLams [VarPat "f", VarPat "xs", VarPat "b"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Var "b")
+                              ,varD "b")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,mkApps (Var "f")
-                                      [Var "y"
-                                      ,mkApps (Var "List.fold_right")
-                                              [Var "f",Var "b", Var "ys"]
+                              ,mkAppsD (varD "f")
+                                      [varD "y"
+                                      ,mkAppsD (varD "List.fold_right")
+                                              [varD "f",varD "b", varD "ys"]
                                       ]
                               )
                              ]))
@@ -123,77 +136,77 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("List.assoc"
              ,mkRec "List.assoc"
                     (mkLams [VarPat "z", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,App (Var "raise") [mkConApp "Not_found" []])
+                              ,appD (varD "raise") [mkConAppD "Not_found" []])
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Ite (App (Var "=") [Var "z", App (Var "fst") [Var "y"]])
-                                   (App (Var "snd") [Var "y"])
-                                   (App (Var "List.assoc") [Var "z", Var "ys"])
+                              ,iteD (appD (varD "=") [varD "z", appD (varD "fst") [varD "y"]])
+                                   (appD (varD "snd") [varD "y"])
+                                   (appD (varD "List.assoc") [varD "z", varD "ys"])
                               )
                              ]))
              )
            , ("List.exists"
              ,mkRec "List.exists"
                     (mkLams [VarPat "f", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Lit (LB False))
+                              ,litD (LB False))
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Ite (App (Var "f") [Var "y"])
-                                   (Lit (LB True))
-                                   (App (Var "List.exists") [Var "f", Var "ys"])
+                              ,iteD (appD (varD "f") [varD "y"])
+                                   (litD (LB True))
+                                   (appD (varD "List.exists") [varD "f", varD "ys"])
                               )
                              ]))
              )
            , ("List.for_all"
              ,mkRec "List.for_all"
                     (mkLams [VarPat "f", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Lit (LB True))
+                              ,litD (LB True))
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Ite (App (Var "not") [App (Var "f") [Var "y"]])
-                                   (Lit (LB False))
-                                   (App (Var "List.for_all") [Var "f", Var "ys"])
+                              ,iteD (appD (varD "not") [appD (varD "f") [varD "y"]])
+                                   (litD (LB False))
+                                   (appD (varD "List.for_all") [varD "f", varD "ys"])
                               )
                              ]))
              )
            , ("List.filter"
              ,mkRec "List.filter"
                     (mkLams [VarPat "f", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,mkConApp "[]" [])
+                              ,mkConAppD "[]" [])
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Ite (App (Var "f") [Var "y"])
-                                   (mkConApp "::" [Var "y", App (Var "List.filter") [Var "f", Var "ys"]])
-                                   (App (Var "List.filter") [Var "f", Var "ys"])
+                              ,iteD (appD (varD "f") [varD "y"])
+                                   (mkConAppD "::" [varD "y", appD (varD "List.filter") [varD "f", varD "ys"]])
+                                   (appD (varD "List.filter") [varD "f", varD "ys"])
                               )
                              ]))
              )
            , ("List.map"
              ,mkRec "List.map"
                     (mkLams [VarPat "f", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Var "[]")
+                              ,varD "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,mkConApp "::"
-                                [ mkApps (Var "f") [Var "y"]
-                                , mkApps (Var "List.map")
-                                         [Var "f"
-                                         ,Var "ys"
+                              ,mkConAppD "::"
+                                [ mkAppsD (varD "f") [varD "y"]
+                                , mkAppsD (varD "List.map")
+                                         [varD "f"
+                                         ,varD "ys"
                                          ]
                                 ]
                               )
@@ -202,16 +215,17 @@ primVars = [ ("[]", VL [] (TVar "a"))
            , ("List.iter"
              ,mkRec "List.iter"
                     (mkLams [VarPat "f", VarPat "xs"]
-                            (Case (Var "xs")
+                            (caseD (varD "xs")
                              [(ConPat "[]" Nothing
                               ,Nothing
-                              ,Var "[]")
+                              ,varD "[]")
                              ,(ConsPat (VarPat "y") (VarPat "ys")
                               ,Nothing
-                              ,Seq (mkApps (Var "f") [Var "y"])
-                                   (mkApps (Var "List.iter")
-                                           [Var "f"
-                                           ,Var "ys"
+                              ,seqD
+                                   (mkAppsD (varD "f") [varD "y"])
+                                   (mkAppsD (varD "List.iter")
+                                           [varD "f"
+                                           ,varD "ys"
                                            ])
                               )
                              ]))
@@ -558,17 +572,17 @@ baseEnv = Env . Map.fromList
 
 mkBopFun :: Bop -> Value
 mkBopFun bop = VF $ Func (mkLams [VarPat "x", VarPat "y"]
-                                 (Bop bop (Var "x") (Var "y")))
+                                 (bopD bop (varD "x") (varD "y")))
                          emptyEnv
 
 mkPrim1Fun :: Prim1 -> Value
 mkPrim1Fun f = VF $ Func (mkLams [VarPat "x"]
-                                 (Prim1 f (Var "x")))
+                                 (Prim1 f (varD "x")))
                          emptyEnv
 
 mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = VF $ Func (mkLams [VarPat "x", VarPat "y"]
-                                 (Prim2 f (Var "x") (Var "y")))
+                                 (Prim2 f (varD "x") (varD "y")))
                          emptyEnv
 
 tI = tCon tINT

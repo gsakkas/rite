@@ -5,6 +5,8 @@ module NanoML.Lexer where
 import Data.Char
 
 import Debug.Trace
+
+import NanoML.Types
 }
 
 %wrapper "monad"
@@ -118,14 +120,22 @@ tokens :-
   \' ($printable # [\']) \' { tokS TokChar }
 
 {
-tok :: Token -> AlexInput -> Int -> Alex Token
-tok t _ _ = return t
+tok :: Token -> AlexInput -> Int -> Alex LToken
+tok t _ len = do
+  (l,c) <- getPosition
+  let ss = SrcSpan l c l (c + len)
+  return (LToken ss t)
 
-tokS :: (String -> Token) -> AlexInput -> Int -> Alex Token
-tokS t (_, _, _, str) len = return (t (take len str))
+tokS :: (String -> Token) -> AlexInput -> Int -> Alex LToken
+tokS t (_, _, _, str) len = do
+  (l,c) <- getPosition
+  let ss = SrcSpan l c l (c + len)
+  return (LToken ss (t (take len str)))
 
 mkExp :: String -> String
 mkExp s = let (d,f) = break (=='.') s in d ++ ".0" ++ drop 1 f
+
+data LToken = LToken SrcSpan Token
 
 data Token
   = TokId String
@@ -209,7 +219,7 @@ data Token
   | TokEOF
   deriving (Eq,Show)
 
-nested_comment :: AlexInput -> Int -> Alex Token
+nested_comment :: AlexInput -> Int -> Alex LToken
 nested_comment _ _ = do
   input <- alexGetInput
   go 1 input
@@ -238,7 +248,7 @@ getPos (AlexPn _ line column) = (line, column)
 getPosition :: Alex (Int, Int)
 getPosition = Alex $ \s -> Right (s, getPos . alex_pos $ s)
 
-lexWrap :: (Token -> Alex a) -> Alex a
+lexWrap :: (LToken -> Alex a) -> Alex a
 lexWrap cont = do
     tok <- alexMonadScan
     cont tok
@@ -250,16 +260,34 @@ lexError s = do
 		     then " before " ++ show (head input)
 		     else " at end of file"))
 
-alexEOF = return TokEOF
+alexEOF = do
+  (l,c) <- getPosition
+  let ss = SrcSpan l c l c
+  return (LToken ss TokEOF)
 
 showPosn (AlexPn _ line col) = show line ++ ':' : show col
 
-alexScanTokens :: String -> Either String [Token]
+alexScanTokens :: String -> Either String [LToken]
 alexScanTokens input = runAlex input gather
   where
   gather = do
     t <- alexMonadScan
     case t of
-      TokEOF -> return [TokEOF]
+      LToken _ TokEOF -> return [t]
       _      -> return . (t :) =<< gather
+
+instance Located LToken where
+  getSrcSpanMaybe (LToken ss _) = Just ss
+
+getId (LToken _ (TokId x)) = x
+getCon (LToken _ (TokCon x)) = x
+getString (LToken _ (TokString x)) = x
+getChar (LToken _ (TokChar x)) = x
+getInt (LToken _ (TokInt x)) = x
+getFloat (LToken _ (TokFloat x)) = x
+getInfix0 (LToken _ (TokInfixOp0 x)) = x
+getInfix1 (LToken _ (TokInfixOp1 x)) = x
+getInfix2 (LToken _ (TokInfixOp2 x)) = x
+getInfix3 (LToken _ (TokInfixOp3 x)) = x
+getInfix4 (LToken _ (TokInfixOp4 x)) = x
 }

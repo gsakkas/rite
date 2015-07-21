@@ -100,58 +100,58 @@ mycensor f m = pass $ do
 
 eval :: MonadEval m => Expr -> m Value
 eval expr = logExpr expr $ case expr of
-  Var v ->
+  Var ms v ->
     lookupEnv v =<< gets stVarEnv
-  Lam _ _ ->
+  Lam ms _ _ ->
     VF . Func expr <$> gets stVarEnv
-  App f args -> do
+  App ms f args -> do
     vf    <- eval f
     vargs <- mapM eval args
     -- FIXME: this appears to be discarding bindings introduced by the
     -- function application
     foldM evalApp vf vargs
-  Bop b e1 e2 -> do
+  Bop ms b e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
     evalBop b v1 v2
-  Uop u e -> do
+  Uop ms u e -> do
     v <- eval e
     evalUop u v
-  Lit l -> return (litValue l)
-  Let Rec binds body -> do
+  Lit ms l -> return (litValue l)
+  Let ms Rec binds body -> do
     env <- evalRecBinds binds
     eval body `withEnv` env
-  Let NonRec binds body -> do
+  Let ms NonRec binds body -> do
     env <- evalNonRecBinds binds
     eval body `withEnv` env
-  Ite eb et ef -> do
+  Ite ms eb et ef -> do
     vb <- eval eb
     case vb of
       VB True  -> eval et
       VB False -> eval ef
       _        -> typeError "if-then-else given a non-boolean"
-  Seq e1 e2 ->
+  Seq ms e1 e2 ->
     eval e1 >> eval e2
-  Case e as -> do
+  Case ms e as -> do
     v <- eval e
     evalAlts v as
-  Tuple es -> do
+  Tuple ms es -> do
     vs <- mapM eval es
     return (VT (length vs) vs (map typeOf vs))
-  ConApp "()" Nothing -> return VU
-  ConApp "[]" Nothing -> return (VL [] (TVar "a"))
-  ConApp "::" (Just (Tuple [h,t])) -> do
+  ConApp ms "()" Nothing -> return VU
+  ConApp ms "[]" Nothing -> return (VL [] (TVar "a"))
+  ConApp ms "::" (Just (Tuple ms' [h,t])) -> do
     vh <- eval h
     vt <- eval t
     force vt (tL (typeOf vh)) $ \(VL vt t) -> do
       su <- unify t (typeOf vh)
       return (VL (vh:vt) (subst su t))
-  ConApp dc Nothing -> do
+  ConApp ms dc Nothing -> do
     evalConApp dc Nothing
-  ConApp dc (Just e) -> do
+  ConApp ms dc (Just e) -> do
     v <- eval e
     evalConApp dc (Just v)
-  Record flds -> do
+  Record ms flds -> do
     td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
     unless (all (`elem` map fst3 fs) (map fst flds)) $
       typeError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
@@ -167,20 +167,20 @@ eval expr = logExpr expr $ case expr of
         return ((f,i),su)
     let t = subst (mconcat sus) $ typeDeclType td
     return (VR vs t)
-  Field e f -> do
+  Field ms e f -> do
     v <- eval e
     getField v f
-  SetField r f e -> do
+  SetField ms r f e -> do
     vr <- eval r
     v  <- eval e
     setField vr f v
     return VU
-  Array [] -> return (VV Vector.empty (TVar "a"))
-  Array es -> do
+  Array ms [] -> return (VV Vector.empty (TVar "a"))
+  Array ms es -> do
     (v:vs) <- mapM eval es
     mapM_ (unify (typeOf v) . typeOf) vs
     return (VV (Vector.fromList (v:vs)) (typeOf v))
-  Try e alts -> do
+  Try ms e alts -> do
     env <- gets stVarEnv
     eval e `catchError` \e -> do
       setVarEnv env
@@ -226,8 +226,8 @@ forceSame x y@(VH {}) k = force y (typeOf x) $ \y -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp f a = logExpr (App (Val f) [Val a]) $ case f of
-  VF (Func (Lam p e) env) -> do
+evalApp f a = logExpr (App Nothing (Val f) [Val a]) $ case f of
+  VF (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
     eval e `withEnv` joinEnv pat_env env
   _ -> typeError "tried to apply a non-function"
@@ -263,7 +263,7 @@ evalConApp dc v = do
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
-evalBop bop v1 v2 = logExpr (Bop bop (Val v1) (Val v2)) $ case bop of
+evalBop bop v1 v2 = logExpr (Bop Nothing bop (Val v1) (Val v2)) $ case bop of
   Eq     -> forceSame v1 v2 $ \v1 v2 -> VB <$> eqVal v1 v2
   Neq    -> forceSame v1 v2 $ \v1 v2 -> VB . not <$> eqVal v1 v2
   Lt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> ltVal v1 v2
@@ -326,7 +326,7 @@ litValue (LD d) = VD d
 litValue (LB b) = VB b
 litValue (LC c) = VC c
 litValue (LS s) = VS s
-litValue LU     = VU
+--litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
@@ -352,7 +352,7 @@ matchPat v p = logMaybeEnv $ case p of
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
   IntervalPat lo hi -> force v (typeOfLit lo) $ \v -> do
-    VB b <- eval (mkApps (Var "&&") [mkApps (Var ">=") [Val v, Lit lo], mkApps (Var "<=") [Val v, Lit hi]])
+    VB b <- eval (mkApps Nothing (Var Nothing "&&") [mkApps Nothing (Var Nothing ">=") [Val v, Lit Nothing lo], mkApps Nothing (Var Nothing "<=") [Val v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
   ConsPat p ps -> force v (tL a) $ \v -> do
     case v of
@@ -417,7 +417,7 @@ matchLit (VD d1) (LD d2) = return $ d1 == d2
 matchLit (VB b1) (LB b2) = return $ b1 == b2
 matchLit (VC c1) (LC c2) = return $ c1 == c2
 matchLit (VS s1) (LS s2) = return $ s1 == s2
-matchLit VU      LU      = return True
+--matchLit VU      LU      = return True
 matchLit v       l       = typeError (printf "type error: tried to match %s against %s"
                                       (show $ pretty v) (show $ pretty l) :: String)
 
