@@ -7,6 +7,7 @@
 {-# LANGUAGE ViewPatterns     #-}
 module NanoML.Step where
 
+import Control.Applicative
 import Control.Monad.Except
 import Control.Monad.State
 import qualified Data.Aeson as Aeson
@@ -53,7 +54,7 @@ stepAll expr = do
 
 stepAllProg [] = return ()
 stepAllProg (d:p) = do
-  --traceShowM $ pretty d
+--  traceShowM $ pretty d
   md <- stepDecl d
   case md of
     Nothing -> stepAllProg p
@@ -295,6 +296,7 @@ addEvent :: MonadEval m => Expr -> m ()
 addEvent expr
   | Just loc <- getSrcSpanMaybe expr
   , interesting expr = do
+--  traceShowM $ pretty expr
   let line = srcSpanStartLine loc
   let column = srcSpanStartCol loc
   let expr_width = srcSpanWidth loc
@@ -302,12 +304,12 @@ addEvent expr
   let stdout = ""
   let func_name = "<top-level>"
   Env env <- gets stVarEnv
-  let Env benv = baseEnv
-  let env' = Map.difference env benv
-  let ordered_globals = map fst $ Map.toList env'
-  let globals = env'
+--  let Env benv = baseEnv
+  let env' = init env
+  let ordered_globals = map fst $ last env'
+  let globals = Map.fromList $ last env'
   let heap = IntMap.empty
-  let stack = []
+  let stack = mkStack (init env')
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -333,13 +335,13 @@ addReturn expr
   let event = "return"
   let stdout = ""
   let func_name = "<top-level>"
-  Env env <- gets stVarEnv
-  let Env benv = baseEnv
-  let env' = Map.difference env benv
-  let ordered_globals = map fst $ Map.toList env'
-  let globals = Map.insert "__return__" (unVal expr) env'
+  Env env <- insertEnv "__return__" (unVal expr) <$> gets stVarEnv
+--  let Env benv = baseEnv
+  let env' = init env
+  let ordered_globals = reverse $ map fst $ last env'
+  let globals = Map.fromList $ last env'
   let heap = IntMap.empty
-  let stack = []
+  let stack = mkStack (init env')
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -354,6 +356,24 @@ addReturn expr
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addReturn _ = return ()
+
+mkStack :: [[(Var,Value)]] -> [Scope]
+mkStack env = case zipWith (\id e -> mkScope "let" id e) [1..] env of
+  s : ss -> s { scp_is_highlighted = True } : ss
+  ss -> ss
+
+mkScope :: Var -> Int -> [(Var,Value)] -> Scope
+mkScope fn id env = Scope
+  { scp_frame_id = id
+  , scp_encoded_locals = Map.fromList env
+  , scp_is_highlighted = False
+  , scp_is_parent = False
+  , scp_func_name = fn
+  , scp_is_zombie = False
+  , scp_parent_frame_id_list = []
+  , scp_unique_hash = fn ++ "_f" ++ show id
+  , scp_ordered_varnames = reverse $ map fst env
+  }
 
 interesting expr = case expr of
   Val {} -> False
@@ -376,7 +396,17 @@ instance Aeson.ToJSON Event where
     ]
 
 instance Aeson.ToJSON Scope where
-  toJSON _ = Aeson.object []
+  toJSON Scope {..} = Aeson.object
+    [ "frame_id"        Aeson..= Aeson.toJSON scp_frame_id
+    , "encoded_locals"  Aeson..= Aeson.toJSON scp_encoded_locals
+    , "is_highlighted"  Aeson..= Aeson.toJSON scp_is_highlighted
+    , "is_parent"       Aeson..= Aeson.toJSON scp_is_parent
+    , "func_name"       Aeson..= Aeson.toJSON scp_func_name
+    , "is_zombie"       Aeson..= Aeson.toJSON scp_is_zombie
+    , "parent_frame_id_list" Aeson..= Aeson.toJSON scp_parent_frame_id_list
+    , "unique_hash"     Aeson..= Aeson.toJSON scp_unique_hash
+    , "ordered_varnames" Aeson..= Aeson.toJSON scp_ordered_varnames
+    ]
 
 instance Aeson.ToJSON Value where
   toJSON (VI i) = Aeson.toJSON i

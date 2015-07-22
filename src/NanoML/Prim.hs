@@ -570,7 +570,7 @@ mkRec f lam = func
   env  = insertEnv f func baseEnv
 
 baseEnv :: Env
-baseEnv = Env . Map.fromList
+baseEnv = Env . (:[])
         $  map (second mkBopFun) primBops
         ++ primVars
 

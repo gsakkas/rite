@@ -192,29 +192,33 @@ subst su t = case t of
   ti :-> to -> subst su ti :-> subst su to
   TTup ts -> TTup (map (subst su) ts)
 
-newtype Env = Env (Map Var Value) deriving Show
+newtype Env = Env [[(Var,Value)]] deriving Show
 
 instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
 
 insertEnv :: Var -> Value -> Env -> Env
-insertEnv var val (Env env) = Env (Map.insert var val env)
+insertEnv var val (Env []) = Env [[(var, val)]]
+insertEnv var val (Env (e:es)) = Env (((var, val) : e): es)
 
 -- | Left-biased union of environments.
 joinEnv :: Env -> Env -> Env
-joinEnv (Env e1) (Env e2) = Env (Map.union e1 e2)
+joinEnv (Env e1) (Env e2) = Env (e1 ++ e2)
 
 lookupEnv :: MonadEval m => Var -> Env -> m Value
-lookupEnv v (Env env) = case Map.lookup v env of
-  Nothing -> throwError (UnboundVariable v)
-  Just x  -> return x
+lookupEnv v (Env env) = go env
+  where
+  go [] = throwError (UnboundVariable v)
+  go (e:es) = case lookup v e of
+    Nothing -> go es
+    Just x  -> return x
 
 toListEnv :: Env -> [(Var,Value)]
-toListEnv (Env e) = Map.toList e
+toListEnv (Env e) = concat e
 
 emptyEnv :: Env
-emptyEnv = Env Map.empty
+emptyEnv = Env []
 
 withEnv :: MonadEval m => m a -> Env -> m a
 m `withEnv` env = do
@@ -227,7 +231,7 @@ m `withEnv` env = do
 withExtendedEnv :: MonadEval m => m a -> Env -> m a
 m `withExtendedEnv` env = do
   genv <- gets stVarEnv
-  m `withEnv` (joinEnv genv env)
+  m `withEnv` (joinEnv env genv)
 
 data Value
   = VI !Int
@@ -348,6 +352,31 @@ getSrcSpanExprMaybe expr = case expr of
   Val ms _ -> ms
   With _ e -> getSrcSpanExprMaybe e
   Replace _ e -> getSrcSpanExprMaybe e
+
+onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
+onSrcSpanExpr f expr = case expr of
+  Var ms x -> Var (f ms) x
+  Lam ms x y -> Lam (f ms) x y
+  App ms x y -> App (f ms) x y
+  Bop ms x y z -> Bop (f ms) x y z
+  Uop ms x y -> Uop (f ms) x y
+  Lit ms x -> Lit (f ms) x
+  Let ms x y z -> Let (f ms) x y z
+  Ite ms x y z -> Ite (f ms) x y z
+  Seq ms x y -> Seq (f ms) x y
+  Case ms x y -> Case (f ms) x y
+  Tuple ms x -> Tuple (f ms) x
+  ConApp ms x y -> ConApp (f ms) x y
+  Record ms x -> Record (f ms) x
+  Field ms x y -> Field (f ms) x y
+  SetField ms x y z -> SetField (f ms) x y z
+  Array ms x -> Array (f ms) x
+  Try ms x y -> Try (f ms) x y
+  Prim1 ms x y -> Prim1 (f ms) x y
+  Prim2 ms x y z -> Prim2 (f ms) x y z
+  Val ms x -> Val (f ms) x
+  With x y -> With x (onSrcSpanExpr f y)
+  Replace x y -> Replace x (onSrcSpanExpr f y)
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
@@ -712,6 +741,34 @@ data Event = Event
   , evt_expr :: !Expr
   } deriving Show
 
+
+-- {
+--   "frame_id": 2, 
+--   "encoded_locals": {
+--     "a": 1, 
+--     "b": 2
+--   }, 
+--   "is_highlighted": false, 
+--   "is_parent": false, 
+--   "func_name": "bar", 
+--   "is_zombie": false, 
+--   "parent_frame_id_list": [], 
+--   "unique_hash": "bar_f2", 
+--   "ordered_varnames": [
+--     "a", 
+--     "b"
+--   ]
+-- }, 
+
 data Scope = Scope
-  deriving Show
+  { scp_frame_id :: !Int
+  , scp_encoded_locals :: !(Map Var Value)
+  , scp_is_highlighted :: !Bool
+  , scp_is_parent :: !Bool
+  , scp_func_name :: !String
+  , scp_is_zombie :: !Bool
+  , scp_parent_frame_id_list :: ![Int]
+  , scp_unique_hash :: !String
+  , scp_ordered_varnames :: ![Var]
+  } deriving Show
 
