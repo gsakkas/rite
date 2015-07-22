@@ -581,12 +581,12 @@ mkBopFun bop = VF $ Func (mkLams [varPatD "x", varPatD "y"]
 
 mkPrim1Fun :: Prim1 -> Value
 mkPrim1Fun f = VF $ Func (mkLams [varPatD "x"]
-                                 (Prim1 f (varD "x")))
+                                 (Prim1 Nothing f (varD "x")))
                          emptyEnv
 
 mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = VF $ Func (mkLams [varPatD "x", varPatD "y"]
-                                 (Prim2 f (varD "x") (varD "y")))
+                                 (Prim2 Nothing f (varD "x") (varD "y")))
                          emptyEnv
 
 tI = tCon tINT

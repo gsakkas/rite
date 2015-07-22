@@ -105,9 +105,9 @@ instance Pretty Expr where
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
       where zt = 5
-    Prim1 p x -> parens (text (show p) <+> pretty x)
-    Prim2 p x y -> parens (text (show p) <+> pretty x <+> pretty y)
-    Val v -> prettyPrec z v
+    Prim1 _ p x -> parens (text (show p) <+> pretty x)
+    Prim2 _ p x y -> parens (text (show p) <+> pretty x <+> pretty y)
+    Val _ v -> prettyPrec z v
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec undefined

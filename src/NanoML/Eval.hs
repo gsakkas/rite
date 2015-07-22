@@ -187,14 +187,14 @@ eval expr = logExpr expr $ case expr of
       case e of
         MLException ex -> evalAlts ex alts
         _              -> maybeThrow e
-  Prim1 (P1 p f t) e -> do
+  Prim1 _ (P1 p f t) e -> do
     v <- eval e
     force v t $ \v -> f v
-  Prim2 (P2 p f t1 t2) e1 e2 -> do
+  Prim2 _ (P2 p f t1 t2) e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
     forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2
-  Val v -> return v
+  Val _ v -> return v
 
 force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
 force x (TVar {}) k = k x -- delay instantiation until we have a concrete type
@@ -226,7 +226,7 @@ forceSame x y@(VH {}) k = force y (typeOf x) $ \y -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp f a = logExpr (App Nothing (Val f) [Val a]) $ case f of
+evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
   VF (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
     eval e `withEnv` joinEnv pat_env env
@@ -263,7 +263,7 @@ evalConApp dc v = do
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
-evalBop bop v1 v2 = logExpr (Bop Nothing bop (Val v1) (Val v2)) $ case bop of
+evalBop bop v1 v2 = logExpr (Bop Nothing bop (Val Nothing v1) (Val Nothing v2)) $ case bop of
   Eq     -> forceSame v1 v2 $ \v1 v2 -> VB <$> eqVal v1 v2
   Neq    -> forceSame v1 v2 $ \v1 v2 -> VB . not <$> eqVal v1 v2
   Lt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> ltVal v1 v2
@@ -352,7 +352,9 @@ matchPat v p = logMaybeEnv $ case p of
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
   IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v -> do
-    VB b <- eval (mkApps Nothing (Var Nothing "&&") [mkApps Nothing (Var Nothing ">=") [Val v, Lit Nothing lo], mkApps Nothing (Var Nothing "<=") [Val v, Lit Nothing hi]])
+    VB b <- eval (mkApps Nothing (Var Nothing "&&")
+                  [ mkApps Nothing (Var Nothing ">=") [Val Nothing v, Lit Nothing lo]
+                  , mkApps Nothing (Var Nothing "<=") [Val Nothing v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> force v (tL a) $ \v -> do
     case v of

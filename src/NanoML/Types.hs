@@ -317,9 +317,9 @@ data Expr
   | SetField !MSrcSpan Expr String Expr
   | Array !MSrcSpan [Expr]
   | Try !MSrcSpan Expr [Alt]
-  | Prim1 Prim1 Expr
-  | Prim2 Prim2 Expr Expr
-  | Val Value -- embed a value inside an Expr for ease of tracing
+  | Prim1 !MSrcSpan Prim1 Expr
+  | Prim2 !MSrcSpan Prim2 Expr Expr
+  | Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
   | With Env Expr
   | Replace Env Expr
   deriving (Show, Generic)
@@ -343,9 +343,11 @@ getSrcSpanExprMaybe expr = case expr of
   SetField ms _ _ _ -> ms
   Array ms _ -> ms
   Try ms _ _ -> ms
+  Prim1 ms _ _ -> ms
+  Prim2 ms _ _ _ -> ms
+  Val ms _ -> ms
   With _ e -> getSrcSpanExprMaybe e
   Replace _ e -> getSrcSpanExprMaybe e
-  _ -> Nothing
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
