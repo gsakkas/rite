@@ -120,15 +120,18 @@ tokens :-
   \' ($printable # [\']) \' { tokS TokChar }
 
 {
+
+-- mkL c (p,_,_,str) len = return (L p c (take len str))
+
 tok :: Token -> AlexInput -> Int -> Alex LToken
-tok t _ len = do
-  (l,c) <- getPosition
+tok t (p,_,_,_) len = do
+  let (l,c) = getPos p
   let ss = SrcSpan l c l (c + len)
   return (LToken ss t)
 
 tokS :: (String -> Token) -> AlexInput -> Int -> Alex LToken
-tokS t (_, _, _, str) len = do
-  (l,c) <- getPosition
+tokS t (p,_,_,str) len = do
+  let (l,c) = getPos p
   let ss = SrcSpan l c l (c + len)
   return (LToken ss (t (take len str)))
 
@@ -136,6 +139,7 @@ mkExp :: String -> String
 mkExp s = let (d,f) = break (=='.') s in d ++ ".0" ++ drop 1 f
 
 data LToken = LToken SrcSpan Token
+  deriving Show
 
 data Token
   = TokId String

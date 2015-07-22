@@ -272,6 +272,12 @@ data SrcSpan = SrcSpan
   , srcSpanEndCol    :: !Int
   } deriving (Show, Generic)
 
+srcSpanWidth SrcSpan {..}
+  | srcSpanStartLine == srcSpanEndLine
+  = srcSpanEndCol - srcSpanStartCol
+  | otherwise -- TODO:
+  = 1
+
 joinSrcSpan x y = SrcSpan (srcSpanStartLine x) (srcSpanStartCol x)
                           (srcSpanEndLine y)   (srcSpanEndCol y)
 
@@ -698,31 +704,12 @@ data Event = Event
   , evt_globals :: !(Map Var Value)
   , evt_heap :: !(IntMap Value)
   , evt_line :: !Int
+  , evt_column :: !Int
+  , evt_expr_width :: !Int
   , evt_event :: !String
+  , evt_expr :: !Expr
   } deriving Show
 
 data Scope = Scope
   deriving Show
 
-instance Aeson.ToJSON Event where
-  toJSON Event {..} = Aeson.object
-    [ "ordered_globals" Aeson..= Aeson.toJSON evt_ordered_globals
-    , "stdout"          Aeson..= Aeson.toJSON evt_stdout
-    , "func_name"       Aeson..= Aeson.toJSON evt_func_name
-    , "stack_to_render" Aeson..= Aeson.toJSON evt_stack_to_render
-    , "globals"         Aeson..= Aeson.toJSON evt_globals
-    , "heap"            Aeson..= Aeson.toJSON evt_heap
-    , "line"            Aeson..= Aeson.toJSON evt_line
-    , "event"           Aeson..= Aeson.toJSON evt_event
-    ]
-
-instance Aeson.ToJSON Scope where
-  toJSON _ = Aeson.object []
-
-instance Aeson.ToJSON Value where
-  toJSON (VI i) = Aeson.toJSON i
-  toJSON (VD d) = Aeson.toJSON d
-  toJSON (VB b) = Aeson.toJSON b
-  toJSON (VC c) = Aeson.toJSON c
-  toJSON (VS s) = Aeson.toJSON s
-  toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)

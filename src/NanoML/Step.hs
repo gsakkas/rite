@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns   #-}
 {-# LANGUAGE BangPatterns     #-}
@@ -61,13 +62,13 @@ stepDecl decl = case decl of
       (\es -> return . Just $ DFun ss NonRec (zip ps es))
   DEvl ss expr
     | isVal expr -> return Nothing
-    | otherwise  -> Just . DEvl ss <$> step expr
+    | otherwise  -> addEvent expr >> Just . DEvl ss <$> step expr
   DTyp _ decls -> mapM_ addType decls >> return Nothing
   DExn _ decl -> extendType "exn" decl >> return Nothing
 
 
 step :: MonadEval m => Expr -> m Expr
-step expr = addEvent expr >> case expr of
+step expr = case expr of
   Val v -> return expr
   With env e -> do
     e' <- step e `withExtendedEnv` env
@@ -279,8 +280,11 @@ concatMapM f xs = liftM concat (mapM f xs)
 
 addEvent :: MonadEval m => Expr -> m ()
 addEvent expr
-  | Just loc <- getSrcSpanMaybe expr = do
+  | Just loc <- getSrcSpanMaybe expr
+  , interesting expr = do
   let line = srcSpanStartLine loc
+  let column = srcSpanStartCol loc
+  let expr_width = srcSpanWidth loc
   let event = "step_line"
   let stdout = ""
   let func_name = "<top-level>"
@@ -298,7 +302,41 @@ addEvent expr
                   , evt_globals = globals
                   , evt_heap = heap
                   , evt_line = line
+                  , evt_column = column - 1
+                  , evt_expr_width = expr_width
                   , evt_event = event
+                  , evt_expr = expr
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addEvent _ = return ()
+
+interesting expr = case expr of
+  Val {} -> False
+  Var {} -> False
+  _      -> True
+
+instance Aeson.ToJSON Event where
+  toJSON Event {..} = Aeson.object
+    [ "ordered_globals" Aeson..= Aeson.toJSON evt_ordered_globals
+    , "stdout"          Aeson..= Aeson.toJSON evt_stdout
+    , "func_name"       Aeson..= Aeson.toJSON evt_func_name
+    , "stack_to_render" Aeson..= Aeson.toJSON evt_stack_to_render
+    , "globals"         Aeson..= Aeson.toJSON evt_globals
+    , "heap"            Aeson..= Aeson.toJSON evt_heap
+    , "line"            Aeson..= Aeson.toJSON evt_line
+    , "column"          Aeson..= Aeson.toJSON evt_column
+    , "expr_width"      Aeson..= Aeson.toJSON evt_expr_width
+    , "event"           Aeson..= Aeson.toJSON evt_event
+    , "expr"            Aeson..= Aeson.toJSON (show (pretty evt_expr))
+    ]
+
+instance Aeson.ToJSON Scope where
+  toJSON _ = Aeson.object []
+
+instance Aeson.ToJSON Value where
+  toJSON (VI i) = Aeson.toJSON i
+  toJSON (VD d) = Aeson.toJSON d
+  toJSON (VB b) = Aeson.toJSON b
+  toJSON (VC c) = Aeson.toJSON c
+  toJSON (VS s) = Aeson.toJSON s
+  toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)
