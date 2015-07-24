@@ -16,6 +16,7 @@ import Control.Monad.Fix
 import Control.Monad.Random
 import Control.Monad.RWS   hiding (Alt)
 import Data.IORef
+import Data.List
 import Data.Maybe
 import qualified Data.Vector as Vector
 import System.IO.Unsafe
@@ -50,13 +51,13 @@ evalDecl decl = case decl of
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do
-  env <- gets stVarEnv
-  mfix $ \fenv -> setVarEnv fenv >> foldr joinEnv env <$> evalBinds binds
+  env <- allocEnv "let-rec"
+  mfix $ \fenv -> setVarEnv fenv >> foldl' joinEnv env <$> evalBinds binds
 
 evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalNonRecBinds binds = do
-  env <- gets stVarEnv
-  foldr joinEnv env <$> evalBinds binds
+  env <- allocEnv "let"
+  foldl' joinEnv env <$> evalBinds binds
 
 evalBinds :: MonadEval m => [(Pat,Expr)] -> m [Env]
 evalBinds binds = mapM evalBind binds
@@ -101,7 +102,7 @@ mycensor f m = pass $ do
 eval :: MonadEval m => Expr -> m Value
 eval expr = logExpr expr $ case expr of
   Var ms v ->
-    lookupEnv v =<< gets stVarEnv
+    lookupVar v
   Lam ms _ _ ->
     VF . Func expr <$> gets stVarEnv
   App ms f args -> do

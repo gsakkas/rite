@@ -567,10 +567,10 @@ mkRec :: Var -> Expr -> Value
 mkRec f lam = func
   where
   func = VF (Func lam env)
-  env  = insertEnv f func baseEnv
+  env  = {- insertEnv f func -} baseEnv
 
 baseEnv :: Env
-baseEnv = Env . (:[])
+baseEnv = Env 0 "global" Nothing
         $  map (second mkBopFun) primBops
         ++ primVars
 

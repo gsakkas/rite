@@ -192,33 +192,70 @@ subst su t = case t of
   ti :-> to -> subst su ti :-> subst su to
   TTup ts -> TTup (map (subst su) ts)
 
-newtype Env = Env [[(Var,Value)]] deriving Show
+-- TODO: this is not precise enough for the visualizer.
+-- we need an environment graph so we can have, eg multiple
+-- scopes from recursive calls that all share the global
+-- scope as a parent
+-- newtype Env = Env [[(Var,Value)]] deriving Show
+
+data Env = Env
+  { envId :: !Ref
+  , envName :: !String
+  , envParent :: !(Maybe Env)
+  , envEnv :: ![(Var,Value)]
+  } deriving Show
 
 instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
 
+allocEnv fn = do
+  p <- gets stVarEnv
+  allocEnvWith fn p
+
+allocEnvWith :: MonadEval m => Var -> Env -> m Env
+allocEnvWith fn p = do
+  i <- fresh
+  return Env { envId = i, envName = fn, envParent = Just p, envEnv = [] }
+
+freeEnv :: MonadEval m => Ref -> m ()
+freeEnv = undefined
+
 insertEnv :: Var -> Value -> Env -> Env
-insertEnv var val (Env []) = Env [[(var, val)]]
-insertEnv var val (Env (e:es)) = Env (((var, val) : e): es)
+insertEnv var val env = env { envEnv = (var,val) : envEnv env }
+-- insertEnv var val (Env []) = Env [[(var, val)]]
+-- insertEnv var val (Env (e:es)) = Env (((var, val) : e): es)
 
 -- | Left-biased union of environments.
 joinEnv :: Env -> Env -> Env
-joinEnv (Env e1) (Env e2) = Env (e1 ++ e2)
+joinEnv e1 e2 = e1 { envEnv = envEnv e1 ++ envEnv e2 }
 
 lookupEnv :: MonadEval m => Var -> Env -> m Value
-lookupEnv v (Env env) = go env
-  where
-  go [] = throwError (UnboundVariable v)
-  go (e:es) = case lookup v e of
-    Nothing -> go es
-    Just x  -> return x
+lookupEnv v Env {..} = case lookup v envEnv of
+  Nothing
+    | Just p <- envParent -> lookupEnv v p
+    | otherwise           -> throwError (UnboundVariable v)
+  Just x                  -> return x
+  -- where
+  -- go [] = throwError (UnboundVariable v)
+  -- go (e:es) = case lookup v e of
+  --   Nothing -> go es
+  --   Just x  -> return x
 
-toListEnv :: Env -> [(Var,Value)]
-toListEnv (Env e) = concat e
+-- getEnv :: MonadEval m => Ref -> m Env
+-- getEnv i = (IntMap.! i) <$> gets stEnvMap
+
+lookupVar :: MonadEval m => Var -> m Value
+lookupVar v = lookupEnv v =<< gets stVarEnv
+
+toListEnv :: Env -> [Env]
+toListEnv env = env : maybe [] toListEnv (envParent env)
+
+-- toListEnv :: Env -> [(Var,Value)]
+-- toListEnv (Env e) = concat e
 
 emptyEnv :: Env
-emptyEnv = Env []
+emptyEnv = Env 0 "" Nothing []
 
 withEnv :: MonadEval m => m a -> Env -> m a
 m `withEnv` env = do

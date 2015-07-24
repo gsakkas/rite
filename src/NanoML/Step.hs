@@ -31,6 +31,7 @@ import NanoML.Types
 
 import Debug.Trace
 
+writeTrace :: String -> Seq.Seq Event -> IO ()
 writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
                                 ("var trace = " <> Aeson.encode obj)
   where
@@ -76,12 +77,15 @@ stepDecl decl = case decl of
   DTyp _ decls -> mapM_ addType decls >> return Nothing
   DExn _ decl -> extendType "exn" decl >> return Nothing
 
+-- stepNonRecBinds binds = do
+--   env <- evalNonRecBinds
+  
 
 step :: MonadEval m => Expr -> m Expr
 step expr = case expr of
   Val _ v -> return expr
   With env e -> do
-    e' <- step e `withExtendedEnv` env
+    e' <- step e `withEnv` env
     return $ if isVal e'
              then e'
              else With env e'
@@ -107,7 +111,8 @@ step expr = case expr of
   Lit ms l -> return (Val ms (litValue l))
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
-    return $ With env body
+    nenv <- allocEnv ("let:" ++ show (srcSpanStartLine $ fromJust ms))
+    return $ With (joinEnv nenv env) body
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
     -- stepOne es
@@ -116,9 +121,11 @@ step expr = case expr of
     --   (\es -> return $ Let Rec (zip ps es) body)
   Let ms NonRec binds body -> do
     let (ps, es) = unzip binds
-    env <- gets stVarEnv
     stepOne es
-      (\vs -> flip With body <$> evalNonRecBinds (zip ps vs))
+      (\vs -> do env <- evalNonRecBinds (zip ps vs)
+                 nenv <- allocEnv ("let:" ++ show (srcSpanStartLine $ fromJust ms))
+                 return $ With (joinEnv nenv env) body
+      )
       (\es -> return $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
     | Val _ b <- b
@@ -198,13 +205,15 @@ stepApp ms (Val _ f) es = case f of
   VF (Func x env)
     | (ps, e, env) <- gatherLams f -> do
         let (vs, es') = splitAt (length ps) es
-        traceShowM (map pretty ps, pretty e)
-        traceShowM (map unVal vs, map unVal es')
+        -- traceShowM (map pretty ps, pretty e)
+        -- traceShowM (map unVal vs, map unVal es')
         Just pat_env <- mconcat <$> zipWithM matchPat (map unVal vs) ps
         -- pushEnv env
         -- pushEnv pat_env
-        Replace env . With pat_env <$> case es' of
-          [] -> traceShowM (pretty e) >> return (onSrcSpanExpr (<|> ms) e)
+        nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env
+        let with = With (joinEnv nenv pat_env)
+        Replace env . with <$> case es' of
+          [] -> addCall e `withEnv` joinEnv nenv pat_env >> return (onSrcSpanExpr (<|> ms) e)
           _  -> return $ App ms e es'
   _ -> typeError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
@@ -230,12 +239,14 @@ stepAlts _ []
 stepAlts (Val ms v) ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> stepAlts (Val ms v) as
-      Just bnd -> do newenv <- joinEnv bnd <$> gets stVarEnv
+      Just bnd -> 
                      case g of
                       Nothing -> return $ With bnd e
-                      Just g  ->
-                        eval g `withExtendedEnv` newenv >>= \case
-                          VB True  -> return $ With bnd e
+                      Just g  -> do
+                        nenv <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms))
+                        let newenv = joinEnv nenv bnd
+                        eval g `withEnv` newenv >>= \case
+                          VB True  -> return $ With newenv e
                           VB False -> stepAlts (Val ms v) as
 
 ----------------------------------------------------------------------
@@ -296,20 +307,21 @@ addEvent :: MonadEval m => Expr -> m ()
 addEvent expr
   | Just loc <- getSrcSpanMaybe expr
   , interesting expr = do
---  traceShowM $ pretty expr
+  -- traceShowM $ pretty expr
   let line = srcSpanStartLine loc
   let column = srcSpanStartCol loc
   let expr_width = srcSpanWidth loc
   let event = "step_line"
   let stdout = ""
   let func_name = "<top-level>"
-  Env env <- gets stVarEnv
+  envs <- init . toListEnv <$> gets stVarEnv
 --  let Env benv = baseEnv
-  let env' = init env
-  let ordered_globals = map fst $ last env'
-  let globals = Map.fromList $ last env'
+  traceShowM (pretty expr, length envs)  
+  let genv = [] -- envEnv $ last envs
+  let ordered_globals = reverse $ map fst genv
+  let globals = Map.fromList genv
   let heap = IntMap.empty
-  let stack = mkStack (init env')
+  let stack = mkStack envs -- (init envs)
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -325,23 +337,57 @@ addEvent expr
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addEvent _ = return ()
 
+addCall :: MonadEval m => Expr -> m ()
+addCall expr
+  | Just loc <- getSrcSpanMaybe expr = do
+  -- traceShowM $ pretty expr
+  let line = srcSpanStartLine loc
+  let column = srcSpanStartCol loc
+  let expr_width = srcSpanWidth loc
+  let event = "call"
+  let stdout = ""
+  let func_name = "<top-level>"
+  envs <- init . toListEnv <$> gets stVarEnv
+--  let Env benv = baseEnv
+  traceShowM ("call", pretty expr, length envs)  
+  let genv = [] -- envEnv $ last envs
+  let ordered_globals = reverse $ map fst genv
+  let globals = Map.fromList genv
+  let heap = IntMap.empty
+  let stack = mkStack envs -- (init envs)
+  let evt = Event { evt_ordered_globals = ordered_globals
+                  , evt_stdout = stdout
+                  , evt_func_name = func_name
+                  , evt_stack_to_render = stack
+                  , evt_globals = globals
+                  , evt_heap = heap
+                  , evt_line = line
+                  , evt_column = column - 1
+                  , evt_expr_width = expr_width
+                  , evt_event = event
+                  , evt_expr = expr
+                  }
+  modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
+addCall _ = return ()
+
 addReturn :: MonadEval m => Expr -> m ()
 addReturn expr
   | Just loc <- getSrcSpanMaybe expr = do
---  traceShowM $ pretty expr
+  -- traceShowM $ pretty expr
   let line = srcSpanStartLine loc
   let column = srcSpanStartCol loc
   let expr_width = srcSpanWidth loc
   let event = "return"
   let stdout = ""
   let func_name = "<top-level>"
-  Env env <- insertEnv "__return__" (unVal expr) <$> gets stVarEnv
+  envs <- init . toListEnv . insertEnv "__return__" (unVal expr) <$> gets stVarEnv
 --  let Env benv = baseEnv
-  let env' = init env
-  let ordered_globals = reverse $ map fst $ last env'
-  let globals = Map.fromList $ last env'
+  traceShowM ("return", pretty expr, length envs)  
+  let genv = [] -- envEnv $ last envs
+  let ordered_globals = reverse $ map fst genv
+  let globals = Map.fromList genv
   let heap = IntMap.empty
-  let stack = mkStack (init env')
+  let stack = mkStack envs -- (init envs)
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -357,23 +403,35 @@ addReturn expr
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addReturn _ = return ()
 
-mkStack :: [[(Var,Value)]] -> [Scope]
-mkStack env = case zipWith (\id e -> mkScope "let" id e) [1..] env of
+mkStack :: [Env] -> [Scope]
+mkStack env = markParents . reverse $ case zipWith (\id e -> mkScope e) [1..] env of
   s : ss -> s { scp_is_highlighted = True } : ss
   ss -> ss
 
-mkScope :: Var -> Int -> [(Var,Value)] -> Scope
-mkScope fn id env = Scope
-  { scp_frame_id = id
-  , scp_encoded_locals = Map.fromList env
+mkScope :: Env -> Scope
+mkScope e = Scope
+  { scp_frame_id = envId e
+  , scp_encoded_locals = Map.fromList $ envEnv e
   , scp_is_highlighted = False
   , scp_is_parent = False
-  , scp_func_name = fn
+  , scp_func_name = envName e
   , scp_is_zombie = False
-  , scp_parent_frame_id_list = []
-  , scp_unique_hash = fn ++ "_f" ++ show id
-  , scp_ordered_varnames = reverse $ map fst env
+  , scp_parent_frame_id_list = (\\[0]) . map envId . tail $ toListEnv e
+  , scp_unique_hash = mkHash e
+  , scp_ordered_varnames = reverse $ map fst (envEnv e)
   }
+
+mkHash :: Env -> String
+mkHash e = envName e ++ "_f" ++ show (envId e)
+
+markParents :: [Scope] -> [Scope]
+markParents []     = []
+markParents (s:ss) = s' : ss'
+  where
+  ss' = markParents ss
+  s'  = if any (\p -> scp_frame_id s `elem` scp_parent_frame_id_list p) ss'
+        then s { scp_is_parent = True, scp_unique_hash = scp_unique_hash s ++ "_p" }
+        else s
 
 interesting expr = case expr of
   Val {} -> False
