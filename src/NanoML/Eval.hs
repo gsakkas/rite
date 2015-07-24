@@ -51,20 +51,23 @@ evalDecl decl = case decl of
 
 evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalRecBinds binds = do
-  env <- allocEnv "let-rec"
-  mfix $ \fenv -> setVarEnv fenv >> foldl' joinEnv env <$> evalBinds binds
+  penv <- gets stVarEnv
+  mfix $ \fenv -> do
+    setVarEnv fenv
+    bnd <- evalBinds binds
+    allocEnvWith "let-rec" penv bnd
 
 evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
 evalNonRecBinds binds = do
-  env <- allocEnv "let"
-  foldl' joinEnv env <$> evalBinds binds
+  bnd <- evalBinds binds
+  allocEnv "let" bnd
 
-evalBinds :: MonadEval m => [(Pat,Expr)] -> m [Env]
-evalBinds binds = mapM evalBind binds
+evalBinds :: MonadEval m => [(Pat,Expr)] -> m [(Var,Value)]
+evalBinds binds = concatMapM evalBind binds
 
 -- | @evalBind (p,e) env@ returns the environment matched by @p@
-evalBind :: MonadEval m => (Pat,Expr) -> m Env
-evalBind (p,e) = logEnv $ do
+evalBind :: MonadEval m => (Pat,Expr) -> m [(Var,Value)]
+evalBind (p,e) = do
   v <- eval e
   matchPat v p >>= \case
     Nothing  -> throwError $ MLException (mkExn "Match_failure" [])
@@ -230,7 +233,7 @@ evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
   VF (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
-    eval e `withEnv` joinEnv pat_env env
+    eval e `withEnv` undefined -- joinEnv pat_env env
   _ -> typeError "tried to apply a non-function"
 
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
@@ -335,7 +338,7 @@ evalAlts _ []
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
-      Just bnd -> do newenv <- joinEnv bnd <$> gets stVarEnv
+      Just bnd -> do newenv <- undefined -- joinEnv bnd <$> gets stVarEnv
                      case g of
                       Nothing -> eval e `withEnv` newenv
                       Just g  ->
@@ -345,10 +348,10 @@ evalAlts v ((p,g,e):as)
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
-matchPat :: MonadEval m => Value -> Pat -> m (Maybe Env)
-matchPat v p = logMaybeEnv $ case p of
+matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
+matchPat v p = case p of
   VarPat _ var ->
-    return $ Just (insertEnv var v emptyEnv)
+    return $ Just [(var,v)]
   LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
@@ -365,24 +368,24 @@ matchPat v p = logMaybeEnv $ case p of
         menv1 <- matchPat x p
         menv2 <- matchPat xs ps
         case (menv1, menv2) of
-         (Just env1, Just env2) -> return $ Just (joinEnv env1 env2)
+         (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
   ListPat _ ps -> force v (tL a) $ \(VL vs _) -> do
     if length ps /= length vs
       then return Nothing
-      else fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+      else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
   TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs _) -> do
-    fmap (foldr joinEnv emptyEnv) . (sequence :: [Maybe Env] -> Maybe [Env])
+    fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
-    return $ Just emptyEnv
+    return $ Just mempty
   ConPat _ "[]" Nothing -> force v (tL a) $ \(VL vs _) ->
     case vs of
-      [] -> return (Just emptyEnv)
+      [] -> return (Just mempty)
       _  -> return Nothing
   ConPat _ "()" Nothing -> force v tU $ \v ->
-    return (Just emptyEnv)
+     return (Just mempty)
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
@@ -397,7 +400,7 @@ matchPat v p = logMaybeEnv $ case p of
           (Just p,  Just v)  -> matchPat v p
   AsPat _ p x -> do
     Just env <- matchPat v p
-    return (Just (insertEnv x v env))
+    return (Just ((x,v) : env))
   ConstraintPat _ p t -> force v t $ \v -> do
     matchPat v p
   _ -> err

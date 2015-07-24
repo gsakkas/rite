@@ -104,7 +104,7 @@ outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
 data EvalState = EvalState
-  { stVarEnv   :: !Env
+  { stVarEnv   :: Env
   , stTypeEnv  :: !(Map TCon TypeDecl)
   , stDataEnv  :: !(Map DCon DataDecl)
   , stFieldEnv :: !(Map String TypeDecl)
@@ -112,6 +112,7 @@ data EvalState = EvalState
   , stStore    :: !(IntMap (MutFlag, Value))
   , stArgs     :: ![Expr]
   , stTrace    :: !(Seq Event)
+  , stEnvMap   :: !(IntMap Env)
   } deriving Show
 
 rememberArgs :: MonadEval m => [Expr] -> m ()
@@ -209,14 +210,18 @@ instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
 
-allocEnv fn = do
+allocEnv fn bnd = do
   p <- gets stVarEnv
-  allocEnvWith fn p
+  allocEnvWith fn p bnd
 
-allocEnvWith :: MonadEval m => Var -> Env -> m Env
-allocEnvWith fn p = do
+allocEnvWith :: MonadEval m => Var -> Env -> [(Var,Value)] -> m Env
+allocEnvWith fn p bnd = do
   i <- fresh
-  return Env { envId = i, envName = fn, envParent = Just p, envEnv = [] }
+--  traceShowM (i, fn)
+--  traceShowM (i, envId p)
+  let e = Env { envId = i, envName = fn, envParent = Just p, envEnv = bnd }
+  modify' $ \s -> s { stEnvMap = IntMap.insert i e (stEnvMap s) }
+  return e
 
 freeEnv :: MonadEval m => Ref -> m ()
 freeEnv = undefined
@@ -242,8 +247,8 @@ lookupEnv v Env {..} = case lookup v envEnv of
   --   Nothing -> go es
   --   Just x  -> return x
 
--- getEnv :: MonadEval m => Ref -> m Env
--- getEnv i = (IntMap.! i) <$> gets stEnvMap
+getEnv :: MonadEval m => Ref -> m Env
+getEnv i = (IntMap.! i) <$> gets stEnvMap
 
 lookupVar :: MonadEval m => Var -> m Value
 lookupVar v = lookupEnv v =<< gets stVarEnv

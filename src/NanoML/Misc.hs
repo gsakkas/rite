@@ -420,3 +420,6 @@ readFileStrict = fmap T.unpack . TIO.readFile
 fst3 (a,b,c) = a
 snd3 (a,b,c) = b
 thd3 (a,b,c) = c
+
+concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
+concatMapM f xs = liftM concat (mapM f xs)

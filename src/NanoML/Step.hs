@@ -44,7 +44,8 @@ writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
              && evt_event x == evt_event y
 
 runStep opts x = case runEvalFull opts x of
-  (_, st, _) -> stTrace st
+  (Left e, st, _)  -> traceShow e $ stTrace st
+  (Right v, st, _) -> stTrace st
 
 stepAll expr = do
   --traceShowM $ pretty expr
@@ -79,7 +80,7 @@ stepDecl decl = case decl of
 
 -- stepNonRecBinds binds = do
 --   env <- evalNonRecBinds
-  
+
 
 step :: MonadEval m => Expr -> m Expr
 step expr = case expr of
@@ -111,8 +112,7 @@ step expr = case expr of
   Lit ms l -> return (Val ms (litValue l))
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
-    nenv <- allocEnv ("let:" ++ show (srcSpanStartLine $ fromJust ms))
-    return $ With (joinEnv nenv env) body
+    return $ With env body
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
     -- stepOne es
@@ -123,8 +123,7 @@ step expr = case expr of
     let (ps, es) = unzip binds
     stepOne es
       (\vs -> do env <- evalNonRecBinds (zip ps vs)
-                 nenv <- allocEnv ("let:" ++ show (srcSpanStartLine $ fromJust ms))
-                 return $ With (joinEnv nenv env) body
+                 return $ With env body
       )
       (\es -> return $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
@@ -210,10 +209,10 @@ stepApp ms (Val _ f) es = case f of
         Just pat_env <- mconcat <$> zipWithM matchPat (map unVal vs) ps
         -- pushEnv env
         -- pushEnv pat_env
-        nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env
-        let with = With (joinEnv nenv pat_env)
+        nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
+        let with = With nenv
         Replace env . with <$> case es' of
-          [] -> addCall e `withEnv` joinEnv nenv pat_env >> return (onSrcSpanExpr (<|> ms) e)
+          [] -> addCall e `withEnv` nenv >> return (onSrcSpanExpr (<|> ms) e)
           _  -> return $ App ms e es'
   _ -> typeError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
@@ -225,7 +224,7 @@ stepApp _ f es = error (show (f:es))
 --   case tl of
 --           -- this doesn't seem right..
 --     [] -> return e -- step e `withExtendedEnv` joinEnv pat_env env
---     --vs -> 
+--     --vs ->
 
 --stepBop :: MonadEval m => Bop -> Expr -> Expr -> m Expr
 stepBop ms bop (Val _ v1) (Val _ v2) = Val ms <$> evalBop bop v1 v2
@@ -239,14 +238,12 @@ stepAlts _ []
 stepAlts (Val ms v) ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> stepAlts (Val ms v) as
-      Just bnd -> 
+      Just bnd -> do bnd <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms)) bnd
                      case g of
                       Nothing -> return $ With bnd e
                       Just g  -> do
-                        nenv <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms))
-                        let newenv = joinEnv nenv bnd
-                        eval g `withEnv` newenv >>= \case
-                          VB True  -> return $ With newenv e
+                        eval g `withEnv` bnd >>= \case
+                          VB True  -> return $ With bnd e
                           VB False -> stepAlts (Val ms v) as
 
 ----------------------------------------------------------------------
@@ -265,7 +262,7 @@ stepOne es kv ke = do
     (e:es) -> do
       v <- step e
       ke (vals ++ v : es)
-          
+
 -- single :: Functor m => m a -> m [a]
 -- single = fmap (:[])
 
@@ -280,7 +277,7 @@ stepOne es kv ke = do
 --                        concatMapM (\v -> do x <- k (vals ++ v : es)
 --                                             (x:) <$> go es (vals ++ [v])
 --                                   ) vs
-                       
+
 
 isVal :: Expr -> Bool
 isVal (Val _ _)    = True
@@ -299,9 +296,6 @@ gatherLams (VF (Func (Lam _ p e) env)) = go [p] e
   go ps (Lam _ p e) = go (p:ps) e
   go ps e           = (reverse ps, e, env)
 
-concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-concatMapM f xs = liftM concat (mapM f xs)
-
 
 addEvent :: MonadEval m => Expr -> m ()
 addEvent expr
@@ -314,14 +308,16 @@ addEvent expr
   let event = "step_line"
   let stdout = ""
   let func_name = "<top-level>"
-  envs <- init . toListEnv <$> gets stVarEnv
+  id <- envId <$> gets stVarEnv
+  envs <- IntMap.elems . IntMap.delete 0 <$> gets stEnvMap
 --  let Env benv = baseEnv
-  traceShowM (pretty expr, length envs)  
+  -- traceShowM (pretty expr, length envs)
   let genv = [] -- envEnv $ last envs
   let ordered_globals = reverse $ map fst genv
   let globals = Map.fromList genv
   let heap = IntMap.empty
-  let stack = mkStack envs -- (init envs)
+  let stack = mkStack id envs -- (init envs)
+  -- traceShowM stack
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -347,14 +343,17 @@ addCall expr
   let event = "call"
   let stdout = ""
   let func_name = "<top-level>"
-  envs <- init . toListEnv <$> gets stVarEnv
+  id <- envId <$> gets stVarEnv
+  envs <- IntMap.elems . IntMap.delete 0 <$> gets stEnvMap
 --  let Env benv = baseEnv
-  traceShowM ("call", pretty expr, length envs)  
+  -- traceShowM ("call", pretty expr, length envs)
   let genv = [] -- envEnv $ last envs
   let ordered_globals = reverse $ map fst genv
   let globals = Map.fromList genv
   let heap = IntMap.empty
-  let stack = mkStack envs -- (init envs)
+  let stack = mkStack id envs -- (init envs)
+  -- traceShowM ("call", stack)
+
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -380,14 +379,17 @@ addReturn expr
   let event = "return"
   let stdout = ""
   let func_name = "<top-level>"
-  envs <- init . toListEnv . insertEnv "__return__" (unVal expr) <$> gets stVarEnv
+  id <- envId <$> gets stVarEnv
+  envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust (insertEnv "__return__" (unVal expr)) id <$> gets stEnvMap
 --  let Env benv = baseEnv
-  traceShowM ("return", pretty expr, length envs)  
+  -- traceShowM ("return", pretty expr, length envs)
   let genv = [] -- envEnv $ last envs
   let ordered_globals = reverse $ map fst genv
   let globals = Map.fromList genv
   let heap = IntMap.empty
-  let stack = mkStack envs -- (init envs)
+  let stack = mkStack id envs -- (init envs)
+  -- traceShowM stack
+
   let evt = Event { evt_ordered_globals = ordered_globals
                   , evt_stdout = stdout
                   , evt_func_name = func_name
@@ -403,20 +405,20 @@ addReturn expr
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addReturn _ = return ()
 
-mkStack :: [Env] -> [Scope]
-mkStack env = markParents . reverse $ case zipWith (\id e -> mkScope e) [1..] env of
-  s : ss -> s { scp_is_highlighted = True } : ss
-  ss -> ss
+mkStack :: Ref -> [Env] -> [Scope]
+mkStack id env = markParents (map (mkScope id) env)
+  -- s : ss -> s { scp_is_highlighted = True } : ss
+  -- ss -> ss
 
-mkScope :: Env -> Scope
-mkScope e = Scope
+mkScope :: Ref -> Env -> Scope
+mkScope id e = Scope
   { scp_frame_id = envId e
   , scp_encoded_locals = Map.fromList $ envEnv e
-  , scp_is_highlighted = False
+  , scp_is_highlighted = envId e == id
   , scp_is_parent = False
   , scp_func_name = envName e
   , scp_is_zombie = False
-  , scp_parent_frame_id_list = (\\[0]) . map envId . tail $ toListEnv e
+  , scp_parent_frame_id_list = maybe [] (\p -> [envId p] \\ [0]) (envParent e) -- (\\[0]) . map envId . tail $ toListEnv e
   , scp_unique_hash = mkHash e
   , scp_ordered_varnames = reverse $ map fst (envEnv e)
   }

@@ -9,6 +9,7 @@ import Control.Monad.Random (RandT, evalRandT, liftRandT, runRandT, MonadRandom)
 import Control.Monad.Reader.Class
 import Control.Monad.State
 import Control.Monad.Writer.Class
+import qualified Data.IntMap as IntMap
 import Data.Foldable
 import Data.Sequence
 import System.Random
@@ -84,8 +85,9 @@ initState = EvalState
   , stTypeEnv = baseTypeEnv
   , stDataEnv = baseDataEnv
   , stFieldEnv = baseFieldEnv
-  , stFresh = 1
+  , stFresh = succ (envId baseEnv)
   , stStore = mempty
   , stArgs = []
   , stTrace = mempty
+  , stEnvMap = IntMap.fromList [(envId baseEnv, baseEnv)]
   }
