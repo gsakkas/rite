@@ -4,6 +4,7 @@
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE LambdaCase            #-}
+{-# LANGUAGE MultiWayIf            #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
@@ -11,6 +12,7 @@
 {-# LANGUAGE TypeOperators         #-}
 module NanoML.Types where
 
+import           Control.Applicative
 import           Control.Arrow
 import           Control.Exception
 import           Control.Monad
@@ -208,6 +210,9 @@ data Env = Env
   , envEnv :: ![(Var,Value)]
   } deriving (Show, Generic)
 
+instance Eq Env where
+  e1 == e2 = envId e1 == envId e2
+
 instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
@@ -294,11 +299,11 @@ data Value
   | VV (Vector Value) Type
   | VF Func
   | VH !Ref (Maybe Type) -- ^ A "hole" that will be filled in later, on demand.
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
 data Func
   = Func Expr Env
-  deriving (Generic)
+  deriving (Generic, Eq)
 
 -- NOTE: we can NEVER print the captured environment since recursive
 -- functions will refer to themselves
@@ -311,23 +316,23 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
-data RecFlag = Rec | NonRec deriving (Show, Generic)
-data MutFlag = Mut | NonMut deriving (Show, Generic)
+data RecFlag = Rec | NonRec deriving (Show, Generic, Eq)
+data MutFlag = Mut | NonMut deriving (Show, Generic, Eq)
 
 data SrcSpan = SrcSpan
   { srcSpanStartLine :: !Int
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Show, Generic)
+  } deriving (Show, Generic, Eq)
 
 srcSpanWidth SrcSpan {..}
   | srcSpanStartLine == srcSpanEndLine
   = srcSpanEndCol - srcSpanStartCol
   | otherwise -- TODO:
-  = 1
+  = 100
 
 joinSrcSpan x y = SrcSpan (srcSpanStartLine x) (srcSpanStartCol x)
                           (srcSpanEndLine y)   (srcSpanEndCol y)
@@ -373,7 +378,7 @@ data Expr
   | Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
   | With Env Expr
   | Replace Env Expr
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of
@@ -428,13 +433,18 @@ onSrcSpanExpr f expr = case expr of
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
   show (P1 v _ _) = v
+instance Eq Prim1 where
+  P1 v1 _ _ == P1 v2 _ _ = v1 == v2
+
 data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value) Type Type
 instance Show Prim2 where
   show (P2 v _ _ _) = v
+instance Eq Prim2 where
+  P2 v1 _ _ _ == P2 v2 _ _ _ = v1 == v2
 
 data Uop
   = Neg | FNeg
-  deriving (Show)
+  deriving (Show, Eq)
 
 data Bop
   = Eq | Neq
@@ -443,7 +453,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show)
+  deriving (Show, Eq)
 
 type Alt = (Pat, Guard, Expr)
 
@@ -461,7 +471,7 @@ data Pat
   | OrPat !MSrcSpan Pat Pat
   | AsPat !MSrcSpan Pat Var
   | ConstraintPat !MSrcSpan Pat Type
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
 getSrcSpanPatMaybe :: Pat -> MSrcSpan
 getSrcSpanPatMaybe pat = case pat of
@@ -483,7 +493,7 @@ data Type
   | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
-  deriving (Show, Generic) -- NOTE: explicitly not an instance of Eq since we want to unify
+  deriving (Show, Generic, Eq)
 
 infixr :->
 
@@ -907,3 +917,67 @@ instance CollectEnvIds DataDecl where
 
 instance CollectEnvIds TypeDecl where
   collectEnvIds _ = []
+
+
+-- | Compute the difference between two expressions
+exprDiff :: Env -> Expr -> Expr -> Maybe (Env, Expr)
+exprDiff env e1 e2 = case (e1, e2) of
+  (Var lx x, Var ly y) -> if lx == ly && x == y then Nothing else Just (env, e2)
+  (Lam lx px x, Lam ly py y) ->
+    if lx == ly && px == py then exprDiff env x y else Just (env, e2)
+  (App lx fx ax, App ly fy ay) ->
+    if lx == ly && length ax == length ay
+    then exprDiff env fx fy <|> msum (zipWith (exprDiff env) ax ay)
+    else Just (env, e2)
+  (Bop lx bx x1 x2, Bop ly by y1 y2) ->
+    if lx == ly && bx == by
+    then exprDiff env x1 y1 <|> exprDiff env x2 y2
+    else Just (env, e2)
+  (Uop lx ux x, Uop ly uy y) ->
+    if lx == ly && ux == uy
+    then exprDiff env x y
+    else Just (env, e2)
+  (Lit lx x, Lit ly y) ->
+    if lx == ly && x == y then Nothing else Just (env, e2)
+  (Let lx rx xbs x, Let ly ry ybs y) ->
+    if lx == ly && rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
+    then msum (zipWith (exprDiff env) (map snd xbs) (map snd ybs)) <|> exprDiff env x y
+    else Just (env, e2)
+  (Seq lx x1 x2, Seq ly y1 y2) ->
+    if lx == ly then exprDiff env x1 y1 <|> exprDiff env x2 y2 else Just (env, e2)
+  (Case lx x axs, Case ly y ays) ->
+    if lx == ly && length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
+    then exprDiff env x y <|> msum (zipWith (exprDiff env) (map thd3 axs) (map thd3 ays))
+    else Just (env, e2)
+  (Tuple lx xs, Tuple ly ys)
+    | lx == ly && length xs == length ys
+      -> msum (zipWith (exprDiff env) xs ys)
+  (ConApp lx cx mx, ConApp ly cy my)
+    | lx == ly && cx == cy -> if
+        | Just x <- mx, Just y <- my
+          -> exprDiff env x y
+        | Nothing <- mx, Nothing <- my
+          -> Nothing
+        | otherwise
+          -> Just (env, e2)
+  (Record lx fxs, Record ly fys)
+    | lx == ly && map fst fxs == map fst fys
+      -> msum (zipWith (exprDiff env) (map snd fxs) (map snd fys))
+  (Prim1 lx (P1 vx _ _) x, Prim1 ly (P1 vy _ _) y)
+    | lx == ly && vx == vy
+      -> exprDiff env x y
+  (Prim2 lx (P2 vx _ _ _) x1 x2, Prim2 ly (P2 vy _ _ _) y1 y2)
+    | lx == ly && vx == vy
+      -> exprDiff env x1 y1 <|> exprDiff env x2 y2
+  (Val _ x, Val _ y) -> if x == y then Nothing else Just (env, e2)
+  (With ex x, With ey y)
+    | envId ex == envId ey
+      -> exprDiff ex x y
+  (Replace ex x, Replace ey y)
+    | envId ex == envId ey
+      -> exprDiff ex x y
+  _ -> Just (env, e2)
+  
+fst3 (a,b,c) = a
+snd3 (a,b,c) = b
+thd3 (a,b,c) = c

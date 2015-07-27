@@ -468,6 +468,4 @@ parseLiteral = safeParse unsafeParseLiteral
 parsePattern = safeParse unsafeParsePattern
 parseType    = safeParse unsafeParseType
 
-
-thd3 (_,_,c) = c
 }

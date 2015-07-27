@@ -79,6 +79,10 @@ stepDecl decl = case decl of
     | otherwise  -> do
         e <- step expr
         gcScopes e
+        env <- gets stVarEnv
+        case exprDiff env expr e of
+          Nothing -> return ()
+          Just (env, expr) -> addEvent expr `withEnv` env
         return (Just $ DEvl ss e)
   DTyp _ decls -> mapM_ addType decls >> return Nothing
   DExn _ decl -> extendType "exn" decl >> return Nothing
@@ -106,15 +110,17 @@ step expr = case expr of
       then addReturn e' `withEnv` bnd >> return e'
       else return $ Replace env $ With bnd e'
   Var ms v -> do
-    addEvent expr
+    -- addEvent expr
     fmap (Val ms) . lookupEnv v =<< gets stVarEnv
-  Lam ms _ _ -> addEvent expr >>
+  Lam ms _ _ -> -- addEvent expr >>
     Val ms . VF . Func expr <$> gets stVarEnv
   App ms f args -> stepOne (f:args)
-                  (\(f:args) -> addEvent expr >> stepApp ms f args)
+                  (\(f:args) -> -- addEvent expr >> 
+                                stepApp ms f args)
                   (\(f:args) -> return $ App ms f args)
   Bop ms b e1 e2 -> stepOne [e1,e2]
-                   (\[v1,v2] -> addEvent expr >> stepBop ms b v1 v2)
+                   (\[v1,v2] -> -- addEvent expr >> 
+                                stepBop ms b v1 v2)
                    (\[e1,e2] -> return $ Bop ms b e1 e2)
   Uop ms u e
     | isVal e   -> stepUop ms u e
@@ -138,17 +144,20 @@ step expr = case expr of
       (\es -> return $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
     | Val _ b <- b
-      -> addEvent expr >> case b of
+      -> -- addEvent expr >>
+      case b of
           VB True  -> return t
           VB False -> return f
     | otherwise
       -> do b <- step b
             return $ Ite ms b t f
   Seq ms e1 e2
-    | isVal e1  -> addEvent expr >> return e2
+    | isVal e1  -> -- addEvent expr >>
+      return e2
     | otherwise -> (\e1 -> Seq ms e1 e2) <$> step e1
   Case ms e as
-    | isVal e   -> addEvent expr >> stepAlts e as
+    | isVal e   -> -- addEvent expr >> 
+      stepAlts e as
     | otherwise -> (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
                 (\vs -> return . Val ms $ VT (length vs) (map unVal vs) (map (typeOf . unVal) vs))
@@ -308,6 +317,8 @@ gatherLams (VF (Func (Lam _ p e) env)) = go [p] e
 
 
 addEvent :: MonadEval m => Expr -> m ()
+addEvent (With env expr) = addEvent expr `withEnv` env
+addEvent (Replace env expr) = addEvent expr `withEnv` env
 addEvent expr
   | Just loc <- getSrcSpanMaybe expr
   , interesting expr = do
@@ -344,76 +355,76 @@ addEvent expr
 addEvent _ = return ()
 
 addCall :: MonadEval m => Expr -> m ()
-addCall expr
-  | Just loc <- getSrcSpanMaybe expr = do
-  -- traceShowM $ pretty expr
-  let line = srcSpanStartLine loc
-  let column = srcSpanStartCol loc
-  let expr_width = srcSpanWidth loc
-  let event = "call"
-  let stdout = ""
-  let func_name = "<top-level>"
-  id <- envId <$> gets stVarEnv
-  envs <- IntMap.elems . IntMap.delete 0 <$> gets stEnvMap
---  let Env benv = baseEnv
-  -- traceShowM ("call", pretty expr, length envs)
-  let genv = [] -- envEnv $ last envs
-  let ordered_globals = reverse $ map fst genv
-  let globals = Map.fromList genv
-  let heap = IntMap.empty
-  let stack = mkStack id envs -- (init envs)
-  -- traceShowM ("call", stack)
+-- addCall expr
+--   | Just loc <- getSrcSpanMaybe expr = do
+--   -- traceShowM $ pretty expr
+--   let line = srcSpanStartLine loc
+--   let column = srcSpanStartCol loc
+--   let expr_width = srcSpanWidth loc
+--   let event = "call"
+--   let stdout = ""
+--   let func_name = "<top-level>"
+--   id <- envId <$> gets stVarEnv
+--   envs <- IntMap.elems . IntMap.delete 0 <$> gets stEnvMap
+-- --  let Env benv = baseEnv
+--   -- traceShowM ("call", pretty expr, length envs)
+--   let genv = [] -- envEnv $ last envs
+--   let ordered_globals = reverse $ map fst genv
+--   let globals = Map.fromList genv
+--   let heap = IntMap.empty
+--   let stack = mkStack id envs -- (init envs)
+--   -- traceShowM ("call", stack)
 
-  let evt = Event { evt_ordered_globals = ordered_globals
-                  , evt_stdout = stdout
-                  , evt_func_name = func_name
-                  , evt_stack_to_render = stack
-                  , evt_globals = globals
-                  , evt_heap = heap
-                  , evt_line = line
-                  , evt_column = column - 1
-                  , evt_expr_width = expr_width
-                  , evt_event = event
-                  , evt_expr = expr
-                  }
-  modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
+--   let evt = Event { evt_ordered_globals = ordered_globals
+--                   , evt_stdout = stdout
+--                   , evt_func_name = func_name
+--                   , evt_stack_to_render = stack
+--                   , evt_globals = globals
+--                   , evt_heap = heap
+--                   , evt_line = line
+--                   , evt_column = column - 1
+--                   , evt_expr_width = expr_width
+--                   , evt_event = event
+--                   , evt_expr = expr
+--                   }
+--   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addCall _ = return ()
 
 addReturn :: MonadEval m => Expr -> m ()
-addReturn expr
-  | Just loc <- getSrcSpanMaybe expr = do
-  -- traceShowM $ pretty expr
-  let line = srcSpanStartLine loc
-  let column = srcSpanStartCol loc
-  let expr_width = srcSpanWidth loc
-  let event = "return"
-  let stdout = ""
-  let func_name = "<top-level>"
-  id <- envId <$> gets stVarEnv
-  envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust (insertEnv "__return__" (unVal expr)) id <$> gets stEnvMap
-  -- traceShowM (id, map envId envs)
---  let Env benv = baseEnv
-  -- traceShowM ("return", pretty expr, length envs)
-  let genv = [] -- envEnv $ last envs
-  let ordered_globals = reverse $ map fst genv
-  let globals = Map.fromList genv
-  let heap = IntMap.empty
-  let stack = mkStack id envs -- (init envs)
-  -- traceShowM stack
+-- addReturn expr
+--   | Just loc <- getSrcSpanMaybe expr = do
+--   -- traceShowM $ pretty expr
+--   let line = srcSpanStartLine loc
+--   let column = srcSpanStartCol loc
+--   let expr_width = srcSpanWidth loc
+--   let event = "return"
+--   let stdout = ""
+--   let func_name = "<top-level>"
+--   id <- envId <$> gets stVarEnv
+--   envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust (insertEnv "__return__" (unVal expr)) id <$> gets stEnvMap
+--   -- traceShowM (id, map envId envs)
+-- --  let Env benv = baseEnv
+--   -- traceShowM ("return", pretty expr, length envs)
+--   let genv = [] -- envEnv $ last envs
+--   let ordered_globals = reverse $ map fst genv
+--   let globals = Map.fromList genv
+--   let heap = IntMap.empty
+--   let stack = mkStack id envs -- (init envs)
+--   -- traceShowM stack
 
-  let evt = Event { evt_ordered_globals = ordered_globals
-                  , evt_stdout = stdout
-                  , evt_func_name = func_name
-                  , evt_stack_to_render = stack
-                  , evt_globals = globals
-                  , evt_heap = heap
-                  , evt_line = line
-                  , evt_column = column - 1
-                  , evt_expr_width = expr_width
-                  , evt_event = event
-                  , evt_expr = expr
-                  }
-  modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
+--   let evt = Event { evt_ordered_globals = ordered_globals
+--                   , evt_stdout = stdout
+--                   , evt_func_name = func_name
+--                   , evt_stack_to_render = stack
+--                   , evt_globals = globals
+--                   , evt_heap = heap
+--                   , evt_line = line
+--                   , evt_column = column - 1
+--                   , evt_expr_width = expr_width
+--                   , evt_event = event
+--                   , evt_expr = expr
+--                   }
+--   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addReturn _ = return ()
 
 mkStack :: Ref -> [Env] -> [Scope]
