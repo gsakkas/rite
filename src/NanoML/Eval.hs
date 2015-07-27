@@ -133,7 +133,7 @@ eval expr = logExpr expr $ case expr of
     case vb of
       VB True  -> eval et
       VB False -> eval ef
-      _        -> typeError "if-then-else given a non-boolean"
+      _        -> typeError (typeOf vb) (tCon tBOOL)
   Seq ms e1 e2 ->
     eval e1 >> eval e2
   Case ms e as -> do
@@ -158,9 +158,9 @@ eval expr = logExpr expr $ case expr of
   Record ms flds -> do
     td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
     unless (all (`elem` map fst3 fs) (map fst flds)) $
-      typeError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
+      otherError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
     unless (all (`elem` map fst flds) (map fst3 fs)) $
-      typeError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
+      otherError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
     (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
       let e = fromJust $ lookup f flds
       v <- eval e
@@ -234,7 +234,7 @@ evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
   VF (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
     eval e `withEnv` undefined -- joinEnv pat_env env
-  _ -> typeError "tried to apply a non-function"
+  _ -> otherError "tried to apply a non-function"
 
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
@@ -262,7 +262,7 @@ evalConApp dc v = do
             Nothing         -> 0
             Just (VT n _ _) -> n
             Just _          -> 1
-      typeError (printf "%s expects %d arguments, but was given %d"
+      otherError (printf "%s expects %d arguments, but was given %d"
                         dc (length as) nArgs)
 
 evalBop :: MonadEval m
@@ -307,22 +307,22 @@ gtVal x y = do
 
 plusVal (VI i) (VI j) = return $ VI (i+j)
 plusVal (VD i) (VD j) = return $ VD (i+j)
-plusVal _      _      = typeError "+ can only be applied to ints"
+-- plusVal _      _      = typeError "+ can only be applied to ints"
 
 minusVal (VI i) (VI j) = return $ VI (i-j)
 minusVal (VD i) (VD j) = return $ VD (i-j)
-minusVal _      _      = typeError "- can only be applied to ints"
+-- minusVal _      _      = typeError "- can only be applied to ints"
 
 timesVal (VI i) (VI j) = return $ VI (i*j)
 timesVal (VD i) (VD j) = return $ VD (i*j)
-timesVal _      _      = typeError "* can only be applied to ints"
+-- timesVal _      _      = typeError "* can only be applied to ints"
 
 divVal (VI i) (VI j) = return $ VI (i `div` j)
 divVal (VD i) (VD j) = return $ VD (i / j)
-divVal _      _      = typeError "/ can only be applied to ints"
+-- divVal _      _      = typeError "/ can only be applied to ints"
 
 modVal (VI i) (VI j) = return $ VI (i `mod` j)
-modVal _      _      = typeError "mod can only be applied to ints"
+-- modVal _      _      = typeError "mod can only be applied to ints"
 
 litValue :: Literal -> Value
 litValue (LI i) = VI i
@@ -404,7 +404,7 @@ matchPat v p = case p of
   ConstraintPat _ p t -> force v t $ \v -> do
     matchPat v p
   _ -> err
-  where err = typeError (printf "type error: tried to match %s against %s"
+  where err = otherError (printf "tried to match %s against %s"
                       (show $ pretty v) (show $ pretty p) :: String)
 
 safeMatch [] Nothing = True
@@ -415,7 +415,7 @@ safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
 unconsVal (VL (x:xs) t) = return (x, VL xs t)
-unconsVal _             = typeError "type error: uncons can only be applied to lists"
+unconsVal _             = otherError "type error: uncons can only be applied to lists"
 
 matchLit :: MonadEval m => Value -> Literal -> m Bool
 matchLit (VI i1) (LI i2) = return $ i1 == i2
@@ -424,8 +424,7 @@ matchLit (VB b1) (LB b2) = return $ b1 == b2
 matchLit (VC c1) (LC c2) = return $ c1 == c2
 matchLit (VS s1) (LS s2) = return $ s1 == s2
 --matchLit VU      LU      = return True
-matchLit v       l       = typeError (printf "type error: tried to match %s against %s"
-                                      (show $ pretty v) (show $ pretty l) :: String)
+matchLit v       l       = typeError (typeOf v) (typeOf (litValue l))
 
 
 testEval :: String -> IO ()

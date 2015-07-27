@@ -87,9 +87,12 @@ isSuccess Failure {} = False
 data NanoError
   = MLException Value
   | UnboundVariable Var
-  | TypeError String -- TODO:
+  | TypeError Type Type
   | ParseError String
+  | MissingFields Type Expr
+  | InvalidFields Type Expr
   | OutputTypeMismatch Value Type
+  | OtherError String
   deriving (Show, Generic, Typeable)
 
 instance Exception NanoError
@@ -101,11 +104,14 @@ varToInt (TApp c ts)  = TApp c (map varToInt ts)
 varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
-typeError :: MonadEval m => String -> m a
-typeError = throwError . TypeError
+typeError :: MonadEval m => Type -> Type -> m a
+typeError t1 t2 = throwError $ TypeError t1 t2
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
+
+otherError :: MonadEval m => String -> m a
+otherError = throwError . OtherError
 
 data EvalState = EvalState
   { stVarEnv   :: Env
@@ -163,21 +169,21 @@ lookupType :: MonadEval m => TCon -> m TypeDecl
 lookupType tcon = do
   tys <- gets stTypeEnv
   case Map.lookup tcon tys of
-    Nothing -> typeError ("unknown type: " ++ tcon)
+    Nothing -> otherError ("unknown type: " ++ tcon)
     Just t -> return t
 
 lookupDataCon :: MonadEval m => DCon -> m DataDecl
 lookupDataCon dc = do
   dcons <- gets stDataEnv
   case Map.lookup dc dcons of
-    Nothing -> typeError ("unknown data constructor: " ++ dc)
+    Nothing -> otherError ("unknown data constructor: " ++ dc)
     Just d  -> return d
 
 lookupField :: MonadEval m => String -> m TypeDecl
 lookupField fld = do
   flds <- gets stFieldEnv
   case Map.lookup fld flds of
-    Nothing -> typeError ("unknown record field: " ++ fld)
+    Nothing -> otherError ("unknown record field: " ++ fld)
     Just d  -> return d
 
 lookupStore :: MonadEval m => Ref -> m (Maybe (MutFlag, Value))
@@ -572,11 +578,11 @@ unify x@(TApp xc xts) y@(TApp yc yts)
                                        (subst (zip (tyVars yt) yts) ty)
          (Alias t, _) -> unify (subst (zip (tyVars xt) xts) t) y
          (_, Alias t) -> unify x (subst (zip (tyVars yt) yts) t)
-         _ -> typeError $ printf "could not match %s against %s" (show x) (show y)
+         _ -> typeError x y
 unify x@(TApp c ts) y = unifyAlias c ts y x
 unify x y@(TApp c ts) = unifyAlias c ts x y
 unify x y
-  = typeError $ printf "could not match %s against %s" (show x) (show y)
+  = typeError x y
 
 unifyVar :: Monad m => TVar -> Type -> m [(TVar, Type)]
 unifyVar a t
@@ -589,7 +595,7 @@ unifyAlias c ts x y = do
   TypeDecl {..} <- lookupType c
   case tyRhs of
     Alias t -> unify x (subst (zip tyVars ts) t)
-    _ -> typeError $ printf "could not match %s against %s" (show x) (show y)
+    _ -> typeError x y
 
 typeOf :: Value -> Type
 typeOf v = case v of
@@ -704,12 +710,12 @@ cmpVal (VL x _) (VL y _) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM c
 cmpVal (VT i x _) (VT j y _)
   | i == j
   = cmpAnd <$> zipWithM cmpVal x y
-cmpVal (VF x) (VF y) = typeError "cannot compare functions"
+cmpVal (VF x) (VF y) = otherError "cannot compare functions"
 cmpVal x@(VA c1 v1 _) y@(VA c2 v2 _) = do
   dd1 <- lookupDataCon c2
   dd2 <- lookupDataCon c2
   unless (tyCon (dType dd1) == tyCon (dType dd2)) $
-    typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+    typeError (typeOf x) (typeOf y)
   let dcs = map dCon . typeDataCons . dType $ dd1
   case compare (fromJust (elemIndex c1 dcs)) (fromJust (elemIndex c2 dcs)) of
     LT -> return (VI (-1))
@@ -719,7 +725,7 @@ cmpVal x@(VA c1 v1 _) y@(VA c2 v2 _) = do
       (Just v1, Just v2) -> cmpVal v1 v2
 cmpVal x y
   -- = return False
-  = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
+  = typeError (typeOf x) (typeOf y)
 
 cmp x y = VI $ fromEnum (compare x y) - 1
 
@@ -795,6 +801,7 @@ data Event = Event
   , evt_column :: !Int
   , evt_expr_width :: !Int
   , evt_event :: !String
+  , evt_exception_msg :: !String
   , evt_expr :: !Expr
   } deriving Show
 

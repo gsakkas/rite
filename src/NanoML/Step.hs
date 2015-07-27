@@ -57,7 +57,7 @@ stepAll expr = do
 stepAllProg [] = return ()
 stepAllProg (d:p) = do
 --  traceShowM $ pretty d
-  md <- stepDecl d
+  md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
   case md of
     Nothing -> stepAllProg p
     Just d  -> stepAllProg (d:p)
@@ -182,9 +182,9 @@ step expr = case expr of
     | otherwise -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
       unless (all (`elem` map fst3 fs) (map fst flds)) $
-        typeError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
+        otherError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
       unless (all (`elem` map fst flds) (map fst3 fs)) $
-        typeError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
+        otherError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
       let (fs, es) = unzip flds
       stepOne es
         (error "step.Record: impossible")
@@ -233,8 +233,9 @@ stepApp ms (Val _ f) es = case f of
         Replace env . with <$> case es' of
           [] -> addCall e `withEnv` nenv >> return (onSrcSpanExpr (<|> ms) e)
           _  -> return $ App ms e es'
-  _ -> typeError $ printf "'%s' is not a function" (show f)
+  _ -> otherError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
+
 
 -- stepApp (Val f) (map unVal -> vs) = do
 --   let (ps, e, env) = gatherLams f
@@ -349,10 +350,19 @@ addEvent expr
                   , evt_column = column - 1
                   , evt_expr_width = expr_width
                   , evt_event = event
+                  , evt_exception_msg = ""
                   , evt_expr = expr
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 addEvent _ = return ()
+
+addUncaughtException :: MonadEval m => NanoError -> m ()
+addUncaughtException exn = do
+  last_evt <- gets (last . toList . stTrace)
+  let evt = last_evt { evt_event = "uncaught_exception"
+                     , evt_exception_msg = show (pretty exn)
+                     }
+  modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 
 addCall :: MonadEval m => Expr -> m ()
 -- addCall expr
@@ -480,6 +490,7 @@ instance Aeson.ToJSON Event where
     , "column"          Aeson..= Aeson.toJSON evt_column
     , "expr_width"      Aeson..= Aeson.toJSON evt_expr_width
     , "event"           Aeson..= Aeson.toJSON evt_event
+    , "exception_msg"   Aeson..= Aeson.toJSON evt_exception_msg
     , "expr"            Aeson..= Aeson.toJSON (show (pretty evt_expr))
     ]
 

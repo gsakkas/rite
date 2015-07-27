@@ -542,20 +542,20 @@ pprintexc_to_string x@(VA {}) = return $ VS $ show x
 getField :: MonadEval m => Value -> String -> m Value
 getField x@(VR fs _) f = case lookup f fs of
   Just i  -> snd <$> readStore i
-  Nothing -> typeError $ printf "record %s does not have a field '%s'"
+  Nothing -> otherError $ printf "record %s does not have a field '%s'"
                                 (show x) f
-getField x f = typeError $ printf "%s is not a record" (show x)
+getField x f = otherError $ printf "%s is not a record" (show x)
 
 setField :: MonadEval m => Value -> String -> Value -> m ()
 setField x@(VR fs _) f v = case lookup f fs of
-  Nothing    -> typeError $ printf "record %s does not have a field '%s'"
+  Nothing    -> otherError $ printf "record %s does not have a field '%s'"
                                    (show x) f
   Just i -> do
     (m, _) <- readStore i
     case m of
       Mut -> writeStore i (m,v)
-      _   -> typeError $ printf "field '%s' is not mutable" f
-setField x _ _ = typeError $ printf "%s is not a record" (show x)
+      _   -> otherError $ printf "field '%s' is not mutable" f
+setField x _ _ = otherError $ printf "%s is not a record" (show x)
 
 mkNonRec :: Expr -> Value
 mkNonRec lam = func
