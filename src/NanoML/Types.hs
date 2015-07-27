@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds       #-}
+{-# LANGUAGE DefaultSignatures     #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
@@ -7,6 +8,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE TypeOperators         #-}
 module NanoML.Types where
 
 import           Control.Arrow
@@ -86,7 +88,7 @@ data NanoError
   | TypeError String -- TODO:
   | ParseError String
   | OutputTypeMismatch Value Type
-  deriving (Show, Typeable)
+  deriving (Show, Generic, Typeable)
 
 instance Exception NanoError
 
@@ -204,7 +206,7 @@ data Env = Env
   , envName :: !String
   , envParent :: !(Maybe Env)
   , envEnv :: ![(Var,Value)]
-  } deriving Show
+  } deriving (Show, Generic)
 
 instance Monoid Env where
   mempty  = emptyEnv
@@ -456,7 +458,7 @@ data Pat
   | OrPat !MSrcSpan Pat Pat
   | AsPat !MSrcSpan Pat Var
   | ConstraintPat !MSrcSpan Pat Type
-  deriving (Show)
+  deriving (Show, Generic)
 
 getSrcSpanPatMaybe :: Pat -> MSrcSpan
 getSrcSpanPatMaybe pat = case pat of
@@ -478,7 +480,7 @@ data Type
   | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
-  deriving (Show) -- NOTE: explicitly not an instance of Eq since we want to unify
+  deriving (Show, Generic) -- NOTE: explicitly not an instance of Eq since we want to unify
 
 infixr :->
 
@@ -814,3 +816,84 @@ data Scope = Scope
   , scp_ordered_varnames :: ![Var]
   } deriving Show
 
+
+class CollectEnvIds a where
+  collectEnvIds :: a -> [Ref]
+  default collectEnvIds :: (Generic a, GCollectEnvIds (Rep a)) => a -> [Ref]
+  collectEnvIds x = gcollectEnvIds (from x)
+
+instance CollectEnvIds Env where
+  collectEnvIds Env {..} = envId : maybe [] collectEnvIds envParent
+
+class GCollectEnvIds f where
+  gcollectEnvIds :: f a -> [Ref]
+
+instance GCollectEnvIds U1 where
+  gcollectEnvIds _ = []
+
+instance GCollectEnvIds a => GCollectEnvIds (M1 i c a) where
+  gcollectEnvIds (M1 x) = gcollectEnvIds x
+
+instance CollectEnvIds a => GCollectEnvIds (K1 i a) where
+  gcollectEnvIds (K1 x) = collectEnvIds x
+
+instance (GCollectEnvIds f, GCollectEnvIds g) => GCollectEnvIds (f :+: g) where
+  gcollectEnvIds (L1 x) = gcollectEnvIds x
+  gcollectEnvIds (R1 x) = gcollectEnvIds x
+
+instance (GCollectEnvIds f, GCollectEnvIds g) => GCollectEnvIds (f :*: g) where
+  gcollectEnvIds (f :*: g) = gcollectEnvIds f ++ gcollectEnvIds g
+
+instance CollectEnvIds Expr
+instance CollectEnvIds Pat
+instance CollectEnvIds Type
+instance CollectEnvIds Value
+instance CollectEnvIds Func
+
+instance CollectEnvIds a => CollectEnvIds (Maybe a) where
+  collectEnvIds = maybe [] collectEnvIds
+
+instance CollectEnvIds a => CollectEnvIds [a] where
+  collectEnvIds = concatMap collectEnvIds
+
+instance CollectEnvIds a => CollectEnvIds (Vector a) where
+  collectEnvIds = concatMap collectEnvIds . Vector.toList
+
+instance (CollectEnvIds a, CollectEnvIds b) => CollectEnvIds (a,b) where
+  collectEnvIds (a,b) = collectEnvIds a ++ collectEnvIds b
+
+instance (CollectEnvIds a, CollectEnvIds b, CollectEnvIds c) => CollectEnvIds (a,b,c) where
+  collectEnvIds (a,b,c) = collectEnvIds a ++ collectEnvIds b ++ collectEnvIds c
+
+instance CollectEnvIds Bool where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Char where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Double where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Int where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Bop where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Uop where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Prim1 where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Prim2 where
+  collectEnvIds _ = []
+
+instance CollectEnvIds Literal where
+  collectEnvIds _ = []
+
+instance CollectEnvIds RecFlag where
+  collectEnvIds _ = []
+
+instance CollectEnvIds SrcSpan where
+  collectEnvIds _ = []

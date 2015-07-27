@@ -74,7 +74,10 @@ stepDecl decl = case decl of
       (\es -> return . Just $ DFun ss NonRec (zip ps es))
   DEvl ss expr
     | isVal expr -> return Nothing
-    | otherwise  -> Just . DEvl ss <$> step expr
+    | otherwise  -> do
+        e <- step expr
+        gcScopes e
+        return (Just $ DEvl ss e)
   DTyp _ decls -> mapM_ addType decls >> return Nothing
   DExn _ decl -> extendType "exn" decl >> return Nothing
 
@@ -434,6 +437,12 @@ markParents (s:ss) = s' : ss'
   s'  = if any (\p -> scp_frame_id s `elem` scp_parent_frame_id_list p) ss'
         then s { scp_is_parent = True, scp_unique_hash = scp_unique_hash s ++ "_p" }
         else s
+
+gcScopes :: MonadEval m => Expr -> m ()
+gcScopes expr = do
+  let ids = collectEnvIds expr
+  envMap <- gets stEnvMap
+  modify' $ \s -> s { stEnvMap = IntMap.filterWithKey (\k _ -> k `elem` ids) (stEnvMap s) }
 
 interesting expr = case expr of
   Val {} -> False
