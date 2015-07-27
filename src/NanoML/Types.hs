@@ -221,12 +221,15 @@ allocEnvWith fn p bnd = do
   i <- fresh
 --  traceShowM (i, fn)
 --  traceShowM (i, envId p)
-  let e = Env { envId = i, envName = fn, envParent = Just p, envEnv = bnd }
+  let e = Env { envId = i, envName = fn, envParent = Just p
+              -- we reverse the binders here so we can add new binders to the front and
+              -- maintain ordering by appearance in the source program
+              , envEnv = reverse bnd }
   modify' $ \s -> s { stEnvMap = IntMap.insert i e (stEnvMap s) }
   return e
 
-freeEnv :: MonadEval m => Ref -> m ()
-freeEnv = undefined
+-- freeEnv :: MonadEval m => Ref -> m ()
+-- freeEnv = undefined
 
 insertEnv :: Var -> Value -> Env -> Env
 insertEnv var val env = env { envEnv = (var,val) : envEnv env }
@@ -272,10 +275,10 @@ m `withEnv` env = do
   setVarEnv penv
   return a
 
-withExtendedEnv :: MonadEval m => m a -> Env -> m a
-m `withExtendedEnv` env = do
-  genv <- gets stVarEnv
-  m `withEnv` (joinEnv env genv)
+-- withExtendedEnv :: MonadEval m => m a -> Env -> m a
+-- m `withExtendedEnv` env = do
+--   genv <- gets stVarEnv
+--   m `withEnv` (joinEnv env genv)
 
 data Value
   = VI !Int
@@ -844,6 +847,7 @@ instance (GCollectEnvIds f, GCollectEnvIds g) => GCollectEnvIds (f :+: g) where
 instance (GCollectEnvIds f, GCollectEnvIds g) => GCollectEnvIds (f :*: g) where
   gcollectEnvIds (f :*: g) = gcollectEnvIds f ++ gcollectEnvIds g
 
+instance CollectEnvIds Decl
 instance CollectEnvIds Expr
 instance CollectEnvIds Pat
 instance CollectEnvIds Type
@@ -896,4 +900,10 @@ instance CollectEnvIds RecFlag where
   collectEnvIds _ = []
 
 instance CollectEnvIds SrcSpan where
+  collectEnvIds _ = []
+
+instance CollectEnvIds DataDecl where
+  collectEnvIds _ = []
+
+instance CollectEnvIds TypeDecl where
   collectEnvIds _ = []

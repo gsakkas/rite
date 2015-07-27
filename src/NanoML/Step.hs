@@ -69,9 +69,11 @@ stepDecl decl = case decl of
     return Nothing
   DFun ss NonRec binds -> do
     let (ps, es) = unzip binds
-    stepOne es
-      (\vs -> Nothing <$ (setVarEnv =<< evalNonRecBinds (zip ps vs)))
-      (\es -> return . Just $ DFun ss NonRec (zip ps es))
+    r <- stepOne es
+         (\vs -> Nothing <$ (setVarEnv =<< evalNonRecBinds (zip ps vs)))
+         (\es -> return . Just $ DFun ss NonRec (zip ps es))
+    gcScopes r
+    return r
   DEvl ss expr
     | isVal expr -> return Nothing
     | otherwise  -> do
@@ -93,11 +95,16 @@ step expr = case expr of
     return $ if isVal e'
              then e'
              else With env e'
-  Replace env e -> do
-    e' <- step e `withEnv` env
+  -- Replace env e -> do
+  --   e' <- step e `withEnv` env
+  --   if isVal e'
+  --     then addReturn e' `withEnv` env >> return e'
+  --     else return $ Replace env e'
+  Replace env (With bnd e) -> do
+    e' <- step e `withEnv` bnd
     if isVal e'
-      then addReturn e' >> return e'
-      else return $ Replace env e'
+      then addReturn e' `withEnv` bnd >> return e'
+      else return $ Replace env $ With bnd e'
   Var ms v -> do
     addEvent expr
     fmap (Val ms) . lookupEnv v =<< gets stVarEnv
@@ -384,6 +391,7 @@ addReturn expr
   let func_name = "<top-level>"
   id <- envId <$> gets stVarEnv
   envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust (insertEnv "__return__" (unVal expr)) id <$> gets stEnvMap
+  -- traceShowM (id, map envId envs)
 --  let Env benv = baseEnv
   -- traceShowM ("return", pretty expr, length envs)
   let genv = [] -- envEnv $ last envs
@@ -438,7 +446,7 @@ markParents (s:ss) = s' : ss'
         then s { scp_is_parent = True, scp_unique_hash = scp_unique_hash s ++ "_p" }
         else s
 
-gcScopes :: MonadEval m => Expr -> m ()
+gcScopes :: (MonadEval m, CollectEnvIds a) => a -> m ()
 gcScopes expr = do
   let ids = collectEnvIds expr
   envMap <- gets stEnvMap
