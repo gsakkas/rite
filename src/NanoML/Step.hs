@@ -78,11 +78,16 @@ stepDecl decl = case decl of
     | isVal expr -> return Nothing
     | otherwise  -> do
         e <- step expr
-        gcScopes e
         env <- gets stVarEnv
+        -- traceShowM (pretty expr)
+        -- traceShowM (pretty e)
+        -- traceShowM expr
+        -- traceShowM e
         case exprDiff env expr e of
           Nothing -> return ()
-          Just (env, expr) -> addEvent expr `withEnv` env
+          Just (env, expr, kind) -> addEvent expr kind `withEnv` env
+        gcScopes e
+        -- traceM ""
         return (Just $ DEvl ss e)
   DTyp _ decls -> mapM_ addType decls >> return Nothing
   DExn _ decl -> extendType "exn" decl >> return Nothing
@@ -317,21 +322,24 @@ gatherLams (VF (Func (Lam _ p e) env)) = go [p] e
   go ps e           = (reverse ps, e, env)
 
 
-addEvent :: MonadEval m => Expr -> m ()
-addEvent (With env expr) = addEvent expr `withEnv` env
-addEvent (Replace env expr) = addEvent expr `withEnv` env
-addEvent expr
+addEvent :: MonadEval m => Expr -> Kind -> m ()
+addEvent (With env expr) k = addEvent expr k `withEnv` env
+addEvent (Replace env expr) k = addEvent expr k `withEnv` env
+addEvent expr k
   | Just loc <- getSrcSpanMaybe expr
-  , interesting expr = do
-  -- traceShowM $ pretty expr
+  , interesting expr || k == Return = do
   let line = srcSpanStartLine loc
   let column = srcSpanStartCol loc
   let expr_width = srcSpanWidth loc
-  let event = "step_line"
+  let event = showKind k
   let stdout = ""
   let func_name = "<top-level>"
   id <- envId <$> gets stVarEnv
-  envs <- IntMap.elems . IntMap.delete 0 <$> gets stEnvMap
+  traceShowM (k, id, expr)
+  let insertReturn 
+        | Return <- k = insertEnv "__return__" (unVal expr)
+        | otherwise   = \x -> x
+  envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust insertReturn id <$> gets stEnvMap
 --  let Env benv = baseEnv
   -- traceShowM (pretty expr, length envs)
   let genv = [] -- envEnv $ last envs
@@ -354,7 +362,7 @@ addEvent expr
                   , evt_expr = expr
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
-addEvent _ = return ()
+addEvent _ _ = return ()
 
 addUncaughtException :: MonadEval m => NanoError -> m ()
 addUncaughtException exn = do

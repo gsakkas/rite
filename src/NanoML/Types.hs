@@ -214,7 +214,10 @@ data Env = Env
   , envName :: !String
   , envParent :: !(Maybe Env)
   , envEnv :: ![(Var,Value)]
-  } deriving (Show, Generic)
+  } deriving (Generic)
+
+instance Show Env where
+  show e = "Env " ++ show (envId e)
 
 instance Eq Env where
   e1 == e2 = envId e1 == envId e2
@@ -332,7 +335,10 @@ data SrcSpan = SrcSpan
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Show, Generic, Eq)
+  } deriving (Generic, Eq)
+
+instance Show SrcSpan where
+  show _ = "SrcSpan"
 
 srcSpanWidth SrcSpan {..}
   | srcSpanStartLine == srcSpanEndLine
@@ -926,36 +932,46 @@ instance CollectEnvIds TypeDecl where
   collectEnvIds _ = []
 
 
+data Kind = StepLine | Call | Return
+  deriving (Show, Eq, Generic)
+
+showKind StepLine = "step_line"
+showKind Call = "call"
+showKind Return = "return"
+
 -- | Compute the difference between two expressions
-exprDiff :: Env -> Expr -> Expr -> Maybe (Env, Expr)
+exprDiff :: Env -> Expr -> Expr -> Maybe (Env, Expr, Kind)
 exprDiff env e1 e2 = case (e1, e2) of
-  (Var lx x, Var ly y) -> if lx == ly && x == y then Nothing else Just (env, e2)
-  (Lam lx px x, Lam ly py y) ->
-    if lx == ly && px == py then exprDiff env x y else Just (env, e2)
-  (App lx fx ax, App ly fy ay) ->
-    if lx == ly && length ax == length ay
-    then exprDiff env fx fy <|> msum (zipWith (exprDiff env) ax ay)
-    else Just (env, e2)
-  (Bop lx bx x1 x2, Bop ly by y1 y2) ->
-    if lx == ly && bx == by
-    then exprDiff env x1 y1 <|> exprDiff env x2 y2
-    else Just (env, e2)
-  (Uop lx ux x, Uop ly uy y) ->
-    if lx == ly && ux == uy
-    then exprDiff env x y
-    else Just (env, e2)
-  (Lit lx x, Lit ly y) ->
-    if lx == ly && x == y then Nothing else Just (env, e2)
-  (Let lx rx xbs x, Let ly ry ybs y) ->
-    if lx == ly && rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
-    then msum (zipWith (exprDiff env) (map snd xbs) (map snd ybs)) <|> exprDiff env x y
-    else Just (env, e2)
-  (Seq lx x1 x2, Seq ly y1 y2) ->
-    if lx == ly then exprDiff env x1 y1 <|> exprDiff env x2 y2 else Just (env, e2)
-  (Case lx x axs, Case ly y ays) ->
-    if lx == ly && length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
-    then exprDiff env x y <|> msum (zipWith (exprDiff env) (map thd3 axs) (map thd3 ays))
-    else Just (env, e2)
+  (Var lx x, Var ly y)
+    | lx == ly && x == y
+      -> Nothing
+  (Lam lx px x, Lam ly py y)
+    | lx == ly && px == py
+      -> exprDiff env x y
+  (App lx fx ax, App ly fy ay)
+    | lx == ly && length ax == length ay
+      -> exprDiff env fx fy <|> msum (zipWith (exprDiff env) ax ay)
+  (Bop lx bx x1 x2, Bop ly by y1 y2)
+    | lx == ly && bx == by
+      -> exprDiff env x1 y1 <|> exprDiff env x2 y2
+  (Uop lx ux x, Uop ly uy y)
+    | lx == ly && ux == uy
+      -> exprDiff env x y
+  (Lit lx x, Lit ly y)
+    | lx == ly && x == y
+      -> Nothing
+  (Let lx rx xbs x, Let ly ry ybs y)
+    | lx == ly && rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
+      -> msum (zipWith (exprDiff env) (map snd xbs) (map snd ybs)) <|> exprDiff env x y
+  (Ite lx bx tx fx, Ite ly by ty fy)
+    | lx == ly
+      -> exprDiff env bx by <|> exprDiff env tx ty <|> exprDiff env fx fy
+  (Seq lx x1 x2, Seq ly y1 y2)
+    | lx == ly
+      -> exprDiff env x1 y1 <|> exprDiff env x2 y2
+  (Case lx x axs, Case ly y ays)
+    | lx == ly && length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
+      -> exprDiff env x y <|> msum (zipWith (exprDiff env) (map thd3 axs) (map thd3 ays))
   (Tuple lx xs, Tuple ly ys)
     | lx == ly && length xs == length ys
       -> msum (zipWith (exprDiff env) xs ys)
@@ -966,7 +982,7 @@ exprDiff env e1 e2 = case (e1, e2) of
         | Nothing <- mx, Nothing <- my
           -> Nothing
         | otherwise
-          -> Just (env, e2)
+          -> Just (env, e2, StepLine)
   (Record lx fxs, Record ly fys)
     | lx == ly && map fst fxs == map fst fys
       -> msum (zipWith (exprDiff env) (map snd fxs) (map snd fys))
@@ -976,14 +992,20 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Prim2 lx (P2 vx _ _ _) x1 x2, Prim2 ly (P2 vy _ _ _) y1 y2)
     | lx == ly && vx == vy
       -> exprDiff env x1 y1 <|> exprDiff env x2 y2
-  (Val _ x, Val _ y) -> if x == y then Nothing else Just (env, e2)
+  (Val _ x, Val _ y)
+    | x == y
+      -> Nothing
   (With ex x, With ey y)
     | envId ex == envId ey
       -> exprDiff ex x y
   (Replace ex x, Replace ey y)
     | envId ex == envId ey
       -> exprDiff ex x y
-  _ -> Just (env, e2)
+  (_, Replace _ _)
+    -> Just (env, e2, Call)
+  (Replace _ (With env' _), _)
+    -> Just (env', e2, Return)
+  _ -> Just (env, e2, StepLine)
   
 fst3 (a,b,c) = a
 snd3 (a,b,c) = b
