@@ -87,10 +87,11 @@ knownFuncs = Map.fromList . map (second (fromRight . parseType)) $
 facProg :: String
 facProg = unlines [ "let rec fac n ="
                   , "  if n = 0 then"
-                  , "    1"
+                  , "    true"
                   , "  else"
-                  , "    n * fac (n - 1)"
-                  , ";;"
+                  , "    n * fac (n - 1);;"
+                  , ""
+                  , "fac 3;;"
                   ]
 
 badProg :: String
