@@ -138,3 +138,393 @@ wwhile := fun (f,b) ->
             let f = fun b -> (x,y) in
             if y = true then wwhile (f,x) else x
 ```
+
+
+[ ] compress reduction steps
+  - "recursive explanation algorithm"
+    - crash because `1 * true`
+    - where did `true` come from? `fac 0`
+  - which are the salient bits in an explanation?
+
+[ ] what are the claims to make in the paper?
+  - expressive? efficient? usable?
+  - design tool / experiment to support claims
+  - measure the number choices a human would have to make to reach the "fix" they made
+    - grab bad program and subsequent fix
+    - how many steps in tool to reach changed expression
+
+[ ] sketch out exploration for some examples
+  - `fac`, let-swap bug, a few others
+  - for each, show a single ideal trace, e.g.
+    - 5: 1 * true  (* pick [1] or [2] *)
+    - 3: true
+
+```
+
+------------------------------------------------------------
+1	let rec fac n =
+2	  if n = 0 then
+3	    true
+4	  else
+5	    n * fac (n - 1);;
+6	
+7	fac 1;;
+
+error: 5: could not match 'int' with 'bool' in
+  1 * true
+
+[1]: 1
+[2]: *
+[3]: true
+
+> 3
+
+------------------------------------------------------------
+1	let rec fac n =
+2	  if n = 0 then
+3	    true
+4	  else
+5	    n * fac (n - 1);;
+6	
+7	fac 1;;
+
+error: 5: could not match 'int' with 'bool' in
+  1 * true
+
+  fac 0 ==> true
+
+[1]: fac
+[2]: 0
+
+> 2
+
+------------------------------------------------------------
+1	let rec fac n =
+2	  if n = 0 then
+3	    true
+4	  else
+5	    n * fac (n - 1);;
+6	
+7	fac 1;;
+
+error: 5: could not match 'int' with 'bool' in
+  1 * true
+
+  5: fac 0 ==> true
+
+  5: 1 - 1 ==> 0
+
+[1]: 1
+[2]: -
+[3]: 1
+
+> 1
+
+------------------------------------------------------------
+1	let rec fac n =
+2	  if n = 0 then
+3	    true
+4	  else
+5	    n * fac (n - 1);;
+6	
+7	fac 1;;
+
+error: could not match 'int' with 'bool' in
+  5: 1 * true
+
+  5: fac 0 ==> true
+
+  5: 1 - 1 ==> 0
+
+  1: n ==> 1
+
+[1]: n
+
+> 1
+
+------------------------------------------------------------
+1	let rec fac n =
+2	  if n = 0 then
+3	    true
+4	  else
+5	    n * fac (n - 1);;
+6	
+7	fac 1;;
+
+error: could not match 'int' with 'bool' in
+  5: 1 * true
+
+  5: fac 0 ==> true
+
+  5: 1 - 1 ==> 0
+
+  1: n ==> 1
+
+  7: fac 1
+
+[1]: fac
+[2]: 1
+
+>
+
+```
+
+```
+
+------------------------------------------------------------
+1  let (x,y) = ("5", 5);;
+2
+3  let rec wwhile (f,b) =
+4    let f b = (x, y) in
+5    if x = true then
+6      wwhile (f, x)
+7    else x;;
+8
+9  wwhile (fun x => x, 1);;
+
+error: could not match 'string' with 'bool' in
+  5: "5" = true
+
+[1]: "5"
+[2]: =
+[3]: true
+
+> 1
+
+------------------------------------------------------------
+1  let (x,y) = ("5", 5);;
+2
+3  let rec wwhile (f,b) =
+4    let f b = (x, y) in
+5    if x = true then
+6      wwhile (f, x)
+7    else x;;
+8
+9  wwhile (fun x => x, 1);;
+
+error: could not match 'string' with 'bool' in
+  5: "5" = true
+
+  5: x ==> "5"
+
+[1]: x
+
+> 1
+
+------------------------------------------------------------
+1  let (x,y) = ("5", 5);;
+2
+3  let rec wwhile (f,b) =
+4    let f b = (x, y) in
+5    if x = true then
+6      wwhile (f, x)
+7    else x;;
+8
+9  wwhile (fun x => x, 1);;
+
+error: could not match 'string' with 'bool' in
+  5: "5" = true
+
+  5: x ==> "5"
+
+  1: let (x,y) = ("5", 5);;
+
+[1]: "5"
+[2]: 5
+
+>
+
+```
+
+```
+------------------------------------------------------------
+ 1  let explode s =
+ 2    let rec go i =
+ 3      if i >= (String.length s) 
+ 4      then [] 
+ 5      else (s.[i]) :: (go (i + 1)) 
+ 6    in go 0;;
+ 7
+ 8  let listReverse l =
+ 9    let rec helper xs = function 
+10      | [] -> xs 
+11      | hd::tl -> helper (hd :: xs) tl 
+12    in helper [];;
+13
+14  let palindrome w =
+15    if (listReverse (explode w)) = (explode w) 
+16    then true 
+17    else false;;
+18
+19  palindrome "a";;
+
+error: could not match ''a -> 'b' with 'char list' in
+  15: <fun> = ['a']
+
+[1]: <fun>
+[2]: =
+[3]: ['a']
+
+> 1
+
+------------------------------------------------------------
+ 1  let explode s =
+ 2    let rec go i =
+ 3      if i >= (String.length s) 
+ 4      then [] 
+ 5      else (s.[i]) :: (go (i + 1)) 
+ 6    in go 0;;
+ 7
+ 8  let listReverse l =
+ 9    let rec helper xs = function 
+10      | [] -> xs 
+11      | hd::tl -> helper (hd :: xs) tl 
+12    in helper [];;
+13
+14  let palindrome w =
+15    if (listReverse (explode w)) = (explode w) 
+16    then true 
+17    else false;;
+18
+19  palindrome "a";;
+
+error: could not match ''a -> 'b' with 'char list' in
+  15: <fun> = ['a']
+
+  15: listReverse ['a'] ==> <fun>
+
+[1]: listReverse
+[2]: ['a']
+[3]: single step
+
+> 3
+
+------------------------------------------------------------
+ 1  let explode s =
+ 2    let rec go i =
+ 3      if i >= (String.length s) 
+ 4      then [] 
+ 5      else (s.[i]) :: (go (i + 1)) 
+ 6    in go 0;;
+ 7
+ 8  let listReverse l =
+ 9    let rec helper xs = function 
+10      | [] -> xs 
+11      | hd::tl -> helper (hd :: xs) tl 
+12    in helper [];;
+13
+14  let palindrome w =
+15    if (listReverse (explode w)) = (explode w) 
+16    then true 
+17    else false;;
+18
+19  palindrome "a";;
+
+error: could not match ''a -> 'b' with 'char list' in
+  15: <fun> = ['a']
+
+  15: listReverse ['a'] ==> <fun>
+
+  9: let rec helper xs = ...
+     in helper []
+
+[1]: single step
+
+> 1
+
+------------------------------------------------------------
+ 1  let explode s =
+ 2    let rec go i =
+ 3      if i >= (String.length s) 
+ 4      then [] 
+ 5      else (s.[i]) :: (go (i + 1)) 
+ 6    in go 0;;
+ 7
+ 8  let listReverse l =
+ 9    let rec helper xs = function 
+10      | [] -> xs 
+11      | hd::tl -> helper (hd :: xs) tl 
+12    in helper [];;
+13
+14  let palindrome w =
+15    if (listReverse (explode w)) = (explode w) 
+16    then true 
+17    else false;;
+18
+19  palindrome "a";;
+
+error: could not match ''a -> 'b' with 'char list' in
+  15: <fun> = ['a']
+
+  15: listReverse ['a'] ==> <fun>
+
+   9: let rec helper xs = ...
+      in helper []
+
+  12: helper []
+
+[1]: helper
+[2]: []
+[3]: single step
+
+> 3
+
+------------------------------------------------------------
+ 1  let explode s =
+ 2    let rec go i =
+ 3      if i >= (String.length s) 
+ 4      then [] 
+ 5      else (s.[i]) :: (go (i + 1)) 
+ 6    in go 0;;
+ 7
+ 8  let listReverse l =
+ 9    let rec helper xs = function 
+10      | [] -> xs 
+11      | hd::tl -> helper (hd :: xs) tl 
+12    in helper [];;
+13
+14  let palindrome w =
+15    if (listReverse (explode w)) = (explode w) 
+16    then true 
+17    else false;;
+18
+19  palindrome "a";;
+
+error: could not match ''a -> 'b' with 'char list' in
+  15: <fun> = ['a']
+
+  15: listReverse ['a'] ==> <fun>
+
+   9: let rec helper xs = ...
+      in helper []
+
+  12: helper []
+
+   9: function
+       | [] -> []
+       | hd::tl -> helper (hd :: []) Tl
+
+
+```
+
+```
+listReverse (explode w)
+  ==>
+(fun l => let rec helper xs = ... in helper []) (explode w)
+  ==>
+(fun l => let rec helper xs = ... in helper []) ((fun s => ...) w)
+  ==>
+(fun l => let rec helper xs = ... in helper []) ((fun s => ...) "a")
+  ==>
+(fun l => let rec helper xs = ... in helper []) ['a']
+  ==>
+let rec helper xs = ... in helper []
+  ==>
+helper []
+  ==>
+(fun xs => function ...) []
+  ==>
+(function ...)
+
+
+```
