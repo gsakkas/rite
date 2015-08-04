@@ -85,7 +85,7 @@ stepDecl decl = case decl of
         -- traceShowM e
         case exprDiff env expr e of
           Nothing -> return ()
-          Just (env, expr, kind) -> addEvent expr kind `withEnv` env
+          Just (env, before, after, kind) -> addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
         gcScopes e
         -- traceM ""
         return (Just $ DEvl ss e)
@@ -99,26 +99,21 @@ stepDecl decl = case decl of
 step :: MonadEval m => Expr -> m Expr
 step expr = case expr of
   Val _ v -> return expr
-  With env e -> do
-    e' <- step e `withEnv` env
-    return $ if isVal e'
-             then e'
-             else With env e'
-  -- Replace env e -> do
-  --   e' <- step e `withEnv` env
-  --   if isVal e'
-  --     then addReturn e' `withEnv` env >> return e'
-  --     else return $ Replace env e'
-  Replace env (With bnd e) -> do
-    e' <- step e `withEnv` bnd
-    if isVal e'
-      then addReturn e' `withEnv` bnd >> return e'
-      else return $ Replace env $ With bnd e'
+  With ms env e
+    | isVal e   -> return e
+    | otherwise -> do
+        e' <- step e `withEnv` env
+        return $ With ms env e'
+  Replace ms env e
+    | isVal e   -> return e
+    | otherwise -> do
+        e' <- step e `withEnv` env
+        return $ Replace ms env e'
   Var ms v -> do
     -- addEvent expr
     fmap (Val ms) . lookupEnv v =<< gets stVarEnv
-  Lam ms _ _ -> -- addEvent expr >>
-    Val ms . VF . Func expr <$> gets stVarEnv
+  Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
+    Val ms . VF prv . Func expr <$> gets stVarEnv
   App ms f args -> stepOne (f:args)
                   (\(f:args) -> -- addEvent expr >> 
                                 stepApp ms f args)
@@ -133,7 +128,7 @@ step expr = case expr of
   Lit ms l -> return (Val ms (litValue l))
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
-    return $ With env body
+    return $ With ms env body
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
     -- stepOne es
@@ -144,15 +139,15 @@ step expr = case expr of
     let (ps, es) = unzip binds
     stepOne es
       (\vs -> do env <- evalNonRecBinds (zip ps vs)
-                 return $ With env body
+                 return $ With ms env body
       )
       (\es -> return $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
     | Val _ b <- b
       -> -- addEvent expr >>
       case b of
-          VB True  -> return t
-          VB False -> return f
+          VB _ True  -> return t
+          VB _ False -> return f
     | otherwise
       -> do b <- step b
             return $ Ite ms b t f
@@ -165,7 +160,8 @@ step expr = case expr of
       stepAlts e as
     | otherwise -> (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
-                (\vs -> return . Val ms $ VT (length vs) (map unVal vs) (map (typeOf . unVal) vs))
+                (\vs -> withCurrentProv $ \prv ->
+                  Val ms $ VT prv (length vs) (map unVal vs) (map (typeOf . unVal) vs))
                 (\es -> return $ Tuple ms es)
   ConApp ms dc Nothing -> do
     Val ms <$> evalConApp dc Nothing
@@ -183,7 +179,7 @@ step expr = case expr of
           writeStore i (m,v)
           return ((f,i),su)
       let t = subst (mconcat sus) $ typeDeclType td
-      return . Val ms $ VR vs t
+      withCurrentProv $ \prv -> Val ms $ VR prv vs t
     | otherwise -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
       unless (all (`elem` map fst3 fs) (map fst flds)) $
@@ -197,13 +193,13 @@ step expr = case expr of
   Field ms e f
     | Val _ v <- e -> Val ms <$> getField v f
   SetField ms r f e -> stepOne [r,e]
-                      (\[Val _ vr, Val _ ve] -> setField vr f ve >> return (Val ms VU))
+                      (\[Val _ vr, Val _ ve] -> setField vr f ve >> withCurrentProv (Val ms . VU))
                       (\[r,e] -> return $ SetField ms r f e)
-  Array ms [] -> return $ Val ms (VV Vector.empty (TVar "a"))
+  Array ms [] -> withCurrentProv $ \prv -> Val ms (VV prv Vector.empty (TVar "a"))
   Array ms es -> stepOne es
                 (\(map unVal -> (v:vs)) -> do
                     mapM_ (unify (typeOf v) . typeOf) vs
-                    return (Val ms (VV (Vector.fromList (v:vs)) (typeOf v))))
+                    withCurrentProv $ \prv -> (Val ms (VV prv (Vector.fromList (v:vs)) (typeOf v))))
                 (\es -> return $ Array ms es)
   Try ms e alts
     | isVal e   -> return e
@@ -225,22 +221,28 @@ step expr = case expr of
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
 stepApp ms (Val _ f) es = case f of
-  VF (Func x env)
-    | (ps, e, env) <- gatherLams f -> do
-        let (vs, es') = splitAt (length ps) es
-        -- traceShowM (map pretty ps, pretty e)
-        -- traceShowM (map unVal vs, map unVal es')
-        Just pat_env <- mconcat <$> zipWithM matchPat (map unVal vs) ps
+  VF _ (Func (Lam {}) env) -> do
+        let (ps, e, env) = gatherLams f
+            (eps, es', ps') = zipWithLeftover es ps
+        traceShowM (eps, es', ps')
+        Just pat_env <- mconcat <$> mapM (\(Val _ v, p) -> matchPat v p) eps
+        traceShowM pat_env
+        traceM ""
         -- pushEnv env
         -- pushEnv pat_env
         nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
-        let with = With nenv
-        Replace env . with <$> case es' of
-          [] -> addCall e `withEnv` nenv >> return (onSrcSpanExpr (<|> ms) e)
-          _  -> return $ App ms e es'
+        Replace ms nenv <$> case (ps', es') of
+          ([], []) -> return (onSrcSpanExpr (<|> ms) e)
+          ([], _) -> return $ App ms e es'
+          (_, []) -> return $ mkLams ps' e
   _ -> otherError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
 
+zipWithLeftover = go []
+  where
+  go xys xs     []     = (reverse xys, xs, [])
+  go xys []     ys     = (reverse xys, [], ys)
+  go xys (x:xs) (y:ys) = go ((x,y):xys) xs ys
 
 -- stepApp (Val f) (map unVal -> vs) = do
 --   let (ps, e, env) = gatherLams f
@@ -259,17 +261,18 @@ stepUop ms uop (Val _ v) = Val ms <$> evalUop uop v
 
 stepAlts :: MonadEval m => Expr -> [Alt] -> m Expr
 stepAlts _ []
-  = fmap (Val Nothing) . maybeThrow $ MLException (mkExn "Match_failure" [])
+  = withCurrentProvM $ \prv ->
+    fmap (Val Nothing) . maybeThrow $ MLException (mkExn "Match_failure" [] prv)
 stepAlts (Val ms v) ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> stepAlts (Val ms v) as
       Just bnd -> do bnd <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms)) bnd
                      case g of
-                      Nothing -> return $ With bnd e
+                      Nothing -> return $ With ms bnd e
                       Just g  -> do
                         eval g `withEnv` bnd >>= \case
-                          VB True  -> return $ With bnd e
-                          VB False -> stepAlts (Val ms v) as
+                          VB _ True  -> return $ With ms bnd e
+                          VB _ False -> stepAlts (Val ms v) as
 
 ----------------------------------------------------------------------
 -- Utilities
@@ -305,7 +308,7 @@ stepOne es kv ke = do
 
 
 isVal :: Expr -> Bool
-isVal (Val _ _)    = True
+isVal (Val _ _)  = True
 isVal _          = False
 
 unVal :: Expr -> Value
@@ -316,18 +319,17 @@ spanVals xs = let (vs,es) = span isVal xs
               in (map unVal vs, es)
 
 gatherLams :: Value -> ([Pat], Expr, Env)
-gatherLams (VF (Func (Lam _ p e) env)) = go [p] e
+gatherLams (VF _ (Func (Lam _ p e) env)) = go [p] e
   where
   go ps (Lam _ p e) = go (p:ps) e
   go ps e           = (reverse ps, e, env)
 
 
-addEvent :: MonadEval m => Expr -> Kind -> m ()
-addEvent (With env expr) k = addEvent expr k `withEnv` env
-addEvent (Replace env expr) k = addEvent expr k `withEnv` env
-addEvent expr k
-  | Just loc <- getSrcSpanMaybe expr
-  , interesting expr || k == Return = do
+addEvent :: MonadEval m => Expr -> Expr -> Kind -> MSrcSpan -> m ()
+addEvent bf (With _ env expr) k ms = addEvent bf expr k ms `withEnv` env
+addEvent bf (Replace _ env expr) k ms = addEvent bf expr k ms `withEnv` env
+addEvent bf expr k (Just loc)
+  | interesting expr || k == Return = do
   let line = srcSpanStartLine loc
   let column = srcSpanStartCol loc
   let expr_width = srcSpanWidth loc
@@ -335,7 +337,7 @@ addEvent expr k
   let stdout = ""
   let func_name = "<top-level>"
   id <- envId <$> gets stVarEnv
-  traceShowM (k, id, expr)
+  -- traceShowM (k, id, expr)
   let insertReturn 
         | Return <- k = insertEnv "__return__" (unVal expr)
         | otherwise   = \x -> x
@@ -359,10 +361,11 @@ addEvent expr k
                   , evt_expr_width = expr_width
                   , evt_event = event
                   , evt_exception_msg = ""
-                  , evt_expr = expr
+                  , evt_before = bf
+                  , evt_after = expr
                   }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
-addEvent _ _ = return ()
+addEvent _ _ _ _ = return ()
 
 addUncaughtException :: MonadEval m => NanoError -> m ()
 addUncaughtException exn = do
@@ -499,7 +502,8 @@ instance Aeson.ToJSON Event where
     , "expr_width"      Aeson..= Aeson.toJSON evt_expr_width
     , "event"           Aeson..= Aeson.toJSON evt_event
     , "exception_msg"   Aeson..= Aeson.toJSON evt_exception_msg
-    , "expr"            Aeson..= Aeson.toJSON (show (pretty evt_expr))
+    , "expr_before"     Aeson..= Aeson.toJSON (show (pretty evt_before))
+    , "expr_after"      Aeson..= Aeson.toJSON (show (pretty evt_after))
     ]
 
 instance Aeson.ToJSON Scope where
@@ -516,9 +520,9 @@ instance Aeson.ToJSON Scope where
     ]
 
 instance Aeson.ToJSON Value where
-  toJSON (VI i) = Aeson.toJSON i
-  toJSON (VD d) = Aeson.toJSON d
-  toJSON (VB b) = Aeson.toJSON b
-  toJSON (VC c) = Aeson.toJSON c
-  toJSON (VS s) = Aeson.toJSON s
+  toJSON (VI _ i) = Aeson.toJSON i
+  toJSON (VD _ d) = Aeson.toJSON d
+  toJSON (VB _ b) = Aeson.toJSON b
+  toJSON (VC _ c) = Aeson.toJSON c
+  toJSON (VS _ s) = Aeson.toJSON s
   toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)

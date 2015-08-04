@@ -70,7 +70,7 @@ evalBind :: MonadEval m => (Pat,Expr) -> m [(Var,Value)]
 evalBind (p,e) = do
   v <- eval e
   matchPat v p >>= \case
-    Nothing  -> throwError $ MLException (mkExn "Match_failure" [])
+    Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
     Just env -> return env
 
 
@@ -106,8 +106,8 @@ eval :: MonadEval m => Expr -> m Value
 eval expr = logExpr expr $ case expr of
   Var ms v ->
     lookupVar v
-  Lam ms _ _ ->
-    VF . Func expr <$> gets stVarEnv
+  Lam ms _ _ -> withCurrentProvM $ \prv ->
+    VF prv . Func expr <$> gets stVarEnv
   App ms f args -> do
     vf    <- eval f
     vargs <- mapM eval args
@@ -131,8 +131,8 @@ eval expr = logExpr expr $ case expr of
   Ite ms eb et ef -> do
     vb <- eval eb
     case vb of
-      VB True  -> eval et
-      VB False -> eval ef
+      VB _ True  -> eval et
+      VB _ False -> eval ef
       _        -> typeError (typeOf vb) (tCon tBOOL)
   Seq ms e1 e2 ->
     eval e1 >> eval e2
@@ -141,15 +141,15 @@ eval expr = logExpr expr $ case expr of
     evalAlts v as
   Tuple ms es -> do
     vs <- mapM eval es
-    return (VT (length vs) vs (map typeOf vs))
-  ConApp ms "()" Nothing -> return VU
-  ConApp ms "[]" Nothing -> return (VL [] (TVar "a"))
+    withCurrentProv $ \prv -> (VT prv (length vs) vs (map typeOf vs))
+  ConApp ms "()" Nothing -> withCurrentProv VU
+  ConApp ms "[]" Nothing -> withCurrentProv$ \prv -> (VL prv [] (TVar "a"))
   ConApp ms "::" (Just (Tuple ms' [h,t])) -> do
     vh <- eval h
     vt <- eval t
-    force vt (tL (typeOf vh)) $ \(VL vt t) -> do
+    force vt (tL (typeOf vh)) $ \(VL _ vt t) -> do
       su <- unify t (typeOf vh)
-      return (VL (vh:vt) (subst su t))
+      withCurrentProv $ \prv -> (VL prv (vh:vt) (subst su t))
   ConApp ms dc Nothing -> do
     evalConApp dc Nothing
   ConApp ms dc (Just e) -> do
@@ -170,7 +170,7 @@ eval expr = logExpr expr $ case expr of
         writeStore i (m,v)
         return ((f,i),su)
     let t = subst (mconcat sus) $ typeDeclType td
-    return (VR vs t)
+    withCurrentProv $ \prv -> (VR prv vs t)
   Field ms e f -> do
     v <- eval e
     getField v f
@@ -178,12 +178,12 @@ eval expr = logExpr expr $ case expr of
     vr <- eval r
     v  <- eval e
     setField vr f v
-    return VU
-  Array ms [] -> return (VV Vector.empty (TVar "a"))
+    withCurrentProv VU
+  Array ms [] -> withCurrentProv $ \prv -> (VV prv Vector.empty (TVar "a"))
   Array ms es -> do
     (v:vs) <- mapM eval es
     mapM_ (unify (typeOf v) . typeOf) vs
-    return (VV (Vector.fromList (v:vs)) (typeOf v))
+    withCurrentProv $ \prv -> (VV prv (Vector.fromList (v:vs)) (typeOf v))
   Try ms e alts -> do
     env <- gets stVarEnv
     eval e `catchError` \e -> do
@@ -231,7 +231,7 @@ forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
-  VF (Func (Lam ms p e) env) -> do
+  VF _ (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
     eval e `withEnv` undefined -- joinEnv pat_env env
   _ -> otherError "tried to apply a non-function"
@@ -239,41 +239,43 @@ evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
+  prv <- getCurrentProv
   case (dArgs dd, v) of
     ([], Nothing)
-      | dc == "()" -> return VU
-      | dc == "[]" -> return (VL [] (TVar "a"))
-      | otherwise  -> return (VA dc v (typeDeclType $ dType dd))
+      | dc == "()" -> return (VU prv)
+      | dc == "[]" -> return (VL prv [] (TVar "a"))
+      | otherwise  -> return (VA prv dc v (typeDeclType $ dType dd))
     ([a], Just v) -> force v a $ \v -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
-      return (VA dc (Just v) t)
-    (as,  Just (VT n vs ts))
+      return (VA prv dc (Just v) t)
+    (as,  Just (VT _ n vs ts))
       | dc == "::"
-      , [vh, VL vt t] <- vs -> do
+      , [vh, VL _ vt t] <- vs -> do
         su <- unify (typeOf vh) t
-        return (VL (vh : vt) (subst su t))
+        return (VL prv (vh : vt) (subst su t))
       | length as == n -> forces (zip vs ts) $ \vs -> do
         su <- mconcat <$> zipWithM unify as ts
         let t = subst su $ typeDeclType $ dType dd
-        return (VA dc v t)
+        return (VA prv dc v t)
     (as, _) -> do
       let nArgs = case v of
             Nothing         -> 0
-            Just (VT n _ _) -> n
+            Just (VT _ n _ _) -> n
             Just _          -> 1
       otherError (printf "%s expects %d arguments, but was given %d"
                         dc (length as) nArgs)
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
-evalBop bop v1 v2 = logExpr (Bop Nothing bop (Val Nothing v1) (Val Nothing v2)) $ case bop of
-  Eq     -> forceSame v1 v2 $ \v1 v2 -> VB <$> eqVal v1 v2
-  Neq    -> forceSame v1 v2 $ \v1 v2 -> VB . not <$> eqVal v1 v2
-  Lt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> ltVal v1 v2
-  Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
-  Gt     -> forceSame v1 v2 $ \v1 v2 -> VB <$> gtVal v1 v2
-  Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
+evalBop bop v1 v2 = withCurrentProvM $ \prv ->
+ logExpr (Bop Nothing bop (Val Nothing v1) (Val Nothing v2)) $ case bop of
+  Eq     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> eqVal v1 v2
+  Neq    -> forceSame v1 v2 $ \v1 v2 -> VB prv . not <$> eqVal v1 v2
+  Lt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> ltVal v1 v2
+  Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
+  Gt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> gtVal v1 v2
+  Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
   Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> plusVal v1 v2
   Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> minusVal v1 v2
   Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> timesVal v1 v2
@@ -285,8 +287,8 @@ evalBop bop v1 v2 = logExpr (Bop Nothing bop (Val Nothing v1) (Val Nothing v2)) 
   FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> divVal v1 v2
 
 evalUop :: MonadEval m => Uop -> Value -> m Value
-evalUop Neg  v = force v (tCon tINT) $ \(VI i) -> return (VI (negate i))
-evalUop FNeg v = force v (tCon tFLOAT) $ \(VD d) -> return (VD (negate d))
+evalUop Neg  v = force v (tCon tINT)   $ \(VI _ i) -> withCurrentProv $ \prv -> VI prv (negate i)
+evalUop FNeg v = force v (tCon tFLOAT) $ \(VD _ d) -> withCurrentProv $ \prv -> VD prv (negate d)
 
 
 -- ltVal (VI x) (VI y) = return (x < y)
@@ -298,43 +300,43 @@ evalUop FNeg v = force v (tCon tFLOAT) $ \(VD d) -> return (VD (negate d))
 -- gtVal x      y      = typeError "cannot compare ordering of non-numeric types"
 
 ltVal x y = do
-  VI i <- cmpVal x y
+  VI _ i <- cmpVal x y
   return (i == (-1))
 
 gtVal x y = do
-  VI i <- cmpVal x y
+  VI _ i <- cmpVal x y
   return (i == 1)
 
-plusVal (VI i) (VI j) = return $ VI (i+j)
-plusVal (VD i) (VD j) = return $ VD (i+j)
+plusVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i+j)
+plusVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i+j)
 -- plusVal _      _      = typeError "+ can only be applied to ints"
 
-minusVal (VI i) (VI j) = return $ VI (i-j)
-minusVal (VD i) (VD j) = return $ VD (i-j)
+minusVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i-j)
+minusVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i-j)
 -- minusVal _      _      = typeError "- can only be applied to ints"
 
-timesVal (VI i) (VI j) = return $ VI (i*j)
-timesVal (VD i) (VD j) = return $ VD (i*j)
+timesVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i*j)
+timesVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i*j)
 -- timesVal _      _      = typeError "* can only be applied to ints"
 
-divVal (VI i) (VI j) = return $ VI (i `div` j)
-divVal (VD i) (VD j) = return $ VD (i / j)
+divVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i `div` j)
+divVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i / j)
 -- divVal _      _      = typeError "/ can only be applied to ints"
 
-modVal (VI i) (VI j) = return $ VI (i `mod` j)
+modVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i `mod` j)
 -- modVal _      _      = typeError "mod can only be applied to ints"
 
 litValue :: Literal -> Value
-litValue (LI i) = VI i
-litValue (LD d) = VD d
-litValue (LB b) = VB b
-litValue (LC c) = VC c
-litValue (LS s) = VS s
+litValue (LI i) = VI nullProv i
+litValue (LD d) = VD nullProv d
+litValue (LB b) = VB nullProv b
+litValue (LC c) = VC nullProv c
+litValue (LS s) = VS nullProv s
 --litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
 evalAlts _ []
-  = maybeThrow $ MLException (mkExn "Match_failure" [])
+  = withCurrentProvM $ \prv -> maybeThrow $ MLException (mkExn "Match_failure" [] prv)
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
@@ -343,8 +345,8 @@ evalAlts v ((p,g,e):as)
                       Nothing -> eval e `withEnv` newenv
                       Just g  ->
                         eval g `withEnv` newenv >>= \case
-                          VB True  -> eval e `withEnv` newenv
-                          VB False -> evalAlts v as
+                          VB _ True  -> eval e `withEnv` newenv
+                          VB _ False -> evalAlts v as
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
@@ -356,31 +358,31 @@ matchPat v p = case p of
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
   IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v -> do
-    VB b <- eval (mkApps Nothing (Var Nothing "&&")
+    VB _ b <- eval (mkApps Nothing (Var Nothing "&&")
                   [ mkApps Nothing (Var Nothing ">=") [Val Nothing v, Lit Nothing lo]
                   , mkApps Nothing (Var Nothing "<=") [Val Nothing v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> force v (tL a) $ \v -> do
     case v of
-      VL [] _ -> return Nothing
-      VL _ _ -> do
+      VL _ [] _ -> return Nothing
+      VL _ _ _ -> do
         (x,xs) <- unconsVal v
         menv1 <- matchPat x p
         menv2 <- matchPat xs ps
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
-  ListPat _ ps -> force v (tL a) $ \(VL vs _) -> do
+  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
-  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs _) -> do
+  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ _ vs _) -> do
     fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
-  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL vs _) ->
+  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs _) ->
     case vs of
       [] -> return (Just mempty)
       _  -> return Nothing
@@ -389,7 +391,7 @@ matchPat v p = case p of
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    force v (typeDeclType $ dType dd) $ \(VA c v' t) -> do
+    force v (typeDeclType $ dType dd) $ \(VA _ c v' t) -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing
@@ -414,15 +416,15 @@ safeMatch ts (Just (WildPat _)) = True
 safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
-unconsVal (VL (x:xs) t) = return (x, VL xs t)
+unconsVal (VL prv (x:xs) t) = return (x, VL prv xs t) -- FIXME: is this the right provenance??
 unconsVal _             = otherError "type error: uncons can only be applied to lists"
 
 matchLit :: MonadEval m => Value -> Literal -> m Bool
-matchLit (VI i1) (LI i2) = return $ i1 == i2
-matchLit (VD d1) (LD d2) = return $ d1 == d2
-matchLit (VB b1) (LB b2) = return $ b1 == b2
-matchLit (VC c1) (LC c2) = return $ c1 == c2
-matchLit (VS s1) (LS s2) = return $ s1 == s2
+matchLit (VI _ i1) (LI i2) = return $ i1 == i2
+matchLit (VD _ d1) (LD d2) = return $ d1 == d2
+matchLit (VB _ b1) (LB b2) = return $ b1 == b2
+matchLit (VC _ c1) (LC c2) = return $ c1 == c2
+matchLit (VS _ s1) (LS s2) = return $ s1 == s2
 --matchLit VU      LU      = return True
 matchLit v       l       = typeError (typeOf v) (typeOf (litValue l))
 

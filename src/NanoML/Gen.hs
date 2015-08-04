@@ -23,33 +23,33 @@ genArgs :: MonadEval m => Type -> TypeEnv -> m [Value]
 genArgs ty env = mapM (flip genValue env) (argTys ty)
 
 genValue :: MonadEval m => Type -> TypeEnv -> m Value
-genValue ty env = case ty of
+genValue ty env = withCurrentProvM $ \prv -> case ty of
   TVar _ -> do
     r <- fresh
     return (VH r Nothing)
   TApp t []
     | t == tINT
-      -> VI <$> sized (\s -> getRandomR (-s, s))
+      -> VI prv <$> sized (\s -> getRandomR (-s, s))
     | t == tFLOAT
-      -> VD <$> sized (\s -> getRandomR (negate (fromIntegral s), fromIntegral s))
+      -> VD prv <$> sized (\s -> getRandomR (negate (fromIntegral s), fromIntegral s))
     | t == tCHAR
-      -> VC <$> sized (\s -> getRandomR ('a', chr (ord 'a' + s)))
+      -> VC prv <$> sized (\s -> getRandomR ('a', chr (ord 'a' + s)))
     | t == tSTRING
-      -> VS <$> listOf (sized (\s -> getRandomR ('a', chr (ord 'a' + s))))
+      -> VS prv <$> listOf (sized (\s -> getRandomR ('a', chr (ord 'a' + s))))
     | t == tBOOL
-      -> VB <$> oneof [return False, return True]
+      -> VB prv <$> oneof [return False, return True]
     | t == tUNIT
-      -> return VU
+      -> return (VU prv)
     | otherwise
       -> sized (genADT t [] env)
   TApp "list" [t] -> genList t env
-  TApp "array" [t] -> sized (fmap (flip VV t . Vector.fromList) . flip vectorOf (genValue t env))
+  TApp "array" [t] -> sized (fmap ((\ x -> VV prv x t) . Vector.fromList) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
-  TTup ts -> (\x -> VT (length ts) x ts) <$> mapM (flip genValue env) ts
-  _ :-> to -> VF . flip Func mempty . Lam Nothing (WildPat Nothing) <$> (fmap (Val Nothing) . flip genValue env) to
+  TTup ts -> (\x -> VT prv (length ts) x ts) <$> mapM (flip genValue env) ts
+  _ :-> to -> VF prv . flip Func mempty . Lam Nothing (WildPat Nothing) <$> (fmap (Val Nothing) . flip genValue env) to
 
 genList :: MonadEval m => Type -> TypeEnv -> m Value
-genList t env = flip VL t <$> listOf (genValue t env)
+genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x t) <$> listOf (genValue t env)
 
 genADT :: MonadEval m => TCon -> [Type] -> TypeEnv -> Int -> m Value
 genADT c ts e n = do
@@ -57,7 +57,7 @@ genADT c ts e n = do
   case tyRhs of
     Alias ty -> genValue ty e
     Alg dds  -> oneof (mapMaybe (genDataDecl tyVars) dds)
-    TRec flds -> flip VR t <$> mapM genField flds
+    TRec flds -> withCurrentProvM $ \prv -> (\x -> VR prv x t) <$> mapM genField flds
 
   where
 
@@ -65,7 +65,7 @@ genADT c ts e n = do
 
   genDataDecl tvs DataDecl {..}
     | [] <- dArgs
-    = Just $ return $ VA dCon Nothing t
+    = Just $ withCurrentProv $ \prv -> VA prv dCon Nothing t
     | n <= 0 && any isRec dArgs
     = Nothing
     | otherwise
@@ -73,10 +73,11 @@ genADT c ts e n = do
       ns <- replicateM (length dArgs) (getRandomR (0, prev n))
       vs <- zipWithM (\n d -> resize n . (`genValue` e) . subst (zip tvs ts) $ d)
                      ns dArgs
-      let v = case dArgs of
-            [_] -> head vs
-            _   -> VT (length vs) vs ts
-      return $ VA dCon (Just v) t
+      withCurrentProvM $ \prv -> do
+        let v = case dArgs of
+              [_] -> head vs
+              _   -> VT prv (length vs) vs ts
+        return $ VA prv dCon (Just v) t
 
 --  isRec (TCon t)    = t == c
   isRec (TApp t ts) = t == c || any isRec ts

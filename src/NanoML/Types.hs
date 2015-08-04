@@ -9,21 +9,19 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE OverlappingInstances     #-}
+{-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE TypeOperators         #-}
 module NanoML.Types where
 
 import           Control.Applicative
-import           Control.Arrow
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
-import           Control.Monad.Fix
 import           Control.Monad.Random
 import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
-import qualified Data.Aeson                   as Aeson
-import           Data.Char
 import           Data.IntMap.Strict           (IntMap)
 import qualified Data.IntMap.Strict           as IntMap
 import           Data.List
@@ -127,6 +125,18 @@ data EvalState = EvalState
 
 rememberArgs :: MonadEval m => [Expr] -> m ()
 rememberArgs args = modify' $ \s -> s { stArgs = args }
+
+getStepIndex :: MonadEval m => m Int
+getStepIndex = Seq.length <$> gets stTrace
+
+getCurrentProv :: MonadEval m => m Prov
+getCurrentProv = Prov <$> getStepIndex
+
+withCurrentProv :: MonadEval m => (Prov -> a) -> m a
+withCurrentProv f = f <$> getCurrentProv
+
+withCurrentProvM :: MonadEval m => (Prov -> m a) -> m a
+withCurrentProvM f = f =<< getCurrentProv
 
 -- | An index into the store.
 type Ref = Int
@@ -294,19 +304,26 @@ m `withEnv` env = do
 --   genv <- gets stVarEnv
 --   m `withEnv` (joinEnv env genv)
 
+-- | The provenance of a 'Value' is the index of the step that created it
+data Prov = Prov Int
+  deriving (Show, Eq, Generic)
+
+nullProv :: Prov
+nullProv = Prov 0
+
 data Value
-  = VI !Int
-  | VD !Double
-  | VC !Char
-  | VS !String
-  | VB !Bool
-  | VU
-  | VL [Value] Type
-  | VT !Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
-  | VA DCon (Maybe Value) Type
-  | VR [(String, Ref)] Type
-  | VV (Vector Value) Type
-  | VF Func
+  = VI !Prov !Int
+  | VD !Prov !Double
+  | VC !Prov !Char
+  | VS !Prov !String
+  | VB !Prov !Bool
+  | VU !Prov
+  | VL !Prov [Value] Type
+  | VT !Prov !Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+  | VA !Prov DCon (Maybe Value) Type
+  | VR !Prov [(String, Ref)] Type
+  | VV !Prov (Vector Value) Type
+  | VF !Prov Func
   | VH !Ref (Maybe Type) -- ^ A "hole" that will be filled in later, on demand.
   deriving (Show, Generic, Eq)
 
@@ -335,10 +352,10 @@ data SrcSpan = SrcSpan
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Generic, Eq)
+  } deriving (Show, Generic, Eq)
 
-instance Show SrcSpan where
-  show _ = "SrcSpan"
+instance Show MSrcSpan where
+  show _ = ""
 
 srcSpanWidth SrcSpan {..}
   | srcSpanStartLine == srcSpanEndLine
@@ -388,8 +405,8 @@ data Expr
   | Prim1 !MSrcSpan Prim1 Expr
   | Prim2 !MSrcSpan Prim2 Expr Expr
   | Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
-  | With Env Expr
-  | Replace Env Expr
+  | With !MSrcSpan Env Expr
+  | Replace !MSrcSpan Env Expr
   deriving (Show, Generic, Eq)
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
@@ -414,8 +431,8 @@ getSrcSpanExprMaybe expr = case expr of
   Prim1 ms _ _ -> ms
   Prim2 ms _ _ _ -> ms
   Val ms _ -> ms
-  With _ e -> getSrcSpanExprMaybe e
-  Replace _ e -> getSrcSpanExprMaybe e
+  With ms _ _ -> ms
+  Replace ms _ _ -> ms
 
 onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
 onSrcSpanExpr f expr = case expr of
@@ -439,8 +456,8 @@ onSrcSpanExpr f expr = case expr of
   Prim1 ms x y -> Prim1 (f ms) x y
   Prim2 ms x y z -> Prim2 (f ms) x y z
   Val ms x -> Val (f ms) x
-  With x y -> With x (onSrcSpanExpr f y)
-  Replace x y -> Replace x (onSrcSpanExpr f y)
+  With ms x y -> With (f ms) x y
+  Replace ms x y -> Replace (f ms) x y
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
@@ -605,18 +622,18 @@ unifyAlias c ts x y = do
 
 typeOf :: Value -> Type
 typeOf v = case v of
-  VI _ -> tCon tINT
-  VD _ -> tCon tFLOAT
-  VC _ -> tCon tCHAR
-  VS _ -> tCon tSTRING
-  VB _ -> tCon tBOOL
-  VU   -> tCon tUNIT
-  VL _ t -> mkTApps tLIST [t]
-  VT _ _ ts -> TTup ts
-  VA _ _ t -> t
-  VR _ t -> t
-  VV _ t -> mkTApps tARRAY [t]
-  VF _ -> TVar "a" :-> TVar "b" -- TODO
+  VI _ _ -> tCon tINT
+  VD _ _ -> tCon tFLOAT
+  VC _ _ -> tCon tCHAR
+  VS _ _ -> tCon tSTRING
+  VB _ _ -> tCon tBOOL
+  VU _   -> tCon tUNIT
+  VL _ _ t -> mkTApps tLIST [t]
+  VT _ _ _ ts -> TTup ts
+  VA _ _ _ t -> t
+  VR _ _ t -> t
+  VV _ _ t -> mkTApps tARRAY [t]
+  VF _ _ -> TVar "a" :-> TVar "b" -- TODO
   VH _ Nothing -> TVar "a"
   VH _ (Just t) -> t
   -- VF _ -> error "typeOf: <<function>>"
@@ -674,11 +691,11 @@ mkUMinus ms "-." (Lit _ (LD d)) = Lit ms (LD (- d))
 mkUMinus ms "-"  e              = Uop ms Neg e
 mkUMinus ms "-." e              = Uop ms FNeg e
 
-mkExn :: DCon -> [Value] -> Value
-mkExn dcon []   = VA dcon Nothing (tCon tEXN)
-mkExn dcon [a]  = VA dcon (Just a) (tCon tEXN)
-mkExn dcon args = VA dcon (Just (VT (length args) args (map typeOf args)))
-                     (tCon tEXN)
+mkExn :: DCon -> [Value] -> Prov -> Value
+mkExn dcon []   prv = VA prv dcon Nothing (tCon tEXN)
+mkExn dcon [a]  prv = VA prv dcon (Just a) (tCon tEXN)
+mkExn dcon args prv = VA prv dcon (Just (VT prv (length args) args (map typeOf args)))
+                                  (tCon tEXN)
 
 tCon :: TCon -> Type
 tCon c = mkTApps c []
@@ -704,39 +721,43 @@ tCon c = mkTApps c []
 --   -- = return False
 --   = typeError (printf "cannot compare incompatible types: (%s) (%s)" (show x) (show y) :: String)
 
-eqVal x y = (\(VI x) -> x == 0) <$> cmpVal x y
+eqVal x y = (\(VI _ x) -> x == 0) <$> cmpVal x y
 
-cmpVal (VI x) (VI y) = return (cmp x y)
-cmpVal (VD x) (VD y) = return (cmp x y)
-cmpVal (VB x) (VB y) = return (cmp x y)
-cmpVal (VC x) (VC y) = return (cmp x y)
-cmpVal (VS x) (VS y) = return (cmp x y)
-cmpVal VU     VU     = return (VI 0)
-cmpVal (VL x _) (VL y _) = cmpAnd . ((length x `cmp` length y) :) <$> zipWithM cmpVal x y
-cmpVal (VT i x _) (VT j y _)
+cmpVal (VI _ x) (VI _ y) = cmp x y
+cmpVal (VD _ x) (VD _ y) = cmp x y
+cmpVal (VB _ x) (VB _ y) = cmp x y
+cmpVal (VC _ x) (VC _ y) = cmp x y
+cmpVal (VS _ x) (VS _ y) = cmp x y
+cmpVal (VU _)   (VU _) = getCurrentProv >>= \prv -> return (VI prv 0)
+cmpVal (VL _ x _) (VL _ y _) = do
+  lcmp <- length x `cmp` length y
+  xscmp <- zipWithM cmpVal x y
+  return $ cmpAnd (lcmp : xscmp)
+cmpVal (VT _ i x _) (VT _ j y _)
   | i == j
   = cmpAnd <$> zipWithM cmpVal x y
-cmpVal (VF x) (VF y) = otherError "cannot compare functions"
-cmpVal x@(VA c1 v1 _) y@(VA c2 v2 _) = do
+cmpVal (VF _ x) (VF _ y) = otherError "cannot compare functions"
+cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
   dd1 <- lookupDataCon c2
   dd2 <- lookupDataCon c2
   unless (tyCon (dType dd1) == tyCon (dType dd2)) $
     typeError (typeOf x) (typeOf y)
   let dcs = map dCon . typeDataCons . dType $ dd1
+  prv <- getCurrentProv
   case compare (fromJust (elemIndex c1 dcs)) (fromJust (elemIndex c2 dcs)) of
-    LT -> return (VI (-1))
-    GT -> return (VI 1)
+    LT -> return (VI prv (-1))
+    GT -> return (VI prv 1)
     EQ -> case (v1, v2) of
-      (Nothing, Nothing) -> return (VI 0)
+      (Nothing, Nothing) -> return (VI prv 0)
       (Just v1, Just v2) -> cmpVal v1 v2
 cmpVal x y
   -- = return False
   = typeError (typeOf x) (typeOf y)
 
-cmp x y = VI $ fromEnum (compare x y) - 1
+cmp x y = getCurrentProv >>= \prv -> return $ VI prv $ fromEnum (compare x y) - 1
 
-cmpAnd []        = VI 0
-cmpAnd (VI 0:xs) = cmpAnd xs
+cmpAnd []        = error "cmpAnd: empty list"
+cmpAnd (VI _ 0:xs) = cmpAnd xs
 cmpAnd (x:xs)    = x
 
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
@@ -808,7 +829,8 @@ data Event = Event
   , evt_expr_width :: !Int
   , evt_event :: !String
   , evt_exception_msg :: !String
-  , evt_expr :: !Expr
+  , evt_before :: !Expr
+  , evt_after :: !Expr
   } deriving Show
 
 
@@ -874,6 +896,8 @@ instance CollectEnvIds Decl
 instance CollectEnvIds Expr
 instance CollectEnvIds Pat
 instance CollectEnvIds Type
+instance CollectEnvIds Prov where
+  collectEnvIds _ = []
 instance CollectEnvIds Value
 instance CollectEnvIds Func
 
@@ -940,7 +964,7 @@ showKind Call = "call"
 showKind Return = "return"
 
 -- | Compute the difference between two expressions
-exprDiff :: Env -> Expr -> Expr -> Maybe (Env, Expr, Kind)
+exprDiff :: Env -> Expr -> Expr -> Maybe (Env, Expr, Expr, Kind)
 exprDiff env e1 e2 = case (e1, e2) of
   (Var lx x, Var ly y)
     | lx == ly && x == y
@@ -982,7 +1006,7 @@ exprDiff env e1 e2 = case (e1, e2) of
         | Nothing <- mx, Nothing <- my
           -> Nothing
         | otherwise
-          -> Just (env, e2, StepLine)
+          -> Just (env, e1, e2, StepLine)
   (Record lx fxs, Record ly fys)
     | lx == ly && map fst fxs == map fst fys
       -> msum (zipWith (exprDiff env) (map snd fxs) (map snd fys))
@@ -995,18 +1019,18 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Val _ x, Val _ y)
     | x == y
       -> Nothing
-  (With ex x, With ey y)
-    | envId ex == envId ey
+  (With lx ex x, With ly ey y)
+    | lx == ly && envId ex == envId ey
       -> exprDiff ex x y
-  (Replace ex x, Replace ey y)
-    | envId ex == envId ey
+  (Replace lx ex x, Replace ly ey y)
+    | lx == ly && envId ex == envId ey
       -> exprDiff ex x y
-  (_, Replace _ _)
-    -> Just (env, e2, Call)
-  (Replace _ (With env' _), _)
-    -> Just (env', e2, Return)
-  _ -> Just (env, e2, StepLine)
-  
+  (_, Replace _ _ _)
+    -> Just (env, e1, e2, Call)
+  (Replace _ env' _, _)
+    -> Just (env', e1, e2, Return)
+  _ -> Just (env, e1, e2, StepLine)
+
 fst3 (a,b,c) = a
 snd3 (a,b,c) = b
 thd3 (a,b,c) = c

@@ -26,20 +26,20 @@ parensIf False = id
 
 instance Pretty Value where
   prettyPrec z v = case v of
-    VI i -> pretty i
-    VD d -> pretty d
-    VC c -> text $ "'" ++ [c] ++ "'"
-    VS s -> text $ show s
-    VB b -> text (if b then "true" else "false")
-    VU   -> text "()"
-    VL l _ -> list l
-    VT _ xs _ -> tuple xs
-    VA d Nothing _ -> text d
-    VA d (Just x) _ -> parensIf (z>za) $ text d <+> pretty x
+    VI _ i -> pretty i
+    VD _ d -> pretty d
+    VC _ c -> text $ "'" ++ [c] ++ "'"
+    VS _ s -> text $ show s
+    VB _ b -> text (if b then "true" else "false")
+    VU _   -> text "()"
+    VL _ l _ -> list l
+    VT _ _ xs _ -> tuple xs
+    VA _ d Nothing _ -> text d
+    VA _ d (Just x) _ -> parensIf (z>za) $ text d <+> pretty x
       where za = 26
-    VR fs _ -> record fs
-    VV vs _ -> array $ Vector.toList vs
-    VF (Func e _) -> prettyPrec z e
+    VR _ fs _ -> record fs
+    VV _ vs _ -> array $ Vector.toList vs
+    VF _ (Func e _) -> prettyPrec z e
     VH _ _ -> text "_"
 
 list xs = text "[" <> (hsep $ intersperse semi $ map pretty xs) <> text "]"
@@ -111,8 +111,8 @@ instance Pretty Expr where
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec undefined
-    With env e -> prettyPrec z e
-    Replace env e -> prettyPrec z e
+    With _ env e -> prettyPrec z e
+    Replace _ env e -> prettyPrec z e
 
 instance Pretty Bop where
   pretty Eq = text "=#"
