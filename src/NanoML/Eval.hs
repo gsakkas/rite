@@ -121,7 +121,7 @@ eval expr = logExpr expr $ case expr of
   Uop ms u e -> do
     v <- eval e
     evalUop u v
-  Lit ms l -> return (litValue l)
+  Lit ms l -> litValue l
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
     eval body `withEnv` env
@@ -326,12 +326,12 @@ divVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i / j)
 modVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i `mod` j)
 -- modVal _      _      = typeError "mod can only be applied to ints"
 
-litValue :: Literal -> Value
-litValue (LI i) = VI nullProv i
-litValue (LD d) = VD nullProv d
-litValue (LB b) = VB nullProv b
-litValue (LC c) = VC nullProv c
-litValue (LS s) = VS nullProv s
+litValue :: MonadEval m => Literal -> m Value
+litValue (LI i) = withCurrentProv $ \prv -> VI prv i
+litValue (LD d) = withCurrentProv $ \prv -> VD prv d
+litValue (LB b) = withCurrentProv $ \prv -> VB prv b
+litValue (LC c) = withCurrentProv $ \prv -> VC prv c
+litValue (LS s) = withCurrentProv $ \prv -> VS prv s
 --litValue LU     = VU
 
 evalAlts :: MonadEval m => Value -> [Alt] -> m Value
@@ -426,7 +426,9 @@ matchLit (VB _ b1) (LB b2) = return $ b1 == b2
 matchLit (VC _ c1) (LC c2) = return $ c1 == c2
 matchLit (VS _ s1) (LS s2) = return $ s1 == s2
 --matchLit VU      LU      = return True
-matchLit v       l       = typeError (typeOf v) (typeOf (litValue l))
+matchLit v       l       = do
+  lv <- litValue l
+  typeError (typeOf v) (typeOf lv)
 
 
 testEval :: String -> IO ()

@@ -125,7 +125,7 @@ step expr = case expr of
   Uop ms u e
     | isVal e   -> stepUop ms u e
     | otherwise -> Uop ms u <$> step e
-  Lit ms l -> return (Val ms (litValue l))
+  Lit ms l -> Val ms <$> litValue l
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
     return $ With ms env body
@@ -372,6 +372,7 @@ addUncaughtException exn = do
   last_evt <- gets (last . toList . stTrace)
   let evt = last_evt { evt_event = "uncaught_exception"
                      , evt_exception_msg = show (pretty exn)
+                     , evt_before = evt_after last_evt
                      }
   modify' $ \s -> s { stTrace = stTrace s Seq.|> evt }
 
