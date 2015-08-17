@@ -121,7 +121,84 @@ data EvalState = EvalState
   , stArgs     :: ![Expr]
   , stTrace    :: !(Seq Event)
   , stEnvMap   :: !(IntMap Env)
+  -- , stNodes    :: !(Map Expr Int)
+  , stEdges    :: ![(Expr, EdgeKind, Expr)]
   } deriving Show
+
+addEdge :: MonadEval m => EdgeKind -> Expr -> Expr -> m ()
+addEdge k e1 e2 = modify' $ \s -> s { stEdges = (skipEnv e1, k, skipEnv e2) : stEdges s }
+
+addSubTerms :: MonadEval m => Expr -> m Expr
+addSubTerms expr = do
+  case expr of
+    Var _ _ -> return ()
+    Lam _ _ b -> addEdge (SubTerm 0) expr b
+    App _ f xs -> zipWithM_ (\i e -> addEdge (SubTerm i) expr e) [0..] (f:xs)
+    Bop _ _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
+    Uop _ _ x -> addEdge (SubTerm 0) expr x
+    Lit _ _ -> return ()
+    Let _ _ binds body -> zipWithM_ (\i e -> addEdge (SubTerm i) expr e) [0..] (body : map snd binds)
+    Ite _ b t f -> addEdge (SubTerm 0) expr b >> addEdge (SubTerm 1) expr t >> addEdge (SubTerm 2) expr f
+    Seq _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
+
+    Prim1 _ _ x -> addEdge (SubTerm 0) expr x
+    Prim2 _ _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
+    _ -> return ()
+
+  return expr
+
+skipEnv :: Expr -> Expr
+skipEnv expr = case expr of
+  With _ _ e -> skipEnv e
+  Replace _ _ e -> skipEnv e
+  _ -> expr
+
+refreshDecl :: MonadEval m => Decl -> m Decl
+refreshDecl decl = case decl of
+  DFun ss r binds -> DFun ss r <$> mapM refreshBind binds
+  DEvl ss x -> DEvl ss <$> refreshExpr x
+  DTyp {} -> return decl
+  DExn {} -> return decl
+
+refreshExpr :: MonadEval m => Expr -> m Expr
+refreshExpr expr = addSubTerms =<< case expr of
+  Var {} -> return expr
+  Lam ms p e -> Lam ms p <$> refreshExpr e
+  App ms f xs -> App ms <$> refreshExpr f <*> mapM refreshExpr xs
+  Bop ms b x y -> Bop ms b <$> refreshExpr x <*> refreshExpr y
+  Uop ms u x -> Uop ms u <$> refreshExpr x
+  Lit {} -> return expr
+  Let ms r binds body -> Let ms r <$> mapM refreshBind binds <*> refreshExpr body
+  Ite ms b t f -> Ite ms <$> refreshExpr b <*> refreshExpr t <*> refreshExpr f
+  Seq ms x y -> Seq ms <$> refreshExpr x <*> refreshExpr y
+  Case ms e alts -> Case ms <$> refreshExpr e <*> mapM refreshAlt alts
+  Tuple ms xs -> Tuple ms <$> mapM refreshExpr xs
+  ConApp ms c Nothing -> return expr
+  ConApp ms c (Just x) -> ConApp ms c . Just <$> refreshExpr x
+  Record ms fs -> Record ms <$> mapM refreshBind fs
+  Field ms e f -> Field ms <$> refreshExpr e <*> pure f
+  SetField ms e f x -> SetField ms <$> refreshExpr e <*> pure f <*> refreshExpr x
+  Array ms xs -> Array ms <$> mapM refreshExpr xs
+  Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
+  Prim1 ms p x -> Prim1 ms p <$> refreshExpr x
+  Prim2 ms p x y -> Prim2 ms p <$> refreshExpr x <*> refreshExpr y
+  Val {} -> return expr
+  With ms e x -> With ms e <$> refreshExpr x
+  Replace ms e x -> Replace ms e <$> refreshExpr x
+
+refreshBind :: MonadEval m => (a, Expr) -> m (a, Expr)
+refreshBind (a,e) = do
+  e <- refreshExpr e
+  return (a,e)
+
+refreshAlt :: MonadEval m => Alt -> m Alt
+refreshAlt (p,Nothing,e) = do
+  e <- refreshExpr e
+  return (p,Nothing,e)
+refreshAlt (p,Just g,e) = do
+  e <- refreshExpr e
+  g <- refreshExpr g
+  return (p,Just g,e)
 
 rememberArgs :: MonadEval m => [Expr] -> m ()
 rememberArgs args = modify' $ \s -> s { stArgs = args }
@@ -1034,3 +1111,9 @@ exprDiff env e1 e2 = case (e1, e2) of
 fst3 (a,b,c) = a
 snd3 (a,b,c) = b
 thd3 (a,b,c) = c
+
+
+data EdgeKind
+  = StepsTo
+  | SubTerm !Int
+  deriving (Show, Generic, Eq)

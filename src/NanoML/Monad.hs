@@ -90,4 +90,5 @@ initState = EvalState
   , stArgs = []
   , stTrace = mempty
   , stEnvMap = IntMap.fromList [(envId baseEnv, baseEnv)]
+  , stEdges = []
   }

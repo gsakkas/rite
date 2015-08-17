@@ -8,10 +8,14 @@
 module NanoML.Step where
 
 import Control.Applicative
+import Control.Exception
 import Control.Monad.Except
 import Control.Monad.State
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as LBS
+import qualified Data.Graph.Inductive.Dot as Graph
+import qualified Data.Graph.Inductive.Graph as Graph
+import qualified Data.Graph.Inductive.PatriciaTree as Graph
 import Data.List
 import Data.Foldable
 import qualified Data.IntMap as IntMap
@@ -20,6 +24,7 @@ import Data.Maybe
 import Data.Monoid hiding (Alt)
 import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
+import System.Mem.StableName
 import Text.Printf
 
 import NanoML.Eval
@@ -46,6 +51,26 @@ writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
 runStep opts x = case runEvalFull opts x of
   (Left e, st, _)  -> traceShow e $ stTrace st
   (Right v, st, _) -> stTrace st
+
+runGraph opts x = case runEvalFull opts x of
+  (Left e, st, _)  -> traceShow e $ stEdges st
+  (Right v, st, _) -> stEdges st
+
+buildGraph :: [(Expr, EdgeKind, Expr)] -> IO (Graph.Gr Expr EdgeKind)
+buildGraph tr = do
+  nodes <- concatMapM mkNode tr
+--  print (length nodes, length (nub nodes))
+  edges <- mapM mkEdge tr
+  return $ Graph.mkGraph (nub nodes) (nub edges)
+  where
+  mkNode (x, k, y) = do
+    xn <- makeStableName =<< evaluate x
+    yn <- makeStableName =<< evaluate y
+    return [(hashStableName xn, x), (hashStableName yn, y)]
+  mkEdge (x, k, y) = do
+    xn <- makeStableName =<< evaluate x
+    yn <- makeStableName =<< evaluate y
+    return (hashStableName xn, hashStableName yn, k)
 
 stepAll expr = do
   --traceShowM $ pretty expr
@@ -79,13 +104,20 @@ stepDecl decl = case decl of
     | otherwise  -> do
         e <- step expr
         env <- gets stVarEnv
+        addEdge StepsTo expr e
         -- traceShowM (pretty expr)
         -- traceShowM (pretty e)
         -- traceShowM expr
         -- traceShowM e
+        -- addEdge StepsTo expr e
         case exprDiff env expr e of
-          Nothing -> return ()
-          Just (env, before, after, kind) -> addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
+          Nothing -> traceShowM "no diff" >> traceShowM (pretty expr) >> traceShowM (pretty e) >> traceShowM ""
+          Just (env, before, after, kind) -> do
+            traceShowM (pretty before)
+            traceShowM (pretty after)
+            traceShowM ""
+            addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
+            unless (kind == Return) $ addEdge StepsTo before after
         gcScopes e
         -- traceM ""
         return (Just $ DEvl ss e)
@@ -117,14 +149,14 @@ step expr = case expr of
   App ms f args -> stepOne (f:args)
                   (\(f:args) -> -- addEvent expr >> 
                                 stepApp ms f args)
-                  (\(f:args) -> return $ App ms f args)
+                  (\(f:args) -> addSubTerms $ App ms f args)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >> 
                                 stepBop ms b v1 v2)
-                   (\[e1,e2] -> return $ Bop ms b e1 e2)
+                   (\[e1,e2] -> addSubTerms $ Bop ms b e1 e2)
   Uop ms u e
     | isVal e   -> stepUop ms u e
-    | otherwise -> Uop ms u <$> step e
+    | otherwise -> addSubTerms =<< Uop ms u <$> step e
   Lit ms l -> Val ms <$> litValue l
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
@@ -141,7 +173,7 @@ step expr = case expr of
       (\vs -> do env <- evalNonRecBinds (zip ps vs)
                  return $ With ms env body
       )
-      (\es -> return $ Let ms NonRec (zip ps es) body)
+      (\es -> addSubTerms $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
     | Val _ b <- b
       -> -- addEvent expr >>
@@ -150,24 +182,24 @@ step expr = case expr of
           VB _ False -> return f
     | otherwise
       -> do b <- step b
-            return $ Ite ms b t f
+            addSubTerms $ Ite ms b t f
   Seq ms e1 e2
     | isVal e1  -> -- addEvent expr >>
       return e2
-    | otherwise -> (\e1 -> Seq ms e1 e2) <$> step e1
+    | otherwise -> addSubTerms =<< (\e1 -> Seq ms e1 e2) <$> step e1
   Case ms e as
     | isVal e   -> -- addEvent expr >> 
       stepAlts e as
-    | otherwise -> (\e -> Case ms e as) <$> step e
+    | otherwise -> addSubTerms =<< (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
                 (\vs -> withCurrentProv $ \prv ->
                   Val ms $ VT prv (length vs) (map unVal vs) (map (typeOf . unVal) vs))
-                (\es -> return $ Tuple ms es)
+                (\es -> addSubTerms $ Tuple ms es)
   ConApp ms dc Nothing -> do
     Val ms <$> evalConApp dc Nothing
   ConApp ms dc (Just e)
     | Val _ v <- e -> Val ms <$> evalConApp dc (Just v)
-    | otherwise  -> ConApp ms dc . Just <$> step e
+    | otherwise  -> addSubTerms =<< ConApp ms dc . Just <$> step e
   Record ms flds
     | all (isVal . snd) flds -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
@@ -189,18 +221,18 @@ step expr = case expr of
       let (fs, es) = unzip flds
       stepOne es
         (error "step.Record: impossible")
-        (\es -> return $ Record ms $ zip fs es)
+        (\es -> addSubTerms $ Record ms $ zip fs es)
   Field ms e f
     | Val _ v <- e -> Val ms <$> getField v f
   SetField ms r f e -> stepOne [r,e]
                       (\[Val _ vr, Val _ ve] -> setField vr f ve >> withCurrentProv (Val ms . VU))
-                      (\[r,e] -> return $ SetField ms r f e)
+                      (\[r,e] -> addSubTerms $ SetField ms r f e)
   Array ms [] -> withCurrentProv $ \prv -> Val ms (VV prv Vector.empty (TVar "a"))
   Array ms es -> stepOne es
                 (\(map unVal -> (v:vs)) -> do
                     mapM_ (unify (typeOf v) . typeOf) vs
                     withCurrentProv $ \prv -> (Val ms (VV prv (Vector.fromList (v:vs)) (typeOf v))))
-                (\es -> return $ Array ms es)
+                (\es -> addSubTerms $ Array ms es)
   Try ms e alts
     | isVal e   -> return e
     | otherwise -> do
@@ -212,11 +244,11 @@ step expr = case expr of
             _              -> Val ms <$> maybeThrow e
   Prim1 ms p@(P1 x f t) e
     | Val _ v <- e -> fmap (Val ms) . force v t $ \v -> f v
-    | otherwise  -> Prim1 ms p <$> step e
+    | otherwise  -> addSubTerms =<< Prim1 ms p <$> step e
   Prim2 ms p@(P2 x f t1 t2) e1 e2 ->
     stepOne [e1,e2]
       (\[Val _ v1, Val _ v2] -> fmap (Val ms) . forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2)
-      (\[e1,e2] -> return (Prim2 ms p e1 e2))
+      (\[e1,e2] -> addSubTerms (Prim2 ms p e1 e2))
   _ -> error (show expr)
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
@@ -224,19 +256,24 @@ stepApp ms (Val _ f) es = case f of
   VF _ (Func (Lam {}) env) -> do
         let (ps, e, env) = gatherLams f
             (eps, es', ps') = zipWithLeftover es ps
-        traceShowM (eps, es', ps')
+        -- traceShowM (eps, es', ps')
         Just pat_env <- mconcat <$> mapM (\(Val _ v, p) -> matchPat v p) eps
-        traceShowM pat_env
-        traceM ""
+        -- traceShowM pat_env
+        -- traceM ""
         -- pushEnv env
         -- pushEnv pat_env
         nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
         Replace ms nenv <$> case (ps', es') of
-          ([], []) -> return (onSrcSpanExpr (<|> ms) e)
-          ([], _) -> return $ App ms e es'
-          (_, []) -> return $ mkLams ps' e
+          ([], []) -> refreshExpr $ onSrcSpanExpr (<|> ms) e -- only refresh at saturated applications
+          ([], _) -> addSubTerms $ App ms e es'
+          (_, []) -> mkLamsSubTerms ps' e
   _ -> otherError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
+
+mkLamsSubTerms [] e = return e
+mkLamsSubTerms (p:ps) e = do
+  x <- mkLamsSubTerms ps e
+  addSubTerms $ Lam (mergeLocated p x) p x
 
 zipWithLeftover = go []
   where

@@ -38,6 +38,7 @@ library
                      , deepseq
                      , directory
                      , exceptions >= 0.8
+                     , fgl, fgl-visualize
                      , filepath
                      , mtl >= 2.2
                      , parsers >=0.12
@@ -45,7 +46,7 @@ library
                      , regex-tdfa >= 1.2
                      , text >= 1.2
                      , transformers >= 0.4
-                     , trifecta >=1.5
+                     -- , trifecta >=1.5
                      , unordered-containers >= 0.2
                      , vector >= 0.10
   build-tools:         alex, happy
