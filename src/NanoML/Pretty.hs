@@ -110,7 +110,7 @@ instance Pretty Expr where
     Val _ v -> prettyPrec z v
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
-      where zb = opPrec undefined
+      where zb = opPrec (error "prettyExpr.Bop")
     With _ env e -> prettyPrec z e
     Replace _ env e -> prettyPrec z e
 

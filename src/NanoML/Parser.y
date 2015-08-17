@@ -210,7 +210,7 @@ DataDecls :: { [DataDecl] }
 | DataDecls '|' DataDecl      { $3 : $1 }
 
 DataDecl :: { DataDecl }
-: con DataArgs              { DataDecl (getCon $1) $2 undefined }
+: con DataArgs              { DataDecl (getCon $1) $2 (error "parseDataDecl") }
 
 DataArgs :: { [Type] }
 : {- empty -}                 { [] }

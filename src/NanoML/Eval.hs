@@ -233,7 +233,7 @@ evalApp :: MonadEval m => Value -> Value -> m Value
 evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
   VF _ (Func (Lam ms p e) env) -> do
     Just pat_env <- matchPat a p
-    eval e `withEnv` undefined -- joinEnv pat_env env
+    eval e `withEnv` error "evalApp" -- joinEnv pat_env env
   _ -> otherError "tried to apply a non-function"
 
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
@@ -340,7 +340,7 @@ evalAlts _ []
 evalAlts v ((p,g,e):as)
   = matchPat v p >>= \case
       Nothing  -> evalAlts v as
-      Just bnd -> do newenv <- undefined -- joinEnv bnd <$> gets stVarEnv
+      Just bnd -> do newenv <- error "evalAlts" -- joinEnv bnd <$> gets stVarEnv
                      case g of
                       Nothing -> eval e `withEnv` newenv
                       Just g  ->
