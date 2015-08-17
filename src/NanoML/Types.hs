@@ -126,7 +126,10 @@ data EvalState = EvalState
   } deriving Show
 
 addEdge :: MonadEval m => EdgeKind -> Expr -> Expr -> m ()
-addEdge k e1 e2 = modify' $ \s -> s { stEdges = (skipEnv e1, k, skipEnv e2) : stEdges s }
+addEdge k e1 e2 = unless (x == y) $ modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }
+  where
+  x = skipEnv e1
+  y = skipEnv e2
 
 addSubTerms :: MonadEval m => Expr -> m Expr
 addSubTerms expr = do
@@ -162,18 +165,18 @@ refreshDecl decl = case decl of
 
 refreshExpr :: MonadEval m => Expr -> m Expr
 refreshExpr expr = addSubTerms =<< case expr of
-  Var {} -> return expr
+  Var ms v -> return $ Var ms v
   Lam ms p e -> Lam ms p <$> refreshExpr e
   App ms f xs -> App ms <$> refreshExpr f <*> mapM refreshExpr xs
   Bop ms b x y -> Bop ms b <$> refreshExpr x <*> refreshExpr y
   Uop ms u x -> Uop ms u <$> refreshExpr x
-  Lit {} -> return expr
+  Lit ms l -> return $ Lit ms l
   Let ms r binds body -> Let ms r <$> mapM refreshBind binds <*> refreshExpr body
   Ite ms b t f -> Ite ms <$> refreshExpr b <*> refreshExpr t <*> refreshExpr f
   Seq ms x y -> Seq ms <$> refreshExpr x <*> refreshExpr y
   Case ms e alts -> Case ms <$> refreshExpr e <*> mapM refreshAlt alts
   Tuple ms xs -> Tuple ms <$> mapM refreshExpr xs
-  ConApp ms c Nothing -> return expr
+  ConApp ms c Nothing -> return $ ConApp ms c Nothing
   ConApp ms c (Just x) -> ConApp ms c . Just <$> refreshExpr x
   Record ms fs -> Record ms <$> mapM refreshBind fs
   Field ms e f -> Field ms <$> refreshExpr e <*> pure f
@@ -182,7 +185,7 @@ refreshExpr expr = addSubTerms =<< case expr of
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p x -> Prim1 ms p <$> refreshExpr x
   Prim2 ms p x y -> Prim2 ms p <$> refreshExpr x <*> refreshExpr y
-  Val {} -> return expr
+  Val ms v -> return expr --  Val ms v
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
 

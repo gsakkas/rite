@@ -104,20 +104,22 @@ stepDecl decl = case decl of
     | otherwise  -> do
         e <- step expr
         env <- gets stVarEnv
-        addEdge StepsTo expr e
-        -- traceShowM (pretty expr)
-        -- traceShowM (pretty e)
-        -- traceShowM expr
-        -- traceShowM e
         -- addEdge StepsTo expr e
-        case exprDiff env expr e of
-          Nothing -> traceShowM "no diff" >> traceShowM (pretty expr) >> traceShowM (pretty e) >> traceShowM ""
-          Just (env, before, after, kind) -> do
-            traceShowM (pretty before)
-            traceShowM (pretty after)
-            traceShowM ""
-            addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
-            unless (kind == Return) $ addEdge StepsTo before after
+        -- -- traceShowM (pretty expr)
+        -- -- traceShowM (pretty e)
+        -- -- traceShowM expr
+        -- -- traceShowM e
+        -- -- addEdge StepsTo expr e
+        -- case exprDiff env expr e of
+        --   Nothing -> traceShowM "no diff" >> traceShowM (pretty expr) >> traceShowM (pretty e) >> traceShowM ""
+        --   Just (env, before, after, kind) -> do
+        --     traceShowM (pretty before)
+        --     traceShowM (pretty after)
+        --     traceShowM ""
+        --     addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
+        --     unless (kind == Return) $ addEdge StepsTo before after
+        --     -- TODO: need to add StepsTo edges for all sub-terms along the path to the changed term
+        --     -- see, e.g., the `1 + 2` sub-term in evaluation of `1 + 2 + 3`
         gcScopes e
         -- traceM ""
         return (Just $ DEvl ss e)
@@ -127,40 +129,48 @@ stepDecl decl = case decl of
 -- stepNonRecBinds binds = do
 --   env <- evalNonRecBinds
 
+build :: MonadEval m => Expr -> Expr -> m Expr
+build before after = do
+  addEdge StepsTo before after
+  addSubTerms after
+  return after
 
 step :: MonadEval m => Expr -> m Expr
 step expr = case expr of
   Val _ v -> return expr
-  With ms env e
-    | isVal e   -> return e
-    | otherwise -> do
-        e' <- step e `withEnv` env
-        return $ With ms env e'
+  -- With ms env e
+  --   | isVal e   -> return e
+  --   | otherwise -> do
+  --       e' <- step e `withEnv` env
+  --       build expr $ With ms env e'
   Replace ms env e
     | isVal e   -> return e
     | otherwise -> do
         e' <- step e `withEnv` env
-        return $ Replace ms env e'
+        if isVal e'
+          then build expr e'
+          else build expr $ Replace ms env e'
+        -- build expr $ Replace ms env e'
   Var ms v -> do
     -- addEvent expr
-    fmap (Val ms) . lookupEnv v =<< gets stVarEnv
+    build expr =<< fmap (Val ms) . lookupEnv v =<< gets stVarEnv
   Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
     Val ms . VF prv . Func expr <$> gets stVarEnv
   App ms f args -> stepOne (f:args)
                   (\(f:args) -> -- addEvent expr >> 
-                                stepApp ms f args)
-                  (\(f:args) -> addSubTerms $ App ms f args)
+                                build expr =<< stepApp ms f args)
+                  (\(f:args) -> build expr $ App ms f args)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >> 
-                                stepBop ms b v1 v2)
-                   (\[e1,e2] -> addSubTerms $ Bop ms b e1 e2)
+                                build expr =<< stepBop ms b v1 v2)
+                   (\[e1,e2] -> build expr $ Bop ms b e1 e2)
   Uop ms u e
-    | isVal e   -> stepUop ms u e
-    | otherwise -> addSubTerms =<< Uop ms u <$> step e
-  Lit ms l -> Val ms <$> litValue l
+    | isVal e   -> build expr =<< stepUop ms u e
+    | otherwise -> build expr =<< Uop ms u <$> step e
+  Lit ms l -> build expr =<< Val ms <$> litValue l
   Let ms Rec binds body -> do
     env <- evalRecBinds binds
-    return $ With ms env body
+    build expr $ With ms env body
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
     -- stepOne es
@@ -171,35 +181,35 @@ step expr = case expr of
     let (ps, es) = unzip binds
     stepOne es
       (\vs -> do env <- evalNonRecBinds (zip ps vs)
-                 return $ With ms env body
+                 build expr $ With ms env body
       )
-      (\es -> addSubTerms $ Let ms NonRec (zip ps es) body)
+      (\es -> build expr $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
     | Val _ b <- b
       -> -- addEvent expr >>
       case b of
-          VB _ True  -> return t
-          VB _ False -> return f
+          VB _ True  -> build expr t
+          VB _ False -> build expr f
     | otherwise
       -> do b <- step b
-            addSubTerms $ Ite ms b t f
+            build expr $ Ite ms b t f
   Seq ms e1 e2
     | isVal e1  -> -- addEvent expr >>
-      return e2
-    | otherwise -> addSubTerms =<< (\e1 -> Seq ms e1 e2) <$> step e1
+      build expr e2
+    | otherwise -> build expr =<< (\e1 -> Seq ms e1 e2) <$> step e1
   Case ms e as
     | isVal e   -> -- addEvent expr >> 
-      stepAlts e as
-    | otherwise -> addSubTerms =<< (\e -> Case ms e as) <$> step e
+      build expr =<< stepAlts e as
+    | otherwise -> build expr =<< (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
-                (\vs -> withCurrentProv $ \prv ->
-                  Val ms $ VT prv (length vs) (map unVal vs) (map (typeOf . unVal) vs))
-                (\es -> addSubTerms $ Tuple ms es)
+                (\vs -> withCurrentProvM $ \prv ->
+                  build expr $ Val ms $ VT prv (length vs) (map unVal vs) (map (typeOf . unVal) vs))
+                (\es -> build expr $ Tuple ms es)
   ConApp ms dc Nothing -> do
-    Val ms <$> evalConApp dc Nothing
+    build expr =<< Val ms <$> evalConApp dc Nothing
   ConApp ms dc (Just e)
-    | Val _ v <- e -> Val ms <$> evalConApp dc (Just v)
-    | otherwise  -> addSubTerms =<< ConApp ms dc . Just <$> step e
+    | Val _ v <- e -> build expr =<< Val ms <$> evalConApp dc (Just v)
+    | otherwise  -> build expr =<< ConApp ms dc . Just <$> step e
   Record ms flds
     | all (isVal . snd) flds -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
@@ -211,7 +221,7 @@ step expr = case expr of
           writeStore i (m,v)
           return ((f,i),su)
       let t = subst (mconcat sus) $ typeDeclType td
-      withCurrentProv $ \prv -> Val ms $ VR prv vs t
+      withCurrentProvM $ \prv -> build expr $ Val ms $ VR prv vs t
     | otherwise -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
       unless (all (`elem` map fst3 fs) (map fst flds)) $
@@ -221,34 +231,34 @@ step expr = case expr of
       let (fs, es) = unzip flds
       stepOne es
         (error "step.Record: impossible")
-        (\es -> addSubTerms $ Record ms $ zip fs es)
+        (\es -> build expr $ Record ms $ zip fs es)
   Field ms e f
-    | Val _ v <- e -> Val ms <$> getField v f
+    | Val _ v <- e -> build expr =<< Val ms <$> getField v f
   SetField ms r f e -> stepOne [r,e]
-                      (\[Val _ vr, Val _ ve] -> setField vr f ve >> withCurrentProv (Val ms . VU))
-                      (\[r,e] -> addSubTerms $ SetField ms r f e)
-  Array ms [] -> withCurrentProv $ \prv -> Val ms (VV prv Vector.empty (TVar "a"))
+                      (\[Val _ vr, Val _ ve] -> setField vr f ve >> withCurrentProvM (build expr . Val ms . VU))
+                      (\[r,e] -> build expr $ SetField ms r f e)
+  Array ms [] -> withCurrentProvM $ \prv -> build expr $ Val ms (VV prv Vector.empty (TVar "a"))
   Array ms es -> stepOne es
                 (\(map unVal -> (v:vs)) -> do
                     mapM_ (unify (typeOf v) . typeOf) vs
-                    withCurrentProv $ \prv -> (Val ms (VV prv (Vector.fromList (v:vs)) (typeOf v))))
-                (\es -> addSubTerms $ Array ms es)
+                    withCurrentProvM $ \prv -> build expr (Val ms (VV prv (Vector.fromList (v:vs)) (typeOf v))))
+                (\es -> build expr $ Array ms es)
   Try ms e alts
-    | isVal e   -> return e
+    | isVal e   -> build expr e
     | otherwise -> do
         env <- gets stVarEnv
-        (\e -> Try ms e alts) <$> step e `catchError` \e -> do
+        build expr =<< (\e -> Try ms e alts) <$> step e `catchError` \e -> do
           setVarEnv env
           case e of
-            MLException ex -> stepAlts (Val ms ex) alts
+            MLException ex -> build expr =<< stepAlts (Val ms ex) alts
             _              -> Val ms <$> maybeThrow e
   Prim1 ms p@(P1 x f t) e
-    | Val _ v <- e -> fmap (Val ms) . force v t $ \v -> f v
-    | otherwise  -> addSubTerms =<< Prim1 ms p <$> step e
+    | Val _ v <- e -> build expr =<< (fmap (Val ms) . force v t $ \v -> f v)
+    | otherwise  -> build expr =<< Prim1 ms p <$> step e
   Prim2 ms p@(P2 x f t1 t2) e1 e2 ->
     stepOne [e1,e2]
-      (\[Val _ v1, Val _ v2] -> fmap (Val ms) . forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2)
-      (\[e1,e2] -> addSubTerms (Prim2 ms p e1 e2))
+      (\[Val _ v1, Val _ v2] -> build expr =<< (fmap (Val ms) . forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2))
+      (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
   _ -> error (show expr)
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
