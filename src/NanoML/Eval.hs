@@ -143,7 +143,7 @@ eval expr = logExpr expr $ case expr of
     vs <- mapM eval es
     withCurrentProv $ \prv -> (VT prv (length vs) vs (map typeOf vs))
   ConApp ms "()" Nothing -> withCurrentProv VU
-  ConApp ms "[]" Nothing -> withCurrentProv$ \prv -> (VL prv [] (TVar "a"))
+  ConApp ms "[]" Nothing -> withCurrentProv $ \prv -> (VL prv [] (TVar "a"))
   ConApp ms "::" (Just (Tuple ms' [h,t])) -> do
     vh <- eval h
     vt <- eval t

@@ -85,7 +85,7 @@ isSuccess Failure {} = False
 data NanoError
   = MLException Value
   | UnboundVariable Var
-  | TypeError Type Type
+  | TypeError Expr Type Type
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
@@ -103,7 +103,7 @@ varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
 typeError :: MonadEval m => Type -> Type -> m a
-typeError t1 t2 = throwError $ TypeError t1 t2
+typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError e t1 t2)
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -123,7 +123,16 @@ data EvalState = EvalState
   , stEnvMap   :: !(IntMap Env)
   -- , stNodes    :: !(Map Expr Int)
   , stEdges    :: ![(Expr, EdgeKind, Expr)]
+  , stCurrentExpr :: Expr
   } deriving Show
+
+withCurrentExpr :: MonadEval m => Expr -> m a -> m a
+withCurrentExpr e x = do
+  e' <- gets stCurrentExpr
+  modify' $ \s -> s { stCurrentExpr = e }
+  a <- x
+  modify' $ \s -> s { stCurrentExpr = e' }
+  return a
 
 addEdge :: MonadEval m => EdgeKind -> Expr -> Expr -> m ()
 addEdge k e1 e2 = unless (x == y) $ modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }

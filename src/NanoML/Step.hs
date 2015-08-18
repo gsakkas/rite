@@ -52,11 +52,19 @@ runStep opts x = case runEvalFull opts x of
   (Left e, st, _)  -> traceShow e $ stTrace st
   (Right v, st, _) -> stTrace st
 
-runGraph opts x = case runEvalFull opts x of
-  (Left e, st, _)  -> traceShow e $ stEdges st
-  (Right v, st, _) -> stEdges st
+----------------------------------------------------------------------
+-- Working with the reduction graph
+----------------------------------------------------------------------
 
-buildGraph :: [(Expr, EdgeKind, Expr)] -> IO (Graph.Gr Expr EdgeKind)
+type Graph = Graph.Gr Expr EdgeKind
+type Node  = Graph.LNode Expr
+type Edge  = Graph.LEdge EdgeKind
+
+runGraph opts x = case runEvalFull opts x of
+  (Left e, st, _)  -> Left $ traceShow e $ (stEdges st, stCurrentExpr st)
+  (Right v, st, _) -> Right $ stEdges st
+
+buildGraph :: [(Expr, EdgeKind, Expr)] -> IO Graph
 buildGraph tr = do
   nodes <- concatMapM mkNode tr
 --  print (length nodes, length (nub nodes))
@@ -72,6 +80,38 @@ buildGraph tr = do
     yn <- makeStableName =<< evaluate y
     return (hashStableName xn, hashStableName yn, k)
 
+isStepsTo = (==StepsTo)
+
+isSubTerm (SubTerm _) = True
+isSubTerm _           = False
+
+-- | Follow the 'StepsTo' relation forward once from a node.
+forwardstep :: Graph -> Graph.Node -> Maybe Graph.Node
+forwardstep gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
+  Nothing      -> Nothing
+  Just (n', _) -> Just n'
+
+-- | Follow the 'StepsTo' relation as far back as possible from a node.
+backjump :: Graph -> Graph.Node -> Maybe Graph.Node
+backjump gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
+  Nothing      -> Nothing
+  Just (n', _) -> backjump gr n' <|> Just n'
+
+-- | Find the 'SubTerm's of a node.
+subterms :: Graph -> Graph.Node -> [Graph.Node]
+subterms gr n = map fst . filter (isSubTerm . snd) $ Graph.lsuc gr n
+
+candidates :: Graph -> Graph.Node -> [Graph.Node]
+candidates gr n = maybeToList (forwardstep gr n)
+               ++ mapMaybe (backjump gr) (subterms gr n)
+
+bfs :: Graph -> Graph.Node -> [Graph.Node]
+bfs gr n = next ++ concatMap (bfs gr) next -- FIXME: this doesn't look right..
+  where next = candidates gr n
+
+----------------------------------------------------------------------
+-- Stepping
+----------------------------------------------------------------------
 stepAll expr = do
   --traceShowM $ pretty expr
   expr' <- step expr
@@ -136,7 +176,7 @@ build before after = do
   return after
 
 step :: MonadEval m => Expr -> m Expr
-step expr = case expr of
+step expr = withCurrentExpr expr $ case expr of
   Val _ v -> return expr
   -- With ms env e
   --   | isVal e   -> return e

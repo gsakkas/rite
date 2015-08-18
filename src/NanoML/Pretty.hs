@@ -240,7 +240,7 @@ instance Pretty NanoError where
   pretty e = case e of
     MLException v -> text "*** Exception:" <+> pretty v
     UnboundVariable v -> text "Unbound variable:" <+> pretty v
-    TypeError t1 t2 -> text "Type error: could not match" <+> pretty t1 <+> text "with" <+> pretty t2
+    TypeError e t1 t2 -> text "Type error: could not match" <+> pretty t1 <+> text "with" <+> pretty t2
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s
