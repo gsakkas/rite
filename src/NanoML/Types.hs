@@ -739,7 +739,19 @@ mkCurried (p:ps) e = Lam (mergeLocated p e) p (mkCurried ps e)
 mkCurried p e = error $ "mkCurried: " ++ show p ++ " " ++ show e
 
 mkInfix :: MSrcSpan -> Expr -> Expr -> Expr -> Expr
-mkInfix ms x op y = mkApps ms op [x,y]
+mkInfix ms x op y
+  | Var _ o <- op
+  , Just bop <- lookup o primBops
+  = Bop ms bop x y
+  | otherwise
+  = mkApps ms op [x,y]
+
+primBops :: [(Var, Bop)]
+primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
+           ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
+           ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
+           ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
+           ]
 
 mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr
 mkApps = App

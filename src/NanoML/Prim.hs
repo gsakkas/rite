@@ -59,13 +59,6 @@ dNot_found = DataDecl "Not_found" []
 dMatch_failure = DataDecl "Match_failure" []
 dInvalid_argument = DataDecl "Invalid_argument" [tCon "string"]
 
-primBops :: [(Var, Bop)]
-primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
-           ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
-           ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
-           ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
-           ]
-
 varD = Var Nothing
 iteD = Ite Nothing
 mkConAppD = mkConApp Nothing
