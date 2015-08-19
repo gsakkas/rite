@@ -537,8 +537,27 @@ helper []
     - how common will that be?
 
 - preliminary results from `Misc.badProg`:
-  - bfs: 110 steps to reach target `true`
+  - bfs: 110 steps to reach target `()`
   - dfs: 13 steps
 
 - preliminary results from `Misc.wwhileProg`:
   - can't even reach target using proposed rules
+
+- will the target expression always be a subterm of the stuck term?
+  - no, see `Misc.wwhileProg`
+    - type error occurs because `let f b = (x, y)` defines `f` instead
+      of calling `f` and matching on the result.
+    - target is entire binding, which needs to be reversed
+    - but the binding of `y` on line 1 *is* used by the stuck term; so
+      all is not lost, blaming `y` on line 1 should highlight the
+      scoping problem.
+  - but for the most part, *maybe*?
+    - type errors can appear far removed from their source because of
+      unification variables
+    - at run-time we always have concrete values, no unification variables
+      - by extension, perhaps run-time type errors cannot be far removed
+        from their source
+      - i.e. follow the bad value back to its source
+  - since ocaml does not have overloading, we always know which value to blame
+    - not quite true! what if type error is from applying the wrong
+      function/constructor? could have multiple errors
