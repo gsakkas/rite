@@ -133,6 +133,26 @@ badTarget =  SrcSpan { srcSpanStartLine = 6
                      , srcSpanEndCol = 9
                      }
 
+palindromeProg = unlines [ "let listReverse l ="
+                         , "  let rec helper xs = function "
+                         , "    | [] -> xs "
+                         , "    | hd::tl -> helper (hd :: xs) tl "
+                         , "  in helper [];;"
+                         , ""
+                         , "let palindrome (w : char list) ="
+                         , "  if (listReverse w) = w "
+                         , "  then true "
+                         , "  else false;;"
+                         , ""
+                         , "palindrome ['a'];;"
+                         ]
+palindromeTarget = SrcSpan { srcSpanStartLine = 5
+                           , srcSpanStartCol = 6
+                           , srcSpanEndLine = 5
+                           , srcSpanEndCol = 15
+                           }
+
+
 ignoredMLs :: [String]
 ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "prog0503.ml" -- uses Array.of_list

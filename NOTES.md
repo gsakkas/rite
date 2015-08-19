@@ -543,6 +543,10 @@ helper []
 - preliminary results from `Misc.wwhileProg`:
   - can't even reach target using proposed rules
 
+- preliminary results from `Misc.palindromeProg`:
+  - bfs: 12 steps to reach target `helper []`
+  - dfs: 6 steps to reach target
+
 - will the target expression always be a subterm of the stuck term?
   - no, see `Misc.wwhileProg`
     - type error occurs because `let f b = (x, y)` defines `f` instead
