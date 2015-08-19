@@ -93,6 +93,26 @@ facProg = unlines [ "let rec fac n ="
                   , ""
                   , "fac 1;;"
                   ]
+facTarget = SrcSpan { srcSpanStartLine = 3
+                    , srcSpanStartCol = 5
+                    , srcSpanEndLine = 3
+                    , srcSpanEndCol = 9
+                    }
+
+wwhileProg :: String
+wwhileProg = unlines [ "let (x,y) = (\"5\", 5);;"
+                     , "let rec wwhile (f,b) ="
+                     , "  let f b = (x, y) in "
+                     , "  if y = true "
+                     , "  then wwhile (f, x)"
+                     , "  else x;;"
+                     , "wwhile ((fun x -> x), 1);;"
+                     ]
+wwhileTarget = SrcSpan { srcSpanStartLine = 3
+                       , srcSpanStartCol = 14
+                       , srcSpanEndLine = 3
+                       , srcSpanEndCol = 18
+                       }
 
 badProg :: String
 badProg = unlines [ "let f lst ="
@@ -105,7 +125,13 @@ badProg = unlines [ "let f lst ="
                   , "  match loop lst [(0.0,0.0)] with"
                   , "    | h :: t -> h"
                   , ";;"
+                  , "f [1];;"
                   ]
+badTarget =  SrcSpan { srcSpanStartLine = 6
+                     , srcSpanStartCol = 7
+                     , srcSpanEndLine = 6
+                     , srcSpanEndCol = 9
+                     }
 
 ignoredMLs :: [String]
 ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)

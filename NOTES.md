@@ -535,3 +535,10 @@ helper []
   - is this a good example or a pathological case?
     - target expression is actually a subterm of the stuck term
     - how common will that be?
+
+- preliminary results from `Misc.badProg`:
+  - bfs: 110 steps to reach target `true`
+  - dfs: 13 steps
+
+- preliminary results from `Misc.wwhileProg`:
+  - can't even reach target using proposed rules
