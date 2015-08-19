@@ -532,6 +532,8 @@ helper []
 - preliminary results from `Misc.facProg`:
   - bfs: 30 steps to reach target `true`
   - dfs: 11 steps
+  - human: 9 steps (same path as dfs after first backtrack)
+  - worst-case: 62 nodes in graph
   - is this a good example or a pathological case?
     - target expression is actually a subterm of the stuck term
     - how common will that be?
@@ -539,13 +541,18 @@ helper []
 - preliminary results from `Misc.badProg`:
   - bfs: 110 steps to reach target `()`
   - dfs: 13 steps
+  - human: 13 steps (same path as dfs)
+  - worst-case: 100 nodes in graph
 
 - preliminary results from `Misc.wwhileProg`:
   - can't even reach target using proposed rules
+  - worst-case: 52 nodes in graph
 
 - preliminary results from `Misc.palindromeProg`:
   - bfs: 12 steps to reach target `helper []`
   - dfs: 6 steps to reach target
+  - human: 6 steps (same path as dfs)
+  - worst-case: 94 nodes in graph
 
 - will the target expression always be a subterm of the stuck term?
   - no, see `Misc.wwhileProg`
