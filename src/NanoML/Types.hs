@@ -443,8 +443,8 @@ data SrcSpan = SrcSpan
   , srcSpanEndCol    :: !Int
   } deriving (Show, Generic, Eq)
 
-instance Show MSrcSpan where
-  show _ = ""
+-- instance Show MSrcSpan where
+--   show _ = ""
 
 srcSpanWidth SrcSpan {..}
   | srcSpanStartLine == srcSpanEndLine

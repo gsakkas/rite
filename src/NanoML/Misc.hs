@@ -91,7 +91,7 @@ facProg = unlines [ "let rec fac n ="
                   , "  else"
                   , "    n * fac (n - 1);;"
                   , ""
-                  , "fac 3;;"
+                  , "fac 1;;"
                   ]
 
 badProg :: String
@@ -420,3 +420,10 @@ readFileStrict = fmap T.unpack . TIO.readFile
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f xs = liftM concat (mapM f xs)
+
+findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
+findM p [] = return Nothing
+findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
+
+ifM :: Monad m => m Bool -> m a -> m a -> m a
+ifM b t f = do b <- b; if b then t else f

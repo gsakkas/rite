@@ -528,3 +528,10 @@ helper []
 
 
 ```
+
+- preliminary results from `Misc.facProg`:
+  - bfs: 30 steps to reach target `true`
+  - dfs: 11 steps
+  - is this a good example or a pathological case?
+    - target expression is actually a subterm of the stuck term
+    - how common will that be?

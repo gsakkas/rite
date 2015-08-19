@@ -80,6 +80,13 @@ buildGraph tr = do
     yn <- makeStableName =<< evaluate y
     return (hashStableName xn, hashStableName yn, k)
 
+findRoot :: Graph -> Expr -> IO Graph.Node
+findRoot gr e = do
+  en <- makeStableName =<< evaluate e
+  let p (n,x) = do xn <- makeStableName =<< evaluate x
+                   return (xn == en)
+  fst . fromJust <$> findM p (Graph.labNodes gr)
+
 isStepsTo = (==StepsTo)
 
 isSubTerm (SubTerm _) = True
@@ -106,8 +113,28 @@ candidates gr n = maybeToList (forwardstep gr n)
                ++ mapMaybe (backjump gr) (subterms gr n)
 
 bfs :: Graph -> Graph.Node -> [Graph.Node]
-bfs gr n = next ++ concatMap (bfs gr) next -- FIXME: this doesn't look right..
-  where next = candidates gr n
+bfs gr n = go [n]
+  where
+  go []     = []
+  go (x:xs) = x : go (xs ++ candidates gr x)
+
+  -- next ++ concatMap (bfs gr) next -- FIXME: this doesn't look right..
+  -- where next = candidates gr n
+
+dfs :: Graph -> Graph.Node -> [Graph.Node]
+dfs gr n = n : concatMap (dfs gr) (candidates gr n)
+
+search :: Graph -> Graph.Node -> SrcSpan
+       -> (Graph -> Graph.Node -> [Graph.Node])
+       -> [Graph.Node]
+search gr root target strat =
+  case span notTarget walk of
+    (xs, t:_) -> xs ++ [t]
+  where
+  walk = strat gr root
+  notTarget n = case getSrcSpanMaybe . fromJust $ Graph.lab gr n of
+    Nothing -> True
+    Just ss -> ss /= target
 
 ----------------------------------------------------------------------
 -- Stepping
