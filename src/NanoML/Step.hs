@@ -210,6 +210,13 @@ step expr = withCurrentExpr expr $ case expr of
   --   | otherwise -> do
   --       e' <- step e `withEnv` env
   --       build expr $ With ms env e'
+  With ms env e
+    | isVal e   -> return e
+    | otherwise -> do
+        e' <- step e `withEnv` env
+        if isVal e'
+          then build expr e'
+          else build expr $ With ms env e'
   Replace ms env e
     | isVal e   -> return e
     | otherwise -> do

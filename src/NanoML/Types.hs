@@ -142,19 +142,29 @@ addEdge k e1 e2 = unless (x == y) $ modify' $ \s -> s { stEdges = (x, k, y) : st
 
 addSubTerms :: MonadEval m => Expr -> m Expr
 addSubTerms expr = do
-  case expr of
+  let mkEdge i e = addEdge (SubTerm i) expr e
+  case skipEnv expr of
     Var _ _ -> return ()
-    Lam _ _ b -> addEdge (SubTerm 0) expr b
-    App _ f xs -> zipWithM_ (\i e -> addEdge (SubTerm i) expr e) [0..] (f:xs)
-    Bop _ _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
-    Uop _ _ x -> addEdge (SubTerm 0) expr x
+    Lam _ _ b -> mkEdge 0 b
+    App _ f xs -> zipWithM_ mkEdge [0..] (f:xs)
+    Bop _ _ x y -> mkEdge 0 x >> mkEdge 1 y
+    Uop _ _ x -> mkEdge 0 x
     Lit _ _ -> return ()
-    Let _ _ binds body -> zipWithM_ (\i e -> addEdge (SubTerm i) expr e) [0..] (body : map snd binds)
-    Ite _ b t f -> addEdge (SubTerm 0) expr b >> addEdge (SubTerm 1) expr t >> addEdge (SubTerm 2) expr f
-    Seq _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
-
-    Prim1 _ _ x -> addEdge (SubTerm 0) expr x
-    Prim2 _ _ x y -> addEdge (SubTerm 0) expr x >> addEdge (SubTerm 1) expr y
+    Let _ _ binds body -> zipWithM_ mkEdge [0..] (body : map snd binds)
+    Ite _ b t f -> mkEdge 0 b >> mkEdge 1 t >> mkEdge 2 f
+    Seq _ x y -> mkEdge 0 x >> mkEdge 1 y
+    Case _ e alts -> zipWithM_ mkEdge [0..]
+                     (e : concatMap (\(_,g,b) -> maybeToList g ++ [b]) alts)
+    Tuple _ es -> zipWithM_ mkEdge [0..] es
+    ConApp _ _ me -> zipWithM_ mkEdge [0..] (maybeToList me)
+    Record _ fs -> zipWithM_ mkEdge [0..] (map snd fs)
+    Field _ e _ -> mkEdge 0 e
+    SetField _ e _ x -> mkEdge 0 e >> mkEdge 1 x
+    Array _ es -> zipWithM_ mkEdge [0..] es
+    Try _ e alts -> zipWithM_ mkEdge [0..]
+                    (e : concatMap (\(_,g,b) -> maybeToList g ++ [b]) alts)
+    Prim1 _ _ x -> mkEdge 0 x
+    Prim2 _ _ x y -> mkEdge 0 x >> mkEdge 1 y
     _ -> return ()
 
   return expr
