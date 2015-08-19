@@ -161,6 +161,7 @@ instance Pretty Pat where
     WildPat _ -> text "_"
     OrPat _ p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
     AsPat _ p v -> pretty p <+> text "as" <+> text v
+    ConstraintPat _ p t -> parens $ pretty p <+> char ':' <+> pretty t
 
 prettyTuple [] = empty
 prettyTuple [x] = pretty x
