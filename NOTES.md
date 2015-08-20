@@ -530,7 +530,7 @@ helper []
 ```
 
 - preliminary results from `Misc.facProg`:
-  - bfs: 30 steps to reach target `true`
+  - bfs: 30 (19 skipping seen nodes) steps to reach target `true`
   - dfs: 11 steps
   - human: 9 steps (same path as dfs after first backtrack)
   - worst-case: 62 nodes in graph
@@ -539,7 +539,7 @@ helper []
     - how common will that be?
 
 - preliminary results from `Misc.badProg`:
-  - bfs: 110 steps to reach target `()`
+  - bfs: 110 (32 skipping seen nodes) steps to reach target `()`
   - dfs: 13 steps
   - human: 13 steps (same path as dfs)
   - worst-case: 100 nodes in graph
@@ -549,7 +549,7 @@ helper []
   - worst-case: 52 nodes in graph
 
 - preliminary results from `Misc.palindromeProg`:
-  - bfs: 12 steps to reach target `helper []`
+  - bfs: 12 (11 skipping seen nodes) steps to reach target `helper []`
   - dfs: 6 steps to reach target
   - human: 6 steps (same path as dfs)
   - worst-case: 94 nodes in graph
