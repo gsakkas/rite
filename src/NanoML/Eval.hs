@@ -251,10 +251,10 @@ evalConApp dc v = do
       return (VA prv dc (Just v) t)
     (as,  Just (VT _ n vs ts))
       | dc == "::"
-      , [vh, VL _ vt t] <- vs -> do
+      , [vh, VL _ vt t] <- vs -> force vh t $ \vh -> do
         su <- unify (typeOf vh) t
         return (VL prv (vh : vt) (subst su t))
-      | length as == n -> forces (zip vs ts) $ \vs -> do
+      | length as == n -> forces (zip vs as) $ \vs -> do
         su <- mconcat <$> zipWithM unify as ts
         let t = subst su $ typeDeclType $ dType dd
         return (VA prv dc v t)
