@@ -572,3 +572,9 @@ helper []
   - since ocaml does not have overloading, we always know which value to blame
     - not quite true! what if type error is from applying the wrong
       function/constructor? could have multiple errors
+
+- [ ] generate ordered list of interesting paths
+  - given `prim v1 v2 vn`
+    1. paths that end in `vi` that incur type error
+    2. path that ends in `prim` (alternatively, path that ends in `prim v1 v2 vn`)
+    3. paths that end in other `vi`
