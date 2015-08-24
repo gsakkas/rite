@@ -302,7 +302,7 @@ step expr = withCurrentExpr expr $ case expr of
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
       (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
         let Val _ v = fromJust $ lookup f flds
-        force v t $ \v -> do
+        force v t $ \v su -> do
           su <- unify t (typeOf v)
           i <- fresh
           writeStore i (m,v)
@@ -340,11 +340,11 @@ step expr = withCurrentExpr expr $ case expr of
             MLException ex -> build expr =<< stepAlts (Val ms ex) alts
             _              -> Val ms <$> maybeThrow e
   Prim1 ms p@(P1 x f t) e
-    | Val _ v <- e -> build expr =<< (fmap (Val ms) . force v t $ \v -> f v)
+    | Val _ v <- e -> build expr =<< (fmap (Val ms) . force v t $ \v su -> f v)
     | otherwise  -> build expr =<< Prim1 ms p <$> step e
   Prim2 ms p@(P2 x f t1 t2) e1 e2 ->
     stepOne [e1,e2]
-      (\[Val _ v1, Val _ v2] -> build expr =<< (fmap (Val ms) . forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2))
+      (\[Val _ v1, Val _ v2] -> build expr =<< (fmap (Val ms) . forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2))
       (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
   _ -> error (show expr)
 

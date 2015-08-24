@@ -304,7 +304,9 @@ readStore i = (IntMap.! i) <$> gets stStore
 writeStore :: MonadEval m => Ref -> (MutFlag,Value) -> m ()
 writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
 
-subst :: [(TVar, Type)] -> Type -> Type
+type Subst = [(TVar, Type)]
+
+subst :: Subst -> Type -> Type
 subst su t = case t of
   TVar x -> fromMaybe t (lookup x su)
 --  TCon _ -> t

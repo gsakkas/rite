@@ -9,6 +9,7 @@
 {-# LANGUAGE RecordWildCards #-}
 module NanoML.Eval (module NanoML.Eval, module NanoML.Monad) where
 
+import Control.Arrow (first, second)
 import Control.Exception
 import Control.Monad
 import Control.Monad.Except
@@ -147,7 +148,7 @@ eval expr = logExpr expr $ case expr of
   ConApp ms "::" (Just (Tuple ms' [h,t])) -> do
     vh <- eval h
     vt <- eval t
-    force vt (tL (typeOf vh)) $ \(VL _ vt t) -> do
+    force vt (tL (typeOf vh)) $ \(VL _ vt t) su -> do
       su <- unify t (typeOf vh)
       withCurrentProv $ \prv -> (VL prv (vh:vt) (subst su t))
   ConApp ms dc Nothing -> do
@@ -164,7 +165,7 @@ eval expr = logExpr expr $ case expr of
     (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
       let e = fromJust $ lookup f flds
       v <- eval e
-      force v t $ \v -> do
+      force v t $ \v su -> do
         su <- unify t (typeOf v)
         i <- fresh
         writeStore i (m,v)
@@ -193,40 +194,40 @@ eval expr = logExpr expr $ case expr of
         _              -> maybeThrow e
   Prim1 _ (P1 p f t) e -> do
     v <- eval e
-    force v t $ \v -> f v
+    force v t $ \v su -> f v
   Prim2 _ (P2 p f t1 t2) e1 e2 -> do
     v1 <- eval e1
     v2 <- eval e2
-    forces [(v1,t1),(v2,t2)] $ \[v1,v2] -> f v1 v2
+    forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
   Val _ v -> return v
 
-force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
-force x (TVar {}) k = k x -- delay instantiation until we have a concrete type
+force :: MonadEval m => Value -> Type -> (Value -> Subst -> m a) -> m a
+force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete type
 force (VH r _) t k = do
   lookupStore r >>= \case
     Just (_,v) -> do
-      unify (typeOf v) t
-      k v
+      su <- unify (typeOf v) t
+      k v su
     Nothing -> do
       env <- gets stTypeEnv
       v <- genValue t env
       writeStore r (NonMut,v)
-      k v
+      k v []
 force v t k = do
-  unify (typeOf v) t
-  k v
+  su <- unify (typeOf v) t
+  k v su
 
-forces :: MonadEval m => [(Value,Type)] -> ([Value] -> m a) -> m a
-forces vts k = go vts []
+forces :: MonadEval m => [(Value,Type)] -> ([Value] -> Subst -> m a) -> m a
+forces vts k = go vts [] []
   where
-  go []          vs = k (reverse vs)
-  go ((v,t):vts) vs = force v t (\v -> go vts (v:vs))
+  go []          vs su = k (reverse vs) su
+  go ((v,t):vts) vs su = force v t (\v su' -> go (map (second (subst su')) vts) (v:vs) (su ++ su'))
 
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
 forceSame x@(VH {}) y@(VH {}) k =
-  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
-forceSame x@(VH {}) y k = force x (typeOf y) $ \x -> k x y
-forceSame x y@(VH {}) k = force y (typeOf x) $ \y -> k x y
+  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] su -> k x y
+forceSame x@(VH {}) y k = force x (typeOf y) $ \x su -> k x y
+forceSame x y@(VH {}) k = force y (typeOf x) $ \y su -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
@@ -245,16 +246,16 @@ evalConApp dc v = do
       | dc == "()" -> return (VU prv)
       | dc == "[]" -> return (VL prv [] (TVar "a"))
       | otherwise  -> return (VA prv dc v (typeDeclType $ dType dd))
-    ([a], Just v) -> force v a $ \v -> do
+    ([a], Just v) -> force v a $ \v su -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
       return (VA prv dc (Just v) t)
     (as,  Just (VT _ n vs ts))
       | dc == "::"
-      , [vh, VL _ vt t] <- vs -> force vh t $ \vh -> do
+      , [vh, VL _ vt t] <- vs -> force vh t $ \vh su -> do
         su <- unify (typeOf vh) t
         return (VL prv (vh : vt) (subst su t))
-      | length as == n -> forces (zip vs as) $ \vs -> do
+      | length as == n -> forces (zip vs as) $ \vs su -> do
         su <- mconcat <$> zipWithM unify as ts
         let t = subst su $ typeDeclType $ dType dd
         return (VA prv dc v t)
@@ -276,19 +277,19 @@ evalBop bop v1 v2 = withCurrentProvM $ \prv ->
   Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
   Gt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> gtVal v1 v2
   Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
-  Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> plusVal v1 v2
-  Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> minusVal v1 v2
-  Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> timesVal v1 v2
-  Div    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> divVal v1 v2
-  Mod    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> modVal v1 v2
-  FPlus  -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> plusVal v1 v2
-  FMinus -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> minusVal v1 v2
-  FTimes -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> timesVal v1 v2
-  FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> divVal v1 v2
+  Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> plusVal v1 v2
+  Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> minusVal v1 v2
+  Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> timesVal v1 v2
+  Div    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> divVal v1 v2
+  Mod    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> modVal v1 v2
+  FPlus  -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> plusVal v1 v2
+  FMinus -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> minusVal v1 v2
+  FTimes -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> timesVal v1 v2
+  FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> divVal v1 v2
 
 evalUop :: MonadEval m => Uop -> Value -> m Value
-evalUop Neg  v = force v (tCon tINT)   $ \(VI _ i) -> withCurrentProv $ \prv -> VI prv (negate i)
-evalUop FNeg v = force v (tCon tFLOAT) $ \(VD _ d) -> withCurrentProv $ \prv -> VD prv (negate d)
+evalUop Neg  v = force v (tCon tINT)   $ \(VI _ i) su -> withCurrentProv $ \prv -> VI prv (negate i)
+evalUop FNeg v = force v (tCon tFLOAT) $ \(VD _ d) su -> withCurrentProv $ \prv -> VD prv (negate d)
 
 
 -- ltVal (VI x) (VI y) = return (x < y)
@@ -354,15 +355,15 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
 matchPat v p = case p of
   VarPat _ var ->
     return $ Just [(var,v)]
-  LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
+  LitPat _ lit -> force v (typeOfLit lit) $ \v su -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
-  IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v -> do
+  IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v su -> do
     VB _ b <- eval (mkApps Nothing (Var Nothing "&&")
                   [ mkApps Nothing (Var Nothing ">=") [Val Nothing v, Lit Nothing lo]
                   , mkApps Nothing (Var Nothing "<=") [Val Nothing v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
-  ConsPat _ p ps -> force v (tL a) $ \v -> do
+  ConsPat _ p ps -> force v (tL a) $ \v su -> do
     case v of
       VL _ [] _ -> return Nothing
       VL _ _ _ -> do
@@ -372,26 +373,26 @@ matchPat v p = case p of
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
-  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) -> do
+  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) su -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
-  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ _ vs _) -> do
+  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ _ vs _) su -> do
     fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
-  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs _) ->
+  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs _) su ->
     case vs of
       [] -> return (Just mempty)
       _  -> return Nothing
-  ConPat _ "()" Nothing -> force v tU $ \v ->
+  ConPat _ "()" Nothing -> force v tU $ \v su ->
      return (Just mempty)
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    force v (typeDeclType $ dType dd) $ \(VA _ c v' t) -> do
+    force v (typeDeclType $ dType dd) $ \(VA _ c v' t) su -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing
@@ -403,7 +404,7 @@ matchPat v p = case p of
   AsPat _ p x -> do
     Just env <- matchPat v p
     return (Just ((x,v) : env))
-  ConstraintPat _ p t -> force v t $ \v -> do
+  ConstraintPat _ p t -> force v t $ \v su -> do
     matchPat v p
   _ -> err
   where err = otherError (printf "tried to match %s against %s"
