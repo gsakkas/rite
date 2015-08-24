@@ -136,6 +136,18 @@ search gr root target strat =
     Nothing -> True
     Just ss -> ss /= target
 
+-- | Compute all "interesting" paths involving a term.
+--
+-- 1. The 'StepsTo' path that leads to the term itself.
+-- 2. The 'StepsTo' paths that lead to the term's immediate subterms.
+paths :: Graph -> Graph.Node -> [Graph.Path]
+paths gr root = map mkPath (root : subterms gr root)
+  where
+  mkPath n = go (backjump gr n) []
+
+  go Nothing  p = p
+  go (Just n) p = go (forwardstep gr n) (p ++ [n])
+
 ----------------------------------------------------------------------
 -- Stepping
 ----------------------------------------------------------------------
