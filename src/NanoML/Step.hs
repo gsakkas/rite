@@ -61,7 +61,7 @@ type Node  = Graph.LNode Expr
 type Edge  = Graph.LEdge EdgeKind
 
 runGraph opts x = case runEvalFull opts x of
-  (Left e, st, _)  -> Left $ traceShow e $ (stEdges st, stCurrentExpr st)
+  (Left e, st, _)  -> Left $ (e, stTrace st, stEdges st, stCurrentExpr st)
   (Right v, st, _) -> Right $ stEdges st
 
 buildGraph :: [(Expr, EdgeKind, Expr)] -> IO Graph
@@ -198,6 +198,7 @@ stepDecl decl = case decl of
 
 build :: MonadEval m => Expr -> Expr -> m Expr
 build before after = do
+  addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
   addEdge StepsTo before after
   addSubTerms after
   return after
@@ -347,10 +348,10 @@ stepApp ms (Val _ f) es = case f of
         -- pushEnv env
         -- pushEnv pat_env
         nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
-        Replace ms nenv <$> case (ps', es') of
-          ([], []) -> refreshExpr $ onSrcSpanExpr (<|> ms) e -- only refresh at saturated applications
-          ([], _) -> addSubTerms $ App ms e es'
-          (_, []) -> mkLamsSubTerms ps' e
+        case (ps', es') of
+          ([], []) -> Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
+          ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
+          (_, []) -> withCurrentProvM $ \prv -> mkLamsSubTerms ps' e >>= \l -> return $ Val ms (VF prv (Func l nenv)) -- WRONG?? mkLamsSubTerms ps' e
   _ -> otherError $ printf "'%s' is not a function" (show f)
 stepApp _ f es = error (show (f:es))
 
