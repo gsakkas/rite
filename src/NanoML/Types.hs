@@ -747,7 +747,18 @@ typeOfLit l = case l of
   LS _ -> tCon tSTRING
   LB _ -> tCon tBOOL
   -- LU   -> tCon tUNIT
-  
+
+-- | Returns the type of the arguments, not the operator.
+typeOfBop :: Bop -> Type
+typeOfBop b
+  | b == Plus || b == Minus || b == Times || b == Div || b == Mod
+  = tCon tINT
+  | b == FPlus || b == FMinus || b == FTimes || b == FDiv || b == FExp
+  = tCon tFLOAT
+  | b == And || b == Or
+  = tCon tBOOL
+  | otherwise
+  = TVar "a"
 
 ----------------------------------------------------------------------
 -- Utilities

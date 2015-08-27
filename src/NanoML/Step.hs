@@ -64,6 +64,50 @@ runGraph opts x = case runEvalFull opts x of
   (Left e, st, _)  -> Left $ (e, stTrace st, stEdges st, stCurrentExpr st)
   (Right v, st, _) -> Right $ stEdges st
 
+mkPaths st = do
+  let expr = stCurrentExpr st
+  let edges = stEdges st
+  gr <- buildGraph edges
+  root <- findRoot gr expr
+
+  let check (Val _ v) t =
+        case runEval stdOpts (put st >> unify (typeOf v) t) of
+          Left _ -> False
+          Right _ -> True
+
+  -- with a single subterm we always prioritize it over the parent
+  let checkOne x = findRoot gr x >>= \xn -> return [mkPath gr xn, mkPath gr root]
+
+  -- otherwise we order as follows
+  -- 1. subterms that don't unify on their own
+  -- 2. subterms that constribute to inconsistent instantiation of tyvars
+  --    e.g. in `1 :: [true]` we would have `a ~ int` and `a ~ bool`
+  -- 3. the parent term
+  -- 4. subterms that unify
+  let checkMany xts = do
+        let bad  = filter (not . uncurry check) xts
+        let poly = [] -- FIXME: check that all tyvars can be consistently instantiated
+        ns <- mapM (findRoot gr) (nub $ map fst bad ++ map fst poly ++ [expr] ++ map fst xts)
+        return $ map (mkPath gr) ns
+  
+  case expr of
+    Uop _ u x -> checkOne x
+    Bop _ b x y -> checkMany [(x, typeOfBop b), (y, typeOfBop b)]
+    ConApp  _ c (Just x)
+      -> let ts = dArgs $ stDataEnv st Map.! c
+         in case (x, ts) of
+              (_, [t]) -> checkOne x
+                                                                -- FIXME: this creates a new object and breaks the graph...
+              (Val ms (VT _ _ vs _), _) -> checkMany $ zip (map (Val ms) vs) ts
+    Record _ fs
+      -> let TRec fts = tyRhs $ stFieldEnv st Map.! fst (head fs)
+         in checkMany [ (fromJust $ lookup f fs, t) | (f, _, t) <- fts ]
+    Case _ x as -> checkOne x
+    Prim1 _ p@(P1 _ f t) x -> checkOne x
+    Prim2 _ p@(P2 _ f tx ty) x y -> checkMany [(x, tx), (y, ty)]
+    _ -> error $ "mkPaths impossible: " ++ show expr
+
+
 buildGraph :: [(Expr, EdgeKind, Expr)] -> IO Graph
 buildGraph tr = do
   nodes <- concatMapM mkNode tr
@@ -141,10 +185,10 @@ search gr root target strat =
 -- 1. The 'StepsTo' path that leads to the term itself.
 -- 2. The 'StepsTo' paths that lead to the term's immediate subterms.
 paths :: Graph -> Graph.Node -> [Graph.Path]
-paths gr root = map mkPath (root : subterms gr root)
-  where
-  mkPath n = go (backjump gr n) []
+paths gr root = map (mkPath gr) (root : subterms gr root)
 
+mkPath gr n = go (backjump gr n) []
+  where
   go Nothing  p = p
   go (Just n) p = go (forwardstep gr n) (p ++ [n])
 
