@@ -101,6 +101,7 @@ instance Pretty Expr where
     Field _ e f -> pretty e <> char '.' <> text f
     SetField _ e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
     Array _ es -> array es
+    List _ es -> list es
     Try _ e ps -> parensIf (z > zt) $
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
@@ -218,7 +219,7 @@ instance Pretty Double where
   pretty = PP.pretty
 
 instance Pretty Char where
-  pretty = PP.pretty
+  pretty = PP.squotes . PP.pretty
 
 expr ==> val = nest 2 $ pretty expr <$> (text "==>" <+> pretty val)
 var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
