@@ -202,10 +202,10 @@ refreshExpr expr = addSubTerms =<< case expr of
   Field ms e f -> Field ms <$> refreshExpr e <*> pure f
   SetField ms e f x -> SetField ms <$> refreshExpr e <*> pure f <*> refreshExpr x
   Array ms xs -> Array ms <$> mapM refreshExpr xs
+  List ms xs -> List ms <$> mapM refreshExpr xs
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p x -> Prim1 ms p <$> refreshExpr x
   Prim2 ms p x y -> Prim2 ms p <$> refreshExpr x <*> refreshExpr y
-  -- Val ms v -> return expr --  Val ms v
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
 
@@ -573,6 +573,7 @@ getSrcSpanExprMaybe expr = case expr of
   Field ms _ _ -> ms
   SetField ms _ _ _ -> ms
   Array ms _ -> ms
+  List ms _ -> ms
   Try ms _ _ -> ms
   Prim1 ms _ _ -> ms
   Prim2 ms _ _ _ -> ms
@@ -690,6 +691,13 @@ argTys _         = []
 resTy :: Type -> Type
 resTy (_ :-> o) = resTy o
 resTy t         = t
+
+freeTyVars :: Type -> [TVar]
+freeTyVars t = case t of
+  TVar v -> [v]
+  TApp _ ts -> nub (concatMap freeTyVars ts)
+  ti :-> to -> nub (freeTyVars ti ++ freeTyVars to)
+  TTup ts -> nub (concatMap freeTyVars ts)
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }

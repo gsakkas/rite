@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns   #-}
@@ -75,6 +76,11 @@ mkPaths st = do
           Left _ -> False
           Right _ -> True
 
+  let checkpoly vts =
+        case runEval stdOpts (put st >> foldM (\su (v,t) -> (su++) <$> unify (typeOf v) (subst su t)) [] vts) of
+          Left _ -> False
+          Right _ -> True
+
   -- with a single subterm we always prioritize it over the parent
   let checkOne x = findRoot gr x >>= \xn -> return [mkPath gr xn, mkPath gr root]
 
@@ -86,7 +92,9 @@ mkPaths st = do
   -- 4. subterms that unify
   let checkMany xts = do
         let bad  = filter (not . uncurry check) xts
-        let poly = [] -- FIXME: check that all tyvars can be consistently instantiated
+        let poly = let grps = Map.elems $ Map.fromListWith (++) $
+                              concatMap (\(x,t) -> map (,[(x,t)]) (freeTyVars t)) xts
+                   in concat $ filter (not . checkpoly) grps
         ns <- mapM (findRoot gr) (nub $ map fst bad ++ map fst poly ++ [expr] ++ map fst xts)
         return $ map (mkPath gr) ns
   
@@ -97,7 +105,6 @@ mkPaths st = do
       -> let ts = dArgs $ stDataEnv st Map.! c
          in case (x, ts) of
               (_, [t]) -> checkOne x
-                                                                -- FIXME: this creates a new object and breaks the graph...
               (VT _ vs, _) -> checkMany $ zip vs ts
     Record _ fs _
       -> let TRec fts = tyRhs $ stFieldEnv st Map.! fst (head fs)
@@ -126,7 +133,6 @@ buildGraph tr = do
 
 findRoot :: Graph -> Expr -> IO Graph.Node
 findRoot gr e = do
-  print e
   en <- makeStableName =<< evaluate e
   let p (n,x) = do xn <- makeStableName =<< evaluate x
                    return (xn == en)
@@ -188,9 +194,9 @@ search gr root target strat =
 paths :: Graph -> Graph.Node -> [Graph.Path]
 paths gr root = map (mkPath gr) (root : subterms gr root)
 
-mkPath gr n = go (backjump gr n) []
+mkPath gr n = go (backjump gr n) (maybe [n] (const []) (backjump gr n))
   where
-  go Nothing  p = p ++ [n]
+  go Nothing  p = p
   go (Just n) p = go (forwardstep gr n) (p ++ [n])
 
 ----------------------------------------------------------------------
@@ -376,6 +382,12 @@ step expr = withCurrentExpr expr $ case expr of
                     mapM_ (unify (typeOf v) . typeOf) vs
                     withCurrentProvM $ \prv -> build expr (VV prv (v:vs)))
                 (\es -> build expr $ Array ms es)
+  List ms [] -> withCurrentProvM $ \prv -> build expr $ VL prv []
+  List ms es -> stepOne es
+                (\(v:vs) -> do
+                    mapM_ (unify (typeOf v) . typeOf) vs
+                    withCurrentProvM $ \prv -> build expr (VL prv (v:vs)))
+                (\es -> build expr $ List ms es)
   Try ms e alts
     | isValue e -> build expr e
     | otherwise -> do
@@ -392,7 +404,7 @@ step expr = withCurrentExpr expr $ case expr of
     stepOne [e1,e2]
       (\[v1, v2] -> build expr =<< (forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2))
       (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
-  _ -> error (show expr)
+  _ -> error ("step: " ++ show expr)
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
 stepApp ms f es = case f of
