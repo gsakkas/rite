@@ -293,8 +293,8 @@ SimpleExpr :: { Expr }
 : ValLongIdent          { Var (getSrcSpanMaybe $1) (getVal $1) }
 | ConLongIdent %prec constr  { mkConApp (getSrcSpanMaybe $1) (getVal $1) [] }
 | Value                 { (getVal $1) }
-| SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var Nothing "String.get") [$1, $4] }
-| SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var Nothing "Array.get")  [$1, $4] }
+| SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "String.get") [$1, $4] }
+| SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "Array.get")  [$1, $4] }
 | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
 | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
@@ -340,12 +340,12 @@ FunDef :: { Expr }
 | SimplePattern FunDef  { Lam (mergeLocated $1 $2) $1 $2 Nothing }
 
 Value :: { Loc Value }
-: string    { L (getSrcSpanMaybe $1) (VS Nothing (read (getString $1))) }
-| char      { L (getSrcSpanMaybe $1) (VC Nothing (read (getChar $1))) }
-| int       { L (getSrcSpanMaybe $1) (VI Nothing (read (getInt $1))) }
-| float     { L (getSrcSpanMaybe $1) (VD Nothing (read (getFloat $1))) }
-| "true"    { L (getSrcSpanMaybe $1) (VB Nothing True) }
-| "false"   { L (getSrcSpanMaybe $1) (VB Nothing False) }
+: string    { L (getSrcSpanMaybe $1) (VS (getSrcSpanMaybe $1) (read (getString $1))) }
+| char      { L (getSrcSpanMaybe $1) (VC (getSrcSpanMaybe $1) (read (getChar $1))) }
+| int       { L (getSrcSpanMaybe $1) (VI (getSrcSpanMaybe $1) (read (getInt $1))) }
+| float     { L (getSrcSpanMaybe $1) (VD (getSrcSpanMaybe $1) (read (getFloat $1))) }
+| "true"    { L (getSrcSpanMaybe $1) (VB (getSrcSpanMaybe $1) True) }
+| "false"   { L (getSrcSpanMaybe $1) (VB (getSrcSpanMaybe $1) False) }
 
 Literal :: { Loc Literal }
 : string    { L (getSrcSpanMaybe $1) (LS (read (getString $1))) }
