@@ -18,7 +18,6 @@ import Control.Monad.Random
 import Control.Monad.RWS   hiding (Alt)
 import Data.IORef
 import Data.List
-import Data.Maybe
 import qualified Data.Vector as Vector
 import System.IO.Unsafe
 import Text.Printf
@@ -107,8 +106,8 @@ eval :: MonadEval m => Expr -> m Value
 eval expr = logExpr expr $ case expr of
   Var ms v ->
     lookupVar v
-  Lam ms _ _ -> withCurrentProvM $ \prv ->
-    VF prv . Func expr <$> gets stVarEnv
+  Lam ms p e _ ->
+    Lam ms p e . Just <$> gets stVarEnv
   App ms f args -> do
     vf    <- eval f
     vargs <- mapM eval args
@@ -142,21 +141,20 @@ eval expr = logExpr expr $ case expr of
     evalAlts v as
   Tuple ms es -> do
     vs <- mapM eval es
-    withCurrentProv $ \prv -> (VT prv (length vs) vs (map typeOf vs))
-  ConApp ms "()" Nothing -> withCurrentProv VU
-  ConApp ms "[]" Nothing -> withCurrentProv $ \prv -> (VL prv [] (TVar "a"))
-  ConApp ms "::" (Just (Tuple ms' [h,t])) -> do
+    withCurrentProv $ \prv -> (VT prv vs)
+  ConApp ms "()" Nothing _ -> withCurrentProv VU
+  ConApp ms "[]" Nothing _ -> withCurrentProv $ \prv -> (VL prv [])
+  ConApp ms "::" (Just (Tuple ms' [h,t])) _ -> do
     vh <- eval h
     vt <- eval t
-    force vt (tL (typeOf vh)) $ \(VL _ vt t) su -> do
-      su <- unify t (typeOf vh)
-      withCurrentProv $ \prv -> (VL prv (vh:vt) (subst su t))
-  ConApp ms dc Nothing -> do
+    force vt (tL (typeOf vh)) $ \(VL _ vt) su -> do
+      withCurrentProv $ \prv -> (VL prv (vh:vt))
+  ConApp ms dc Nothing _ -> do
     evalConApp dc Nothing
-  ConApp ms dc (Just e) -> do
+  ConApp ms dc (Just e) _ -> do
     v <- eval e
     evalConApp dc (Just v)
-  Record ms flds -> do
+  Record ms flds _ -> do
     td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
     unless (all (`elem` map fst3 fs) (map fst flds)) $
       otherError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
@@ -169,9 +167,9 @@ eval expr = logExpr expr $ case expr of
         su <- unify t (typeOf v)
         i <- fresh
         writeStore i (m,v)
-        return ((f,i),su)
+        return ((f, Ref i),su)
     let t = subst (mconcat sus) $ typeDeclType td
-    withCurrentProv $ \prv -> (VR prv vs t)
+    withCurrentProv $ \prv -> (VR prv vs (Just t))
   Field ms e f -> do
     v <- eval e
     getField v f
@@ -180,11 +178,11 @@ eval expr = logExpr expr $ case expr of
     v  <- eval e
     setField vr f v
     withCurrentProv VU
-  Array ms [] -> withCurrentProv $ \prv -> (VV prv Vector.empty (TVar "a"))
+  Array ms [] -> withCurrentProv $ \prv -> (VV prv [])
   Array ms es -> do
     (v:vs) <- mapM eval es
     mapM_ (unify (typeOf v) . typeOf) vs
-    withCurrentProv $ \prv -> (VV prv (Vector.fromList (v:vs)) (typeOf v))
+    withCurrentProv $ \prv -> (VV prv (v:vs))
   Try ms e alts -> do
     env <- gets stVarEnv
     eval e `catchError` \e -> do
@@ -199,11 +197,10 @@ eval expr = logExpr expr $ case expr of
     v1 <- eval e1
     v2 <- eval e2
     forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
-  Val _ v -> return v
 
 force :: MonadEval m => Value -> Type -> (Value -> Subst -> m a) -> m a
 force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete type
-force (VH r _) t k = do
+force (Hole _ r _) t k = do
   lookupStore r >>= \case
     Just (_,v) -> do
       su <- unify (typeOf v) t
@@ -224,18 +221,19 @@ forces vts k = go vts [] []
   go ((v,t):vts) vs su = force v t (\v su' -> go (map (second (subst su')) vts) (v:vs) (su ++ su'))
 
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
-forceSame x@(VH {}) y@(VH {}) k =
+forceSame x@(Hole {}) y@(Hole {}) k =
   forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] su -> k x y
-forceSame x@(VH {}) y k = force x (typeOf y) $ \x su -> k x y
-forceSame x y@(VH {}) k = force y (typeOf x) $ \y su -> k x y
+forceSame x@(Hole {}) y k = force x (typeOf y) $ \x su -> k x y
+forceSame x y@(Hole {}) k = force y (typeOf x) $ \y su -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
-  VF _ (Func (Lam ms p e) env) -> do
-    Just pat_env <- matchPat a p
-    eval e `withEnv` error "evalApp" -- joinEnv pat_env env
-  _ -> otherError "tried to apply a non-function"
+evalApp = undefined
+-- evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
+--   VF _ (Func (Lam ms p e) env) -> do
+--     Just pat_env <- matchPat a p
+--     eval e `withEnv` error "evalApp" -- joinEnv pat_env env
+--   _ -> otherError "tried to apply a non-function"
 
 evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
@@ -244,33 +242,32 @@ evalConApp dc v = do
   case (dArgs dd, v) of
     ([], Nothing)
       | dc == "()" -> return (VU prv)
-      | dc == "[]" -> return (VL prv [] (TVar "a"))
-      | otherwise  -> return (VA prv dc v (typeDeclType $ dType dd))
+      | dc == "[]" -> return (VL prv [])
+      | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
     ([a], Just v) -> force v a $ \v su -> do
       su <- unify a (typeOf v)
       let t = subst su $ typeDeclType $ dType dd
-      return (VA prv dc (Just v) t)
-    (as,  Just (VT _ n vs ts))
+      return (VA prv dc (Just v) (Just t))
+    (as,  Just (VT _ vs))
       | dc == "::"
-      , [vh, VL _ vt t] <- vs -> force vh t $ \vh su -> do
-        su <- unify (typeOf vh) t
-        return (VL prv (vh : vt) (subst su t))
-      | length as == n -> forces (zip vs as) $ \vs su -> do
-        su <- mconcat <$> zipWithM unify as ts
+      , [vh, VL _ vt] <- vs -> force vh (typeOfList vt) $ \vh su -> do
+        return (VL prv (vh : vt))
+      | length as == length vs -> forces (zip vs as) $ \vs su -> do
+        su <- mconcat <$> zipWithM unify as (map typeOf vs)
         let t = subst su $ typeDeclType $ dType dd
-        return (VA prv dc v t)
+        return (VA prv dc v (Just t))
     (as, _) -> do
       let nArgs = case v of
-            Nothing         -> 0
-            Just (VT _ n _ _) -> n
-            Just _          -> 1
+            Nothing        -> 0
+            Just (VT _ vs) -> length vs
+            Just _         -> 1
       otherError (printf "%s expects %d arguments, but was given %d"
                         dc (length as) nArgs)
 
 evalBop :: MonadEval m
         => Bop -> Value -> Value -> m Value
 evalBop bop v1 v2 = withCurrentProvM $ \prv ->
- logExpr (Bop Nothing bop (Val Nothing v1) (Val Nothing v2)) $ case bop of
+ logExpr (Bop Nothing bop v1 v2) $ case bop of
   Eq     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> eqVal v1 v2
   Neq    -> forceSame v1 v2 $ \v1 v2 -> VB prv . not <$> eqVal v1 v2
   Lt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> ltVal v1 v2
@@ -360,30 +357,30 @@ matchPat v p = case p of
     return $ if b then Just mempty else Nothing
   IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v su -> do
     VB _ b <- eval (mkApps Nothing (Var Nothing "&&")
-                  [ mkApps Nothing (Var Nothing ">=") [Val Nothing v, Lit Nothing lo]
-                  , mkApps Nothing (Var Nothing "<=") [Val Nothing v, Lit Nothing hi]])
+                  [ mkApps Nothing (Var Nothing ">=") [v, Lit Nothing lo]
+                  , mkApps Nothing (Var Nothing "<=") [v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> force v (tL a) $ \v su -> do
     case v of
-      VL _ [] _ -> return Nothing
-      VL _ _ _ -> do
+      VL _ [] -> return Nothing
+      VL _ _ -> do
         (x,xs) <- unconsVal v
         menv1 <- matchPat x p
         menv2 <- matchPat xs ps
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
-  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) su -> do
+  ListPat _ ps -> force v (tL a) $ \(VL _ vs) su -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
-  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ _ vs _) su -> do
+  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs) su -> do
     fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
-  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs _) su ->
+  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs) su ->
     case vs of
       [] -> return (Just mempty)
       _  -> return Nothing
@@ -417,7 +414,7 @@ safeMatch ts (Just (WildPat _)) = True
 safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
-unconsVal (VL prv (x:xs) t) = return (x, VL prv xs t) -- FIXME: is this the right provenance??
+unconsVal (VL prv (x:xs)) = return (x, VL prv xs) -- FIXME: is this the right provenance??
 unconsVal _             = otherError "type error: uncons can only be applied to lists"
 
 matchLit :: MonadEval m => Value -> Literal -> m Bool

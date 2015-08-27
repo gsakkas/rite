@@ -9,9 +9,10 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
-{-# LANGUAGE OverlappingInstances     #-}
+{-# LANGUAGE OverlappingInstances  #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE PatternSynonyms       #-}
 module NanoML.Types where
 
 import           Control.Applicative
@@ -145,7 +146,7 @@ addSubTerms expr = do
   let mkEdge i e = addEdge (SubTerm i) expr e
   case skipEnv expr of
     Var _ _ -> return ()
-    Lam _ _ b -> mkEdge 0 b
+    Lam _ _ b _ -> mkEdge 0 b
     App _ f xs -> zipWithM_ mkEdge [0..] (f:xs)
     Bop _ _ x y -> mkEdge 0 x >> mkEdge 1 y
     Uop _ _ x -> mkEdge 0 x
@@ -156,8 +157,8 @@ addSubTerms expr = do
     Case _ e alts -> zipWithM_ mkEdge [0..]
                      (e : concatMap (\(_,g,b) -> maybeToList g ++ [b]) alts)
     Tuple _ es -> zipWithM_ mkEdge [0..] es
-    ConApp _ _ me -> zipWithM_ mkEdge [0..] (maybeToList me)
-    Record _ fs -> zipWithM_ mkEdge [0..] (map snd fs)
+    ConApp _ _ me _ -> zipWithM_ mkEdge [0..] (maybeToList me)
+    Record _ fs _ -> zipWithM_ mkEdge [0..] (map snd fs)
     Field _ e _ -> mkEdge 0 e
     SetField _ e _ x -> mkEdge 0 e >> mkEdge 1 x
     Array _ es -> zipWithM_ mkEdge [0..] es
@@ -185,7 +186,7 @@ refreshDecl decl = case decl of
 refreshExpr :: MonadEval m => Expr -> m Expr
 refreshExpr expr = addSubTerms =<< case expr of
   Var ms v -> return $ Var ms v
-  Lam ms p e -> Lam ms p <$> refreshExpr e
+  Lam ms p e env -> Lam ms p <$> refreshExpr e <*> pure env
   App ms f xs -> App ms <$> refreshExpr f <*> mapM refreshExpr xs
   Bop ms b x y -> Bop ms b <$> refreshExpr x <*> refreshExpr y
   Uop ms u x -> Uop ms u <$> refreshExpr x
@@ -195,16 +196,16 @@ refreshExpr expr = addSubTerms =<< case expr of
   Seq ms x y -> Seq ms <$> refreshExpr x <*> refreshExpr y
   Case ms e alts -> Case ms <$> refreshExpr e <*> mapM refreshAlt alts
   Tuple ms xs -> Tuple ms <$> mapM refreshExpr xs
-  ConApp ms c Nothing -> return $ ConApp ms c Nothing
-  ConApp ms c (Just x) -> ConApp ms c . Just <$> refreshExpr x
-  Record ms fs -> Record ms <$> mapM refreshBind fs
+  ConApp ms c Nothing mt -> return $ ConApp ms c Nothing mt
+  ConApp ms c (Just x) mt -> (\x -> ConApp ms c x mt) . Just <$> refreshExpr x
+  Record ms fs mt -> (\fs -> Record ms fs mt) <$> mapM refreshBind fs
   Field ms e f -> Field ms <$> refreshExpr e <*> pure f
   SetField ms e f x -> SetField ms <$> refreshExpr e <*> pure f <*> refreshExpr x
   Array ms xs -> Array ms <$> mapM refreshExpr xs
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p x -> Prim1 ms p <$> refreshExpr x
   Prim2 ms p x y -> Prim2 ms p <$> refreshExpr x <*> refreshExpr y
-  Val ms v -> return expr --  Val ms v
+  -- Val ms v -> return expr --  Val ms v
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
 
@@ -228,13 +229,13 @@ rememberArgs args = modify' $ \s -> s { stArgs = args }
 getStepIndex :: MonadEval m => m Int
 getStepIndex = Seq.length <$> gets stTrace
 
-getCurrentProv :: MonadEval m => m Prov
-getCurrentProv = Prov <$> getStepIndex
+getCurrentProv :: MonadEval m => m MSrcSpan
+getCurrentProv = getSrcSpanExprMaybe <$> gets stCurrentExpr
 
-withCurrentProv :: MonadEval m => (Prov -> a) -> m a
+withCurrentProv :: MonadEval m => (MSrcSpan -> a) -> m a
 withCurrentProv f = f <$> getCurrentProv
 
-withCurrentProvM :: MonadEval m => (Prov -> m a) -> m a
+withCurrentProvM :: MonadEval m => (MSrcSpan -> m a) -> m a
 withCurrentProvM f = f =<< getCurrentProv
 
 -- | An index into the store.
@@ -409,33 +410,74 @@ m `withEnv` env = do
 data Prov = Prov Int
   deriving (Show, Eq, Generic)
 
-nullProv :: Prov
-nullProv = Prov 0
+nullProv = Nothing
 
-data Value
-  = VI !Prov !Int
-  | VD !Prov !Double
-  | VC !Prov !Char
-  | VS !Prov !String
-  | VB !Prov !Bool
-  | VU !Prov
-  | VL !Prov [Value] Type
-  | VT !Prov !Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
-  | VA !Prov DCon (Maybe Value) Type
-  | VR !Prov [(String, Ref)] Type
-  | VV !Prov (Vector Value) Type
-  | VF !Prov Func
-  | VH !Ref (Maybe Type) -- ^ A "hole" that will be filled in later, on demand.
-  deriving (Show, Generic, Eq)
+-- nullProv :: Prov
+-- nullProv = Prov 0
 
-data Func
-  = Func Expr Env
-  deriving (Generic, Eq)
+type Value = Expr -- {v:Expr | isValue v}
 
--- NOTE: we can NEVER print the captured environment since recursive
--- functions will refer to themselves
-instance Show Func where
-  showsPrec p (Func expr _) = showsPrec p expr
+isValue :: Expr -> Bool
+isValue expr = case expr of
+  Lam _ _ _ env -> isJust env
+  Lit {} -> True
+  Tuple _ es -> all isValue es
+  ConApp _ _ me mt -> maybe True isValue me && isJust mt
+  Record _ fs mt -> all (isValue . snd) fs && isJust mt
+  Array _ es -> all isValue es
+  List _ es -> all isValue es
+  Hole {} -> True
+  Ref {} -> True
+  _ -> False
+
+pattern VI ms x <- Lit ms (LI x) where
+  VI ms x = Lit ms (LI x)
+pattern VD ms x <- Lit ms (LD x) where
+  VD ms x = Lit ms (LD x)
+pattern VC ms x <- Lit ms (LC x) where
+  VC ms x = Lit ms (LC x)
+pattern VS ms x <- Lit ms (LS x) where
+  VS ms x = Lit ms (LS x)
+pattern VB ms x <- Lit ms (LB x) where
+  VB ms x = Lit ms (LB x)
+pattern VU ms <- ConApp ms "()" Nothing _ where
+  VU ms = ConApp ms "()" Nothing (Just (tCon tUNIT))
+pattern VL ms vs <- List ms vs where
+  VL ms vs = List ms vs
+pattern VT ms vs <- Tuple ms vs where
+  VT ms vs = Tuple ms vs
+pattern VA ms c mv mt <- ConApp ms c mv mt where
+  VA ms c mv mt = ConApp ms c mv mt
+pattern VR ms fs mt <- Record ms fs mt where
+  VR ms fs mt = Record ms fs mt
+pattern VV ms vs <- Array ms vs where
+  VV ms vs = Array ms vs
+
+
+-- data Value
+--   = VI !Prov !Int
+--   | VD !Prov !Double
+--   | VC !Prov !Char
+--   | VS !Prov !String
+--   | VB !Prov !Bool
+--   | VU !Prov
+--   | VL !Prov [Value] Type
+--   | VT !Prov !Int [Value] [Type] -- VT sz:{Nat | sz >= 2} (ListN Value sz)
+--   | VA !Prov DCon (Maybe Value) Type
+--   | VR !Prov [(String, Ref)] Type
+--   | VV !Prov (Vector Value) Type
+--   | VF !Prov Func
+--   | VH !Ref (Maybe Type) -- ^ A "hole" that will be filled in later, on demand.
+--   deriving (Show, Generic, Eq)
+
+-- data Func
+--   = Func Expr Env
+--   deriving (Generic, Eq)
+
+-- -- NOTE: we can NEVER print the captured environment since recursive
+-- -- functions will refer to themselves
+-- instance Show Func where
+--   showsPrec p (Func expr _) = showsPrec p expr
 
 data Literal
   = LI Int
@@ -487,7 +529,7 @@ type MSrcSpan = Maybe SrcSpan
 
 data Expr
   = Var !MSrcSpan Var
-  | Lam !MSrcSpan Pat Expr
+  | Lam !MSrcSpan Pat Expr (Maybe Env)
   | App !MSrcSpan Expr [Expr]
   | Bop !MSrcSpan Bop Expr Expr
   | Uop !MSrcSpan Uop Expr
@@ -497,23 +539,26 @@ data Expr
   | Seq !MSrcSpan Expr Expr
   | Case !MSrcSpan Expr [Alt]
   | Tuple !MSrcSpan [Expr]
-  | ConApp !MSrcSpan DCon (Maybe Expr)
-  | Record !MSrcSpan [(String, Expr)]
+  | ConApp !MSrcSpan DCon (Maybe Expr) (Maybe Type)
+  | Record !MSrcSpan [(String, Expr)] (Maybe Type)
   | Field !MSrcSpan Expr String
   | SetField !MSrcSpan Expr String Expr
   | Array !MSrcSpan [Expr]
+  | List !MSrcSpan [Expr]
   | Try !MSrcSpan Expr [Alt]
   | Prim1 !MSrcSpan Prim1 Expr
   | Prim2 !MSrcSpan Prim2 Expr Expr
-  | Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
+  -- Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
   | With !MSrcSpan Env Expr
   | Replace !MSrcSpan Env Expr
+  | Hole !MSrcSpan !Ref (Maybe Type)
+  | Ref !Ref
   deriving (Show, Generic, Eq)
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of
   Var ms _ -> ms
-  Lam ms _ _ -> ms
+  Lam ms _ _ _ -> ms
   App ms _ _ -> ms
   Bop ms _ _ _ -> ms
   Uop ms _ _ -> ms
@@ -523,22 +568,22 @@ getSrcSpanExprMaybe expr = case expr of
   Seq ms _ _ -> ms
   Case ms _ _ -> ms
   Tuple ms _ -> ms
-  ConApp ms _ _ -> ms
-  Record ms _ -> ms
+  ConApp ms _ _ _ -> ms
+  Record ms _ _ -> ms
   Field ms _ _ -> ms
   SetField ms _ _ _ -> ms
   Array ms _ -> ms
   Try ms _ _ -> ms
   Prim1 ms _ _ -> ms
   Prim2 ms _ _ _ -> ms
-  Val ms _ -> ms
+  -- Val ms _ -> ms
   With ms _ _ -> ms
   Replace ms _ _ -> ms
 
 onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
 onSrcSpanExpr f expr = case expr of
   Var ms x -> Var (f ms) x
-  Lam ms x y -> Lam (f ms) x y
+  Lam ms x y e -> Lam (f ms) x y e
   App ms x y -> App (f ms) x y
   Bop ms x y z -> Bop (f ms) x y z
   Uop ms x y -> Uop (f ms) x y
@@ -548,15 +593,15 @@ onSrcSpanExpr f expr = case expr of
   Seq ms x y -> Seq (f ms) x y
   Case ms x y -> Case (f ms) x y
   Tuple ms x -> Tuple (f ms) x
-  ConApp ms x y -> ConApp (f ms) x y
-  Record ms x -> Record (f ms) x
+  ConApp ms x y mt -> ConApp (f ms) x y mt
+  Record ms x mt -> Record (f ms) x mt
   Field ms x y -> Field (f ms) x y
   SetField ms x y z -> SetField (f ms) x y z
   Array ms x -> Array (f ms) x
   Try ms x y -> Try (f ms) x y
   Prim1 ms x y -> Prim1 (f ms) x y
   Prim2 ms x y z -> Prim2 (f ms) x y z
-  Val ms x -> Val (f ms) x
+  -- Val ms x -> Val (f ms) x
   With ms x y -> With (f ms) x y
   Replace ms x y -> Replace (f ms) x y
 
@@ -723,21 +768,34 @@ unifyAlias c ts x y = do
 
 typeOf :: Value -> Type
 typeOf v = case v of
-  VI _ _ -> tCon tINT
-  VD _ _ -> tCon tFLOAT
-  VC _ _ -> tCon tCHAR
-  VS _ _ -> tCon tSTRING
-  VB _ _ -> tCon tBOOL
-  VU _   -> tCon tUNIT
-  VL _ _ t -> mkTApps tLIST [t]
-  VT _ _ _ ts -> TTup ts
-  VA _ _ _ t -> t
-  VR _ _ t -> t
-  VV _ _ t -> mkTApps tARRAY [t]
-  VF _ _ -> TVar "a" :-> TVar "b" -- TODO
-  VH _ Nothing -> TVar "a"
-  VH _ (Just t) -> t
-  -- VF _ -> error "typeOf: <<function>>"
+  Lam {} -> TVar "a" :-> TVar "b" -- TODO
+  Lit _ l -> typeOfLit l
+  Tuple _ vs -> TTup (map typeOf vs)
+  ConApp _ c mv (Just t) -> t
+  Record _ fs (Just t) -> t
+  Array _ vs -> mkTApps tARRAY [case vs of { x:_ -> typeOf x; _ -> TVar "a"}]
+  List _ vs -> mkTApps tLIST [case vs of { x:_ -> typeOf x; _ -> TVar "a"}]
+  Hole _ _ mt -> maybe (TVar "a") id mt
+  _ -> error $ "typeOf: " ++ show v
+  -- VI _ _ -> tCon tINT
+  -- VD _ _ -> tCon tFLOAT
+  -- VC _ _ -> tCon tCHAR
+  -- VS _ _ -> tCon tSTRING
+  -- VB _ _ -> tCon tBOOL
+  -- VU _   -> tCon tUNIT
+  -- VL _ _ t -> mkTApps tLIST [t]
+  -- VT _ _ _ ts -> TTup ts
+  -- VA _ _ _ t -> t
+  -- VR _ _ t -> t
+  -- VV _ _ t -> mkTApps tARRAY [t]
+  -- VF _ _ -> TVar "a" :-> TVar "b" -- TODO
+  -- VH _ Nothing -> TVar "a"
+  -- VH _ (Just t) -> t
+  -- -- VF _ -> error "typeOf: <<function>>"
+
+typeOfList :: [Expr] -> Type
+typeOfList [] = TVar "a"
+typeOfList (x:_) = typeOf x
 
 typeOfLit :: Literal -> Type
 typeOfLit l = case l of
@@ -766,8 +824,8 @@ typeOfBop b
 
 {-@ mkCurried :: ListNE Pat -> Expr -> Expr @-}
 mkCurried :: [Pat] -> Expr -> Expr
-mkCurried [p]    e = Lam (mergeLocated p e) p e
-mkCurried (p:ps) e = Lam (mergeLocated p e) p (mkCurried ps e)
+mkCurried [p]    e = Lam (mergeLocated p e) p e Nothing
+mkCurried (p:ps) e = Lam (mergeLocated p e) p (mkCurried ps e) Nothing
 mkCurried p e = error $ "mkCurried: " ++ show p ++ " " ++ show e
 
 mkInfix :: MSrcSpan -> Expr -> Expr -> Expr -> Expr
@@ -789,22 +847,22 @@ mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr
 mkApps = App
 
 mkConApp :: MSrcSpan -> DCon -> [Expr] -> Expr
-mkConApp ms c []  = ConApp ms c Nothing
-mkConApp ms c [e] = ConApp ms c (Just e)
-mkConApp ms c es  = ConApp ms c (Just (Tuple ms' es))
+mkConApp ms c []  = ConApp ms c Nothing Nothing
+mkConApp ms c [e] = ConApp ms c (Just e) Nothing
+mkConApp ms c es  = ConApp ms c (Just (Tuple ms' es)) Nothing
   where ms' = mergeLocated (head es) (last es)
 
 mkLams :: [Pat] -> Expr -> Expr
 mkLams ps e = case ps of
   []   -> e
-  p:ps -> Lam (mergeLocated p e) p (mkLams ps e)
+  p:ps -> Lam (mergeLocated p e) p (mkLams ps e) Nothing
 
 mkList :: [Expr] -> Expr
 mkList = foldr (\h t -> mkConApp Nothing "::" [h,t]) (mkConApp Nothing "[]" [])
 
 mkFunction :: MSrcSpan -> [Alt] -> Expr
 mkFunction ms alts = Lam ms (VarPat ms "$x")
-                         (Case ms (Var ms "$x") alts)
+                         (Case ms (Var ms "$x") alts) Nothing
 
 mkTApps :: TCon -> [Type] -> Type
 mkTApps = TApp
@@ -815,11 +873,11 @@ mkUMinus ms "-." (Lit _ (LD d)) = Lit ms (LD (- d))
 mkUMinus ms "-"  e              = Uop ms Neg e
 mkUMinus ms "-." e              = Uop ms FNeg e
 
-mkExn :: DCon -> [Value] -> Prov -> Value
-mkExn dcon []   prv = VA prv dcon Nothing (tCon tEXN)
-mkExn dcon [a]  prv = VA prv dcon (Just a) (tCon tEXN)
-mkExn dcon args prv = VA prv dcon (Just (VT prv (length args) args (map typeOf args)))
-                                  (tCon tEXN)
+mkExn :: DCon -> [Value] -> MSrcSpan -> Value
+mkExn dcon []   prv = ConApp prv dcon Nothing (Just $ tCon tEXN)
+mkExn dcon [a]  prv = ConApp prv dcon (Just a) (Just $ tCon tEXN)
+mkExn dcon args prv = ConApp prv dcon (Just (Tuple prv args))
+                                  (Just $ tCon tEXN)
 
 tCon :: TCon -> Type
 tCon c = mkTApps c []
@@ -853,14 +911,14 @@ cmpVal (VB _ x) (VB _ y) = cmp x y
 cmpVal (VC _ x) (VC _ y) = cmp x y
 cmpVal (VS _ x) (VS _ y) = cmp x y
 cmpVal (VU _)   (VU _) = getCurrentProv >>= \prv -> return (VI prv 0)
-cmpVal (VL _ x _) (VL _ y _) = do
+cmpVal (VL _ x) (VL _ y) = do
   lcmp <- length x `cmp` length y
   xscmp <- zipWithM cmpVal x y
   return $ cmpAnd (lcmp : xscmp)
-cmpVal (VT _ i x _) (VT _ j y _)
-  | i == j
+cmpVal (VT _ x) (VT _ y)
+  | length x == length y
   = cmpAnd <$> zipWithM cmpVal x y
-cmpVal (VF _ x) (VF _ y) = otherError "cannot compare functions"
+cmpVal (Lam {}) (Lam {}) = otherError "cannot compare functions"
 cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
   dd1 <- lookupDataCon c2
   dd2 <- lookupDataCon c2
@@ -1022,8 +1080,8 @@ instance CollectEnvIds Pat
 instance CollectEnvIds Type
 instance CollectEnvIds Prov where
   collectEnvIds _ = []
-instance CollectEnvIds Value
-instance CollectEnvIds Func
+-- instance CollectEnvIds Value
+-- instance CollectEnvIds Func
 
 instance CollectEnvIds a => CollectEnvIds (Maybe a) where
   collectEnvIds = maybe [] collectEnvIds
@@ -1093,7 +1151,7 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Var lx x, Var ly y)
     | lx == ly && x == y
       -> Nothing
-  (Lam lx px x, Lam ly py y)
+  (Lam lx px x _, Lam ly py y _)
     | lx == ly && px == py
       -> exprDiff env x y
   (App lx fx ax, App ly fy ay)
@@ -1123,7 +1181,7 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Tuple lx xs, Tuple ly ys)
     | lx == ly && length xs == length ys
       -> msum (zipWith (exprDiff env) xs ys)
-  (ConApp lx cx mx, ConApp ly cy my)
+  (ConApp lx cx mx mtx, ConApp ly cy my mty)
     | lx == ly && cx == cy -> if
         | Just x <- mx, Just y <- my
           -> exprDiff env x y
@@ -1131,7 +1189,7 @@ exprDiff env e1 e2 = case (e1, e2) of
           -> Nothing
         | otherwise
           -> Just (env, e1, e2, StepLine)
-  (Record lx fxs, Record ly fys)
+  (Record lx fxs mtx, Record ly fys mty)
     | lx == ly && map fst fxs == map fst fys
       -> msum (zipWith (exprDiff env) (map snd fxs) (map snd fys))
   (Prim1 lx (P1 vx _ _) x, Prim1 ly (P1 vy _ _) y)
@@ -1140,9 +1198,9 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Prim2 lx (P2 vx _ _ _) x1 x2, Prim2 ly (P2 vy _ _ _) y1 y2)
     | lx == ly && vx == vy
       -> exprDiff env x1 y1 <|> exprDiff env x2 y2
-  (Val _ x, Val _ y)
-    | x == y
-      -> Nothing
+  -- (Val _ x, Val _ y)
+  --   | x == y
+  --     -> Nothing
   (With lx ex x, With ly ey y)
     | lx == ly && envId ex == envId ey
       -> exprDiff ex x y

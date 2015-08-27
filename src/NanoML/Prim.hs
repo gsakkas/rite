@@ -77,10 +77,10 @@ conPatD = ConPat Nothing
 consPatD = ConsPat Nothing
 
 primVars :: [(Var, Value)]
-primVars = [ ("[]", VL nullProv [] (TVar "a"))
-           , ("::", VF nullProv (Func (mkLams [varPatD "x", varPatD "xs"]
-                                     (mkConAppD "::" [varD "x", varD "xs"]))
-                             emptyEnv))
+primVars = [ ("[]", VL nullProv [])
+           -- , ("::", VF nullProv (Func (mkLams [varPatD "x", varPatD "xs"]
+           --                           (mkConAppD "::" [varD "x", varD "xs"]))
+           --                   emptyEnv))
            , ("()", VU nullProv)
            , ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
@@ -95,7 +95,7 @@ primVars = [ ("[]", VL nullProv [] (TVar "a"))
            , ("!", mkNonRec $ mkLams [varPatD "x"] (fieldD (varD "x") "contents"))
            , (":=", mkNonRec $ mkLams [varPatD "x", varPatD "v"]
                                       (setFieldD (varD "x") "contents" (varD "v")))
-           , ("ref", mkNonRec $ mkLams [varPatD "x"] (recordD [("contents", varD "x")]))
+           , ("ref", mkNonRec $ mkLams [varPatD "x"] (recordD [("contents", varD "x")] Nothing))
            , ("List.fold_left"
              ,mkRec "List.fold_left"
                     (mkLams [varPatD "f", varPatD "b", varPatD "xs"]
@@ -227,7 +227,7 @@ primVars = [ ("[]", VL nullProv [] (TVar "a"))
                               )
                              ]))
              )
-           , ("Sys.argv", VV nullProv (Vector.fromList [VS nullProv "foo", VS nullProv "bar", VS nullProv "qux"]) (tCon "string"))
+           , ("Sys.argv", VV nullProv [VS nullProv "foo", VS nullProv "bar", VS nullProv "qux"])
            , ("**", mkPrim2Fun $ P2 "exp" pexp tF tF)
            , ("@", mkPrim2Fun $ P2 "@" pappend (tL a) (tL a))
            , ("^", mkPrim2Fun $ P2 "^" pconcat tS tS)
@@ -301,10 +301,10 @@ pcompare :: MonadEval m => Value -> Value -> m Value
 pcompare = cmpVal
 
 pfst :: MonadEval m => Value -> m Value
-pfst (VT _ 2 [x,_] _) = return x
+pfst (VT _ [x,_]) = return x
 
 psnd :: MonadEval m => Value -> m Value
-psnd (VT _ 2 [_,y] _) = return y
+psnd (VT _ [_,y]) = return y
 
 pand :: MonadEval m => Value -> Value -> m Value
 pand (VB _ x) (VB _ y) = withCurrentProv $ \prv -> (VB prv (x && y))
@@ -335,7 +335,7 @@ plog10 (VD _ x) = withCurrentProv $ \prv -> (VD prv (logBase 10 x))
 
 pmodf :: MonadEval m => Value -> m Value
 pmodf (VD _ x) = let (n,d) = properFraction x
-                 in withCurrentProv $ \prv -> (VT prv 2 [VD prv d, VD prv (fromInteger n)] [tCon tFLOAT, tCon tFLOAT])
+                 in withCurrentProv $ \prv -> (VT prv [VD prv d, VD prv (fromInteger n)])
 
 psqrt :: MonadEval m => Value -> m Value
 psqrt (VD _ i) = withCurrentProv $ \prv -> (VD prv (sqrt i))
@@ -418,9 +418,9 @@ pstring_make :: MonadEval m => Value -> Value -> m Value
 pstring_make (VI _ n) (VC _ c) = withCurrentProv $ \prv -> (VS prv (replicate n c))
 
 parray_get :: MonadEval m => Value -> Value -> m Value
-parray_get (VV _ a _) (VI _ i)
-  | i >= 0 && i < Vector.length a
-  = return (a Vector.! i)
+parray_get (VV _ a) (VI _ i)
+  | i >= 0 && i < length a
+  = return (a !! i)
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow $ MLException $ mkExn "Invalid_argument" [VS prv "index out of bounds"] prv
 
@@ -482,47 +482,47 @@ pchar_uppercase :: MonadEval m => Value -> m Value
 pchar_uppercase (VC _ c) = withCurrentProv $ \prv -> (VC prv (toUpper c))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
-plist_combine (VL _ xs tx) (VL _ ys ty)
+plist_combine (VL _ xs) (VL _ ys)
   | length xs == length ys
-  = withCurrentProv $ \prv -> (VL prv (zipWith (\x y -> VT prv 2 [x,y] [tx, ty]) xs ys) (TTup [tx,ty]))
+  = withCurrentProv $ \prv -> (VL prv (zipWith (\x y -> VT prv [x,y]) xs ys))
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.combine"] prv))
 
 plist_nth :: MonadEval m => Value -> Value -> m Value
-plist_nth (VL _ xs _) (VI _ n)
+plist_nth (VL _ xs) (VI _ n)
   | n >= 0 && n < length xs
   = return (xs !! n)
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.nth"] prv))
 
 plist_split :: MonadEval m => Value -> m Value
-plist_split (VL _ xs (TTup [ta, tb]))
-  = withCurrentProv $ \prv -> (VT prv (length xs) [VL prv as ta, VL prv bs tb] [ta, tb])
+plist_split (VL _ xs)
+  = withCurrentProv $ \prv -> (VT prv [VL prv as, VL prv bs])
   where
   -- FIXME: these list functions really shouldn't be primitives,
   -- introduces nasty laziness issues..
-  (as, bs) = unzip . map (\(VT _ _ [a,b] _) -> (a,b)) $ xs
+  (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
 
 plist_mem :: MonadEval m => Value -> Value -> m Value
-plist_mem x (VL _ xs t) = withCurrentProvM $ \prv -> VB prv <$> allM (`eqVal` x) xs
+plist_mem x (VL _ xs) = withCurrentProvM $ \prv -> VB prv <$> allM (`eqVal` x) xs
 
 plist_length :: MonadEval m => Value -> m Value
-plist_length (VL _ s _) = withCurrentProv $ \prv -> VI prv (length s)
+plist_length (VL _ s) = withCurrentProv $ \prv -> VI prv (length s)
 
 plist_rev :: MonadEval m => Value -> m Value
-plist_rev (VL _ xs t) = withCurrentProv $ \prv -> VL prv (reverse xs) t
+plist_rev (VL _ xs) = withCurrentProv $ \prv -> VL prv (reverse xs)
 
 plist_hd :: MonadEval m => Value -> m Value
-plist_hd (VL _ (x:_) _) = return x
+plist_hd (VL _ (x:_)) = return x
 
 plist_tl :: MonadEval m => Value -> m Value
-plist_tl (VL _ (_:xs) t) = withCurrentProv $ \prv -> VL prv xs t
+plist_tl (VL _ (_:xs)) = withCurrentProv $ \prv -> VL prv xs
 
 pappend :: MonadEval m => Value -> Value -> m Value
-pappend (VL _ xs tx) (VL _ ys ty) = do
-  su <- unify tx ty
+pappend (VL _ xs) (VL _ ys) = do
+  su <- unify (typeOfList xs) (typeOfList ys)
   prv <- getCurrentProv
-  return (VL prv (xs ++ ys) (subst su tx))
+  return (VL prv (xs ++ ys))
 
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS _ xs) (VS _ ys) = withCurrentProv $ \prv -> VS prv (xs ++ ys)
@@ -535,7 +535,7 @@ pprintexc_to_string x@(VA {}) = withCurrentProv $ \prv -> VS prv $ show x
 
 getField :: MonadEval m => Value -> String -> m Value
 getField x@(VR _ fs _) f = case lookup f fs of
-  Just i  -> snd <$> readStore i
+  Just (Ref i)  -> snd <$> readStore i
   Nothing -> otherError $ printf "record %s does not have a field '%s'"
                                 (show x) f
 getField x f = otherError $ printf "%s is not a record" (show x)
@@ -544,7 +544,7 @@ setField :: MonadEval m => Value -> String -> Value -> m ()
 setField x@(VR _ fs _) f v = case lookup f fs of
   Nothing    -> otherError $ printf "record %s does not have a field '%s'"
                                    (show x) f
-  Just i -> do
+  Just (Ref i) -> do
     (m, _) <- readStore i
     case m of
       Mut -> writeStore i (m,v)
@@ -554,13 +554,13 @@ setField x _ _ = otherError $ printf "%s is not a record" (show x)
 mkNonRec :: Expr -> Value
 mkNonRec lam = func
   where
-  func = VF nullProv (Func lam env)
+  func = Replace Nothing env lam
   env  = baseEnv
 
 mkRec :: Var -> Expr -> Value
 mkRec f lam = func
   where
-  func = VF nullProv (Func lam env)
+  func = Replace Nothing env lam
   env  = {- insertEnv f func -} baseEnv
 
 baseEnv :: Env
@@ -569,22 +569,19 @@ baseEnv = Env 0 "global" Nothing
         ++ primVars
 
 mkBopFun :: Bop -> Value
-mkBopFun bop = VF nullProv
-             $ Func (mkLams [varPatD "x", varPatD "y"]
-                            (bopD bop (varD "x") (varD "y")))
-                    emptyEnv
+mkBopFun bop = Replace Nothing emptyEnv
+             $ mkLams [varPatD "x", varPatD "y"]
+                            (bopD bop (varD "x") (varD "y"))
 
 mkPrim1Fun :: Prim1 -> Value
-mkPrim1Fun f = VF nullProv
-             $ Func (mkLams [varPatD "x"]
-                            (Prim1 Nothing f (varD "x")))
-                    emptyEnv
+mkPrim1Fun f = Replace Nothing emptyEnv
+             $ mkLams [varPatD "x"]
+                            (Prim1 Nothing f (varD "x"))
 
 mkPrim2Fun :: Prim2 -> Value
-mkPrim2Fun f = VF nullProv
-             $ Func (mkLams [varPatD "x", varPatD "y"]
-                            (Prim2 Nothing f (varD "x") (varD "y")))
-                    emptyEnv
+mkPrim2Fun f = Replace Nothing emptyEnv
+             $ mkLams [varPatD "x", varPatD "y"]
+                            (Prim2 Nothing f (varD "x") (varD "y"))
 
 tI = tCon tINT
 tF = tCon tFLOAT
@@ -606,4 +603,4 @@ maybeThrow err = do
   r <- asks exceptionRecovery
   unless (r && b) $ throwError err
   r <- fresh
-  return (VH r Nothing)
+  return (Hole Nothing r Nothing)

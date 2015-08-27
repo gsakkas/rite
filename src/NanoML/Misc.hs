@@ -1,3 +1,4 @@
+{-# LANGUAGE ImplicitParams #-}
 module NanoML.Misc where
 
 import           Control.Arrow
@@ -9,9 +10,12 @@ import           Data.Map         (Map)
 import qualified Data.Map         as Map
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
+import           GHC.SrcLoc
+import           GHC.Stack hiding (showCallStack)
 import           System.Directory
 import           System.FilePath
 import           System.IO.Unsafe
+import           Text.Printf
 
 import           NanoML.Parser
 import           NanoML.Types
@@ -473,3 +477,17 @@ findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
+
+
+fromJust :: (?callStack :: CallStack)
+         => Maybe a -> a
+fromJust (Just x) = x
+fromJust Nothing  = error ("Maybe.fromJust: Nothing\n" ++ showCallStack ?callStack)
+
+showCallStack :: CallStack -> String
+showCallStack stk = case getCallStack stk of
+  _:locs -> unlines $ "Callstack:" : map format locs
+  _ -> Prelude.error "showCallStack: empty call-stack"
+  where
+  unlines = foldr1 (\x y -> x ++ "\n" ++ y)
+  format (fn, loc) = printf "  %s, called at %s" fn (showSrcLoc loc)

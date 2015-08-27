@@ -26,7 +26,7 @@ genValue :: MonadEval m => Type -> TypeEnv -> m Value
 genValue ty env = withCurrentProvM $ \prv -> case ty of
   TVar _ -> do
     r <- fresh
-    return (VH r Nothing)
+    return (Hole Nothing r Nothing)
   TApp t []
     | t == tINT
       -> VI prv <$> sized (\s -> getRandomR (-s, s))
@@ -43,13 +43,13 @@ genValue ty env = withCurrentProvM $ \prv -> case ty of
     | otherwise
       -> sized (genADT t [] env)
   TApp "list" [t] -> genList t env
-  TApp "array" [t] -> sized (fmap ((\ x -> VV prv x t) . Vector.fromList) . flip vectorOf (genValue t env))
+  TApp "array" [t] -> sized (fmap (\ x -> VV prv x) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
-  TTup ts -> (\x -> VT prv (length ts) x ts) <$> mapM (flip genValue env) ts
-  _ :-> to -> VF prv . flip Func mempty . Lam Nothing (WildPat Nothing) <$> (fmap (Val Nothing) . flip genValue env) to
+  TTup ts -> (\xs -> VT prv xs) <$> mapM (flip genValue env) ts
+  _ :-> to -> Lam Nothing (WildPat Nothing) <$> (flip genValue env) to <*> pure Nothing
 
 genList :: MonadEval m => Type -> TypeEnv -> m Value
-genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x t) <$> listOf (genValue t env)
+genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x) <$> listOf (genValue t env)
 
 genADT :: MonadEval m => TCon -> [Type] -> TypeEnv -> Int -> m Value
 genADT c ts e n = do
@@ -57,7 +57,7 @@ genADT c ts e n = do
   case tyRhs of
     Alias ty -> genValue ty e
     Alg dds  -> oneof (mapMaybe (genDataDecl tyVars) dds)
-    TRec flds -> withCurrentProvM $ \prv -> (\x -> VR prv x t) <$> mapM genField flds
+    TRec flds -> withCurrentProvM $ \prv -> (\x -> VR prv x (Just t)) <$> mapM genField flds
 
   where
 
@@ -65,7 +65,7 @@ genADT c ts e n = do
 
   genDataDecl tvs DataDecl {..}
     | [] <- dArgs
-    = Just $ withCurrentProv $ \prv -> VA prv dCon Nothing t
+    = Just $ withCurrentProv $ \prv -> VA prv dCon Nothing (Just t)
     | n <= 0 && any isRec dArgs
     = Nothing
     | otherwise
@@ -76,8 +76,8 @@ genADT c ts e n = do
       withCurrentProvM $ \prv -> do
         let v = case dArgs of
               [_] -> head vs
-              _   -> VT prv (length vs) vs ts
-        return $ VA prv dCon (Just v) t
+              _   -> VT prv vs
+        return $ VA prv dCon (Just v) (Just t)
 
 --  isRec (TCon t)    = t == c
   isRec (TApp t ts) = t == c || any isRec ts
@@ -89,7 +89,7 @@ genADT c ts e n = do
     v <- resize n' (genValue t e)
     i <- fresh
     writeStore i (m,v)
-    return (f,i)
+    return (f, Ref i)
 
 prev n = max 0 (n-1)
 

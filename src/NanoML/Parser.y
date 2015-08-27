@@ -168,7 +168,7 @@ LetBinding :: { (Pat, Expr) }
 FunBinding :: { Expr }
 : '=' SeqExpr        { $2 }
 | TypeConstraint '=' SeqExpr { $3 }
-| SimplePattern FunBinding { Lam (mergeLocated $1 $2) $1 $2 }
+| SimplePattern FunBinding { Lam (mergeLocated $1 $2) $1 $2 Nothing }
 
 TypeConstraint :: { Type }
 : ':' Type { $2 }
@@ -260,7 +260,7 @@ Expr :: { Expr }
 | ConLongIdent SimpleExpr %prec below_SHARP { mkConApp (mergeLocated $1 $2) (getVal $1) [$2] }
 | "let" RecFlag LetBindings "in" SeqExpr    { Let (mergeLocated $1 $5) $2 (reverse $3) $5 }
 | "function" MaybePipe AltList              { mkFunction (mergeLocated $1 (thd3 (head $3))) (reverse $3) }
-| "fun" SimplePattern FunDef                { Lam (mergeLocated $1 $3) $2 $3 }
+| "fun" SimplePattern FunDef                { Lam (mergeLocated $1 $3) $2 $3 Nothing }
 | "match" SeqExpr "with" MaybePipe AltList  { Case (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
 | "try" SeqExpr "with" MaybePipe AltList    { Try (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (mergeLocated (last $1) (head $1)) (reverse $1) }
@@ -292,17 +292,17 @@ Expr :: { Expr }
 SimpleExpr :: { Expr }
 : ValLongIdent          { Var (getSrcSpanMaybe $1) (getVal $1) }
 | ConLongIdent %prec constr  { mkConApp (getSrcSpanMaybe $1) (getVal $1) [] }
-| Value                 { Val (getSrcSpanMaybe $1) (getVal $1) }
+| Value                 { (getVal $1) }
 | SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var Nothing "String.get") [$1, $4] }
 | SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var Nothing "Array.get")  [$1, $4] }
 | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
 | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
 | "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) }
-| '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 }
+| '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
 | "begin" SeqExpr "end" { $2 }
 | "begin" "end"         { Var (mergeLocated $1 $2) "()" }
-| '[' ExprSemiList MaybeSemi ']'  { mkList (reverse $2) }
+| '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) }
 
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }
@@ -337,15 +337,15 @@ Alt :: { Alt }
 
 FunDef :: { Expr }
 : "->" SeqExpr          { $2 }
-| SimplePattern FunDef  { Lam (mergeLocated $1 $2) $1 $2 }
+| SimplePattern FunDef  { Lam (mergeLocated $1 $2) $1 $2 Nothing }
 
 Value :: { Loc Value }
-: string    { L (getSrcSpanMaybe $1) (VS (Prov 0) (read (getString $1))) }
-| char      { L (getSrcSpanMaybe $1) (VC (Prov 0) (read (getChar $1))) }
-| int       { L (getSrcSpanMaybe $1) (VI (Prov 0) (read (getInt $1))) }
-| float     { L (getSrcSpanMaybe $1) (VD (Prov 0) (read (getFloat $1))) }
-| "true"    { L (getSrcSpanMaybe $1) (VB (Prov 0) True) }
-| "false"   { L (getSrcSpanMaybe $1) (VB (Prov 0) False) }
+: string    { L (getSrcSpanMaybe $1) (VS Nothing (read (getString $1))) }
+| char      { L (getSrcSpanMaybe $1) (VC Nothing (read (getChar $1))) }
+| int       { L (getSrcSpanMaybe $1) (VI Nothing (read (getInt $1))) }
+| float     { L (getSrcSpanMaybe $1) (VD Nothing (read (getFloat $1))) }
+| "true"    { L (getSrcSpanMaybe $1) (VB Nothing True) }
+| "false"   { L (getSrcSpanMaybe $1) (VB Nothing False) }
 
 Literal :: { Loc Literal }
 : string    { L (getSrcSpanMaybe $1) (LS (read (getString $1))) }

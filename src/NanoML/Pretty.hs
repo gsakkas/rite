@@ -24,23 +24,23 @@ class Pretty a where
 parensIf True  = parens
 parensIf False = id
 
-instance Pretty Value where
-  prettyPrec z v = case v of
-    VI _ i -> pretty i
-    VD _ d -> pretty d
-    VC _ c -> text $ "'" ++ [c] ++ "'"
-    VS _ s -> text $ show s
-    VB _ b -> text (if b then "true" else "false")
-    VU _   -> text "()"
-    VL _ l _ -> list l
-    VT _ _ xs _ -> tuple xs
-    VA _ d Nothing _ -> text d
-    VA _ d (Just x) _ -> parensIf (z>za) $ text d <+> pretty x
-      where za = 26
-    VR _ fs _ -> record fs
-    VV _ vs _ -> array $ Vector.toList vs
-    VF _ (Func e _) -> prettyPrec z e
-    VH _ _ -> text "_"
+-- instance Pretty Value where
+--   prettyPrec z v = case v of
+--     VI _ i -> pretty i
+--     VD _ d -> pretty d
+--     VC _ c -> text $ "'" ++ [c] ++ "'"
+--     VS _ s -> text $ show s
+--     VB _ b -> text (if b then "true" else "false")
+--     VU _   -> text "()"
+--     VL _ l _ -> list l
+--     VT _ _ xs _ -> tuple xs
+--     VA _ d Nothing _ -> text d
+--     VA _ d (Just x) _ -> parensIf (z>za) $ text d <+> pretty x
+--       where za = 26
+--     VR _ fs _ -> record fs
+--     VV _ vs _ -> array $ Vector.toList vs
+--     VF _ (Func e _) -> prettyPrec z e
+--     VH _ _ -> text "_"
 
 list xs = text "[" <> (hsep $ intersperse semi $ map pretty xs) <> text "]"
 array xs = text "[|" <> (hsep $ intersperse semi $ map pretty xs) <> text "|]"
@@ -61,7 +61,7 @@ instance Pretty Literal where
 instance Pretty Expr where
   prettyPrec z e = case e of
     Var _ v -> text v
-    Lam _ p e -> group $ parensIf (z > zl) $ nest 2 $
+    Lam _ p e _ -> group $ parensIf (z > zl) $ nest 2 $
                text "fun" <+> pretty p <+> text "->" <$> pretty e
       where zl = 5
     App _ (Var _ f) [x, y]
@@ -90,14 +90,14 @@ instance Pretty Expr where
                      <$> vsep (map prettyAlt alts)
       where zc = 5
     Tuple _ xs -> prettyTuple xs
-    ConApp _ c Nothing -> text c
-    ConApp _ "::" (Just (Tuple _ [hd,tl])) -> parensIf (z > zc) $
+    ConApp _ c Nothing _ -> text c
+    ConApp _ "::" (Just (Tuple _ [hd,tl])) _ -> parensIf (z > zc) $
                                           prettyPrec (zc+1) hd <+> text "::" <+> prettyPrec (zc+1) tl
       where zc = 26
-    ConApp _ c (Just e) -> parensIf (z > zc) $
+    ConApp _ c (Just e) _ -> parensIf (z > zc) $
                          text c <+> pretty e
       where zc = 26
-    Record _ flds -> record flds
+    Record _ flds _ -> record flds
     Field _ e f -> pretty e <> char '.' <> text f
     SetField _ e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
     Array _ es -> array es
@@ -107,7 +107,7 @@ instance Pretty Expr where
       where zt = 5
     Prim1 _ p x -> parens (text (show p) <+> pretty x)
     Prim2 _ p x y -> parens (text (show p) <+> pretty x <+> pretty y)
-    Val _ v -> prettyPrec z v
+    -- Val _ v -> prettyPrec z v
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec (error "prettyExpr.Bop")
