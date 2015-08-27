@@ -67,7 +67,7 @@ evalBinds binds = concatMapM evalBind binds
 
 -- | @evalBind (p,e) env@ returns the environment matched by @p@
 evalBind :: MonadEval m => (Pat,Expr) -> m [(Var,Value)]
-evalBind (p,e) = do
+evalBind (p,e) = withCurrentExpr e $ do
   v <- eval e
   matchPat v p >>= \case
     Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
@@ -228,7 +228,7 @@ forceSame x y@(Hole {}) k = force y (typeOf x) $ \y su -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
 evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp = undefined
+evalApp = error "evalApp"
 -- evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
 --   VF _ (Func (Lam ms p e) env) -> do
 --     Just pat_env <- matchPat a p

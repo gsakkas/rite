@@ -91,5 +91,5 @@ initState = EvalState
   , stTrace = mempty
   , stEnvMap = IntMap.fromList [(envId baseEnv, baseEnv)]
   , stEdges = []
-  , stCurrentExpr = undefined
+  , stCurrentExpr = error "initState.stCurrentExpr"
   }

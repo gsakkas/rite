@@ -53,6 +53,18 @@ runStep opts x = case runEvalFull opts x of
   (Left e, st, _)  -> traceShow e $ stTrace st
   (Right v, st, _) -> stTrace st
 
+checkProg :: String -> IO [[Expr]]
+checkProg s = do
+  let Right p = parseTopForm s
+  let (r, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl p)
+  print r
+  case r of
+    Right _ -> return []
+    Left e -> do
+      gr <- buildGraph (stEdges st)
+      paths <- mkPaths st
+      return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
+
 ----------------------------------------------------------------------
 -- Working with the reduction graph
 ----------------------------------------------------------------------
