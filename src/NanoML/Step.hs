@@ -50,20 +50,24 @@ writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
              && evt_event x == evt_event y
 
 runStep opts x = case runEvalFull opts x of
-  (Left e, st, _)  -> traceShow e $ stTrace st
+  (Left e, st, _)  -> -- traceShow e $ 
+                      stTrace st
   (Right v, st, _) -> stTrace st
 
 checkProg :: String -> IO [[Expr]]
 checkProg s = do
   let Right p = parseTopForm s
   let (r, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl p)
-  print r
+  -- print r
   case r of
     Right _ -> return []
     Left e -> do
       gr <- buildGraph (stEdges st)
       paths <- mkPaths st
       return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
+
+renderPath :: [Expr] -> Doc
+renderPath xs = vsep (intersperse (text "  ==>") (map pretty xs))
 
 ----------------------------------------------------------------------
 -- Working with the reduction graph
@@ -223,7 +227,7 @@ stepAll expr = do
 
 stepAllProg [] = return ()
 stepAllProg (d:p) = do
---  traceShowM $ pretty d
+  -- traceShowM $ pretty d
   md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
   case md of
     Nothing -> stepAllProg p
@@ -307,6 +311,12 @@ step expr = withCurrentExpr expr $ case expr of
   Lam ms p e Nothing -> Lam ms p e . Just <$> gets stVarEnv
   -- Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
+  -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
+  --       this makes the trace a bit more readable.
+  App ms f@(Var _ v) args -> stepOne args
+                  (\args -> do f <- lookupEnv v =<< gets stVarEnv
+                               build expr =<< stepApp ms f args)
+                  (\args -> build expr $ App ms f args)
   App ms f args -> stepOne (f:args)
                   (\(f:args) -> -- addEvent expr >> 
                                 build expr =<< stepApp ms f args)
