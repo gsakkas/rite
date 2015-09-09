@@ -92,4 +92,5 @@ initState = EvalState
   , stEnvMap = IntMap.fromList [(envId baseEnv, baseEnv)]
   , stEdges = []
   , stCurrentExpr = error "initState.stCurrentExpr"
+  , stSteps = 0
   }

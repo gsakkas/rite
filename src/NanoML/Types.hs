@@ -63,11 +63,12 @@ data NanoOpts = NanoOpts
   , seed                  :: !Int -- ^ Random seed
   , size                  :: !Int -- ^ Maximum size of generated values
   , exceptionRecovery     :: Bool -- ^ Should we "recover" from exceptions by generating a random value?
+  , maxSteps              :: !Int -- ^ Maximum number of reduction steps to take
   } deriving Show
 
 stdOpts, loudOpts :: NanoOpts
 stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False
-                   , seed = 1234567, size = 10, exceptionRecovery = True
+                   , seed = 1234567, size = 10, exceptionRecovery = True, maxSteps = 500
                    }
 loudOpts = stdOpts { enablePrint = True }
 
@@ -77,6 +78,7 @@ data Result
             , usedSeed :: !Int
             , usedSize :: !Int
             , counterExample :: !Doc
+            , pathSlices :: ![Doc]
             }
   deriving Show
 
@@ -124,7 +126,8 @@ data EvalState = EvalState
   , stEnvMap   :: !(IntMap Env)
   -- , stNodes    :: !(Map Expr Int)
   , stEdges    :: ![(Expr, EdgeKind, Expr)]
-  , stCurrentExpr :: Expr
+  , stCurrentExpr :: Expr -- NOTE: can't be strict
+  , stSteps    :: !Int
   } deriving Show
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a

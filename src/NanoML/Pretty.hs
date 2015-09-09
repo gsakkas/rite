@@ -2,9 +2,11 @@
 {-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.Pretty
-  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest, text)
+  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest, text, fillHoles)
   where
 
+import           Control.Arrow                (first, second)
+import qualified Data.IntMap                  as IntMap
 import           Data.List                    hiding (group)
 import qualified Data.Vector                  as Vector
 import           Prelude                      hiding ((<$>))
@@ -23,6 +25,36 @@ class Pretty a where
 -- | Wrap the enclosed 'Doc' in parentheses only if the condition holds.
 parensIf True  = parens
 parensIf False = id
+
+fillHoles :: EvalState -> Expr -> Expr
+fillHoles st = go
+  where
+  go e = case e of
+    Hole _ r _ -> maybe e snd (IntMap.lookup r (stStore st))
+
+    Lam ms p x me -> Lam ms p (go x) me
+    App ms f xs -> App ms (go f) (map go xs)
+    Bop ms b x y -> Bop ms b (go x) (go y)
+    Uop ms u x -> Uop ms u (go x)
+    Let ms r bnds body -> Let ms r (map (second go) bnds) (go body)
+    Ite ms b t f -> Ite ms (go b) (go t) (go f)
+    Seq ms x y -> Seq ms (go x) (go y)
+    Case ms x alts -> Case ms (go x) (map (\(p,g,x) -> (p, fmap go g, go x)) alts)
+    Tuple ms xs -> Tuple ms (map go xs)
+    ConApp ms d mx mt -> ConApp ms d (fmap go mx) mt
+    Record ms flds mt -> Record ms (map (second go) flds) mt
+    Field ms x f -> Field ms (go x) f
+    SetField ms x f y -> SetField ms (go x) f (go y)
+    Array ms xs -> Array ms (map go xs)
+    List ms xs -> List ms (map go xs)
+    Try ms x alts -> Try ms (go x) (map (\(p,g,x) -> (p, fmap go g, go x)) alts)
+    Prim1 ms p x -> Prim1 ms p (go x)
+    Prim2 ms p x y -> Prim2 ms p (go x) (go y)
+    With ms env x -> With ms env (go x)
+    Replace ms env x -> Replace ms env (go x)
+    
+    _ -> e
+
 
 -- instance Pretty Value where
 --   prettyPrec z v = case v of
@@ -114,6 +146,7 @@ instance Pretty Expr where
       where zb = opPrec (error "prettyExpr.Bop")
     With _ env e -> prettyPrec z e
     Replace _ env e -> prettyPrec z e
+    Hole _ _ _ -> text "_"
 
 instance Pretty Bop where
   pretty Eq = text "="

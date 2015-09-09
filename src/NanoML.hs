@@ -8,7 +8,8 @@ module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
   , module NanoML.Eval
-  , check, checkAll, checkAllFrom, runProg
+  , module NanoML.Step
+  , check, checkAll, checkAllFrom, runProg, checkDecl
   ) where
 
 import           Control.Exception
@@ -37,6 +38,7 @@ import           NanoML.Gen
 import           NanoML.Misc
 import           NanoML.Parser hiding (read)
 import           NanoML.Pretty
+import           NanoML.Step
 import           NanoML.Types
 
 import Debug.Trace
@@ -109,24 +111,28 @@ checkDecl f prog = go (Success 0) 0
   go (Success 1000) _ = return (Success 1000)
   go (Success n) !m   = do
     r <- within n sec $ nanoCheck n m stdOpts $ do
-      mapM_ evalDecl prog
+      -- mapM_ evalDecl prog
+      prog <- mapM refreshDecl prog
+      stepAllProg prog
       to (Var Nothing f) [Var Nothing f]
     go r ((m+1) `mod` 5)
 
   to e args = do
     rememberArgs args
-    v <- eval e
+    v <- stepAll e
     case v of
-      VF _ -> do
-        arg <- flip VH Nothing <$> fresh
-        to (mkApps Nothing (Val v) [Val arg]) (args ++ [Val arg])
+      Lam {} -> do
+        arg <- (\r -> Hole Nothing r Nothing) <$> fresh
+        let x = mkApps Nothing v [arg]
+        addSubTerms x
+        to x (args ++ [arg])
       _ -> return ()
 
 sec = 1000000 * 60
 
 within n s x = do
   m <- timeout s x
-  return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>")) m
+  return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>") []) m
 
 nanoCheck :: Int -> Int -> NanoOpts -> Eval () -> IO Result
 nanoCheck numSuccess maxSize opts x = do
@@ -136,28 +142,32 @@ nanoCheck numSuccess maxSize opts x = do
   return $ case x of
     (Left (MLException e), _, _) -> Success (numSuccess + 1)
     (Left e, st, tr) ->
-      let invoc = case map (fetchArg' (stStore st)) (stArgs st) of
+                  -- NOTE: don't forget to fill in holes with generated values
+      let paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
+          invoc = case map (fetchArg' (stStore st)) (stArgs st) of
             [] -> mempty
-            f:args -> pretty (mkApps Nothing f args)
+            f:args -> pretty (fillHoles st $ mkApps Nothing f args)
       in Failure (numSuccess + 1) seed maxSize
-                 (vcat (text (show e) : invoc : []))
+                 invoc
+                 (map renderPath paths)
+--                 (vcat (text (show e) : invoc : []))
     (Right _, _, _) -> Success (numSuccess + 1)
 
-fetchArg' st (Val v) = Val (fetchArg st v)
+-- fetchArg' st (Val v) = Val (fetchArg st v)
 fetchArg' st e = e
 
-fetchArg st (VH r _)
+fetchArg st (Hole _ r _)
   | Just (_,v) <- IntMap.lookup r st
   = fetchArg st v
-fetchArg st (VL vs t)
-  = VL (map (fetchArg st) vs) t
-fetchArg st (VT n vs ts)
-  = VT n (map (fetchArg st) vs) ts
-fetchArg st (VA c (Just v) t)
-  = VA c (Just (fetchArg st v)) t
+fetchArg st (VL ms vs)
+  = VL ms (map (fetchArg st) vs)
+fetchArg st (VT ms vs)
+  = VT ms (map (fetchArg st) vs)
+fetchArg st (VA ms c (Just v) t)
+  = VA ms c (Just (fetchArg st v)) t
 --  TODO: fetchArg st (VR )
-fetchArg st (VV vs t)
-  = VV (Vector.map (fetchArg st) vs) t
+fetchArg st (VV ms vs)
+  = VV ms (map (fetchArg st) vs)
 fetchArg st v
   = v
 

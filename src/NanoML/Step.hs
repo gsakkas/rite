@@ -11,6 +11,7 @@ module NanoML.Step where
 import Control.Applicative
 import Control.Exception
 import Control.Monad.Except
+import Control.Monad.Reader
 import Control.Monad.State
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as LBS
@@ -61,7 +62,9 @@ checkProg s = do
   -- print r
   case r of
     Right _ -> return []
-    Left e -> do
+    Left e -> makePaths st
+
+makePaths st = do
       gr <- buildGraph (stEdges st)
       paths <- mkPaths st
       return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
@@ -78,8 +81,8 @@ type Node  = Graph.LNode Expr
 type Edge  = Graph.LEdge EdgeKind
 
 runGraph opts x = case runEvalFull opts x of
-  (Left e, st, _)  -> Left $ (e, stTrace st, stEdges st, stCurrentExpr st)
-  (Right v, st, _) -> Right $ stEdges st
+  (Left e, st, _)  -> Left (e, stTrace st, stEdges st, stCurrentExpr st)
+  (Right v, st, _) -> Right (stEdges st)
 
 mkPaths st = do
   let expr = stCurrentExpr st
@@ -221,7 +224,10 @@ mkPath gr n = go (backjump gr n) (maybe [n] (const []) (backjump gr n))
 stepAll expr = do
   --traceShowM $ pretty expr
   expr' <- step expr
-  if isValue expr'
+  modify' $ \s -> s { stSteps = stSteps s + 1 }
+  ss <- gets stSteps
+  maxss <- asks maxSteps
+  if isValue expr' || ss >= maxss
      then return expr'
      else stepAll expr'
 
@@ -229,9 +235,14 @@ stepAllProg [] = return ()
 stepAllProg (d:p) = do
   -- traceShowM $ pretty d
   md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
+  modify' $ \s -> s { stSteps = stSteps s + 1 }
+  ss <- gets stSteps
+  maxss <- asks maxSteps
   case md of
     Nothing -> stepAllProg p
-    Just d  -> stepAllProg (d:p)
+    Just d
+      | ss >= maxss -> return ()
+      | otherwise   -> stepAllProg (d:p)
 
 stepDecl :: MonadEval m => Decl -> m (Maybe Decl)
 stepDecl decl = case decl of
