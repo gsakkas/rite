@@ -102,7 +102,8 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = within 0 sec $ nanoCheck 0 0 stdOpts $ do
-                 mapM_ evalDecl prog
+                 prog <- mapM refreshDecl prog
+                 stepAllProg prog
 
 checkDecl :: Var -> Prog -> IO Result
 checkDecl f prog = go (Success 0) 0
