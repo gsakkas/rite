@@ -578,3 +578,26 @@ helper []
     1. paths that end in `vi` that incur type error
     2. path that ends in `prim` (alternatively, path that ends in `prim v1 v2 vn`)
     3. paths that end in other `vi`
+
+
+- start with source term --> stuck term
+  - set of stepping operations
+    1. small step forward
+    2. small step back
+    3. "big" step forward (skip over next function call)
+    4. "big" step back (step back to last function call)
+    5. zoom in on a specific function call
+
+    fac 1 ---> 1 * true
+
+      ==> { big-step back from `1 * true` }
+
+    fac 1 ---> 1 * fac 0 ---> 1 * true
+
+      ==> { small-step forward from `1 * fac 0` }
+
+    fac 1 ---> 1 * fac 0 ---> 1 * if ... then ... else ... ---> 1 * true
+
+      ==> { click hyper-edge from `fac 0` to `true` }
+
+    fac 0 ---> true
