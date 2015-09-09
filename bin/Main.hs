@@ -12,7 +12,7 @@ import NanoML
 import NanoML.Misc
 
 
-main = scotty 9000 $ do
+main = scotty 8091 $ do
   get "/" $ do
     html . renderText . doctypehtml_ $ do
       title_ "NanoML"
