@@ -491,3 +491,13 @@ showCallStack stk = case getCallStack stk of
   where
   unlines = foldr1 (\x y -> x ++ "\n" ++ y)
   format (fn, loc) = printf "  %s, called at %s" fn (showSrcLoc loc)
+
+pairwiseNub []
+  = []
+pairwiseNub [x]
+  = [x]
+pairwiseNub (x:y:zs)
+  | show x == show y
+  = pairwiseNub (y:zs)
+  | otherwise
+  = x : pairwiseNub (y : zs)

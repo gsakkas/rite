@@ -70,7 +70,7 @@ makePaths st = do
       return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
 
 renderPath :: [Expr] -> Doc
-renderPath xs = vsep (intersperse (text "  ==>") (map pretty xs))
+renderPath xs = vsep (intersperse (text "  ==>") (pairwiseNub $ map pretty xs))
 
 ----------------------------------------------------------------------
 -- Working with the reduction graph
