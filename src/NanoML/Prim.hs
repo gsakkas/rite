@@ -575,13 +575,11 @@ mkBopFun bop = Replace Nothing emptyEnv
 
 mkPrim1Fun :: Prim1 -> Value
 mkPrim1Fun f = Replace Nothing emptyEnv
-             $ mkLams [varPatD "x"]
-                            (Prim1 Nothing f (varD "x"))
+             $ Prim1 Nothing f
 
 mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = Replace Nothing emptyEnv
-             $ mkLams [varPatD "x", varPatD "y"]
-                            (Prim2 Nothing f (varD "x") (varD "y"))
+             $ Prim2 Nothing f
 
 tI = tCon tINT
 tF = tCon tFLOAT

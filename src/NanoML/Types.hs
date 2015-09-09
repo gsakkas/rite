@@ -167,8 +167,8 @@ addSubTerms expr = do
     Array _ es -> zipWithM_ mkEdge [0..] es
     Try _ e alts -> zipWithM_ mkEdge [0..]
                     (e : concatMap (\(_,g,b) -> maybeToList g ++ [b]) alts)
-    Prim1 _ _ x -> mkEdge 0 x
-    Prim2 _ _ x y -> mkEdge 0 x >> mkEdge 1 y
+    -- Prim1 _ _ x -> mkEdge 0 x
+    -- Prim2 _ _ x y -> mkEdge 0 x >> mkEdge 1 y
     _ -> return ()
 
   return expr
@@ -207,8 +207,8 @@ refreshExpr expr = addSubTerms =<< case expr of
   Array ms xs -> Array ms <$> mapM refreshExpr xs
   List ms xs -> List ms <$> mapM refreshExpr xs
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
-  Prim1 ms p x -> Prim1 ms p <$> refreshExpr x
-  Prim2 ms p x y -> Prim2 ms p <$> refreshExpr x <*> refreshExpr y
+  Prim1 ms p -> return $ Prim1 ms p -- <$> refreshExpr x
+  Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
 
@@ -431,6 +431,8 @@ isValue expr = case expr of
   List _ es -> all isValue es
   Hole {} -> True
   Ref {} -> True
+  Prim1 {} -> True
+  Prim2 {} -> True
   _ -> False
 
 pattern VI ms x <- Lit ms (LI x) where
@@ -549,8 +551,8 @@ data Expr
   | Array !MSrcSpan [Expr]
   | List !MSrcSpan [Expr]
   | Try !MSrcSpan Expr [Alt]
-  | Prim1 !MSrcSpan Prim1 Expr
-  | Prim2 !MSrcSpan Prim2 Expr Expr
+  | Prim1 !MSrcSpan Prim1
+  | Prim2 !MSrcSpan Prim2
   -- Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
   | With !MSrcSpan Env Expr
   | Replace !MSrcSpan Env Expr
@@ -578,8 +580,8 @@ getSrcSpanExprMaybe expr = case expr of
   Array ms _ -> ms
   List ms _ -> ms
   Try ms _ _ -> ms
-  Prim1 ms _ _ -> ms
-  Prim2 ms _ _ _ -> ms
+  Prim1 ms _ -> ms
+  Prim2 ms _ -> ms
   -- Val ms _ -> ms
   With ms _ _ -> ms
   Replace ms _ _ -> ms
@@ -603,8 +605,8 @@ onSrcSpanExpr f expr = case expr of
   SetField ms x y z -> SetField (f ms) x y z
   Array ms x -> Array (f ms) x
   Try ms x y -> Try (f ms) x y
-  Prim1 ms x y -> Prim1 (f ms) x y
-  Prim2 ms x y z -> Prim2 (f ms) x y z
+  Prim1 ms x -> Prim1 (f ms) x
+  Prim2 ms x -> Prim2 (f ms) x
   -- Val ms x -> Val (f ms) x
   With ms x y -> With (f ms) x y
   Replace ms x y -> Replace (f ms) x y
@@ -949,7 +951,7 @@ cmpVal x y
 
 cmp x y = getCurrentProv >>= \prv -> return $ VI prv $ fromEnum (compare x y) - 1
 
-cmpAnd []        = error "cmpAnd: empty list"
+cmpAnd []        = VI Nothing 0 -- error "cmpAnd: empty list"
 cmpAnd (VI _ 0:xs) = cmpAnd xs
 cmpAnd (x:xs)    = x
 
@@ -1203,12 +1205,12 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Record lx fxs mtx, Record ly fys mty)
     | lx == ly && map fst fxs == map fst fys
       -> msum (zipWith (exprDiff env) (map snd fxs) (map snd fys))
-  (Prim1 lx (P1 vx _ _) x, Prim1 ly (P1 vy _ _) y)
+  (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
     | lx == ly && vx == vy
-      -> exprDiff env x y
-  (Prim2 lx (P2 vx _ _ _) x1 x2, Prim2 ly (P2 vy _ _ _) y1 y2)
+      -> Nothing
+  (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
     | lx == ly && vx == vy
-      -> exprDiff env x1 y1 <|> exprDiff env x2 y2
+      -> Nothing
   -- (Val _ x, Val _ y)
   --   | x == y
   --     -> Nothing

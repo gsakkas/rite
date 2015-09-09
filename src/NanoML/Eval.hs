@@ -190,13 +190,13 @@ eval expr = logExpr expr $ case expr of
       case e of
         MLException ex -> evalAlts ex alts
         _              -> maybeThrow e
-  Prim1 _ (P1 p f t) e -> do
-    v <- eval e
-    force v t $ \v su -> f v
-  Prim2 _ (P2 p f t1 t2) e1 e2 -> do
-    v1 <- eval e1
-    v2 <- eval e2
-    forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
+  -- Prim1 _ (P1 p f t) e -> do
+  --   v <- eval e
+  --   force v t $ \v su -> f v
+  -- Prim2 _ (P2 p f t1 t2) e1 e2 -> do
+  --   v1 <- eval e1
+  --   v2 <- eval e2
+  --   forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
 
 force :: MonadEval m => Value -> Type -> (Value -> Subst -> m a) -> m a
 force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete type

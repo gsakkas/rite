@@ -48,8 +48,6 @@ fillHoles st = go
     Array ms xs -> Array ms (map go xs)
     List ms xs -> List ms (map go xs)
     Try ms x alts -> Try ms (go x) (map (\(p,g,x) -> (p, fmap go g, go x)) alts)
-    Prim1 ms p x -> Prim1 ms p (go x)
-    Prim2 ms p x y -> Prim2 ms p (go x) (go y)
     With ms env x -> With ms env (go x)
     Replace ms env x -> Replace ms env (go x)
     
@@ -138,8 +136,8 @@ instance Pretty Expr where
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
       where zt = 5
-    Prim1 _ p x -> parens (text (show p) <+> pretty x)
-    Prim2 _ p x y -> parens (text (show p) <+> pretty x <+> pretty y)
+    Prim1 _ p -> text (show p)
+    Prim2 _ p -> text (show p)
     -- Val _ v -> prettyPrec z v
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y

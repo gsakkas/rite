@@ -129,8 +129,8 @@ mkPaths st = do
       -> let TRec fts = tyRhs $ stFieldEnv st Map.! fst (head fs)
          in checkMany [ (fromJust $ lookup f fs, t) | (f, _, t) <- fts ]
     Case _ x as -> checkOne x
-    Prim1 _ p@(P1 _ f t) x -> checkOne x
-    Prim2 _ p@(P2 _ f tx ty) x y -> checkMany [(x, tx), (y, ty)]
+    App _ (Prim1 _ p@(P1 _ f t)) [x] -> checkOne x
+    App _ (Prim2 _ p@(P2 _ f tx ty)) [x,y] -> checkMany [(x, tx), (y, ty)]
     _ -> error $ "mkPaths impossible: " ++ show expr
 
 
@@ -324,14 +324,15 @@ step expr = withCurrentExpr expr $ case expr of
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
   --       this makes the trace a bit more readable.
-  App ms f@(Var _ v) args -> stepOne args
-                  (\args -> do f <- lookupEnv v =<< gets stVarEnv
-                               build expr =<< stepApp ms f args)
-                  (\args -> build expr $ App ms f args)
-  App ms f args -> stepOne (f:args)
-                  (\(f:args) -> -- addEvent expr >> 
-                                build expr =<< stepApp ms f args)
-                  (\(f:args) -> build expr $ App ms f args)
+  -- App ms f@(Var _ v) args -> stepOne args
+  --                 (\args -> do f <- lookupEnv v =<< gets stVarEnv
+  --                              traceShowM f
+  --                              build expr =<< stepApp ms f args)
+  --                 (\args -> build expr $ App ms f args)
+  App ms f args -> stepOne (args ++ [f])
+                  (\vs -> -- addEvent expr >> 
+                                build expr =<< stepApp ms (last vs) (init vs))
+                  (\es -> build expr $ App ms (last es) (init es))
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >> 
                                 build expr =<< stepBop ms b v1 v2)
@@ -430,17 +431,31 @@ step expr = withCurrentExpr expr $ case expr of
           case e of
             MLException ex -> build expr =<< stepAlts ex alts
             _              -> maybeThrow e
-  Prim1 ms p@(P1 x f t) e
-    | isValue e -> build expr =<< (force e t $ \v su -> f v)
-    | otherwise -> build expr =<< Prim1 ms p <$> step e
-  Prim2 ms p@(P2 x f t1 t2) e1 e2 ->
-    stepOne [e1,e2]
-      (\[v1, v2] -> build expr =<< (forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2))
-      (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
+  -- Prim1 ms p@(P1 x f t) e
+  --   | isValue e -> build expr =<< (force e t $ \v su -> f v)
+  --   | otherwise -> build expr =<< Prim1 ms p <$> step e
+  -- Prim2 ms p@(P2 x f t1 t2) e1 e2 ->
+  --   stepOne [e1,e2]
+  --     (\[v1, v2] -> build expr =<< (forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2))
+  --     (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
   _ -> error ("step: " ++ show expr)
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
 stepApp ms f es = case f of
+  With _ e f -> stepApp ms f es
+  Replace _ e f -> stepApp ms f es
+  -- immediately apply saturated primitve wrappers
+  Prim1 ms' (P1 x f' t) -> do
+    traceShowM (f, es)
+    case es of
+     [e] -> force e t $ \v su -> f' v
+     e:es -> do x <- force e t $ \v su -> f' v
+                return (App ms x es)
+  Prim2 ms' (P2 x f t1 t2) -> do
+    case es of
+     [e1,e2] -> forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
+     e1:e2:es -> do x <- forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
+                    return (App ms x es)
   Lam _ p e (Just env) -> do
         let (ps, e, env) = gatherLams f
             (eps, es', ps') = zipWithLeftover es ps
