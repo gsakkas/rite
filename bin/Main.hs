@@ -27,10 +27,13 @@ main = scotty 8091 $ do
           button_ [type_ "submit"] "Submit"
 
   post "/" $ do
-    prog :: String <- param "prog"
-    var :: String <- param "var"
+    prog <- param "prog"
+    var  <- param "var"
     liftIO $ print (var, prog)
-    res <- liftIO (checkDecl var (fromRight (parseTopForm prog)))
+    let p = fromRight (parseTopForm prog)
+    res <- liftIO $ if null var
+                    then fromJust <$> check Nothing p
+                    else checkDecl var p
     case res of
       Success n -> html . renderText . doctypehtml_ $ do
         title_ "NanoML"
