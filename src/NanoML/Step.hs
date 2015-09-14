@@ -347,15 +347,15 @@ step expr = withCurrentExpr expr $ case expr of
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
   --       this makes the trace a bit more readable.
-  -- App ms f@(Var _ v) args -> stepOne args
-  --                 (\args -> do f <- lookupEnv v =<< gets stVarEnv
-  --                              traceShowM f
-  --                              build expr =<< stepApp ms f args)
-  --                 (\args -> build expr $ App ms f args)
-  App ms f args -> stepOne (args ++ [f])
-                  (\vs -> -- addEvent expr >> 
-                                build expr =<< stepApp ms (last vs) (init vs))
-                  (\es -> build expr $ App ms (last es) (init es))
+  App ms f@(Var _ v) args -> stepOne args
+                  (\args -> do f <- lookupEnv v =<< gets stVarEnv
+                               traceShowM f
+                               build expr =<< stepApp ms f args)
+                  (\args -> build expr $ App ms f args)
+  App ms f args -> stepOne (f:args)
+                  (\(f:vs) -> -- addEvent expr >> 
+                                build expr =<< stepApp ms f vs)
+                  (\(f:es) -> build expr $ App ms f es)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >> 
                                 build expr =<< stepBop ms b v1 v2)
