@@ -23,7 +23,7 @@ explore :: Graph -> Graph.Node -> IO ()
 explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab root), (stuck, getLab stuck)]))
   where
   steps = Graph.efilter (isStepsTo . Graph.edgeLabel) gr
-  root = fromJust (backjump gr stuck)
+  root = backback gr stuck
   getLab = fromJust . Graph.lab gr
 
   prettyGraph = Graph.nmap pretty
@@ -40,19 +40,19 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
       's' -> bigForward path node
       'b' -> smallBackward path node
       'S' -> bigBackward path node
-    
-  smallForward p n  = case onlySteps (Graph.lsuc steps n) of
-                        [(x,_)] -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
-                        [] -> liftIO (printf "Can't step forward!\n") >> go p
-  bigForward p n    = case onlySteps (Graph.lsuc steps n) of
-                        [(x,_)] -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
-                        [] -> liftIO (printf "Can't jump forward!\n") >> go p
-  smallBackward p n = case onlySteps (Graph.lpre steps n) of
-                        [(x,_)] -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
-                        [] -> liftIO (printf "Can't step backward!\n") >> go p
-  bigBackward p n   = case onlySteps (Graph.lpre steps n) of
-                        [(x,_)] -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
-                        [] -> liftIO (printf "Can't jump backward!\n") >> go p
+
+  smallForward p n  = case forwardstep steps n of
+                        Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
+                        Nothing -> liftIO (printf "Can't step forward!\n") >> go p
+  bigForward p n    = case forwardjump steps n of
+                        Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
+                        Nothing -> liftIO (printf "Can't jump forward!\n") >> go p
+  smallBackward p n = case backwardstep steps n of
+                        Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
+                        Nothing -> liftIO (printf "Can't step backward!\n") >> go p
+  bigBackward p n   = case backjump steps n of
+                        Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
+                        Nothing -> liftIO (printf "Can't jump backward!\n") >> go p
 
 
 onlySteps = filter (isStepsTo . snd)
@@ -69,12 +69,12 @@ collapse gr ns = Graph.mkGraph ns es
   f [x,y] = let sp = Set.fromList (Graph.esp (fst x) (fst y) gr)
             in if Set.null sp || (Set.intersection sp sns /= Set.fromList [fst x, fst y])
                then Nothing
-               else Just (fst x, fst y, StepsTo)
+               else Just (fst x, fst y, StepsTo BoringStep)
 
 
 test = do
   let (_, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl (fromRight (parseTopForm facProg)))
   gr <- buildGraph (stEdges st)
   stuck <- findRoot gr (stCurrentExpr st)
-  explore gr stuck
-  
+  -- explore gr stuck
+  return (gr, stuck)

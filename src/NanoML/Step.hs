@@ -157,10 +157,11 @@ findRoot gr e = do
                    return (xn == en)
   fst . fromJust <$> findM p (Graph.labNodes gr)
 
-isStepsTo = (==StepsTo)
+isStepsTo (StepsTo {}) = True
+isStepsTo _            = False
 
-isSubTerm (SubTerm _) = True
-isSubTerm _           = False
+isSubTerm (SubTerm {}) = True
+isSubTerm _            = False
 
 -- | Follow the 'StepsTo' relation forward once from a node.
 forwardstep :: Graph -> Graph.Node -> Maybe Graph.Node
@@ -168,11 +169,30 @@ forwardstep gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
   Nothing      -> Nothing
   Just (n', _) -> Just n'
 
+backwardstep :: Graph -> Graph.Node -> Maybe Graph.Node
+backwardstep gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
+  Nothing      -> Nothing
+  Just (n', _) -> Just n'
+
 -- | Follow the 'StepsTo' relation as far back as possible from a node.
 backjump :: Graph -> Graph.Node -> Maybe Graph.Node
 backjump gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
-  Nothing      -> Nothing
-  Just (n', _) -> backjump gr n' <|> Just n'
+  Nothing -> Nothing
+  Just (n', StepsTo k)
+    | k == CallStep -> Just n'
+    | otherwise     -> backjump gr n' <|> Just n'
+
+forwardjump :: Graph -> Graph.Node -> Maybe Graph.Node
+forwardjump gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
+  Nothing -> Nothing
+  Just (n', StepsTo k)
+    | k == CallStep -> Just n'
+    | otherwise     -> forwardjump gr n' <|> Just n'
+
+backback :: Graph -> Graph.Node -> Graph.Node
+backback gr n = case backjump gr n of
+  Nothing -> n
+  Just n' -> backback gr n'
 
 -- | Find the 'SubTerm's of a node.
 subterms :: Graph -> Graph.Node -> [Graph.Node]
@@ -223,6 +243,7 @@ mkPath gr n = go (backjump gr n) (maybe [n] (const []) (backjump gr n))
 ----------------------------------------------------------------------
 stepAll expr = do
   --traceShowM $ pretty expr
+  modify' (\s -> s { stStepKind = BoringStep })
   expr' <- step expr
   modify' $ \s -> s { stSteps = stSteps s + 1 }
   ss <- gets stSteps
@@ -234,6 +255,7 @@ stepAll expr = do
 stepAllProg [] = return ()
 stepAllProg (d:p) = do
   -- traceShowM $ pretty d
+  modify' (\s -> s { stStepKind = BoringStep })
   md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
   modify' $ \s -> s { stSteps = stSteps s + 1 }
   ss <- gets stSteps
@@ -289,7 +311,8 @@ stepDecl decl = case decl of
 build :: MonadEval m => Expr -> Expr -> m Expr
 build before after = do
   addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
-  addEdge StepsTo before after
+  sk <- gets stStepKind
+  addEdge (StepsTo sk) before after
   addSubTerms after
   return after
 
@@ -313,7 +336,7 @@ step expr = withCurrentExpr expr $ case expr of
     | otherwise -> do
         e' <- step e `withEnv` env
         if isValue e'
-          then build expr e'
+          then modify' (\s -> s { stStepKind = ReturnStep }) >> build expr e'
           else build expr $ Replace ms env e'
         -- build expr $ Replace ms env e'
   Var ms v -> do
@@ -467,7 +490,9 @@ stepApp ms f es = case f of
         -- pushEnv pat_env
         nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
         case (ps', es') of
-          ([], []) -> Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
+          ([], []) -> do
+            modify' (\s -> s { stStepKind = CallStep })
+            Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
           ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
           (_, []) -> withCurrentProvM $ \prv -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) -> return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
   _ -> otherError $ printf "'%s' is not a function" (show f)

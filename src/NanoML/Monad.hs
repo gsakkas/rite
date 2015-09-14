@@ -93,4 +93,5 @@ initState = EvalState
   , stEdges = []
   , stCurrentExpr = error "initState.stCurrentExpr"
   , stSteps = 0
+  , stStepKind = BoringStep
   }

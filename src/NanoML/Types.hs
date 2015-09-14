@@ -128,6 +128,7 @@ data EvalState = EvalState
   , stEdges    :: ![(Expr, EdgeKind, Expr)]
   , stCurrentExpr :: Expr -- NOTE: can't be strict
   , stSteps    :: !Int
+  , stStepKind :: !StepKind
   } deriving Show
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
@@ -1232,6 +1233,10 @@ thd3 (a,b,c) = c
 
 
 data EdgeKind
-  = StepsTo
+  = StepsTo !StepKind
   | SubTerm !Int
+  deriving (Show, Generic, Eq)
+
+data StepKind
+  = BoringStep | CallStep | ReturnStep
   deriving (Show, Generic, Eq)
