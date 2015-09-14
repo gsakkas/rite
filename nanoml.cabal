@@ -47,6 +47,7 @@ library
                      , exceptions >= 0.8
                      , fgl, fgl-visualize
                      , filepath
+                     , haskeline
                      , mtl >= 2.2
                      , parsers >=0.12
                      , random >= 1.1

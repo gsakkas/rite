@@ -446,7 +446,7 @@ stepApp ms f es = case f of
   Replace _ e f -> stepApp ms f es
   -- immediately apply saturated primitve wrappers
   Prim1 ms' (P1 x f' t) -> do
-    traceShowM (f, es)
+    -- traceShowM (f, es)
     case es of
      [e] -> force e t $ \v su -> f' v
      e:es -> do x <- force e t $ \v su -> f' v
