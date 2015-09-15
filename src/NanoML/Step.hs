@@ -186,6 +186,7 @@ forwardjump :: Graph -> Graph.Node -> Maybe Graph.Node
 forwardjump gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
   Nothing -> Nothing
   Just (n', StepsTo k)
+      -- TODO: is this right??
     | k == CallStep -> Just n'
     | otherwise     -> forwardjump gr n' <|> Just n'
 
@@ -193,6 +194,11 @@ backback :: Graph -> Graph.Node -> Graph.Node
 backback gr n = case backjump gr n of
   Nothing -> n
   Just n' -> backback gr n'
+
+forwardforward :: Graph -> Graph.Node -> Graph.Node
+forwardforward gr n = case forwardstep gr n of
+  Nothing -> n
+  Just n' -> forwardforward gr n'
 
 -- | Find the 'SubTerm's of a node.
 subterms :: Graph -> Graph.Node -> [Graph.Node]
@@ -349,7 +355,7 @@ step expr = withCurrentExpr expr $ case expr of
   --       this makes the trace a bit more readable.
   App ms f@(Var _ v) args -> stepOne args
                   (\args -> do f <- lookupEnv v =<< gets stVarEnv
-                               traceShowM f
+                               -- traceShowM f
                                build expr =<< stepApp ms f args)
                   (\args -> build expr $ App ms f args)
   App ms f args -> stepOne (f:args)

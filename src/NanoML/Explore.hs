@@ -4,7 +4,8 @@ import Control.Monad
 import Control.Monad.IO.Class
 import qualified Data.Graph.Inductive as Graph
 import qualified Data.List as List
-import Data.Maybe (mapMaybe)
+import Data.Maybe (isJust, mapMaybe)
+import Data.Monoid
 import qualified Data.Set as Set
 import System.Console.Haskeline
 import Text.Printf
@@ -26,20 +27,22 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
   root = backback gr stuck
   getLab = fromJust . Graph.lab gr
 
-  prettyGraph = Graph.nmap pretty
+  -- prettyGraph = Graph.nmap pretty
 
   -- go :: Graph -> IO ()
   go path = do
-    liftIO $ Graph.prettyPrint (prettyGraph path)
-    liftIO $ printf "Choose a node. "
-    node <- read . fromJust <$> getInputLine "> "
-    liftIO $ printf "[f]orward, [s]kip forward, [b]ackward, [S]kip backward "
+    let p = Graph.topsort path
+    liftIO $ mypprint p
+    liftIO $ printf "Choose an expression "
+    node <- (p!!) . pred . read . fromJust <$> getInputLine "> "
+    liftIO $ printf "[f]orward, [s]kip forward, [b]ackward, [S]kip backward, [z]oom "
     act <- fromJust <$> getInputChar "> "
     case act of
       'f' -> smallForward path node
       's' -> bigForward path node
       'b' -> smallBackward path node
       'S' -> bigBackward path node
+      'z' -> zoom path node
 
   smallForward p n  = case forwardstep steps n of
                         Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
@@ -53,7 +56,19 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
   bigBackward p n   = case backjump steps n of
                         Just x  -> go (collapse steps ((x, getLab x) : Graph.labNodes p))
                         Nothing -> liftIO (printf "Can't jump backward!\n") >> go p
+  zoom p n = case filter q (subterms gr n) of
+               []  -> liftIO (printf "No zoom candidates") >> go p
+               [x] -> go (collapse steps [(x, getLab x), (z, getLab z)])
+                      where z = forwardforward steps x
+               _ -> error "explore.zoom: impossible: more than 1 candidate"
+    where q x = isJust $ List.find (== StepsTo CallStep) (map snd $ Graph.lsuc gr x)
 
+  mypprint p = forM_ (zip [1..] p) $ \(i,n) -> do
+    let idx = printf "%02d: " (i :: Int)
+    let doc = text idx <> pretty (getLab n)
+    print doc
+
+  
 
 onlySteps = filter (isStepsTo . snd)
 
