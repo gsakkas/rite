@@ -489,6 +489,7 @@ stepApp ms f es = case f of
         let (ps, e, env) = gatherLams f
             (eps, es', ps') = zipWithLeftover es ps
         -- traceShowM (eps, es', ps')
+        -- traceShowM (f,es)
         Just pat_env <- mconcat <$> mapM (\(v, p) -> matchPat v p) eps
         -- traceShowM pat_env
         -- traceM ""

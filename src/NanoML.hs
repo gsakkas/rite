@@ -101,7 +101,7 @@ safeTail [] = []
 safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
-runProg prog = within 0 sec $ nanoCheck 0 0 stdOpts $ do
+runProg prog = nanoCheck 0 0 stdOpts $ do
                  prog <- mapM refreshDecl prog
                  stepAllProg prog
 
@@ -111,29 +111,31 @@ checkDecl f prog = go (Success 0) 0
   go r@(Failure {}) _ = return r
   go (Success 1000) _ = return (Success 1000)
   go (Success n) !m   = do
-    r <- within n sec $ nanoCheck n m stdOpts $ do
+    r <- nanoCheck n m stdOpts $ do
       -- mapM_ evalDecl prog
       prog <- mapM refreshDecl prog
       stepAllProg prog
-      to (Var Nothing f) [Var Nothing f]
+      to (Var Nothing f) []
     go r ((m+1) `mod` 5)
 
-  to e args = do
-    rememberArgs args
-    v <- stepAll e
+  to f args = do
+    rememberArgs (f:args)
+    let x = mkApps Nothing f args
+    addSubTerms x
+    v <- stepAll x
     case v of
       Lam {} -> do
         arg <- (\r -> Hole Nothing r Nothing) <$> fresh
-        let x = mkApps Nothing v [arg]
-        addSubTerms x
-        to x (args ++ [arg])
+        -- let x = mkApps Nothing e (args ++ [arg])
+        -- addSubTerms x
+        to f (args ++ [arg])
       _ -> return ()
 
 sec = 1000000 * 60
 
-within n s x = do
-  m <- timeout s x
-  return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>") []) m
+-- within n s x = do
+--   m <- timeout s x
+--   return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>") []) m
 
 nanoCheck :: Int -> Int -> NanoOpts -> Eval () -> IO Result
 nanoCheck numSuccess maxSize opts x = do
@@ -151,6 +153,7 @@ nanoCheck numSuccess maxSize opts x = do
       in Failure (numSuccess + 1) seed maxSize
                  invoc
                  (map renderPath paths)
+                 st
 --                 (vcat (text (show e) : invoc : []))
     (Right _, _, _) -> Success (numSuccess + 1)
 

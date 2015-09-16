@@ -21,9 +21,16 @@ executable nanoml-server
   default-language: Haskell2010
   build-depends: base >= 4.7 && < 5, nanoml, lucid, scotty, transformers
 
+executable nano-check
+  main-is: Check.hs
+  hs-source-dirs: bin
+  default-language: Haskell2010
+  build-depends: base >= 4.7 && < 5, nanoml, transformers
+
 library
   exposed-modules:     NanoML
                      , NanoML.Eval
+                     , NanoML.Explore
                      , NanoML.Gen
                      , NanoML.Lexer
                      , NanoML.Misc

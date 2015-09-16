@@ -79,6 +79,7 @@ data Result
             , usedSize :: !Int
             , counterExample :: !Doc
             , pathSlices :: ![Doc]
+            , finalState :: !EvalState
             }
   deriving Show
 
@@ -858,7 +859,8 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ]
 
 mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr
-mkApps = App
+mkApps ms f [] = f
+mkApps ms f xs = App ms f xs
 
 mkConApp :: MSrcSpan -> DCon -> [Expr] -> Expr
 mkConApp ms c []  = ConApp ms c Nothing Nothing
