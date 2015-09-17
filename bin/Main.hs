@@ -5,11 +5,15 @@ module Main where
 
 import Control.Monad
 import Control.Monad.IO.Class
+import qualified Data.Graph.Inductive.Dot as Graph
+import qualified Data.Graph.Inductive.Graph as Graph
+import Data.Text (Text)
 import Lucid
 import Web.Scotty
 
 import NanoML
 import NanoML.Misc
+import NanoML.Pretty
 
 
 main = scotty 8091 $ do
@@ -26,6 +30,10 @@ main = scotty 8091 $ do
                  , style_ "font-family: monospace;" ]
           button_ [type_ "submit"] "Submit"
 
+  get "/vis.css" $ file "bin/dist/vis.css"
+  get "/vis.js"  $ file "bin/dist/vis.js"
+  get "/nanoml.js"  $ file "bin/nanoml.js"  
+
   post "/" $ do
     prog <- param "prog"
     var  <- param "var"
@@ -41,18 +49,37 @@ main = scotty 8091 $ do
           "Could not find a counter-example after "
           toHtml (show n)
           "tests.."
-      Failure {..} -> html . renderText . doctypehtml_ $ do
-        title_ "NanoML"
-        body_ $ do
-          h2_ "Program"
-          div_ [ style_ "font-family: monospace;" ] $
-            code_ $ pre_ $ toHtml prog
-          h2_ "Counter-example"
-          div_ [ style_ "font-family: monospace;" ] (toHtml (show counterExample))
-          h2_ "Interesting paths"
-          div_ [ style_ "font-family: monospace;" ] $ forM pathSlices $ \p -> do
-            div_ [ style_ "float:left; margin:0; width:33%;" ] $
-              code_ $ pre_ $ toHtml (show p)
+      Failure {..} -> do
+        gr <- liftIO $ buildGraph (stEdges finalState)
+        st <- liftIO $ findRoot gr (stCurrentExpr finalState)
+        let gr' = Graph.nmap (fillHoles finalState) gr
+        let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
+        html . renderText . doctypehtml_ $ do
+          head_ $ do
+            title_ "NanoML"
+            link_ [ href_ "/vis.css", rel_ "stylesheet", type_ "text/css" ]
+            script_ [ src_ "/vis.js", type_ "text/javascript" ] ("" :: Text)
+            script_ [ id_ "reduction-graph", type_ "text/dot" ] dot
+            script_ [ id_ "root-node" ] (show (backback gr st))
+            script_ [ id_ "stuck-node" ] (show st)
+            script_ [ src_ "/nanoml.js", type_ "text/javascript" ] ("" :: Text)
+          body_ [ onload_ "draw()" ] $ do
+            h2_ "Program"
+            div_ [ style_ "font-family: monospace;" ] $
+              code_ $ pre_ $ toHtml prog
+            h2_ "Trace"
+            div_ [ id_ "menu", style_ "visibility: hidden;"] $ ul_ $ do
+              li_ [ id_ "step-forward",  onclick_ "stepForward()"  ] "Step forward"
+              li_ [ id_ "step-backward", onclick_ "stepBackward()" ] "Step backward"
+              li_ [ id_ "jump-forward",  onclick_ "jumpForward()"  ] "Jump forward"
+              li_ [ id_ "jump-backward", onclick_ "jumpBackward()" ] "Jump backward"
+            div_ [ id_ "vis", style_ "width: 600px; height: 400px; border: 1px solid lightgray;" ] ""
+            -- h2_ "Counter-example"
+            -- div_ [ style_ "font-family: monospace;" ] (toHtml (show counterExample))
+            -- h2_ "Interesting paths"
+            -- div_ [ style_ "font-family: monospace;" ] $ forM pathSlices $ \p -> do
+            --   div_ [ style_ "float:left; margin:0; width:33%;" ] $
+            --     code_ $ pre_ $ toHtml (show p)
             
 
     -- html . renderText . doctypehtml_ $ do

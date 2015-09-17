@@ -91,7 +91,11 @@ instance Pretty Literal where
 instance Pretty Expr where
   prettyPrec z e = case e of
     Var _ v -> text v
-    Lam _ p e _ -> group $ parensIf (z > zl) $ nest 2 $
+    Lam _ (VarPat _ "$x") (Case _ (Var _ "$x") alts) _
+      -> group $ parensIf (z > zl) $ hang 2 $
+               text "function" <$> vsep (map prettyAlt alts)
+      where zl = 5
+    Lam _ p e _ -> group $ parensIf (z > zl) $ hang 2 $
                text "fun" <+> pretty p <+> text "->" <$> pretty e
       where zl = 5
     App _ (Var _ f) [x, y]

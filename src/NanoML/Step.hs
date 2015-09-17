@@ -191,7 +191,7 @@ forwardjump gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
     | otherwise     -> forwardjump gr n' <|> Just n'
 
 backback :: Graph -> Graph.Node -> Graph.Node
-backback gr n = case backjump gr n of
+backback gr n = case backwardstep gr n of
   Nothing -> n
   Just n' -> backback gr n'
 
