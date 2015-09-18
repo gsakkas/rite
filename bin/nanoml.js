@@ -179,6 +179,9 @@ function draw() {
   // }});
   // console.log(steps);
   var options = {
+    interaction: {
+      selectConnectedEdges: false,
+    },
     layout: {
       hierarchical: { direction: 'LR' , sortMethod: 'directed' }
     },
@@ -200,18 +203,18 @@ function draw() {
     // network.on("oncontext", function (params) {
     //     console.log('oncontext Event:', params);
     // });
-    network.on("selectNode", function (params) {
-        console.log('selectNode Event:', params);
-        canStepForward();
-        canStepBackward();
-        canJumpForward();
-        canJumpBackward();
-        // ctxmenu.style.position = 'fixed';
-        // ctxmenu.style.top  = params.event.center.x;
-        // ctxmenu.style.left = params.event.center.y;
-        // ctxmenu.style.visibility = 'visible';
-        // ctxmenu.style.zIndex = 1;
-    });
+    // network.on("selectNode", function (params) {
+    //     console.log('selectNode Event:', params);
+    //     canStepForward();
+    //     canStepBackward();
+    //     canJumpForward();
+    //     canJumpBackward();
+    //     // ctxmenu.style.position = 'fixed';
+    //     // ctxmenu.style.top  = params.event.center.x;
+    //     // ctxmenu.style.left = params.event.center.y;
+    //     // ctxmenu.style.visibility = 'visible';
+    //     // ctxmenu.style.zIndex = 1;
+    // });
     network.on("selectEdge", function (params) {
         console.log('selectEdge Event:', params);
         canStepForward();
@@ -219,10 +222,10 @@ function draw() {
         canJumpForward();
         canJumpBackward();
     });
-    network.on("deselectNode", function (params) {
-        console.log('deselectNode Event:', params);
-        resetButtons();
-    });
+    // network.on("deselectNode", function (params) {
+    //     console.log('deselectNode Event:', params);
+    //     resetButtons();
+    // });
     network.on("deselectEdge", function (params) {
         console.log('deselectEdge Event:', params);
         resetButtons();
