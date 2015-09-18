@@ -30,19 +30,21 @@ function isSingleStep(from, to) {
     }}).length > 0;
 }
 
-function canStepForward() {
+function canStepForward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('stepForward');
-  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
-  console.log(edge);
-  var next = allEdges.get({filter: function(x) {
-    return x.from === edge.from && x.label.indexOf('StepsTo') >= 0;
+  var out = allEdges.get({filter: function(x) {
+    return x.from === node.id && x.label.indexOf('StepsTo') >= 0;
   }});
-  if (next.length === 0 || network.body.data.nodes.get(next[0].to) !== null) return;
-  console.log(network.body.data.nodes.get(next[0]));
-  next = next[0];
-  console.log(next);
-  sf_target = [next.to, edge];
+  var curEdge = network.body.data.edges.get({filter: function(x) {
+    return x.from === node.id;
+  }});
+  if (out.length === 0 || curEdge.length === 0 || network.body.data.nodes.get(out[0].to) !== null) return;
+  console.log(network.body.data.nodes.get(out[0]));
+  out = out[0];
+  curEdge = curEdge[0];
+  console.log(out);
+  sf_target = [out.to, curEdge];
   document.getElementById('step-forward').disabled = false;
   // insertNode(allNodes.get(next.from), edge);
 }
@@ -52,20 +54,22 @@ function stepForward() {
   resetButtons();
 }
 
-function canStepBackward() {
+function canStepBackward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('stepBackward');
-  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
-  console.log(edge);
-  var prev = allEdges.get({filter: function(x) {
-    return x.to === edge.to && x.label.indexOf('StepsTo') >= 0;
+  var inn = allEdges.get({filter: function(x) {
+    return x.to === node.id && x.label.indexOf('StepsTo') >= 0;
   }});
-  console.log(prev);
-  if (prev.length === 0 || network.body.data.nodes.get(prev[0].from) !== null) return;
-  console.log(network.body.data.nodes.get(prev[0]));
-  prev = prev[0];
-  console.log(prev);
-  sb_target = [prev.from, edge];
+  var curEdge = network.body.data.edges.get({filter: function(x) {
+    return x.to === node.id;
+  }});
+  console.log(inn);
+  if (inn.length === 0 || curEdge.length === 0 || network.body.data.nodes.get(inn[0].from) !== null) return;
+  console.log(network.body.data.nodes.get(inn[0]));
+  inn = inn[0];
+  curEdge = curEdge[0];
+  console.log(inn);
+  sb_target = [inn.from, curEdge];
   document.getElementById('step-backward').disabled = false;
   // insertNode(allNodes.get(prev[0].from), edge);
 }
@@ -75,32 +79,34 @@ function stepBackward() {
   resetButtons();
 }
 
-function canJumpForward() {
+function canJumpForward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpForward');
-  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
-  console.log(edge);
-  if (isSingleStep(edge.from, edge.to)) return;
-  var next = allEdges.get({filter: function(x) {
-    return x.from === edge.from &&
-           x.label.indexOf('StepsTo') >= 0 &&
-           x.label.indexOf('StepsTo CallStep') < 0;
+  var out = allEdges.get({filter: function(x) {
+    return x.from === node.id &&
+           x.label.indexOf('StepsTo') >= 0; // &&
+           // x.label.indexOf('StepsTo CallStep') < 0;
   }});
-  if (next.length === 0) return;
-  next = next[0];
+  var curEdge = network.body.data.edges.get({filter: function(x) {
+    return x.from === node.id;
+  }});
+  if (out.length === 0 || curEdge.length === 0) return;
+  out = out[0];
+  curEdge = curEdge[0];
   while (true) {
-    nextNodes = allEdges.get({filter: function(x) {
-      return x.from === next.to &&
+    var outEdges = allEdges.get({filter: function(x) {
+      return x.from === out.to &&
              x.label.indexOf('StepsTo') >= 0;
     }});
-    console.log(nextNodes);
-    if (nextNodes.length === 0) break;
-    next = nextNodes[0];
-    if (next.label === 'StepsTo CallStep') break;
+    console.log(outEdges);
+    if (outEdges.length === 0) break;
+    if (outEdges[0].label === 'StepsTo CallStep') break;
+    out = outEdges[0];
   }
-  if (network.body.data.nodes.get(next.to) !== null) return;
-  console.log(next);
-  jf_target = [next.to, edge];
+  // if (isSingleStep(node.id, out.to)) return;
+  if (network.body.data.nodes.get(out.to) !== null) return;
+  console.log(out);
+  jf_target = [out.to, curEdge];
   document.getElementById('jump-forward').disabled = false;
   // insertNode(allNodes.get(next.from), edge);
 }
@@ -110,32 +116,34 @@ function jumpForward() {
   resetButtons();
 }
 
-function canJumpBackward() {
+function canJumpBackward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpBackward');
-  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
-  console.log(edge);
-  if (isSingleStep(edge.from, edge.to)) return;
-  var prev = allEdges.get({filter: function(x) {
-    return x.to === edge.to &&
-           x.label.indexOf('StepsTo') >= 0 &&
-           x.label.indexOf('StepsTo CallStep') < 0;
+  var inn = allEdges.get({filter: function(x) {
+    return x.to === node.id &&
+           x.label.indexOf('StepsTo') >= 0; // &&
+           // x.label.indexOf('StepsTo CallStep') < 0;
   }});
-  if (prev.length === 0) return;
-  prev = prev[0];
+  var curEdge = network.body.data.edges.get({filter: function(x) {
+    return x.to === node.id;
+  }});
+  if (inn.length === 0 || curEdge.length === 0) return;
+  inn = inn[0];
+  curEdge = curEdge[0];
   while (true) {
-    prevNodes = allEdges.get({filter: function(x) {
-      return x.to === prev.from &&
+    innEdges = allEdges.get({filter: function(x) {
+      return x.to === inn.from &&
              x.label.indexOf('StepsTo') >= 0;
     }});
-    console.log(prevNodes);
-    if (prevNodes.length === 0) break;
-    prev = prevNodes[0];
-    if (prev.label === 'StepsTo CallStep') break;
+    console.log(innEdges);
+    if (innEdges.length === 0) break;
+    inn = innEdges[0];
+    if (inn.label === 'StepsTo CallStep') break;
   }
-  if (network.body.data.nodes.get(prev.from) !== null) return;
-  console.log(prev);
-  jb_target = [prev.from, edge];
+  // if (isSingleStep(inn.from, node.id)) return;
+  if (network.body.data.nodes.get(inn.from) !== null) return;
+  console.log(inn);
+  jb_target = [inn.from, curEdge];
   document.getElementById('jump-backward').disabled = false;
   // insertNode(allNodes.get(prev.from), edge);
 }
@@ -228,33 +236,36 @@ function draw() {
     // network.on("oncontext", function (params) {
     //     console.log('oncontext Event:', params);
     // });
-    // network.on("selectNode", function (params) {
-    //     console.log('selectNode Event:', params);
-    //     canStepForward();
-    //     canStepBackward();
-    //     canJumpForward();
-    //     canJumpBackward();
-    //     // ctxmenu.style.position = 'fixed';
-    //     // ctxmenu.style.top  = params.event.center.x;
-    //     // ctxmenu.style.left = params.event.center.y;
-    //     // ctxmenu.style.visibility = 'visible';
-    //     // ctxmenu.style.zIndex = 1;
-    // });
-    network.on("selectEdge", function (params) {
-        console.log('selectEdge Event:', params);
-        canStepForward();
-        canStepBackward();
-        canJumpForward();
-        canJumpBackward();
+    network.on("selectNode", function (params) {
+        console.log('selectNode Event:', params);
+        var node = network.body.data.nodes.get(network.getSelectedNodes()[0]);
+        console.log(node);
+        canStepForward(node);
+        canStepBackward(node);
+        canJumpForward(node);
+        canJumpBackward(node);
+        // ctxmenu.style.position = 'fixed';
+        // ctxmenu.style.top  = params.event.center.x;
+        // ctxmenu.style.left = params.event.center.y;
+        // ctxmenu.style.visibility = 'visible';
+        // ctxmenu.style.zIndex = 1;
     });
-    // network.on("deselectNode", function (params) {
-    //     console.log('deselectNode Event:', params);
-    //     resetButtons();
-    // });
-    network.on("deselectEdge", function (params) {
-        console.log('deselectEdge Event:', params);
+    network.on("selectEdge", function (params) {
+        return false;
+        console.log('selectEdge Event:', params);
+        // canStepForward();
+        // canStepBackward();
+        // canJumpForward();
+        // canJumpBackward();
+    });
+    network.on("deselectNode", function (params) {
+        console.log('deselectNode Event:', params);
         resetButtons();
     });
+    // network.on("deselectEdge", function (params) {
+    //     console.log('deselectEdge Event:', params);
+    //     resetButtons();
+    // });
     // network.on("hoverNode", function (params) {
     //     console.log('hoverNode Event:', params);
     // });
