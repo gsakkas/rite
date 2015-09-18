@@ -207,16 +207,16 @@ function draw() {
     interaction: {
       selectConnectedEdges: false,
     },
-    // layout: {
-    //   hierarchical: { direction: 'LR' , sortMethod: 'directed' }
-    // },
+    layout: {
+      hierarchical: { direction: 'UD', sortMethod: 'directed' }
+    },
     nodes: {
       font: { face: 'monospace' }
     },
     // edges: {
     //   label: "",
     // },
-    physics: { enabled: false},
+    // physics: { enabled: false},
   };
   network = new vis.Network(container, {nodes: nodes, edges: edges}, options);
     // network.on("hidePopup", function () {
