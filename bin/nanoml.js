@@ -9,12 +9,15 @@ var sb_target = undefined;
 var jf_target = undefined;
 var jb_target = undefined;
 
+var single_width = 1;
+var multi_width = 5;
+
 function resetButtons() {
   sf_target = undefined;
   sb_target = undefined;
   jf_target = undefined;
   jb_target = undefined;
-    
+
   document.getElementById('step-forward').disabled = true;
   document.getElementById('step-backward').disabled = true;
   document.getElementById('jump-forward').disabled = true;
@@ -32,7 +35,7 @@ function canStepForward() {
   console.log('stepForward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
-  var next = allEdges.get({filter: function(x) { 
+  var next = allEdges.get({filter: function(x) {
     return x.from === edge.from && x.label.indexOf('StepsTo') >= 0;
   }});
   if (next.length === 0 || network.body.data.nodes.get(next[0].to) !== null) return;
@@ -54,7 +57,7 @@ function canStepBackward() {
   console.log('stepBackward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
-  var prev = allEdges.get({filter: function(x) { 
+  var prev = allEdges.get({filter: function(x) {
     return x.to === edge.to && x.label.indexOf('StepsTo') >= 0;
   }});
   console.log(prev);
@@ -78,7 +81,7 @@ function canJumpForward() {
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
   if (isSingleStep(edge.from, edge.to)) return;
-  var next = allEdges.get({filter: function(x) { 
+  var next = allEdges.get({filter: function(x) {
     return x.from === edge.from &&
            x.label.indexOf('StepsTo') >= 0 &&
            x.label.indexOf('StepsTo CallStep') < 0;
@@ -86,7 +89,7 @@ function canJumpForward() {
   if (next.length === 0) return;
   next = next[0];
   while (true) {
-    nextNodes = allEdges.get({filter: function(x) { 
+    nextNodes = allEdges.get({filter: function(x) {
       return x.from === next.to &&
              x.label.indexOf('StepsTo') >= 0;
     }});
@@ -113,7 +116,7 @@ function canJumpBackward() {
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
   if (isSingleStep(edge.from, edge.to)) return;
-  var prev = allEdges.get({filter: function(x) { 
+  var prev = allEdges.get({filter: function(x) {
     return x.to === edge.to &&
            x.label.indexOf('StepsTo') >= 0 &&
            x.label.indexOf('StepsTo CallStep') < 0;
@@ -121,7 +124,7 @@ function canJumpBackward() {
   if (prev.length === 0) return;
   prev = prev[0];
   while (true) {
-    prevNodes = allEdges.get({filter: function(x) { 
+    prevNodes = allEdges.get({filter: function(x) {
       return x.to === prev.from &&
              x.label.indexOf('StepsTo') >= 0;
     }});
@@ -146,10 +149,25 @@ function jumpBackward() {
 function insertNode(node, replacingEdge) {
   var pnodes = network.body.data.nodes;
   var pedges = network.body.data.edges;
-    
+
+  if (allEdges.get({filter: function(x) {
+        return x.from === replacingEdge.from && x.to === node.id;
+      }}).length > 0) {
+    var width_in = single_width;
+  } else {
+    var width_in = multi_width;
+  }
+  if (allEdges.get({filter: function(x) {
+        return x.from === node.id && x.to === replacingEdge.to;
+      }}).length > 0) {
+    var width_out = single_width;
+  } else {
+    var width_out = multi_width;
+  }
+
   pnodes.add(node);
-  pedges.add([{arrows: 'to', from: replacingEdge.from, to: node.id}
-             ,{arrows: 'to', from: node.id, to: replacingEdge.to}]);
+  pedges.add([{arrows: 'to', from: replacingEdge.from, to: node.id, width: width_in}
+             ,{arrows: 'to', from: node.id, to: replacingEdge.to, width: width_out}]);
   pedges.remove(replacingEdge);
 
   network.setData({nodes: pnodes, edges: pedges});
@@ -165,15 +183,22 @@ function draw() {
   var root = document.getElementById('root-node').text;
   var stuck = document.getElementById('stuck-node').text;
   data = vis.network.convertDot(dot);
-  data.nodes.forEach(function(n) { 
-    n.label = n.label.replace(/\\n/g, "\n"); 
+  data.nodes.forEach(function(n) {
+    n.label = n.label.replace(/\\n/g, "\n");
   });
   allNodes = new vis.DataSet(data.nodes);
   allEdges = new vis.DataSet(data.edges);
   var nodes = new vis.DataSet(data.nodes).get({filter: function(x) {
     return x.id === ('u' + root) || x.id === ('u' + stuck);
   }});
-  var edges = new vis.DataSet([{ arrows: 'to', from: ('u'+root), to: ('u'+stuck)}]);
+  if (allEdges.get({filter: function(x) {
+        return x.from === ('u'+root) && x.to === ('u'+stuck);
+      }}).length > 0) {
+    var width = single_width;
+  } else {
+    var width = multi_width;
+  }
+  var edges = new vis.DataSet([{ arrows: 'to', from: ('u'+root), to: ('u'+stuck), width: width}]);
   // steps = new vis.DataSet(data.edges).get({filter: function (x) {
   //   return x.label.indexOf("StepsTo") === 0;
   // }});
@@ -182,16 +207,16 @@ function draw() {
     interaction: {
       selectConnectedEdges: false,
     },
-    layout: {
-      hierarchical: { direction: 'LR' , sortMethod: 'directed' }
-    },
+    // layout: {
+    //   hierarchical: { direction: 'LR' , sortMethod: 'directed' }
+    // },
     nodes: {
       font: { face: 'monospace' }
     },
     // edges: {
     //   label: "",
     // },
-    // physics: { enabled: false},
+    physics: { enabled: false},
   };
   network = new vis.Network(container, {nodes: nodes, edges: edges}, options);
     // network.on("hidePopup", function () {

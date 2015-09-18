@@ -82,7 +82,7 @@ main = scotty 8091 $ do
                 li_ $
                   button_ [ disabled_ "true", id_ "jump-backward", onclick_ "jumpBackward()" ]
                     "Jump backward"
-              div_ [ id_ "vis", style_ "float: left; width: 600px; height: 400px; border: 1px solid lightgray;" ] ""
+              div_ [ id_ "vis", style_ "float: left; width: 800px; height: 800px; border: 1px solid lightgray;" ] ""
             -- h2_ "Counter-example"
             -- div_ [ style_ "font-family: monospace;" ] (toHtml (show counterExample))
             -- h2_ "Interesting paths"
