@@ -4,20 +4,52 @@ var steps = undefined;
 var network = undefined;
 var ctxmenu = undefined;
 
-function stepForward() {
+var sf_target = undefined;
+var sb_target = undefined;
+var jf_target = undefined;
+var jb_target = undefined;
+
+function resetButtons() {
+  sf_target = undefined;
+  sb_target = undefined;
+  jf_target = undefined;
+  jb_target = undefined;
+    
+  document.getElementById('step-forward').disabled = true;
+  document.getElementById('step-backward').disabled = true;
+  document.getElementById('jump-forward').disabled = true;
+  document.getElementById('jump-backward').disabled = true;
+}
+
+function isSingleStep(from, to) {
+  return allEdges.get({filter: function(x) {
+      return x.from === from && x.to === to;
+    }}).length > 0;
+}
+
+function canStepForward() {
   // ctxmenu.style.visibility = 'hidden';
-  network.unselectAll();
   console.log('stepForward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
   var next = allEdges.get({filter: function(x) { 
     return x.from === edge.from && x.label.indexOf('StepsTo') >= 0;
   }});
+  if (next.length === 0 || network.body.data.nodes.get(next[0].to) !== null) return;
+  console.log(network.body.data.nodes.get(next[0]));
+  next = next[0];
   console.log(next);
-  insertNode(allNodes.get(next[0].from), edge);
+  sf_target = [next.to, edge];
+  document.getElementById('step-forward').disabled = false;
+  // insertNode(allNodes.get(next.from), edge);
 }
 
-function stepBackward() {
+function stepForward() {
+  insertNode(allNodes.get(sf_target[0]), sf_target[1]);
+  resetButtons();
+}
+
+function canStepBackward() {
   // ctxmenu.style.visibility = 'hidden';
   console.log('stepBackward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
@@ -26,19 +58,33 @@ function stepBackward() {
     return x.to === edge.to && x.label.indexOf('StepsTo') >= 0;
   }});
   console.log(prev);
-  insertNode(allNodes.get(prev[0].from), edge);
+  if (prev.length === 0 || network.body.data.nodes.get(prev[0].from) !== null) return;
+  console.log(network.body.data.nodes.get(prev[0]));
+  prev = prev[0];
+  console.log(prev);
+  sb_target = [prev.from, edge];
+  document.getElementById('step-backward').disabled = false;
+  // insertNode(allNodes.get(prev[0].from), edge);
 }
 
-function jumpForward() {
+function stepBackward() {
+  insertNode(allNodes.get(sb_target[0]), sb_target[1]);
+  resetButtons();
+}
+
+function canJumpForward() {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpForward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
+  if (isSingleStep(edge.from, edge.to)) return;
   var next = allEdges.get({filter: function(x) { 
     return x.from === edge.from &&
            x.label.indexOf('StepsTo') >= 0 &&
            x.label.indexOf('StepsTo CallStep') < 0;
-  }})[0];
+  }});
+  if (next.length === 0) return;
+  next = next[0];
   while (true) {
     nextNodes = allEdges.get({filter: function(x) { 
       return x.from === next.to &&
@@ -49,20 +95,31 @@ function jumpForward() {
     next = nextNodes[0];
     if (next.label === 'StepsTo CallStep') break;
   }
+  if (network.body.data.nodes.get(next.to) !== null) return;
   console.log(next);
-  insertNode(allNodes.get(next.from), edge);
+  jf_target = [next.to, edge];
+  document.getElementById('jump-forward').disabled = false;
+  // insertNode(allNodes.get(next.from), edge);
 }
 
-function jumpBackward() {
+function jumpForward() {
+  insertNode(allNodes.get(jf_target[0]), jf_target[1]);
+  resetButtons();
+}
+
+function canJumpBackward() {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpBackward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
+  if (isSingleStep(edge.from, edge.to)) return;
   var prev = allEdges.get({filter: function(x) { 
     return x.to === edge.to &&
            x.label.indexOf('StepsTo') >= 0 &&
            x.label.indexOf('StepsTo CallStep') < 0;
-  }})[0];
+  }});
+  if (prev.length === 0) return;
+  prev = prev[0];
   while (true) {
     prevNodes = allEdges.get({filter: function(x) { 
       return x.to === prev.from &&
@@ -73,8 +130,17 @@ function jumpBackward() {
     prev = prevNodes[0];
     if (prev.label === 'StepsTo CallStep') break;
   }
+  if (network.body.data.nodes.get(prev.from) !== null) return;
   console.log(prev);
-  insertNode(allNodes.get(prev.from), edge);
+  jb_target = [prev.from, edge];
+  document.getElementById('jump-backward').disabled = false;
+  // insertNode(allNodes.get(prev.from), edge);
+}
+
+function jumpBackward() {
+  console.log(jb_target);
+  insertNode(allNodes.get(jb_target[0]), jb_target[1]);
+  resetButtons();
 }
 
 function insertNode(node, replacingEdge) {
@@ -119,17 +185,21 @@ function draw() {
     // physics: { enabled: false},
   };
   network = new vis.Network(container, {nodes: nodes, edges: edges}, options);
-    network.on("hidePopup", function () {
-        console.log('hidePopup Event');
-    });
-    network.on("select", function (params) {
-        console.log('select Event:', params);
-    });
-    network.on("oncontext", function (params) {
-        console.log('oncontext Event:', params);
-    });
+    // network.on("hidePopup", function () {
+    //     console.log('hidePopup Event');
+    // });
+    // network.on("select", function (params) {
+    //     console.log('select Event:', params);
+    // });
+    // network.on("oncontext", function (params) {
+    //     console.log('oncontext Event:', params);
+    // });
     network.on("selectNode", function (params) {
         console.log('selectNode Event:', params);
+        canStepForward();
+        canStepBackward();
+        canJumpForward();
+        canJumpBackward();
         // ctxmenu.style.position = 'fixed';
         // ctxmenu.style.top  = params.event.center.x;
         // ctxmenu.style.left = params.event.center.y;
@@ -138,23 +208,29 @@ function draw() {
     });
     network.on("selectEdge", function (params) {
         console.log('selectEdge Event:', params);
+        canStepForward();
+        canStepBackward();
+        canJumpForward();
+        canJumpBackward();
     });
     network.on("deselectNode", function (params) {
         console.log('deselectNode Event:', params);
+        resetButtons();
     });
     network.on("deselectEdge", function (params) {
         console.log('deselectEdge Event:', params);
+        resetButtons();
     });
-    network.on("hoverNode", function (params) {
-        console.log('hoverNode Event:', params);
-    });
-    network.on("hoverEdge", function (params) {
-        console.log('hoverEdge Event:', params);
-    });
-    network.on("blurNode", function (params) {
-        console.log('blurNode Event:', params);
-    });
-    network.on("blurEdge", function (params) {
-        console.log('blurEdge Event:', params);
-    });
+    // network.on("hoverNode", function (params) {
+    //     console.log('hoverNode Event:', params);
+    // });
+    // network.on("hoverEdge", function (params) {
+    //     console.log('hoverEdge Event:', params);
+    // });
+    // network.on("blurNode", function (params) {
+    //     console.log('blurNode Event:', params);
+    // });
+    // network.on("blurEdge", function (params) {
+    //     console.log('blurEdge Event:', params);
+    // });
 }
