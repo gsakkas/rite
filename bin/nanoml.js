@@ -165,6 +165,9 @@ function draw() {
   var root = document.getElementById('root-node').text;
   var stuck = document.getElementById('stuck-node').text;
   data = vis.network.convertDot(dot);
+  data.nodes.forEach(function(n) { 
+    n.label = n.label.replace(/\\n/g, "\n"); 
+  });
   allNodes = new vis.DataSet(data.nodes);
   allEdges = new vis.DataSet(data.edges);
   var nodes = new vis.DataSet(data.nodes).get({filter: function(x) {
@@ -178,6 +181,9 @@ function draw() {
   var options = {
     layout: {
       hierarchical: { direction: 'LR' , sortMethod: 'directed' }
+    },
+    nodes: {
+      font: { face: 'monospace' }
     },
     // edges: {
     //   label: "",
