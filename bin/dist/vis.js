@@ -28833,6 +28833,8 @@ return /******/ (function(modules) { // webpackBootstrap
         if (viewFontSize >= this.nodeOptions.scaling.label.maxVisible) {
           fontSize = Number(this.nodeOptions.scaling.label.maxVisible) / this.body.view.scale;
         }
+          
+        x = x - this.size.width / 2;
 
         var yLine = this.size.yLine;
 
@@ -28853,7 +28855,7 @@ return /******/ (function(modules) { // webpackBootstrap
         yLine = _setAlignment22[1];
         ctx.font = (selected && this.nodeOptions.labelHighlightBold ? 'bold ' : '') + fontSize + "px " + this.fontOptions.face;
         ctx.fillStyle = fontColor;
-        ctx.textAlign = 'center';
+        ctx.textAlign = 'start';
 
         // set the strokeWidth
         if (this.fontOptions.strokeWidth > 0) {
