@@ -68,12 +68,13 @@ main = scotty 8091 $ do
             div_ [ style_ "font-family: monospace;" ] $
               code_ $ pre_ $ toHtml prog
             h2_ "Trace"
-            div_ [ id_ "menu", style_ "visibility: hidden;"] $ ul_ $ do
-              li_ [ id_ "step-forward",  onclick_ "stepForward()"  ] "Step forward"
-              li_ [ id_ "step-backward", onclick_ "stepBackward()" ] "Step backward"
-              li_ [ id_ "jump-forward",  onclick_ "jumpForward()"  ] "Jump forward"
-              li_ [ id_ "jump-backward", onclick_ "jumpBackward()" ] "Jump backward"
-            div_ [ id_ "vis", style_ "width: 600px; height: 400px; border: 1px solid lightgray;" ] ""
+            div_ $ do
+              div_ [ id_ "menu", style_ "float: left;" ] $ ul_ $ do
+                li_ [ id_ "step-forward",  onclick_ "stepForward()"  ] "Step forward"
+                li_ [ id_ "step-backward", onclick_ "stepBackward()" ] "Step backward"
+                li_ [ id_ "jump-forward",  onclick_ "jumpForward()"  ] "Jump forward"
+                li_ [ id_ "jump-backward", onclick_ "jumpBackward()" ] "Jump backward"
+              div_ [ id_ "vis", style_ "float: left; width: 600px; height: 400px; border: 1px solid lightgray;" ] ""
             -- h2_ "Counter-example"
             -- div_ [ style_ "font-family: monospace;" ] (toHtml (show counterExample))
             -- h2_ "Interesting paths"

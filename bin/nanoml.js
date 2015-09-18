@@ -5,12 +5,20 @@ var network = undefined;
 var ctxmenu = undefined;
 
 function stepForward() {
-  ctxmenu.style.visibility = 'hidden';
+  // ctxmenu.style.visibility = 'hidden';
   network.unselectAll();
+  console.log('stepForward');
+  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
+  console.log(edge);
+  var next = allEdges.get({filter: function(x) { 
+    return x.from === edge.from && x.label.indexOf('StepsTo') >= 0;
+  }});
+  console.log(next);
+  insertNode(allNodes.get(next[0].from), edge);
 }
 
 function stepBackward() {
-  ctxmenu.style.visibility = 'hidden';
+  // ctxmenu.style.visibility = 'hidden';
   console.log('stepBackward');
   var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
   console.log(edge);
@@ -22,13 +30,51 @@ function stepBackward() {
 }
 
 function jumpForward() {
-  ctxmenu.style.visibility = 'hidden';
-  network.unselectAll();
+  // ctxmenu.style.visibility = 'hidden';
+  console.log('jumpForward');
+  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
+  console.log(edge);
+  var next = allEdges.get({filter: function(x) { 
+    return x.from === edge.from &&
+           x.label.indexOf('StepsTo') >= 0 &&
+           x.label.indexOf('StepsTo CallStep') < 0;
+  }})[0];
+  while (true) {
+    nextNodes = allEdges.get({filter: function(x) { 
+      return x.from === next.to &&
+             x.label.indexOf('StepsTo') >= 0;
+    }});
+    console.log(nextNodes);
+    if (nextNodes.length === 0) break;
+    next = nextNodes[0];
+    if (next.label === 'StepsTo CallStep') break;
+  }
+  console.log(next);
+  insertNode(allNodes.get(next.from), edge);
 }
 
 function jumpBackward() {
-  ctxmenu.style.visibility = 'hidden';
-  network.unselectAll();
+  // ctxmenu.style.visibility = 'hidden';
+  console.log('jumpBackward');
+  var edge = network.body.data.edges.get(network.getSelectedEdges()[0]);
+  console.log(edge);
+  var prev = allEdges.get({filter: function(x) { 
+    return x.to === edge.to &&
+           x.label.indexOf('StepsTo') >= 0 &&
+           x.label.indexOf('StepsTo CallStep') < 0;
+  }})[0];
+  while (true) {
+    prevNodes = allEdges.get({filter: function(x) { 
+      return x.to === prev.from &&
+             x.label.indexOf('StepsTo') >= 0;
+    }});
+    console.log(prevNodes);
+    if (prevNodes.length === 0) break;
+    prev = prevNodes[0];
+    if (prev.label === 'StepsTo CallStep') break;
+  }
+  console.log(prev);
+  insertNode(allNodes.get(prev.from), edge);
 }
 
 function insertNode(node, replacingEdge) {
@@ -42,6 +88,8 @@ function insertNode(node, replacingEdge) {
 
   network.setData({nodes: pnodes, edges: pedges});
   network.unselectAll();
+  // network.stabilize();
+  // network.redraw();
 }
 
 function draw() {
@@ -63,7 +111,7 @@ function draw() {
   // console.log(steps);
   var options = {
     layout: {
-      hierarchical: { direction: 'LR', sortMethod: 'directed' }
+      hierarchical: { direction: 'LR' , sortMethod: 'directed' }
     },
     // edges: {
     //   label: "",
@@ -82,11 +130,11 @@ function draw() {
     });
     network.on("selectNode", function (params) {
         console.log('selectNode Event:', params);
-        ctxmenu.style.position = 'fixed';
-        ctxmenu.style.top  = params.event.center.x;
-        ctxmenu.style.left = params.event.center.y;
-        ctxmenu.style.visibility = 'visible';
-        ctxmenu.style.zIndex = 1;
+        // ctxmenu.style.position = 'fixed';
+        // ctxmenu.style.top  = params.event.center.x;
+        // ctxmenu.style.left = params.event.center.y;
+        // ctxmenu.style.visibility = 'visible';
+        // ctxmenu.style.zIndex = 1;
     });
     network.on("selectEdge", function (params) {
         console.log('selectEdge Event:', params);
