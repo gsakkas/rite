@@ -51,9 +51,10 @@ main = scotty 8091 $ do
           "tests.."
       Failure {..} -> do
         gr <- liftIO $ buildGraph (stEdges finalState)
-        st <- liftIO $ findRoot gr (stCurrentExpr finalState)
+        st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
         let gr' = Graph.nmap (fillHoles finalState) gr
         let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
+        liftIO $ writeFile "tmp.dot" dot
         html . renderText . doctypehtml_ $ do
           head_ $ do
             title_ "NanoML"

@@ -204,6 +204,11 @@ forwardforward gr n = case forwardstep gr n of
 subterms :: Graph -> Graph.Node -> [Graph.Node]
 subterms gr n = map fst . filter (isSubTerm . snd) $ Graph.lsuc gr n
 
+ancestor :: Graph -> Graph.Node -> Graph.Node
+ancestor gr n = case find (isSubTerm . snd) (Graph.lpre gr n) of
+  Nothing -> n
+  Just (n', _) -> ancestor gr n'
+
 candidates :: Graph -> Graph.Node -> [Graph.Node]
 candidates gr n = maybeToList (forwardstep gr n)
                ++ mapMaybe (backjump gr) (subterms gr n)
