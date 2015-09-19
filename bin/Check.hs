@@ -18,7 +18,7 @@ main = do
   prog <- parseFile file
   res <- maybe (fromJust <$> check Nothing prog) (\v -> checkDecl v prog) func
   case res of
-    Success n -> printf "Could not find a counter-example after %d tests..\n" n
+    Success n _  -> printf "Could not find a counter-example after %d tests..\n" n
     Failure {..} -> do gr <- buildGraph (stEdges finalState)
                        st <- findRoot gr (stCurrentExpr finalState)
                        explore gr st
