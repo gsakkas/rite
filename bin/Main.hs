@@ -74,8 +74,8 @@ main = scotty 8091 $ do
                         -- , rows_ "10", cols_ "50"
                         -- , style_ "font-family: monospace;"
                       ] ""
-          div_ [class_ "col-md-6"] $ do
-            div_ [ id_ "vis" -- , style_ "height: 100%; border: 1px solid lightgray;"
+          div_ [class_ "mybody col-md-6"] $ do
+            div_ [ id_ "vis", class_ "mybody", style_ "border: 1px solid lightgray;"
                  ] ""
 
   get "/zepto.min.js"  $ file "bin/dist/zepto.min.js"
