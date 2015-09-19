@@ -2,7 +2,6 @@ var nodes = undefined;
 var edges = undefined;
 var steps = undefined;
 var network = undefined;
-var ctxmenu = undefined;
 
 var sf_target = undefined;
 var sb_target = undefined;
@@ -11,6 +10,10 @@ var jb_target = undefined;
 
 var single_width = 1;
 var multi_width = 5;
+
+var func_input = undefined;
+var check_btn = undefined;
+var editor = undefined;
 
 function resetButtons() {
   sf_target = undefined;
@@ -184,12 +187,44 @@ function insertNode(node, replacingEdge) {
   // network.redraw();
 }
 
-function draw() {
-  ctxmenu = document.getElementById('menu');
+function setup() {
+  var prog = document.getElementById('prog');
+  var cm = CodeMirror.fromTextArea(prog, {
+    mode: "mllike",
+    lineNumbers: true,
+  });
+  func_input = document.getElementById('var-input');
+  check_btn = document.getElementById('check-btn');
+  check_btn.onclick = function (evt) {
+    evt.preventDefault();
+    var func = func_input.text;
+    var prog = cm.getValue();
+    console.log(prog);
+
+    // send ajax request
+    $.ajax({
+      type: 'POST',
+      url: '/check',
+      data: {'prog': prog, 'var': func},
+      dataType: 'json',
+      success: function(data, status, xhr) {
+        console.log(status, data);
+        draw(data);
+      },
+      error: function(xhr, errorType, error) {
+        console.log(errorType, error);
+      }
+    });
+    
+  };
+}
+
+function draw(data) {
+  // ctxmenu = document.getElementById('menu');
   var container = document.getElementById('vis');
-  var dot = document.getElementById('reduction-graph').text;
-  var root = document.getElementById('root-node').text;
-  var stuck = document.getElementById('stuck-node').text;
+  var dot = data.dot; //document.getElementById('reduction-graph').text;
+  var root = data.root; //document.getElementById('root-node').text;
+  var stuck = data.stuck; //document.getElementById('stuck-node').text;
   data = vis.network.convertDot(dot);
   data.nodes.forEach(function(n) {
     n.label = n.label.replace(/\\n/g, "\n");

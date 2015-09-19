@@ -73,7 +73,9 @@ stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEqu
 loudOpts = stdOpts { enablePrint = True }
 
 data Result
-  = Success { numTests :: !Int }
+  = Success { numTests :: !Int
+            , finalState :: !EvalState
+            }
   | Failure { numTests :: !Int
             , usedSeed :: !Int
             , usedSize :: !Int

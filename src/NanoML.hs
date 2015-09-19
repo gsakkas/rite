@@ -106,11 +106,11 @@ runProg prog = nanoCheck 0 0 stdOpts $ do
                  stepAllProg prog
 
 checkDecl :: Var -> Prog -> IO Result
-checkDecl f prog = go (Success 0) 0
+checkDecl f prog = go (Success 0 initState) 0
   where
-  go r@(Failure {}) _ = return r
-  go (Success 1000) _ = return (Success 1000)
-  go (Success n) !m   = do
+  go r@(Failure {}) _    = return r
+  go (Success 1000 st) _ = return (Success 1000 st)
+  go (Success n _st) !m  = do
     r <- nanoCheck n m stdOpts $ do
       -- mapM_ evalDecl prog
       prog <- mapM refreshDecl prog
@@ -143,7 +143,7 @@ nanoCheck numSuccess maxSize opts x = do
   let opts' = opts { seed = seed, size = maxSize }
   x <- evaluate $ runEvalFull opts' x
   return $ case x of
-    (Left (MLException e), _, _) -> Success (numSuccess + 1)
+    (Left (MLException e), st, _) -> Success (numSuccess + 1) st
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values
       let paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
@@ -155,7 +155,7 @@ nanoCheck numSuccess maxSize opts x = do
                  (map renderPath paths)
                  st
 --                 (vcat (text (show e) : invoc : []))
-    (Right _, _, _) -> Success (numSuccess + 1)
+    (Right _, st, _) -> Success (numSuccess + 1) st
 
 -- fetchArg' st (Val v) = Val (fetchArg st v)
 fetchArg' st e = e
