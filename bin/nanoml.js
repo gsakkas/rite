@@ -14,6 +14,8 @@ var multi_width = 5;
 var func_input = undefined;
 var check_btn = undefined;
 var editor = undefined;
+var safe_banner = undefined;
+var unsafe_banner = undefined;
 
 function resetButtons() {
   sf_target = undefined;
@@ -187,16 +189,34 @@ function insertNode(node, replacingEdge) {
   // network.redraw();
 }
 
+function notifySafe() {
+  safe_banner.style.display = 'block';
+}
+function notifyUnsafe() {
+  unsafe_banner.style.display = 'block';
+}
+
 function setup() {
   var prog = document.getElementById('prog');
   var cm = CodeMirror.fromTextArea(prog, {
     mode: "mllike",
     lineNumbers: true,
   });
+    
+  // TODO: how do i get the hash fragment and base64 decode in javascript??
+  // var initial = getFragment();
+  // cm.setText(initial.decode());
+
   func_input = document.getElementById('var-input');
   check_btn = document.getElementById('check-btn');
+  safe_banner = document.getElementById('safe-banner');
+  unsafe_banner = document.getElementById('unsafe-banner');
+
   check_btn.onclick = function (evt) {
     evt.preventDefault();
+    safe_banner.style.display = 'none';
+    unsafe_banner.style.display = 'none';
+
     var func = func_input.text;
     var prog = cm.getValue();
     console.log(prog);
@@ -209,9 +229,15 @@ function setup() {
       dataType: 'json',
       success: function(data, status, xhr) {
         console.log(status, data);
+        if (data.result === 'value') {
+          notifySafe();
+        } else if (data.result === 'stuck') {
+          notifyUnsafe();
+        }
         draw(data);
       },
       error: function(xhr, errorType, error) {
+        alert('Oh noes, something went wrong!');
         console.log(errorType, error);
       }
     });
@@ -224,7 +250,7 @@ function draw(data) {
   var container = document.getElementById('vis');
   var dot = data.dot; //document.getElementById('reduction-graph').text;
   var root = data.root; //document.getElementById('root-node').text;
-  var stuck = data.stuck; //document.getElementById('stuck-node').text;
+  var stuck = data[data.result]; //document.getElementById('stuck-node').text;
   data = vis.network.convertDot(dot);
   data.nodes.forEach(function(n) {
     n.label = n.label.replace(/\\n/g, "\n");

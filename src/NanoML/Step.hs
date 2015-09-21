@@ -55,19 +55,19 @@ runStep opts x = case runEvalFull opts x of
                       stTrace st
   (Right v, st, _) -> stTrace st
 
-checkProg :: String -> IO [[Expr]]
-checkProg s = do
-  let Right p = parseTopForm s
-  let (r, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl p)
-  -- print r
-  case r of
-    Right _ -> return []
-    Left e -> makePaths st
+-- checkProg :: String -> IO [[Expr]]
+-- checkProg s = do
+--   let Right p = parseTopForm s
+--   let (r, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl p)
+--   -- print r
+--   case r of
+--     Right _ -> return []
+--     Left e -> makePaths st
 
-makePaths st = do
-      gr <- buildGraph (stEdges st)
-      paths <- mkPaths st
-      return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
+-- makePaths st = do
+--       gr <- buildGraph (stEdges st)
+--       paths <- mkPaths st
+--       return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
 
 renderPath :: [Expr] -> Doc
 renderPath xs = vsep (intersperse (text "  ==>") (pairwiseNub $ map pretty xs))
@@ -84,54 +84,57 @@ runGraph opts x = case runEvalFull opts x of
   (Left e, st, _)  -> Left (e, stTrace st, stEdges st, stCurrentExpr st)
   (Right v, st, _) -> Right (stEdges st)
 
-mkPaths st = do
-  let expr = stCurrentExpr st
-  let edges = stEdges st
-  gr <- buildGraph edges
-  root <- findRoot gr expr
+-- mkPaths st = do
+--   let expr = stCurrentExpr st
+--   let edges = stEdges st
+--   gr <- buildGraph edges
+--   root <- findRoot gr expr
 
-  let check v t =
-        case runEval stdOpts (put st >> unify (typeOf v) t) of
-          Left _ -> False
-          Right _ -> True
+--   let check v t =
+--         case runEval stdOpts (put st >> unify (typeOf v) t) of
+--           Left _ -> False
+--           Right _ -> True
 
-  let checkpoly vts =
-        case runEval stdOpts (put st >> foldM (\su (v,t) -> (su++) <$> unify (typeOf v) (subst su t)) [] vts) of
-          Left _ -> False
-          Right _ -> True
+--   let checkpoly vts =
+--         case runEval stdOpts (put st >> foldM (\su (v,t) -> (su++) <$> unify (typeOf v) (subst su t)) [] vts) of
+--           Left _ -> False
+--           Right _ -> True
 
-  -- with a single subterm we always prioritize it over the parent
-  let checkOne x = findRoot gr x >>= \xn -> return [mkPath gr xn, mkPath gr root]
+--   -- with a single subterm we always prioritize it over the parent
+--   let checkOne x = findRoot gr x >>= \xn -> return [mkPath gr xn, mkPath gr root]
 
-  -- otherwise we order as follows
-  -- 1. subterms that don't unify on their own
-  -- 2. subterms that constribute to inconsistent instantiation of tyvars
-  --    e.g. in `1 :: [true]` we would have `a ~ int` and `a ~ bool`
-  -- 3. the parent term
-  -- 4. subterms that unify
-  let checkMany xts = do
-        let bad  = filter (not . uncurry check) xts
-        let poly = let grps = Map.elems $ Map.fromListWith (++) $
-                              concatMap (\(x,t) -> map (,[(x,t)]) (freeTyVars t)) xts
-                   in concat $ filter (not . checkpoly) grps
-        ns <- mapM (findRoot gr) (nub $ map fst bad ++ map fst poly ++ [expr] ++ map fst xts)
-        return $ map (mkPath gr) ns
+--   -- otherwise we order as follows
+--   -- 1. subterms that don't unify on their own
+--   -- 2. subterms that constribute to inconsistent instantiation of tyvars
+--   --    e.g. in `1 :: [true]` we would have `a ~ int` and `a ~ bool`
+--   -- 3. the parent term
+--   -- 4. subterms that unify
+--   let checkMany xts = do
+--         let bad  = filter (not . uncurry check) xts
+--         let poly = let grps = Map.elems $ Map.fromListWith (++) $
+--                               concatMap (\(x,t) -> map (,[(x,t)]) (freeTyVars t)) xts
+--                    in concat $ filter (not . checkpoly) grps
+--         ns <- mapM (findRoot gr) (nub $ map fst bad ++ map fst poly ++ [expr] ++ map fst xts)
+--         return $ map (mkPath gr) ns
   
-  case expr of
-    Uop _ u x -> checkOne x
-    Bop _ b x y -> checkMany [(x, typeOfBop b), (y, typeOfBop b)]
-    ConApp _ c (Just x) _
-      -> let ts = dArgs $ stDataEnv st Map.! c
-         in case (x, ts) of
-              (_, [t]) -> checkOne x
-              (VT _ vs, _) -> checkMany $ zip vs ts
-    Record _ fs _
-      -> let TRec fts = tyRhs $ stFieldEnv st Map.! fst (head fs)
-         in checkMany [ (fromJust $ lookup f fs, t) | (f, _, t) <- fts ]
-    Case _ x as -> checkOne x
-    App _ (Prim1 _ p@(P1 _ f t)) [x] -> checkOne x
-    App _ (Prim2 _ p@(P2 _ f tx ty)) [x,y] -> checkMany [(x, tx), (y, ty)]
-    _ -> error $ "mkPaths impossible: " ++ show expr
+--   case expr of
+--     Uop _ u x -> checkOne x
+--     Bop _ b x y -> checkMany [(x, typeOfBop b), (y, typeOfBop b)]
+--     ConApp _ c (Just x) _
+--       -> let ts = dArgs $ stDataEnv st Map.! c
+--          in case (x, ts) of
+--               (_, [t]) -> checkOne x
+--               (VT _ vs, _) -> checkMany $ zip vs ts
+--     Record _ fs _
+--       -> let TRec fts = tyRhs $ stFieldEnv st Map.! fst (head fs)
+--          in checkMany [ (fromJust $ lookup f fs, t) | (f, _, t) <- fts ]
+--     Case _ x as -> checkOne x
+--     App ms (Var _ v) xs
+--       | Just f <- lookupEnv v (stVarEnv st)
+--       -> undefined
+--     App _ (Prim1 _ p@(P1 _ f t)) [x] -> checkOne x
+--     App _ (Prim2 _ p@(P2 _ f tx ty)) [x,y] -> checkMany [(x, tx), (y, ty)]
+--     _ -> error $ "mkPaths impossible: " ++ show expr
 
 
 buildGraph :: [(Expr, EdgeKind, Expr)] -> IO Graph

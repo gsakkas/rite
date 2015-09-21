@@ -11,6 +11,7 @@ import qualified Data.Graph.Inductive.Graph as Graph
 import Data.Text (Text)
 import Lucid
 import Web.Scotty
+import Network.Wai.Middleware.RequestLogger
 
 import NanoML
 import NanoML.Misc
@@ -18,6 +19,7 @@ import NanoML.Pretty
 
 
 main = scotty 8091 $ do
+  middleware logStdoutDev
   get "/" $ do
     html . renderText . doctypehtml_ $ do
       head_ $ do
@@ -75,6 +77,12 @@ main = scotty 8091 $ do
                         -- , style_ "font-family: monospace;"
                       ] ""
           div_ [class_ "mybody col-md-6"] $ do
+            div_ [ id_ "safe-banner", class_ "alert alert-info"
+                 , style_ "display: none;" ] $ do
+              "Couldn't find a type error, here's a random execution instead."
+            div_ [ id_ "unsafe-banner", class_ "alert alert-warning"
+                 , style_ "display: none;" ] $ do
+              "Your program contains a type error!"
             div_ [ id_ "vis", class_ "mybody", style_ "border: 1px solid lightgray;"
                  ] ""
 
@@ -90,7 +98,7 @@ main = scotty 8091 $ do
   post "/check" $ do
     prog <- param "prog"
     var  <- param "var"
-    liftIO $ print (var, prog)
+    -- liftIO $ print (var, prog)
     let p = fromRight (parseTopForm prog)
     -- liftIO $ print (prettyProg p)
     res <- liftIO $ if null var
@@ -104,11 +112,12 @@ main = scotty 8091 $ do
         let gr' = Graph.nmap (fillHoles finalState) gr
         let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
         let root = show (backback gr st)
-        let stuck = show st
+        let value = show st
         liftIO $ writeFile "tmp.dot" dot
         json $ Map.fromList [ ("dot" :: String, dot)
                             , ("root", root)
-                            , ("stuck", stuck)
+                            , ("value", value)
+                            , ("result", "value")
                             ]
 
         -- html . renderText . doctypehtml_ $ do
@@ -128,6 +137,7 @@ main = scotty 8091 $ do
         json $ Map.fromList [ ("dot" :: String, dot)
                             , ("root", root)
                             , ("stuck", stuck)
+                            , ("result", "stuck")
                             ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do

@@ -56,26 +56,26 @@ check err prog =
       , Just (f,d,p) <- traceShow (l,c) findDecl prog (read l) (read c)
 --      , Just t <- Map.lookup f knownFuncs
         -> do r <- checkDecl f p
-              printResult r
+              -- printResult r
               return $ Just r
     DFun _ _ [(VarPat _ f, Lam {})]
       -- Just t <- Map.lookup f knownFuncs
         -> do r <- checkDecl f prog
-              printResult r
+              -- printResult r
               return $ Just r
     DFun _ _ [(WildPat _, _)]
         -> do r <- runProg prog
-              printResult r
+              -- printResult r
               return $ Just r
     DFun _ _ [(VarPat _ _, _)]
         -> do r <- runProg prog
-              printResult r
+              -- printResult r
               return $ Just r
     DEvl _ _
         -> do r <- runProg prog
-              printResult r
+              -- printResult r
               return $ Just r
-    _ -> do printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
+    _ -> do -- printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
             return Nothing
 
 printResult Failure {..} = do
@@ -146,13 +146,13 @@ nanoCheck numSuccess maxSize opts x = do
     (Left (MLException e), st, _) -> Success (numSuccess + 1) st
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values
-      let paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
+      let -- paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
           invoc = case map (fetchArg' (stStore st)) (stArgs st) of
             [] -> mempty
             f:args -> pretty (fillHoles st $ mkApps Nothing f args)
       in Failure (numSuccess + 1) seed maxSize
                  invoc
-                 (map renderPath paths)
+                 [] -- (map renderPath paths)
                  st
 --                 (vcat (text (show e) : invoc : []))
     (Right _, st, _) -> Success (numSuccess + 1) st

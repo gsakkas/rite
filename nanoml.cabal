@@ -20,7 +20,7 @@ executable nanoml-server
   hs-source-dirs: bin
   default-language: Haskell2010
   build-depends: base >= 4.7 && < 5, containers, fgl, fgl-visualize,
-                 nanoml, lucid, scotty, text, transformers
+                 nanoml, lucid, scotty, text, transformers, wai-extra
 
 executable nano-check
   main-is: Check.hs
