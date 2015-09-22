@@ -252,7 +252,7 @@ evalConApp dc v = do
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
-      , [vh, VL _ vt] <- vs -> force vh (typeOfList vt) $ \vh su -> do
+      , [vh, vt] <- vs -> force vt (tL a) $ \(VL _ vt) _ -> force vh (typeOfList vt) $ \vh _ -> do
         return (VL prv (vh : vt))
       | length as == length vs -> forces (zip vs as) $ \vs su -> do
         su <- mconcat <$> zipWithM unify as (map typeOf vs)
@@ -387,10 +387,11 @@ matchPat v p = case p of
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
-  ConPat _ "[]" Nothing -> force v (tL a) $ \(VL _ vs) su ->
-    case vs of
-      [] -> return (Just mempty)
-      _  -> return Nothing
+  ConPat _ "[]" Nothing -> force v (tL a) $ \v  su -> case v of
+    -- case vs of
+      VL _ [] -> return (Just mempty)
+      VL _ _  -> return Nothing
+      _ -> error $ "matchPat: impossible: " ++ show v
   ConPat _ "()" Nothing -> force v tU $ \v su ->
      return (Just mempty)
   ConPat _ dc p' -> do

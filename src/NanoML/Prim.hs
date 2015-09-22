@@ -85,20 +85,19 @@ primVars = [ ("[]", VL nullProv [])
            , ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max"
-             ,mkNonRec $ mkLams [varPatD "x", varPatD "y"]
+             ,mkLams baseEnv [varPatD "x", varPatD "y"]
                                 (iteD (mkAppsD (varD ">=") [varD "x", varD "y"])
                                      (varD "x") (varD "y")))
            , ("min"
-             ,mkNonRec $ mkLams [varPatD "x", varPatD "y"]
+             ,mkLams baseEnv [varPatD "x", varPatD "y"]
                                 (iteD (mkAppsD (varD "<=") [varD "x", varD "y"])
                                      (varD "x") (varD "y")))
-           , ("!", mkNonRec $ mkLams [varPatD "x"] (fieldD (varD "x") "contents"))
-           , (":=", mkNonRec $ mkLams [varPatD "x", varPatD "v"]
+           , ("!", mkLams baseEnv [varPatD "x"] (fieldD (varD "x") "contents"))
+           , (":=", mkLams baseEnv [varPatD "x", varPatD "v"]
                                       (setFieldD (varD "x") "contents" (varD "v")))
-           , ("ref", mkNonRec $ mkLams [varPatD "x"] (recordD [("contents", varD "x")] Nothing))
+           , ("ref", mkLams baseEnv [varPatD "x"] (recordD [("contents", varD "x")] Nothing))
            , ("List.fold_left"
-             ,mkRec "List.fold_left"
-                    (mkLams [varPatD "f", varPatD "b", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "b", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -114,8 +113,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.fold_right"
-             ,mkRec "List.fold_right"
-                    (mkLams [varPatD "f", varPatD "xs", varPatD "b"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs", varPatD "b"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -131,8 +129,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.assoc"
-             ,mkRec "List.assoc"
-                    (mkLams [varPatD "z", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "z", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -146,8 +143,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.exists"
-             ,mkRec "List.exists"
-                    (mkLams [varPatD "f", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -161,8 +157,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.for_all"
-             ,mkRec "List.for_all"
-                    (mkLams [varPatD "f", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -176,8 +171,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.filter"
-             ,mkRec "List.filter"
-                    (mkLams [varPatD "f", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -191,8 +185,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.map"
-             ,mkRec "List.map"
-                    (mkLams [varPatD "f", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -210,8 +203,7 @@ primVars = [ ("[]", VL nullProv [])
                              ]))
              )
            , ("List.iter"
-             ,mkRec "List.iter"
-                    (mkLams [varPatD "f", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -551,17 +543,17 @@ setField x@(VR _ fs _) f v = case lookup f fs of
       _   -> otherError $ printf "field '%s' is not mutable" f
 setField x _ _ = otherError $ printf "%s is not a record" (show x)
 
-mkNonRec :: Expr -> Value
-mkNonRec lam = func
-  where
-  func = Replace Nothing env lam
-  env  = baseEnv
+-- mkNonRec :: Expr -> Value
+-- mkNonRec lam = func
+--   where
+--   func = Replace Nothing env lam
+--   env  = baseEnv
 
-mkRec :: Var -> Expr -> Value
-mkRec f lam = func
-  where
-  func = Replace Nothing env lam
-  env  = {- insertEnv f func -} baseEnv
+-- mkRec :: Var -> Expr -> Value
+-- mkRec f lam = func
+--   where
+--   func = Replace Nothing env lam
+--   env  = {- insertEnv f func -} baseEnv
 
 baseEnv :: Env
 baseEnv = Env 0 "global" Nothing
@@ -569,8 +561,7 @@ baseEnv = Env 0 "global" Nothing
         ++ primVars
 
 mkBopFun :: Bop -> Value
-mkBopFun bop = Replace Nothing emptyEnv
-             $ mkLams [varPatD "x", varPatD "y"]
+mkBopFun bop = mkLams emptyEnv [varPatD "x", varPatD "y"]
                             (bopD bop (varD "x") (varD "y"))
 
 mkPrim1Fun :: Prim1 -> Value

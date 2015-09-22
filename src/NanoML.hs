@@ -79,7 +79,7 @@ check err prog =
             return Nothing
 
 printResult Failure {..} = do
-  printf "*** Failed after %d tests:\n" numTests
+  printf "*** Failed after %d tests: %s\n" numTests (show errorMsg)
   print counterExample
 printResult Success {..} =
   printf "+++ OK, passed %d tests.\n" numTests

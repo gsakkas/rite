@@ -274,6 +274,7 @@ stepAllProg (d:p) = do
   modify' $ \s -> s { stSteps = stSteps s + 1 }
   ss <- gets stSteps
   maxss <- asks maxSteps
+  -- traceShowM (ss, maxss)
   case md of
     Nothing -> stepAllProg p
     Just d
@@ -338,7 +339,8 @@ matchRecBinds binds = do
     unless (all (\(p,v) -> -- isFunPat p || 
                            isFun v) binds) $
       otherError "'let rec' must only bind functions"
-    bnd <- matchBinds binds
+    binds' <- forM binds $ \(p,v) -> (p,) <$> step v
+    bnd <- matchBinds binds'
     allocEnvWith "let-rec" penv bnd
   where
   -- isFunPat (FunPat {}) = True
@@ -387,7 +389,7 @@ step expr = withCurrentExpr expr $ case expr of
   Var ms v -> do
     -- addEvent expr
     build expr =<< lookupEnv v =<< gets stVarEnv
-  Lam ms p e Nothing -> Lam ms p e . Just <$> gets stVarEnv
+  Lam ms p e Nothing -> build expr . Lam ms p e . Just =<< gets stVarEnv
   -- Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
@@ -395,11 +397,11 @@ step expr = withCurrentExpr expr $ case expr of
   App ms f@(Var _ v) args -> stepOne args
                   (\args -> do f <- lookupEnv v =<< gets stVarEnv
                                -- traceShowM f
-                               build expr =<< stepApp ms f args)
+                               build expr =<< stepApp ms (skipEnv f) args)
                   (\args -> build expr $ App ms f args)
   App ms f args -> stepOne (f:args)
                   (\(f:vs) -> -- addEvent expr >> 
-                                build expr =<< stepApp ms f vs)
+                                build expr =<< stepApp ms (skipEnv f) vs)
                   (\(f:es) -> build expr $ App ms f es)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >> 
@@ -431,7 +433,7 @@ step expr = withCurrentExpr expr $ case expr of
       case b of
           VB _ True  -> build expr t
           VB _ False -> build expr f
-          _ -> _HEREEREERRE
+          _ -> typeError (tCon tBOOL) (typeOf b)
     | otherwise
       -> do b <- step b
             build expr $ Ite ms b t f
@@ -476,6 +478,7 @@ step expr = withCurrentExpr expr $ case expr of
         (\es -> build expr $ Record ms (zip fs es) Nothing)
   Field ms e f
     | isValue e -> build expr =<< getField e f
+    | otherwise -> build expr . (\e' -> Field ms e' f) =<< step e
   SetField ms r f e -> stepOne [r,e]
                       (\[vr, ve] -> setField vr f ve >> withCurrentProvM (build expr . VU))
                       (\[r,e] -> build expr $ SetField ms r f e)
@@ -509,10 +512,10 @@ step expr = withCurrentExpr expr $ case expr of
   --     (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
   _ -> error ("step: " ++ show expr)
 
-stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
-stepApp ms f' es = case f' of
-  With _ e f -> stepApp ms f es
-  Replace _ e f -> stepApp ms f es
+stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
+stepApp ms f' es = force f' (TVar "a" :-> TVar "b") $ \f' su -> case f' of
+  -- With _ e f -> stepApp ms f es
+  -- Replace _ e f -> stepApp ms f es
   -- immediately apply saturated primitve wrappers
   Prim1 ms' (P1 x f' t) -> do
     -- traceShowM (f, es)
@@ -546,7 +549,8 @@ stepApp ms f' es = case f' of
             Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
           ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
           (_, []) -> withCurrentProvM $ \prv -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) -> return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
-  _ -> otherError $ printf "'%s' is not a function" (show f')
+  _ -> error $ "stepApp: impossible: " ++ show f'
+  -- _ -> typeError (TVar "a" :-> TVar "b") (typeOf f') -- otherError $ printf "'%s' is not a function" (show f')
 -- stepApp _ f es = error (show (f:es))
 
 mkLamsSubTerms [] e = return e

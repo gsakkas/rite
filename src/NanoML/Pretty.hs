@@ -149,6 +149,7 @@ instance Pretty Expr where
     With _ env e -> prettyPrec z e
     Replace _ env e -> prettyPrec z e
     Hole _ _ _ -> text "_"
+    Ref r -> text "<ref-" <> pretty r <> text ">"
 
 instance Pretty Bop where
   pretty Eq = text "="

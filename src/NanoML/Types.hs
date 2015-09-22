@@ -215,6 +215,8 @@ refreshExpr expr = addSubTerms =<< case expr of
   Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
+  Hole ms r mt -> return $ Hole ms r mt
+  Ref r -> return $ Ref r
 
 refreshBind :: MonadEval m => (a, Expr) -> m (a, Expr)
 refreshBind (a,e) = do
@@ -610,12 +612,15 @@ onSrcSpanExpr f expr = case expr of
   Field ms x y -> Field (f ms) x y
   SetField ms x y z -> SetField (f ms) x y z
   Array ms x -> Array (f ms) x
+  List ms x -> List (f ms) x
   Try ms x y -> Try (f ms) x y
   Prim1 ms x -> Prim1 (f ms) x
   Prim2 ms x -> Prim2 (f ms) x
   -- Val ms x -> Val (f ms) x
   With ms x y -> With (f ms) x y
   Replace ms x y -> Replace (f ms) x y
+  Hole ms x y -> Hole (f ms) x y
+  Ref r -> Ref r
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
@@ -874,10 +879,10 @@ mkConApp ms c [e] = ConApp ms c (Just e) Nothing
 mkConApp ms c es  = ConApp ms c (Just (Tuple ms' es)) Nothing
   where ms' = mergeLocated (head es) (last es)
 
-mkLams :: [Pat] -> Expr -> Expr
-mkLams ps e = case ps of
+mkLams :: Env -> [Pat] -> Expr -> Expr
+mkLams env ps e = case ps of
   []   -> e
-  p:ps -> Lam (mergeLocated p e) p (mkLams ps e) Nothing
+  p:ps -> Lam (mergeLocated p e) p (mkLams env ps e) (Just env)
 
 mkList :: [Expr] -> Expr
 mkList = foldr (\h t -> mkConApp Nothing "::" [h,t]) (mkConApp Nothing "[]" [])
