@@ -248,26 +248,28 @@ function setup() {
 function draw(data) {
   // ctxmenu = document.getElementById('menu');
   var container = document.getElementById('vis');
-  var dot = data.dot; //document.getElementById('reduction-graph').text;
+  // var dot = data.dot; //document.getElementById('reduction-graph').text;
   var root = data.root; //document.getElementById('root-node').text;
   var stuck = data[data.result]; //document.getElementById('stuck-node').text;
-  data = vis.network.convertDot(dot);
-  data.nodes.forEach(function(n) {
-    n.label = n.label.replace(/\\n/g, "\n");
-  });
+  // data = vis.network.convertDot(dot);
+  // data.nodes.forEach(function(n) {
+  //   n.label = n.label.replace(/\\n/g, "\n");
+  // });
   allNodes = new vis.DataSet(data.nodes);
   allEdges = new vis.DataSet(data.edges);
-  var nodes = new vis.DataSet(data.nodes).get({filter: function(x) {
-    return x.id === ('u' + root) || x.id === ('u' + stuck);
+  console.log(allNodes, allEdges, root, stuck);
+  var nodes = allNodes.get({filter: function(x) {
+    return x.id === root || x.id === stuck;
   }});
+  console.log(nodes);
   if (allEdges.get({filter: function(x) {
-        return x.from === ('u'+root) && x.to === ('u'+stuck);
+        return x.from === root && x.to === stuck;
       }}).length > 0) {
     var width = single_width;
   } else {
     var width = multi_width;
   }
-  var edges = new vis.DataSet([{ arrows: 'to', from: ('u'+root), to: ('u'+stuck), width: width}]);
+  var edges = new vis.DataSet([{ arrows: 'to', from: root, to: stuck, width: width}]);
   // steps = new vis.DataSet(data.edges).get({filter: function (x) {
   //   return x.label.indexOf("StepsTo") === 0;
   // }});

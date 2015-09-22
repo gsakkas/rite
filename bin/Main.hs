@@ -5,6 +5,7 @@ module Main where
 
 import Control.Monad
 import Control.Monad.IO.Class
+import Data.Aeson (object, (.=))
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import qualified Data.Graph.Inductive.Dot as Graph
@@ -106,21 +107,29 @@ main = scotty 8091 $ do
     res <- liftIO $ if null var
                     then fromJust <$> check Nothing p
                     else checkDecl var p
+    let mkNode (n, l) = object ["id" .= n, "label" .= l]
+    let mkEdge (x, y, l) = object [ "arrows" .= ("to" :: String)
+                                  , "from" .= x, "to" .= y
+                                  , "label" .= l]
     -- liftIO $ print res
     case res of
       Success n finalState -> do
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
-        let gr' = Graph.nmap (fillHoles finalState) gr
-        let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
-        let root = show (backback gr st)
-        let value = show st
-        liftIO $ writeFile "tmp.dot" dot
-        json $ Map.fromList [ ("dot" :: String, dot)
-                            , ("root", root)
-                            , ("value", value)
-                            , ("result", "value")
-                            ]
+        let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
+        -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
+        let nodes = Graph.labNodes gr'
+        let edges = Graph.labEdges gr'
+        let root = backback gr st
+        let value = st
+        -- liftIO $ writeFile "tmp.dot" dot
+        json $ object [ -- ("dot" :: String, dot)
+                        "nodes"  .= map mkNode nodes
+                      , "edges"  .= map mkEdge edges
+                      , "root"   .= root
+                      , "value"  .= value
+                      , "result" .= ("value" :: String)
+                      ]
 
         -- html . renderText . doctypehtml_ $ do
         -- title_ "NanoML"
@@ -131,17 +140,21 @@ main = scotty 8091 $ do
       Failure {..} -> do
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
-        let gr' = Graph.nmap (fillHoles finalState) gr
-        let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
-        let root = show (backback gr st)
-        let stuck = show st
-        liftIO $ writeFile "tmp.dot" dot
-        json $ Map.fromList [ ("dot" :: String, dot)
-                            , ("root", root)
-                            , ("stuck", stuck)
-                            , ("result", "stuck")
-                            , ("reason", show errorMsg)
-                            ]
+        let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
+        -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
+        let nodes = Graph.labNodes gr'
+        let edges = Graph.labEdges gr'
+        let root = backback gr st
+        let stuck = st
+        -- liftIO $ writeFile "tmp.dot" dot
+        json $ object [ -- ("dot" :: String, dot)
+                        "nodes"  .= map mkNode nodes
+                      , "edges"  .= map mkEdge edges
+                      , "root"   .= root
+                      , "stuck"  .= stuck
+                      , "result" .= ("stuck" :: String)
+                      , "reason" .= show errorMsg
+                      ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do
         --     title_ "NanoML"
