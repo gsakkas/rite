@@ -6,6 +6,7 @@ module Main where
 import Control.Monad
 import Control.Monad.IO.Class
 import qualified Data.Map as Map
+import Data.Maybe (fromMaybe)
 import qualified Data.Graph.Inductive.Dot as Graph
 import qualified Data.Graph.Inductive.Graph as Graph
 import Data.Text (Text)
@@ -21,6 +22,7 @@ import NanoML.Pretty
 main = scotty 8091 $ do
   middleware logStdoutDev
   get "/" $ do
+    prog <- lookup "prog" <$> params
     html . renderText . doctypehtml_ $ do
       head_ $ do
         title_ "NanoMaLy"
@@ -75,7 +77,7 @@ main = scotty 8091 $ do
             textarea_ [ id_ "prog", name_ "prog"
                         -- , rows_ "10", cols_ "50"
                         -- , style_ "font-family: monospace;"
-                      ] ""
+                      ] (toHtml $ fromMaybe "" prog)
           div_ [class_ "mybody col-md-6"] $ do
             div_ [ id_ "safe-banner", class_ "alert alert-info"
                  , style_ "display: none;" ] $ do

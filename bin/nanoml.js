@@ -198,14 +198,13 @@ function notifyUnsafe() {
 
 function setup() {
   var prog = document.getElementById('prog');
-  var cm = CodeMirror.fromTextArea(prog, {
+  editor = CodeMirror.fromTextArea(prog, {
     mode: "mllike",
     lineNumbers: true,
   });
     
   // TODO: how do i get the hash fragment and base64 decode in javascript??
-  // var initial = getFragment();
-  // cm.setText(initial.decode());
+  // editor.setValue(atob(window.location.hash));
 
   func_input = document.getElementById('var-input');
   check_btn = document.getElementById('check-btn');
