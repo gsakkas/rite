@@ -192,7 +192,8 @@ function insertNode(node, replacingEdge) {
 function notifySafe() {
   safe_banner.style.display = 'block';
 }
-function notifyUnsafe() {
+function notifyUnsafe(reason) {
+  unsafe_banner.innerText = reason;
   unsafe_banner.style.display = 'block';
 }
 
@@ -217,7 +218,7 @@ function setup() {
     unsafe_banner.style.display = 'none';
 
     var func = func_input.text;
-    var prog = cm.getValue();
+    var prog = editor.getValue();
     console.log(prog);
 
     // send ajax request
@@ -231,7 +232,7 @@ function setup() {
         if (data.result === 'value') {
           notifySafe();
         } else if (data.result === 'stuck') {
-          notifyUnsafe();
+          notifyUnsafe(data.reason);
         }
         draw(data);
       },

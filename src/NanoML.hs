@@ -152,7 +152,7 @@ nanoCheck numSuccess maxSize opts x = do
             f:args -> pretty (fillHoles st $ mkApps Nothing f args)
       in Failure (numSuccess + 1) seed maxSize
                  invoc
-                 [] -- (map renderPath paths)
+                 (pretty e)
                  st
 --                 (vcat (text (show e) : invoc : []))
     (Right _, st, _) -> Success (numSuccess + 1) st

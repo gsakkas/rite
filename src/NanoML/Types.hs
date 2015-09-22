@@ -80,7 +80,7 @@ data Result
             , usedSeed :: !Int
             , usedSize :: !Int
             , counterExample :: !Doc
-            , pathSlices :: ![Doc]
+            , errorMsg :: !Doc
             , finalState :: !EvalState
             }
   deriving Show

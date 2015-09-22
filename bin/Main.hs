@@ -140,6 +140,7 @@ main = scotty 8091 $ do
                             , ("root", root)
                             , ("stuck", stuck)
                             , ("result", "stuck")
+                            , ("reason", show errorMsg)
                             ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do
