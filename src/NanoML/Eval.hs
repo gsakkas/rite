@@ -36,42 +36,42 @@ import Debug.Trace
 -- Evaluation
 ----------------------------------------------------------------------
 
-evalString :: MonadEval m => String -> m Value
-evalString s = case parseExpr s of
-  Left e  -> throwError (ParseError e)
-  Right e -> eval e
+-- evalString :: MonadEval m => String -> m Value
+-- evalString s = case parseExpr s of
+--   Left e  -> throwError (ParseError e)
+--   Right e -> eval e
 
-evalDecl :: MonadEval m => Decl -> m ()
-evalDecl decl = case decl of
-  DFun _ Rec    binds  -> evalRecBinds binds >>= setVarEnv
-  DFun _ NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
-  DEvl _ expr -> void $ eval expr
-  DTyp _ decls -> mapM_ addType decls
-  DExn _ decl -> extendType "exn" decl
+-- evalDecl :: MonadEval m => Decl -> m ()
+-- evalDecl decl = case decl of
+--   DFun _ Rec    binds  -> evalRecBinds binds >>= setVarEnv
+--   DFun _ NonRec binds  -> evalNonRecBinds binds >>= setVarEnv
+--   DEvl _ expr -> void $ eval expr
+--   DTyp _ decls -> mapM_ addType decls
+--   DExn _ decl -> extendType "exn" decl
 
-evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
-evalRecBinds binds = do
-  penv <- gets stVarEnv
-  mfix $ \fenv -> do
-    setVarEnv fenv
-    bnd <- evalBinds binds
-    allocEnvWith "let-rec" penv bnd
+-- evalRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
+-- evalRecBinds binds = do
+--   penv <- gets stVarEnv
+--   mfix $ \fenv -> do
+--     setVarEnv fenv
+--     bnd <- evalBinds binds
+--     allocEnvWith "let-rec" penv bnd
 
-evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
-evalNonRecBinds binds = do
-  bnd <- evalBinds binds
-  allocEnv "let" bnd
+-- evalNonRecBinds :: MonadEval m => [(Pat,Expr)] -> m Env
+-- evalNonRecBinds binds = do
+--   bnd <- evalBinds binds
+--   allocEnv "let" bnd
 
-evalBinds :: MonadEval m => [(Pat,Expr)] -> m [(Var,Value)]
-evalBinds binds = concatMapM evalBind binds
+-- evalBinds :: MonadEval m => [(Pat,Expr)] -> m [(Var,Value)]
+-- evalBinds binds = concatMapM evalBind binds
 
--- | @evalBind (p,e) env@ returns the environment matched by @p@
-evalBind :: MonadEval m => (Pat,Expr) -> m [(Var,Value)]
-evalBind (p,e) = withCurrentExpr e $ do
-  v <- eval e
-  matchPat v p >>= \case
-    Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
-    Just env -> return env
+-- -- | @evalBind (p,e) env@ returns the environment matched by @p@
+-- evalBind :: MonadEval m => (Pat,Expr) -> m [(Var,Value)]
+-- evalBind (p,e) = withCurrentExpr e $ do
+--   v <- eval e
+--   matchPat v p >>= \case
+--     Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
+--     Just env -> return env
 
 
 
@@ -102,94 +102,96 @@ mycensor f m = pass $ do
     a <- m
     return (a, f a)
 
-eval :: MonadEval m => Expr -> m Value
-eval expr = logExpr expr $ case expr of
-  Var ms v ->
-    lookupVar v
-  Lam ms p e _ ->
-    Lam ms p e . Just <$> gets stVarEnv
-  App ms f args -> do
-    vf    <- eval f
-    vargs <- mapM eval args
-    -- FIXME: this appears to be discarding bindings introduced by the
-    -- function application
-    foldM evalApp vf vargs
-  Bop ms b e1 e2 -> do
-    v1 <- eval e1
-    v2 <- eval e2
-    evalBop b v1 v2
-  Uop ms u e -> do
-    v <- eval e
-    evalUop u v
-  Lit ms l -> litValue l
-  Let ms Rec binds body -> do
-    env <- evalRecBinds binds
-    eval body `withEnv` env
-  Let ms NonRec binds body -> do
-    env <- evalNonRecBinds binds
-    eval body `withEnv` env
-  Ite ms eb et ef -> do
-    vb <- eval eb
-    case vb of
-      VB _ True  -> eval et
-      VB _ False -> eval ef
-      _        -> typeError (typeOf vb) (tCon tBOOL)
-  Seq ms e1 e2 ->
-    eval e1 >> eval e2
-  Case ms e as -> do
-    v <- eval e
-    evalAlts v as
-  Tuple ms es -> do
-    vs <- mapM eval es
-    withCurrentProv $ \prv -> (VT prv vs)
-  ConApp ms "()" Nothing _ -> withCurrentProv VU
-  ConApp ms "[]" Nothing _ -> withCurrentProv $ \prv -> (VL prv [])
-  ConApp ms "::" (Just (Tuple ms' [h,t])) _ -> do
-    vh <- eval h
-    vt <- eval t
-    force vt (tL (typeOf vh)) $ \(VL _ vt) su -> do
-      withCurrentProv $ \prv -> (VL prv (vh:vt))
-  ConApp ms dc Nothing _ -> do
-    evalConApp dc Nothing
-  ConApp ms dc (Just e) _ -> do
-    v <- eval e
-    evalConApp dc (Just v)
-  Record ms flds _ -> do
-    td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
-    unless (all (`elem` map fst3 fs) (map fst flds)) $
-      otherError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
-    unless (all (`elem` map fst flds) (map fst3 fs)) $
-      otherError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
-    (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
-      let e = fromJust $ lookup f flds
-      v <- eval e
-      force v t $ \v su -> do
-        su <- unify t (typeOf v)
-        i <- fresh
-        writeStore i (m,v)
-        return ((f, Ref i),su)
-    let t = subst (mconcat sus) $ typeDeclType td
-    withCurrentProv $ \prv -> (VR prv vs (Just t))
-  Field ms e f -> do
-    v <- eval e
-    getField v f
-  SetField ms r f e -> do
-    vr <- eval r
-    v  <- eval e
-    setField vr f v
-    withCurrentProv VU
-  Array ms [] -> withCurrentProv $ \prv -> (VV prv [])
-  Array ms es -> do
-    (v:vs) <- mapM eval es
-    mapM_ (unify (typeOf v) . typeOf) vs
-    withCurrentProv $ \prv -> (VV prv (v:vs))
-  Try ms e alts -> do
-    env <- gets stVarEnv
-    eval e `catchError` \e -> do
-      setVarEnv env
-      case e of
-        MLException ex -> evalAlts ex alts
-        _              -> maybeThrow e
+-- eval :: MonadEval m => Expr -> m Value
+-- eval expr = logExpr expr $ case expr of
+--   Var ms v ->
+--     lookupVar v
+--   Lam ms p e _ ->
+--     Lam ms p e . Just <$> gets stVarEnv
+--   App ms f args -> do
+--     vf    <- eval f
+--     vargs <- mapM eval args
+--     -- FIXME: this appears to be discarding bindings introduced by the
+--     -- function application
+--     foldM evalApp vf vargs
+--   Bop ms b e1 e2 -> do
+--     v1 <- eval e1
+--     v2 <- eval e2
+--     evalBop b v1 v2
+--   Uop ms u e -> do
+--     v <- eval e
+--     evalUop u v
+--   Lit ms l -> litValue l
+  -- Let ms Rec binds body -> do
+  --   env <- evalRecBinds binds
+  --   eval body `withEnv` env
+  -- Let ms NonRec binds body -> do
+  --   env <- evalNonRecBinds binds
+  --   eval body `withEnv` env
+  -- Ite ms eb et ef -> do
+  --   vb <- eval eb
+  --   case vb of
+  --     VB _ True  -> eval et
+  --     VB _ False -> eval ef
+  --     _        -> typeError (typeOf vb) (tCon tBOOL)
+  -- Seq ms e1 e2 ->
+  --   eval e1 >> eval e2
+  -- Case ms e as -> do
+  --   v <- eval e
+  --   evalAlts v as
+  -- Tuple ms es -> do
+  --   vs <- mapM eval es
+  --   withCurrentProv $ \prv -> (VT prv vs)
+  -- ConApp ms "()" Nothing _ -> withCurrentProv VU
+  -- ConApp ms "[]" Nothing _ -> withCurrentProv $ \prv -> (VL prv [])
+  -- ConApp ms "::" (Just (Tuple ms' [h,t])) _ -> do
+  --   vh <- eval h
+  --   vt <- eval t
+  --   force vt (tL (typeOf vh)) $ \(VL _ vt) su -> do
+  --     withCurrentProv $ \prv -> (VL prv (vh:vt))
+  -- ConApp ms dc Nothing _ -> do
+  --   evalConApp dc Nothing
+  -- ConApp ms dc (Just e) _ -> do
+  --   v <- eval e
+  --   evalConApp dc (Just v)
+  -- Record ms flds _ -> do
+  --   td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
+  --   unless (all (`elem` map fst3 fs) (map fst flds)) $
+  --     otherError $ printf "invalid fields for type %s: %s" tyCon (show $ pretty expr)
+  --   unless (all (`elem` map fst flds) (map fst3 fs)) $
+  --     otherError $ printf "missing fields for type %s: %s" tyCon (show $ pretty expr)
+  --   (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
+  --     let e = fromJust $ lookup f flds
+  --     v <- eval e
+  --     force v t $ \v su -> do
+  --       su <- unify t (typeOf v)
+  --       i <- fresh
+  --       writeStore i (m,v)
+  --       return ((f, Ref i),su)
+  --   let t = subst (mconcat sus) $ typeDeclType td
+  --   withCurrentProv $ \prv -> (VR prv vs (Just t))
+  -- Field ms e f -> do
+  --   v <- eval e
+  --   getField v f
+  -- SetField ms r f e -> do
+  --   vr <- eval r
+  --   v  <- eval e
+  --   setField vr f v
+  --   withCurrentProv VU
+  -- Array ms [] -> withCurrentProv $ \prv -> (VV prv [])
+  -- Array ms es -> do
+  --   (v:vs) <- mapM eval es
+  --   mapM_ (unify (typeOf v) . typeOf) vs
+  --   withCurrentProv $ \prv -> (VV prv (v:vs))
+  -- Try ms e alts -> do
+  --   env <- gets stVarEnv
+  --   eval e `catchError` \e -> do
+  --     setVarEnv env
+  --     case e of
+  --       MLException ex -> evalAlts ex alts
+  --       _              -> maybeThrow e
+--   -- FIXME: 
+--   _ -> return expr
   -- Prim1 _ (P1 p f t) e -> do
   --   v <- eval e
   --   force v t $ \v su -> f v
@@ -227,8 +229,8 @@ forceSame x@(Hole {}) y k = force x (typeOf y) $ \x su -> k x y
 forceSame x y@(Hole {}) k = force y (typeOf x) $ \y su -> k x y
 forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
 
-evalApp :: MonadEval m => Value -> Value -> m Value
-evalApp = error "evalApp"
+-- evalApp :: MonadEval m => Value -> Value -> m Value
+-- evalApp = error "evalApp"
 -- evalApp f a = logExpr (App Nothing (Val Nothing f) [Val Nothing a]) $ case f of
 --   VF _ (Func (Lam ms p e) env) -> do
 --     Just pat_env <- matchPat a p
@@ -274,6 +276,8 @@ evalBop bop v1 v2 = withCurrentProvM $ \prv ->
   Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
   Gt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> gtVal v1 v2
   Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
+  And    -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] su -> pand v1 v2
+  Or     -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] su -> por v1 v2
   Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> plusVal v1 v2
   Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> minusVal v1 v2
   Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> timesVal v1 v2
@@ -332,19 +336,19 @@ litValue (LC c) = withCurrentProv $ \prv -> VC prv c
 litValue (LS s) = withCurrentProv $ \prv -> VS prv s
 --litValue LU     = VU
 
-evalAlts :: MonadEval m => Value -> [Alt] -> m Value
-evalAlts _ []
-  = withCurrentProvM $ \prv -> maybeThrow $ MLException (mkExn "Match_failure" [] prv)
-evalAlts v ((p,g,e):as)
-  = matchPat v p >>= \case
-      Nothing  -> evalAlts v as
-      Just bnd -> do newenv <- error "evalAlts" -- joinEnv bnd <$> gets stVarEnv
-                     case g of
-                      Nothing -> eval e `withEnv` newenv
-                      Just g  ->
-                        eval g `withEnv` newenv >>= \case
-                          VB _ True  -> eval e `withEnv` newenv
-                          VB _ False -> evalAlts v as
+-- evalAlts :: MonadEval m => Value -> [Alt] -> m Value
+-- evalAlts _ []
+--   = withCurrentProvM $ \prv -> maybeThrow $ MLException (mkExn "Match_failure" [] prv)
+-- evalAlts v ((p,g,e):as)
+--   = matchPat v p >>= \case
+--       Nothing  -> evalAlts v as
+--       Just bnd -> do newenv <- error "evalAlts" -- joinEnv bnd <$> gets stVarEnv
+--                      case g of
+--                       Nothing -> eval e `withEnv` newenv
+--                       Just g  ->
+--                         eval g `withEnv` newenv >>= \case
+--                           VB _ True  -> eval e `withEnv` newenv
+--                           VB _ False -> evalAlts v as
 
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
@@ -356,9 +360,12 @@ matchPat v p = case p of
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
   IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v su -> do
-    VB _ b <- eval (mkApps Nothing (Var Nothing "&&")
-                  [ mkApps Nothing (Var Nothing ">=") [v, Lit Nothing lo]
-                  , mkApps Nothing (Var Nothing "<=") [v, Lit Nothing hi]])
+    VB _ b <- do lb <- evalBop Ge v (Lit Nothing lo)
+                 gb <- evalBop Le v (Lit Nothing hi)
+                 evalBop And lb gb
+      -- eval (mkApps Nothing (Var Nothing "&&")
+      --             [ mkApps Nothing (Var Nothing ">=") [v, Lit Nothing lo]
+      --             , mkApps Nothing (Var Nothing "<=") [v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> force v (tL a) $ \v su -> do
     case v of
@@ -429,6 +436,6 @@ matchLit v       l       = do
   typeError (typeOf v) (typeOf lv)
 
 
-testEval :: String -> IO ()
-testEval s = let Right e = parseExpr s
-             in print $ runEval stdOpts (eval e)
+-- testEval :: String -> IO ()
+-- testEval s = let Right e = parseExpr s
+--              in print $ runEval stdOpts (eval e)

@@ -283,12 +283,12 @@ stepAllProg (d:p) = do
 stepDecl :: MonadEval m => Decl -> m (Maybe Decl)
 stepDecl decl = case decl of
   DFun ss Rec    binds -> do
-    setVarEnv =<< evalRecBinds binds
+    setVarEnv =<< matchRecBinds binds
     return Nothing
   DFun ss NonRec binds -> do
     let (ps, es) = unzip binds
     r <- stepOne es
-         (\vs -> Nothing <$ (setVarEnv =<< evalNonRecBinds (zip ps vs)))
+         (\vs -> Nothing <$ (setVarEnv =<< matchNonRecBinds (zip ps vs)))
          (\es -> return . Just $ DFun ss NonRec (zip ps es))
     gcScopes r
     return r
@@ -329,6 +329,37 @@ build before after = do
   addEdge (StepsTo sk) before after
   addSubTerms after
   return after
+
+matchRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
+matchRecBinds binds = do
+  penv <- gets stVarEnv
+  mfix $ \fenv -> do
+    setVarEnv fenv
+    unless (all (\(p,v) -> -- isFunPat p || 
+                           isFun v) binds) $
+      otherError "'let rec' must only bind functions"
+    bnd <- matchBinds binds
+    allocEnvWith "let-rec" penv bnd
+  where
+  -- isFunPat (FunPat {}) = True
+  -- isFunPat _           = False
+  isFun (Lam {}) = True
+  isFun _        = False
+
+matchNonRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
+matchNonRecBinds binds = do
+  bnd <- matchBinds binds
+  allocEnv "let" bnd
+
+matchBinds :: MonadEval m => [(Pat,Value)] -> m [(Var,Value)]
+matchBinds binds = concatMapM matchBind binds
+
+-- | @matchBind (p,e) env@ returns the environment matched by @p@
+matchBind :: MonadEval m => (Pat,Value) -> m [(Var,Value)]
+matchBind (p,v) = do
+  matchPat v p >>= \case
+    Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
+    Just env -> return env
 
 step :: MonadEval m => Expr -> m Expr
 step expr = withCurrentExpr expr $ case expr of
@@ -379,7 +410,7 @@ step expr = withCurrentExpr expr $ case expr of
     | otherwise -> build expr =<< Uop ms u <$> step e
   -- Lit ms l -> build expr
   Let ms Rec binds body -> do
-    env <- evalRecBinds binds
+    env <- matchRecBinds binds
     build expr $ With ms env body
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
@@ -390,7 +421,7 @@ step expr = withCurrentExpr expr $ case expr of
   Let ms NonRec binds body -> do
     let (ps, es) = unzip binds
     stepOne es
-      (\vs -> do env <- evalNonRecBinds (zip ps vs)
+      (\vs -> do env <- matchNonRecBinds (zip ps vs)
                  build expr $ With ms env body
       )
       (\es -> build expr $ Let ms NonRec (zip ps es) body)
@@ -400,6 +431,7 @@ step expr = withCurrentExpr expr $ case expr of
       case b of
           VB _ True  -> build expr t
           VB _ False -> build expr f
+          _ -> _HEREEREERRE
     | otherwise
       -> do b <- step b
             build expr $ Ite ms b t f
@@ -409,7 +441,7 @@ step expr = withCurrentExpr expr $ case expr of
     | otherwise -> build expr =<< (\e1 -> Seq ms e1 e2) <$> step e1
   Case ms e as
     | isValue e   -> -- addEvent expr >> 
-      build expr =<< stepAlts e as
+      build expr =<< stepAlts (Case ms) e as
     | otherwise -> build expr =<< (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
                 (\vs -> withCurrentProvM $ \prv ->
@@ -466,7 +498,7 @@ step expr = withCurrentExpr expr $ case expr of
         build expr =<< (\e -> Try ms e alts) <$> step e `catchError` \e -> do
           setVarEnv env
           case e of
-            MLException ex -> build expr =<< stepAlts ex alts
+            MLException ex -> build expr =<< stepAlts (Case ms) ex alts
             _              -> maybeThrow e
   -- Prim1 ms p@(P1 x f t) e
   --   | isValue e -> build expr =<< (force e t $ \v su -> f v)
@@ -478,7 +510,7 @@ step expr = withCurrentExpr expr $ case expr of
   _ -> error ("step: " ++ show expr)
 
 stepApp :: MonadEval m => MSrcSpan -> Expr -> [Expr] -> m Expr
-stepApp ms f es = case f of
+stepApp ms f' es = case f' of
   With _ e f -> stepApp ms f es
   Replace _ e f -> stepApp ms f es
   -- immediately apply saturated primitve wrappers
@@ -490,11 +522,15 @@ stepApp ms f es = case f of
                 return (App ms x es)
   Prim2 ms' (P2 x f t1 t2) -> do
     case es of
+     [e1] -> do env <- gets stVarEnv
+                return (Lam ms (VarPat ms "$x") (App ms f' (es ++ [Var ms "$x"])) (Just env))
      [e1,e2] -> forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
      e1:e2:es -> do x <- forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
                     return (App ms x es)
+     _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
+             undefined
   Lam _ p e (Just env) -> do
-        let (ps, e, env) = gatherLams f
+        let (ps, e, env) = gatherLams f'
             (eps, es', ps') = zipWithLeftover es ps
         -- traceShowM (eps, es', ps')
         -- traceShowM (f,es)
@@ -510,7 +546,7 @@ stepApp ms f es = case f of
             Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
           ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
           (_, []) -> withCurrentProvM $ \prv -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) -> return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
-  _ -> otherError $ printf "'%s' is not a function" (show f)
+  _ -> otherError $ printf "'%s' is not a function" (show f')
 -- stepApp _ f es = error (show (f:es))
 
 mkLamsSubTerms [] e = return e
@@ -539,21 +575,28 @@ stepBop ms bop v1 v2 = evalBop bop v1 v2
 --stepUop :: MonadEval m => Uop -> Expr -> m Expr
 stepUop ms uop v = evalUop uop v
 
-stepAlts :: MonadEval m => Expr -> [Alt] -> m Expr
-stepAlts _ []
+stepAlts :: MonadEval m => (Expr -> [Alt] -> Expr) -> Expr -> [Alt] -> m Expr
+stepAlts _ _ []
   = withCurrentProvM $ \prv ->
     maybeThrow $ MLException (mkExn "Match_failure" [] prv)
-stepAlts v ((p,g,e):as)
+stepAlts f v ((p,g,e):as)
   = matchPat v p >>= \case
-      Nothing  -> stepAlts v as
+      Nothing  -> stepAlts f v as
       Just bnd -> do let ms = getSrcSpanExprMaybe v
                      bnd <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms)) bnd
                      case g of
                       Nothing -> return $ With ms bnd e
-                      Just g  -> do
-                        eval g `withEnv` bnd >>= \case
-                          VB _ True  -> return $ With ms bnd e
-                          VB _ False -> stepAlts v as
+                      Just g
+                        | VB _ True  <- g -> return $ With ms bnd e
+                        | VB _ False <- g -> stepAlts f v as
+                        | isValue g -> typeError (tCon tBOOL) (typeOf g)
+                        | otherwise -> do g' <- step g
+                                          return $ f v ((p,Just g',e):as)
+                        
+                        -- FIXME: `step` the guard instead
+                        -- eval g `withEnv` bnd >>= \case
+                        --   VB _ True  -> return $ With ms bnd e
+                        --   VB _ False -> stepAlts v as
 
 ----------------------------------------------------------------------
 -- Utilities

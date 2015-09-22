@@ -589,6 +589,8 @@ getSrcSpanExprMaybe expr = case expr of
   -- Val ms _ -> ms
   With ms _ _ -> ms
   Replace ms _ _ -> ms
+  Hole ms _ _ -> ms
+  Ref _ -> Nothing
 
 onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
 onSrcSpanExpr f expr = case expr of
@@ -786,6 +788,8 @@ unifyAlias c ts x y = do
 typeOf :: Value -> Type
 typeOf v = case v of
   Lam {} -> TVar "a" :-> TVar "b" -- TODO
+  Prim1 {} -> TVar "a" :-> TVar "b" -- TODO
+  Prim2 {} -> TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
   Lit _ l -> typeOfLit l
   Tuple _ vs -> TTup (map typeOf vs)
   ConApp _ c mv (Just t) -> t
