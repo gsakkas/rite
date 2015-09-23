@@ -999,8 +999,10 @@ cmpVal (Lam {}) (Lam {}) = otherError "cannot compare functions"
 cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
   dd1 <- lookupDataCon c2
   dd2 <- lookupDataCon c2
-  unless (tyCon (dType dd1) == tyCon (dType dd2)) $
-    typeError (typeOf x) (typeOf y)
+  unless (tyCon (dType dd1) == tyCon (dType dd2)) $ do
+    xt <- typeOfM x
+    yt <- typeOfM y
+    typeError xt yt
   let dcs = map dCon . typeDataCons . dType $ dd1
   prv <- getCurrentProv
   case compare (fromJust (elemIndex c1 dcs)) (fromJust (elemIndex c2 dcs)) of
@@ -1011,7 +1013,9 @@ cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
       (Just v1, Just v2) -> cmpVal v1 v2
 cmpVal x y
   -- = return False
-  = typeError (typeOf x) (typeOf y)
+  = do xt <- typeOfM x
+       yt <- typeOfM y
+       typeError xt yt
 
 cmp x y = getCurrentProv >>= \prv -> return $ VI prv $ fromEnum (compare x y) - 1
 

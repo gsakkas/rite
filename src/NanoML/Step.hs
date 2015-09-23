@@ -620,7 +620,8 @@ stepAlts f v ((p,g,e):as)
                       Just g
                         | VB _ True  <- g -> return $ With ms bnd e
                         | VB _ False <- g -> stepAlts f v as
-                        | isValue g -> typeError (tCon tBOOL) (typeOf g)
+                        | isValue g -> do gt <- typeOfM g
+                                          typeError (tCon tBOOL) gt
                         | otherwise -> do g' <- step g
                                           return $ f v ((p,Just g',e):as)
                         

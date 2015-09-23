@@ -460,8 +460,9 @@ matchLit (VC _ c1) (LC c2) = return $ c1 == c2
 matchLit (VS _ s1) (LS s2) = return $ s1 == s2
 --matchLit VU      LU      = return True
 matchLit v       l       = do
-  lv <- litValue l
-  typeError (typeOf v) (typeOf lv)
+  --lv <- litValue l
+  vt <- typeOfM v
+  typeError vt (typeOfLit l)
 
 
 -- testEval :: String -> IO ()
