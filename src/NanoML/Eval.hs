@@ -258,18 +258,20 @@ evalConApp dc v = do
       | dc == "()" -> return (VU prv)
       | dc == "[]" -> return (VL prv [] (Just a))
       | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
-    ([a], Just v) -> force v (subst su a) $ \v su -> do
+    ([a], Just v) -> force v a $ \v _ -> do
       vt <- typeOfM v
-      su <- unify a vt
+      su <- unify vt a
       let t = subst su $ typeDeclType $ dType dd
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
-      , [vh, vt] <- vs -> force vt (tL $ subst su a) $ \(VL _ vt mt) _ ->
+      , [vh, vt] <- vs -> do
+        a <- freshTVar
+        force vt (tL a) $ \(VL _ vt mt) _ ->
          force vh (subst su $ typeOfList vt) $ \vh _ -> do
            return (VL prv (vh : vt) (Just (typeOf vh)))
-      | length as == length vs -> forces (zip vs (map (subst su) as)) $ \vs _ -> do
-        su <- mconcat <$> zipWithM unify as (map (subst su . typeOf) vs)
+      | length as == length vs -> forces (zip vs as) $ \vs _ -> do
+        su <- mconcat <$> zipWithM unify (map typeOf vs) as
         let t = subst su $ typeDeclType $ dType dd
         return (VA prv dc v (Just t))
     (as, _) -> do
