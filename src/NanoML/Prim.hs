@@ -512,8 +512,8 @@ plist_hd (VL _ xs) = case xs of
 
 plist_tl :: MonadEval m => Value -> m Value
 plist_tl (VL _ xs) = case xs of
-  _ : xs -> return xs
-  _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.tl"] prv))
+  _ : xs -> withCurrentProv $ \prv -> VL prv xs
+  _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.hd"] prv))
 
 pappend :: MonadEval m => Value -> Value -> m Value
 pappend (VL _ xs) (VL _ ys) = do
