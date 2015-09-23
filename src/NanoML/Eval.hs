@@ -321,9 +321,9 @@ timesVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i*j)
 timesVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i*j)
 -- timesVal _      _      = typeError "* can only be applied to ints"
 
-divVal (VI {}) (VI _ 0) = withCurrentProv $ \prv ->
+divVal (VI {}) (VI _ 0) = withCurrentProvM $ \prv ->
   maybeThrow $ MLException (mkExn "Division_by_zero" [] prv)
-divVal (VD {}) (VD _ 0) = withCurrentProv $ \prv ->
+divVal (VD {}) (VD _ 0) = withCurrentProvM $ \prv ->
   maybeThrow $ MLException (mkExn "Division_by_zero" [] prv)
 divVal (VI _ i) (VI _ j) = withCurrentProv $ \prv -> VI prv (i `div` j)
 divVal (VD _ i) (VD _ j) = withCurrentProv $ \prv -> VD prv (i / j)
