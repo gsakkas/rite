@@ -120,7 +120,7 @@ checkDecl f prog = do
   where
   go (f,st,v) r@(Failure {}) _ = return r
   go (f,st,v) r@(Success n st' v') !m = do
-    print (pretty v, pretty v')
+    -- print (pretty v, pretty v')
     case fst3 (runEvalFull stdOpts (unify (typeOf v) (typeOf v'))) of
       Left e -> return $ Failure (n+1) 0 0 mempty (pretty e) st'
       Right {} -> do
