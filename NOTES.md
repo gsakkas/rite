@@ -601,3 +601,9 @@ helper []
       ==> { click hyper-edge from `fac 0` to `true` }
 
     fac 0 ---> true
+
+---------------
+
+- [ ] catch functions that return different types depending on input
+    - first run, capture full trace
+    - if any subsequent run produces a different output type, ERROR

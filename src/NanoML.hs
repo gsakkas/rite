@@ -106,17 +106,45 @@ runProg prog = nanoCheck 0 0 stdOpts $ do
                  stepAllProg prog
 
 checkDecl :: Var -> Prog -> IO Result
-checkDecl f prog = go (Success 0 initState) 0
-  where
-  go r@(Failure {}) _    = return r
-  go (Success 1000 st) _ = return (Success 1000 st)
-  go (Success n _st) !m  = do
-    r <- nanoCheck n m stdOpts $ do
+checkDecl f prog = do
+    r <- nanoCheck 0 0 stdOpts $ do
       -- mapM_ evalDecl prog
       prog <- mapM refreshDecl prog
       stepAllProg prog
       to (Var Nothing f) []
-    go r ((m+1) `mod` 5)
+    case r of
+      Failure {}     -> return r
+      Success _ st v -> go (f,st,v) r 1
+  -- go r 1
+  -- go (Success 0 initState (VU Nothing)) 0
+  where
+  go (f,st,v) r@(Failure {}) _ = return r
+  go (f,st,v) r@(Success n st' v') !m = do
+    print (pretty v, pretty v')
+    case fst3 (runEvalFull stdOpts (unify (typeOf v) (typeOf v'))) of
+      Left e -> return $ Failure (n+1) 0 0 mempty (pretty e) st'
+      Right {} -> do
+        r <- nanoCheck n m stdOpts $ do
+          prog <- mapM refreshDecl prog
+          stepAllProg prog
+          args <- replicateM (length (stArgs st) - 1) $
+                    (\r -> Hole Nothing r Nothing) <$> fresh
+          fo (Var Nothing f) args
+
+        go (f,st,v) r ((m+1) `mod` 5)
+
+
+
+  -- go r@(Failure {}) _      = return r
+  -- go r@(Success 1000 st v) _ = return r
+  -- go (Success n _st _v) !m  = do
+  --   r <- nanoCheck n m stdOpts $ do
+  --     -- mapM_ evalDecl prog
+  --     prog <- mapM refreshDecl prog
+  --     stepAllProg prog
+  --     to (Var Nothing f) []
+  --
+  --   go r ((m+1) `mod` 5)
 
   to f args = do
     rememberArgs (f:args)
@@ -129,7 +157,21 @@ checkDecl f prog = go (Success 0 initState) 0
         -- let x = mkApps Nothing e (args ++ [arg])
         -- addSubTerms x
         to f (args ++ [arg])
-      _ -> return ()
+      _ -> return v
+
+  fo f args = do
+    rememberArgs (f:args)
+    let x = mkApps Nothing f args
+    addSubTerms x
+    stepAll x
+    -- v <- stepAll x
+    -- case v of
+    --   Lam {} -> do
+    --     arg <- (\r -> Hole Nothing r Nothing) <$> fresh
+    --     -- let x = mkApps Nothing e (args ++ [arg])
+    --     -- addSubTerms x
+    --     to f (args ++ [arg])
+    --   _ -> return v
 
 sec = 1000000 * 60
 
@@ -137,13 +179,13 @@ sec = 1000000 * 60
 --   m <- timeout s x
 --   return $ fromMaybe (Failure (n+1) 0 0 (text "<<timeout>>") []) m
 
-nanoCheck :: Int -> Int -> NanoOpts -> Eval () -> IO Result
+nanoCheck :: Int -> Int -> NanoOpts -> Eval Value -> IO Result
 nanoCheck numSuccess maxSize opts x = do
   seed <- getRandom
   let opts' = opts { seed = seed, size = maxSize }
   x <- evaluate $ runEvalFull opts' x
   return $ case x of
-    (Left (MLException e), st, _) -> Success (numSuccess + 1) st
+    (Left (MLException e), st, _) -> Success (numSuccess + 1) st e
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values
       let -- paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
@@ -155,7 +197,7 @@ nanoCheck numSuccess maxSize opts x = do
                  (pretty e)
                  st
 --                 (vcat (text (show e) : invoc : []))
-    (Right _, st, _) -> Success (numSuccess + 1) st
+    (Right v, st, _) -> Success (numSuccess + 1) st v
 
 -- fetchArg' st (Val v) = Val (fetchArg st v)
 fetchArg' st e = e

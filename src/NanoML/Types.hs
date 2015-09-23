@@ -75,6 +75,7 @@ loudOpts = stdOpts { enablePrint = True }
 data Result
   = Success { numTests :: !Int
             , finalState :: !EvalState
+            , result     :: !Value
             }
   | Failure { numTests :: !Int
             , usedSeed :: !Int
@@ -109,7 +110,7 @@ varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
 typeError :: MonadEval m => Type -> Type -> m a
-typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError e t1 t2)
+typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError undefined t1 t2)
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -239,7 +240,7 @@ getStepIndex :: MonadEval m => m Int
 getStepIndex = Seq.length <$> gets stTrace
 
 getCurrentProv :: MonadEval m => m MSrcSpan
-getCurrentProv = getSrcSpanExprMaybe <$> gets stCurrentExpr
+getCurrentProv = return Nothing -- getSrcSpanExprMaybe <$> gets stCurrentExpr
 
 withCurrentProv :: MonadEval m => (MSrcSpan -> a) -> m a
 withCurrentProv f = f <$> getCurrentProv

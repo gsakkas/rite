@@ -82,7 +82,7 @@ main = scotty 8091 $ do
           div_ [class_ "mybody col-md-6"] $ do
             div_ [ id_ "safe-banner", class_ "alert alert-info"
                  , style_ "display: none;" ] $ do
-              "Couldn't find a type error, here's a random execution instead."
+              "Couldn't find a type error.."
             div_ [ id_ "unsafe-banner", class_ "alert alert-warning"
                  , style_ "display: none;" ] $ do
               "Your program contains a type error!"
@@ -113,16 +113,17 @@ main = scotty 8091 $ do
                                   , "label" .= l]
     -- liftIO $ print res
     case res of
-      Success n finalState -> do
+      Success n finalState v -> do
+        -- liftIO $ print v
         gr <- liftIO $ buildGraph (stEdges finalState)
-        st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
+        st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
         let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
         -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
         let nodes = Graph.labNodes gr'
         let edges = Graph.labEdges gr'
         let root = backback gr st
         let value = st
-        -- liftIO $ writeFile "tmp.dot" dot
+        -- liftIO $ writeFile "tmp.dot" (Graph.showDot (Graph.fglToDotString gr'))
         json $ object [ -- ("dot" :: String, dot)
                         "nodes"  .= map mkNode nodes
                       , "edges"  .= map mkEdge edges
