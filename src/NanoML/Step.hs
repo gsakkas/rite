@@ -532,16 +532,20 @@ stepApp ms f' es = do
   -- immediately apply saturated primitve wrappers
   Prim1 ms' (P1 x f' t) -> do
     -- traceShowM (f, es)
+    su <- forM (freeTyVars t) $ \tv -> (tv,) . TVar <$> freshTVar
     case es of
-     [e] -> force e t $ \v su -> f' v
-     e:es -> do x <- force e t $ \v su -> f' v
+     [e] -> force e (subst su t) $ \v su -> f' v
+     e:es -> do x <- force e (subst su t) $ \v su -> f' v
                 return (App ms x es)
   Prim2 ms' (P2 x f t1 t2) -> do
+    su <- forM (freeTyVars t1 ++ freeTyVars t2) $ \tv -> (tv,) . TVar <$> freshTVar
+    let t1' = subst su t1
+        t2' = subst su t2
     case es of
      [e1] -> do env <- gets stVarEnv
                 return (Lam ms (VarPat ms "$x") (App ms f' (es ++ [Var ms "$x"])) (Just env))
-     [e1,e2] -> forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
-     e1:e2:es -> do x <- forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
+     [e1,e2] -> forces [(e1,t1'),(e2,t2')] $ \[v1,v2] su -> f v1 v2
+     e1:e2:es -> do x <- forces [(e1,t1'),(e2,t2')] $ \[v1,v2] su -> f v1 v2
                     return (App ms x es)
      -- _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
      --         undefined
