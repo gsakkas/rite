@@ -46,7 +46,7 @@ tArray  = mkTypeDecl "array"  ["a"] (mkAlgRhs [])
 tUnit   = mkTypeDecl "unit"   []    (mkAlgRhs [dUnit])
 tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
-tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument])
+tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument, dDivision_by_zero])
 tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
 
 dUnit = DataDecl "()" []
@@ -57,6 +57,7 @@ dSome = DataDecl "Some" [TVar "a"]
 dFailure = DataDecl "Failure" []
 dNot_found = DataDecl "Not_found" []
 dMatch_failure = DataDecl "Match_failure" []
+dDivision_by_zero = DataDecl "Division_by_zero" []
 dInvalid_argument = DataDecl "Invalid_argument" [tCon "string"]
 
 varD = Var Nothing
