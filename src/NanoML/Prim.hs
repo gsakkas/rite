@@ -506,10 +506,14 @@ plist_rev :: MonadEval m => Value -> m Value
 plist_rev (VL _ xs) = withCurrentProv $ \prv -> VL prv (reverse xs)
 
 plist_hd :: MonadEval m => Value -> m Value
-plist_hd (VL _ (x:_)) = return x
+plist_hd (VL _ xs) = case xs of
+  x : _ -> return x
+  _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.hd"] prv))
 
 plist_tl :: MonadEval m => Value -> m Value
-plist_tl (VL _ (_:xs)) = withCurrentProv $ \prv -> VL prv xs
+plist_tl (VL _ xs) = case xs of
+  _ : xs -> return xs
+  _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.tl"] prv))
 
 pappend :: MonadEval m => Value -> Value -> m Value
 pappend (VL _ xs) (VL _ ys) = do
@@ -591,6 +595,6 @@ maybeThrow :: MonadEval m => NanoError -> m Value
 maybeThrow err = do
   b <- getRandom
   r <- asks exceptionRecovery
-  unless (r && b) $ throwError err
+  unless (r && not b) $ throwError err
   r <- fresh
   return (Hole Nothing r Nothing)
