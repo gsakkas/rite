@@ -780,11 +780,19 @@ unify x y@(TApp c ts) = unifyAlias c ts x y
 unify x y
   = typeError x y
 
-unifyVar :: Monad m => TVar -> Type -> m [(TVar, Type)]
+unifyVar :: MonadEval m => TVar -> Type -> m [(TVar, Type)]
 unifyVar a t
   | TVar b <- t, a == b = return []
   -- FIXME: occurs check
+  | a `elem` tvarsOf t = typeError (TVar a) t
   | otherwise   = return [(a,t)]
+
+tvarsOf t = case t of
+  TVar a -> [a]
+  ti :-> to -> tvarsOf ti ++ tvarsOf to
+  TTup ts -> concatMap tvarsOf ts
+  TApp _ ts -> concatMap tvarsOf ts
+  
 
 unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m [(TVar, Type)]
 unifyAlias c ts x y = do
