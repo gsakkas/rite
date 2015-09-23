@@ -543,7 +543,11 @@ stepApp ms f' es = force f' (TVar "a" :-> TVar "b") $ \f' su -> case f' of
             (eps, es', ps') = zipWithLeftover es ps
         -- traceShowM (eps, es', ps')
         -- traceShowM (f,es)
-        Just pat_env' <- mconcat <$> mapM (\(v, p) -> matchPat v p) eps
+        pat_env' <- mconcat <$> mapM (\(v, p) -> matchPat v p) eps
+        pat_env' <- maybe (withCurrentProvM $
+                           throwError . MLException . mkExn "Match_failure" [])
+                          return
+                          pat_env'
         pat_env <- forM pat_env' $ \(var, val) -> (var,) <$> refreshExpr val
         -- traceShowM pat_env
         -- traceM ""
