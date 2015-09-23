@@ -7,12 +7,15 @@ import Text.Printf
 
 import NanoML
 
+isRight Right {} = True
+isRight _        = False
+
 main = do
   [dir] <- getArgs
   results <- checkAllFrom dir
   printf "\nDONE!\n"
-  let (ss, fs) = partition (isSuccess . snd) . map fromJust . filter isJust $ results
-  let becauseOf r = (r `isInfixOf`) . show . errorMsg . snd
+  let (ss, fs) = partition (isRight . snd) . map fromJust . filter isJust $ results
+  let becauseOf r = (r `isInfixOf`) . show . snd
   printf "%d programs:\n" (length ss + length fs)
   printf "  %d did not fail at runtime\n" (length ss)
   printf "  %d timed out\n" (length (filter (becauseOf "timeout") fs))

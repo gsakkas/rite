@@ -224,7 +224,10 @@ fetchArg st v
 
 checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
 
-checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> printResult r >> return (Just (f,r))) r)
+checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> printResult r >> return (Just (f,resultEither r))) r)
+
+resultEither Failure {..} = Left errorMsg
+resultEither Success {}   = Right ()
 
 checkType :: MonadEval m => Value -> Type -> m Bool
 checkType v t = unify t (typeOf v) >> return True
