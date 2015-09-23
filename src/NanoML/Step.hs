@@ -262,8 +262,10 @@ stepAll expr = do
   modify' $ \s -> s { stSteps = stSteps s + 1 }
   ss <- gets stSteps
   maxss <- asks maxSteps
-  if isValue expr' || ss >= maxss
-     then modify' (\s -> s { stCurrentExpr = expr' }) >> return expr'
+  when (ss >= maxss) $
+    otherError "<timeout>"
+  if isValue expr'
+     then return expr'
      else stepAll expr'
 
 stepAllProg [] = return (VU Nothing)
@@ -275,14 +277,15 @@ stepAllProg (d:p) = do
   ss <- gets stSteps
   maxss <- asks maxSteps
   -- traceShowM (ss, maxss)
+  when (ss >= maxss) $
+    otherError "<timeout>"
   case md of
     Nothing -> stepAllProg p
     Just d@(DEvl _ v)
-      | ss >= maxss || isValue v -> return v
+      | isValue v -> return v
       | otherwise   -> stepAllProg (d:p)
     Just d
-      | ss >= maxss -> return (VU Nothing)
-      | otherwise   -> stepAllProg (d:p)
+      -> stepAllProg (d:p)
 
 stepDecl :: MonadEval m => Decl -> m (Maybe Decl)
 stepDecl decl = case decl of
