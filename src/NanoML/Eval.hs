@@ -211,7 +211,7 @@ force (Hole _ r mt) t k = do
     Nothing -> do
       env <- gets stTypeEnv
       ht <- maybe (TVar <$> freshTVar) return mt
-      su <- unify ht t
+      su <- unify t ht
       v <- genValue (subst su t) env
       writeStore r (NonMut,v)
       k v []
@@ -415,7 +415,7 @@ matchPat v p = case p of
     return $ Just mempty
   ConPat _ "[]" Nothing -> do
     a <- freshTVar
-    force v (tL (TVar a)) $ \v  su -> case v of
+    force v (tL (TVar a)) $ \v su -> case v of
     -- case vs of
       VL _ [] _ -> return (Just mempty)
       VL _ _ _ -> return Nothing
