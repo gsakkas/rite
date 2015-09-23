@@ -119,9 +119,10 @@ checkDecl f prog = do
   -- go (Success 0 initState (VU Nothing)) 0
   where
   go (f,st,v) r@(Failure {}) _ = return r
+  go _ r@(Success 1000 st v) _ = return r
   go (f,st,v) r@(Success n st' v') !m = do
     -- print (pretty v, pretty v')
-    case fst3 (runEvalFull stdOpts (unify (typeOf v) (typeOf v'))) of
+    case fst3 (runEvalFull stdOpts (unifyNoExn (typeOf v) (typeOf v'))) of
       Left e -> return $ Failure (n+1) 0 0 mempty (pretty e) st'
       Right {} -> do
         r <- nanoCheck n m stdOpts $ do
@@ -133,6 +134,10 @@ checkDecl f prog = do
 
         go (f,st,v) r ((m+1) `mod` 5)
 
+
+  unifyNoExn t1 t2 = unify (unExn t1) (unExn t2)
+  unExn (TApp "exn" []) = TVar "a"
+  unExn t = t
 
 
   -- go r@(Failure {}) _      = return r
