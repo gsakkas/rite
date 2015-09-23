@@ -750,6 +750,10 @@ type TCon = String
 
 type DCon = String
 
+freshTVar :: MonadEval m => m TVar
+freshTVar = do
+  i <- fresh
+  return $ 't' : show i
 
 unify :: MonadEval m => Type -> Type -> m [(TVar, Type)]
 unify (TVar a) t = unifyVar a t
@@ -784,15 +788,9 @@ unifyVar :: MonadEval m => TVar -> Type -> m [(TVar, Type)]
 unifyVar a t
   | TVar b <- t, a == b = return []
   -- FIXME: occurs check
-  | a `elem` tvarsOf t = typeError (TVar a) t
+  | a `elem` freeTyVars t = typeError (TVar a) t
   | otherwise   = return [(a,t)]
 
-tvarsOf t = case t of
-  TVar a -> [a]
-  ti :-> to -> tvarsOf ti ++ tvarsOf to
-  TTup ts -> concatMap tvarsOf ts
-  TApp _ ts -> concatMap tvarsOf ts
-  
 
 unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m [(TVar, Type)]
 unifyAlias c ts x y = do

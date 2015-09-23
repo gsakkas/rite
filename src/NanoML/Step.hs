@@ -523,7 +523,10 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   _ -> error ("step: " ++ show (pretty expr))
 
 stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
-stepApp ms f' es = force f' (TVar "a" :-> TVar "b") $ \f' su -> case f' of
+stepApp ms f' es = do
+ a <- freshTVar
+ b <- freshTVar
+ force f' (TVar a :-> TVar b) $ \f' su -> case f' of
   -- With _ e f -> stepApp ms f es
   -- Replace _ e f -> stepApp ms f es
   -- immediately apply saturated primitve wrappers

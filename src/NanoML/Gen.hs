@@ -26,7 +26,7 @@ genValue :: MonadEval m => Type -> TypeEnv -> m Value
 genValue ty env = withCurrentProvM $ \prv -> case ty of
   TVar _ -> do
     r <- fresh
-    return (Hole Nothing r Nothing)
+    return (Hole Nothing r (Just ty))
   TApp t []
     | t == tINT
       -> VI prv <$> sized (\s -> getRandomR (-s, s))

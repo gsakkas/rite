@@ -202,14 +202,16 @@ mycensor f m = pass $ do
 
 force :: MonadEval m => Value -> Type -> (Value -> Subst -> m a) -> m a
 force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete type
-force (Hole _ r _) t k = do
+force (Hole _ r mt) t k = do
   lookupStore r >>= \case
     Just (_,v) -> do
       su <- unify (typeOf v) t
       k v su
     Nothing -> do
       env <- gets stTypeEnv
-      v <- genValue t env
+      ht <- maybe (TVar <$> freshTVar) return mt
+      su <- unify ht t
+      v <- genValue (subst su t) env
       writeStore r (NonMut,v)
       k v []
 force v t k = do
@@ -241,7 +243,8 @@ evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
   prv <- getCurrentProv
-  case (dArgs dd, v) of
+  su <- forM (nub $ concatMap freeTyVars (dArgs dd)) $ \tv -> (tv,) . TVar <$> freshTVar
+  case (map (subst su) (dArgs dd), v) of
     ([], Nothing)
       | dc == "()" -> return (VU prv)
       | dc == "[]" -> return (VL prv [] (Just a))

@@ -136,7 +136,7 @@ checkDecl f prog = do
 
 
   unifyNoExn t1 t2 = unify (unExn t1) (unExn t2)
-  unExn (TApp "exn" []) = TVar "a"
+  unExn (TApp "exn" []) = TVar "exn"
   unExn t = t
 
 
