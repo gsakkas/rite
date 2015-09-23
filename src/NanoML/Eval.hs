@@ -267,7 +267,7 @@ evalConApp dc v = do
       | dc == "::"
       , [vh, vt] <- vs -> do
         a <- freshTVar
-        force vt (tL a) $ \(VL _ vt mt) _ ->
+        force vt (tL (TVar a)) $ \(VL _ vt mt) _ ->
          force vh (subst su $ typeOfList vt) $ \vh _ -> do
            return (VL prv (vh : vt) (Just (typeOf vh)))
       | length as == length vs -> forces (zip vs as) $ \vs _ -> do
