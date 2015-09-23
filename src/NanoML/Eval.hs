@@ -374,7 +374,9 @@ matchPat v p = case p of
       --             [ mkApps Nothing (Var Nothing ">=") [v, Lit Nothing lo]
       --             , mkApps Nothing (Var Nothing "<=") [v, Lit Nothing hi]])
     return $ if b then Just mempty else Nothing
-  ConsPat _ p ps -> force v (tL a) $ \v su -> do
+  ConsPat _ p ps -> do
+   a <- freshTVar
+   force v (tL (TVar a)) $ \v su -> do
     case v of
       VL _ [] _ -> return Nothing
       VL _ _ _ -> do
@@ -384,17 +386,23 @@ matchPat v p = case p of
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
-  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) su -> do
+  ListPat _ ps -> do
+   a <- freshTVar
+   force v (tL (TVar a)) $ \(VL _ vs mt) su -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
-  TuplePat _ ps -> force v (TTup (replicate (length ps) a)) $ \(VT _ vs) su -> do
+  TuplePat _ ps -> do
+   ts <- replicateM (length ps) (TVar <$> freshTVar)
+   force v (TTup ts) $ \(VT _ vs) su -> do
     fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
-  ConPat _ "[]" Nothing -> force v (tL a) $ \v  su -> case v of
+  ConPat _ "[]" Nothing -> do
+    a <- freshTVar
+    force v (tL (TVar a)) $ \v  su -> case v of
     -- case vs of
       VL _ [] _ -> return (Just mempty)
       VL _ _ _ -> return Nothing
@@ -404,7 +412,8 @@ matchPat v p = case p of
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    force v (typeDeclType $ dType dd) $ \(VA _ c v' t) su -> do
+    su <- forM (nub (concatMap freeTyVars (dArgs dd))) $ \tv -> (tv,) . TVar <$> freshTVar
+    force v (subst su $ typeDeclType $ dType dd) $ \(VA _ c v' t) su -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing
