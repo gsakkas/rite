@@ -55,6 +55,9 @@ main = scotty 8091 $ do
             form_ [class_ "navbar-form navbar-right"] $ do
               div_ [ class_ "form-group" ] $ do
                 button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
+                        , id_ "undo",  onclick_ "stepUndo()" ]
+                  "Undo"
+                button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
                         , id_ "step-forward",  onclick_ "stepForward()" ]
                   "Step forward"
                 button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
