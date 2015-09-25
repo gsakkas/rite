@@ -828,6 +828,38 @@ typeOf v = case v of
   -- VH _ (Just t) -> t
   -- -- VF _ -> error "typeOf: <<function>>"
 
+typeOfM :: MonadEval m => Value -> m Type
+typeOfM v = case v of
+  Lam {} -> do
+    a <- freshTVar
+    b <- freshTVar
+    return (TVar a :-> TVar b)
+    -- TVar "a" :-> TVar "b" -- TODO
+  Prim1 _ (P1 x f t) -> do
+    r <- freshTVar
+    return (t :-> TVar r)
+    --TVar "a" :-> TVar "b" -- TODO
+  Prim2 _ (P2 x f t1 t2) -> do
+    r <- freshTVar
+    return (t1 :-> t2 :-> TVar r)
+    -- TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
+  Lit _ l -> return $ typeOfLit l
+  Tuple _ vs -> TTup <$> (mapM typeOfM vs)
+  ConApp _ c mv (Just t) -> return t
+  Record _ fs (Just t) -> return t
+  Array _ vs -> do
+    a <- freshTVar
+    return $ mkTApps tARRAY [case vs of { x:_ -> typeOf x; _ -> TVar a}]
+  List _ vs -> do
+    a <- freshTVar
+    return $ mkTApps tLIST [case vs of { x:_ -> typeOf x; _ -> TVar a}]
+  Hole _ _ mt -> maybe (TVar <$> freshTVar) return mt
+  _ -> error $ "typeOf: " ++ show v
+
+typeOfListM :: MonadEval m => [Expr] -> m Type
+typeOfListM [] = TVar <$> freshTVar
+typeOfListM (x:_) = typeOfM x
+
 typeOfList :: [Expr] -> Type
 typeOfList [] = TVar "a"
 typeOfList (x:_) = typeOf x

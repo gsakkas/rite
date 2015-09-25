@@ -205,7 +205,8 @@ force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete typ
 force (Hole _ r mt) t k = do
   lookupStore r >>= \case
     Just (_,v) -> do
-      su <- unify (typeOf v) t
+      vt <- typeOfM v
+      su <- unify vt t
       k v su
     Nothing -> do
       env <- gets stTypeEnv
@@ -215,7 +216,8 @@ force (Hole _ r mt) t k = do
       writeStore r (NonMut,v)
       k v []
 force v t k = do
-  su <- unify (typeOf v) t
+  vt <- typeOfM v
+  su <- unify vt t
   k v su
 
 forces :: MonadEval m => [(Value,Type)] -> ([Value] -> Subst -> m a) -> m a
@@ -227,9 +229,16 @@ forces vts k = go vts [] []
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
 forceSame x@(Hole {}) y@(Hole {}) k =
   forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] su -> k x y
-forceSame x@(Hole {}) y k = force x (typeOf y) $ \x su -> k x y
-forceSame x y@(Hole {}) k = force y (typeOf x) $ \y su -> k x y
-forceSame x y k = unify (typeOf x) (typeOf y) >> k x y
+forceSame x@(Hole {}) y k = do
+  yt <- typeOfM y
+  force x yt $ \x su -> k x y
+forceSame x y@(Hole {}) k = do
+  xt <- typeOfM x
+  force y xt $ \y su -> k x y
+forceSame x y k = do
+  xt <- typeOfM x
+  yt <- typeOfM y
+  unify xt yt >> k x y
 
 -- evalApp :: MonadEval m => Value -> Value -> m Value
 -- evalApp = error "evalApp"
@@ -250,15 +259,17 @@ evalConApp dc v = do
       | dc == "[]" -> return (VL prv [] (Just a))
       | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
     ([a], Just v) -> force v (subst su a) $ \v su -> do
-      su <- unify a (typeOf v)
+      vt <- typeOfM v
+      su <- unify a vt
       let t = subst su $ typeDeclType $ dType dd
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
-      , [vh, vt] <- vs -> force vt (tL $ subst su a) $ \(VL _ vt mt) _ -> force vh (typeOfList vt) $ \vh _ -> do
-        return (VL prv (vh : vt) (typeOf vh))
-      | length as == length vs -> forces (zip vs (map (subst su) as)) $ \vs su -> do
-        su <- mconcat <$> zipWithM unify as (map typeOf vs)
+      , [vh, vt] <- vs -> force vt (tL $ subst su a) $ \(VL _ vt mt) _ ->
+         force vh (subst su $ typeOfList vt) $ \vh _ -> do
+           return (VL prv (vh : vt) (Just (typeOf vh)))
+      | length as == length vs -> forces (zip vs (map (subst su) as)) $ \vs _ -> do
+        su <- mconcat <$> zipWithM unify as (map (subst su . typeOf) vs)
         let t = subst su $ typeDeclType $ dType dd
         return (VA prv dc v (Just t))
     (as, _) -> do

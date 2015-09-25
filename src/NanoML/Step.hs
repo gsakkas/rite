@@ -467,6 +467,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   Record ms flds Nothing
     | all (isValue . snd) flds -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
+      -- FIXME: refresh tyvars from tydecl
       (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
         let v = fromJust $ lookup f flds
         force v t $ \v su -> do
@@ -495,15 +496,19 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   Array ms [] _ -> withCurrentProv $ \prv -> VV prv [] (Just a)
   Array ms es mt -> stepOne es
                 (\(v:vs) -> do
-                    mapM_ (unify (typeOf v) . typeOf) vs
-                    withCurrentProv $ \prv -> VV prv (v:vs) (Just (typeOf v)))
-                (\es -> return $ Array ms es mt)
-  List ms [] _ -> withCurrentProv $ \prv -> VL prv [] (Just a)
-  List ms es mt -> stepOne es
+                    vt <- typeOfM v
+                    vts <- mapM typeOfM vs
+                    mapM_ (unify vt) vts
+                    withCurrentProv $ \prv -> VV prv (v:vs))
+                (\es -> return $ Array ms es)
+  List ms [] _ -> withCurrentProv $ \prv -> VL prv []
+  List ms es _ -> stepOne es
                 (\(v:vs) -> do
-                    mapM_ (unify (typeOf v) . typeOf) vs
-                    withCurrentProv $ \prv -> VL prv (v:vs) (Just (typeOf v)))
-                (\es -> return $ List ms es mt)
+                    vt <- typeOfM v
+                    vts <- mapM typeOfM vs
+                    mapM_ (unify vt) vts
+                    withCurrentProv $ \prv -> VL prv (v:vs))
+                (\es -> return $ List ms es (Just vt))
   Try ms e alts
     | isValue e -> return e
     | otherwise -> do
