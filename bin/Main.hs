@@ -29,7 +29,7 @@ main = scotty 8091 $ do
         title_ "NanoMaLy"
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css", rel_ "stylesheet", type_ "text/css" ]
-        -- script_ [ src_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js", type_ "text/javascript" ] ("" :: Text)ext/css" ]
+        script_ [ src_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js", type_ "text/javascript" ] ("" :: Text)
         script_ [ src_ "/zepto.min.js", type_ "text/javascript" ] ("" :: Text)
         link_ [ href_ "/vis.css", rel_ "stylesheet", type_ "text/css" ]
         script_ [ src_ "/vis.js", type_ "text/javascript" ] ("" :: Text)
@@ -44,7 +44,17 @@ main = scotty 8091 $ do
             div_ [class_ "navbar-header"] $ do
               a_ [class_ "navbar-brand", href_ "#"] "NanoMaLy"
             form_ [class_ "navbar-form navbar-left"] $ do
-              div_ [class_ "form-group"] $ do
+              div_ [class_ "form-group row"] $ do
+                div_ [class_ "dropdown"] $ do
+                  button_ [ class_ "btn btn-default dropdown-toggle", type_ "button"
+                          , id_ "loadMenu", data_ "toggle" "dropdown" ] $ do
+                    "Load example "
+                    span_ [class_ "caret"] ""
+                  ul_ [class_ "dropdown-menu"] $ do
+                    li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
+                    li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
+                    li_ $ a_ [onclick_ "loadDemo('loop')"] "loop"
+                    li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
                 input_ [ id_ "var-input", name_ "var"
                        , placeholder_ "check this function"
                        , type_ "text", class_ "form-control"

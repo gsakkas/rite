@@ -18,6 +18,51 @@ var editor = undefined;
 var safe_banner = undefined;
 var unsafe_banner = undefined;
 
+var demos = {
+  factorial: [ "let rec fac n ="
+             , "  if n = 0 then"
+             , "    true"
+             , "  else"
+             , "    n * fac (n - 1)"
+             ].join('\n'),
+
+  wwhile: [ "let (x,y) = (\"5\", 5);;"
+          , "let rec wwhile (f,b) ="
+          , "  let f b = (x, y) in "
+          , "  if y = true "
+          , "  then wwhile (f, x)"
+          , "  else x"
+          ].join('\n'),
+
+  loop: [ "let f lst ="
+        , "  let rec loop lst acc ="
+        , "    if lst = [] then"
+        , "      acc"
+        , "    else"
+        , "      ()"
+        , "  in"
+        , "  match loop lst [(0.0,0.0)] with"
+        , "    | h :: t -> h"
+        ].join('\n'),
+
+  palindrome: [ "let listReverse l ="
+              , "  let rec helper xs = function "
+              , "    | [] -> xs "
+              , "    | hd::tl -> helper (hd :: xs) tl "
+              , "  in helper []"
+              , ""
+              , "let palindrome (w : char list) ="
+              , "  if (listReverse w) = w "
+              , "  then true "
+              , "  else false"
+              ].join('\n'),
+
+};
+
+function loadDemo(demo) {
+  editor.setValue(demos[demo]);
+}
+
 function resetButtons() {
   sf_target = undefined;
   sb_target = undefined;
