@@ -23,7 +23,7 @@ var demos = {
              , "  if n = 0 then"
              , "    true"
              , "  else"
-             , "    n * fac (n - 1)"
+             , "    n * fac (n - 1);;"
              ].join('\n'),
 
   wwhile: [ "let (x,y) = (\"5\", 5);;"
@@ -31,7 +31,7 @@ var demos = {
           , "  let f b = (x, y) in "
           , "  if y = true "
           , "  then wwhile (f, x)"
-          , "  else x"
+          , "  else x;;"
           ].join('\n'),
 
   loop: [ "let f lst ="
@@ -42,19 +42,19 @@ var demos = {
         , "      ()"
         , "  in"
         , "  match loop lst [(0.0,0.0)] with"
-        , "    | h :: t -> h"
+        , "    | h :: t -> h;;"
         ].join('\n'),
 
   palindrome: [ "let listReverse l ="
               , "  let rec helper xs = function "
               , "    | [] -> xs "
               , "    | hd::tl -> helper (hd :: xs) tl "
-              , "  in helper []"
+              , "  in helper [];;"
               , ""
               , "let palindrome (w : char list) ="
               , "  if (listReverse w) = w "
               , "  then true "
-              , "  else false"
+              , "  else false;;"
               ].join('\n'),
 
 };

@@ -3,6 +3,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
+import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Aeson (object, (.=))
@@ -29,6 +30,7 @@ main = scotty 8091 $ do
         title_ "NanoMaLy"
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css", rel_ "stylesheet", type_ "text/css" ]
+        script_ [ src_ "//code.jquery.com/jquery-2.1.4.min.js", type_ "text/javascript" ] ("" :: Text)
         script_ [ src_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js", type_ "text/javascript" ] ("" :: Text)
         script_ [ src_ "/zepto.min.js", type_ "text/javascript" ] ("" :: Text)
         link_ [ href_ "/vis.css", rel_ "stylesheet", type_ "text/css" ]
@@ -43,18 +45,20 @@ main = scotty 8091 $ do
           div_ [class_ "container-fluid"] $ do
             div_ [class_ "navbar-header"] $ do
               a_ [class_ "navbar-brand", href_ "#"] "NanoMaLy"
+            ul_ [class_ "nav navbar-nav"] $ do
+              li_ [class_ "dropdown"] $ do
+                button_ [ class_ "btn btn-default navbar-btn dropdown-toggle"
+                        , type_ "button"
+                        , id_ "loadMenu", data_ "toggle" "dropdown" ] $ do
+                  "Load "
+                  span_ [class_ "caret"] ""
+                ul_ [class_ "dropdown-menu"] $ do
+                  li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
+                  li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
+                  li_ $ a_ [onclick_ "loadDemo('loop')"] "loop"
+                  li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
             form_ [class_ "navbar-form navbar-left"] $ do
-              div_ [class_ "form-group row"] $ do
-                div_ [class_ "dropdown"] $ do
-                  button_ [ class_ "btn btn-default dropdown-toggle", type_ "button"
-                          , id_ "loadMenu", data_ "toggle" "dropdown" ] $ do
-                    "Load example "
-                    span_ [class_ "caret"] ""
-                  ul_ [class_ "dropdown-menu"] $ do
-                    li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
-                    li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
-                    li_ $ a_ [onclick_ "loadDemo('loop')"] "loop"
-                    li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
+              div_ [class_ "form-group"] $ do
                 input_ [ id_ "var-input", name_ "var"
                        , placeholder_ "check this function"
                        , type_ "text", class_ "form-control"
@@ -113,7 +117,7 @@ main = scotty 8091 $ do
 
   post "/check" $ do
     prog <- param "prog"
-    var  <- param "var"
+    var  <- param "var" <|> return ""
     -- liftIO $ print (var, prog)
     let p = fromRight (parseTopForm prog)
     -- liftIO $ print (prettyProg p)
@@ -152,6 +156,7 @@ main = scotty 8091 $ do
         --   toHtml (show n)
         --   "tests.."
       Failure {..} -> do
+        -- liftIO $ print errorMsg
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
         let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
