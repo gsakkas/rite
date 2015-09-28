@@ -263,7 +263,7 @@ stepAll expr = do
   ss <- gets stSteps
   maxss <- asks maxSteps
   when (ss >= maxss) $
-    otherError "<timeout>"
+    throwError TimeoutError
   if isValue expr'
      then return expr'
      else stepAll expr'
@@ -278,7 +278,7 @@ stepAllProg (d:p) = do
   maxss <- asks maxSteps
   -- traceShowM (ss, maxss)
   when (ss >= maxss) $
-    otherError "<timeout>"
+    throwError TimeoutError
   case md of
     Nothing -> stepAllProg p
     Just d@(DEvl _ v)
@@ -536,8 +536,8 @@ stepApp ms f' es = force f' (TVar "a" :-> TVar "b") $ \f' su -> case f' of
      [e1,e2] -> forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
      e1:e2:es -> do x <- forces [(e1,t1),(e2,t2)] $ \[v1,v2] su -> f v1 v2
                     return (App ms x es)
-     _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
-             undefined
+     -- _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
+     --         undefined
   Lam _ p e (Just env) -> do
         let (ps, e, env) = gatherLams f'
             (eps, es', ps') = zipWithLeftover es ps

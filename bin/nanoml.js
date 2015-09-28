@@ -302,6 +302,9 @@ function setup() {
           notifySafe();
         } else if (data.result === 'stuck') {
           notifyUnsafe(data.reason);
+        } else if (data.result === 'timeout') {
+          notifyUnsafe("Timed out on input: " + data.root);
+          return;
         }
         draw(data);
       },

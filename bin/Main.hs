@@ -157,24 +157,30 @@ main = scotty 8091 $ do
         --   "tests.."
       Failure {..} -> do
         -- FIXME: handle programs that time out!!!
+        liftIO $ print $ pretty errorMsg
         liftIO $ print counterExample
-        gr <- liftIO $ buildGraph (stEdges finalState)
-        st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
-        let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
-        -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
-        let nodes = Graph.labNodes gr'
-        let edges = Graph.labEdges gr'
-        let root = backback gr st
-        let stuck = st
-        -- liftIO $ writeFile "tmp.dot" dot
-        json $ object [ -- ("dot" :: String, dot)
-                        "nodes"  .= map mkNode nodes
-                      , "edges"  .= map mkEdge edges
-                      , "root"   .= root
-                      , "stuck"  .= stuck
-                      , "result" .= ("stuck" :: String)
-                      , "reason" .= show errorMsg
-                      ]
+        case errorMsg of
+          TimeoutError -> json $ object [ "result" .= ("timeout" :: String)
+                                        , "root" .= show counterExample
+                                        ]
+          _ -> do
+            gr <- liftIO $ buildGraph (stEdges finalState)
+            st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
+            let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
+            -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
+            let nodes = Graph.labNodes gr'
+            let edges = Graph.labEdges gr'
+            let root = backback gr st
+            let stuck = st
+            -- liftIO $ writeFile "tmp.dot" dot
+            json $ object [ -- ("dot" :: String, dot)
+                            "nodes"  .= map mkNode nodes
+                          , "edges"  .= map mkEdge edges
+                          , "root"   .= root
+                          , "stuck"  .= stuck
+                          , "result" .= ("stuck" :: String)
+                          , "reason" .= show (pretty errorMsg)
+                          ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do
         --     title_ "NanoML"

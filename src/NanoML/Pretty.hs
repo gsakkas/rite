@@ -282,3 +282,4 @@ instance Pretty NanoError where
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s
+    TimeoutError -> text "Error: <timeout>"

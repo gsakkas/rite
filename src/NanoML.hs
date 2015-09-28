@@ -79,7 +79,7 @@ check err prog =
             return Nothing
 
 printResult Failure {..} = do
-  printf "*** Failed after %d tests: %s\n" numTests (show errorMsg)
+  printf "*** Failed after %d tests: %s\n" numTests (show $ pretty errorMsg)
   print counterExample
 printResult Success {..} =
   printf "+++ OK, passed %d tests.\n" numTests
@@ -123,7 +123,7 @@ checkDecl f prog = do
   go (f,st,v) r@(Success n st' v') !m = do
     -- print (pretty v, pretty v')
     case fst3 (runEvalFull stdOpts (unifyNoExn (typeOf v) (typeOf v'))) of
-      Left e -> return $ Failure (n+1) 0 0 mempty (pretty e) st'
+      Left e -> return $ Failure (n+1) 0 0 mempty e st'
       Right {} -> do
         r <- nanoCheck n m stdOpts $ do
           prog <- mapM refreshDecl prog
@@ -199,7 +199,7 @@ nanoCheck numSuccess maxSize opts x = do
             f:args -> pretty (fillHoles st $ mkApps Nothing f args)
       in Failure (numSuccess + 1) seed maxSize
                  invoc
-                 (pretty e)
+                 e
                  st
 --                 (vcat (text (show e) : invoc : []))
     (Right v, st, _) -> Success (numSuccess + 1) st v

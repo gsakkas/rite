@@ -81,7 +81,7 @@ data Result
             , usedSeed :: !Int
             , usedSize :: !Int
             , counterExample :: !Doc
-            , errorMsg :: !Doc
+            , errorMsg :: !NanoError
             , finalState :: !EvalState
             }
   deriving Show
@@ -98,6 +98,7 @@ data NanoError
   | InvalidFields Type Expr
   | OutputTypeMismatch Value Type
   | OtherError String
+  | TimeoutError
   deriving (Show, Generic, Typeable)
 
 instance Exception NanoError
@@ -110,7 +111,7 @@ varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
 typeError :: MonadEval m => Type -> Type -> m a
-typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError undefined t1 t2)
+typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError e t1 t2)
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
