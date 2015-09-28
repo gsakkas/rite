@@ -156,7 +156,8 @@ main = scotty 8091 $ do
         --   toHtml (show n)
         --   "tests.."
       Failure {..} -> do
-        -- liftIO $ print errorMsg
+        -- FIXME: handle programs that time out!!!
+        liftIO $ print counterExample
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
         let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
