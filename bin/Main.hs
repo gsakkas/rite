@@ -7,6 +7,7 @@ import Control.Applicative
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Aeson (object, (.=))
+import Data.Default
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import qualified Data.Graph.Inductive.Dot as Graph
@@ -21,8 +22,10 @@ import NanoML.Misc
 import NanoML.Pretty
 
 
-main = scotty 8091 $ do
-  middleware logStdoutDev
+main = do
+ log <- mkRequestLogger def { outputFormat = Detailed False }
+ scotty 8091 $ do
+  middleware log
   get "/" $ do
     prog <- lookup "prog" <$> params
     html . renderText . doctypehtml_ $ do
