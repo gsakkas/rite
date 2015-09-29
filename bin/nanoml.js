@@ -159,31 +159,34 @@ function stepBackward() {
 function canJumpForward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpForward');
-  var out = allEdges.get({filter: function(x) {
-    return x.from === node.id &&
-           x.label.indexOf('StepsTo') >= 0; // &&
-           // x.label.indexOf('StepsTo CallStep') < 0;
-  }});
+  // var out = allEdges.get({filter: function(x) {
+  //   return x.from === node.id &&
+  //          x.label.indexOf('StepsTo') >= 0; // &&
+  //          // x.label.indexOf('StepsTo CallStep') < 0;
+  // }});
   var curEdge = network.body.data.edges.get({filter: function(x) {
     return x.from === node.id;
   }});
-  if (out.length === 0 || curEdge.length === 0) return;
-  out = out[0];
+  if (curEdge.length === 0) return;
+  // out = out[0];
   curEdge = curEdge[0];
+  var next = node.id;
   while (true) {
     var outEdges = allEdges.get({filter: function(x) {
-      return x.from === out.to &&
+      return x.from === next &&
              x.label.indexOf('StepsTo') >= 0;
     }});
     // console.log(outEdges);
     if (outEdges.length === 0) break;
-    if (outEdges[0].label === 'StepsTo CallStep') break;
-    out = outEdges[0];
+    if (outEdges[0].to === curEdge.to) break;
+    var out = outEdges[0];
+    if (out.label === 'StepsTo CallStep' && out.from !== node.id) break;
+    next = out.to;
   }
   // if (isSingleStep(node.id, out.to)) return;
-  if (network.body.data.nodes.get(out.to) !== null) return;
+  if (out !== undefined && network.body.data.nodes.get(out.from) !== null) return;
   // console.log(out);
-  jf_target = [out.to, curEdge];
+  jf_target = [out.from, curEdge];
   document.getElementById('jump-forward').disabled = false;
   // insertNode(allNodes.get(next.from), edge);
 }
@@ -196,26 +199,30 @@ function jumpForward() {
 function canJumpBackward(node) {
   // ctxmenu.style.visibility = 'hidden';
   console.log('jumpBackward');
-  var inn = allEdges.get({filter: function(x) {
-    return x.to === node.id &&
-           x.label.indexOf('StepsTo') >= 0; // &&
-           // x.label.indexOf('StepsTo CallStep') < 0;
-  }});
-  var curEdge = network.body.data.edges.get({filter: function(x) {
+  // var inn = allEdges.get({filter: function(x) {
+  //   return x.to === node.id &&
+  //          x.label.indexOf('StepsTo') >= 0; // &&
+  //          // x.label.indexOf('StepsTo CallStep') < 0;
+  // }});
+  var curEdges = network.body.data.edges.get({filter: function(x) {
     return x.to === node.id;
   }});
-  if (inn.length === 0 || curEdge.length === 0) return;
-  inn = inn[0];
-  curEdge = curEdge[0];
+  if (curEdges.length === 0) return;
+  // inn = inn[0];
+  var curEdge = curEdges[0];
+  var next = node.id;
   while (true) {
-    innEdges = allEdges.get({filter: function(x) {
-      return x.to === inn.from &&
+    var innEdges = allEdges.get({filter: function(x) {
+      return x.to === next &&
              x.label.indexOf('StepsTo') >= 0;
     }});
     // console.log(innEdges);
     if (innEdges.length === 0) break;
-    inn = innEdges[0];
+    // console.log(curEdge, innEdges[0]);
+    if (innEdges[0].from === curEdge.from) break;
+    var inn = innEdges[0];
     if (inn.label === 'StepsTo CallStep') break;
+    next = inn.from;
   }
   // if (isSingleStep(inn.from, node.id)) return;
   if (network.body.data.nodes.get(inn.from) !== null) return;
