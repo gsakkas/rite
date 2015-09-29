@@ -886,6 +886,11 @@ mkLams env ps e = case ps of
   []   -> e
   p:ps -> Lam (mergeLocated p e) p (mkLams env ps e) (Just env)
 
+mkLamsNoEnv :: [Pat] -> Expr -> Expr
+mkLamsNoEnv ps e = case ps of
+  []   -> e
+  p:ps -> Lam (mergeLocated p e) p (mkLamsNoEnv ps e) Nothing
+
 mkList :: [Expr] -> Expr
 mkList = foldr (\h t -> mkConApp Nothing "::" [h,t]) (mkConApp Nothing "[]" [])
 

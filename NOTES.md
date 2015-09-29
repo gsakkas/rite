@@ -607,3 +607,10 @@ helper []
 - [ ] catch functions that return different types depending on input
     - first run, capture full trace
     - if any subsequent run produces a different output type, ERROR
+
+- demo programs
+  1. fac / fib
+  2. qsort
+  3. recursive sum
+  4. fold
+  5. vanilla-rec vs tail-rec

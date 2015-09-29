@@ -72,6 +72,9 @@ bopD = Bop Nothing
 appD = App Nothing
 seqD = Seq Nothing
 litD = Lit Nothing
+letD = Let Nothing
+listD = List Nothing
+tupleD = Tuple Nothing
 
 varPatD = VarPat Nothing
 conPatD = ConPat Nothing
@@ -219,6 +222,31 @@ primVars = [ ("[]", VL nullProv [])
                                            ])
                               )
                              ]))
+             )
+           , ("List.partition"
+             ,(mkLams baseEnv [varPatD "p", varPatD "xs"]
+                (letD Rec
+                 [(varPatD "part"
+                  ,mkLamsNoEnv [varPatD "yes", varPatD "no", varPatD "l"]
+                   (caseD (varD "l")
+                    [(conPatD "[]" Nothing
+                     ,Nothing
+                     ,tupleD [mkAppsD (varD "List.rev") [varD "yes"]
+                             ,mkAppsD (varD "List.rev") [varD "no"]]
+                     )
+                     ,(consPatD (varPatD "x") (varPatD "l'")
+                      ,Nothing
+                      ,iteD (mkAppsD (varD "p") [varD "x"])
+                            (mkAppsD (varD "part")
+                                     [mkConAppD "::" [varD "x", varD "yes"]
+                                     ,varD "no"
+                                     ,varD "l'"])
+                            (mkAppsD (varD "part")
+                                     [varD "yes"
+                                     ,mkConAppD "::" [varD "x", varD "no"]
+                                     ,varD "l'"])
+                      )]))]
+                 (mkAppsD (varD "part") [listD [], listD [], varD "xs"])))
              )
            , ("Sys.argv", VV nullProv [VS nullProv "foo", VS nullProv "bar", VS nullProv "qux"])
            , ("**", mkPrim2Fun $ P2 "exp" pexp tF tF)

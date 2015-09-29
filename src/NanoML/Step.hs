@@ -280,10 +280,12 @@ stepAllProg (d:p) = do
   when (ss >= maxss) $
     throwError TimeoutError
   case md of
-    Nothing -> stepAllProg p
+    Nothing
+      | [] <- p   -> gets stCurrentExpr
+      | otherwise -> stepAllProg p
     Just d@(DEvl _ v)
       | isValue v -> return v
-      | otherwise   -> stepAllProg (d:p)
+      | otherwise -> stepAllProg (d:p)
     Just d
       -> stepAllProg (d:p)
 
@@ -295,7 +297,8 @@ stepDecl decl = case decl of
   DFun ss NonRec binds -> do
     let (ps, es) = unzip binds
     r <- stepOne es
-         (\vs -> Nothing <$ (setVarEnv =<< matchNonRecBinds (zip ps vs)))
+         (\vs -> do modify' (\s -> s { stCurrentExpr = head vs })
+                    Nothing <$ (setVarEnv =<< matchNonRecBinds (zip ps vs)))
          (\es -> return . Just $ DFun ss NonRec (zip ps es))
     gcScopes r
     return r
@@ -395,6 +398,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   Var ms v -> do
     -- addEvent expr
     lookupEnv v =<< gets stVarEnv
+  Lam ms p e (Just env) -> return $ Lam ms p e (Just env)
   Lam ms p e Nothing -> Lam ms p e . Just <$> gets stVarEnv
   -- Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
@@ -516,7 +520,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   --   stepOne [e1,e2]
   --     (\[v1, v2] -> build expr =<< (forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2))
   --     (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
-  _ -> error ("step: " ++ show expr)
+  _ -> error ("step: " ++ show (pretty expr))
 
 stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
 stepApp ms f' es = force f' (TVar "a" :-> TVar "b") $ \f' su -> case f' of

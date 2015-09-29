@@ -8,6 +8,7 @@ var sf_target = undefined;
 var sb_target = undefined;
 var jf_target = undefined;
 var jb_target = undefined;
+var zm_target = undefined;
 
 var single_width = 1;
 var multi_width = 5;
@@ -20,7 +21,7 @@ var unsafe_banner = undefined;
 
 var demos = {
   factorial: [ "let rec fac n ="
-             , "  if n = 0 then"
+             , "  if n <= 0 then"
              , "    true"
              , "  else"
              , "    n * fac (n - 1);;"
@@ -68,11 +69,13 @@ function resetButtons() {
   sb_target = undefined;
   jf_target = undefined;
   jb_target = undefined;
+  zm_target = undefined;
 
   document.getElementById('step-forward').disabled = true;
   document.getElementById('step-backward').disabled = true;
   document.getElementById('jump-forward').disabled = true;
   document.getElementById('jump-backward').disabled = true;
+  document.getElementById('step-into').disabled = true;
 }
 
 function isSingleStep(from, to) {
@@ -83,7 +86,7 @@ function isSingleStep(from, to) {
 
 function canStepUndo() {
   console.log('canStepUndo');
-  if (stack.length >= 2) {
+  if (stack.length > 0) {
     document.getElementById('undo').disabled = false;
   } else {
     document.getElementById('undo').disabled = true;
@@ -95,8 +98,12 @@ function stepUndo() {
   // tmp = stack.pop()
   // console.log(tmp);
   // stack.push(tmp);
-  stack.pop()
-  network.setData(stack[stack.length-1]);
+  var diff = stack.pop()
+  // network.setData(stack[stack.length-1]);
+  network.body.data.nodes.remove(diff.nodes.add);
+  network.body.data.nodes.add(diff.nodes.remove);
+  network.body.data.edges.remove(diff.edges.add);
+  network.body.data.edges.add(diff.edges.remove);
   canStepUndo();
 }
 
@@ -223,10 +230,69 @@ function jumpBackward() {
   resetButtons();
 }
 
+function canStepInto(node) {
+  console.log('canStepInto');
+  var subs = allEdges.get({filter: function(x) {
+    return x.from === node.id &&
+           x.label.indexOf('SubTerm') >= 0;
+  }});
+  if (subs.length === 0) return;
+  // TODO: handle case where multiple subterms are at a function call
+  var sub = allNodes.get(subs[0].to);
+  var val = sub;
+  var valId = val.id;
+  console.log(sub);
+  while (true) {
+    var outEdges = allEdges.get({filter: function(x) {
+      return x.from === valId &&
+             x.label.indexOf('StepsTo') >= 0;
+    }});
+    // console.log(outEdges);
+    if (outEdges.length === 0) break;
+    valId = outEdges[0].to;
+    console.log(valId);
+  }
+  val = allNodes.get(valId);
+  if (val.id === sub.id) return;
+
+  zm_target = [sub, val];
+  document.getElementById('step-into').disabled = false;
+}
+
+function stepInto() {
+  var sub = zm_target[0];
+  var val = zm_target[1];
+
+  var pnodes = network.body.data.nodes;
+  var pedges = network.body.data.edges;
+
+  if (allEdges.get({filter: function(x) {
+        return x.from === sub.id && x.to === val.id;
+      }}).length > 0) {
+    var width = single_width;
+  } else {
+    var width = multi_width;
+  }
+
+  var nodeIds = pnodes.add([sub, val]);
+  var edgeIds = pedges.add([{arrows: 'to', from: sub.id, to: val.id, width: width}]);
+
+  var diff = { nodes: { add: nodeIds, remove: [] },
+               edges: { add: edgeIds, remove: [] }
+             };
+
+  // console.log(newData);
+  stack.push(diff);
+  // network.setData(newData);
+  network.unselectAll();
+  resetButtons();
+  canStepUndo();
+}
+
 function insertNode(node, replacingEdge) {
   // IMPORTANT: copy the dataset so we can save state between operations
-  var pnodes = new vis.DataSet(network.body.data.nodes.get());
-  var pedges = new vis.DataSet(network.body.data.edges.get());
+  var pnodes = network.body.data.nodes;
+  var pedges = network.body.data.edges;
 
   if (allEdges.get({filter: function(x) {
         return x.from === replacingEdge.from && x.to === node.id;
@@ -243,16 +309,20 @@ function insertNode(node, replacingEdge) {
     var width_out = multi_width;
   }
 
-  pnodes.add(node);
-  pedges.add([{arrows: 'to', from: replacingEdge.from, to: node.id, width: width_in}
-             ,{arrows: 'to', from: node.id, to: replacingEdge.to, width: width_out}]);
+  var nodeIds = pnodes.add(node);
+  var edgeIds = pedges.add([{arrows: 'to', from: replacingEdge.from, to: node.id, width: width_in}
+                           ,{arrows: 'to', from: node.id, to: replacingEdge.to, width: width_out}]);
   pedges.remove(replacingEdge);
 
-  var newData = {nodes: pnodes, edges: pedges};
+  var diff = { nodes: { add: nodeIds, remove: [] },
+               edges: { add: edgeIds, remove: [replacingEdge] }
+             };
+
   // console.log(newData);
-  stack.push(newData);
-  network.setData(newData);
+  stack.push(diff);
+  // network.setData(newData);
   network.unselectAll();
+  resetButtons();
   canStepUndo();
   // network.stabilize();
   // network.redraw();
@@ -272,7 +342,7 @@ function setup() {
     mode: "mllike",
     lineNumbers: true,
   });
-    
+
   // TODO: how do i get the hash fragment and base64 decode in javascript??
   // editor.setValue(atob(window.location.hash));
 
@@ -288,6 +358,7 @@ function setup() {
 
     var func = func_input.text;
     var prog = editor.getValue();
+    stack = [];
     // console.log(prog);
 
     // send ajax request
@@ -306,6 +377,8 @@ function setup() {
           notifyUnsafe("Timed out on input: " + data.root);
           return;
         }
+        stack = [];
+        resetButtons();
         draw(data);
       },
       error: function(xhr, errorType, error) {
@@ -313,7 +386,7 @@ function setup() {
         console.log(errorType, error);
       }
     });
-    
+
   };
 }
 
@@ -362,7 +435,7 @@ function draw(data) {
     // physics: { enabled: false},
   };
   var newData = {nodes: nodes, edges: edges};
-  stack.push(newData);
+  // stack.push(newData);
   network = new vis.Network(container, newData, options);
     // network.on("hidePopup", function () {
     //     console.log('hidePopup Event');
@@ -381,6 +454,7 @@ function draw(data) {
         canStepBackward(node);
         canJumpForward(node);
         canJumpBackward(node);
+        canStepInto(node);
         // ctxmenu.style.position = 'fixed';
         // ctxmenu.style.top  = params.event.center.x;
         // ctxmenu.style.left = params.event.center.y;

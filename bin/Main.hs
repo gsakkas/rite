@@ -83,6 +83,9 @@ main = scotty 8091 $ do
                 button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
                         , id_ "jump-backward", onclick_ "jumpBackward()" ]
                   "Jump backward"
+                button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
+                        , id_ "step-into", onclick_ "stepInto()" ]
+                  "Step into"
 
         div_ [class_ "mybody row"] $ do
           div_ [class_ "mybody col-md-6"] $ do
