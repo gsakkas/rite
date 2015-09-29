@@ -233,9 +233,18 @@ function jumpBackward() {
 function canStepInto(node) {
   console.log('canStepInto');
   var subs = allEdges.get({filter: function(x) {
-    return x.from === node.id &&
-           x.label.indexOf('SubTerm') >= 0;
+
+    if (!(x.from === node.id && x.label.indexOf('SubTerm') >= 0))
+      return false;
+
+    var steps = allEdges.get({filter: function(y) {
+        return y.from === x.to && y.label.indexOf('StepsTo CallStep') >= 0; }
+    });
+    // console.log(x, steps);
+
+    return steps.length > 0;
   }});
+  // console.log(subs);
   if (subs.length === 0) return;
   // TODO: handle case where multiple subterms are at a function call
   var sub = allNodes.get(subs[0].to);
