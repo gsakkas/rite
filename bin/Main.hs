@@ -12,12 +12,14 @@ import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import qualified Data.Graph.Inductive.Dot as Graph
 import qualified Data.Graph.Inductive.Graph as Graph
+import qualified Data.Set as Set
 import Data.Text (Text)
 import Lucid
 import Web.Scotty
 import Network.Wai.Middleware.RequestLogger
 
 import NanoML
+import NanoML.Explore
 import NanoML.Misc
 import NanoML.Pretty
 
@@ -133,20 +135,26 @@ main = do
     let mkNode (n, l) = object ["id" .= n, "label" .= l]
     let mkEdge (x, y, l) = object [ "arrows" .= ("to" :: String)
                                   , "from" .= x, "to" .= y
-                                  , "label" .= l]
+                                  , "label" .= show l]
     -- liftIO $ print res
     case res of
       Success n finalState v -> do
         -- liftIO $ print v
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
-        let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
-        -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
-        let nodes = Graph.labNodes gr'
-        let edges = Graph.labEdges gr'
+        let gr' = Graph.nmap (show . pretty . fillHoles finalState) gr
+        let badEdges = filter (\(v1,v2,el) -> Graph.lab gr' v1 == Graph.lab gr' v2) (Graph.labEdges gr')
+        -- liftIO $ print badEdges
+        let gr'' = collapseEdges badEdges gr'
+        -- let nodes = Set.toList (Set.difference (Set.fromList (Graph.labNodes gr'))
+        --                                        (Set.fromList (map (Graph.labNode' . Graph.context gr' . fst3) badEdges)))
+        -- liftIO $ print nodes
+        -- let gr'' = collapse gr' nodes
+        let nodes = Graph.labNodes gr''
+        let edges = Graph.labEdges gr''
         let root = backback gr st
         let value = st
-        -- liftIO $ writeFile "tmp.dot" (Graph.showDot (Graph.fglToDotString gr'))
+        -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
         json $ object [ -- ("dot" :: String, dot)
                         "nodes"  .= map mkNode nodes
                       , "edges"  .= map mkEdge edges
@@ -172,12 +180,16 @@ main = do
           _ -> do
             gr <- liftIO $ buildGraph (stEdges finalState)
             st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
-            let gr' = Graph.emap show . Graph.nmap (show . pretty . fillHoles finalState) $ gr
-            -- let dot = Graph.showDot (Graph.fglToDotGeneric gr' (show.pretty) show id)
-            let nodes = Graph.labNodes gr'
-            let edges = Graph.labEdges gr'
+            let gr' = Graph.nmap (show . pretty . fillHoles finalState) gr
+            let badEdges = filter (\(v1,v2,el) -> Graph.lab gr' v1 == Graph.lab gr' v2) (Graph.labEdges gr')
+            -- let nodes = Set.toList (Set.difference (Set.fromList (Graph.labNodes gr'))
+            --                                        (Set.fromList (map (Graph.labNode' . Graph.context gr' . fst3) badEdges)))
+            let gr'' = collapseEdges badEdges gr'
+            let nodes = Graph.labNodes gr''
+            let edges = Graph.labEdges gr''
             let root = backback gr st
             let stuck = st
+            -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
             -- liftIO $ writeFile "tmp.dot" dot
             json $ object [ -- ("dot" :: String, dot)
                             "nodes"  .= map mkNode nodes

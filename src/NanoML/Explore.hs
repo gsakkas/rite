@@ -72,10 +72,20 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
 
 onlySteps = filter (isStepsTo . snd)
 
+collapseEdges :: [Graph.LEdge b] -> Graph.Gr a b -> Graph.Gr a b
+collapseEdges es gr = foldr collapseEdge gr es
+
+collapseEdge :: Graph.LEdge b -> Graph.Gr a b -> Graph.Gr a b
+collapseEdge (v1,v2,_) gr =
+  Graph.insEdges es . Graph.delEdge (v1,v2) . Graph.delNode v1 $ gr
+  where
+  es = [ (x,v2,l) | (x, l) <- Graph.lpre gr v1 ]
+
 -- | Collapse a graph to a subset of the nodes.
 --
 -- Differs from Graph.filter in that paths between nodes are preserved.
-collapse :: Graph -> [Node] -> Graph
+
+collapse :: Eq a => Graph.Gr a EdgeKind -> [Graph.LNode a] -> Graph.Gr a EdgeKind
 collapse gr ns = Graph.mkGraph ns es
   where
   es = mapMaybe f . List.nub . map (take 2) $ List.permutations ns
