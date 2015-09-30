@@ -608,9 +608,29 @@ helper []
     - first run, capture full trace
     - if any subsequent run produces a different output type, ERROR
 
-- demo programs
+- [ ] demo programs
   1. fac / fib
   2. qsort
   3. recursive sum
   4. fold
   5. vanilla-rec vs tail-rec
+
+
+- [ ] add nonce to ocaml's URLs to identify traces
+  - can correlate with ocaml-top data
+
+- [ ] list of stuff for UGs to do
+  - anonymize raw data
+  - test web ui
+  -
+
+- [ ] prepare for A/B study
+  - 5-10 bad programs
+    - identify source of type error, explain, fix
+    - A: just ocaml / ocaml-top
+    - B: ocaml + web ui
+  - 2 sessions
+    - 1st after ADT homework
+    - 2nd?
+  - willing to pay $20-25/hr
+    - does this mean new IRB?
