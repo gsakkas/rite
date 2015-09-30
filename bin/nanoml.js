@@ -80,7 +80,8 @@ function resetButtons() {
 
 function isSingleStep(from, to) {
   return allEdges.get({filter: function(x) {
-      return x.from === from && x.to === to;
+      return x.from === from && x.to === to &&
+             x.label.indexOf('StepsTo') >= 0;
     }}).length > 0;
 }
 
