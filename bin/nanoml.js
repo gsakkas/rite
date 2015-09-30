@@ -300,16 +300,12 @@ function insertNode(node, replacingEdge) {
   var pnodes = network.body.data.nodes;
   var pedges = network.body.data.edges;
 
-  if (allEdges.get({filter: function(x) {
-        return x.from === replacingEdge.from && x.to === node.id;
-      }}).length > 0) {
+  if (isSingleStep(replacingEdge.from, node.id)) {
     var width_in = single_width;
   } else {
     var width_in = multi_width;
   }
-  if (allEdges.get({filter: function(x) {
-        return x.from === node.id && x.to === replacingEdge.to;
-      }}).length > 0) {
+  if (isSingleStep(node.id, replacingEdge.to)) {
     var width_out = single_width;
   } else {
     var width_out = multi_width;
