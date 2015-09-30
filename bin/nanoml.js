@@ -84,8 +84,25 @@ function isSingleStep(from, to) {
     }}).length > 0;
 }
 
+function findPath(from, to) {
+  var next = from;
+  var edges = [];
+  while (true) {
+    var outEdges = allEdges.get({filter: function(x) {
+      return x.from === next &&
+             x.label.indexOf('StepsTo') >= 0;
+    }});
+    if (outEdges.length === 0) return [];
+    var out = outEdges[0];
+    edges.push(out)
+    if (out.to === to) break;
+    next = out.to;
+  }
+  return edges;
+}
+
 function canStepUndo() {
-  console.log('canStepUndo');
+  // console.log('canStepUndo');
   if (stack.length > 0) {
     document.getElementById('undo').disabled = false;
   } else {
@@ -109,7 +126,7 @@ function stepUndo() {
 
 function canStepForward(node) {
   // ctxmenu.style.visibility = 'hidden';
-  console.log('stepForward');
+  // console.log('stepForward');
   var out = allEdges.get({filter: function(x) {
     return x.from === node.id && x.label.indexOf('StepsTo') >= 0;
   }});
@@ -133,7 +150,7 @@ function stepForward() {
 
 function canStepBackward(node) {
   // ctxmenu.style.visibility = 'hidden';
-  console.log('stepBackward');
+  // console.log('stepBackward');
   var inn = allEdges.get({filter: function(x) {
     return x.to === node.id && x.label.indexOf('StepsTo') >= 0;
   }});
@@ -157,38 +174,25 @@ function stepBackward() {
 }
 
 function canJumpForward(node) {
-  // ctxmenu.style.visibility = 'hidden';
-  console.log('jumpForward');
-  // var out = allEdges.get({filter: function(x) {
-  //   return x.from === node.id &&
-  //          x.label.indexOf('StepsTo') >= 0; // &&
-  //          // x.label.indexOf('StepsTo CallStep') < 0;
-  // }});
-  var curEdge = network.body.data.edges.get({filter: function(x) {
+  var curEdges = network.body.data.edges.get({filter: function(x) {
     return x.from === node.id;
   }});
-  if (curEdge.length === 0) return;
-  // out = out[0];
-  curEdge = curEdge[0];
-  var next = node.id;
-  while (true) {
-    var outEdges = allEdges.get({filter: function(x) {
-      return x.from === next &&
-             x.label.indexOf('StepsTo') >= 0;
-    }});
-    // console.log(outEdges);
-    if (outEdges.length === 0) break;
-    if (outEdges[0].to === curEdge.to) break;
-    var out = outEdges[0];
-    if (out.label === 'StepsTo CallStep' && out.from !== node.id) break;
-    next = out.to;
+  if (curEdges.length === 0) return;
+  var curEdge = curEdges[0];
+  var path = findPath(curEdge.from, curEdge.to);
+  console.log(curEdge, path);
+  if (path.length === 0) return;
+  for (var i = 1; i < path.length; i++) {
+    var e = path[i];
+    if (network.body.data.nodes.get(e.to) !== null) {
+      return;
+    }
+    if (e.label.indexOf('CallStep') >= 0) {
+      jf_target = [e.from, curEdge];
+      document.getElementById('jump-forward').disabled = false;
+      return;
+    }
   }
-  // if (isSingleStep(node.id, out.to)) return;
-  if (out !== undefined && network.body.data.nodes.get(out.from) !== null) return;
-  // console.log(out);
-  jf_target = [out.from, curEdge];
-  document.getElementById('jump-forward').disabled = false;
-  // insertNode(allNodes.get(next.from), edge);
 }
 
 function jumpForward() {
@@ -197,39 +201,25 @@ function jumpForward() {
 }
 
 function canJumpBackward(node) {
-  // ctxmenu.style.visibility = 'hidden';
-  console.log('jumpBackward');
-  // var inn = allEdges.get({filter: function(x) {
-  //   return x.to === node.id &&
-  //          x.label.indexOf('StepsTo') >= 0; // &&
-  //          // x.label.indexOf('StepsTo CallStep') < 0;
-  // }});
   var curEdges = network.body.data.edges.get({filter: function(x) {
     return x.to === node.id;
   }});
   if (curEdges.length === 0) return;
-  // inn = inn[0];
   var curEdge = curEdges[0];
-  var next = node.id;
-  while (true) {
-    var innEdges = allEdges.get({filter: function(x) {
-      return x.to === next &&
-             x.label.indexOf('StepsTo') >= 0;
-    }});
-    // console.log(innEdges);
-    if (innEdges.length === 0) break;
-    // console.log(curEdge, innEdges[0]);
-    if (innEdges[0].from === curEdge.from) break;
-    var inn = innEdges[0];
-    if (inn.label === 'StepsTo CallStep') break;
-    next = inn.from;
+  var path = findPath(curEdge.from, curEdge.to);
+  console.log(curEdge, path);
+  if (path.length === 0) return;
+  for (var i = path.length-2; i >= 0; i--) {
+    var e = path[i];
+    if (network.body.data.nodes.get(e.from) !== null) {
+      return;
+    }
+    if (e.label.indexOf('CallStep') >= 0) {
+      jb_target = [e.from, curEdge];
+      document.getElementById('jump-backward').disabled = false;
+      return;
+    }
   }
-  // if (isSingleStep(inn.from, node.id)) return;
-  if (network.body.data.nodes.get(inn.from) !== null) return;
-  // console.log(inn);
-  jb_target = [inn.from, curEdge];
-  document.getElementById('jump-backward').disabled = false;
-  // insertNode(allNodes.get(prev.from), edge);
 }
 
 function jumpBackward() {
@@ -238,7 +228,7 @@ function jumpBackward() {
 }
 
 function canStepInto(node) {
-  console.log('canStepInto');
+  // console.log('canStepInto');
   var subs = allEdges.get({filter: function(x) {
 
     if (!(x.from === node.id && x.label.indexOf('SubTerm') >= 0))
@@ -257,7 +247,7 @@ function canStepInto(node) {
   var sub = allNodes.get(subs[0].to);
   var val = sub;
   var valId = val.id;
-  console.log(sub);
+  // console.log(sub);
   while (true) {
     var outEdges = allEdges.get({filter: function(x) {
       return x.from === valId &&
@@ -266,7 +256,7 @@ function canStepInto(node) {
     // console.log(outEdges);
     if (outEdges.length === 0) break;
     valId = outEdges[0].to;
-    console.log(valId);
+    // console.log(valId);
   }
   val = allNodes.get(valId);
   if (val.id === sub.id) return;
@@ -374,7 +364,7 @@ function setup() {
 
     var func = func_input.text;
     var prog = editor.getValue();
-    stack = [];
+    // stack = [];
     // console.log(prog);
 
     // send ajax request
