@@ -244,7 +244,7 @@ evalConApp dc v = do
   case (dArgs dd, v) of
     ([], Nothing)
       | dc == "()" -> return (VU prv)
-      | dc == "[]" -> return (VL prv [])
+      | dc == "[]" -> return (VL prv [] (Just a))
       | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
     ([a], Just v) -> force v a $ \v su -> do
       su <- unify a (typeOf v)
@@ -252,8 +252,8 @@ evalConApp dc v = do
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
-      , [vh, vt] <- vs -> force vt (tL a) $ \(VL _ vt) _ -> force vh (typeOfList vt) $ \vh _ -> do
-        return (VL prv (vh : vt))
+      , [vh, vt] <- vs -> force vt (tL a) $ \(VL _ vt mt) _ -> force vh (typeOfList vt) $ \vh su -> do
+        return (VL prv (vh : vt) (Just (subst su $ typeOf vh)))
       | length as == length vs -> forces (zip vs as) $ \vs su -> do
         su <- mconcat <$> zipWithM unify as (map typeOf vs)
         let t = subst su $ typeDeclType $ dType dd
@@ -373,15 +373,15 @@ matchPat v p = case p of
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> force v (tL a) $ \v su -> do
     case v of
-      VL _ [] -> return Nothing
-      VL _ _ -> do
+      VL _ [] _ -> return Nothing
+      VL _ _ _ -> do
         (x,xs) <- unconsVal v
         menv1 <- matchPat x p
         menv2 <- matchPat xs ps
         case (menv1, menv2) of
          (Just env1, Just env2) -> return $ Just (env1 <> env2)
          _                      -> return Nothing
-  ListPat _ ps -> force v (tL a) $ \(VL _ vs) su -> do
+  ListPat _ ps -> force v (tL a) $ \(VL _ vs _) su -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
@@ -393,8 +393,8 @@ matchPat v p = case p of
     return $ Just mempty
   ConPat _ "[]" Nothing -> force v (tL a) $ \v  su -> case v of
     -- case vs of
-      VL _ [] -> return (Just mempty)
-      VL _ _  -> return Nothing
+      VL _ [] _ -> return (Just mempty)
+      VL _ _ _ -> return Nothing
       _ -> error $ "matchPat: impossible: " ++ show v
   ConPat _ "()" Nothing -> force v tU $ \v su ->
      return (Just mempty)
@@ -426,7 +426,7 @@ safeMatch ts (Just (WildPat _)) = True
 safeMatch _ _ = False
 
 unconsVal :: MonadEval m => Value -> m (Value, Value)
-unconsVal (VL prv (x:xs)) = return (x, VL prv xs) -- FIXME: is this the right provenance??
+unconsVal (VL prv (x:xs) mt) = return (x, VL prv xs mt) -- FIXME: is this the right provenance??
 unconsVal _             = otherError "type error: uncons can only be applied to lists"
 
 matchLit :: MonadEval m => Value -> Literal -> m Bool

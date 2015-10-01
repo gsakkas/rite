@@ -45,8 +45,8 @@ fillHoles st = go
     Record ms flds mt -> Record ms (map (second go) flds) mt
     Field ms x f -> Field ms (go x) f
     SetField ms x f y -> SetField ms (go x) f (go y)
-    Array ms xs -> Array ms (map go xs)
-    List ms xs -> List ms (map go xs)
+    Array ms xs mt -> Array ms (map go xs) mt
+    List ms xs mt -> List ms (map go xs) mt
     Try ms x alts -> Try ms (go x) (map (\(p,g,x) -> (p, fmap go g, go x)) alts)
     With ms env x -> With ms env (go x)
     Replace ms env x -> Replace ms env (go x)
@@ -134,8 +134,8 @@ instance Pretty Expr where
     Record _ flds _ -> record flds
     Field _ e f -> pretty e <> char '.' <> text f
     SetField _ e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
-    Array _ es -> array es
-    List _ es -> list es
+    Array _ es _ -> array es
+    List _ es _ -> list es
     Try _ e ps -> parensIf (z > zt) $
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)

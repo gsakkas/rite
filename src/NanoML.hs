@@ -210,15 +210,15 @@ fetchArg' st e = e
 fetchArg st (Hole _ r _)
   | Just (_,v) <- IntMap.lookup r st
   = fetchArg st v
-fetchArg st (VL ms vs)
-  = VL ms (map (fetchArg st) vs)
+fetchArg st (VL ms vs mt)
+  = VL ms (map (fetchArg st) vs) mt
 fetchArg st (VT ms vs)
   = VT ms (map (fetchArg st) vs)
 fetchArg st (VA ms c (Just v) t)
   = VA ms c (Just (fetchArg st v)) t
 --  TODO: fetchArg st (VR )
-fetchArg st (VV ms vs)
-  = VV ms (map (fetchArg st) vs)
+fetchArg st (VV ms vs mt)
+  = VV ms (map (fetchArg st) vs) mt
 fetchArg st v
   = v
 

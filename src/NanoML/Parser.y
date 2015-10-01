@@ -298,11 +298,11 @@ SimpleExpr :: { Expr }
 | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
 | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
-| "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) }
+| "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) Nothing }
 | '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
 | "begin" SeqExpr "end" { $2 }
 | "begin" "end"         { Var (mergeLocated $1 $2) "()" }
-| '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) }
+| '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) Nothing }
 
 SimpleExprList :: { [Expr] }
 : SimpleExpr                  { [$1] }

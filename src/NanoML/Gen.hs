@@ -43,13 +43,13 @@ genValue ty env = withCurrentProvM $ \prv -> case ty of
     | otherwise
       -> sized (genADT t [] env)
   TApp "list" [t] -> genList t env
-  TApp "array" [t] -> sized (fmap (\ x -> VV prv x) . flip vectorOf (genValue t env))
+  TApp "array" [t] -> sized (fmap (\ x -> VV prv x (Just t)) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
   TTup ts -> (\xs -> VT prv xs) <$> mapM (flip genValue env) ts
   _ :-> to -> Lam Nothing (WildPat Nothing) <$> (flip genValue env) to <*> pure (Just emptyEnv)
 
 genList :: MonadEval m => Type -> TypeEnv -> m Value
-genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x) <$> listOf (genValue t env)
+genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x (Just t)) <$> listOf (genValue t env)
 
 genADT :: MonadEval m => TCon -> [Type] -> TypeEnv -> Int -> m Value
 genADT c ts e n = do

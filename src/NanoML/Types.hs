@@ -170,7 +170,8 @@ addSubTerms expr = do
     Record _ fs _ -> zipWithM_ mkEdge [0..] (map snd fs)
     Field _ e _ -> mkEdge 0 e
     SetField _ e _ x -> mkEdge 0 e >> mkEdge 1 x
-    Array _ es -> zipWithM_ mkEdge [0..] es
+    Array _ es mt -> zipWithM_ mkEdge [0..] es
+    List _ es mt -> zipWithM_ mkEdge [0..] es
     Try _ e alts -> zipWithM_ mkEdge [0..]
                     (e : concatMap (\(_,g,b) -> maybeToList g ++ [b]) alts)
     -- Prim1 _ _ x -> mkEdge 0 x
@@ -210,8 +211,8 @@ refreshExpr expr = addSubTerms =<< case expr of
   Record ms fs mt -> (\fs -> Record ms fs mt) <$> mapM refreshBind fs
   Field ms e f -> Field ms <$> refreshExpr e <*> pure f
   SetField ms e f x -> SetField ms <$> refreshExpr e <*> pure f <*> refreshExpr x
-  Array ms xs -> Array ms <$> mapM refreshExpr xs
-  List ms xs -> List ms <$> mapM refreshExpr xs
+  Array ms xs mt -> Array ms <$> mapM refreshExpr xs <*> pure mt
+  List ms xs mt -> List ms <$> mapM refreshExpr xs <*> pure mt
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p -> return $ Prim1 ms p -- <$> refreshExpr x
   Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
@@ -435,8 +436,8 @@ isValue expr = case expr of
   Tuple _ es -> all isValue es
   ConApp _ _ me mt -> maybe True isValue me && isJust mt
   Record _ fs mt -> all (isValue . snd) fs && isJust mt
-  Array _ es -> all isValue es
-  List _ es -> all isValue es
+  Array _ es mt -> all isValue es && isJust mt
+  List _ es mt -> all isValue es && isJust mt
   Hole {} -> True
   Ref {} -> True
   Prim1 {} -> True
@@ -455,16 +456,16 @@ pattern VB ms x <- Lit ms (LB x) where
   VB ms x = Lit ms (LB x)
 pattern VU ms <- ConApp ms "()" Nothing _ where
   VU ms = ConApp ms "()" Nothing (Just (tCon tUNIT))
-pattern VL ms vs <- List ms vs where
-  VL ms vs = List ms vs
+pattern VL ms vs mt <- List ms vs mt where
+  VL ms vs mt = List ms vs mt
 pattern VT ms vs <- Tuple ms vs where
   VT ms vs = Tuple ms vs
 pattern VA ms c mv mt <- ConApp ms c mv mt where
   VA ms c mv mt = ConApp ms c mv mt
 pattern VR ms fs mt <- Record ms fs mt where
   VR ms fs mt = Record ms fs mt
-pattern VV ms vs <- Array ms vs where
-  VV ms vs = Array ms vs
+pattern VV ms vs mt <- Array ms vs mt where
+  VV ms vs mt = Array ms vs mt
 
 
 -- data Value
@@ -556,8 +557,8 @@ data Expr
   | Record !MSrcSpan [(String, Expr)] (Maybe Type)
   | Field !MSrcSpan Expr String
   | SetField !MSrcSpan Expr String Expr
-  | Array !MSrcSpan [Expr]
-  | List !MSrcSpan [Expr]
+  | Array !MSrcSpan [Expr] (Maybe Type)
+  | List !MSrcSpan [Expr] (Maybe Type)
   | Try !MSrcSpan Expr [Alt]
   | Prim1 !MSrcSpan Prim1
   | Prim2 !MSrcSpan Prim2
@@ -585,8 +586,8 @@ getSrcSpanExprMaybe expr = case expr of
   Record ms _ _ -> ms
   Field ms _ _ -> ms
   SetField ms _ _ _ -> ms
-  Array ms _ -> ms
-  List ms _ -> ms
+  Array ms _ _ -> ms
+  List ms _ _ -> ms
   Try ms _ _ -> ms
   Prim1 ms _ -> ms
   Prim2 ms _ -> ms
@@ -613,8 +614,8 @@ onSrcSpanExpr f expr = case expr of
   Record ms x mt -> Record (f ms) x mt
   Field ms x y -> Field (f ms) x y
   SetField ms x y z -> SetField (f ms) x y z
-  Array ms x -> Array (f ms) x
-  List ms x -> List (f ms) x
+  Array ms x mt -> Array (f ms) x mt
+  List ms x mt -> List (f ms) x mt
   Try ms x y -> Try (f ms) x y
   Prim1 ms x -> Prim1 (f ms) x
   Prim2 ms x -> Prim2 (f ms) x
@@ -801,8 +802,8 @@ typeOf v = case v of
   Tuple _ vs -> TTup (map typeOf vs)
   ConApp _ c mv (Just t) -> t
   Record _ fs (Just t) -> t
-  Array _ vs -> mkTApps tARRAY [case vs of { x:_ -> typeOf x; _ -> TVar "a"}]
-  List _ vs -> mkTApps tLIST [case vs of { x:_ -> typeOf x; _ -> TVar "a"}]
+  Array _ vs (Just t) -> mkTApps tARRAY [t]
+  List _ vs (Just t) -> mkTApps tLIST [t]
   Hole _ _ mt -> maybe (TVar "a") id mt
   _ -> error $ "typeOf: " ++ show v
   -- VI _ _ -> tCon tINT
@@ -945,7 +946,11 @@ cmpVal (VB _ x) (VB _ y) = cmp x y
 cmpVal (VC _ x) (VC _ y) = cmp x y
 cmpVal (VS _ x) (VS _ y) = cmp x y
 cmpVal (VU _)   (VU _) = getCurrentProv >>= \prv -> return (VI prv 0)
-cmpVal (VL _ x) (VL _ y) = do
+cmpVal (VV _ x _) (VV _ y _) = do
+  lcmp <- length x `cmp` length y
+  xscmp <- zipWithM cmpVal x y
+  return $ cmpAnd (lcmp : xscmp)
+cmpVal (VL _ x _) (VL _ y _) = do
   lcmp <- length x `cmp` length y
   xscmp <- zipWithM cmpVal x y
   return $ cmpAnd (lcmp : xscmp)

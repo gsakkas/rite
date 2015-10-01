@@ -73,7 +73,7 @@ appD = App Nothing
 seqD = Seq Nothing
 litD = Lit Nothing
 letD = Let Nothing
-listD = List Nothing
+listD xs = List Nothing xs Nothing
 tupleD = Tuple Nothing
 
 varPatD = VarPat Nothing
@@ -81,7 +81,7 @@ conPatD = ConPat Nothing
 consPatD = ConsPat Nothing
 
 primVars :: [(Var, Value)]
-primVars = [ ("[]", VL nullProv [])
+primVars = [ ("[]", VL nullProv [] Nothing)
            -- , ("::", VF nullProv (Func (mkLams [varPatD "x", varPatD "xs"]
            --                           (mkConAppD "::" [varD "x", varD "xs"]))
            --                   emptyEnv))
@@ -248,7 +248,7 @@ primVars = [ ("[]", VL nullProv [])
                       )]))]
                  (mkAppsD (varD "part") [listD [], listD [], varD "xs"])))
              )
-           , ("Sys.argv", VV nullProv [VS nullProv "foo", VS nullProv "bar", VS nullProv "qux"])
+           , ("Sys.argv", VV nullProv [VS nullProv "foo", VS nullProv "bar", VS nullProv "qux"] (Just (tCon tSTRING)))
            , ("**", mkPrim2Fun $ P2 "exp" pexp tF tF)
            , ("@", mkPrim2Fun $ P2 "@" pappend (tL a) (tL a))
            , ("^", mkPrim2Fun $ P2 "^" pconcat tS tS)
@@ -439,7 +439,7 @@ pstring_make :: MonadEval m => Value -> Value -> m Value
 pstring_make (VI _ n) (VC _ c) = withCurrentProv $ \prv -> (VS prv (replicate n c))
 
 parray_get :: MonadEval m => Value -> Value -> m Value
-parray_get (VV _ a) (VI _ i)
+parray_get (VV _ a _) (VI _ i)
   | i >= 0 && i < length a
   = return (a !! i)
   | otherwise
@@ -503,51 +503,51 @@ pchar_uppercase :: MonadEval m => Value -> m Value
 pchar_uppercase (VC _ c) = withCurrentProv $ \prv -> (VC prv (toUpper c))
 
 plist_combine :: MonadEval m => Value -> Value -> m Value
-plist_combine (VL _ xs) (VL _ ys)
+plist_combine (VL _ xs (Just tx)) (VL _ ys (Just ty))
   | length xs == length ys
-  = withCurrentProv $ \prv -> (VL prv (zipWith (\x y -> VT prv [x,y]) xs ys))
+  = withCurrentProv $ \prv -> (VL prv (zipWith (\x y -> VT prv [x,y]) xs ys) (Just (TTup [tx, ty])))
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.combine"] prv))
 
 plist_nth :: MonadEval m => Value -> Value -> m Value
-plist_nth (VL _ xs) (VI _ n)
+plist_nth (VL _ xs _) (VI _ n)
   | n >= 0 && n < length xs
   = return (xs !! n)
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.nth"] prv))
 
 plist_split :: MonadEval m => Value -> m Value
-plist_split (VL _ xs)
-  = withCurrentProv $ \prv -> (VT prv [VL prv as, VL prv bs])
+plist_split (VL _ xs mt)
+  = withCurrentProv $ \prv -> (VT prv [VL prv as mt, VL prv bs mt])
   where
   -- FIXME: these list functions really shouldn't be primitives,
   -- introduces nasty laziness issues..
   (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
 
 plist_mem :: MonadEval m => Value -> Value -> m Value
-plist_mem x (VL _ xs) = withCurrentProvM $ \prv -> VB prv <$> allM (`eqVal` x) xs
+plist_mem x (VL _ xs _) = withCurrentProvM $ \prv -> VB prv <$> allM (`eqVal` x) xs
 
 plist_length :: MonadEval m => Value -> m Value
-plist_length (VL _ s) = withCurrentProv $ \prv -> VI prv (length s)
+plist_length (VL _ s _) = withCurrentProv $ \prv -> VI prv (length s)
 
 plist_rev :: MonadEval m => Value -> m Value
-plist_rev (VL _ xs) = withCurrentProv $ \prv -> VL prv (reverse xs)
+plist_rev (VL _ xs mt) = withCurrentProv $ \prv -> VL prv (reverse xs) mt
 
 plist_hd :: MonadEval m => Value -> m Value
-plist_hd (VL _ xs) = case xs of
+plist_hd (VL _ xs _) = case xs of
   x : _ -> return x
   _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.hd"] prv))
 
 plist_tl :: MonadEval m => Value -> m Value
-plist_tl (VL _ xs) = case xs of
-  _ : xs -> withCurrentProv $ \prv -> VL prv xs
+plist_tl (VL _ xs mt) = case xs of
+  _ : xs -> withCurrentProv $ \prv -> VL prv xs mt
   _ -> withCurrentProvM $ \prv -> maybeThrow (MLException (mkExn "Invalid_argument" [VS prv "List.hd"] prv))
 
 pappend :: MonadEval m => Value -> Value -> m Value
-pappend (VL _ xs) (VL _ ys) = do
-  su <- unify (typeOfList xs) (typeOfList ys)
+pappend (VL _ xs (Just tx)) (VL _ ys (Just ty)) = do
+  su <- unify tx ty
   prv <- getCurrentProv
-  return (VL prv (xs ++ ys))
+  return (VL prv (xs ++ ys) (Just (subst su ty)))
 
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS _ xs) (VS _ ys) = withCurrentProv $ \prv -> VS prv (xs ++ ys)
