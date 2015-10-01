@@ -111,7 +111,11 @@ varToInt (ti :-> to)  = varToInt ti :-> varToInt to
 
 
 typeError :: MonadEval m => Type -> Type -> m a
-typeError t1 t2 = gets stCurrentExpr >>= \e -> throwError (TypeError e t1 t2)
+typeError t1 t2 = do
+  t1s <- substM t1
+  t2s <- substM t2
+  e <- gets stCurrentExpr
+  throwError (TypeError e t1s t2s (fromJust $ getSrcSpanExprMaybe e))
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -807,7 +811,10 @@ unify t (TVar a) = unifyVar a t
 unify (xi :-> xo) (yi :-> yo)
   = mappend <$> unify xi yi <*> unify xo yo
 unify (TTup xs) (TTup ys)
+  | length xs == length ys
   = mconcat <$> zipWithM unify xs ys
+  | otherwise
+  = typeError (TTup xs) (TTup ys)
 unify x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
   = mconcat <$> zipWithM unify xts yts
