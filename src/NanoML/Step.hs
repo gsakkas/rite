@@ -493,22 +493,26 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   SetField ms r f e -> stepOne [r,e]
                       (\[vr, ve] -> setField vr f ve >> withCurrentProv VU)
                       (\[r,e] -> return $ SetField ms r f e)
-  Array ms [] _ -> withCurrentProv $ \prv -> VV prv [] (Just a)
+  Array ms [] _ -> withCurrentProvM $ \prv -> do
+    a <- freshTVar
+    return $ VV prv [] (Just (TVar a))
   Array ms es mt -> stepOne es
                 (\(v:vs) -> do
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
                     mapM_ (unify vt) vts
-                    withCurrentProv $ \prv -> VV prv (v:vs))
-                (\es -> return $ Array ms es)
-  List ms [] _ -> withCurrentProv $ \prv -> VL prv []
-  List ms es _ -> stepOne es
+                    withCurrentProv $ \prv -> VV prv (v:vs) (Just vt))
+                (\es -> return $ Array ms es mt)
+  List ms [] _ -> withCurrentProvM $ \prv -> do
+    a <- freshTVar
+    return $ VL prv [] (Just (TVar a))
+  List ms es mt -> stepOne es
                 (\(v:vs) -> do
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
                     mapM_ (unify vt) vts
-                    withCurrentProv $ \prv -> VL prv (v:vs))
-                (\es -> return $ List ms es (Just vt))
+                    withCurrentProv $ \prv -> VL prv (v:vs) (Just vt))
+                (\es -> return $ List ms es mt)
   Try ms e alts
     | isValue e -> return e
     | otherwise -> do

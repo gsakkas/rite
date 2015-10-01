@@ -847,12 +847,8 @@ typeOfM v = case v of
   Tuple _ vs -> TTup <$> (mapM typeOfM vs)
   ConApp _ c mv (Just t) -> return t
   Record _ fs (Just t) -> return t
-  Array _ vs -> do
-    a <- freshTVar
-    return $ mkTApps tARRAY [case vs of { x:_ -> typeOf x; _ -> TVar a}]
-  List _ vs -> do
-    a <- freshTVar
-    return $ mkTApps tLIST [case vs of { x:_ -> typeOf x; _ -> TVar a}]
+  Array _ vs (Just t) -> return (mkTApps tARRAY [t])
+  List _ vs (Just t) -> return (mkTApps tLIST [t])
   Hole _ _ mt -> maybe (TVar <$> freshTVar) return mt
   _ -> error $ "typeOf: " ++ show v
 
