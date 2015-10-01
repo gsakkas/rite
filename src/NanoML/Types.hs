@@ -91,8 +91,8 @@ isSuccess Failure {} = False
 
 data NanoError
   = MLException Value
-  | UnboundVariable Var SrcSpan
-  | TypeError Expr Type Type SrcSpan
+  | UnboundVariable Var MSrcSpan
+  | TypeError Expr Type Type MSrcSpan
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
@@ -115,7 +115,7 @@ typeError t1 t2 = do
   t1s <- substM t1
   t2s <- substM t2
   e <- gets stCurrentExpr
-  throwError (TypeError e t1s t2s (fromJust $ getSrcSpanExprMaybe e))
+  throwError (TypeError e t1s t2s (getSrcSpanExprMaybe e))
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -400,7 +400,7 @@ lookupEnv v Env {..} = case lookup v envEnv of
   Nothing
     | Just p <- envParent -> lookupEnv v p
     | otherwise           -> gets stCurrentExpr >>= \e ->
-      throwError (UnboundVariable v (fromJust $ getSrcSpanExprMaybe e))
+      throwError (UnboundVariable v (getSrcSpanExprMaybe e))
   Just x                  -> return x
   -- where
   -- go [] = throwError (UnboundVariable v)

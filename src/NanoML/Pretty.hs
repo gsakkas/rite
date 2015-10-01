@@ -263,8 +263,13 @@ var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
 render :: Doc -> String
 render d = displayS (renderSmart 0.5 72 d) ""
 
+instance Pretty MSrcSpan where
+  pretty (Just ss) = pretty ss
+  pretty Nothing = text "<unknown>"
+
 instance Pretty SrcSpan where
-  pretty SrcSpan{..} = pretty srcSpanStartLine <+> char ':' <+> pretty srcSpanStartCol
+  pretty SrcSpan{..} = text "line" <+> pretty srcSpanStartLine
+                    <> char ',' <+> text "column" <+> pretty srcSpanStartCol
 
 instance Pretty Type where
   prettyPrec z t = case t of
@@ -279,8 +284,8 @@ instance Pretty Type where
 instance Pretty NanoError where
   pretty e = case e of
     MLException v -> text "*** Exception:" <+> pretty v
-    UnboundVariable v ss -> text "Unbound variable at " <+> pretty ss <+> text ":" <+> pretty v
-    TypeError e t1 t2 ss -> text "Type error at " <+> pretty ss <+> text ": could not match" <+> pretty t1 <+> text "with" <+> pretty t2
+    UnboundVariable v ss -> text "Unbound variable at" <+> pretty ss <+> text ":" <+> pretty v
+    TypeError e t1 t2 ss -> text "Type error at" <+> pretty ss <+> text ": could not match" <+> pretty t1 <+> text "with" <+> pretty t2
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s
