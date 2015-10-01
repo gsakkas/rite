@@ -91,8 +91,8 @@ isSuccess Failure {} = False
 
 data NanoError
   = MLException Value
-  | UnboundVariable Var
-  | TypeError Expr Type Type
+  | UnboundVariable Var SrcSpan
+  | TypeError Expr Type Type SrcSpan
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
@@ -399,7 +399,8 @@ lookupEnv :: MonadEval m => Var -> Env -> m Value
 lookupEnv v Env {..} = case lookup v envEnv of
   Nothing
     | Just p <- envParent -> lookupEnv v p
-    | otherwise           -> throwError (UnboundVariable v)
+    | otherwise           -> gets stCurrentExpr >>= \e ->
+      throwError (UnboundVariable v (fromJust $ getSrcSpanExprMaybe e))
   Just x                  -> return x
   -- where
   -- go [] = throwError (UnboundVariable v)
