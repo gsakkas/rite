@@ -269,7 +269,8 @@ evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
   prv <- getCurrentProv
-  su <- fmap Map.fromList $ forM (nub $ concatMap freeTyVars (dArgs dd)) $ \tv ->
+  let tvs = tyVars (dType dd)
+  su <- fmap Map.fromList $ forM tvs $ \tv ->
     (tv,) . TVar <$> freshTVar
   case (map (subst su) (dArgs dd), v) of
     ([], Nothing)
@@ -279,7 +280,7 @@ evalConApp dc v = do
     ([a], Just v) -> force v a $ \v -> do
       vt <- typeOfM v
       unify vt a
-      t <- substM $ mkTApps (tyCon (dType dd)) [a]
+      t <- substM $ mkTApps (tyCon (dType dd)) (map (subst su . TVar) tvs)
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
@@ -290,7 +291,7 @@ evalConApp dc v = do
          force vh (subst su t) $ \vh -> do
            return (VL prv (vh : vt) (Just (typeOf vh)))
       | length as == length vs -> forces (zip vs as) $ \vs -> do
-        t <- substM $ mkTApps (tyCon (dType dd)) as
+        t <- substM $ mkTApps (tyCon (dType dd)) (map (subst su . TVar) tvs)
         return (VA prv dc v (Just t))
     (as, _) -> do
       let nArgs = case v of
@@ -443,7 +444,7 @@ matchPat v p = case p of
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    su <- fmap Map.fromList $ forM (nub (concatMap freeTyVars (dArgs dd))) $ \tv ->
+    su <- fmap Map.fromList $ forM (tyVars (dType dd)) $ \tv ->
       (tv,) . TVar <$> freshTVar
     force v (subst su $ typeDeclType $ dType dd) $ \(VA _ c v' t) -> do
         unless (safeMatch (dArgs dd) p') err
