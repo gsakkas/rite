@@ -134,7 +134,14 @@ data EvalState = EvalState
   , stCurrentExpr :: Expr -- NOTE: can't be strict
   , stSteps    :: !Int
   , stStepKind :: !StepKind
+  , stSubst    :: !Subst
   } deriving Show
+
+addSubst :: MonadEval m => TVar -> Type -> m ()
+addSubst a t = do
+  su <- gets stSubst
+  let su' = Map.insert a t (fmap (subst (Map.singleton a t)) su)
+  modify' $ \s -> s { stSubst = su' }
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
@@ -317,11 +324,11 @@ readStore i = (IntMap.! i) <$> gets stStore
 writeStore :: MonadEval m => Ref -> (MutFlag,Value) -> m ()
 writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
 
-type Subst = [(TVar, Type)]
+type Subst = Map TVar Type -- [(TVar, Type)]
 
 subst :: Subst -> Type -> Type
 subst su t = case t of
-  TVar x -> fromMaybe t (lookup x su)
+  TVar x -> fromMaybe t (Map.lookup x su)
 --  TCon _ -> t
   TApp c ts -> TApp c (map (subst su) ts)
   ti :-> to -> subst su ti :-> subst su to
@@ -784,12 +791,12 @@ unify x y@(TApp c ts) = unifyAlias c ts x y
 unify x y
   = typeError x y
 
-unifyVar :: MonadEval m => TVar -> Type -> m [(TVar, Type)]
+unifyVar :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
 unifyVar a t
-  | TVar b <- t, a == b = return []
+  | TVar b <- t, a == b = return () -- []
   -- FIXME: occurs check
   | a `elem` freeTyVars t = typeError (TVar a) t
-  | otherwise   = return [(a,t)]
+  | otherwise   = addSubst a t -- return [(a,t)]
 
 
 unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m [(TVar, Type)]
