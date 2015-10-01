@@ -143,6 +143,12 @@ addSubst a t = do
   let su' = Map.insert a t (fmap (subst (Map.singleton a t)) su)
   modify' $ \s -> s { stSubst = su' }
 
+getSubst :: MonadEval m => m Subst
+getSubst = gets stSubst
+
+substM :: MonadEval m => Type -> m Type
+substM t = getSubst >>= \su -> return (subst su t)
+
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
   e' <- gets stCurrentExpr
@@ -632,6 +638,34 @@ onSrcSpanExpr f expr = case expr of
   Hole ms x y -> Hole (f ms) x y
   Ref r -> Ref r
 
+-- onType :: (Type -> Type) -> Expr -> Expr
+-- onType f expr = case expr of
+--   Var ms x -> Var ms x
+--   Lam ms x y e -> Lam ms x y e
+--   App ms x y -> App ms x y
+--   Bop ms x y z -> Bop ms x y z
+--   Uop ms x y -> Uop ms x y
+--   Lit ms x -> Lit ms x
+--   Let ms x y z -> Let ms x y z
+--   Ite ms x y z -> Ite ms x y z
+--   Seq ms x y -> Seq ms x y
+--   Case ms x y -> Case ms x y
+--   Tuple ms x -> Tuple ms x
+--   ConApp ms x y mt -> ConApp ms x y (fmap f mt)
+--   Record ms x mt -> Record ms x (fmap f mt)
+--   Field ms x y -> Field ms x y
+--   SetField ms x y z -> SetField ms x y z
+--   Array ms x mt -> Array ms x (fmap f mt)
+--   List ms x mt -> List ms x (fmap f mt)
+--   Try ms x y -> Try ms x y
+--   Prim1 ms x -> Prim1 ms x
+--   Prim2 ms x -> Prim2 ms x
+--   -- Val ms x -> Val ms x
+--   With ms x y -> With ms x y
+--   Replace ms x y -> Replace ms x y
+--   Hole ms x y -> Hole ms x y
+--   Ref r -> Ref r
+
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
   show (P1 v _ _) = v
@@ -762,7 +796,7 @@ freshTVar = do
   i <- fresh
   return $ 't' : show i
 
-unify :: MonadEval m => Type -> Type -> m [(TVar, Type)]
+unify :: MonadEval m => Type -> Type -> m () -- [(TVar, Type)]
 unify (TVar a) t = unifyVar a t
 unify t (TVar a) = unifyVar a t
 -- unify (TCon x) (TCon y)
@@ -780,11 +814,13 @@ unify x@(TApp xc xts) y@(TApp yc yts)
   | otherwise
   = do xt <- lookupType xc
        yt <- lookupType yc
+       let sux = Map.fromList (zip (tyVars xt) xts)
+       let suy = Map.fromList (zip (tyVars yt) yts)
        case (tyRhs xt, tyRhs yt) of
-         (Alias tx, Alias ty) -> unify (subst (zip (tyVars xt) xts) tx)
-                                       (subst (zip (tyVars yt) yts) ty)
-         (Alias t, _) -> unify (subst (zip (tyVars xt) xts) t) y
-         (_, Alias t) -> unify x (subst (zip (tyVars yt) yts) t)
+         (Alias tx, Alias ty) -> unify (subst sux tx)
+                                       (subst suy ty)
+         (Alias t, _) -> unify (subst sux t) y
+         (_, Alias t) -> unify x (subst suy t)
          _ -> typeError x y
 unify x@(TApp c ts) y = unifyAlias c ts y x
 unify x y@(TApp c ts) = unifyAlias c ts x y
@@ -799,11 +835,12 @@ unifyVar a t
   | otherwise   = addSubst a t -- return [(a,t)]
 
 
-unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m [(TVar, Type)]
+unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m () -- [(TVar, Type)]
 unifyAlias c ts x y = do
   TypeDecl {..} <- lookupType c
+  let su = Map.fromList (zip tyVars ts)
   case tyRhs of
-    Alias t -> unify x (subst (zip tyVars ts) t)
+    Alias t -> unify x (subst su t)
     _ -> typeError x y
 
 typeOf :: Value -> Type

@@ -71,7 +71,8 @@ genADT c ts e n = do
     | otherwise
     = Just $ do
       ns <- replicateM (length dArgs) (getRandomR (0, prev n))
-      vs <- zipWithM (\n d -> resize n . (`genValue` e) . subst (zip tvs ts) $ d)
+      let su = Map.fromList (zip tvs ts)
+      vs <- zipWithM (\n d -> resize n . (`genValue` e) . subst su $ d)
                      ns dArgs
       withCurrentProvM $ \prv -> do
         let v = case dArgs of

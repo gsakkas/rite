@@ -18,6 +18,7 @@ import Control.Monad.Random
 import Control.Monad.RWS   hiding (Alt)
 import Data.IORef
 import Data.List
+import qualified Data.Map as Map
 import qualified Data.Vector as Vector
 import System.IO.Unsafe
 import Text.Printf
@@ -200,45 +201,56 @@ mycensor f m = pass $ do
   --   v2 <- eval e2
   --   forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
 
-force :: MonadEval m => Value -> Type -> (Value -> Subst -> m a) -> m a
-force x (TVar {}) k = k x [] -- delay instantiation until we have a concrete type
+force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
+-- force x (TVar {}) k = k x -- delay instantiation until we have a concrete type
 force (Hole _ r mt) t k = do
   lookupStore r >>= \case
     Just (_,v) -> do
       vt <- typeOfM v
-      su <- unify vt t
-      k v su
+      t' <- substM t
+      unify vt t'
+      k v
+      -- su <- getSubst
+      -- k (onType (subst su) v)
     Nothing -> do
       env <- gets stTypeEnv
       ht <- maybe (TVar <$> freshTVar) return mt
-      su <- unify t ht
+      t' <- substM t
+      unify t' ht
+      su <- getSubst
       v <- genValue (subst su t) env
       writeStore r (NonMut,v)
-      k v []
+      k v
 force v t k = do
   vt <- typeOfM v
-  su <- unify vt t
-  k v su
+  t' <- substM t
+  unify vt t'
+  -- su <- getSubst
+  -- k (onType (subst su) v)
+  k v
 
-forces :: MonadEval m => [(Value,Type)] -> ([Value] -> Subst -> m a) -> m a
-forces vts k = go vts [] []
+forces :: MonadEval m => [(Value,Type)] -> ([Value] -> m a) -> m a
+forces vts k = go vts []
   where
-  go []          vs su = k (reverse vs) su
-  go ((v,t):vts) vs su = force v t (\v su' -> go (map (second (subst su')) vts) (v:vs) (su ++ su'))
+  go []          vs = k (reverse vs)
+  go ((v,t):vts) vs = force v t (\v -> go vts (v:vs))
 
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
 forceSame x@(Hole {}) y@(Hole {}) k =
-  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] su -> k x y
+  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
 forceSame x@(Hole {}) y k = do
-  yt <- typeOfM y
-  force x yt $ \x su -> k x y
+  yt <- substM =<< typeOfM y
+  force x yt $ \x -> k x y
 forceSame x y@(Hole {}) k = do
-  xt <- typeOfM x
-  force y xt $ \y su -> k x y
+  xt <- substM =<< typeOfM x
+  force y xt $ \y -> k x y
 forceSame x y k = do
-  xt <- typeOfM x
-  yt <- typeOfM y
-  unify xt yt >> k x y
+  xt <- substM =<< typeOfM x
+  yt <- substM =<< typeOfM y
+  unify xt yt
+  k x y
+  -- su <- getSubst
+  -- k (onType (subst su) x) (onType (subst su) y)
 
 -- evalApp :: MonadEval m => Value -> Value -> m Value
 -- evalApp = error "evalApp"
@@ -252,27 +264,28 @@ evalConApp :: MonadEval m => DCon -> Maybe Value -> m Value
 evalConApp dc v = do
   dd <- lookupDataCon dc
   prv <- getCurrentProv
-  su <- forM (nub $ concatMap freeTyVars (dArgs dd)) $ \tv -> (tv,) . TVar <$> freshTVar
+  su <- fmap Map.fromList $ forM (nub $ concatMap freeTyVars (dArgs dd)) $ \tv ->
+    (tv,) . TVar <$> freshTVar
   case (map (subst su) (dArgs dd), v) of
     ([], Nothing)
       | dc == "()" -> return (VU prv)
-      | dc == "[]" -> return (VL prv [] (Just a))
+      | dc == "[]" -> VL prv [] . Just . TVar <$> freshTVar
       | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
-    ([a], Just v) -> force v a $ \v _ -> do
+    ([a], Just v) -> force v a $ \v -> do
       vt <- typeOfM v
-      su <- unify vt a
-      let t = subst su $ typeDeclType $ dType dd
+      unify vt a
+      t <- substM $ mkTApps (tyCon (dType dd)) [a]
       return (VA prv dc (Just v) (Just t))
     (as,  Just (VT _ vs))
       | dc == "::"
       , [vh, vt] <- vs -> do
         a <- freshTVar
-        force vt (tL (TVar a)) $ \(VL _ vt mt) _ ->
-         force vh (subst su $ typeOfList vt) $ \vh _ -> do
+        force vt (tL (TVar a)) $ \(VL _ vt mt) -> do
+         t <- substM (TVar a)
+         force vh (subst su t) $ \vh -> do
            return (VL prv (vh : vt) (Just (typeOf vh)))
-      | length as == length vs -> forces (zip vs as) $ \vs _ -> do
-        su <- mconcat <$> zipWithM unify (map typeOf vs) as
-        let t = subst su $ typeDeclType $ dType dd
+      | length as == length vs -> forces (zip vs as) $ \vs -> do
+        t <- substM $ mkTApps (tyCon (dType dd)) as
         return (VA prv dc v (Just t))
     (as, _) -> do
       let nArgs = case v of
@@ -292,21 +305,21 @@ evalBop bop v1 v2 = withCurrentProvM $ \prv ->
   Le     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> ltVal v1 v2 <*> eqVal v1 v2
   Gt     -> forceSame v1 v2 $ \v1 v2 -> VB prv <$> gtVal v1 v2
   Ge     -> forceSame v1 v2 $ \v1 v2 -> (\x y -> VB prv (x || y)) <$> gtVal v1 v2 <*> eqVal v1 v2
-  And    -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] su -> pand v1 v2
-  Or     -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] su -> por v1 v2
-  Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> plusVal v1 v2
-  Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> minusVal v1 v2
-  Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> timesVal v1 v2
-  Div    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> divVal v1 v2
-  Mod    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] su -> modVal v1 v2
-  FPlus  -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> plusVal v1 v2
-  FMinus -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> minusVal v1 v2
-  FTimes -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> timesVal v1 v2
-  FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] su -> divVal v1 v2
+  And    -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] -> pand v1 v2
+  Or     -> forces [(v1,tCon tBOOL),(v2,tCon tBOOL)] $ \[v1,v2] -> por v1 v2
+  Plus   -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> plusVal v1 v2
+  Minus  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> minusVal v1 v2
+  Times  -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> timesVal v1 v2
+  Div    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> divVal v1 v2
+  Mod    -> forces [(v1,tCon tINT),(v2,tCon tINT)] $ \[v1,v2] -> modVal v1 v2
+  FPlus  -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> plusVal v1 v2
+  FMinus -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> minusVal v1 v2
+  FTimes -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> timesVal v1 v2
+  FDiv   -> forces [(v1,tCon tFLOAT),(v2,tCon tFLOAT)] $ \[v1,v2] -> divVal v1 v2
 
 evalUop :: MonadEval m => Uop -> Value -> m Value
-evalUop Neg  v = force v (tCon tINT)   $ \(VI _ i) su -> withCurrentProv $ \prv -> VI prv (negate i)
-evalUop FNeg v = force v (tCon tFLOAT) $ \(VD _ d) su -> withCurrentProv $ \prv -> VD prv (negate d)
+evalUop Neg  v = force v (tCon tINT)   $ \(VI _ i) -> withCurrentProv $ \prv -> VI prv (negate i)
+evalUop FNeg v = force v (tCon tFLOAT) $ \(VD _ d) -> withCurrentProv $ \prv -> VD prv (negate d)
 
 
 -- ltVal (VI x) (VI y) = return (x < y)
@@ -376,10 +389,10 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
 matchPat v p = case p of
   VarPat _ var ->
     return $ Just [(var,v)]
-  LitPat _ lit -> force v (typeOfLit lit) $ \v su -> do
+  LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
     b <- matchLit v lit
     return $ if b then Just mempty else Nothing
-  IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v su -> do
+  IntervalPat _ lo hi -> force v (typeOfLit lo) $ \v -> do
     VB _ b <- do lb <- evalBop Ge v (Lit Nothing lo)
                  gb <- evalBop Le v (Lit Nothing hi)
                  evalBop And lb gb
@@ -389,7 +402,7 @@ matchPat v p = case p of
     return $ if b then Just mempty else Nothing
   ConsPat _ p ps -> do
    a <- freshTVar
-   force v (tL (TVar a)) $ \v su -> do
+   force v (tL (TVar a)) $ \v -> do
     case v of
       VL _ [] _ -> return Nothing
       VL _ _ _ -> do
@@ -401,32 +414,33 @@ matchPat v p = case p of
          _                      -> return Nothing
   ListPat _ ps -> do
    a <- freshTVar
-   force v (tL (TVar a)) $ \(VL _ vs mt) su -> do
+   force v (tL (TVar a)) $ \(VL _ vs mt) -> do
     if length ps /= length vs
       then return Nothing
       else fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
              <$> zipWithM matchPat vs ps
   TuplePat _ ps -> do
    ts <- replicateM (length ps) (TVar <$> freshTVar)
-   force v (TTup ts) $ \(VT _ vs) su -> do
+   force v (TTup ts) $ \(VT _ vs) -> do
     fmap mconcat . sequence -- :: [Maybe _] -> Maybe [_])
        <$> zipWithM matchPat vs ps
   WildPat _ ->
     return $ Just mempty
   ConPat _ "[]" Nothing -> do
     a <- freshTVar
-    force v (tL (TVar a)) $ \v su -> case v of
+    force v (tL (TVar a)) $ \v -> case v of
     -- case vs of
       VL _ [] _ -> return (Just mempty)
       VL _ _ _ -> return Nothing
       _ -> error $ "matchPat: impossible: " ++ show v
-  ConPat _ "()" Nothing -> force v tU $ \v su ->
+  ConPat _ "()" Nothing -> force v tU $ \v ->
      return (Just mempty)
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    su <- forM (nub (concatMap freeTyVars (dArgs dd))) $ \tv -> (tv,) . TVar <$> freshTVar
-    force v (subst su $ typeDeclType $ dType dd) $ \(VA _ c v' t) su -> do
+    su <- fmap Map.fromList $ forM (nub (concatMap freeTyVars (dArgs dd))) $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    force v (subst su $ typeDeclType $ dType dd) $ \(VA _ c v' t) -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing
@@ -438,7 +452,7 @@ matchPat v p = case p of
   AsPat _ p x -> do
     Just env <- matchPat v p
     return (Just ((x,v) : env))
-  ConstraintPat _ p t -> force v t $ \v su -> do
+  ConstraintPat _ p t -> force v t $ \v -> do
     matchPat v p
   _ -> err
   where err = otherError (printf "tried to match %s against %s"

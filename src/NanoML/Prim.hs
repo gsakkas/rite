@@ -545,9 +545,10 @@ plist_tl (VL _ xs mt) = case xs of
 
 pappend :: MonadEval m => Value -> Value -> m Value
 pappend (VL _ xs (Just tx)) (VL _ ys (Just ty)) = do
-  su <- unify tx ty
+  unify tx ty
+  t <- substM tx
   prv <- getCurrentProv
-  return (VL prv (xs ++ ys) (Just (subst su ty)))
+  return (VL prv (xs ++ ys) (Just t))
 
 pconcat :: MonadEval m => Value -> Value -> m Value
 pconcat (VS _ xs) (VS _ ys) = withCurrentProv $ \prv -> VS prv (xs ++ ys)

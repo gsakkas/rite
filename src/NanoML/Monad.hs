@@ -94,6 +94,7 @@ initState = EvalState
   , stCurrentExpr = error "initState.stCurrentExpr"
   , stSteps = 0
   , stStepKind = BoringStep
+  , stSubst = mempty
   }
 
 -- uniquify :: EvalState -> EvalState

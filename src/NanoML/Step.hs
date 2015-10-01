@@ -440,7 +440,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   Ite ms b t f
     | isValue b
       -> -- addEvent expr >>
-      force b tB $ \b su -> case b of
+      force b tB $ \b -> case b of
           VB _ True  -> return t
           VB _ False -> return f
           -- _ -> typeError (tCon tBOOL) (typeOf b)
@@ -466,16 +466,16 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
     | otherwise -> ConApp ms dc . Just <$> step e <*> pure Nothing
   Record ms flds Nothing
     | all (isValue . snd) flds -> do
-      td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
-      -- FIXME: refresh tyvars from tydecl
-      (vs, sus) <- fmap unzip $ forM fs $ \ (f, m, t) -> do
+      td@TypeDecl {tyCon, tyVars, tyRhs = TRec fs} <- lookupField $ fst $ head flds
+      su <- fmap Map.fromList $ forM tyVars $ \tv ->
+        (tv,) . TVar <$> freshTVar
+      vs <- forM fs $ \ (f, m, t) -> do
         let v = fromJust $ lookup f flds
-        force v t $ \v su -> do
-          su <- unify t (typeOf v)
+        force v (subst su t) $ \v -> do
           i <- fresh
           writeStore i (m,v)
-          return ((f, Ref i),su)
-      let t = subst (mconcat sus) $ typeDeclType td
+          return (f, Ref i)
+      t <- substM $ mkTApps tyCon (map (subst su . TVar) tyVars)
       withCurrentProv $ \prv -> VR prv vs (Just t)
     | otherwise -> do
       td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField $ fst $ head flds
@@ -501,7 +501,8 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
                     mapM_ (unify vt) vts
-                    withCurrentProv $ \prv -> VV prv (v:vs) (Just vt))
+                    vt' <- substM vt
+                    withCurrentProv $ \prv -> VV prv (v:vs) (Just vt'))
                 (\es -> return $ Array ms es mt)
   List ms [] _ -> withCurrentProvM $ \prv -> do
     a <- freshTVar
@@ -511,7 +512,8 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
                     mapM_ (unify vt) vts
-                    withCurrentProv $ \prv -> VL prv (v:vs) (Just vt))
+                    vt' <- substM vt
+                    withCurrentProv $ \prv -> VL prv (v:vs) (Just vt'))
                 (\es -> return $ List ms es mt)
   Try ms e alts
     | isValue e -> return e
@@ -535,26 +537,27 @@ stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
 stepApp ms f' es = do
  a <- freshTVar
  b <- freshTVar
- force f' (TVar a :-> TVar b) $ \f' su -> case f' of
+ force f' (TVar a :-> TVar b) $ \f' -> case f' of
   -- With _ e f -> stepApp ms f es
   -- Replace _ e f -> stepApp ms f es
   -- immediately apply saturated primitve wrappers
   Prim1 ms' (P1 x f' t) -> do
     -- traceShowM (f, es)
-    su <- forM (freeTyVars t) $ \tv -> (tv,) . TVar <$> freshTVar
+    su <- fmap Map.fromList $ forM (freeTyVars t) $ \tv -> (tv,) . TVar <$> freshTVar
     case es of
-     [e] -> force e (subst su t) $ \v su -> f' v
-     e:es -> do x <- force e (subst su t) $ \v su -> f' v
+     [e] -> force e (subst su t) $ \v -> f' v
+     e:es -> do x <- force e (subst su t) $ \v -> f' v
                 return (App ms x es)
   Prim2 ms' (P2 x f t1 t2) -> do
-    su <- forM (freeTyVars t1 ++ freeTyVars t2) $ \tv -> (tv,) . TVar <$> freshTVar
+    su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2) $ \tv ->
+      (tv,) . TVar <$> freshTVar
     let t1' = subst su t1
         t2' = subst su t2
     case es of
      [e1] -> do env <- gets stVarEnv
                 return (Lam ms (VarPat ms "$x") (App ms f' (es ++ [Var ms "$x"])) (Just env))
-     [e1,e2] -> forces [(e1,t1'),(e2,t2')] $ \[v1,v2] su -> f v1 v2
-     e1:e2:es -> do x <- forces [(e1,t1'),(e2,t2')] $ \[v1,v2] su -> f v1 v2
+     [e1,e2] -> forces [(e1,t1'),(e2,t2')] $ \[v1,v2] -> f v1 v2
+     e1:e2:es -> do x <- forces [(e1,t1'),(e2,t2')] $ \[v1,v2] -> f v1 v2
                     return (App ms x es)
      -- _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
      --         undefined
