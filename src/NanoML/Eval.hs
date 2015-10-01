@@ -202,8 +202,12 @@ mycensor f m = pass $ do
   --   forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
 
 force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
--- force x (TVar {}) k = k x -- delay instantiation until we have a concrete type
-force (Hole _ r mt) t k = do
+force x t k = substM t >>= \t' -> force' x t' k
+
+force' x (TVar {}) k = k x -- delay instantiation until we have a concrete type
+force' h@(Hole _ r mt) t k = do
+  x <- lookupStore r
+  -- traceShowM (h, t, x)
   lookupStore r >>= \case
     Just (_,v) -> do
       vt <- typeOfM v
@@ -218,10 +222,11 @@ force (Hole _ r mt) t k = do
       t' <- substM t
       unify t' ht
       su <- getSubst
-      v <- genValue (subst su t) env
+      v <- genValue (subst su t') env
+      -- traceShowM (t', subst su t', v)
       writeStore r (NonMut,v)
       k v
-force v t k = do
+force' v t k = do
   vt <- typeOfM v
   t' <- substM t
   unify vt t'
