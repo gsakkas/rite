@@ -152,7 +152,7 @@ main = do
         -- let gr'' = collapse gr' nodes
         let nodes = Graph.labNodes gr''
         let edges = Graph.labEdges gr''
-        let root = backback gr st
+        let root = backback gr'' st
         let value = st
         -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
         json $ object [ -- ("dot" :: String, dot)
@@ -187,7 +187,7 @@ main = do
             let gr'' = collapseEdges badEdges gr'
             let nodes = Graph.labNodes gr''
             let edges = Graph.labEdges gr''
-            let root = backback gr st
+            let root = backback gr'' st
             let stuck = st
             -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
             -- liftIO $ writeFile "tmp.dot" dot

@@ -172,7 +172,7 @@ forwardstep gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
   Nothing      -> Nothing
   Just (n', _) -> Just n'
 
-backwardstep :: Graph -> Graph.Node -> Maybe Graph.Node
+backwardstep :: Graph.Gr a EdgeKind -> Graph.Node -> Maybe Graph.Node
 backwardstep gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
   Nothing      -> Nothing
   Just (n', _) -> Just n'
@@ -193,7 +193,7 @@ forwardjump gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
     | k == CallStep -> Just n'
     | otherwise     -> forwardjump gr n' <|> Just n'
 
-backback :: Graph -> Graph.Node -> Graph.Node
+backback :: Graph.Gr a EdgeKind -> Graph.Node -> Graph.Node
 backback gr n = case backwardstep gr n of
   Nothing -> n
   Just n' -> backback gr n'

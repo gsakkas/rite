@@ -77,7 +77,7 @@ collapseEdges es gr = foldr collapseEdge gr es
 
 collapseEdge :: Graph.LEdge b -> Graph.Gr a b -> Graph.Gr a b
 collapseEdge (v1,v2,_) gr =
-  Graph.insEdges es . Graph.delEdge (v1,v2) . Graph.delNode v1 $ gr
+  Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
   where
   es = [ (x,v2,l) | (x, l) <- Graph.lpre gr v1 ]
 
