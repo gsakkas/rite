@@ -122,7 +122,7 @@ checkDecl f prog = do
   go _ r@(Success 1000 st v) _ = return r
   go (f,st,v) r@(Success n st' v') !m = do
     -- print (pretty v, pretty v')
-    case fst3 (runEvalFull stdOpts (unifyNoExn (typeOf v) (typeOf v'))) of
+    case fst3 (runEvalFull stdOpts (put st >> unifyNoExn (typeOf v) (typeOf v'))) of
       Left e -> return $ Failure (n+1) 0 0 mempty e st'
       Right {} -> do
         r <- nanoCheck n m stdOpts $ do
