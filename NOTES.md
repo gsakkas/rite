@@ -622,7 +622,20 @@ helper []
 - [ ] list of stuff for UGs to do
   - anonymize raw data
   - test web ui
-  -
+  - data analysis
+    - how long does it take students to complete homeworks?
+    - where do the errors show up?
+      - which homework?
+      - which problem?
+    - what kind of errors do they encounter?
+      - categories (syntax, monotype, polytype, hof)
+      - frequency
+    - how long does it take them to fix the error?
+      - by category
+      - by homework (do they get better over time?)
+    - underlying issue of dealing with large time gaps
+      - how to decide when they stopped working?
+      - can use timer events (large gap with no timer events indicates ocaml-top closed)
 
 - [ ] prepare for A/B study
   - 5-10 bad programs
