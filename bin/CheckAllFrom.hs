@@ -1,33 +1,62 @@
 module Main where
 
+import Control.Monad
 import Data.List
 import Data.Maybe
 import System.Environment
 import Text.Printf
 
 import NanoML
+import NanoML.Misc
+import NanoML.Parser
+import NanoML.Pretty
 
 isRight Right {} = True
 isRight _        = False
 
+data ST = ST { total :: !Int, safe :: !Int, timeout :: !Int
+             , unbound :: !Int, output :: !Int, unsafe :: !Int
+             }
+
+initST = ST 0 0 0 0 0 0
+
+reduceM xs z f = foldM f z xs
+
+bumpIf True = 1
+bumpIf False = 0
+
 main = do
   [dir] <- getArgs
-  results <- checkAllFrom dir
+  ps <- parseAllIn dir
+  let becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
+  st <- reduceM ps initST $ \st (f,e,p) -> do
+    putStrLn ("\n" ++ f)
+    r <- check e p
+    case r of
+      Nothing -> return st
+      Just r  -> do
+        printResult r
+        let bumpIfFail b = bumpIf (not (isSuccess r) && b)
+        return $! st { total = total st + 1
+                     , safe  = safe st + bumpIf (isSuccess r)
+                     , timeout = timeout st + bumpIfFail (becauseOf "timeout" r)
+                     , unbound = unbound st + bumpIfFail (becauseOf "Unbound" r)
+                     , output  = output st  + bumpIfFail (becauseOf "OutputType" r)
+                     , unsafe  = unsafe st  + bumpIfFail (becauseOf "Type error" r)
+                     }
   printf "\nDONE!\n"
-  let (ss, fs) = partition (isRight . snd) . map fromJust . filter isJust $ results
-  let becauseOf r = (r `isInfixOf`) . show . snd
-  printf "%d programs:\n" (length ss + length fs)
-  printf "  %d did not fail at runtime\n" (length ss)
-  printf "  %d timed out\n" (length (filter (becauseOf "timeout") fs))
+  printf "%d programs:\n" (total st)
+  printf "  %d did not fail at runtime\n" (safe st)
+  printf "  %d timed out\n" (timeout st)
   printf "  %d did failed at runtime:\n"
-    (length fs - length (filter (becauseOf "timeout") fs))
+    (total st - safe st - timeout st)
   printf "    %d due to an unbound variable or datacon\n"
-    (length (filter (becauseOf "Unbound") fs))
+    (unbound st)
     -- length (filter (becauseOf "unknown") fs))
   printf "    %d due to an output-type-mismatch\n"
-    (length (filter (becauseOf "OutputType") fs))
+    (output st)
   printf "    %d due to a type error (%02.02f %%)\n"
-    (length (filter (becauseOf "Type error") fs))
-    ((fromIntegral (length (filter (becauseOf "Type error") fs))
-      / fromIntegral (length ss + length fs) :: Double)
+    (unsafe st)
+    ((fromIntegral (unsafe st)
+      / fromIntegral (total st) :: Double)
      * 100)

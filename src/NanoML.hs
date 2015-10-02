@@ -4,12 +4,14 @@
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE PackageImports    #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE TupleSections   #-}
 module NanoML
   ( module NanoML.Parser
   , module NanoML.Types
   , module NanoML.Eval
   , module NanoML.Step
   , check, checkAll, checkAllFrom, runProg, checkDecl
+  , printResult
   ) where
 
 import           Control.Exception
@@ -224,9 +226,14 @@ fetchArg st v
 
 checkAll = checkAllFrom "../yunounderstand/data/sp14/prog/unify"
 
-checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> printResult r >> return (Just (f,resultEither r))) r)
+data SP a b = SP !a !b
 
-resultEither Failure {..} = Left $ pretty errorMsg
+spfst (SP a b) = a
+spsnd (SP a b) = b
+
+checkAllFrom dir = parseAllIn dir >>= mapM (\(f,e,p) -> putStrLn ("\n" ++ f) >> check e p >>= \r -> maybe (return Nothing) (\r -> printResult r >> return (Just $! SP f $! resultEither r)) r)
+
+resultEither Failure {..} = Left $! pretty errorMsg
 resultEither Success {}   = Right ()
 
 checkType :: MonadEval m => Value -> Type -> m Bool

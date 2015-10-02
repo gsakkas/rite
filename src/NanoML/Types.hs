@@ -92,7 +92,7 @@ isSuccess Failure {} = False
 data NanoError
   = MLException Value
   | UnboundVariable Var MSrcSpan
-  | TypeError Expr Type Type MSrcSpan
+  | TypeError Type Type MSrcSpan
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
@@ -115,7 +115,7 @@ typeError t1 t2 = do
   t1s <- substM t1
   t2s <- substM t2
   e <- gets stCurrentExpr
-  throwError (TypeError e t1s t2s (getSrcSpanExprMaybe e))
+  throwError (TypeError t1s t2s (getSrcSpanExprMaybe e))
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
