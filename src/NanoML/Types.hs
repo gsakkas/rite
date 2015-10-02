@@ -10,6 +10,7 @@
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
 {-# LANGUAGE OverlappingInstances  #-}
+{-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE PatternSynonyms       #-}
@@ -851,19 +852,19 @@ unifyAlias c ts x y = do
     Alias t -> unify x (subst su t)
     _ -> typeError x y
 
-typeOf :: Value -> Type
-typeOf v = case v of
-  Lam {} -> TVar "a" :-> TVar "b" -- TODO
-  Prim1 {} -> TVar "a" :-> TVar "b" -- TODO
-  Prim2 {} -> TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
-  Lit _ l -> typeOfLit l
-  Tuple _ vs -> TTup (map typeOf vs)
-  ConApp _ c mv (Just t) -> t
-  Record _ fs (Just t) -> t
-  Array _ vs (Just t) -> mkTApps tARRAY [t]
-  List _ vs (Just t) -> mkTApps tLIST [t]
-  Hole _ _ mt -> maybe (TVar "a") id mt
-  _ -> error $ "typeOf: " ++ show v
+-- typeOf :: Value -> Type
+-- typeOf v = case v of
+--   Lam {} -> TVar "a" :-> TVar "b" -- TODO
+--   Prim1 {} -> TVar "a" :-> TVar "b" -- TODO
+--   Prim2 {} -> TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
+--   Lit _ l -> typeOfLit l
+--   Tuple _ vs -> TTup (map typeOf vs)
+--   ConApp _ c mv (Just t) -> t
+--   Record _ fs (Just t) -> t
+--   Array _ vs (Just t) -> mkTApps tARRAY [t]
+--   List _ vs (Just t) -> mkTApps tLIST [t]
+--   Hole _ _ mt -> maybe (TVar "a") id mt
+--   _ -> error $ "typeOf: " ++ show v
   -- VI _ _ -> tCon tINT
   -- VD _ _ -> tCon tFLOAT
   -- VC _ _ -> tCon tCHAR
@@ -881,7 +882,7 @@ typeOf v = case v of
   -- -- VF _ -> error "typeOf: <<function>>"
 
 typeOfM :: MonadEval m => Value -> m Type
-typeOfM v = case v of
+typeOfM v = substM =<< case v of
   Lam {} -> do
     a <- freshTVar
     b <- freshTVar
@@ -889,11 +890,14 @@ typeOfM v = case v of
     -- TVar "a" :-> TVar "b" -- TODO
   Prim1 _ (P1 x f t) -> do
     r <- freshTVar
-    return (t :-> TVar r)
+    su <- fmap Map.fromList $ forM (freeTyVars t) $ \tv -> (tv,) . TVar <$> freshTVar
+    return (subst su t :-> TVar r)
     --TVar "a" :-> TVar "b" -- TODO
   Prim2 _ (P2 x f t1 t2) -> do
     r <- freshTVar
-    return (t1 :-> t2 :-> TVar r)
+    su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2) $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    return (subst su t1 :-> subst su t2 :-> TVar r)
     -- TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
   Lit _ l -> return $ typeOfLit l
   Tuple _ vs -> TTup <$> (mapM typeOfM vs)
@@ -904,13 +908,13 @@ typeOfM v = case v of
   Hole _ _ mt -> maybe (TVar <$> freshTVar) return mt
   _ -> error $ "typeOf: " ++ show v
 
-typeOfListM :: MonadEval m => [Expr] -> m Type
-typeOfListM [] = TVar <$> freshTVar
-typeOfListM (x:_) = typeOfM x
+-- typeOfListM :: MonadEval m => [Expr] -> m Type
+-- typeOfListM [] = TVar <$> freshTVar
+-- typeOfListM (x:_) = typeOfM x
 
-typeOfList :: [Expr] -> Type
-typeOfList [] = TVar "a"
-typeOfList (x:_) = typeOf x
+-- typeOfList :: [Expr] -> Type
+-- typeOfList [] = TVar "a"
+-- typeOfList (x:_) = typeOf x
 
 typeOfLit :: Literal -> Type
 typeOfLit l = case l of
@@ -922,16 +926,16 @@ typeOfLit l = case l of
   -- LU   -> tCon tUNIT
 
 -- | Returns the type of the arguments, not the operator.
-typeOfBop :: Bop -> Type
-typeOfBop b
+typeOfBopM :: MonadEval m => Bop -> m Type
+typeOfBopM b
   | b == Plus || b == Minus || b == Times || b == Div || b == Mod
-  = tCon tINT
+  = return $ tCon tINT
   | b == FPlus || b == FMinus || b == FTimes || b == FDiv || b == FExp
-  = tCon tFLOAT
+  = return $ tCon tFLOAT
   | b == And || b == Or
-  = tCon tBOOL
+  = return $ tCon tBOOL
   | otherwise
-  = TVar "a"
+  = TVar <$> freshTVar
 
 ----------------------------------------------------------------------
 -- Utilities

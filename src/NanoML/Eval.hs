@@ -276,7 +276,7 @@ evalConApp dc v = do
     ([], Nothing)
       | dc == "()" -> return (VU prv)
       | dc == "[]" -> VL prv [] . Just . TVar <$> freshTVar
-      | otherwise  -> return (VA prv dc v (Just . typeDeclType $ dType dd))
+      | otherwise  -> return (VA prv dc v (Just . subst su . typeDeclType $ dType dd))
     ([a], Just v) -> force v a $ \v -> do
       vt <- typeOfM v
       unify vt a
@@ -289,7 +289,8 @@ evalConApp dc v = do
         force vt (tL (TVar a)) $ \(VL _ vt mt) -> do
          t <- substM (TVar a)
          force vh (subst su t) $ \vh -> do
-           return (VL prv (vh : vt) (Just (typeOf vh)))
+           th <- typeOfM vh
+           return (VL prv (vh : vt) (Just th))
       | length as == length vs -> forces (zip vs as) $ \vs -> do
         t <- substM $ mkTApps (tyCon (dType dd)) (map (subst su . TVar) tvs)
         return (VA prv dc v (Just t))
@@ -444,9 +445,10 @@ matchPat v p = case p of
   ConPat _ dc p' -> do
     -- FIXME: this is confusing
     dd <- lookupDataCon dc
-    su <- fmap Map.fromList $ forM (tyVars (dType dd)) $ \tv ->
-      (tv,) . TVar <$> freshTVar
-    force v (subst su $ typeDeclType $ dType dd) $ \(VA _ c v' t) -> do
+    -- su <- fmap Map.fromList $ forM (tyVars (dType dd)) $ \tv ->
+    --   (tv,) . TVar <$> freshTVar
+    tvs <- replicateM (length (tyVars (dType dd))) (TVar <$> freshTVar)
+    force v (mkTApps (tyCon (dType dd)) tvs) $ \(VA _ c v' t) -> do
         unless (safeMatch (dArgs dd) p') err
         if dc /= c
           then return Nothing

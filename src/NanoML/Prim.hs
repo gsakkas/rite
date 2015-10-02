@@ -1,7 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase      #-}
 {-# LANGUAGE RecordWildCards #-}
-module NanoML.Prim where
+module NanoML.Prim
+  ( baseEnv, baseTypeEnv, baseDataEnv, baseFieldEnv
+  , tB, tL, tU, pand, por, getField, setField
+  , maybeThrow
+  ) where
 
 import Control.Arrow
 import Control.Monad.Except
@@ -615,8 +619,8 @@ tU = tCon tUNIT
 tA t = mkTApps tARRAY [t]
 tL t = mkTApps tLIST [t]
 tE = tCon tEXN
-a = TVar "a"
-b = TVar "b"
+a = TVar "a0"
+b = TVar "b0"
 tT x y = TTup [x,y]
 
 
