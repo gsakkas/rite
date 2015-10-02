@@ -308,21 +308,21 @@ lookupType :: MonadEval m => TCon -> m TypeDecl
 lookupType tcon = do
   tys <- gets stTypeEnv
   case Map.lookup tcon tys of
-    Nothing -> otherError ("unknown type: " ++ tcon)
+    Nothing -> otherError ("unbound type: " ++ tcon)
     Just t -> return t
 
 lookupDataCon :: MonadEval m => DCon -> m DataDecl
 lookupDataCon dc = do
   dcons <- gets stDataEnv
   case Map.lookup dc dcons of
-    Nothing -> otherError ("unknown data constructor: " ++ dc)
+    Nothing -> otherError ("unbound data constructor: " ++ dc)
     Just d  -> return d
 
 lookupField :: MonadEval m => String -> m TypeDecl
 lookupField fld = do
   flds <- gets stFieldEnv
   case Map.lookup fld flds of
-    Nothing -> otherError ("unknown record field: " ++ fld)
+    Nothing -> otherError ("unbound record field: " ++ fld)
     Just d  -> return d
 
 lookupStore :: MonadEval m => Ref -> m (Maybe (MutFlag, Value))

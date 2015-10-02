@@ -22,8 +22,8 @@ main = do
   printf "  %d did failed at runtime:\n"
     (length fs - length (filter (becauseOf "timeout") fs))
   printf "    %d due to an unbound variable or datacon\n"
-    (length (filter (becauseOf "Unbound") fs) +
-     length (filter (becauseOf "unknown") fs))
+    (length (filter (becauseOf "Unbound") fs))
+    -- length (filter (becauseOf "unknown") fs))
   printf "    %d due to an output-type-mismatch\n"
     (length (filter (becauseOf "OutputType") fs))
   printf "    %d due to a type error (%02.02f %%)\n"

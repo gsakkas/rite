@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -47,7 +48,7 @@ instance MonadReader NanoOpts Eval where
 
 instance MonadState EvalState Eval where
   get = EvalM $ gets nanoState
-  put st = EvalM $ modify' $ \s -> s { nanoState = st }
+  put !st = EvalM $ modify' $ \s -> s { nanoState = st }
 
 instance MonadWriter [Doc] Eval where
   tell w = EvalM $ modify' $ \s -> s { nanoWriter = nanoWriter s `mappend` (fromList w) }
