@@ -29,9 +29,9 @@ genValue ty env = withCurrentProvM $ \prv -> case ty of
     return (Hole Nothing r (Just ty))
   TApp t []
     | t == tINT
-      -> VI prv <$> sized (\s -> getRandomR (-s, s))
+      -> VI prv <$> sized (\s -> getRandomR (0, s))
     | t == tFLOAT
-      -> VD prv <$> sized (\s -> getRandomR (negate (fromIntegral s), fromIntegral s))
+      -> VD prv <$> sized (\s -> getRandomR (0, fromIntegral s))
     | t == tCHAR
       -> VC prv <$> sized (\s -> getRandomR ('a', chr (ord 'a' + s)))
     | t == tSTRING
