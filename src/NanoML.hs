@@ -106,6 +106,10 @@ runProg :: Prog -> IO Result
 runProg prog = nanoCheck 0 0 stdOpts $ do
                  prog <- mapM refreshDecl prog
                  stepAllProg prog
+                 case last prog of
+                   DFun _ _ [(_, e)] -> fillInLams e []
+                   DEvl _ e -> fillInLams e []
+                   _ -> return (VU Nothing)
 
 checkDecl :: Var -> Prog -> IO Result
 checkDecl f prog = do
@@ -113,7 +117,7 @@ checkDecl f prog = do
       -- mapM_ evalDecl prog
       prog <- mapM refreshDecl prog
       stepAllProg prog
-      to (Var Nothing f) []
+      fillInLams (Var Nothing f) []
     case r of
       Failure {}     -> return r
       Success _ st v -> go (f,st,v) r 1
@@ -157,18 +161,6 @@ checkDecl f prog = do
   --
   --   go r ((m+1) `mod` 5)
 
-  to f args = do
-    rememberArgs (f:args)
-    let x = mkApps Nothing f args
-    addSubTerms x
-    v <- stepAll x
-    case v of
-      Lam {} -> do
-        arg <- (\r -> Hole Nothing r Nothing) <$> fresh
-        -- let x = mkApps Nothing e (args ++ [arg])
-        -- addSubTerms x
-        to f (args ++ [arg])
-      _ -> return v
 
   fo f args = do
     rememberArgs (f:args)
@@ -183,6 +175,19 @@ checkDecl f prog = do
     --     -- addSubTerms x
     --     to f (args ++ [arg])
     --   _ -> return v
+
+fillInLams f args = do
+  rememberArgs (f:args)
+  let x = mkApps Nothing f args
+  addSubTerms x
+  v <- stepAll x
+  case v of
+    Lam {} -> do
+      arg <- (\r -> Hole Nothing r Nothing) <$> fresh
+      -- let x = mkApps Nothing e (args ++ [arg])
+      -- addSubTerms x
+      fillInLams f (args ++ [arg])
+    _ -> return v
 
 sec = 1000000 * 60
 
