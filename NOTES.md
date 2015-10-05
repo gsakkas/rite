@@ -647,3 +647,12 @@ helper []
     - 2nd?
   - willing to pay $20-25/hr
     - does this mean new IRB?
+
+- [ ] connect the editor, type error, and bad term
+  - also highlight corresponding source node of selected graph node
+
+- [ ] prepare 20min intro to tool
+
+- [ ] maybe symbolic evaluator to improve coverage
+
+- [ ] test different timeouts
