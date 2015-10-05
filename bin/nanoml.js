@@ -3,6 +3,7 @@ var edges = undefined;
 var steps = undefined;
 var network = undefined;
 var stack = [];
+var errors = [];
 
 var sf_target = undefined;
 var sb_target = undefined;
@@ -353,6 +354,11 @@ function setup() {
   editor = CodeMirror.fromTextArea(prog, {
     mode: "mllike",
     lineNumbers: true,
+    gutters: ["CodeMirror-lint-markers"],
+    lint: {
+      lintOnChange: false,
+      getAnnotations: function(d, o, e) { return errors; },
+    },
   });
 
   // TODO: how do i get the hash fragment and base64 decode in javascript??
@@ -382,9 +388,22 @@ function setup() {
       success: function(data, status, xhr) {
         console.log(status, data);
         if (data.result === 'value') {
-          notifySafe();
+          // notifySafe();
+          errors = [];
+          editor.performLint();
         } else if (data.result === 'stuck') {
-          notifyUnsafe(data.reason);
+          // notifyUnsafe(data.reason);
+          var stuckNode = data.nodes.filter(function(n) {
+              return n.id === data.bad;
+          })[0];
+          errors = [{ from: { line: stuckNode.span.startLine - 1,
+                              ch: stuckNode.span.startCol - 1},
+                      to: { line: stuckNode.span.endLine - 1,
+                            ch: stuckNode.span.endCol},
+                      message: data.reason,
+                      severity: 'error'
+                    }];
+          editor.performLint();
         } else if (data.result === 'timeout') {
           notifyUnsafe("Timed out on input: " + data.root);
           return;
@@ -436,10 +455,10 @@ function draw(data) {
       selectConnectedEdges: false,
     },
     layout: {
-      hierarchical: { direction: 'UD', sortMethod: 'directed' }
+      hierarchical: { direction: 'UD', sortMethod: 'directed' },
     },
     nodes: {
-      font: { face: 'monospace' }
+      font: { face: 'monospace' },
     },
     // edges: {
     //   label: "",

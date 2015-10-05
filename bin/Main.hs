@@ -43,6 +43,7 @@ main = do
         script_ [ src_ "/codemirror-min.js", type_ "text/javascript" ] ("" :: Text)
         link_ [ href_ "/codemirror.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/dialog.css", rel_ "stylesheet", type_ "text/css" ]
+        link_ [ href_ "/lint.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/nanoml.css", rel_ "stylesheet", type_ "text/css" ]
         script_ [ src_ "/nanoml.js", type_ "text/javascript" ] ("" :: Text)
       body_ [class_ "container-fluid", onload_ "setup()"] $ do
@@ -120,6 +121,7 @@ main = do
   get "/codemirror-min.js"  $ file "bin/dist/codemirror-min.js"
   get "/codemirror.css"  $ file "bin/dist/codemirror.css"
   get "/dialog.css" $ file "bin/dist/dialog.css"
+  get "/lint.css" $ file "bin/dist/lint.css"
   get "/nanoml.css"  $ file "bin/nanoml.css"
   get "/nanoml.js"  $ file "bin/nanoml.js"
 
@@ -184,7 +186,8 @@ main = do
                                         ]
           _ -> do
             gr <- liftIO $ buildGraph (stEdges finalState)
-            st <- fmap (ancestor gr) $ liftIO $ findRoot gr (stCurrentExpr finalState)
+            bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
+            let st = ancestor gr bad
             let gr' = Graph.nmap (show . pretty . fillHoles finalState) gr
             let badEdges = filter (\(v1,v2,el) -> Graph.lab gr' v1 == Graph.lab gr' v2) (Graph.labEdges gr')
             -- let nodes = Set.toList (Set.difference (Set.fromList (Graph.labNodes gr'))
@@ -201,6 +204,7 @@ main = do
                           , "edges"  .= map mkEdge edges
                           , "root"   .= root
                           , "stuck"  .= stuck
+                          , "bad"    .= bad
                           , "result" .= ("stuck" :: String)
                           , "reason" .= show (pretty errorMsg)
                           ]
