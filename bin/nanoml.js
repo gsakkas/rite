@@ -16,6 +16,7 @@ var multi_width = 5;
 var func_input = undefined;
 var check_btn = undefined;
 var editor = undefined;
+var mark = undefined;
 var safe_banner = undefined;
 var unsafe_banner = undefined;
 
@@ -100,6 +101,12 @@ function findPath(from, to) {
     next = out.to;
   }
   return edges;
+}
+
+function clearMark() {
+  if (mark)
+      mark.clear();
+  mark = undefined;
 }
 
 function canStepUndo() {
@@ -293,6 +300,7 @@ function stepInto() {
   // network.setData(newData);
   network.unselectAll();
   resetButtons();
+  clearMark();
   canStepUndo();
 }
 
@@ -325,6 +333,7 @@ function insertNode(node, replacingEdge) {
   stack.push(diff);
   // network.setData(newData);
   network.unselectAll();
+  clearMark();
   resetButtons();
   canStepUndo();
   // network.stabilize();
@@ -452,6 +461,12 @@ function draw(data) {
     network.on("selectNode", function (params) {
         // console.log('selectNode Event:', params);
         var node = network.body.data.nodes.get(network.getSelectedNodes()[0]);
+        console.log(node.span);
+        if (node.span) {
+            mark = editor.markText({line: node.span.startLine - 1, ch: node.span.startCol - 1},
+                                   {line: node.span.endLine - 1, ch: node.span.endCol},
+                                   {className: "CodeMirror-selected"});
+        }
         // console.log(node);
         canStepForward(node);
         canStepBackward(node);
@@ -475,6 +490,7 @@ function draw(data) {
     network.on("deselectNode", function (params) {
         // console.log('deselectNode Event:', params);
         resetButtons();
+        clearMark();
     });
     // network.on("deselectEdge", function (params) {
     //     console.log('deselectEdge Event:', params);
