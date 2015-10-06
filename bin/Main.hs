@@ -56,7 +56,7 @@ main = do
                 button_ [ class_ "btn btn-default navbar-btn dropdown-toggle"
                         , type_ "button"
                         , id_ "loadMenu", data_ "toggle" "dropdown" ] $ do
-                  "Load "
+                  "Demo "
                   span_ [class_ "caret"] ""
                 ul_ [class_ "dropdown-menu"] $ do
                   li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"

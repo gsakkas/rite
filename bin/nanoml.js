@@ -437,6 +437,15 @@ function draw(data) {
   var nodes = new vis.DataSet(allNodes.get({filter: function(x) {
     return x.id === root || x.id === stuck;
   }}));
+  // color the stuck node red
+  if (data.result === "stuck") {
+    var stuckNode = nodes.get(stuck);
+    var redBG = "#FFD2E5", redBD = "#E92B7C";
+    stuckNode.color = { background: redBG, border: redBD,
+                        highlight: { background: redBG, border: redBD }
+                      };
+    nodes.update(stuckNode);
+  }
   //console.log(nodes);
   if (allEdges.get({filter: function(x) {
         return x.from === root && x.to === stuck;
