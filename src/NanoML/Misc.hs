@@ -443,7 +443,7 @@ parseAllIn dir = do
 --  let dir = "../yunounderstand/data/sp14/prog/unify"
   mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
           <$> getDirectoryContents dir
-  parseAll dir mls
+  parseAll dir (sort mls)
 
 parseAll dir [] = return []
 parseAll dir (ml:mls) = do
