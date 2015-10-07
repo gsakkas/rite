@@ -334,7 +334,7 @@ stepDecl decl = case decl of
 
 build :: MonadEval m => Expr -> Expr -> m Expr
 build before after = do
-  addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
+  -- addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
   sk <- gets stStepKind
   addEdge (StepsTo sk) before after
   addSubTerms after

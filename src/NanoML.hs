@@ -178,8 +178,8 @@ checkDecl f prog = do
 
 fillInLams f args = do
   rememberArgs (f:args)
-  let x = mkApps Nothing f args
-  addSubTerms x
+  modify' $ \s -> s { stEdges = mempty }
+  x <- refreshExpr $ mkApps Nothing f args
   v <- stepAll x
   case v of
     Lam {} -> do
