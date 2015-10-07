@@ -104,7 +104,8 @@ instance Pretty Expr where
            prettyPrec (zf+1) x <+> text f <+> prettyPrec (zf+1) y
       where zf = opPrec f
     App _ f xs -> parensIf (z > za) $
-                prettyPrec za f <+> hsep (map (prettyPrec (za+1)) xs)
+                prettyPrec za f <+>
+                align (foldr1 (</>) (map (prettyPrec (za+1)) xs))
       where za = 26
     Lit _ l -> pretty l
     Let _ r bnds body -> group $ parensIf (z > zl) $
@@ -119,7 +120,7 @@ instance Pretty Expr where
     Seq _ x y -> parensIf (z > zs) $
                prettyPrec (zs+1) x <> semi </> prettyPrec (zs+1) y
       where zs = 3
-    Case _ e alts -> parensIf (z > zc) $
+    Case _ e alts -> parensIf (z > zc) $ align $
                    text "match" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt alts)
       where zc = 5
@@ -129,14 +130,14 @@ instance Pretty Expr where
                                           prettyPrec (zc+1) hd <+> text "::" <+> prettyPrec (zc+1) tl
       where zc = 26
     ConApp _ c (Just e) _ -> parensIf (z > zc) $
-                         text c <+> pretty e
+                         text c <+> prettyPrec (zc+1) e
       where zc = 26
     Record _ flds _ -> record flds
     Field _ e f -> pretty e <> char '.' <> text f
     SetField _ e f v -> pretty e <> char '.' <+> text "<-" <+> pretty v
     Array _ es _ -> array es
     List _ es _ -> list es
-    Try _ e ps -> parensIf (z > zt) $
+    Try _ e ps -> parensIf (z > zt) $ align $
                    text "try" <+> pretty e <+> text "with"
                      <$> vsep (map prettyAlt ps)
       where zt = 5
