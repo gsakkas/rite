@@ -648,11 +648,18 @@ helper []
   - willing to pay $20-25/hr
     - does this mean new IRB?
 
-- [ ] connect the editor, type error, and bad term
+- [X] connect the editor, type error, and bad term
   - also highlight corresponding source node of selected graph node
+
+- [ ] insert subterm edge to BAD term when the STUCK term contains it as a subterm
 
 - [ ] prepare 20min intro to tool
 
 - [ ] maybe symbolic evaluator to improve coverage
 
 - [ ] test different timeouts
+
+- [ ] debug filter example!!!
+  - `let` binder seems to be problematic
+
+- [ ] visualize environment when you click on a node
