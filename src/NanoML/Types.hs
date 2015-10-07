@@ -163,7 +163,8 @@ withCurrentExpr e x = do
   return a
 
 addEdge :: MonadEval m => EdgeKind -> Expr -> Expr -> m ()
-addEdge k e1 e2 = unless (x == y) $ modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }
+addEdge k e1 e2 = -- unless (x == y) $
+                  modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }
   where
   x = skipEnv e1
   y = skipEnv e2

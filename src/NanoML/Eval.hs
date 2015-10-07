@@ -393,7 +393,17 @@ litValue (LS s) = withCurrentProv $ \prv -> VS prv s
 -- | If a @Pat@ matches a @Value@, returns the @Env@ bound by the
 -- pattern.
 matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
-matchPat v p = case p of
+-- NOTE: it's crucial that we refresh the bound value before placing it
+-- in the environment, so we maintain the invariant that each expr has
+-- AT MOST ONE incoming StepsTo edge. consider
+--
+--   let x = 1 + 1 in x
+--
+-- we'll have a node for the expression '2' with a StepsTo edge coming
+-- from '1 + 1'. if we do not refresh the '2' before we bind it to 'x',
+-- we'll end up with a separate incoming StepsTo edge from 'x'. this
+-- will HORRIBLY confuse the reduction graph traversal functions.
+matchPat v' p = refreshExpr v' >>= \v -> case p of
   VarPat _ var ->
     return $ Just [(var,v)]
   LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
@@ -464,7 +474,7 @@ matchPat v p = case p of
     matchPat v p
   _ -> err
   where err = otherError (printf "tried to match %s against %s"
-                      (show $ pretty v) (show $ pretty p) :: String)
+                      (show $ pretty v') (show $ pretty p) :: String)
 
 safeMatch [] Nothing = True
 safeMatch [t] (Just p) = True
