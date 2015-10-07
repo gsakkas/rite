@@ -148,9 +148,9 @@ run p var = do
                           , "endLine" .= srcSpanEndLine s
                           , "endCol" .= srcSpanEndCol s
                           ]
-    let mkNode st (n, l) = object [ "id" .= n, "label" .= show (pretty (fillHoles st l))
-                                  , "span" .= fmap mkSpan (getSrcSpanExprMaybe l)
-                                  ]
+    let mkNode (n, (l,s)) = object [ "id" .= n, "label" .= l
+                                   , "span" .= fmap mkSpan s
+                                   ]
     let mkEdge (x, y, l) = object [ "arrows" .= ("to" :: String)
                                   , "from" .= x, "to" .= y
                                   , "label" .= show l]
@@ -160,21 +160,18 @@ run p var = do
         -- liftIO $ print v
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
-        let gr' = Graph.nmap (show . pretty . fillHoles finalState) gr
-        let badEdges = filter (\(v1,v2,el) -> Graph.lab gr' v1 == Graph.lab gr' v2) (Graph.labEdges gr')
-        -- liftIO $ print badEdges
-        let gr'' = collapseEdges badEdges gr
-        -- let nodes = Set.toList (Set.difference (Set.fromList (Graph.labNodes gr'))
-        --                                        (Set.fromList (map (Graph.labNode' . Graph.context gr' . fst3) badEdges)))
-        -- liftIO $ print nodes
-        -- let gr'' = collapse gr' nodes
+
+        let gr' = Graph.nmap (\n -> (show $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n)) gr
+        let gr'' = collapseBadEdges gr'
+
         let nodes = Graph.labNodes gr''
         let edges = Graph.labEdges gr''
         let root = backback gr'' st
         let value = st
-        -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
+
+        -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' (show.pretty) show id)
         json $ object [ -- ("dot" :: String, dot)
-                        "nodes"  .= map (mkNode finalState) nodes
+                        "nodes"  .= map mkNode nodes
                       , "edges"  .= map mkEdge edges
                       , "root"   .= root
                       , "value"  .= value
@@ -199,19 +196,21 @@ run p var = do
             gr <- liftIO $ buildGraph (stEdges finalState)
             bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
             let st = ancestor gr bad
-            let gr' = Graph.nmap (show . pretty . fillHoles finalState) gr
-            let badEdges = filter (\(v1,v2,el) -> Graph.lab gr' v1 == Graph.lab gr' v2) (Graph.labEdges gr')
-            -- let nodes = Set.toList (Set.difference (Set.fromList (Graph.labNodes gr'))
-            --                                        (Set.fromList (map (Graph.labNode' . Graph.context gr' . fst3) badEdges)))
-            let gr'' = collapseEdges badEdges gr
+            let gr' = Graph.nmap (\n -> ( show $ pretty $ fillHoles finalState n
+                                        , getSrcSpanExprMaybe n
+                                        ))
+                                 gr
+            let gr'' = collapseBadEdges gr'
+
             let nodes = Graph.labNodes gr''
             let edges = Graph.labEdges gr''
             let root = backback gr'' st
             let stuck = st
+
             -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' id show id)
             -- liftIO $ writeFile "tmp.dot" dot
             json $ object [ -- ("dot" :: String, dot)
-                            "nodes"  .= map (mkNode finalState) nodes
+                            "nodes"  .= map mkNode nodes
                           , "edges"  .= map mkEdge edges
                           , "root"   .= root
                           , "stuck"  .= stuck

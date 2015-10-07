@@ -72,8 +72,23 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
 
 onlySteps = filter (isStepsTo . snd)
 
-collapseEdges :: [Graph.LEdge b] -> Graph.Gr a b -> Graph.Gr a b
-collapseEdges es gr = foldr collapseEdge gr es
+-- collapseEdges :: [Graph.LEdge b] -> Graph.Gr a b -> Graph.Gr a b
+-- collapseEdges es gr = Graph.delNodes oldN . Graph.delEdges oldE . -- Graph.delNodes oldN .
+--                       Graph.insEdges newE $ gr
+--   where
+--   newE = [ (x,v2,l) | (v1,v2,_) <- es
+--                     , (x, l) <- Graph.lpre gr v1 ]
+--   oldE = [ (v1,v2)  | (v1,v2,_) <- es ]
+--   oldN = [ v1       | (v1,_ ,_) <- es ]
+
+
+collapseBadEdges :: Eq a => Graph.Gr a b -> Graph.Gr a b
+collapseBadEdges gr
+  = case badEdges gr of
+      []  -> gr
+      e:_ -> collapseBadEdges (collapseEdge e gr)
+  where
+  badEdges gr = filter (\(v1,v2,el) -> Graph.lab gr v1 == Graph.lab gr v2) (Graph.labEdges gr)
 
 collapseEdge :: Graph.LEdge b -> Graph.Gr a b -> Graph.Gr a b
 collapseEdge (v1,v2,_) gr =

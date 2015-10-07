@@ -659,7 +659,7 @@ helper []
 
 - [ ] test different timeouts
 
-- [ ] debug filter example!!!
+- [X] debug filter example!!!
   - `let` binder seems to be problematic
 
 - [ ] visualize environment when you click on a node
