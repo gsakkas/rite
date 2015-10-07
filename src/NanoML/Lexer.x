@@ -26,9 +26,9 @@ $graphic   = [$lower $upper $symbol $digit $special \_\:\"\']
 
 $cntrl   = [$upper \@\[\\\]\^\_]
 @ascii   = \^ $cntrl | NUL | SOH | STX | ETX | EOT | ENQ | ACK
-	 | BEL | BS | HT | LF | VT | FF | CR | SO | SI | DLE
-	 | DC1 | DC2 | DC3 | DC4 | NAK | SYN | ETB | CAN | EM
-	 | SUB | ESC | FS | GS | RS | US | SP | DEL
+         | BEL | BS | HT | LF | VT | FF | CR | SO | SI | DLE
+         | DC1 | DC2 | DC3 | DC4 | NAK | SYN | ETB | CAN | EM
+         | SUB | ESC | FS | GS | RS | US | SP | DEL
 $charesc = [abfnrtv\\\"\'\&]
 @escape  = \\ ($charesc | @ascii | @decimal)
 @gap     = $whitechar+
@@ -115,7 +115,7 @@ tokens :-
 
   ($lower | \_) [$alpha $digit \_ \']* { tokS TokId }
   ($upper | \_) [$alpha $digit \_ \']* { tokS TokCon }
- 
+
   \" @string* \"            { tokS TokString }
   \' ($printable # [\']) \' { tokS TokChar }
 
@@ -182,7 +182,7 @@ data Token
   | TokTry
   | TokType
   | TokWhen
-  | TokWith 
+  | TokWith
 
   | TokLAnd
   | TokLOr
@@ -228,23 +228,23 @@ nested_comment _ _ = do
   input <- alexGetInput
   go 1 input
   where go 0 input = do alexSetInput input; alexMonadScan
-	go n input = do
+        go n input = do
           case alexGetByte input of
-	    Nothing  -> err input
-	    Just (c,input) -> do
+            Nothing  -> err input
+            Just (c,input) -> do
               case chr (fromIntegral c) of
-	    	'*' -> do
+                '*' -> do
                   case alexGetByte input of
-		    Nothing  -> err input
+                    Nothing  -> err input
                     Just (c,input') | c == fromIntegral (ord ')') -> go (n-1) input'
                     Just (c,input')   -> go n input
-	     	'(' -> do
+                '(' -> do
                   case alexGetByte input of
-		    Nothing  -> err input
+                    Nothing  -> err input
                     Just (c,input') | c == fromIntegral (ord '*') -> go (n+1) input'
-		    Just (c,input')   -> go n input
-	    	c -> go n input
-        err input = do alexSetInput input; lexError "error in nested comment"  
+                    Just (c,input')   -> go n input
+                c -> go n input
+        err input = do alexSetInput input; lexError "error in nested comment"
 
 getPos :: AlexPosn -> (Int, Int)
 getPos (AlexPn _ line column) = (line, column)
@@ -258,11 +258,16 @@ lexWrap cont = do
     cont tok
 
 lexError s = do
-  (p,c,_,input) <- alexGetInput
-  alexError (showPosn p ++ ": " ++ s ++
-		   (if (not (null input))
-		     then " before " ++ show (head input)
-		     else " at end of file"))
+  (AlexPn _ line col, c, _, input) <- alexGetInput
+  alexError $ "unexpected " ++ (if null input
+                                then "end-of-file"
+                                else show (head input))
+      ++ " at line " ++ show line
+      ++ ", column " ++ show col
+  -- alexError (showPosn p ++ ": " ++ s ++
+  --                  (if (not (null input))
+  --                   then " before " ++ show (head input)
+  --                   else " at end of file"))
 
 alexEOF = do
   (l,c) <- getPosition

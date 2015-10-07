@@ -462,11 +462,11 @@ locDecl :: (Int,Int) -> (Int,Int) -> (SrcSpan -> Decl) -> Decl
 locDecl (sl,sc) (el,ec) f = f (SrcSpan sl sc el ec)
 
 parseError :: LToken -> Alex a
-parseError (LToken _ t) = do
-    (line, column) <- getPosition
+parseError (LToken loc t) = do
+    -- (line, column) <- getPosition
     alexError $ "unexpected token " ++ show t
-      ++ " at line " ++ show line
-      ++ ", column " ++ show (column - 1)
+      ++ " at line " ++ show (srcSpanStartLine loc)
+      ++ ", column " ++ show (srcSpanStartCol loc)
 
 safeParse parser s = runAlex s parser
 

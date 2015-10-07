@@ -388,10 +388,13 @@ function setup() {
       success: function(data, status, xhr) {
         console.log(status, data);
         if (data.result === 'value') {
+
           // notifySafe();
           errors = [];
           editor.performLint();
+
         } else if (data.result === 'stuck') {
+
           // notifyUnsafe(data.reason);
           var stuckNode = data.nodes.filter(function(n) {
               return n.id === data.bad;
@@ -404,10 +407,31 @@ function setup() {
                       severity: 'error'
                     }];
           editor.performLint();
+
         } else if (data.result === 'timeout') {
+
           notifyUnsafe("Timed out on input: " + data.root);
           return;
+
+        } else if (data.result === 'parse-error') {
+
+          var line = data.error.match(/line (\d+)/)[1];
+          var ch = data.error.match(/column (\d+)/)[1];
+
+          errors = [{ from: { line: line - 1,
+                              ch: ch - 1
+                            },
+                      to: { line: line - 1,
+                            ch: ch
+                          },
+                      message: 'Parse error',
+                      severity: 'error'
+                    }];
+          editor.performLint();
+          return;
+
         }
+
         stack = [];
         resetButtons();
         draw(data);

@@ -130,12 +130,23 @@ main = do
     var  <- param "var" <|> return ""
     -- liftIO $ print (var, prog)
     let p = fromRight (parseTopForm prog)
+    case parseTopForm prog of
+      Right p -> run p var
+      Left  e -> json $ object [ "result" .= ("parse-error" :: String)
+                               , "error"  .= e
+                               ]
+
+
+
+run p var = do
     -- liftIO $ print (prettyProg p)
     res <- liftIO $ if null var
                     then fromJust <$> check Nothing p
                     else checkDecl var p
-    let mkSpan s = object [ "startLine" .= srcSpanStartLine s, "startCol" .= srcSpanStartCol s
-                          , "endLine" .= srcSpanEndLine s, "endCol" .= srcSpanEndCol s
+    let mkSpan s = object [ "startLine" .= srcSpanStartLine s
+                          , "startCol" .= srcSpanStartCol s
+                          , "endLine" .= srcSpanEndLine s
+                          , "endCol" .= srcSpanEndCol s
                           ]
     let mkNode st (n, l) = object [ "id" .= n, "label" .= show (pretty (fillHoles st l))
                                   , "span" .= fmap mkSpan (getSrcSpanExprMaybe l)
