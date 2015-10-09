@@ -492,6 +492,7 @@ function draw(data) {
     },
     nodes: {
       font: { face: 'monospace' },
+      shape: 'box',
     },
     // edges: {
     //   label: "",
