@@ -160,16 +160,16 @@ run p var = do
         -- liftIO $ print v
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
-
+        root <- liftIO $ findRoot gr (stRoot finalState)
         let gr' = Graph.nmap (\n -> (show $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n)) gr
         let gr'' = collapseBadEdges gr'
 
         let nodes = Graph.labNodes gr''
         let edges = Graph.labEdges gr''
-        let root = backback gr'' st
+        -- let root = backback gr'' st
         let value = st
 
-        -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' (show.pretty) show id)
+        liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' (fst) show id)
         json $ object [ -- ("dot" :: String, dot)
                         "nodes"  .= map mkNode nodes
                       , "edges"  .= map mkEdge edges
@@ -195,6 +195,7 @@ run p var = do
           _ -> do
             gr <- liftIO $ buildGraph (stEdges finalState)
             bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
+            root <- liftIO $ findRoot gr (stRoot finalState)
             let st = ancestor gr bad
             let gr' = Graph.nmap (\n -> ( show $ pretty $ fillHoles finalState n
                                         , getSrcSpanExprMaybe n
@@ -204,7 +205,7 @@ run p var = do
 
             let nodes = Graph.labNodes gr''
             let edges = Graph.labEdges gr''
-            let root = backback gr'' st
+            -- let root = backback gr'' st
             let stuck = st
 
             -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' id show id)

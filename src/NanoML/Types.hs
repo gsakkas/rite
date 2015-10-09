@@ -131,7 +131,7 @@ data EvalState = EvalState
   , stFieldEnv :: !(Map String TypeDecl)
   , stFresh    :: !Ref
   , stStore    :: !(IntMap (MutFlag, Value))
-  , stArgs     :: ![Expr]
+  , stRoot     :: Expr -- NOTE: can't be strict
   , stTrace    :: !(Seq Event)
   , stEnvMap   :: !(IntMap Env)
   -- , stNodes    :: !(Map Expr Int)
@@ -254,8 +254,12 @@ refreshAlt (p,Just g,e) = do
   g <- refreshExpr g
   return (p,Just g,e)
 
-rememberArgs :: MonadEval m => [Expr] -> m ()
-rememberArgs args = modify' $ \s -> s { stArgs = args }
+nArgs :: Expr -> Int
+nArgs (App _ f xs) = length xs
+nArgs _            = 0
+
+-- rememberArgs :: MonadEval m => [Expr] -> m ()
+-- rememberArgs args = modify' $ \s -> s { stArgs = args }
 
 getStepIndex :: MonadEval m => m Int
 getStepIndex = Seq.length <$> gets stTrace

@@ -403,6 +403,12 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
 -- from '1 + 1'. if we do not refresh the '2' before we bind it to 'x',
 -- we'll end up with a separate incoming StepsTo edge from 'x'. this
 -- will HORRIBLY confuse the reduction graph traversal functions.
+
+-- FIXME: this is NOT QUITE RIGHT, see onlyEvens example from
+-- discussion2.ml
+-- maybe we need to just deal with multiple incoming edges and
+-- always have a PATH that we insert nodes from, instead of literally
+-- walking backwards from the final node
 matchPat v' p = refreshExpr v' >>= \v -> case p of
   VarPat _ var ->
     return $ Just [(var,v)]

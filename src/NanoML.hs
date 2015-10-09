@@ -65,20 +65,21 @@ check err prog =
         -> do r <- checkDecl f prog
               -- printResult r
               return $ Just r
-    DFun _ _ [(WildPat _, _)]
-        -> do r <- runProg prog
-              -- printResult r
-              return $ Just r
-    DFun _ _ [(VarPat _ _, _)]
-        -> do r <- runProg prog
-              -- printResult r
-              return $ Just r
-    DEvl _ _
-        -> do r <- runProg prog
-              -- printResult r
-              return $ Just r
+    -- DFun _ _ [(WildPat _, _)]
+    --     -> do r <- runProg prog
+    --           -- printResult r
+    --           return $ Just r
+    -- DFun _ _ [(VarPat _ _, _)]
+    --     -> do r <- runProg prog
+    --           -- printResult r
+    --           return $ Just r
+    -- DEvl _ _
+    --     -> do r <- runProg prog
+    --           -- printResult r
+    --           return $ Just r
     _ -> do -- printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
-            return Nothing
+            r <- runProg prog
+            return (Just r)
 
 printResult Failure {..} = do
   printf "*** Failed after %d tests: %s\n" numTests (show $ pretty errorMsg)
@@ -105,11 +106,13 @@ safeTail (x:xs) = xs
 runProg :: Prog -> IO Result
 runProg prog = nanoCheck 0 0 stdOpts $ do
                  prog <- mapM refreshDecl prog
-                 stepAllProg prog
+                 v <- stepAllProg prog
                  case last prog of
-                   DFun _ _ [(_, e)] -> fillInLams e []
-                   DEvl _ e -> fillInLams e []
-                   _ -> return (VU Nothing)
+                   DFun _ _ bnds
+                     -> last <$> mapM (\(p,e) -> fillInLams e []) bnds
+                   DEvl _ e
+                     -> fillInLams e []
+                   _ -> return v
 
 checkDecl :: Var -> Prog -> IO Result
 checkDecl f prog = do
@@ -138,7 +141,7 @@ checkDecl f prog = do
         r <- nanoCheck n m stdOpts $ do
           prog <- mapM refreshDecl prog
           stepAllProg prog
-          args <- replicateM (length (stArgs st) - 1) $
+          args <- replicateM (nArgs (stRoot st)) $
                     (\r -> Hole Nothing r Nothing) <$> fresh
           fo (Var Nothing f) args
 
@@ -163,8 +166,8 @@ checkDecl f prog = do
 
 
   fo f args = do
-    rememberArgs (f:args)
     let x = mkApps Nothing f args
+    setEntry x
     addSubTerms x
     stepAll x
     -- v <- stepAll x
@@ -177,9 +180,9 @@ checkDecl f prog = do
     --   _ -> return v
 
 fillInLams f args = do
-  rememberArgs (f:args)
   modify' $ \s -> s { stEdges = mempty }
   x <- refreshExpr $ mkApps Nothing f args
+  setEntry x
   v <- stepAll x
   case v of
     Lam {} -> do
@@ -205,9 +208,7 @@ nanoCheck numSuccess maxSize opts x = do
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values
       let -- paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
-          invoc = case map (fetchArg' (stStore st)) (stArgs st) of
-            [] -> mempty
-            f:args -> pretty (fillHoles st $ mkApps Nothing f args)
+          invoc = pretty (fillHoles st $ stRoot st)
       in Failure (numSuccess + 1) seed maxSize
                  invoc
                  e

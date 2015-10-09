@@ -91,10 +91,13 @@ collapseBadEdges gr
   badEdges gr = filter (\(v1,v2,el) -> Graph.lab gr v1 == Graph.lab gr v2) (Graph.labEdges gr)
 
 collapseEdge :: Graph.LEdge b -> Graph.Gr a b -> Graph.Gr a b
-collapseEdge (v1,v2,_) gr =
-  Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
-  where
-  es = [ (x,v2,l) | (x, l) <- Graph.lpre gr v1 ]
+collapseEdge (v1,v2,_) gr
+  | null (Graph.lpre gr v1)
+  = let es = [ (v1,x,l) | (x, l) <- Graph.lsuc gr v2 ]
+    in Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
+  | otherwise
+  = let es = [ (x,v2,l) | (x, l) <- Graph.lpre gr v1 ]
+    in Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
 
 -- | Collapse a graph to a subset of the nodes.
 --

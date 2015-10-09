@@ -1,4 +1,5 @@
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE ImplicitParams #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns   #-}
@@ -28,6 +29,7 @@ import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
 import System.Mem.StableName
 import Text.Printf
+import GHC.Stack
 
 import NanoML.Eval
 import NanoML.Misc
@@ -153,7 +155,7 @@ buildGraph tr = do
     yn <- makeStableName =<< evaluate y
     return (hashStableName xn, hashStableName yn, k)
 
-findRoot :: Graph -> Expr -> IO Graph.Node
+findRoot :: (?callStack :: CallStack) => Graph -> Expr -> IO Graph.Node
 findRoot gr e = do
   en <- makeStableName =<< evaluate e
   let p (n,x) = do xn <- makeStableName =<< evaluate x
@@ -255,6 +257,8 @@ mkPath gr n = go (backjump gr n) (maybe [n] (const []) (backjump gr n))
 ----------------------------------------------------------------------
 -- Stepping
 ----------------------------------------------------------------------
+transStep expr = setEntry expr >> stepAll expr
+
 stepAll expr = do
   --traceShowM $ pretty expr
   modify' (\s -> s { stStepKind = BoringStep })
@@ -268,66 +272,87 @@ stepAll expr = do
      then return expr'
      else stepAll expr'
 
-stepAllProg [] = return (VU Nothing)
-stepAllProg (d:p) = do
-  -- traceShowM $ pretty d
-  modify' (\s -> s { stStepKind = BoringStep })
-  md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
-  modify' $ \s -> s { stSteps = stSteps s + 1 }
-  ss <- gets stSteps
-  maxss <- asks maxSteps
-  -- traceShowM (ss, maxss)
-  when (ss >= maxss) $
-    throwError TimeoutError
-  case md of
-    Nothing
-      | [] <- p   -> gets stCurrentExpr
-      | otherwise -> stepAllProg p
-    Just d@(DEvl _ v)
-      | isValue v -> return v
-      | otherwise -> stepAllProg (d:p)
-    Just d
-      -> stepAllProg (d:p)
+stepAllProg [d]   = transStepDecl d
+stepAllProg (d:p) = transStepDecl d >> stepAllProg p
 
-stepDecl :: MonadEval m => Decl -> m (Maybe Decl)
-stepDecl decl = case decl of
-  DFun ss Rec    binds -> do
-    setVarEnv =<< matchRecBinds binds
-    return Nothing
-  DFun ss NonRec binds -> do
-    let (ps, es) = unzip binds
-    r <- stepOne es
-         (\vs -> do modify' (\s -> s { stCurrentExpr = head vs })
-                    Nothing <$ (setVarEnv =<< matchNonRecBinds (zip ps vs)))
-         (\es -> return . Just $ DFun ss NonRec (zip ps es))
-    gcScopes r
-    return r
-  DEvl ss expr
-    | isValue expr -> modify' (\s -> s { stCurrentExpr = expr }) >> return (Just (DEvl ss expr))
-    | otherwise    -> do
-        e <- step expr
-        env <- gets stVarEnv
-        -- addEdge StepsTo expr e
-        -- -- traceShowM (pretty expr)
-        -- -- traceShowM (pretty e)
-        -- -- traceShowM expr
-        -- -- traceShowM e
-        -- -- addEdge StepsTo expr e
-        -- case exprDiff env expr e of
-        --   Nothing -> traceShowM "no diff" >> traceShowM (pretty expr) >> traceShowM (pretty e) >> traceShowM ""
-        --   Just (env, before, after, kind) -> do
-        --     traceShowM (pretty before)
-        --     traceShowM (pretty after)
-        --     traceShowM ""
-        --     addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
-        --     unless (kind == Return) $ addEdge StepsTo before after
-        --     -- TODO: need to add StepsTo edges for all sub-terms along the path to the changed term
-        --     -- see, e.g., the `1 + 2` sub-term in evaluation of `1 + 2 + 3`
-        gcScopes e
-        -- traceM ""
-        return (Just $ DEvl ss e)
-  DTyp _ decls -> mapM_ addType decls >> return Nothing
-  DExn _ decl -> extendType "exn" decl >> return Nothing
+setEntry e = modify' $ \s -> s { stRoot = e }
+
+transStepDecl d = case d of
+  DEvl _ expr
+    -> transStep expr
+  DFun _ Rec binds
+    -> do env <- matchRecBinds binds
+          setVarEnv env
+          return . snd . last . envEnv $ env
+  DFun _ NonRec binds
+    -> do let (ps, es) = unzip binds
+          vs <- mapM transStep es
+          setVarEnv =<< matchNonRecBinds (zip ps vs)
+          return (last vs)
+  DTyp _ decls
+    -> mapM_ addType decls >> addSubTerms (VU Nothing)
+  DExn _ decl
+    -> extendType "exn" decl >> addSubTerms (VU Nothing)
+          
+
+-- transStepDecl d = do
+--   -- traceShowM $ pretty d
+--   modify' (\s -> s { stStepKind = BoringStep })
+--   md <- stepDecl d `catchError` \e -> addUncaughtException e >> throwError e
+--   modify' $ \s -> s { stSteps = stSteps s + 1 }
+--   ss <- gets stSteps
+--   maxss <- asks maxSteps
+--   -- traceShowM (ss, maxss)
+--   when (ss >= maxss) $
+--     throwError TimeoutError
+--   case md of
+--     Nothing
+--       -> gets stCurrentExpr
+--     Just d@(DEvl _ v)
+--       | isValue v -> return v
+--       | otherwise -> transStepDecl d
+--     Just d
+--       -> transStepDecl d
+
+-- stepDecl :: MonadEval m => Decl -> m (Maybe Decl)
+-- stepDecl decl = case decl of
+--   DFun ss Rec    binds -> do
+--     setVarEnv =<< matchRecBinds binds
+--     return Nothing
+--   DFun ss NonRec binds -> do
+--     let (ps, es) = unzip binds
+--     r <- stepOne es
+--          (\vs -> do modify' (\s -> s { stCurrentExpr = head vs })
+--                     Nothing <$ (setVarEnv =<< matchNonRecBinds (zip ps vs)))
+--          (\es -> return . Just $ DFun ss NonRec (zip ps es))
+--     gcScopes r
+--     return r
+--   DEvl ss expr
+--     | isValue expr -> modify' (\s -> s { stCurrentExpr = expr }) >> return (Just (DEvl ss expr))
+--     | otherwise    -> do
+--         e <- step expr
+--         env <- gets stVarEnv
+--         -- addEdge StepsTo expr e
+--         -- -- traceShowM (pretty expr)
+--         -- -- traceShowM (pretty e)
+--         -- -- traceShowM expr
+--         -- -- traceShowM e
+--         -- -- addEdge StepsTo expr e
+--         -- case exprDiff env expr e of
+--         --   Nothing -> traceShowM "no diff" >> traceShowM (pretty expr) >> traceShowM (pretty e) >> traceShowM ""
+--         --   Just (env, before, after, kind) -> do
+--         --     traceShowM (pretty before)
+--         --     traceShowM (pretty after)
+--         --     traceShowM ""
+--         --     addEvent before after kind (getSrcSpanExprMaybe expr) `withEnv` env
+--         --     unless (kind == Return) $ addEdge StepsTo before after
+--         --     -- TODO: need to add StepsTo edges for all sub-terms along the path to the changed term
+--         --     -- see, e.g., the `1 + 2` sub-term in evaluation of `1 + 2 + 3`
+--         gcScopes e
+--         -- traceM ""
+--         return (Just $ DEvl ss e)
+--   DTyp _ decls -> mapM_ addType decls >> return Nothing
+--   DExn _ decl -> extendType "exn" decl >> return Nothing
 
 -- stepNonRecBinds binds = do
 --   env <- evalNonRecBinds
