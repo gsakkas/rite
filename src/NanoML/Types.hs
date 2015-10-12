@@ -1371,5 +1371,5 @@ data EdgeKind
   deriving (Show, Generic, Eq)
 
 data StepKind
-  = BoringStep | CallStep | ReturnStep
+  = BoringStep | CallStep | ReturnStep | PrimStep
   deriving (Show, Generic, Eq)

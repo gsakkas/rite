@@ -417,7 +417,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
     | otherwise -> do
         e' <- step e `withEnv` env
         if isValue e'
-          then e' <$ modify' (\s -> s { stStepKind = ReturnStep })
+          then return e' -- <$ modify' (\s -> s { stStepKind = ReturnStep })
           else return $ Replace ms env e'
         -- build expr $ Replace ms env e'
   Var ms v -> do
@@ -568,12 +568,14 @@ stepApp ms f' es = do
   -- immediately apply saturated primitve wrappers
   Prim1 ms' (P1 x f' t) -> do
     -- traceShowM (f, es)
+    modify' (\s -> s { stStepKind = PrimStep })
     su <- fmap Map.fromList $ forM (freeTyVars t) $ \tv -> (tv,) . TVar <$> freshTVar
     case es of
      [e] -> force e (subst su t) $ \v -> f' v
      e:es -> do x <- force e (subst su t) $ \v -> f' v
                 return (App ms x es)
   Prim2 ms' (P2 x f t1 t2) -> do
+    modify' (\s -> s { stStepKind = PrimStep })
     su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2) $ \tv ->
       (tv,) . TVar <$> freshTVar
     let t1' = subst su t1
@@ -586,17 +588,17 @@ stepApp ms f' es = do
                     return (App ms x es)
      -- _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
      --         undefined
-  Lam _ p e (Just env) -> do
+  Lam _ _ _ (Just _) -> do
         let (ps, e, env) = gatherLams f'
             (eps, es', ps') = zipWithLeftover es ps
         -- traceShowM (eps, es', ps')
         -- traceShowM (f,es)
         pat_env' <- mconcat <$> mapM (\(v, p) -> matchPat v p) eps
-        pat_env' <- maybe (withCurrentProvM $
+        pat_env <- maybe (withCurrentProvM $
                            throwError . MLException . mkExn "Match_failure" [])
                           return
                           pat_env'
-        pat_env <- forM pat_env' $ \(var, val) -> (var,) <$> refreshExpr val
+        -- pat_env <- forM pat_env' $ \(var, val) -> (var,) <$> refreshExpr val
         -- traceShowM pat_env
         -- traceM ""
         -- pushEnv env
@@ -605,9 +607,10 @@ stepApp ms f' es = do
         case (ps', es') of
           ([], []) -> do
             modify' (\s -> s { stStepKind = CallStep })
-            Replace ms nenv <$> refreshExpr (onSrcSpanExpr (<|> ms) e) -- only refresh at saturated applications
+            Replace ms nenv <$> refreshExpr e -- only refresh at saturated applications
           ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
-          (_, []) -> withCurrentProvM $ \prv -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) -> return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
+          (_, []) -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) ->
+                       return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
   _ -> error $ "stepApp: impossible: " ++ show f'
   -- _ -> typeError (TVar "a" :-> TVar "b") (typeOf f') -- otherError $ printf "'%s' is not a function" (show f')
 -- stepApp _ f es = error (show (f:es))
@@ -633,10 +636,12 @@ zipWithLeftover = go []
 --     --vs ->
 
 --stepBop :: MonadEval m => Bop -> Expr -> Expr -> m Expr
-stepBop ms bop v1 v2 = evalBop bop v1 v2
+stepBop ms bop v1 v2 = do modify' (\s -> s { stStepKind = PrimStep })
+                          evalBop bop v1 v2
 
 --stepUop :: MonadEval m => Uop -> Expr -> m Expr
-stepUop ms uop v = evalUop uop v
+stepUop ms uop v = do modify' (\s -> s { stStepKind = PrimStep })
+                      evalUop uop v
 
 stepAlts :: MonadEval m => (Expr -> [Alt] -> Expr) -> Expr -> [Alt] -> m Expr
 stepAlts _ _ []

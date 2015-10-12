@@ -409,7 +409,8 @@ matchPat :: MonadEval m => Value -> Pat -> m (Maybe [(Var,Value)])
 -- maybe we need to just deal with multiple incoming edges and
 -- always have a PATH that we insert nodes from, instead of literally
 -- walking backwards from the final node
-matchPat v' p = refreshExpr v' >>= \v -> case p of
+matchPat v p = -- refreshExpr v' >>= \v ->
+ case p of
   VarPat _ var ->
     return $ Just [(var,v)]
   LitPat _ lit -> force v (typeOfLit lit) $ \v -> do
@@ -480,7 +481,7 @@ matchPat v' p = refreshExpr v' >>= \v -> case p of
     matchPat v p
   _ -> err
   where err = otherError (printf "tried to match %s against %s"
-                      (show $ pretty v') (show $ pretty p) :: String)
+                      (show $ pretty v) (show $ pretty p) :: String)
 
 safeMatch [] Nothing = True
 safeMatch [t] (Just p) = True
