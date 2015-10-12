@@ -214,12 +214,12 @@ refreshDecl decl = case decl of
 
 refreshExpr :: MonadEval m => Expr -> m Expr
 refreshExpr expr = addSubTerms =<< case expr of
-  Var ms v -> return $ Var ms v
+  Var ms v -> return $ mkVar ms v
   Lam ms p e env -> Lam ms p <$> refreshExpr e <*> pure env
   App ms f xs -> App ms <$> refreshExpr f <*> mapM refreshExpr xs
   Bop ms b x y -> Bop ms b <$> refreshExpr x <*> refreshExpr y
   Uop ms u x -> Uop ms u <$> refreshExpr x
-  Lit ms l -> return $ Lit ms l
+  Lit ms l -> return $ mkLit ms l
   Let ms r binds body -> Let ms r <$> mapM refreshBind binds <*> refreshExpr body
   Ite ms b t f -> Ite ms <$> refreshExpr b <*> refreshExpr t <*> refreshExpr f
   Seq ms x y -> Seq ms <$> refreshExpr x <*> refreshExpr y
@@ -237,8 +237,17 @@ refreshExpr expr = addSubTerms =<< case expr of
   Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
   With ms e x -> With ms e <$> refreshExpr x
   Replace ms e x -> Replace ms e <$> refreshExpr x
-  Hole ms r mt -> return $ Hole ms r mt
-  Ref r -> return $ Ref r
+  Hole ms r mt -> return $ mkHole ms r mt
+  Ref r -> return $ mkRef r
+
+mkVar = Var
+{-# NOINLINE mkVar #-}
+mkLit = Lit
+{-# NOINLINE mkLit #-}
+mkHole = Hole
+{-# NOINLINE mkHole #-}
+mkRef = Ref
+{-# NOINLINE mkRef #-}
 
 refreshBind :: MonadEval m => (a, Expr) -> m (a, Expr)
 refreshBind (a,e) = do
