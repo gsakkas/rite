@@ -98,10 +98,10 @@ function findPath(from, to) {
     if (outEdges.length === 0) return [];
     var out = outEdges[0];
     edges.push(out)
-    if (out.to === to) break;
+    if (out.to === to) return edges;
     next = out.to;
   }
-  return edges;
+  return [];
 }
 
 function clearMark() {
@@ -160,21 +160,18 @@ function stepForward() {
 function canStepBackward(node) {
   // ctxmenu.style.visibility = 'hidden';
   // console.log('stepBackward');
-  var inn = allEdges.get({filter: function(x) {
-    return x.to === node.id && x.label.indexOf('StepsTo') >= 0;
-  }});
-  var curEdge = network.body.data.edges.get({filter: function(x) {
+
+  var curEdges = network.body.data.edges.get({filter: function(x) {
     return x.to === node.id;
   }});
-  // console.log(inn);
-  if (inn.length === 0 || curEdge.length === 0 || network.body.data.nodes.get(inn[0].from) !== null) return;
-  // console.log(network.body.data.nodes.get(inn[0]));
-  inn = inn[0];
-  curEdge = curEdge[0];
-  // console.log(inn);
-  sb_target = [inn.from, curEdge];
+  if (curEdges.length === 0) return;
+  var curEdge = curEdges[0];
+  var path = findPath(curEdge.from, curEdge.to);
+  console.log(curEdge, path);
+  if (path.length <= 2) return;
+
+  sb_target = [path[path.length - 1].from, curEdge];
   document.getElementById('step-backward').disabled = false;
-  // insertNode(allNodes.get(prev[0].from), edge);
 }
 
 function stepBackward() {
