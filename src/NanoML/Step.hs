@@ -413,11 +413,11 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
                  then e'
                  else With ms env e'
   Replace ms env e
-    | isValue e -> return e
+    | isValue e -> return e <* modify' (\s -> s { stStepKind = ReturnStep })
     | otherwise -> do
         e' <- step e `withEnv` env
         if isValue e'
-          then return e' -- <$ modify' (\s -> s { stStepKind = ReturnStep })
+          then return e' <* modify' (\s -> s { stStepKind = ReturnStep })
           else return $ Replace ms env e'
         -- build expr $ Replace ms env e'
   Var ms v -> do

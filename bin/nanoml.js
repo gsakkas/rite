@@ -236,7 +236,12 @@ function canJumpForward(node) {
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
   // console.log(curEdge, path);
-  if (path.length === 0) return;
+  if (path.length <= 1) return;
+  if (path[0].label.indexOf('ReturnStep') >= 0) {
+    jf_target = [path[0].to, curEdge];
+    document.getElementById('jump-forward').disabled = false;
+    return;
+  }
   for (var i = 1; i < path.length; i++) {
     var e = path[i];
     if (network.body.data.nodes.get(e.to) !== null) {
@@ -244,6 +249,11 @@ function canJumpForward(node) {
     }
     if (e.label.indexOf('CallStep') >= 0) {
       jf_target = [e.from, curEdge];
+      document.getElementById('jump-forward').disabled = false;
+      return;
+    }
+    if (e.label.indexOf('ReturnStep') >= 0) {
+      jf_target = [e.to, curEdge];
       document.getElementById('jump-forward').disabled = false;
       return;
     }

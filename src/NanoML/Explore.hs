@@ -68,7 +68,7 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
     let doc = text idx <> pretty (getLab n)
     print doc
 
-  
+
 
 onlySteps = filter (isStepsTo . snd)
 
@@ -82,7 +82,7 @@ onlySteps = filter (isStepsTo . snd)
 --   oldN = [ v1       | (v1,_ ,_) <- es ]
 
 
-collapseBadEdges :: Eq a => Graph.Gr a b -> Graph.Gr a b
+collapseBadEdges :: Eq a => Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseBadEdges gr
   = case badEdges gr of
       []  -> gr
@@ -90,14 +90,26 @@ collapseBadEdges gr
   where
   badEdges gr = filter (\(v1,v2,el) -> Graph.lab gr v1 == Graph.lab gr v2) (Graph.labEdges gr)
 
-collapseEdge :: Graph.LEdge b -> Graph.Gr a b -> Graph.Gr a b
-collapseEdge (v1,v2,_) gr
-  | null (Graph.lpre gr v1)
-  = let es = [ (v1,x,l) | (x, l) <- Graph.lsuc gr v2 ]
-    in Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
-  | otherwise
-  = let es = [ (x,v2,l) | (x, l) <- Graph.lpre gr v1 ]
+collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
+collapseEdge (v1,v2,l) gr
+  | not (null (Graph.lpre gr v1)) || isReturnStep l
+  = let es = [ (x,v2,moreInfo l l') | (x, l') <- Graph.lpre gr v1 ]
     in Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
+  | null (Graph.lpre gr v1)
+  = let es = [ (v1,x,moreInfo l l') | (x, l') <- Graph.lsuc gr v2 ]
+    in Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
+
+isReturnStep (StepsTo ReturnStep) = True
+isReturnStep _                    = False
+
+moreInfo (StepsTo k1) (StepsTo k2) = StepsTo $ case (k1, k2) of
+  (ReturnStep, _) -> ReturnStep
+  (_, ReturnStep) -> ReturnStep
+  (CallStep, _) -> CallStep
+  (_, CallStep) -> CallStep
+  _ -> k2
+moreInfo e1 e2 = e2
+
 
 -- | Collapse a graph to a subset of the nodes.
 --
