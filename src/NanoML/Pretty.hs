@@ -50,7 +50,7 @@ fillHoles st = go
     Try ms x alts -> Try ms (go x) (map (\(p,g,x) -> (p, fmap go g, go x)) alts)
     With ms env x -> With ms env (go x)
     Replace ms env x -> Replace ms env (go x)
-    
+
     _ -> e
 
 
@@ -147,6 +147,9 @@ instance Pretty Expr where
     Bop _ bop x y -> parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec (error "prettyExpr.Bop")
+    Uop _ uop x -> parens $ -- parensIf (z > zb) $
+                   prettyPrec (zb+1) x <+> pretty uop
+      where zb = opPrec (error "prettyExpr.Uop")
     With _ env e -> prettyPrec z e
     Replace _ env e -> prettyPrec z e
     Hole _ _ _ -> text "_"
@@ -171,6 +174,10 @@ instance Pretty Bop where
   pretty FTimes = text "*."
   pretty FDiv = text "/."
   pretty FExp = text "exp"
+
+instance Pretty Uop where
+  pretty Neg = text "-"
+  pretty FNeg = text "-."
 
 isInfix :: Var -> Bool
 isInfix = all (`elem` "!$%&*+-./:<=>?@^|~")
