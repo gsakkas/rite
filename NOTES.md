@@ -659,7 +659,7 @@ helper []
 
 - [ ] test different timeouts
 
-- [ ] debug filter example!!!
+- [X] debug filter example!!!
   - `let` binder seems to be problematic
 
 - [ ] visualize environment when you click on a node
@@ -667,3 +667,5 @@ helper []
 - [ ] step-into grabs the immediate subterm, not the nested subterm that we want
 
 - [ ] weird criss-crossing of edges between nodes when you do multiple step-intos
+
+- [X] add step-over, which crunches the next expression down to a value

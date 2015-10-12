@@ -10,6 +10,7 @@ var sb_target = undefined;
 var jf_target = undefined;
 var jb_target = undefined;
 var zm_target = undefined;
+var so_target = undefined;
 
 var single_width = 1;
 var multi_width = 5;
@@ -72,12 +73,14 @@ function resetButtons() {
   jf_target = undefined;
   jb_target = undefined;
   zm_target = undefined;
+  so_target = undefined;
 
   document.getElementById('step-forward').disabled = true;
   document.getElementById('step-backward').disabled = true;
   document.getElementById('jump-forward').disabled = true;
   document.getElementById('jump-backward').disabled = true;
   document.getElementById('step-into').disabled = true;
+  document.getElementById('step-over').disabled = true;
 }
 
 function isSingleStep(from, to) {
@@ -104,9 +107,55 @@ function findPath(from, to) {
   return [];
 }
 
+function pathNodes(path) {
+  return [path[0].from].concat(path.map(getEdgeTo));
+}
+
+function getEdgeFrom(edge) { return edge.from; }
+function getEdgeTo(edge) { return edge.to; }
+
+function getSubTerms(nodeId) {
+  return allEdges.get({filter: function(x) {
+    return x.from === nodeId && x.label.indexOf('SubTerm') >= 0;
+  }}).map(getEdgeTo);
+}
+
+function getParents(nodeId) {
+  return allEdges.get({filter: function(x) {
+    return x.to === nodeId && x.label.indexOf('SubTerm') >= 0;
+  }}).map(getEdgeFrom);
+}
+
+function getNextTerm(nodeId) {
+  return allEdges.get({filter: function(x) {
+    return x.from === nodeId && x.label.indexOf('StepsTo') >= 0;
+  }}).map(getEdgeTo)[0];
+}
+
+// transitive closure of `getNextTerm`
+function crunch(nodeId) {
+  var next = getNextTerm(nodeId);
+  if (next) {
+    return crunch(next);
+  } else {
+    return nodeId;
+  }
+}
+
+// return the `id` of the immediate subterm of `from` the will be
+// stepped next.
+function findNextStep(from, to) {
+  var path = findPath(from, to);
+  var subs = getSubTerms(from);
+  var candidates = subs.map(getNextTerm)
+  candidates = candidates.map(getParents);
+  var next = candidates.findIndex(function(c) { return c.includes(path[0].to); });
+  return subs[next];
+}
+
 function clearMark() {
   if (mark)
-      mark.clear();
+    mark.clear();
   mark = undefined;
 }
 
@@ -167,7 +216,7 @@ function canStepBackward(node) {
   if (curEdges.length === 0) return;
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
-  console.log(curEdge, path);
+  // console.log(curEdge, path);
   if (path.length <= 2) return;
 
   sb_target = [path[path.length - 1].from, curEdge];
@@ -186,7 +235,7 @@ function canJumpForward(node) {
   if (curEdges.length === 0) return;
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
-  console.log(curEdge, path);
+  // console.log(curEdge, path);
   if (path.length === 0) return;
   for (var i = 1; i < path.length; i++) {
     var e = path[i];
@@ -213,7 +262,7 @@ function canJumpBackward(node) {
   if (curEdges.length === 0) return;
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
-  console.log(curEdge, path);
+  // console.log(curEdge, path);
   if (path.length === 0) return;
   for (var i = path.length-2; i >= 0; i--) {
     var e = path[i];
@@ -230,6 +279,30 @@ function canJumpBackward(node) {
 
 function jumpBackward() {
   insertNode(allNodes.get(jb_target[0]), jb_target[1]);
+  resetButtons();
+}
+
+function canStepOver(node) {
+  var curEdges = network.body.data.edges.get({filter: function(x) {
+    return x.from === node.id;
+  }});
+  if (curEdges.length === 0) return;
+  var curEdge = curEdges[0];
+  var path = pathNodes(findPath(curEdge.from, curEdge.to));
+  var subId = findNextStep(curEdge.from, curEdge.to);
+  var nextIds = getParents(crunch(subId));
+  // NOTE: we traverse `path` instead of `nextIds` to ensure we find the
+  // first valid node.
+  var nextId = path[path.findIndex(function(n) { return nextIds.includes(n); })];
+   // nextIds[nextIds.findIndex(function(n) { return path.includes(n); })];
+  if (nextId && !network.body.data.nodes.get(nextId)) {
+    so_target = [nextId, curEdge];
+    document.getElementById('step-over').disabled = false;
+  }
+}
+
+function stepOver() {
+  insertNode(allNodes.get(so_target[0]), so_target[1]);
   resetButtons();
 }
 
@@ -523,6 +596,7 @@ function draw(data) {
         canJumpForward(node);
         canJumpBackward(node);
         canStepInto(node);
+        canStepOver(node);
         // ctxmenu.style.position = 'fixed';
         // ctxmenu.style.top  = params.event.center.x;
         // ctxmenu.style.left = params.event.center.y;

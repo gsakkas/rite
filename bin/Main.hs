@@ -92,6 +92,9 @@ main = do
                 button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
                         , id_ "step-into", onclick_ "stepInto()" ]
                   "Step into"
+                button_ [ type_ "button", class_ "btn btn-default", disabled_ "disabled"
+                        , id_ "step-over", onclick_ "stepOver()" ]
+                  "Step over"
 
         div_ [class_ "mybody row"] $ do
           div_ [class_ "mybody col-md-6"] $ do
