@@ -669,3 +669,10 @@ helper []
 - [ ] weird criss-crossing of edges between nodes when you do multiple step-intos
 
 - [X] add step-over, which crunches the next expression down to a value
+
+- [X] jump forward should jump to the next "return"
+  - if there are no more beta reductinos?
+  - or next beta/return whichever comes first?
+
+1. ff, env stack (with freshening of shadowed vars), highlight bad subterm
+2. gather sample problems from logs on goto
