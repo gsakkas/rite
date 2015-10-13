@@ -30,7 +30,7 @@ fillHoles :: EvalState -> Expr -> Expr
 fillHoles st = go
   where
   go e = case e of
-    Hole _ r _ -> maybe e snd (IntMap.lookup r (stStore st))
+    Hole _ r _ -> maybe e (go . snd) (IntMap.lookup r (stStore st))
 
     Lam ms p x me -> Lam ms p (go x) me
     App ms f xs -> App ms (go f) (map go xs)
@@ -152,7 +152,7 @@ instance Pretty Expr where
       where zb = opPrec (error "prettyExpr.Uop")
     With _ env e -> prettyPrec z e
     Replace _ env e -> prettyPrec z e
-    Hole _ _ _ -> text "_"
+    Hole _ r _ -> text "_" <> pretty r
     Ref r -> text "<ref-" <> pretty r <> text ">"
 
 instance Pretty Bop where
@@ -194,11 +194,12 @@ instance Pretty MutFlag where
   pretty _   = empty
 
 instance Pretty Pat where
-  pretty p = case p of
+  prettyPrec z p = case p of
     VarPat _ v -> text v
     LitPat _ l -> pretty l
     IntervalPat _ l h -> pretty l <+> text ".." <+> pretty h
-    ConsPat _ x xs -> pretty x <+> text "::" <+> pretty xs
+    ConsPat _ x xs -> parensIf (z > zc) $ prettyPrec (zc+1) x <+> text "::" <+> prettyPrec zc xs
+                      where zc = 6
     ConPat _ c Nothing -> text c
     ConPat _ c (Just p) -> text c <+> pretty p
     ListPat _ l -> list l
