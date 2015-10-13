@@ -400,11 +400,11 @@ matchBind (p,v) = do
 
 unshadow :: MonadEval m => Expr -> Env -> m (Env, Expr)
 unshadow expr env = do
-  bound <- map fst . concat . map envEnv . toListEnv <$> gets stVarEnv
+  bound <- map fst . concat . map envEnv . tail . toListEnv <$> gets stVarEnv
   let su = mapMaybe (`shadows` bound) (map fst $ envEnv env)
   let expr' = substVars su expr
   let env' = env { envEnv = substEnv su (envEnv env) }
-  traceShowM (envEnv env, envEnv env', pretty expr')
+  -- traceShowM (envEnv env, envEnv env', pretty expr')
   return (env', expr')
 
 substEnv :: [(Var, Var)] -> [(Var,Value)] -> [(Var,Value)]
