@@ -684,7 +684,10 @@ stepApp ms f' es = do
           ([], []) -> do
             modify' (\s -> s { stStepKind = CallStep })
             Replace ms nenv' <$> refreshExpr e' -- only refresh at saturated applications
-          ([], _) -> Replace ms nenv' <$> addSubTerms (App ms e' es')
+          ([], _) -> do
+            modify' (\s -> s { stStepKind = CallStep })
+            e'' <- refreshExpr e'
+            Replace ms nenv' <$> addSubTerms (App ms e'' es')
           (_, []) -> mkLamsSubTerms ps' e' >>= \(Lam ms p e _) ->
                        return $ Lam ms p e $ Just nenv' -- WRONG?? mkLamsSubTerms ps' e
   _ -> error $ "stepApp: impossible: " ++ show f'
