@@ -17,6 +17,7 @@
 module NanoML.Types where
 
 import           Control.Applicative
+import           Control.Arrow
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
@@ -729,6 +730,20 @@ data Pat
   | ConstraintPat !MSrcSpan Pat Type
   deriving (Show, Generic, Eq)
 
+bindersOf :: Pat -> [Var]
+bindersOf p = case p of
+  VarPat _ v -> [v]
+  ConsPat _ p1 p2 -> bindersOf p1 ++ bindersOf p2
+  ConPat _ v mp -> v : maybe [] bindersOf mp
+  ListPat _ ps -> concatMap bindersOf ps
+  TuplePat _ ps -> concatMap bindersOf ps
+  OrPat _ p1 p2 -> bindersOf p1 ++ bindersOf p2
+  AsPat _ p v -> v : bindersOf p
+  ConstraintPat _ p _ -> bindersOf p
+
+bindersOfBinds :: [(Pat, Expr)] -> [Var]
+bindersOfBinds pes = concatMap (bindersOf . fst) pes
+
 getSrcSpanPatMaybe :: Pat -> MSrcSpan
 getSrcSpanPatMaybe pat = case pat of
   VarPat ms _ -> ms
@@ -1371,5 +1386,9 @@ data EdgeKind
   deriving (Show, Generic, Eq)
 
 data StepKind
-  = BoringStep | CallStep | ReturnStep | PrimStep
+  = BoringStep | CallStep | ReturnStep | PrimStep | RenameStep
   deriving (Show, Generic, Eq)
+
+
+renameBinds :: MonadEval m => Expr -> m Expr
+renameBinds e = undefined

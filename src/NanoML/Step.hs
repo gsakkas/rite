@@ -10,6 +10,7 @@
 module NanoML.Step where
 
 import Control.Applicative
+import Control.Arrow
 import Control.Exception
 import Control.Monad.Except
 import Control.Monad.Reader
@@ -53,7 +54,7 @@ writeTrace p tr = LBS.writeFile "../OnlinePythonTutor/v3/test-trace.js"
              && evt_event x == evt_event y
 
 runStep opts x = case runEvalFull opts x of
-  (Left e, st, _)  -> -- traceShow e $ 
+  (Left e, st, _)  -> -- traceShow e $
                       stTrace st
   (Right v, st, _) -> stTrace st
 
@@ -118,7 +119,7 @@ runGraph opts x = case runEvalFull opts x of
 --                    in concat $ filter (not . checkpoly) grps
 --         ns <- mapM (findRoot gr) (nub $ map fst bad ++ map fst poly ++ [expr] ++ map fst xts)
 --         return $ map (mkPath gr) ns
-  
+
 --   case expr of
 --     Uop _ u x -> checkOne x
 --     Bop _ b x y -> checkMany [(x, typeOfBop b), (y, typeOfBop b)]
@@ -293,7 +294,7 @@ transStepDecl d = case d of
     -> mapM_ addType decls >> addSubTerms (VU Nothing)
   DExn _ decl
     -> extendType "exn" decl >> addSubTerms (VU Nothing)
-          
+
 
 -- transStepDecl d = do
 --   -- traceShowM $ pretty d
@@ -370,7 +371,7 @@ matchRecBinds binds = do
   penv <- gets stVarEnv
   mfix $ \fenv -> do
     setVarEnv fenv
-    unless (all (\(p,v) -> -- isFunPat p || 
+    unless (all (\(p,v) -> -- isFunPat p ||
                            isFun v) binds) $
       otherError "'let rec' must only bind functions"
     binds' <- forM binds $ \(p,v) -> (p,) <$> step v
@@ -396,6 +397,78 @@ matchBind (p,v) = do
   matchPat v p >>= \case
     Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
     Just env -> return env
+
+unshadow :: MonadEval m => Expr -> Env -> m (Env, Expr)
+unshadow expr env = do
+  bound <- map fst . concat . map envEnv . toListEnv <$> gets stVarEnv
+  let su = mapMaybe (`shadows` bound) (map fst $ envEnv env)
+  let expr' = substVars su expr
+  let env' = env { envEnv = substEnv su (envEnv env) }
+  traceShowM (envEnv env, envEnv env', pretty expr')
+  return (env', expr')
+
+substEnv :: [(Var, Var)] -> [(Var,Value)] -> [(Var,Value)]
+substEnv su env = map (first (\v -> fromMaybe v $ lookup v su)) env
+
+substVars :: [(Var, Var)] -> Expr -> Expr
+substVars su = go
+  where
+  su \\ vs = filter (\(v,_) -> v `notElem` vs) su
+
+  go (Var ms v) = Var ms $ fromMaybe v $ lookup v su
+  go (Lam ms p e x) = Lam ms p (substVars (su \\ bindersOf p) e) x
+  go (App ms f xs) = App ms (go f) (map go xs)
+  go (Bop ms b x y) = Bop ms b (go x) (go y)
+  go (Uop ms u x) = Uop ms u (go x)
+  go (Lit ms l) = Lit ms l
+  go (Let ms NonRec bnds body)
+    = Let ms NonRec (map (second go) bnds)
+                    (substVars (su \\ bindersOfBinds bnds) body)
+  go (Let ms Rec bnds body)
+    = Let ms Rec (map (second (substVars (su \\ bindersOfBinds bnds))) bnds)
+                 (substVars (su \\ bindersOfBinds bnds) body)
+  go (Ite ms b t f) = Ite ms (go b) (go t) (go f)
+  go (Seq ms x y) = Seq ms (go x) (go y)
+  go (Case ms e alts) = Case ms (go e) (map goAlt alts)
+  go (Tuple ms xs) = Tuple ms (map go xs)
+  go (ConApp ms d me mt) = ConApp ms d (fmap go me) mt
+  go (Record ms flds mt) = Record ms (map (second go) flds) mt
+  go (Field ms e f) = Field ms (go e) f
+  go (SetField ms e f x) = SetField ms (go e) f (go x)
+  go (Array ms xs mt) = Array ms (map go xs) mt
+  go (List ms xs mt) = List ms (map go xs) mt
+  go (Try ms e alts) = Try ms (go e) (map goAlt alts)
+  go (Prim1 ms p) = Prim1 ms p
+  go (Prim2 ms p) = Prim2 ms p
+  go (With ms x e) = With ms x (go e)
+  go (Replace ms x e) = Replace ms x (go e)
+  go (Hole ms r mt) = Hole ms r mt
+  go (Ref r) = Ref r
+
+  goAlt (p, g, e) = let su' = su \\ bindersOf p
+                    in (p, fmap (substVars su') g, substVars su' e)
+
+shadows :: Var -> [Var] -> Maybe (Var, Var)
+shadows v' vs' =
+  if n > 0
+  then Just $ (v', traceShowId $ traceShow (v',vs') $ v ++ '|' : show n)
+  else Nothing
+  where
+  eqvs = filter ((==v) . dropSuffix) vs'
+  n = if null eqvs then 0 :: Int
+      else 1 + maximum (map (read . onlySuffix) eqvs)
+  v = dropSuffix v'
+  vs = map dropSuffix vs'
+{-# INLINE shadows #-}
+
+dropSuffix :: Var -> Var
+dropSuffix = takeWhile (/='|')
+{-# INLINE dropSuffix #-}
+
+onlySuffix :: Var -> Var
+onlySuffix v = let sx = dropWhile (/='|') v
+               in if null sx then "0" else tail sx
+{-# INLINE onlySuffix #-}
 
 step :: MonadEval m => Expr -> m Expr
 step expr = withCurrentExpr expr $ build expr =<< case expr of
@@ -435,11 +508,11 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
                                stepApp ms (skipEnv f) args)
                   (\args -> return $ App ms f args)
   App ms f args -> stepOne (f:args)
-                  (\(f:vs) -> -- addEvent expr >> 
+                  (\(f:vs) -> -- addEvent expr >>
                                 stepApp ms (skipEnv f) vs)
                   (\(f:es) -> return $ App ms f es)
   Bop ms b e1 e2 -> stepOne [e1,e2]
-                   (\[v1,v2] -> -- addEvent expr >> 
+                   (\[v1,v2] -> -- addEvent expr >>
                                 stepBop ms b v1 v2)
                    (\[e1,e2] -> return $ Bop ms b e1 e2)
   Uop ms u e
@@ -448,7 +521,8 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   -- Lit ms l -> build expr
   Let ms Rec binds body -> do
     env <- matchRecBinds binds
-    return $ With ms env body
+    (env', body') <- unshadow body env
+    return $ With ms env' body'
     -- let (ps, es) = unzip binds
     -- env <- gets stVarEnv
     -- stepOne es
@@ -459,7 +533,8 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
     let (ps, es) = unzip binds
     stepOne es
       (\vs -> do env <- matchNonRecBinds (zip ps vs)
-                 return $ With ms env body
+                 (env', body') <- unshadow body env
+                 return $ With ms env' body'
       )
       (\es -> return $ Let ms NonRec (zip ps es) body)
   Ite ms b t f
@@ -477,7 +552,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
       return e2
     | otherwise -> (\e1 -> Seq ms e1 e2) <$> step e1
   Case ms e as
-    | isValue e   -> -- addEvent expr >> 
+    | isValue e   -> -- addEvent expr >>
         stepAlts (Case ms) e as
     | otherwise -> (\e -> Case ms e as) <$> step e
   Tuple ms es -> stepOne es
@@ -604,13 +679,14 @@ stepApp ms f' es = do
         -- pushEnv env
         -- pushEnv pat_env
         nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
+        (nenv', e') <- unshadow e nenv
         case (ps', es') of
           ([], []) -> do
             modify' (\s -> s { stStepKind = CallStep })
-            Replace ms nenv <$> refreshExpr e -- only refresh at saturated applications
-          ([], _) -> Replace ms nenv <$> addSubTerms (App ms e es')
-          (_, []) -> mkLamsSubTerms ps' e >>= \(Lam ms p e _) ->
-                       return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
+            Replace ms nenv' <$> refreshExpr e' -- only refresh at saturated applications
+          ([], _) -> Replace ms nenv' <$> addSubTerms (App ms e' es')
+          (_, []) -> mkLamsSubTerms ps' e' >>= \(Lam ms p e _) ->
+                       return $ Lam ms p e $ Just nenv' -- WRONG?? mkLamsSubTerms ps' e
   _ -> error $ "stepApp: impossible: " ++ show f'
   -- _ -> typeError (TVar "a" :-> TVar "b") (typeOf f') -- otherError $ printf "'%s' is not a function" (show f')
 -- stepApp _ f es = error (show (f:es))
@@ -653,15 +729,17 @@ stepAlts f v ((p,g,e):as)
       Just bnd -> do let ms = getSrcSpanExprMaybe v
                      bnd <- allocEnv ("match:" ++ show (srcSpanStartLine $ fromJust ms)) bnd
                      case g of
-                      Nothing -> return $ With ms bnd e
+                      Nothing -> do (bnd', e') <- unshadow e bnd
+                                    return $ With ms bnd' e'
                       Just g
-                        | VB _ True  <- g -> return $ With ms bnd e
+                        | VB _ True  <- g -> do (bnd', e') <- unshadow e bnd
+                                                return $ With ms bnd' e'
                         | VB _ False <- g -> stepAlts f v as
                         | isValue g -> do gt <- typeOfM g
                                           typeError (tCon tBOOL) gt
                         | otherwise -> do g' <- step g
                                           return $ f v ((p,Just g',e):as)
-                        
+
                         -- FIXME: `step` the guard instead
                         -- eval g `withEnv` bnd >>= \case
                         --   VB _ True  -> return $ With ms bnd e
@@ -731,7 +809,7 @@ addEvent bf expr k (Just loc)
   let func_name = "<top-level>"
   id <- envId <$> gets stVarEnv
   -- traceShowM (k, id, expr)
-  let insertReturn 
+  let insertReturn
         | Return <- k = insertEnv "__return__" expr
         | otherwise   = \x -> x
   envs <- IntMap.elems . IntMap.delete 0 . IntMap.adjust insertReturn id <$> gets stEnvMap
