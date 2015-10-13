@@ -700,8 +700,13 @@ let rec assoc (d,k,l) =
             else
               d
 
+(*
 let _ = assoc ((-1), "William", [("william", 23)])
-```
+*)
+``` # SAFE, but wrong type
+
+
+UNSAFE EXAMPLES
 
 ```
 type expr =
