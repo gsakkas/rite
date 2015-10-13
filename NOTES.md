@@ -676,3 +676,191 @@ helper []
 
 1. ff, env stack (with freshening of shadowed vars), highlight bad subterm
 2. gather sample problems from logs on goto
+
+
+```
+let rec wwhile (f,b) =
+  match f b with 
+  | (b', false) -> b' 
+  | (b', true)  -> wwhile (f, b')
+
+let fixpoint (f,b) = 
+  wwhile ((let f' x = ((f x), ((f x) = x)) in f), b)
+```
+
+- dead code issue, specifically, `f'` constraint `f : a -> a` but `f'` is never used so constraint is vacuous
+
+
+```
+let rec assoc (d,k,l) =
+  match l with 
+  | [] -> d 
+  | h::t -> if h = k then 
+              assoc (d, k, t)
+            else
+              d
+
+let _ = assoc ((-1), "William", [("william", 23)])
+```
+
+```
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr * expr
+  | Times of expr * expr
+  | Thresh of expr * expr * expr * expr
+let buildSine e = Sine e
+let buildX () = VarX
+let buildY () = VarY
+let rec build (rand,depth) =
+  match rand (0, depth) with
+  | 0 -> buildX
+  | 1 -> buildY
+  | 2 -> buildSine buildX
+  | _ -> buildX
+```
+
+```
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = seen @ h in
+        let rest' = let is_in i = (i mod 2) = 0 in 
+                    List.filter is_in t in
+        helper (seen', rest') in
+  List.rev (helper ([], l))
+```
+
+```
+let rec digitsOfInt n =
+  if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10]
+
+let digits n = digitsOfInt (abs n)
+
+let rec sumList xs = match xs with 
+  | [] -> 0 
+  | h::t -> h + (sumList t)
+
+let rec additivePersistence n =
+  if ((sumList (digitsOfInt (digits n))) ) < 10
+  then n
+  else additivePersistence (sumList (digitsOfInt (digits n)))
+```
+
+```
+let rec append xs ys =
+  match xs with
+  | [] -> ys
+  | h::t -> let append2 = append t ys in h :: append2
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with 
+        | 0 -> [] 
+        | _ -> append digitsOfInt (n / 10) [n mod 10])
+```
+
+```
+let listReverse l =
+  let rec reverse xs = match xs with 
+    | [] -> xs 
+    | h::t -> reverse [h] t 
+  in
+  reverse [] l
+```
+
+```
+let rec listReverse l =
+  match l with 
+  | [] -> [] 
+  | (h::t)::[] -> (listReverse t) @ [h]
+
+(* throws ml exception!!!! *)
+let _ = listReverse [[1];[2];[3]];;
+
+```
+
+```
+let rec digitsOfInt n =
+  if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10]
+let rec sumList xs = match xs with 
+  | [] -> 0 
+  | h::t -> h + (sumList t)
+
+let addDigits n = sumList (digitsOfInt n)
+
+let rec digitalRoot n =
+  if n < 10 then n 
+  else if (addDigits n) > 9 then digitalRoot (addDigits n)
+``` # output type mismatch, why not caught?
+
+```
+let rec listReverse l =
+  match l with 
+  | [] -> [] 
+  | h::t -> (listReverse t) @ [h]
+let cutTail z = match listReverse z with 
+  | [] -> [] 
+  | h::t -> t
+let getHeads x = match listReverse x with 
+  | [] -> [] 
+  | h::t -> h
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0
+let rec matchHeads y =
+  match y with
+  | [] -> true
+  | h::t -> if h = (getHeads t) 
+            then matchHeads (cutTail t) 
+            else false
+let palindrome w =
+  match explode w with 
+  | [] -> true 
+  | h::t -> matchHeads (explode w)
+```
+
+```
+let getHead h = match h with | [] -> [] | h::t -> h
+let getTail t = match t with | [] -> [] | h::t -> t
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h]
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0
+let rec matchHeads x =
+  match x with
+  | [] -> true
+  | h::t ->
+      if (getHead x) = (getHead (listReverse x))
+      then matchHeads (getTail (listReverse t))
+      else false
+let palindrome w =
+  match explode w with 
+  | [] -> true 
+  | h::t -> matchHeads (explode w)
+  
+let _ = palindrome "bbbb"
+``` # WTF, broken.. NOT BROKEN, error is in getHead, which gets type `[[a]] -> [a]`, but program still can't go wrong
+
+```
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10]
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t)
+let rec additivePersistence n =
+  let rec recCounter n count =
+    if n < 10
+    then count
+    else recCounter ((sumList (digitsOfInt n)) (count + 1)) in
+  recCounter n 0
+```
+
+
