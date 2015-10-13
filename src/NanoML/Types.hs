@@ -740,6 +740,7 @@ bindersOf p = case p of
   OrPat _ p1 p2 -> bindersOf p1 ++ bindersOf p2
   AsPat _ p v -> v : bindersOf p
   ConstraintPat _ p _ -> bindersOf p
+  _ -> []
 
 bindersOfBinds :: [(Pat, Expr)] -> [Var]
 bindersOfBinds pes = concatMap (bindersOf . fst) pes
