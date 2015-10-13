@@ -145,7 +145,7 @@ checkDecl f prog = do
                     (\r -> Hole Nothing r Nothing) <$> fresh
           fo (Var Nothing f) args
 
-        go (f,st,v) r ((m+1) `mod` 5)
+        go (f,st,v) r ((m+1) `mod` 20)
 
 
   unifyNoExn t1 t2 = unify (unExn t1) (unExn t2)
