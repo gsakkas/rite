@@ -451,7 +451,7 @@ substVars su = go
 shadows :: Var -> [Var] -> Maybe (Var, Var)
 shadows v' vs' =
   if n > 0
-  then Just $ (v', traceShowId $ traceShow (v',vs') $ v ++ '|' : show n)
+  then Just $ (v', v ++ '|' : show n)
   else Nothing
   where
   eqvs = filter ((==v) . dropSuffix) vs'
@@ -518,6 +518,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   Uop ms u e
     | isValue e -> stepUop ms u e
     | otherwise -> Uop ms u <$> step e
+  Lit ms l -> return $ mkLit ms l
   -- Lit ms l -> build expr
   Let ms Rec binds body -> do
     env <- matchRecBinds binds
