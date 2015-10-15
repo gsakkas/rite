@@ -46,7 +46,6 @@ main = do
         link_ [ href_ "/lint.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/nanoml.css", rel_ "stylesheet", type_ "text/css" ]
         script_ [ src_ "/nanoml.js", type_ "text/javascript" ] ("" :: Text)
-        script_ [ src_ "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js", type_ "text/javascript" ] ("" :: Text)
 
       body_ [class_ "container-fluid", onload_ "setup()"] $ do
         nav_ [class_ "navbar navbar-default"] $ do
