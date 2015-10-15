@@ -451,7 +451,7 @@ substVars su = go
 shadows :: Var -> [Var] -> Maybe (Var, Var)
 shadows v' vs' =
   if n > 0
-  then Just $ (v', v ++ '|' : show n)
+  then Just $ (v', v ++ '_' : show n)
   else Nothing
   where
   eqvs = filter ((==v) . dropSuffix) vs'
@@ -462,11 +462,11 @@ shadows v' vs' =
 {-# INLINE shadows #-}
 
 dropSuffix :: Var -> Var
-dropSuffix = takeWhile (/='|')
+dropSuffix = takeWhile (/='_')
 {-# INLINE dropSuffix #-}
 
 onlySuffix :: Var -> Var
-onlySuffix v = let sx = dropWhile (/='|') v
+onlySuffix v = let sx = dropWhile (/='_') v
                in if null sx then "0" else tail sx
 {-# INLINE onlySuffix #-}
 

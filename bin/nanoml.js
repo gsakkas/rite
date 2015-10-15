@@ -1,3 +1,8 @@
+// start Mixpanel
+(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
+// end Mixpanel
+
 var nodes = undefined;
 var edges = undefined;
 var steps = undefined;
@@ -21,6 +26,18 @@ var editor = undefined;
 var mark = undefined;
 var safe_banner = undefined;
 var unsafe_banner = undefined;
+
+var uuid = undefined;
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
 
 var demos = {
   factorial: [ "let rec fac n ="
@@ -169,6 +186,7 @@ function canStepUndo() {
 }
 
 function stepUndo() {
+  mixpanel.track("Undo", { "uuid": uuid });
   // var tmp = stack.pop();
   // tmp = stack.pop()
   // console.log(tmp);
@@ -202,6 +220,7 @@ function canStepForward(node) {
 }
 
 function stepForward() {
+  mixpanel.track("StepForward", { "node": sf_target[0], "replacingEdge": sf_target[1], "uuid": uuid });
   insertNode(allNodes.get(sf_target[0]), sf_target[1]);
   resetButtons();
 }
@@ -224,6 +243,7 @@ function canStepBackward(node) {
 }
 
 function stepBackward() {
+  mixpanel.track("StepBackward", { "node": sb_target[0], "replacingEdge": sb_target[1], "uuid": uuid});
   insertNode(allNodes.get(sb_target[0]), sb_target[1]);
   resetButtons();
 }
@@ -261,6 +281,7 @@ function canJumpForward(node) {
 }
 
 function jumpForward() {
+  mixpanel.track("JumpForward", { "node": jf_target[0], "replacingEdge": jf_target[1], "uuid": uuid});
   insertNode(allNodes.get(jf_target[0]), jf_target[1]);
   resetButtons();
 }
@@ -288,6 +309,7 @@ function canJumpBackward(node) {
 }
 
 function jumpBackward() {
+  mixpanel.track("JumpBackward", { "node": jb_target[0], "replacingEdge": jb_target[1], "uuid": uuid});
   insertNode(allNodes.get(jb_target[0]), jb_target[1]);
   resetButtons();
 }
@@ -312,6 +334,7 @@ function canStepOver(node) {
 }
 
 function stepOver() {
+  mixpanel.track("StepOver", { "node": so_target[0], "replacingEdge": so_target[1], "uuid": uuid});
   insertNode(allNodes.get(so_target[0]), so_target[1]);
   resetButtons();
 }
@@ -355,6 +378,8 @@ function canStepInto(node) {
 }
 
 function stepInto() {
+  mixpanel.track("StepInto", { "subTerm": zm_target[0], "subValue": zm_target[1], "uuid": uuid});
+
   var sub = zm_target[0];
   var val = zm_target[1];
 
@@ -430,6 +455,8 @@ function notifyUnsafe(reason) {
 }
 
 function setup() {
+  mixpanel.init("fdb0d3d364100623a32292ece89884e2",{debug:true});
+
   var prog = document.getElementById('prog');
   editor = CodeMirror.fromTextArea(prog, {
     mode: "mllike",
@@ -468,12 +495,20 @@ function setup() {
       success: function(data, status, xhr) {
         console.log(status, data);
         if (data.result === 'value') {
-
+          uuid = guid();
+          mixpanel.track("Safe", { "nodes": data.nodes, "edges": data.edges,
+                                   "root": data.root, "final": data.value,
+                                   "program": prog, "function": func, "uuid": uuid });
+          
           // notifySafe();
           errors = [];
           editor.performLint();
 
         } else if (data.result === 'stuck') {
+          uuid = guid();
+          mixpanel.track("Unsafe", { "nodes": data.nodes, "edges": data.edges,
+                                   "root": data.root, "final": data.value,
+                                   "program": prog, "function": func, "uuid": uuid });
 
           // notifyUnsafe(data.reason);
           var stuckNode = data.nodes.filter(function(n) {
@@ -489,6 +524,7 @@ function setup() {
           editor.performLint();
 
         } else if (data.result === 'timeout') {
+          mixpanel.track("Timeout", { "root": data.root, "program": prog, "function": func });
 
           notifyUnsafe("Timed out on input: " + data.root);
           return;
@@ -517,6 +553,7 @@ function setup() {
         draw(data);
       },
       error: function(xhr, errorType, error) {
+        mixpanel.track("ServerCrash", { "error": error, "program": prog, "function": func });
         alert('Oh noes, something went wrong!');
         console.log(errorType, error);
       }
