@@ -869,3 +869,7 @@ let rec additivePersistence n =
 ```
 
 
+- [ ] SEMFIX
+
+- [ ] analyze by hand random subset of bad programs that we can't crash
+  - would concolic execution help for them??

@@ -92,6 +92,8 @@ collapseBadEdges gr
 
 collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseEdge (v1,v2,l) gr
+  | v1 == v2
+  = Graph.delEdge (v1,v2) gr
   | not (null (Graph.lpre gr v1)) || isReturnStep l
   = let es = [ (x,v2,moreInfo l l') | (x, l') <- Graph.lpre gr v1 ]
     in Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
