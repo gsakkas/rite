@@ -28869,7 +28869,21 @@ return /******/ (function(modules) { // webpackBootstrap
           if (this.fontOptions.strokeWidth > 0) {
             ctx.strokeText(this.lines[i], x, yLine);
           }
-          ctx.fillText(this.lines[i], x, yLine);
+          if (this.nodeOptions.styleSegments[i] === undefined) {
+            // no special styling, just draw the text
+            ctx.fillText(this.lines[i], x, yLine);
+          } else {
+            var xx = x;
+            var segments = this.nodeOptions.styleSegments[i];
+            for (var j = 0; j < segments.length; j++) {
+              var segment = segments[j];
+              ctx.save();
+              ctx.fillStyle = segment.style;
+              ctx.fillText(segment.text, xx, yLine);
+              xx += ctx.measureText(segment.text).width;
+              ctx.restore();
+            }
+          }
           yLine += fontSize;
         }
       }
