@@ -2,7 +2,7 @@
 {-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.Pretty
-  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, (==>), (=:), nest, text, fillHoles)
+  (pretty, prettyProg, hsep, vsep, vcat, Doc, render, renderSpans, (==>), (=:), nest, text, fillHoles)
   where
 
 import           Control.Arrow                (first, second)
@@ -10,16 +10,16 @@ import qualified Data.IntMap                  as IntMap
 import           Data.List                    hiding (group)
 import qualified Data.Vector                  as Vector
 import           Prelude                      hiding ((<$>))
-import           Text.PrettyPrint.ANSI.Leijen hiding (Pretty, pretty, list)
-import qualified Text.PrettyPrint.ANSI.Leijen as PP
+import           Text.PrettyPrint.Annotated.Leijen hiding (Pretty, pretty, list)
+import qualified Text.PrettyPrint.Annotated.Leijen as PP
 
 import           NanoML.Types
 
 class Pretty a where
-  pretty :: a -> Doc
+  pretty :: a -> Doc Annot
   pretty = prettyPrec 0
 
-  prettyPrec :: Int -> a -> Doc
+  prettyPrec :: Int -> a -> Doc Annot
   prettyPrec _ = pretty
 
 -- | Wrap the enclosed 'Doc' in parentheses only if the condition holds.
@@ -88,9 +88,13 @@ instance Pretty Literal where
     LB b -> text (if b then "true" else "false")
 --    LU   -> text "()"
 
+annotateIf b a d
+  | b         = annotate a d
+  | otherwise = d
+
 instance Pretty Expr where
   prettyPrec z e = case e of
-    Var _ v -> text v
+    Var _ v -> annotate Redex $ text v
     Lam _ (VarPat _ "$x") (Case _ (Var _ "$x") alts) _
       -> group $ parensIf (z > zl) $ hang 2 $
                text "function" <$> vsep (map prettyAlt alts)
@@ -100,22 +104,26 @@ instance Pretty Expr where
       where zl = 5
     App _ (Var _ f) [x, y]
       | isInfix f
-        -> parensIf (z > zf) $
+        -> annotateIf (isValue x && isValue y) Redex $
+           parensIf (z > zf) $
            prettyPrec (zf+1) x <+> text f <+> prettyPrec (zf+1) y
       where zf = opPrec f
-    App _ f xs -> parensIf (z > za) $
-                prettyPrec za f <+>
-                align (foldr1 (</>) (map (prettyPrec (za+1)) xs))
+    App _ f xs -> annotateIf (all isValue xs) Redex $
+                  parensIf (z > za) $
+                  prettyPrec za f <+>
+                  align (foldr1 (</>) (map (prettyPrec (za+1)) xs))
       where za = 26
     Lit _ l -> pretty l
-    Let _ r bnds body -> group $ parensIf (z > zl) $
-                       align $ text "let" <> pretty r <+> prettyBinds bnds
-                               <+> text "in" <$> pretty body
+    Let _ r bnds body -> annotateIf (all (isValue . snd) bnds) Redex $
+                         group $ parensIf (z > zl) $
+                         align $ text "let" <> pretty r <+> prettyBinds bnds
+                             <+> text "in" <$> pretty body
       where zl = 4
-    Ite _ b t f -> group $ parensIf (z > zi) $ align $
+    Ite _ b t f -> annotateIf (isValue b) Redex $
+                 group $ parensIf (z > zi) $ align $
                  text "if"   <+> pretty b <$>
-                 text "then" <+> pretty t <$>
-                 text "else" <+> pretty f
+                 text "then" <+> noAnnotate (pretty t) <$>
+                 text "else" <+> noAnnotate (pretty f)
       where zi = 7
     Seq _ x y -> parensIf (z > zs) $
                prettyPrec (zs+1) x <> semi </> prettyPrec (zs+1) y
@@ -144,10 +152,11 @@ instance Pretty Expr where
     Prim1 _ p -> text (show p)
     Prim2 _ p -> text (show p)
     -- Val _ v -> prettyPrec z v
-    Bop _ bop x y -> parensIf (z > zb) $
+    Bop _ bop x y -> annotateIf (isValue x && isValue y) Redex $
+                   parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
       where zb = opPrec (error "prettyExpr.Bop")
-    Uop _ uop x -> parens $ -- parensIf (z > zb) $
+    Uop _ uop x -> annotateIf (isValue x) Redex $ parens $ -- parensIf (z > zb) $
                    prettyPrec (zb+1) x <+> pretty uop
       where zb = opPrec (error "prettyExpr.Uop")
     With _ env e -> prettyPrec z e
@@ -251,26 +260,29 @@ instance Pretty DataDecl where
     []  -> text dCon
     ts  -> text dCon <+> text "of" <+> hsep (intersperse (text "*") $ map pretty ts)
 
-prettyProg :: Prog -> Doc
+prettyProg :: Prog -> Doc Annot
 prettyProg = vsep . map pretty
 
 instance Pretty TVar where
   pretty = text
 
 instance Pretty Int where
-  pretty = PP.pretty
+  pretty = text . show
 
 instance Pretty Double where
-  pretty = PP.pretty
+  pretty = text . show
 
 instance Pretty Char where
-  pretty = PP.squotes . PP.pretty
+  pretty = text . show
 
 expr ==> val = nest 2 $ pretty expr <$> (text "==>" <+> pretty val)
 var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
 
-render :: Doc -> String
-render d = displayS (renderSmart 0.5 72 d) ""
+render :: Doc a -> String
+render d = displayS (renderPretty 0.5 80 d) ""
+
+renderSpans :: Doc a -> (String, SpanList a)
+renderSpans d = displaySpans (renderPretty 0.5 80 d)
 
 instance Pretty MSrcSpan where
   pretty (Just ss) = pretty ss

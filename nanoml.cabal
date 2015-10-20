@@ -45,7 +45,7 @@ library
   -- other-extensions:
   build-depends:       MonadRandom >= 0.4
                      , aeson >= 0.8
-                     , ansi-wl-pprint >= 0.6
+                     , annotated-wl-pprint >= 0.6
                      , array
                      , base >=4.7 && <5
                      , bytestring >= 0.10

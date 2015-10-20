@@ -72,7 +72,7 @@ runStep opts x = case runEvalFull opts x of
 --       paths <- mkPaths st
 --       return [ [ fromJust (Graph.lab gr n) | n <- path ] | path <- paths ]
 
-renderPath :: [Expr] -> Doc
+renderPath :: [Expr] -> Doc Annot
 renderPath xs = vsep (intersperse (text "  ==>") (pairwiseNub $ map pretty xs))
 
 ----------------------------------------------------------------------

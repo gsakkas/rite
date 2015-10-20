@@ -25,7 +25,7 @@ import NanoML.Types
 data NanoState = NanoState
   { nanoReader :: !NanoOpts
   , nanoState  :: !EvalState
-  , nanoWriter :: !(Seq Doc)
+  , nanoWriter :: !(Seq (Doc Annot))
   }
 
 newtype Eval a = EvalM (RandT StdGen (ExceptT NanoError (State NanoState)) a)
@@ -50,7 +50,7 @@ instance MonadState EvalState Eval where
   get = EvalM $ gets nanoState
   put !st = EvalM $ modify' $ \s -> s { nanoState = st }
 
-instance MonadWriter [Doc] Eval where
+instance MonadWriter [Doc Annot] Eval where
   tell w = EvalM $ modify' $ \s -> s { nanoWriter = nanoWriter s `mappend` (fromList w) }
   listen (EvalM x) = EvalM $ do
     w <- gets nanoWriter
@@ -67,12 +67,12 @@ instance MonadWriter [Doc] Eval where
     modify' $ \s -> s { nanoWriter = w `mappend` fromList (f (toList w')) }
     return a
 
-runEval :: NanoOpts -> Eval a -> Either (NanoError, [Doc]) a
+runEval :: NanoOpts -> Eval a -> Either (NanoError, [Doc Annot]) a
 runEval opts x = case runEvalFull opts x of
   (Left e, _, tr) -> Left (e, tr)
   (Right v, _, _) -> Right v
 
-runEvalFull :: NanoOpts -> Eval a -> (Either NanoError a, EvalState, [Doc])
+runEvalFull :: NanoOpts -> Eval a -> (Either NanoError a, EvalState, [Doc Annot])
 runEvalFull opts (EvalM x) =
   let init = NanoState opts initState mempty
       stdGen = mkStdGen (seed opts) 

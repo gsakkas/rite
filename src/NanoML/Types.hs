@@ -25,6 +25,7 @@ import           Control.Monad.Random
 import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
+import           Data.Aeson                   (ToJSON)
 import           Data.IntMap.Strict           (IntMap)
 import qualified Data.IntMap.Strict           as IntMap
 import           Data.List
@@ -38,7 +39,7 @@ import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
 import           GHC.Generics
 import           System.IO.Unsafe
-import           Text.PrettyPrint.ANSI.Leijen (Doc)
+import           Text.PrettyPrint.Annotated.Leijen (Doc)
 import           Text.Printf
 
 -- import Test.QuickCheck.GenT
@@ -51,7 +52,7 @@ import           Debug.Trace
 
 type MonadEval m = ( MonadError NanoError m
                    , MonadReader NanoOpts m
-                   , MonadWriter [Doc] m
+                   -- , MonadWriter [Doc] m
                    , MonadState EvalState m
                    , MonadFix m, MonadRandom m
                    )
@@ -74,6 +75,11 @@ stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEqu
                    }
 loudOpts = stdOpts { enablePrint = True }
 
+data Annot = Redex | Foo
+  deriving (Generic, Show, Eq)
+
+instance ToJSON Annot
+
 data Result
   = Success { numTests :: !Int
             , finalState :: !EvalState
@@ -82,7 +88,7 @@ data Result
   | Failure { numTests :: !Int
             , usedSeed :: !Int
             , usedSize :: !Int
-            , counterExample :: !Doc
+            , counterExample :: !(Doc Annot)
             , errorMsg :: !NanoError
             , finalState :: !EvalState
             }

@@ -65,7 +65,7 @@ explore gr stuck = runInputT defaultSettings (go (collapse gr [(root, getLab roo
 
   mypprint p = forM_ (zip [1..] p) $ \(i,n) -> do
     let idx = printf "%02d: " (i :: Int)
-    let doc = text idx <> pretty (getLab n)
+    let doc = text idx --  <> pretty (getLab n)
     print doc
 
 
@@ -82,15 +82,16 @@ onlySteps = filter (isStepsTo . snd)
 --   oldN = [ v1       | (v1,_ ,_) <- es ]
 
 
-collapseBadEdges :: Eq a => Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
+-- collapseBadEdges :: Eq a => Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseBadEdges gr
   = case badEdges gr of
       []  -> gr
       e:_ -> collapseBadEdges (collapseEdge e gr)
   where
-  badEdges gr = filter (\(v1,v2,el) -> Graph.lab gr v1 == Graph.lab gr v2) (Graph.labEdges gr)
+  badEdges gr = filter (\(v1,v2,el) -> fmap (fst.fst) (Graph.lab gr v1) == fmap (fst.fst) (Graph.lab gr v2))
+                (Graph.labEdges gr)
 
-collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
+-- collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseEdge (v1,v2,l) gr
   | v1 == v2
     -- FIXME: this really shouldn't be possible..

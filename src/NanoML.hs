@@ -136,7 +136,7 @@ checkDecl f prog = do
                   vt <- typeOfM v
                   vt' <- typeOfM v'
                   unifyNoExn vt vt') of
-      Left e -> return $ Failure (n+1) 0 0 mempty e st'
+      Left e -> return $ Failure (n+1) 0 0 (pretty "") e st'
       Right {} -> do
         r <- nanoCheck n m stdOpts $ do
           prog <- mapM refreshDecl prog

@@ -152,9 +152,10 @@ run p var = do
                           , "endLine" .= srcSpanEndLine s
                           , "endCol" .= srcSpanEndCol s
                           ]
-    let mkNode (n, (l,s)) = object [ "id" .= n, "label" .= l
-                                   , "span" .= fmap mkSpan s
-                                   ]
+    let mkNode (n, ((l,as),s)) = object [ "id" .= n, "label" .= l
+                                        , "span" .= fmap mkSpan s
+                                        , "annots" .= as
+                                        ]
     let mkEdge (x, y, l) = object [ "arrows" .= ("to" :: String)
                                   , "from" .= x, "to" .= y
                                   , "label" .= show l]
@@ -165,7 +166,7 @@ run p var = do
         gr <- liftIO $ buildGraph (stEdges finalState)
         st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
         root <- liftIO $ findRoot gr (stRoot finalState)
-        let gr' = Graph.nmap (\n -> (show $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n)) gr
+        let gr' = Graph.nmap (\n -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n)) gr
         let gr'' = collapseBadEdges gr'
 
         let nodes = Graph.labNodes gr''
@@ -173,7 +174,7 @@ run p var = do
         -- let root = backback gr'' st
         let value = st
 
-        liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' (fst) show id)
+        liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr'' (fst.fst) show id)
         json $ object [ -- ("dot" :: String, dot)
                         "nodes"  .= map mkNode nodes
                       , "edges"  .= map mkEdge edges
@@ -201,10 +202,7 @@ run p var = do
             bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
             root <- liftIO $ findRoot gr (stRoot finalState)
             let st = ancestor gr bad
-            let gr' = Graph.nmap (\n -> ( show $ pretty $ fillHoles finalState n
-                                        , getSrcSpanExprMaybe n
-                                        ))
-                                 gr
+            let gr' = Graph.nmap (\n -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n)) gr
             let gr'' = collapseBadEdges gr'
 
             let nodes = Graph.labNodes gr''

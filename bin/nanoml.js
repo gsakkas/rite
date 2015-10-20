@@ -30,6 +30,36 @@ var unsafe_banner = undefined;
 
 var uuid = undefined;
 
+function computeBBox(el) {
+    var box = document.getElementById("width-calc");
+    box.innerHTML = '<pre><code>' + el + '</code></pre>';
+    return { width: box.offsetWidth * 1.05, height: box.offsetHeight };
+}
+
+function makeSVG(el) {
+    console.log(el);
+    var box = computeBBox(el);
+    var data =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="'+box.width+'" height="'+box.height+'">' +
+        '<rect x="0" y="0" width="100%" height="100%" fill="#000000" stroke-width="20" stroke="#ffffff" ></rect>' +
+        '<foreignObject x="15" y="10" width="100%" height="100%">' +
+        '<div xmlns="http://www.w3.org/1999/xhtml" >' +
+        '<pre><code>' +
+        el +
+        '</code></pre>' +
+        '</div>' +
+        '</foreignObject>' +
+        '</svg>';
+
+    var DOMURL = window.URL || window.webkitURL || window;
+
+    var img = new Image();
+    var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+    var url = DOMURL.createObjectURL(svg);
+
+    return url;
+}
+
 function guid() {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -498,7 +528,7 @@ function setup() {
           mixpanel.track("Safe", { "nodes": data.nodes, "edges": data.edges,
                                    "root": data.root, "final": data.value,
                                    "program": prog, "function": func, "uuid": uuid });
-          
+
           // notifySafe();
           errors = [];
           editor.performLint();
@@ -571,6 +601,54 @@ function draw(data) {
   // data.nodes.forEach(function(n) {
   //   n.label = n.label.replace(/\\n/g, "\n");
   // });
+  data.nodes.map(function(node) {
+    if (node.annots.length > 0) {
+      // console.log(node);
+
+      var pre   = node.label.substring(0, node.annots[0][0]);
+      if (pre.length > 0) {
+        pre = pre.split('\n');
+      } else {
+        pre = [];
+      }
+      var redex = node.label.substring(node.annots[0][0],
+                                       node.annots[0][0] + node.annots[0][1]);
+      if (redex[redex.length-1] === '\n') {
+        redex = redex.split('\n'); redex.push("");
+      } else {
+        redex = redex.split('\n');
+      }
+      var post  = node.label.substring(node.annots[0][0] + node.annots[0][1]);
+      if (post.length > 0) {
+        post = post.split('\n');
+      } else {
+        post = [];
+      }
+      var i = 0;
+      var segs = [];
+      for (var j = 0; j < pre.length; j++) {
+        segs[i] = segs[i] || [];
+        segs[i].push({text: pre[j], style: 'gray'});
+        if (j < pre.length - 1) i++;
+      }
+      for (var j = 0; j < redex.length; j++) {
+        segs[i] = segs[i] || [];
+        segs[i].push({text: redex[j]});
+        if (j < redex.length - 1) i++;
+      }
+      for (var j = 0; j < post.length; j++) {
+        segs[i] = segs[i] || [];
+        segs[i].push({text: post[j], style: 'gray'});
+        if (j < post.length - 1) i++;
+      }
+      node.styleSegments = segs;
+      console.log(node.label,pre,redex,post,node.styleSegments);
+    }
+      // node.styleSegments = [[{text: 'foo', style: 'red'},{text: 'bar', style: 'blue'}]];
+      // var url = makeSVG(node.label);
+      // node.image = url;
+      // node.shape = 'image';
+  });
   allNodes = new vis.DataSet(data.nodes);
   allEdges = new vis.DataSet(data.edges);
   //console.log(allNodes, allEdges, root, stuck);
