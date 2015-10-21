@@ -88,7 +88,7 @@ collapseBadEdges gr
       []  -> gr
       e:_ -> collapseBadEdges (collapseEdge e gr)
   where
-  badEdges gr = filter (\(v1,v2,el) -> fmap (fst.fst) (Graph.lab gr v1) == fmap (fst.fst) (Graph.lab gr v2))
+  badEdges gr = filter (\(v1,v2,el) -> fmap (fst.fst3) (Graph.lab gr v1) == fmap (fst.fst3) (Graph.lab gr v2))
                 (Graph.labEdges gr)
 
 -- collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind

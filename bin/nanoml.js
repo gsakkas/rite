@@ -602,6 +602,17 @@ function draw(data) {
   //   n.label = n.label.replace(/\\n/g, "\n");
   // });
   data.nodes.map(function(node) {
+    if (node.env && node.env.length > 0) {
+      var wrap = function (s) { return '<pre style="font-size: 12px;">' + s + '</pre>'; };
+      var tb = '<h4>Environment</h4>'; // '<table class="table">';
+      var env = node.env;
+      for (var i = 0; i < env.length; i++) {
+        tb += wrap('val ' + env[i][0] + ' = ' + env[i][1]);
+        // tb += '<tr><th scope="row">' + wrap(env[i][0]) + '</th><td><small>' + wrap(env[i][1]) + '</small></td></tr>';
+      }
+      // tb += '</table>';
+      node.title = tb;
+    }
     if (node.annots.length > 0) {
       // console.log(node);
 
@@ -642,7 +653,7 @@ function draw(data) {
         if (j < post.length - 1) i++;
       }
       node.styleSegments = segs;
-      console.log(node.label,pre,redex,post,node.styleSegments);
+      // console.log(node.label,pre,redex,post,node.styleSegments);
     }
       // node.styleSegments = [[{text: 'foo', style: 'red'},{text: 'bar', style: 'blue'}]];
       // var url = makeSVG(node.label);
@@ -708,12 +719,22 @@ function draw(data) {
     network.on("selectNode", function (params) {
         // console.log('selectNode Event:', params);
         var node = network.body.data.nodes.get(network.getSelectedNodes()[0]);
-        console.log(node.span);
+        console.log(node);
         if (node.span) {
             mark = editor.markText({line: node.span.startLine - 1, ch: node.span.startCol - 1},
                                    {line: node.span.endLine - 1, ch: node.span.endCol},
                                    {className: "CodeMirror-selected"});
         }
+        // if (node.env.length > 0) {
+        //   var env = node.env;
+        //   $('#vis').popover({title: 'Environment', content: env, placement: 'left', html: true});
+        //   $('#vis').popover('show');
+        //   // var legend = document.getElementById('legend');
+        //   // for (var i = 0; i < env.length; i++) {
+        //   //   legend.innerHTML += ('<pre><code>'+ env[i][0] + ' = ' +
+        //   //                        env[i][1] + '</code></pre>');
+        //   // }
+        // }
         // console.log(node);
         canStepForward(node);
         canStepBackward(node);
@@ -737,6 +758,8 @@ function draw(data) {
     });
     network.on("deselectNode", function (params) {
         // console.log('deselectNode Event:', params);
+        // document.getElementById('legend').innerHTML = '';
+        // $('#vis').popover('destroy');
         resetButtons();
         clearMark();
     });

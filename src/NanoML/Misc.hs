@@ -468,8 +468,8 @@ parseFile f = do
 readFileStrict :: FilePath -> IO String
 readFileStrict = fmap T.unpack . TIO.readFile
 
-concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-concatMapM f xs = liftM concat (mapM f xs)
+-- concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
+-- concatMapM f xs = liftM concat (mapM f xs)
 
 findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
 findM p [] = return Nothing

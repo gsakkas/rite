@@ -163,6 +163,19 @@ findRoot gr e = do
                    return (xn == en)
   fst . fromJust <$> findM p (Graph.labNodes gr)
 
+-- addEnvs :: [(Expr, Env)] -> Graph -> IO Graph
+addEnvs st gr = do
+  envs <- fmap IntMap.fromList $ forM (stExprEnvs st) $ \(x,e) -> do
+    xn <- makeStableName =<< evaluate x
+    return (hashStableName xn, e)
+  print envs
+  return $ Graph.gmap (\(i,n,l,o) ->
+      (i, n, (l, addFreeVars st l <$> IntMap.lookup n envs), o))
+    gr
+
+-- addFreeVars :: Expr -> Env -> [(Var,Value)]
+addFreeVars st x e = nub $ map (second (render . pretty . fillHoles st)) $ freeVars x e
+
 isStepsTo (StepsTo {}) = True
 isStepsTo _            = False
 
@@ -495,7 +508,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
         -- build expr $ Replace ms env e'
   Var ms v -> do
     -- addEvent expr
-    lookupEnv v =<< gets stVarEnv
+    lookupVar v
   Lam ms p e (Just env) -> return $ Lam ms p e (Just env)
   Lam ms p e Nothing -> Lam ms p e . Just <$> gets stVarEnv
   -- Lam ms _ _ -> withCurrentProvM $ \prv -> -- addEvent expr >>
@@ -503,7 +516,7 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
   --       this makes the trace a bit more readable.
   App ms f@(Var _ v) args -> stepOne args
-                  (\args -> do f <- lookupEnv v =<< gets stVarEnv
+                  (\args -> do f <- lookupVar v
                                -- traceShowM f
                                stepApp ms (skipEnv f) args)
                   (\args -> return $ App ms f args)

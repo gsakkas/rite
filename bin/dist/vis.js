@@ -37876,7 +37876,7 @@ return /******/ (function(modules) { // webpackBootstrap
             // adjust a small offset such that the mouse cursor is located in the
             // bottom left location of the popup, and you can easily move over the
             // popup area
-            this.popup.setPosition(pointer.x + 3, pointer.y - 5);
+            this.popup.setPosition(0, 0); // (pointer.x + 3, pointer.y - 5);
             this.popup.setText(this.popupObj.getTitle());
             this.popup.show();
             this.body.emitter.emit('showPopup', this.popupObj.id);
@@ -38308,8 +38308,8 @@ return /******/ (function(modules) { // webpackBootstrap
     _createClass(Popup, [{
       key: 'setPosition',
       value: function setPosition(x, y) {
-        this.x = parseInt(x);
-        this.y = parseInt(y);
+        this.x = 0; //parseInt(x);
+        this.y = 0; //parseInt(y);
       }
 
       /**

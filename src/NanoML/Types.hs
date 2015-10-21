@@ -147,6 +147,7 @@ data EvalState = EvalState
   , stSteps    :: !Int
   , stStepKind :: !StepKind
   , stSubst    :: !Subst
+  , stExprEnvs :: ![(Expr,Env)]
   } deriving Show
 
 addSubst :: MonadEval m => TVar -> Type -> m ()
@@ -163,6 +164,10 @@ substM t = getSubst >>= \su -> return (subst su t)
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
+  env <- gets stVarEnv
+  xes <- gets stExprEnvs
+  unless ((e,env) `elem` xes) $
+    modify' $ \s -> s { stExprEnvs = (e,env) : xes }
   e' <- gets stCurrentExpr
   modify' $ \s -> s { stCurrentExpr = e }
   a <- x
@@ -417,13 +422,12 @@ insertEnv var val env = env { envEnv = (var,val) : envEnv env }
 joinEnv :: Env -> Env -> Env
 joinEnv e1 e2 = e1 { envEnv = envEnv e1 ++ envEnv e2 }
 
-lookupEnv :: MonadEval m => Var -> Env -> m Value
+lookupEnv :: Var -> Env -> Maybe Value
 lookupEnv v Env {..} = case lookup v envEnv of
   Nothing
     | Just p <- envParent -> lookupEnv v p
-    | otherwise           -> gets stCurrentExpr >>= \e ->
-      throwError (UnboundVariable v (getSrcSpanExprMaybe e))
-  Just x                  -> return x
+    | otherwise           -> Nothing
+  Just x                  -> Just x
   -- where
   -- go [] = throwError (UnboundVariable v)
   -- go (e:es) = case lookup v e of
@@ -434,7 +438,13 @@ getEnv :: MonadEval m => Ref -> m Env
 getEnv i = (IntMap.! i) <$> gets stEnvMap
 
 lookupVar :: MonadEval m => Var -> m Value
-lookupVar v = lookupEnv v =<< gets stVarEnv
+lookupVar v = do
+  mv <- lookupEnv v <$> gets stVarEnv
+  case mv of
+    Just v -> return v
+    Nothing ->
+      gets stCurrentExpr >>= \e ->
+      throwError (UnboundVariable v (getSrcSpanExprMaybe e))
 
 toListEnv :: Env -> [Env]
 toListEnv env = env : maybe [] toListEnv (envParent env)
@@ -692,6 +702,39 @@ onSrcSpanExpr f expr = case expr of
 --   Replace ms x y -> Replace ms x y
 --   Hole ms x y -> Hole ms x y
 --   Ref r -> Ref r
+
+freeVars :: Expr -> Env -> [(Var,Value)]
+freeVars x env = go x
+  where
+  go x = case x of
+    Var _ x -> maybe [] (\v -> [(x,v)]) (lookupEnv x env)
+    Lam _ p e _ -> filter (`notBound` bindersOf p) $ go e
+    App _ x y -> go x ++ concatMap go y
+    Bop _ _ x y -> go x ++ go y
+    Uop _ _ x -> go x
+    Let _ _ b e -> filter (`notBound` bindersOfBinds b) $ go e
+    Ite _ x y z -> go x ++ go y ++ go z
+    Seq _ x y -> go x ++ go y
+    Case _ e alts -> go e ++ concatMap (flip freeVarsAlts env) alts
+    Tuple _ xs -> concatMap go xs
+    ConApp _ _ (Just x) _ -> go x
+    Record _ xs _ -> concatMap (go.snd) xs
+    Field _ x _ -> go x
+    SetField _ x _ v -> go x ++ go v
+    Array _ xs _ -> concatMap go xs
+    List _ xs _ -> concatMap go xs
+    Try _ e alts -> go e ++ concatMap (flip freeVarsAlts env) alts
+    With _ e x -> freeVars x e
+    Replace _ e x -> freeVars x e
+    _ -> []
+
+freeVarsAlts :: Alt -> Env -> [(Var,Value)]
+freeVarsAlts (p,g,e) env =
+  let gvs = maybe [] (flip freeVars env) g
+      evs = freeVars e env
+  in filter (`notBound` bindersOf p) (gvs ++ evs)
+
+v `notBound` bs = fst v `notElem` bs
 
 data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
 instance Show Prim1 where
@@ -1139,30 +1182,30 @@ mergeLocated x y = joinSrcSpan <$> getSrcSpanMaybe x <*> getSrcSpanMaybe y
 ----------------------------------------------------------------------
 
 -- {
---   "code": "x = 5\ny = 10\nz = x + y\n\n", 
+--   "code": "x = 5\ny = 10\nz = x + y\n\n",
 --   "trace": [
 --     {
---       "ordered_globals": [], 
---       "stdout": "", 
---       "func_name": "<module>", 
---       "stack_to_render": [], 
---       "globals": {}, 
---       "heap": {}, 
---       "line": 1, 
+--       "ordered_globals": [],
+--       "stdout": "",
+--       "func_name": "<module>",
+--       "stack_to_render": [],
+--       "globals": {},
+--       "heap": {},
+--       "line": 1,
 --       "event": "step_line"
---     }, 
+--     },
 --     {
 --       "ordered_globals": [
 --         "x"
---       ], 
---       "stdout": "", 
---       "func_name": "<module>", 
---       "stack_to_render": [], 
+--       ],
+--       "stdout": "",
+--       "func_name": "<module>",
+--       "stack_to_render": [],
 --       "globals": {
 --         "x": 5
---       }, 
---       "heap": {}, 
---       "line": 2, 
+--       },
+--       "heap": {},
+--       "line": 2,
 --       "event": "step_line"
 --     }, ...
 --   ]
@@ -1186,22 +1229,22 @@ data Event = Event
 
 
 -- {
---   "frame_id": 2, 
+--   "frame_id": 2,
 --   "encoded_locals": {
---     "a": 1, 
+--     "a": 1,
 --     "b": 2
---   }, 
---   "is_highlighted": false, 
---   "is_parent": false, 
---   "func_name": "bar", 
---   "is_zombie": false, 
---   "parent_frame_id_list": [], 
---   "unique_hash": "bar_f2", 
+--   },
+--   "is_highlighted": false,
+--   "is_parent": false,
+--   "func_name": "bar",
+--   "is_zombie": false,
+--   "parent_frame_id_list": [],
+--   "unique_hash": "bar_f2",
 --   "ordered_varnames": [
---     "a", 
+--     "a",
 --     "b"
 --   ]
--- }, 
+-- },
 
 data Scope = Scope
   { scp_frame_id :: !Int
@@ -1399,3 +1442,6 @@ data StepKind
 
 renameBinds :: MonadEval m => Expr -> m Expr
 renameBinds e = undefined
+
+concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
+concatMapM f xs = liftM concat (mapM f xs)

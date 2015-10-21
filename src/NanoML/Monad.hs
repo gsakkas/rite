@@ -96,6 +96,7 @@ initState = EvalState
   , stSteps = 0
   , stStepKind = BoringStep
   , stSubst = mempty
+  , stExprEnvs = mempty
   }
 
 -- uniquify :: EvalState -> EvalState
