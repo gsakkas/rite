@@ -304,10 +304,10 @@ expr ==> val = nest 2 $ pretty expr <$> (text "==>" <+> pretty val)
 var =: val   = group $ nest 2 $ text var    <+> (text ":="  <$> pretty val)
 
 render :: Doc a -> String
-render d = displayS (renderPretty 0.5 80 d) ""
+render d = displayS (renderPretty 0.5 60 d) ""
 
 renderSpans :: Doc a -> (String, SpanList a)
-renderSpans d = displaySpans (renderPretty 0.5 80 d)
+renderSpans d = displaySpans (renderPretty 0.5 60 d)
 
 instance Pretty MSrcSpan where
   pretty (Just ss) = pretty ss
