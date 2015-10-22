@@ -386,7 +386,7 @@ matchRecBinds binds = do
     unless (all (\(p,v) -> -- isFunPat p ||
                            isFun v) binds) $
       otherError "'let rec' must only bind functions"
-    binds' <- forM binds $ \(p,v) -> (p,) <$> step v
+    binds' <- forM binds $ \(p,Lam ms p1 e _) -> return (p,Lam ms p1 e (Just fenv))
     bnd <- matchBinds binds'
     allocEnvWith "let-rec" penv bnd
   where
