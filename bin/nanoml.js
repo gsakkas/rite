@@ -637,9 +637,10 @@ function draw(data) {
       }
       var i = 0;
       var segs = [];
+      var contextStyle = 'rgba(0, 0, 0, 0.33)'
       for (var j = 0; j < pre.length; j++) {
         segs[i] = segs[i] || [];
-        segs[i].push({text: pre[j], style: 'gray'});
+        segs[i].push({text: pre[j], style: contextStyle});
         if (j < pre.length - 1) i++;
       }
       for (var j = 0; j < redex.length; j++) {
@@ -649,7 +650,7 @@ function draw(data) {
       }
       for (var j = 0; j < post.length; j++) {
         segs[i] = segs[i] || [];
-        segs[i].push({text: post[j], style: 'gray'});
+        segs[i].push({text: post[j], style: contextStyle});
         if (j < post.length - 1) i++;
       }
       node.styleSegments = segs;
