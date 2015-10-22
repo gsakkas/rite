@@ -382,7 +382,7 @@ matchRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
 matchRecBinds binds = do
   penv <- gets stVarEnv
   mfix $ \fenv -> do
-    setVarEnv fenv
+    -- setVarEnv fenv
     unless (all (\(p,v) -> -- isFunPat p ||
                            isFun v) binds) $
       otherError "'let rec' must only bind functions"

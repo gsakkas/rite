@@ -166,8 +166,8 @@ withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
   env <- gets stVarEnv
   xes <- gets stExprEnvs
-  unless ((e,env) `elem` xes) $
-    modify' $ \s -> s { stExprEnvs = (e,env) : xes }
+  -- unless ((e,env) `elem` xes) $
+  modify' $ \s -> s { stExprEnvs = (e,env) : xes }
   e' <- gets stCurrentExpr
   modify' $ \s -> s { stCurrentExpr = e }
   a <- x
