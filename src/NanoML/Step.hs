@@ -168,7 +168,6 @@ addEnvs st gr = do
   envs <- fmap IntMap.fromList $ forM (stExprEnvs st) $ \(x,e) -> do
     xn <- makeStableName =<< evaluate x
     return (hashStableName xn, e)
-  print envs
   return $ Graph.gmap (\(i,n,l,o) ->
       (i, n, (l, addFreeVars st l <$> IntMap.lookup n envs), o))
     gr
