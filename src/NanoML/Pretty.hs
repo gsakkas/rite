@@ -118,7 +118,7 @@ instance Pretty Expr where
         prettyPrec (zf+1) x <+> text f <+> prettyPrec (zf+1) y
       where zf = opPrec f
     App _ f xs ->
-      annotateIf (all isValue xs) Redex $
+      annotateIf ((isValue f || isVar f) && all isValue xs) Redex $
       parensIf (z > za) $
       noAnnotateIf (isVar f) (prettyPrec za f) <+>
       align (foldr1 (</>) (map (prettyPrec (za+1)) xs))
