@@ -603,7 +603,7 @@ function draw(data) {
   // });
   data.nodes.map(function(node) {
     if (node.env && node.env.length > 0) {
-      var wrap = function (s) { return '<pre style="font-size: 12px;">' + s + '</pre>'; };
+      var wrap = function (s) { return '<pre style="font-size: 10px;">' + s + '</pre>'; };
       var tb = '<h4>Environment</h4>'; // '<table class="table">';
       var env = node.env;
       for (var i = 0; i < env.length; i++) {
