@@ -707,7 +707,9 @@ freeVars :: Expr -> Env -> [(Var,Value)]
 freeVars x env = go x
   where
   go x = case x of
-    Var _ x -> maybe [] (\v -> [(x,v)]) (lookupEnv x env)
+    Var _ x ->
+      -- ignore primitives when displaying environment
+      maybe [] (\v -> [(x,v)]) (lookup x $ concat $ map envEnv $ init $ toListEnv env)
     Lam _ p e _ -> filter (`notBound` bindersOf p) $ go e
     App _ x y -> go x ++ concatMap go y
     Bop _ _ x y -> go x ++ go y
