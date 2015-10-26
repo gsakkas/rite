@@ -19,6 +19,7 @@ import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Graph.Inductive.Dot as Graph
 import qualified Data.Graph.Inductive.Graph as Graph
+import qualified Data.Graph.Inductive.NodeMap as Graph
 import qualified Data.Graph.Inductive.PatriciaTree as Graph
 import Data.List
 import Data.Foldable
@@ -79,9 +80,9 @@ renderPath xs = vsep (intersperse (text "  ==>") (pairwiseNub $ map pretty xs))
 -- Working with the reduction graph
 ----------------------------------------------------------------------
 
-type Graph = Graph.Gr Expr EdgeKind
-type Node  = Graph.LNode Expr
-type Edge  = Graph.LEdge EdgeKind
+type Graph = Graph.Gr Node EdgeKind
+-- type Node  = Graph.LNode Expr
+-- type Edge  = Graph.LEdge EdgeKind
 
 runGraph opts x = case runEvalFull opts x of
   (Left e, st, _)  -> Left (e, stTrace st, stEdges st, stCurrentExpr st)
@@ -140,37 +141,45 @@ runGraph opts x = case runEvalFull opts x of
 --     _ -> error $ "mkPaths impossible: " ++ show expr
 
 
-buildGraph :: [(Expr, EdgeKind, Expr)] -> IO Graph
-buildGraph tr = do
-  nodes <- concatMapM mkNode tr
---  print (length nodes, length (nub nodes))
-  edges <- mapM mkEdge tr
-  return $ Graph.mkGraph (nub nodes) (nub edges)
+buildGraph :: [(Node, EdgeKind, Node)] -> Graph.Gr Node EdgeKind
+buildGraph tr = fst $ Graph.mkMapGraph (nub nodes) (nub edges)
   where
-  mkNode (x, k, y) = do
-    xn <- makeStableName =<< evaluate x
-    yn <- makeStableName =<< evaluate y
-    return [(hashStableName xn, x), (hashStableName yn, y)]
-  mkEdge (x, k, y) = do
-    xn <- makeStableName =<< evaluate x
-    yn <- makeStableName =<< evaluate y
-    return (hashStableName xn, hashStableName yn, k)
+  nodes = concatMap (\(e1,_,e2) -> [e1,e2]) tr
+  edges = map (\(e1,l,e2) -> (e1,e2,l)) tr
 
-findRoot :: (?callStack :: CallStack) => Graph -> Expr -> IO Graph.Node
-findRoot gr e = do
-  en <- makeStableName =<< evaluate e
-  let p (n,x) = do xn <- makeStableName =<< evaluate x
-                   return (xn == en)
-  fst . fromJust <$> findM p (Graph.labNodes gr)
+-- buildGraph tr = do
+--   nodes <- concatMapM mkNode tr
+-- --  print (length nodes, length (nub nodes))
+--   edges <- mapM mkEdge tr
+--   return $ Graph.mkGraph (nub nodes) (nub edges)
+--   where
+--   mkNode (x, k, y) = do
+--     xn <- makeStableName =<< evaluate x
+--     yn <- makeStableName =<< evaluate y
+--     return [(hashStableName xn, x), (hashStableName yn, y)]
+--   mkEdge (x, k, y) = do
+--     xn <- makeStableName =<< evaluate x
+--     yn <- makeStableName =<< evaluate y
+--     return (hashStableName xn, hashStableName yn, k)
+
+-- findRoot :: (?callStack :: CallStack) => Graph -> Expr -> IO
+  -- Graph.Node
+findRoot :: (?callStack :: CallStack) => Graph -> Node -> Graph.Node
+findRoot gr e = fromJust . lookup e . map (\(a,b) -> (b,a)) $ Graph.labNodes gr
+-- findRoot gr e = do
+--   en <- makeStableName =<< evaluate e
+--   let p (n,x) = do xn <- makeStableName =<< evaluate x
+--                    return (xn == en)
+--   fst . fromJust <$> findM p (Graph.labNodes gr)
 
 -- addEnvs :: [(Expr, Env)] -> Graph -> IO Graph
-addEnvs st gr = do
-  envs <- fmap IntMap.fromList $ forM (stExprEnvs st) $ \(x,e) -> do
-    xn <- makeStableName =<< evaluate x
-    return (hashStableName xn, e)
-  return $ Graph.gmap (\(i,n,l,o) ->
-      (i, n, (l, addFreeVars st l <$> IntMap.lookup n envs), o))
-    gr
+-- addEnvs st gr = do
+--   envs <- fmap IntMap.fromList $ forM (stExprEnvs st) $ \(x,e) -> do
+--     xn <- makeStableName =<< evaluate x
+--     return (hashStableName xn, e)
+--   return $ Graph.gmap (\(i,n,l,o) ->
+--       (i, n, (l, addFreeVars st l <$> IntMap.lookup n envs), o))
+--     gr
 
 -- addFreeVars :: Expr -> Env -> [(Var,Value)]
 addFreeVars st x e = nub $ map (second (render . pretty . fillHoles st)) $ freeVars x e
@@ -251,7 +260,7 @@ search gr root target strat =
     (xs, t:_) -> xs ++ [t]
   where
   walk = strat gr root
-  notTarget n = case getSrcSpanMaybe . fromJust $ Graph.lab gr n of
+  notTarget n = case getSrcSpanMaybe . fst . fromJust $ Graph.lab gr n of
     Nothing -> True
     Just ss -> ss /= target
 
@@ -270,10 +279,15 @@ mkPath gr n = go (backjump gr n) (maybe [n] (const []) (backjump gr n))
 ----------------------------------------------------------------------
 -- Stepping
 ----------------------------------------------------------------------
-transStep expr = setEntry expr >> stepAll expr
+transStep expr' = do
+  modify' $ \s -> s { stEdges = mempty }
+  expr <- refreshExpr expr'
+  env <- gets stVarEnv
+  setEntry (expr, env)
+  stepAll expr
 
 stepAll expr = do
-  --traceShowM $ pretty expr
+  -- traceShowM $ pretty expr
   modify' (\s -> s { stStepKind = BoringStep })
   expr' <- step expr
   modify' $ \s -> s { stSteps = stSteps s + 1 }
@@ -290,7 +304,7 @@ stepAllProg (d:p) = transStepDecl d >> stepAllProg p
 
 setEntry e = modify' $ \s -> s { stRoot = e }
 
-transStepDecl d = case d of
+transStepDecl d = modify' (\s -> s { stEdges = mempty }) >> refreshDecl d >>= \case
   DEvl _ expr
     -> transStep expr
   DFun _ Rec binds
@@ -370,11 +384,14 @@ transStepDecl d = case d of
 -- stepNonRecBinds binds = do
 --   env <- evalNonRecBinds
 
-build :: MonadEval m => Expr -> Expr -> m Expr
-build before after = do
+build :: MonadEval m => Expr -> m Expr -> m Expr
+build before mkAfter = do
+  env1 <- gets stVarEnv
+  after <- mkAfter
+  env2 <- gets stVarEnv
   -- addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
   sk <- gets stStepKind
-  addEdge (StepsTo sk) before after
+  addEdge (StepsTo sk) (before,env1) (after,env2)
   addSubTerms after
   return after
 
@@ -412,12 +429,24 @@ matchBind (p,v) = do
 
 unshadow :: MonadEval m => Expr -> Env -> m (Env, Expr)
 unshadow expr env = do
-  bound <- map fst . concat . map envEnv . tail . toListEnv <$> gets stVarEnv
-  let su = mapMaybe (`shadows` bound) (map fst $ envEnv env)
-  expr' <- refreshExpr $ substVars su expr
+  (su, expr') <- unshadow' expr env
   let env' = env { envEnv = substEnv su (envEnv env) }
-  -- traceShowM (envEnv env, envEnv env', pretty expr')
+  expr' <- refreshExpr expr' `withEnv` env'
   return (env', expr')
+  -- bound <- map fst . concat . map envEnv . tail . toListEnv <$> gets stVarEnv
+  -- let su = mapMaybe (`shadows` bound) (map fst $ envEnv env)
+  -- expr' <- refreshExpr $ substVars su expr
+  -- let env' = env { envEnv = substEnv su (envEnv env) }
+  -- traceShowM (envEnv env, envEnv env', pretty expr')
+  -- return (env', expr')
+
+unshadow' :: MonadEval m => Expr -> Env -> m ([(Var,Var)], Expr)
+unshadow' expr env = do
+  bound <- map fst . concatMap envEnv . tail . toListEnv <$> gets stVarEnv
+  let su = mapMaybe ((`shadows` bound) . fst) (envEnv env)
+  let expr' = substVars su expr
+  -- traceShowM (su, pretty expr')
+  return (su, expr')
 
 substEnv :: [(Var, Var)] -> [(Var,Value)] -> [(Var,Value)]
 substEnv su env = map (first (\v -> fromMaybe v $ lookup v su)) env
@@ -483,7 +512,7 @@ onlySuffix v = let sx = dropWhile (/='_') v
 {-# INLINE onlySuffix #-}
 
 step :: MonadEval m => Expr -> m Expr
-step expr = withCurrentExpr expr $ build expr =<< case expr of
+step expr = withCurrentExpr expr $ build expr $ case expr of
   -- Val _ v -> return expr
   -- With ms env e
   --   | isVal e   -> return e
@@ -494,16 +523,12 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
     | isValue e -> return e
     | otherwise -> do
         e' <- step e `withEnv` env
-        return $ if isValue e'
-                 then e'
-                 else With ms env e'
+        return $ With ms env e'
   Replace ms env e
     | isValue e -> return e <* modify' (\s -> s { stStepKind = ReturnStep })
     | otherwise -> do
         e' <- step e `withEnv` env
-        if isValue e'
-          then return e' <* modify' (\s -> s { stStepKind = ReturnStep })
-          else return $ Replace ms env e'
+        return $ Replace ms env e'
         -- build expr $ Replace ms env e'
   Var ms v -> do
     -- addEvent expr
@@ -514,14 +539,17 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
   --       this makes the trace a bit more readable.
-  App ms f@(Var _ v) args -> stepOne args
+  App ms f'@(Var _ v) args -> stepOne args
                   (\args -> do f <- lookupVar v
+                               -- env <- gets stVarEnv
+                               -- addEdge (StepsTo BoringStep) (f',env) (f,env)
+                               -- _ <- build f' $ return f
                                -- traceShowM f
-                               stepApp ms (skipEnv f) args)
-                  (\args -> return $ App ms f args)
+                               stepApp ms f args)
+                  (\args -> return $ App ms f' args)
   App ms f args -> stepOne (f:args)
                   (\(f:vs) -> -- addEvent expr >>
-                                stepApp ms (skipEnv f) vs)
+                                stepApp ms f vs)
                   (\(f:es) -> return $ App ms f es)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >>
@@ -647,6 +675,8 @@ step expr = withCurrentExpr expr $ build expr =<< case expr of
   _ -> error ("step: " ++ show (pretty expr))
 
 stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
+stepApp ms (With _ env f) es = stepApp ms f es `withEnv` env
+stepApp ms (Replace _ env f) es = stepApp ms f es `withEnv` env
 stepApp ms f' es = do
  a <- freshTVar
  b <- freshTVar
@@ -691,18 +721,24 @@ stepApp ms f' es = do
         -- traceM ""
         -- pushEnv env
         -- pushEnv pat_env
-        nenv <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
-        (nenv', e') <- unshadow e nenv
+        nenv' <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
+        -- NOTE: we unshadow wrt to the *surrounding* env, not the
+        -- closed-over env
+        cenv <- gets stVarEnv
+        (su, e') <- unshadow' e cenv
+        let nenv = nenv' { envEnv = substEnv su (envEnv nenv') }
         case (ps', es') of
           ([], []) -> do
             modify' (\s -> s { stStepKind = CallStep })
-            Replace ms nenv' <$> refreshExpr e' -- only refresh at saturated applications
+            refreshExpr (Replace ms nenv e')
+            -- Replace ms nenv <$> (refreshExpr e' `withEnv` nenv) -- only refresh at saturated applications
           ([], _) -> do
             modify' (\s -> s { stStepKind = CallStep })
-            e'' <- refreshExpr e'
-            Replace ms nenv' <$> addSubTerms (App ms e'' es')
+            refreshExpr (Replace ms nenv (App ms e' es'))
+            -- e'' <- refreshExpr e' `withEnv` nenv
+            -- Replace ms nenv <$> addSubTerms (App ms e'' es')
           (_, []) -> mkLamsSubTerms ps' e' >>= \(Lam ms p e _) ->
-                       return $ Lam ms p e $ Just nenv' -- WRONG?? mkLamsSubTerms ps' e
+                       return $ Lam ms p e $ Just nenv -- WRONG?? mkLamsSubTerms ps' e
   _ -> error $ "stepApp: impossible: " ++ show f'
   -- _ -> typeError (TVar "a" :-> TVar "b") (typeOf f') -- otherError $ printf "'%s' is not a function" (show f')
 -- stepApp _ f es = error (show (f:es))

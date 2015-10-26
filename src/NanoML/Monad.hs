@@ -88,15 +88,15 @@ initState = EvalState
   , stFieldEnv = baseFieldEnv
   , stFresh = succ (envId baseEnv)
   , stStore = mempty
-  , stRoot = (VU (Just (SrcSpan 0 0 0 0)))
+  , stRoot = (VU (Just (SrcSpan 0 0 0 0)), baseEnv)
   , stTrace = mempty
   , stEnvMap = IntMap.fromList [(envId baseEnv, baseEnv)]
   , stEdges = []
-  , stCurrentExpr = (VU (Just (SrcSpan 0 0 0 0))) -- error "initState.stCurrentExpr"
+  , stCurrentExpr = (VU (Just (SrcSpan 0 0 0 0)), baseEnv) -- error "initState.stCurrentExpr"
   , stSteps = 0
   , stStepKind = BoringStep
   , stSubst = mempty
-  , stExprEnvs = mempty
+  -- , stExprEnvs = mempty
   }
 
 -- uniquify :: EvalState -> EvalState

@@ -105,7 +105,7 @@ safeTail (x:xs) = xs
 
 runProg :: Prog -> IO Result
 runProg prog = nanoCheck 0 0 stdOpts $ do
-                 prog <- mapM refreshDecl prog
+                 -- prog <- mapM refreshDecl prog
                  v <- stepAllProg prog
                  case last prog of
                    DFun _ _ bnds
@@ -118,7 +118,7 @@ checkDecl :: Var -> Prog -> IO Result
 checkDecl f prog = do
     r <- nanoCheck 0 0 stdOpts $ do
       -- mapM_ evalDecl prog
-      prog <- mapM refreshDecl prog
+      -- prog <- mapM refreshDecl prog
       stepAllProg prog
       fillInLams (Var Nothing f) []
     case r of
@@ -139,9 +139,9 @@ checkDecl f prog = do
       Left e -> return $ Failure (n+1) 0 0 (pretty "") e st'
       Right {} -> do
         r <- nanoCheck n m stdOpts $ do
-          prog <- mapM refreshDecl prog
+          -- prog <- mapM refreshDecl prog
           stepAllProg prog
-          args <- replicateM (nArgs (stRoot st)) $
+          args <- replicateM (nArgs (fst (stRoot st))) $
                     (\r -> Hole Nothing r Nothing) <$> fresh
           fo (Var Nothing f) args
 
@@ -167,7 +167,8 @@ checkDecl f prog = do
 
   fo f args = do
     let x = mkApps Nothing f args
-    setEntry x
+    env <- gets stVarEnv
+    setEntry (x,env)
     addSubTerms x
     stepAll x
     -- v <- stepAll x
@@ -181,8 +182,10 @@ checkDecl f prog = do
 
 fillInLams f args = do
   modify' $ \s -> s { stEdges = mempty }
-  x <- refreshExpr $ mkApps Nothing f args
-  setEntry x
+  -- x <- refreshExpr $ mkApps Nothing f args
+  let x = mkApps Nothing f args
+  env <- gets stVarEnv
+  setEntry (x,env)
   v <- stepAll x
   case v of
     Lam {} -> do
@@ -208,7 +211,7 @@ nanoCheck numSuccess maxSize opts x = do
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values
       let -- paths = map (map (fillHoles st)) $ unsafePerformIO $ makePaths st
-          invoc = pretty (fillHoles st $ stRoot st)
+          invoc = pretty (fillHoles st $ fst $ stRoot st)
       in Failure (numSuccess + 1) seed maxSize
                  invoc
                  e

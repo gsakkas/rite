@@ -4,6 +4,7 @@
 module Main where
 
 import Control.Applicative
+import Control.Arrow
 import Control.Monad
 import Control.Monad.IO.Class
 import Data.Aeson (object, (.=))
@@ -169,11 +170,20 @@ run p var = do
     case res of
       Success n finalState v -> do
         -- liftIO $ print v
-        gr <- liftIO $ buildGraph (stEdges finalState)
-        st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
-        root <- liftIO $ findRoot gr (stRoot finalState)
-        gr' <- liftIO $ addEnvs finalState gr
-        let gr'' = Graph.nmap (\(n,e) -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n, e)) gr'
+        let gr = buildGraph (stEdges finalState)
+        let st = findRoot gr (v, stVarEnv finalState)
+        let root = findRoot gr (stRoot finalState)
+        let gr' = gr
+        -- gr <- liftIO $ buildGraph (stEdges finalState)
+        -- st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
+        -- root <- liftIO $ findRoot gr (stRoot finalState)
+        -- gr' <- liftIO $ addEnvs finalState gr
+        let gr'' = Graph.nmap (\(n,e) ->
+                                 ( renderSpans $ pretty $ fillHoles finalState n
+                                 , getSrcSpanExprMaybe n
+                                 , addFreeVars finalState n e
+                                 ))
+                              gr'
         let gr''' = collapseBadEdges gr''
 
         let nodes = Graph.labNodes gr'''
@@ -205,12 +215,24 @@ run p var = do
                                         , "root" .= show counterExample
                                         ]
           _ -> do
-            gr <- liftIO $ buildGraph (stEdges finalState)
-            bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
-            root <- liftIO $ findRoot gr (stRoot finalState)
+            -- liftIO $ mapM_ print (stEdges finalState)
+            let gr = buildGraph (stEdges finalState)
+            let bad = findRoot gr (stCurrentExpr finalState)
+            let root = findRoot gr (stRoot finalState)
+            let gr' = gr
+            -- gr <- liftIO $ buildGraph (stEdges finalState)
+            -- bad <- liftIO $ findRoot gr (stCurrentExpr finalState)
+            -- root <- liftIO $ findRoot gr (stRoot finalState)
             let st = ancestor gr bad
-            gr' <- liftIO $ addEnvs finalState gr
-            let gr'' = Graph.nmap (\(n,e) -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n, e)) gr'
+            -- gr' <- liftIO $ addEnvs finalState gr
+            let gr'' = Graph.nmap (\(n,e) ->
+                                     ( -- first ((show (envId e) ++ " : " ++ show (getSrcSpanExprMaybe n) ++ "\n") ++) $
+                                       renderSpans $ pretty $ fillHoles finalState n
+                                     , getSrcSpanExprMaybe n
+                                     , addFreeVars finalState n e
+                                     ))
+                                  gr'
+            -- let gr'' = Graph.nmap (\(n,e) -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n, e)) gr'
             let gr''' = collapseBadEdges gr''
 
             let nodes = Graph.labNodes gr'''

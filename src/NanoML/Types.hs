@@ -83,7 +83,7 @@ instance ToJSON Annot
 data Result
   = Success { numTests :: !Int
             , finalState :: !EvalState
-            , result     :: !Value
+            , result     :: !Value -- TODO: should this be a Node??
             }
   | Failure { numTests :: !Int
             , usedSeed :: !Int
@@ -123,7 +123,7 @@ typeError t1 t2 = do
   t1s <- substM t1
   t2s <- substM t2
   e <- gets stCurrentExpr
-  throwError (TypeError t1s t2s (getSrcSpanExprMaybe e))
+  throwError (TypeError t1s t2s (getSrcSpanExprMaybe $ fst e))
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -138,16 +138,16 @@ data EvalState = EvalState
   , stFieldEnv :: !(Map String TypeDecl)
   , stFresh    :: !Ref
   , stStore    :: !(IntMap (MutFlag, Value))
-  , stRoot     :: Expr -- NOTE: can't be strict
+  , stRoot     :: Node -- NOTE: can't be strict
   , stTrace    :: !(Seq Event)
   , stEnvMap   :: !(IntMap Env)
   -- , stNodes    :: !(Map Expr Int)
-  , stEdges    :: ![(Expr, EdgeKind, Expr)]
-  , stCurrentExpr :: Expr -- NOTE: can't be strict
+  , stEdges    :: ![(Node, EdgeKind, Node)]
+  , stCurrentExpr :: Node -- NOTE: can't be strict
   , stSteps    :: !Int
   , stStepKind :: !StepKind
   , stSubst    :: !Subst
-  , stExprEnvs :: ![(Expr,Env)]
+  -- , stExprEnvs :: ![(Expr,Env)]
   } deriving Show
 
 addSubst :: MonadEval m => TVar -> Type -> m ()
@@ -165,26 +165,32 @@ substM t = getSubst >>= \su -> return (subst su t)
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
   env <- gets stVarEnv
-  xes <- gets stExprEnvs
+  -- xes <- gets stExprEnvs
   -- unless ((e,env) `elem` xes) $
-  modify' $ \s -> s { stExprEnvs = (e,env) : xes }
+  --   modify' $ \s -> s { stExprEnvs = (e,env) : xes }
   e' <- gets stCurrentExpr
-  modify' $ \s -> s { stCurrentExpr = e }
+  modify' $ \s -> s { stCurrentExpr = (e,env) }
   a <- x
   modify' $ \s -> s { stCurrentExpr = e' }
   return a
 
-addEdge :: MonadEval m => EdgeKind -> Expr -> Expr -> m ()
+addEdge :: MonadEval m => EdgeKind -> (Expr,Env) -> (Expr,Env) -> m ()
 addEdge k e1 e2 = -- unless (x == y) $
                   modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }
   where
-  x = skipEnv e1
-  y = skipEnv e2
+  x = skipEnv e1 -- first skipEnv e1
+  y = skipEnv e2 -- first skipEnv e2
+
+skipEnv (With _ env e, _) = skipEnv (e, env)
+skipEnv (Replace _ env e, _) = skipEnv (e, env)
+skipEnv (e, env) = (e, env)
 
 addSubTerms :: MonadEval m => Expr -> m Expr
-addSubTerms expr = do
-  let mkEdge i e = addEdge (SubTerm i) expr e
-  case skipEnv expr of
+addSubTerms expr' = do
+  env' <- gets stVarEnv
+  let (expr,env) = skipEnv (expr',env')
+  let mkEdge i e = addEdge (SubTerm i) (expr,env) (e,env)
+  case expr of
     Var _ _ -> return ()
     Lam _ _ b _ -> mkEdge 0 b
     App _ f xs -> zipWithM_ mkEdge [0..] (f:xs)
@@ -209,13 +215,13 @@ addSubTerms expr = do
     -- Prim2 _ _ x y -> mkEdge 0 x >> mkEdge 1 y
     _ -> return ()
 
-  return expr
+  return expr'
 
-skipEnv :: Expr -> Expr
-skipEnv expr = case expr of
-  With _ _ e -> skipEnv e
-  Replace _ _ e -> skipEnv e
-  _ -> expr
+-- skipEnv :: Expr -> Expr
+-- skipEnv expr = case expr of
+--   With _ _ e -> skipEnv e
+--   Replace _ _ e -> skipEnv e
+--   _ -> expr
 
 refreshDecl :: MonadEval m => Decl -> m Decl
 refreshDecl decl = case decl of
@@ -247,8 +253,8 @@ refreshExpr expr = addSubTerms =<< case expr of
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p -> return $ Prim1 ms p -- <$> refreshExpr x
   Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
-  With ms e x -> With ms e <$> refreshExpr x
-  Replace ms e x -> Replace ms e <$> refreshExpr x
+  With ms e x -> With ms e <$> (refreshExpr x `withEnv` e)
+  Replace ms e x -> Replace ms e <$> (refreshExpr x `withEnv` e)
   Hole ms r mt -> return $ mkHole ms r mt
   Ref r -> return $ mkRef r
 
@@ -390,6 +396,9 @@ instance Show Env where
 instance Eq Env where
   e1 == e2 = envId e1 == envId e2
 
+instance Ord Env where
+  compare e1 e2 = compare (envId e1) (envId e2)
+
 instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
@@ -444,7 +453,7 @@ lookupVar v = do
     Just v -> return v
     Nothing ->
       gets stCurrentExpr >>= \e ->
-      throwError (UnboundVariable v (getSrcSpanExprMaybe e))
+      throwError (UnboundVariable v (getSrcSpanExprMaybe $ fst e))
 
 toListEnv :: Env -> [Env]
 toListEnv env = env : maybe [] toListEnv (envParent env)
@@ -549,17 +558,22 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
-  deriving (Show, Generic, Eq)
+  deriving (Show, Generic, Eq, Ord)
 
-data RecFlag = Rec | NonRec deriving (Show, Generic, Eq)
-data MutFlag = Mut | NonMut deriving (Show, Generic, Eq)
+data RecFlag = Rec | NonRec deriving (Show, Generic, Eq, Ord)
+data MutFlag = Mut | NonMut deriving (Show, Generic, Eq, Ord)
 
 data SrcSpan = SrcSpan
   { srcSpanStartLine :: !Int
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Show, Generic, Eq)
+  } deriving (Generic, Eq, Ord)
+
+instance Show SrcSpan where
+  show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
+                             srcSpanStartLine srcSpanStartCol
+                             srcSpanEndLine   srcSpanEndCol
 
 -- instance Show MSrcSpan where
 --   show _ = ""
@@ -617,7 +631,7 @@ data Expr
   | Replace !MSrcSpan Env Expr
   | Hole !MSrcSpan !Ref (Maybe Type)
   | Ref !Ref
-  deriving (Show, Generic, Eq)
+  deriving (Show, Generic, Eq, Ord)
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of
@@ -743,16 +757,20 @@ instance Show Prim1 where
   show (P1 v _ _) = v
 instance Eq Prim1 where
   P1 v1 _ _ == P1 v2 _ _ = v1 == v2
+instance Ord Prim1 where
+  compare (P1 v1 _ _) (P1 v2 _ _) = compare v1 v2
 
 data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value) Type Type
 instance Show Prim2 where
   show (P2 v _ _ _) = v
 instance Eq Prim2 where
   P2 v1 _ _ _ == P2 v2 _ _ _ = v1 == v2
+instance Ord Prim2 where
+  compare (P2 v1 _ _ _) (P2 v2 _ _ _) = compare v1 v2
 
 data Uop
   = Neg | FNeg
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data Bop
   = Eq | Neq
@@ -761,7 +779,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 type Alt = (Pat, Guard, Expr)
 
@@ -779,7 +797,7 @@ data Pat
   | OrPat !MSrcSpan Pat Pat
   | AsPat !MSrcSpan Pat Var
   | ConstraintPat !MSrcSpan Pat Type
-  deriving (Show, Generic, Eq)
+  deriving (Show, Generic, Eq, Ord)
 
 bindersOf :: Pat -> [Var]
 bindersOf p = case p of
@@ -816,7 +834,7 @@ data Type
   | TApp TCon [Type]
   | Type :-> Type
   | TTup [Type]
-  deriving (Show, Generic, Eq)
+  deriving (Show, Generic, Eq, Ord)
 
 infixr :->
 
@@ -1431,6 +1449,8 @@ fst3 (a,b,c) = a
 snd3 (a,b,c) = b
 thd3 (a,b,c) = c
 
+
+type Node = (Expr,Env)
 
 data EdgeKind
   = StepsTo !StepKind

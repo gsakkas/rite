@@ -131,9 +131,9 @@ collapse gr ns = Graph.mkGraph ns es
                else Just (fst x, fst y, StepsTo BoringStep)
 
 
-test = do
-  let (_, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl (fromRight (parseTopForm facProg)))
-  gr <- buildGraph (stEdges st)
-  stuck <- findRoot gr (stCurrentExpr st)
-  -- explore gr stuck
-  return (gr, stuck)
+-- test = do
+--   let (_, st, _) = runEvalFull stdOpts (stepAllProg =<< mapM refreshDecl (fromRight (parseTopForm facProg)))
+--   gr <- buildGraph (stEdges st)
+--   stuck <- findRoot gr (stCurrentExpr st)
+--   -- explore gr stuck
+--   return (gr, stuck)
