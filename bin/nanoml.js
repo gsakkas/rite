@@ -324,9 +324,9 @@ function canJumpBackward(node) {
   if (curEdges.length === 0) return;
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
-  // console.log(curEdge, path);
+  console.log(curEdge, path);
   if (path.length === 0) return;
-  for (var i = path.length-2; i >= 0; i--) {
+  for (var i = path.length-1; i >= 0; i--) {
     var e = path[i];
     if (network.body.data.nodes.get(e.from) !== null) {
       return;
