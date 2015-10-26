@@ -128,7 +128,7 @@ checkDecl f prog = do
   -- go (Success 0 initState (VU Nothing)) 0
   where
   go (f,st,v) r@(Failure {}) _ = return r
-  go _ r@(Success 1000 st v) _ = return r
+  go _ r@(Success 100 st v) _ = return r
   go (f,st,v) r@(Success n st' v') !m = do
     -- print (pretty v, pretty v')
     case fst3 (runEvalFull stdOpts $ do
