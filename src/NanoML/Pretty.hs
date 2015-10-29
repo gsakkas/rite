@@ -77,12 +77,12 @@ fillHoles st = go
 --     VF _ (Func e _) -> prettyPrec z e
 --     VH _ _ -> text "_"
 
-list xs = text "[" <> (hsep $ intersperse semi $ map pretty xs) <> text "]"
-array xs = text "[|" <> (hsep $ intersperse semi $ map pretty xs) <> text "|]"
-tuple xs = text "(" <> (hsep $ intersperse comma $ map pretty xs) <> text ")"
+list xs = text "[" <> (hsep $ intersperse semi $ map (prettyPrec 0) xs) <> text "]"
+array xs = text "[|" <> (hsep $ intersperse semi $ map (prettyPrec 0) xs) <> text "|]"
+tuple xs = text "(" <> (hsep $ intersperse comma $ map (prettyPrec 0) xs) <> text ")"
 record xs = text "{" <> (hsep $ intersperse semi $ map prettyField xs) <> text "}"
 
-prettyField (f,x) = text f <+> text "=" <+> pretty x
+prettyField (f,x) = text f <+> text "=" <+> prettyPrec 0 x
 
 instance Pretty Literal where
   pretty l = case l of
