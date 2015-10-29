@@ -165,7 +165,9 @@ buildGraph tr = fst $ Graph.mkMapGraph (nub nodes) (nub edges)
 -- findRoot :: (?callStack :: CallStack) => Graph -> Expr -> IO
   -- Graph.Node
 findRoot :: (?callStack :: CallStack) => Graph -> Node -> Graph.Node
-findRoot gr e = fromJust . lookup e . map (\(a,b) -> (b,a)) $ Graph.labNodes gr
+findRoot gr e = case lookup e . map (\(a,b) -> (b,a)) $ Graph.labNodes gr of
+  Just n -> n
+  Nothing -> trace (printf "findRoot: couldn't find: %s" (show e)) 0
 -- findRoot gr e = do
 --   en <- makeStableName =<< evaluate e
 --   let p (n,x) = do xn <- makeStableName =<< evaluate x
@@ -317,10 +319,14 @@ transStepDecl d = modify' (\s -> s { stEdges = mempty }) >> refreshDecl d >>= \c
           setVarEnv =<< matchNonRecBinds (zip ps vs)
           return (last vs)
   DTyp _ decls
-    -> mapM_ addType decls >> addSubTerms (VU Nothing)
+    -> mapM_ addType decls >> mkFakeStep
   DExn _ decl
-    -> extendType "exn" decl >> addSubTerms (VU Nothing)
+    -> extendType "exn" decl >> mkFakeStep
 
+mkFakeStep :: MonadEval m => m Value
+mkFakeStep = do
+  x <- gets stRoot
+  build (fst x) $ return (VU Nothing)
 
 -- transStepDecl d = do
 --   -- traceShowM $ pretty d
