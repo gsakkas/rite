@@ -182,8 +182,7 @@ checkDecl f prog = do
 
 fillInLams f args = do
   modify' $ \s -> s { stEdges = mempty }
-  -- x <- refreshExpr $ mkApps Nothing f args
-  let x = mkApps Nothing f args
+  x <- refreshExpr $ mkApps Nothing f args
   env <- gets stVarEnv
   setEntry (x,env)
   v <- stepAll x
@@ -207,6 +206,7 @@ nanoCheck numSuccess maxSize opts x = do
   let opts' = opts { seed = seed, size = maxSize }
   x <- evaluate $ runEvalFull opts' x
   return $ case x of
+
     (Left (MLException e), st, _) -> Success (numSuccess + 1) st e
     (Left e, st, tr) ->
                   -- NOTE: don't forget to fill in holes with generated values

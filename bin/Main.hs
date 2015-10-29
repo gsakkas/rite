@@ -179,7 +179,8 @@ run p var = do
         -- root <- liftIO $ findRoot gr (stRoot finalState)
         -- gr' <- liftIO $ addEnvs finalState gr
         let gr'' = Graph.nmap (\(n,e) ->
-                                 ( renderSpans $ pretty $ fillHoles finalState n
+                                 ( renderSpans $ prettyRedex e $
+                                   fillHoles finalState n
                                  , getSrcSpanExprMaybe n
                                  , addFreeVars finalState n e
                                  ))
@@ -227,7 +228,8 @@ run p var = do
             -- gr' <- liftIO $ addEnvs finalState gr
             let gr'' = Graph.nmap (\(n,e) ->
                                      ( -- first ((show (envId e) ++ " : " ++ show (getSrcSpanExprMaybe n) ++ "\n") ++) $
-                                       renderSpans $ pretty $ fillHoles finalState n
+                                       renderSpans $ prettyRedex e $
+                                       fillHoles finalState n
                                      , getSrcSpanExprMaybe n
                                      , addFreeVars finalState n e
                                      ))

@@ -503,6 +503,9 @@ isValue expr = case expr of
   Prim2 {} -> True
   _ -> False
 
+isVar (Var {}) = True
+isVar _        = False
+
 pattern VI ms x <- Lit ms (LI x) where
   VI ms x = Lit ms (LI x)
 pattern VD ms x <- Lit ms (LD x) where
@@ -1455,15 +1458,13 @@ type Node = (Expr,Env)
 data EdgeKind
   = StepsTo !StepKind
   | SubTerm !Int
+  | RedexOf
   deriving (Show, Generic, Eq)
 
 data StepKind
   = BoringStep | CallStep | ReturnStep | PrimStep | RenameStep
   deriving (Show, Generic, Eq)
 
-
-renameBinds :: MonadEval m => Expr -> m Expr
-renameBinds e = undefined
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f xs = liftM concat (mapM f xs)

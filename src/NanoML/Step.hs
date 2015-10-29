@@ -387,13 +387,18 @@ transStepDecl d = modify' (\s -> s { stEdges = mempty }) >> refreshDecl d >>= \c
 build :: MonadEval m => Expr -> m Expr -> m Expr
 build before mkAfter = do
   env1 <- gets stVarEnv
-  after <- mkAfter
+  (did_throw, after) <- (fmap (False,) mkAfter) `catchError` onlyMLExn
   env2 <- gets stVarEnv
   -- addEvent before after StepLine (getSrcSpanExprMaybe before) -- kind (getSrcSpanExprMaybe expr) `withEnv` env
   sk <- gets stStepKind
   addEdge (StepsTo sk) (before,env1) (after,env2)
   addSubTerms after
-  return after
+  if did_throw
+    then throwError (MLException after)
+    else return after
+
+onlyMLExn (MLException e) = return (True, e)
+onlyMLExn e = throwError e
 
 matchRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
 matchRecBinds binds = do
@@ -406,11 +411,9 @@ matchRecBinds binds = do
     binds' <- forM binds $ \(p,Lam ms p1 e _) -> return (p,Lam ms p1 e (Just fenv))
     bnd <- matchBinds binds'
     allocEnvWith "let-rec" penv bnd
-  where
-  -- isFunPat (FunPat {}) = True
-  -- isFunPat _           = False
-  isFun (Lam {}) = True
-  isFun _        = False
+
+isFun (Lam {}) = True
+isFun _        = False
 
 matchNonRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
 matchNonRecBinds binds = do
@@ -807,12 +810,24 @@ stepOne :: MonadEval m
         -> ([Expr] -> m a) -- ^ what to do after stepping a single expression
         -> m a
 stepOne es kv ke = do
-  let (vals, exprs) = span isValue es
+  (vals, exprs) <- spanM isValueOrFunVar es
   case exprs of
-    []     -> kv vals
+    []     -> kv =<< mapM resolveVar vals
     (e:es) -> do
+      -- noteRedex e
       v <- step e
       ke (vals ++ v : es)
+
+noteRedex e = do
+  super <- gets stCurrentExpr
+  env <- gets stVarEnv
+  addEdge RedexOf super (e,env)
+
+isValueOrFunVar (Var _ v) = isFun <$> lookupVar v
+isValueOrFunVar e = return (isValue e)
+
+resolveVar (Var _ v) = lookupVar v
+resolveVar e         = return e
 
 -- single :: Functor m => m a -> m [a]
 -- single = fmap (:[])

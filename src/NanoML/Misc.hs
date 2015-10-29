@@ -501,3 +501,13 @@ pairwiseNub (x:y:zs)
   = pairwiseNub (y:zs)
   | otherwise
   = x : pairwiseNub (y : zs)
+
+spanM :: Monad m => (a -> m Bool) -> [a] -> m ([a],[a])
+spanM p = go []
+  where
+  go yes []     = return (reverse yes, [])
+  go yes (x:xs) = do
+    b <- p x
+    if b
+      then go (x:yes) xs
+      else return (reverse yes, x:xs)
