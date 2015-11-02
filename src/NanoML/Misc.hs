@@ -16,6 +16,7 @@ import           System.Directory
 import           System.FilePath
 import           System.IO.Unsafe
 import           Text.Printf
+import           Text.Read
 
 import           NanoML.Parser
 import           NanoML.Types
@@ -478,6 +479,11 @@ findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
 
+read :: (?callStack :: CallStack, Read a)
+     => String -> a
+read s = case readEither s of
+           Left e -> error (e ++ showCallStack ?callStack)
+           Right x -> x
 
 fromJust :: (?callStack :: CallStack)
          => Maybe a -> a

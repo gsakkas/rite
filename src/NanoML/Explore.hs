@@ -1,5 +1,7 @@
 module NanoML.Explore where
 
+import Prelude hiding (read)
+
 import Control.Monad
 import Control.Monad.IO.Class
 import qualified Data.Graph.Inductive as Graph

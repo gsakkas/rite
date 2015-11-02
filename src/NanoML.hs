@@ -15,6 +15,8 @@ module NanoML
   , printResult
   ) where
 
+import Prelude hiding (read)
+
 import           Control.Exception
 import           Control.Monad
 import           Control.Monad.Except
@@ -152,7 +154,7 @@ checkDeclWith opts f prog = do
                     (\r -> Hole Nothing r Nothing) <$> fresh
           fo (Var Nothing f) args
 
-        go (f,st,v) r ((m+1) `mod` (maxSteps opts))
+        go (f,st,v) r ((m+1) `mod` (size opts))
 
 
   unifyNoExn t1 t2 = unify (unExn t1) (unExn t2)

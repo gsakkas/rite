@@ -9,6 +9,8 @@
 {-# LANGUAGE ViewPatterns     #-}
 module NanoML.Step where
 
+import Prelude hiding (read)
+
 import Control.Applicative
 import Control.Arrow
 import Control.Exception
@@ -501,7 +503,7 @@ substVars su = go
 shadows :: Var -> [Var] -> Maybe (Var, Var)
 shadows v' vs' =
   if n > 0
-  then Just $ (v', v ++ '_' : show n)
+  then Just $ (v', v ++ '|' : show n)
   else Nothing
   where
   eqvs = filter ((==v) . dropSuffix) vs'
@@ -512,11 +514,11 @@ shadows v' vs' =
 {-# INLINE shadows #-}
 
 dropSuffix :: Var -> Var
-dropSuffix = takeWhile (/='_')
+dropSuffix = takeWhile (/='|')
 {-# INLINE dropSuffix #-}
 
 onlySuffix :: Var -> Var
-onlySuffix v = let sx = dropWhile (/='_') v
+onlySuffix v = let sx = dropWhile (/='|') v
                in if null sx then "0" else tail sx
 {-# INLINE onlySuffix #-}
 
