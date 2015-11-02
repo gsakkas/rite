@@ -11,6 +11,7 @@ module NanoML
   , module NanoML.Eval
   , module NanoML.Step
   , check, checkAll, checkAllFrom, runProg, checkDecl
+  , checkWith, checkDeclWith, runProgWith
   , printResult
   ) where
 
@@ -45,9 +46,10 @@ import           NanoML.Types
 
 import Debug.Trace
 
+check = checkWith stdOpts
 
-check :: Maybe Err -> Prog -> IO (Maybe Result)
-check err prog =
+checkWith :: NanoOpts -> Maybe Err -> Prog -> IO (Maybe Result)
+checkWith opts err prog =
   case last prog of
     -- NOTE: it's crucial that we prioritize the case where ocaml has
     -- told us where the type error is
@@ -57,12 +59,12 @@ check err prog =
            :: Maybe (String,String,String,[String])
       , Just (f,d,p) <- traceShow (l,c) findDecl prog (read l) (read c)
 --      , Just t <- Map.lookup f knownFuncs
-        -> do r <- checkDecl f p
+        -> do r <- checkDeclWith opts f p
               -- printResult r
               return $ Just r
     DFun _ _ [(VarPat _ f, Lam {})]
       -- Just t <- Map.lookup f knownFuncs
-        -> do r <- checkDecl f prog
+        -> do r <- checkDeclWith opts f prog
               -- printResult r
               return $ Just r
     -- DFun _ _ [(WildPat _, _)]
@@ -78,7 +80,7 @@ check err prog =
     --           -- printResult r
     --           return $ Just r
     _ -> do -- printf "I don't (yet) know how to check this program!\n" -- (show $ prettyProg prog)
-            r <- runProg prog
+            r <- runProgWith opts prog
             return (Just r)
 
 printResult Failure {..} = do
@@ -103,20 +105,25 @@ surrounds l c (SrcSpan sl sc el ec)
 safeTail [] = []
 safeTail (x:xs) = xs
 
-runProg :: Prog -> IO Result
-runProg prog = nanoCheck 0 0 stdOpts $ do
-                 -- prog <- mapM refreshDecl prog
-                 v <- stepAllProg prog
-                 case last prog of
-                   DFun _ _ bnds
-                     -> last <$> mapM (\(p,e) -> fillInLams e []) bnds
-                   DEvl _ e
-                     -> fillInLams e []
-                   _ -> return v
+runProg = runProgWith stdOpts
 
-checkDecl :: Var -> Prog -> IO Result
-checkDecl f prog = do
-    r <- nanoCheck 0 0 stdOpts $ do
+runProgWith :: NanoOpts -> Prog -> IO Result
+runProgWith opts prog =
+  nanoCheck 0 0 opts $ do
+    -- prog <- mapM refreshDecl prog
+    v <- stepAllProg prog
+    case last prog of
+      DFun _ _ bnds
+        -> last <$> mapM (\(p,e) -> fillInLams e []) bnds
+      DEvl _ e
+        -> fillInLams e []
+      _ -> return v
+
+checkDecl = checkDeclWith stdOpts
+
+checkDeclWith :: NanoOpts -> Var -> Prog -> IO Result
+checkDeclWith opts f prog = do
+    r <- nanoCheck 0 0 opts $ do
       -- mapM_ evalDecl prog
       -- prog <- mapM refreshDecl prog
       stepAllProg prog
@@ -128,24 +135,24 @@ checkDecl f prog = do
   -- go (Success 0 initState (VU Nothing)) 0
   where
   go (f,st,v) r@(Failure {}) _ = return r
-  go _ r@(Success 100 st v) _ = return r
+  go _ r@(Success n st v) _ | n >= maxTests opts = return r
   go (f,st,v) r@(Success n st' v') !m = do
     -- print (pretty v, pretty v')
-    case fst3 (runEvalFull stdOpts $ do
+    case fst3 (runEvalFull opts $ do
                   put st
                   vt <- typeOfM v
                   vt' <- typeOfM v'
                   unifyNoExn vt vt') of
       Left e -> return $ Failure (n+1) 0 0 (pretty "") e st'
       Right {} -> do
-        r <- nanoCheck n m stdOpts $ do
+        r <- nanoCheck n m opts $ do
           -- prog <- mapM refreshDecl prog
           stepAllProg prog
           args <- replicateM (nArgs (fst (stRoot st))) $
                     (\r -> Hole Nothing r Nothing) <$> fresh
           fo (Var Nothing f) args
 
-        go (f,st,v) r ((m+1) `mod` (maxSteps stdOpts))
+        go (f,st,v) r ((m+1) `mod` (maxSteps opts))
 
 
   unifyNoExn t1 t2 = unify (unExn t1) (unExn t2)

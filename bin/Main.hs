@@ -212,9 +212,9 @@ run p var = do
         liftIO $ print $ pretty errorMsg
         liftIO $ print counterExample
         case errorMsg of
-          TimeoutError -> json $ object [ "result" .= ("timeout" :: String)
-                                        , "root" .= show counterExample
-                                        ]
+          TimeoutError i -> json $ object [ "result" .= ("timeout" :: String)
+                                          , "root" .= show counterExample
+                                          ]
           _ -> do
             -- liftIO $ mapM_ print (stEdges finalState)
             let gr = buildGraph (stEdges finalState)

@@ -60,18 +60,20 @@ type MonadEval m = ( MonadError NanoError m
 type Var = String
 
 data NanoOpts = NanoOpts
-  { enablePrint           :: Bool -- ^ Should we actually print things to stdout?
-  , checkDataCons         :: Bool -- ^ Should we check that datacon args have the proper type?
-  , heterogeneousEquality :: Bool -- ^ Should we allow equality comparison between different types?
-  , seed                  :: !Int -- ^ Random seed
-  , size                  :: !Int -- ^ Maximum size of generated values
-  , exceptionRecovery     :: Bool -- ^ Should we "recover" from exceptions by generating a random value?
-  , maxSteps              :: !Int -- ^ Maximum number of reduction steps to take
+  { enablePrint           :: !Bool -- ^ Should we actually print things to stdout?
+  , checkDataCons         :: !Bool -- ^ Should we check that datacon args have the proper type?
+  , heterogeneousEquality :: !Bool -- ^ Should we allow equality comparison between different types?
+  , seed                  :: !Int  -- ^ Random seed
+  , size                  :: !Int  -- ^ Maximum size of generated values
+  , exceptionRecovery     :: !Bool -- ^ Should we "recover" from exceptions by generating a random value?
+  , maxSteps              :: !Int  -- ^ Maximum number of reduction steps to take
+  , maxTests              :: !Int
   } deriving Show
 
 stdOpts, loudOpts :: NanoOpts
 stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False
                    , seed = 1234567, size = 20, exceptionRecovery = True, maxSteps = 1000
+                   , maxTests = 100
                    }
 loudOpts = stdOpts { enablePrint = True }
 
@@ -106,7 +108,7 @@ data NanoError
   | InvalidFields Type Expr
   | OutputTypeMismatch Value Type
   | OtherError String
-  | TimeoutError
+  | TimeoutError Int
   deriving (Show, Generic, Typeable)
 
 instance Exception NanoError

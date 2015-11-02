@@ -25,20 +25,38 @@ reduceM xs z f = foldM f z xs
 bumpIf True = 1
 bumpIf False = 0
 
+initOpts = stdOpts { maxTests = 1000 }
+
+extendOpts opts = opts { maxSteps = 1000 + maxSteps opts }
+
+upperBound = 10000
+
+checkLoop opts e p = do
+  r <- checkWith opts e p
+  case r of
+    Nothing -> return Nothing
+    Just r
+      | not (isSuccess r) && becauseOf "timeout" r
+        -> if maxSteps opts == upperBound
+           then return (Just r)
+           else checkLoop (extendOpts opts) e p
+      | otherwise -> return (Just r)
+
+becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
+
 main = do
   [dir] <- getArgs
   ps <- parseAllIn dir
-  let becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
   st <- reduceM ps initST $ \st (f,e,p) -> do
     putStrLn ("\n" ++ f)
-    r <- check e p
+    r <- checkLoop initOpts e p
     case r of
       Nothing -> return st
       Just r  -> do
         printResult r
         let bumpIfFail b = bumpIf (not (isSuccess r) && b)
-        return $! st { total = total st + 1
-                     , safe  = safe st + bumpIf (isSuccess r)
+        return $! st { total   = total st   + 1
+                     , safe    = safe st    + bumpIf (isSuccess r)
                      , timeout = timeout st + bumpIfFail (becauseOf "timeout" r)
                      , unbound = unbound st + bumpIfFail (becauseOf "Unbound" r)
                      , output  = output st  + bumpIfFail (becauseOf "OutputType" r)

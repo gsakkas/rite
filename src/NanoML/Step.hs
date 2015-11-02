@@ -296,7 +296,7 @@ stepAll expr = do
   ss <- gets stSteps
   maxss <- asks maxSteps
   when (ss >= maxss) $
-    throwError TimeoutError
+    throwError (TimeoutError ss)
   if isValue expr'
      then return expr'
      else stepAll expr'
