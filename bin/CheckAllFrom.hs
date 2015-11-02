@@ -4,6 +4,7 @@ import Control.Monad
 import Data.List
 import Data.Maybe
 import System.Environment
+import System.IO
 import Text.Printf
 
 import NanoML
@@ -45,6 +46,7 @@ checkLoop opts e p = do
 becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
 
 main = do
+  hSetBuffering stdout LineBuffering
   [dir] <- getArgs
   ps <- parseAllIn dir
   st <- reduceM ps initST $ \st (f,e,p) -> do
