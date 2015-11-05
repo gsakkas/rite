@@ -26,7 +26,7 @@ reduceM xs z f = foldM f z xs
 bumpIf True = 1
 bumpIf False = 0
 
-initOpts = stdOpts { maxTests = 1000 }
+initOpts = stdOpts { maxTests = 1000, produceTrace = False }
 
 extendOpts opts = opts { maxSteps = 1000 + maxSteps opts }
 

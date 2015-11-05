@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns          #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE DefaultSignatures     #-}
 {-# LANGUAGE DeriveGeneric         #-}
@@ -26,6 +27,9 @@ import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import           Data.Aeson                   (ToJSON)
+import           Data.Hashable
+import qualified Data.HashSet                 as HashSet
+import           Data.HashSet                 (HashSet)
 import           Data.IntMap.Strict           (IntMap)
 import qualified Data.IntMap.Strict           as IntMap
 import           Data.List
@@ -68,12 +72,13 @@ data NanoOpts = NanoOpts
   , exceptionRecovery     :: !Bool -- ^ Should we "recover" from exceptions by generating a random value?
   , maxSteps              :: !Int  -- ^ Maximum number of reduction steps to take
   , maxTests              :: !Int
+  , produceTrace          :: !Bool
   } deriving Show
 
 stdOpts, loudOpts :: NanoOpts
 stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEquality = False
                    , seed = 1234567, size = 20, exceptionRecovery = True, maxSteps = 1000
-                   , maxTests = 100
+                   , maxTests = 100, produceTrace = True
                    }
 loudOpts = stdOpts { enablePrint = True }
 
@@ -144,7 +149,7 @@ data EvalState = EvalState
   , stTrace    :: !(Seq Event)
   , stEnvMap   :: !(IntMap Env)
   -- , stNodes    :: !(Map Expr Int)
-  , stEdges    :: ![(Node, EdgeKind, Node)]
+  , stEdges    :: !(HashSet (Node, EdgeKind, Node))
   , stCurrentExpr :: Node -- NOTE: can't be strict
   , stSteps    :: !Int
   , stStepKind :: !StepKind
@@ -177,8 +182,10 @@ withCurrentExpr e x = do
   return a
 
 addEdge :: MonadEval m => EdgeKind -> (Expr,Env) -> (Expr,Env) -> m ()
-addEdge k e1 e2 = -- unless (x == y) $
-                  modify' $ \s -> s { stEdges = (x, k, y) : stEdges s }
+addEdge !k !e1 !e2 = do -- unless (x == y) $
+  b <- asks produceTrace
+  when b $
+    modify' $ \s -> s { stEdges = HashSet.insert (x, k, y) (stEdges s) }
   where
   x = skipEnv e1 -- first skipEnv e1
   y = skipEnv e2 -- first skipEnv e2
@@ -191,7 +198,7 @@ addSubTerms :: MonadEval m => Expr -> m Expr
 addSubTerms expr' = do
   env' <- gets stVarEnv
   let (expr,env) = skipEnv (expr',env')
-  let mkEdge i e = addEdge (SubTerm i) (expr,env) (e,env)
+  let mkEdge !i !e = addEdge (SubTerm i) (expr,env) (e,env)
   case expr of
     Var _ _ -> return ()
     Lam _ _ b _ -> mkEdge 0 b
@@ -405,6 +412,9 @@ instance Monoid Env where
   mempty  = emptyEnv
   mappend = joinEnv
 
+instance Hashable Env where
+  hashWithSalt salt env = hashWithSalt salt (envId env)
+
 allocEnv fn bnd = do
   p <- gets stVarEnv
   allocEnvWith fn p bnd
@@ -565,8 +575,13 @@ data Literal
   | LS String
   deriving (Show, Generic, Eq, Ord)
 
+instance Hashable Literal
+
 data RecFlag = Rec | NonRec deriving (Show, Generic, Eq, Ord)
 data MutFlag = Mut | NonMut deriving (Show, Generic, Eq, Ord)
+
+instance Hashable RecFlag
+instance Hashable MutFlag
 
 data SrcSpan = SrcSpan
   { srcSpanStartLine :: !Int
@@ -574,6 +589,8 @@ data SrcSpan = SrcSpan
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
   } deriving (Generic, Eq, Ord)
+
+instance Hashable SrcSpan
 
 instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
@@ -611,32 +628,34 @@ getSrcSpan d = case d of
 type MSrcSpan = Maybe SrcSpan
 
 data Expr
-  = Var !MSrcSpan Var
-  | Lam !MSrcSpan Pat Expr (Maybe Env)
-  | App !MSrcSpan Expr [Expr]
-  | Bop !MSrcSpan Bop Expr Expr
-  | Uop !MSrcSpan Uop Expr
-  | Lit !MSrcSpan Literal
-  | Let !MSrcSpan RecFlag [(Pat,Expr)] Expr
-  | Ite !MSrcSpan Expr Expr Expr
-  | Seq !MSrcSpan Expr Expr
-  | Case !MSrcSpan Expr [Alt]
+  = Var !MSrcSpan !Var
+  | Lam !MSrcSpan !Pat !Expr (Maybe Env)
+  | App !MSrcSpan !Expr [Expr]
+  | Bop !MSrcSpan !Bop !Expr !Expr
+  | Uop !MSrcSpan !Uop !Expr
+  | Lit !MSrcSpan !Literal
+  | Let !MSrcSpan !RecFlag [(Pat,Expr)] !Expr
+  | Ite !MSrcSpan !Expr !Expr !Expr
+  | Seq !MSrcSpan !Expr !Expr
+  | Case !MSrcSpan !Expr [Alt]
   | Tuple !MSrcSpan [Expr]
-  | ConApp !MSrcSpan DCon (Maybe Expr) (Maybe Type)
+  | ConApp !MSrcSpan !DCon (Maybe Expr) (Maybe Type)
   | Record !MSrcSpan [(String, Expr)] (Maybe Type)
-  | Field !MSrcSpan Expr String
-  | SetField !MSrcSpan Expr String Expr
+  | Field !MSrcSpan !Expr !String
+  | SetField !MSrcSpan !Expr !String !Expr
   | Array !MSrcSpan [Expr] (Maybe Type)
   | List !MSrcSpan [Expr] (Maybe Type)
-  | Try !MSrcSpan Expr [Alt]
-  | Prim1 !MSrcSpan Prim1
-  | Prim2 !MSrcSpan Prim2
+  | Try !MSrcSpan !Expr [Alt]
+  | Prim1 !MSrcSpan !Prim1
+  | Prim2 !MSrcSpan !Prim2
   -- Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
-  | With !MSrcSpan Env Expr
-  | Replace !MSrcSpan Env Expr
+  | With !MSrcSpan Env !Expr
+  | Replace !MSrcSpan Env !Expr
   | Hole !MSrcSpan !Ref (Maybe Type)
   | Ref !Ref
   deriving (Show, Generic, Eq, Ord)
+
+instance Hashable Expr
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of
@@ -757,25 +776,31 @@ freeVarsAlts (p,g,e) env =
 
 v `notBound` bs = fst v `notElem` bs
 
-data Prim1 = P1 Var (forall m. MonadEval m => Value -> m Value) Type
+data Prim1 = P1 !Var !(forall m. MonadEval m => Value -> m Value) !Type
 instance Show Prim1 where
   show (P1 v _ _) = v
 instance Eq Prim1 where
   P1 v1 _ _ == P1 v2 _ _ = v1 == v2
 instance Ord Prim1 where
   compare (P1 v1 _ _) (P1 v2 _ _) = compare v1 v2
+instance Hashable Prim1 where
+  hashWithSalt salt (P1 v _ _) = hashWithSalt salt v
 
-data Prim2 = P2 Var (forall m. MonadEval m => Value -> Value -> m Value) Type Type
+data Prim2 = P2 !Var !(forall m. MonadEval m => Value -> Value -> m Value) !Type !Type
 instance Show Prim2 where
   show (P2 v _ _ _) = v
 instance Eq Prim2 where
   P2 v1 _ _ _ == P2 v2 _ _ _ = v1 == v2
 instance Ord Prim2 where
   compare (P2 v1 _ _ _) (P2 v2 _ _ _) = compare v1 v2
+instance Hashable Prim2 where
+  hashWithSalt salt (P2 v _ _ _) = hashWithSalt salt v
 
 data Uop
   = Neg | FNeg
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq, Ord, Generic)
+
+instance Hashable Uop
 
 data Bop
   = Eq | Neq
@@ -784,25 +809,29 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq, Ord, Generic)
+
+instance Hashable Bop
 
 type Alt = (Pat, Guard, Expr)
 
 type Guard = Maybe Expr
 
 data Pat
-  = VarPat !MSrcSpan Var
-  | LitPat !MSrcSpan Literal
-  | IntervalPat !MSrcSpan Literal Literal
-  | ConsPat !MSrcSpan Pat Pat
-  | ConPat !MSrcSpan Var (Maybe Pat)
+  = VarPat !MSrcSpan !Var
+  | LitPat !MSrcSpan !Literal
+  | IntervalPat !MSrcSpan !Literal !Literal
+  | ConsPat !MSrcSpan !Pat !Pat
+  | ConPat !MSrcSpan !Var (Maybe Pat)
   | ListPat !MSrcSpan [Pat]
   | TuplePat !MSrcSpan [Pat]
   | WildPat !MSrcSpan
-  | OrPat !MSrcSpan Pat Pat
-  | AsPat !MSrcSpan Pat Var
-  | ConstraintPat !MSrcSpan Pat Type
+  | OrPat !MSrcSpan !Pat !Pat
+  | AsPat !MSrcSpan !Pat !Var
+  | ConstraintPat !MSrcSpan !Pat !Type
   deriving (Show, Generic, Eq, Ord)
+
+instance Hashable Pat
 
 bindersOf :: Pat -> [Var]
 bindersOf p = case p of
@@ -834,12 +863,14 @@ getSrcSpanPatMaybe pat = case pat of
   ConstraintPat ms _ _ -> ms
 
 data Type
-  = TVar TVar
+  = TVar !TVar
   -- TCon TCon
-  | TApp TCon [Type]
-  | Type :-> Type
+  | TApp !TCon [Type]
+  | !Type :-> !Type
   | TTup [Type]
   deriving (Show, Generic, Eq, Ord)
+
+instance Hashable Type
 
 infixr :->
 
@@ -1463,9 +1494,13 @@ data EdgeKind
   | RedexOf
   deriving (Show, Generic, Eq)
 
+instance Hashable EdgeKind
+
 data StepKind
   = BoringStep | CallStep | ReturnStep | PrimStep | RenameStep
   deriving (Show, Generic, Eq)
+
+instance Hashable StepKind
 
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]

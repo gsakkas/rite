@@ -11,6 +11,7 @@ import Data.Aeson (object, (.=))
 import Data.Default
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
+import qualified Data.HashSet as HashSet
 import qualified Data.Graph.Inductive.Dot as Graph
 import qualified Data.Graph.Inductive.Graph as Graph
 import qualified Data.Set as Set
@@ -170,7 +171,7 @@ run p var = do
     case res of
       Success n finalState v -> do
         -- liftIO $ print v
-        let gr = buildGraph (stEdges finalState)
+        let gr = buildGraph (HashSet.toList $ stEdges finalState)
         let st = findRoot gr (v, stVarEnv finalState)
         let root = findRoot gr (stRoot finalState)
         let gr' = gr
@@ -217,7 +218,7 @@ run p var = do
                                           ]
           _ -> do
             -- liftIO $ mapM_ print (stEdges finalState)
-            let gr = buildGraph (stEdges finalState)
+            let gr = buildGraph (HashSet.toList $ stEdges finalState)
             let bad = findRoot gr (stCurrentExpr finalState)
             let root = findRoot gr (stRoot finalState)
             let gr' = gr
