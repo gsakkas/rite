@@ -17,9 +17,10 @@ isRight _        = False
 
 data ST = ST { total :: !Int, safe :: !Int, timeout :: !Int
              , unbound :: !Int, output :: !Int, unsafe :: !Int
+             , diverge :: !Int
              }
 
-initST = ST 0 0 0 0 0 0
+initST = ST 0 0 0 0 0 0 0
 
 reduceM xs z f = foldM f z xs
 
@@ -63,18 +64,21 @@ main = do
                      , unbound = unbound st + bumpIfFail (becauseOf "Unbound" r)
                      , output  = output st  + bumpIfFail (becauseOf "OutputType" r)
                      , unsafe  = unsafe st  + bumpIfFail (becauseOf "Type error" r)
+                     , diverge = diverge st + bumpIfFail (becauseOf "infinite recursion" r)
                      }
   printf "\nDONE!\n"
   printf "%d programs:\n" (total st)
   printf "  %d did not fail at runtime\n" (safe st)
   printf "  %d timed out\n" (timeout st)
-  printf "  %d did failed at runtime:\n"
+  printf "  %d did fail at runtime:\n"
     (total st - safe st - timeout st)
   printf "    %d due to an unbound variable or datacon\n"
     (unbound st)
     -- length (filter (becauseOf "unknown") fs))
   printf "    %d due to an output-type-mismatch\n"
     (output st)
+  printf "    %d due to infinite recursion\n"
+    (diverge st)
   printf "    %d due to a type error (%02.02f %%)\n"
     (unsafe st)
     ((fromIntegral (unsafe st)

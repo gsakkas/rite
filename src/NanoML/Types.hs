@@ -154,8 +154,19 @@ data EvalState = EvalState
   , stSteps    :: !Int
   , stStepKind :: !StepKind
   , stSubst    :: !Subst
+  , stCallStack :: ![(MSrcSpan,[Value])]
   -- , stExprEnvs :: ![(Expr,Env)]
   } deriving Show
+
+pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
+pushCallStack loc args = do
+  curStack <- gets stCallStack
+  when ((loc,args) `elem` curStack) $
+    otherError "infinite recursion"
+  modify' $ \s -> s { stCallStack = (loc,args) : curStack }
+
+popCallStack :: MonadEval m => m ()
+popCallStack = modify' $ \s -> s { stCallStack = tail (stCallStack s) }
 
 addSubst :: MonadEval m => TVar -> Type -> m ()
 addSubst a t = do
