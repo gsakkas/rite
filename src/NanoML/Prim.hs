@@ -603,12 +603,10 @@ mkBopFun bop = mkLams emptyEnv [varPatD "x", varPatD "y"]
                             (bopD bop (varD "x") (varD "y"))
 
 mkPrim1Fun :: Prim1 -> Value
-mkPrim1Fun f = Replace Nothing emptyEnv
-             $ Prim1 Nothing f
+mkPrim1Fun f = Prim1 Nothing f
 
 mkPrim2Fun :: Prim2 -> Value
-mkPrim2Fun f = Replace Nothing emptyEnv
-             $ Prim2 Nothing f
+mkPrim2Fun f = Prim2 Nothing f
 
 tI = tCon tINT
 tF = tCon tFLOAT
