@@ -536,7 +536,10 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
         e' <- step e `withEnv` env
         return $ With ms env e'
   Replace ms env e
-    | isValue e -> return e <* modify' (\s -> s { stStepKind = ReturnStep })
+    | isValue e -> do
+        popCallStack
+        modify' (\s -> s { stStepKind = ReturnStep })
+        return e
     | otherwise -> do
         e' <- step e `withEnv` env
         return $ Replace ms env e'
@@ -740,10 +743,12 @@ stepApp ms f' es = do
         let nenv = nenv' { envEnv = substEnv su (envEnv nenv') }
         case (ps', es') of
           ([], []) -> do
+            pushCallStack (getSrcSpanExprMaybe f') es
             modify' (\s -> s { stStepKind = CallStep })
             refreshExpr (Replace ms nenv e')
             -- Replace ms nenv <$> (refreshExpr e' `withEnv` nenv) -- only refresh at saturated applications
           ([], _) -> do
+            pushCallStack (getSrcSpanExprMaybe f') (map fst eps)
             modify' (\s -> s { stStepKind = CallStep })
             refreshExpr (Replace ms nenv (App ms e' es'))
             -- e'' <- refreshExpr e' `withEnv` nenv

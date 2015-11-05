@@ -96,6 +96,7 @@ initState = EvalState
   , stSteps = 0
   , stStepKind = BoringStep
   , stSubst = mempty
+  , stCallStack = mempty
   -- , stExprEnvs = mempty
   }
 
