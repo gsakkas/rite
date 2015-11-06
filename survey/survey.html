@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Code Readability Survey</title>
+
+<link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.18.custom.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="survey.css" />
+<script src="survey.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    init();
+  });
+</script>
+</head>
+<body>
+
+<h2>Example Code</h2>
+<table cellpadding=0 cellspacing=0 border=0>
+<tr>
+  <td class="selection" style="border: 0; width: 3em">
+    <div class="radio"><input type="radio" name="rating" value="A"><br/>A</div>
+  </td>
+  <td><code id="left"></code></td>
+</tr><tr>
+  <td class="selection" style="border: 0; width: 3em">
+    <div class="radio"><input type="radio" name="rating" value="B"><br/>B</div>
+  </td>
+  <td><code id="right"></code></td>
+</tr>
+</table>
+
+<h2>History</h2>
+<div id="history"></div>
+
+<h2>&nbsp;</h2>
+
+</body>
+</html>

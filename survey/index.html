@@ -1,0 +1,115 @@
+<html>
+<head>
+  <title>Code Readability Survey - Welcome</title>
+
+  <link type="text/css" rel="stylesheet" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" />
+  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+
+  <style type="text/css">
+    .address ul {
+      list-style: none;
+    }
+    .address ul li {
+      display: inline-block;
+      padding-right:  2ex;
+      padding-bottom: 2ex;
+    }
+
+    .table-of-contents {
+      list-style: none;
+    }
+
+    .body-text {
+      font-family: "Helvetica", "Arial", sans-serif;
+      margin-left:  2em;
+      margin-right: 2em;
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.mail').click(function(){
+        var addr = $(this).text();
+        location = "mailto:" + addr + "@" + "virginia.edu";
+      }).hover(
+        function(){
+          var addr = $(this).text();
+          window.status = "mailto:" + addr + "@" + "virginia.edu";
+          return false;
+        }, function() {
+          window.status = "";
+          return false;
+        }
+      );
+    });
+  </script>
+</head>
+<body>
+
+<h2>Contents</h2>
+<ul class="table-of-contents">
+<li><a href='#about'>About</a></li>
+<li><a href='#instructions'>Instructions</a></li>
+<li><a href='#gettingstarted'>Getting Started</a></h2>
+</ul>
+
+<h2><a name='about'>About</a></h2>
+<div class='body-text'>
+<p>
+Code readability has a significant impact on developer time. Unreadable code is
+harder to understand, harder to modify, harder to fix, and easier to get wrong.
+However, we do not really understand what makes code more or less readable. With
+this survey, we hope to learn what factors impact people's perceptions of code
+readability and whether they are different for different languages.
+</p><p>
+This Code Readability survey is completely voluntary; you may stop at any time.
+We will not ask you for your name and will not record any identifying
+information. Data obtained from this survey will only be used to learn the
+factors that affect the readability of different code examples.
+</p><p>
+If you choose to participate, you will be presented with examples of code from
+real-world programming projects and asked to rate them as readable or
+unreadable. You will also be asked to rate your experience with programming and
+with the languages in question.
+</p><p>
+No special experience is necessary to take this survey. Most people will
+complete the survey in less than 30 minutes, but there is no time limit.
+</p><p>
+The investigators can be contacted at:
+<div class="address">
+  <ul><li>
+  Jonathan Dorn<br /><a class='mail' href='#mail:jad5ju'>jad5ju</a>
+  </li><li>
+  Wes Weimer<br /><a class='mail' href='#mail:weimer'>weimer</a>
+  </li></ul>
+</div>
+</p>
+</div>
+
+<h2><a name='instructions'>Instructions</a></h2>
+<div class='body-text'>
+<p>
+You will be shown several examples of code from real-world programming projects.
+For each example, we ask that you rate the code readability on a scale of 1
+(very unreadable) to 5 (very readable). Once you have rated each snippet, you
+will be presented with the next one. You can always go back to look at examples
+you have already rated by clicking on the buttons at the bottom of the page.
+</p><p>
+Please do not spend too much time on any example. Since this survey is about
+readability and not understanding the code, please just look at the example long
+enough to form a quick intuition about the readability and move on.
+</p>
+</div>
+
+<h2><a name='gettingstarted'>Getting Started</a></h2>
+<div class='body-text'>
+<p>
+<a href="survey.html">Let's go!</a>
+</p>
+</div>
+
+<h2>&nbsp;</h2>
+
+</body>
+</html>
+
