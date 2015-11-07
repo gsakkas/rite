@@ -113,6 +113,8 @@ instance Pretty Expr where
   prettyPrec z e = case e of
     Var _ v -> case lookupEnv v ?env of
                  Just (Lam {}) -> text v
+                 Just (Prim1 {}) -> text v
+                 Just (Prim2 {}) -> text v
                  x -> annotate Redex $ text v
     Lam _ (VarPat _ "$x") (Case _ (Var _ "$x") alts) _ ->
       noAnnotate $
@@ -154,7 +156,7 @@ instance Pretty Expr where
       annotateIf (isValueOrFunVar x) Redex $
       parensIf (z > zs) $
       prettyPrec (zs) x <> semi </> prettyPrec (zs) y
-      
+
       where zs = 3
     Case _ e alts
       --  isValueOrFunVar e ->
@@ -165,7 +167,7 @@ instance Pretty Expr where
       --   parensIf (z > zc) $ align $
       --   text "match" <+> pretty e <+> text "with"
       --     <$> vsep (map prettyAlt alts)
-      -- where zc = 5        
+      -- where zc = 5
       ->
       annotateIf (isValueOrFunVar e) Redex $
       parensIf (z > zc) $ align $
