@@ -58,7 +58,6 @@ def new_session():
 
     c.execute('SELECT u_group FROM users ORDER BY ID DESC LIMIT 1;')
     r = c.fetchone()
-    print r
     if r is None:
         g = 'ocaml'
     elif r[0] == 'ocaml':
