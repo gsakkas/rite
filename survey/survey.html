@@ -1,41 +1,191 @@
 <html>
 <head>
-<title>Code Readability Survey</title>
 
-<link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.18.custom.min.js"></script>
+    <title>Type Error Debugging Survey</title>
+    <link href=
+    "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel=
+    "stylesheet" type="text/css">
+    <link href=
+    "http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"
+    rel="stylesheet" type="text/css">
+    <!-- <script async src="//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" type= -->
+    <!-- "text/javascript"> -->
+    <!-- </script> -->
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript">
+    </script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
+    type="text/javascript">
+    </script>
+    <script src="zepto.min.js" type="text/javascript">
+    </script>
+    <link href="vis.css" rel="stylesheet" type="text/css">
+    <script src="vis.js" type="text/javascript">
+    </script>
+    <script src="codemirror-min.js" type="text/javascript">
+    </script>
+    <link href="codemirror.css" rel="stylesheet" type="text/css">
+    <link href="dialog.css" rel="stylesheet" type="text/css">
+    <link href="lint.css" rel="stylesheet" type="text/css">
+    <link href="nanoml.css" rel="stylesheet" type="text/css">
+    <script src="nanoml.js" type="text/javascript">
+    </script>
 
-<link rel="stylesheet" type="text/css" href="survey.css" />
-<script src="survey.js"></script>
+
+<!-- <title>Type Error Debugging Survey</title> -->
+
+<!-- <link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" /> -->
+<!-- <script type="text/javascript" src="jquery-1.7.2.min.js"></script> -->
+<!-- <script type="text/javascript" src="jquery-ui/js/jquery-ui-1.8.18.custom.min.js"></script> -->
+
+<!-- <link rel="stylesheet" type="text/css" href="survey.css" /> -->
+<!-- <script src="survey.js"></script> -->
 
 <script type="text/javascript">
   $(document).ready(function(){
-    init();
+    setup();
   });
 </script>
 </head>
+
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">NanoMaLy</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <!-- <li class="dropdown"> -->
+                <!--     <button class="btn btn-default navbar-btn dropdown-toggle" -->
+                <!--     data-toggle="dropdown" id="loadMenu" type="button">Demo -->
+                <!--     <span class="caret"></span></button> -->
+                <!--     <ul class="dropdown-menu"> -->
+                <!--         <li> -->
+                <!--             <a onclick="loadDemo('factorial')">factorial</a> -->
+                <!--         </li> -->
+                <!--         <li> -->
+                <!--             <a onclick="loadDemo('wwhile')">wwhile</a> -->
+                <!--         </li> -->
+                <!--         <li> -->
+                <!--             <a onclick="loadDemo('loop')">loop</a> -->
+                <!--         </li> -->
+                <!--         <li> -->
+                <!--             <a onclick="loadDemo('palindrome')">palindrome</a> -->
+                <!--         </li> -->
+                <!--     </ul> -->
+                <!-- </li> -->
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <!-- <input class="form-control" id="var-input" name="var" -->
+                    <!-- placeholder="check this function" style= -->
+                    <!-- "font-family: monospace;" type="text"> -->
+                    
+                    <button class= "btn btn-default" id="check-btn"
+                    type= "submit">Submit!</button>
+                </div>
+            </form>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <button class="btn btn-default" disabled="disabled"
+                    id="undo" onclick="stepUndo()"
+                    type="button">Undo</button>
+                    
+                    <button class="btn btn-default" disabled="disabled"
+                    id="step-forward" onclick= "stepForward()"
+                    type="button">Step forward</button>
+                    
+                    <button class="btn btn-default" disabled=
+                    "disabled" id="step-backward" onclick="stepBackward()"
+                    type="button">Step backward</button>
+                    
+                    <button class= "btn btn-default" disabled="disabled"
+                    id="jump-forward" onclick="jumpForward()"
+                    type="button">Jump forward</button>
+                    
+                    <button class="btn btn-default" disabled= "disabled"
+                    id="jump-backward" onclick="jumpBackward()"
+                    type="button">Jump backward</button>
+                    
+                    <!-- <button class= "btn btn-default" disabled="disabled" -->
+                    <!-- id="step-into" onclick="stepInto()" -->
+                    <!-- type="button">Step into</button> -->
 
-<h2>Example Code</h2>
-<table cellpadding=0 cellspacing=0 border=0>
-<tr>
-  <td class="selection" style="border: 0; width: 3em">
-    <div class="radio"><input type="radio" name="rating" value="A"><br/>A</div>
-  </td>
-  <td><code id="left"></code></td>
-</tr><tr>
-  <td class="selection" style="border: 0; width: 3em">
-    <div class="radio"><input type="radio" name="rating" value="B"><br/>B</div>
-  </td>
-  <td><code id="right"></code></td>
-</tr>
-</table>
+                    <!-- <button class="btn btn-default" disabled= "disabled" -->
+                    <!-- id="step-over" onclick="stepOver()" type= -->
+                    <!-- "button">Step over</button> -->
+                </div>
+            </form>
+        </div>
+    </nav>
+    <div class="mybody row">
+        <div class="mybody col-md-6">
+            <textarea id="prog" name="prog">
+            </textarea>
+            <br/>
+            <form class="col-sm-offset-1 form-horizontal">
+              <div class="form-group row">
+                <!-- <input class="form-control" id="var-input" name="var" -->
+                <!-- placeholder="check this function" style= -->
+                <!-- "font-family: monospace;" type="text"> -->
+                <label for="cause" class="col-sm-2 control-label">Cause</label>
+                <div class="col-sm-10">
+                  <textarea id="cause" name="cause" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="explanation" class="col-sm-2 control-label">Explanation</label>
+                <div class="col-sm-10">
+                  <textarea id="explanation" name="explanation" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="fix" class="col-sm-2 control-label">Fix</label>
+                <div class="col-sm-10">
+                  <textarea id="fix" name="fix" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group row">    
+                <div class="col-sm-offset-2 col-sm-4">
+                  <button class="btn btn-default" id="submit-btn"
+                          type="submit">Submit!</button>
+                </div>
+              </div>
+            </form>
+        </div>
+        <div class="mybody col-md-6">
+          <!-- <div class="alert alert-info" id="safe-banner" style="display: none;"> -->
+          <!--   Couldn't find a type error.. -->
+          <!-- </div> -->
+          <!-- <div class="alert alert-warning" id="unsafe-banner" style= -->
+          <!--      "display: none;"> -->
+          <!--   Your program contains a type error! -->
+          <!-- </div> -->
+          <div class="mybody" id="vis" style="border: 1px solid lightgray;">
+          </div>
+        </div>
+    </div>
 
-<h2>History</h2>
-<div id="history"></div>
 
-<h2>&nbsp;</h2>
+
+<!-- <h2>Example Code</h2> -->
+<!-- <table cellpadding=0 cellspacing=0 border=0> -->
+<!-- <tr> -->
+<!--   <td class="selection" style="border: 0; width: 3em"> -->
+<!--     <div class="radio"><input type="radio" name="rating" value="A"><br/>A</div> -->
+<!--   </td> -->
+<!--   <td><code id="left"></code></td> -->
+<!-- </tr><tr> -->
+<!--   <td class="selection" style="border: 0; width: 3em"> -->
+<!--     <div class="radio"><input type="radio" name="rating" value="B"><br/>B</div> -->
+<!--   </td> -->
+<!--   <td><code id="right"></code></td> -->
+<!-- </tr> -->
+<!-- </table> -->
+
+<!-- <h2>History</h2> -->
+<!-- <div id="history"></div> -->
+
+<!-- <h2>&nbsp;</h2> -->
 
 </body>
 </html>

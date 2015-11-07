@@ -1,21 +1,22 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 
 import cgi
 from Cookie import SimpleCookie
 import glob
 import hashlib
 import json
-import MySQLdb
+import sqlite3
 import os
 import random
 import re
 import sys
 import time
 import uuid
+import cgitb; cgitb.enable()
 
-form = cgi.FieldStorage()
+form = cgi.FieldStorage(keep_blank_values=True)
 
-snippetsdir = "pairs.gordon.3"
+snippetsdir = "data"
 
 db = None;
 c  = None;
@@ -23,131 +24,98 @@ if "HTTP_COOKIE" in os.environ:
     cookies = SimpleCookie( os.environ[ 'HTTP_COOKIE' ] )
 else:
     cookies = SimpleCookie()
-sid_cookie = "rdblty-session-id"
+sid_cookie = "nanomaly-session-id"
+
+snippets = [ 'prog0971', 'palindrome', 'prog0223', 'prog3382', 'prog0553',
+             'prog2746', 'gist1', 'gist2', 'gist3', 'prog3197' ]    
 
 def connect():
     global c
     global db
     if c != None:
         return c
-    db = MySQLdb.connect(
-        host="localhost",
-        user="jondorn",
-        passwd="jondorn",
-        db="jondorn_readability_live",
+    db = sqlite3.connect(
+        'nanomaly.db'
     )
     c = db.cursor()
     return c
 
+if not os.path.exists('nanomaly.db'):
+    connect()
+    c.execute('''CREATE TABLE users
+                 (id integer primary key asc, u_group text,
+                  session text, compcode text, email text);''')
+    c.execute('''CREATE TABLE responses
+                 (userid text, snippet text, r_group text, time integer,
+                  cause text, explanation text, fix text,
+                  PRIMARY KEY (userid, snippet) );''')
+    c.execute('''INSERT INTO users (session, u_group) VALUES (?, ?);''', ("foo", "ocaml"))
+    db.commit()
+
 def new_session():
     global c
+    connect()
 
-    code = 0
-    while code == 0:
-        sid = hashlib.md5(
-            str( time.time() )
-            + os.environ.get( "HTTP_USER_AGENT", "" )
-            + os.environ.get( "REMOTE_ADDR", "" )
-            + os.environ.get( "REMOTE_PORT", "" )
-            + os.environ.get( "HTTP_ACCEPT", "" )
-        ).hexdigest()
+    c.execute('SELECT u_group FROM users ORDER BY ID DESC LIMIT 1;')
+    r = c.fetchone()
+    print r
+    if r is None:
+        g = 'ocaml'
+    elif r[0] == 'ocaml':
+        g = 'nanomaly'
+    else:
+        g = 'ocaml'
 
-        connect()
-        addr = os.environ[ "REMOTE_ADDR" ]
-        code = c.execute(
-            "INSERT INTO users ( session, address ) VALUES ( %s, %s );",
-            ( sid, addr )
-        )
+    sid = uuid.uuid4()
+    c.execute(
+        "INSERT INTO users ( session, u_group ) VALUES ( ?, ? );",
+        ( str(sid), g )
+    )
+    db.commit()
 
     cookies[ sid_cookie ] = sid
-    return sid
+    return str(sid)
 
 def get_session_id():
     global c
-    if "session" in form:
-        session = form[ "session" ].value
-    else:
+    if sid_cookie in cookies:
         session = cookies[ sid_cookie ].value
+    else:
+        session = new_session()
 
     connect()
-    code = c.execute( "SELECT id FROM users WHERE session=%s;", session )
-    if code != 1:
-        raise Exception( "bad session '%s': %d" % ( session, code ) )
-    sid = int( c.fetchone()[ 0 ] )
-    random.seed( sid )
+    c.execute( "SELECT id FROM users WHERE session=?;", (session, ) )
+    x = c.fetchone()
+    if x is None:
+        new_session()
+        return get_session_id()
+    # if code != 1:
+    #     raise Exception( "bad session '%s': %d" % ( session, code ) )
+    sid = int( x[0] )
     return sid
 
-def get_rotation( user_id, snip_id ):
-    user_id = int( user_id )
-    snip_id = int( snip_id )
-    return ( user_id ^ snip_id ) & 0x1
 
-def get_snippet_id( num, record = False ):
-    global c
-
-    sid = get_session_id()
-
-    snippets = glob.glob( os.path.join( snippetsdir, "*" ) )
-    total = len( snippets )
-
-    # We need to rotate the order of choices so that some participants get A on
-    # the left and some get A on the right. This corresponds to rotating by 0 or
-    # 1. We implement this with a shuffled list of rotation sizes. It does not
-    # matter that this list is longer than the list of snippets; as long as the
-    # probability of a 0-rotation or 1-rotation is correct.
-
-    rotations = [ 0, 1 ] * total
-
-    # Sort the snippets before shuffling them so that the order is
-    # deterministic with the same random seed.
-
-    snippets.sort()
-    random.shuffle( snippets )
-    random.shuffle( rotations )
-    index = ( sid * 11 + int( num ) ) % total
-
-    if record:
-        snip = snippets[ index ]
-    
-        snip_id = os.path.basename( snip )
-
-        code = c.execute(
-            "INSERT INTO snippets ( userid, rownum, snippet )"
-            + " VALUES ( %s, %s, %s );",
-            ( sid, num, snip_id )
-        )
-        if code != 1:
-            raise Exception( "could not reserve snippet" )
-        return snip_id, rotations[ index ]
-    else:
-        code = c.execute(
-            "SELECT snippet FROM snippets WHERE userid=%s AND rownum=%s;",
-            ( sid, num )
-        )
-        if code == 0:
-            raise Exception( "no snippet was reserved for user" )
-        elif code == 1:
-            return str( c.fetchone()[ 0 ] ), rotations[ index ]
-        else:
-            raise Exception( "too many snippets reserved!" )
-
-def record_score():
+def record_response():
     global c
     sid          = get_session_id()
-    snippet, rot = get_snippet_id( form[ "snippetnum" ].value )
+    snippetnum   = int(form["snippetnum"].value)
+    snippet      = snippets[snippetnum]
+    # snippet, rot = get_snippet_id( form[ "snippetnum" ].value )
     time         = form[ "time" ].value
-    score        = ord( str( form[ "score" ].value )[ 0 ] ) - ord( "A" )
+    # score        = ord( str( form[ "score" ].value )[ 0 ] ) - ord( "A" )
 
     connect()
-    code = c.execute(
-        "INSERT INTO preferences ( userid, snippet, time, visible, canonical )"
-        + " VALUES ( %s, %s, %s, %s, %s );",
-        ( sid, snippet, time, score, ( score + rot ) % 2 ) )
-    if code != 1:
-        raise Exception( "could not record score" )
+    c.execute(
+        "INSERT OR REPLACE INTO responses ( userid, snippet, r_group, time, cause, explanation, fix )"
+        + " VALUES ( ?, ?, ?, ?, ?, ?, ? );",
+        ( sid, snippet, form["group"]. value, time, form["cause"].value, form["explanation"].value, form["fix"].value ) )
     db.commit()
 
-    return { "status":   "success" }
+    if (snippetnum + 1 >= len(snippets)):
+        return record_answers()
+
+    return get_snippet(snippetnum + 1)
+    # return { "status":   "success" }
 
 def record_answers():
     global c
@@ -156,7 +124,7 @@ def record_answers():
     connect()
     completion_code = str( uuid.uuid4() ).replace( "-", "" )
     code = c.execute(
-        "UPDATE users SET compcode = %s WHERE id = %s;",
+        "UPDATE users SET compcode = ? WHERE id = ?;",
         ( completion_code, sid )
     )
     return { "body": """
@@ -166,45 +134,67 @@ def record_answers():
         """.strip() % completion_code
     };
 
-def get_snippet():
-    result = dict()
-    if "session" in form:
-        result[ "session" ] = form[ "session" ].value
+def choose_group(sid, snippetnum):
+    c.execute('SELECT u_group FROM users WHERE id=?', (sid, ))
+    g = c.fetchone()[0]
+    if snippetnum % 2 == 0 and g == 'ocaml':
+        return 'ocaml'
+    elif snippetnum % 2 == 0 and g == 'nanomaly':
+        return 'nanomaly'
+    elif g == 'ocaml':
+        return 'nanomaly'
     else:
-        result[ "session" ] = new_session()
+        return 'ocaml'
+    
+
+def get_snippet(snippetnum):
+    result = dict()
+
     sid = get_session_id()
 
-    num, rot = get_snippet_id( form[ "snippetnum" ].value, True )
-    aname = os.path.join( snippetsdir, num, "a.html" )
-    bname = os.path.join( snippetsdir, num, "b.html" )
-    if rot != 0:
-        aname, bname = bname, aname
+    # num, rot = get_snippet_id( form[ "snippetnum" ].value, True )
 
-    if os.path.exists( aname ) and os.path.exists( bname ):
-        result[ "lang" ] = "text/x-java"
-        with open( aname ) as a:
-            result[ "left" ] = a.read()
-        with open( bname ) as b:
-            result[ "right" ] = b.read()
+    snippet = snippets[snippetnum]
+
+    group = choose_group(sid, snippetnum)    
+
+    mlname = os.path.join( snippetsdir, snippet) + '.ml'
+    jsonname = os.path.join( snippetsdir, snippet) + '.json'
+    errname = os.path.join( snippetsdir, snippet) + '.err'
+
+    if os.path.exists( mlname ) and os.path.exists( jsonname ) and os.path.exists( errname ):
+        with open( mlname ) as ml:
+            result[ "prog" ] = ml.read()
+        with open( jsonname ) as js:
+            result[ "json" ] = js.read()
+        with open( errname ) as err:
+            result[ "err" ] = err.read()
+        result[ "group" ] = group
+        result[ "snippetnum" ] = snippetnum
 
         return result
     else:
-        raise Exception( "Do not know snippet " + form[ "snippetnum" ].value + "(" + aname + ", " + bname + ")" )
+        raise Exception( "Do not know snippet " + form[ "snippetnum" ].value + "(" + mlname + ", " + jsonname + ", " + errname + ")" )
 
+
+debuglog = "nanomaly.log"
 try:
-    debuglog = "/tmp/readability.log"
     if os.path.exists( debuglog ):
         os.remove( debuglog )
-#    with open( debuglog, 'w' ) as fh:
-#        print >>fh, form
+    with open( debuglog, 'w' ) as fh:
+        print >>fh, form
 
-    if "score" in form:
-        result = record_score()
-    elif "exp1" in form:
+    if form.has_key("cause"):
+        result = record_response()
+    elif form.getfirst("exp1") is not None:
         result = record_answers()
     else:
-        result = get_snippet()
+        result = get_snippet(0)
 except Exception as e:
+    with open( debuglog, 'w' ) as fh:
+        import traceback
+        print >>fh, form
+        traceback.print_exc(file=fh)
     result = { "error": repr( e ) }
 except:
     result = { "error": "unknown exception (not subclass of Exception)" }
