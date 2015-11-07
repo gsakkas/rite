@@ -540,7 +540,7 @@ function setup() {
       console.log('sending', data);
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8000/survey.py',
+      url: 'survey.py',
 //      url: 'survey.py',
       data: data,
       dataType: 'json',
@@ -578,7 +578,7 @@ function setup() {
     // kick it all off
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8000/survey.py',
+      url: 'survey.py',
       data: {'foo':'bar'},
       dataType: 'json',
       success: function(data, status, xhr) {
