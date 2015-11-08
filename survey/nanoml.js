@@ -556,7 +556,8 @@ function setup() {
       dataType: 'json',
       success: function(data, status, xhr) {
         if (data.body !== undefined) {
-          $('#my-email').modal('show');
+          $('#thanks').modal();
+          $('#thanks').modal('show');
           return;
         }
         // data = JSON.parse(data);
