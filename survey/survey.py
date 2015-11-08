@@ -116,16 +116,21 @@ def record_response():
     return get_snippet(snippetnum + 1)
     # return { "status":   "success" }
 
-def record_answers():
+def record_email():
     global c
     sid = get_session_id()
 
     connect()
     completion_code = str( uuid.uuid4() ).replace( "-", "" )
-    code = c.execute(
-        "UPDATE users SET compcode = ? WHERE id = ?;",
-        ( completion_code, sid )
+    # code = c.execute(
+    #     "UPDATE users SET compcode = ? WHERE id = ?;",
+    #     ( completion_code, sid )
+    # )
+
+    c.execute("UPDATE users SET email = ? WHERE id = ?",
+              ( form["email"].value, sid)
     )
+
     return { "body": """
         <h2>Thank You!</h2>
         <p>Thank you for taking our survey.</p>
@@ -185,8 +190,8 @@ try:
 
     if form.has_key("cause"):
         result = record_response()
-    elif form.getfirst("exp1") is not None:
-        result = record_answers()
+    elif form.has_key("email"):
+        result = record_email()
     else:
         result = get_snippet(0)
 except Exception as e:
