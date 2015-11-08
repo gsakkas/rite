@@ -533,6 +533,16 @@ function setup() {
     // stack = [];
     // console.log(prog);
 
+    // setup email form
+    $('#email-btn').submit(function(evt) {
+      $.ajax({
+          type: 'POST',
+          url: 'survey.py',
+          data: { 'email': $('#my-email').text },
+          success: function() { $('#thanks').modal('hide'); },
+      });
+    });
+
     // send ajax request
     var data = {'cause': cause, 'explanation': explanation, 'fix': fix,
                 'snippetnum': snippetnum, 'time': time, 'group': group,
@@ -546,7 +556,7 @@ function setup() {
       dataType: 'json',
       success: function(data, status, xhr) {
         if (data.body !== undefined) {
-          alert('Thanks! All done!');
+          $('#my-email').modal('show');
           return;
         }
         // data = JSON.parse(data);
