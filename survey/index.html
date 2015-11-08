@@ -1,9 +1,9 @@
 <html>
 <head>
-  <title>Code Readability Survey - Welcome</title>
+  <title>Type Error Debugging Survey - Welcome</title>
 
-  <link type="text/css" rel="stylesheet" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" />
-  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <!-- <link type="text/css" rel="stylesheet" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" /> -->
+  <!-- <script type="text/javascript" src="jquery-1.7.2.min.js"></script> -->
 
   <style type="text/css">
     .address ul {
@@ -26,23 +26,23 @@
     }
   </style>
 
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $('.mail').click(function(){
-        var addr = $(this).text();
-        location = "mailto:" + addr + "@" + "virginia.edu";
-      }).hover(
-        function(){
-          var addr = $(this).text();
-          window.status = "mailto:" + addr + "@" + "virginia.edu";
-          return false;
-        }, function() {
-          window.status = "";
-          return false;
-        }
-      );
-    });
-  </script>
+  <!-- <script type="text/javascript"> -->
+  <!--   $(document).ready(function(){ -->
+  <!--     $('.mail').click(function(){ -->
+  <!--       var addr = $(this).text(); -->
+  <!--       location = "mailto:" + addr + "@" + "virginia.edu"; -->
+  <!--     }).hover( -->
+  <!--       function(){ -->
+  <!--         var addr = $(this).text(); -->
+  <!--         window.status = "mailto:" + addr + "@" + "virginia.edu"; -->
+  <!--         return false; -->
+  <!--       }, function() { -->
+  <!--         window.status = ""; -->
+  <!--         return false; -->
+  <!--       } -->
+  <!--     ); -->
+  <!--   }); -->
+  <!-- </script> -->
 </head>
 <body>
 
@@ -56,55 +56,77 @@
 <h2><a name='about'>About</a></h2>
 <div class='body-text'>
 <p>
-Code readability has a significant impact on developer time. Unreadable code is
-harder to understand, harder to modify, harder to fix, and easier to get wrong.
-However, we do not really understand what makes code more or less readable. With
-this survey, we hope to learn what factors impact people's perceptions of code
-readability and whether they are different for different languages.
-</p><p>
-This Code Readability survey is completely voluntary; you may stop at any time.
-We will not ask you for your name and will not record any identifying
-information. Data obtained from this survey will only be used to learn the
-factors that affect the readability of different code examples.
-</p><p>
-If you choose to participate, you will be presented with examples of code from
-real-world programming projects and asked to rate them as readable or
-unreadable. You will also be asked to rate your experience with programming and
-with the languages in question.
-</p><p>
-No special experience is necessary to take this survey. Most people will
-complete the survey in less than 30 minutes, but there is no time limit.
-</p><p>
-The investigators can be contacted at:
-<div class="address">
-  <ul><li>
-  Jonathan Dorn<br /><a class='mail' href='#mail:jad5ju'>jad5ju</a>
-  </li><li>
-  Wes Weimer<br /><a class='mail' href='#mail:weimer'>weimer</a>
-  </li></ul>
-</div>
+  Type errors are a common stumbling block for people trying to learn
+  functional programming languages like OCaml or Haskell. They are
+  notoriously terse and easily misleading to novices. These languages
+  refuse to let programmers run their code until the type checker is
+  satisfied. We want to study whether running the code and presenting a
+  counter-example (a set of inputs that would cause the program to crash)
+  can help diagnose and fix type errors.
+</p>
+<p>
+  This survey is completely voluntary; you may stop at any time.  We
+  will not ask you for your name and will not record any identifying
+  information. Data obtained from this survey will only be used to learn
+  whether providing runtime traces helps diagnose and fix type errors.
+</p>
+<p>
+  If you choose to participate, you will be presented with examples of
+  code written by students learning OCaml, and we will ask you to
+  identify the error and fix it.
+</p>
+<p>
+  We recommend some familiarity with OCaml or functional programming to
+   take this survey.  Most people will complete the survey in less than
+   30 minutes, but there is no time limit.
+</p>
+<p>
+  The investigators can be contacted at:
+  <div class="address">
+    <ul><li>
+        Eric Seidel<br /><a class='mail' href='mailto:eseidel@cs.ucsd.edu'>eseidel@cs.ucsd.edu</a>
+      </li><li>
+        Wes Weimer<br /><a class='mail' href='mailto:weimer@cs.virginia.edu'>weimer@cs.virginia.edu</a>
+    </li></ul>
+  </div>
 </p>
 </div>
 
 <h2><a name='instructions'>Instructions</a></h2>
 <div class='body-text'>
 <p>
-You will be shown several examples of code from real-world programming projects.
-For each example, we ask that you rate the code readability on a scale of 1
-(very unreadable) to 5 (very readable). Once you have rated each snippet, you
-will be presented with the next one. You can always go back to look at examples
-you have already rated by clicking on the buttons at the bottom of the page.
-</p><p>
-Please do not spend too much time on any example. Since this survey is about
-readability and not understanding the code, please just look at the example long
-enough to form a quick intuition about the readability and move on.
+  You will be shown several snippets of code with type errors. For each
+  example, we ask that you determine the cause of the error (i.e. which
+  expression is at fault), explain why there is an error, and rewrite
+  the code to fix the error.
 </p>
+<p>
+  Each example will come with either a simple error message, or an
+  interactive trace of a failed execution. The interactive trace will
+  start with just the input expression and the state at which the
+  program got stuck (e.g. by trying to add an integer and a string). You
+  can step forward or backward from a given expression by clicking on
+  the expression and clicking the "Step forward" or "Step backward"
+  button. You can also "Jump" (forward or backward) to the closest
+  function call, skipping over intermediate steps. In each expression,
+  we will highlight the sub-expression where the next computation step
+  will occur. For example, in <pre><code>x + y</code></pre> we would
+  highlight <code>x</code> because the next step is to lookup 
+  <code>x</code> in the environment. But in <pre><code>1 + 2</code></pre>
+  we would highlight the entire expression, as the next step is performing the
+  addition. Finally, you see the environment at any point in the trace by hovering
+  over the corresponding expression.
+</p>
+<p>
+  We recommend taking a few minutes to familiarize yourself with a
+  <a target="blank" href="demo.html">quick demo</a> of the interactive
+  trace before starting the survey.
 </div>
 
 <h2><a name='gettingstarted'>Getting Started</a></h2>
 <div class='body-text'>
 <p>
-<a href="survey.html">Let's go!</a>
+<a target="blank" href="survey.html">Let's go!</a>
 </p>
 </div>
 
