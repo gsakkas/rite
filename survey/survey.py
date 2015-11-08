@@ -111,7 +111,7 @@ def record_response():
     db.commit()
 
     if (snippetnum + 1 >= len(snippets)):
-        return record_answers()
+        return {'body': 'thanks!'}
 
     return get_snippet(snippetnum + 1)
     # return { "status":   "success" }
