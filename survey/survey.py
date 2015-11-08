@@ -58,7 +58,6 @@ def new_session():
 
     c.execute('SELECT u_group FROM users ORDER BY ID DESC LIMIT 1;')
     r = c.fetchone()
-    print r
     if r is None:
         g = 'ocaml'
     elif r[0] == 'ocaml':
@@ -197,6 +196,10 @@ except Exception as e:
         traceback.print_exc(file=fh)
     result = { "error": repr( e ) }
 except:
+    with open( debuglog, 'w' ) as fh:
+        import traceback
+        print >>fh, form
+        traceback.print_exc(file=fh)
     result = { "error": "unknown exception (not subclass of Exception)" }
 finally:
     if c != None:
@@ -204,7 +207,14 @@ finally:
     if db != None:
         db.close()
 
-print "Content-Type: text/html"
+with open( debuglog, 'w' ) as fh:
+    print >>fh, form
+    print >>fh, "Content-Type: application/json"
+    print >>fh, cookies
+    print >>fh, ""
+    print >>fh, json.dumps( result )
+
+print "Content-Type: application/json"
 print cookies
 print
 print json.dumps( result )
