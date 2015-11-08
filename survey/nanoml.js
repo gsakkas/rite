@@ -534,14 +534,15 @@ function setup() {
     // console.log(prog);
 
     // setup email form
-    $('#email-btn').submit(function(evt) {
+    document.getElementById('my-email').onclick = function(evt) {
+      console.log('email', $('#my-email').text );
       $.ajax({
           type: 'POST',
           url: 'survey.py',
           data: { 'email': $('#my-email').text },
           success: function() { $('#thanks').modal('hide'); },
       });
-    });
+    };
 
     // send ajax request
     var data = {'cause': cause, 'explanation': explanation, 'fix': fix,
