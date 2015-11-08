@@ -108,13 +108,24 @@
   can step forward or backward from a given expression by clicking on
   the expression and clicking the "Step forward" or "Step backward"
   button. You can also "Jump" (forward or backward) to the closest
-  function call, skipping over intermediate steps. In each expression,
-  we will highlight the sub-expression where the next computation step
-  will occur. For example, in <pre><code>x + y</code></pre> we would
-  highlight <code>x</code> because the next step is to lookup 
-  <code>x</code> in the environment. But in <pre><code>1 + 2</code></pre>
-  we would highlight the entire expression, as the next step is performing the
-  addition. Finally, you see the environment at any point in the trace by hovering
+  function call, skipping over intermediate steps. 
+</p>
+<p>
+  In each expression, we will highlight the sub-expression where the
+  next computation step will occur. 
+
+  For example, in <pre><code>x + y</code></pre> we would
+  highlight <code>x</code> because the next step is to
+  lookup <code>x</code> in the environment.
+
+  But in <pre><code>1 + 2</code></pre> we would highlight the entire
+  expression, as the next step is performing the addition.
+
+  At times, the trace will need to disambiguate a variable by appending a
+  <code>|</code> followed by a number, e.g. <code>n</code> may be
+  renamed to <code>n|1</code>.
+
+  Finally, you see the environment at any point in the trace by hovering
   over the corresponding expression.
 </p>
 <p>
