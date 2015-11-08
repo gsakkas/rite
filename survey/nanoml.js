@@ -535,11 +535,11 @@ function setup() {
 
     // setup email form
     document.getElementById('email-btn').onclick = function(evt) {
-      console.log('email', $('#my-email').text );
+      console.log('email', $('#my-email').val() );
       $.ajax({
           type: 'POST',
           url: 'survey.py',
-          data: { 'email': $('#my-email').text },
+          data: { 'email': $('#my-email').val() },
           success: function() { $('#thanks').modal('hide'); },
       });
     };

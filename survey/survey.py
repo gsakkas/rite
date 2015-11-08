@@ -127,7 +127,7 @@ def record_email():
     #     ( completion_code, sid )
     # )
 
-    c.execute("UPDATE users SET email = ? WHERE id = ?",
+    c.execute("UPDATE users SET email = ? WHERE id = ?;",
               ( form["email"].value, sid)
     )
 
