@@ -534,7 +534,7 @@ function setup() {
     // console.log(prog);
 
     // setup email form
-    document.getElementById('my-email').onclick = function(evt) {
+    document.getElementById('email-btn').onclick = function(evt) {
       console.log('email', $('#my-email').text );
       $.ajax({
           type: 'POST',
@@ -556,9 +556,9 @@ function setup() {
       data: data,
       dataType: 'json',
       success: function(data, status, xhr) {
-        if (data.body !== undefined) {
+        if (data.email !== undefined) {
           $('#thanks').modal();
-          $('#thanks').modal('show');
+          // $('#thanks').modal('show');
           return;
         }
         // data = JSON.parse(data);
