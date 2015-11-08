@@ -130,6 +130,7 @@ def record_email():
     c.execute("UPDATE users SET email = ? WHERE id = ?;",
               ( form["email"].value, sid)
     )
+    db.commit()
 
     return { "body": """
         <h2>Thank You!</h2>
