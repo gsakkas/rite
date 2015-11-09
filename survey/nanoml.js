@@ -552,53 +552,53 @@ function setup() {
                 success: function() { $('#thanks').modal('hide'); },
             });
         };
-    };
 
-    // send ajax request
-    var data = {'cause': cause, 'explanation': explanation, 'fix': fix,
-                'snippetnum': snippetnum, 'time': time, 'group': group,
-               };
-    console.log('sending', data);
-    $.ajax({
-        type: 'POST',
-        url: 'survey.py',
-        //      url: 'survey.py',
-        data: data,
-        dataType: 'json',
-        success: function(data, status, xhr) {
-            if (data.compcode !== undefined) {
-                $('#completion-code').text(data.compcode)
-                $('#thanks').modal();
-                // $('#thanks').modal('show');
-                return;
+        // send ajax request
+        var data = {'cause': cause, 'explanation': explanation, 'fix': fix,
+                    'snippetnum': snippetnum, 'time': time, 'group': group,
+                   };
+        console.log('sending', data);
+        $.ajax({
+            type: 'POST',
+            url: 'survey.py',
+            //      url: 'survey.py',
+            data: data,
+            dataType: 'json',
+            success: function(data, status, xhr) {
+                if (data.compcode !== undefined) {
+                    $('#completion-code').text(data.compcode)
+                    $('#thanks').modal();
+                    // $('#thanks').modal('show');
+                    return;
+                }
+                window.scroll(0,0);
+                // data = JSON.parse(data);
+                console.log(status, data);
+                $('#cause').val('');
+                $('#explanation').val('');
+                startTime = new Date();
+                group = data.group;
+                editor.setValue(data.prog);
+                fixEditor.setValue(data.prog);
+                snippetnum = data.snippetnum;
+                stack = [];
+                resetButtons();
+                if (data.group === 'nanomaly') {
+                    draw(JSON.parse(data.json));
+                    $('#nav-buttons').show();
+                    $('#nav-buttons').popover('show');
+                } else {
+                    draw_ocaml(data);
+                    $('#nav-buttons').hide();
+                }
+            },
+            error: function(xhr, errorType, error) {
+                // mixpanel.track("ServerCrash", { "error": error, "program": prog, "function": func });
+                alert('Oh noes, something went wrong!');
+                console.log(errorType, error);
             }
-            window.scroll(0,0);
-            // data = JSON.parse(data);
-            console.log(status, data);
-            $('#cause').val('');
-            $('#explanation').val('');
-            startTime = new Date();
-            group = data.group;
-            editor.setValue(data.prog);
-            fixEditor.setValue(data.prog);
-            snippetnum = data.snippetnum;
-            stack = [];
-            resetButtons();
-            if (data.group === 'nanomaly') {
-                draw(JSON.parse(data.json));
-                $('#nav-buttons').show();
-                $('#nav-buttons').popover('show');
-            } else {
-                draw_ocaml(data);
-                $('#nav-buttons').hide();
-            }
-        },
-        error: function(xhr, errorType, error) {
-            // mixpanel.track("ServerCrash", { "error": error, "program": prog, "function": func });
-            alert('Oh noes, something went wrong!');
-            console.log(errorType, error);
-        }
-    });
+        });
+    };
 
     // kick it all off
     $.ajax({
