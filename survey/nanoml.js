@@ -539,7 +539,11 @@ function setup() {
       $.ajax({
           type: 'POST',
           url: 'survey.py',
-          data: { 'email': $('#my-email').val() },
+          data: { 'email': $('#my-email').val(),
+                  'important': $('#important').val(),
+                  'compilers': $('#compilers').val(),
+                  'other': $('#other').val()
+                },
           success: function() { $('#thanks').modal('hide'); },
       });
     };
@@ -556,26 +560,29 @@ function setup() {
       data: data,
       dataType: 'json',
       success: function(data, status, xhr) {
-        if (data.email !== undefined) {
+        if (data.compcode !== undefined) {
+          $('#completion-code').text(data.compcode)
           $('#thanks').modal();
           // $('#thanks').modal('show');
           return;
         }
         // data = JSON.parse(data);
         console.log(status, data);
-        fixEditor.setValue('');
         $('#cause').val('');
         $('#explanation').val('');
         startTime = new Date();
         group = data.group;
         editor.setValue(data.prog);
+        fixEditor.setValue(data.prog);
         snippetnum = data.snippetnum;
         stack = [];
         resetButtons();
         if (data.group === 'nanomaly') {
             draw(JSON.parse(data.json));
+            $('#nav-buttons').style('display: true;');
         } else {
             draw_ocaml(data);
+            $('#nav-buttons').style('display: none;');
         }
       },
       error: function(xhr, errorType, error) {
@@ -599,13 +606,16 @@ function setup() {
         startTime = new Date();
         group = data.group;
         editor.setValue(data.prog);
+        fixEditor.setValue(data.prog);
         snippetnum = data.snippetnum;
         stack = [];
         resetButtons();
         if (data.group === 'nanomaly') {
             draw(JSON.parse(data.json));
+            $('#nav-buttons').style('display: true;');
         } else {
             draw_ocaml(data);
+            $('#nav-buttons').style('display: none;');
         }
       },
       error: function(xhr, errorType, error) {

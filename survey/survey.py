@@ -111,7 +111,12 @@ def record_response():
     db.commit()
 
     if (snippetnum + 1 >= len(snippets)):
-        return {'email': 'please!'}
+        completion_code = str( uuid.uuid4() ).replace( "-", "" )
+        c.execute('UPDATE users SET compcode = ? WHERE id = ?;',
+                  ( completion_code, sid)
+        )
+        db.commit()
+        return {'compcode': '<tt>' + completion_code + '</tt>'}
 
     return get_snippet(snippetnum + 1)
     # return { "status":   "success" }
@@ -121,14 +126,14 @@ def record_email():
     sid = get_session_id()
 
     connect()
-    completion_code = str( uuid.uuid4() ).replace( "-", "" )
+    # completion_code = str( uuid.uuid4() ).replace( "-", "" )
     # code = c.execute(
     #     "UPDATE users SET compcode = ? WHERE id = ?;",
     #     ( completion_code, sid )
     # )
 
-    c.execute("UPDATE users SET email = ? WHERE id = ?;",
-              ( form["email"].value, sid)
+    c.execute("UPDATE users SET email = ? important = ? compilers = ? other = ? WHERE id = ?;",
+              ( form["email"].value, form["important"].value, form["compilers"].value, form['other'].value, sid)
     )
     db.commit()
 
@@ -136,7 +141,7 @@ def record_email():
         <h2>Thank You!</h2>
         <p>Thank you for taking our survey.</p>
         <p>Completion code: <tt>%s</tt></p>
-        """.strip() % completion_code
+        """.strip() # % completion_code
     };
 
 def choose_group(sid, snippetnum):
