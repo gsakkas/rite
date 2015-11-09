@@ -549,7 +549,10 @@ function setup() {
                         'compilers': $('#compilers').val(),
                         'other': $('#other').val()
                       },
-                success: function() { $('#thanks').modal('hide'); },
+                success: function() { 
+                    $('#thanks').modal('hide');
+                    $('#body').text('Thanks for your participation, that concludes our study.');
+                },
             });
         };
 
