@@ -117,8 +117,55 @@
             </form>
         </div>
     </nav>
+
     <div class="mybody row">
-        <div class="mybody col-md-6">
+      <div class="mybody col-md-3">
+        <p>
+          This demonstration will familiarize you with interactive traces of
+          failed executions. Follow these steps:
+        </p>
+        <ol>
+          <li>
+            Mouse over the underlined code on the left to see the type error <code>could not match int with bool</code>.
+          </li>
+          <li>
+            Take a look at the graphical representation of the execution on the
+            right. Notice the trace began by calling <code>fac 2</code> and got
+            stuck at <code>2 * (1 * true)</code>, specifically when it tried to
+            evaluate the sub-expression <code>1 * true</code>.
+          </li>
+          <li>
+            Click on the <code>fac 2</code> node. Notice that the "Step forward"
+            and "Jump forward" buttons at the top are no longer disabled. This
+            means we can take a single step forward from <code>fac 2</code>, or
+            jump forward to the next function call.
+          </li>
+          <li>
+            Click "Jump forward". This inserts a new node in the trace, <code>2 * fac 1</code>.
+          </li>
+          <li>
+            Select the <code>2 * (1 * true)</code> node and click "Step
+            backward". Notice that the <code>true</code> has been replaced
+            by <code>if true then true else ...</code>.
+          <li>
+            Step backward a few more times (or alternatively, Jump backward
+            once) until you reach the expression <code>2 * (1 * fac 0)</code>.
+            It's clear now that the type error arose because the <code>fac 0</code>
+            call evaluated to <code>true</code> when it should have
+            been <code>1</code>, the base case.
+          </li>
+          <li>
+            So for this snippet, we would mark the <code>true</code> on line 3
+            as the source of the error, explain how the program tried to
+            multiply that <code>true</code> by <code>1</code>, and fix the
+            program by replacing <code>true</code> with <code>1</code>.
+          </li>
+          <li>
+            Done! Close this tab when you're ready and start the survey.
+          </li>
+        </ol>
+      </div>     
+      <div class="mybody col-md-3">
             <textarea id="prog" name="prog">
             </textarea>
             <!-- <br/> -->

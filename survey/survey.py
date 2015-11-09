@@ -26,7 +26,7 @@ else:
     cookies = SimpleCookie()
 sid_cookie = "nanomaly-session-id"
 
-snippets = [ 'prog0971', 'palindrome', 'prog0223', 'prog3382', 'prog0553',
+snippets = [ 'prog0971', 'palindrome', 'prog0223', 'prog3382', # 'prog0553',
              'prog2746', 'gist1', 'gist2', 'gist3', 'prog3197' ]    
 
 def connect():
