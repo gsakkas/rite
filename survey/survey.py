@@ -133,7 +133,7 @@ def record_email():
     #     ( completion_code, sid )
     # )
 
-    c.execute("UPDATE users SET email = ? important = ? compilers = ? other = ? WHERE id = ?;",
+    c.execute("UPDATE users SET email = ?, important = ?, compilers = ?, other = ? WHERE id = ?;",
               ( form["email"].value, form["important"].value, form["compilers"].value, form['other'].value, sid)
     )
     db.commit()

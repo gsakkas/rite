@@ -566,7 +566,7 @@ function setup() {
             dataType: 'json',
             success: function(data, status, xhr) {
                 if (data.compcode !== undefined) {
-                    $('#completion-code').text(data.compcode)
+                    $('#completion-code').html(data.compcode)
                     $('#thanks').modal();
                     // $('#thanks').modal('show');
                     return;
