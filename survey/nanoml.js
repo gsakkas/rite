@@ -566,6 +566,7 @@ function setup() {
           // $('#thanks').modal('show');
           return;
         }
+        window.scroll(0,0);
         // data = JSON.parse(data);
         console.log(status, data);
         $('#cause').val('');
@@ -583,7 +584,6 @@ function setup() {
             $('#nav-buttons').popover({
                 placement: 'bottom',
                 content: 'Click on one of the bubbles below to get started!',
-                trigger: 'focus',
             });
             $('#nav-buttons').popover('show');
         } else {
@@ -622,7 +622,6 @@ function setup() {
             $('#nav-buttons').popover({
                 placement: 'bottom',
                 content: 'Click on one of the bubbles below to get started!',
-                trigger: 'focus',
             });
             $('#nav-buttons').popover('show');
         } else {
@@ -798,6 +797,7 @@ function draw(data) {
     // });
     network.on("selectNode", function (params) {
         // console.log('selectNode Event:', params);
+        $('#nav-buttons').popover('hide');
         var node = network.body.data.nodes.get(network.getSelectedNodes()[0]);
         console.log(node);
         if (node.span) {
