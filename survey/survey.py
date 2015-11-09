@@ -44,7 +44,8 @@ if not os.path.exists('nanomaly.db'):
     connect()
     c.execute('''CREATE TABLE users
                  (id integer primary key asc, u_group text,
-                  session text, compcode text, email text);''')
+                  session text, compcode text, email text,
+                  important text, compilers text, other text);''')
     c.execute('''CREATE TABLE responses
                  (userid text, snippet text, r_group text, time integer,
                   cause text, explanation text, fix text,
