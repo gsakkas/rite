@@ -579,10 +579,16 @@ function setup() {
         resetButtons();
         if (data.group === 'nanomaly') {
             draw(JSON.parse(data.json));
-            $('#nav-buttons').style('display: true;');
+            $('#nav-buttons').show();
+            $('#nav-buttons').popover({
+                placement: 'bottom',
+                content: 'Click on one of the bubbles below to get started!',
+                trigger: 'focus',
+            });
+            $('#nav-buttons').popover('show');
         } else {
             draw_ocaml(data);
-            $('#nav-buttons').style('display: none;');
+            $('#nav-buttons').hide();
         }
       },
       error: function(xhr, errorType, error) {
@@ -612,10 +618,16 @@ function setup() {
         resetButtons();
         if (data.group === 'nanomaly') {
             draw(JSON.parse(data.json));
-            $('#nav-buttons').style('display: true;');
+            $('#nav-buttons').show();
+            $('#nav-buttons').popover({
+                placement: 'bottom',
+                content: 'Click on one of the bubbles below to get started!',
+                trigger: 'focus',
+            });
+            $('#nav-buttons').popover('show');
         } else {
             draw_ocaml(data);
-            $('#nav-buttons').style('display: none;');
+            $('#nav-buttons').hide();
         }
       },
       error: function(xhr, errorType, error) {

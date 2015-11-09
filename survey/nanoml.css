@@ -29,7 +29,7 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 
 .CodeMirror {
   border: 1px solid #eee;
-  height: 90%;
+  height: 50%;
 }
 
 .mybody {
