@@ -1,0 +1,4 @@
+File "gist2.ml", line 8, characters 38-39:
+Error: This expression has type 'a list list
+       but an expression was expected of type int list
+       Type 'a list is not compatible with type int 

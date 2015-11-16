@@ -293,6 +293,7 @@ transStep expr' = do
 stepAll expr = do
   -- traceShowM $ pretty expr
   modify' (\s -> s { stStepKind = BoringStep })
+  let ?envs = []
   expr' <- step expr
   modify' $ \s -> s { stSteps = stSteps s + 1 }
   ss <- gets stSteps
@@ -438,7 +439,7 @@ matchBind (p,v) = do
     Nothing  -> withCurrentProvM $ \prv -> throwError $ MLException (mkExn "Match_failure" [] prv)
     Just env -> return env
 
-unshadow :: MonadEval m => Expr -> Env -> m (Env, Expr)
+unshadow :: (?envs :: [Env], MonadEval m) => Expr -> Env -> m (Env, Expr)
 unshadow expr env = do
   (su, expr') <- unshadow' expr env
   let env' = env { envEnv = substEnv su (envEnv env) }
@@ -451,12 +452,13 @@ unshadow expr env = do
   -- traceShowM (envEnv env, envEnv env', pretty expr')
   -- return (env', expr')
 
-unshadow' :: MonadEval m => Expr -> Env -> m ([(Var,Var)], Expr)
+unshadow' :: (?envs :: [Env], MonadEval m) => Expr -> Env -> m ([(Var,Var)], Expr)
 unshadow' expr env = do
-  bound <- map fst . concatMap envEnv . tail . toListEnv <$> gets stVarEnv
+  cenv <- gets stVarEnv
+  let bound = concatMap (map fst . concatMap envEnv . init . toListEnv) (cenv : ?envs)
   let su = mapMaybe ((`shadows` bound) . fst) (envEnv env)
   let expr' = substVars su expr
-  -- traceShowM (su, pretty expr')
+  --traceShowM (su, pretty expr')
   return (su, expr')
 
 substEnv :: [(Var, Var)] -> [(Var,Value)] -> [(Var,Value)]
@@ -522,7 +524,7 @@ onlySuffix v = let sx = dropWhile (/='|') v
                in if null sx then "0" else tail sx
 {-# INLINE onlySuffix #-}
 
-step :: MonadEval m => Expr -> m Expr
+step :: (?envs :: [Env], MonadEval m) => Expr -> m Expr
 step expr = withCurrentExpr expr $ build expr $ case expr of
   -- Val _ v -> return expr
   -- With ms env e
@@ -533,6 +535,7 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
   With ms env e
     | isValue e -> return e
     | otherwise -> do
+        let ?envs = env : ?envs
         e' <- step e `withEnv` env
         return $ With ms env e'
   Replace ms env e
@@ -541,6 +544,7 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
         modify' (\s -> s { stStepKind = ReturnStep })
         return e
     | otherwise -> do
+        let ?envs = env : ?envs
         e' <- step e `withEnv` env
         return $ Replace ms env e'
         -- build expr $ Replace ms env e'
@@ -688,7 +692,7 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
   --     (\[e1,e2] -> build expr (Prim2 ms p e1 e2))
   _ -> error ("step: " ++ show (pretty expr))
 
-stepApp :: MonadEval m => MSrcSpan -> Value -> [Value] -> m Expr
+stepApp :: (?envs :: [Env], MonadEval m) => MSrcSpan -> Value -> [Value] -> m Expr
 stepApp ms (With _ env f) es = stepApp ms f es `withEnv` env
 stepApp ms (Replace _ env f) es = stepApp ms f es `withEnv` env
 stepApp ms f' es = do
@@ -736,10 +740,7 @@ stepApp ms f' es = do
         -- pushEnv env
         -- pushEnv pat_env
         nenv' <- allocEnvWith ("app:" ++ show (srcSpanStartLine $ fromJust ms)) env pat_env
-        -- NOTE: we unshadow wrt to the *surrounding* env, not the
-        -- closed-over env
-        cenv <- gets stVarEnv
-        (su, e') <- unshadow' e cenv
+        (su, e') <- unshadow' e nenv'
         let nenv = nenv' { envEnv = substEnv su (envEnv nenv') }
         case (ps', es') of
           ([], []) -> do
@@ -787,7 +788,8 @@ stepBop ms bop v1 v2 = do modify' (\s -> s { stStepKind = PrimStep })
 stepUop ms uop v = do modify' (\s -> s { stStepKind = PrimStep })
                       evalUop uop v
 
-stepAlts :: MonadEval m => (Expr -> [Alt] -> Expr) -> Expr -> [Alt] -> m Expr
+stepAlts :: (?envs :: [Env], MonadEval m)
+         => (Expr -> [Alt] -> Expr) -> Expr -> [Alt] -> m Expr
 stepAlts _ _ []
   = withCurrentProvM $ \prv ->
     maybeThrow $ MLException (mkExn "Match_failure" [] prv)
@@ -817,7 +819,7 @@ stepAlts f v ((p,g,e):as)
 -- Utilities
 ----------------------------------------------------------------------
 
-stepOne :: MonadEval m
+stepOne :: (?envs :: [Env], MonadEval m)
         => [Expr]          -- ^ possible expressions to step through
         -> ([Expr] -> m a) -- ^ what to do when they're all values
         -> ([Expr] -> m a) -- ^ what to do after stepping a single expression

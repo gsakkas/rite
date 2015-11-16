@@ -1,0 +1,154 @@
+<html>
+<head>
+  <title>Type Error Debugging Survey - Welcome</title>
+
+  <!-- <link type="text/css" rel="stylesheet" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" /> -->
+  <!-- <script type="text/javascript" src="jquery-1.7.2.min.js"></script> -->
+
+  <style type="text/css">
+    .address ul {
+      list-style: none;
+    }
+    .address ul li {
+      display: inline-block;
+      padding-right:  2ex;
+      padding-bottom: 2ex;
+    }
+
+    .table-of-contents {
+      list-style: none;
+    }
+
+    .body-text {
+      font-family: "Helvetica", "Arial", sans-serif;
+      margin-left:  2em;
+      margin-right: 2em;
+    }
+  </style>
+
+  <!-- <script type="text/javascript"> -->
+  <!--   $(document).ready(function(){ -->
+  <!--     $('.mail').click(function(){ -->
+  <!--       var addr = $(this).text(); -->
+  <!--       location = "mailto:" + addr + "@" + "virginia.edu"; -->
+  <!--     }).hover( -->
+  <!--       function(){ -->
+  <!--         var addr = $(this).text(); -->
+  <!--         window.status = "mailto:" + addr + "@" + "virginia.edu"; -->
+  <!--         return false; -->
+  <!--       }, function() { -->
+  <!--         window.status = ""; -->
+  <!--         return false; -->
+  <!--       } -->
+  <!--     ); -->
+  <!--   }); -->
+  <!-- </script> -->
+</head>
+<body>
+
+<h2>Contents</h2>
+<ul class="table-of-contents">
+<li><a href='#about'>About</a></li>
+<li><a href='#instructions'>Instructions</a></li>
+<li><a href='#gettingstarted'>Getting Started</a></h2>
+</ul>
+
+<h2><a name='about'>About</a></h2>
+<div class='body-text'>
+<p>
+  Type errors are a common stumbling block for people trying to learn
+  functional programming languages like OCaml or Haskell. 
+
+  We are interested in learning what makes type errors difficult to
+  diagnose and fix.
+
+  <!-- They are notoriously terse and easily misleading to novices. These -->
+  <!-- languages refuse to let programmers run their code until the type -->
+  <!-- checker is satisfied. -->
+
+  <!-- We want to study whether running the code and presenting a -->
+  <!-- counter-example (a set of inputs that would cause the program to -->
+  <!-- crash) can help diagnose and fix type errors. -->
+</p>
+<p>
+  This survey is completely voluntary; you may stop at any time.  We
+  will not ask you for your name and will not record any identifying
+  information. Data obtained from this survey will only be used to learn
+  whether providing runtime traces helps diagnose and fix type errors.
+</p>
+<p>
+  If you choose to participate, you will be presented with examples of
+  code written by students learning OCaml, and we will ask you to
+  identify the error and fix it.
+</p>
+<p>
+  We recommend some familiarity with OCaml or functional programming to
+  take this survey.  We expect the survey to take roughly 30 minutes,
+  but there is no time limit.
+</p>
+<p>
+  The investigators can be contacted at:
+  <div class="address">
+    <ul><li>
+        Eric Seidel<br /><a class='mail' href='mailto:eseidel@cs.ucsd.edu'>eseidel@cs.ucsd.edu</a>
+      </li><li>
+        Wes Weimer<br /><a class='mail' href='mailto:weimer@cs.virginia.edu'>weimer@cs.virginia.edu</a>
+    </li></ul>
+  </div>
+</p>
+</div>
+
+<h2><a name='instructions'>Instructions</a></h2>
+<div class='body-text'>
+<p>
+  You will be shown several snippets of code with type errors. For each
+  example, we ask that you determine the cause of the error (i.e. which
+  expression is at fault), explain why there is an error, and rewrite
+  the code to fix the error.
+</p>
+<p>
+  Each example will come with either a simple error message, or an
+  interactive trace of a failed execution. The interactive trace will
+  start with just the input expression and the state at which the
+  program got stuck (e.g. by trying to add an integer and a string). You
+  can step forward or backward from a given expression by clicking on
+  the expression and clicking the "Step forward" or "Step backward"
+  button. You can also "Jump" (forward or backward) to the closest
+  function call, skipping over intermediate steps. 
+</p>
+<p>
+  In each expression, we will highlight the sub-expression where the
+  next computation step will occur. 
+
+  For example, in <pre><code>x + y</code></pre> we would
+  highlight <code>x</code> because the next step is to
+  lookup <code>x</code> in the environment.
+
+  But in <pre><code>1 + 2</code></pre> we would highlight the entire
+  expression, as the next step is performing the addition.
+
+  At times, the trace will need to disambiguate a variable by appending a
+  <code>|</code> followed by a number, e.g. <code>n</code> may be
+  renamed to <code>n|1</code>.
+
+  Finally, you see the environment at any point in the trace by hovering
+  over the corresponding expression.
+</p>
+<p>
+  We recommend taking a few minutes to familiarize yourself with a
+  <a target="blank" href="demo.html">quick demo</a> of the interactive
+  trace before starting the survey.
+</div>
+
+<h2><a name='gettingstarted'>Getting Started</a></h2>
+<div class='body-text'>
+<p>
+<a target="blank" href="survey.html">Let's go!</a>
+</p>
+</div>
+
+<h2>&nbsp;</h2>
+
+</body>
+</html>
+

@@ -1,0 +1,79 @@
+<html>
+<head>
+  <title>Code Readability Survey</title>
+
+  <link type="text/css" href="jquery-ui/css/smoothness/jquery-ui-1.8.18.custom.css" rel="stylesheet" />
+  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="survey.css" />
+  <script type="text/javascript" src="questionaire.js"></script>
+
+  <style>
+    p {
+      font-family: "Helvetica", "Arial", sans-serif;
+      margin-left:  2em;
+      margin-right: 2em;
+    }
+
+    .missing {
+      border: 2px solid red;
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("input[type=text]").keypress( validateNumber );
+      $("input[type=submit]").click( validateForm );
+    });
+  </script>
+</head>
+<body>
+
+<h2>Wrapping Up</h2>
+<p>
+You are almost done! Please answer these final few questions.
+</p>
+
+<h2>Experience</h2>
+<p>
+How many years of overall programming experience do you have?<br/>
+<input type='text' id='exp1' size='5' value='' />
+</p><p>
+How many years of Java programming experience do you have?<br/>
+<input type='text' id='exp2' size='5' value='' />
+</p><p>
+How many years of CUDA programming experience do you have?<br/>
+<input type='text' id='exp3' size='5' value='' />
+</p><p>
+How many years of Python programming experience do you have?<br/>
+<input type='text' id='exp4' size='5' value='' />
+</p><p>
+How many years of schooling in Computer Science have you completed. (For
+example, if you are currently a third year undergraduate student, you have most
+likely completed 2 years.)<br/>
+<input type='text' id='exp5' size='5' value='' />
+</p><p>
+How many years of industrial computing experience do you have? (A summer
+internship counts as 0.5).<br/>
+<input type='text' id='exp6' size='5' value='' />
+</p>
+
+<h2>Miscellaneous</h2>
+
+<p>
+What code features do you feel affect readability? That is, what made some code
+examples harder to read than others?<br>
+<textarea id='misc7' rows='3' cols='60'></textarea>
+</p><p>
+Did you encounter any problems with the survey itself? (Please explain in
+detail.)
+<textarea id='misc8' rows='3' cols='60' class='optional'></textarea>
+</p>
+
+<input type='submit' value='Submit' />
+
+<h2>&nbsp;</h2>
+
+</body>
+</html>
+

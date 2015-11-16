@@ -763,7 +763,9 @@ freeVars x env = go x
     App _ x y -> go x ++ concatMap go y
     Bop _ _ x y -> go x ++ go y
     Uop _ _ x -> go x
-    Let _ _ b e -> filter (`notBound` bindersOfBinds b) $ go e
+    Let _ Rec b e -> filter (`notBound` bindersOfBinds b) $ concatMap go (e : map snd b)
+    Let _ NonRec b e -> concatMap go (map snd b)
+                     ++ filter (`notBound` bindersOfBinds b) (go e)
     Ite _ x y z -> go x ++ go y ++ go z
     Seq _ x y -> go x ++ go y
     Case _ e alts -> go e ++ concatMap (flip freeVarsAlts env) alts
