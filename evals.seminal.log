@@ -36,16 +36,16 @@ reverseHelp _2 _8 ""
 reverseHelp _2 _8 _14 _23
 
 20060302-19:07:08-0c9a74768b1ce28cda245bf0300484f0.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't27 -> 't28 with int
+*** Failed after 2 tests: Type error : could not match 't27 -> 't28 with int
 reverseHelp 1 ""
 
 20060302-19:14:56-24471d7711961e7e9bd5c4e991485f01.seminal.ml
-*** Failed after 8 tests: Type error : could not match unit with string
-reverseHelp 1 "egdf"
+*** Failed after 3 tests: Type error : could not match unit with string
+reverseHelp 1 "ca"
 
 20060302-19:21:02-d5696c8c12ef82896f4e7eced60e32c8.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't30 -> 't31 with string
-reverseHelp 2 "" _4
+*** Failed after 5 tests: Type error : could not match 't28 -> 't29 with string
+reverseHelp 1 "eace" _4
 
 20060302-21:10:04-38dc8291e8c39612a75396c81f0ca005.seminal.ml
 *** Failed after 1 tests: Error: unbound data constructor: Null
@@ -60,8 +60,8 @@ reverse _3
 print_string x
 
 20060303-20:51:08-b1062ae1e521cf11892c663425a3dda8.seminal.ml
-*** Failed after 8 tests: Type error : could not match unit with string
-prnt (Cons ("cdhc" , Cons ("efe" , Null)))
+*** Failed after 2 tests: Type error : could not match unit with string
+prnt (Cons ("" , Null))
 
 20060303-20:53:58-e021a562c275370c34ca3ba963367424.seminal.ml
 *** Failed after 1 tests: Type error : could not match string list with 't10 lst
@@ -72,7 +72,7 @@ append ["a"] ["b"]
 append x y
 
 20060303-20:59:18-cec313538dab60fdbdbd549d4dfc8c22.seminal.ml
-*** Failed after 3 tests: Unbound variable : lst2
+*** Failed after 5 tests: Unbound variable : lst2
 append (Cons (_15 , Null))
 
 20060303-21:49:20-2bc1510b76bf11ac93785858fe7225ee.seminal.ml
@@ -89,11 +89,11 @@ print_string (map "test")
 
 20060305-21:49:26-9fc379ff0ebf471cca400f4c3b144205.seminal.ml
 *** Failed after 2 tests: Type error : could not match string with 't13 list
-mapHelp _4 "a" _6
+mapHelp _4 "b" _6
 
 20060305-21:54:22-225f629e0d1a262f23af4cbcfa099317.seminal.ml
 *** Failed after 2 tests: Type error : could not match int with string
-map _5 "b"
+map _5 "a"
 
 20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
 +++ OK, passed 1000 tests.
@@ -114,23 +114,23 @@ upperMatch 'a'
 print_string test
 
 20060306-08:32:58-cadc6088100ec722ce0c8ab60e81a45a.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't33 list with string
-listToString [_16 ; _17] _8
+*** Failed after 2 tests: Type error : could not match 't24 list with string
+listToString [_16] _8
 
 20060306-08:33:16-ec35aa1715ccf5f5b7fff55effcc06f0.seminal.ml
-*** Failed after 5 tests: Type error : could not match char with string
-uppercase "dce"
+*** Failed after 4 tests: Type error : could not match char with string
+uppercase "db"
 
 20060306-08:37:02-47b330576eb70ab4b956307ff1978ccc.seminal.ml
 *** Failed after 1 tests: Type error : could not match unit with string
 print_string test
 
 20060306-08:46:54-c09bb5fa4ade9b9834ebc0e95c303f20.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't14 list with char
+*** Failed after 4 tests: Type error : could not match 't14 list with char
 listToString [_16 ; _17] _8
 
 20060306-09:32:26-9dfb57b0785b1229719704e079d51228.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't46 -> 't47 with 't45 list
+*** Failed after 4 tests: Type error : could not match 't46 -> 't47 with 't45 list
 
 
 20060306-09:54:52-94bacf5a48d35fd1aa367bc565cc4abd.seminal.ml
@@ -141,52 +141,52 @@ listToString [_16 ; _17] _8
 map _6 _12
 
 20060308-15:14:55-8b55587ab02b2e74f5be9a1620ad164b.seminal.ml
-*** Failed after 4 tests: Type error : could not match string with 't60 list
-printRec [3 ; 3 ; 1]
+*** Failed after 2 tests: Type error : could not match string with 't36 list
+printRec [0]
 
 20060308-16:27:14-d2561594acb510c00ce747e7e54b07de.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 let arg1 =
   Array.get Sys.argv 1 in
-let ret = reverse arg1 in
-let _ = print_endline ret in
-let lst =
-  map charConvert arg1 in
-let _ =
-  print_endline (printRec lst) in
-let foldLeftString =
-  fold_left test_fold_left "null"
-            "abcdefgh" in
-let _ =
-  print_endline foldLeftString in
-let foldRightString =
-  fold_right test_fold_right
-             "abcdefgh" "null" in
-print_endline foldRightString
+(let ret = reverse arg1 in
+ (let _ = print_endline ret in
+  (let lst =
+     map charConvert arg1 in
+   (let _ =
+      print_endline (printRec lst) in
+    (let foldLeftString =
+       fold_left test_fold_left "null"
+                 "abcdefgh" in
+     (let _ =
+        print_endline foldLeftString in
+      (let foldRightString =
+         fold_right test_fold_right
+                    "abcdefgh" "null" in
+       print_endline foldRightString)))))))
 
 20060308-16:43:26-9fc4f621ad5235ecb0a0bfe70ddbac27.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 let arg1 =
   Array.get Sys.argv 1 in
-let ret = reverse arg1 in
-let _ = print_endline ret in
-let lst =
-  map charConvert arg1 in
-let _ =
-  print_endline (printRec lst) in
-let foldLeftString =
-  fold_left test_fold_left "null"
-            "abcdefgh" in
-let _ =
-  print_endline foldLeftString in
-let foldRightString =
-  fold_right test_fold_right
-             "abcdefgh" "null" in
-let _ =
-  print_endline foldRightString in
-let _ =
-  print_endline (uppercase arg1) in
-print_endline (lowercase arg1)
+(let ret = reverse arg1 in
+ (let _ = print_endline ret in
+  (let lst =
+     map charConvert arg1 in
+   (let _ =
+      print_endline (printRec lst) in
+    (let foldLeftString =
+       fold_left test_fold_left "null"
+                 "abcdefgh" in
+     (let _ =
+        print_endline foldLeftString in
+      (let foldRightString =
+         fold_right test_fold_right
+                    "abcdefgh" "null" in
+       (let _ =
+          print_endline foldRightString in
+        (let _ =
+           print_endline (uppercase arg1) in
+         print_endline (lowercase arg1))))))))))
 
 20060308-17:49:12-350bb6231959f879ee62f44461de9e70.seminal.ml
 *** Failed after 1 tests: Type error : could not match char with string
@@ -195,33 +195,33 @@ test_title 'a'
 
 20060308-17:58:24-ba6b10619bc62fead2d1d1fc3e4bcfc0.seminal.ml
 *** Failed after 2 tests: Type error : could not match int with string
-titlecase "b"
+titlecase "a"
 
 20060308-18:17:57-53a3b527552c251aa1421ce37caa859c.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 let arg1 =
   Array.get Sys.argv 1 in
-let ret = reverse arg1 in
-let _ = print_endline ret in
-let lst =
-  map charConvert arg1 in
-let _ =
-  print_endline (printRec lst) in
-let foldLeftString =
-  fold_left test_fold_left "null"
-            arg1 in
-let _ =
-  print_endline foldLeftString in
-let foldRightString =
-  fold_right test_fold_right arg1
-             "null" in
-let _ =
-  print_endline foldRightString in
-let _ =
-  print_endline (uppercase arg1) in
-let _ =
-  print_endline (lowercase arg1) in
-print_endline (titlecase arg1)
+(let ret = reverse arg1 in
+ (let _ = print_endline ret in
+  (let lst =
+     map charConvert arg1 in
+   (let _ =
+      print_endline (printRec lst) in
+    (let foldLeftString =
+       fold_left test_fold_left "null"
+                 arg1 in
+     (let _ =
+        print_endline foldLeftString in
+      (let foldRightString =
+         fold_right test_fold_right arg1
+                    "null" in
+       (let _ =
+          print_endline foldRightString in
+        (let _ =
+           print_endline (uppercase arg1) in
+         (let _ =
+            print_endline (lowercase arg1) in
+          print_endline (titlecase arg1)))))))))))
 
 20060308-19:14:09-035509263a843a367f5130529c008817.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with bool
@@ -229,164 +229,169 @@ histogram_fold (Counter (0 , 'a'))
                'a'
 
 20060308-19:19:12-06937106ff3926fe3963a0e5d3b99347.seminal.ml
-*** Failed after 2 tests: Type error : could not match char with string
-histogram "a"
+*** Failed after 3 tests: Type error : could not match char with string
+histogram "c"
 
 20060308-19:36:26-98875b907492a273c971c6c3494ccbbc.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 let arg1 =
   Array.get Sys.argv 1 in
-let ret = reverse arg1 in
-let _ = print_endline ret in
-let lst =
-  map charConvert arg1 in
-let _ =
-  print_endline (printRec lst) in
-let foldLeftString =
-  fold_left test_fold_left "null"
-            arg1 in
-let _ =
-  print_endline foldLeftString in
-let foldRightString =
-  fold_right test_fold_right arg1
-             "null" in
-let _ =
-  print_endline foldRightString in
-let _ =
-  print_endline (uppercase arg1) in
-let _ =
-  print_endline (lowercase arg1) in
-let test = titlecase arg1 in
-let _ =
-  match test with
-  | Tester (b , s) -> print_endline s in
-let histData = histogram arg1 in
-match histData with
-| Counter (i , c) -> print_endline (string_of_int i)
+(let ret = reverse arg1 in
+ (let _ = print_endline ret in
+  (let lst =
+     map charConvert arg1 in
+   (let _ =
+      print_endline (printRec lst) in
+    (let foldLeftString =
+       fold_left test_fold_left "null"
+                 arg1 in
+     (let _ =
+        print_endline foldLeftString in
+      (let foldRightString =
+         fold_right test_fold_right arg1
+                    "null" in
+       (let _ =
+          print_endline foldRightString in
+        (let _ =
+           print_endline (uppercase arg1) in
+         (let _ =
+            print_endline (lowercase arg1) in
+          (let test = titlecase arg1 in
+           (let _ =
+              match test with
+              | Tester (b , s) -> print_endline s in
+            (let histData =
+               histogram arg1 in
+             match histData with
+             | Counter (i , c) -> print_endline (string_of_int i))))))))))))))
 
 20060308-19:58:35-73bc04d94b0b091a44df19c1baaf55f3.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 let arg1 =
   Array.get Sys.argv 1 in
-let ret = reverse arg1 in
-let _ = print_endline ret in
-let lst =
-  map charConvert arg1 in
-let _ =
-  print_endline (printRec lst) in
-let foldLeftString =
-  fold_left test_fold_left "null"
-            arg1 in
-let _ =
-  print_endline foldLeftString in
-let foldRightString =
-  fold_right test_fold_right arg1
-             "null" in
-let _ =
-  print_endline foldRightString in
-let _ =
-  print_endline (uppercase arg1) in
-let _ =
-  print_endline (lowercase arg1) in
-let test = titlecase arg1 in
-let _ =
-  match test with
-  | Tester (b , s) -> print_endline s in
-let histData = histogram arg1 in
-let output =
-  printRec histData in
-print_endline output
+(let ret = reverse arg1 in
+ (let _ = print_endline ret in
+  (let lst =
+     map charConvert arg1 in
+   (let _ =
+      print_endline (printRec lst) in
+    (let foldLeftString =
+       fold_left test_fold_left "null"
+                 arg1 in
+     (let _ =
+        print_endline foldLeftString in
+      (let foldRightString =
+         fold_right test_fold_right arg1
+                    "null" in
+       (let _ =
+          print_endline foldRightString in
+        (let _ =
+           print_endline (uppercase arg1) in
+         (let _ =
+            print_endline (lowercase arg1) in
+          (let test = titlecase arg1 in
+           (let _ =
+              match test with
+              | Tester (b , s) -> print_endline s in
+            (let histData =
+               histogram arg1 in
+             (let output =
+                printRec histData in
+              print_endline output))))))))))))))
 
 20060311-23:38:59-d8f33461447ecf33f137a33374ccfae1.seminal.ml
-*** Failed after 6 tests: Type error : could not match int with heapElement list
+*** Failed after 51 tests: Type error : could not match int with heapElement list
 
 
 20060311-23:47:13-bb5548edde7545872f33b6b15649642f.seminal.ml
-*** Failed after 17 tests: Type error : could not match 't18 list with int
+*** Failed after 68 tests: Type error : could not match 't18 list with int
 
 
 20060312-00:01:00-e429466fc820ac64a608a8302289bcb7.seminal.ml
-*** Failed after 2 tests: Type error : could not match ('t14 * 't15) with int
-lookup [IntEntry 0] _3
+*** Failed after 3 tests: Type error : could not match ('t14 * 't15) with (string * heapElement) list
+lookup [HeapEntry [("a" , HeapEntry [])]]
+       _3
 
 20060312-00:02:53-b5e4fbb55ad62a0991139e6650717758.seminal.ml
 *** Failed after 1 tests: Type error : could not match ('t22 * 't23) with int
 update _3 _9 _15
 
 20060312-00:03:36-75e554ed461a798f3b14545e2dfb6e02.seminal.ml
-*** Failed after 3 tests: Type error : could not match int with heapElement
-
+*** Failed after 10 tests: Type error : could not match heapElement with int
+interp_e [("dicdgiji" , HeapEntry [("dbcca" , HeapEntry [("" , IntEntry 0)]) ; ("" , HeapEntry [("a" , IntEntry 0)]) ; ("h" , HeapEntry [("" , HeapEntry [("" , HeapEntry [])]) ; ("fbce" , HeapEntry []) ; ("e" , IntEntry 0)]) ; ("hdf" , HeapEntry [("aaa" , IntEntry 1)]) ; ("dedeb" , HeapEntry []) ; ("fedfe" , HeapEntry [])]) ; ("jieeaa" , HeapEntry [("hbieh" , IntEntry 3) ; ("iif" , IntEntry 1) ; ("gib" , HeapEntry [])]) ; ("c" , IntEntry 2) ; ("jbcgacgbe" , IntEntry 2) ; ("bjehbjg" , IntEntry 0) ; ("" , IntEntry 0) ; ("" , HeapEntry [("a" , HeapEntry [])])]
+         (Plus (Plus (Int 0 , Int 0) , Times (Var "" , Int 3)))
 
 20060313-20:23:36-95bbcfafa3a38ccac06f556bd50a04cc.seminal.ml
 *** Failed after 3 tests: Type error : could not match heapElement with int
-interp_e [("a" , HeapEntry [])]
-         (Times (Times (Int 0 , Var "") , Var ""))
+interp_e []
+         (Plus (Var "" , Var ""))
 
 20060313-22:34:26-a82a6e4c5612542497388ac707e1afcf.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with intorheap
 interp_prog (Assign ("" , Int 0))
 
 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
-*** Failed after 7 tests: Type error : could not match intorheap with exp
-interp_e [("debdbg" , Int 2) ; ("" , Int 0) ; ("dbadf" , Heap [("ddad" , Heap [("bcc" , Int 2) ; ("acd" , Heap [])])])]
-         (Times (Heap [] , Var ""))
+*** Failed after 5 tests: Type error : could not match intorheap with exp
+interp_e [("eb" , Heap [("" , Heap [])]) ; ("" , Int 1)]
+         (Var "")
 
 20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
-*** Failed after 42 tests: Type error : could not match intorheap with exp
-interp_e [("" , Int 0)]
-         (Plus (Var "" , Var ""))
+*** Failed after 19 tests: Type error : could not match intorheap with exp
+interp_e [("" , Heap [("" , Int 5) ; ("jcegdgfhjj" , Heap [("aca" , Int 0)]) ; ("geh" , Heap [("" , Int 1)]) ; ("fg" , Int 6) ; ("khaige" , Int 1)]) ; ("dmg" , Heap [("edda" , Int 2) ; ("b" , Int 0) ; ("bdbb" , Heap [("b" , Heap [])]) ; ("b" , Int 0)]) ; ("ag" , Heap [("jhbkbc" , Int 1) ; ("jfehehbcbg" , Int 5)]) ; ("edbocflgckkkkd" , Int 5) ; ("bnpbceoosfealrl" , Heap [("bdc" , Heap []) ; ("cda" , Heap [])]) ; ("kenkjmrinjlrobqcme" , Int 8) ; ("hhrsofqndefbk" , Heap [("qiqdcbbadgifgifj" , Heap [("a" , Int 0) ; ("b" , Int 0)]) ; ("fadqigehdnqbjoc" , Int 7) ; ("oeallajnkbij" , Heap [("cabc" , Heap [("cc" , Heap [])])]) ; ("ipinalhb" , Heap [("" , Int 1) ; ("bhdad" , Int 0) ; ("gfebc" , Int 3) ; ("cchb" , Int 1) ; ("cc" , Heap []) ; ("c" , Int 1)]) ; ("nqmohfejcm" , Int 0) ; ("bo" , Int 5) ; ("kakmjblmhjod" , Int 5) ; ("hbeeompekoqoof" , Int 0) ; ("hqfoaec" , Int 13) ; ("dgpaan" , Int 4) ; ("bnhenkl" , Int 12) ; ("fhplqaikeop" , Heap []) ; ("ig" , Int 3) ; ("goljejampjneomom" , Int 5) ; ("" , Heap [("geeffh" , Heap [("" , Int 0) ; ("aaaa" , Heap [("bd" , Heap [])]) ; ("caaf" , Heap [("c" , Int 0)]) ; ("" , Int 2) ; ("b" , Int 3)]) ; ("cdg" , Int 4) ; ("ibd" , Heap []) ; ("" , Int 2) ; ("jcjfjdb" , Int 0) ; ("ehdbf" , Int 0) ; ("i" , Int 2) ; ("ic" , Heap []) ; ("iibadcgg" , Int 4)])]) ; ("fjilmrmckpagidce" , Int 3) ; ("gcag" , Heap [("edda" , Heap []) ; ("bca" , Heap []) ; ("caae" , Int 1) ; ("bb" , Heap [])]) ; ("odlkocfqspkcrmik" , Heap []) ; ("ecmjd" , Int 11) ; ("glhmpois" , Int 16) ; ("e" , Int 9)]
+         (Times (Int 0 , Plus (Var "" , Heap [])))
 
 20060316-15:04:22-646d45fc661ea972e495854dafda19d7.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
 makePoly _2 0.0
 
 20060316-17:28:56-cb82b8e194910fe2ced3aab54f0a7577.seminal.ml
-*** Failed after 1 tests: Type error : could not match int with heapContain
-interp_s []
-         (Assign ("" , Int 0))
+*** Failed after 3 tests: Type error : could not match int with heapContain
+interp_s [("" , HeapInt 0) ; ("b" , HeapInt 0)]
+         (If (Plus (Int 0 , Int 0) , If (Var "" , Skip , Assign ("" , Int 0)) , Assign ("" , Int 0)))
 
 20060316-17:48:30-214ae1ff72fdc57fe9fcb9d441c5126a.seminal.ml
+*** Failed after 3 tests: Type error : could not match heapContain with int
+interp_e []
+         (Plus (Var "" , Plus (Var "" , Var "")))
+
+20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
+*** Failed after 1 tests: Type error : could not match string with heapContain
+interp_s [] (Restoreheap "")
+
+20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
 *** Failed after 2 tests: Type error : could not match heapContain with int
 interp_e []
          (Plus (Var "" , Var ""))
 
-20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
-*** Failed after 6 tests: Type error : could not match string with heapContain
-interp_s [("" , HeapCon [("abd" , HeapCon [])]) ; ("ecde" , HeapInt 2)]
-         (Restoreheap "abc")
-
-20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
-*** Failed after 4 tests: Type error : could not match int with heapContain
-
-
 20060316-18:53:54-be762b624eb6b35410f5e00547f2a579.seminal.ml
-*** Failed after 1 tests: Type error : could not match exp with heapEntry
-interp_s []
-         (Assign ("" , Int 0))
+*** Failed after 4 tests: Type error : could not match exp with heapEntry
+interp_s [("dc" , Heap []) ; ("dcc" , Heap [("" , HInt 0)])]
+         (Assign ("c" , Int 0))
 
 20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
 *** Failed after 1 tests: Type error : could not match stmt with 't166 list
 print_heap (stmtsToSeq stmts) _107
 
 20060316-23:07:58-2378bc775661a7c89604be96966c4259.seminal.ml
-*** Failed after 1 tests: Type error : could not match 't21 -> 't22 with move list
-makePoly 0.0 0.0
+*** Failed after 2 tests: Type error : could not match 't14 -> 't15 with move list
+makePoly 0.7077876390487653
+         0.8030058560009166
 
 20060316-23:15:56-8740564a90852da99c1d1bd7bef8897e.seminal.ml
-*** Failed after 8 tests: Unbound variable : pi
-interpLarge [Turn 0.8116469884057006 ; Forward 0.0]
+*** Failed after 6 tests: Unbound variable : pi
+interpLarge [Home ; Turn 0.9836559766057782 ; Home ; For (0 , [])]
 
 20060316-23:16:56-c5c2fe4b8bf744437e4adaf36529464b.seminal.ml
-*** Failed after 6 tests: Unbound variable : pi
-interpLarge [Turn 0.6941039507281128 ; Turn 1.7914474799194156 ; Turn 0.7033079228065497]
+*** Failed after 3 tests: Unbound variable : pi
+interpLarge [Home ; Turn 0.0]
 
 20060317-20:59:10-62548773f8854de2f4ec54a035814283.seminal.ml
 *** Failed after 4 tests: Type error : could not match int with float
-interpLarge [Turn 0.0 ; Turn 0.0]
+interpLarge [Turn 0.0]
 
 20060317-20:59:44-36ef05a00938aacce23d0d13a4c3a945.seminal.ml
-*** Failed after 6 tests: Type error : could not match 't111 -> 't112 with ('t108 * 't109 * 't110)
-interpLarge [Forward 2.8953457538310126 ; For (0 , []) ; For (2 , [Home]) ; For (0 , []) ; For (2 , [Turn 0.44829303181590796])]
+*** Failed after 10 tests: Type error : could not match 't239 -> 't240 with ('t236 * 't237 * 't238)
+interpLarge [Turn 0.6863020193449332 ; Forward 3.005510271452068 ; Home ; Forward 0.0 ; Forward 1.3996360834292751 ; Forward 4.2830391642252765 ; For (3 , [Home ; Forward 0.6811485933453478 ; For (0 , [])]) ; Turn 2.652695229274482]
 
 20060317-21:37:11-096a01551f7cdd335b3d20437b761729.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
@@ -397,36 +402,34 @@ makePoly 0.0 _12
 interpLarge []
 
 20060317-22:27:40-749212b202dba76c8efe1df72c2fa36c.seminal.ml
-*** Failed after 3 tests: Error: <timeout>
-interpSmall [Home ; For (0 , [])]
+*** Failed after 1 tests: Type error : could not match unit with 't54 list
+interpSmall []
 
 20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
 *** Failed after 1 tests: Type error : could not match string with (string * int) list
 Seq (testProgram1 , Saveheap "myheap1")
 
 20060319-13:26:52-dfb16e91c8f77833a400015941114cd0.seminal.ml
-*** Failed after 4 tests: Type error : could not match (string * int) list with stmt
+*** Failed after 4 tests: Type error : could not match stmt with (string * int) list
 
 
 20060319-13:43:18-06b44c2851b0cf81bcb54bfa7f1abe36.seminal.ml
-*** Failed after 3 tests: Type error : could not match int with heapVar
-interp_s [("" , 2)]
-         (RestoreHeap "")
+*** Failed after 2 tests: Type error : could not match int with heapVar
+interp_s []
+         (Seq (RestoreHeap "" , Skip))
 
 20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml
-*** Failed after 2 tests: Type error : could not match heapVar with int
-interp_e [("b" , 1)]
-         (Times (Var "" , Int 0))
+*** Failed after 5 tests: Type error : could not match int with heapVar
+
 
 20060319-14:52:14-bd3d537e5d622471db44fef57470b962.seminal.ml
-*** Failed after 8 tests: Type error : could not match int with heapVar
+*** Failed after 5 tests: Type error : could not match int with heapVar
 interp_s []
-         (Assign ("ccdfac" , Plus (Plus (Var "" , Var "") , Times (Var "" , Int 0))))
+         (Assign ("" , Plus (Int 0 , Var "")))
 
 20060319-15:07:50-8f39f32b5a36e11a9464ad6fec165b06.seminal.ml
-*** Failed after 8 tests: Type error : could not match heapVar with (string * heapVar) list
-interp_s [("eefe" , Heap [("c" , HeapInt 0) ; ("c" , Heap [])]) ; ("c" , Heap [])]
-         (Seq (Seq (RestoreHeap "" , RestoreHeap "") , Skip))
+*** Failed after 3 tests: Type error : could not match heapVar with (string * heapVar) list
+
 
 20060319-18:31:02-58a2a6ce864ad7931326ad63f6ecd7dc.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
@@ -441,15 +444,14 @@ interpLarge example_logo_prog
 interpLarge example_logo_prog
 
 20060319-19:23:28-3cc736accbce3e21a783db2d0f187c96.seminal.ml
-*** Failed after 19 tests: Type error : could not match (float * float) with (float * float) list
-interpLarge [Home ; Home ; Turn 3.9971426517080615 ; Home ; For (3 , [Home])]
+*** Failed after 47 tests: Type error : could not match (float * float) with (float * float) list
+interpLarge [Home ; Home ; Forward 1.009977156479826]
 
 20060319-19:25:12-f00bf018aea70324f68ac0ba0f808cae.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060319-19:42:18-5f0bde7ab1d576545f4d89f88dab34e9.seminal.ml
-*** Failed after 8 tests: Type error : could not match 't35 with 't35 list
-
++++ OK, passed 1000 tests.
 
 20060319-19:49:56-1687e8b7d88c855ff1225445c6cbd4e3.seminal.ml
 +++ OK, passed 1000 tests.
@@ -462,28 +464,28 @@ interpLarge [Home ; Home ; Turn 3.9971426517080615 ; Home ; For (3 , [Home])]
 interpSmall []
 
 20060319-20:12:50-9e05cf3ce7d3e32b370b305e43ceb96e.seminal.ml
-*** Failed after 3 tests: Type error : could not match (move list * float * float * float) with 't34 list
-interpSmall [Home]
+*** Failed after 8 tests: Type error : could not match (move list * float * float * float) with 't34 list
+interpSmall [Home ; Home ; Forward 0.46060776076525034 ; Turn 0.4786521058607033 ; Home ; For (0 , [Turn 0.7656772919856049]) ; For (1 , [])]
 
 20060319-20:22:42-d63e90715d3fa73c6f01d82b97c2c2b9.seminal.ml
-*** Failed after 6 tests: Type error : could not match float with int
-interpSmall [Home ; Home ; Forward 0.9601989565725362 ; Home ; Home]
+*** Failed after 4 tests: Type error : could not match float with int
+interpSmall [Home]
 
 20060319-20:25:40-ab4845a572308a5afc057b8957487498.seminal.ml
-*** Failed after 1 tests: Type error : could not match ('t52 -> 't53 * float * float * 't35 * (float * float) list) with 't51 list
-interpSmall []
+*** Failed after 3 tests: Type error : could not match ('t64 -> 't65 * float * float * 't41 * (float * float) list) with 't63 list
+interpSmall [For (0 , [])]
 
 20060319-20:31:44-c7d3dae870ff326c6e2fd8bf9e61eaac.seminal.ml
 *** Failed after 1 tests: Type error : could not match (move * move) with move
 interpSmall [(Home , Home)]
 
 20060319-20:33:22-bcfa231f83876c0dc43b07ef583566dd.seminal.ml
-*** Failed after 2 tests: Type error : could not match float with int
-interpSmall [For (0 , [])]
+*** Failed after 8 tests: Type error : could not match (float * float) with (float * float) list
+interpSmall [Turn 2.3469046769024704 ; Turn 0.6413285132485835 ; Forward 0.0 ; Turn 4.441159050106612 ; Turn 0.0 ; Turn 0.1204520171069996 ; Forward 5.832933418799052]
 
 20060319-20:50:52-35197c77367f54669cee073b06fe3d9f.seminal.ml
-*** Failed after 2 tests: Type error : could not match unit with 't30 list
-interpSmall [For (0 , [])]
+*** Failed after 3 tests: Type error : could not match unit with 't30 list
+interpSmall [Home]
 
 20060319-20:54:18-c6f1941f5de39e516e26f06cc990b9ca.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with float
@@ -492,9 +494,9 @@ interpSmall [Forward 1]
 20060319-21:34:00-e26e787a429e0f90295aee0f257622a1.seminal.ml
 *** Failed after 2 tests: Type error : could not match ('t71 * 't72) with ((float * float) * 't70) list
 interpTrans [Forward 0.0]
-            0.7883638934294056
-            0.31328180391640237
-            0.178491474278758
+            0.4078874961273048
+            0.20763294209664118
+            0.5253922063513117
 
 20060319-22:34:04-69a3d06e7473a44a841727a7bc995e4d.seminal.ml
 *** Failed after 1 tests: Type error : could not match string with int
@@ -505,26 +507,26 @@ let a = "hi" in a + 5
 [Forward 3.0 ; Home ; Turn 1.5 ; For (2 , [Forward 2.5 ; Home ; Turn 1])]
 
 20060320-22:38:06-708bc29e217c4928054fc822a3c96238.seminal.ml
-*** Failed after 5 tests: Type error : could not match (float * float) list with move
-interpLarge [Home ; For (1 , [])]
+*** Failed after 7 tests: Type error : could not match (float * float) list with move
+interpLarge [For (3 , [Forward 0.7195238333024021 ; Home ; For (0 , [])]) ; Forward 1.407603468801069 ; Forward 2.058631675893716]
 
 20060321-14:46:28-05145270d2aab43fd3bd842cc07baf1c.seminal.ml
-*** Failed after 3 tests: Type error : could not match unit with string
-print_heap [(_23 , 0) ; ("" , 1)]
+*** Failed after 3 tests: Type error : could not match string with unit
+
 
 20060321-14:59:04-b1275c5a9b0b11add3e4dd1a9b0bf13c.seminal.ml
 *** Failed after 1 tests: Type error : could not match string with 't45 list
 print_heap ("" , 0)
 
 20060321-15:25:48-2255f168a336d2981038c536d51364a3.seminal.ml
-*** Failed after 2 tests: Type error : could not match ('t35 * 't36) with heap_elt
-interp_e [Complex ("" , [])]
-         (Plus (Int 0 , Var ""))
+*** Failed after 3 tests: Type error : could not match ('t21 * 't22) with heap_elt
+interp_e [Complex ("" , []) ; Simple ("" , 0)]
+         (Var "")
 
 20060321-15:34:36-8c2ed57505ebdb3c66f90b66ae3e8b87.seminal.ml
-*** Failed after 1 tests: Type error : could not match (string * int) with heap_elt
+*** Failed after 3 tests: Type error : could not match (string * int) with heap_elt
 interp_s []
-         (Assign ("" , Var ""))
+         (Assign ("" , Int 0))
 
 20060321-16:03:46-b0d9a3963e06527effc0d63025a8d667.seminal.ml
 *** Failed after 1 tests: Type error : could not match (string * int) with heap_elt
@@ -541,8 +543,8 @@ print_heap test_heap
 +++ OK, passed 1000 tests.
 
 20060321-17:40:30-9d28fd9356cc4ade9bdd5c09496600fa.seminal.ml
-*** Failed after 4 tests: Type error : could not match heap_elt with 't66 list
-print_heap [H ("b" , [H ("b" , [I ("" , 0)]) ; H ("" , [])]) ; _24]
+*** Failed after 6 tests: Type error : could not match heap_elt with 't107 list
+print_heap [I ("ab" , 0) ; H ("dd" , [H ("" , [I ("" , 0)]) ; H ("aa" , [H ("" , []) ; H ("" , [])]) ; I ("" , 0)])]
 
 20060321-17:41:14-5ad417e97b8ab19fbfb89db95c99c846.seminal.ml
 +++ OK, passed 1000 tests.
@@ -556,39 +558,41 @@ print_heap (Assign ("ans" , Int 4))
 Assign ("ans" , Plus ("c" , Int 5))
 
 20060321-19:13:54-3266bbae2ef5c3a941538a6481a5e5d5.seminal.ml
-+++ OK, passed 1000 tests.
+*** Failed after 3 tests: Unbound variable : f2|1
+interpTrans [Turn 0.0 ; Home]
+            _12 _13 0.3491420071479878
 
 20060321-20:20:44-5df57b343df5a403116c396481a3d568.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060321-21:07:58-0ebbcafc7586fac16a56ba7b103f69f7.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060321-21:29:28-0b780c5b4ffcfe2968cb8e73cefa3897.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060321-21:38:22-dde7db6405ce5ba9ae626405e061c4a3.seminal.ml
-*** Failed after 3 tests: Type error : could not match float with int
-interpLarge [Forward 0.8741198936423005 ; Forward 0.4321011195591672]
+*** Failed after 9 tests: Type error : could not match float with int
+interpLarge [For (2 , [Forward 0.0 ; Forward 1.9626238428484273 ; Turn 4.675150592931221e-2 ; Home]) ; Forward 0.0 ; For (1 , [Home]) ; For (5 , []) ; Turn 2.5381874592050266 ; Turn 0.0 ; Home ; For (1 , [Turn 0.6802096733034239])]
 
 20060321-22:08:35-80305c5562a7971b78c8db75d01d0fd0.seminal.ml
-*** Failed after 3 tests: Type error : could not match int with float
-interpLarge [Turn 0.13104002340927268 ; Forward 0.0]
+*** Failed after 6 tests: Type error : could not match int with float
+interpLarge [Turn 1.3183802683749808 ; Home ; Forward 3.771275014314193 ; Home ; For (1 , [])]
 
 20060322-00:21:12-0ccd603b43d0ef97d3e539c3f0925073.seminal.ml
-*** Failed after 7 tests: Type error : could not match float with int
-interpLarge [Turn 3.793346377295893 ; Home ; Forward 1.2029755954921162 ; Forward 2.7975320439983347 ; Turn 0.0 ; Home]
+*** Failed after 11 tests: Type error : could not match float with int
+interpLarge [Home ; Turn 0.37215531241427546 ; Forward 2.5861395905397035 ; Turn 1.8530551696143487 ; For (4 , [Home ; Turn 1.2033129709977046 ; For (4 , [Forward 1.7401966562931719 ; For (2 , [For (0 , []) ; Turn 0.0])])]) ; For (0 , [Home]) ; Home ; For (2 , [])]
 
 20060322-00:47:36-635d92e5e80fdb07be8405858041dcbd.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with float
 interpLarge []
 
 20060322-02:34:06-a881a82dd5534a442bf71f2fcd057d33.seminal.ml
-*** Failed after 3 tests: Error: <timeout>
-interpLarge [For (0 , []) ; Forward 0.5368120077510667]
+*** Failed after 4 tests: Type error : could not match 't29 list with move
+interpLarge [For (1 , []) ; Turn 0.0]
 
 20060322-08:30:28-3f81c07149bfccbd0e3179bdf8a9aadd.seminal.ml
 *** Failed after 1 tests: Type error : could not match string with int
@@ -603,32 +607,31 @@ makePoly _2 _8
 makePoly 0 _8
 
 20060322-14:52:42-79d266181ace652898dfea63f34d1e95.seminal.ml
-*** Failed after 5 tests: Type error : could not match float with int
-interpLarge [Turn 0.8004286566519223 ; Turn 1.0900070787852099]
+*** Failed after 3 tests: Type error : could not match float with int
+interpLarge [Turn 0.0 ; Forward 0.7979542469849503]
 
 20060322-15:04:54-ac4a1848657627cfd6df53804ad2c8f5.seminal.ml
-*** Failed after 11 tests: Type error : could not match (float * float) with 't37 list
-interpLarge [Forward 2.4182683351073226 ; Home ; Forward 0.28136328362725493 ; Turn 2.417730411480968 ; Turn 0.0 ; Forward 0.379447035947976 ; Home ; For (1 , [Home ; Turn 1.5438168021917724 ; For (0 , [Home]) ; Turn 0.30115694161348394])]
+*** Failed after 8 tests: Type error : could not match (float * float) with 't59 list
+interpLarge [Turn 1.1006012545818742 ; Forward 4.722745962208909 ; Turn 0.0 ; Home]
 
 20060322-15:33:54-702b0150ab82b8d3fe04d50824f66378.seminal.ml
 *** Failed after 1 tests: Unbound variable : lst
 loopFor 0 0 _18
 
 20060322-15:37:15-a3b57f848696e7fb4e0c7b52ec319871.seminal.ml
-*** Failed after 4 tests: Type error : could not match float with int
+*** Failed after 3 tests: Type error : could not match float with int
 interpSmall []
 
 20060322-15:37:30-cccd2d578960e5ca742dca45d4bd04e4.seminal.ml
-*** Failed after 4 tests: Type error : could not match move with 't61 list
-interpLarge [Turn 0.0 ; Forward 0.0 ; For (2 , [])]
+*** Failed after 6 tests: Type error : could not match move with 't31 list
+interpLarge [For (2 , [Forward 0.4139453416196399 ; Home ; For (0 , [Home])]) ; Home ; Home]
 
 20060322-15:37:56-7674fa2cf2a648a9e414034e5ffccee5.seminal.ml
-*** Failed after 2 tests: Type error : could not match float with int
-interpSmall [Forward 0.0]
+*** Failed after 4 tests: Type error : could not match float with int
+interpSmall [Forward 0.6807454727435964 ; Forward 0.34878190994071023 ; For (0 , [Home ; Home])]
 
 20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml
-*** Failed after 19 tests: Type error : could not match 't33 with 't33 list
-
++++ OK, passed 1000 tests.
 
 20060322-16:38:10-626e570c3d6f0bf644688095ee05e7aa.seminal.ml
 +++ OK, passed 1000 tests.
@@ -645,49 +648,46 @@ makePoly _2 0.0
 interpLarge [Home]
 
 20060322-20:08:36-a8f43066cc9b2fd09808dd2eb10c07f9.seminal.ml
-*** Failed after 5 tests: Type error : could not match (float * float) with (float * float) list
-interpLarge [Turn 0.38807730245279903 ; Home ; For (0 , [Turn 0.541880883820451]) ; Turn 0.5766462806885579]
+*** Failed after 2 tests: Type error : could not match (float * float) with (float * float) list
+interpLarge [Home]
 
 20060322-20:42:10-898d93a908e3393e99cf3e0027384a19.seminal.ml
-*** Failed after 11 tests: Type error : could not match move list with move
-interpLarge [Home ; Home ; Home ; Turn 3.2509543764502107 ; Forward 0.0 ; Home ; For (2 , [Turn 0.0 ; Home ; Turn 0.0 ; Home ; Turn 0.39320539532410903]) ; For (0 , [Home])]
+*** Failed after 9 tests: Type error : could not match move list with move
+interpLarge [Turn 0.5713636451993179 ; For (4 , [Home ; Turn 0.0]) ; Home ; Turn 0.0 ; Forward 1.4853385476708199 ; Turn 3.519047872981383 ; Forward 0.2842811915226128]
 
 20060322-20:53:12-8240b6c0f1e8fb463aae7ab123a6ad8d.seminal.ml
-*** Failed after 2 tests: Type error : could not match 't46 -> 't47 with 't45 list
-interpSmall [Turn 0.0]
+*** Failed after 2 tests: Type error : could not match 't50 -> 't51 with 't49 list
+interpSmall [Forward 0.0]
 
 20060323-08:35:44-95aa68925746f2cfecd00300845fb947.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060323-08:43:40-4ea7768a439a9c9693ab1dd8a5a3e1ae.seminal.ml
-*** Failed after 6 tests: Type error : could not match ('t86 -> 't87 * float * float * float) with ('t84 * 't85)
-interpTrans [Home ; Turn 0.616316899800576 ; Forward 3.498438442359297 ; Home]
-            1.5569498245991953
-            0.6808633667373531 _9
+*** Failed after 6 tests: Type error : could not match ('t59 list * 't60) with ('t61 -> 't62 * 't63 * 't64 * float)
+
 
 20060323-09:29:18-4d4687569f144490d021a1f614083ab6.seminal.ml
-*** Failed after 7 tests: Type error : could not match 't230 -> 't231 with ('t228 * 't229)
-interpTrans [Home ; Turn 1.7854619724207685 ; Forward 0.0 ; For (0 , [Turn 1.6661009881060989 ; Forward 0.3524688444014492]) ; Turn 0.4357180085902024 ; For (4 , [For (1 , [])])]
-            3.653313556129067
-            2.263167048655976 _9
+*** Failed after 3 tests: Type error : could not match 't89 -> 't90 with ('t87 * 't88)
+interpTrans [Turn 0.0 ; For (1 , [])]
+            _7 _8 0.7045328566241267
 
 20060323-10:36:10-23f563f30054417a24188e71c358a86b.seminal.ml
-*** Failed after 7 tests: Type error : could not match (float * float) with 't29 list
-interpTrans [Home ; _18 ; _19 ; _20]
-            _6 _7 _8
+*** Failed after 3 tests: Type error : could not match (float * float) with 't27 list
+interpTrans [Home ; _18] _6 _7
+            _8
 
 20060323-13:43:52-9b3c922faea5332ae7dcbdd3542cf6bb.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with float
 [For (10 , [Turn 10])]
 
 20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
-*** Failed after 13 tests: Type error : could not match float with int
-interpSmall [Forward 2.793437996899948 ; For (8 , [Turn 4.701451596031371 ; Turn 5.512692258657256 ; Home ; For (1 , [Home ; Home ; Forward 0.9681360793772464]) ; Home]) ; For (3 , [Forward 0.0]) ; Home]
+*** Failed after 12 tests: Type error : could not match float with int
+interpSmall [For (3 , [Forward 1.0114144294447232 ; For (1 , [Home ; Forward 0.0 ; Home]) ; Turn 0.8813288731200131])]
 
 20060323-15:47:38-bdbf194565202f6e6e0fcc814a9c01e7.seminal.ml
-*** Failed after 11 tests: Type error : could not match ('t29 * 't30) with 't28 list
-interpTrans [Home ; _18 ; _19]
-            _6 _7 _8
+*** Failed after 8 tests: Type error : could not match ('t28 * 't29) with 't27 list
+interpTrans [Home ; _18] _6 _7
+            _8
 
 20060323-16:46:00-99a4dfd320923a6e786e35326d72280c.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
@@ -718,75 +718,76 @@ makePoly 5 2
 interpLarge example_logo_prog
 
 20060323-17:42:56-fde71158703a08ba423540e01ef09474.seminal.ml
-*** Failed after 4 tests: Type error : could not match move with 't40 list
-makePoly 3 0.8840371100752427
+*** Failed after 8 tests: Type error : could not match move with 't66 list
+makePoly 5 1.3537816997475942
 
 20060323-17:43:30-1b93c486fae4bb533744e65e09c11cdc.seminal.ml
-*** Failed after 7 tests: Type error : could not match move list with move
+*** Failed after 5 tests: Type error : could not match move list with move
 
 
 20060323-17:53:24-a64241aa861dc6d7d3671fc0eed904ec.seminal.ml
 *** Failed after 5 tests: Type error : could not match move with 't20 list
-makePoly 3 1.6246663388484097
+makePoly 4 2.4986455350254593
 
 20060323-18:18:26-dcbd6b61400ff0cc8088df3b9bf9ec58.seminal.ml
-*** Failed after 3 tests: Type error : could not match float with int
-interpSmall [Forward 0.7746517553893618 ; Turn 0.0]
+*** Failed after 4 tests: Type error : could not match float with int
+interpSmall [Forward 0.9261858337474231 ; Forward 0.0]
 
 20060323-18:20:56-215cf04f284998f18aa9a297f6c69cae.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
 makePoly _2 _8
 
 20060323-18:23:06-e8617e33234ad0d0b1db0cca97888631.seminal.ml
-*** Failed after 8 tests: Type error : could not match float -> float -> 't92 with float
-interpSmall [Turn 1.499319687667159 ; For (0 , []) ; Turn 0.0 ; Turn 4.725839236695934 ; Forward 0.0 ; Forward 1.8406593963563087 ; Forward 0.0]
+*** Failed after 6 tests: Type error : could not match float -> float -> 't126 with float
+interpSmall [Forward 0.8631567246575085 ; Home ; Turn 1.4527311709685629 ; Turn 0.0]
 
 20060323-18:45:02-8c83180cdb55405fceb028edc3b8e52f.seminal.ml
-*** Failed after 5 tests: Type error : could not match ('t107 * 't108 * 't109 * 't110) with unit
-interpSmall [Forward 0.5966061218223575 ; For (0 , [])]
+*** Failed after 10 tests: Type error : could not match ('t54 * 't55 * 't56 * 't57) with unit
+interpSmall [For (0 , [Forward 2.2148728582149055])]
 
 20060323-20:07:14-1ff99f5b5d1579e4b5f2712f7687bb64.seminal.ml
-*** Failed after 3 tests: Type error : could not match float with int
-interpTrans [Forward 0.0]
-            0.5381902286336762
-            0.36693092500567825
-            0.9105347336162866
+*** Failed after 8 tests: Type error : could not match float with int
+interpTrans [Forward 0.8089296075893267 ; Turn 0.28601064938419263 ; Forward 0.9927942465361259 ; Turn 3.667267138897774]
+            3.19772002014244
+            3.8157599744799136
+            4.114457497938105
 
 20060323-20:16:12-f769124d67c2d8b1ba60882729d52b66.seminal.ml
-*** Failed after 4 tests: Type error : could not match float with int
-interpTrans [Turn 0.16066047501664293 ; Turn 6.2344875762764596e-2 ; Forward 0.3599413672944105]
-            2.6843421257233957
-            2.000390944941093
-            1.7544642854527446
+*** Failed after 3 tests: Type error : could not match float with int
+interpTrans [Home ; Turn 0.2875867217920729]
+            1.5842084208151797
+            1.4935386066423806
+            1.4119374617346379
 
 20060323-21:30:30-8708affd60c03e76b1b80f206b86f42a.seminal.ml
-*** Failed after 6 tests: Type error : could not match ((float * float) list * float) with float
-interpTrans [Turn 1.7824179470986525 ; Turn 0.8886115779683887 ; _24 ; _25]
-            4.159134125620292
-            2.586147678810814
-            2.2103246561291052
+*** Failed after 2 tests: Type error : could not match ((float * float) list * float) with float
+interpTrans [Turn 0.0]
+            0.9000368690744728
+            0.26541197403499583
+            0.25723816012805145
 
 20060323-21:50:16-0a01d9e97b5fb61deca9c42f7b87e874.seminal.ml
-*** Failed after 17 tests: Error: <timeout>
-interpSmall [For (8 , []) ; For (3 , [Forward 1.239457910352906 ; Forward 0.0 ; For (0 , [For (0 , []) ; Home ; For (1 , []) ; Turn 0.3244064396940116]) ; For (1 , [Turn 2.8911980920153044 ; For (0 , []) ; Home ; Turn 0.6847609142502737])]) ; Forward 5.768737986993022 ; Turn 0.5011208691726852 ; Home ; For (1 , [Turn 0.5795913907413565 ; Turn 1.2879674517789703 ; For (1 , []) ; Forward 0.22483584773803234 ; For (9 , [Home ; Turn 0.0]) ; For (4 , [Forward 1.871836548018773 ; For (4 , [For (6 , [Turn 2.6671478604800645 ; Forward 0.0]) ; For (0 , []) ; Home]) ; Home ; Home]) ; Forward 2.527193249040268 ; For (0 , [For (2 , []) ; For (0 , []) ; For (4 , [])]) ; For (6 , []) ; Turn 4.515383884797464]) ; Forward 3.2531270266337495 ; Home ; Home ; Forward 1.5587435843409336 ; Forward 2.1446456751785963 ; For (1 , [Turn 8.197682662587265 ; For (1 , [Home]) ; For (0 , [Turn 0.9739989513468863 ; Home ; Forward 1.1949570339215296 ; Forward 1.098526954498106 ; Forward 0.4852491983777124]) ; Forward 0.2948980181361476 ; For (0 , []) ; Forward 4.266892886565946 ; For (8 , [Turn 0.3861626626577085 ; Forward 1.2957538461956781 ; For (5 , [Home ; Turn 0.0]) ; Forward 3.7720036008525857 ; Forward 6.327899625103863]) ; For (3 , []) ; Home ; Turn 0.0 ; Home ; Turn 3.701875535640309e-2 ; Forward 2.350393642326365 ; Turn 2.9657843377264053])]
+*** Failed after 13 tests: Error: <timeout after 10000 steps>
+interpSmall [Forward 0.17156750775174479 ; Turn 2.4096708300522707 ; For (10 , [Turn 1.4895629805978658 ; Turn 2.507885043553783 ; Forward 0.981923497232688]) ; Turn 0.6164531995897774 ; Home ; Forward 5.373846453685635 ; Turn 0.7089634284936412 ; For (7 , [Turn 0.3873264438778907 ; For (2 , [Forward 1.5557176984286776 ; Home ; For (0 , [])]) ; Home ; For (5 , [For (0 , []) ; Turn 0.5741722944793377 ; For (1 , [])]) ; Home ; Forward 0.0])]
 
 20060323-22:04:56-2161ca6d347b52d7dbd370350b463115.seminal.ml
 *** Failed after 1 tests: Type error : could not match move with move list
 interpLarge example_logo_prog
 
 20060323-22:20:22-4e5f88ae07be062df109ed5701cbef33.seminal.ml
-*** Failed after 18 tests: Error: <timeout>
-interpSmall [Home ; Turn 2.9211126799800855 ; For (8 , []) ; For (1 , [Forward 2.4748386017753004 ; Forward 0.19318612631276066 ; For (4 , [Turn 0.9873734179004101 ; Turn 1.0935144322375994 ; Turn 1.5706117141842562 ; Home])]) ; For (10 , [Home ; Home ; For (1 , [Forward 0.15523454070415021 ; For (0 , [For (0 , [])])]) ; Home ; Turn 2.677946812281573 ; Forward 2.1405841539829824 ; Turn 1.0870814706090504]) ; Forward 0.46300148651454975 ; Home ; For (0 , [Forward 0.0 ; Home]) ; Home ; Home ; For (1 , [Turn 1.0882903219871776 ; For (0 , [Home ; Home ; Turn 0.7638104035602497 ; Forward 3.9344153648349294 ; For (3 , [Home ; Home ; Turn 0.9663736744319333 ; For (0 , [])]) ; Forward 3.6139051527008608]) ; Turn 0.0 ; Forward 0.0 ; Turn 1.971748132863389 ; Home ; For (1 , [])]) ; Forward 9.94202288750677 ; Turn 4.985575875477986 ; Turn 5.431696921367102 ; Turn 9.30102611692602 ; Forward 0.8726483065587022]
+*** Failed after 17 tests: Error: <timeout after 10000 steps>
+interpSmall [For (6 , [Turn 1.2619690669968922 ; Turn 4.66733375255208 ; Forward 7.8360373977840565 ; Forward 10.066123872359517 ; Home ; Forward 0.4218019781591875 ; Home ; Forward 2.2164600235286644 ; Turn 8.7508539876534]) ; Forward 0.44159211183180025 ; Forward 3.219291755942041 ; Turn 7.412532897153904 ; Turn 0.0 ; Forward 6.874025863517673 ; Turn 4.765278877948746 ; Forward 2.8445328930293066 ; For (0 , [For (0 , []) ; Forward 6.945374691937811e-2 ; Forward 0.0]) ; For (2 , [Home ; For (0 , [Home]) ; For (0 , [Home]) ; For (3 , []) ; Turn 5.1051916398022765 ; Turn 1.0020451090133577 ; Forward 0.0 ; Home ; Turn 6.090293647844861]) ; Forward 4.590224376619849 ; For (6 , [Home ; For (3 , []) ; Forward 1.662861275873639 ; Turn 2.9802847766789418 ; Home ; Home]) ; For (5 , [For (0 , [Turn 0.5353693170013611]) ; Home ; Home ; Turn 0.7075825251836219 ; For (1 , [Forward 0.0])]) ; Home ; For (1 , [Turn 0.8166400930132234 ; Home ; Turn 7.156642556967507 ; Home ; Home ; Home ; Forward 10.872664366189873 ; Home ; Forward 0.25882465679471733 ; Turn 0.5950617664165971 ; For (3 , [])])]
 
 20060323-22:43:36-a87f4de68f6bf8428673d8b8bab3f579.seminal.ml
 *** Failed after 1 tests: Type error : could not match 't9 -> 't10 with int
 let ml = [Forward 5.0] in
-let mlPlus = (Turn 1.0) :: ml in
-let forMove = For (5 mlPlus) in
-[forMove]
+(let mlPlus =
+   (Turn 1.0) :: ml in
+ (let forMove = For (5 mlPlus) in
+  [forMove]))
 
 20060323-22:59:04-39ece06ece66c8dc880ee10675819a09.seminal.ml
-*** Failed after 23 tests: Type error : could not match int with heapElement
+*** Failed after 7 tests: Type error : could not match int with heapElement
 
 
 20060323-22:59:38-e7c2c654f54054eb7c19d03cfec68e3b.seminal.ml
@@ -794,8 +795,9 @@ let forMove = For (5 mlPlus) in
 lookup_var [] _9
 
 20060323-23:05:28-8208a05059a4335cea94c878a710ddd0.seminal.ml
-*** Failed after 2 tests: Type error : could not match heapElement with int
-interp_s [] (RestoreHeap "")
+*** Failed after 4 tests: Type error : could not match heapElement with int
+interp_s [Heap ("" , []) ; Heap ("" , [VarElement ("" , 0)])]
+         (Seq (RestoreHeap "" , RestoreHeap "b"))
 
 20060323-23:11:28-c24ddccacfbcdc668613ca92ad083c49.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with exp
@@ -813,32 +815,32 @@ makePoly _2 0.0
 +++ OK, passed 1000 tests.
 
 20060323-23:58:10-8a98128ae553a921e83e0e588be1843b.seminal.ml
-*** Failed after 8 tests: Type error : could not match move list with move
-interpLarge [For (2 , [For (1 , [Home ; Home]) ; Home]) ; Turn 2.2550132132046614 ; Turn 3.2329402239334497 ; For (3 , [For (1 , []) ; Home ; For (1 , []) ; Forward 0.6582335082137248]) ; Home ; Turn 3.2068634760625807 ; For (5 , [For (0 , []) ; Home])]
+*** Failed after 5 tests: Type error : could not match move list with move
+interpLarge [For (2 , [Home ; Home])]
 
 20060324-10:21:08-1099c20635149bf4c21dae977b473fa7.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-11:54:50-493d658d01a1323b9f1da1c0ae811325.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-11:55:50-f2f7f0e7c9ad0f9553a24b4cb7d4a247.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-11:58:26-d434312dfde528e7d5f0dc87a9807aeb.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-11:59:18-bf001761f7012c241e4087c39d2e9776.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-12:01:30-c9e982702b75e6ace803eee5f5d31401.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-19:51:52-4c4952762d71314d3fdcccdf6da3c0f2.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with float
@@ -859,49 +861,49 @@ interpTrans [] _19 _38 _57
 
 20060324-20:45:28-232a876d350ebc97006824843fc62110.seminal.ml
 *** Failed after 1 tests: Type error : could not match float with int
-acos (1.0 -)
+acos (- 1.0)
 
 20060324-22:00:17-ecdfe52e272243e86b6b7a8128d95dd3.seminal.ml
-*** Failed after 3 tests: Type error : could not match (string * storage) list with storage
-interp_s [("" , Heap2 [])]
-         (SaveHeap "")
+*** Failed after 1 tests: Type error : could not match (string * storage) list with storage
+interp_s [] (SaveHeap "")
 
 20060324-22:00:33-db93e113469e7bb804bada46ace29e7a.seminal.ml
-*** Failed after 4 tests: Type error : could not match int with storage
-interp_e []
-         (Plus (Var "" , Int 0))
-
-20060324-22:01:55-60f7617e7e801a26ea584bcc86751861.seminal.ml
-*** Failed after 1 tests: Type error : could not match exp with storage
+*** Failed after 2 tests: Type error : could not match int with storage
 interp_e [] (Var "")
 
+20060324-22:01:55-60f7617e7e801a26ea584bcc86751861.seminal.ml
+*** Failed after 4 tests: Type error : could not match exp with storage
+interp_e [("d" , StoredHeap []) ; ("c" , StoredHeap [])]
+         (Var "")
+
 20060324-22:04:48-ca1773b81b82f426df3e9e7e4632b399.seminal.ml
-*** Failed after 1 tests: Type error : could not match int with storage
-interp_s []
+*** Failed after 2 tests: Type error : could not match int with storage
+interp_s [("a" , StoredHeap [])]
          (Assign ("" , Int 0))
 
 20060324-22:07:48-d2b75cb83836da475118ae658501a5ca.seminal.ml
-*** Failed after 7 tests: Type error : could not match 't577 list -> int -> 't576 with ('t574 * 't575)
-interpTrans [For (0 , []) ; For (5 , [Forward 0.0 ; For (0 , [Forward 0.0]) ; Forward 0.0 ; For (1 , [For (0 , [])])]) ; Forward 4.201507640998692e-2 ; Forward 1.8053254695680394 ; Forward 4.66615390206821 ; For (0 , [Home ; Turn 1.5743343309330586])]
-            1.535937283055724
-            0.18203674017507487
-            1.9976206668604402
+*** Failed after 9 tests: Type error : could not match 't309 list -> int -> 't308 with ('t306 * 't307)
+interpTrans [Forward 0.4963923551022581 ; For (2 , [Home ; Forward 2.916690696069471]) ; For (0 , [Turn 0.0 ; Home]) ; Forward 4.683691131840087]
+            3.615126234244949
+            2.539871603192423
+            3.5769227296119723
 
 20060324-22:08:00-d2df9ba9c697ee7e1b27b4b952dcdd4a.seminal.ml
-*** Failed after 1 tests: Type error : could not match (string * storage) list with storage
-interp_s [] (SaveHeap "")
+*** Failed after 4 tests: Type error : could not match (string * storage) list with storage
+interp_s [("a" , StoredInt 0) ; ("ca" , StoredHeap [("" , StoredHeap []) ; ("" , StoredHeap [])])]
+         (SaveHeap "")
 
 20060324-22:24:46-8ab05dd4986d17d763e509d04ea02fde.seminal.ml
 *** Failed after 1 tests: Unbound variable : List.fold_left2
 let compare_float_pairs =
   fun acc ->
-    fun x ->
-      fun y ->
-        acc && ((abs_float (fst x -. fst y) < 1.0e-4) && abs_float (snd x -. snd y)) in
-if List.fold_left2 compare_float_pairs
-                   true ansL
-                   ansS && List.fold_left2 compare_float_pairs
-                                           true ansS ansI
+    (fun x ->
+       (fun y ->
+          (acc && ((abs_float (fst x -. fst y) < 1.0e-4) && abs_float (snd x -. snd y))))) in
+if (List.fold_left2 compare_float_pairs
+                    true ansL
+                    ansS && List.fold_left2 compare_float_pairs
+                                            true ansS ansI)
 then print_string "Match!\n"
 else print_string "Mismatch!\n"
 
@@ -910,46 +912,47 @@ else print_string "Mismatch!\n"
 makePoly _2 0.0
 
 20060324-22:37:56-14013c68b574056a18cf98eb43cf3811.seminal.ml
-*** Failed after 11 tests: Type error : could not match ('t458 * 't459) with (float * float) list
-interpTrans [Home ; Forward 8.955665257780832e-2 ; Home ; Turn 5.38956016224203 ; For (1 , [Turn 5.988820169068946]) ; For (3 , [Turn 2.453955366098999 ; Home ; Forward 5.321480765679493 ; For (2 , [Forward 1.1456211747232352]) ; Forward 3.2489664585242077]) ; Forward 3.2062617488234917 ; Turn 2.613260885547506]
-            3.8019760413863013
-            4.541653287647564 _9
+*** Failed after 9 tests: Type error : could not match ('t215 * 't216) with (float * float) list
+interpTrans [Forward 1.2362944048066047 ; Forward 3.630811685680902 ; For (2 , [Home ; For (0 , [])]) ; Forward 1.026224577546218]
+            7.564108070971786
+            7.775085659308458
+            5.513672125695472
 
 20060324-22:39:30-c619291e201e563ad9550d8cd7acb5f0.seminal.ml
-*** Failed after 9 tests: Type error : could not match ('t421 * 't422) with (float * float) list
-interpTrans [Forward 0.32154630912837256 ; For (3 , [Turn 0.9703425411038997 ; Turn 1.6394281028886006 ; For (0 , []) ; Home]) ; Home ; For (3 , [Turn 0.3058275427770313 ; Forward 0.0]) ; For (4 , []) ; Home ; For (0 , [Turn 4.539273898243501e-2 ; Forward 0.37881429803343214 ; Forward 0.0 ; For (1 , []) ; Home])]
-            1.9551344907460972
-            3.381950021753174
-            7.435181179266822
+*** Failed after 6 tests: Type error : could not match ('t178 * 't179) with (float * float) list
+interpTrans [Forward 0.0 ; Turn 3.7322892380608828 ; Turn 1.407165798926758 ; For (1 , [Forward 0.3443188534519839])]
+            0.9803465838847542
+            0.3405282060615228
+            2.836174655740153
 
 20060324-22:39:43-eebf94185c695dc23122f1f8a3b05347.seminal.ml
-*** Failed after 36 tests: Type error : could not match (float * float) with 't38 list
-interpLarge [Home ; Home ; Forward 2.6790513889572525 ; Loop (11 , [Loop (5 , [Loop (3 , [Loop (0 , [Turn 0.5343445750674235])]) ; Home ; Home ; Loop (0 , [Turn 0.698781106262751])]) ; Turn 1.5202056700614395 ; Home]) ; Turn 7.226658083160531 ; Turn 4.537210294929984 ; Turn 1.2610410676436472 ; Loop (4 , []) ; Turn 3.986082349661613]
+*** Failed after 14 tests: Type error : could not match (float * float) with 't38 list
+interpLarge [Home ; Home ; Loop (8 , [Home ; Home ; Loop (2 , [Home ; Home ; Turn 0.0 ; Forward 1.2654412282972747 ; Loop (1 , [])]) ; Home ; Turn 0.0 ; Turn 5.050154551686627 ; Forward 4.870602896077024]) ; Home]
 
 20060324-22:45:51-9b07192b0a6d5857aee50032d33ab030.seminal.ml
-*** Failed after 4 tests: Type error : could not match float with int
-interpLarge [Turn 0.8776444734552178]
+*** Failed after 3 tests: Type error : could not match float with int
+interpLarge [Turn 0.8710858928642659]
 
 20060324-22:46:18-435497b4fd7d69acd543ff31eea2fb72.seminal.ml
-*** Failed after 19 tests: Type error : could not match ('t800 * 't801) with (float * float) list
-interpTrans [For (2 , [Forward 0.8058424024005058 ; For (4 , [Home ; For (3 , []) ; Forward 0.6205689897306246 ; Forward 1.3438917814121332 ; Turn 2.0184958858488287 ; For (0 , [])]) ; Home ; Turn 2.5201336169882995 ; Forward 0.7728850687501518 ; Home ; For (1 , [For (3 , []) ; Forward 0.8747437245482321 ; Turn 0.0 ; Home ; Forward 2.9815827344396064])]) ; Turn 0.0 ; Forward 0.9326122155512602 ; For (4 , [Forward 0.0 ; Forward 3.419916625623203 ; Home ; Forward 0.5865922191341655 ; For (2 , []) ; For (1 , [Home])]) ; Home ; For (6 , [Forward 0.0 ; Home])]
-            11.195278005629767
-            13.236930596321198
-            7.967670736733908
+*** Failed after 11 tests: Type error : could not match ('t254 * 't255) with (float * float) list
+interpTrans [Home ; For (6 , [Forward 1.8025558344058683 ; Forward 2.828207005169059e-3]) ; Forward 0.3268141967560514 ; For (3 , [])]
+            2.951531902781477
+            6.859969562970381 _9
 
 20060324-22:53:08-18b6d1fa1b4022dcf41a6276b9ca9fc9.seminal.ml
-*** Failed after 34 tests: Error: <timeout>
-interpTrans [Home ; For (7 , [Forward 3.377770816956515 ; Forward 4.672599565255571]) ; Turn 1.9817180215615369 ; Home ; For (11 , [For (1 , [Home ; For (1 , []) ; Turn 0.0 ; For (4 , [Forward 0.5704510144717239 ; Turn 0.40639448877033746 ; Home]) ; Forward 0.0]) ; For (4 , []) ; For (4 , [For (0 , []) ; Forward 0.0 ; For (0 , [For (0 , [])])])]) ; Forward 1.7823765129277351]
-            5.321461779527761
-            1.2819728069497272 _10
+*** Failed after 20 tests: Error: <timeout after 10000 steps>
+interpTrans [Turn 6.023671637965011 ; Home ; Turn 2.007453733790523 ; For (5 , [For (3 , [For (0 , [])]) ; Forward 2.975146778015404 ; Forward 0.4806759337249702 ; For (5 , [Forward 0.0 ; For (1 , [Home ; Forward 1.1280395580237286 ; Forward 1.8045207494798703])]) ; Forward 0.0]) ; Forward 1.5964553535051915 ; Home ; For (3 , [Turn 0.0]) ; Forward 1.34495025611943 ; Forward 0.0 ; Turn 3.910913394997061 ; Home ; Home ; For (7 , []) ; For (9 , [Forward 4.766028348386764e-2 ; For (5 , [Home]) ; For (0 , [Home ; Home ; Home ; Forward 5.741228316811244 ; For (5 , []) ; Forward 0.17076132519797826]) ; For (2 , [Home ; Home ; Forward 0.0]) ; Forward 0.3102635049988989 ; For (3 , [For (0 , []) ; Home]) ; Home ; For (2 , [For (1 , []) ; Turn 0.5934116027919114 ; For (0 , []) ; Turn 0.2909687695285923 ; Turn 0.2656465143361588]) ; Home ; Home])]
+            9.640207003887234
+            11.080965545080305
+            0.7344249419265166
 
 20060324-22:57:22-f4d3fc8cbafcab94ceae8ce7d40c51a5.seminal.ml
 *** Failed after 1 tests: Type error : could not match move with move list
 interpLarge example_logo_prog
 
 20060324-23:04:56-f1d095019a8df3560f887b998e607db5.seminal.ml
-*** Failed after 3 tests: Type error : could not match int with float
-interpLarge [Turn 0.0 ; Forward 0.0]
+*** Failed after 5 tests: Type error : could not match int with float
+interpLarge [Turn 0.0]
 
 20060325-09:30:54-e182e9092714cced8953b2f5b29145da.seminal.ml
 *** Failed after 1 tests: Type error : could not match stmt with node
@@ -960,96 +963,100 @@ interp_prog _9
 printheap h 0
 
 20060328-14:00:48-8da9cf0dfa8df41870d6ee216a089637.seminal.ml
-*** Failed after 63 tests: Type error : could not match unit with exp
-interp _8 _9
-       (Apply (Pair (Int 0 , Int 0) , Int 0))
+*** Failed after 137 tests: Type error : could not match unit with exp
+interp (fun _ ->
+          (fun _ ->
+             [("gmjgbaaphb" , First (Int 0)) ; ("il" , Plus (Int 0 , Second (Var ""))) ; ("qqmngbojdbk" , First (Pair (If (Var "" , Var "" , Int 0) , Apply (Int 0 , Var "")))) ; ("bk" , Plus (First (Var "fhfbgdhb") , Closure ("ba" , Int 0 , [("" , Plus (Var "" , Int 0))]))) ; ("opfnbdch" , Lam ("b" , If (Apply (Var "" , If (Int 0 , Int 0 , Int 0)) , First (Var "") , Plus (Var "" , Plus (Var "" , Int 0))) , None)) ; ("o" , Second (Plus (Plus (If (Int 0 , First (Var "") , Pair (Var "" , Int 0)) , Var "") , Pair (Apply (If (Int 0 , Int 0 , Var "") , First (Int 0)) , Second (Var ""))))) ; ("hbdhecngkibalkgb" , Second (Lam ("acgdigd" , Pair (First (Lam ("" , Var "" , Some [])) , Var "a") , None))) ; ("mhmm" , Int 1) ; ("emgmdeamihocqjld" , Plus (Var "b" , Second (First (Int 0)))) ; ("hqh" , Closure ("bibgchjif" , First (Second (Var "")) , [("i" , If (Pair (Pair (Lam ("" , Int 0 , None) , Plus (Apply (Apply (Int 0 , Var "") , Int 0) , Pair (Var "" , Var ""))) , Closure ("" , Int 0 , [])) , Var "" , First (Int 0))) ; ("lcjldkmebei" , Var "kbbl") ; ("knmhdhjjakbd" , Closure ("ab" , Closure ("cb" , Plus (Var "" , Lam ("" , Int 0 , Some [])) , []) , [])) ; ("dme" , First (Closure ("bgea" , If (Int 0 , Pair (Int 0 , Int 0) , If (Var "" , Int 0 , Var "")) , [("e" , Plus (Pair (Var "bb" , Int 0) , Lam ("b" , Var "" , None))) ; ("ccdfca" , Int 1) ; ("dacag" , Pair (Apply (Var "" , Second (Var "")) , If (Closure ("" , Var "" , []) , If (Var "" , Var "" , Int 0) , If (Var "" , Var "" , Int 0))))]))) ; ("bcnjcnbbfblcl" , Plus (Plus (Pair (Var "" , Apply (Second (Var "") , Int 0)) , First (Pair (Int 0 , Var ""))) , Apply (If (Apply (Var "" , Int 0) , Int 0 , Var "") , Apply (Int 0 , Pair (Var "" , Var ""))))) ; ("lebmmdhfflgen" , Pair (Lam ("" , Pair (Int 0 , Int 0) , None) , Second (Lam ("" , Int 0 , None))))])) ; ("gbjbqhfoenfpl" , Second (Closure ("" , Int 0 , [("" , Var "b") ; ("b" , If (Int 0 , Pair (Var "" , Var "") , Int 0))]))) ; ("haeqbjlqmq" , If (Closure ("ab" , Second (Var "") , [("" , Pair (Closure ("abdggc" , Int 0 , [("" , Pair (Plus (First (Int 0) , Apply (Int 0 , Var "")) , Pair (Second (Int 0) , Apply (Plus (Var "" , Second (Int 0)) , Var ""))))]) , Lam ("b" , Var "" , Some []))) ; ("bjcjfdhak" , Int 8) ; ("c" , Var "ccd") ; ("dajeha" , Lam ("" , Closure ("" , Lam ("" , Var "" , Some []) , []) , None)) ; ("" , Closure ("" , Second (Var "") , [("fffc" , Apply (Pair (If (Lam ("" , Var "" , None) , Second (Int 0) , Lam ("" , Int 0 , None)) , Var "") , Var "")) ; ("dfe" , First (Second (Var "")))]))]) , Var "adbdae" , Plus (Int 0 , Plus (Int 0 , If (Int 0 , Var "" , Int 0))))) ; ("ljakhbpqonoc" , Plus (Apply (Var "" , Int 0) , Var "")) ; ("ihoppocepepeipn" , Closure ("de" , Pair (Var "ba" , Pair (Apply (Plus (Var "" , Var "") , Plus (Int 0 , Var "")) , First (If (Second (Int 0) , Int 0 , Int 0)))) , [("m" , Second (Pair (Plus (Closure ("" , Var "" , []) , Var "") , Int 0))) ; ("ccjhhma" , First (Var "deb")) ; ("ikjfldmk" , Pair (Apply (If (Int 0 , Closure ("" , If (Var "" , Var "" , Var "") , []) , Closure ("" , Int 0 , [])) , Var "") , Closure ("b" , Var "" , [])))])) ; ("ndmjgekgeekqejb" , Var "bbdbbe")]))
+       [("b" , _117) ; ("ibbhkiddhge" , _139) ; ("hqc" , _161) ; ("geqqhkkjimkanppq" , _183) ; ("gcjmdmb" , _205) ; ("nkbigccqqkfmg" , _227)]
+       (Plus (If (Int 0 , Var "" , Int 0) , Pair (Var "" , Lam ("" , Int 0 , None))))
 
 20060329-19:32:13-413085166cad1985799707383569fe55.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060401-08:09:20-9b97df096c7b5d2aa43c35e50188230c.seminal.ml
-*** Failed after 11 tests: Type error : could not match int with exp
+*** Failed after 3 tests: Type error : could not match int with exp
 
 
 20060403-20:09:44-6a44548eed87d4b6e6201e799844d20c.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060403-20:43:16-b07f4d13cabbbd98858efb4e21fb2f2e.seminal.ml
-*** Failed after 5 tests: Type error : could not match exp with 't33 list option
+*** Failed after 7 tests: Type error : could not match exp with 't48 list option
 
 
 20060403-21:25:44-455f9320f05e875d718926bbafb03dd9.seminal.ml
-*** Failed after 2 tests: Type error : could not match string list option with 't30 list
-computeFreeVars (Lam ("" , Var "" , Some []))
+*** Failed after 8 tests: Type error : could not match string list option with 't45 list
+computeFreeVars (Apply (Lam ("b" , First (Var "") , Some []) , Second (Plus (Var "" , Var ""))))
 
 20060403-21:35:06-110b4ff4ab239ddf2024c924f7b24c81.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060403-23:29:52-92f0c4405907a1f677168b5773c9c0a9.seminal.ml
-*** Failed after 185 tests: Type error : could not match int with exp
-interp (fun _ -> fun _ -> []) _9
-       (Plus (Plus (Plus (Int 0 , Int 0) , Lam ("" , Int 0 , Some [])) , Int 0))
+*** Failed after 723 tests: Type error : could not match int with exp
+interp _8 []
+       (Plus (Plus (Var "" , Int 0) , Int 0))
 
 20060403-23:30:42-935cb5f8947224ca15c05bc1b31c5394.seminal.ml
-*** Failed after 122 tests: Type error : could not match exp with int
+*** Failed after 12 tests: Type error : could not match exp with int
 interp _8 _9
        (Plus (Int 0 , Int 0))
 
 20060403-23:31:40-acb953a7a447b99f3a44d62c523c0ade.seminal.ml
-+++ OK, passed 1000 tests.
+*** Failed after 759 tests: Type error : could not match int with exp
+interp _8 _9
+       (Apply (Plus (Int 0 , Int 0) , Int 1))
 
 20060404-22:13:52-137af8b879346e055957a720071ea44e.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060404-22:15:04-5f68f13050763ebfd26af1dc16f0ea9f.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060404-22:23:08-8982c9c35730867ec38c6a14fbd2ebba.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060405-11:30:40-3b59839ff274888dc397e3bb11f47e38.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060405-20:30:56-fbd72970e1c774661ada3799804de280.seminal.ml
-*** Failed after 4 tests: Type error : could not match exp with string
-computeFreeVars (Lam ("b" , Var "" , Some []))
+*** Failed after 8 tests: Type error : could not match exp with string
+computeFreeVars (Pair (Second (If (Var "" , Apply (Second (Var "") , Second (Var "")) , Int 0)) , Lam ("" , Plus (Var "" , Pair (Var "" , Var "")) , None)))
 
 20060405-20:41:02-03a9838eef87a5baf5d05bd769e72274.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060406-11:05:36-7beaaeb582c5ffce2f318b0abe8d1ff6.seminal.ml
-*** Failed after 18 tests: Type error : could not match unit with exp
-interp _8 _9
-       (Apply (Plus (First (Int 0) , Int 0) , Plus (Int 0 , Var "")))
+*** Failed after 27 tests: Type error : could not match unit with exp
+interp _8
+       [("aeef" , _105) ; ("fdb" , _127) ; ("cfgede" , _149) ; ("aceb" , _171) ; ("" , _193) ; _94]
+       (Apply (Apply (Apply (Int 0 , Var "") , Int 0) , Closure ("c" , Pair (Var "" , Var "") , [("" , Plus (Var "" , Lam ("ca" , If (Closure ("" , Int 0 , []) , Int 0 , Var "") , Some []))) ; ("" , Lam ("aa" , Int 0 , Some []))])))
 
 20060406-11:17:50-f3fec0a8ebf80f9b609a4bd6698f4c33.seminal.ml
-*** Failed after 91 tests: Type error : could not match unit with exp
-interp (fun _ ->
-          fun _ ->
-            [("fhdi" , Lam ("" , Second (Lam ("" , Var "" , Some [])) , Some ["a"])) ; ("ikbehe" , Var "ff") ; ("" , Plus (First (Var "") , Plus (First (Apply (Int 0 , Var "")) , Int 0))) ; ("dgkccibh" , Closure ("fjacj" , Int 1 , [("fddh" , Closure ("b" , Int 0 , [("a" , Closure ("" , Var "" , [])) ; ("dd" , First (Second (Plus (Var "" , Int 0))))])) ; ("dbah" , Pair (Apply (Int 0 , First (Var "b")) , Closure ("" , Var "ccbcb" , []))) ; ("bbfb" , Plus (Pair (Lam ("" , Var "" , Some []) , Var "") , Closure ("ba" , Int 0 , [("" , Var "b")]))) ; ("aecic" , Lam ("b" , Int 0 , None)) ; ("dfggfhe" , Second (Closure ("a" , Lam ("" , Var "" , Some []) , [("a" , Second (Apply (Var "" , Int 0)))]))) ; ("ecggiff" , Int 0) ; ("idafaag" , If (Plus (Var "" , Lam ("" , Int 0 , Some [])) , Var "" , First (Lam ("ba" , Plus (Pair (Var "" , Closure ("" , Int 0 , [])) , Var "") , Some []))))])) ; ("i" , Closure ("ab" , Closure ("" , Second (Int 0) , []) , [("" , If (Var "a" , First (Var "") , Int 0)) ; ("cc" , Plus (Int 0 , Second (Var "")))])) ; ("djh" , Closure ("" , If (Plus (Lam ("" , Int 0 , None) , Closure ("b" , Var "" , [])) , Var "" , First (Var "")) , [])) ; ("ebhckibja" , Plus (Plus (Plus (Int 0 , Int 0) , Var "") , Apply (Lam ("" , Var "" , None) , First (Second (Int 0))))) ; ("hadahghce" , First (Int 3)) ; ("fjhfjbbci" , Var "dda")])
-       _9
-       (Apply (Lam ("" , Int 0 , None) , Plus (Apply (Var "" , Int 0) , Int 0)))
+*** Failed after 92 tests: Type error : could not match unit with exp
+interp _8 _9
+       (Apply (Closure ("" , Int 0 , []) , Plus (Var "" , Apply (Var "" , Int 0))))
 
 20060406-14:42:20-dde7bed9a1366515f6889378b8159823.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060406-15:15:00-89b2ea1f6daa44f016f1115e5e7a0e5c.seminal.ml
-*** Failed after 34 tests: Type error : could not match exp with int
-interp _8 _9
-       (If (Int 1 , If (Int 0 , Plus (Pair (Lam ("" , Var "" , Some []) , Plus (Int 0 , Var "")) , Apply (If (Int 0 , Int 0 , Var "") , Second (Int 0))) , Int 0) , Var ""))
+*** Failed after 30 tests: Type error : could not match exp with int
+interp _8
+       [("ic" , _132) ; ("bfi" , _154) ; ("fgj" , _176) ; ("jhfhc" , _198) ; ("chjhji" , _220)]
+       (Plus (Second (Int 0) , Apply (Pair (Int 0 , Var "a") , If (Int 0 , Int 0 , Int 0))))
 
 20060406-16:17:14-8a3de947b667000de8e1ae8f13f19ad5.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
-print_prog (Int 0)
+print_prog (Var "")
 
 20060406-16:21:14-364e8a472f1d55e872c7f223d5767649.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
@@ -1060,55 +1067,55 @@ print_prog (Var "")
 print_prog (Var "")
 
 20060406-16:33:28-3e359e9c9b8723f54053d2ca78c3f996.seminal.ml
-*** Failed after 26 tests: Type error : could not match string list with string list option
-computeFreeVars (First (Lam ("" , Int 0 , Some [])))
+*** Failed after 8 tests: Type error : could not match 't107 list with string list option
+computeFreeVars (Plus (Apply (Int 0 , Lam ("" , Var "" , None)) , Second (If (Int 0 , Int 0 , Int 0))))
 
 20060406-16:51:34-f6a4b5a7a5903facda19e0431adb571e.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060406-16:55:42-d74890b981d3589d3da26b20eb3d9287.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060407-12:05:48-b0c22b01ad12500b1c4bf679d6fb1d2a.seminal.ml
-*** Failed after 2 tests: Type error : could not match (exp * 't32 list) with 't46 list
-computeFreeVars (Pair (Int 0 , Var ""))
+*** Failed after 8 tests: Type error : could not match (exp * 't48 list) with 't60 list
+computeFreeVars (Pair (Apply (Pair (Var "" , If (Int 0 , Var "" , Int 0)) , Pair (Int 0 , Int 0)) , If (Pair (Var "" , If (Int 0 , Int 0 , Int 0)) , Pair (Var "" , Var "") , If (Var "" , Pair (Var "" , Int 0) , If (Int 0 , If (Var "" , Var "" , Var "") , Plus (Int 0 , Int 0))))))
 
 20060407-12:38:30-642a84ce028494fa2e6f268cb01f2d6e.seminal.ml
 *** Failed after 1 tests: Type error : could not match unit list with string
 print_endline ("Test: " ^ printlist test_lst)
 
 20060407-13:09:40-68fa1d749857b7c158fe3ea20c682917.seminal.ml
-*** Failed after 14 tests: Type error : could not match string list option with 't394 list
-computeFreeVars (Pair (If (Second (Var "") , Lam ("" , Var "" , Some []) , Lam ("" , Int 0 , None)) , Plus (Closure ("d" , Lam ("" , If (Int 0 , Int 0 , Var "") , None) , [("b" , Pair (Int 0 , Int 0))]) , First (Int 0))))
+*** Failed after 25 tests: Type error : could not match 't2 list with string list option
+
 
 20060407-14:04:36-4f6bd8de53c236abdacd46fda85bf207.seminal.ml
-*** Failed after 9 tests: Type error : could not match 't200 with string
-computeFreeVars (Lam ("bfffgef" , Second (Lam ("" , Int 0 , Some [])) , None))
+*** Failed after 4 tests: Type error : could not match 't256 list with string list option
+computeFreeVars (Lam ("" , Lam ("a" , Int 0 , None) , Some []))
 
 20060407-14:09:40-7804fcbc75f8b1ecc35cb5f0b73b61e1.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't286 list option with 't312 list
-computeFreeVars (Apply (Int 0 , Apply (Int 0 , Int 0)))
+*** Failed after 11 tests: Type error : could not match string list option with 't570 list
+computeFreeVars (Pair (Lam ("ca" , Apply (Lam ("" , Var "" , None) , Plus (Pair (If (Int 0 , Var "" , Var "") , Int 0) , Pair (Int 0 , Int 0))) , None) , Pair (Int 0 , Int 0)))
 
 20060407-14:13:28-a922dd99a12b24c5e1535113889190b5.seminal.ml
-*** Failed after 20 tests: Type error : could not match 't230 with string
-computeFreeVars (Apply (First (Second (Pair (First (Pair (Int 0 , Var "")) , Lam ("" , Var "" , Some [])))) , Lam ("" , Closure ("bb" , Second (Int 0) , []) , Some ["a"])))
+*** Failed after 9 tests: Type error : could not match string list option with 't433 list
+computeFreeVars (Apply (Lam ("fcacb" , Int 0 , None) , If (If (Var "" , Var "" , Var "") , Var "" , Int 0)))
 
 20060407-19:01:03-abd1f315759bb561fda04484cb139c03.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060407-19:05:44-5fc103089dd1d89d86c9c1b5d7749cf2.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060407-19:41:33-7f6991e60ba2fb91dfbf4ee0f2fbee98.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060407-20:43:07-5c966853d652348eb775115fde313289.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060407-22:11:48-f973eeb63f5f9db2f9feec0812c1b4e1.seminal.ml
@@ -1119,64 +1126,66 @@ print_endline "array : ";
 print_endline ()))
 
 20060407-22:23:32-b4b678d78faa53925ca15fc1f5bb7159.seminal.ml
-*** Failed after 3 tests: Type error : could not match 't859 -> 't860 with string
+*** Failed after 3 tests: Type error : could not match 't876 -> 't877 with string
 interp _822 _823
-       (Second (Var ""))
+       (First (Pair (Var "" , Int 0)))
 
 20060407-22:43:20-5c0b48e6862129272a152635d2fffb9f.seminal.ml
-*** Failed after 4 tests: Type error : could not match (string * 't835) list with exp
-printEnv [("ccb" , _837) ; _831 ; _832]
+*** Failed after 2 tests: Type error : could not match (string * 't833) list with exp
+printEnv [("a" , _835)]
 
 20060407-22:43:39-0e0a265418f2ab15923390cbe2319fe1.seminal.ml
 *** Failed after 1 tests: Type error : could not match exp with 't829 list
 printEnv (Int 0)
 
 20060407-22:58:54-33fb0f89929a29aeedba76680ae970bc.seminal.ml
-*** Failed after 4 tests: Type error : could not match 't50 list with string list option
-computeFreeVars (Plus (Var "" , Lam ("" , Int 0 , Some [])))
+*** Failed after 9 tests: Type error : could not match 't199 list with string list option
+computeFreeVars (Pair (Var "b" , If (Pair (Pair (Var "" , Int 0) , Var "bb") , Pair (Int 0 , Var "") , Lam ("" , Plus (Int 0 , Int 0) , None))))
 
 20060408-22:49:00-d7677aecaf225da83dfe298659b3af98.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060408-22:49:39-62b3d2f60005e371eb26262ca86f49d7.seminal.ml
-*** Failed after 1 tests: Error: <timeout>
+*** Failed after 1 tests: Error: <timeout after 10000 steps>
 interp1 [] ex2
 
 20060408-23:13:58-31888a7830c581fa2341c3dd0c854717.seminal.ml
-*** Failed after 4 tests: Type error : could not match (exp * 't32 list) with 't32 list
-
+*** Failed after 2 tests: Type error : could not match (exp * 't46 list) with 't52 list
+computeFreeVars (Pair (Int 0 , Var ""))
 
 20060408-23:22:14-3b63f43df03b8b00547e6d4bc27d4e97.seminal.ml
 *** Failed after 5 tests: Type error : could not match ('t33 * 't32 list) with exp
 
 
 20060408-23:25:43-af8743fb96b206fe5d43a8f1ffba9d59.seminal.ml
-*** Failed after 12 tests: Type error : could not match (unit * exp) with exp
+*** Failed after 4 tests: Type error : could not match (unit * exp) with exp
 interp (fun _ ->
-          fun _ -> [("gcaa" , Var "")]) _9
-       (Plus (Second (Lam ("" , Int 0 , Some [])) , Var ""))
+          (fun _ ->
+             [("" , Apply (Var "" , Var "")) ; ("bdd" , Closure ("a" , Closure ("" , Second (Var "") , []) , [])) ; ("aaa" , Second (If (Plus (Var "" , Var "") , Int 0 , Int 0)))]))
+       _9
+       (First (Lam ("b" , Int 0 , Some [])))
 
 20060408-23:28:03-17cf64e920a8226ad7e5c78cd6217862.seminal.ml
-*** Failed after 8 tests: Type error : could not match unit with int
-computeFreeVars (Pair (Plus (If (Lam ("" , Int 0 , None) , Var "" , Apply (Var "" , Int 0)) , Var "") , If (If (Int 0 , Pair (Int 0 , Var "") , Int 0) , Apply (Var "" , Pair (Plus (Int 0 , Int 0) , Int 0)) , Closure ("" , Plus (Int 0 , Int 0) , []))))
+*** Failed after 12 tests: Type error : could not match unit with int
+computeFreeVars (Plus (If (Closure ("fc" , Int 0 , [("ebdc" , Lam ("ccb" , Int 0 , None)) ; ("b" , If (Var "" , Var "" , Int 0)) ; ("eeaa" , First (Closure ("" , Plus (Int 0 , Var "") , [("" , Lam ("" , Int 0 , Some [])) ; ("" , If (Apply (Int 0 , Int 0) , Var "" , Plus (Int 0 , Int 0)))])))]) , If (Int 0 , If (Var "" , Pair (Var "" , Int 0) , Int 0) , Lam ("" , Var "" , Some [])) , Second (Int 0)) , Var ""))
 
 20060409-00:07:29-26092bf6b0d197a7cad0d4c6a3b795e6.seminal.ml
 *** Failed after 1 tests: Error: Lam expects 3 arguments, but was given 2
 Lam ("x" , Var "x")
 
 20060409-15:05:26-8ff60256917627e3357b0b8561216a84.seminal.ml
-*** Failed after 36 tests: Type error : could not match ('t263 * 't264) with string
+*** Failed after 10 tests: Type error : could not match ('t217 * 't218) with string
 interp (fun _ ->
-          fun _ ->
-            [("" , Plus (Closure ("aaed" , Apply (Int 0 , Int 0) , [("" , Plus (Var "" , First (First (Lam ("" , Var "" , Some []))))) ; ("" , Var "b") ; ("add" , If (If (Lam ("" , Var "" , None) , Int 0 , Var "") , Var "" , Int 0)) ; ("bb" , First (Int 0))]) , First (Second (Var "")))) ; ("" , If (Closure ("" , Int 0 , []) , Pair (Int 1 , Int 0) , First (If (Var "" , Int 0 , Closure ("" , Var "" , []))))) ; ("i" , Closure ("" , Var "" , [("" , Var "")])) ; ("ehmagmhe" , Int 1) ; ("jgjlgaimndfdjcc" , Second (Apply (Pair (Int 0 , Int 0) , Int 0))) ; ("degnhbnfed" , First (Plus (Var "" , Int 2))) ; ("dhdplfmjjknhij" , Plus (Int 11 , Plus (If (Int 1 , Var "" , Pair (First (Var "") , Int 0)) , Apply (Lam ("" , Pair (Plus (Var "" , Int 0) , Int 0) , Some []) , Var "")))) ; ("fohcplblbeab" , Int 3) ; ("i" , Plus (Int 0 , First (Var ""))) ; ("dgahfbneon" , Int 0)])
-       ["mghb" ; "jmcjjpfdfc" ; "pokjobkkldbpd" ; "gdnpcbkcifocbl" ; "kmplilhbgmgfh"]
-       (Pair (If (Apply (Lam ("" , Var "" , None) , Var "b") , Second (Int 2) , Var "") , First (First (First (Int 0)))))
+          (fun _ ->
+             [("" , Pair (Closure ("abada" , Var "" , []) , Lam ("ca" , First (Var "") , Some []))) ; ("aahfibh" , Second (Closure ("" , Plus (Var "" , Var "") , []))) ; ("efbfe" , Plus (Closure ("ddd" , Int 0 , [("" , First (Int 0))]) , Var "")) ; ("aejdda" , Int 3) ; ("dicfgd" , Second (Var "")) ; ("ghfda" , Apply (If (Plus (First (Var "") , Second (Var "")) , Int 0 , First (Plus (Int 0 , Int 0))) , First (Var ""))) ; ("ia" , If (If (Int 0 , Int 0 , Lam ("" , Var "" , Some [])) , Apply (Plus (Var "" , Var "") , Int 0) , Var "")) ; ("ebjeabjj" , Lam ("b" , Lam ("a" , If (Closure ("" , First (Var "") , []) , Plus (Var "" , Second (Int 0)) , Lam ("cb" , First (Closure ("" , Int 0 , [])) , None)) , Some ["a"]) , Some ["b"])) ; ("ijjgbe" , Plus (Pair (Int 0 , Var "") , Closure ("" , Second (Int 0) , [])))]))
+       ["ij" ; "fjaeac" ; "fdi"]
+       (Second (Apply (Lam ("" , Var "" , None) , If (Var "" , Int 0 , Int 0))))
 
 20060414-10:15:40-92278a7bf8def4c58490ade009db5dcc.seminal.ml
-*** Failed after 9 tests: Type error : could not match exn with string
-typecheck _10
-          (Cast (RecordV [("d" , {contents = <ref-19>}) ; ("c" , {contents = <ref-21>})] , RecordT [("a" , RecordT [] , Both)]))
+*** Failed after 5 tests: Type error : could not match exn with string
+typecheck [("ebdc" , _54) ; ("" , RecordT [("" , ArrowT (IntT , IntT) , Write) ; ("bd" , RecordT [] , Write) ; ("cd" , IntT , Both)]) ; _42 ; _43]
+          (Cast (Var "" , IntT))
 
 20060414-11:06:26-2e8f9d56c3e7c006332210cfc11dfc40.seminal.ml
 *** Failed after 1 tests: Type error : could not match exp with typ
@@ -1191,187 +1200,186 @@ Letrec (RecordT [("cur" , IntT , Read) ; ("acc" , IntT , Read)] , "loop" , "x" ,
 client2 {ctr2 = <ref-10> ; incr2 = <ref-11> ; allowDecr2 = <ref-12> ; print2 = <ref-13>}
 
 20060415-22:25:48-14e1c11a58d9c3801bb7bab54912b31c.seminal.ml
-*** Failed after 36 tests: Type error : could not match 't17 -> 't18 with exp
+*** Failed after 22 tests: Type error : could not match 't17 -> 't18 with exp
 typecheck _8 (RecordV [])
 
 20060416-13:23:38-0530e1eaf713b518ff0e7e7a832ea50c.seminal.ml
-*** Failed after 9 tests: Type error : could not match 't50 -> 't51 with bool
-subtype (RecordT [])
-        (RecordT [("" , ArrowT (ArrowT (IntT , IntT) , RecordT [("a" , RecordT [] , Read)]) , Read) ; ("aa" , RecordT [] , Both)])
+*** Failed after 4 tests: Type error : could not match (string * typ * access) with typ
+subtype (RecordT [("" , ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , IntT)) , Read)])
+        (ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , IntT)))
 
 20060416-13:29:12-8de255153d5663cbcb8fad71f8dc4724.seminal.ml
-*** Failed after 8 tests: Type error : could not match (string * typ * access) with typ
-subtype (RecordT [("" , IntT , Read)])
-        (RecordT [("cbcfgb" , IntT , Write) ; ("" , IntT , Read)])
+*** Failed after 4 tests: Type error : could not match (string * typ * access) with typ
+subtype (RecordT [("a" , ArrowT (IntT , IntT) , Both)])
+        (ArrowT (IntT , RecordT []))
 
 20060416-23:25:44-e7cce69a55cf521059786e569bdc1318.seminal.ml
-*** Failed after 14 tests: Type error : could not match exp with typ
+*** Failed after 16 tests: Type error : could not match exp with typ
 typecheck _8
-          (If (If (If (Letrec (IntT , "" , "" , IntT , Int 0) , Var "" , Int 0) , Var "" , Int 0) , Closure ("" , Int 0 , {contents = <ref-17>}) , If (Var "" , Lam ("bbabg" , IntT , Get (Var "" , "")) , RecordE [])))
+          (If (Cast (Get (If (Var "" , Var "" , Get (Int 0 , "")) , "caa") , ArrowT (ArrowT (IntT , IntT) , IntT)) , Set (Lam ("" , ArrowT (IntT , IntT) , Int 0) , "b" , Int 0) , Cast (Letrec (RecordT [] , "" , "" , IntT , Int 1) , RecordT [("" , ArrowT (IntT , IntT) , Read)])))
 
 20060417-09:09:48-c1254f26855289d18929c3dffb68cc3d.seminal.ml
-*** Failed after 5 tests: Type error : could not match string with 't20 list
-type_to_string (RecordT [("c" , RecordT [] , Read)])
+*** Failed after 2 tests: Type error : could not match string with 't20 list
+type_to_string (RecordT [])
 
 20060417-22:20:54-16c6772d6fdb93e703aea2128369c509.seminal.ml
-*** Failed after 3 tests: Type error : could not match string with 't20 list
-type_to_string (RecordT [("" , IntT , Read)])
+*** Failed after 7 tests: Type error : could not match string with 't28 list
+type_to_string (ArrowT (RecordT [("ba" , IntT , Both) ; ("b" , IntT , Write)] , RecordT []))
 
 20060417-22:41:48-01a73c5b831c09060fa52a6d35b70d63.seminal.ml
-*** Failed after 6 tests: Type error : could not match string with 't52 list
-subtype (RecordT [("a" , ArrowT (IntT , IntT) , Both) ; ("bdb" , ArrowT (RecordT [] , ArrowT (ArrowT (IntT , IntT) , IntT)) , Write)])
-        (ArrowT (IntT , IntT))
+*** Failed after 12 tests: Type error : could not match string with 't60 list
+subtype (ArrowT (RecordT [("cc" , ArrowT (RecordT [] , ArrowT (IntT , IntT)) , Both) ; ("" , IntT , Write) ; ("" , RecordT [("a" , RecordT [] , Read) ; ("" , ArrowT (ArrowT (IntT , IntT) , RecordT []) , Write)] , Both) ; ("" , IntT , Read)] , IntT))
+        (RecordT [])
 
 20060418-22:05:32-39fdd837557bc77c42f640f2b57c4bb7.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060419-09:13:18-d2a4e8e4cefed9ee58f028d6ea15e910.seminal.ml
-*** Failed after 15 tests: Type error : could not match string with 't135 list
-typecheck _14
-          (Get (Letrec (IntT , "dda" , "" , ArrowT (IntT , RecordT [("" , IntT , Read)]) , Apply (Var "" , Int 0)) , ""))
+*** Failed after 3 tests: Type error : could not match string with 't100 list
+typecheck []
+          (Get (Get (Var "" , "") , ""))
 
 20060419-09:24:44-b0e52bafc8fad4bc05a7ec92466c8a96.seminal.ml
 *** Failed after 1 tests: Type error : could not match int with string
 compareRecWidth [] _14
 
 20060419-09:34:18-a751dc69b7fc8ed0ed2f3150f8f781e9.seminal.ml
-*** Failed after 4 tests: Type error : could not match ('t91 * 't92) with typ
-typecheck []
-          (Letrec (IntT , "" , "" , IntT , Letrec (IntT , "b" , "" , IntT , Plus (Int 0 , Var ""))))
+*** Failed after 24 tests: Type error : could not match ('t63 * 't64) with typ
+typecheck [_42 ; _43]
+          (Get (Letrec (IntT , "" , "b" , IntT , Var "") , ""))
 
 20060419-09:39:12-1b59d618af2b6777b32b06872235a1a5.seminal.ml
-*** Failed after 10 tests: Type error : could not match string with 't151 list
-typecheck [("" , RecordT [("bebebg" , ArrowT (ArrowT (RecordT [] , IntT) , IntT) , Read) ; ("debec" , RecordT [("aa" , ArrowT (IntT , IntT) , Both)] , Write) ; ("bdf" , RecordT [] , Both) ; ("c" , IntT , Write)]) ; _39 ; _40 ; _41 ; _42 ; _43 ; _44 ; _45 ; _46]
-          (Get (Var "" , "b"))
+*** Failed after 6 tests: Type error : could not match exp with typ
+typecheck []
+          (Plus (Closure ("" , Var "" , {contents = <ref-23>}) , Letrec (IntT , "a" , "c" , ArrowT (IntT , IntT) , Int 0)))
 
 20060420-11:57:34-64faf25cf828b203532860f001bbe336.seminal.ml
-*** Failed after 24 tests: Type error : could not match unit with bool
-typecheck _8
-          (Plus (Cast (Int 0 , IntT) , Int 0))
+*** Failed after 6 tests: Type error : could not match unit with bool
+typecheck [_56 ; _57 ; _58 ; _59]
+          (Plus (Get (Int 0 , "") , Lam ("" , IntT , Int 0)))
 
 20060420-12:58:02-dac428f4bb4abd4e1e1c736857e38c88.seminal.ml
-*** Failed after 2 tests: Type error : could not match ('t28 * 't29 * 't30) with (string * typ * access) list
+*** Failed after 3 tests: Type error : could not match ('t28 * 't29 * 't30) with (string * typ * access) list
 subtype IntT (RecordT [])
 
 20060420-13:26:40-295f6dadefdff9931a5b54c5f40a9631.seminal.ml
-*** Failed after 5 tests: Type error : could not match ('t72 * 't73) with (typ * access) option
-subtype (RecordT [("" , RecordT [] , Read)])
-        (RecordT [("c" , ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , IntT)) , Read) ; ("" , ArrowT (ArrowT (IntT , IntT) , IntT) , Both)])
+*** Failed after 28 tests: Type error : could not match ('t61 * 't62) with (typ * access) option
+subtype (RecordT [("" , RecordT [("c" , ArrowT (IntT , ArrowT (ArrowT (IntT , IntT) , IntT)) , Write)] , Both) ; ("fa" , ArrowT (ArrowT (IntT , IntT) , IntT) , Both) ; ("" , IntT , Both) ; ("de" , ArrowT (IntT , ArrowT (IntT , IntT)) , Both) ; ("" , ArrowT (IntT , IntT) , Read)])
+        (RecordT [("" , IntT , Read) ; ("decb" , RecordT [] , Write) ; ("a" , IntT , Both)])
 
 20060420-13:38:24-ef3f2b6607c05aa2a3d64cc30f7e5587.seminal.ml
-*** Failed after 278 tests: Type error : could not match exp with typ
+*** Failed after 45 tests: Type error : could not match exp with typ
 typecheck _8
-          (Plus (Cast (Get (RecordE [] , "") , RecordT []) , If (Get (Letrec (IntT , "" , "" , IntT , Int 0) , "") , RecordE [] , RecordV [("cb" , {contents = <ref-17>}) ; ("" , {contents = <ref-19>})])))
+          (If (If (Letrec (IntT , "" , "" , ArrowT (IntT , IntT) , Int 0) , RecordE [] , Int 0) , Var "" , Plus (Var "" , Cast (Int 0 , IntT))))
 
 20060420-13:46:42-6b7b9df433faea187437ee73710fed1e.seminal.ml
-*** Failed after 5 tests: Type error : could not match unit with bool
-typecheck _8 (RecordE [])
+*** Failed after 3 tests: Type error : could not match (string * exp) with ('t32 * 't33 * 't34)
+typecheck _8
+          (RecordE [("b" , Apply (Int 0 , Var ""))])
 
 20060420-13:48:52-2d8bd63819a740a8529923125a96d7de.seminal.ml
-*** Failed after 9 tests: Type error : could not match unit with bool
-typecheck _8
-          (Plus (RecordE [] , Letrec (IntT , "" , "" , IntT , Lam ("ab" , RecordT [] , Closure ("" , Var "" , {contents = <ref-17>})))))
+*** Failed after 2 tests: Type error : could not match unit with bool
+typecheck _8 (RecordE [])
 
 20060420-14:37:50-f4603d9b9411817f0e5686e3dc20bc8c.seminal.ml
-*** Failed after 16 tests: Type error : could not match 't48 -> 't49 with bool
-subtype (RecordT [("" , ArrowT (IntT , RecordT []) , Both) ; ("c" , RecordT [] , Read) ; ("bdd" , ArrowT (RecordT [] , IntT) , Write)])
-        (RecordT [("iibbi" , ArrowT (ArrowT (RecordT [] , IntT) , IntT) , Read) ; ("gihgeiai" , IntT , Write) ; ("ff" , RecordT [("ba" , ArrowT (RecordT [] , ArrowT (IntT , IntT)) , Write)] , Read) ; ("fhcc" , ArrowT (RecordT [("c" , IntT , Read) ; ("a" , RecordT [] , Write) ; ("ccce" , ArrowT (ArrowT (RecordT [] , RecordT []) , ArrowT (IntT , IntT)) , Read)] , IntT) , Read) ; ("ab" , IntT , Write) ; ("deggfhbd" , RecordT [("cbbhgcc" , IntT , Write) ; ("h" , IntT , Write)] , Write)])
+*** Failed after 2 tests: Type error : could not match 't34 -> 't35 with bool
+subtype (ArrowT (IntT , IntT))
+        (ArrowT (IntT , IntT))
 
 20060420-14:42:50-174cee33963e34fe367d8a7099d076f7.seminal.ml
-*** Failed after 34 tests: Error: RecordT expects 1 arguments, but was given 0
-subtype (RecordT [("iacd" , RecordT [("ifdfchc" , ArrowT (RecordT [] , IntT) , Read) ; ("geggehe" , ArrowT (ArrowT (IntT , RecordT []) , RecordT [("cc" , ArrowT (ArrowT (IntT , IntT) , IntT) , Both)]) , Read) ; ("agiig" , RecordT [("" , IntT , Read) ; ("d" , ArrowT (RecordT [] , IntT) , Both) ; ("ae" , ArrowT (RecordT [] , RecordT []) , Both)] , Both) ; ("aecdfecb" , RecordT [("" , RecordT [("" , RecordT [] , Write) ; ("cc" , IntT , Read)] , Read)] , Both) ; ("hic" , IntT , Read) ; ("faci" , ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , RecordT [])) , Both) ; ("hefeh" , ArrowT (RecordT [] , RecordT []) , Both)] , Read) ; ("jgeaahebj" , IntT , Read) ; ("j" , ArrowT (IntT , ArrowT (IntT , IntT)) , Write)])
-        (RecordT [("i" , RecordT [("" , RecordT [] , Both)] , Write) ; ("fg" , RecordT [] , Write) ; ("" , ArrowT (ArrowT (IntT , ArrowT (IntT , IntT)) , IntT) , Read) ; ("che" , RecordT [("efec" , IntT , Both) ; ("ef" , IntT , Write)] , Read) ; ("i" , ArrowT (IntT , RecordT [("aa" , IntT , Read)]) , Write)])
+*** Failed after 6 tests: Error: RecordT expects 1 arguments, but was given 0
+subtype (RecordT [("" , ArrowT (IntT , IntT) , Both)])
+        (RecordT [("b" , RecordT [] , Read) ; ("cb" , ArrowT (RecordT [] , IntT) , Read)])
 
 20060420-14:53:50-33f59721c84171a9a81162de2a236e18.seminal.ml
-*** Failed after 9 tests: Type error : could not match typ with unit
-
+*** Failed after 9 tests: Type error : could not match unit with typ
+typecheck [_116 ; _117 ; _118 ; _119 ; _120 ; _121 ; _122]
+          (Lam ("bad" , RecordT [("a" , ArrowT (IntT , IntT) , Write)] , Letrec (ArrowT (RecordT [] , IntT) , "db" , "adfcc" , IntT , Closure ("" , Lam ("" , ArrowT (IntT , IntT) , RecordV []) , {contents = <ref-17>}))))
 
 20060420-15:02:38-395fc7642049c949d9b40cf19e356a18.seminal.ml
-*** Failed after 3 tests: Error: tried to match Cast (Var "" , IntT) against RecordV
-typecheck [("aa" , _44) ; ("" , _66)]
-          (Apply (Var "" , Cast (Var "" , IntT)))
+*** Failed after 2 tests: Error: tried to match _9 against RecordV
+typecheck _8
+          (Cast (Var "" , IntT))
 
 20060420-15:03:22-2f62bf710968390e0ca81dcbaf9ac350.seminal.ml
-*** Failed after 7 tests: Type error : could not match exp with typ
+*** Failed after 3 tests: Type error : could not match exp with typ
 typecheck _8
-          (RecordE [("f" , Var "")])
+          (RecordE [("" , Cast (Int 0 , IntT))])
 
 20060420-15:04:44-224ca4c8f96b2c6dcf0e1f035d8fdb0b.seminal.ml
-*** Failed after 16 tests: Type error : could not match typ with 't218 list
-typecheck [_102 ; _103 ; _104 ; _105 ; _106 ; _107 ; _108 ; _109 ; _110 ; _111 ; _112 ; _113 ; _114]
-          (Apply (Lam ("" , RecordT [("b" , IntT , Write)] , Letrec (IntT , "" , "" , IntT , Int 0)) , If (RecordE [] , RecordE [] , Plus (Int 0 , Get (Int 0 , "")))))
+*** Failed after 16 tests: Type error : could not match typ with 't138 list
+typecheck _8
+          (Get (RecordE [("b" , Letrec (IntT , "" , "" , IntT , Var ""))] , "iajgjdcdf"))
 
 20060420-15:15:34-f3de90b032b1ab0acc55ba351230021b.seminal.ml
-*** Failed after 3 tests: Unbound variable : checktype
-typecheck _8
-          (If (Var "" , Int 0 , Cast (Var "" , IntT)))
+*** Failed after 11 tests: Unbound variable : checktype
+typecheck [_43 ; _44 ; _45 ; _46]
+          (Lam ("a" , ArrowT (IntT , IntT) , Apply (Cast (Var "" , IntT) , Apply (Int 0 , Var ""))))
 
 20060421-12:48:26-f3359f667b5a1876fd310f0292d7b57c.seminal.ml
-*** Failed after 8 tests: Unbound variable : la
-typecheck _8
-          (Get (Cast (Var "" , ArrowT (IntT , IntT)) , ""))
+*** Failed after 3 tests: Unbound variable : la
+typecheck _8 (Get (Var "" , ""))
 
 20060421-12:55:30-220009617aefd214b090b47a5f324eff.seminal.ml
-*** Failed after 5 tests: Unbound variable : la
+*** Failed after 7 tests: Unbound variable : la
 typecheck _8
-          (Get (RecordE [("" , If (Closure ("" , Int 0 , {contents = <ref-17>}) , Int 0 , Var ""))] , ""))
+          (Letrec (IntT , "ba" , "da" , RecordT [("b" , IntT , Read)] , Get (Int 0 , "")))
 
 20060421-17:21:10-79fe2fbff99827a5b1379ba48f931116.seminal.ml
 *** Failed after 1 tests: Error: record Record Nothing [("ctr2",Ref 10),("incr2",Ref 11),("allowDecr2",Ref 12),("print2",Ref 13)] (Just (TApp "t2" [TVar "a"])) does not have a field 'print1'
 client2 {ctr2 = <ref-10> ; incr2 = <ref-11> ; allowDecr2 = <ref-12> ; print2 = <ref-13>}
 
 20060421-17:38:10-9fedad806a399da07f601d1c08599c98.seminal.ml
-*** Failed after 10 tests: Type error : could not match exp with 't25 list
+*** Failed after 18 tests: Type error : could not match exp with 't25 list
 typecheck _8
-          (Get (Int 0 , "ecddeh"))
+          (Get (Get (Cast (Var "" , IntT) , "") , "a"))
 
 20060421-17:41:02-0838d2deac55fab6e99ca6a22f996fb7.seminal.ml
-*** Failed after 5 tests: Type error : could not match exp with 't25 list
+*** Failed after 8 tests: Type error : could not match exp with 't25 list
 typecheck _8
-          (Get (Apply (Int 0 , Var "") , ""))
+          (Get (If (Var "" , Int 0 , Int 0) , "a"))
 
 20060421-18:24:24-ea21fd9a34b5cd724b1843a65c7ba4b1.seminal.ml
-*** Failed after 16 tests: Type error : could not match exp with 't35 list
+*** Failed after 4 tests: Type error : could not match exp with 't24 list
 typecheck _8
-          (If (Get (Closure ("" , Int 0 , {contents = <ref-17>}) , "") , Cast (Var "" , RecordT []) , Apply (Lam ("cc" , IntT , Int 0) , Var "")))
+          (Get (Letrec (ArrowT (IntT , IntT) , "" , "" , RecordT [] , Var "") , ""))
 
 20060421-18:54:48-531e81fe22a5c558cbd10d537c0e7a3f.seminal.ml
-*** Failed after 127 tests: Type error : could not match 't120 option with typ
-typecheck [("dcdaaf" , _77) ; ("" , RecordT []) ; _65 ; _66]
-          (If (Int 0 , Int 0 , Get (Get (Var "" , "ab") , "")))
+*** Failed after 13 tests: Type error : could not match typ with 't102 option
+
 
 20060421-18:59:42-4693f912b79c1f8595120782f5618bfc.seminal.ml
-*** Failed after 4 tests: Type error : could not match ('t142 * 't143) with 't140 option
-typecheck [("c" , _52) ; ("" , RecordT [("b" , IntT , Read)])]
-          (Get (Plus (Var "" , Int 0) , ""))
+*** Failed after 23 tests: Type error : could not match ('t143 * 't144) with 't141 option
+typecheck [("" , ArrowT (IntT , IntT)) ; _41]
+          (Get (Apply (Var "" , Var "") , ""))
 
 20060421-19:09:48-c6e8c52f60ef4537806fbfce51ccfd37.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060422-14:27:16-f2f2d7b30c2ee14f630e6f99b177e544.seminal.ml
-*** Failed after 20 tests: Unbound variable : checktype
+*** Failed after 4 tests: Unbound variable : checktype
 typecheck _8
-          (If (Set (RecordE [] , "ac" , If (Var "ac" , Apply (Var "" , Var "") , RecordV [])) , Closure ("" , Closure ("" , Int 0 , {contents = <ref-17>}) , {contents = <ref-19>}) , Get (Get (Lam ("da" , RecordT [("b" , ArrowT (IntT , IntT) , Write)] , RecordV []) , "abbc") , "")))
+          (Get (RecordE [] , ""))
 
 20060422-14:32:10-515422d7b51cfe948920ecc7a6ce6025.seminal.ml
-*** Failed after 6 tests: Type error : could not match 't24 list with typ
+*** Failed after 2 tests: Type error : could not match 't24 list with typ
 typecheck _8 (RecordE [])
 
 20060422-14:34:46-6f7ee1ff7b2f1840f25b0b2ac4a619a1.seminal.ml
-*** Failed after 24 tests: Type error : could not match ((string * typ) * access) with (string * typ * access)
-typecheck [_50 ; _51 ; _52]
-          (RecordE [("" , Lam ("" , IntT , Var ""))])
+*** Failed after 108 tests: Type error : could not match ((string * 't54) * access) with (string * typ * access)
+typecheck _8
+          (RecordE [("dcc" , Closure ("" , Letrec (IntT , "" , "" , IntT , Int 0) , {contents = <ref-17>}))])
 
 20060422-14:36:42-0f5feccefb217a4914f337274357c84a.seminal.ml
-*** Failed after 14 tests: Type error : could not match 't24 -> 't25 with (string * typ * access) list
+*** Failed after 11 tests: Type error : could not match 't40 -> 't41 with (string * typ * access) list
 typecheck _8
-          (RecordE [("efibg" , Letrec (RecordT [("" , ArrowT (ArrowT (IntT , IntT) , IntT) , Write)] , "" , "c" , RecordT [] , Letrec (IntT , "" , "a" , IntT , If (Int 0 , Int 0 , Var "")))) ; ("iba" , Var "") ; ("d" , Cast (Closure ("" , Set (Int 0 , "" , Var "") , {contents = <ref-17>}) , ArrowT (IntT , IntT))) ; ("e" , Cast (Set (Apply (Int 0 , Int 0) , "c" , Cast (Var "" , ArrowT (IntT , IntT))) , ArrowT (IntT , ArrowT (RecordT [("" , IntT , Both)] , IntT)))) ; ("" , Set (Get (Var "" , "") , "" , Set (Plus (Var "" , Cast (Var "" , IntT)) , "a" , If (Int 0 , RecordE [] , Var "")))) ; ("ecehhdej" , RecordE [("b" , Set (Apply (Var "" , Int 0) , "" , Get (Int 0 , "")))]) ; ("bjhidghc" , Set (Var "db" , "a" , RecordE [("b" , Var "bbda") ; ("" , RecordE [("bbd" , RecordV []) ; ("c" , Letrec (IntT , "" , "" , RecordT [] , If (Int 0 , Var "" , Var "")))]) ; ("babd" , Lam ("" , IntT , Lam ("cc" , IntT , Int 0))) ; ("a" , Apply (If (Int 0 , Var "" , Var "") , RecordE []))]))])
+          (RecordE [("" , Closure ("" , Var "" , {contents = <ref-17>})) ; ("" , Letrec (IntT , "bbd" , "" , ArrowT (RecordT [] , RecordT [("" , IntT , Write)]) , Set (Var "" , "" , RecordV []))) ; ("dbdb" , Apply (Int 4 , RecordV [("cb" , {contents = <ref-19>}) ; ("c" , {contents = <ref-21>}) ; ("cde" , {contents = <ref-23>}) ; ("df" , {contents = <ref-25>}) ; ("a" , {contents = <ref-27>}) ; ("" , {contents = <ref-29>})])) ; ("chcadaeea" , If (RecordV [] , Apply (Int 0 , Int 0) , Closure ("a" , If (Cast (Var "" , IntT) , RecordE [] , Var "") , {contents = <ref-31>}))) ; ("jeiffj" , Lam ("daa" , RecordT [] , Set (Closure ("" , Var "" , {contents = <ref-33>}) , "a" , Int 0))) ; ("iciddj" , Set (Cast (Letrec (IntT , "" , "a" , IntT , RecordV []) , IntT) , "b" , Cast (Var "" , IntT))) ; ("fefacjhah" , Get (Var "" , "a")) ; ("d" , Int 0) ; ("dghdcai" , Int 2)])
 
 DONE!
 290 programs:
   18 did not fail at runtime
-  22 timed out
-  250 did failed at runtime:
-    10 due to an unbound variable or datacon
+  20 timed out
+  252 did failed at runtime:
+    11 due to an unbound variable or datacon
     0 due to an output-type-mismatch
-    232 due to a type error (80.00 %)
+    233 due to a type error (80.34 %)
