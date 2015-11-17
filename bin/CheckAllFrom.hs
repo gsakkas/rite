@@ -28,7 +28,7 @@ data ST = ST { total :: !Int, safe :: !Int, timeout :: !Int
              }
 
 data O = Safe | Unsafe | Unbound | Output | Diverge | Timeout
-       deriving (Show, Read)
+       deriving (Show, Read, Eq)
 instance FromField O where
   parseField s
     | s == "S" = pure Safe
@@ -63,7 +63,7 @@ reduceM xs z f = foldM f z xs
 bumpIf True = 1
 bumpIf False = 0
 
-initOpts = stdOpts { maxTests = 1000, produceTrace = False }
+initOpts = stdOpts { maxTests = 1000, produceTrace = True }
 
 extendOpts opts = opts { maxSteps = 1000 + maxSteps opts }
 
@@ -91,13 +91,14 @@ checkLoop opts e p = do
 becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
 
 mkOutcome f r
-  | isSuccess r = Safe
-  | becauseOf "timeout" r = Timeout
-  | becauseOf "Unbound" r = Unbound
-  | becauseOf "OutputType" r = Output
-  | becauseOf "Type error" r = Unsafe
-  | becauseOf "infinite recursion" r = Diverge
-  | otherwise = error $ "mkOutcome: " ++ f
+  | isSuccess r = Just Safe
+  | becauseOf "timeout" r = Just Timeout
+  | becauseOf "Unbound" r = Just Unbound
+  | becauseOf "unbound" r = Just Unbound
+  | becauseOf "OutputType" r = Just Output
+  | becauseOf "Type error" r = Just Unsafe
+  | becauseOf "infinite recursion" r = Just Diverge
+  | otherwise = trace ("mkOutcome: " ++ f) Nothing
 
 makePath :: Result -> [StepKind]
 makePath r =
@@ -108,35 +109,48 @@ makePath r =
       --                                  else stCurrentExpr fs
       --                                , stVarEnv fs )
       root = findRoot gr (stRoot fs)
-  in unfoldr (forward gr) $ root
+  in myunfoldr (forward gr) $! root
+
+myunfoldr f x = go [] x
+  where
+  go xs x =
+    case f x of
+      Nothing -> []
+      Just (a, x')
+        | x' `elem` xs -> []
+        | otherwise -> a : go (x' : xs) x'
+
 
 forward :: Graph -> Graph.Node -> Maybe (StepKind, Graph.Node)
 forward gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
   Nothing              -> Nothing
+  Just (n', _) | n == n' -> Nothing -- self loop? shouldn't be possible...
   Just (n', StepsTo k) -> Just (k, n')
 
 main = do
-  hSetBuffering stdout LineBuffering
-  [dir] <- getArgs
+  hSetBuffering stdout NoBuffering
+  [dir, csv] <- getArgs
   ps <- parseAllIn dir
   rs <- reduceM ps [] $ \rs (f,e,p) -> do
     putStrLn ("\n" ++ f)
     r <- checkLoop initOpts e p
     case r of
       Nothing -> return rs
-      Just (r,t,ms) -> do
-        printResult r
-        let path = makePath r
-        let o = R { file = f
-                  , stepLimit = ms
-                  , time = t
-                  , tests = numTests r
-                  , outcome = mkOutcome f r
-                  , steps = length path
-                  , jumps = length (filter (== CallStep) path)
-                  }
-        o `seq` return (o:rs)
-  LBS.putStrLn (encodeDefaultOrderedByName rs)
+      Just (r,t,ms)
+        | Nothing <- mkOutcome f r -> return rs
+        | Just x <- mkOutcome f r -> do
+          printResult r
+          let path = makePath $! r
+          let o = R { file = f
+                    , stepLimit = ms
+                    , time = t
+                    , tests = numTests r
+                    , outcome = x
+                    , steps = if x `elem` [Safe,Diverge,Timeout] then 0 else length path
+                    , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else length (filter (== CallStep) path)
+                    }
+          o `seq` return (o:rs)
+  LBS.writeFile csv {- "out.csv" -} (encodeDefaultOrderedByName rs)
   --   case r of
   --     Nothing -> return st
   --     Just r  -> do

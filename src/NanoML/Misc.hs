@@ -438,6 +438,8 @@ ignoredMLs = [ "prog0012.ml" -- accidental use of ! (deref)
              , "20060323-22:20:22-4e5f88ae07be062df109ed5701cbef33.seminal.ml" -- way too slow
              , "prog0502.ml" -- way too slow
              , "prog1137.ml" -- way too slow
+             , "prog1196.ml" -- way too slow
+             , "prog1197.ml" -- way too slow
              ]
 
 type Err = String
