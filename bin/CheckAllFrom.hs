@@ -19,6 +19,8 @@ import NanoML.Misc
 import NanoML.Parser
 import NanoML.Pretty
 
+import Debug.Trace
+
 isRight Right {} = True
 isRight _        = False
 
@@ -63,11 +65,11 @@ reduceM xs z f = foldM f z xs
 bumpIf True = 1
 bumpIf False = 0
 
-initOpts = stdOpts { maxTests = 1000, produceTrace = True }
+initOpts = stdOpts { maxTests = 1000, produceTrace = True, maxSteps = 500 }
 
-extendOpts opts = opts { maxSteps = 1000 + maxSteps opts }
+extendOpts opts = opts { maxSteps = 500 + maxSteps opts }
 
-upperBound = 10000
+upperBound = 3000
 
 getTime :: IO Double
 getTime = realToFrac `fmap` getPOSIXTime
