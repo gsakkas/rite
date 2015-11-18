@@ -1,6 +1,10 @@
-{-# LANGUAGE DeriveGeneric, OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric, OverloadedStrings, BangPatterns, ScopedTypeVariables #-}
 module Main where
 
+-- import Control.Concurrent.Async
+import Control.Concurrent.ParallelIO.Global
+import Control.DeepSeq
+import Control.Exception
 import Control.Monad
 import qualified Data.ByteString.Lazy.Char8 as LBS
 import Data.Csv
@@ -12,9 +16,10 @@ import Data.Time.Clock.POSIX
 import GHC.Generics (Generic)
 import System.Environment
 import System.IO
+import qualified System.Timeout as T
 import Text.Printf
 
-import NanoML
+import NanoML hiding (force)
 import NanoML.Misc
 import NanoML.Parser
 import NanoML.Pretty
@@ -30,7 +35,10 @@ data ST = ST { total :: !Int, safe :: !Int, timeout :: !Int
              }
 
 data O = Safe | Unsafe | Unbound | Output | Diverge | Timeout
-       deriving (Show, Read, Eq)
+       deriving (Show, Read, Eq, Generic)
+
+instance NFData O
+
 instance FromField O where
   parseField s
     | s == "S" = pure Safe
@@ -52,6 +60,8 @@ data R = R { file :: !String
            , stepLimit :: !Int, time :: !Double, tests :: !Int
            , outcome :: !O, steps :: !Int, jumps :: !Int
            } deriving Generic
+
+instance NFData R
 
 instance FromNamedRecord R
 instance ToNamedRecord R
@@ -75,13 +85,13 @@ getTime :: IO Double
 getTime = realToFrac `fmap` getPOSIXTime
 
 timed x = do start <- getTime
-             v     <- x
+             !v     <- x
              end   <- getTime
              return (end-start, v)
 
 checkLoop opts e p = do
-  (t, r) <- timed $ checkWith opts e p
-  case r of
+  (t, r) <- timed $ T.timeout (10 * 60 * (10^6)) $ checkWith opts e p
+  case join r of
     Nothing -> return Nothing
     Just r
       | not (isSuccess r) && becauseOf "timeout" r
@@ -129,29 +139,33 @@ forward gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
   Just (n', _) | n == n' -> Nothing -- self loop? shouldn't be possible...
   Just (n', StepsTo k) -> Just (k, n')
 
+forConcurrently xs f = parallel (map f xs) -- mapConcurrently f xs
+
 main = do
   hSetBuffering stdout NoBuffering
   [dir, csv] <- getArgs
   ps <- parseAllIn dir
-  rs <- reduceM ps [] $ \rs (f,e,p) -> do
+  -- rs <- reduceM ps [] $ \rs (f,e,p) -> do
+  rs <- fmap catMaybes . forConcurrently ps $ \(f,e,p) -> do
     putStrLn ("\n" ++ f)
-    r <- checkLoop initOpts e p
+    r <- (evaluate =<< checkLoop initOpts e p) `catch` \(e::SomeException) -> return Nothing
     case r of
-      Nothing -> return rs
-      Just (r,t,ms)
-        | Nothing <- mkOutcome f r -> return rs
-        | Just x <- mkOutcome f r -> do
-          printResult r
-          let path = makePath $! r
-          let o = R { file = f
-                    , stepLimit = ms
-                    , time = t
-                    , tests = numTests r
-                    , outcome = x
-                    , steps = if x `elem` [Safe,Diverge,Timeout] then 0 else length path
-                    , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else length (filter (== CallStep) path)
-                    }
-          o `seq` return (o:rs)
+       Nothing -> return Nothing
+       Just (r,t,ms)
+         | Nothing <- mkOutcome f r -> return Nothing
+         | Just x <- mkOutcome f r -> do
+           printResult r
+           let path = makePath $! r
+           let o = R { file = f
+                     , stepLimit = ms
+                     , time = t
+                     , tests = numTests r
+                     , outcome = x
+                     , steps = if x `elem` [Safe,Diverge,Timeout] then 0 else length path
+                     , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else length (filter (== CallStep) path)
+                     }
+           return $!! (Just o)
+    `catch` \(_ :: SomeException) -> return Nothing
   LBS.writeFile csv {- "out.csv" -} (encodeDefaultOrderedByName rs)
   --   case r of
   --     Nothing -> return st
