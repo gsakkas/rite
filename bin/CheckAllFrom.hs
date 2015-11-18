@@ -90,10 +90,12 @@ timed x = do start <- getTime
              return (end-start, v)
 
 checkLoop opts e p = do
-  (t, r) <- timed $ T.timeout (10 * 60 * (10^6)) $ checkWith opts e p
-  case join r of
-    Nothing -> return Nothing
-    Just r
+  (t, r) <- timed $ T.timeout (20 * 60 * (10^6)) $ checkWith opts e p
+  case r of
+    -- timed out after x minutes..
+    Nothing -> return (Just (Failure 1 1 1 (pretty $ VU Nothing) (TimeoutError (maxSteps opts)) initState, t, maxSteps opts))
+    Just Nothing -> return Nothing
+    Just (Just r)
       | not (isSuccess r) && becauseOf "timeout" r
         -> if maxSteps opts == upperBound
            then return (Just (r,t, maxSteps opts))
