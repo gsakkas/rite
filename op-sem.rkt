@@ -8,7 +8,7 @@
      x
      (e e)
      (e + e)
-     (if e then e else e)
+     (ite e e e)
      ;(fix e)
      )
   ;; values
@@ -28,7 +28,7 @@
      (v C)
      (C + e)
      (v + C)
-     (if C then e else e)
+     (ite C e e)
      hole)
 
   ;; type contexts
@@ -192,7 +192,7 @@
    (--> [(in-hole C (v_1 + v_2)) vsu_1]
         [(in-hole C ,(+ (term n_1) (term n_2))) vsu_3]
         (where (n_1 vsu_2) (narrow v_1 int vsu_1))
-        (where (n_2 vsu_3) (narrow v_2 int vsu_2))
+        (where (n_2 vsu_3) (narrow v_2 int vsu_1))
         "E-Plus-Good")
    (--> [(in-hole C (v_1 + v_2)) vsu_1]
         [(in-hole C stuck) vsu_2]
@@ -204,15 +204,15 @@
         "E-Plus-Bad2")
 
    ;; If
-   (--> [(in-hole C (if v_1 then e_1 else e_2)) vsu_1]
+   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
         [(in-hole C e_1) vsu_2]
         (where (true vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Good1")
-   (--> [(in-hole C (if v_1 then e_1 else e_2)) vsu_1]
+   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
         [(in-hole C e_2) vsu_2]
         (where (false vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Good2")
-   (--> [(in-hole C (if v_1 then e_1 else e_2)) vsu_1]
+   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
         [(in-hole C stuck) vsu_2]
         (where (stuck vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Bad")
@@ -235,13 +235,28 @@
   (test--> -->λh (term ((1    + true) ())) (term (stuck ())))
   (test--> -->λh (term ((true + 2   ) ())) (term (stuck ())))
   ;; E-If
-  (test--> -->λh (term ((if true  then 1 else 2) ())) (term (1     ())))
-  (test--> -->λh (term ((if false then 1 else 2) ())) (term (2     ())))
-  (test--> -->λh (term ((if 1     then 1 else 2) ())) (term (stuck ())))
+  (test--> -->λh (term ((ite true  1 2) ())) (term (1     ())))
+  (test--> -->λh (term ((ite false 1 2) ())) (term (2     ())))
+  (test--> -->λh (term ((ite 1     1 2) ())) (term (stuck ())))
   ;; E-App
   (test--> -->λh (term (((λ x x) 1) ())) (term (1     ())))
   (test--> -->λh (term ((1       1) ())) (term (stuck ()))))
 
+;; value-or-confluent-step? : term → boolean
+(define (value-or-confluent-step? e)
+  (or (redex-match λh v e)
+      ;; E-Plus-Bad makes -->λh non-deterministic, so we check that the 
+      ;; reductions are confluent rather than unique
+      (match (apply-reduction-relation -->λh (term (,e ())))
+        [(list) #f]
+        [(list _) #t]
+        [(list x ys ...) (andmap (λ (y) (equal? x y)) ys)])
+      ))
+
+(module+ test
+  (redex-check λh
+    #:satisfying (closed e nil)
+    (value-or-confluent-step? (term e))))
 
 (define-metafunction λh
   eval-value : e -> v
@@ -289,7 +304,7 @@
 
   [(closed e_1 xs) (closed e_2 xs) (closed e_3 xs)
    ---------------------------
-   (closed (if e_1 then e_2 else e_3) xs)])
+   (closed (ite e_1 e_2 e_3) xs)])
 
 (define-judgment-form λh
   #:mode (used I I)
@@ -328,13 +343,13 @@
 
   [(used e_1 xs)
    ---------------------------
-   (used (if e_1 then e_2 else e_3) xs)]
+   (used (ite e_1 e_2 e_3) xs)]
   [(used e_2 xs)
    ---------------------------
-   (used (if e_1 then e_2 else e_3) xs)]
+   (used (ite e_1 e_2 e_3) xs)]
   [(used e_3 xs)
    ---------------------------
-   (used (if e_1 then e_2 else e_3) xs)]
+   (used (ite e_1 e_2 e_3) xs)]
 )
 
 (define-judgment-form λh
@@ -360,22 +375,30 @@
                    #:satisfying (closed-used e (x : nil))
                    ; #:in-order
                    (begin
-                     (printf "checking ~s\n" (term (λ x e)))
+                     ;;(printf "checking ~s\n" (term (λ x e)))
                      (implies (and ; (judgment-holds (closed e (x)))
                                    ; (judgment-holds (closed v ()))
                                    (judgment-holds (gets-stuck? ((λ x e) (v-box k)))))
-                              (judgment-holds (gets-stuck? ((λ x e) 0)))
-                              ;; (andmap (λ (i)
-                              ;;           (judgment-holds (gets-stuck? ((λ x e) 
-                              ;;                                         ,(generate-term λh v #:i-th i)))))
-                              ;;         (range 1000))
+                              ;; (judgment-holds (gets-stuck? ((λ x e) 0)))
+                              (and 
+                               (ormap (λ (i)
+                                        (judgment-holds (gets-stuck? ((λ x e) 
+                                                                      ,(generate-term λh n #:i-th i)))))
+                                      (range 10))
+                               (or
+                                (judgment-holds (gets-stuck? ((λ x e) true)))
+                                (judgment-holds (gets-stuck? ((λ x e) false))))
+                               (ormap (λ (i)
+                                        (judgment-holds (gets-stuck? ((λ x e) 
+                                                                      ,(generate-term λh (λ x e) #:i-th i)))))
+                                      (range 10))
                               ))
                    ; #:source -->λh
-                   )
-      (values (covered-cases cr)
-              (covered-cases cn)
-              (covered-cases cg))
-      ;;(covered-cases cr)
+                   ))
+      ;; (values (covered-cases cr)
+      ;;         (covered-cases cn)
+      ;;         (covered-cases cg))
+      (covered-cases cr)
       ))
     ;; #:satisfying (gets-stuck? ((λ x e)) (v-box k))
     ;; (judgment-holds
