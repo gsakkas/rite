@@ -484,6 +484,17 @@ function insertNode(node, replacingEdge) {
     // network.redraw();
 }
 
+// Repeatedly expand the trace starting at 'nodeId', to produce a
+// jump-compressed trace.
+function expandTrace(nodeId) {
+    canJumpForward(nodeId);
+    if (jf_target !== undefined) {
+        nextId = jf_target[0];
+        jumpForward();
+        expandTrace(nextId);
+    }
+}
+
 // function notifySafe() {
 //   safe_banner.style.display = 'block';
 // }
@@ -587,12 +598,14 @@ function setup() {
                 stack = [];
                 resetButtons();
                 if (data.group === 'nanomaly') {
-                    draw(JSON.parse(data.json));
-                    $('#nav-buttons').show();
-                    $('#nav-buttons').popover('show');
+                    data = JSON.parse(data.json);
+                    draw(data);
+                    expandTrace(data.root);
+                    // $('#nav-buttons').show();
+                    // $('#nav-buttons').popover('show');
                 } else {
                     draw_ocaml(data);
-                    $('#nav-buttons').hide();
+                    // $('#nav-buttons').hide();
                 }
             },
             error: function(xhr, errorType, error) {
@@ -620,12 +633,14 @@ function setup() {
             stack = [];
             resetButtons();
             if (data.group === 'nanomaly') {
-                draw(JSON.parse(data.json));
-                $('#nav-buttons').show();
-                $('#nav-buttons').popover('show');
+                data = JSON.parse(data.json);
+                draw(data);
+                expandTrace(data.root);
+                // $('#nav-buttons').show();
+                // $('#nav-buttons').popover('show');
             } else {
                 draw_ocaml(data);
-                $('#nav-buttons').hide();
+                // $('#nav-buttons').hide();
             }
         },
         error: function(xhr, errorType, error) {
