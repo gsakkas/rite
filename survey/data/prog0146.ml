@@ -1,7 +1,7 @@
-let a x = x + x
+let f x = x + x
 
-let x x' = x' + 3
+let g x = x + 3
 
-let f y z = x a
+let h y z = f a
 
-let _ = f 1 2
+let _ = h 1 2
