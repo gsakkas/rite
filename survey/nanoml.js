@@ -302,7 +302,7 @@ function canJumpForward(node) {
     }
     for (var i = 1; i < path.length; i++) {
         var e = path[i];
-        if (network.body.data.nodes.get(e.to) !== null) {
+        if (network.body.data.nodes.get(e.from) !== null) {
             return;
         }
         if (e.label.indexOf('CallStep') >= 0) {
@@ -335,7 +335,7 @@ function canJumpBackward(node) {
     if (path.length === 0) return;
     for (var i = path.length-1; i >= 0; i--) {
         var e = path[i];
-        if (network.body.data.nodes.get(e.from) !== null) {
+        if (network.body.data.nodes.get(e.to) !== null) {
             return;
         }
         if (e.label.indexOf('CallStep') >= 0) {
