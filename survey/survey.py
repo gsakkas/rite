@@ -26,8 +26,26 @@ else:
     cookies = SimpleCookie()
 sid_cookie = "nanomaly-session-id"
 
-snippets = [ 'prog0971', 'palindrome', 'prog0223', 'prog3382', # 'prog0553',
-             'prog2746', 'gist1', 'gist2', 'gist3', 'prog3197' ]    
+# snippets = [ 'prog0971', 'palindrome', 'prog0223', 'prog3382', # 'prog0553',
+#              'prog2746', 'gist1', 'gist2', 'gist3', 'prog3197' ]
+
+snippets = [
+    # intro
+    # 'fac', # maybe use this for tutorial instead??
+    'sumList',
+    'append',
+    'prog0310',
+
+    # medium
+    'prog0146',
+    'prog0276',
+    'palindrome',
+
+    # hard
+    'prog0358',
+    'prog0223',
+    'prog0971',
+]
 
 def connect():
     global c
