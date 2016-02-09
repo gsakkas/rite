@@ -32,13 +32,15 @@ sid_cookie = "nanomaly-session-id"
 snippets = [
     # intro
     # 'fac', # maybe use this for tutorial instead??
+
+    # easy
     'sumList',
-    'append',
     'prog0310',
+    'append',
 
     # medium
-    'prog0276',
     'palindrome',
+    'prog0276',
     'prog0146',
 
     # hard
@@ -126,7 +128,7 @@ def record_response():
     c.execute(
         "INSERT OR REPLACE INTO responses ( userid, snippet, r_group, time, cause, explanation, fix )"
         + " VALUES ( ?, ?, ?, ?, ?, ?, ? );",
-        ( sid, snippet, form["group"]. value, time, form["cause"].value, form["explanation"].value, form["fix"].value ) )
+        ( sid, snippet, form["group"]. value, time, form["cause"].value, form["explanation"].value, '') )
     db.commit()
 
     if (snippetnum + 1 >= len(snippets)):

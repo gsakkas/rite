@@ -35,7 +35,6 @@ var snippetnum = 0;
 
 var group = undefined;
 var startTime = undefined;
-var fixEditor = undefined;
 
 function computeBBox(el) {
     var box = document.getElementById("width-calc");
@@ -517,12 +516,6 @@ function setup() {
         },
     });
     
-    var fix = document.getElementById('fix');
-    fixEditor = CodeMirror.fromTextArea(fix, {
-        mode: "mllike",
-        lineNumbers: true,
-    });
-
     // TODO: how do i get the hash fragment and base64 decode in javascript??
     // editor.setValue(atob(window.location.hash));
 
@@ -543,7 +536,6 @@ function setup() {
 
         var cause = $('#cause').val();
         var explanation = $('#explanation').val();
-        var fix = fixEditor.getValue();
         var time = new Date() - startTime;
 
         // var func = func_input.text;
@@ -570,7 +562,7 @@ function setup() {
         };
 
         // send ajax request
-        var data = {'cause': cause, 'explanation': explanation, 'fix': fix,
+        var data = {'cause': cause, 'explanation': explanation,
                     'snippetnum': snippetnum, 'time': time, 'group': group,
                    };
         console.log('sending', data);
@@ -595,7 +587,6 @@ function setup() {
                 startTime = new Date();
                 group = data.group;
                 editor.setValue(data.prog);
-                fixEditor.setValue(data.prog);
                 snippetnum = data.snippetnum;
                 stack = [];
                 resetButtons();
@@ -630,7 +621,6 @@ function setup() {
             startTime = new Date();
             group = data.group;
             editor.setValue(data.prog);
-            fixEditor.setValue(data.prog);
             snippetnum = data.snippetnum;
             stack = [];
             resetButtons();
