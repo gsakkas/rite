@@ -505,7 +505,7 @@ substVars su = go
 shadows :: Var -> [Var] -> Maybe (Var, Var)
 shadows v' vs' =
   if n > 0
-  then Just $ (v', v ++ '|' : show n)
+  then Just $ (v', v ++ separator : show n)
   else Nothing
   where
   eqvs = filter ((==v) . dropSuffix) vs'
@@ -516,13 +516,16 @@ shadows v' vs' =
 {-# INLINE shadows #-}
 
 dropSuffix :: Var -> Var
-dropSuffix = takeWhile (/='|')
+dropSuffix = takeWhile (/= separator)
 {-# INLINE dropSuffix #-}
 
 onlySuffix :: Var -> Var
-onlySuffix v = let sx = dropWhile (/='|') v
+onlySuffix v = let sx = dropWhile (/= separator) v
                in if null sx then "0" else tail sx
 {-# INLINE onlySuffix #-}
+
+separator :: Char
+separator = '_'
 
 step :: (?envs :: [Env], MonadEval m) => Expr -> m Expr
 step expr = withCurrentExpr expr $ build expr $ case expr of
