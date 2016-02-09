@@ -130,10 +130,10 @@ function resetButtons() {
     zm_target = undefined;
     so_target = undefined;
 
-    document.getElementById('step-forward').disabled = true;
-    document.getElementById('step-backward').disabled = true;
-    document.getElementById('jump-forward').disabled = true;
-    document.getElementById('jump-backward').disabled = true;
+    // document.getElementById('step-forward').disabled = true;
+    // document.getElementById('step-backward').disabled = true;
+    // document.getElementById('jump-forward').disabled = true;
+    // document.getElementById('jump-backward').disabled = true;
     // document.getElementById('step-into').disabled = true;
     // document.getElementById('step-over').disabled = true;
 }
@@ -217,9 +217,9 @@ function clearMark() {
 function canStepUndo() {
     // console.log('canStepUndo');
     if (stack.length > 0) {
-        document.getElementById('undo').disabled = false;
+        // document.getElementById('undo').disabled = false;
     } else {
-        document.getElementById('undo').disabled = true;
+        // document.getElementById('undo').disabled = true;
     }
 }
 
@@ -253,7 +253,7 @@ function canStepForward(node) {
     curEdge = curEdge[0];
     // console.log(out);
     sf_target = [out.to, curEdge];
-    document.getElementById('step-forward').disabled = false;
+    // document.getElementById('step-forward').disabled = false;
     // insertNode(allNodes.get(next.from), edge);
 }
 
@@ -277,7 +277,7 @@ function canStepBackward(node) {
     if (path.length <= 2) return;
 
     sb_target = [path[path.length - 1].from, curEdge];
-    document.getElementById('step-backward').disabled = false;
+    // document.getElementById('step-backward').disabled = false;
 }
 
 function stepBackward() {
@@ -297,7 +297,7 @@ function canJumpForward(node) {
     if (path.length <= 1) return;
     if (path[0].label.indexOf('ReturnStep') >= 0) {
         jf_target = [path[0].to, curEdge];
-        document.getElementById('jump-forward').disabled = false;
+        // document.getElementById('jump-forward').disabled = false;
         return;
     }
     for (var i = 1; i < path.length; i++) {
@@ -307,12 +307,12 @@ function canJumpForward(node) {
         }
         if (e.label.indexOf('CallStep') >= 0) {
             jf_target = [e.from, curEdge];
-            document.getElementById('jump-forward').disabled = false;
+            // document.getElementById('jump-forward').disabled = false;
             return;
         }
         if (e.label.indexOf('ReturnStep') >= 0) {
             jf_target = [e.to, curEdge];
-            document.getElementById('jump-forward').disabled = false;
+            // document.getElementById('jump-forward').disabled = false;
             return;
         }
     }
@@ -340,7 +340,7 @@ function canJumpBackward(node) {
         }
         if (e.label.indexOf('CallStep') >= 0) {
             jb_target = [e.from, curEdge];
-            document.getElementById('jump-backward').disabled = false;
+            // document.getElementById('jump-backward').disabled = false;
             return;
         }
     }
@@ -367,7 +367,7 @@ function canStepOver(node) {
     // nextIds[nextIds.findIndex(function(n) { return path.includes(n); })];
     if (nextId && !network.body.data.nodes.get(nextId)) {
         so_target = [nextId, curEdge];
-        document.getElementById('step-over').disabled = false;
+        // document.getElementById('step-over').disabled = false;
     }
 }
 
@@ -412,7 +412,7 @@ function canStepInto(node) {
     if (val.id === sub.id) return;
 
     zm_target = [sub, val];
-    document.getElementById('step-into').disabled = false;
+    // document.getElementById('step-into').disabled = false;
 }
 
 function stepInto() {
@@ -487,7 +487,9 @@ function insertNode(node, replacingEdge) {
 // Repeatedly expand the trace starting at 'nodeId', to produce a
 // jump-compressed trace.
 function expandTrace(nodeId) {
-    canJumpForward(nodeId);
+    var node = network.body.data.nodes.get(nodeId);
+    console.log(node);
+    canJumpForward(node);
     if (jf_target !== undefined) {
         nextId = jf_target[0];
         jumpForward();
