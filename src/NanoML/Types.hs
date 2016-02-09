@@ -481,6 +481,14 @@ lookupVar v = do
 toListEnv :: Env -> [Env]
 toListEnv env = env : maybe [] toListEnv (envParent env)
 
+noBaseEnv :: Env -> Env
+noBaseEnv env
+  | Just p <- envParent env
+  , envId p == 0
+  = env { envParent = Nothing }
+  | otherwise
+  = env { envParent = fmap noBaseEnv (envParent env) }
+
 -- toListEnv :: Env -> [(Var,Value)]
 -- toListEnv (Env e) = concat e
 
@@ -753,13 +761,15 @@ onSrcSpanExpr f expr = case expr of
 --   Ref r -> Ref r
 
 freeVars :: Expr -> Env -> [(Var,Value)]
-freeVars x env = go x
+freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
   where
   go x = case x of
     Var _ x ->
       -- ignore primitives when displaying environment
-      maybe [] (\v -> [(x,v)]) (lookup x $ concat $ map envEnv $ init $ toListEnv env)
-    Lam _ p e _ -> filter (`notBound` bindersOf p) $ go e
+      maybe [] -- (error $ "freeVars unknown: " ++ x)
+            (\v -> [(x,v)])
+            (lookup x $ concat $ map envEnv $ toListEnv $ noBaseEnv env)
+    Lam _ p e menv -> filter (`notBound` bindersOf p) $ freeVars e (fromMaybe env menv)
     App _ x y -> go x ++ concatMap go y
     Bop _ _ x y -> go x ++ go y
     Uop _ _ x -> go x

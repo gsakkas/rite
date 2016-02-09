@@ -111,7 +111,8 @@ isValueOrFunVar e = isValue e
 
 instance Pretty Expr where
   prettyPrec z e = case e of
-    Var _ v -> case lookupEnv v ?env of
+    Var _ v -> parensIf (isInfix v) $
+               case lookupEnv v ?env of
                  Just (Lam {}) -> text v
                  Just (Prim1 {}) -> text v
                  Just (Prim2 {}) -> text v
@@ -212,7 +213,7 @@ instance Pretty Expr where
       where zb = opPrec (error "prettyExpr.Uop")
     With _ env e -> let ?env = env in prettyPrec z e
     Replace _ env e -> let ?env = env in prettyPrec z e
-    Hole _ r _ -> text "_" <> pretty r
+    Hole _ _r _ -> text "_"  -- NOTE: ignore the index
     Ref r -> text "<ref-" <> pretty r <> text ">"
 
 instance Pretty Bop where
