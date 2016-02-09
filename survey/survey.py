@@ -37,9 +37,9 @@ snippets = [
     'prog0310',
 
     # medium
-    'prog0146',
     'prog0276',
     'palindrome',
+    'prog0146',
 
     # hard
     'prog0358',
@@ -188,8 +188,8 @@ def get_snippet(snippetnum):
     group = choose_group(sid, snippetnum)    
 
     mlname = os.path.join( snippetsdir, snippet) + '.ml'
-    jsonname = os.path.join( snippetsdir, snippet) + '.json'
-    errname = os.path.join( snippetsdir, snippet) + '.err'
+    jsonname = os.path.join( snippetsdir, snippet) + '.ml.json'
+    errname = os.path.join( snippetsdir, snippet) + '.ml.err'
 
     if os.path.exists( mlname ) and os.path.exists( jsonname ) and os.path.exists( errname ):
         with open( mlname ) as ml:

@@ -137,7 +137,7 @@ main = do
     -- liftIO $ print (var, prog)
     let p = fromRight (parseTopForm prog)
     case parseTopForm prog of
-      Right p -> run p var
+      Right p -> json =<< run p var
       Left  e -> json $ object [ "result" .= ("parse-error" :: String)
                                , "error"  .= e
                                ]
@@ -194,13 +194,13 @@ run p var = do
         let value = st
 
         -- liftIO $ writeFile "tmp.dot" $ Graph.showDot (Graph.fglToDotGeneric gr''' (fst.fst) show id)
-        json $ object [ -- ("dot" :: String, dot)
-                        "nodes"  .= map mkNode nodes
-                      , "edges"  .= map mkEdge edges
-                      , "root"   .= root
-                      , "value"  .= value
-                      , "result" .= ("value" :: String)
-                      ]
+        return $ object [ -- ("dot" :: String, dot)
+                          "nodes"  .= map mkNode nodes
+                        , "edges"  .= map mkEdge edges
+                        , "root"   .= root
+                        , "value"  .= value
+                        , "result" .= ("value" :: String)
+                        ]
 
         -- html . renderText . doctypehtml_ $ do
         -- title_ "NanoML"
@@ -213,9 +213,9 @@ run p var = do
         liftIO $ print $ pretty errorMsg
         liftIO $ print counterExample
         case errorMsg of
-          TimeoutError i -> json $ object [ "result" .= ("timeout" :: String)
-                                          , "root" .= show counterExample
-                                          ]
+          TimeoutError i -> return $ object [ "result" .= ("timeout" :: String)
+                                            , "root" .= show counterExample
+                                            ]
           _ -> do
             -- liftIO $ mapM_ print (stEdges finalState)
             let gr = buildGraph (HashSet.toList $ stEdges finalState)
@@ -245,15 +245,15 @@ run p var = do
 
             -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' (fst.fst) show id)
             -- liftIO $ writeFile "tmp.dot" dot
-            json $ object [ -- ("dot" :: String, dot)
-                            "nodes"  .= map mkNode nodes
-                          , "edges"  .= map mkEdge edges
-                          , "root"   .= root
-                          , "stuck"  .= stuck
-                          , "bad"    .= bad
-                          , "result" .= ("stuck" :: String)
-                          , "reason" .= show (pretty errorMsg)
-                          ]
+            return $ object [ -- ("dot" :: String, dot)
+                              "nodes"  .= map mkNode nodes
+                            , "edges"  .= map mkEdge edges
+                            , "root"   .= root
+                            , "stuck"  .= stuck
+                            , "bad"    .= bad
+                            , "result" .= ("stuck" :: String)
+                            , "reason" .= show (pretty errorMsg)
+                            ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do
         --     title_ "NanoML"
