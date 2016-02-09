@@ -34,7 +34,7 @@ snippets = [
     # 'fac', # maybe use this for tutorial instead??
 
     # easy
-    'sumList',
+    'sumlist',
     'prog0310',
     'append',
 
@@ -205,7 +205,7 @@ def get_snippet(snippetnum):
 
         return result
     else:
-        raise Exception( "Do not know snippet " + form[ "snippetnum" ].value + "(" + mlname + ", " + jsonname + ", " + errname + ")" )
+        raise Exception( "Do not know snippet " + str(snippetnum) + " (" + mlname + ", " + jsonname + ", " + errname + ")" )
 
 
 debuglog = "nanomaly.log"
