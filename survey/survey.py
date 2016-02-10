@@ -33,22 +33,41 @@ snippets = [
     # intro
     # 'fac', # maybe use this for tutorial instead??
 
-    # easy
-    'prog0310',                 # digistOfInt -3
-    'prog3151'                  # sqsum
+    ### easy ###
+
+    # no recursion
+    'mem',
+    'prog0016',
+
+    # 'prog0310',                 # digistOfInt -3
+    # 'prog0110',                 # sumList
+    # 'prog3192',                 # sumList
+
+    # simple recursion
+    'prog3151',                 # sqsum
+    'prog0415',                 # digitsOfInt
     'prog1203',                 # assoc
+
+    # interaction between base case and inductive case
     'sumlist',
 
-    # medium
-    'prog0164',                 # append
-    'palindrome',
-    'prog0276',                 # compose (+) 1
-    # 'prog0146',
+    ### medium ###
 
-    # hard
+    # polymorphic datatypes
+    'prog0164',                 # append
+    'prog0160',                 # digitsOfInt
+    'prog3671',                 # removeDuplicates
+
+    # accidentally higher-order
+    'palindrome',
+
+    # higher-order
+    'prog0276',                 # compose (+) 1
+
+    ### hard ###
+
     'prog0358',                 # wwhile
     'prog0223',                 # bigMul
-    'prog3671',                 # removeDuplicates
     'prog0971',                 # pipe
 ]
 

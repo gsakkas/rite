@@ -1,0 +1,3 @@
+File "prog0110.ml", line 4, characters 16-17:
+Error: This expression has type int list
+       but an expression was expected of type int

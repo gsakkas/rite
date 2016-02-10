@@ -1,0 +1,4 @@
+File "mem.ml", line 4, characters 18-20:
+Error: This expression has type 'a but an expression was expected of type
+         'a list
+       The type variable 'a occurs inside 'a list
