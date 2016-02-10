@@ -44,9 +44,9 @@ snippets = [
     # 'prog3192',                 # sumList
 
     # simple recursion
-    'prog3151',                 # sqsum
     'prog0415',                 # digitsOfInt
-    'prog1203',                 # assoc
+    # 'prog1203',                 # assoc
+    'prog3151',                 # sqsum
 
     # interaction between base case and inductive case
     'sumlist',
