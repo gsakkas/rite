@@ -768,7 +768,11 @@ function draw(data) {
     } else {
         var width = multi_width;
     }
-    var edges = new vis.DataSet([{ arrows: 'to', from: root, to: stuck, width: width}]);
+    if (root !== stuck) {
+      var edges = new vis.DataSet([{ arrows: 'to', from: root, to: stuck, width: width}]);
+    } else {
+      var edges = new vis.DataSet([]);
+    }
     // steps = new vis.DataSet(data.edges).get({filter: function (x) {
     //   return x.label.indexOf("StepsTo") === 0;
     // }});

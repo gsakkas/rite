@@ -86,8 +86,8 @@ prettyField (f,x) = text f <+> text "=" <+> prettyPrec 0 x
 
 instance Pretty Literal where
   pretty l = case l of
-    LI i -> pretty i
-    LD d -> pretty d
+    LI i -> parensIf (i < 0) $ pretty i
+    LD d -> parensIf (d < 0) $ pretty d
     LC c -> pretty c
     LS s -> text $ show s
     LB b -> text (if b then "true" else "false")
