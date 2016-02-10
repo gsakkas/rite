@@ -422,6 +422,8 @@ matchRecBinds binds = do
     allocEnvWith "let-rec" penv bnd
 
 isFun (Lam {}) = True
+isFun (Prim1 {}) = True
+isFun (Prim2 {}) = True
 isFun _        = False
 
 matchNonRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
