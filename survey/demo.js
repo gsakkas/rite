@@ -130,10 +130,10 @@ function resetButtons() {
   zm_target = undefined;
   so_target = undefined;
 
-  document.getElementById('step-forward').disabled = true;
-  document.getElementById('step-backward').disabled = true;
-  document.getElementById('jump-forward').disabled = true;
-  document.getElementById('jump-backward').disabled = true;
+  // document.getElementById('step-forward').disabled = true;
+  // document.getElementById('step-backward').disabled = true;
+  // document.getElementById('jump-forward').disabled = true;
+  // document.getElementById('jump-backward').disabled = true;
   // document.getElementById('step-into').disabled = true;
   // document.getElementById('step-over').disabled = true;
 }
@@ -217,9 +217,9 @@ function clearMark() {
 function canStepUndo() {
   // console.log('canStepUndo');
   if (stack.length > 0) {
-    document.getElementById('undo').disabled = false;
+    // document.getElementById('undo').disabled = false;
   } else {
-    document.getElementById('undo').disabled = true;
+    // document.getElementById('undo').disabled = true;
   }
 }
 
@@ -253,7 +253,7 @@ function canStepForward(node) {
   curEdge = curEdge[0];
   // console.log(out);
   sf_target = [out.to, curEdge];
-  document.getElementById('step-forward').disabled = false;
+  // document.getElementById('step-forward').disabled = false;
   // insertNode(allNodes.get(next.from), edge);
 }
 
@@ -277,7 +277,7 @@ function canStepBackward(node) {
   if (path.length <= 2) return;
 
   sb_target = [path[path.length - 1].from, curEdge];
-  document.getElementById('step-backward').disabled = false;
+  // document.getElementById('step-backward').disabled = false;
 }
 
 function stepBackward() {
@@ -297,7 +297,7 @@ function canJumpForward(node) {
   if (path.length <= 1) return;
   if (path[0].label.indexOf('ReturnStep') >= 0) {
     jf_target = [path[0].to, curEdge];
-    document.getElementById('jump-forward').disabled = false;
+    // document.getElementById('jump-forward').disabled = false;
     return;
   }
   for (var i = 1; i < path.length; i++) {
@@ -307,12 +307,12 @@ function canJumpForward(node) {
     }
     if (e.label.indexOf('CallStep') >= 0) {
       jf_target = [e.from, curEdge];
-      document.getElementById('jump-forward').disabled = false;
+      // document.getElementById('jump-forward').disabled = false;
       return;
     }
     if (e.label.indexOf('ReturnStep') >= 0) {
       jf_target = [e.to, curEdge];
-      document.getElementById('jump-forward').disabled = false;
+      // document.getElementById('jump-forward').disabled = false;
       return;
     }
   }
@@ -340,7 +340,7 @@ function canJumpBackward(node) {
     }
     if (e.label.indexOf('CallStep') >= 0) {
       jb_target = [e.from, curEdge];
-      document.getElementById('jump-backward').disabled = false;
+      // document.getElementById('jump-backward').disabled = false;
       return;
     }
   }
@@ -367,7 +367,7 @@ function canStepOver(node) {
    // nextIds[nextIds.findIndex(function(n) { return path.includes(n); })];
   if (nextId && !network.body.data.nodes.get(nextId)) {
     so_target = [nextId, curEdge];
-    document.getElementById('step-over').disabled = false;
+    // document.getElementById('step-over').disabled = false;
   }
 }
 
@@ -412,7 +412,7 @@ function canStepInto(node) {
   if (val.id === sub.id) return;
 
   zm_target = [sub, val];
-  document.getElementById('step-into').disabled = false;
+  // document.getElementById('step-into').disabled = false;
 }
 
 function stepInto() {
@@ -446,6 +446,19 @@ function stepInto() {
   resetButtons();
   clearMark();
   canStepUndo();
+}
+
+// Repeatedly expand the trace starting at 'nodeId', to produce a
+// jump-compressed trace.
+function expandTrace(nodeId) {
+    var node = network.body.data.nodes.get(nodeId);
+    console.log(node);
+    canJumpForward(node);
+    if (jf_target !== undefined) {
+        nextId = jf_target[0];
+        jumpForward();
+        expandTrace(nextId);
+    }
 }
 
 function insertNode(node, replacingEdge) {
@@ -520,27 +533,88 @@ function setup() {
 
   editor.setValue(demos.factorial);
   draw(factrace);
+  expandTrace(factrace.root);
 
   // Instance the tour
   var tour = new Tour({
+    onEnd: function(_) { window.location.href = "http://dijkstra.cs.virginia.edu/projects/nanomaly/survey/survey.html"; },
     steps: [
     {
-      element: "#my-element",
-      title: "Title of my step",
-      content: "Content of my step"
+      element: ".CodeMirror", // ".CodeMirror-line :contains(n - 1)",
+      title: "Bad Factorial",
+      content: "Here's a simple factorial program with a bug. Notice that line 5 is underlined in red. "
+             // + "Mouseover the highlighted line.",
+             + "If you mouseover line 5, a popup will explain that the program tried to multiply an int "
+             + "and a bool, which is not allowed.",
+      placement: "bottom",
+      // reflex: true, // "hover",
+      //backdrop: true,
     },
     {
-      element: "#my-other-element",
-      title: "Title of my step",
-      content: "Content of my step"
-    }
+      element: "#vis",
+      title: "Visualizing The Execution",
+      content: "This is a visualization of the execution of <code>fac 2</code>. "
+             + "Each node represents a step in the computation. "
+             + "You can click-and-drag to move the nodes, and use the scroll wheel to zoom in and out.",
+      placement: "left",
+      //backdrop: true,
+    },
+    {
+      element: "#vis",
+      title: "Stuck Expressions",
+      content: "Notice that the bottom node is red, this means that the program got stuck at that point. "
+             + "Furthermore, <code>1 * true</code> is highlighted, which is the expression the program "
+             + "was trying to evaluate when it got stuck.",
+      placement: "left",
+      //backdrop: true,
+    },
+    {
+      element: "#vis",
+      title: "Highlighting Source Expressions",
+      content: "Click on the stuck (red) node. Notice that <code>n * fac (n-1)</code> is highlighted in "
+             + "the code editor on the left. This is the expression in the source program that corresponds "
+             + "to the stuck expression.",
+      placement: "left",
+      //backdrop: true,
+    },
+    {
+      element: "#vis",
+      title: "Local Environments",
+      content: "Hover over any of the blue nodes. A box will pop up showing what all variables in the "
+             + "expression map to at that point in the program. In this case we only see the definition "
+             + "of <code>fac</code>, but in general seeing the local variables can be useful.",
+      placement: "left",
+      //backdrop: true,
+    },
+    {
+      element: "#vis",
+      title: "Identifying The Problem",
+      content: "The visualization shows the sequence of function calls and returns. "
+             + "Notice that the <code>true</code> in the stuck node is the return value of "
+             + "<code>fac 0</code>. This is clearly incorrect, as <code>fac</code> should "
+             + "always return an <code>int</code>. So we can blame the <code>true</code> on "
+             + "line 3 of the program, even though the error occurs on line 5.",
+      placement: "left",
+      //backdrop: true,
+    },
+    {
+      // element: "#vis",
+      orphan: true,
+      title: "",
+      content: "This concludes the tutorial. Good luck!",
+      // placement: "left",
+      //backdrop: true,
+      //redirect: "survey.html",
+    },
     ]});
 
   // Initialize the tour
-  tour.init();
+  tour.init(true);
 
   // Start the tour
-  tour.start();
+  tour.start(true);
+
+  console.log('tour started');
 }
 
 function draw(data) {
