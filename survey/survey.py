@@ -34,19 +34,22 @@ snippets = [
     # 'fac', # maybe use this for tutorial instead??
 
     # easy
+    'prog0310',                 # digistOfInt -3
+    'prog3151'                  # sqsum
+    'prog1203',                 # assoc
     'sumlist',
-    'prog0310',
-    'append',
 
     # medium
+    'prog0164',                 # append
     'palindrome',
-    'prog0276',
-    'prog0146',
+    'prog0276',                 # compose (+) 1
+    # 'prog0146',
 
     # hard
-    'prog0358',
-    'prog0223',
-    'prog0971',
+    'prog0358',                 # wwhile
+    'prog0223',                 # bigMul
+    'prog3671',                 # removeDuplicates
+    'prog0971',                 # pipe
 ]
 
 def connect():

@@ -1,0 +1,4 @@
+File "prog1203.ml", line 5, characters 12-14:
+Error: This expression has type 'a but an expression was expected of type
+         ('a * 'b) list
+       The type variable 'a occurs inside ('a * 'b) list
