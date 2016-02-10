@@ -3,4 +3,4 @@ let rec sqsum xs =
   | [] -> 0
   | h::t -> (sqsum t) @ (h * h)
 
-let _ = sqsum [1; 2]
+let _ = sqsum [1]
