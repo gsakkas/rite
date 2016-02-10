@@ -97,16 +97,20 @@ annotateIf b a d
   | b         = annotate a $ noAnnotate d
   | otherwise = d
 
-noAnnotateIf b d =
-  if b
-     then noAnnotate d
-     else d
+-- noAnnotateIf b d =
+--   if b
+--      then noAnnotate d
+--      else d
 
 isFun (Lam {}) = True
+isFun (Prim1 {}) = True
+isFun (Prim2 {}) = True
 isFun _        = False
 
 isValueOrFunVar (Var _ v) = maybe False isFun (lookupEnv v ?env)
 isValueOrFunVar (Lam {})  = True
+isValueOrFunVar (Prim1 {})  = True
+isValueOrFunVar (Prim2 {})  = True
 isValueOrFunVar e = isValue e
 
 instance Pretty Expr where
@@ -144,7 +148,7 @@ instance Pretty Expr where
       annotateIf (all (isValueOrFunVar . snd) bnds) Redex $
       group $ parensIf (z > zl) $
       align $ text "let" <> pretty r <+> prettyBinds (zl) bnds
-          <+> text "in" <$> prettyPrec (zl) body
+          <+> text "in" <$> noAnnotate (prettyPrec (zl) body)
       where zl = 4
     Ite _ b t f ->
       annotateIf (isValueOrFunVar b) Redex $
@@ -156,7 +160,7 @@ instance Pretty Expr where
     Seq _ x y ->
       annotateIf (isValueOrFunVar x) Redex $
       parensIf (z > zs) $
-      prettyPrec (zs) x <> semi </> prettyPrec (zs) y
+      prettyPrec (zs) x <> semi </> noAnnotate (prettyPrec (zs) y)
 
       where zs = 3
     Case _ e alts
@@ -173,7 +177,7 @@ instance Pretty Expr where
       annotateIf (isValueOrFunVar e) Redex $
       parensIf (z > zc) $ align $
       text "match" <+> prettyPrec (zc) e <+> text "with"
-        <$> vsep (map (prettyAlt (zc)) alts)
+        <$> vsep (map (noAnnotate . prettyAlt (zc)) alts)
       where zc = 5
     Tuple _ xs -> prettyTuple 0 xs
     ConApp _ c Nothing _ -> text c
