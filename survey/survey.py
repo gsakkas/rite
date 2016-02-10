@@ -62,7 +62,7 @@ snippets = [
     'palindrome',
 
     # higher-order
-    'prog0276',                 # compose (+) 1
+    # 'prog0276',                 # compose (+) 1
 
     ### hard ###
 
