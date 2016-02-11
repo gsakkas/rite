@@ -370,14 +370,27 @@ instance Pretty NanoError where
   pretty e = case e of
     MLException v -> text "*** Exception:" <+> pretty v
     UnboundVariable v ss ->
-      text "Unbound variable" <+>
+      text "Unbound variable" <>
        -- "at" <+> pretty ss <+>
        text ":" <+> pretty v
     TypeError t1 t2 ss ->
-      text "Type error" <+>
+      text "Type error" <>
       -- "at" <+> pretty ss <+>
-      text ": could not match" <+> pretty t1 <+> text "with" <+> pretty t2
+      -- text ": could not match" <+> pretty t1 <+> text "with" <+> pretty t2
+      text ": stuck because" <+>
+      ticks (prettyTyCon t1) <+>
+      text "is incompatible with" <+>
+      ticks (prettyTyCon t2)
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s
     TimeoutError n -> text "Error: <timeout after" <+> pretty n <+> text "steps>"
+
+ticks d = char '`' <> d <> char '\''
+
+prettyTyCon :: Type -> Doc Annot
+prettyTyCon t = case t of
+  TVar {} -> pretty t
+  TApp c _ -> text c
+  _ :-> _ -> text "function"
+  TTup x -> pretty (length x) <> char '-' <> text "tuple"
