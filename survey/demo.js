@@ -601,7 +601,7 @@ function setup() {
       // element: "#vis",
       orphan: true,
       title: "",
-      content: "This concludes the tutorial. Good luck!",
+      content: "This concludes the tutorial. Click \"End tour\" to start the survey. Good luck!",
       // placement: "left",
       //backdrop: true,
       //redirect: "survey.html",
