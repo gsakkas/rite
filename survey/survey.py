@@ -37,7 +37,7 @@ snippets = [
 
     # no recursion
     'mem',
-    'prog0016',
+    # 'prog0016',                   # too confusing..
 
     # 'prog0310',                 # digistOfInt -3
     # 'prog0110',                 # sumList

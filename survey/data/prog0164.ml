@@ -1,6 +1,6 @@
-let append x l =
+let append x xs =
   match x with
-  | []   -> l
-  | h::t -> h :: t :: l
+  | []   -> xs
+  | h::t -> h :: t :: xs
 
 let _ = append [1] [2]

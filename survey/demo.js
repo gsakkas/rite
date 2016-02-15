@@ -562,7 +562,7 @@ function setup() {
     {
       element: "#vis",
       title: "Stuck Expressions",
-      content: "Notice that the bottom node is red, this means that the program got stuck at that point. "
+      content: "Notice that the bottom node is red, this means that the program <b>got stuck</b> at that point. "
              + "Furthermore, <code>1 * true</code> is highlighted, which is the expression the program "
              + "was trying to evaluate when it got stuck.",
       placement: "left",

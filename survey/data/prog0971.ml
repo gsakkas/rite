@@ -1,6 +1,6 @@
 let pipe fs = 
-  let f a x = x a in 
-  let base a = a in 
+  let f acc el = el acc in
+  let base x = x in
     List.fold_left f base fs
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3
+let _ = pipe [(fun y -> y + y); (fun z -> z + 3)] 3

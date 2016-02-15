@@ -1,7 +1,7 @@
-let append x l =
-  match l with
+let append x xs =
+  match xs with
   | [] -> [x]
-  | _  -> x :: l
+  | _  -> x :: xs
 
 let rec digitsOfInt n =
   if n <= 0

@@ -4,7 +4,7 @@ let f x =
 
 let rec wwhile (f,b) =
   match f with
-  | (x, false) -> x
-  | (x, true)  -> wwhile (f, x)
+  | (z, false) -> z
+  | (z, true)  -> wwhile (f, z)
 
 let _ = wwhile (f, 2)

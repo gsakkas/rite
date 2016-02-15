@@ -3,4 +3,4 @@ let mem x l =
   | []     -> false
   | hd::tl -> x = hd
 
-let _ = mem 1 [1]
+let _ = mem "cat" ["dog"]

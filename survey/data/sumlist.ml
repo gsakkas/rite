@@ -1,5 +1,5 @@
 let rec sumList xs = match xs with
-  | []     -> []
-  | x::xs' -> x + sumList xs'
+  | []    -> []
+  | y::ys -> y + sumList ys
 
 let _ = sumList [1;2]
