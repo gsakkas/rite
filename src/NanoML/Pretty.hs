@@ -229,7 +229,7 @@ inReplace d =
   in d
 
 splitContext :: (?ctx :: Context, ?pctx :: Context)
-             => ((?ctx :: Context, ?pctx :: Context) => Int -> Doc Annot -> Doc Annot)
+             => ((?ctx :: Context, ?pctx :: Context) => Int -> ((?ctx :: Context, ?pctx :: Context) => Doc Annot) -> Doc Annot)
              -> ((?ctx :: Context, ?pctx :: Context) => Expr -> Doc Annot)
              -> [Expr]
              -> [Doc Annot]
