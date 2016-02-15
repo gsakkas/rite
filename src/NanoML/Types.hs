@@ -28,6 +28,8 @@ import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import           Data.Aeson                   (ToJSON)
 import           Data.Hashable
+import qualified Data.HashMap.Strict          as HashMap
+import           Data.HashMap.Strict          (HashMap)
 import qualified Data.HashSet                 as HashSet
 import           Data.HashSet                 (HashSet)
 import           Data.IntMap.Strict           (IntMap)
@@ -155,6 +157,7 @@ data EvalState = EvalState
   , stStepKind :: !StepKind
   , stSubst    :: !Subst
   , stCallStack :: ![(MSrcSpan,[Value])]
+  , stContexts :: !(HashMap Expr Context)
   -- , stExprEnvs :: ![(Expr,Env)]
   } deriving Show
 
@@ -673,32 +676,66 @@ data Expr
   | Hole !MSrcSpan !Ref (Maybe Type)
   | Ref !Ref
   deriving (Show, Generic, Eq, Ord)
-
 instance Hashable Expr
 
 data Context
   = Here | Elsewhere
-  | InAppF Context
-  | InAppXs Int Context
-  | InBopL Context
-  | InBopR Context
-  | InUop Context
-  | InLet Int Context
-  | InIte Context
-  | InSeq Context
-  | InCase Context
-  | InTuple Int Context
-  | InConApp Context
-  | InRecord Int Context
-  | InField Context
-  | InSetFieldF Context
-  | InSetFieldX Context
-  | InArray Int Context
-  | InList Int Context
-  | InTry Context
-  | InWith Context
-  | InReplace Context
+  | InAppF !Context
+  | InAppXs !Int !Context
+  | InBopL !Context
+  | InBopR !Context
+  | InUop !Context
+  | InLet !Int !Context
+  | InIte !Context
+  | InSeq !Context
+  | InCase !Context
+  | InTuple !Int !Context
+  | InConApp !Context
+  | InRecord !Int !Context
+  | InField !Context
+  | InSetFieldF !Context
+  | InSetFieldX !Context
+  | InArray !Int !Context
+  | InList !Int !Context
+  | InTry !Context
+  | InWith !Context
+  | InReplace !Context
   deriving (Show, Generic, Eq, Ord)
+instance Hashable Context
+
+applyContext :: Context -> Expr -> Maybe Expr
+applyContext ctx expr = case (ctx, expr) of
+  (Here, e) -> Just e
+  (Elsewhere, _) -> Nothing
+  (InAppF c, App _ f _) -> applyContext c f
+  (InAppXs i c, App _ _ xs) -> applyContext c (xs !! i)
+  (InBopL c, Bop _ _ l _) -> applyContext c l
+  (InBopR c, Bop _ _ _ r) -> applyContext c r
+  (InUop c, Uop _ _ e) -> applyContext c e
+  (InLet i c, Let _ _ binds _) -> applyContext c (snd (binds !! i))
+  (InIte c, Ite _ b _ _) -> applyContext c b
+  (InSeq c, Seq _ e _) -> applyContext c e
+  (InCase c, Case _ e _) -> applyContext c e
+  (InTuple i c, Tuple _ xs) -> applyContext c (xs !! i)
+  (InConApp c, ConApp _ _ (Just e) _) -> applyContext c e
+  (InRecord i c, Record _ flds _) -> applyContext c (snd (flds !! i))
+  (InField c, Field _ e _) -> applyContext c e
+  (InSetFieldF c, SetField _ e _ _) -> applyContext c e
+  (InSetFieldX c, SetField _ _ _ e) -> applyContext c e
+  (InArray i c, Array _ xs _) -> applyContext c (xs !! i)
+  (InList i c, List _ xs _) -> applyContext c (xs !! i)
+  (InTry c, Try _ e _) -> applyContext c e
+  (InWith c, With _ _ e) -> applyContext c e
+  (InReplace c, Replace _ _ e) -> applyContext c e
+  _ -> Nothing
+
+applyContext_maybe :: HashMap Expr Context -> Expr -> Maybe Expr
+applyContext_maybe ctxs e = do
+  traceShowM ("applyContext.e", e)
+  ctx <- HashMap.lookup e ctxs
+  traceShowM ("applyContext.ctx", ctx)
+  applyContext ctx e
+
 
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of

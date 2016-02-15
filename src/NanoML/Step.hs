@@ -26,6 +26,7 @@ import qualified Data.Graph.Inductive.PatriciaTree as Graph
 import Data.List
 import Data.Foldable
 import qualified Data.IntMap as IntMap
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.Map as Map
 import Data.Maybe hiding (fromJust)
 import Data.Monoid hiding (Alt)
@@ -395,6 +396,8 @@ mkFakeStep = do
 
 build :: MonadEval m => Expr -> m Expr -> m Expr
 build before mkAfter = do
+  (_, ctx, _) <- decompose before
+  noteContext before ctx
   env1 <- gets stVarEnv
   (did_throw, after) <- (fmap (False,) mkAfter) `catchError` onlyMLExn
   env2 <- gets stVarEnv
@@ -529,25 +532,120 @@ onlySuffix v = let sx = dropWhile (/= separator) v
 separator :: Char
 separator = '_'
 
-mkRedex e = (e, Here, id)
+mkRedex e = return (e, Here, id)
+
+extendRedex fc fe e = do
+  (x, c, f) <- decompose e
+  return (x, fc c, f . fe)
+
+-- extendRedexes fc fe es = do
+--   (x, c, i, f) <- decomposeOne es
+--   return (x, fc c, f . fe)
+
+decomposeOne :: MonadEval m => [Expr] -> m (Maybe (Expr, Context, Int, Expr -> Expr))
+decomposeOne es = do
+  (vals, exprs) <- spanM isValueOrFunVar es
+  case exprs of
+    []    -> return Nothing
+    (e:_) -> do
+      (x, c, f) <- decompose e
+      return (Just (x, c, fromJust (findIndex (==e) es), f))
 
 -- | Decompose an expression into the redex, context, and function to
 -- stitch a new expression into the context.
-decompose :: Expr -> (Expr, Context, Expr -> Expr)
+decompose :: MonadEval m => Expr -> m (Expr, Context, Expr -> Expr)
 decompose = \case
   With ms env e
     | isValue e -> mkRedex (With ms env e)
-    | otherwise ->
-      let (x, c, f) = decompose e
-      in (x, InWith c, With ms env . f)
+    | otherwise -> extendRedex InWith (With ms env) e `withEnv` env
   Replace ms env e
     | isValue e -> mkRedex (Replace ms env e)
-    | otherwise ->
-      let (x, c, f) = decompose e
-      in (x, InReplace c, Replace ms env . f)
+    | otherwise -> extendRedex InReplace (Replace ms env) e `withEnv` env
   Var ms v -> mkRedex (Var ms v)
   Lam ms p e env -> mkRedex (Lam ms p e env)
-  App ms f args -> undefined    --  TODO
+  App ms f args -> do
+    decomposeOne (f:args) >>= \case
+      -- whole application is redex
+      Nothing -> mkRedex (App ms f args)
+      Just (e, c, i, f') -> return $
+        if i == 0
+        then (e, InAppF c, \e -> App ms e args)
+        else (e, InAppXs (i-1) c, (\e -> App ms f (replace (i-1) e args)) . f')
+  Bop ms b l r -> do
+    decomposeOne [l,r] >>= \case
+      Nothing -> mkRedex (Bop ms b l r)
+      Just (e, c, i, f) -> return $
+        if i == 0
+        then (e, InBopL c, (\l' -> Bop ms b l' r) . f)
+        else (e, InBopR c, (\r' -> Bop ms b l r') . f)
+  Uop ms u e
+    | isValue e -> mkRedex (Uop ms u e)
+    | otherwise -> extendRedex InUop (Uop ms u) e
+  Lit ms l -> mkRedex (Lit ms l)
+  Let ms Rec binds body -> mkRedex (Let ms Rec binds body)
+  Let ms r   binds body -> do
+    let (ps, es) = unzip binds
+    decomposeOne es >>= \case
+      Nothing -> mkRedex (Let ms r binds body)
+      Just (e, c, i, f) -> return ( e
+                                  , InLet i c
+                                  , (\x -> Let ms r (zip ps (replace i x es)) body) . f)
+  Ite ms b t f
+    | isValue b -> mkRedex (Ite ms b t f)
+    | otherwise -> extendRedex InIte (\x -> Ite ms x t f) b
+  Seq ms e1 e2
+    | isValue e1 -> mkRedex (Seq ms e1 e2)
+    | otherwise  -> extendRedex InSeq (\e -> Seq ms e e2) e1
+  Case ms e as
+    | isValue e -> mkRedex (Case ms e as)
+    | otherwise -> extendRedex InCase (\e -> Case ms e as) e
+  Tuple ms es -> do
+    decomposeOne es >>= \case
+      Nothing -> mkRedex (Tuple ms es)
+      Just (e, c, i, f) -> return ( e
+                                  , InTuple i c
+                                  , (\x -> Tuple ms (replace i x es)) . f
+                                  )
+  e@(ConApp _ _ Nothing Nothing) -> mkRedex e
+  e@(ConApp ms dc (Just x) Nothing)
+    | isValue x -> mkRedex e
+    | otherwise -> extendRedex InConApp (\x -> ConApp ms dc (Just x) Nothing) x
+  Record ms flds Nothing -> do
+    let (fs, es) = unzip flds
+    decomposeOne es >>= \case
+      Nothing -> mkRedex (Record ms flds Nothing)
+      Just (e, c, i, f) -> return ( e
+                                  , InRecord i c
+                                  , (\x -> Record ms (zip fs (replace i x es)) Nothing) . f
+                                  )
+  Field ms e f
+    | isValue e -> mkRedex (Field ms e f)
+    | otherwise -> extendRedex InField (\e -> Field ms e f) e
+  SetField ms r f e -> do
+    decomposeOne [r,e] >>= \case
+      Nothing -> mkRedex (SetField ms r f e)
+      Just (e, c, i, f') -> return $
+        if i == 0
+        then (e, InSetFieldF c, (\r -> SetField ms r f e) . f')
+        else (e, InSetFieldX c, (\e -> SetField ms r f e) . f')
+  Array ms es mt -> do
+    decomposeOne es >>= \case
+      Nothing -> mkRedex (Array ms es mt)
+      Just (e, c, i, f) -> return ( e
+                                  , InArray i c
+                                  , (\x -> Array ms (replace i x es) mt) . f
+                                  )
+  List ms es mt -> do
+    decomposeOne es >>= \case
+      Nothing -> mkRedex (List ms es mt)
+      Just (e, c, i, f) -> return ( e
+                                  , InList i c
+                                  , (\x -> List ms (replace i x es) mt) . f
+                                  )
+  Try ms e as
+    | isValue e -> mkRedex (Try ms e as)
+    | otherwise -> extendRedex InTry (\e -> Try ms e as) e
+  e -> error ("decompose can't handle: " ++ show (pretty e))
 
 step :: (?envs :: [Env], MonadEval m) => Expr -> m Expr
 step expr = withCurrentExpr expr $ build expr $ case expr of
@@ -863,7 +961,11 @@ noteRedex e = do
   env <- gets stVarEnv
   addEdge RedexOf super (e,env)
 
-isValueOrFunVar (Var _ v) = isFun <$> lookupVar v
+noteContext e c = modify' $ \ s -> s { stContexts = HashMap.insert e c (stContexts s) }
+
+isValueOrFunVar (Var _ v) = do
+  x <- lookupVar v
+  return (isFun x)
 isValueOrFunVar e = return (isValue e)
 
 resolveVar (Var _ v) = lookupVar v

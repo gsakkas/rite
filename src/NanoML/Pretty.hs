@@ -20,12 +20,14 @@ import Debug.Trace
 
 class Pretty a where
   pretty :: a -> Doc Annot
-  pretty = let ?env = emptyEnv in prettyPrec 0
+  pretty = let ?env = emptyEnv
+           in prettyPrec 0
 
-  prettyPrec :: (?env ::Env) => Int -> a -> Doc Annot
+  prettyPrec :: (?env :: Env) => Int -> a -> Doc Annot
   prettyPrec _ = pretty
 
-prettyRedex env e = let ?env = env in prettyPrec 0 e
+prettyRedex env e = let ?env = env
+                    in prettyPrec 0 e
 
 -- | Wrap the enclosed 'Doc' in parentheses only if the condition holds.
 parensIf True  = parens

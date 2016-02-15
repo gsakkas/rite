@@ -25,6 +25,7 @@ import NanoML.Explore
 import NanoML.Misc
 import NanoML.Pretty
 
+import Debug.Trace
 
 main = do
  log <- mkRequestLogger def { outputFormat = Detailed False }
@@ -182,7 +183,8 @@ run p var = do
         let gr'' = Graph.nmap (\(n,e) ->
                                  ( renderSpans $ prettyRedex e $
                                    fillHoles finalState n
-                                 , getSrcSpanExprMaybe n
+                                 , getSrcSpanExprMaybe . fromMaybe n $
+                                   (applyContext_maybe (stContexts finalState) n)
                                  , addFreeVars finalState n e
                                  ))
                               gr'
@@ -231,7 +233,8 @@ run p var = do
                                      ( -- first ((show (envId e) ++ " : " ++ show (getSrcSpanExprMaybe n) ++ "\n") ++) $
                                        renderSpans $ prettyRedex e $
                                        fillHoles finalState n
-                                     , getSrcSpanExprMaybe n
+                                     , getSrcSpanExprMaybe . fromMaybe n $
+                                       (applyContext_maybe (stContexts finalState) n)
                                      , addFreeVars finalState n e
                                      ))
                                   gr'

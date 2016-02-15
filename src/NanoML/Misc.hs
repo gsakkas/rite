@@ -523,3 +523,8 @@ spanM p = go []
     if b
       then go (x:yes) xs
       else return (reverse yes, x:xs)
+
+replace :: Int -> a -> [a] -> [a]
+replace 0 x (_:ys) = x : ys
+replace n x (y:ys) = y : replace (n-1) x ys
+replace _ _ _      = error "replace called with larger index than list"

@@ -571,9 +571,9 @@ function setup() {
     {
       element: "#vis",
       title: "Highlighting Source Expressions",
-      content: "Click on the stuck (red) node. Notice that <code>n * fac (n-1)</code> is highlighted in "
+      content: "Click on the node containing <code>fac 0</code> in bold. Notice that <code>fac (n-1)</code> is highlighted in "
              + "the code editor on the left. This is the expression in the source program that corresponds "
-             + "to the stuck expression.",
+             + "to the next expression we will evaluate.",
       placement: "left",
       //backdrop: true,
     },
@@ -589,9 +589,11 @@ function setup() {
     {
       element: "#vis",
       title: "Identifying The Problem",
-      content: "The visualization shows the sequence of function calls and returns. "
-             + "Notice that the <code>true</code> in the stuck node is the return value of "
-             + "<code>fac 0</code>. This is clearly incorrect, as <code>fac</code> should "
+      content: "The visualization shows an overview on the program execution. "
+             + "From <code>fac 2</code> we get to <code>2 * fac 1</code>. "
+             + "From <code>fac 1</code> we get to <code>1 * fac 0</code>. "
+             + "Finally, <code>fac 0</code> is just <code>true</code>, "
+             + "which is the source of our troubles, as <code>fac</code> should "
              + "always return an <code>int</code>. So we can blame the <code>true</code> on "
              + "line 3 of the program, even though the error occurs on line 5.",
       placement: "left",
