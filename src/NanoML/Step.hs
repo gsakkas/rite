@@ -529,6 +529,26 @@ onlySuffix v = let sx = dropWhile (/= separator) v
 separator :: Char
 separator = '_'
 
+mkRedex e = (e, Here, id)
+
+-- | Decompose an expression into the redex, context, and function to
+-- stitch a new expression into the context.
+decompose :: Expr -> (Expr, Context, Expr -> Expr)
+decompose = \case
+  With ms env e
+    | isValue e -> mkRedex (With ms env e)
+    | otherwise ->
+      let (x, c, f) = decompose e
+      in (x, InWith c, With ms env . f)
+  Replace ms env e
+    | isValue e -> mkRedex (Replace ms env e)
+    | otherwise ->
+      let (x, c, f) = decompose e
+      in (x, InReplace c, Replace ms env . f)
+  Var ms v -> mkRedex (Var ms v)
+  Lam ms p e env -> mkRedex (Lam ms p e env)
+  App ms f args -> undefined    --  TODO
+
 step :: (?envs :: [Env], MonadEval m) => Expr -> m Expr
 step expr = withCurrentExpr expr $ build expr $ case expr of
   -- Val _ v -> return expr

@@ -676,6 +676,30 @@ data Expr
 
 instance Hashable Expr
 
+data Context
+  = Here | Elsewhere
+  | InAppF Context
+  | InAppXs Int Context
+  | InBopL Context
+  | InBopR Context
+  | InUop Context
+  | InLet Int Context
+  | InIte Context
+  | InSeq Context
+  | InCase Context
+  | InTuple Int Context
+  | InConApp Context
+  | InRecord Int Context
+  | InField Context
+  | InSetFieldF Context
+  | InSetFieldX Context
+  | InArray Int Context
+  | InList Int Context
+  | InTry Context
+  | InWith Context
+  | InReplace Context
+  deriving (Show, Generic, Eq, Ord)
+
 getSrcSpanExprMaybe :: Expr -> MSrcSpan
 getSrcSpanExprMaybe expr = case expr of
   Var ms _ -> ms
