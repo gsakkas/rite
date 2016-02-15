@@ -788,10 +788,10 @@ function draw(data) {
             font: { face: 'monospace' },
             shape: 'box',
         },
-        // edges: {
-        //   label: "",
-        // },
-        // physics: { enabled: false},
+        edges: {
+            smooth: { type: 'vertical' }
+        },
+        physics: { enabled: false},
     };
     var newData = {nodes: nodes, edges: edges};
     // stack.push(newData);
