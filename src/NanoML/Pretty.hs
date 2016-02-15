@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE RecordWildCards      #-}
 {-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE RankNTypes           #-}
 {-# LANGUAGE ImplicitParams       #-}
 module NanoML.Pretty
   (pretty, prettyRedex, prettyProg, hsep, vsep, vcat, Doc, render, renderSpans, (==>), (=:), nest, text, fillHoles)
@@ -21,9 +22,12 @@ import Debug.Trace
 class Pretty a where
   pretty :: a -> Doc Annot
   pretty = let ?env = emptyEnv
+               ?ctx = Elsewhere
+               ?pctx = Elsewhere
            in prettyPrec 0
 
-  prettyPrec :: (?env :: Env) => Int -> a -> Doc Annot
+  prettyPrec :: (?env :: Env, ?ctx :: Context, ?pctx :: Context)
+             => Int -> a -> Doc Annot
   prettyPrec _ = pretty
 
 prettyRedex env e = let ?env = env
@@ -79,10 +83,16 @@ fillHoles st = go
 --     VF _ (Func e _) -> prettyPrec z e
 --     VH _ _ -> text "_"
 
-list xs = text "[" <> (hsep $ intersperse semi $ map (prettyPrec 0) xs) <> text "]"
-array xs = text "[|" <> (hsep $ intersperse semi $ map (prettyPrec 0) xs) <> text "|]"
-tuple xs = text "(" <> (hsep $ intersperse comma $ map (prettyPrec 0) xs) <> text ")"
-record xs = text "{" <> (hsep $ intersperse semi $ map prettyField xs) <> text "}"
+list xs = text "[" <> (hsep $ intersperse semi $
+                       splitContext inList (prettyPrec 0) xs) <> text "]"
+array xs = text "[|" <> (hsep $ intersperse semi $
+                         splitContext inArray (prettyPrec 0) xs) <> text "|]"
+tuple xs = text "(" <> (hsep $ intersperse comma $
+                        splitContext inTuple (prettyPrec 0) xs) <> text ")"
+record xs = text "{" <> (hsep $ intersperse semi $
+                         let (fs, es) = unzip xs
+                             ds = splitContext inRecord (prettyPrec 0) es in
+                         map prettyField (zip fs ds)) <> text "}"
 
 prettyField (f,x) = text f <+> text "=" <+> prettyPrec 0 x
 
@@ -98,6 +108,16 @@ instance Pretty Literal where
 annotateIf b a d
   | b         = annotate a $ noAnnotate d
   | otherwise = d
+
+annotateRedex d
+  | ?ctx == Here = annotate Redex d
+  | otherwise    = d
+
+annotateLastRedex d
+  | ?pctx == Here = annotate LastRedex d
+  | otherwise     = d
+
+annotateRedexes d = annotateRedex . annotateLastRedex $ d
 
 -- noAnnotateIf b d =
 --   if b
@@ -115,55 +135,153 @@ isValueOrFunVar (Prim1 {})  = True
 isValueOrFunVar (Prim2 {})  = True
 isValueOrFunVar e = isValue e
 
+inAppF, inBopL, inBopR, inUop, inIte, inSeq, inCase,
+  inConApp, inField, inSetFieldF, inSetFieldX, inTry,
+  inWith, inReplace
+  :: (?ctx :: Context, ?pctx :: Context)
+  => ((?ctx :: Context, ?pctx :: Context) => a)
+  -> a
+
+inAppXs, inLet, inTuple, inRecord, inArray, inList
+  :: (?ctx :: Context, ?pctx :: Context)
+  => Int -> ((?ctx :: Context, ?pctx :: Context) => a)
+  -> a
+
+inAppF d =
+  let ?ctx  = case ?ctx  of { InAppF c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InAppF c -> c; _ -> Elsewhere }
+  in d
+inAppXs i d =
+  let ?ctx  = case ?ctx  of { InAppXs j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InAppXs j c | i == j -> c; _ -> Elsewhere }
+  in d
+inBopL d =
+  let ?ctx  = case ?ctx  of { InBopL c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InBopL c -> c; _ -> Elsewhere }
+  in d
+inBopR d =
+  let ?ctx  = case ?ctx  of { InBopR c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InBopR c -> c; _ -> Elsewhere }
+  in d
+inUop d =
+  let ?ctx  = case ?ctx  of { InUop c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InUop c -> c; _ -> Elsewhere }
+  in d
+inLet i d =
+  let ?ctx  = case ?ctx  of { InLet j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InLet j c | i == j -> c; _ -> Elsewhere }
+  in d
+inIte d =
+  let ?ctx  = case ?ctx  of { InIte c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InIte c -> c; _ -> Elsewhere }
+  in d
+inSeq d =
+  let ?ctx  = case ?ctx  of { InSeq c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InSeq c -> c; _ -> Elsewhere }
+  in d
+inCase d =
+  let ?ctx  = case ?ctx  of { InCase c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InCase c -> c; _ -> Elsewhere }
+  in d
+inTuple i d =
+  let ?ctx  = case ?ctx  of { InTuple j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InTuple j c | i == j -> c; _ -> Elsewhere }
+  in d
+inConApp d =
+  let ?ctx  = case ?ctx  of { InConApp c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InConApp c -> c; _ -> Elsewhere }
+  in d
+inRecord i d =
+  let ?ctx  = case ?ctx  of { InRecord j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InRecord j c | i == j -> c; _ -> Elsewhere }
+  in d
+inField d =
+  let ?ctx  = case ?ctx  of { InField c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InField c -> c; _ -> Elsewhere }
+  in d
+inSetFieldF d =
+  let ?ctx  = case ?ctx  of { InSetFieldF c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InSetFieldF c -> c; _ -> Elsewhere }
+  in d
+inSetFieldX d =
+  let ?ctx  = case ?ctx  of { InSetFieldX c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InSetFieldX c -> c; _ -> Elsewhere }
+  in d
+inArray i d =
+  let ?ctx  = case ?ctx  of { InArray j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InArray j c | i == j -> c; _ -> Elsewhere }
+  in d
+inList i d =
+  let ?ctx  = case ?ctx  of { InList j c | i == j -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InList j c | i == j -> c; _ -> Elsewhere }
+  in d
+inTry d =
+  let ?ctx  = case ?ctx  of { InTry c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InTry c -> c; _ -> Elsewhere }
+  in d
+inWith d =
+  let ?ctx  = case ?ctx  of { InWith c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InWith c -> c; _ -> Elsewhere }
+  in d
+inReplace d =
+  let ?ctx  = case ?ctx  of { InReplace c -> c; _ -> Elsewhere }
+      ?pctx = case ?pctx of { InReplace c -> c; _ -> Elsewhere }
+  in d
+
+splitContext :: (?ctx :: Context, ?pctx :: Context)
+             => ((?ctx :: Context, ?pctx :: Context) => Int -> Doc Annot -> Doc Annot)
+             -> ((?ctx :: Context, ?pctx :: Context) => Expr -> Doc Annot)
+             -> [Expr]
+             -> [Doc Annot]
+splitContext mkCtx f xs = zipWith (\x i -> mkCtx i (f x)) xs [0..]
+
 instance Pretty Expr where
   prettyPrec z e = case e of
-    Var _ v -> parensIf (isInfix v) $
-               case lookupEnv v ?env of
-                 Just (Lam {}) -> text v
-                 Just (Prim1 {}) -> text v
-                 Just (Prim2 {}) -> text v
-                 x -> annotate Redex $ text v
+    Var _ v -> annotateRedexes $ parensIf (isInfix v) $ text v
     Lam _ (VarPat _ "$x") (Case _ (Var _ "$x") alts) _ ->
-      noAnnotate $
+      annotateRedexes $ noAnnotate $ -- redexes can't occur under a lambda
       group $ parensIf (z > zl) $ hang 2 $
       text "function" <$> vsep (map (prettyAlt (zl)) alts)
       where zl = 5
     Lam _ p e _ ->
-      noAnnotate $
+      annotateRedexes $ noAnnotate $ -- redexes can't occur under a lambda
       group $ parensIf (z > zl) $ hang 2 $
       text "fun" <+> pretty p <+> text "->" <$> prettyPrec (zl) e
       where zl = 5
     App _ (Var _ f) [x, y]
       | isInfix f ->
-        annotateIf (isValueOrFunVar x && isValueOrFunVar y) Redex $
+        annotateRedexes $
         parensIf (z > zf) $
-        prettyPrec (zf+1) x <+> text f <+> prettyPrec (zf+1) y
+        inAppXs 0 (prettyPrec (zf+1) x) <+>
+        text f <+>
+        inAppXs 1 (prettyPrec (zf+1) y)
       where zf = opPrec f
     App _ f xs ->
-      annotateIf (all isValueOrFunVar (f:xs)) Redex $
+      annotateRedexes $
       parensIf (z > za) $
-      (prettyPrec za f) <+>
-      align (foldr1 (</>) (map (prettyPrec (za+1)) xs))
+      inAppF (prettyPrec za f) <+>
+      align (foldr1 (</>) (splitContext inAppXs (prettyPrec (za+1)) xs))
       where za = 26
     Lit _ l -> pretty l
     Let _ r bnds body ->
-      annotateIf (all (isValueOrFunVar . snd) bnds) Redex $
+      annotateRedexes $
       group $ parensIf (z > zl) $
-      align $ text "let" <> pretty r <+> prettyBinds (zl) bnds
+      let (bs, es) = unzip bnds
+          ds = splitContext inLet (prettyPrec (zl+1)) es in
+      align $ text "let" <> pretty r <+> prettyBinds (zl) (zip bs ds)
           <+> text "in" <$> noAnnotate (prettyPrec (zl) body)
       where zl = 4
     Ite _ b t f ->
-      annotateIf (isValueOrFunVar b) Redex $
+      annotateRedexes $
       group $ parensIf (z > zi) $ align $
-      text "if"   <+> prettyPrec (zi) b <$>
+      text "if"   <+> inIte (prettyPrec (zi) b) <$>
       text "then" <+> noAnnotate (prettyPrec (zi) t) <$>
       text "else" <+> noAnnotate (prettyPrec (zi) f)
       where zi = 7
     Seq _ x y ->
-      annotateIf (isValueOrFunVar x) Redex $
+      annotateRedexes $
       parensIf (z > zs) $
-      prettyPrec (zs) x <> semi </> noAnnotate (prettyPrec (zs) y)
-
+      inSeq (prettyPrec (zs) x) <> semi </> noAnnotate (prettyPrec (zs) y)
       where zs = 3
     Case _ e alts
       --  isValueOrFunVar e ->
@@ -176,49 +294,57 @@ instance Pretty Expr where
       --     <$> vsep (map prettyAlt alts)
       -- where zc = 5
       ->
-      annotateIf (isValueOrFunVar e) Redex $
+      annotateRedexes $
       parensIf (z > zc) $ align $
-      text "match" <+> prettyPrec (zc) e <+> text "with"
+      text "match" <+> inCase (prettyPrec (zc) e) <+> text "with"
         <$> vsep (map (noAnnotate . prettyAlt (zc)) alts)
       where zc = 5
     Tuple _ xs -> prettyTuple 0 xs
-    ConApp _ c Nothing _ -> text c
+    ConApp _ c Nothing _ -> annotateRedexes $ text c
     ConApp _ "::" (Just (Tuple _ [hd,tl])) _ ->
+      annotateRedexes $
       parensIf (z > zc) $
-      prettyPrec (zc+1) hd <+> text "::" <+> prettyPrec (zc+1) tl
+      inConApp $
+      inTuple 0 (prettyPrec (zc+1) hd) <+>
+      text "::" <+>
+      inTuple 1 (prettyPrec (zc+1) tl)
       where zc = 26
-    ConApp _ c (Just e) _ -> parensIf (z > zc) $
-                         text c <+> prettyPrec (zc+1) e
+    ConApp _ c (Just e) _ ->
+      annotateRedexes $
+      parensIf (z > zc) $
+      text c <+> inConApp (prettyPrec (zc+1) e)
       where zc = 26
     Record _ flds _ -> record flds
     Field _ e f ->
-      annotateIf (isValueOrFunVar e) Redex $
-      prettyPrec z e <> char '.' <> text f
+      annotateRedexes $
+      inField (prettyPrec z e) <> char '.' <> text f
     SetField _ e f v ->
-      annotateIf (isValueOrFunVar e && isValueOrFunVar v) Redex $
-      prettyPrec z e <> char '.' <> text f <+> text "<-" <+> prettyPrec z v
+      annotateRedexes $
+      inSetFieldF (prettyPrec z e) <> char '.' <> text f <+> text "<-" <+>
+      inSetFieldX (prettyPrec z v)
     Array _ es _ -> array es
     List _ es _ -> list es
     Try _ e ps ->
-      annotateIf (isValueOrFunVar e) Redex $
+      annotateRedexes $
       parensIf (z > zt) $ align $
-      text "try" <+> prettyPrec zt e <+> text "with"
-        <$> vsep (map (prettyAlt (zt)) ps)
+      text "try" <+> inTry (prettyPrec zt e) <+> text "with"
+        <$> vsep (map (noAnnotate . prettyAlt (zt)) ps)
       where zt = 5
     Prim1 _ p -> text (show p)
     Prim2 _ p -> text (show p)
     -- Val _ v -> prettyPrec z v
     Bop _ bop x y ->
-      annotateIf (isValueOrFunVar x && isValueOrFunVar y) Redex $
+      annotateRedexes $
       parensIf (z > zb) $
-      prettyPrec (zb+1) x <+> pretty bop <+> prettyPrec (zb+1) y
+      inBopL (prettyPrec (zb+1) x) <+> pretty bop <+> inBopR (prettyPrec (zb+1) y)
       where zb = opPrec (error "prettyExpr.Bop")
     Uop _ uop x ->
-      annotateIf (isValueOrFunVar x) Redex $ parens $ -- parensIf (z > zb) $
-      pretty uop <+> prettyPrec (zb+1) x
+      annotateRedexes $
+      parens $
+      pretty uop <+> inUop (prettyPrec (zb+1) x)
       where zb = opPrec (error "prettyExpr.Uop")
-    With _ env e -> let ?env = env in prettyPrec z e
-    Replace _ env e -> let ?env = env in prettyPrec z e
+    With _ env e -> let ?env = env in inWith (prettyPrec z e)
+    Replace _ env e -> let ?env = env in inReplace (prettyPrec z e)
     Hole _ _r _ -> text "_"  -- NOTE: ignore the index
     Ref r -> text "<ref-" <> pretty r <> text ">"
 
@@ -269,13 +395,17 @@ instance Pretty Pat where
                       where zc = 6
     ConPat _ c Nothing -> text c
     ConPat _ c (Just p) -> text c <+> pretty p
-    ListPat _ l -> list l
+    ListPat _ l -> prettyList l
     TuplePat _ l -> prettyTuple 0 l
     WildPat _ -> text "_"
     OrPat _ p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
     AsPat _ p v -> pretty p <+> text "as" <+> text v
     ConstraintPat _ p t -> parens $ pretty p <+> char ':' <+> pretty t
 
+instance Pretty (Doc Annot) where
+  prettyPrec _ = id
+
+prettyList xs = parens $ hsep $ intersperse semi $ map (prettyPrec 0) xs
 
 prettyTuple z [] = empty
 prettyTuple z [x] = prettyPrec z x
@@ -302,7 +432,9 @@ prettyAltRedex z (p, g, e) =
 
 instance Pretty Decl where
   pretty d = case d of
-    DFun _ r bnds -> let ?env = emptyEnv in
+    DFun _ r bnds -> let ?env = emptyEnv
+                         ?ctx = Elsewhere
+                         ?pctx = Elsewhere in
                      text "let" <> pretty r <+> prettyBinds 0 bnds
     DEvl _ expr   -> pretty expr
     DTyp _ tdecls -> text "type" <+> prettyTypeDecls tdecls
@@ -313,7 +445,9 @@ prettyTypeDecls (b:bs) = pretty b <$> text "and" <+> prettyTypeDecls bs
 
 
 instance Pretty TypeDecl where
-  pretty TypeDecl {..} = let ?env = emptyEnv in
+  pretty TypeDecl {..} = let ?env = emptyEnv
+                             ?ctx = Elsewhere
+                             ?pctx = Elsewhere in
                          group $ prettyTuple 0 tyVars <+> text tyCon <+> text "=" <$>
                                  pretty tyRhs
 

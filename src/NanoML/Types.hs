@@ -84,7 +84,7 @@ stdOpts = NanoOpts { enablePrint = False, checkDataCons = True, heterogeneousEqu
                    }
 loudOpts = stdOpts { enablePrint = True }
 
-data Annot = Redex | Foo
+data Annot = Redex | LastRedex
   deriving (Generic, Show, Eq)
 
 instance ToJSON Annot
@@ -729,11 +729,37 @@ applyContext ctx expr = case (ctx, expr) of
   (InReplace c, Replace _ _ e) -> applyContext c e
   _ -> Nothing
 
+-- narrowContext :: Context -> Expr -> Context
+-- narrowContext ctx expr = case (ctx, expr) of
+--   (Here, e) -> Elsewhere
+--   (Elsewhere, _) -> Elsewhere
+--   (InAppF c, App _ f _) -> c
+--   (InAppXs i c, App _ _ xs) -> narrowContext c (xs !! i)
+--   (InBopL c, Bop _ _ l _) -> narrowContext c l
+--   (InBopR c, Bop _ _ _ r) -> narrowContext c r
+--   (InUop c, Uop _ _ e) -> narrowContext c e
+--   (InLet i c, Let _ _ binds _) -> narrowContext c (snd (binds !! i))
+--   (InIte c, Ite _ b _ _) -> narrowContext c b
+--   (InSeq c, Seq _ e _) -> narrowContext c e
+--   (InCase c, Case _ e _) -> narrowContext c e
+--   (InTuple i c, Tuple _ xs) -> narrowContext c (xs !! i)
+--   (InConApp c, ConApp _ _ (Just e) _) -> narrowContext c e
+--   (InRecord i c, Record _ flds _) -> narrowContext c (snd (flds !! i))
+--   (InField c, Field _ e _) -> narrowContext c e
+--   (InSetFieldF c, SetField _ e _ _) -> narrowContext c e
+--   (InSetFieldX c, SetField _ _ _ e) -> narrowContext c e
+--   (InArray i c, Array _ xs _) -> narrowContext c (xs !! i)
+--   (InList i c, List _ xs _) -> narrowContext c (xs !! i)
+--   (InTry c, Try _ e _) -> narrowContext c e
+--   (InWith c, With _ _ e) -> narrowContext c e
+--   (InReplace c, Replace _ _ e) -> narrowContext c e
+--   _ -> Elsewhere
+
 applyContext_maybe :: HashMap Expr Context -> Expr -> Maybe Expr
 applyContext_maybe ctxs e = do
-  traceShowM ("applyContext.e", e)
+  -- traceShowM ("applyContext.e", e)
   ctx <- HashMap.lookup e ctxs
-  traceShowM ("applyContext.ctx", ctx)
+  -- traceShowM ("applyContext.ctx", ctx)
   applyContext ctx e
 
 

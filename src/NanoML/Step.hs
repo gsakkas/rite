@@ -206,6 +206,9 @@ backwardstep gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
   Nothing      -> Nothing
   Just (n', _) -> Just n'
 
+backStep gr i = fmap (fromJust . Graph.lab gr)
+                     (backwardstep gr i)
+
 -- | Follow the 'StepsTo' relation as far back as possible from a node.
 backjump :: Graph -> Graph.Node -> Maybe Graph.Node
 backjump gr n = case find (isStepsTo . snd) $ Graph.lpre gr n of
@@ -549,7 +552,7 @@ decomposeOne es = do
     []    -> return Nothing
     (e:_) -> do
       (x, c, f) <- decompose e
-      return (Just (x, c, fromJust (findIndex (==e) es), f))
+      return (Just (x, c, length vals, f))
 
 -- | Decompose an expression into the redex, context, and function to
 -- stitch a new expression into the context.

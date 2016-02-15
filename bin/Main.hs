@@ -1,3 +1,4 @@
+{-# LANGUAGE ImplicitParams #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -11,6 +12,7 @@ import Data.Aeson (object, (.=))
 import Data.Default
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
+import qualified Data.HashMap.Strict as HashMap
 import qualified Data.HashSet as HashSet
 import qualified Data.Graph.Inductive.Dot as Graph
 import qualified Data.Graph.Inductive.Graph as Graph
@@ -180,13 +182,21 @@ run p var = do
         -- st <- liftIO $ findRoot gr v -- (stCurrentExpr finalState)
         -- root <- liftIO $ findRoot gr (stRoot finalState)
         -- gr' <- liftIO $ addEnvs finalState gr
-        let gr'' = Graph.nmap (\(n,e) ->
+        let gr'' = Graph.gmap (\(inc, i, (n,e), outc) ->
+                                let ?ctx = fromMaybe Elsewhere
+                                           (HashMap.lookup n (stContexts finalState))
+                                    ?pctx = fromMaybe Elsewhere (do
+                                      (m,_) <- backStep gr i
+                                      HashMap.lookup m (stContexts finalState))
+                                in
+                                (inc, i,
                                  ( renderSpans $ prettyRedex e $
                                    fillHoles finalState n
                                  , getSrcSpanExprMaybe . fromMaybe n $
                                    (applyContext_maybe (stContexts finalState) n)
                                  , addFreeVars finalState n e
-                                 ))
+                                 ), outc)
+                                )
                               gr'
         let gr''' = collapseBadEdges gr''
 
@@ -229,14 +239,21 @@ run p var = do
             -- root <- liftIO $ findRoot gr (stRoot finalState)
             let st = ancestor gr bad
             -- gr' <- liftIO $ addEnvs finalState gr
-            let gr'' = Graph.nmap (\(n,e) ->
+            let gr'' = Graph.gmap (\(inc, i, (n,e), outc) ->
+                                let ?ctx = fromMaybe Elsewhere
+                                           (HashMap.lookup n (stContexts finalState))
+                                    ?pctx = fromMaybe Elsewhere (do
+                                      (m,_) <- backStep gr i
+                                      HashMap.lookup m (stContexts finalState))
+                                in (inc, i,
                                      ( -- first ((show (envId e) ++ " : " ++ show (getSrcSpanExprMaybe n) ++ "\n") ++) $
                                        renderSpans $ prettyRedex e $
                                        fillHoles finalState n
                                      , getSrcSpanExprMaybe . fromMaybe n $
                                        (applyContext_maybe (stContexts finalState) n)
                                      , addFreeVars finalState n e
-                                     ))
+                                     ), outc)
+                                  )
                                   gr'
             -- let gr'' = Graph.nmap (\(n,e) -> (renderSpans $ pretty $ fillHoles finalState n, getSrcSpanExprMaybe n, e)) gr'
             let gr''' = collapseBadEdges gr''
