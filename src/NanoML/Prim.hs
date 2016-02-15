@@ -529,7 +529,7 @@ plist_split (VL _ xs mt)
   (as, bs) = unzip . map (\(VT _ [a,b]) -> (a,b)) $ xs
 
 plist_mem :: MonadEval m => Value -> Value -> m Value
-plist_mem x (VL _ xs _) = withCurrentProvM $ \prv -> VB prv <$> allM (`eqVal` x) xs
+plist_mem x (VL _ xs _) = withCurrentProvM $ \prv -> VB prv <$> anyM (`eqVal` x) xs
 
 plist_length :: MonadEval m => Value -> m Value
 plist_length (VL _ s _) = withCurrentProv $ \prv -> VI prv (length s)

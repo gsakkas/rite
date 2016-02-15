@@ -1237,6 +1237,10 @@ allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM f []     = return True
 allM f (x:xs) = (&&) <$> f x <*> allM f xs
 
+anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
+anyM f []     = return False
+anyM f (x:xs) = (||) <$> f x <*> anyM f xs
+
 data Loc a = L (Maybe SrcSpan) a
 
 getVal (L _ x) = x
