@@ -1,3 +1,7 @@
+(* `removeDuplicates xs` returns the list of elements of `xs` with the
+   duplicates, i.e. second, third, etc. occurrences, removed, and where
+   the remaining elements appear in the same order as in `xs` *)
+
 let removeDuplicates xs =
   let rec helper (seen,rest) =
     match rest with
