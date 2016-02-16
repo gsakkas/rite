@@ -537,15 +537,16 @@ isValue expr = case expr of
   Prim2 {} -> True
   _ -> False
 
+-- | Like 'isValue' but doesn't care if we've resolved the types yet.
 isValue' :: Expr -> Bool
 isValue' expr = case expr of
   Lam _ _ _ env -> True
   Lit {} -> True
-  Tuple _ es -> all isValue es
-  ConApp _ _ me mt -> maybe True isValue me
-  Record _ fs mt -> all (isValue . snd) fs
-  Array _ es mt -> all isValue es
-  List _ es mt -> all isValue es
+  Tuple _ es -> all isValue' es
+  ConApp _ _ me mt -> maybe True isValue' me
+  Record _ fs mt -> all (isValue' . snd) fs
+  Array _ es mt -> all isValue' es
+  List _ es mt -> all isValue' es
   Hole {} -> True
   Ref {} -> True
   Prim1 {} -> True
