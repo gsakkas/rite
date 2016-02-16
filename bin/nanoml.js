@@ -700,15 +700,16 @@ function draw(data) {
       selectConnectedEdges: false,
     },
     layout: {
-      hierarchical: { direction: 'UD', sortMethod: 'directed' },
+      hierarchical: { direction: 'UD', sortMethod: 'directed', levelSeparation: 100, nodeSpacing: 100 },
     },
     nodes: {
       font: { face: 'monospace' },
       shape: 'box',
     },
     edges: {
-      smooth: { type: 'vertical' }
+      // smooth: { type: 'vertical', roundness: 0.0 }
     },
+    // physics: { hierarchicalRepulsion: { nodeDistance: 120, springLength: 70, centralGravity: 1 } },
     physics: { enabled: false},
   };
   var newData = {nodes: nodes, edges: edges};
