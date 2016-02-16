@@ -737,7 +737,7 @@ function draw(data) {
                 segs[i].push({text: post[j], style: contextStyle});
                 if (j < post.length - 1) i++;
             }
-            node.styleSegments = segs;
+            node.styleSegments = node.styleSegments || segs;
             // console.log(node.label,pre,redex,post,node.styleSegments);
         }
         // node.styleSegments = [[{text: 'foo', style: 'red'},{text: 'bar', style: 'blue'}]];
