@@ -683,13 +683,13 @@
                     0,
                     18,
                     "LastRedex"
-                ],
+                ]
             ],
             "styleSegments": [
                 [
                     { "text": "sqsum []", "style": "rgba(0, 1, 0, 0)" },
-                    { "text": " @ (h * h)", "style": "rgba(0, 0, 1, 0.33)" },
-                ],
+                    { "text": " @ (h * h)", "style": "rgba(0, 0, 1, 0.33)" }
+                ]
             ],
             "env": [
                 [
