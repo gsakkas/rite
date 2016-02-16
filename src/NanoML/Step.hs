@@ -609,8 +609,8 @@ decompose = \case
                                   , InTuple i c
                                   , (\x -> Tuple ms (replace i x es)) . f
                                   )
-  e@(ConApp _ _ Nothing Nothing) -> mkRedex e
-  e@(ConApp ms dc (Just x) Nothing)
+  e@(ConApp _ _ Nothing _) -> mkRedex e
+  e@(ConApp ms dc (Just x) _)
     | isValue x -> mkRedex e
     | otherwise -> extendRedex InConApp (\x -> ConApp ms dc (Just x) Nothing) x
   Record ms flds Nothing -> do

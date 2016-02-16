@@ -1,4 +1,4 @@
-File "prog3671.ml", line 8, characters 25-26:
+File "prog3671.ml", line 12, characters 25-26:
 Error: This expression has type 'a list
        but an expression was expected of type 'a
        The type variable 'a occurs inside 'a list
