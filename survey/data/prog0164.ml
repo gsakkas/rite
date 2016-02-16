@@ -1,5 +1,5 @@
-(* `append xs ys` returns a list containing the elements of `xs`
-   followed by the elements of `ys` *)
+(* `append xs ys` returns a list containing the elements of
+   `xs` followed by the elements of `ys` *)
 
 let append xs ys =
   match xs with

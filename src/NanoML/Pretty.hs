@@ -114,7 +114,7 @@ annotateRedex d
   | otherwise    = d
 
 annotateLastRedex d
-  | ?pctx == Here = annotate LastRedex d
+  --- | ?pctx == Here = annotate LastRedex d
   | otherwise     = d
 
 annotateRedexes d = annotateRedex . annotateLastRedex $ d
@@ -299,7 +299,7 @@ instance Pretty Expr where
       text "match" <+> inCase (prettyPrec (zc) e) <+> text "with"
         <$> vsep (map (noAnnotate . prettyAlt (zc)) alts)
       where zc = 5
-    Tuple _ xs -> prettyTuple 0 xs
+    Tuple _ xs -> tuple xs
     ConApp _ c Nothing _ -> annotateRedexes $ text c
     ConApp _ "::" (Just (Tuple _ [hd,tl])) _ ->
       annotateRedexes $
