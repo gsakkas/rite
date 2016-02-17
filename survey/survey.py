@@ -82,7 +82,7 @@ def connect():
     c = db.cursor()
     return c
 
-if not os.path.exists('nanomaly.db'):
+if not os.path.exists('nanomaly-v2.db'):
     connect()
     c.execute('''CREATE TABLE users
                  (id integer primary key asc, u_group text,
