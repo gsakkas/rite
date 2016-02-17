@@ -522,7 +522,7 @@ function setup() {
     // func_input = document.getElementById('var-input');
     submit_btn = document.getElementById('submit-btn');
     // safe_banner = document.getElementById('safe-banner');
-    // unsafe_banner = document.getElementById('unsafe-banner');
+    unsafe_banner = document.getElementById('unsafe-banner');
     $('#nav-buttons').popover({
         placement: 'bottom',
         content: 'Click on one of the bubbles below to get started!',
