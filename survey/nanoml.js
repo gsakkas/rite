@@ -645,6 +645,7 @@ function setup() {
 }
 
 function draw_ocaml(data) {
+    unsafe_banner.style.display = "none";
     var container = document.getElementById('vis');
     container.innerHTML = '<pre><code>' + data.err + '</code></pre>';
     var line = data.err.match(/line (\d+)/)[1];
