@@ -128,8 +128,12 @@
             "id": 0,
             "styleSegments": [
                 [
-                    { "text": "match \"cat\" with", "underline": true },
-                    { "text": "| [] -> false", "underline": true },
+                    { "text": "match \"cat\" with", "underline": true }
+                ],
+                [
+                    { "text": "| [] -> false", "underline": true }
+                ],
+                [
                     { "text": "| hd :: tl -> x = hd", "underline": true }
                 ]
             ],

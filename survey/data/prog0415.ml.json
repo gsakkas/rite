@@ -220,12 +220,24 @@
             ],
             "styleSegments": [
                 [
-                    { "text": "match 1 with", "underline": true },
-                    { "text": "| [] -> []", "underline": true },
-                    { "text": "| h :: t -> (let rest =", "underline": true },
-                    { "text": "               digitsOfInt t in", "underline": true },
-                    { "text": "             if h > 0", "underline": true },
-                    { "text": "             then h :: rest", "underline": true },
+                    { "text": "match 1 with", "underline": true }
+                ],
+                [
+                    { "text": "| [] -> []", "underline": true }
+                ],
+                [
+                    { "text": "| h :: t -> (let rest =", "underline": true }
+                ],
+                [
+                    { "text": "               digitsOfInt t in", "underline": true }
+                ],
+                [
+                    { "text": "             if h > 0", "underline": true }
+                ],
+                [
+                    { "text": "             then h :: rest", "underline": true }
+                ],
+                [
                     { "text": "             else rest)", "underline": true }
                 ]
             ],
