@@ -499,10 +499,10 @@ function expandTrace(nodeId) {
 // function notifySafe() {
 //   safe_banner.style.display = 'block';
 // }
-// function notifyUnsafe(reason) {
-//   unsafe_banner.innerText = reason;
-//   unsafe_banner.style.display = 'block';
-// }
+function notifyUnsafe(reason) {
+  unsafe_banner.innerText = reason;
+  unsafe_banner.style.display = 'block';
+}
 
 function setup() {
     var prog = document.getElementById('prog');
@@ -666,6 +666,8 @@ function draw(data) {
     var stuckNode = data.nodes.filter(function(n) {
         return n.id === data.bad;
     })[0];
+
+    notifyUnsafe(data.reason);
 
     errors = [{ from: { line: stuckNode.span.startLine - 1,
                         ch: stuckNode.span.startCol - 1},
