@@ -29650,10 +29650,10 @@ return /******/ (function(modules) { // webpackBootstrap
               if (segment.underline === true) {
                 ctx.beginPath();
                 // context.strokeStyle = color;
-                context.lineWidth = 2;
-                context.moveTo(xx,yLine);
-                context.lineTo(xx+width,yLine);
-                context.stroke();
+                ctx.lineWidth = 2;
+                ctx.moveTo(xx,yLine);
+                ctx.lineTo(xx+width,yLine);
+                ctx.stroke();
               }
               ctx.fillStyle = segment.style;
               ctx.fillText(segment.text, xx, yLine);
