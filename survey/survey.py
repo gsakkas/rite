@@ -77,7 +77,7 @@ def connect():
     if c != None:
         return c
     db = sqlite3.connect(
-        'nanomaly.db'
+        'nanomaly-v2.db'
     )
     c = db.cursor()
     return c
