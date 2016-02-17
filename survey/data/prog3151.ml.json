@@ -687,8 +687,8 @@
             ],
             "styleSegments": [
                 [
-                    { "text": "sqsum []", "style": "rgba(0, 255, 0, 1)" },
-                    { "text": " @ (h * h)", "style": "rgba(0, 255, 0, 0.33)" }
+                    { "text": "sqsum []", "underline": true },
+                    { "text": " @ (h * h)", "style": "rgba(0, 0, 0, 0.33)", "underline": true }
                 ]
             ],
             "env": [

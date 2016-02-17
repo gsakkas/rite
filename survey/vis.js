@@ -29646,9 +29646,18 @@ return /******/ (function(modules) { // webpackBootstrap
             for (var j = 0; j < segments.length; j++) {
               var segment = segments[j];
               ctx.save();
+              var width = ctx.measureText(segment.text).width;
+              if (segment.underline === true) {
+                ctx.beginPath();
+                // context.strokeStyle = color;
+                context.lineWidth = 2;
+                context.moveTo(xx,yLine);
+                context.lineTo(xx+width,yLine);
+                context.stroke();
+              }
               ctx.fillStyle = segment.style;
               ctx.fillText(segment.text, xx, yLine);
-              xx += ctx.measureText(segment.text).width;
+              xx += width;
               ctx.restore();
             }
           }
