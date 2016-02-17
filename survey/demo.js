@@ -82,7 +82,9 @@ var demos = {
              , "  if n <= 0 then"
              , "    true"
              , "  else"
-             , "    n * fac (n - 1);;"
+             , "    n * fac (n - 1)"
+             , ""
+             , "let _ = fac 2"
              ].join('\n'),
 
   wwhile: [ "let (x,y) = (\"5\", 5);;"
@@ -618,6 +620,8 @@ function setup() {
 
   // Start the tour
   tour.start(true);
+
+  tour.goTo(0);
 
   console.log('tour started');
 }
