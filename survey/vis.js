@@ -29648,11 +29648,11 @@ return /******/ (function(modules) { // webpackBootstrap
               ctx.save();
               var width = ctx.measureText(segment.text).width;
               if (segment.underline === true) {
-                var startY = yLine+9;
+                var startY = yLine+7;
                 ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
                 ctx.beginPath();
                 // context.strokeStyle = color;
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 1;
                 ctx.moveTo(xx,startY);
                 ctx.lineTo(xx+width,startY);
                 ctx.stroke();

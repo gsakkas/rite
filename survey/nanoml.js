@@ -19,7 +19,7 @@ var zm_target = undefined;
 var so_target = undefined;
 
 var single_width = 1;
-var multi_width = 5;
+var multi_width = 3;
 
 var func_input = undefined;
 var check_btn = undefined;
@@ -782,7 +782,7 @@ function draw(data) {
             selectConnectedEdges: false,
         },
         layout: {
-            hierarchical: { direction: 'UD', sortMethod: 'directed' },
+            hierarchical: { direction: 'UD', sortMethod: 'directed', levelSeparation: 100 },
         },
         nodes: {
             font: { face: 'monospace' },
@@ -791,7 +791,7 @@ function draw(data) {
         edges: {
             smooth: { type: 'vertical' }
         },
-        physics: { enabled: false},
+        physics: { enabled: false },
     };
     var newData = {nodes: nodes, edges: edges};
     // stack.push(newData);
