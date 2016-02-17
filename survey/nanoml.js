@@ -18,8 +18,8 @@ var jb_target = undefined;
 var zm_target = undefined;
 var so_target = undefined;
 
-var single_width = 1;
-var multi_width = 3;
+var single_width = 2;
+var multi_width = 2;
 
 var func_input = undefined;
 var check_btn = undefined;

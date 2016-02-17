@@ -18,8 +18,8 @@ var jb_target = undefined;
 var zm_target = undefined;
 var so_target = undefined;
 
-var single_width = 1;
-var multi_width = 5;
+var single_width = 2;
+var multi_width = 2;
 
 var func_input = undefined;
 var check_btn = undefined;
@@ -500,10 +500,10 @@ function insertNode(node, replacingEdge) {
 // function notifySafe() {
 //   safe_banner.style.display = 'block';
 // }
-// function notifyUnsafe(reason) {
-//   unsafe_banner.innerText = reason;
-//   unsafe_banner.style.display = 'block';
-// }
+function notifyUnsafe(reason) {
+  unsafe_banner.innerText = reason;
+  unsafe_banner.style.display = 'block';
+}
 
 function setup() {
   var prog = document.getElementById('prog');
@@ -529,7 +529,7 @@ function setup() {
   // func_input = document.getElementById('var-input');
     // submit_btn = document.getElementById('submit-btn');
   // safe_banner = document.getElementById('safe-banner');
-  // unsafe_banner = document.getElementById('unsafe-banner');
+  unsafe_banner = document.getElementById('unsafe-banner');
 
   editor.setValue(demos.factorial);
   draw(factrace);
@@ -555,7 +555,9 @@ function setup() {
       title: "Visualizing The Execution",
       content: "This is a visualization of the execution of <code>fac 2</code>. "
              + "Each node represents a step in the computation. "
-             + "You can click-and-drag to move the nodes, and use the scroll wheel to zoom in and out.",
+             + "You can click-and-drag to move the nodes, and zoom in and out with the scroll wheel. "
+             + "When you mouse over any of the nodes, a box will pop up showing what all the variables "
+             + "in the expression map to at that point in the program. ",
       placement: "left",
       //backdrop: true,
     },
@@ -564,7 +566,8 @@ function setup() {
       title: "Stuck Expressions",
       content: "Notice that the bottom node is red, this means that the program <b>got stuck</b> at that point. "
              + "Furthermore, <code>1 * true</code> is highlighted, which is the expression the program "
-             + "was trying to evaluate when it got stuck.",
+             + "was trying to evaluate when it got stuck. The red alert box above the visualization tells us "
+             + "why the program got stuck, in this case because we tried to multiply an int with a bool. ",
       placement: "left",
       //backdrop: true,
     },
@@ -577,15 +580,15 @@ function setup() {
       placement: "left",
       //backdrop: true,
     },
-    {
-      element: "#vis",
-      title: "Local Environments",
-      content: "Hover over any of the blue nodes. A box will pop up showing what all variables in the "
-             + "expression map to at that point in the program. In this case we only see the definition "
-             + "of <code>fac</code>, but in general seeing the local variables can be useful.",
-      placement: "left",
-      //backdrop: true,
-    },
+    // {
+    //   element: "#vis",
+    //   title: "Local Environments",
+    //   content: "Hover over any of the blue nodes. A box will pop up showing what all variables in the "
+    //          + "expression map to at that point in the program. In this case we only see the definition "
+    //          + "of <code>fac</code>, but in general seeing the local variables can be useful.",
+    //   placement: "left",
+    //   //backdrop: true,
+    // },
     {
       element: "#vis",
       title: "Identifying The Problem",
@@ -625,6 +628,8 @@ function draw(data) {
     var stuckNode = data.nodes.filter(function(n) {
         return n.id === data.bad;
     })[0];
+
+    notifyUnsafe(data.reason);
 
     errors = [{ from: { line: stuckNode.span.startLine - 1,
                         ch: stuckNode.span.startCol - 1},
