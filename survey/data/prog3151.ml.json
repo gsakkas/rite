@@ -1020,6 +1020,12 @@
                     "Redex"
                 ]
             ],
+            "styleSegments": [
+                [
+                    { "text": "0 @ " },
+                    { "text": "1", "underline": true }
+                ]
+            ],
             "env": [],
             "id": 25,
             "label": "0 @ 1",
@@ -1211,6 +1217,14 @@
                     5,
                     1,
                     "Redex"
+                ]
+            ],
+            "styleSegments": [
+                [
+                    { "text": "0", "style": "rgba(0, 0, 0, 0.33)", "underline": true },
+                    { "text": " @ (", "style": "rgba(0, 0, 0, 0.33)" },
+                    { "text": "h" },
+                    { "text": " * h)", "style": "rgba(0, 0, 0, 0.33)" }
                 ]
             ],
             "env": [

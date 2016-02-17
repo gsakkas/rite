@@ -29649,7 +29649,7 @@ return /******/ (function(modules) { // webpackBootstrap
               var width = ctx.measureText(segment.text).width;
               if (segment.underline === true) {
                 var startY = yLine+9;
-                ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+                ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
                 ctx.beginPath();
                 // context.strokeStyle = color;
                 ctx.lineWidth = 2;
