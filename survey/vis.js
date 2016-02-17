@@ -29647,16 +29647,16 @@ return /******/ (function(modules) { // webpackBootstrap
               var segment = segments[j];
               ctx.save();
               var width = ctx.measureText(segment.text).width;
-              if (segment.underline === true) {
-                var startY = yLine+7;
-                ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
-                ctx.beginPath();
-                // context.strokeStyle = color;
-                ctx.lineWidth = 1;
-                ctx.moveTo(xx,startY);
-                ctx.lineTo(xx+width,startY);
-                ctx.stroke();
-              }
+              // if (segment.underline === true) {
+              //   var startY = yLine+7;
+              //   ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
+              //   ctx.beginPath();
+              //   // context.strokeStyle = color;
+              //   ctx.lineWidth = 1;
+              //   ctx.moveTo(xx,startY);
+              //   ctx.lineTo(xx+width,startY);
+              //   ctx.stroke();
+              // }
               ctx.fillStyle = segment.style;
               ctx.fillText(segment.text, xx, yLine);
               xx += width;

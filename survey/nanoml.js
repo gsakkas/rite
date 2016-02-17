@@ -785,7 +785,7 @@ function draw(data) {
             hierarchical: { direction: 'UD', sortMethod: 'directed', levelSeparation: 100 },
         },
         nodes: {
-            font: { face: 'monospace' },
+            font: { face: 'monospace', size: 16 },
             shape: 'box',
         },
         edges: {
