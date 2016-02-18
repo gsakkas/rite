@@ -3,12 +3,17 @@
    etc. occurrences, removed, and where the remaining
    elements appear in the same order as in `xs` *)
 
+let rec mem x l =
+  match l with
+  | [] -> false
+  | h::t -> if x = h then true else mem x t
+
 let removeDuplicates xs =
   let rec helper (seen,rest) =
     match rest with
     | [] -> seen
     | h::t ->
-       let seen' = if List.mem h seen
+       let seen' = if mem h seen
                    then [] :: seen
                    else [h] :: seen
        in helper (seen', t)
