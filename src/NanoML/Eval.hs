@@ -202,9 +202,12 @@ mycensor f m = pass $ do
   --   forces [(v1,t1),(v2,t2)] $ \[v1,v2] su -> f v1 v2
 
 force :: MonadEval m => Value -> Type -> (Value -> m a) -> m a
-force x t k = substM t >>= \t' -> force' x t' k
+force x t k = do
+  t' <- substM t
+  -- traceShowM ("force", x, t')
+  force' x t' k
 
-force' x (TVar {}) k = k x -- delay instantiation until we have a concrete type
+force' x@(Hole _ _ Nothing) (TVar {}) k = k x -- delay instantiation until we have a concrete type
 force' h@(Hole _ r mt) t k = do
   x <- lookupStore r
   -- traceShowM (h, t, x)
