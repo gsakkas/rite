@@ -1067,7 +1067,7 @@ unify :: MonadEval m
       => Type -- ^ actual type
       -> Type -- ^ expected type
       -> m () -- [(TVar, Type)]
-unify s t = unify' s t -- TODO: `catchError` \_ -> typeError s t
+unify s t = unify' s t `catchError` \_ -> typeError s t
             -- ignore the error from unify' and just report the top-level mismatch
             -- TODO: report context too
 

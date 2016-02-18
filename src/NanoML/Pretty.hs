@@ -9,6 +9,7 @@ module NanoML.Pretty
 
 import           Control.Arrow                (first, second)
 import qualified Data.IntMap                  as IntMap
+import qualified Data.Map                     as Map
 import           Data.List                    hiding (group)
 import qualified Data.Vector                  as Vector
 import           Prelude                      hiding ((<$>))
@@ -510,13 +511,18 @@ instance Pretty NanoError where
        -- "at" <+> pretty ss <+>
        text ":" <+> pretty v
     TypeError t1 t2 ss ->
+      let tvs = freeTyVars t1 ++ freeTyVars t2
+          su  = Map.fromList $ zip tvs (map (TVar . (:[])) ['a' .. 'z'])
+          t1' = subst su t1
+          t2' = subst su t2
+      in
       text "Type error" <>
       -- "at" <+> pretty ss <+>
       -- text ": could not match" <+> pretty t1 <+> text "with" <+> pretty t2
       text ": stuck because" <+>
-      ticks (prettyTyCon t1) <+>
+      {-ticks-} (pretty t1') <+>
       text "is incompatible with" <+>
-      ticks (prettyTyCon t2)
+      {-ticks-} (pretty t2')
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s
