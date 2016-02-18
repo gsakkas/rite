@@ -1080,15 +1080,15 @@ unify' t (TVar a) = unifyVar a t
 -- unify' (TCon x) t = unify'Alias x [] t
 -- unify' t (TCon x) = unify'Alias x [] t
 unify' (xi :-> xo) (yi :-> yo)
-  = mappend <$> unify' xi yi <*> unify' xo yo
+  = unify' xi yi >> unify' xo yo
 unify' (TTup xs) (TTup ys)
   | length xs == length ys
-  = mconcat <$> zipWithM unify' xs ys
+  = void $ zipWithM unify' xs ys
   | otherwise
-  = typeError (TTup xs) (TTup ys)
+  = uncurry typeError ?wtf -- typeError (TTup xs) (TTup ys)
 unify' x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
-  = mconcat <$> zipWithM unify' xts yts
+  = void $ zipWithM unify' xts yts
   | otherwise
   = do xt <- lookupType xc
        yt <- lookupType yc
