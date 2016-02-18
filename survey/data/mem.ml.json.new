@@ -1,0 +1,336 @@
+{
+    "bad": 0,
+    "edges": [
+        {
+            "arrows": "to",
+            "from": 0,
+            "label": "SubTerm 1",
+            "to": 1
+        },
+        {
+            "arrows": "to",
+            "from": 0,
+            "label": "SubTerm 2",
+            "to": 11
+        },
+        {
+            "arrows": "to",
+            "from": 0,
+            "label": "SubTerm 0",
+            "to": 13
+        },
+        {
+            "arrows": "to",
+            "from": 4,
+            "label": "StepsTo BoringStep",
+            "to": 0
+        },
+        {
+            "arrows": "to",
+            "from": 4,
+            "label": "SubTerm 1",
+            "to": 1
+        },
+        {
+            "arrows": "to",
+            "from": 4,
+            "label": "SubTerm 0",
+            "to": 9
+        },
+        {
+            "arrows": "to",
+            "from": 4,
+            "label": "SubTerm 2",
+            "to": 11
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 0",
+            "to": 3
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 0",
+            "to": 3
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "StepsTo CallStep",
+            "to": 4
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 1",
+            "to": 5
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 1",
+            "to": 5
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 2",
+            "to": 10
+        },
+        {
+            "arrows": "to",
+            "from": 6,
+            "label": "SubTerm 2",
+            "to": 10
+        },
+        {
+            "arrows": "to",
+            "from": 9,
+            "label": "StepsTo BoringStep",
+            "to": 13
+        },
+        {
+            "arrows": "to",
+            "from": 10,
+            "label": "SubTerm 0",
+            "to": 8
+        },
+        {
+            "arrows": "to",
+            "from": 11,
+            "label": "SubTerm 0",
+            "to": 12
+        },
+        {
+            "arrows": "to",
+            "from": 11,
+            "label": "SubTerm 1",
+            "to": 14
+        }
+    ],
+    "nodes": [
+        {
+            "annots": [
+                [
+                    0,
+                    51,
+                    "Redex"
+                ]
+            ],
+            "env": [
+                [
+                    "x",
+                    "\"cat\""
+                ]
+            ],
+            "id": 0,
+            "styleSegments": [
+                [
+                    { "text": "match \"cat\" with", "underline": true },
+                    { "text": "| [] -> false", "underline": true },
+                    { "text": "| hd :: tl -> x = hd", "underline": true }
+                ]
+            ],
+            "label": "match \"cat\" with\n| [] -> false\n| hd :: tl -> x = hd",
+            "span": {
+                "endCol": 21,
+                "endLine": 7,
+                "startCol": 3,
+                "startLine": 5
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 1,
+            "label": "false",
+            "span": {
+                "endCol": 20,
+                "endLine": 6,
+                "startCol": 15,
+                "startLine": 6
+            }
+        },
+        {
+            "annots": [],
+            "env": [
+                [
+                    "mem",
+                    "fun x ->\n  fun l ->\n    match x with\n    | [] -> false\n    | hd :: tl -> x = hd"
+                ]
+            ],
+            "id": 3,
+            "label": "mem",
+            "span": {
+                "endCol": 12,
+                "endLine": 9,
+                "startCol": 9,
+                "startLine": 9
+            }
+        },
+        {
+            "annots": [
+                [
+                    6,
+                    1,
+                    "Redex"
+                ]
+            ],
+            "env": [
+                [
+                    "x",
+                    "\"cat\""
+                ]
+            ],
+            "id": 4,
+            "label": "match x with\n| [] -> false\n| hd :: tl -> x = hd",
+            "span": {
+                "endCol": 10,
+                "endLine": 5,
+                "startCol": 9,
+                "startLine": 5
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 5,
+            "label": "\"cat\"",
+            "span": {
+                "endCol": 18,
+                "endLine": 9,
+                "startCol": 13,
+                "startLine": 9
+            }
+        },
+        {
+            "annots": [
+                [
+                    0,
+                    17,
+                    "Redex"
+                ]
+            ],
+            "env": [
+                [
+                    "mem",
+                    "fun x ->\n  fun l ->\n    match x with\n    | [] -> false\n    | hd :: tl -> x = hd"
+                ]
+            ],
+            "id": 6,
+            "label": "mem \"cat\" [\"dog\"]",
+            "span": {
+                "endCol": 26,
+                "endLine": 9,
+                "startCol": 9,
+                "startLine": 9
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 8,
+            "label": "\"dog\"",
+            "span": {
+                "endCol": 25,
+                "endLine": 9,
+                "startCol": 20,
+                "startLine": 9
+            }
+        },
+        {
+            "annots": [
+                [
+                    0,
+                    1,
+                    "Redex"
+                ]
+            ],
+            "env": [
+                [
+                    "x",
+                    "\"cat\""
+                ]
+            ],
+            "id": 9,
+            "label": "x",
+            "span": {
+                "endCol": 10,
+                "endLine": 5,
+                "startCol": 9,
+                "startLine": 5
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 10,
+            "label": "[\"dog\"]",
+            "span": null
+        },
+        {
+            "annots": [],
+            "env": [
+                [
+                    "x",
+                    "\"cat\""
+                ]
+            ],
+            "id": 11,
+            "label": "x = hd",
+            "span": {
+                "endCol": 21,
+                "endLine": 7,
+                "startCol": 15,
+                "startLine": 7
+            }
+        },
+        {
+            "annots": [],
+            "env": [
+                [
+                    "x",
+                    "\"cat\""
+                ]
+            ],
+            "id": 12,
+            "label": "x",
+            "span": {
+                "endCol": 16,
+                "endLine": 7,
+                "startCol": 15,
+                "startLine": 7
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 13,
+            "label": "\"cat\"",
+            "span": {
+                "endCol": 18,
+                "endLine": 9,
+                "startCol": 13,
+                "startLine": 9
+            }
+        },
+        {
+            "annots": [],
+            "env": [],
+            "id": 14,
+            "label": "hd",
+            "span": {
+                "endCol": 21,
+                "endLine": 7,
+                "startCol": 19,
+                "startLine": 7
+            }
+        }
+    ],
+    "reason": "Type error: stuck because `string' is incompatible with `list'",
+    "result": "stuck",
+    "root": 6,
+    "stuck": 0
+}
