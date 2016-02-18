@@ -789,7 +789,7 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
                 (\(v:vs) -> do
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
-                    mapM_ (unify vt) vts
+                    mapM_ (`unify` vt) vts
                     vt' <- substM vt
                     withCurrentProv $ \prv -> VV prv (v:vs) (Just vt'))
                 (\es -> return $ Array ms es mt)
@@ -800,7 +800,7 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
                 (\(v:vs) -> do
                     vt <- typeOfM v
                     vts <- mapM typeOfM vs
-                    mapM_ (unify vt) vts
+                    mapM_ (`unify` vt) vts
                     vt' <- substM vt
                     withCurrentProv $ \prv -> VL prv (v:vs) (Just vt'))
                 (\es -> return $ List ms es mt)

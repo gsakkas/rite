@@ -220,7 +220,7 @@ force' h@(Hole _ r mt) t k = do
       env <- gets stTypeEnv
       ht <- maybe (TVar <$> freshTVar) return mt
       t' <- substM t
-      unify t' ht
+      unify ht t'
       su <- getSubst
       v <- genValue (subst su t') env
       -- traceShowM (t', subst su t', v)

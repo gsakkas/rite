@@ -1063,38 +1063,46 @@ freshTVar = do
   i <- fresh
   return $ 't' : show i
 
-unify :: MonadEval m => Type -> Type -> m () -- [(TVar, Type)]
-unify (TVar a) t = unifyVar a t
-unify t (TVar a) = unifyVar a t
--- unify (TCon x) (TCon y)
+unify :: MonadEval m
+      => Type -- ^ actual type
+      -> Type -- ^ expected type
+      -> m () -- [(TVar, Type)]
+unify s t = unify' s t -- TODO: `catchError` \_ -> typeError s t
+            -- ignore the error from unify' and just report the top-level mismatch
+            -- TODO: report context too
+
+unify' :: MonadEval m => Type -> Type -> m () -- [(TVar, Type)]
+unify' (TVar a) t = unifyVar a t
+unify' t (TVar a) = unifyVar a t
+-- unify' (TCon x) (TCon y)
 --    x == y
 --   = return []
--- unify (TCon x) t = unifyAlias x [] t
--- unify t (TCon x) = unifyAlias x [] t
-unify (xi :-> xo) (yi :-> yo)
-  = mappend <$> unify xi yi <*> unify xo yo
-unify (TTup xs) (TTup ys)
+-- unify' (TCon x) t = unify'Alias x [] t
+-- unify' t (TCon x) = unify'Alias x [] t
+unify' (xi :-> xo) (yi :-> yo)
+  = mappend <$> unify' xi yi <*> unify' xo yo
+unify' (TTup xs) (TTup ys)
   | length xs == length ys
-  = mconcat <$> zipWithM unify xs ys
+  = mconcat <$> zipWithM unify' xs ys
   | otherwise
   = typeError (TTup xs) (TTup ys)
-unify x@(TApp xc xts) y@(TApp yc yts)
+unify' x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
-  = mconcat <$> zipWithM unify xts yts
+  = mconcat <$> zipWithM unify' xts yts
   | otherwise
   = do xt <- lookupType xc
        yt <- lookupType yc
        let sux = Map.fromList (zip (tyVars xt) xts)
        let suy = Map.fromList (zip (tyVars yt) yts)
        case (tyRhs xt, tyRhs yt) of
-         (Alias tx, Alias ty) -> unify (subst sux tx)
+         (Alias tx, Alias ty) -> unify' (subst sux tx)
                                        (subst suy ty)
-         (Alias t, _) -> unify (subst sux t) y
-         (_, Alias t) -> unify x (subst suy t)
+         (Alias t, _) -> unify' (subst sux t) y
+         (_, Alias t) -> unify' x (subst suy t)
          _ -> typeError x y
-unify x@(TApp c ts) y = unifyAlias c ts y x
-unify x y@(TApp c ts) = unifyAlias c ts x y
-unify x y
+unify' x@(TApp c ts) y = unifyAlias c ts y x
+unify' x y@(TApp c ts) = unifyAlias c ts x y
+unify' x y
   = typeError x y
 
 unifyVar :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
@@ -1110,7 +1118,7 @@ unifyAlias c ts x y = do
   TypeDecl {..} <- lookupType c
   let su = Map.fromList (zip tyVars ts)
   case tyRhs of
-    Alias t -> unify x (subst su t)
+    Alias t -> unify' x (subst su t)
     _ -> typeError x y
 
 -- typeOf :: Value -> Type
