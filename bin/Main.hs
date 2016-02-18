@@ -239,13 +239,17 @@ run p var = do
             -- root <- liftIO $ findRoot gr (stRoot finalState)
             let st = ancestor gr bad
             -- gr' <- liftIO $ addEnvs finalState gr
+            -- liftIO $ putStrLn "CONTEXTS"
+            -- liftIO $ mapM_ print $ [(pretty e, c) | (e, c) <- HashMap.toList (stContexts finalState)]
+            -- liftIO $ putStrLn ""
             let gr'' = Graph.gmap (\(inc, i, (n,e), outc) ->
                                 let ?ctx = fromMaybe Elsewhere
                                            (HashMap.lookup n (stContexts finalState))
                                     ?pctx = fromMaybe Elsewhere (do
                                       (m,_) <- backStep gr i
                                       HashMap.lookup m (stContexts finalState))
-                                in (inc, i,
+                                in -- traceShow (pretty n, ?ctx, ?pctx, renderSpans $ prettyRedex e $ fillHoles finalState n)
+                                   (inc, i,
                                      ( -- first ((show (envId e) ++ " : " ++ show (getSrcSpanExprMaybe n) ++ "\n") ++) $
                                        renderSpans $ prettyRedex e $
                                        fillHoles finalState n
