@@ -200,11 +200,11 @@
         (where (n_2 vsu_3) (narrow v_2 int vsu_1))
         "E-Plus-Good")
    (--> [(in-hole C (v_1 + v_2)) vsu_1]
-        [(in-hole C stuck-t) vsu_2]
+        [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 int vsu_1))
         "E-Plus-Bad1")
    (--> [(in-hole C (v_1 + v_2)) vsu_1]
-        [(in-hole C stuck-t) vsu_2]
+        [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_2 int vsu_1))
         "E-Plus-Bad2")
 
@@ -218,7 +218,7 @@
         (where (false vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Good2")
    (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
-        [(in-hole C stuck-t) vsu_2]
+        [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Bad")
 
@@ -229,7 +229,7 @@
         (fresh k_1 k_2)
         "E-App-Good")
    (--> [(in-hole C (v_1 v_2)) vsu_1]
-        [(in-hole C stuck-t) vsu_2]
+        [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 ((t-box k_1) -> (t-box k_2)) vsu_1))
         (fresh k_1 k_2)
         "E-App-Bad")))
@@ -264,8 +264,10 @@
     (value-or-confluent-step? (term e))))
 
 (define-metafunction λh
-  eval-value : e -> (v or stuck)
-  [(eval-value e) v (where (v _) ,(first (apply-reduction-relation* -->λh (term (e ())))))])
+  eval-value : e -> v or stuck
+  [(eval-value e_1) e_2
+   (where (e_2 _) ,(first (apply-reduction-relation* -->λh
+                            (term (e_1 ())))))])
 
 (define-judgment-form λh
   #:mode (gets-stuck-t? I)
