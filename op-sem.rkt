@@ -3,6 +3,9 @@
 (require racket/list)
 
 (define-language λh
+  ;; configurations (for the reduction relation)
+  (Config (e vsu) (stuck vsu))
+
   ;; expressions
   (e v
      x
@@ -10,14 +13,15 @@
      (e + e)
      (ite e e e)
      ;(fix e)
-     stuck
+     (c es)
+     (match e with ps)
      )
   ;; stuck terms
   (stuck stuck-t ;; stuck due to a (dynamic) type error
          stuck-e ;; stuck due to some other error (e.g. div-zero)
          )
   ;; values
-  (v n b (λ x e) (v-box k))
+  (v n b (λ x e) (v-box k) (c vs))
   (n number)
   (b true false)
   ;; types
@@ -28,12 +32,21 @@
   (vsu ((k_!_ v) ...))
   (k variable-not-otherwise-mentioned)
 
+  ;; constructors
+  (c variable-not-otherwise-mentioned)
+
+  ;; patterns
+  (p (c xs -> e))
+
   ;; evaluation contexts
   (C (C e)
      (v C)
      (C + e)
      (v + C)
      (ite C e e)
+     (c C)
+     (C : es)
+     (v : C)
      hole)
 
   ;; type contexts
@@ -41,6 +54,12 @@
 
   ;; lists, ugh..
   (xs nil (x : xs))
+  (es nil (e : es))
+  (vs nil (v : vs))
+  (ps nil (p : ps))
+
+  #:binding-forms
+  (λ x e #:refers-to x)
   )
 
 (define-judgment-form λh
@@ -52,11 +71,6 @@
    -----------
    (elem x (_ : xs))]
   )
-
-(define-metafunction λh
-  Σ : number ... -> number
-  [(Σ number ...)
-   ,(apply + (term (number ...)))])
 
 ;; stolen from david van horn's redex-aam-tutorial
 (define-language REDEX)
@@ -85,13 +99,6 @@
     [(vsu-extend any any_0 any_1 ...)
      (ext1 (vsu-extend any any_1 ...) any_0)])
 
-
-(require redex/tut-subst)
-(define-metafunction λh
-  subst : x v e -> e
-  [(subst x v e)
-   ,(subst/proc x? (list (term x)) (list (term v)) (term e))])
-(define x? (redex-match λh x))
 
 
 (define-metafunction λh
@@ -128,7 +135,7 @@
    (clause-name "Gen-Hole")])
 
 (define-metafunction λh
-  narrow : e t vsu -> (e vsu)
+  narrow : e t vsu -> (v vsu) or (stuck-t vsu)
   ;; any value narrows to a type-hole
   [(narrow v (t-box k) vsu)
    (v vsu)
@@ -191,7 +198,7 @@
 (define -->λh
   (reduction-relation
    λh
-   #:domain (e vsu)
+   #:domain Config
    
    ;; Plus
    (--> [(in-hole C (v_1 + v_2)) vsu_1]
@@ -224,7 +231,7 @@
 
    ;; App
    (--> [(in-hole C (v_1 v_2)) vsu_1]
-        [(in-hole C (subst x_1 v_2 e_1)) vsu_2]
+        [(in-hole C (substitute e_1 x_1 v_2)) vsu_2]
         (where ((λ x_1 e_1) vsu_2) (narrow v_1 ((t-box k_1) -> (t-box k_2)) vsu_1))
         (fresh k_1 k_2)
         "E-App-Good")
@@ -232,7 +239,14 @@
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 ((t-box k_1) -> (t-box k_2)) vsu_1))
         (fresh k_1 k_2)
-        "E-App-Bad")))
+        "E-App-Bad")
+
+   ;; Match
+   ;; (--> [(in-hole C (match v_1 with (p ...))) vsu_1]
+   ;;      [(in-hole C (subst su e)) vsu_2]
+   ;;      (where ((v_2 vsu_2) (narrow v_1 (type-of-pattern (p ...)))))
+   ;;      (where (e su) (matching-pattern v_2 (p ...))))
+   ))
 
 (module+ test
   ;; E-Plus
@@ -247,6 +261,17 @@
   (test--> -->λh (term (((λ x x) 1) ())) (term (1     ())))
   (test--> -->λh (term ((1       1) ())) (term (stuck-t ()))))
 
+;; value? : expression -> boolean
+;; returns true if the input matches
+;; the 'v' non-terminal
+(define value? (redex-match λh v))
+
+;; single-step? : expression -> boolean
+;; returns true if 'e' steps to exactly one term
+(define (single-step? e)
+  (= (length (apply-reduction-relation -->λh e))
+     1))
+
 ;; value-or-confluent-step? : term → boolean
 (define (value-or-confluent-step? e)
   (or (redex-match λh v e)
@@ -259,14 +284,13 @@
       ))
 
 (module+ test
-  (redex-check λh
-    #:satisfying (closed e nil)
+  (redex-check λh #:satisfying (closed e nil)
     (value-or-confluent-step? (term e))))
 
 (define-metafunction λh
   eval-value : e -> v or stuck
-  [(eval-value e_1) e_2
-   (where (e_2 _) ,(first (apply-reduction-relation* -->λh
+  [(eval-value e_1) any
+   (where (any _) ,(first (apply-reduction-relation* -->λh
                             (term (e_1 ())))))])
 
 (define-judgment-form λh
@@ -275,10 +299,11 @@
   [(gets-stuck-t? e) (where stuck-t (eval-value e))])
 
 (module+ test
-  (test-equal (judgment-holds (gets-stuck-t? stuck-t)) #t)
+  ;;(test-equal (judgment-holds (gets-stuck-t? stuck-t)) #t)
   ;; (test-equal (first (apply-reduction-relation* -->λh (term (stuck-t ()))))
   ;;             (term (stuck-t ())))
-  (test-equal (judgment-holds (gets-stuck-t? (1 + true))) #t))
+  (test-equal (judgment-holds (gets-stuck-t? (1 + true))) #t)
+  (test-equal (judgment-holds (gets-stuck-t? (1 + 2))) #f))
 
 (define-judgment-form λh
   #:mode (closed I I)
