@@ -288,20 +288,19 @@
   [(narrow (nil @ t_1) (list t_2) vsu)
    ((nil @ t_1) vsu)
    ;; FIXME: apply resulting su
-   (side-condition (term (type-compat t_1 t_2)))
+   (judgment-holds (type-compat t_1 t_2))
    (clause-name "Narrow-Nil-Good")]
-  [(narrow v (list t) vsu)
-   (stuck-t vsu)
-   (clause-name "Narrow-Nil-Bad")]
-
+  ;; [(narrow v (list t) vsu)
+  ;;  (stuck-t vsu)
+  ;;  (clause-name "Narrow-Nil-Bad")]
   [(narrow (cons @ t_1 v_1 v_2) (list t_2) vsu)
    ((cons @ t_1 v_1 v_2) vsu)
    ;; FIXME: apply resulting su
-   (side-condition (term (type-compat t_1 t_2)))
+   (judgment-holds (type-compat t_1 t_2))
    (clause-name "Narrow-Cons-Good")]
   [(narrow v (list t) vsu)
    (stuck-t vsu)
-   (clause-name "Narrow-Cons-Bad")]
+   (clause-name "Narrow-List-Bad")]
 
   [(narrow (pair (@ t_1 t_2) v_1 v_2) (t_3 * t_4) vsu)
    (pair (@ t_1 t_2) v_1 v_2)
@@ -319,6 +318,11 @@
   (test-equal (term (narrow 1 bool ())) '(stuck-t ()))
   (test-equal (term (narrow h bool ((h true)))) '(true ((h true))))
   (test-equal (term (narrow h int ((h true)))) '(stuck-t ((h true))))
+
+  (test-equal (term (narrow (nil @ int) (list int) ())) '((nil @ int) ()))
+  (test-equal (term (narrow (nil @ int) (list bool) ())) '(stuck-t ()))
+  (test-equal (term (narrow (cons @ int 1 (nil @ int)) (list int) ())) '((cons @ int 1 (nil @ int)) ()))
+  (test-equal (term (narrow (cons @ int 1 (nil @ int)) (list bool) ())) '(stuck-t ()))
 
   (test-predicate integer? (first (term (narrow h int ()))))
   )
