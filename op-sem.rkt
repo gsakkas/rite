@@ -12,41 +12,54 @@
      (e e)
      (e + e)
      (ite e e e)
+     (cons e e)
+     nil
+     (hd e)
      ;(fix e)
-     (c es)
-     (match e with ps)
+     ;; (c es)
+     ;; (match e with alts)
      )
   ;; stuck terms
   (stuck stuck-t ;; stuck due to a (dynamic) type error
          stuck-e ;; stuck due to some other error (e.g. div-zero)
          )
   ;; values
-  (v n b (λ x e) (v-box k) (c vs))
+  (v n b (λ x e) h
+     (cons @ t v v) (nil @ t) ;; `t` is the *element* type
+     ;;(c vs)
+     )
   (n number)
   (b true false)
   ;; types
-  (t int bool (t -> t) (t-box k))
+  (t int bool (t -> t) a
+     (list t)
+     )
   ;; variables
   (x variable-not-otherwise-mentioned)
   ;; value substitutions
-  (vsu ((k_!_ v) ...))
-  (k variable-not-otherwise-mentioned)
+  (vsu ((h_!_ v) ...))
+  (h variable-not-otherwise-mentioned)
+  (a variable-not-otherwise-mentioned)
 
-  ;; constructors
-  (c variable-not-otherwise-mentioned)
+  ;; ;; constructors
+  ;; (c variable-not-otherwise-mentioned)
 
-  ;; patterns
-  (p (c xs -> e))
+  ;; ;; patterns
+  ;; (p (c xs))
+  ;; (alt (p -> e))
 
   ;; evaluation contexts
-  (C (C e)
-     (v C)
-     (C + e)
-     (v + C)
-     (ite C e e)
-     (c C)
-     (C : es)
-     (v : C)
+  (E (E e)
+     (v E)
+     (E + e)
+     (v + E)
+     (ite E e e)
+     (cons E e)
+     (cons v E)
+     (hd E)
+     ;; (c E)
+     ;; (E : es)
+     ;; (v : E)
      hole)
 
   ;; type contexts
@@ -54,9 +67,10 @@
 
   ;; lists, ugh..
   (xs nil (x : xs))
-  (es nil (e : es))
-  (vs nil (v : vs))
-  (ps nil (p : ps))
+  ;; (es nil (e : es))
+  ;; (vs nil (v : vs))
+  ;; (ps nil (p : ps))
+  ;; (alts nil (alt : alts))
 
   #:binding-forms
   (λ x e #:refers-to x)
@@ -83,9 +97,9 @@
 ;    #:contract (vsu-lookup ((any any) ...) any any)
 ;    [(vsu-lookup (_ ... (any any_0) _ ...) any any_0)])
 (define-metafunction λh
-  vsu-lookup : vsu k -> any
-  [(vsu-lookup vsu k)
-   ,(let ((v (assq (term k) (term vsu))))
+  vsu-lookup : vsu h -> any
+  [(vsu-lookup vsu h)
+   ,(let ((v (assq (term h) (term vsu))))
       (if v (term ,(second v)) v))])
 (define-metafunction λh
     ext1 : ((any any) ...) (any any) -> ((any any) ...)
@@ -102,11 +116,38 @@
 
 
 (define-metafunction λh
-  type-of : v -> t
+  type-of : e -> t
   [(type-of n) int]
   [(type-of b) bool]
-  [(type-of (λ x e)) ((t-box k_1) -> (type-of e))] ;; fresh k?
-  [(type-of e) (t-box k_2)] ;; fresh k?
+  [(type-of (nil @ t)) t]
+  [(type-of (cons @ t v_1 v_2)) t]
+  [(type-of (λ x e)) (a -> (type-of e))] ;; fresh a?
+  [(type-of e) a] ;; fresh a?
+  )
+
+;; TODO: need to produce substitution and propagate. suspicious that
+;; redex doesn't find a counter-example
+(define-judgment-form λh
+  #:mode (type-compat I I)
+  #:contract (type-compat t t)
+  [------------------
+   (type-compat int int)]
+
+  [------------------
+   (type-compat bool bool)]
+
+  [(type-compat t_1 t_2)
+   ------------------
+   (type-compat (list t_1) (list t_2))]
+
+  [(type-compat t_1 t_3) (type-compat t_2 t_4)
+   ------------------
+   (type-compat (t_1 -> t_2) (t_3 -> t_4))]
+
+  [------------------
+   (type-compat a t)]
+  [------------------
+   (type-compat t a)]
   )
 
 ;; (define-judgement-form λh
@@ -125,40 +166,44 @@
   [(gen bool)
    ,(generate-term λh b 5)
    (clause-name "Gen-Bool")]
+  [(gen (list t))
+   (nil @ t) ;; FIXME
+   ;; ,(generate-term λh  5)
+   (clause-name "Gen-List")]
   [(gen (t_1 -> t_2))
-                      ;; how to say fresh k?
-   ,(generate-term λh (λ x (v-box k)) 5)
+                      ;; how to say fresh h?
+   ,(generate-term λh (λ x h) 5)
    (clause-name "Gen-Fun")]
-  [(gen (t-box x_1))
-                      ;; how to say fresh k?
-   ,(generate-term λh (v-box k) 5)
+  [(gen a)
+                      ;; how to say fresh h?
+   ,(generate-term λh h 5)
    (clause-name "Gen-Hole")])
 
 (define-metafunction λh
   narrow : e t vsu -> (v vsu) or (stuck-t vsu)
   ;; any value narrows to a type-hole
-  [(narrow v (t-box k) vsu)
+  [(narrow v a vsu)
    (v vsu)
    (clause-name "Narrow-Type-Hole")]
   
   ;; a value-hole that is in the vsu narrows to the same value
-  [(narrow (v-box k) t vsu)
+  [(narrow h t vsu)
    (v vsu)
-   (where v (vsu-lookup vsu k))
+   (where v (vsu-lookup vsu h))
    (side-condition (term v))
    ;; provided that the narrowing type matches (thanks redex!)
    (side-condition (equal? (term (type-of v)) (term t)))
    (clause-name "Narrow-Hole-Known-Good")]
   ;; otherwise we're stuck
-  [(narrow (v-box k) t vsu)
+  [(narrow h t vsu)
    (stuck-t vsu)
-   (where v (vsu-lookup vsu k))
+   (where v (vsu-lookup vsu h))
    (side-condition (term v))
    (clause-name "Narrow-Hole-Known-Bad")]
   
   ;; a value-hole narrows to a random value of the given type
-  [(narrow (v-box k) t vsu)
-   (v (vsu-extend vsu (k v)))
+  [(narrow h t vsu)
+   (v (vsu-extend vsu (h v)))
    (where v (gen t))
    (clause-name "Narrow-Hole-Good")]
 
@@ -184,15 +229,32 @@
    (clause-name "Narrow-Fun-Good")]
   [(narrow v (t_1 -> t_2) vsu)
    (stuck-t vsu)
-   (clause-name "Narrow-Fun-Bad")])
+   (clause-name "Narrow-Fun-Bad")]
+
+  [(narrow (nil @ t) (list t) vsu)
+   ((nil @ t) vsu)
+   (clause-name "Narrow-Nil-Good")]
+  [(narrow v (list t) vsu)
+   (stuck-t vsu)
+   (clause-name "Narrow-Nil-Bad")]
+
+  [(narrow (cons @ t v_1 v_2) (list t) vsu)
+   ((cons @ t v_1 v_2) vsu)
+   (side-condition (term (type-compat (type-of v_1) t)))
+   (side-condition (term (type-compat (type-of v_2) (list t))))
+   (clause-name "Narrow-Cons-Good")]
+  [(narrow v (list t) vsu)
+   (stuck-t vsu)
+   (clause-name "Narrow-Cons-Bad")]
+  )
 
 (module+ test
   (test-equal (term (narrow 1 int ())) '(1 ()))
   (test-equal (term (narrow 1 bool ())) '(stuck-t ()))
-  (test-equal (term (narrow (v-box k) bool ((k true)))) '(true ((k true))))
-  (test-equal (term (narrow (v-box k) int ((k true)))) '(stuck-t ((k true))))
+  (test-equal (term (narrow h bool ((h true)))) '(true ((h true))))
+  (test-equal (term (narrow h int ((h true)))) '(stuck-t ((h true))))
 
-  (test-predicate integer? (first (term (narrow (v-box k) int ()))))
+  (test-predicate integer? (first (term (narrow h int ()))))
   )
 
 (define -->λh
@@ -201,52 +263,122 @@
    #:domain Config
    
    ;; Plus
-   (--> [(in-hole C (v_1 + v_2)) vsu_1]
-        [(in-hole C ,(+ (term n_1) (term n_2))) vsu_3]
+   (--> [(in-hole E (v_1 + v_2)) vsu_1]
+        [(in-hole E ,(+ (term n_1) (term n_2))) vsu_3]
         (where (n_1 vsu_2) (narrow v_1 int vsu_1))
         (where (n_2 vsu_3) (narrow v_2 int vsu_1))
         "E-Plus-Good")
-   (--> [(in-hole C (v_1 + v_2)) vsu_1]
+   (--> [(in-hole E (v_1 + v_2)) vsu_1]
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 int vsu_1))
         "E-Plus-Bad1")
-   (--> [(in-hole C (v_1 + v_2)) vsu_1]
+   (--> [(in-hole E (v_1 + v_2)) vsu_1]
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_2 int vsu_1))
         "E-Plus-Bad2")
 
    ;; If
-   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
-        [(in-hole C e_1) vsu_2]
+   (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
+        [(in-hole E e_1) vsu_2]
         (where (true vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Good1")
-   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
-        [(in-hole C e_2) vsu_2]
+   (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
+        [(in-hole E e_2) vsu_2]
         (where (false vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Good2")
-   (--> [(in-hole C (ite v_1 e_1 e_2)) vsu_1]
+   (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 bool vsu_1))
         "E-If-Bad")
 
    ;; App
-   (--> [(in-hole C (v_1 v_2)) vsu_1]
-        [(in-hole C (substitute e_1 x_1 v_2)) vsu_2]
-        (where ((λ x_1 e_1) vsu_2) (narrow v_1 ((t-box k_1) -> (t-box k_2)) vsu_1))
+   (--> [(in-hole E (v_1 v_2)) vsu_1]
+        [(in-hole E (substitute e_1 x_1 v_2)) vsu_2]
+        (where ((λ x_1 e_1) vsu_2) (narrow v_1 (a_1 -> a_2) vsu_1))
         (fresh k_1 k_2)
         "E-App-Good")
-   (--> [(in-hole C (v_1 v_2)) vsu_1]
+   (--> [(in-hole E (v_1 v_2)) vsu_1]
         [stuck-t vsu_2]
-        (where (stuck-t vsu_2) (narrow v_1 ((t-box k_1) -> (t-box k_2)) vsu_1))
+        (where (stuck-t vsu_2) (narrow v_1 (a_1 -> a_2) vsu_1))
         (fresh k_1 k_2)
         "E-App-Bad")
 
+   ;; Cons
+   (--> [(in-hole E (cons v_1 v_2)) vsu_1]
+        [(in-hole E (cons @ t v_1 v_3)) vsu_2]
+        (where t (type-of v_1))
+        (where (v_3 vsu_2) (narrow v_2 (list t) vsu_1))
+        "E-Cons-Good")
+   (--> [(in-hole E (cons v_1 v_2)) vsu_1]
+        [stuck-t vsu_2]
+        (where t (type-of v_1))
+        (where (stuck-t vsu_2) (narrow v_2 (list t) vsu_1))
+        "E-Cons-Bad")
+
+   ;; Nil
+   (--> [(in-hole E nil) vsu]
+        [(in-hole E (nil @ a)) vsu]
+        (fresh k))
+
+   ;; Hd
+   (--> [(in-hole E (hd v_1)) vsu_1]
+        [(in-hole E v_2) vsu_2]
+        (where ((cons @ t v_2 v_3) vsu_2) (narrow v_1 (list a) vsu_1))
+        (fresh k)
+        "E-Hd-Good")
+   (--> [(in-hole E (hd v_1)) vsu_1]
+        [stuck-t vsu_2]
+        (where (stuck-t vsu_2) (narrow v_1 (list a) vsu_1))
+        (fresh k)
+        "E-Hd-Bad1")
+   (--> [(in-hole E (hd v_1)) vsu_1]
+        [stuck-e vsu_2]
+        (where ((nil @ t) vsu_2) (narrow v_1 (list a) vsu_1))
+        (fresh k)
+        "E-Hd-Bad2")
+
+
    ;; Match
-   ;; (--> [(in-hole C (match v_1 with (p ...))) vsu_1]
-   ;;      [(in-hole C (subst su e)) vsu_2]
+   ;; (--> [(in-hole E (match v_1 with (p ...))) vsu_1]
+   ;;      [(in-hole E (subst su e)) vsu_2]
    ;;      (where ((v_2 vsu_2) (narrow v_1 (type-of-pattern (p ...)))))
-   ;;      (where (e su) (matching-pattern v_2 (p ...))))
+   ;;      (where (e su) (matching-pattern v_2 (p ...)))
+   ;;      "E-Match-Good")
    ))
+
+;; (define-metafunction λh
+;;   matches-pattern : v ps -> ((x v) ...) or stuck
+;;   [(matches-pattern (c vs) ((c xs) : _))
+;;    (safe-zip xs vs)]
+;;   [(matches-pattern (c_1 vs) ((c_2 xs) : ps))
+;;    (matches-pattern (c_1 vs) ps)]
+;;   [(matches-pattern (c vs) nil)
+;;    stuck-e]
+;;   ;; #:mode (matches-pattern? I I O)
+;;   ;; #:contract (matches-pattern? )
+;;   )
+
+;; (define-metafunction λh
+;;   safe-zip : xs vs -> ((x v) ...) or stuck
+;;   [(safe-zip nil nil) ()]
+;;   [(safe-zip nil _)   stuck-t]
+;;   [(safe-zip _   nil) stuck-t]
+;;   [(safe-zip (x : xs) (v : vs)) stuck
+;;    (where stuck (safe-zip xs vs))]
+;;   [(safe-zip (x : xs) (v : vs)) ((x v) (x_1 v_1) ...)
+;;    (where ((x_1 v_1) ...) (safe-zip xs vs))])
+
+;; (module+ test
+;;   ;; safe-zip
+;;   (test-equal (term (safe-zip (x : (y : nil)) (1 : (2 : nil)))) (term ((x 1) (y 2))))
+;;   (test-equal (term (safe-zip (x : (y : nil)) (1 : nil)))       (term stuck-t))
+
+;;   ;; matches-pattern
+;;   (test-equal (term (matches-pattern (c nil)       ((c nil) : nil)))       (term ()))
+;;   (test-equal (term (matches-pattern (c (1 : nil)) ((c nil) : nil)))       (term stuck-t))
+;;   (test-equal (term (matches-pattern (c nil)       ((c (x : nil)) : nil))) (term stuck-t))
+;;   (test-equal (term (matches-pattern (c nil)       nil))                   (term stuck-e))
+;;   )
 
 (module+ test
   ;; E-Plus
@@ -320,7 +452,7 @@
    (closed b xs)]
 
   ;; [---------------------------
-  ;;  (closed (v-box k) xs)]
+  ;;  (closed h xs)]
 
   [(closed e (x : xs))
    ---------------------------
@@ -336,7 +468,18 @@
 
   [(closed e_1 xs) (closed e_2 xs) (closed e_3 xs)
    ---------------------------
-   (closed (ite e_1 e_2 e_3) xs)])
+   (closed (ite e_1 e_2 e_3) xs)]
+
+  [---------------------------
+   (closed nil xs)]
+
+  [(closed e_1 xs) (closed e_2 xs)
+   ---------------------------
+   (closed (cons e_1 e_2) xs)]
+
+  [(closed e xs)
+   ---------------------------
+   (closed (hd e) xs)])
 
 (define-judgment-form λh
   #:mode (used I I)
@@ -353,7 +496,7 @@
   ;;  (used b (x ...))]
 
   ;; [---------------------------
-  ;;  (closed (v-box k) (x ...))]
+  ;;  (closed h (x ...))]
 
   [(used e (x : xs))
    ---------------------------
@@ -382,7 +525,18 @@
   [(used e_3 xs)
    ---------------------------
    (used (ite e_1 e_2 e_3) xs)]
-)
+
+  [(used e_1 xs)
+   ---------------------------
+   (used (cons e_1 e_2) xs)]
+
+  [(used e_2 xs)
+   ---------------------------
+   (used (cons e_1 e_2) xs)]
+
+  [(used e xs)
+   ---------------------------
+   (used (hd e) xs)])
 
 (define-judgment-form λh
   #:mode (closed-used I I)
@@ -410,7 +564,7 @@
                      ;;(printf "checking ~s\n" (term (λ x e)))
                      (implies (and ; (judgment-holds (closed e (x)))
                                    ; (judgment-holds (closed v ()))
-                                   (judgment-holds (gets-stuck-t? ((λ x e) (v-box k)))))
+                                   (judgment-holds (gets-stuck-t? ((λ x e) h))))
                               ;; (judgment-holds (gets-stuck-t? ((λ x e) 0)))
                               (and 
                                (ormap (λ (i)
@@ -432,7 +586,7 @@
       ;;         (covered-cases cg))
       (covered-cases cr)
       ))
-    ;; #:satisfying (gets-stuck-t? ((λ x e)) (v-box k))
+    ;; #:satisfying (gets-stuck-t? ((λ x e)) h)
     ;; (judgment-holds
     ;;  (gets-stuck-t? ((λ x e) v))))
 )
