@@ -215,10 +215,19 @@
   [(gen bool)
    ,(generate-term λh b 5)
    (clause-name "Gen-Bool")]
+  ;; FIXME: how can i write a non-deterministic metafunction in redex?
+  [(gen (list int))
+   (cons @ int 1 (cons @ int 2 (nil @ int)))
+   (clause-name "Gen-List-Int")]
+  [(gen (list bool))
+   (cons @ bool true (nil @ bool))
+   (clause-name "Gen-List-Bool")]
   [(gen (list t))
-   (nil @ t) ;; FIXME
-   ;; ,(generate-term λh  5)
-   (clause-name "Gen-List")]
+   (nil @ t)
+   (clause-name "Gen-List-T")]
+  ;; [(gen (list t))
+  ;;  ,(second (generate-term λh #:satisfying (wf-list v t) 5))
+  ;;  (clause-name "Gen-List")]
   [(gen (t_1 * t_2))
    (pair (@ t_1 t_2) v_1 v_2)
    (where v_1 (gen t_1))
