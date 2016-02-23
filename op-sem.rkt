@@ -2,6 +2,12 @@
 (require redex)
 (require racket/list)
 
+;; gen is non-deterministic, so turn off redex's caching
+(caching-enabled? #f)
+(check-redundancy #t)
+
+;; (current-traced-metafunctions '(gen narrow))
+
 (define-language λh
   ;; configurations (for the reduction relation)
   (Config (e vsu) (stuck vsu))
@@ -55,7 +61,7 @@
   (x variable-not-otherwise-mentioned)
   ;; value substitutions
   (vsu ((h_!_ v) ...))
-  (h variable-not-otherwise-mentioned)
+  (h (variable-prefix h_))
   (a variable-not-otherwise-mentioned)
 
   ;; ;; constructors
@@ -215,14 +221,15 @@
   [(gen bool)
    ,(generate-term λh b 5)
    (clause-name "Gen-Bool")]
-  ;; FIXME: how can i write a non-deterministic metafunction in redex?
   [(gen (list int))
-   (cons @ int 1 (cons @ int 2 (nil @ int)))
+   ,(second (generate-term λh #:satisfying (wf-list v int) 5))
    (clause-name "Gen-List-Int")]
   [(gen (list bool))
-   (cons @ bool true (nil @ bool))
+   ,(second (generate-term λh #:satisfying (wf-list v bool) 5))
    (clause-name "Gen-List-Bool")]
   [(gen (list t))
+   ;; FIXME: how can i refer to the `t` bound by `list t`?
+   ;; ,(second (eval `(generate-term λh #:satisfying (wf-list v t) 5)))
    (nil @ t)
    (clause-name "Gen-List-T")]
   ;; [(gen (list t))
@@ -325,16 +332,21 @@
 (module+ test
   (test-equal (term (narrow 1 int ())) '(1 ()))
   (test-equal (term (narrow 1 bool ())) '(stuck-t ()))
-  (test-equal (term (narrow h bool ((h true)))) '(true ((h true))))
-  (test-equal (term (narrow h int ((h true)))) '(stuck-t ((h true))))
+  (test-equal (term (narrow h_0 bool ((h_0 true)))) '(true ((h_0 true))))
+  (test-equal (term (narrow h_0 int ((h_0 true)))) '(stuck-t ((h_0 true))))
 
   (test-equal (term (narrow (nil @ int) (list int) ())) '((nil @ int) ()))
   (test-equal (term (narrow (nil @ int) (list bool) ())) '(stuck-t ()))
   (test-equal (term (narrow (cons @ int 1 (nil @ int)) (list int) ())) '((cons @ int 1 (nil @ int)) ()))
   (test-equal (term (narrow (cons @ int 1 (nil @ int)) (list bool) ())) '(stuck-t ()))
 
-  (test-predicate integer? (first (term (narrow h int ()))))
+  (test-predicate integer? (first (term (narrow h_0 int ()))))
   )
+
+(define-metafunction λh
+  choose-branch : b e e -> e
+  [(choose-branch true e_1 e_2) e_1]
+  [(choose-branch false e_1 e_2) e_2])
 
 (define -->λh
   (reduction-relation λh
@@ -356,14 +368,33 @@
         "E-Plus-Bad2")
 
    ;; If
+
+   ;; this is different from the latex semantics in that
+   ;; we separate the narrowing of the condition from the
+   ;; reduction of the if. redex seems to need this, otherwise
+   ;; due to the non-deterministic gen, it can try to reduce
+   ;; both via true and false, and get stuck
+
+   ;; (--> [(in-hole E (ite true e_1 e_2)) vsu_1]
+   ;;      [(in-hole E e_1) vsu_1]
+   ;;      "E-If-1")
+   ;; (--> [(in-hole E (ite false e_1 e_2)) vsu_1]
+   ;;      [(in-hole E e_2) vsu_1]
+   ;;      "E-If-2")
+   ;; (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
+   ;;      [(in-hole E (ite b   e_1 e_2)) vsu_2]
+   ;;      (where (b vsu_2) (narrow v_1 bool vsu_1))
+   ;;      "E-If-Good")
+
    (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
-        [(in-hole E e_1) vsu_2]
-        (where (true vsu_2) (narrow v_1 bool vsu_1))
+        [(in-hole E e_3) vsu_2]
+        (where (b vsu_2) (narrow v_1 bool vsu_1))
+        (where e_3 (choose-branch b e_1 e_2))
         "E-If-Good1")
-   (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
-        [(in-hole E e_2) vsu_2]
-        (where (false vsu_2) (narrow v_1 bool vsu_1))
-        "E-If-Good2")
+   ;; (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
+   ;;      [(in-hole E e_2) vsu_2]
+   ;;      (where (false vsu_2) (narrow v_1 bool vsu_1))
+   ;;      "E-If-Good2")
    (--> [(in-hole E (ite v_1 e_1 e_2)) vsu_1]
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 bool vsu_1))
@@ -463,8 +494,8 @@
   (test--> -->λh (term ((1    + true) ())) (term (stuck-t ())))
   (test--> -->λh (term ((true + 2   ) ())) (term (stuck-t ())))
   ;; E-If
-  (test--> -->λh (term ((ite true  1 2) ())) (term (1     ())))
-  (test--> -->λh (term ((ite false 1 2) ())) (term (2     ())))
+  (test-->> -->λh (term ((ite true  1 2) ())) (term (1     ())))
+  (test-->> -->λh (term ((ite false 1 2) ())) (term (2     ())))
   (test--> -->λh (term ((ite 1     1 2) ())) (term (stuck-t ())))
   ;; E-App
   (test--> -->λh (term (((λ x x) 1) ())) (term (1     ())))
@@ -528,8 +559,8 @@
   [---------------------------
    (closed b xs)]
 
-  ;; [---------------------------
-  ;;  (closed h xs)]
+  [---------------------------
+   (closed h xs)]
 
   [(closed e (x : xs))
    ---------------------------
@@ -641,7 +672,7 @@
                      ;; (printf "checking ~s\n" (term (λ x e)))
                      (implies (and ; (judgment-holds (closed e (x)))
                                    ; (judgment-holds (closed v ()))
-                                   (judgment-holds (gets-stuck-t? ((λ x e) h))))
+                                   (judgment-holds (gets-stuck-t? ((λ x e) h_0))))
                               ;; (judgment-holds (gets-stuck-t? ((λ x e) 0)))
                               (and 
                                (ormap (λ (i)
@@ -661,7 +692,9 @@
                                       (range 10))
                                (ormap (λ (i)
                                         (judgment-holds (gets-stuck-t? ((λ x e)
-                                                                        ,(second (generate-term λh #:satisfying (type-of v fun) 5))))))
+                                                                        ;; ,(second (generate-term λh #:satisfying (type-of v fun) 5))))))
+                                                                        ;; dont generate arbitrary functions, may be ill-formed, e.g not closed
+                                                                        (λ x h_50)))))
                                       (range 10))
                               ))
                    ; #:source -->λh
