@@ -7,7 +7,7 @@
   (Config (e vsu) (stuck vsu))
 
   ;; expressions
-  (e v
+  (e v ;; n b (λ x e) ;; same as values
      x
      (e e)
      (e + e)
@@ -15,6 +15,15 @@
      (cons e e)
      nil
      (hd e)
+
+     ;; (pair e e)
+     ;; (fst e)
+     ;; (snd e)
+     ;; (inl e)
+     ;; (inr e)
+     ;; (getl e)
+     ;; (getr e)
+
      ;(fix e)
      ;; (c es)
      ;; (match e with alts)
@@ -26,13 +35,21 @@
   ;; values
   (v n b (λ x e) h
      (cons @ t v v) (nil @ t) ;; `t` is the *element* type
+
+     ;; (pair (@ t t) v v) (inl @ t v) (inr @ t v)
      ;;(c vs)
      )
   (n number)
   (b true false)
   ;; types
-  (t int bool (t -> t) a
+  (t int bool fun a
      (list t)
+
+     (t * t)
+     (t + t)
+     )
+  (t-gen int bool fun
+     (list t-gen)
      )
   ;; variables
   (x variable-not-otherwise-mentioned)
@@ -57,13 +74,19 @@
      (cons E e)
      (cons v E)
      (hd E)
+
+     ;; (pair E e)
+     ;; (pair v E)
+     ;; (inl E)
+     ;; (inr E)
+
      ;; (c E)
      ;; (E : es)
      ;; (v : E)
      hole)
 
   ;; type contexts
-  (T (T -> t) (t -> T) hole)
+  ;; (T (T -> t) (t -> T) hole)
 
   ;; lists, ugh..
   (xs nil (x : xs))
@@ -115,14 +138,32 @@
 
 
 
-(define-metafunction λh
-  type-of : e -> t
-  [(type-of n) int]
-  [(type-of b) bool]
-  [(type-of (nil @ t)) t]
-  [(type-of (cons @ t v_1 v_2)) t]
-  [(type-of (λ x e)) (a -> (type-of e))] ;; fresh a?
-  [(type-of e) a] ;; fresh a?
+(define-judgment-form λh
+  #:mode (type-of I O)
+  #:contract (type-of v t)
+  ;; type-of : v -> t
+  [(type-of n int)]
+  [(type-of b bool)]
+  [(type-of (nil @ t) (list t))]
+  [(type-of (cons @ t v_1 v_2) (list t))]
+
+  [(type-of (pair (@ t_1 t_2) _ _) (t_1 * t_2))]
+  [(type-of (inl (@ t_1 t_2) _) (t_1 + t_2))]
+  [(type-of (inr (@ t_1 t_2) _) (t_1 + t_2))]
+
+  [(type-of (λ x e) fun)]
+
+  [(type-of h h)] ;; FIXME: this is an ugly pun
+  )
+
+(define-judgment-form λh
+  #:mode (wf-list I I)
+  #:contract (wf-list v t-gen)
+  [----------------
+   (wf-list (nil @ t-gen) t-gen)]
+  [(type-of v_1 t-gen) (wf-list v_2 t-gen)
+   --------------------
+   (wf-list (cons @ t-gen v_1 v_2) t-gen)]
   )
 
 ;; TODO: need to produce substitution and propagate. suspicious that
@@ -143,6 +184,14 @@
   [(type-compat t_1 t_3) (type-compat t_2 t_4)
    ------------------
    (type-compat (t_1 -> t_2) (t_3 -> t_4))]
+
+  [(type-compat t_1 t_3) (type-compat t_2 t_4)
+   -------------------------
+   (type-compat (t_1 * t_2) (t_3 * t_4))]
+
+  [(type-compat t_1 t_3) (type-compat t_2 t_4)
+   -------------------------
+   (type-compat (t_1 + t_2) (t_3 + t_4))]
 
   [------------------
    (type-compat a t)]
@@ -170,7 +219,12 @@
    (nil @ t) ;; FIXME
    ;; ,(generate-term λh  5)
    (clause-name "Gen-List")]
-  [(gen (t_1 -> t_2))
+  [(gen (t_1 * t_2))
+   (pair (@ t_1 t_2) v_1 v_2)
+   (where v_1 (gen t_1))
+   (where v_2 (gen t_2))
+   (clause-name "Gen-Pair")]
+  [(gen fun)
                       ;; how to say fresh h?
    ,(generate-term λh (λ x h) 5)
    (clause-name "Gen-Fun")]
@@ -180,7 +234,7 @@
    (clause-name "Gen-Hole")])
 
 (define-metafunction λh
-  narrow : e t vsu -> (v vsu) or (stuck-t vsu)
+  narrow : v t vsu -> (v vsu) or (stuck-t vsu)
   ;; any value narrows to a type-hole
   [(narrow v a vsu)
    (v vsu)
@@ -192,7 +246,7 @@
    (where v (vsu-lookup vsu h))
    (side-condition (term v))
    ;; provided that the narrowing type matches (thanks redex!)
-   (side-condition (equal? (term (type-of v)) (term t)))
+   (judgment-holds (type-of v t))
    (clause-name "Narrow-Hole-Known-Good")]
   ;; otherwise we're stuck
   [(narrow h t vsu)
@@ -224,28 +278,40 @@
    (clause-name "Narrow-Bool-Bad")]
 
   ;; and functions to functions
-  [(narrow (λ x e) (t_1 -> t_2) vsu)
+  [(narrow (λ x e) fun vsu)
    ((λ x e) vsu)
    (clause-name "Narrow-Fun-Good")]
-  [(narrow v (t_1 -> t_2) vsu)
+  [(narrow v fun vsu)
    (stuck-t vsu)
    (clause-name "Narrow-Fun-Bad")]
 
-  [(narrow (nil @ t) (list t) vsu)
-   ((nil @ t) vsu)
+  [(narrow (nil @ t_1) (list t_2) vsu)
+   ((nil @ t_1) vsu)
+   ;; FIXME: apply resulting su
+   (side-condition (term (type-compat t_1 t_2)))
    (clause-name "Narrow-Nil-Good")]
   [(narrow v (list t) vsu)
    (stuck-t vsu)
    (clause-name "Narrow-Nil-Bad")]
 
-  [(narrow (cons @ t v_1 v_2) (list t) vsu)
-   ((cons @ t v_1 v_2) vsu)
-   (side-condition (term (type-compat (type-of v_1) t)))
-   (side-condition (term (type-compat (type-of v_2) (list t))))
+  [(narrow (cons @ t_1 v_1 v_2) (list t_2) vsu)
+   ((cons @ t_1 v_1 v_2) vsu)
+   ;; FIXME: apply resulting su
+   (side-condition (term (type-compat t_1 t_2)))
    (clause-name "Narrow-Cons-Good")]
   [(narrow v (list t) vsu)
    (stuck-t vsu)
    (clause-name "Narrow-Cons-Bad")]
+
+  [(narrow (pair (@ t_1 t_2) v_1 v_2) (t_3 * t_4) vsu)
+   (pair (@ t_1 t_2) v_1 v_2)
+   (side-condition (term (type-compat t_1 t_3)))
+   (side-condition (term (type-compat t_2 t_4)))
+   (clause-name "Narrow-Pair-Good")]
+  [(narrow v (t_1 * t_2) vsu)
+   (stuck-t vsu)
+   (clause-name "Narrow-Pair-Bad")]
+
   )
 
 (module+ test
@@ -258,8 +324,7 @@
   )
 
 (define -->λh
-  (reduction-relation
-   λh
+  (reduction-relation λh
    #:domain Config
    
    ;; Plus
@@ -294,47 +359,46 @@
    ;; App
    (--> [(in-hole E (v_1 v_2)) vsu_1]
         [(in-hole E (substitute e_1 x_1 v_2)) vsu_2]
-        (where ((λ x_1 e_1) vsu_2) (narrow v_1 (a_1 -> a_2) vsu_1))
-        (fresh k_1 k_2)
+        (where ((λ x_1 e_1) vsu_2) (narrow v_1 fun vsu_1))
         "E-App-Good")
    (--> [(in-hole E (v_1 v_2)) vsu_1]
         [stuck-t vsu_2]
-        (where (stuck-t vsu_2) (narrow v_1 (a_1 -> a_2) vsu_1))
-        (fresh k_1 k_2)
+        (where (stuck-t vsu_2) (narrow v_1 fun vsu_1))
         "E-App-Bad")
 
    ;; Cons
    (--> [(in-hole E (cons v_1 v_2)) vsu_1]
         [(in-hole E (cons @ t v_1 v_3)) vsu_2]
-        (where t (type-of v_1))
+        (judgment-holds (type-of v_1 t))
         (where (v_3 vsu_2) (narrow v_2 (list t) vsu_1))
         "E-Cons-Good")
    (--> [(in-hole E (cons v_1 v_2)) vsu_1]
         [stuck-t vsu_2]
-        (where t (type-of v_1))
+        (judgment-holds (type-of v_1 t))
         (where (stuck-t vsu_2) (narrow v_2 (list t) vsu_1))
         "E-Cons-Bad")
 
    ;; Nil
    (--> [(in-hole E nil) vsu]
         [(in-hole E (nil @ a)) vsu]
-        (fresh k))
+        (fresh a)
+        "E-Nil")
 
    ;; Hd
    (--> [(in-hole E (hd v_1)) vsu_1]
         [(in-hole E v_2) vsu_2]
         (where ((cons @ t v_2 v_3) vsu_2) (narrow v_1 (list a) vsu_1))
-        (fresh k)
+        (fresh a)
         "E-Hd-Good")
    (--> [(in-hole E (hd v_1)) vsu_1]
         [stuck-t vsu_2]
         (where (stuck-t vsu_2) (narrow v_1 (list a) vsu_1))
-        (fresh k)
+        (fresh a)
         "E-Hd-Bad1")
    (--> [(in-hole E (hd v_1)) vsu_1]
         [stuck-e vsu_2]
         (where ((nil @ t) vsu_2) (narrow v_1 (list a) vsu_1))
-        (fresh k)
+        (fresh a)
         "E-Hd-Bad2")
 
 
@@ -561,7 +625,7 @@
                    #:satisfying (closed-used e (x : nil))
                    ; #:in-order
                    (begin
-                     ;;(printf "checking ~s\n" (term (λ x e)))
+                     ;; (printf "checking ~s\n" (term (λ x e)))
                      (implies (and ; (judgment-holds (closed e (x)))
                                    ; (judgment-holds (closed v ()))
                                    (judgment-holds (gets-stuck-t? ((λ x e) h))))
@@ -575,8 +639,16 @@
                                 (judgment-holds (gets-stuck-t? ((λ x e) true)))
                                 (judgment-holds (gets-stuck-t? ((λ x e) false))))
                                (ormap (λ (i)
+                                        (let [(v (second (generate-term λh #:satisfying (wf-list v int) 5)))]
+                                          ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
+                                          (judgment-holds (gets-stuck-t? ((λ x e)
+                                                                          ;; FIXME: redex really doesn't want to generate proper lists of arbitrary types...
+                                                                          ;; so we approximate with int lists
+                                                                          ,v)))))
+                                      (range 10))
+                               (ormap (λ (i)
                                         (judgment-holds (gets-stuck-t? ((λ x e)
-                                                                      ,(generate-term λh (λ x e) #:i-th i)))))
+                                                                        ,(second (generate-term λh #:satisfying (type-of v fun) 5))))))
                                       (range 10))
                               ))
                    ; #:source -->λh
