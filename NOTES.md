@@ -75,8 +75,8 @@
 [ ] keep going after MLExceptions
   - ml exceptions are annoying, because they can prevent access to the ill-typed code, e.g.
 ```
-let interpSmall (movelist : move list) : (float*float) list = 
-  let interpSmallStep movelist x y dir : move list * float * float * float = 
+let interpSmall (movelist : move list) : (float*float) list =
+  let interpSmallStep movelist x y dir : move list * float * float * float =
   match movelist with
     [] -> raise Unimplemented
   | Home::tl -> raise Unimplemented
@@ -86,7 +86,7 @@ let interpSmall (movelist : move list) : (float*float) list =
   in
   let rec loop movelist x y dir acc =
     raise Unimplemented
-  in 
+  in
   List.rev (loop movelist 0.0 0.0 0.0 [(0.0,0.0)])
 ```
     - `List.rev (loop ...)` is ill-typed, but we can't reach it since
@@ -101,7 +101,7 @@ let interpSmall (movelist : move list) : (float*float) list =
       - may only be thrown on a particular branch
     - keep log of tests that threw MLException
       - may indicate that type error is unreachable
-  
+
 [X] don't try to specialize datacons with multiple arguments, just let them be tuples...
 ```
 # type ('a,'b) myoption = Mynone | Mysome of ('a * 'b);;
@@ -167,7 +167,7 @@ wwhile := fun (f,b) ->
 3	    true
 4	  else
 5	    n * fac (n - 1);;
-6	
+6
 7	fac 1;;
 
 error: 5: could not match 'int' with 'bool' in
@@ -185,7 +185,7 @@ error: 5: could not match 'int' with 'bool' in
 3	    true
 4	  else
 5	    n * fac (n - 1);;
-6	
+6
 7	fac 1;;
 
 error: 5: could not match 'int' with 'bool' in
@@ -204,7 +204,7 @@ error: 5: could not match 'int' with 'bool' in
 3	    true
 4	  else
 5	    n * fac (n - 1);;
-6	
+6
 7	fac 1;;
 
 error: 5: could not match 'int' with 'bool' in
@@ -226,7 +226,7 @@ error: 5: could not match 'int' with 'bool' in
 3	    true
 4	  else
 5	    n * fac (n - 1);;
-6	
+6
 7	fac 1;;
 
 error: could not match 'int' with 'bool' in
@@ -248,7 +248,7 @@ error: could not match 'int' with 'bool' in
 3	    true
 4	  else
 5	    n * fac (n - 1);;
-6	
+6
 7	fac 1;;
 
 error: could not match 'int' with 'bool' in
@@ -340,20 +340,20 @@ error: could not match 'string' with 'bool' in
 ------------------------------------------------------------
  1  let explode s =
  2    let rec go i =
- 3      if i >= (String.length s) 
- 4      then [] 
- 5      else (s.[i]) :: (go (i + 1)) 
+ 3      if i >= (String.length s)
+ 4      then []
+ 5      else (s.[i]) :: (go (i + 1))
  6    in go 0;;
  7
  8  let listReverse l =
- 9    let rec helper xs = function 
-10      | [] -> xs 
-11      | hd::tl -> helper (hd :: xs) tl 
+ 9    let rec helper xs = function
+10      | [] -> xs
+11      | hd::tl -> helper (hd :: xs) tl
 12    in helper [];;
 13
 14  let palindrome w =
-15    if (listReverse (explode w)) = (explode w) 
-16    then true 
+15    if (listReverse (explode w)) = (explode w)
+16    then true
 17    else false;;
 18
 19  palindrome "a";;
@@ -370,20 +370,20 @@ error: could not match ''a -> 'b' with 'char list' in
 ------------------------------------------------------------
  1  let explode s =
  2    let rec go i =
- 3      if i >= (String.length s) 
- 4      then [] 
- 5      else (s.[i]) :: (go (i + 1)) 
+ 3      if i >= (String.length s)
+ 4      then []
+ 5      else (s.[i]) :: (go (i + 1))
  6    in go 0;;
  7
  8  let listReverse l =
- 9    let rec helper xs = function 
-10      | [] -> xs 
-11      | hd::tl -> helper (hd :: xs) tl 
+ 9    let rec helper xs = function
+10      | [] -> xs
+11      | hd::tl -> helper (hd :: xs) tl
 12    in helper [];;
 13
 14  let palindrome w =
-15    if (listReverse (explode w)) = (explode w) 
-16    then true 
+15    if (listReverse (explode w)) = (explode w)
+16    then true
 17    else false;;
 18
 19  palindrome "a";;
@@ -402,20 +402,20 @@ error: could not match ''a -> 'b' with 'char list' in
 ------------------------------------------------------------
  1  let explode s =
  2    let rec go i =
- 3      if i >= (String.length s) 
- 4      then [] 
- 5      else (s.[i]) :: (go (i + 1)) 
+ 3      if i >= (String.length s)
+ 4      then []
+ 5      else (s.[i]) :: (go (i + 1))
  6    in go 0;;
  7
  8  let listReverse l =
- 9    let rec helper xs = function 
-10      | [] -> xs 
-11      | hd::tl -> helper (hd :: xs) tl 
+ 9    let rec helper xs = function
+10      | [] -> xs
+11      | hd::tl -> helper (hd :: xs) tl
 12    in helper [];;
 13
 14  let palindrome w =
-15    if (listReverse (explode w)) = (explode w) 
-16    then true 
+15    if (listReverse (explode w)) = (explode w)
+16    then true
 17    else false;;
 18
 19  palindrome "a";;
@@ -435,20 +435,20 @@ error: could not match ''a -> 'b' with 'char list' in
 ------------------------------------------------------------
  1  let explode s =
  2    let rec go i =
- 3      if i >= (String.length s) 
- 4      then [] 
- 5      else (s.[i]) :: (go (i + 1)) 
+ 3      if i >= (String.length s)
+ 4      then []
+ 5      else (s.[i]) :: (go (i + 1))
  6    in go 0;;
  7
  8  let listReverse l =
- 9    let rec helper xs = function 
-10      | [] -> xs 
-11      | hd::tl -> helper (hd :: xs) tl 
+ 9    let rec helper xs = function
+10      | [] -> xs
+11      | hd::tl -> helper (hd :: xs) tl
 12    in helper [];;
 13
 14  let palindrome w =
-15    if (listReverse (explode w)) = (explode w) 
-16    then true 
+15    if (listReverse (explode w)) = (explode w)
+16    then true
 17    else false;;
 18
 19  palindrome "a";;
@@ -472,20 +472,20 @@ error: could not match ''a -> 'b' with 'char list' in
 ------------------------------------------------------------
  1  let explode s =
  2    let rec go i =
- 3      if i >= (String.length s) 
- 4      then [] 
- 5      else (s.[i]) :: (go (i + 1)) 
+ 3      if i >= (String.length s)
+ 4      then []
+ 5      else (s.[i]) :: (go (i + 1))
  6    in go 0;;
  7
  8  let listReverse l =
- 9    let rec helper xs = function 
-10      | [] -> xs 
-11      | hd::tl -> helper (hd :: xs) tl 
+ 9    let rec helper xs = function
+10      | [] -> xs
+11      | hd::tl -> helper (hd :: xs) tl
 12    in helper [];;
 13
 14  let palindrome w =
-15    if (listReverse (explode w)) = (explode w) 
-16    then true 
+15    if (listReverse (explode w)) = (explode w)
+16    then true
 17    else false;;
 18
 19  palindrome "a";;
@@ -662,7 +662,7 @@ helper []
 - [X] debug filter example!!!
   - `let` binder seems to be problematic
 
-- [ ] visualize environment when you click on a node
+- [X] visualize environment when you click on a node
 
 - [ ] step-into grabs the immediate subterm, not the nested subterm that we want
 
@@ -680,11 +680,11 @@ helper []
 
 ```
 let rec wwhile (f,b) =
-  match f b with 
-  | (b', false) -> b' 
+  match f b with
+  | (b', false) -> b'
   | (b', true)  -> wwhile (f, b')
 
-let fixpoint (f,b) = 
+let fixpoint (f,b) =
   wwhile ((let f' x = ((f x), ((f x) = x)) in f), b)
 ```
 
@@ -693,9 +693,9 @@ let fixpoint (f,b) =
 
 ```
 let rec assoc (d,k,l) =
-  match l with 
-  | [] -> d 
-  | h::t -> if h = k then 
+  match l with
+  | [] -> d
+  | h::t -> if h = k then
               assoc (d, k, t)
             else
               d
@@ -735,7 +735,7 @@ let removeDuplicates l =
     | [] -> seen
     | h::t ->
         let seen' = seen @ h in
-        let rest' = let is_in i = (i mod 2) = 0 in 
+        let rest' = let is_in i = (i mod 2) = 0 in
                     List.filter is_in t in
         helper (seen', rest') in
   List.rev (helper ([], l))
@@ -747,8 +747,8 @@ let rec digitsOfInt n =
 
 let digits n = digitsOfInt (abs n)
 
-let rec sumList xs = match xs with 
-  | [] -> 0 
+let rec sumList xs = match xs with
+  | [] -> 0
   | h::t -> h + (sumList t)
 
 let rec additivePersistence n =
@@ -766,24 +766,24 @@ let rec append xs ys =
 let rec digitsOfInt n =
   if n < 0
   then []
-  else (match n with 
-        | 0 -> [] 
+  else (match n with
+        | 0 -> []
         | _ -> append digitsOfInt (n / 10) [n mod 10])
 ```
 
 ```
 let listReverse l =
-  let rec reverse xs = match xs with 
-    | [] -> xs 
-    | h::t -> reverse [h] t 
+  let rec reverse xs = match xs with
+    | [] -> xs
+    | h::t -> reverse [h] t
   in
   reverse [] l
 ```
 
 ```
 let rec listReverse l =
-  match l with 
-  | [] -> [] 
+  match l with
+  | [] -> []
   | (h::t)::[] -> (listReverse t) @ [h]
 
 (* throws ml exception!!!! *)
@@ -794,27 +794,27 @@ let _ = listReverse [[1];[2];[3]];;
 ```
 let rec digitsOfInt n =
   if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10]
-let rec sumList xs = match xs with 
-  | [] -> 0 
+let rec sumList xs = match xs with
+  | [] -> 0
   | h::t -> h + (sumList t)
 
 let addDigits n = sumList (digitsOfInt n)
 
 let rec digitalRoot n =
-  if n < 10 then n 
+  if n < 10 then n
   else if (addDigits n) > 9 then digitalRoot (addDigits n)
 ``` # output type mismatch, why not caught?
 
 ```
 let rec listReverse l =
-  match l with 
-  | [] -> [] 
+  match l with
+  | [] -> []
   | h::t -> (listReverse t) @ [h]
-let cutTail z = match listReverse z with 
-  | [] -> [] 
+let cutTail z = match listReverse z with
+  | [] -> []
   | h::t -> t
-let getHeads x = match listReverse x with 
-  | [] -> [] 
+let getHeads x = match listReverse x with
+  | [] -> []
   | h::t -> h
 let explode s =
   let rec go i =
@@ -823,12 +823,12 @@ let explode s =
 let rec matchHeads y =
   match y with
   | [] -> true
-  | h::t -> if h = (getHeads t) 
-            then matchHeads (cutTail t) 
+  | h::t -> if h = (getHeads t)
+            then matchHeads (cutTail t)
             else false
 let palindrome w =
-  match explode w with 
-  | [] -> true 
+  match explode w with
+  | [] -> true
   | h::t -> matchHeads (explode w)
 ```
 
@@ -849,10 +849,10 @@ let rec matchHeads x =
       then matchHeads (getTail (listReverse t))
       else false
 let palindrome w =
-  match explode w with 
-  | [] -> true 
+  match explode w with
+  | [] -> true
   | h::t -> matchHeads (explode w)
-  
+
 let _ = palindrome "bbbb"
 ``` # WTF, broken.. NOT BROKEN, error is in getHead, which gets type `[[a]] -> [a]`, but program still can't go wrong
 
