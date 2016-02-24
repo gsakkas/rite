@@ -151,16 +151,6 @@
     [(extend any any_0 any_1 ...)
      (ext1 (extend any any_1 ...) any_0)])
 
-(define-metafunction λh
-  unify : t t -> tsu or #f
-  ;; #:mode (unify I I O)
-  ;; #:contract (unify t t tsu)
-  [(unify t t) ()]
-  [(unify a t) ((a t))]
-  [(unify t a) ((a t))]
-  [(unify (tree t_1) (tree t_2)) (unify t_1 t_2)]
-  [(unify _ _) #f])
-
 
 (define-judgment-form λh
   #:mode (type-of I O)
@@ -209,42 +199,6 @@
    (wf-tree (node @ t v_1 v_2 v_3) t)]
   )
 
-;; TODO: need to produce substitution and propagate. suspicious that
-;; redex doesn't find a counter-example
-(define-judgment-form λh
-  #:mode (type-compat I I)
-  #:contract (type-compat t t)
-  [------------------
-   (type-compat int int)]
-
-  [------------------
-   (type-compat bool bool)]
-
-  [------------------
-   (type-compat fun fun)]
-
-  [(type-compat t_1 t_2)
-   ------------------
-   (type-compat (tree t_1) (tree t_2))]
-
-  ;; [(type-compat t_1 t_3) (type-compat t_2 t_4)
-  ;;  ------------------
-  ;;  (type-compat (t_1 -> t_2) (t_3 -> t_4))]
-
-  ;; [(type-compat t_1 t_3) (type-compat t_2 t_4)
-  ;;  -------------------------
-  ;;  (type-compat (t_1 * t_2) (t_3 * t_4))]
-
-  ;; [(type-compat t_1 t_3) (type-compat t_2 t_4)
-  ;;  -------------------------
-  ;;  (type-compat (t_1 + t_2) (t_3 + t_4))]
-
-  [------------------
-   (type-compat a t)]
-  [------------------
-   (type-compat t a)]
-  )
-
 (define-metafunction λh
   type-compat-1 : t t tsu -> tsu or #f
   ;; #:mode (type-compat-1 I I I O)
@@ -260,21 +214,43 @@
 
 (define-metafunction λh
   type-compat-var : a t tsu -> tsu or #f
+
+  ;; apply substitution
   [(type-compat-var a t tsu)
    (type-compat-1 t_1 t tsu)
    (where t_1 (lookup tsu a))
    (side-condition/hidden (term t_1))]
-  ;; FIXME: occurs check)
+
+  ;; occurs check
+  [(type-compat-var a t tsu)
+   #f
+   (side-condition (memq (term a) (term (ty-vars-of t))))]
+
+  ;; otherwise extend substitution
   [(type-compat-var a t tsu) tsu_1
    (where tsu_1 (extend tsu (a t)))])
 
-;; (define-judgement-form λh
-;;   #:mode (I ~ I)
-;;   #:contract (t ~ t)
-;;   [------------------------ "refl"
-;;    (t ~ t)]
+(define-metafunction λh
+  ty-vars-of : t -> (a ...)
+  [(ty-vars-of a) (a)]
+  [(ty-vars-of (tree t)) (ty-vars-of t)]
+  [(ty-vars-of t) ()])
 
-;;   )
+(module+ test
+  (test-equal (term (type-compat-1 int int  ())) (term ()))
+  (test-equal (term (type-compat-1 int bool ())) (term #f))
+  (test-equal (term (type-compat-1 a   a    ())) (term ()))
+  (test-equal (term (type-compat-1 a   bool ())) (term ((a bool))))
+  (test-equal (term (type-compat-1 int a    ())) (term ((a int))))
+  (test-equal (term (type-compat-1 a_1 a_2  ())) (term ((a_1 a_2))))
+
+  (test-equal (term (type-compat-1 (tree a)   (tree a)   ())) (term ()))
+  (test-equal (term (type-compat-1 (tree a_1) (tree a_2) ())) (term ((a_1 a_2))))
+  (test-equal (term (type-compat-1 (tree a)   (tree int) ())) (term ((a int))))
+  (test-equal (term (type-compat-1 (tree int) (tree a)   ())) (term ((a int))))
+
+  (test-equal (term (type-compat-1 (tree a)   a          ())) (term #f))
+  )
 
 (define-metafunction λh
   gen : t -> v
