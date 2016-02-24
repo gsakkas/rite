@@ -543,9 +543,7 @@
            (term ((leaf @ int) () ((a int)))))
   (test--> -->λh
            (term ((case ,x of (leaf -> true) (node x_1 x_2 x_3 -> x_3)) () ()))
-           (term ((node @ int 2 (leaf @ int) (leaf @ int)) () ((a int)))))
-
-  )
+           (term ((node @ int 2 (leaf @ int) (leaf @ int)) () ((a int))))))
 
 
 ;; value-or-confluent-step? : term → boolean
@@ -576,11 +574,15 @@
   [(gets-stuck-t? e) (where stuck-t (eval-value e))])
 
 (module+ test
-  ;;(test-equal (judgment-holds (gets-stuck-t? stuck-t)) #t)
-  ;; (test-equal (first (apply-reduction-relation* -->λh (term (stuck-t ()))))
-  ;;             (term (stuck-t ())))
   (test-equal (judgment-holds (gets-stuck-t? (1 + true))) #t)
-  (test-equal (judgment-holds (gets-stuck-t? (1 + 2))) #f))
+  (test-equal (judgment-holds (gets-stuck-t? (1 + 2))) #f)
+  (test-equal (judgment-holds (gets-stuck-t? (case (node 1 leaf leaf) of
+                                                   (leaf -> 2)
+                                                   (node x_1 x_2 x_3 -> (node true x_2 leaf)))))
+              #t)
+  (test-equal (judgment-holds (gets-stuck-t? (node leaf (node 1 leaf leaf) leaf)))
+              #t)
+  )
 
 (define-judgment-form λh
   #:mode (closed I I)
