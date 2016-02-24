@@ -125,19 +125,19 @@
   )
 
 ;; stolen from david van horn's redex-aam-tutorial
-(define-language REDEX)
-(define-judgment-form REDEX
-    #:mode (lookup I I O)
-    #:contract (lookup ((any any) ...) any any)
-    [(lookup (_ ... (any any_0) _ ...) any any_0)])
+;; (define-language REDEX)
+;; (define-judgment-form REDEX
+;;     #:mode (lookup I I O)
+;;     #:contract (lookup ((any any) ...) any any)
+;;     [(lookup (_ ... (any any_0) _ ...) any any_0)])
 ;(define-judgment-form λh
 ;    #:mode (vsu-lookup I I O)
 ;    #:contract (vsu-lookup ((any any) ...) any any)
 ;    [(vsu-lookup (_ ... (any any_0) _ ...) any any_0)])
 (define-metafunction λh
-  vsu-lookup : vsu h -> any
-  [(vsu-lookup vsu h)
-   ,(let ((v (assq (term h) (term vsu))))
+  lookup : ((any any) ...) any -> any
+  [(lookup any_1 any_2)
+   ,(let ((v (assq (term any_2) (term any_1))))
       (if v (term ,(second v)) v))])
 (define-metafunction λh
     ext1 : ((any any) ...) (any any) -> ((any any) ...)
@@ -145,11 +145,6 @@
      (any_0 ... (any_k any_v1) any_1 ...)]
     [(ext1 (any_0 ...) (any_k any_v1))
      ((any_k any_v1) any_0 ...)])
-(define-metafunction λh
-    vsu-extend : ((any any) ...) (any any) ... -> ((any any) ...)
-    [(vsu-extend any) any]
-    [(vsu-extend any any_0 any_1 ...)
-     (ext1 (vsu-extend any any_1 ...) any_0)])
 (define-metafunction λh
     extend : ((any any) ...) (any any) ... -> ((any any) ...)
     [(extend any) any]
@@ -255,13 +250,23 @@
   ;; #:mode (type-compat-1 I I I O)
   ;; #:contract (type-compat-1 t t tsu tsu)
   [(type-compat-1 t t tsu) tsu]
-  [(type-compat-1 a t tsu) tsu_1
-   (where tsu_1 (extend tsu (a t)))]
-  [(type-compat-1 t a tsu) tsu_1
-   (where tsu_1 (extend tsu (a t)))]
+  [(type-compat-1 a t tsu)
+   (type-compat-var a t tsu)]
+  [(type-compat-1 t a tsu)
+   (type-compat-var a t tsu)]
   [(type-compat-1 (tree t_1) (tree t_2) tsu_1) tsu_2
    (where tsu_2 (type-compat-1 t_1 t_2 tsu_1))]
   [(type-compat-1 t_1 t_2 tsu) #f])
+
+(define-metafunction λh
+  type-compat-var : a t tsu -> tsu or #f
+  [(type-compat-var a t tsu)
+   (type-compat-1 t_1 t tsu)
+   (where t_1 (lookup tsu a))
+   (side-condition/hidden (term t_1))]
+  ;; FIXME: occurs check)
+  [(type-compat-var a t tsu) tsu_1
+   (where tsu_1 (extend tsu (a t)))])
 
 ;; (define-judgement-form λh
 ;;   #:mode (I ~ I)
@@ -317,7 +322,7 @@
   ;; a value-hole that is in the vsu narrows to the same value
   [(narrow h t vsu tsu)
    (v vsu tsu)
-   (where v (vsu-lookup vsu h))
+   (where v (lookup vsu h))
    (side-condition/hidden (term v))
    ;; provided that the narrowing type matches (thanks redex!)
    (judgment-holds (type-of v t))
@@ -325,13 +330,13 @@
   ;; otherwise we're stuck
   [(narrow h t vsu tsu)
    (stuck-t vsu tsu)
-   (where v (vsu-lookup vsu h))
+   (where v (lookup vsu h))
    (side-condition/hidden (term v))
    (clause-name "Narrow-Hole-Known-Bad")]
   
   ;; a value-hole narrows to a random value of the given type
   [(narrow h t vsu tsu)
-   (v (vsu-extend vsu (h v)) tsu)
+   (v (extend vsu (h v)) tsu)
    (where v (gen t))
    (clause-name "Narrow-Hole-Good")]
 
@@ -793,12 +798,12 @@
 
 (define extend-rw
   (rw-lambda
-   [`(vsu-extend ,Γ (,x ,t))
+   [`(extend ,Γ (,x ,t))
     => (list "" Γ "[" x "→" t "]")]))
 
 (define lookup-rw
   (rw-lambda
-   [`(vsu-lookup ,Γ ,x)
+   [`(lookup ,Γ ,x)
     => (list "" Γ "(" x ")")]))
 
 (define type-compat-rw
@@ -817,10 +822,10 @@
 
 
 (define-rw-context with-rws
-  #:atomic (['t "τ"] ['-> "→"] ['number "n"] ['vsu "σ"] ['a "α"])
+  #:atomic (['t "τ"] ['-> "→"] ['number "n"] ['vsu "σ"] ['a "α"] ['tsu "θ"])
   #:compound (['type-of typeof-rw]
-              ['vsu-extend extend-rw]
-              ['vsu-lookup lookup-rw]
+              ['extend extend-rw]
+              ['lookup lookup-rw]
               ['type-compat type-compat-rw]
               ['substitute substitute-rw]
               ))
