@@ -6,7 +6,7 @@
 (caching-enabled? #f)
 (check-redundancy #t)
 
-;; (current-traced-metafunctions '(gen narrow choose-alt))
+;; (current-traced-metafunctions '(gen narrow apply-su))
 
 (define-language λh
   ;; configurations (for the reduction relation)
@@ -15,6 +15,7 @@
   ;; expressions
   (e v ;; n b (λ x e) ;; same as values
      x
+     h
      (e e)
      (e + e)
      (ite e e e)
@@ -42,7 +43,7 @@
          stuck-e ;; stuck due to some other error (e.g. div-zero)
          )
   ;; values
-  (v n b (λ x e) h
+  (v n b (λ x e) (h @ t)
      (node @ t v v v) (leaf @ t) ;; `t` is the *element* type
 
      ;; (pair (@ t t) v v) (inl @ t v) (inr @ t v)
@@ -67,7 +68,7 @@
   ;; type substitutions
   (tsu ((a_!_ t) ...))
   (h (variable-prefix h_))
-  (a variable-not-otherwise-mentioned)
+  (a (variable-prefix a))
 
   ;; ;; constructors
   ;; (c variable-not-otherwise-mentioned)
@@ -170,7 +171,9 @@
 
   [(type-of (λ x e) fun)]
 
-  [(type-of h h)] ;; FIXME: this is an ugly pun
+  [(type-of (h @ t) t)]
+  ;; [(type-of h a)
+  ;;  (where a ,(generate-term λh a 5))]
   )
 
 (define-judgment-form λh
@@ -236,6 +239,15 @@
   [(ty-vars-of (tree t)) (ty-vars-of t)]
   [(ty-vars-of t) ()])
 
+(define-metafunction λh
+  apply-su : tsu t -> t
+  [(apply-su tsu a)
+   (apply-su tsu t)
+   (where t (lookup tsu a))
+   (side-condition/hidden (term t))]
+  [(apply-su tsu t)
+   t])
+
 (module+ test
   (test-equal (term (type-compat-1 int int  ())) (term ()))
   (test-equal (term (type-compat-1 int bool ())) (term #f))
@@ -266,6 +278,10 @@
   [(gen (tree bool))
    ,(second (generate-term λh #:satisfying (wf-tree v bool) 3))
    (clause-name "Gen-Tree-Bool")]
+  [(gen (tree a))
+   (node @ a v (leaf @ a) (leaf @ a))
+   (where v (gen a))
+   (clause-name "Gen-Tree-Hole")]
   [(gen (tree t))
    ;; FIXME: how can i refer to the `t` bound by `tree t`?
    ;; ,(second (eval `(generate-term λh #:satisfying (wf-tree v t) 5)))
@@ -284,36 +300,43 @@
    ,(generate-term λh (λ x h) 5)
    (clause-name "Gen-Fun")]
   [(gen a)
+   (h @ a)
    ;; how to say fresh h?
-   ,(generate-term λh h 5)
+   (where h ,(generate-term λh h 5))
    (clause-name "Gen-Hole")])
 
 (define-metafunction λh
   narrow : v t vsu tsu -> (v vsu tsu) or (stuck-t vsu tsu)
   ;; any value narrows to a type-hole
   [(narrow v a vsu tsu)
-   (v vsu tsu)
+   (v vsu tsu_1)
+   (judgment-holds (type-of v t))
+   (where tsu_1 (extend tsu (a t)))
    (clause-name "Narrow-Type-Hole")]
   
   ;; a value-hole that is in the vsu narrows to the same value
-  [(narrow h t vsu tsu)
-   (v vsu tsu)
+  [(narrow (h @ t_1) t_2 vsu tsu)
+   (v vsu tsu_2)
    (where v (lookup vsu h))
    (side-condition/hidden (term v))
    ;; provided that the narrowing type matches (thanks redex!)
-   (judgment-holds (type-of v t))
+   (where tsu_1 (type-compat-1 t_1 t_2 tsu))
+   (judgment-holds (type-of v t_v))
+   (where t_11 (apply-su tsu_1 t_1))
+   (where tsu_2 (type-compat-1 t_11 t_v tsu_1))
    (clause-name "Narrow-Hole-Known-Good")]
   ;; otherwise we're stuck
-  [(narrow h t vsu tsu)
+  [(narrow (h @ t_1) t_2 vsu tsu)
    (stuck-t vsu tsu)
    (where v (lookup vsu h))
    (side-condition/hidden (term v))
    (clause-name "Narrow-Hole-Known-Bad")]
-  
   ;; a value-hole narrows to a random value of the given type
-  [(narrow h t vsu tsu)
-   (v (extend vsu (h v)) tsu)
-   (where v (gen t))
+  [(narrow (h @ t_1) t_2 vsu tsu)
+   (v (extend vsu (h v)) tsu_1)
+   (where tsu_1 (type-compat-1 t_1 t_2 tsu))
+   (where t_3 (apply-su tsu_1 t_1))
+   (where v (gen t_3))
    (clause-name "Narrow-Hole-Good")]
 
   ;; ints narrow to int
@@ -375,17 +398,32 @@
   )
 
 (module+ test
-  (test-equal (term (narrow 1 int () ())) '(1 () ()))
-  (test-equal (term (narrow 1 bool () ())) '(stuck-t () ()))
-  (test-equal (term (narrow h_0 bool ((h_0 true)) ())) '(true ((h_0 true)) ()))
-  (test-equal (term (narrow h_0 int ((h_0 true)) ())) '(stuck-t ((h_0 true)) ()))
+  (test-equal (term (narrow 1 int () ()))
+              '(1 () ()))
+  (test-equal (term (narrow 1 bool () ()))
+              '(stuck-t () ()))
+  (test-equal (term (narrow (h_0 @ a) bool ((h_0 true)) ()))
+              '(true ((h_0 true)) ((a bool))))
+  (test-equal (term (narrow (h_0 @ a) int ((h_0 true)) ()))
+              '(stuck-t ((h_0 true)) ()))
 
-  (test-equal (term (narrow (leaf @ int) (tree int) () ())) '((leaf @ int) () ()))
-  (test-equal (term (narrow (leaf @ int) (tree bool) () ())) '(stuck-t () ()))
-  (test-equal (term (narrow (node @ int 1 (leaf @ int) (leaf @ int)) (tree int) () ())) '((node @ int 1 (leaf @ int) (leaf @ int)) () ()))
-  (test-equal (term (narrow (node @ int 1 (leaf @ int) (leaf @ int)) (tree bool) () ())) '(stuck-t () ()))
+  (test-equal (term (narrow (leaf @ int) (tree int) () ()))
+              '((leaf @ int) () ()))
+  (test-equal (term (narrow (leaf @ int) (tree bool) () ()))
+              '(stuck-t () ()))
+  (test-equal (term (narrow (node @ int 1 (leaf @ int) (leaf @ int))
+                            (tree int) () ()))
+              '((node @ int 1 (leaf @ int) (leaf @ int)) () ()))
+  (test-equal (term (narrow (node @ int 1 (leaf @ int) (leaf @ int))
+                            (tree bool) () ()))
+              '(stuck-t () ()))
 
-  (test-predicate integer? (first (term (narrow h_0 int () ()))))
+  (test-equal (term (narrow 1 a () ()))
+              '(1 () ((a int))))
+  (test-equal (term (narrow (leaf @ a_1) a_2 () ()))
+              '((leaf @ a_1) () ((a_2 (tree a_1)))))
+
+  (test-predicate integer? (first (term (narrow (h_0 @ a) int () ()))))
   )
 
 (define-metafunction λh
@@ -409,6 +447,12 @@
 (define -->λh
   (reduction-relation
    λh #:domain Config
+
+   ;; Hole
+   (--> [(in-hole E h) vsu tsu]
+        [(in-hole E (h @ a)) vsu tsu]
+        (fresh a)
+        "E-Hole")
 
    ;; Plus
    (--> [(in-hole E (v_1 + v_2)) vsu_1 tsu_1]
@@ -465,11 +509,13 @@
         "E-App-Bad")
 
    ;; Node
-   (--> [(in-hole E (node     v_1 v_2  v_3))  vsu_1 tsu_1]
-        [(in-hole E (node @ t v_1 v_21 v_31)) vsu_3 tsu_3]
-        (judgment-holds (type-of v_1 t))
-        (where (v_21 vsu_2 tsu_2) (narrow v_2 (tree t) vsu_1 tsu_1))
-        (where (v_31 vsu_3 tsu_3) (narrow v_3 (tree t) vsu_2 tsu_2))
+   (--> [(in-hole E (node     v_1 v_2  v_3))   vsu_1 tsu_1]
+        [(in-hole E (node @ t v_11 v_21 v_31)) vsu_4 tsu_4]
+        (fresh a)
+        (where (v_11 vsu_2 tsu_2) (narrow v_1 a        vsu_1 tsu_1))
+        (where (v_21 vsu_3 tsu_3) (narrow v_2 (tree a) vsu_2 tsu_2))
+        (where (v_31 vsu_4 tsu_4) (narrow v_3 (tree a) vsu_3 tsu_3))
+        (where t (apply-su tsu_4 a))
         "E-Node-Good")
    (--> [(in-hole E (node v_1 v_2 v_3)) vsu_1 tsu_1]
         [stuck-t vsu_2 tsu_2]
@@ -491,14 +537,14 @@
    ;; Case
    (--> [(in-hole E (case v_1 of (leaf -> e_1) (node x_1 x_2 x_3 -> e_2))) vsu_1 tsu_1]
         [(in-hole E e_3) vsu_2 tsu_2]
-        (where (v_2 vsu_2 tsu_2) (narrow v_1 (tree a) vsu_1 tsu_1))
         (fresh a)
+        (where (v_2 vsu_2 tsu_2) (narrow v_1 (tree a) vsu_1 tsu_1))
         (where e_3 (choose-alt v_2 e_1 x_1 x_2 x_3 e_2))
         "E-Case-Good")
    (--> [(in-hole E (case v of (leaf -> e_1) (node x_1 x_2 x_3 -> e_2))) vsu_1 tsu_1]
         [stuck-t vsu_2 tsu_2]
-        (where (stuck-t vsu_2 tsu_2) (narrow v (tree a) vsu_1 tsu_1))
         (fresh a)
+        (where (stuck-t vsu_2 tsu_2) (narrow v (tree a) vsu_1 tsu_1))
         "E-Case-Bad")
    ))
 
@@ -526,7 +572,11 @@
   (test--> -->λh (term ((node 1 (leaf @ int) (leaf @ bool)) () ())) (term (stuck-t () ())))
   (test--> -->λh
            (term ((node       1 (leaf @ int) (leaf @ int)) () ()))
-           (term ((node @ int 1 (leaf @ int) (leaf @ int)) () ())))
+           (term ((node @ int 1 (leaf @ int) (leaf @ int)) () ((a int)))))
+  ;; (test--> -->λh
+  ;;          (term ((node       (h_0 @ a_0) (h_1 @ a_1) (h_2 @ a_3)) () ()))
+  ;;          (term ((node @ a_0 h_0 (leaf @ h_0) (leaf @ h_0))
+  ;;                 ((h_2 (leaf @ h_0)) (h_1 (leaf @ h_0))) ())))
   ;; E-Case
   (define x (term (node @ int 1 (leaf @ int) (node @ int 2 (leaf @ int) (leaf @ int)))))
   (test--> -->λh
@@ -699,7 +749,7 @@
   (define (finds-general-witness? e)
     ;; for any function
     (begin
-      ;; (printf "checking ~s\n" (term (λ x e)))
+      ;; (printf "checking ~s\n" e)
 
       (implies
 
@@ -713,26 +763,36 @@
 
         ;; ints
         (ormap
-         (λ (i) (judgment-holds (gets-stuck-t? (,e ,(generate-term λh n #:i-th i)))))
+         (λ (i)
+           (let [(v (generate-term λh n #:i-th i))]
+             (or
+              (judgment-holds (gets-stuck-t? (,e ,v)))
+              (printf "not stuck: ~s\n" (term (,e ,v))))))
          (range 10))
 
         ;; bools
         (or
-         (judgment-holds (gets-stuck-t? (,e true)))
-         (judgment-holds (gets-stuck-t? (,e false))))
+         (or (judgment-holds (gets-stuck-t? (,e true)))
+             (printf "not stuck: ~s\n" (term (,e true))))
+         (or (judgment-holds (gets-stuck-t? (,e false)))
+             (printf "not stuck: ~s\n" (term (,e false)))))
 
         ;; trees
         (ormap
          (λ (i) (let [(v (second (generate-term λh #:satisfying (wf-tree v t-gen) 3)))]
                   ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
-                  (judgment-holds (gets-stuck-t? (,e ,v)))))
+                  (or (judgment-holds (gets-stuck-t? (,e ,v)))
+                      (printf "not stuck: ~s\n" (term (,e ,v))))))
          (range 10))
 
         ;; functions
         (ormap
-         (λ (i) (judgment-holds
-                 ;; dont generate arbitrary functions, may be ill-formed, e.g not closed
-                 (gets-stuck-t? (,e (λ x h_50)))))
+         (λ (i)
+           (or
+            (judgment-holds
+             ;; dont generate arbitrary functions, may be ill-formed, e.g not closed
+             (gets-stuck-t? (,e (λ x h_50))))
+            (printf "not stuck: ~s\n" (term (,e (λ x h_50))))))
          (range 10))
         ))
       ))
@@ -748,10 +808,10 @@
        (finds-general-witness? (term (λ x e)))
        #:attempts 1000)
       (redex-check
-       λh (λ x e) #:in-order
+       λh e #:in-order
        (finds-general-witness? (term (λ x (case e of
-                                                (leaf -> e)
-                                                (node x x x -> e)))))
+                                                (leaf -> 1)
+                                                (node x_1 x_2 x_3 -> 2)))))
        #:attempts 1000)
       (redex-check
        ;; for any closed function
@@ -779,6 +839,11 @@
    [`(extend ,Γ (,x ,t))
     => (list "" Γ "[" x "→" t "]")]))
 
+(define apply-su-rw
+  (rw-lambda
+   [`(apply-su ,Γ ,x)
+    => (list "" Γ "(" x ")")]))
+
 (define lookup-rw
   (rw-lambda
    [`(lookup ,Γ ,x)
@@ -786,7 +851,7 @@
 
 (define type-compat-rw
   (rw-lambda
-   [`(type-compat ,s ,t)
+   [`(type-compat-1 ,s ,t, su)
     => (list "" s " ~ " t)]))
 
 (define substitute-rw
@@ -804,13 +869,14 @@
   #:compound (['type-of typeof-rw]
               ['extend extend-rw]
               ['lookup lookup-rw]
-              ['type-compat type-compat-rw]
+              ['type-compat-1 type-compat-rw]
               ['substitute substitute-rw]
+              ['apply-su apply-su-rw]
               ))
 
 (define (render-λh)
   (with-rws (render-language λh "language.ps" #:nts '(e stuck v n b t)))
-  (parameterize ([metafunction-pict-style 'left-right/beside-side-conditions])
+  (parameterize ([metafunction-pict-style 'left-right])
     (with-rws (render-metafunction narrow "narrow.ps" #:contract? #t)))
   (parameterize ([metafunction-pict-style 'left-right/beside-side-conditions])
     (with-rws (render-metafunctions choose-branch choose-alt
