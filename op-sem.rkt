@@ -49,7 +49,7 @@
      ;; (pair (@ t t) v v) (inl @ t v) (inr @ t v)
      ;;(c vs)
      )
-  (n number)
+  (n integer)
   (b true false)
   ;; types
   (t int bool fun a
@@ -509,13 +509,11 @@
         "E-App-Bad")
 
    ;; Node
-   (--> [(in-hole E (node     v_1 v_2  v_3))   vsu_1 tsu_1]
-        [(in-hole E (node @ t v_11 v_21 v_31)) vsu_4 tsu_4]
-        (fresh a)
-        (where (v_11 vsu_2 tsu_2) (narrow v_1 a        vsu_1 tsu_1))
-        (where (v_21 vsu_3 tsu_3) (narrow v_2 (tree a) vsu_2 tsu_2))
-        (where (v_31 vsu_4 tsu_4) (narrow v_3 (tree a) vsu_3 tsu_3))
-        (where t (apply-su tsu_4 a))
+   (--> [(in-hole E (node     v_1 v_2  v_3))  vsu_1 tsu_1]
+        [(in-hole E (node @ t v_1 v_21 v_31)) vsu_3 tsu_3]
+        (judgment-holds (type-of v_1 t))
+        (where (v_21 vsu_2 tsu_2) (narrow v_2 (tree t) vsu_1 tsu_1))
+        (where (v_31 vsu_3 tsu_3) (narrow v_3 (tree t) vsu_2 tsu_2))
         "E-Node-Good")
    (--> [(in-hole E (node v_1 v_2 v_3)) vsu_1 tsu_1]
         [stuck-t vsu_2 tsu_2]
@@ -523,9 +521,10 @@
         (where (stuck-t vsu_2 tsu_2) (narrow v_2 (tree t) vsu_1 tsu_1))
         "E-Node-Bad1")
    (--> [(in-hole E (node v_1 v_2 v_3)) vsu_1 tsu_1]
-        [stuck-t vsu_2 tsu_2]
+        [stuck-t vsu_3 tsu_3]
         (judgment-holds (type-of v_1 t))
-        (where (stuck-t vsu_2 tsu_2) (narrow v_3 (tree t) vsu_1 tsu_1))
+        (where (v_11 vsu_2 tsu_2) (narrow v_2 (tree t) vsu_1 tsu_1))
+        (where (stuck-t vsu_3 tsu_3) (narrow v_3 (tree t) vsu_2 tsu_2))
         "E-Node-Bad2")
 
    ;; Leaf
@@ -541,10 +540,10 @@
         (where (v_2 vsu_2 tsu_2) (narrow v_1 (tree a) vsu_1 tsu_1))
         (where e_3 (choose-alt v_2 e_1 x_1 x_2 x_3 e_2))
         "E-Case-Good")
-   (--> [(in-hole E (case v of (leaf -> e_1) (node x_1 x_2 x_3 -> e_2))) vsu_1 tsu_1]
+   (--> [(in-hole E (case v_1 of (leaf -> e_1) (node x_1 x_2 x_3 -> e_2))) vsu_1 tsu_1]
         [stuck-t vsu_2 tsu_2]
         (fresh a)
-        (where (stuck-t vsu_2 tsu_2) (narrow v (tree a) vsu_1 tsu_1))
+        (where (stuck-t vsu_2 tsu_2) (narrow v_1 (tree a) vsu_1 tsu_1))
         "E-Case-Bad")
    ))
 
@@ -572,7 +571,7 @@
   (test--> -->λh (term ((node 1 (leaf @ int) (leaf @ bool)) () ())) (term (stuck-t () ())))
   (test--> -->λh
            (term ((node       1 (leaf @ int) (leaf @ int)) () ()))
-           (term ((node @ int 1 (leaf @ int) (leaf @ int)) () ((a int)))))
+           (term ((node @ int 1 (leaf @ int) (leaf @ int)) () ())))
   ;; (test--> -->λh
   ;;          (term ((node       (h_0 @ a_0) (h_1 @ a_1) (h_2 @ a_3)) () ()))
   ;;          (term ((node @ a_0 h_0 (leaf @ h_0) (leaf @ h_0))
@@ -632,6 +631,12 @@
               #t)
   (test-equal (judgment-holds (gets-stuck-t? (node leaf (node 1 leaf leaf) leaf)))
               #t)
+
+  (define f (term (λ x (case x of
+                             (leaf -> leaf)
+                             (node x_1 x_2 x_3 -> (node x_1
+                                                        (node 2 leaf leaf)
+                                                        (node true leaf leaf)))))))
   )
 
 (define-judgment-form λh
@@ -674,9 +679,9 @@
    ---------------------------
    (closed (node e_1 e_2 e_3) xs)]
 
-  [(closed e_1 xs) (closed e_2 xs) (closed e_3 xs)
+  [(closed e_1 xs) (closed e_2 xs) (closed e_3 (x_1 : (x_2 : (x_3 : xs))))
    ---------------------------
-   (closed (case e_1 of (leaf -> e_2) (node _ _ _ -> e_3)) xs)])
+   (closed (case e_1 of (leaf -> e_2) (node x_1 x_2 x_3 -> e_3)) xs)])
 
 (define-judgment-form λh
   #:mode (used I I)
@@ -726,13 +731,13 @@
 
   [(used e_1 xs)
    ---------------------------
-   (used (case e_1 of (leaf -> e_2) (node _ _ _ -> e_3)) xs)]
+   (used (case e_1 of (leaf -> e_2) (node x_1 x_2 x_3 -> e_3)) xs)]
   [(used e_2 xs)
    ---------------------------
-   (used (case e_1 of (leaf -> e_2) (node _ _ _ -> e_3)) xs)]
+   (used (case e_1 of (leaf -> e_2) (node x_1 x_2 x_3 -> e_3)) xs)]
   [(used e_3 xs)
    ---------------------------
-   (used (case e_1 of (leaf -> e_2) (node _ _ _ -> e_3)) xs)])
+   (used (case e_1 of (leaf -> e_2) (node x_1 x_2 x_3 -> e_3)) xs)])
 
 (define-judgment-form λh
   #:mode (closed-used I I)
@@ -767,23 +772,38 @@
            (let [(v (generate-term λh n #:i-th i))]
              (or
               (judgment-holds (gets-stuck-t? (,e ,v)))
-              (printf "not stuck: ~s\n" (term (,e ,v))))))
+              (and (printf "not stuck: ~s\n" (term (,e ,v))) #f))))
          (range 10))
 
         ;; bools
         (or
          (or (judgment-holds (gets-stuck-t? (,e true)))
-             (printf "not stuck: ~s\n" (term (,e true))))
+             (and (printf "not stuck: ~s\n" (term (,e true))) #f))
          (or (judgment-holds (gets-stuck-t? (,e false)))
-             (printf "not stuck: ~s\n" (term (,e false)))))
+             (and (printf "not stuck: ~s\n" (term (,e false))) #f)))
 
         ;; trees
-        (ormap
-         (λ (i) (let [(v (second (generate-term λh #:satisfying (wf-tree v t-gen) 3)))]
-                  ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
-                  (or (judgment-holds (gets-stuck-t? (,e ,v)))
-                      (printf "not stuck: ~s\n" (term (,e ,v))))))
-         (range 10))
+        (and
+         ;; tree int
+         (or
+          (judgment-holds (gets-stuck-t? (,e (leaf @ int))))
+          (and (printf "not stuck: ~s\n" (term (,e (leaf @ int)))) #f)
+          (ormap
+           (λ (i) (let [(v (second (generate-term λh #:satisfying (wf-tree v int) 3)))]
+                    ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
+                    (or (judgment-holds (gets-stuck-t? (,e ,v)))
+                        (and (printf "not stuck: ~s\n" (term (,e ,v))) #f))))
+           (range 10)))
+         ;; tree bool
+         (or
+          (judgment-holds (gets-stuck-t? (,e (leaf @ bool))))
+          (and (printf "not stuck: ~s\n" (term (,e (leaf @ bool)))) #f)
+          (ormap
+           (λ (i) (let [(v (second (generate-term λh #:satisfying (wf-tree v bool) 3)))]
+                    ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
+                    (or (judgment-holds (gets-stuck-t? (,e ,v)))
+                        (and (printf "not stuck: ~s\n" (term (,e ,v))) #f))))
+           (range 10))))
 
         ;; functions
         (ormap
@@ -792,7 +812,7 @@
             (judgment-holds
              ;; dont generate arbitrary functions, may be ill-formed, e.g not closed
              (gets-stuck-t? (,e (λ x h_50))))
-            (printf "not stuck: ~s\n" (term (,e (λ x h_50))))))
+            (and (printf "not stuck: ~s\n" (term (,e (λ x h_50)))) #f)))
          (range 10))
         ))
       ))
