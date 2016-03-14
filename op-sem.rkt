@@ -26,7 +26,8 @@
      ;; (get-left e)
      ;; (get-right e)
 
-     ;; (pair e e)
+     (pair e e)
+     (case e of (pair x x -> e))
      ;; (fst e)
      ;; (snd e)
      ;; (inl e)
@@ -45,7 +46,7 @@
   ;; values
   (v n b (λ x e) (h @ t)
      (node @ t v v v) (leaf @ t) ;; `t` is the *element* type
-
+     (pair v v)
      ;; (pair (@ t t) v v) (inl @ t v) (inr @ t v)
      ;;(c vs)
      )
@@ -54,8 +55,7 @@
   ;; types
   (t int bool fun a
      (tree t)
-
-     ;; (t * t)
+     (t * t)
      ;; (t + t)
      )
   (t-gen int bool
@@ -83,6 +83,9 @@
      (E + e)
      (v + E)
      (ite E e e)
+     (pair E e)
+     (pair v E)
+     (case E of (pair x x -> e))
      (node E e e)
      (node v E e)
      (node v v E)
@@ -113,6 +116,8 @@
   (case e_1 of
         (leaf -> e_2)
         (node x_1 x_2 x_3 -> e_3 #:refers-to (shadow x_1 x_2 x_3)))
+  (case e_1 of
+        (pair x_1 x_2 -> e_2 #:refers-to (shadow x_1 x_2)))
   )
 
 (define-judgment-form λh
@@ -160,6 +165,10 @@
   [(type-of n int)]
   [(type-of b bool)]
 
+  [(type-of v_1 t_1) (type-of v_2 t_2)
+   ----------------------------------------
+   (type-of (pair v_1 v_2) (t_1 * t_2))]
+
   [(type-of (leaf @ t) (tree t))]
   [(type-of v_1 t) (type-of v_2 (tree t)) (type-of v_3 (tree t))
    -------------------------------------
@@ -182,6 +191,9 @@
   ;; type-of-gen : v -> t
   [(type-of-gen n int)]
   [(type-of-gen b bool)]
+  [(type-of-gen v_1 t_1) (type-of-gen v_2 t_2)
+   ----------------------------------------
+   (type-of-gen (pair v_1 v_2) (t_1 * t_2))]
   [(type-of-gen (leaf @ t-gen) (tree t-gen))]
   [(type-of-gen v_1 t-gen) (type-of-gen v_2 (tree t-gen)) (type-of-gen v_3 (tree t-gen))
    -------------------------------------
@@ -213,6 +225,10 @@
    (type-compat-var a t tsu)]
   [(type-compat-1 (tree t_1) (tree t_2) tsu_1) tsu_2
    (where tsu_2 (type-compat-1 t_1 t_2 tsu_1))]
+  [(type-compat-1 (t_11 * t_12) (t_21 * t_22) tsu_1) tsu_3
+   (where tsu_2 (type-compat-1 t_11 t_21 tsu_1))
+   (side-condition (term tsu_2))
+   (where tsu_3 (type-compat-1 t_12 t_22 tsu_2))]
   [(type-compat-1 t_1 t_2 tsu) #f])
 
 (define-metafunction λh
@@ -237,6 +253,7 @@
   ty-vars-of : t -> (a ...)
   [(ty-vars-of a) (a)]
   [(ty-vars-of (tree t)) (ty-vars-of t)]
+  [(ty-vars-of (t_1 * t_2)) ,(append (term (ty-vars-of t_1)) (term (ty-vars-of t_2)))]
   [(ty-vars-of t) ()])
 
 (define-metafunction λh
@@ -262,6 +279,10 @@
   (test-equal (term (type-compat-1 (tree int) (tree a)   ())) (term ((a int))))
 
   (test-equal (term (type-compat-1 (tree a)   a          ())) (term #f))
+
+  (test-equal (term (type-compat-1 (int * bool) (int * bool) ())) (term ()))
+  (test-equal (term (type-compat-1 (int * bool) (int * int) ())) (term #f))
+  (test-equal (term (type-compat-1 (int * bool) (int * a) ())) (term ((a bool))))
   )
 
 (define-metafunction λh
@@ -272,6 +293,10 @@
   [(gen bool)
    ,(generate-term λh b 5)
    (clause-name "Gen-Bool")]
+  [(gen (t_1 * t_2))
+   (pair v_1 v_2)
+   (where v_1 (gen t_1))
+   (where v_2 (gen t_2))]
   [(gen (tree int))
    ,(second (generate-term λh #:satisfying (wf-tree v int) 3))
    (clause-name "Gen-Tree-Int")]
@@ -382,6 +407,16 @@
   ;;  (stuck-t vsu)
   ;;  (clause-name "Narrow-Tree-Bad")]
 
+  [(narrow (pair v_1 v_2) (t_1 * t_2) vsu tsu)
+   ((pair v_1 v_2) vsu tsu_2)
+   (judgment-holds (type-of v_1 t_v_1))
+   (where tsu_1 (type-compat-1 t_v_1 t_1 tsu))
+   (side-condition/hidden (term tsu_1))
+   (judgment-holds (type-of v_2 t_v_2))
+   (where tsu_2 (type-compat-1 t_v_2 t_2 tsu_1))
+   (side-condition/hidden (term tsu_2))
+   (clause-name "Narrow-Pair-Good")]
+
   [(narrow v t vsu tsu)
    (stuck-t vsu tsu)
    (clause-name "Narrow-Bad")]
@@ -422,6 +457,13 @@
               '(1 () ((a int))))
   (test-equal (term (narrow (leaf @ a_1) a_2 () ()))
               '((leaf @ a_1) () ((a_2 (tree a_1)))))
+
+  (test-equal (term (narrow (pair 1 true) (int * bool) () ()))
+              '((pair 1 true) () ()))
+  (test-equal (term (narrow (pair 1 true) (int * int) () ()))
+              '(stuck-t () ()))
+  (test-equal (term (narrow (pair 1 (leaf @ int)) (int * (tree a)) () ()))
+              '((pair 1 (leaf @ int)) () ((a int))))
 
   (test-predicate integer? (first (term (narrow (h_0 @ a) int () ()))))
   )
@@ -545,6 +587,18 @@
         (fresh a)
         (where (stuck-t vsu_2 tsu_2) (narrow v_1 (tree a) vsu_1 tsu_1))
         "E-Case-Bad")
+
+   (--> [(in-hole E (case v of (pair x_1 x_2 -> e))) vsu_1 tsu_1]
+        [(in-hole E e_1) vsu_2 tsu_2]
+        (fresh a_1 a_2)
+        (where ((pair v_1 v_2) vsu_2 tsu_2) (narrow v (a_1 * a_2) vsu_1 tsu_1))
+        (where e_1 (substitute (substitute e x_1 v_1) x_2 v_2))
+        "E-Case-Pair-Good")
+   (--> [(in-hole E (case v of (pair x_1 x_2 -> e))) vsu_1 tsu_1]
+        [stuck-t vsu_2 tsu_2]
+        (fresh a_1 a_2)
+        (where (stuck-t vsu_2 tsu_2) (narrow v (a_1 * a_2) vsu_1 tsu_1))
+        "E-Case-Pair-Bad")
    ))
 
 
@@ -592,7 +646,15 @@
            (term ((leaf @ int) () ((a int)))))
   (test--> -->λh
            (term ((case ,x of (leaf -> true) (node x_1 x_2 x_3 -> x_3)) () ()))
-           (term ((node @ int 2 (leaf @ int) (leaf @ int)) () ((a int))))))
+           (term ((node @ int 2 (leaf @ int) (leaf @ int)) () ((a int)))))
+
+  (test--> -->λh
+           (term ((case (pair 1 true) of (pair x_1 x_2 -> x_2)) () ()))
+           (term (true () ((a_2 bool) (a_1 int)))))
+  (test--> -->λh
+           (term ((case true of (pair x_1 x_2 -> x_2)) () ()))
+           (term (stuck-t () ())))
+  )
 
 
 ;; value-or-confluent-step? : term → boolean
@@ -679,6 +741,14 @@
    ---------------------------
    (closed (node e_1 e_2 e_3) xs)]
 
+  [(closed e_1 xs) (closed e_2 xs)
+   ---------------------------
+   (closed (pair e_1 e_2) xs)]
+
+  [(closed e_1 xs) (closed e_2 (x_1 : (x_2 : xs)))
+   ---------------------------
+   (closed (case e_1 of (pair x_1 x_2 -> e_2)) xs)]
+
   [(closed e_1 xs) (closed e_2 xs) (closed e_3 (x_1 : (x_2 : (x_3 : xs))))
    ---------------------------
    (closed (case e_1 of (leaf -> e_2) (node x_1 x_2 x_3 -> e_3)) xs)])
@@ -728,6 +798,20 @@
   [(used e_3 xs)
    ---------------------------
    (used (node e_1 e_2 e_3) xs)]
+
+  [(used e_1 xs)
+   ---------------------------
+   (used (pair e_1 e_2) xs)]
+  [(used e_2 xs)
+   ---------------------------
+   (used (pair e_1 e_2) xs)]
+
+  [(used e_1 xs)
+   ---------------------------
+   (used (case e_1 of (pair x_1 x_2 -> e_2)) xs)]
+  [(used e_2 xs)
+   ---------------------------
+   (used (case e_1 of (pair x_1 x_2 -> e_2)) xs)]
 
   [(used e_1 xs)
    ---------------------------
@@ -804,6 +888,14 @@
                     (or (judgment-holds (gets-stuck-t? (,e ,v)))
                         (and (printf "not stuck: ~s\n" (term (,e ,v))) #f))))
            (range 10))))
+
+        ;; pairs
+        (ormap
+         (λ (i) (let [(v (second (generate-term λh #:satisfying (type-of-gen v (int * bool)) 3)))]
+                  ;; (printf "testing ~s\n" (term ((λ x e) ,v)))
+                  (or (judgment-holds (gets-stuck-t? (,e ,v)))
+                      (and (printf "not stuck: ~s\n" (term (,e ,v))) #f))))
+         (range 10))
 
         ;; functions
         (ormap
