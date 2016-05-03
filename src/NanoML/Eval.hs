@@ -244,8 +244,8 @@ forces vts k = go vts []
   go ((v,t):vts) vs = force v t (\v -> go vts (v:vs))
 
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
-forceSame x@(Hole {}) y@(Hole {}) k =
-  forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
+-- forceSame x@(Hole {}) y@(Hole {}) k =
+--   forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
 forceSame x@(Hole {}) y k = do
   yt <- substM =<< typeOfM y
   force x yt $ \x -> k x y
