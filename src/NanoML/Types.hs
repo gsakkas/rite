@@ -1085,7 +1085,7 @@ unify' (TTup xs) (TTup ys)
   | length xs == length ys
   = void $ zipWithM unify' xs ys
   | otherwise
-  = uncurry typeError ?wtf -- typeError (TTup xs) (TTup ys)
+  = typeError (TTup xs) (TTup ys)
 unify' x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
   = void $ zipWithM unify' xts yts
