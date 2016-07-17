@@ -26,7 +26,8 @@ import           Control.Monad.Random
 import           Control.Monad.Reader
 import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
-import           Data.Aeson                   (ToJSON)
+import qualified Data.Aeson                   as Aeson
+import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -141,7 +142,7 @@ otherError :: MonadEval m => String -> m a
 otherError = throwError . OtherError
 
 data EvalState = EvalState
-  { stVarEnv   :: Env
+  { stVarEnv   :: !Env
   , stTypeEnv  :: !(Map TCon TypeDecl)
   , stDataEnv  :: !(Map DCon DataDecl)
   , stFieldEnv :: !(Map String TypeDecl)
@@ -613,10 +614,21 @@ data Literal
   | LS String
   deriving (Show, Generic, Eq, Ord)
 
+instance ToJSON Literal where
+  toJSON l = case l of
+    LI i -> Aeson.object ["int" .= i]
+    LD d -> Aeson.object ["double" .= d]
+    LB b -> Aeson.object ["bool" .= b]
+    LC c -> Aeson.object ["char" .= c]
+    LS s -> Aeson.object ["string" .= s]
+
 instance Hashable Literal
 
 data RecFlag = Rec | NonRec deriving (Show, Generic, Eq, Ord)
 data MutFlag = Mut | NonMut deriving (Show, Generic, Eq, Ord)
+
+instance ToJSON MutFlag
+instance FromJSON MutFlag
 
 instance Hashable RecFlag
 instance Hashable MutFlag
@@ -656,6 +668,15 @@ data Decl
   | DExn SrcSpan DataDecl
   deriving (Show, Generic)
 
+instance ToJSON Decl where
+  toJSON d = case d of
+    DFun _ NonRec fs -> Aeson.object ["let" .= fs]
+    DFun _ Rec fs -> Aeson.object ["letrec" .= fs]
+    DEvl _ e -> Aeson.object ["eval" .= e]
+    DTyp _ ts -> Aeson.object ["type" .= ts]
+    DExn _ d -> Aeson.object ["exception" .= d]
+
+
 getSrcSpan :: Decl -> SrcSpan
 getSrcSpan d = case d of
   DFun ss _ _ -> ss
@@ -693,6 +714,29 @@ data Expr
   | Ref !Ref
   deriving (Show, Generic, Eq, Ord)
 instance Hashable Expr
+
+-- NOTE: only handles surface syntax for now (w/o source locations)
+instance ToJSON Expr where
+  toJSON e' = case e' of
+    Var _ v -> Aeson.object ["var" .= v]
+    Lam _ p e _ -> Aeson.object ["fun" .= Aeson.object ["pat" .= p, "exp" .= e]]
+    App _ f es -> Aeson.object ["app" .= Aeson.object ["fun" .= f, "args" .= es]]
+    Bop _ b x y -> Aeson.object ["bop" .= Aeson.object ["op" .= b, "left" .= x, "right" .= y]]
+    Uop _ u x -> Aeson.object ["uop" .= Aeson.object ["op" .= u, "arg" .= x]]
+    Lit _ l -> Aeson.object ["lit" .= l]
+    Let _ Rec ps e -> Aeson.object ["letrec" .= Aeson.object ["binds" .= ps, "body" .= e]]
+    Let _ NonRec ps e -> Aeson.object ["let" .= Aeson.object ["binds" .= ps, "body" .= e]]
+    Ite _ b t f -> Aeson.object ["ite" .= Aeson.object ["cond" .= b, "then" .= t, "else" .= f]]
+    Seq _ x y -> Aeson.object ["seq" .= [x, y]]
+    Case _ e alts -> Aeson.object ["case" .= Aeson.object ["exp" .= e, "alts" .= alts]]
+    Tuple _ es -> Aeson.object ["tuple" .= es]
+    ConApp _ d me _ -> Aeson.object ["con" .= [toJSON d, toJSON me]]
+    Record _ fs _ -> Aeson.object ["record" .= fs]
+    Field _ e f -> Aeson.object ["getField" .= Aeson.object ["exp" .= e, "fld" .= f]]
+    SetField _ e f v -> Aeson.object ["setField" .= Aeson.object ["exp" .= e, "fld" .= f, "val" .= v]]
+    Array _ es _ -> Aeson.object ["array" .= es]
+    List _ es _ -> Aeson.object ["list" .= es]
+    Try _ e alts -> Aeson.object ["try" .= Aeson.object ["exp" .= e, "with" .= alts]]
 
 data Context
   = Here | Elsewhere
@@ -926,6 +970,9 @@ data Uop
   = Neg | FNeg
   deriving (Show, Eq, Ord, Generic)
 
+instance ToJSON Uop
+instance FromJSON Uop
+
 instance Hashable Uop
 
 data Bop
@@ -936,6 +983,9 @@ data Bop
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
   deriving (Show, Eq, Ord, Generic)
+
+instance ToJSON Bop
+instance FromJSON Bop
 
 instance Hashable Bop
 
@@ -958,6 +1008,18 @@ data Pat
   deriving (Show, Generic, Eq, Ord)
 
 instance Hashable Pat
+
+instance ToJSON Pat where
+  toJSON p = case p of
+    VarPat _ v -> Aeson.object ["var" .= v]
+    LitPat _ l -> Aeson.object ["lit" .= l]
+    IntervalPat _ x y -> Aeson.object ["interval" .= [x, y]]
+    ConsPat _ x y -> Aeson.object ["cons" .= [x, y]]
+    ConPat _ x y -> Aeson.object ["con" .= [toJSON x, toJSON y]]
+    ListPat _ xs -> Aeson.object ["list" .= xs]
+    TuplePat _ xs -> Aeson.object ["tuple" .= xs]
+    WildPat _ -> Aeson.object ["wild" .= ()]
+
 
 bindersOf :: Pat -> [Var]
 bindersOf p = case p of
@@ -994,7 +1056,15 @@ data Type
   | TApp !TCon [Type]
   | !Type :-> !Type
   | TTup [Type]
+  | TAll [TVar] !Type
   deriving (Show, Generic, Eq, Ord)
+
+instance ToJSON Type where
+  toJSON t = case t of
+    TVar v -> Aeson.object ["var" .= v]
+    TApp c ts -> Aeson.object ["app" .= Aeson.object ["con" .= c, "args" .= ts]]
+    i :-> o -> Aeson.object ["fun" .= [i, o]]
+    TTup ts -> Aeson.object ["tuple" .= ts]
 
 instance Hashable Type
 
@@ -1025,22 +1095,43 @@ freeTyVars t = case t of
   TApp _ ts -> nub (concatMap freeTyVars ts)
   ti :-> to -> nub (freeTyVars ti ++ freeTyVars to)
   TTup ts -> nub (concatMap freeTyVars ts)
+  TAll as t -> freeTyVars t \\ as
+
+-- freeTyVarsEnv :: Env -> HashSet TVar
+-- freeTyVarsEnv env
+--   | Just penv <- envParent env
+--   = fvs `HashSet.union` freeTyVarsEnv (envParent env)
+--   | otherwise
+--   = fvs
+--   where
+--   fvs = HashSet.fromList (concatMap (freeTyVarsValue.snd)
+--                                 (envEnv env))
+--   freeTyVarsValue = freeTyVars . typeOf
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
-  deriving (Show)
+  deriving (Show, Generic)
+
+instance ToJSON TypeDecl
+-- instance FromJSON TypeDecl
 
 data TypeRhs
   = Alias Type
   | Alg   [DataDecl]
   | TRec  [Field]
-  deriving (Show)
+  deriving (Show, Generic)
+
+instance ToJSON TypeRhs
+-- instance FromJSON TypeRhs
 
 type Field = (String, MutFlag, Type)
 
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
+
+instance ToJSON DataDecl where
+  toJSON d = Aeson.object ["con" .= dCon d, "args" .= dArgs d]
 
 typeDeclType :: TypeDecl -> Type
 typeDeclType TypeDecl {..}
@@ -1063,6 +1154,14 @@ freshTVar = do
   i <- fresh
   return $ 't' : show i
 
+-- inst :: MonadEval m
+--      => [TVar]
+--      -> Type
+--      -> m Type
+-- inst as t = do
+--   as' <- replicateM (length as) freshTVar
+--   return $! subst (zip as as') t
+
 unify :: MonadEval m
       => Type -- ^ actual type
       -> Type -- ^ expected type
@@ -1072,6 +1171,8 @@ unify s t = unify' s t `catchError` \_ -> typeError s t
             -- TODO: report context too
 
 unify' :: MonadEval m => Type -> Type -> m () -- [(TVar, Type)]
+-- unify' (TAll as t1) t2 = inst as t1 >>= \t1 -> unify' t1 t2
+-- unify' t1 (TAll as t2) = inst as t2 >>= \t2 -> unify' t1 t2
 unify' (TVar a) t = unifyVar a t
 unify' t (TVar a) = unifyVar a t
 -- unify' (TCon x) (TCon y)
