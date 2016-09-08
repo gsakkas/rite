@@ -545,13 +545,18 @@ function setup() {
           var stuckNode = data.nodes.filter(function(n) {
               return n.id === data.bad;
           })[0];
-          errors = [{ from: { line: stuckNode.span.startLine - 1,
-                              ch: stuckNode.span.startCol - 1},
-                      to: { line: stuckNode.span.endLine - 1,
-                            ch: stuckNode.span.endCol},
-                      message: data.reason,
-                      severity: 'error'
-                    }];
+          console.log(stuckNode);
+          if (stuckNode.span !== null) {
+            errors = [{ from: { line: stuckNode.span.startLine - 1,
+                                ch: stuckNode.span.startCol - 1},
+                        to: { line: stuckNode.span.endLine - 1,
+                              ch: stuckNode.span.endCol},
+                        message: data.reason,
+                        severity: 'error'
+                      }];
+          } else {
+            errors = [];
+          }
           editor.performLint();
 
         } else if (data.result === 'timeout') {
