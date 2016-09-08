@@ -3,7 +3,7 @@
 
 name:                nanoml
 version:             0.1.0.0
--- synopsis:
+synopsis:            Counter-example generator for OCaml type errors
 -- description:
 license:             BSD3
 license-file:        LICENSE
