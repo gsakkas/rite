@@ -3,7 +3,7 @@
 
 name:                nanoml
 version:             0.1.0.0
--- synopsis:
+synopsis:            Counter-example generator for OCaml type errors
 -- description:
 license:             BSD3
 license-file:        LICENSE
@@ -22,11 +22,17 @@ executable nanoml-server
   build-depends: base >= 4.7 && < 5, aeson, containers, data-default, fgl, fgl-visualize,
                  nanoml, lucid, scotty, text, transformers, wai-extra, unordered-containers >= 0.2
 
--- executable nano-check
---   main-is: Check.hs
---   hs-source-dirs: bin
---   default-language: Haskell2010
---   build-depends: base >= 4.7 && < 5, nanoml, transformers
+executable nano-check
+  main-is: Check.hs
+  hs-source-dirs: bin
+  default-language: Haskell2010
+  build-depends: base >= 4.7 && < 5, nanoml, transformers
+
+executable ocaml-to-json
+  main-is: OcamlToJSON.hs
+  hs-source-dirs: bin
+  default-language: Haskell2010
+  build-depends: base >= 4.7 && < 5, aeson, bytestring, nanoml
 
 library
   exposed-modules:     NanoML

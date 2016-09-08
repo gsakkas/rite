@@ -87,23 +87,36 @@ onlySteps = filter (isStepsTo . snd)
 -- collapseBadEdges :: Eq a => Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseBadEdges gr
   = case badEdges gr of
-      []  -> gr
-      e:_ -> collapseBadEdges (collapseEdge e gr)
+      [] -> gr
+      es -> collapseBadEdges (foldr collapseEdge gr es)
   where
   badEdges gr = filter (\(v1,v2,el) -> fmap (fst.fst3) (Graph.lab gr v1) == fmap (fst.fst3) (Graph.lab gr v2))
                 (Graph.labEdges gr)
 
 -- collapseEdge :: Graph.LEdge EdgeKind -> Graph.Gr a EdgeKind -> Graph.Gr a EdgeKind
 collapseEdge (v1,v2,l) gr
+  --- | traceShow (v1, Graph.lab gr v1, v2, Graph.lab gr v2, l, Graph.lpre gr v1) False
+  --- = undefined
+
+  -- Check whether one of the nodes was already removed
+  | (Nothing, _) <- Graph.match v1 gr
+  = gr
+  | (Nothing, _) <- Graph.match v2 gr
+  = gr
+
   | v1 == v2
     -- FIXME: this really shouldn't be possible..
   = Graph.delEdge (v1,v2) gr
   | not (null (Graph.lpre gr v1)) || isReturnStep l
   = let es = [ (x,v2,moreInfo l l') | (x, l') <- Graph.lpre gr v1 ]
-    in Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
+    in if null es -- FIXME: why does this happen?
+       then gr
+       else Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
   | null (Graph.lpre gr v1)
   = let es = [ (v1,x,moreInfo l l') | (x, l') <- Graph.lsuc gr v2 ]
-    in Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
+    in if null es -- FIXME: why does this happen?
+       then gr
+       else Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
 
 isReturnStep (StepsTo ReturnStep) = True
 isReturnStep _                    = False

@@ -59,12 +59,13 @@ checkWith opts err prog =
       , Just (_,_,_,[l,c])
         <- err =~~ "line ([0-9]+), characters ([0-9]+)"
            :: Maybe (String,String,String,[String])
-      , Just (f,d,p) <- traceShow (l,c) findDecl prog (read l) (read c)
+      , Just (f,d,p) <- traceShow (l,c) $ findDecl prog (read l) (read c)
 --      , Just t <- Map.lookup f knownFuncs
         -> do r <- checkDeclWith opts f p
               -- printResult r
               return $ Just r
-    DFun _ _ [(VarPat _ f, Lam {})]
+    -- DFun _ _ [(VarPat _ f, Lam {})]
+    DFun _ _ [(VarPat _ f, _)]
       -- Just t <- Map.lookup f knownFuncs
         -> do r <- checkDeclWith opts f prog
               -- printResult r

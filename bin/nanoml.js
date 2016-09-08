@@ -267,9 +267,10 @@ function canStepBackward(node) {
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
   // console.log(curEdge, path);
-  if (path.length <= 2) return;
+  if (path.length <= 1) return;
 
   sb_target = [path[path.length - 1].from, curEdge];
+  if (network.body.data.nodes.get(sb_target[0]) !== null) return;
   document.getElementById('step-backward').disabled = false;
 }
 
@@ -295,16 +296,20 @@ function canJumpForward(node) {
   }
   for (var i = 1; i < path.length; i++) {
     var e = path[i];
-    if (network.body.data.nodes.get(e.from) !== null) {
-      // bail if the src node is already in the graph
-      return;
-    }
     if (e.label.indexOf('CallStep') >= 0) {
+      if (network.body.data.nodes.get(e.from) !== null) {
+        // bail if the src node is already in the graph
+        return;
+      }
       jf_target = [e.from, curEdge];
       document.getElementById('jump-forward').disabled = false;
       return;
     }
     if (e.label.indexOf('ReturnStep') >= 0) {
+      if (network.body.data.nodes.get(e.to) !== null) {
+        // bail if the target node is already in the graph
+        return;
+      }
       jf_target = [e.to, curEdge];
       document.getElementById('jump-forward').disabled = false;
       return;
@@ -329,7 +334,7 @@ function canJumpBackward(node) {
   if (path.length === 0) return;
   for (var i = path.length-1; i >= 0; i--) {
     var e = path[i];
-    if (network.body.data.nodes.get(e.to) !== null) {
+    if (network.body.data.nodes.get(e.from) !== null) {
       // bail if the dest node is already in the graph
       return;
     }
@@ -545,13 +550,18 @@ function setup() {
           var stuckNode = data.nodes.filter(function(n) {
               return n.id === data.bad;
           })[0];
-          errors = [{ from: { line: stuckNode.span.startLine - 1,
-                              ch: stuckNode.span.startCol - 1},
-                      to: { line: stuckNode.span.endLine - 1,
-                            ch: stuckNode.span.endCol},
-                      message: data.reason,
-                      severity: 'error'
-                    }];
+          console.log(stuckNode);
+          if (stuckNode.span !== null) {
+            errors = [{ from: { line: stuckNode.span.startLine - 1,
+                                ch: stuckNode.span.startCol - 1},
+                        to: { line: stuckNode.span.endLine - 1,
+                              ch: stuckNode.span.endCol},
+                        message: data.reason,
+                        severity: 'error'
+                      }];
+          } else {
+            errors = [];
+          }
           editor.performLint();
 
         } else if (data.result === 'timeout') {

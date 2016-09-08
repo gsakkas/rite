@@ -721,7 +721,11 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
   Let ms NonRec binds body -> do
     let (ps, es) = unzip binds
     stepOne es
-      (\vs -> do env <- matchNonRecBinds (zip ps vs)
+      (\vs -> do -- env <- gets stEnv
+                 -- let fvs = freeTyVarsEnv env
+                 -- let vs' = map (generalize fvs) vs
+                 -- env <- matchNonRecBinds (zip ps vs')
+                 env <- matchNonRecBinds (zip ps vs)
                  (env', body') <- unshadow body env
                  return $ With ms env' body'
       )
@@ -1212,10 +1216,10 @@ instance Aeson.ToJSON Scope where
     , "ordered_varnames" Aeson..= Aeson.toJSON scp_ordered_varnames
     ]
 
-instance Aeson.ToJSON Expr where
-  toJSON (VI _ i) = Aeson.toJSON i
-  toJSON (VD _ d) = Aeson.toJSON d
-  toJSON (VB _ b) = Aeson.toJSON b
-  toJSON (VC _ c) = Aeson.toJSON c
-  toJSON (VS _ s) = Aeson.toJSON s
-  toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)
+-- instance Aeson.ToJSON Expr where
+--   toJSON (VI _ i) = Aeson.toJSON i
+--   toJSON (VD _ d) = Aeson.toJSON d
+--   toJSON (VB _ b) = Aeson.toJSON b
+--   toJSON (VC _ c) = Aeson.toJSON c
+--   toJSON (VS _ s) = Aeson.toJSON s
+--   toJSON _      = Aeson.toJSON ("<<unknown>>" :: String)

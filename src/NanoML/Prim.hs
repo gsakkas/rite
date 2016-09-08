@@ -121,7 +121,7 @@ primVars = [ ("[]", VL nullProv [] Nothing)
                              ]))
              )
            , ("List.fold_right"
-             ,(mkLams baseEnv [varPatD "f", varPatD "xs", varPatD "b"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "b", varPatD "xs"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
