@@ -64,7 +64,8 @@ checkWith opts err prog =
         -> do r <- checkDeclWith opts f p
               -- printResult r
               return $ Just r
-    DFun _ _ [(VarPat _ f, Lam {})]
+    -- DFun _ _ [(VarPat _ f, Lam {})]
+    DFun _ _ [(VarPat _ f, _)]
       -- Just t <- Map.lookup f knownFuncs
         -> do r <- checkDeclWith opts f prog
               -- printResult r
