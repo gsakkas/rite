@@ -90,7 +90,7 @@ timed x = do start <- getTime
              return (end-start, v)
 
 checkLoop opts e p = do
-  (t, r) <- timed $ T.timeout (20 * 60 * (10^6)) $ checkWith opts e p
+  (t, r) <- timed $ T.timeout (60 * (10^6)) $ checkWith opts e p
   case r of
     -- timed out after x minutes..
     Nothing -> return (Just (Failure 1 1 1 (pretty $ VU Nothing) (TimeoutError (maxSteps opts)) initState, t, maxSteps opts))
@@ -112,7 +112,7 @@ mkOutcome f r
   | becauseOf "OutputType" r = Just Output
   | becauseOf "Type error" r = Just Unsafe
   | becauseOf "infinite recursion" r = Just Diverge
-  | otherwise = trace ("mkOutcome: " ++ f) Nothing
+  | otherwise = trace ("mkOutcome: " ++ f ++ " (" ++ show (pretty (errorMsg r)) ++ ")") Nothing
 
 makePath :: Result -> [StepKind]
 makePath r =
@@ -158,13 +158,14 @@ main = do
          | Just x <- mkOutcome f r -> do
            printResult r
            let path = makePath $! r
+           let ss = [CallStep, ReturnStep] -- could also look at ReturnStep, but we don't mention it in the paper
            let o = R { file = f
                      , stepLimit = ms
                      , time = t
                      , tests = numTests r
                      , outcome = x
-                     , steps = if x `elem` [Safe,Diverge,Timeout] then 0 else length path
-                     , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else length (filter (== CallStep) path)
+                     , steps = if x `elem` [Safe,Diverge,Timeout] then 0 else 1 + length path
+                     , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else 1 + length (filter (`elem` ss) path)
                      }
            return $!! (Just o)
     `catch` \(_ :: SomeException) -> return Nothing
