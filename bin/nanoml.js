@@ -71,43 +71,59 @@ function guid() {
 }
 
 var demos = {
-  factorial: [ "let rec fac n ="
-             , "  if n <= 0 then"
-             , "    true"
-             , "  else"
-             , "    n * fac (n - 1);;"
-             ].join('\n'),
+  factorial:
+    [ "let rec fac n ="
+    , "  if n <= 0 then"
+    , "    true"
+    , "  else"
+    , "    n * fac (n - 1);;"
+    ].join('\n'),
 
-  wwhile: [ "let (x,y) = (\"5\", 5);;"
-          , "let rec wwhile (f,b) ="
-          , "  let f b = (x, y) in "
-          , "  if y = true "
-          , "  then wwhile (f, x)"
-          , "  else x;;"
-          ].join('\n'),
+  sumList:
+    [ "let rec sumList xs ="
+    , "  match xs with"
+    , "  | []    -> []"
+    , "  | y::ys -> y + sumList ys"
+    ].join('\n'),
 
-  loop: [ "let f lst ="
-        , "  let rec loop lst acc ="
-        , "    if lst = [] then"
-        , "      acc"
-        , "    else"
-        , "      ()"
-        , "  in"
-        , "  match loop lst [(0.0,0.0)] with"
-        , "    | h :: t -> h;;"
-        ].join('\n'),
+  digitsOfInt:
+    [ "let append x xs ="
+    , "  match xs with"
+    , "  | [] -> [x]"
+    , "  | _  -> x :: xs"
+    , ""
+    , "let rec digitsOfInt n ="
+    , "  if n <= 0 then"
+    , "    []"
+    , "  else"
+    , "    append (digitsOfInt (n / 10)) [n mod 10]"
+    ].join('\n'),
 
-  palindrome: [ "let listReverse l ="
-              , "  let rec helper xs = function "
-              , "    | [] -> xs "
-              , "    | hd::tl -> helper (hd :: xs) tl "
-              , "  in helper [];;"
-              , ""
-              , "let palindrome (w : char list) ="
-              , "  if (listReverse w) = w "
-              , "  then true "
-              , "  else false;;"
-              ].join('\n'),
+  wwhile:
+    [ "let rec wwhile (f,b) ="
+    , "  match f with"
+    , "  | (z, false) -> z"
+    , "  | (z, true)  -> wwhile (f, z)"
+    , ""
+    , "let f x ="
+    , "  let xx = x * x in"
+    , "  (xx, (xx < 100))"
+    , ""
+    , "let _ = wwhile (f, 2)"
+    ].join('\n'),
+
+  palindrome:
+    [ "let listReverse l ="
+    , "  let rec helper xs = function "
+    , "    | [] -> xs "
+    , "    | hd::tl -> helper (hd :: xs) tl "
+    , "  in helper [];;"
+    , ""
+    , "let palindrome (w : char list) ="
+    , "  if (listReverse w) = w "
+    , "  then true "
+    , "  else false;;"
+    ].join('\n'),
 
 };
 

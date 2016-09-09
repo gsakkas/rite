@@ -66,8 +66,9 @@ main = do
                   span_ [class_ "caret"] ""
                 ul_ [class_ "dropdown-menu"] $ do
                   li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
+                  li_ $ a_ [onclick_ "loadDemo('sumList')"] "sumList"
+                  li_ $ a_ [onclick_ "loadDemo('digitsOfInt')"] "digitsOfInt"
                   li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
-                  li_ $ a_ [onclick_ "loadDemo('loop')"] "loop"
                   li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
             form_ [class_ "navbar-form navbar-left"] $ do
               div_ [class_ "form-group"] $ do
