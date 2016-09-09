@@ -269,7 +269,6 @@ function canStepForward(node) {
 function stepForward() {
   mixpanel.track("StepForward", { "node": sf_target[0], "replacingEdge": sf_target[1], "uuid": uuid });
   insertNode(allNodes.get(sf_target[0]), sf_target[1]);
-  resetButtons();
 }
 
 function canStepBackward(node) {
@@ -293,7 +292,6 @@ function canStepBackward(node) {
 function stepBackward() {
   mixpanel.track("StepBackward", { "node": sb_target[0], "replacingEdge": sb_target[1], "uuid": uuid});
   insertNode(allNodes.get(sb_target[0]), sb_target[1]);
-  resetButtons();
 }
 
 function canJumpForward(node) {
@@ -336,7 +334,6 @@ function canJumpForward(node) {
 function jumpForward() {
   mixpanel.track("JumpForward", { "node": jf_target[0], "replacingEdge": jf_target[1], "uuid": uuid});
   insertNode(allNodes.get(jf_target[0]), jf_target[1]);
-  resetButtons();
 }
 
 function canJumpBackward(node) {
@@ -346,7 +343,7 @@ function canJumpBackward(node) {
   if (curEdges.length === 0) return;
   var curEdge = curEdges[0];
   var path = findPath(curEdge.from, curEdge.to);
-  console.log(curEdge, path);
+  // console.log(curEdge, path);
   if (path.length === 0) return;
   for (var i = path.length-1; i >= 0; i--) {
     var e = path[i];
@@ -365,7 +362,6 @@ function canJumpBackward(node) {
 function jumpBackward() {
   mixpanel.track("JumpBackward", { "node": jb_target[0], "replacingEdge": jb_target[1], "uuid": uuid});
   insertNode(allNodes.get(jb_target[0]), jb_target[1]);
-  resetButtons();
 }
 
 function canStepOver(node) {
@@ -390,7 +386,6 @@ function canStepOver(node) {
 function stepOver() {
   mixpanel.track("StepOver", { "node": so_target[0], "replacingEdge": so_target[1], "uuid": uuid});
   insertNode(allNodes.get(so_target[0]), so_target[1]);
-  resetButtons();
 }
 
 function canStepInto(node) {
@@ -496,6 +491,11 @@ function insertNode(node, replacingEdge) {
   clearMark();
   resetButtons();
   canStepUndo();
+
+  // finally, select the newly-inserted node
+  network.selectNodes([node.id]);
+  network.emit('selectNode', {});
+
   // network.stabilize();
   // network.redraw();
 }
@@ -559,14 +559,14 @@ function setup() {
         } else if (data.result === 'stuck') {
           uuid = guid();
           mixpanel.track("Unsafe", { "nodes": data.nodes, "edges": data.edges,
-                                   "root": data.root, "final": data.value,
-                                   "program": prog, "function": func, "uuid": uuid });
+                                     "root": data.root, "final": data.value,
+                                     "program": prog, "function": func, "uuid": uuid });
 
           // notifyUnsafe(data.reason);
           var stuckNode = data.nodes.filter(function(n) {
               return n.id === data.bad;
           })[0];
-          console.log(stuckNode);
+          // console.log(stuckNode);
           if (stuckNode.span !== null) {
             errors = [{ from: { line: stuckNode.span.startLine - 1,
                                 ch: stuckNode.span.startCol - 1},
