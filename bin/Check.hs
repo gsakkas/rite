@@ -2,6 +2,7 @@
 module Main where
 
 import System.Environment
+import System.Exit
 import Text.Printf
 
 import NanoML
@@ -16,10 +17,14 @@ main = do
                       [file, func] -> (file, Just func)
                       _ -> error "usage: nano-check <file> [function]"
   prog <- parseFile file
-  res <- maybe (fromJust <$> check Nothing prog) (\v -> fromJust <$> check (Just v) prog) func
+  res <- maybe (fromJust <$> check Nothing prog) (\v -> fromJust <$> checkWith (stdOpts {maxTests=100}) (Just v) prog) func
   case res of
-    Success n _ _ -> printf "Could not find a counter-example after %d tests..\n" n
-    Failure {..} -> do -- gr <- buildGraph (stEdges finalState)
-                       -- st <- findRoot gr (stCurrentExpr finalState)
-                       -- explore gr st
-                       print counterExample
+    Success n _ _ -> do
+      printf "Could not find a counter-example after %d tests..\n" n
+      exitSuccess
+    Failure {..} -> do
+      -- gr <- buildGraph (stEdges finalState)
+      -- st <- findRoot gr (stCurrentExpr finalState)
+      -- explore gr st
+      print counterExample
+      exitFailure
