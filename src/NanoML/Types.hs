@@ -998,7 +998,7 @@ data Pat
   | LitPat !MSrcSpan !Literal
   | IntervalPat !MSrcSpan !Literal !Literal
   | ConsPat !MSrcSpan !Pat !Pat
-  | ConPat !MSrcSpan !Var (Maybe Pat)
+  | ConPat !MSrcSpan !DCon (Maybe Pat)
   | ListPat !MSrcSpan [Pat]
   | TuplePat !MSrcSpan [Pat]
   | WildPat !MSrcSpan
