@@ -19,10 +19,12 @@ main = interact (unlines . map generateDiff . lines)
 generateDiff :: String -> String
 generateDiff json = case eitherDecode (LBSC.pack json) of
   Left e -> error e
-  Right (MkInSample bads' [fix'])
+  -- Right (MkInSample bads' [fix'])
+  Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , bads <- rights $ map parseTopForm bads'
     -> unlines . map (LBSC.unpack . encode . diffOne fix) $ bads
+  v -> error (show v)
 
 diffOne :: Prog -> Prog -> OutSample
 diffOne fix bad = MkOutSample (render $ prettyProg bad) bad (diffProg bad fix)
