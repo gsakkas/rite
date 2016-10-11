@@ -101,74 +101,76 @@ literalType l = case l of
   LC {} -> "Char"
   LS {} -> "String"
 
--- diff :: Expr -> Expr -> Maybe Context
--- diff e1 e2 = case (e1, e2) of
---   (Var lx x, Var ly y)
---     | lx == ly && x == y
---       -> Nothing
---   (Lam lx px x _, Lam ly py y _)
---     | lx == ly && px == py
---       -> InLam <$> diff x y
---   (App lx fx ax, App ly fy ay)
---     | lx == ly && length ax == length ay
---       -> merge $ (InAppF <$> diff fx fy)
---                : (zipWith3 (\x y i -> InAppXs i <$> diff x y)
---                    ax ay [0..])
---   (Bop lx bx x1 x2, Bop ly by y1 y2)
---     | lx == ly && bx == by
---       -> merge [InBopL <$> diff x1 y1, InBopR <$> diff x2 y2]
---   (Uop lx ux x, Uop ly uy y)
---     | lx == ly && ux == uy
---       -> InUop <$> diff x y
---   (Lit lx x, Lit ly y)
---     | lx == ly && x == y
---       -> Nothing
---   (Let lx rx xbs x, Let ly ry ybs y)
---     | lx == ly && rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
---       -> merge $ (zipWith (\x y i -> InLet i <$> diff x y)
---                    (map snd xbs) (map snd ybs) [1..])
---                  ++ InLet 0 <$> diff x y
---   -- HEREHERE
---   (Ite lx bx tx fx, Ite ly by ty fy)
---     | lx == ly
---       -> merge $ [diff bx by <|> diff tx ty, Indiff fx fy]
---   (Seq lx x1 x2, Seq ly y1 y2)
---     | lx == ly
---       -> diff x1 y1 <|> diff x2 y2
---   (Case lx x axs, Case ly y ays)
---     | lx == ly && length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
---       -> diff x y <|> msum (zipWith diff (map thd3 axs) (map thd3 ays))
---   (Tuple lx xs, Tuple ly ys)
---     | lx == ly && length xs == length ys
---       -> msum (zipWith diff xs ys)
---   (ConApp lx cx mx mtx, ConApp ly cy my mty)
---     | lx == ly && cx == cy -> if
---         | Just x <- mx, Just y <- my
---           -> diff x y
---         | Nothing <- mx, Nothing <- my
---           -> Nothing
---         | otherwise
---           -> Just Here
---   (Record lx fxs mtx, Record ly fys mty)
---     | lx == ly && map fst fxs == map fst fys
---       -> msum (zipWith diff (map snd fxs) (map snd fys))
---   (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
---     | lx == ly && vx == vy
---       -> Nothing
---   (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
---     | lx == ly && vx == vy
---       -> Nothing
---   -- (Val _ x, Val _ y)
---   --   | x == y
---   --     -> Nothing
---   -- (With lx ex x, With ly ey y)
---   --   | lx == ly && envId ex == envId ey
---   --     -> diff x y
---   -- (Replace lx ex x, Replace ly ey y)
---   --   | lx == ly && envId ex == envId ey
---   --     -> diff x y
---   -- (_, Replace _ _ _)
---   --   -> Just (e1, e2)
---   -- (Replace _ env' _, _)
---   --   -> Just (e1, e2)
---   _ -> Just Here
+diff :: Expr -> Expr -> Maybe SrcSpan
+diff e1 e2 = case (e1, e2) of
+  (Var lx x, Var ly y)
+    | x == y
+      -> Nothing
+  (Lam lx px x _, Lam ly py y _)
+    | px == py
+      -> diff x y
+  (App lx fx ax, App ly fy ay)
+    | length ax == length ay
+      -> merge $ (diff fx fy) : (zipWith diff ax ay)
+  (Bop lx bx x1 x2, Bop ly by y1 y2)
+    | bx == by
+      -> merge [diff x1 y1, diff x2 y2]
+  (Uop lx ux x, Uop ly uy y)
+    | ux == uy
+      -> diff x y
+  (Lit lx x, Lit ly y)
+    | x == y
+      -> Nothing
+  (Let lx rx xbs x, Let ly ry ybs y)
+    | rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
+      -> merge $ diff x y : zipWith diff (map snd xbs) (map snd ybs)
+  (Ite lx bx tx fx, Ite ly by ty fy)
+      -> merge $ [diff bx by, diff tx ty, diff fx fy]
+  (Seq lx x1 x2, Seq ly y1 y2)
+      -> merge $ [diff x1 y1, diff x2 y2]
+  (Case lx x axs, Case ly y ays)
+    | length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
+      -> merge $ diff x y : zipWith diff (map thd3 axs) (map thd3 ays)
+  (Tuple lx xs, Tuple ly ys)
+    | length xs == length ys
+      -> merge (zipWith diff xs ys)
+  (ConApp lx cx mx mtx, ConApp ly cy my mty)
+    | cx == cy -> if
+        | Just x <- mx, Just y <- my
+          -> diff x y
+        | Nothing <- mx, Nothing <- my
+          -> Nothing
+        | otherwise
+          -> lx
+  (Record lx fxs mtx, Record ly fys mty)
+    | map fst fxs == map fst fys
+      -> merge (zipWith diff (map snd fxs) (map snd fys))
+  (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
+    | vx == vy
+      -> Nothing
+  (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
+    | vx == vy
+      -> Nothing
+  -- (Val _ x, Val _ y)
+  --   | x == y
+  --     -> Nothing
+  -- (With lx ex x, With ly ey y)
+  --   | lx == ly && envId ex == envId ey
+  --     -> diff x y
+  -- (Replace lx ex x, Replace ly ey y)
+  --   | lx == ly && envId ex == envId ey
+  --     -> diff x y
+  -- (_, Replace _ _ _)
+  --   -> Just (e1, e2)
+  -- (Replace _ env' _, _)
+  --   -> Just (e1, e2)
+  _ -> getSrcSpanExprMaybe e1
+
+  where
+  merge ls = case catMaybes ls of
+    -- no diff in subexprs => no diff
+    []  -> Nothing
+    -- diff in *one* subexpr => that expr
+    [x] -> Just x
+    -- diff in *multiple* subexprs => parent expr
+    _   -> getSrcSpanExprMaybe e1
