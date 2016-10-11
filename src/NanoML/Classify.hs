@@ -12,6 +12,7 @@ import Data.Set (Set)
 import NanoML.Parser
 import NanoML.Types
 
+import Debug.Trace
 
 fold :: Monoid a => (Expr -> a -> a) -> a -> Expr -> a
 fold f z = go
@@ -134,6 +135,12 @@ diff e1 e2 = case (e1, e2) of
   (Tuple lx xs, Tuple ly ys)
     | length xs == length ys
       -> merge (zipWith diff xs ys)
+  (List lx xs _, List ly ys _)
+    | length xs == length ys
+      -> merge (zipWith diff xs ys)
+  (Array lx xs _, Array ly ys _)
+    | length xs == length ys
+      -> merge (zipWith diff xs ys)
   (ConApp lx cx mx mtx, ConApp ly cy my mty)
     | cx == cy -> if
         | Just x <- mx, Just y <- my
@@ -174,3 +181,31 @@ diff e1 e2 = case (e1, e2) of
     [x] -> Just x
     -- diff in *multiple* subexprs => parent expr
     _   -> getSrcSpanExprMaybe e1
+
+diffProg :: Prog -> Prog -> Maybe SrcSpan
+diffProg p1 p2 = merge $ zipWith diffDecl p1 p2
+  where
+  merge ls = case catMaybes ls of
+    -- no diff in subexprs => no diff
+    []  -> Nothing
+    -- diff in *one* subexpr => that expr
+    [x] -> Just x
+    -- diff in *multiple* subexprs => parent expr
+    _   -> Just $ joinSrcSpan (getSrcSpan (head p1)) (getSrcSpan (last p1))
+
+diffDecl :: Decl -> Decl -> Maybe SrcSpan
+diffDecl d1 d2 = case (d1, d2) of
+  (DFun _ r1 pes1, DFun _ r2 pes2)
+    | r1 == r2 && map fst pes1 == map fst pes2
+    -> merge $ zipWith (\(_,e1) (_,e2) -> diff e1 e2) pes1 pes2
+  (DEvl _ e1, DEvl _ e2)
+    -> diff e1 e2
+  _ -> Just $ getSrcSpan d1
+  where
+  merge ls = case catMaybes ls of
+    -- no diff in subexprs => no diff
+    []  -> Nothing
+    -- diff in *one* subexpr => that expr
+    [x] -> Just x
+    -- diff in *multiple* subexprs => parent expr
+    _   -> Just $ getSrcSpan d1

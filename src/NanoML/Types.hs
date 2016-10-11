@@ -647,6 +647,9 @@ instance Show SrcSpan where
                              srcSpanStartLine srcSpanStartCol
                              srcSpanEndLine   srcSpanEndCol
 
+instance ToJSON SrcSpan where
+  toJSON = toJSON . show
+
 -- instance Show MSrcSpan where
 --   show _ = ""
 
@@ -669,12 +672,14 @@ data Decl
   deriving (Show, Generic)
 
 instance ToJSON Decl where
-  toJSON d = case d of
-    DFun _ NonRec fs -> Aeson.object ["let" .= fs]
-    DFun _ Rec fs -> Aeson.object ["letrec" .= fs]
-    DEvl _ e -> Aeson.object ["eval" .= e]
-    DTyp _ ts -> Aeson.object ["type" .= ts]
-    DExn _ d -> Aeson.object ["exception" .= d]
+  toJSON d = Aeson.object $ addLoc $ case d of
+    DFun _ NonRec fs -> ["let" .= fs]
+    DFun _ Rec fs    -> ["letrec" .= fs]
+    DEvl _ e         -> ["eval" .= e]
+    DTyp _ ts        -> ["type" .= ts]
+    DExn _ d         -> ["exception" .= d]
+    where
+    addLoc = (:) ("loc" .= getSrcSpan d)
 
 
 getSrcSpan :: Decl -> SrcSpan
@@ -717,26 +722,29 @@ instance Hashable Expr
 
 -- NOTE: only handles surface syntax for now (w/o source locations)
 instance ToJSON Expr where
-  toJSON e' = case e' of
-    Var _ v -> Aeson.object ["var" .= v]
-    Lam _ p e _ -> Aeson.object ["fun" .= Aeson.object ["pat" .= p, "exp" .= e]]
-    App _ f es -> Aeson.object ["app" .= Aeson.object ["fun" .= f, "args" .= es]]
-    Bop _ b x y -> Aeson.object ["bop" .= Aeson.object ["op" .= b, "left" .= x, "right" .= y]]
-    Uop _ u x -> Aeson.object ["uop" .= Aeson.object ["op" .= u, "arg" .= x]]
-    Lit _ l -> Aeson.object ["lit" .= l]
-    Let _ Rec ps e -> Aeson.object ["letrec" .= Aeson.object ["binds" .= ps, "body" .= e]]
-    Let _ NonRec ps e -> Aeson.object ["let" .= Aeson.object ["binds" .= ps, "body" .= e]]
-    Ite _ b t f -> Aeson.object ["ite" .= Aeson.object ["cond" .= b, "then" .= t, "else" .= f]]
-    Seq _ x y -> Aeson.object ["seq" .= [x, y]]
-    Case _ e alts -> Aeson.object ["case" .= Aeson.object ["exp" .= e, "alts" .= alts]]
-    Tuple _ es -> Aeson.object ["tuple" .= es]
-    ConApp _ d me _ -> Aeson.object ["con" .= [toJSON d, toJSON me]]
-    Record _ fs _ -> Aeson.object ["record" .= fs]
-    Field _ e f -> Aeson.object ["getField" .= Aeson.object ["exp" .= e, "fld" .= f]]
-    SetField _ e f v -> Aeson.object ["setField" .= Aeson.object ["exp" .= e, "fld" .= f, "val" .= v]]
-    Array _ es _ -> Aeson.object ["array" .= es]
-    List _ es _ -> Aeson.object ["list" .= es]
-    Try _ e alts -> Aeson.object ["try" .= Aeson.object ["exp" .= e, "with" .= alts]]
+  toJSON e' = Aeson.object $ addLoc $ case e' of
+    Var _ v           -> ["var" .= v]
+    Lam _ p e _       -> ["fun" .= Aeson.object ["pat" .= p, "exp" .= e]]
+    App _ f es        -> ["app" .= Aeson.object ["fun" .= f, "args" .= es]]
+    Bop _ b x y       -> ["bop" .= Aeson.object ["op" .= b, "left" .= x, "right" .= y]]
+    Uop _ u x         -> ["uop" .= Aeson.object ["op" .= u, "arg" .= x]]
+    Lit _ l           -> ["lit" .= l]
+    Let _ Rec ps e    -> ["letrec" .= Aeson.object ["binds" .= ps, "body" .= e]]
+    Let _ NonRec ps e -> ["let" .= Aeson.object ["binds" .= ps, "body" .= e]]
+    Ite _ b t f       -> ["ite" .= Aeson.object ["cond" .= b, "then" .= t, "else" .= f]]
+    Seq _ x y         -> ["seq" .= [x, y]]
+    Case _ e alts     -> ["case" .= Aeson.object ["exp" .= e, "alts" .= alts]]
+    Tuple _ es        -> ["tuple" .= es]
+    ConApp _ d me _   -> ["con" .= [toJSON d, toJSON me]]
+    Record _ fs _     -> ["record" .= fs]
+    Field _ e f       -> ["getField" .= Aeson.object ["exp" .= e, "fld" .= f]]
+    SetField _ e f v  -> ["setField" .= Aeson.object ["exp" .= e, "fld" .= f, "val" .= v]]
+    Array _ es _      -> ["array" .= es]
+    List _ es _       -> ["list" .= es]
+    Try _ e alts      -> ["try" .= Aeson.object ["exp" .= e, "with" .= alts]]
+    where
+    addLoc = (:) ("loc" .= getSrcSpanExprMaybe e')
+
 
 data Context
   = Here | Elsewhere
