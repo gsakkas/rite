@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE MultiWayIf #-}
 module NanoML.Classify where
 
@@ -47,7 +48,7 @@ classify do_one = snd . go
     Tuple _ es  -> merge e (map go es)
     ConApp _ _ b _ -> merge e (map go (maybeToList b))
     Record _ fes _ -> merge e (map (go.snd) fes)
-    Field _ x _ -> merge e (map go [e])
+    Field _ x _ -> merge e (map go [x])
     SetField _ x _ y -> merge e (map go [x,y])
     List _ es _ -> merge e (map go es)
     -- FIXME: fill in a few more cases...
@@ -55,7 +56,7 @@ classify do_one = snd . go
 
 
   merge e ars = case mconcat ars of
-    (a', r) -> let a = do_one e a' in (a, Map.insert (loc e) a r)
+    (!a', !r) -> let !a = do_one e a' in (,) a $! Map.insert (loc e) a r
 
 type OpVector = Map String Int
 
