@@ -14,23 +14,40 @@ import NanoML.Types
 
 
 main :: IO ()
-main = interact (unlines . map generateDiff . lines)
+main = interact (unlines
+                 -- TODO: add runtime flag to choose classifier?
+                 . map (generateDiff by_ops)
+                 . lines)
 
-generateDiff :: String -> String
-generateDiff json = case eitherDecode (LBSC.pack json) of
+generateDiff :: (ToJSON a, Monoid a)
+             => (Expr -> a) -> String -> String
+generateDiff mkfs json = case eitherDecode (LBSC.pack json) of
   Left e -> error e
   Right (MkInSample bads' [fix'])
     | Right fix <- parseTopForm fix'
     , bads <- rights $ map parseTopForm bads'
-    -> unlines . map (LBSC.unpack . encode . diffOne fix) $ bads
+    -> unlines . map (LBSC.unpack . encode . diffOne mkfs fix) $ bads
 
-diffOne :: Prog -> Prog -> OutSample
-diffOne fix bad = MkOutSample (render $ prettyProg bad) bad (diffProg bad fix)
+diffOne :: Monoid a => (Expr -> a) -> Prog -> Prog -> OutSample a
+diffOne mkfs fix bad = MkOutSample
+  { prog = render (prettyProg bad)
+  , ast  = bad
+  , loc  = diffProg bad fix
+  , features = mconcat (map mkfsD bad)
+  }
+  where
+  mkfsD (DFun _ _ pes) = mconcat (map (mkfs.snd) pes)
+  mkfsD (DEvl _ e) = mkfs e
+  mkfsD _ = mempty
 
 data InSample = MkInSample { bad :: [String], fix :: [String] }
   deriving (Show, Generic)
 instance FromJSON InSample
 
-data OutSample = MkOutSample { prog :: String, ast :: Prog, loc :: MSrcSpan }
-  deriving (Show, Generic)
-instance ToJSON OutSample
+data OutSample a = MkOutSample
+  { prog :: String
+  , ast :: Prog
+  , loc :: MSrcSpan
+  , features :: a
+  } deriving (Show, Generic)
+instance ToJSON a => ToJSON (OutSample a)
