@@ -27,7 +27,8 @@ preds = [has_op o | o <- [Eq .. FExp]]
 generateDiff :: [Expr -> Bool] -> String -> String
 generateDiff mkfs json = case eitherDecode (LBSC.pack json) of
   Left e -> error e
-  Right (MkInSample bads' [fix'])
+  -- Right (MkInSample bads' [fix'])
+  Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , bads <- rights $ map parseTopForm bads'
     -> unlines . map (LBSC.unpack . encode . diffOne mkfs fix) $ bads

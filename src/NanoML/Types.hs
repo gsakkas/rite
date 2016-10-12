@@ -1027,6 +1027,9 @@ instance ToJSON Pat where
     ListPat _ xs -> Aeson.object ["list" .= xs]
     TuplePat _ xs -> Aeson.object ["tuple" .= xs]
     WildPat _ -> Aeson.object ["wild" .= ()]
+    OrPat _ x y -> Aeson.object ["or" .= [x, y]]
+    AsPat _ x y -> Aeson.object ["as" .= [toJSON x, toJSON y]]
+    ConstraintPat _ x y -> Aeson.object ["type" .= [toJSON x, toJSON y]]
 
 
 bindersOf :: Pat -> [Var]
