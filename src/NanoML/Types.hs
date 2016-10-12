@@ -990,7 +990,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Show, Eq, Ord, Generic, Enum)
 
 instance ToJSON Bop
 instance FromJSON Bop
