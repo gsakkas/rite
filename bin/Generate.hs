@@ -4,6 +4,7 @@ module Main where
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import Data.Either
+import Data.List
 import qualified Data.Map.Strict as Map
 import Data.Maybe
 import GHC.Generics
@@ -33,8 +34,8 @@ generateDiff mkfs json = case eitherDecode (LBSC.pack json) of
   Right (MkInSample bads' [fix'])
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
-    , bads <- rights $ map parseTopForm bads'
-    -> Just . unlines . map (LBSC.unpack . encode . diffOne mkfs fix) $ bads
+    , bads <- rights $ map parseTopForm $ nub bads'
+    -> Just . unlines . map (unlines . map (LBSC.unpack . encode) . diffOne mkfs fix) $ bads
   Right (MkInSample bads' [fix'])
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm fix'
@@ -58,7 +59,10 @@ diffOne fs fix bad = case diffProg bad fix of
   mkfsD _ = mempty
 
 mkOut :: SrcSpan -> (SrcSpan, [Bool]) -> OutSample
-mkOut l1 (l2, fs) = MkOutSample (if l1 == l2 then Bad else Good) fs
+mkOut l1 (l2, fs) = MkOutSample
+  (if l1 == l2 then Bad else Good)
+  (map (\b -> if b then 1 else 0) fs)
+
 
 data InSample = MkInSample { bad :: [String], fix :: [String] }
   deriving (Show, Generic)
@@ -69,7 +73,7 @@ data OutSample = MkOutSample
   -- , ast :: Prog
   -- , loc :: MSrcSpan
   { kind :: Kind
-  , features :: [Bool]
+  , features :: [Int]
   } deriving (Show, Generic)
 instance ToJSON OutSample
 

@@ -150,6 +150,7 @@ has_con c = getAny . fold f mempty
   f e acc = acc <> case e of
                      ConApp _ c' _ _ -> Any $ c == c'
                      Case _ _ as -> Any $ any (pat_has_con c) (map fst3 as)
+                     _ -> mempty
 
 pat_has_con :: DCon -> Pat -> Bool
 pat_has_con c p' = case p' of
