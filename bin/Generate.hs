@@ -23,10 +23,10 @@ main :: IO ()
 main = do
   jsons <- getContents
   let uniqs = uniqDiffs (lines jsons)
-  print (Set.size uniqs)
+  -- print (Set.size uniqs)
     -- TODO: add runtime flag to choose classifier?
   let outs = concatMap (mkOutSample preds) (Set.toList uniqs)
-  mapM_ print outs
+  mapM_ (LBSC.putStrLn . encode) outs
 -- main = interact (unlines
 --                  . catMaybes . map fst . mapAccumL (generateDiff preds) Set.empty
 --                  . lines)
