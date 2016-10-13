@@ -670,6 +670,7 @@ data Decl
   | DTyp SrcSpan [TypeDecl]
   | DExn SrcSpan DataDecl
   deriving (Show, Generic)
+instance Hashable Decl
 
 instance ToJSON Decl where
   toJSON d = Aeson.object $ addLoc $ case d of
@@ -1122,7 +1123,7 @@ freeTyVars t = case t of
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
   deriving (Show, Generic)
-
+instance Hashable TypeDecl
 instance ToJSON TypeDecl
 -- instance FromJSON TypeDecl
 
@@ -1131,7 +1132,7 @@ data TypeRhs
   | Alg   [DataDecl]
   | TRec  [Field]
   deriving (Show, Generic)
-
+instance Hashable TypeRhs
 instance ToJSON TypeRhs
 -- instance FromJSON TypeRhs
 
@@ -1140,7 +1141,8 @@ type Field = (String, MutFlag, Type)
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
-
+instance Hashable DataDecl where
+  hashWithSalt s (DataDecl c as _) = s `hashWithSalt` c `hashWithSalt` as
 instance ToJSON DataDecl where
   toJSON d = Aeson.object ["con" .= dCon d, "args" .= dArgs d]
 
