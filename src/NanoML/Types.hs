@@ -669,7 +669,7 @@ data Decl
   | DEvl SrcSpan Expr
   | DTyp SrcSpan [TypeDecl]
   | DExn SrcSpan DataDecl
-  deriving (Show, Generic)
+  deriving (Show, Eq, Generic)
 instance Hashable Decl
 
 instance ToJSON Decl where
@@ -1122,7 +1122,7 @@ freeTyVars t = case t of
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
-  deriving (Show, Generic)
+  deriving (Show, Eq, Generic)
 instance Hashable TypeDecl
 instance ToJSON TypeDecl
 -- instance FromJSON TypeDecl
@@ -1131,7 +1131,7 @@ data TypeRhs
   = Alias Type
   | Alg   [DataDecl]
   | TRec  [Field]
-  deriving (Show, Generic)
+  deriving (Show, Eq, Generic)
 instance Hashable TypeRhs
 instance ToJSON TypeRhs
 -- instance FromJSON TypeRhs
@@ -1141,6 +1141,8 @@ type Field = (String, MutFlag, Type)
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
   deriving (Show)
+instance Eq DataDecl where
+  (DataDecl d1 a1 _) == (DataDecl d2 a2 _) = d1 == d2 && a1 == a2
 instance Hashable DataDecl where
   hashWithSalt s (DataDecl c as _) = s `hashWithSalt` c `hashWithSalt` as
 instance ToJSON DataDecl where

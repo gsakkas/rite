@@ -35,10 +35,10 @@ preds :: [Expr -> Bool]
 preds = [has_op o | o <- [Eq .. FExp]]
      ++ [has_con "::", has_con "[]"]
 
-uniqDiffs :: [String] -> HashSet (SrcSpan, String)
+uniqDiffs :: [String] -> HashSet (SrcSpan, Prog)
 uniqDiffs = foldl' (\seen json -> seen `mappend` mkDiffs json) mempty
 
-mkDiffs :: String -> HashSet (SrcSpan, String)
+mkDiffs :: String -> HashSet (SrcSpan, Prog)
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
   Right (MkInSample bads' [fix'])
@@ -52,10 +52,10 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
     -> {-trace e-} mempty
   v -> error (show v)
 
-mkDiff :: Prog -> Prog -> Maybe (SrcSpan, String)
+mkDiff :: Prog -> Prog -> Maybe (SrcSpan, Prog)
 mkDiff fix bad = case diffProg bad fix of
   Nothing -> Nothing
-  Just l  -> Just (l, render (prettyProg bad))
+  Just l  -> Just (l, bad)
 
 -- generateDiff :: [Expr -> Bool] -> Set.Set (SrcSpan, String) -> String
 --              -> (Set.Set (SrcSpan, String), Maybe String)
@@ -84,8 +84,8 @@ mkDiff fix bad = case diffProg bad fix of
 --   Nothing -> []
 --   Just l  -> map (mkOut l) (concatMap mkfsD bad)
 
-mkOutSample :: [Expr -> Bool] -> (SrcSpan, String) -> [OutSample]
-mkOutSample fs (l, bad) = map (mkOut l) (concatMap mkfsD (fromRight (parseTopForm bad)))
+mkOutSample :: [Expr -> Bool] -> (SrcSpan, Prog) -> [OutSample]
+mkOutSample fs (l, bad) = map (mkOut l) (concatMap mkfsD bad)
   where
   mkfsD (DFun _ _ pes) = mconcat (map (classify fs.snd) pes)
   mkfsD (DEvl _ e) = classify fs e
