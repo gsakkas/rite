@@ -650,6 +650,10 @@ instance Show SrcSpan where
 instance ToJSON SrcSpan where
   toJSON = toJSON . show
 
+isSubSpanOf :: SrcSpan -> SrcSpan -> Bool
+SrcSpan sl1 sc1 el1 ec1 `isSubSpanOf` SrcSpan sl2 sc2 el2 ec2
+  = (sl1, sc1) >= (sl2, sc2) && (el1, ec1) <= (el2, ec2)
+
 -- instance Show MSrcSpan where
 --   show _ = ""
 

@@ -171,11 +171,11 @@ literalType l = case l of
   LC {} -> "Char"
   LS {} -> "String"
 
-diff :: Expr -> Expr -> Maybe SrcSpan
+diff :: Expr -> Expr -> Set SrcSpan
 diff e1 e2 = case (e1, e2) of
   (Var lx x, Var ly y)
     | x == y
-      -> Nothing
+      -> mempty
   (Lam lx px x _, Lam ly py y _)
     | px == py
       -> diff x y
@@ -190,7 +190,7 @@ diff e1 e2 = case (e1, e2) of
       -> diff x y
   (Lit lx x, Lit ly y)
     | x == y
-      -> Nothing
+      -> mempty
   (Let lx rx xbs x, Let ly ry ybs y)
     | rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
       -> merge $ diff x y : zipWith diff (map snd xbs) (map snd ybs)
@@ -215,18 +215,18 @@ diff e1 e2 = case (e1, e2) of
         | Just x <- mx, Just y <- my
           -> diff x y
         | Nothing <- mx, Nothing <- my
-          -> Nothing
+          -> mempty
         | otherwise
-          -> lx
+          -> Set.singleton (fromJust lx)
   (Record lx fxs mtx, Record ly fys mty)
     | map fst fxs == map fst fys
       -> merge (zipWith diff (map snd fxs) (map snd fys))
   (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
     | vx == vy
-      -> Nothing
+      -> mempty
   (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
     | vx == vy
-      -> Nothing
+      -> mempty
   -- (Val _ x, Val _ y)
   --   | x == y
   --     -> Nothing
@@ -240,41 +240,55 @@ diff e1 e2 = case (e1, e2) of
   --   -> Just (e1, e2)
   -- (Replace _ env' _, _)
   --   -> Just (e1, e2)
-  _ -> getSrcSpanExprMaybe e1
+  _ -> Set.singleton $ fromJust $ getSrcSpanExprMaybe e1
 
   where
-  merge ls = case catMaybes ls of
-    -- no diff in subexprs => no diff
-    []  -> Nothing
-    -- diff in *one* subexpr => that expr
-    [x] -> Just x
-    -- diff in *multiple* subexprs => parent expr
-    _   -> getSrcSpanExprMaybe e1
+  merge = mconcat
+  -- merge ls = case catMaybes ls of
+  --   -- no diff in subexprs => no diff
+  --   []  -> Nothing
+  --   -- diff in *one* subexpr => that expr
+  --   [x] -> Just x
+  --   -- diff in *multiple* subexprs => parent expr
+  --   _   -> getSrcSpanExprMaybe e1
 
-diffProg :: Prog -> Prog -> Maybe SrcSpan
-diffProg p1 p2 = merge $ zipWith diffDecl p1 p2
+-- | Diff two programs by declaration group, and return a set of
+-- spans that have changed in the first program.
+diffProg :: Prog -> Prog -> Set SrcSpan
+diffProg p1 p2 = mconcat $ map go p1
   where
-  merge ls = case catMaybes ls of
-    -- no diff in subexprs => no diff
-    []  -> Nothing
-    -- diff in *one* subexpr => that expr
-    [x] -> Just x
-    -- diff in *multiple* subexprs => parent expr
-    _   -> Just $ joinSrcSpan (getSrcSpan (head p1)) (getSrcSpan (last p1))
+  go (DFun _ _ pes) = mconcat $ map to pes
+  go _              = mempty
 
-diffDecl :: Decl -> Decl -> Maybe SrcSpan
+  to (VarPat _ v, e1)
+    | Just e2 <- lookup v p2ves
+    = diff e1 e2
+  to _
+    = mempty
+
+  p2ves = [(v,e) | DFun _ _ pes <- p2, (VarPat _ v, e) <- pes]
+
+  -- merge ls = case catMaybes ls of
+  --   -- no diff in subexprs => no diff
+  --   []  -> Nothing
+  --   -- diff in *one* subexpr => that expr
+  --   [x] -> Just x
+  --   -- diff in *multiple* subexprs => parent expr
+  --   _   -> Just $ joinSrcSpan (getSrcSpan (head p1)) (getSrcSpan (last p1))
+
+diffDecl :: Decl -> Decl -> Set SrcSpan
 diffDecl d1 d2 = case (d1, d2) of
   (DFun _ r1 pes1, DFun _ r2 pes2)
     | r1 == r2 && map fst pes1 == map fst pes2
-    -> merge $ zipWith (\(_,e1) (_,e2) -> diff e1 e2) pes1 pes2
+    -> mconcat $ zipWith (\(_,e1) (_,e2) -> diff e1 e2) pes1 pes2
   (DEvl _ e1, DEvl _ e2)
     -> diff e1 e2
-  _ -> Just $ getSrcSpan d1
+  _ -> mempty
   where
-  merge ls = case catMaybes ls of
-    -- no diff in subexprs => no diff
-    []  -> Nothing
-    -- diff in *one* subexpr => that expr
-    [x] -> Just x
-    -- diff in *multiple* subexprs => parent expr
-    _   -> Just $ getSrcSpan d1
+  -- merge ls = case catMaybes ls of
+  --   -- no diff in subexprs => no diff
+  --   []  -> Nothing
+  --   -- diff in *one* subexpr => that expr
+  --   [x] -> Just x
+  --   -- diff in *multiple* subexprs => parent expr
+  --   _   -> Just $ getSrcSpan d1

@@ -7,8 +7,9 @@ import Data.Either
 import Data.List
 import qualified Data.Map.Strict as Map
 import Data.Maybe
-import qualified Data.HashSet as Set
+import qualified Data.HashSet as HashSet
 import Data.HashSet (HashSet)
+import qualified Data.Set as Set
 import GHC.Generics
 
 import NanoML.Classify
@@ -23,39 +24,47 @@ main :: IO ()
 main = do
   jsons <- getContents
   let uniqs = uniqDiffs (lines jsons)
-  -- print (Set.size uniqs)
+  -- print (HashSet.size uniqs)
     -- TODO: add runtime flag to choose classifier?
-  let outs = concatMap (mkOutSample preds) (Set.toList uniqs)
+  let outs = concatMap (mkOutSample preds) (HashSet.toList uniqs)
   mapM_ (LBSC.putStrLn . encode) outs
 -- main = interact (unlines
---                  . catMaybes . map fst . mapAccumL (generateDiff preds) Set.empty
+--                  . catMaybes . map fst . mapAccumL (generateDiff preds) HashSet.empty
 --                  . lines)
 
 preds :: [Expr -> Bool]
 preds = [has_op o | o <- [Eq .. FExp]]
      ++ [has_con "::", has_con "[]"]
 
-uniqDiffs :: [String] -> HashSet (SrcSpan, Prog)
+uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog)
 uniqDiffs = foldl' (\seen json -> seen `mappend` mkDiffs json) mempty
 
-mkDiffs :: String -> HashSet (SrcSpan, Prog)
+mkDiffs :: String -> HashSet ([SrcSpan], Prog)
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
   Right (MkInSample bads' [fix'])
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , bads <- rights $ map parseTopForm $ nub bads'
-    -> Set.fromList $ mapMaybe (mkDiff fix) bads
+    -> HashSet.fromList $ mapMaybe (mkDiff fix) bads
   Right (MkInSample bads' [fix'])
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm fix'
     -> {-trace e-} mempty
   v -> error (show v)
 
-mkDiff :: Prog -> Prog -> Maybe (SrcSpan, Prog)
-mkDiff fix bad = case diffProg bad fix of
-  Nothing -> Nothing
-  Just l  -> Just (l, bad)
+mkDiff :: Prog -> Prog -> Maybe ([SrcSpan], Prog)
+mkDiff fix bad
+  | Set.null ds
+  = Nothing
+  | otherwise
+  = Just (Set.toList ds, bad)
+  where
+  ds = diffProg bad fix
+
+  -- = case diffProg bad fix of
+  -- Nothing -> Nothing
+  -- Just l  -> Just (l, bad)
 
 -- generateDiff :: [Expr -> Bool] -> Set.Set (SrcSpan, String) -> String
 --              -> (Set.Set (SrcSpan, String), Maybe String)
@@ -84,16 +93,16 @@ mkDiff fix bad = case diffProg bad fix of
 --   Nothing -> []
 --   Just l  -> map (mkOut l) (concatMap mkfsD bad)
 
-mkOutSample :: [Expr -> Bool] -> (SrcSpan, Prog) -> [OutSample]
-mkOutSample fs (l, bad) = map (mkOut l) (concatMap mkfsD bad)
+mkOutSample :: [Expr -> Bool] -> ([SrcSpan], Prog) -> [OutSample]
+mkOutSample fs (ls, bad) = map (mkOut ls) (concatMap mkfsD bad)
   where
   mkfsD (DFun _ _ pes) = mconcat (map (classify fs.snd) pes)
   mkfsD (DEvl _ e) = classify fs e
   mkfsD _ = mempty
 
-mkOut :: SrcSpan -> (SrcSpan, [Bool]) -> OutSample
-mkOut l1 (l2, fs) = MkOutSample
-  (if l1 == l2 then Bad else Good)
+mkOut :: [SrcSpan] -> (SrcSpan, [Bool]) -> OutSample
+mkOut ls (l2, fs) = MkOutSample
+  (if any (l2 `isSubSpanOf`) ls then Bad else Good)
   (map (\b -> if b then 1 else 0) fs)
 
 fromRight (Right v) = v
