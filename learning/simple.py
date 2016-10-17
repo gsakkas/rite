@@ -14,31 +14,36 @@ CATEGORICAL_COLS = ["Eq","Neq","Lt","Le","Gt","Ge",
 N_CATS = len(CATEGORICAL_COLS)
 N_OUTS = 2
 
+N_FOLDS = 10
+
 data = []
 labels = []
 good=0
 bad=0
 with open('data/ops.json') as f:
-    for l in f.readlines():
-        try:
-            d = json.loads(l)
-            if d['kind'] == 'Good':
-                good+=1
-                if good >= 80000:
-                    continue
-            else:
-                bad+=1
-                if bad >= 80000:
-                    continue
-            fs = [float(f) for f in d['features']]
-            if N_OUTS == 1:
-                l = [1.] if d['kind'] == 'Bad' else [-1.]
-            else:
-                l = [1., 0.] if d['kind'] == 'Bad' else [0., 1.]
-        except:
-            continue
-        data.append(fs)
-        labels.append(l)
+    orig = list(f.readlines())
+
+random.shuffle(orig)
+for l in orig:
+    try:
+        d = json.loads(l)
+        if d['kind'] == 'Good':
+            good+=1
+            if good >= 80000:
+                continue
+        else:
+            bad+=1
+            if bad >= 80000:
+                continue
+        fs = [float(f) for f in d['features']]
+        if N_OUTS == 1:
+            l = [1.] if d['kind'] == 'Bad' else [-1.]
+        else:
+            l = [1., 0.] if d['kind'] == 'Bad' else [0., 1.]
+    except:
+        continue
+    data.append(fs)
+    labels.append(l)
 data = np.array(data)
 labels = np.array(labels)
 
@@ -73,26 +78,50 @@ with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
     #train_step = tf.train.AdamOptimizer(0.1).minimize(cross_entropy)
 
-sess = tf.InteractiveSession()
-merged = tf.merge_all_summaries()
-summary_writer = tf.train.SummaryWriter('/tmp', sess.graph)
-tf.initialize_all_variables().run()
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
-if N_OUTS == 2:
-    correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-else:
-    correct_prediction = tf.equal(tf.sign(y), y_)
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+from itertools import cycle
 
-for i in range(1000):
-    batch_xs = data[i*100 : i*100 + 100]
-    batch_ys = labels[i*100 : i*100 + 100]
-    summary_str, _, acc = sess.run([merged, train_step, accuracy], feed_dict={x: batch_xs, y_: batch_ys})
-    summary_writer.add_summary(summary_str, i)
-    print('Accuracy at step %s: %s' % (i, acc))
+fold_size = len(data) / N_FOLDS
+folds = cycle(chunks(data, fold_size))
+fold_labels = cycle(chunks(labels, fold_size))
 
-print(data.shape)
-print(sess.run(accuracy, feed_dict={x: data[100001:], y_: labels[100001:]}))
-# print(sess.run(y, feed_dict={x: [data[10001]], y_: [labels[10001]]}))
-print('W', sess.run(W))
-print('b', sess.run(b))
+for k in range(N_FOLDS):
+    print('fold %d' % k)
+
+    data_train = folds.next()
+    labels_train = fold_labels.next()
+
+    data_test = np.array([v for v in folds.next() for i in range(N_FOLDS-1)])
+    labels_test = np.array([v for v in fold_labels.next() for i in range(N_FOLDS-1)])
+
+    folds.next()
+    fold_labels.next()
+
+    sess = tf.InteractiveSession()
+    merged = tf.merge_all_summaries()
+    summary_writer = tf.train.SummaryWriter('/tmp', sess.graph)
+    tf.initialize_all_variables().run()
+
+    if N_OUTS == 2:
+        correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+    else:
+        correct_prediction = tf.equal(tf.sign(y), y_)
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+    for i in range(100):
+        batch_xs = data_train[i*100 : i*100 + 100]
+        batch_ys = labels_train[i*100 : i*100 + 100]
+        summary_str, _, acc = sess.run([merged, train_step, accuracy], feed_dict={x: batch_xs, y_: batch_ys})
+        summary_writer.add_summary(summary_str, i)
+        #print('Accuracy at step %s: %s' % (i, acc))
+
+    #print(data.shape)
+    print('accuracy %f' % sess.run(accuracy, feed_dict={x: data_test, y_: labels_test}))
+    # print(sess.run(y, feed_dict={x: [data[10001]], y_: [labels[10001]]}))
+    # print('W', sess.run(W))
+    # print('b', sess.run(b))
+    print("")
