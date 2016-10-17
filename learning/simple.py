@@ -29,11 +29,11 @@ for l in orig:
         d = json.loads(l)
         if d['kind'] == 'Good':
             good+=1
-            if good >= 80000:
+            if good > 80000:
                 continue
         else:
             bad+=1
-            if bad >= 80000:
+            if bad > 80000:
                 continue
         fs = [float(f) for f in d['features']]
         if N_OUTS == 1:
@@ -92,11 +92,12 @@ fold_labels = cycle(chunks(labels, fold_size))
 for k in range(N_FOLDS):
     print('fold %d' % k)
 
-    data_train = folds.next()
-    labels_train = fold_labels.next()
+    data_test = folds.next()
+    labels_test = fold_labels.next()
+    print data_test.shape
 
-    data_test = np.array([v for v in folds.next() for i in range(N_FOLDS-1)])
-    labels_test = np.array([v for v in fold_labels.next() for i in range(N_FOLDS-1)])
+    data_train = np.array([v for v in folds.next() for i in range(N_FOLDS-1)])
+    labels_train = np.array([v for v in fold_labels.next() for i in range(N_FOLDS-1)])
 
     sess = tf.InteractiveSession()
     merged = tf.merge_all_summaries()
