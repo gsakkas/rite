@@ -1,0 +1,9 @@
+resolver: lts-6.20
+packages:
+- ./features
+extra-deps:
+- dotgen-0.4.2
+- fgl-visualize-0.1.0.1
+flags: {}
+extra-package-dbs: []
+

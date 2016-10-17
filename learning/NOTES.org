@@ -1,0 +1,21 @@
+* Notes
+** Feature Selection
+each feature is a predicate on parse trees
+- presence of operator
+- types of leaf nodes?
+** Learning
+*** linear model
+62% acc with presence of operator
+*** convolution neural net
+52% acc with presence of operator
+(unclear if i set it up properly)
+*** wide-n-deep
+would like to try, but can't get example working?
+** Ideas
+- maybe we shouldn't treat each subexpr as an individual feature vector
+  - instead of classifying subexpr as good/bad independently
+  - classify good/bad in context of other subexprs
+* Todo
+** TODO 8k bad/fix pairs, only 4k bad locations?
+should be equal number...
+** TODO fix "syntax error" checker, rerun data
