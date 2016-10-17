@@ -12,16 +12,24 @@ CATEGORICAL_COLS = ["Eq","Neq","Lt","Le","Gt","Ge",
                     "::", "[]", "(,)", "Fun"]
 
 N_CATS = len(CATEGORICAL_COLS)
-N_OUTS = 1
+N_OUTS = 2
 
 data = []
 labels = []
+good=0
+bad=0
 with open('data/ops.json') as f:
     for l in f.readlines():
         try:
             d = json.loads(l)
-            # if d['kind'] == 'Good' and random.choice(range(1,100)) != 1:
-            #     continue
+            if d['kind'] == 'Good':
+                good+=1
+                if good >= 80000:
+                    continue
+            else:
+                bad+=1
+                if bad >= 80000:
+                    continue
             fs = [float(f) for f in d['features']]
             if N_OUTS == 1:
                 l = [1.] if d['kind'] == 'Bad' else [-1.]
@@ -63,6 +71,7 @@ with tf.name_scope('cross_entropy'):
     tf.scalar_summary('cross_entropy', cross_entropy)
 with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+    #train_step = tf.train.AdamOptimizer(0.1).minimize(cross_entropy)
 
 sess = tf.InteractiveSession()
 merged = tf.merge_all_summaries()
@@ -75,12 +84,15 @@ else:
     correct_prediction = tf.equal(tf.sign(y), y_)
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-for i in range(100):
+for i in range(1000):
     batch_xs = data[i*100 : i*100 + 100]
     batch_ys = labels[i*100 : i*100 + 100]
     summary_str, _, acc = sess.run([merged, train_step, accuracy], feed_dict={x: batch_xs, y_: batch_ys})
     summary_writer.add_summary(summary_str, i)
-    #print('Accuracy at step %s: %s' % (i, acc))
+    print('Accuracy at step %s: %s' % (i, acc))
 
-print(sess.run(accuracy, feed_dict={x: data[10001:], y_: labels[10001:]}))
+print(data.shape)
+print(sess.run(accuracy, feed_dict={x: data[100001:], y_: labels[100001:]}))
 # print(sess.run(y, feed_dict={x: [data[10001]], y_: [labels[10001]]}))
+print('W', sess.run(W))
+print('b', sess.run(b))
