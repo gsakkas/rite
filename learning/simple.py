@@ -98,9 +98,6 @@ for k in range(N_FOLDS):
     data_test = np.array([v for v in folds.next() for i in range(N_FOLDS-1)])
     labels_test = np.array([v for v in fold_labels.next() for i in range(N_FOLDS-1)])
 
-    folds.next()
-    fold_labels.next()
-
     sess = tf.InteractiveSession()
     merged = tf.merge_all_summaries()
     summary_writer = tf.train.SummaryWriter('/tmp', sess.graph)
@@ -125,3 +122,7 @@ for k in range(N_FOLDS):
     # print('W', sess.run(W))
     # print('b', sess.run(b))
     print("")
+
+    # drop next set of data/labels to move to next fold
+    folds.next()
+    fold_labels.next()
