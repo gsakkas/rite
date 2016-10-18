@@ -26,15 +26,19 @@ main = do
   let uniqs = uniqDiffs (lines jsons)
   -- print (HashSet.size uniqs)
     -- TODO: add runtime flag to choose classifier?
-  let outs = concatMap (mkOutSample preds) (HashSet.toList uniqs)
+  let outs = concatMap (mkOutSample preds_has) (HashSet.toList uniqs)
   mapM_ (LBSC.putStrLn . encode) outs
 -- main = interact (unlines
 --                  . catMaybes . map fst . mapAccumL (generateDiff preds) HashSet.empty
 --                  . lines)
 
-preds :: [Expr -> Bool]
-preds = [has_op o | o <- [Eq .. Mod]]
+preds_has :: [Expr -> Double]
+preds_has = [has_op o | o <- [Eq .. Mod]]
      ++ [has_con "::", has_con "[]", has_con "(,)", has_fun]
+
+preds_count :: [Expr -> Double]
+preds_count = [count_op o | o <- [Eq .. Mod]]
+     ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
 
 uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog)
 uniqDiffs = foldl' (\seen json -> seen `mappend` mkDiffs json) mempty
@@ -93,17 +97,18 @@ mkDiff fix bad
 --   Nothing -> []
 --   Just l  -> map (mkOut l) (concatMap mkfsD bad)
 
-mkOutSample :: [Expr -> Bool] -> ([SrcSpan], Prog) -> [OutSample]
+mkOutSample :: [Expr -> Double] -> ([SrcSpan], Prog) -> [OutSample]
 mkOutSample fs (ls, bad) = map (mkOut ls) (concatMap mkfsD bad)
   where
   mkfsD (DFun _ _ pes) = mconcat (map (classify fs.snd) pes)
   mkfsD (DEvl _ e) = classify fs e
   mkfsD _ = mempty
 
-mkOut :: [SrcSpan] -> (SrcSpan, [Bool]) -> OutSample
+mkOut :: [SrcSpan] -> (SrcSpan, [Double]) -> OutSample
 mkOut ls (l2, fs) = MkOutSample
   (if any (l2 `isSubSpanOf`) ls then Bad else Good)
-  (map (\b -> if b then 1 else 0) fs)
+  fs
+  -- (map (\b -> if b then 1 else 0) fs)
 
 fromRight (Right v) = v
 fromRight (Left _) = error "fromRight: Left"
@@ -118,7 +123,7 @@ data OutSample = MkOutSample
   -- , ast :: Prog
   -- , loc :: MSrcSpan
   { kind :: Kind
-  , features :: [Int]
+  , features :: [Double]
   } deriving (Show, Generic)
 instance ToJSON OutSample
 

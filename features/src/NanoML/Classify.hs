@@ -55,21 +55,49 @@ fold f z = go
 -- type Feature = Bool (Float?)
 -- [(Check, [Feature])]
 
-classify :: [Expr -> Bool] -> Expr -> [(SrcSpan, [Bool])]
+classify :: [Expr -> Double] -> Expr -> [(SrcSpan, [Double])]
 classify ps = fold f []
   where
   f e acc = (getLoc e, map ($e) ps) : acc
   getLoc e = fromJust (getSrcSpanExprMaybe e)
 
-has_op :: Bop -> Expr -> Bool
-has_op b = getAny . fold f mempty
+bool2double :: Bool -> Double
+bool2double b = if b then 1 else 0
+
+count_op :: Bop -> Expr -> Double
+count_op b = getSum . fold f mempty
+  where
+  f e acc = acc <> case e of
+                     Bop _ b' _ _ -> Sum . bool2double $  b == b'
+                     _            -> mempty
+
+count_con :: DCon -> Expr -> Double
+count_con c = getSum . fold f mempty
+  where
+  f e acc = acc <> case e of
+                     ConApp _ c' _ _ -> Sum . bool2double $ c == c'
+                     Case _ _ as -> Sum . bool2double $ any (pat_has_con c) (map fst3 as)
+                     Tuple _ _ -> Sum . bool2double $ c == "(,)"
+                     List _ _ _ -> Sum . bool2double $ c == "::" || c == "[]"
+                     _ -> mempty
+
+count_fun :: Expr -> Double
+count_fun = getSum . fold f mempty
+  where
+  f e acc = acc <> case e of
+                     Lam {} -> Sum 1
+                     App {} -> Sum 1
+                     _ -> mempty
+
+has_op :: Bop -> Expr -> Double
+has_op b = bool2double . getAny . fold f mempty
   where
   f e acc = acc <> case e of
                      Bop _ b' _ _ -> Any $ b == b'
                      _            -> mempty
 
-has_con :: DCon -> Expr -> Bool
-has_con c = getAny . fold f mempty
+has_con :: DCon -> Expr -> Double
+has_con c = bool2double . getAny . fold f mempty
   where
   f e acc = acc <> case e of
                      ConApp _ c' _ _ -> Any $ c == c'
@@ -78,8 +106,8 @@ has_con c = getAny . fold f mempty
                      List _ _ _ -> Any $ c == "::" || c == "[]"
                      _ -> mempty
 
-has_fun :: Expr -> Bool
-has_fun = getAny . fold f mempty
+has_fun :: Expr -> Double
+has_fun = bool2double . getAny . fold f mempty
   where
   f e acc = acc <> case e of
                      Lam {} -> Any True
