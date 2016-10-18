@@ -1,8 +1,11 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 module NanoML.HeatMap where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.State (evalStateT, modify, get, put)
 import           Data.List                    hiding (group)
 import qualified Data.Map                     as Map
 import           Prelude                      hiding ((<$>))
@@ -63,6 +66,48 @@ computeHeat e = head $ head $ mmult fs ws `msum` b
 
   b = [ [-0.23434784,  0.23434804] ]
 
+foo :: [([Double], Double)]
+                -- returns the "badness" score,
+                -- i.e positive is "bad", negative is "good"
+foo = [ (fs, head $ head $ mmult [fs] ws `msum` b)
+      | fs <- map (map bool2double) $ enum 17
+      ]
+  where
+  ws = [ [-0.06406111,  0.0640611 ]
+       , [-0.01457523,  0.01457523]
+       , [-0.19006032,  0.19006032]
+       , [-0.187015  ,  0.187015  ]
+       , [-0.08262776,  0.08262776]
+       , [-0.01763367,  0.01763367]
+       , [ 0.03144223, -0.03144224]
+       , [-0.01229332,  0.01229331]
+       , [-0.23259756,  0.23259759]
+       , [-0.17104992,  0.17104992]
+       , [ 0.08778118, -0.08778119]
+       , [ 0.13608319, -0.13608322]
+       , [ 0.09898072, -0.09898074]
+       , [ 0.07203147, -0.07203148]
+       , [-0.18782224,  0.18782224]
+       , [ 0.00776304, -0.00776298]
+       , [-0.1542004 ,  0.15420042]
+       ]
+
+  b = [ [-0.23434784,  0.23434804] ]
+
+cATEGORICAL_COLS = ["Eq","Neq","Lt","Le","Gt","Ge",
+                    "And","Or",
+                    "Plus","Minus","Times","Div","Mod",
+                    "::", "[]", "(,)", "Fun"]
+
+-- Q: what feature vectors are marked BAD
+-- A:
+-- mapM_ (print . fst) $ map (first (catMaybes . zipWith (\a b -> if b >= 1 then Just a else Nothing) cATEGORICAL_COLS)) $ filter (\(_,d) -> d > 0) foo
+
+
+enum :: Int -> [[Bool]]
+enum 1 = [[True, False]]
+enum n = map (True:) (enum (n-1)) ++ map (False:) (enum (n-1))
+
 mmult :: Num a => [[a]] -> [[a]] -> [[a]]
 mmult a b = [ [ sum $ zipWith (*) ar bc | bc <- (transpose b) ] | ar <- a ]
 
@@ -70,11 +115,19 @@ msum :: Num a => [[a]] -> [[a]] -> [[a]]
 msum a b = zipWith (zipWith (+)) a b
 
 
-renderHeat :: Doc Annot -> String
-renderHeat d = displayDecorated heat2ansi (renderPretty 0.5 60 d)
+renderHeat :: Doc Annot -> IO ()
+renderHeat d = evalStateT do_this [] >> putStrLn "\ESC[0m"
   where
-  heat2ansi h s = "\ESC[38;2;" ++ (if h < 0 then "0;0;0" else "255;255;255") ++ "m"
-               ++ "\ESC[48;2;" ++ mkansi h ++ "m" ++ s ++ "\ESC[0m"
+  do_this = displayDecoratedA (liftIO . putStr) push pop (renderPretty 0.5 60 d)
+  push h = modify (heat2ansi h:) >> liftIO (putStr (heat2ansi h))
+  pop h  = do _:rest <- get
+              liftIO $ case rest of
+                [] -> putStr "\ESC[0m"
+                x:_ -> putStr x
+              put rest
+
+  heat2ansi h = "\ESC[38;2;" ++ (if h < 0 then "0;0;0" else "255;255;255") ++ "m"
+               ++ "\ESC[48;2;" ++ mkansi h ++ "m" --  ++ s ++ "\ESC[0m"
 
   mkansi h = show (truncate (255 * (1 - (h+1) / 2)))  -- r
           ++ ";"
