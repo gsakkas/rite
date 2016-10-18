@@ -157,9 +157,9 @@ instance Pretty Expr where
       where za = 26
     Lit _ l -> pretty l
     Let _ r bnds body ->
-      group $ parensIf (z > zl) $
-      align $ text "let" <> pretty r <+> prettyBinds (zl) bnds
-          <+> text "in" <$> prettyPrec (zl) body
+      parensIf (z > zl) $
+      align $ text "let" <> pretty r <+> prettyBinds (zl) bnds <+> text "in"
+              <$> prettyPrec (zl) body
       where zl = 4
     Ite _ b t f ->
       group $ parensIf (z > zi) $ align $
@@ -285,7 +285,18 @@ prettyTypeTuple xs = parens $ hsep $ intersperse (text "*") $ map pretty xs
 prettyTypeArgs [] = empty
 prettyTypeArgs as = prettyTuple 0 as <+> empty
 
+prettyBind z (VarPat _ p, e'@(Lam {}))
+  = group $ nest 2 $ pretty p <+> hsep (map pretty ps) <+> text "="
+    <$> prettyPrec z e
+  where
+  (ps, e) = gatherLams e'
 prettyBind z (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> prettyPrec z e
+
+gatherLams :: Value -> ([Pat], Expr)
+gatherLams (Lam _ p e _) = go [p] e
+  where
+  go ps (Lam _ p e _) = go (p:ps) e
+  go ps e             = (reverse ps, e)
 
 prettyBinds z [b] = prettyBind z b
 prettyBinds z (b:bs) = prettyBind z b <$> text "and" <+> prettyBinds z bs
