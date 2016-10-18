@@ -16,6 +16,15 @@ import NanoML.Types
 
 import Debug.Trace
 
+preds_has :: [Expr -> Double]
+preds_has = [has_op o | o <- [Eq .. Mod]]
+     ++ [has_con "::", has_con "[]", has_con "(,)", has_fun]
+
+preds_count :: [Expr -> Double]
+preds_count = [count_op o | o <- [Eq .. Mod]]
+     ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
+
+
 fold :: Monoid a => (Expr -> a -> a) -> a -> Expr -> a
 fold f z = go
   where
@@ -76,6 +85,7 @@ count_con c = getSum . fold f mempty
   where
   f e acc = acc <> case e of
                      ConApp _ c' _ _ -> Sum . bool2double $ c == c'
+                                       -- FIXME
                      Case _ _ as -> Sum . bool2double $ any (pat_has_con c) (map fst3 as)
                      Tuple _ _ -> Sum . bool2double $ c == "(,)"
                      List _ _ _ -> Sum . bool2double $ c == "::" || c == "[]"

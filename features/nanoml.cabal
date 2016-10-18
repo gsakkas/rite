@@ -26,6 +26,7 @@ library
                      -- , NanoML.Eval
                      -- , NanoML.Explore
                      -- , NanoML.Gen
+                     , NanoML.HeatMap
                      , NanoML.Lexer
                      , NanoML.Misc
                      -- , NanoML.Monad

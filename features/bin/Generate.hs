@@ -32,14 +32,6 @@ main = do
 --                  . catMaybes . map fst . mapAccumL (generateDiff preds) HashSet.empty
 --                  . lines)
 
-preds_has :: [Expr -> Double]
-preds_has = [has_op o | o <- [Eq .. Mod]]
-     ++ [has_con "::", has_con "[]", has_con "(,)", has_fun]
-
-preds_count :: [Expr -> Double]
-preds_count = [count_op o | o <- [Eq .. Mod]]
-     ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
-
 uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog)
 uniqDiffs = foldl' (\seen json -> seen `mappend` mkDiffs json) mempty
 
