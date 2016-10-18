@@ -29,11 +29,11 @@ for l in orig:
         d = json.loads(l)
         if d['kind'] == 'Good':
             good+=1
-            if good > 80000:
+            if good > 130000:
                 continue
         else:
             bad+=1
-            if bad > 80000:
+            if bad > 130000:
                 continue
         fs = [float(f) for f in d['features']]
         if N_OUTS == 1:
@@ -120,8 +120,10 @@ for k in range(N_FOLDS):
     #print(data.shape)
     print('accuracy %f' % sess.run(accuracy, feed_dict={x: data_test, y_: labels_test}))
     # print(sess.run(y, feed_dict={x: [data[10001]], y_: [labels[10001]]}))
-    # print('W', sess.run(W))
-    # print('b', sess.run(b))
+    print('W')
+    for c, w in zip(CATEGORICAL_COLS, sess.run(W)):
+        print c, w
+    print('b', sess.run(b))
     print("")
 
     # drop next set of data/labels to move to next fold

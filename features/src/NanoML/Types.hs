@@ -1349,6 +1349,7 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
            ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
            ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
+           ,("&&", And), ("||", Or)
            ]
 
 mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr
