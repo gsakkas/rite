@@ -105,7 +105,7 @@ cATEGORICAL_COLS = ["Eq","Neq","Lt","Le","Gt","Ge",
 
 
 enum :: Int -> [[Bool]]
-enum 1 = [[True, False]]
+enum 0 = [[True, False]]
 enum n = map (True:) (enum (n-1)) ++ map (False:) (enum (n-1))
 
 mmult :: Num a => [[a]] -> [[a]] -> [[a]]
