@@ -15,7 +15,15 @@ would like to try, but can't get example working?
 - maybe we shouldn't treat each subexpr as an individual feature vector
   - instead of classifying subexpr as good/bad independently
   - classify good/bad in context of other subexprs
+** Implementation
+*** Avoiding sampling bias
+- unequal # of good/bad samples can produce misleading results, model
+  has essentially learned constant function, but appears better
+- select N good and bad samples
+- then shuffle them together to ensure similar distribution per batch
+
 * Todo
 ** TODO 8k bad/fix pairs, only 4k bad locations?
 should be equal number...
 ** TODO fix "syntax error" checker, rerun data
+** TODO add type of current / parent / child expr as features
