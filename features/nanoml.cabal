@@ -25,14 +25,14 @@ library
   exposed-modules:     NanoML.Classify
                      -- , NanoML.Eval
                      -- , NanoML.Explore
-                     -- , NanoML.Gen
+                     , NanoML.Gen
                      , NanoML.HeatMap
                      , NanoML.Lexer
                      , NanoML.Misc
-                     -- , NanoML.Monad
+                     , NanoML.Monad
                      , NanoML.Parser
                      , NanoML.Pretty
-                     -- , NanoML.Prim
+                     , NanoML.Prim
                      -- , NanoML.Step
                      , NanoML.Types
   -- other-modules:
@@ -56,6 +56,7 @@ library
                      , parsers >=0.12
                      , random >= 1.1
                      , regex-tdfa >= 1.2
+                     , syb
                      , text >= 1.2
                      , transformers >= 0.4
                      , unordered-containers >= 0.2

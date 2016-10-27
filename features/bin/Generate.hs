@@ -1,8 +1,10 @@
 {-# LANGUAGE DeriveGeneric #-}
 module Main where
 
-import Data.Aeson
+import Data.Aeson (ToJSON(..), FromJSON(..), eitherDecode)
+import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy.Char8 as LBSC
+import Data.Csv
 import Data.Either
 import Data.List
 import qualified Data.Map.Strict as Map
@@ -13,6 +15,7 @@ import qualified Data.Set as Set
 import GHC.Generics
 
 import NanoML.Classify
+import NanoML.Monad
 import NanoML.Parser
 import NanoML.Pretty
 import NanoML.Types hiding (Kind)
@@ -26,8 +29,10 @@ main = do
   let uniqs = uniqDiffs (lines jsons)
   -- print (HashSet.size uniqs)
     -- TODO: add runtime flag to choose classifier?
-  let outs = concatMap (mkOutSample preds_has) (HashSet.toList uniqs)
-  mapM_ (LBSC.putStrLn . encode) outs
+  let outs = concatMap (mkTOutSample preds_tcon) (HashSet.toList uniqs)
+  mapM_ (LBSC.putStrLn . Aeson.encode) outs
+  -- TODO: add header row
+  -- LBSC.putStrLn $ encode $ map toCSV outs
 -- main = interact (unlines
 --                  . catMaybes . map fst . mapAccumL (generateDiff preds) HashSet.empty
 --                  . lines)
@@ -96,6 +101,17 @@ mkOutSample fs (ls, bad) = map (mkOut ls) (concatMap mkfsD bad)
   mkfsD (DEvl _ e) = classify fs e
   mkfsD _ = mempty
 
+mkTOutSample :: [TExpr -> Double] -> ([SrcSpan], Prog) -> [OutSample]
+mkTOutSample fs (ls, bad) = map (mkOut ls) (concatMap mkfsD tbad)
+  where
+  tbad = case runEval stdOpts (typeProg bad) of
+    Left e -> traceShow e []
+    Right p -> p
+
+  mkfsD (TDFun _ _ pes) = mconcat (map (tclassify fs.snd) pes)
+  mkfsD (TDEvl _ e) = tclassify fs e
+  mkfsD _ = mempty
+
 mkOut :: [SrcSpan] -> (SrcSpan, [Double]) -> OutSample
 mkOut ls (l2, fs) = MkOutSample
   (if any (l2 `isSubSpanOf`) ls then Bad else Good)
@@ -120,5 +136,10 @@ data OutSample = MkOutSample
 instance ToJSON OutSample
 
 data Kind = Good | Bad
-  deriving (Show, Generic)
+  deriving (Show, Eq, Generic)
 instance ToJSON Kind
+
+toCSV :: OutSample -> Record
+toCSV (MkOutSample k fs) = toRecord (fk : fs)
+  where
+  fk = if k == Bad then 1 else 0

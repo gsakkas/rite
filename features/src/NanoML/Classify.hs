@@ -1,4 +1,6 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE BangPatterns #-}
@@ -11,6 +13,9 @@ import Control.Monad
 import Control.Monad.Except
 import Control.Monad.State
 import Data.Bifunctor
+import Data.Data
+import Data.Generics.Aliases (mkM)
+import Data.Generics.Schemes
 import Data.Hashable
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
@@ -33,6 +38,8 @@ preds_count :: [Expr -> Double]
 preds_count = [count_op o | o <- [Eq .. Mod]]
      ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
 
+preds_tcon :: [TExpr -> Double]
+preds_tcon = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
 
 fold :: Monoid a => (Expr -> a -> a) -> a -> Expr -> a
 fold f z = go
@@ -109,6 +116,12 @@ classify ps = fold f []
   f e acc = (getLoc e, map ($e) ps) : acc
   getLoc e = fromJust (getSrcSpanExprMaybe e)
 
+tclassify :: [TExpr -> Double] -> TExpr -> [(SrcSpan, [Double])]
+tclassify ps = tfold f []
+  where
+  f e acc = (getLoc e, map ($e) ps) : acc
+  getLoc = infoSpan . texprInfo
+
 bool2double :: Bool -> Double
 bool2double b = if b then 1 else 0
 
@@ -173,15 +186,6 @@ pat_has_con c p' = case p' of
   AsPat _ p _ -> pat_has_con c p
   ConstraintPat _ p _ -> pat_has_con c p
   _ -> False
-
-literalType :: Literal -> String
-literalType l = case l of
-  LI {} -> "Int"
-  LD {} -> "Double"
-  LB {} -> "Bool"
-  LC {} -> "Char"
-  LS {} -> "String"
-
 
 
 
@@ -308,11 +312,47 @@ diffDecl d1 d2 = case (d1, d2) of
   --   -- diff in *multiple* subexprs => parent expr
   --   _   -> Just $ getSrcSpan d1
 
+type TProg = [TDecl]
+
+data TDecl
+  = TDFun SrcSpan RecFlag [(Pat,TExpr)]
+  | TDEvl SrcSpan TExpr
+  | TDTyp SrcSpan [TypeDecl]
+  | TDExn SrcSpan DataDecl
+  deriving (Show, Eq, Data, Generic)
+instance Hashable TDecl
+
+typeProg :: MonadEval m => Prog -> m TProg
+typeProg p = do
+  tp <- mapM typeDecl p
+  forM tp $ \ td -> case td of
+    TDFun {} -> everywhereM (mkM substM) td
+    TDEvl {} -> everywhereM (mkM substM) td
+    -- don't look at TDTyp or TDExn, they contain bottoms
+    _ -> return td
+
+typeDecl :: MonadEval m => Decl -> m TDecl
+typeDecl = \case
+  DFun s r pes -> do
+    -- NOTE: don't forget to generalize
+    (bnds, ptes) <- case r of
+      Rec -> typeRecBinds pes
+      NonRec -> first concat . unzip <$> mapM typeBind pes
+    modify' $ \ s -> s { stVarTypes = foldr (uncurry Map.insert) (stVarTypes s) bnds }
+    return (TDFun s r ptes)
+  DEvl s e -> do
+    te <- typeExpr e
+    return (TDEvl s te)
+  DTyp s tds -> do
+    mapM_ addType tds
+    return (TDTyp s tds)
+  DExn s d -> error "typeDecl: impossible"
+
 
 data Info = MkInfo
   { infoSpan :: SrcSpan
   , infoType :: Type
-  } deriving (Show, Generic, Eq)
+  } deriving (Show, Data, Generic, Eq)
 instance Hashable Info
 
 mkInfo :: MSrcSpan -> Type -> Info
@@ -337,7 +377,7 @@ data TExpr
   | T_Array !Info [TExpr]
   | T_List !Info [TExpr]
   | T_Try !Info !TExpr [TAlt]
-  deriving (Show, Generic, Eq)
+  deriving (Show, Data, Generic, Eq)
 instance Hashable TExpr
 
 type TAlt = (Pat, Maybe TExpr, TExpr)
@@ -362,6 +402,40 @@ texprInfo = \case
   T_Array i _ -> i
   T_List i _ -> i
   T_Try i _ _ -> i
+
+
+tfold :: Monoid a => (TExpr -> a -> a) -> a -> TExpr -> a
+tfold f z = go
+  where
+  go e = f e $ case e of
+    T_Var {} -> z
+    T_Lam _ _ b -> go b
+    T_App _ f es -> mconcat $ map go (f:es)
+    T_Bop _ _ e1 e2 -> mappend (go e1) (go e2)
+    T_Uop _ _ e -> go e
+    T_Lit {} -> z
+    T_Let _ _ pes e -> mconcat (map (go.snd) pes ++ [go e])
+    T_Ite _ x y z -> go x <> go y <> go z
+    T_Seq _ e1 e2 -> mappend (go e1) (go e2)
+    T_Case _ e as -> mconcat (go e : map (go.thd3) as)
+    T_Tuple _ es -> mconcat (map go es)
+    T_ConApp _ _ me -> maybe mempty go me
+    T_Record _ fes -> mconcat (map (go.snd) fes)
+    T_Field _ e _ -> go e
+    T_SetField _ e1 _ e2 -> mappend (go e1) (go e2)
+    T_List _ es -> mconcat (map go es)
+    T_Array _ es -> mconcat (map go es)
+    T_Try _ e as -> mconcat (go e : map (go.thd3) as)
+
+has_tcon :: TCon -> TExpr -> Double
+has_tcon c = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case getType e of
+                     TApp c' _ -> Any $ c == c'
+                     TTup _ -> Any $ c == "Tuple"
+                     _ :-> _ -> Any $ c == "Fun"
+                     _ -> mempty
+
 
 getType :: TExpr -> Type
 getType = infoType . texprInfo
@@ -473,6 +547,8 @@ typeExpr = \case
         tes <- mapM typeExpr es
         zipWithM tryUnify ts (map getType tes)
         return (Just (T_Tuple (mkInfo ml' (TTup (map getType tes))) tes))
+      --FIXME:
+      x -> trace ("typeExpr: ConApp: " ++ show (c, x)) $ return Nothing
     let t = subst su (typeDeclType (dType d))
     return (T_ConApp (mkInfo ml t) c mte)
   Array ml es _ -> do
@@ -487,13 +563,20 @@ typeExpr = \case
     return (T_List (mkInfo ml (mkTApps tLIST [t])) tes)
   -- these should not occur in the dataset
   Try ml e as -> do
-    error "typeExpr: impossible"
+    error "typeExpr: impossible: try"
   Record ml fes _ -> do
-    error "typeExpr: impossible"
+    error "typeExpr: impossible: record"
   Field ml e f -> do
-    error "typeExpr: impossible"
+    te <- typeExpr e
+    td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField f
+    let tvs = tyVars td
+    su <- fmap Map.fromList $ forM tvs $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    tryUnify (getType te) (subst su (typeDeclType td))
+    let Just t = lookup f [(x,z) | (x,y,z) <- fs]
+    return (T_Field (mkInfo ml t) te f)
   SetField ml e f v -> do
-    error "typeExpr: impossible"
+    error "typeExpr: impossible: setfield"
   -- these should not occur at all in freshly parsed programs
   Prim1 {} -> do
     error "typeExpr: impossible"
@@ -513,7 +596,61 @@ typePat = \case
   VarPat _ v -> do
     t <- TVar <$> freshTVar
     return (t, [(v,t)])
-  -- TODO:
+  LitPat _ l -> do
+    let t = typeOfLit l
+    return (t, [])
+  IntervalPat _ l1 l2 -> do
+    let t1 = typeOfLit l1
+    let t2 = typeOfLit l2
+    tryUnify t1 t2
+    return (t1, [])
+  ConsPat _ p1 p2 -> do
+    (t1, bnds1) <- typePat p1
+    (t2, bnds2) <- typePat p2
+    let t = mkTApps tLIST [t1]
+    tryUnify t t2
+    return (t, bnds1 ++ bnds2)
+  ConPat _ c mp -> do
+    d <- lookupDataCon c
+    let tvs = tyVars (dType d)
+    su <- fmap Map.fromList $ forM tvs $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    bnds <- case (map (subst su) (dArgs d), mp) of
+      ([], Nothing) -> return []
+      ([t], Just p) -> do
+        (tp, bnds) <- typePat p
+        tryUnify t tp
+        return bnds
+      (ts, Just (TuplePat ml' ps)) -> do
+        (tps, bndss) <- unzip <$> mapM typePat ps
+        zipWithM tryUnify ts tps
+        return (concat bndss)
+      --FIXME:
+      x -> trace ("typePat: ConPat: " ++ show (c, x)) $ return []
+    let t = subst su (typeDeclType (dType d))
+    return (t, bnds)
+  ListPat _ ps -> do
+    (t:ts, bndss) <- unzip <$> mapM typePat ps
+    mapM_ (tryUnify t) ts
+    return (mkTApps tLIST [t], concat bndss)
+  TuplePat _ ps -> do
+    (ts, bndss) <- unzip <$> mapM typePat ps
+    return (TTup ts, concat bndss)
+  WildPat _ -> do
+    t <- TVar <$> freshTVar
+    return (t, [])
+  OrPat _ p1 p2 -> do
+    (tp1, bnds1) <- typePat p1
+    (tp2, bnds2) <- typePat p2
+    tryUnify tp1 tp2
+    return (tp1, bnds1 ++ bnds2)
+  AsPat _ p v -> do
+    (tp, bnds) <- typePat p
+    return (tp, (v,tp) : bnds)
+  ConstraintPat _ p t -> do
+    (tp, bnds) <- typePat p
+    tryUnify tp t
+    return (tp, bnds)
 
 typeAlt :: MonadEval m => Alt -> m (Type, TAlt)
 typeAlt (p, mg, e) = do

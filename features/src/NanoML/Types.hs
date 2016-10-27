@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE BangPatterns          #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE DefaultSignatures     #-}
@@ -28,6 +29,7 @@ import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import qualified Data.Aeson                   as Aeson
 import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
+import           Data.Data
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -613,7 +615,7 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON Literal where
   toJSON l = case l of
@@ -625,8 +627,8 @@ instance ToJSON Literal where
 
 instance Hashable Literal
 
-data RecFlag = Rec | NonRec deriving (Show, Generic, Eq, Ord)
-data MutFlag = Mut | NonMut deriving (Show, Generic, Eq, Ord)
+data RecFlag = Rec | NonRec deriving (Show, Data, Generic, Eq, Ord)
+data MutFlag = Mut | NonMut deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON MutFlag
 instance FromJSON MutFlag
@@ -639,7 +641,7 @@ data SrcSpan = SrcSpan
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Generic, Eq, Ord)
+  } deriving (Data, Generic, Eq, Ord)
 
 instance Hashable SrcSpan
 
@@ -982,7 +984,7 @@ instance Hashable Prim2 where
 
 data Uop
   = Neg | FNeg
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Show, Eq, Ord, Data, Generic)
 
 instance ToJSON Uop
 instance FromJSON Uop
@@ -996,7 +998,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show, Eq, Ord, Generic, Enum)
+  deriving (Show, Eq, Ord, Data, Generic, Enum)
 
 instance ToJSON Bop
 instance FromJSON Bop
@@ -1019,7 +1021,7 @@ data Pat
   | OrPat !MSrcSpan !Pat !Pat
   | AsPat !MSrcSpan !Pat !Var
   | ConstraintPat !MSrcSpan !Pat !Type
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance Hashable Pat
 
@@ -1074,7 +1076,7 @@ data Type
   | !Type :-> !Type
   | TTup [Type]
   | TAll [TVar] !Type
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON Type where
   toJSON t = case t of
@@ -1127,7 +1129,7 @@ freeTyVars t = case t of
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Data, Generic)
 instance Hashable TypeDecl
 instance ToJSON TypeDecl
 -- instance FromJSON TypeDecl
@@ -1136,7 +1138,7 @@ data TypeRhs
   = Alias Type
   | Alg   [DataDecl]
   | TRec  [Field]
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Data, Generic)
 instance Hashable TypeRhs
 instance ToJSON TypeRhs
 -- instance FromJSON TypeRhs
@@ -1145,7 +1147,7 @@ type Field = (String, MutFlag, Type)
 
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
-  deriving (Show)
+  deriving (Show, Data, Generic)
 instance Eq DataDecl where
   (DataDecl d1 a1 _) == (DataDecl d2 a2 _) = d1 == d2 && a1 == a2
 instance Hashable DataDecl where
