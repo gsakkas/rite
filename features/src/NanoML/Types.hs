@@ -159,6 +159,7 @@ data EvalState = EvalState
   , stSubst    :: !Subst
   , stCallStack :: ![(MSrcSpan,[Value])]
   , stContexts :: !(HashMap Expr Context)
+  , stVarTypes :: !(Map Var Type)
   -- , stExprEnvs :: ![(Expr,Env)]
   } deriving Show
 

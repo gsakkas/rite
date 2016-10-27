@@ -1,15 +1,24 @@
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE MultiWayIf #-}
 module NanoML.Classify where
 
 import Control.Applicative
 import Control.Monad
+import Control.Monad.Except
+import Control.Monad.State
+import Data.Bifunctor
+import Data.Hashable
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe
-import Data.Monoid
+import Data.Monoid hiding (Alt)
 import qualified Data.Set as Set
 import Data.Set (Set)
+import GHC.Generics
 
 import NanoML.Parser
 import NanoML.Types
@@ -54,6 +63,36 @@ fold f z = go
     Replace {} -> z
     Hole {} -> z
     Ref {} -> z
+
+foldM :: (Monad m, Monoid a) => (Expr -> a -> m a) -> a -> Expr -> m a
+foldM f z = go
+  where
+  go e = f e =<< case e of
+    Var {} -> return z
+    Lam _ _ b _ -> go b
+    App _ f es -> mconcat <$> mapM go (f:es)
+    Bop _ _ e1 e2 -> mappend <$> (go e1) <*> (go e2)
+    Uop _ _ e -> go e
+    Lit {} -> return z
+    Let _ _ pes e -> mconcat <$> (mapM go (map snd pes ++ [e]))
+    Ite _ x y z -> mconcat <$> sequence [go x, go y, go z]
+    Seq _ e1 e2 -> mappend <$> (go e1) <*> (go e2)
+    Case _ e as -> mconcat <$> (mapM go (e : map thd3 as))
+    Tuple _ es -> mconcat <$> (mapM go es)
+    ConApp _ _ me _ -> maybe (return mempty) go me
+    Record _ fes _ -> mconcat <$> (mapM (go.snd) fes)
+    Field _ e _ -> go e
+    SetField _ e1 _ e2 -> mappend <$> (go e1) <*> (go e2)
+    List _ es _ -> mconcat <$> (mapM go es)
+    Array _ es _ -> mconcat <$> (mapM go es)
+    Try _ e as -> mconcat <$> (mapM go (e : map thd3 as))
+    -- the rest of these should not appear in parsed exprs
+    Prim1 {} -> return z
+    Prim2 {} -> return z
+    With {} -> return z
+    Replace {} -> return z
+    Hole {} -> return z
+    Ref {} -> return z
 
 -- TODO: rejigger to
 -- classify :: [Expr -> Bool] -> Expr -> Map SrcLoc [Bool]
@@ -142,6 +181,10 @@ literalType l = case l of
   LB {} -> "Bool"
   LC {} -> "Char"
   LS {} -> "String"
+
+
+
+
 
 diff :: Expr -> Expr -> Set SrcSpan
 diff e1 e2 = case (e1, e2) of
@@ -264,3 +307,254 @@ diffDecl d1 d2 = case (d1, d2) of
   --   [x] -> Just x
   --   -- diff in *multiple* subexprs => parent expr
   --   _   -> Just $ getSrcSpan d1
+
+
+data Info = MkInfo
+  { infoSpan :: SrcSpan
+  , infoType :: Type
+  } deriving (Show, Generic, Eq)
+instance Hashable Info
+
+mkInfo :: MSrcSpan -> Type -> Info
+mkInfo ml t = MkInfo (fromJust ml) t
+
+data TExpr
+  = T_Var !Info !Var
+  | T_Lam !Info !Pat !TExpr
+  | T_App !Info !TExpr [TExpr]
+  | T_Bop !Info !Bop !TExpr !TExpr
+  | T_Uop !Info !Uop !TExpr
+  | T_Lit !Info !Literal
+  | T_Let !Info !RecFlag [(Pat,TExpr)] !TExpr
+  | T_Ite !Info !TExpr !TExpr !TExpr
+  | T_Seq !Info !TExpr !TExpr
+  | T_Case !Info !TExpr [TAlt]
+  | T_Tuple !Info [TExpr]
+  | T_ConApp !Info !DCon (Maybe TExpr)
+  | T_Record !Info [(String, TExpr)]
+  | T_Field !Info !TExpr !String
+  | T_SetField !Info !TExpr !String !TExpr
+  | T_Array !Info [TExpr]
+  | T_List !Info [TExpr]
+  | T_Try !Info !TExpr [TAlt]
+  deriving (Show, Generic, Eq)
+instance Hashable TExpr
+
+type TAlt = (Pat, Maybe TExpr, TExpr)
+
+texprInfo :: TExpr -> Info
+texprInfo = \case
+  T_Var i _ -> i
+  T_Lam i _ _ -> i
+  T_App i _ _ -> i
+  T_Bop i _ _ _ -> i
+  T_Uop i _ _ -> i
+  T_Lit i _ -> i
+  T_Let i _ _ _ -> i
+  T_Ite i _ _ _ -> i
+  T_Seq i _ _ -> i
+  T_Case i _ _ -> i
+  T_Tuple i _ -> i
+  T_ConApp i _ _ -> i
+  T_Record i _ -> i
+  T_Field i _ _ -> i
+  T_SetField i _ _ _ -> i
+  T_Array i _ -> i
+  T_List i _ -> i
+  T_Try i _ _ -> i
+
+getType :: TExpr -> Type
+getType = infoType . texprInfo
+
+type TypeEnv = Map Var Type
+
+lookupVarType :: MonadEval m => Var -> m Type
+lookupVarType v = do
+  env <- gets stVarTypes
+  case Map.lookup v env of
+    Just t  -> return t
+    Nothing -> do
+      -- TODO: should be impossible..
+      t <- TVar <$> freshTVar
+      modify' $ \ s -> s { stVarTypes = Map.insert v t (stVarTypes s) }
+      return t
+
+-- TODO: do we want to do a traditional HM-style bottom-up inference, or
+-- a bidirectional thing? since the interesting expressions will be
+-- ill-typed, the choice may make a difference in how we type the bad bits
+typeExpr :: MonadEval m => Expr -> m TExpr
+-- for now let's do a bottom-up thing
+typeExpr = \case
+  Var ml v -> do
+    -- NOTE: don't forget to instantiate
+    t <- lookupVarType v
+    return (T_Var (mkInfo ml t) v)
+  Lam ml p e _ -> do
+    (ti, bnds) <- typePat p
+    te <- withLocalBinds bnds $ typeExpr e
+    let t = ti :-> (getType te)
+    return (T_Lam (mkInfo ml t) p te)
+  App ml f es -> do
+    tf <- typeExpr f
+    tes <- mapM typeExpr es
+    t <- TVar <$> freshTVar
+    tryUnify (getType tf) (foldr (:->) t (map getType tes))
+    return (T_App (mkInfo ml t) tf tes)
+  Bop ml b e1 e2 -> do
+    te1 <- typeExpr e1
+    te2 <- typeExpr e2
+    (t1, t2, t) <- if
+      | b `elem` [Eq .. Ge]
+        -> do { t <- TVar <$> freshTVar; return (t, t, tCon tBOOL) }
+      | b `elem` [And, Or]
+        -> return (tCon tBOOL, tCon tBOOL, tCon tBOOL)
+      | b `elem` [Plus .. Mod]
+        -> return (tCon tINT, tCon tINT, tCon tINT)
+      | b `elem` [FPlus .. FExp]
+        -> return (tCon tFLOAT, tCon tFLOAT, tCon tFLOAT)
+    tryUnify t1 (getType te1)
+    tryUnify t2 (getType te2)
+    return (T_Bop (mkInfo ml t) b te1 te2)
+  Uop ml u e -> do
+    te <- typeExpr e
+    let t = case u of
+              Neg -> tCon tINT
+              FNeg -> tCon tFLOAT
+    tryUnify t (getType te)
+    return (T_Uop (mkInfo ml t) u te)
+  Lit ml l -> do
+    let t = case l of
+              LI {} -> tCon tINT
+              LD {} -> tCon tFLOAT
+              LB {} -> tCon tBOOL
+              LC {} -> tCon tCHAR
+              LS {} -> tCon tSTRING
+    return (T_Lit (mkInfo ml t) l)
+  Let ml r pes e -> do
+    -- NOTE: don't forget to generalize
+    (bnds, ptes) <- case r of
+      Rec -> typeRecBinds pes
+      NonRec -> first concat . unzip <$> mapM typeBind pes
+    te <- withLocalBinds bnds $ typeExpr e
+    return (T_Let (mkInfo ml (getType te)) r ptes te)
+  Ite ml b t f -> do
+    tb <- typeExpr b
+    tt <- typeExpr t
+    tf <- typeExpr f
+    tryUnify (getType tb) (tCon tBOOL)
+    tryUnify (getType tt) (getType tf)
+    -- TODO: should we default to tt when tt !~ tf? Or use fresh a?
+    return (T_Ite (mkInfo ml (getType tt)) tb tt tf)
+  Seq ml e1 e2 -> do
+    te1 <- typeExpr e1
+    te2 <- typeExpr e2
+    return (T_Seq (mkInfo ml (getType te2)) te1 te2)
+  Case ml e as -> do
+    te <- typeExpr e
+    (tps, ta:tas) <- unzip <$> mapM typeAlt as
+    mapM_ (tryUnify (getType te)) tps
+    mapM_ (tryUnify (getType (thd3 ta))) (map (getType.thd3) tas)
+    return (T_Case (mkInfo ml (getType (thd3 ta))) te (ta:tas))
+  Tuple ml es -> do
+    tes <- mapM typeExpr es
+    return (T_Tuple (mkInfo ml (TTup (map getType tes))) tes)
+  ConApp ml c me _ -> do
+    d <- lookupDataCon c
+    let tvs = tyVars (dType d)
+    su <- fmap Map.fromList $ forM tvs $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    mte <- case (map (subst su) (dArgs d), me) of
+      ([], Nothing) -> return Nothing
+      ([t], Just e) -> do
+        te <- typeExpr e
+        tryUnify t (getType te)
+        return (Just te)
+      (ts, Just (Tuple ml' es)) -> do
+        tes <- mapM typeExpr es
+        zipWithM tryUnify ts (map getType tes)
+        return (Just (T_Tuple (mkInfo ml' (TTup (map getType tes))) tes))
+    let t = subst su (typeDeclType (dType d))
+    return (T_ConApp (mkInfo ml t) c mte)
+  Array ml es _ -> do
+    tes <- mapM typeExpr es
+    t <- TVar <$> freshTVar
+    mapM_ (tryUnify t . getType) tes
+    return (T_Array (mkInfo ml (mkTApps tARRAY [t])) tes)
+  List ml es _ -> do
+    tes <- mapM typeExpr es
+    t <- TVar <$> freshTVar
+    mapM_ (tryUnify t . getType) tes
+    return (T_List (mkInfo ml (mkTApps tLIST [t])) tes)
+  -- these should not occur in the dataset
+  Try ml e as -> do
+    error "typeExpr: impossible"
+  Record ml fes _ -> do
+    error "typeExpr: impossible"
+  Field ml e f -> do
+    error "typeExpr: impossible"
+  SetField ml e f v -> do
+    error "typeExpr: impossible"
+  -- these should not occur at all in freshly parsed programs
+  Prim1 {} -> do
+    error "typeExpr: impossible"
+  Prim2 {} -> do
+    error "typeExpr: impossible"
+  With {} -> do
+    error "typeExpr: impossible"
+  Replace {} -> do
+    error "typeExpr: impossible"
+  Hole {} -> do
+    error "typeExpr: impossible"
+  Ref {} -> do
+    error "typeExpr: impossible"
+
+typePat :: MonadEval m => Pat -> m (Type, [(Var, Type)])
+typePat = \case
+  VarPat _ v -> do
+    t <- TVar <$> freshTVar
+    return (t, [(v,t)])
+  -- TODO:
+
+typeAlt :: MonadEval m => Alt -> m (Type, TAlt)
+typeAlt (p, mg, e) = do
+  (tp, bnds) <- typePat p
+  withLocalBinds bnds $ do
+    tg <- case mg of
+      Nothing -> return Nothing
+      Just g  -> do
+        tg <- typeExpr g
+        tryUnify (tCon tBOOL) (getType tg)
+        return (Just tg)
+    te <- typeExpr e
+    return (tp, (p, tg, te))
+
+typeBind :: MonadEval m => (Pat, Expr) -> m ([(Var, Type)], (Pat, TExpr))
+typeBind (p, e) = do
+  te <- typeExpr e
+  (tp, bnds) <- typePat p
+  tryUnify tp (getType te)
+  return (bnds, (p, te))
+
+typeRecBinds :: MonadEval m => [(Pat, Expr)] -> m ([(Var, Type)], [(Pat, TExpr)])
+typeRecBinds pes = do
+  let (ps, es) = unzip pes
+  (tps, bndss) <- unzip <$> mapM typePat ps
+  tes <- withLocalBinds (concat bndss) $ forM (zip tps es) $ \ (tp, e) -> do
+    te <- typeExpr e
+    tryUnify tp (getType te)
+    return te
+  return (concat bndss, zip ps tes)
+  -- mfix $ \ (bnds, _tpes) -> do
+  --   withLocalBinds bnds $ first concat . unzip <$> mapM typeBind pes
+
+-- | Try to unify two types but suppress any errors.
+tryUnify :: MonadEval m => Type -> Type -> m ()
+tryUnify t1 t2 = unify t1 t2 `catchError` \_ -> return ()
+
+withLocalBinds :: MonadEval m => [(Var, Type)] -> m a -> m a
+withLocalBinds bnds do_this = do
+  tenv <- gets stVarTypes
+  modify' $ \ s -> s { stVarTypes = foldr (uncurry Map.insert) (stVarTypes s) bnds }
+  a <- do_this
+  modify' $ \ s -> s { stVarTypes = tenv }
+  return a

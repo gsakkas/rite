@@ -108,3 +108,4 @@ cabal.sandbox.config
 *.eventlog
 .stack-work/
 cabal.project.local
+/events.out.tfevents.1476726689.mimir.local

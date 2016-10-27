@@ -99,6 +99,7 @@ initState = EvalState
   , stCallStack = mempty
   , stContexts = mempty
   -- , stExprEnvs = mempty
+  , stVarTypes = mempty
   }
 
 -- uniquify :: EvalState -> EvalState

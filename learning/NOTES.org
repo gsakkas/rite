@@ -21,9 +21,32 @@ would like to try, but can't get example working?
   has essentially learned constant function, but appears better
 - select N good and bad samples
 - then shuffle them together to ensure similar distribution per batch
-
+** Neural Networks
+http://www.asimovinstitute.org/neural-network-zoo/
 * Todo
 ** TODO 8k bad/fix pairs, only 4k bad locations?
 should be equal number...
 ** TODO fix "syntax error" checker, rerun data
 ** TODO add type of current / parent / child expr as features
+** TODO add feature vectors of children (parent? sibling?)
+zero-pad to widest expr node
+** TODO add type info
+plus whether expr is part of bad program slice
+** TODO run queries on typed asts
+- eg. how often do students match on functions
+
+#+BEGIN_SRC ocaml
+let pipe fs =
+  let f a z e x = x a in
+  let base y = y in
+  List.fold_left f base fs;;
+#+END_SRC
+** DONE make sure we can run nanomaly as a binary on arbitrary files
+CLOSED: [2016-10-27 Thu 10:47]
+- compare against ocaml/sherrloc
+- when they fail, can nanomaly find a witness?
+** TODO diff threshold                                                :ersp:
+if diff encompasses >n% of original program, filter out
+for different n, how many fixes exceed threshold
+** DONE send RJ the algorithm M paper
+CLOSED: [2016-10-27 Thu 10:47]
