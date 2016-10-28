@@ -41,6 +41,9 @@ preds_count = [count_op o | o <- [Eq .. Mod]]
 preds_tcon :: [TExpr -> Double]
 preds_tcon = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
 
+preds_tcon_count :: [TExpr -> Double]
+preds_tcon_count = [count_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+
 fold :: Monoid a => (Expr -> a -> a) -> a -> Expr -> a
 fold f z = go
   where
@@ -427,14 +430,18 @@ tfold f z = go
     T_Array _ es -> mconcat (map go es)
     T_Try _ e as -> mconcat (go e : map (go.thd3) as)
 
-has_tcon :: TCon -> TExpr -> Double
-has_tcon c = bool2double . getAny . tfold f mempty
+
+count_tcon :: TCon -> TExpr -> Double
+count_tcon c = getSum . tfold f mempty
   where
   f e acc = acc <> case getType e of
-                     TApp c' _ -> Any $ c == c'
-                     TTup _ -> Any $ c == "Tuple"
-                     _ :-> _ -> Any $ c == "Fun"
+                     TApp c' _ -> Sum . bool2double $ c == c'
+                     TTup _ -> Sum . bool2double $ c == "Tuple"
+                     _ :-> _ -> Sum . bool2double $ c == "Fun"
                      _ -> mempty
+
+has_tcon :: TCon -> TExpr -> Double
+has_tcon c = bool2double . (>0) . count_tcon c
 
 
 getType :: TExpr -> Type
