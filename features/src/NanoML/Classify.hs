@@ -38,8 +38,15 @@ preds_count :: [Expr -> Double]
 preds_count = [count_op o | o <- [Eq .. Mod]]
      ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
 
+preds_thas :: [TExpr -> Double]
+preds_thas = [thas_op o | o <- [Eq .. Mod]]
+     ++ [thas_con "::", thas_con "[]", thas_con "(,)", thas_fun]
+
 preds_tcon :: [TExpr -> Double]
-preds_tcon = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+preds_tcon = [is_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+
+preds_tcon_agg :: [TExpr -> Double]
+preds_tcon_agg = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
 
 preds_tcon_count :: [TExpr -> Double]
 preds_tcon_count = [count_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
@@ -177,6 +184,31 @@ has_fun = bool2double . getAny . fold f mempty
   f e acc = acc <> case e of
                      Lam {} -> Any True
                      App {} -> Any True
+                     _ -> mempty
+
+thas_op :: Bop -> TExpr -> Double
+thas_op b = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_Bop _ b' _ _ -> Any $ b == b'
+                     _            -> mempty
+
+thas_con :: DCon -> TExpr -> Double
+thas_con c = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_ConApp _ c' _ -> Any $ c == c'
+                     T_Case _ _ as -> Any $ any (pat_has_con c) (map fst3 as)
+                     T_Tuple _ _ -> Any $ c == "(,)"
+                     T_List _ _ -> Any $ c == "::" || c == "[]"
+                     _ -> mempty
+
+thas_fun :: TExpr -> Double
+thas_fun = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_Lam {} -> Any True
+                     T_App {} -> Any True
                      _ -> mempty
 
 pat_has_con :: DCon -> Pat -> Bool
@@ -442,6 +474,13 @@ count_tcon c = getSum . tfold f mempty
 
 has_tcon :: TCon -> TExpr -> Double
 has_tcon c = bool2double . (>0) . count_tcon c
+
+is_tcon :: TCon -> TExpr -> Double
+is_tcon c e = case getType e of
+                TApp c' _ -> bool2double $ c == c'
+                TTup _ -> bool2double $ c == "Tuple"
+                _ :-> _ -> bool2double $ c == "Fun"
+                _ -> 0
 
 
 getType :: TExpr -> Type

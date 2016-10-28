@@ -29,7 +29,8 @@ main = do
   let uniqs = uniqDiffs (lines jsons)
   -- print (HashSet.size uniqs)
     -- TODO: add runtime flag to choose classifier?
-  let outs = concatMap (mkTOutSampleRoot preds_tcon_count) (HashSet.toList uniqs)
+  -- let outs = concatMap (mkOutSampleRoot preds_has) (HashSet.toList uniqs)
+  let outs = concatMap (mkTOutSample (preds_thas ++ preds_tcon)) (HashSet.toList uniqs)
   mapM_ (LBSC.putStrLn . Aeson.encode) outs
   -- TODO: add header row
   -- LBSC.putStrLn $ encode $ map toCSV outs
@@ -97,6 +98,18 @@ mkDiff fix bad
 mkOutSample :: [Expr -> Double] -> ([SrcSpan], Prog) -> [OutSample]
 mkOutSample fs (ls, bad) = map (mkOut ls) (concatMap mkfsD bad)
   where
+  mkfsD (DFun _ _ pes) = mconcat (map (classify fs.snd) pes)
+  mkfsD (DEvl _ e) = classify fs e
+  mkfsD _ = mempty
+
+-- | like 'mkOutSample' but extends each vector with the entire program's features.
+mkOutSampleRoot :: [Expr -> Double] -> ([SrcSpan], Prog) -> [OutSample]
+mkOutSampleRoot fs (ls, bad) = map extend samples
+  where
+  samples = map (mkOut ls) (concatMap mkfsD bad)
+  total = foldr1 (zipWith (+)) (map features samples)
+  extend (MkOutSample k fs) = MkOutSample k (fs ++ total)
+
   mkfsD (DFun _ _ pes) = mconcat (map (classify fs.snd) pes)
   mkfsD (DEvl _ e) = classify fs e
   mkfsD _ = mempty

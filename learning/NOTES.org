@@ -24,9 +24,14 @@ would like to try, but can't get example working?
 ** Neural Networks
 http://www.asimovinstitute.org/neural-network-zoo/
 * Todo
-** TODO 8k bad/fix pairs, only 4k bad locations?
+** CANCELLED 8k bad/fix pairs, only 4k bad locations?
+CLOSED: [2016-10-28 Fri 11:52]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2016-10-28 Fri 11:52]
+:END:
 should be equal number...
-** TODO fix "syntax error" checker, rerun data
+** DONE fix "syntax error" checker, rerun data
+CLOSED: [2016-10-28 Fri 11:52]
 ** TODO add type of current / parent / child expr as features
 ** TODO add feature vectors of children (parent? sibling?)
 zero-pad to widest expr node
@@ -51,3 +56,10 @@ for different n, how many fixes exceed threshold
 ** DONE send RJ the algorithm M paper
 CLOSED: [2016-10-27 Thu 10:47]
 ** TODO try adding *root* features to each vector (identify exprs by common prog)
+** TODO can we predict *type* of expression
+- features are ast-node + [is_int, is_bool, is_list, ...] for children (maybe + is_error?)
+- labels are [is_int, is_bool, is_list, ...]
+- linear classifier
+- train classifier on fully annotated programs
+- then predict in bottom up fashion on unannotated programs, propagating labels up into parent's features
+** TODO: figure out meaningful error location from nanomaly

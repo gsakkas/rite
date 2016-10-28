@@ -28,3 +28,11 @@ Like `types.json` but extended with a summary of the entire program the subexpre
 `types-count-root.json`
 ---------------
 Like `types-root.json` but counts the number of occurrences of a type.
+
+`ops+type.json`
+----------
+Features based on the presence of an operator in a subexpression, and the type of the subexpression
+
+`ops+type-root.json`
+---------------
+Like `ops+type.json` but extended with a summary of the entire program the subexpression came from.
