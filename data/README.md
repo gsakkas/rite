@@ -33,6 +33,10 @@ Like `types+root.json` but counts the number of occurrences of a type.
 ----------
 Features based on the presence of an operator in a subexpression, and the type of the subexpression
 
+`ops+type+context.json`
+---------------
+Like `ops+type.json` but extended with the features of the subexpression's parent and immediate children.
+
 `ops+type+root.json`
 ---------------
 Like `ops+type.json` but extended with a summary of the entire program the subexpression came from.
@@ -44,3 +48,4 @@ Features based on the presence of an operator in a subexpression, and the type o
 `ops+type-aggregate+root.json`
 ---------------
 Like `ops+type.json` but extended with a summary of the entire program the subexpression came from.
+

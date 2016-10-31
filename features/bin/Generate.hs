@@ -30,7 +30,8 @@ main = do
   -- print (HashSet.size uniqs)
     -- TODO: add runtime flag to choose classifier?
   -- let outs = concatMap (mkOutSampleRoot preds_has) (HashSet.toList uniqs)
-  let outs = concatMap (mkTOutSample (preds_thas ++ preds_tcon)) (HashSet.toList uniqs)
+  -- let outs = concatMap (mkTOutSampleRoot (preds_thas_ctx ++ preds_tcon_ctx)) (HashSet.toList uniqs)
+  let outs = concatMap (mkTOutSampleCtx (preds_tis_ctx ++ preds_tcon_ctx)) (HashSet.toList uniqs)
   mapM_ (LBSC.putStrLn . Aeson.encode) outs
   -- TODO: add header row
   -- LBSC.putStrLn $ encode $ map toCSV outs
@@ -139,6 +140,23 @@ mkTOutSampleRoot fs (ls, bad) = map extend samples
 
   mkfsD (TDFun _ _ pes) = mconcat (map (tclassify fs.snd) pes)
   mkfsD (TDEvl _ e) = tclassify fs e
+  mkfsD _ = mempty
+
+-- | like 'mkTOutSample' but includes features pertaining to each expression's parent.
+mkTOutSampleCtx :: [TExpr -> TExpr -> [Double]] -> ([SrcSpan], Prog)
+                -> [OutSample]
+mkTOutSampleCtx fs (ls, bad) = map extend samples
+  where
+  samples = map (mkOut ls) (concatMap mkfsD tbad)
+  total = foldr1 (zipWith (+)) (map features samples)
+  extend (MkOutSample k fs) = MkOutSample k (fs) -- ++ total)
+
+  tbad = case runEval stdOpts (typeProg bad) of
+    Left e -> traceShow e []
+    Right p -> p
+
+  mkfsD (TDFun _ _ pes) = mconcat (map (tclassify_ctx fs.snd) pes)
+  mkfsD (TDEvl _ e) = tclassify_ctx fs e
   mkfsD _ = mempty
 
 mkOut :: [SrcSpan] -> (SrcSpan, [Double]) -> OutSample

@@ -42,8 +42,31 @@ preds_thas :: [TExpr -> Double]
 preds_thas = [thas_op o | o <- [Eq .. Mod]]
      ++ [thas_con "::", thas_con "[]", thas_con "(,)", thas_fun]
 
+preds_thas_ctx :: [TExpr -> TExpr -> [Double]]
+preds_thas_ctx = [thas_op_ctx o | o <- [Eq ..]]
+     ++ [ thas_con_ctx "::", thas_con_ctx "[]"
+        , thas_con_ctx "(,)"
+        , thas_con_ctx "VarX", thas_con_ctx "VarY"
+        , thas_con_ctx "Sine", thas_con_ctx "Cosine"
+        , thas_con_ctx "Average", thas_con_ctx "Times", thas_con_ctx "Thresh"
+        , thas_fun_ctx
+        ]
+
+preds_tis_ctx :: [TExpr -> TExpr -> [Double]]
+preds_tis_ctx = [tis_op_ctx o | o <- [Eq ..]]
+     ++ [ tis_con_ctx "::", tis_con_ctx "[]"
+        , tis_con_ctx "(,)"
+        , tis_con_ctx "VarX", tis_con_ctx "VarY"
+        , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+        , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+        , tis_fun_ctx
+        ]
+
 preds_tcon :: [TExpr -> Double]
 preds_tcon = [is_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+
+preds_tcon_ctx :: [TExpr -> TExpr -> [Double]]
+preds_tcon_ctx = [is_tcon_ctx tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
 
 preds_tcon_agg :: [TExpr -> Double]
 preds_tcon_agg = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
@@ -132,6 +155,13 @@ tclassify ps = tfold f []
   f e acc = (getLoc e, map ($e) ps) : acc
   getLoc = infoSpan . texprInfo
 
+tclassify_ctx :: [TExpr -> TExpr -> [Double]] -> TExpr
+              -> [(SrcSpan, [Double])]
+tclassify_ctx ps = ctfold f []
+  where
+  f p e acc = (getLoc e, concatMap (\c -> c p e) ps) : acc
+  getLoc = infoSpan . texprInfo
+
 bool2double :: Bool -> Double
 bool2double b = if b then 1 else 0
 
@@ -211,6 +241,18 @@ thas_fun = bool2double . getAny . tfold f mempty
                      T_App {} -> Any True
                      _ -> mempty
 
+thas_op_ctx :: Bop -> TExpr -> TExpr -> [Double]
+thas_op_ctx b p e = [thas_op b e, thas_op b p]
+                 ++ take 3 (map (thas_op b) (children e) ++ repeat 0)
+
+thas_con_ctx :: DCon -> TExpr -> TExpr -> [Double]
+thas_con_ctx c p e = [thas_con c e, thas_con c p]
+                 ++ take 3 (map (thas_con c) (children e) ++ repeat 0)
+
+thas_fun_ctx :: TExpr -> TExpr -> [Double]
+thas_fun_ctx p e = [thas_fun e, thas_fun p]
+                 ++ take 3 (map thas_fun (children e) ++ repeat 0)
+
 pat_has_con :: DCon -> Pat -> Bool
 pat_has_con c p' = case p' of
   ConPat _ c' mp -> c == c' || maybe False (pat_has_con c) mp
@@ -223,6 +265,36 @@ pat_has_con c p' = case p' of
   _ -> False
 
 
+tis_op :: Bop -> TExpr -> Double
+tis_op b e = case e of
+  T_Bop _ b' _ _ -> bool2double $ b == b'
+  _            -> 0
+
+tis_con :: DCon -> TExpr -> Double
+tis_con c e = case e of
+  T_ConApp _ c' _ -> bool2double $ c == c'
+  T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
+  T_Tuple _ _ -> bool2double $ c == "(,)"
+  T_List _ _ -> bool2double $ c == "::" || c == "[]"
+  _ -> 0
+
+tis_fun :: TExpr -> Double
+tis_fun e = case e of
+  T_Lam {} -> bool2double True
+  T_App {} -> bool2double True
+  _ -> 0
+
+tis_op_ctx :: Bop -> TExpr -> TExpr -> [Double]
+tis_op_ctx b p e = [tis_op b e, tis_op b p]
+                 ++ take 3 (map (tis_op b) (children e) ++ repeat 0)
+
+tis_con_ctx :: DCon -> TExpr -> TExpr -> [Double]
+tis_con_ctx c p e = [tis_con c e, tis_con c p]
+                 ++ take 3 (map (tis_con c) (children e) ++ repeat 0)
+
+tis_fun_ctx :: TExpr -> TExpr -> [Double]
+tis_fun_ctx p e = [tis_fun e, tis_fun p]
+                 ++ take 3 (map tis_fun (children e) ++ repeat 0)
 
 
 diff :: Expr -> Expr -> Set SrcSpan
@@ -439,29 +511,31 @@ texprInfo = \case
   T_Try i _ _ -> i
 
 
-tfold :: Monoid a => (TExpr -> a -> a) -> a -> TExpr -> a
-tfold f z = go
+ctfold :: Monoid a => (TExpr {- parent -} -> TExpr -> a -> a) -> a -> TExpr -> a
+ctfold f z r = go r r
   where
-  go e = f e $ case e of
+  go p e' = f p e' $ case e' of
     T_Var {} -> z
-    T_Lam _ _ b -> go b
-    T_App _ f es -> mconcat $ map go (f:es)
-    T_Bop _ _ e1 e2 -> mappend (go e1) (go e2)
-    T_Uop _ _ e -> go e
+    T_Lam _ _ b -> go e' b
+    T_App _ f es -> mconcat $ map (go e') (f:es)
+    T_Bop _ _ e1 e2 -> mappend (go e' e1) (go e' e2)
+    T_Uop _ _ e -> go e' e
     T_Lit {} -> z
-    T_Let _ _ pes e -> mconcat (map (go.snd) pes ++ [go e])
-    T_Ite _ x y z -> go x <> go y <> go z
-    T_Seq _ e1 e2 -> mappend (go e1) (go e2)
-    T_Case _ e as -> mconcat (go e : map (go.thd3) as)
-    T_Tuple _ es -> mconcat (map go es)
-    T_ConApp _ _ me -> maybe mempty go me
-    T_Record _ fes -> mconcat (map (go.snd) fes)
-    T_Field _ e _ -> go e
-    T_SetField _ e1 _ e2 -> mappend (go e1) (go e2)
-    T_List _ es -> mconcat (map go es)
-    T_Array _ es -> mconcat (map go es)
-    T_Try _ e as -> mconcat (go e : map (go.thd3) as)
+    T_Let _ _ pes e -> mconcat (map (go e' . snd) pes ++ [go e' e])
+    T_Ite _ x y z -> go e' x <> go e' y <> go e' z
+    T_Seq _ e1 e2 -> mappend (go e' e1) (go e' e2)
+    T_Case _ e as -> mconcat (go e' e : map (go e' . thd3) as)
+    T_Tuple _ es -> mconcat (map (go e') es)
+    T_ConApp _ _ me -> maybe mempty (go e') me
+    T_Record _ fes -> mconcat (map (go e' . snd) fes)
+    T_Field _ e _ -> go e' e
+    T_SetField _ e1 _ e2 -> mappend (go e' e1) (go e' e2)
+    T_List _ es -> mconcat (map (go e') es)
+    T_Array _ es -> mconcat (map (go e') es)
+    T_Try _ e as -> mconcat (go e' e : map (go e' . thd3) as)
 
+tfold :: Monoid a => (TExpr -> a -> a) -> a -> TExpr -> a
+tfold f z r = ctfold (const f) z r
 
 count_tcon :: TCon -> TExpr -> Double
 count_tcon c = getSum . tfold f mempty
@@ -481,6 +555,34 @@ is_tcon c e = case getType e of
                 TTup _ -> bool2double $ c == "Tuple"
                 _ :-> _ -> bool2double $ c == "Fun"
                 _ -> 0
+
+is_tcon_ctx :: TCon -> TExpr {- parent -} -> TExpr -> [Double]
+is_tcon_ctx c p e = [is_tcon c e, is_tcon c p]
+                 ++ take 3 (map (is_tcon c) (children e) ++ repeat 0)
+
+children :: TExpr -> [TExpr]
+children = \case
+  T_Var {} -> []
+  T_Lam _ _ b -> [b]
+  T_App _ f es -> f:es -- NOTE: we may lose some information here by truncating `es`
+  T_Bop _ _ x y -> [x,y]
+  T_Uop _ _ e -> [e]
+  T_Lit {} -> []
+  T_Let _ _ pes e -> map snd pes ++ [e]
+  T_Ite _ x y z -> [x,y,z]
+  T_Seq _ x y -> [x,y]
+  T_Case _ e as -> e : map thd3 as
+  T_Tuple _ es -> es
+  T_ConApp _ _ (Just (T_Tuple _ es)) -> es
+  T_ConApp _ _ (Just e) -> [e]
+  T_ConApp {} -> []
+  T_Record _ fes -> map snd fes
+  T_Field _ e _ -> [e]
+  T_SetField _ x _ y -> [x,y]
+  T_List _ es -> es
+  T_Array _ es -> es
+  T_Try _ e as -> e : map thd3 as
+
 
 
 getType :: TExpr -> Type
