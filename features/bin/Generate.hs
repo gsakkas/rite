@@ -3,6 +3,7 @@ module Main where
 
 import Data.Aeson (ToJSON(..), FromJSON(..), eitherDecode)
 import qualified Data.Aeson as Aeson
+import qualified Data.ByteString.Char8 as BSC
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import Data.Csv
 import Data.Either
@@ -12,7 +13,10 @@ import Data.Maybe
 import qualified Data.HashSet as HashSet
 import Data.HashSet (HashSet)
 import qualified Data.Set as Set
+import qualified Data.Vector as Vector
 import GHC.Generics
+import System.IO
+import Text.Printf
 
 import NanoML.Classify
 import NanoML.Monad
@@ -31,13 +35,36 @@ main = do
     -- TODO: add runtime flag to choose classifier?
   -- let outs = concatMap (mkOutSampleRoot preds_has) (HashSet.toList uniqs)
   -- let outs = concatMap (mkTOutSampleRoot (preds_thas_ctx ++ preds_tcon_ctx)) (HashSet.toList uniqs)
-  let outs = concatMap (mkTOutSampleCtx (preds_tis_ctx ++ preds_tcon_ctx)) (HashSet.toList uniqs)
-  mapM_ (LBSC.putStrLn . Aeson.encode) outs
+  -- let outss = map (mkTOutSampleCtx (preds_thas_ctx ++ preds_tcon_ctx)) (HashSet.toList uniqs)
+  -- let outss = map (mkTOutSampleTypes (preds_tis ++ preds_tcon_children)) (HashSet.toList uniqs)
+  -- traceStats outss
+  -- mapM_ (LBSC.putStrLn . Aeson.encode) (concat outss)
   -- TODO: add header row
   -- LBSC.putStrLn $ encode $ map toCSV outs
+  let (header, features) = unzip $ map (runTFeaturesTypes (preds_tis ++ preds_tcon_children)) (HashSet.toList uniqs)
+  hPrint stderr (head header)
+  hPrint stderr (head (concat features))
+
+  LBSC.putStrLn $ encodeByName (head header) (concat features)
 -- main = interact (unlines
 --                  . catMaybes . map fst . mapAccumL (generateDiff preds) HashSet.empty
 --                  . lines)
+
+-- traceStats :: [[OutSample]] -> IO ()
+-- traceStats outss = do
+--   let fracs = [ fromIntegral (length (filter ((==Bad).kind) outs)) / fromIntegral (length outs)
+--               | outs <- outss
+--               , length outs > 0
+--               ] :: [Double]
+--   hPrintf stderr "%s\n" (show fracs)
+--   hPrintf stderr "%s\n" (show fracs)
+--   hPrintf stderr "Min: %f\n" (minimum fracs)
+--   hPrintf stderr "Max: %f\n" (maximum fracs)
+--   let avg = sum fracs / fromIntegral (length fracs)
+--   hPrintf stderr "Avg: %f\n" avg
+--   let std = sqrt (sum [(f - avg) ^ 2 | f <- fracs] / fromIntegral (length fracs))
+--   hPrintf stderr "Std: %f\n" std
+--   return ()
 
 uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog)
 uniqDiffs = foldl' (\seen json -> seen `mappend` mkDiffs json) mempty
@@ -49,7 +76,7 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , bads <- rights $ map parseTopForm $ nub bads'
-    -> HashSet.fromList $ mapMaybe (mkDiff fix) bads
+    -> HashSet.fromList $ [([], fix)] --  $ mapMaybe (mkDiff fix) bads
   Right (MkInSample bads' [fix'])
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm fix'
@@ -143,13 +170,69 @@ mkTOutSampleRoot fs (ls, bad) = map extend samples
   mkfsD _ = mempty
 
 -- | like 'mkTOutSample' but includes features pertaining to each expression's parent.
+-- mkTOutSampleTypes :: [TExpr -> TExpr -> [Double]] -> ([SrcSpan], Prog)
+--                 -> [OutSample]
+-- mkTOutSampleTypes fs (ls, bad) = samples
+--   where
+--   samples = concatMap mkfsD tbad
+
+--   tbad = case runEval stdOpts (typeProg bad) of
+--     Left e -> traceShow e []
+--     Right p -> p
+
+--   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
+--   mkfsD (TDEvl _ e) = mkTypeOut e
+--   mkfsD _ = mempty
+
+
+--   mkTypeOut te = zipWith MkOutSample labels features
+--     where
+--     (labels, features) = unzip $ ctfold f [] te
+--     f p e acc = (map ($e) preds_tcon, concatMap (\c -> c p e) fs) : acc
+
+runTFeaturesTypes
+  :: [Feature] -> ([SrcSpan], Prog)
+  -> (Header, [NamedRecord])
+runTFeaturesTypes fs (ls, bad) = (header, samples)
+  where
+  header = Vector.fromList
+         $ map (\(l,_) -> mkLabel l) preds_tcon
+        ++ concatMap (\(ls,_) -> map mkFeature ls) fs
+
+  samples = concatMap mkfsD tbad
+
+  tbad = case runEval stdOpts (typeProg bad) of
+    Left e -> traceShow e []
+    Right p -> p
+
+  mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
+  mkfsD (TDEvl _ e) = mkTypeOut e
+  mkfsD _ = mempty
+
+  mkTypeOut :: TExpr -> [NamedRecord]
+  mkTypeOut te = ctfold f [] te -- zipWith MkOutSample labels features
+    where
+--     (labels, features) = unzip $
+    f p e acc = (:acc) . namedRecord $
+                map (\(l,c) -> mkLabel l .= c e) preds_tcon
+             ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
+    -- f p e acc = ( map (\(_,c) -> c e) preds_tcon
+    --             , concatMap (\c -> (snd c) p e) fs
+    --             ) : acc
+
+mkLabel :: String -> BSC.ByteString
+mkLabel s = BSC.pack ("L-" ++ s)
+
+mkFeature :: String -> BSC.ByteString
+mkFeature s = BSC.pack ("F-" ++ s)
+
+-- | like 'mkTOutSample' but includes features pertaining to each expression's parent.
 mkTOutSampleCtx :: [TExpr -> TExpr -> [Double]] -> ([SrcSpan], Prog)
                 -> [OutSample]
 mkTOutSampleCtx fs (ls, bad) = map extend samples
   where
   samples = map (mkOut ls) (concatMap mkfsD tbad)
-  total = foldr1 (zipWith (+)) (map features samples)
-  extend (MkOutSample k fs) = MkOutSample k (fs) -- ++ total)
+  extend (MkOutSample k fs) = MkOutSample k fs
 
   tbad = case runEval stdOpts (typeProg bad) of
     Left e -> traceShow e []
@@ -161,7 +244,7 @@ mkTOutSampleCtx fs (ls, bad) = map extend samples
 
 mkOut :: [SrcSpan] -> (SrcSpan, [Double]) -> OutSample
 mkOut ls (l2, fs) = MkOutSample
-  (if any (l2 `isSubSpanOf`) ls then Bad else Good)
+  (if any (l2 `isSubSpanOf`) ls then [1,0] else [0,1])
   fs
   -- (map (\b -> if b then 1 else 0) fs)
 
@@ -177,7 +260,7 @@ data OutSample = MkOutSample
   -- { prog :: String
   -- , ast :: Prog
   -- , loc :: MSrcSpan
-  { kind :: Kind
+  { kind :: [Double]
   , features :: [Double]
   } deriving (Show, Generic)
 instance ToJSON OutSample
@@ -186,7 +269,7 @@ data Kind = Good | Bad
   deriving (Show, Eq, Generic)
 instance ToJSON Kind
 
-toCSV :: OutSample -> Record
-toCSV (MkOutSample k fs) = toRecord (fk : fs)
-  where
-  fk = if k == Bad then 1 else 0
+-- toCSV :: OutSample -> Record
+-- toCSV (MkOutSample k fs) = toRecord (fk : fs)
+--   where
+--   fk = if k == Bad then 1 else 0

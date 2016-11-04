@@ -42,6 +42,8 @@ preds_thas :: [TExpr -> Double]
 preds_thas = [thas_op o | o <- [Eq .. Mod]]
      ++ [thas_con "::", thas_con "[]", thas_con "(,)", thas_fun]
 
+type Feature = ([String], (TExpr -> TExpr -> [Double]))
+
 preds_thas_ctx :: [TExpr -> TExpr -> [Double]]
 preds_thas_ctx = [thas_op_ctx o | o <- [Eq ..]]
      ++ [ thas_con_ctx "::", thas_con_ctx "[]"
@@ -52,21 +54,57 @@ preds_thas_ctx = [thas_op_ctx o | o <- [Eq ..]]
         , thas_fun_ctx
         ]
 
-preds_tis_ctx :: [TExpr -> TExpr -> [Double]]
-preds_tis_ctx = [tis_op_ctx o | o <- [Eq ..]]
-     ++ [ tis_con_ctx "::", tis_con_ctx "[]"
-        , tis_con_ctx "(,)"
-        , tis_con_ctx "VarX", tis_con_ctx "VarY"
-        , tis_con_ctx "Sine", tis_con_ctx "Cosine"
-        , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
-        , tis_fun_ctx
-        ]
+preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
+            preds_tis_ctx
 
-preds_tcon :: [TExpr -> Double]
-preds_tcon = [is_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tis_ctx =
+    -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
+    map tis_op_ctx [Eq ..]
+ ++ [ tis_con_ctx "::", tis_con_ctx "[]"
+    , tis_con_ctx "(,)"
+    , tis_con_ctx "VarX", tis_con_ctx "VarY"
+    , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+    , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+    , tis_con_case_ctx "::", tis_con_case_ctx "[]"
+    , tis_con_case_ctx "(,)"
+    , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
+    , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
+    , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
+    , tis_fun_ctx, tis_app_ctx
+    , tis_lit_int_ctx
+    , tis_lit_float_ctx
+    , tis_lit_bool_ctx
+    , tis_lit_char_ctx
+    , tis_lit_string_ctx
+    , tis_ite_ctx
+    , tis_seq_ctx
+    ]
 
-preds_tcon_ctx :: [TExpr -> TExpr -> [Double]]
-preds_tcon_ctx = [is_tcon_ctx tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
+base_types :: [Type]
+base_types = map tCon [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, "expr", tUNIT]
+
+concrete_types :: [Type]
+concrete_types = base_types
+              ++ map (mkTApps tLIST . pure) base_types
+-- TODO: make list of interesting types
+-- base types + lists + pairs + functions
+
+preds_tcon :: [(String, TExpr -> Double)]
+preds_tcon = [ (tc,  is_tcon tc)
+             | tc <- [ tINT, tFLOAT, tCHAR, tSTRING, tBOOL
+                     , tLIST, tUNIT, "Tuple", "Fun"
+                     , "expr"
+                     ]
+             ] ++ [("Is-var", is_tvar)]
+
+preds_tcon_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tcon_ctx = [is_tcon_ctx tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]] ++ [is_tvar_ctx]
+
+preds_tcon_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tcon_children = map (first (drop 2) . second (fmap (fmap (drop 2))))
+                      preds_tcon_ctx
 
 preds_tcon_agg :: [TExpr -> Double]
 preds_tcon_agg = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
@@ -273,29 +311,106 @@ tis_op b e = case e of
 tis_con :: DCon -> TExpr -> Double
 tis_con c e = case e of
   T_ConApp _ c' _ -> bool2double $ c == c'
-  T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
   T_Tuple _ _ -> bool2double $ c == "(,)"
   T_List _ _ -> bool2double $ c == "::" || c == "[]"
   _ -> 0
 
+tis_con_case :: DCon -> TExpr -> Double
+tis_con_case c e = case e of
+  T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
+  _ -> 0
+
+
 tis_fun :: TExpr -> Double
 tis_fun e = case e of
   T_Lam {} -> bool2double True
+  _ -> 0
+
+tis_app :: TExpr -> Double
+tis_app e = case e of
   T_App {} -> bool2double True
   _ -> 0
 
-tis_op_ctx :: Bop -> TExpr -> TExpr -> [Double]
-tis_op_ctx b p e = [tis_op b e, tis_op b p]
-                 ++ take 3 (map (tis_op b) (children e) ++ repeat 0)
+tis_lit_int :: TExpr -> Double
+tis_lit_int e = case e of
+  T_Lit _ (LI {}) -> 1
+  _               -> 0
+tis_lit_float :: TExpr -> Double
+tis_lit_float e = case e of
+  T_Lit _ (LD {}) -> 1
+  _               -> 0
+tis_lit_bool :: TExpr -> Double
+tis_lit_bool e = case e of
+  T_Lit _ (LB {}) -> 1
+  _               -> 0
+tis_lit_char :: TExpr -> Double
+tis_lit_char e = case e of
+  T_Lit _ (LC {}) -> 1
+  _               -> 0
+tis_lit_string :: TExpr -> Double
+tis_lit_string e = case e of
+  T_Lit _ (LS {}) -> 1
+  _               -> 0
 
-tis_con_ctx :: DCon -> TExpr -> TExpr -> [Double]
-tis_con_ctx c p e = [tis_con c e, tis_con c p]
-                 ++ take 3 (map (tis_con c) (children e) ++ repeat 0)
+tis_ite :: TExpr -> Double
+tis_ite e = case e of
+  T_Ite {} -> bool2double True
+  _ -> 0
 
-tis_fun_ctx :: TExpr -> TExpr -> [Double]
-tis_fun_ctx p e = [tis_fun e, tis_fun p]
-                 ++ take 3 (map tis_fun (children e) ++ repeat 0)
+tis_seq :: TExpr -> Double
+tis_seq e = case e of
+  T_Seq {} -> bool2double True
+  _ -> 0
 
+mkContextLabels :: String -> [String]
+mkContextLabels l = [l, l++"-P", l++"-C1", l++"-C2", l++"-C3"]
+
+mkContextFeatures :: (TExpr -> Double) -> TExpr -> TExpr -> [Double]
+mkContextFeatures mkF p e =
+  [mkF e, mkF p] ++ take 3 (map mkF (children e) ++ repeat 0)
+
+
+tis_op_ctx :: Bop -> Feature -- TExpr -> TExpr -> [Double]
+tis_op_ctx b = ( mkContextLabels ("Is-" ++ show b), mkContextFeatures (tis_op b) )
+-- tis_op_ctx b p e = [tis_op b e, tis_op b p]
+--                  ++ take 3 (map (tis_op b) (children e) ++ repeat 0)
+
+tis_con_ctx :: DCon -> Feature -- ([String], TExpr -> TExpr -> [Double])
+tis_con_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con c) )
+  where
+  lbl = "Is-" ++ c
+
+tis_con_case_ctx :: DCon -> Feature
+tis_con_case_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con_case c) )
+  where
+  lbl = "Is-" ++ c ++ "-Case"
+
+tis_fun_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_fun_ctx = ( mkContextLabels "Is-Fun", mkContextFeatures tis_fun )
+-- tis_fun_ctx p e = [tis_fun e, tis_fun p]
+--                  ++ take 3 (map tis_fun (children e) ++ repeat 0)
+
+tis_app_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_app_ctx = ( mkContextLabels "Is-App", mkContextFeatures tis_app )
+-- tis_app_ctx p e = [tis_app e, tis_app p]
+--                  ++ take 3 (map tis_app (children e) ++ repeat 0)
+
+tis_lit_int_ctx :: Feature --  TExpr -> TExpr -> [Double]
+tis_lit_int_ctx = ( mkContextLabels "Is-Lit-Int", mkContextFeatures tis_lit_int )
+tis_lit_float_ctx :: Feature --  TExpr -> TExpr -> [Double]
+tis_lit_float_ctx = ( mkContextLabels "Is-Lit-Float", mkContextFeatures tis_lit_float )
+tis_lit_bool_ctx :: Feature --  TExpr -> TExpr -> [Double]
+tis_lit_bool_ctx = ( mkContextLabels "Is-Lit-Bool", mkContextFeatures tis_lit_bool )
+tis_lit_char_ctx :: Feature --  TExpr -> TExpr -> [Double]
+tis_lit_char_ctx = ( mkContextLabels "Is-Lit-Char", mkContextFeatures tis_lit_char )
+tis_lit_string_ctx :: Feature --  TExpr -> TExpr -> [Double]
+tis_lit_string_ctx = ( mkContextLabels "Is-Lit-String", mkContextFeatures tis_lit_string )
+
+tis_ite_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_ite_ctx = ( mkContextLabels "Is-Ite", mkContextFeatures tis_ite )
+
+tis_seq_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_seq_ctx = ( mkContextLabels "Is-Seq", mkContextFeatures tis_seq )
 
 diff :: Expr -> Expr -> Set SrcSpan
 diff e1 e2 = case (e1, e2) of
@@ -556,9 +671,18 @@ is_tcon c e = case getType e of
                 _ :-> _ -> bool2double $ c == "Fun"
                 _ -> 0
 
-is_tcon_ctx :: TCon -> TExpr {- parent -} -> TExpr -> [Double]
-is_tcon_ctx c p e = [is_tcon c e, is_tcon c p]
-                 ++ take 3 (map (is_tcon c) (children e) ++ repeat 0)
+is_tcon_ctx :: TCon -> Feature -- TExpr {- parent -} -> TExpr -> [Double]
+is_tcon_ctx c = ( mkContextLabels ("Is-Type-"++c), mkContextFeatures (is_tcon c) )
+-- is_tcon_ctx c p e = [is_tcon c e, is_tcon c p]
+--                  ++ take 3 (map (is_tcon c) (children e) ++ repeat 0)
+
+is_tvar_ctx :: Feature
+is_tvar_ctx = ( mkContextLabels "Is-Type-Var", mkContextFeatures is_tvar )
+
+is_tvar :: TExpr -> Double
+is_tvar e = case getType e of
+              TVar _ -> bool2double True
+              _ -> 0
 
 children :: TExpr -> [TExpr]
 children = \case
