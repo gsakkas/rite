@@ -1,5 +1,3 @@
-import csv
-import json
 import math
 import os.path
 import random
@@ -13,7 +11,6 @@ import tensorflow.contrib.learn.python.learn as learn
 # local modules
 import input
 import linear
-import plot
 import util
 
 flags = tf.app.flags
@@ -25,7 +22,7 @@ flags.DEFINE_string("model", "linear",
                     "Valid model types: {'linear', 'svm'}.")
 flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
-flags.DEFINE_float("train_rate", 0.1, "Training rate.")
+flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 
@@ -64,10 +61,10 @@ def train_and_eval(df, fs, ls, i=0):
 
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
-        return linear.build_model(fs, ls, train_rate=FLAGS.train_rate,
+        return linear.build_model(fs, ls, learn_rate=FLAGS.learn_rate,
                                   model_dir=model_dir)
     elif FLAGS.model == 'svm':
-        return svm.build_model(fs, ls, train_rate=FLAGS.train_rate,
+        return svm.build_model(fs, ls, learn_rate=FLAGS.learn_rate,
                                model_dir=model_dir)
     else:
         raise ("unknown model type: " + FLAGS.model)

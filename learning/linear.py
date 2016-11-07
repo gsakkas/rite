@@ -6,12 +6,12 @@ import math
 
 import util
 
-def build_model(features, labels, train_rate=0.1, model_dir=None):
+def build_model(features, labels, learn_rate=0.1, model_dir=None):
     '''Build a linear classifier.
 
     @param features: A list of feature names.
     @param labels: A list of label names.
-    @param train_rate: The training rate, defaults to 0.1.
+    @param learn_rate: The training rate, defaults to 0.1.
     @param model_dir: A directory to store the model summaries in.
 
     @return: A 4-tuple of training, testing, plotting, and closing functions.
@@ -38,7 +38,7 @@ def build_model(features, labels, train_rate=0.1, model_dir=None):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
         tf.scalar_summary('cross_entropy', cross_entropy)
     with tf.name_scope('train'):
-        train_step = tf.train.GradientDescentOptimizer(train_rate).minimize(cross_entropy)
+        train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
 
     sess = tf.InteractiveSession()
     merged = tf.merge_all_summaries()
