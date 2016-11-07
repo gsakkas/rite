@@ -11,6 +11,7 @@ import tensorflow.contrib.learn.python.learn as learn
 # local modules
 import input
 import linear
+import svm
 import util
 
 flags = tf.app.flags
