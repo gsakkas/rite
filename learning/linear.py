@@ -1,14 +1,20 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
 
 import math
 
 import util
 
-def build_model(features, labels, train_rate=0.1):
+def build_model(features, labels, train_rate=0.1, model_dir=None):
     '''Build a linear classifier.
 
-    @param train_rate: The training rate, defaults to 0.1
-    @return: A pair of training and testing functions.
+    @param features: A list of feature names.
+    @param labels: A list of label names.
+    @param train_rate: The training rate, defaults to 0.1.
+    @param model_dir: A directory to store the model summaries in.
+
+    @return: A 4-tuple of training, testing, plotting, and closing functions.
     '''
 
     n_in = len(features)
@@ -36,7 +42,7 @@ def build_model(features, labels, train_rate=0.1):
 
     sess = tf.InteractiveSession()
     merged = tf.merge_all_summaries()
-    summary_writer = tf.train.SummaryWriter('/tmp', sess.graph)
+    summary_writer = tf.train.SummaryWriter(model_dir, sess.graph)
     tf.initialize_all_variables().run()
 
     if n_out >= 2:
@@ -46,14 +52,14 @@ def build_model(features, labels, train_rate=0.1):
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
-    def train(data, i, validation=None):
+    def train(data, i, validation=None, verbose=False):
         summary_str, _ = sess.run([merged, train_step],
                                   feed_dict={x: data[features], y_: data[labels]})
         summary_writer.add_summary(summary_str, i)
         if validation is not None:
             acc = sess.run(accuracy,
                            feed_dict={x: validation[features], y_: validation[labels]})
-            if i % 100 == 0:
+            if verbose and i % 100 == 0:
                 print('accuracy at step {}: {}'.format(i, acc))
 
 
@@ -61,4 +67,15 @@ def build_model(features, labels, train_rate=0.1):
         acc = sess.run(accuracy, {x: data[features], y_: data[labels]})
         print('accuracy: %f' % acc)
 
-    return train, test
+    def plot():
+        w = sess.run(tf.transpose(W))
+        plt.matshow(w, cmap='hot', interpolation='nearest')
+        plt.xticks(np.arange(len(features)), features, rotation=90)
+        plt.yticks(np.arange(len(labels)), labels)
+        # plt.legend()
+        plt.show()
+
+    def close():
+        sess.close()
+
+    return train, test, plot, close
