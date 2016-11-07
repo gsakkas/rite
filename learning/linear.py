@@ -77,5 +77,6 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
 
     def close():
         sess.close()
+        tf.reset_default_graph()
 
     return train, test, plot, close

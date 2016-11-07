@@ -57,7 +57,6 @@ def train_and_eval(df, fs, ls, i=0):
         plot()
 
     close()
-    tf.reset_default_graph()
 
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
