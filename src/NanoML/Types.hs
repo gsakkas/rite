@@ -110,7 +110,7 @@ isSuccess Failure {} = False
 data NanoError
   = MLException Value
   | UnboundVariable Var MSrcSpan
-  | TypeError Type Type MSrcSpan
+  | TypeError Type Type MSrcSpan [MSrcSpan]
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
@@ -132,8 +132,34 @@ typeError :: MonadEval m => Type -> Type -> m a
 typeError t1 t2 = do
   t1s <- substM t1
   t2s <- substM t2
-  e <- gets stCurrentExpr
-  throwError (TypeError t1s t2s (getSrcSpanExprMaybe $ fst e))
+  e <- fst <$> gets stCurrentExpr
+  throwError (TypeError t1s t2s (getSrcSpanExprMaybe e) (map getSrcSpanExprMaybe (values e)))
+ where
+  values e' = takeWhile isValue $ case e' of
+    Var {} -> []
+    Lam {} -> []
+    App _ f es -> f : es
+    Bop _ _ x y -> [x, y]
+    Uop _ _ x -> [x]
+    Lit {} -> []
+    Let _ _ pes _ -> map snd pes
+    Ite _ x y z -> [x]
+    Seq _ x y -> [x]
+    Case _ e as -> e : mapMaybe snd3 as
+    Tuple _ es -> es
+    ConApp _ _ me _ -> maybeToList me
+    Record _ fes _ -> map snd fes
+    Field _ e _ -> [e]
+    SetField _ e _ v -> [e,v]
+    Array _ es _ -> es
+    List _ es _ -> es
+    Try _ e as -> e : mapMaybe snd3 as
+    Prim1 {} -> []
+    Prim2 {} -> []
+    With _ _ e -> values e
+    Replace _ _ e -> values e
+    Hole {} -> []
+    Ref {} -> []
 
 outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
@@ -316,7 +342,7 @@ getStepIndex :: MonadEval m => m Int
 getStepIndex = Seq.length <$> gets stTrace
 
 getCurrentProv :: MonadEval m => m MSrcSpan
-getCurrentProv = return Nothing -- getSrcSpanExprMaybe <$> gets stCurrentExpr
+getCurrentProv = getSrcSpanExprMaybe . fst <$> gets stCurrentExpr
 
 withCurrentProv :: MonadEval m => (MSrcSpan -> a) -> m a
 withCurrentProv f = f <$> getCurrentProv

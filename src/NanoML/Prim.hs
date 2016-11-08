@@ -85,12 +85,7 @@ conPatD = ConPat Nothing
 consPatD = ConsPat Nothing
 
 primVars :: [(Var, Value)]
-primVars = [ ("[]", VL nullProv [] Nothing)
-           -- , ("::", VF nullProv (Func (mkLams [varPatD "x", varPatD "xs"]
-           --                           (mkConAppD "::" [varD "x", varD "xs"]))
-           --                   emptyEnv))
-           , ("()", VU nullProv)
-           , ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
+primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max"
              ,mkLams baseEnv [varPatD "x", varPatD "y"]

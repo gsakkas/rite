@@ -510,7 +510,7 @@ instance Pretty NanoError where
       text "Unbound variable" <>
        -- "at" <+> pretty ss <+>
        text ":" <+> pretty v
-    TypeError t1 t2 ss ->
+    TypeError t1 t2 ss vss ->
       let tvs = freeTyVars t1 ++ freeTyVars t2
           su  = Map.fromList $ zip tvs (map (TVar . (:[])) ['a' .. 'z'])
           t1' = subst su t1
@@ -522,7 +522,11 @@ instance Pretty NanoError where
       text ": stuck because" <+>
       {-ticks-} (pretty t1') <+>
       text "is incompatible with" <+>
-      {-ticks-} (pretty t2')
+      {-ticks-} (pretty t2') <$>
+      text "Stuck at:" <$>
+        indent 2 (pretty ss) <$>
+      text "due to values from:" <$>
+        indent 2 (vcat (map pretty vss))
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
     OtherError s -> text "Error:" <+> text s

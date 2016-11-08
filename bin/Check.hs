@@ -8,6 +8,7 @@ import Text.Printf
 import NanoML
 import NanoML.Explore
 import NanoML.Misc
+import NanoML.Pretty
 import NanoML.Step
 
 main = do
@@ -27,4 +28,5 @@ main = do
       -- st <- findRoot gr (stCurrentExpr finalState)
       -- explore gr st
       print counterExample
+      print (pretty errorMsg)
       exitFailure
