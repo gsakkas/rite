@@ -38,21 +38,35 @@ preds_count :: [Expr -> Double]
 preds_count = [count_op o | o <- [Eq .. Mod]]
      ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
 
-preds_thas :: [TExpr -> Double]
-preds_thas = [thas_op o | o <- [Eq .. Mod]]
-     ++ [thas_con "::", thas_con "[]", thas_con "(,)", thas_fun]
+preds_thas :: [Feature] -- [TExpr -> Double]
+preds_thas = map (first (take 1) . second (fmap (fmap (take 1))))
+             preds_thas_ctx
 
 type Feature = ([String], (TExpr -> TExpr -> [Double]))
 
-preds_thas_ctx :: [TExpr -> TExpr -> [Double]]
-preds_thas_ctx = [thas_op_ctx o | o <- [Eq ..]]
-     ++ [ thas_con_ctx "::", thas_con_ctx "[]"
-        , thas_con_ctx "(,)"
-        , thas_con_ctx "VarX", thas_con_ctx "VarY"
-        , thas_con_ctx "Sine", thas_con_ctx "Cosine"
-        , thas_con_ctx "Average", thas_con_ctx "Times", thas_con_ctx "Thresh"
-        , thas_fun_ctx
-        ]
+preds_thas_ctx :: [Feature] --  [TExpr -> TExpr -> [Double]]
+preds_thas_ctx =
+    map thas_op_ctx [Eq ..]
+ ++ [ thas_con_ctx "::", thas_con_ctx "[]"
+    , thas_con_ctx "(,)"
+    , thas_con_ctx "VarX", thas_con_ctx "VarY"
+    , thas_con_ctx "Sine", thas_con_ctx "Cosine"
+    , thas_con_ctx "Average", thas_con_ctx "Times", thas_con_ctx "Thresh"
+    , thas_con_case_ctx "::", thas_con_case_ctx "[]"
+    , thas_con_case_ctx "(,)"
+    , thas_con_case_ctx "VarX", thas_con_case_ctx "VarY"
+    , thas_con_case_ctx "Sine", thas_con_case_ctx "Cosine"
+    , thas_con_case_ctx "Average", thas_con_case_ctx "Times", thas_con_case_ctx "Thresh"
+    , thas_fun_ctx, thas_app_ctx
+    , thas_lit_int_ctx
+    , thas_lit_float_ctx
+    , thas_lit_bool_ctx
+    , thas_lit_char_ctx
+    , thas_lit_string_ctx
+    , thas_ite_ctx
+    , thas_seq_ctx
+    , thas_var_ctx
+    ]
 
 preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
@@ -80,6 +94,7 @@ preds_tis_ctx =
     , tis_lit_string_ctx
     , tis_ite_ctx
     , tis_seq_ctx
+    , tis_var_ctx
     ]
 
 base_types :: [Type]
@@ -266,9 +281,22 @@ thas_con c = bool2double . getAny . tfold f mempty
   where
   f e acc = acc <> case e of
                      T_ConApp _ c' _ -> Any $ c == c'
-                     T_Case _ _ as -> Any $ any (pat_has_con c) (map fst3 as)
                      T_Tuple _ _ -> Any $ c == "(,)"
                      T_List _ _ -> Any $ c == "::" || c == "[]"
+                     _ -> mempty
+
+thas_con_case :: DCon -> TExpr -> Double
+thas_con_case c = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_Case _ _ as -> Any $ any (pat_has_con c) (map fst3 as)
+                     _ -> mempty
+
+thas_var :: TExpr -> Double
+thas_var = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_Var {} -> Any True
                      _ -> mempty
 
 thas_fun :: TExpr -> Double
@@ -276,20 +304,69 @@ thas_fun = bool2double . getAny . tfold f mempty
   where
   f e acc = acc <> case e of
                      T_Lam {} -> Any True
+                     _ -> mempty
+
+thas_app :: TExpr -> Double
+thas_app = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
                      T_App {} -> Any True
                      _ -> mempty
 
-thas_op_ctx :: Bop -> TExpr -> TExpr -> [Double]
-thas_op_ctx b p e = [thas_op b e, thas_op b p]
-                 ++ take 3 (map (thas_op b) (children e) ++ repeat 0)
+thas_op_ctx :: Bop -> Feature -- TExpr -> TExpr -> [Double]
+thas_op_ctx b = ( mkContextLabels ("Has-" ++ show b), mkContextFeatures (thas_op b) )
 
-thas_con_ctx :: DCon -> TExpr -> TExpr -> [Double]
-thas_con_ctx c p e = [thas_con c e, thas_con c p]
-                 ++ take 3 (map (thas_con c) (children e) ++ repeat 0)
+thas_con_ctx :: DCon -> Feature
+thas_con_ctx c = ( mkContextLabels ("Has-" ++ c), mkContextFeatures (thas_con c) )
 
-thas_fun_ctx :: TExpr -> TExpr -> [Double]
-thas_fun_ctx p e = [thas_fun e, thas_fun p]
-                 ++ take 3 (map thas_fun (children e) ++ repeat 0)
+thas_con_case_ctx :: DCon -> Feature
+thas_con_case_ctx c = ( mkContextLabels ("Has-" ++ c ++ "-Case"), mkContextFeatures (thas_con_case c) )
+
+thas_var_ctx :: Feature
+thas_var_ctx = ( mkContextLabels "Has-Var", mkContextFeatures thas_var )
+
+thas_fun_ctx :: Feature
+thas_fun_ctx = ( mkContextLabels "Has-Fun", mkContextFeatures thas_fun )
+
+thas_app_ctx :: Feature
+thas_app_ctx = ( mkContextLabels "Has-App", mkContextFeatures thas_app )
+
+mkTHas :: (TExpr -> Double) -> TExpr -> Double
+mkTHas mkF = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> Any (mkF e == 1)
+
+thas_lit_int :: TExpr -> Double
+thas_lit_int = mkTHas tis_lit_int
+thas_lit_float :: TExpr -> Double
+thas_lit_float = mkTHas tis_lit_float
+thas_lit_bool :: TExpr -> Double
+thas_lit_bool = mkTHas tis_lit_bool
+thas_lit_char :: TExpr -> Double
+thas_lit_char = mkTHas tis_lit_char
+thas_lit_string :: TExpr -> Double
+thas_lit_string = mkTHas tis_lit_string
+
+thas_lit_int_ctx :: Feature
+thas_lit_int_ctx = ( mkContextLabels "Has-Lit-Int", mkContextFeatures thas_lit_int )
+thas_lit_float_ctx :: Feature
+thas_lit_float_ctx = ( mkContextLabels "Has-Lit-Float", mkContextFeatures thas_lit_float )
+thas_lit_bool_ctx :: Feature
+thas_lit_bool_ctx = ( mkContextLabels "Has-Lit-Bool", mkContextFeatures thas_lit_bool )
+thas_lit_char_ctx :: Feature
+thas_lit_char_ctx = ( mkContextLabels "Has-Lit-Char", mkContextFeatures thas_lit_char )
+thas_lit_string_ctx :: Feature
+thas_lit_string_ctx = ( mkContextLabels "Has-Lit-String", mkContextFeatures thas_lit_string )
+
+thas_ite :: TExpr -> Double
+thas_ite = mkTHas tis_ite
+thas_ite_ctx :: Feature
+thas_ite_ctx = ( mkContextLabels "Has-Ite", mkContextFeatures thas_ite )
+
+thas_seq :: TExpr -> Double
+thas_seq = mkTHas tis_seq
+thas_seq_ctx :: Feature
+thas_seq_ctx = ( mkContextLabels "Has-Seq", mkContextFeatures thas_seq )
 
 pat_has_con :: DCon -> Pat -> Bool
 pat_has_con c p' = case p' of
@@ -320,6 +397,10 @@ tis_con_case c e = case e of
   T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
   _ -> 0
 
+tis_var :: TExpr -> Double
+tis_var e = case e of
+  T_Var {} -> bool2double True
+  _ -> 0
 
 tis_fun :: TExpr -> Double
 tis_fun e = case e of
@@ -384,6 +465,9 @@ tis_con_case_ctx :: DCon -> Feature
 tis_con_case_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con_case c) )
   where
   lbl = "Is-" ++ c ++ "-Case"
+
+tis_var_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_var_ctx = ( mkContextLabels "Is-Var", mkContextFeatures tis_var )
 
 tis_fun_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_fun_ctx = ( mkContextLabels "Is-Fun", mkContextFeatures tis_fun )
@@ -496,6 +580,20 @@ diff e1 e2 = case (e1, e2) of
 -- | Diff two programs by declaration group, and return a set of
 -- spans that have changed in the first program.
 diffProg :: Prog -> Prog -> Set SrcSpan
+-- we're really only interested in *deletions* from the bad program
+-- diffProg []  _   = mempty
+-- diffProg bad []  _ foldr joinSrcSpan (map getSrcSpan bad)
+-- diffProg bad fix = case (bad, fix) of
+--   (DFun x1 y1 ((p1, e1):pes1) : _, DFun x2 y2 ((p2,e2):pes2) : _)
+--     | p1 == p2
+--       -> diff e1 e2 <> diffProg (DFun x1 y1 pes1) (DFun x2 y2 pes2)
+--   (DFun _ _ [] : bad', DFun _ _ [] : fix')
+--     -> diffProg bad' fix'
+
+-- diffOne :: Decl -> Prog -> Set SrcSpan
+-- diffOne (DFun x1 y1 ((p1, e1):pes1)) [] = x1
+-- diffOne (DFun x1 y1 ((p1, e1):pes1)) (DFun x2 y2 ((p2, e2)):pes1) = x1
+
 diffProg p1 p2 = mconcat $ map go p1
   where
   go (DFun _ _ pes) = mconcat $ map to pes

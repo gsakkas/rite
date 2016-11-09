@@ -24,6 +24,7 @@ executable generate-features
                , bytestring
                , cassava
                , containers
+               , Diff
                , nanoml
                , unordered-containers
                , vector
