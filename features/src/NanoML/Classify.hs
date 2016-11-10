@@ -72,6 +72,9 @@ preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
             preds_tis_ctx
 
+preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tis_novar = init preds_tis
+
 preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_ctx =
     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
@@ -120,6 +123,11 @@ preds_tcon_ctx = [is_tcon_ctx tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, t
 preds_tcon_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tcon_children = map (first (drop 2) . second (fmap (fmap (drop 2))))
                       preds_tcon_ctx
+
+preds_tcon_novar_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tcon_novar_children = init preds_tcon_children
+
+
 
 preds_tcon_agg :: [TExpr -> Double]
 preds_tcon_agg = [has_tcon tc | tc <- [tINT, tFLOAT, tCHAR, tSTRING, tBOOL, tLIST, tUNIT, "Tuple", "Fun", "expr"]]
