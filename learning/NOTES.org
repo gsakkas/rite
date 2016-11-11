@@ -50,16 +50,23 @@ let pipe fs =
 CLOSED: [2016-10-27 Thu 10:47]
 - compare against ocaml/sherrloc
 - when they fail, can nanomaly find a witness?
-** TODO diff threshold                                                :ersp:
+** DONE diff threshold                                                :ersp:
+CLOSED: [2016-11-10 Thu 15:55]
 if diff encompasses >n% of original program, filter out
 for different n, how many fixes exceed threshold
 ** DONE send RJ the algorithm M paper
 CLOSED: [2016-10-27 Thu 10:47]
-** TODO try adding *root* features to each vector (identify exprs by common prog)
+** CANCELLED try adding *root* features to each vector (identify exprs by common prog)
+CLOSED: [2016-11-10 Thu 15:55]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2016-11-10 Thu 15:55] \\
+  learning is slightly better (~10%), but i have a feeling this is due to the classifier memorizing answers for specific programs
+:END:
 ** TODO can we predict *type* of expression
 - features are ast-node + [is_int, is_bool, is_list, ...] for children (maybe + is_error?)
 - labels are [is_int, is_bool, is_list, ...]
 - linear classifier
 - train classifier on fully annotated programs
 - then predict in bottom up fashion on unannotated programs, propagating labels up into parent's features
-** TODO: figure out meaningful error location from nanomaly
+** TODO figure out meaningful error location from nanomaly
+*** TODO source of values in stuck term
