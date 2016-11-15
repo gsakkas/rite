@@ -26,6 +26,8 @@ import Data.Set (Set)
 import GHC.Generics
 
 import NanoML.Parser
+import NanoML.Pretty
+import NanoML.Prim
 import NanoML.Types
 
 import Debug.Trace
@@ -650,14 +652,25 @@ data TDecl
   deriving (Show, Eq, Data, Generic)
 instance Hashable TDecl
 
-typeProg :: MonadEval m => Prog -> m TProg
+typeProg :: MonadEval m => Prog -> m (TProg, [Set Constraint])
 typeProg p = do
-  tp <- mapM typeDecl p
-  forM tp $ \ td -> case td of
-    TDFun {} -> everywhereM (mkM substM) td
-    TDEvl {} -> everywhereM (mkM substM) td
-    -- don't look at TDTyp or TDExn, they contain bottoms
-    _ -> return td
+  env <- fmap (concat . catMaybes) $ forM primVars $ \(var, val) -> do
+    -- traceM var
+    fmap (Just . fst) (typeRecBinds [(VarPat Nothing var, val)])
+      `catchError` \e -> return Nothing
+  -- let t_fl = fromJust $ lookup "List.fold_left" env
+  -- traceShowM . pretty =<< substM t_fl
+  -- let t_fr = fromJust $ lookup "List.fold_right" env
+  -- traceShowM . pretty =<< substM t_fr
+  withLocalBinds env $ do
+    tp <- mapM typeDecl p
+    cs <- gets stUnsatCores
+    tp' <- forM tp $ \ td -> case td of
+      TDFun {} -> everywhereM (mkM substM) td
+      TDEvl {} -> everywhereM (mkM substM) td
+      -- don't look at TDTyp or TDExn, they contain bottoms
+      _ -> return td
+    return (tp', cs)
 
 typeDecl :: MonadEval m => Decl -> m TDecl
 typeDecl = \case
@@ -826,20 +839,31 @@ lookupVarType v = do
   case Map.lookup v env of
     Just t  -> return t
     Nothing -> do
+      otherError $ "unbound variable: " ++ v
       -- TODO: should be impossible..
-      t <- TVar <$> freshTVar
-      modify' $ \ s -> s { stVarTypes = Map.insert v t (stVarTypes s) }
-      return t
+      -- t <- TVar <$> freshTVar
+      -- modify' $ \ s -> s { stVarTypes = Map.insert v t (stVarTypes s) }
+      -- return t
 
 -- TODO: do we want to do a traditional HM-style bottom-up inference, or
 -- a bidirectional thing? since the interesting expressions will be
 -- ill-typed, the choice may make a difference in how we type the bad bits
 typeExpr :: MonadEval m => Expr -> m TExpr
 -- for now let's do a bottom-up thing
-typeExpr = \case
+typeExpr e = withCurrentExpr e (typeExpr' e)
+
+typeExpr' :: MonadEval m => Expr -> m TExpr
+typeExpr' = \case
   Var ml v -> do
-    -- NOTE: don't forget to instantiate
     t <- lookupVarType v
+    case t of
+      TAll tvs t' -> do
+        su <- fmap Map.fromList $ forM tvs $ \tv ->
+          (tv,) . TVar <$> freshTVar
+        return (subst su t')
+      _ -> return t
+    -- traceM "VAR"
+    -- traceShowM . (v,) . pretty =<< substM t
     return (T_Var (mkInfo ml t) v)
   Lam ml p e _ -> do
     (ti, bnds) <- typePat p
@@ -850,7 +874,12 @@ typeExpr = \case
     tf <- typeExpr f
     tes <- mapM typeExpr es
     t <- TVar <$> freshTVar
+    -- traceM "APP"
+    -- traceShowM . pretty =<< substM (getType tf)
+    -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
     tryUnify (getType tf) (foldr (:->) t (map getType tes))
+    -- traceShowM . pretty =<< substM (getType tf)
+    -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
     return (T_App (mkInfo ml t) tf tes)
   Bop ml b e1 e2 -> do
     te1 <- typeExpr e1
@@ -941,9 +970,9 @@ typeExpr = \case
     return (T_List (mkInfo ml (mkTApps tLIST [t])) tes)
   -- these should not occur in the dataset
   Try ml e as -> do
-    error "typeExpr: impossible: try"
+    otherError "typeExpr: impossible: try"
   Record ml fes _ -> do
-    error "typeExpr: impossible: record"
+    otherError "typeExpr: impossible: record"
   Field ml e f -> do
     te <- typeExpr e
     td@TypeDecl {tyCon, tyRhs = TRec fs} <- lookupField f
@@ -954,20 +983,20 @@ typeExpr = \case
     let Just t = lookup f [(x,z) | (x,y,z) <- fs]
     return (T_Field (mkInfo ml t) te f)
   SetField ml e f v -> do
-    error "typeExpr: impossible: setfield"
+    otherError "typeExpr: impossible: setfield"
   -- these should not occur at all in freshly parsed programs
   Prim1 {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
   Prim2 {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
   With {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
   Replace {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
   Hole {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
   Ref {} -> do
-    error "typeExpr: impossible"
+    otherError "typeExpr: impossible"
 
 typePat :: MonadEval m => Pat -> m (Type, [(Var, Type)])
 typePat = \case
@@ -1064,7 +1093,12 @@ typeRecBinds pes = do
 
 -- | Try to unify two types but suppress any errors.
 tryUnify :: MonadEval m => Type -> Type -> m ()
-tryUnify t1 t2 = unify t1 t2 `catchError` \_ -> return ()
+tryUnify t1 t2 = do
+  prv <- getCurrentProv
+  -- traceShowM (prv, t1, t2)
+  pushConstraints (Set.singleton (mkConstraint prv t1 t2))
+  unify t1 t2 `catchError` \e -> getUnsatCore >>= addUnsatCore
+  popConstraints
 
 withLocalBinds :: MonadEval m => [(Var, Type)] -> m a -> m a
 withLocalBinds bnds do_this = do
@@ -1073,3 +1107,30 @@ withLocalBinds bnds do_this = do
   a <- do_this
   modify' $ \ s -> s { stVarTypes = tenv }
   return a
+
+
+Right foo1 = parseTopForm
+  "let pipe fs =\
+  \  let f a x = a x in\
+  \  let base x = x in\
+  \  List.fold_left f base fs"
+
+Right foo2 = parseTopForm
+  "let rec sepConcat sep sl=\
+  \  match sl with\
+  \  | [] -> \"\"\
+  \  | h :: t -> let f a x = a ^ (sep ^ x) in\
+  \              let base = h in\
+  \              let l = sepConcat sep t in\
+  \              List.fold_left f base l"
+
+Right foo3 = parseTopForm
+  "let rec sepConcat sep sl=\
+  \  match sl with\
+  \  | [] -> \"\"\
+  \  | h :: t -> let f a x = h in\
+  \              let base = \"\" in\
+  \              let l = h ^ t in\
+  \              List.fold_left f base l"
+
+Right fl = parseTopForm "let x = List.fold_left"

@@ -265,7 +265,7 @@ Expr :: { Expr }
 | "try" SeqExpr "with" MaybePipe AltList    { Try (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (mergeLocated (last $1) (head $1)) (reverse $1) }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite (mergeLocated $1 $6) $2 $4 $6 }
-| "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (Var (mergeLocated $1 $4) "()") }
+| "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (mergeLocated $1 $4)) }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
 | SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
@@ -301,7 +301,7 @@ SimpleExpr :: { Expr }
 | "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) Nothing }
 | '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
 | "begin" SeqExpr "end" { $2 }
-| "begin" "end"         { Var (mergeLocated $1 $2) "()" }
+| "begin" "end"         { VU (mergeLocated $1 $2) }
 | '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) Nothing }
 
 SimpleExprList :: { [Expr] }

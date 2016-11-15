@@ -140,14 +140,18 @@ runTFeaturesDiff
 runTFeaturesDiff fs (ls, bad) = (header, samples)
   where
   header = Vector.fromList
-         $ ["L-DidChange", "L-NoChange"]
+         $ ["L-DidChange", "L-NoChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
-  samples = concatMap mkfsD tbad
+  samples
+    | null cores = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- FIXME: shouldn't happen!!
+    | otherwise
+    = concatMap mkfsD tbad
 
-  tbad = case runEval stdOpts (typeProg bad) of
-    Left e -> traceShow e []
-    Right p -> p
+  (tbad, cores) = case runEval stdOpts (typeProg bad) of
+    Left e -> traceShow e ([], [])
+                                   -- only look at first unsat core for now
+    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)))
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e
@@ -159,11 +163,18 @@ runTFeaturesDiff fs (ls, bad) = (header, samples)
     | otherwise
     = ["L-DidChange" .= (0::Double), "L-NoChange" .= (1::Double)]
 
+  inSlice l
+    | any (l `isSubSpanOf`) cores
+    = ["F-InSlice" .= (1::Double)]
+    | otherwise
+    = ["F-InSlice" .= (0::Double)]
+
   mkTypeOut :: TExpr -> [NamedRecord]
   mkTypeOut te = ctfold f [] te
     where
     f p e acc = (:acc) . namedRecord $
                 didChange (infoSpan (texprInfo e))
+             ++ inSlice (infoSpan (texprInfo e))
              ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
@@ -180,7 +191,7 @@ runTFeaturesTypes fs fix = (header, samples)
 
   tfix = case runEval stdOpts (typeProg fix) of
     Left e -> traceShow e []
-    Right p -> p
+    Right (p, _) -> p
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e

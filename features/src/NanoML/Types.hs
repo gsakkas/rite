@@ -43,6 +43,8 @@ import qualified Data.Map.Strict              as Map
 import           Data.Maybe
 import           Data.Sequence                (Seq)
 import qualified Data.Sequence                as Seq
+import           Data.Set                     (Set)
+import qualified Data.Set                     as Set
 import           Data.Typeable (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
@@ -163,7 +165,39 @@ data EvalState = EvalState
   , stContexts :: !(HashMap Expr Context)
   , stVarTypes :: !(Map Var Type)
   -- , stExprEnvs :: ![(Expr,Env)]
+  , stConstraints :: !(Map TVar (Set Constraint))
+  , stConstraintStack :: ![Set Constraint]
+  , stUnsatCores :: ![Set Constraint]
   } deriving Show
+
+data Constraint = MkConstraint { constraintSpan :: !MSrcSpan}
+  deriving (Show, Eq, Ord)
+
+-- future proofing with the type equality
+mkConstraint :: MSrcSpan -> Type -> Type -> Constraint
+mkConstraint s _ _ = MkConstraint s
+
+pushConstraints :: MonadEval m => Set Constraint -> m ()
+pushConstraints ss = modify' $ \s -> s { stConstraintStack = ss : stConstraintStack s }
+
+popConstraints :: MonadEval m => m ()
+popConstraints = modify' $ \s -> s { stConstraintStack = tail $ stConstraintStack s }
+
+recordCurrentConstraints :: MonadEval m => TVar -> m ()
+recordCurrentConstraints v =
+  modify' $ \s -> s { stConstraints = Map.insert v (mconcat (stConstraintStack s)) (stConstraints s) }
+
+retrieveConstraints :: MonadEval m => TVar -> m (Set Constraint)
+retrieveConstraints v = do
+  cs <- gets stConstraints
+  return (cs Map.! v)
+
+getUnsatCore :: MonadEval m => m (Set Constraint)
+getUnsatCore = do
+  mconcat <$> gets stConstraintStack
+
+addUnsatCore :: MonadEval m => Set Constraint -> m ()
+addUnsatCore cs = modify' $ \s -> s { stUnsatCores = cs : stUnsatCores s }
 
 pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
 pushCallStack loc args = do
@@ -178,7 +212,7 @@ popCallStack = modify' $ \s -> s { stCallStack = tail (stCallStack s) }
 addSubst :: MonadEval m => TVar -> Type -> m ()
 addSubst a t = do
   su <- gets stSubst
-  let su' = Map.insert a t (fmap (subst (Map.singleton a t)) su)
+  let su' = Map.insert a t su -- (fmap (subst (Map.singleton a t)) su)
   modify' $ \s -> s { stSubst = su' }
 
 getSubst :: MonadEval m => m Subst
@@ -319,7 +353,7 @@ getStepIndex :: MonadEval m => m Int
 getStepIndex = Seq.length <$> gets stTrace
 
 getCurrentProv :: MonadEval m => m MSrcSpan
-getCurrentProv = return Nothing -- getSrcSpanExprMaybe <$> gets stCurrentExpr
+getCurrentProv = getSrcSpanExprMaybe . fst <$> gets stCurrentExpr
 
 withCurrentProv :: MonadEval m => (MSrcSpan -> a) -> m a
 withCurrentProv f = f <$> getCurrentProv
@@ -397,12 +431,17 @@ writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
 type Subst = Map TVar Type -- [(TVar, Type)]
 
 subst :: Subst -> Type -> Type
-subst su t = case t of
+subst su t = case subst' su t of
+  t' | t == t'   -> t'
+     | otherwise -> subst su t'
+
+subst' :: Subst -> Type -> Type
+subst' su t = case t of
   TVar x -> fromMaybe t (Map.lookup x su)
 --  TCon _ -> t
-  TApp c ts -> TApp c (map (subst su) ts)
-  ti :-> to -> subst su ti :-> subst su to
-  TTup ts -> TTup (map (subst su) ts)
+  TApp c ts -> TApp c (map (subst' su) ts)
+  ti :-> to -> subst' su ti :-> subst' su to
+  TTup ts -> TTup (map (subst' su) ts)
 
 -- TODO: this is not precise enough for the visualizer.
 -- we need an environment graph so we can have, eg multiple
@@ -1229,11 +1268,28 @@ unify' x y
   = typeError x y
 
 unifyVar :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
-unifyVar a t
-  | TVar b <- t, a == b = return () -- []
-  -- FIXME: occurs check
-  | a `elem` freeTyVars t = typeError (TVar a) t
-  | otherwise   = addSubst a t -- return [(a,t)]
+unifyVar a t = do
+  ta <- substM (TVar a)
+  t' <- substM t
+  case ta of
+    TVar a'
+      | TVar b <- t', a' == b -> return ()
+      -- FIXME: occurs check
+      | a' `elem` freeTyVars t' -> typeError ta t'
+      | otherwise -> do
+          addSubst a' t'
+          recordCurrentConstraints a'
+    _ -> do
+      pushConstraints =<< retrieveConstraints a
+      unify ta t'
+      popConstraints
+
+-- unifyVar' :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
+-- unifyVar' a t
+--   | TVar b <- t, a == b = return () -- []
+--   -- FIXME: occurs check
+--   | a `elem` freeTyVars t = typeError (TVar a) t
+--   | otherwise   = addSubst a t -- return [(a,t)]
 
 
 unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m () -- [(TVar, Type)]

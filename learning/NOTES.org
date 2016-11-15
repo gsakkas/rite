@@ -70,3 +70,4 @@ CLOSED: [2016-11-10 Thu 15:55]
 - then predict in bottom up fashion on unannotated programs, propagating labels up into parent's features
 ** TODO figure out meaningful error location from nanomaly
 *** TODO source of values in stuck term
+** TODO add "is part of type-error slice" as a feature

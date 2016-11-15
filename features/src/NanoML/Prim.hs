@@ -5,6 +5,7 @@ module NanoML.Prim
   ( baseEnv, baseTypeEnv, baseDataEnv, baseFieldEnv
   , tB, tL, tU, pand, por, getField, setField
   , maybeThrow
+  , primVars
   ) where
 
 import Control.Arrow
@@ -85,12 +86,7 @@ conPatD = ConPat Nothing
 consPatD = ConsPat Nothing
 
 primVars :: [(Var, Value)]
-primVars = [ ("[]", VL nullProv [] Nothing)
-           -- , ("::", VF nullProv (Func (mkLams [varPatD "x", varPatD "xs"]
-           --                           (mkConAppD "::" [varD "x", varD "xs"]))
-           --                   emptyEnv))
-           , ("()", VU nullProv)
-           , ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
+primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i get the max Double?
            , ("max"
              ,mkLams baseEnv [varPatD "x", varPatD "y"]
@@ -281,7 +277,7 @@ primVars = [ ("[]", VL nullProv [] Nothing)
            , ("String.create", mkPrim1Fun $ P1 "String.create" pstring_create tI)
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get tS tI)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length tS)
-           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tS tC)
+           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tI tC)
            , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char tC)
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int tI)
            , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float tF)
@@ -318,6 +314,92 @@ primVars = [ ("[]", VL nullProv [] Nothing)
            , ("raise", mkPrim1Fun $ P1 "raise" praise tE)
            , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string tE)
            ]
+
+primVarTypes :: [(Var, Type)]
+primVarTypes =
+  [ ("min_float", tCon tFLOAT)
+  , ("max_float", tCon tFLOAT)
+  , ("max", TAll ["a"] (TVar "a" :-> TVar "a" :-> TVar "a"))
+  , ("min", TAll ["a"] (TVar "a" :-> TVar "a" :-> TVar "a"))
+  , ("!", TAll ["a"] (TApp "ref" [TVar "a"] :-> TVar "a"))
+  , (":=", TAll ["a"] (TApp "ref" [TVar "a"] :-> TVar "a" :-> tCon tUNIT))
+  , ("ref", TAll ["a"] (TVar "a" :-> TApp "ref" [TVar "a"]))
+  , ("List.fold_left", TAll ["a", "b"] ((TVar "b" :-> TVar "a" :-> TVar "b") :-> TVar "b" :-> TApp "list" [TVar "a"] :-> TVar "b"))
+  , ("List.fold_right", TAll ["a", "b"] ((TVar "a" :-> TVar "b" :-> TVar "b") :-> TVar "b" :-> TApp "list" [TVar "a"] :-> TVar "b"))
+  , ("List.assoc", TAll ["a", "b"] (TVar "a" :-> TApp "list" [TTup [TVar "a", TVar "b"]] :-> TVar "b"))
+  , ("List.exists", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
+  , ("List.for_all", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
+  , ("List.filter", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("List.map", TAll ["a", "b"] ((TVar "a" :-> TVar "b") :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "b"]))
+  , ("List.iter", TAll ["a"] ((TVar "a" :-> tCon tUNIT) :-> TApp "list" [TVar "a"] :-> tCon tUNIT))
+  , ("List.partition", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> TTup [TApp "list" [TVar "a"], TApp "list" [TVar "a"]]))
+  , ("Sys.argv", TApp "array" [tCon tSTRING])
+  , ("**", tCon tFLOAT :-> tCon tFLOAT :-> tCon tFLOAT)
+  , ("@", TAll ["a"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("^", tCon tSTRING :-> tCon tSTRING :-> tCon tSTRING)
+  , ("&&", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("&", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("||", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("not", tCon tBOOL :-> tCon tBOOL)
+  , ("fst", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "a"))
+  , ("snd", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "b"))
+  , ("failwith", TAll ["a"] (tCon tSTRING :-> TVar "a"))
+  , ("Array.get", TAll ["a"] (TApp "array" [TVar "a"] :-> tCon tINT :-> TVar "a"))
+  , ("Char.code", tCon tCHAR :-> tCon tINT)
+  -- FIXME: support module types
+  -- , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare tC tC)
+  , ("Char.escaped", tCon tCHAR :-> tCon tSTRING)
+  , ("Char.lowercase", tCon tCHAR :-> tCon tCHAR)
+  , ("Char.uppercase", tCon tCHAR :-> tCon tCHAR)
+  , ("List.append", TAll ["a"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("List.combine", TAll ["a", "b"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "b"] :-> TApp "list" [TTup [TVar "a", TVar "b"]]))
+  , ("List.hd", TAll ["a"] (TApp "list" [TVar "a"] :-> TVar "a"))
+  , ("List.length", TAll ["a"] (TApp "list" [TVar "a"] :-> tCon tINT))
+  , ("List.mem", TAll ["a"] (TVar "a" :-> TApp "list" [TVar "a"] :-> tCon tINT))
+  , ("List.nth", TAll ["a"] (tL a :-> tI :-> a))
+  , ("List.rev", TAll ["a"] (tL a :-> tL a))
+  , ("List.split", TAll ["a", "b"] (tL (tT a b) :-> tT (tL a) (tL b)))
+  , ("List.tl", TAll ["a"] (tL a :-> tL a))
+  , ("String.create", tI :-> tS)
+  , ("String.get", tS :-> tI :-> tC)
+  , ("String.length", tS :-> tI)
+  , ("String.make", tI :-> tC :-> tS)
+  , ("print_char", tC :-> tU)
+  , ("print_int", tI :-> tU)
+  , ("print_float", tF :-> tU)
+  , ("print_string", tS :-> tU)
+  , ("print_endline", tS :-> tU)
+  , ("print_newline", tU :-> tU)
+  , ("char_of_int", tI :-> tC)
+  , ("int_of_char", tC :-> tI)
+  , ("int_of_float", tF :-> tI)
+  , ("int_of_string", tS :-> tI)
+  , ("float", tI :-> tF)
+  , ("float_of_int", tI :-> tF)
+  , ("float_of_string", tS :-> tF)
+  , ("string_of_bool", tB :-> tS)
+  , ("string_of_int", tI :-> tS)
+  , ("string_of_float", tF :-> tS)
+  , ("abs", tI :-> tI)
+  , ("abs_float", tF :-> tF)
+  , ("exp", tF :-> tF :-> tF)
+  , ("log", tF :-> tF)
+  , ("log10", tF :-> tF)
+  , ("mod_float", tF :-> tF :-> tF)
+  , ("modf", tF :-> tF)
+  , ("sqrt", tF :-> tF)
+  , ("acos", tF :-> tF)
+  , ("asin", tF :-> tF)
+  , ("atan", tF :-> tF)
+  , ("cos", tF :-> tF)
+  , ("sin", tF :-> tF)
+  , ("tan", tF :-> tF)
+  , ("tanh", tF :-> tF)
+  , ("truncate", tF :-> tI)
+  , ("compare", TAll ["a"] (a :-> a :-> tI))
+  , ("raise", TAll ["a"] (tE :-> a))
+  , ("Printexc.to_string", tE :-> tS)
+  ]
 
 pfailwith :: MonadEval m => Value -> m Value
 pfailwith (VS _ s) = withCurrentProvM $ \prv -> maybeThrow $ MLException (mkExn "Failure" [VS prv s] prv)
