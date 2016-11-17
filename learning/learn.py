@@ -9,6 +9,7 @@ import tensorflow as tf
 import tensorflow.contrib.learn.python.learn as learn
 
 # local modules
+import hidden
 import input
 import linear
 import svm
@@ -20,8 +21,9 @@ FLAGS = flags.FLAGS
 flags.DEFINE_bool("verbose", False, "Print verbose output.")
 flags.DEFINE_string("data", "", "Path to the data.")
 flags.DEFINE_string("model", "linear",
-                    "Valid model types: {'linear', 'svm'}.")
+                    "Valid model types: {'linear', 'svm', 'hidden'}.")
 flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
+flags.DEFINE_string("hidden_layers", "", "")
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
@@ -33,6 +35,8 @@ def main(_):
     df = df.sample(frac=1).reset_index(drop=True)
     #print df.shape
     if FLAGS.n_folds > 1:
+        # FIXME: wrong cross-validation, want to slice data into
+        # n_folds segments and train on n_folds-1
         for i, fold in df.groupby(df.index % FLAGS.n_folds):
             print('fold {}'.format(i))
             #print fold.shape
@@ -65,6 +69,10 @@ def build_model(fs, ls, model_dir):
                                   model_dir=model_dir)
     elif FLAGS.model == 'svm':
         return svm.build_model(fs, ls, learn_rate=FLAGS.learn_rate,
+                               model_dir=model_dir)
+    elif FLAGS.model == 'hidden':
+        hidden_layers = FLAGS.hidden_layers.split('-')
+        return hidden.build_model(fs, ls, hidden_layers, learn_rate=FLAGS.learn_rate,
                                model_dir=model_dir)
     else:
         raise ("unknown model type: " + FLAGS.model)

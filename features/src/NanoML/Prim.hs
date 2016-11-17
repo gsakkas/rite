@@ -5,7 +5,7 @@ module NanoML.Prim
   ( baseEnv, baseTypeEnv, baseDataEnv, baseFieldEnv
   , tB, tL, tU, pand, por, getField, setField
   , maybeThrow
-  , primVars
+  , primVars, primVarTypes
   ) where
 
 import Control.Arrow

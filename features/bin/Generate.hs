@@ -44,6 +44,10 @@ main = do
       -> mkBadFeatures cls preds_thas jsons
     "ops+context"
       -> mkBadFeatures cls preds_thas_ctx jsons
+    "op+context"
+      -> mkBadFeatures cls preds_tis_ctx jsons
+    "op+context-count"
+      -> mkBadFeatures cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "type-inference"
       -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     "type-inference+vars"
@@ -140,18 +144,20 @@ runTFeaturesDiff
 runTFeaturesDiff fs (ls, bad) = (header, samples)
   where
   header = Vector.fromList
-         $ ["L-DidChange", "L-NoChange", "F-InSlice"]
+         $ ["L-NoChange", "L-DidChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
   samples
+    | null cores
+    , Just e <- me = []
     | null cores = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- FIXME: shouldn't happen!!
     | otherwise
     = concatMap mkfsD tbad
 
-  (tbad, cores) = case runEval stdOpts (typeProg bad) of
-    Left e -> traceShow e ([], [])
+  (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
+    Left e -> traceShow e ([], [], Just e)
                                    -- only look at first unsat core for now
-    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)))
+    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e
@@ -165,6 +171,7 @@ runTFeaturesDiff fs (ls, bad) = (header, samples)
 
   inSlice l
     | any (l `isSubSpanOf`) cores
+    --- | any (l ==) cores
     = ["F-InSlice" .= (1::Double)]
     | otherwise
     = ["F-InSlice" .= (0::Double)]

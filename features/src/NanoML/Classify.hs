@@ -70,6 +70,33 @@ preds_thas_ctx =
     , thas_var_ctx
     ]
 
+only_ctx :: Feature -> Feature
+only_ctx = first (drop 1) . second (fmap (fmap (drop 1)))
+
+preds_tcount_ctx :: [Feature] --  [TExpr -> TExpr -> [Double]]
+preds_tcount_ctx =
+    map tcount_op_ctx [Eq ..]
+ ++ [ tcount_con_ctx "::", tcount_con_ctx "[]"
+    , tcount_con_ctx "(,)"
+    , tcount_con_ctx "VarX", tcount_con_ctx "VarY"
+    , tcount_con_ctx "Sine", tcount_con_ctx "Cosine"
+    , tcount_con_ctx "Average", tcount_con_ctx "Times", tcount_con_ctx "Thresh"
+    , tcount_con_case_ctx "::", tcount_con_case_ctx "[]"
+    , tcount_con_case_ctx "(,)"
+    , tcount_con_case_ctx "VarX", tcount_con_case_ctx "VarY"
+    , tcount_con_case_ctx "Sine", tcount_con_case_ctx "Cosine"
+    , tcount_con_case_ctx "Average", tcount_con_case_ctx "Times", tcount_con_case_ctx "Thresh"
+    , tcount_fun_ctx, tcount_app_ctx
+    , tcount_lit_int_ctx
+    , tcount_lit_float_ctx
+    , tcount_lit_bool_ctx
+    , tcount_lit_char_ctx
+    , tcount_lit_string_ctx
+    , tcount_ite_ctx
+    , tcount_seq_ctx
+    , tcount_var_ctx
+    ]
+
 preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
             preds_tis_ctx
@@ -346,6 +373,11 @@ mkTHas mkF = bool2double . getAny . tfold f mempty
   where
   f e acc = acc <> Any (mkF e == 1)
 
+mkTCount :: (TExpr -> Double) -> TExpr -> Double
+mkTCount mkF = getSum . tfold f mempty
+  where
+  f e acc = acc <> Sum (mkF e)
+
 thas_lit_int :: TExpr -> Double
 thas_lit_int = mkTHas tis_lit_int
 thas_lit_float :: TExpr -> Double
@@ -389,6 +421,69 @@ pat_has_con c p' = case p' of
   ConstraintPat _ p _ -> pat_has_con c p
   _ -> False
 
+
+tcount_op :: Bop -> TExpr -> Double
+tcount_op = mkTCount . tis_op
+tcount_op_ctx :: Bop -> Feature
+tcount_op_ctx c = ( mkContextLabels ("Count-"++show c), mkContextFeatures (tcount_op c) )
+
+tcount_con :: DCon -> TExpr -> Double
+tcount_con = mkTCount . tis_con
+tcount_con_ctx :: DCon -> Feature
+tcount_con_ctx c = ( mkContextLabels ("Count-"++c), mkContextFeatures (tcount_con c) )
+
+tcount_con_case :: DCon -> TExpr -> Double
+tcount_con_case = mkTCount . tis_con_case
+tcount_con_case_ctx :: DCon -> Feature
+tcount_con_case_ctx c = ( mkContextLabels ("Count-"++c++"-Case"), mkContextFeatures (tcount_con_case c) )
+
+tcount_fun :: TExpr -> Double
+tcount_fun = mkTCount tis_fun
+tcount_fun_ctx :: Feature
+tcount_fun_ctx = ( mkContextLabels "Count-Fun", mkContextFeatures tcount_fun )
+
+tcount_app :: TExpr -> Double
+tcount_app = mkTCount tis_app
+tcount_app_ctx :: Feature
+tcount_app_ctx = ( mkContextLabels "Count-App", mkContextFeatures tcount_app )
+
+tcount_var :: TExpr -> Double
+tcount_var = mkTCount tis_var
+tcount_var_ctx :: Feature
+tcount_var_ctx = ( mkContextLabels "Count-Var", mkContextFeatures tcount_var )
+
+
+tcount_lit_int :: TExpr -> Double
+tcount_lit_int = mkTCount tis_lit_int
+tcount_lit_float :: TExpr -> Double
+tcount_lit_float = mkTCount tis_lit_float
+tcount_lit_bool :: TExpr -> Double
+tcount_lit_bool = mkTCount tis_lit_bool
+tcount_lit_char :: TExpr -> Double
+tcount_lit_char = mkTCount tis_lit_char
+tcount_lit_string :: TExpr -> Double
+tcount_lit_string = mkTCount tis_lit_string
+
+tcount_lit_int_ctx :: Feature
+tcount_lit_int_ctx = ( mkContextLabels "Count-Lit-Int", mkContextFeatures tcount_lit_int )
+tcount_lit_float_ctx :: Feature
+tcount_lit_float_ctx = ( mkContextLabels "Count-Lit-Float", mkContextFeatures tcount_lit_float )
+tcount_lit_bool_ctx :: Feature
+tcount_lit_bool_ctx = ( mkContextLabels "Count-Lit-Bool", mkContextFeatures tcount_lit_bool )
+tcount_lit_char_ctx :: Feature
+tcount_lit_char_ctx = ( mkContextLabels "Count-Lit-Char", mkContextFeatures tcount_lit_char )
+tcount_lit_string_ctx :: Feature
+tcount_lit_string_ctx = ( mkContextLabels "Count-Lit-String", mkContextFeatures tcount_lit_string )
+
+tcount_ite :: TExpr -> Double
+tcount_ite = mkTCount tis_ite
+tcount_ite_ctx :: Feature
+tcount_ite_ctx = ( mkContextLabels "Count-Ite", mkContextFeatures tcount_ite )
+
+tcount_seq :: TExpr -> Double
+tcount_seq = mkTCount tis_seq
+tcount_seq_ctx :: Feature
+tcount_seq_ctx = ( mkContextLabels "Count-Seq", mkContextFeatures tcount_seq )
 
 tis_op :: Bop -> TExpr -> Double
 tis_op b e = case e of
@@ -481,13 +576,9 @@ tis_var_ctx = ( mkContextLabels "Is-Var", mkContextFeatures tis_var )
 
 tis_fun_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_fun_ctx = ( mkContextLabels "Is-Fun", mkContextFeatures tis_fun )
--- tis_fun_ctx p e = [tis_fun e, tis_fun p]
---                  ++ take 3 (map tis_fun (children e) ++ repeat 0)
 
 tis_app_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_app_ctx = ( mkContextLabels "Is-App", mkContextFeatures tis_app )
--- tis_app_ctx p e = [tis_app e, tis_app p]
---                  ++ take 3 (map tis_app (children e) ++ repeat 0)
 
 tis_lit_int_ctx :: Feature --  TExpr -> TExpr -> [Double]
 tis_lit_int_ctx = ( mkContextLabels "Is-Lit-Int", mkContextFeatures tis_lit_int )
@@ -654,15 +745,15 @@ instance Hashable TDecl
 
 typeProg :: MonadEval m => Prog -> m (TProg, [Set Constraint])
 typeProg p = do
-  env <- fmap (concat . catMaybes) $ forM primVars $ \(var, val) -> do
-    -- traceM var
-    fmap (Just . fst) (typeRecBinds [(VarPat Nothing var, val)])
-      `catchError` \e -> return Nothing
+  -- env <- fmap (concat . catMaybes) $ forM primVarTypes $ \(var, val) -> do
+  --   -- traceM var
+  --   fmap (Just . fst) (typeRecBinds [(VarPat Nothing var, val)])
+  --     `catchError` \e -> return Nothing
   -- let t_fl = fromJust $ lookup "List.fold_left" env
   -- traceShowM . pretty =<< substM t_fl
   -- let t_fr = fromJust $ lookup "List.fold_right" env
   -- traceShowM . pretty =<< substM t_fr
-  withLocalBinds env $ do
+  withLocalBinds primVarTypes $ do
     tp <- mapM typeDecl p
     cs <- gets stUnsatCores
     tp' <- forM tp $ \ td -> case td of
@@ -862,8 +953,7 @@ typeExpr' = \case
           (tv,) . TVar <$> freshTVar
         return (subst su t')
       _ -> return t
-    -- traceM "VAR"
-    -- traceShowM . (v,) . pretty =<< substM t
+    -- traceShowM . ("VAR",v,) . pretty =<< substM t
     return (T_Var (mkInfo ml t) v)
   Lam ml p e _ -> do
     (ti, bnds) <- typePat p
@@ -1075,11 +1165,14 @@ typeAlt (p, mg, e) = do
 typeBind :: MonadEval m => (Pat, Expr) -> m ([(Var, Type)], (Pat, TExpr))
 typeBind (p, e) = do
   te <- typeExpr e
+  t <- substM (getType te)
+  -- traceShowM (pretty p, pretty t)
   (tp, bnds) <- typePat p
   tryUnify tp (getType te)
   return (bnds, (p, te))
 
-typeRecBinds :: MonadEval m => [(Pat, Expr)] -> m ([(Var, Type)], [(Pat, TExpr)])
+typeRecBinds :: MonadEval m => [(Pat, Expr)]
+             -> m ([(Var, Type)], [(Pat, TExpr)])
 typeRecBinds pes = do
   let (ps, es) = unzip pes
   (tps, bndss) <- unzip <$> mapM typePat ps
@@ -1134,3 +1227,21 @@ Right foo3 = parseTopForm
   \              List.fold_left f base l"
 
 Right fl = parseTopForm "let x = List.fold_left"
+
+Right foo4 = parseTopForm foo4'
+foo4' =
+  "let rec sepConcat =\
+  \  fun sep ->\
+  \    fun sl ->\
+  \      match sl with\
+  \      | [] -> \"\"\
+  \      | h :: t -> (let f =\
+  \                     fun a ->\
+  \                       fun x -> a ^ (sep ^ x) in\
+  \                   let base = h in\
+  \                   let l = t in\
+  \                   List.fold_left f base l)\
+  \let stringOfList =\
+  \  fun f ->\
+  \    fun l ->\
+  \      List.map (sepConcat \"\" l)"

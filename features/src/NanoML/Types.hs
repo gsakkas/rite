@@ -442,6 +442,7 @@ subst' su t = case t of
   TApp c ts -> TApp c (map (subst' su) ts)
   ti :-> to -> subst' su ti :-> subst' su to
   TTup ts -> TTup (map (subst' su) ts)
+  TAll tvs t' -> subst (foldl' (flip Map.delete) su tvs) t'
 
 -- TODO: this is not precise enough for the visualizer.
 -- we need an environment graph so we can have, eg multiple

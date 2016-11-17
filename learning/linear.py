@@ -64,8 +64,24 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
 
 
     def test(data):
-        acc = sess.run(accuracy, {x: data[features], y_: data[labels]})
+        acc, truth, observed = sess.run(
+            [accuracy, tf.argmax(y_,1), tf.argmax(y,1)],
+            {x: data[features], y_: data[labels]})
+        # True positives.
+        tp = np.sum(np.logical_and(truth, observed))
+        # False positives.
+        fp = np.sum(np.logical_and(np.logical_not(truth), observed))
+        # False negatives.
+        fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
+        # True negatives.
+        tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
+        precision = np.float32(tp) / (tp + fp)
+        recall = np.float32(tp) / (tp + fn)
+        fscore = 2.0 * precision * recall / (precision + recall)
         print('accuracy: %f' % acc)
+        print('precision: %f' % precision)
+        print('recall: %f' % recall)
+        print('f1 score: %f' % fscore)
 
     def plot():
         w = sess.run(tf.transpose(W))
