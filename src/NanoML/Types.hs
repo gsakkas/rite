@@ -135,7 +135,7 @@ typeError t1 t2 = do
   e <- fst <$> gets stCurrentExpr
   throwError (TypeError t1s t2s (getSrcSpanExprMaybe e) (map getSrcSpanExprMaybe (values e)))
  where
-  values e' = takeWhile isValue $ case e' of
+  values e' = filter isValue $ case e' of
     Var {} -> []
     Lam {} -> []
     App _ f es -> f : es
@@ -1382,6 +1382,8 @@ mkApps ms f [] = f
 mkApps ms f xs = App ms f xs
 
 mkConApp :: MSrcSpan -> DCon -> [Expr] -> Expr
+mkConApp ms "()" [] = VU ms
+mkConApp ms "[]" [] = VL ms [] Nothing
 mkConApp ms c []  = ConApp ms c Nothing Nothing
 mkConApp ms c [e] = ConApp ms c (Just e) Nothing
 mkConApp ms c es  = ConApp ms c (Just (Tuple ms' es)) Nothing

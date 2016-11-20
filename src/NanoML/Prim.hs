@@ -192,7 +192,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,varD "[]")
+                              ,mkConAppD "[]" [])
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,mkConAppD "::"
@@ -210,7 +210,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,varD "[]")
+                              ,mkConAppD "[]" [])
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,seqD
@@ -276,7 +276,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
            , ("String.create", mkPrim1Fun $ P1 "String.create" pstring_create tI)
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get tS tI)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length tS)
-           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tS tC)
+           , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tI tC)
            , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char tC)
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int tI)
            , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float tF)
