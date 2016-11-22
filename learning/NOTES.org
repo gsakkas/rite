@@ -71,3 +71,10 @@ CLOSED: [2016-11-10 Thu 15:55]
 ** TODO figure out meaningful error location from nanomaly
 *** TODO source of values in stuck term
 ** TODO add "is part of type-error slice" as a feature
+** TODO look at samples where we mispredict
+- can we add a custom feature to fix this instance?
+** TODO look at line-level labeling rather than expression-level
+** TODO look at latent semantic analysis / latent diriclet allocation
+** TODO how to combine metrics from expr to line level?
+may need combination of min/max/avg/sum
+** TODO look into non-local features for variables
