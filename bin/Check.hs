@@ -18,7 +18,7 @@ main = do
                       [file, func] -> (file, Just func)
                       _ -> error "usage: nano-check <file> [function]"
   prog <- parseFile file
-  res <- maybe (fromJust <$> check Nothing prog) (\v -> fromJust <$> checkWith (stdOpts {maxTests=100}) (Just v) prog) func
+  res <- maybe (fromJust <$> check Nothing prog) (\v -> fromJust <$> checkWith (stdOpts {maxTests=1000, produceTrace=False}) (Just v) prog) func
   case res of
     Success n _ _ -> do
       printf "Could not find a counter-example after %d tests..\n" n
