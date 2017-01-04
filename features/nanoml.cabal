@@ -25,6 +25,8 @@ executable generate-features
                , cassava
                , containers
                , Diff
+               , directory
+               , filepath
                , nanoml
                , unordered-containers
                , vector

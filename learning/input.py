@@ -27,12 +27,12 @@ def load_csv(path, filter_no_labels=False, balance_labels=True):
         df = df[reduce(lambda x, acc: x | acc, criteria)]
         # print df.shape
 
-    if balance_labels:
-        print df.shape
-        classes = df.groupby(label_names)
-        max_samples = max(len(c) for _, c in classes)
-        print max_samples
-        df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
-        print df.shape
+    # if balance_labels:
+    #     print df.shape
+    #     classes = df.groupby(label_names)
+    #     max_samples = max(len(c) for _, c in classes)
+    #     print max_samples
+    #     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+    #     print df.shape
 
     return (df, feature_names, label_names)

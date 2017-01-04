@@ -70,6 +70,9 @@ preds_thas_ctx =
     , thas_var_ctx
     ]
 
+preds_tsize :: [Feature]
+preds_tsize = [ tsize ]
+
 only_ctx :: Feature -> Feature
 only_ctx = first (drop 1) . second (fmap (fmap (drop 1)))
 
@@ -349,6 +352,11 @@ thas_app = bool2double . getAny . tfold f mempty
   f e acc = acc <> case e of
                      T_App {} -> Any True
                      _ -> mempty
+
+tsize :: Feature
+tsize = ( ["Expr-Size"], size )
+  where
+  size _ e = [getSum $ tfold (const (+1)) (0 :: Sum Double) e]
 
 thas_op_ctx :: Bop -> Feature -- TExpr -> TExpr -> [Double]
 thas_op_ctx b = ( mkContextLabels ("Has-" ++ show b), mkContextFeatures (thas_op b) )

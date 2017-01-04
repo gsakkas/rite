@@ -30,32 +30,44 @@ flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 
 def main(_):
-    df, fs, ls = input.load_csv(FLAGS.data, filter_no_labels=True)
-    # shuffle the data
-    df = df.sample(frac=1).reset_index(drop=True)
-    #print df.shape
-    if FLAGS.n_folds > 1:
-        # FIXME: wrong cross-validation, want to slice data into
-        # n_folds segments and train on n_folds-1
-        for i, fold in df.groupby(df.index % FLAGS.n_folds):
-            print('fold {}'.format(i))
-            #print fold.shape
-            train_and_eval(fold.reset_index(drop=True), fs, ls, i)
-            print('')
-    else:
-        train_and_eval(df, fs, ls)
+    csvs = [f for f in os.listdir(FLAGS.data) if f.endswith('.csv')]
+    random.shuffle(csvs)
+    dfs = []
+    for csv in csvs:
+        df, fs, ls = input.load_csv(os.path.join(FLAGS.data, csv), filter_no_labels=True)
+        if df.shape[0] == 0:
+            continue
+        dfs.append(df)
+    train_and_eval(dfs, fs, ls)
+
+    # # shuffle the data
+    # df = df.sample(frac=1).reset_index(drop=True)
+    # #print df.shape
+    # if FLAGS.n_folds > 1:
+    #     # FIXME: wrong cross-validation, want to slice data into
+    #     # n_folds segments and train on n_folds-1
+    #     for i, fold in df.groupby(df.index % FLAGS.n_folds):
+    #         print('fold {}'.format(i))
+    #         #print fold.shape
+    #         train_and_eval(fold.reset_index(drop=True), fs, ls, i)
+    #         print('')
+    # else:
+    #     train_and_eval(df, fs, ls)
 
 
-def train_and_eval(df, fs, ls, i=0):
+def train_and_eval(dfs, fs, ls, i=0):
     train, test, plot, close = build_model(
         fs, ls, os.path.join(FLAGS.model_dir, 'run{}'.format(i)))
 
-    n = len(df) / 10
-    # split off 1/10 of the data for a test group
-    (_, rest), (_, df_test) = df.groupby(df.index < n)
-    # and another 1/10 for a validation group
-    (_, df_train), (_, df_validate) = rest.groupby(rest.index < 2*n)
-    train_model(train, df_train, validation=df_validate)
+    n = len(dfs) / 10
+    df_test = dfs[-n:]
+    df_validate = dfs[-2*n:-n]
+    df_train = dfs[:-2*n]
+    # # split off 1/10 of the data for a test group
+    # (_, rest), (_, df_test) = df.groupby(df.index < n)
+    # # and another 1/10 for a validation group
+    # (_, df_train), (_, df_validate) = rest.groupby(rest.index < 2*n)
+    train_model(train, df_train, ls, validation=df_validate)
     test_model(test, df_test)
 
     if FLAGS.plot:
@@ -77,14 +89,27 @@ def build_model(fs, ls, model_dir):
     else:
         raise ("unknown model type: " + FLAGS.model)
 
-def train_model(train, df, validation=None):
+def train_model(train, dfs, label_names, validation=None):
     i = 0
-    for _, batch in df.groupby(df.index // FLAGS.batch_size):
-        train(batch, i, validation, verbose=FLAGS.verbose)
-        i += 1
+    for df in dfs:
+        # balance labels for training
+        # print df.shape
+        classes = list(df.groupby(label_names))
+        if any(len(c) == 0 for _, c in classes):
+            continue
+        max_samples = max(len(c) for _, c in classes)
+        # print max_samples
+        df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+        # print df.shape
 
-def test_model(test, df):
-    test(df)
+        train(df, i, validation, verbose=FLAGS.verbose)
+        i += 1
+    # for _, batch in df.groupby(df.index // FLAGS.batch_size):
+    #     train(batch, i, validation, verbose=FLAGS.verbose)
+    #     i += 1
+
+def test_model(test, dfs):
+    test(dfs)
 
 if __name__ == '__main__':
     tf.app.run()

@@ -4,6 +4,7 @@
 module Main where
 
 import Control.Exception (assert)
+import Control.Monad
 import Data.Aeson (ToJSON(..), FromJSON(..), eitherDecode)
 import qualified Data.Aeson as Aeson
 import qualified Data.Algorithm.Diff as Diff
@@ -21,7 +22,9 @@ import Data.HashSet (HashSet)
 import qualified Data.Set as Set
 import qualified Data.Vector as Vector
 import GHC.Generics
+import System.Directory
 import System.Environment
+import System.FilePath
 import System.IO
 import Text.Printf
 
@@ -48,6 +51,8 @@ main = do
       -> mkBadFeatures cls preds_tis_ctx jsons
     "op+context-count"
       -> mkBadFeatures cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    "op+context-count+size"
+      -> mkBadFeatures cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "type-inference"
       -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     "type-inference+vars"
@@ -57,9 +62,15 @@ main = do
 mkBadFeatures :: String -> [Feature] -> [String] -> IO ()
 mkBadFeatures nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
-  let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
-  let path = "data/" ++ nm ++ ".csv"
-  LBSC.writeFile path $ encodeByName (head header) (concat features)
+  let feats = map (runTFeaturesDiff fs) uniqs
+  forM_ (zip [0..] feats) $ \ (i, (header, features)) -> do
+    let path = "data/" ++ nm ++ "/" ++ show i ++ ".csv"
+    createDirectoryIfMissing True (takeDirectory path)
+    LBSC.writeFile path $ encodeByName header features
+
+  -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
+  -- let path = "data/" ++ nm ++ ".csv"
+  -- LBSC.writeFile path $ encodeByName (head header) (concat features)
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
 mkFixFeatures nm fs jsons = do
