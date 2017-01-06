@@ -115,13 +115,14 @@ def build_model(features, labels, hidden,
         summary_writer.add_summary(summary_str, i)
         if validation is not None and i % 100 == 0:
             acc = 0
+            acc1 = 0
             for val in validation:
                 ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: val[features], y_:val[labels], k:min(3, len(val)), keep_prob:1.0})
                 # print ys
                 #top_k = np.argpartition(ys, 3, 0)
                 # print (top_values, top_indices)
-                val['G-NoChange'] = np.transpose(ys)[0]
-                val['G-DidChange'] = np.transpose(ys)[1]
+                # val['G-NoChange'] = np.transpose(ys)[0]
+                # val['G-DidChange'] = np.transpose(ys)[1]
                 # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][val['L-DidChange'] > 0]
                 # print top_indices[1]
                 # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][top_indices[1]]
@@ -129,15 +130,20 @@ def build_model(features, labels, hidden,
                     # print 'SUCCESS'
                     # raise 'die'
                     acc += 1
+                if val['L-DidChange'][top_indices[1][0]] == 1:
+                    # print 'SUCCESS'
+                    # raise 'die'
+                    acc1 += 1
             #     print ''
             # raise 'die'
-            acc = float(acc) / len(validation)
+            acc = float(acc)  / len(validation)
+            acc1 = float(acc1) / len(validation)
             vals = pd.concat(validation)
             # classes = vals.groupby(labels)
             # max_samples = max(len(c) for _, c in classes)
             # vals = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
             acci = sess.run(accuracy, feed_dict={x:vals[features], y_:vals[labels], keep_prob:1.0})
-            print('accuracy at step {}: {} ({})'.format(i, acc, acci))
+            print('accuracy at step %4d: %.3f / %.3f (%.3f)' % (i, acc1, acc, acci))
 
             #validation = validation.drop_duplicates()
             # print(validation[validation['L-NoChange'] == 1].shape, validation[validation['L-DidChange'] == 1].shape)
@@ -169,6 +175,7 @@ def build_model(features, labels, hidden,
 
     def test(data):
         acc = 0
+        acc1 = 0
         for d in data:
             ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
             # print ys
@@ -176,8 +183,12 @@ def build_model(features, labels, hidden,
             # print top_indices
             if any(d['L-DidChange'][idx] == 1 for idx in top_indices[1]):
                 acc += 1
+            if d['L-DidChange'][top_indices[1][0]] == 1:
+                acc1 += 1
+
         acc = float(acc) / len(data)
-        print('accuracy: {}'.format(acc))
+        acc1 = float(acc1) / len(data)
+        print('final accuracy: %.3f / %.3f' % (acc1, acc))
 
         # #data = data.drop_duplicates()
         # print(data[data['L-NoChange'] == 1].shape, data[data['L-DidChange'] == 1].shape)

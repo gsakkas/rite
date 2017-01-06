@@ -28,13 +28,18 @@ flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
+flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
 
 def main(_):
     csvs = [f for f in os.listdir(FLAGS.data) if f.endswith('.csv')]
     random.shuffle(csvs)
     dfs = []
     for csv in csvs:
-        df, fs, ls = input.load_csv(os.path.join(FLAGS.data, csv), filter_no_labels=True)
+        df, fs, ls = input.load_csv(os.path.join(FLAGS.data, csv),
+                                    filter_no_labels=True,
+                                    only_slice=FLAGS.only_slice)
+        if df is None:
+            continue
         if df.shape[0] == 0:
             continue
         dfs.append(df)

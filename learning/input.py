@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def load_csv(path, filter_no_labels=False, balance_labels=True):
+def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False):
     '''Load feature vectors from a csv file.
 
     Expects a header row with feature columns prefixed with 'F-' and
@@ -26,6 +26,12 @@ def load_csv(path, filter_no_labels=False, balance_labels=True):
         criteria = (df[l] == 1.0 for l in label_names)
         df = df[reduce(lambda x, acc: x | acc, criteria)]
         # print df.shape
+
+    if only_slice:
+        df = df[df['F-InSlice'] == 1].reset_index(drop=True)
+        if len(df[df['L-DidChange'] == 1]) == 0:
+            # print path
+            df = None
 
     # if balance_labels:
     #     print df.shape
