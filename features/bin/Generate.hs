@@ -53,6 +53,8 @@ main = do
       -> mkBadFeatures cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op+context-count+size"
       -> mkBadFeatures cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    "op+context-count+type+size"
+      -> mkBadFeatures cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
     "type-inference"
       -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     "type-inference+vars"
