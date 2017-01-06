@@ -32,10 +32,13 @@ CLOSED: [2016-10-28 Fri 11:52]
 should be equal number...
 ** DONE fix "syntax error" checker, rerun data
 CLOSED: [2016-10-28 Fri 11:52]
-** TODO add type of current / parent / child expr as features
-** TODO add feature vectors of children (parent? sibling?)
+** DONE add type of current / parent / child expr as features
+   CLOSED: [2017-01-06 Fri 13:49]
+** DONE add feature vectors of children (parent? sibling?)
+   CLOSED: [2017-01-06 Fri 13:49]
 zero-pad to widest expr node
-** TODO add type info
+** DONE add type info
+   CLOSED: [2017-01-06 Fri 13:49]
 plus whether expr is part of bad program slice
 ** TODO run queries on typed asts
 - eg. how often do students match on functions
@@ -68,13 +71,85 @@ CLOSED: [2016-11-10 Thu 15:55]
 - linear classifier
 - train classifier on fully annotated programs
 - then predict in bottom up fashion on unannotated programs, propagating labels up into parent's features
-** TODO figure out meaningful error location from nanomaly
-*** TODO source of values in stuck term
-** TODO add "is part of type-error slice" as a feature
-** TODO look at samples where we mispredict
+** DONE figure out meaningful error location from nanomaly
+   CLOSED: [2017-01-06 Fri 13:49]
+*** DONE source of values in stuck term
+    CLOSED: [2017-01-06 Fri 13:50]
+** DONE add "is part of type-error slice" as a feature
+   CLOSED: [2017-01-06 Fri 13:50]
+** TODO look at samples where we mispredict                             :wes:
 - can we add a custom feature to fix this instance?
-** TODO look at line-level labeling rather than expression-level
-** TODO look at latent semantic analysis / latent diriclet allocation
-** TODO how to combine metrics from expr to line level?
+** TODO look at line-level labeling rather than expression-level        :wes:
+** TODO look at latent semantic analysis / latent diriclet allocation   :wes:
+** TODO how to combine metrics from expr to line level?                 :wes:
 may need combination of min/max/avg/sum
-** TODO look into non-local features for variables
+** TODO look into non-local features for variables                      :wes:
+** TODO try learning on structure of slice rather than program
+- features could be AST node, type
+- context of neighbors based on *slice* (or constraint graph?)
+- ignore non-slice terms entirely
+** NEXT End-to-end testing
+- evaluate model by classifying all exprs in program, select top-k bad exprs
+- seems we still want to train on jumble of exprs from all programs
+  rather that looking at each program in isolation
+  - much better results, no clue why..
+
+Batching by program: ~0.3 - 0.4 (top-3)
+
+Batching across all programs:
+#+BEGIN_EXAMPLE
+> python learning/learn.py --data data/op+context-count+type+size --learn_rate=0.01 --verbose --model=hidden --hidden_layers=500 --batch_size=100
+2052
+(141589, 299)
+(268146, 299)
+accuracy at step 0000: 0.129 / 0.340 (0.930)  # top-1 / top-3 (by-expr)
+accuracy at step 0100: 0.258 / 0.461 (0.639)
+accuracy at step 0200: 0.316 / 0.527 (0.681)
+accuracy at step 0300: 0.273 / 0.473 (0.734)
+accuracy at step 0400: 0.312 / 0.512 (0.811)
+accuracy at step 0500: 0.332 / 0.547 (0.737)
+accuracy at step 0600: 0.281 / 0.539 (0.775)
+accuracy at step 0700: 0.309 / 0.570 (0.701)
+accuracy at step 0800: 0.324 / 0.559 (0.795)
+accuracy at step 0900: 0.367 / 0.551 (0.748)
+accuracy at step 1000: 0.340 / 0.551 (0.703)
+accuracy at step 1100: 0.355 / 0.543 (0.759)
+accuracy at step 1200: 0.305 / 0.543 (0.757)
+accuracy at step 1300: 0.309 / 0.539 (0.699)
+accuracy at step 1400: 0.336 / 0.555 (0.766)
+accuracy at step 1500: 0.328 / 0.578 (0.693)
+accuracy at step 1600: 0.340 / 0.578 (0.745)
+accuracy at step 1700: 0.332 / 0.570 (0.802)
+accuracy at step 1800: 0.328 / 0.555 (0.681)
+accuracy at step 1900: 0.309 / 0.512 (0.717)
+accuracy at step 2000: 0.301 / 0.516 (0.721)
+accuracy at step 2100: 0.371 / 0.555 (0.731)
+accuracy at step 2200: 0.316 / 0.543 (0.703)
+accuracy at step 2300: 0.332 / 0.551 (0.776)
+accuracy at step 2400: 0.367 / 0.574 (0.817)
+accuracy at step 2500: 0.320 / 0.543 (0.754)
+accuracy at step 2600: 0.355 / 0.586 (0.702)
+accuracy: 0.5859375                           # top-3
+#+END_EXAMPLE
+
+
+** What about just looking at error slices?
+#+BEGIN_EXAMPLE
+> python learning/learn.py --data data/op+context-count+type+size --learn_rate=0.01 --verbose --model=hidden --hidden_layers=500 --batch_size=100
+614
+accuracy at step    0: 0.197 / 0.618 (0.163)
+accuracy at step  100: 0.658 / 0.882 (0.763)
+final accuracy: 0.684 / 0.921
+#+END_EXAMPLE
+
+much better, but 75% of the programs don't change any of the exprs in the slice, WTF?
+
+* TALK NOTES
+- make more clear the purpose of witnesses (generality)
+- talk about locations from nanomaly
+- outline for both parts of the talk, motivate 2nd better
+  - mention "explain" vs "localize" view of problem
+- machine learning model is the box (the function)
+  - features are inputs
+  - labels are outputs
+- slide 37: same color for all boxes, might be confusing

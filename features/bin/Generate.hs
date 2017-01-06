@@ -64,11 +64,19 @@ main = do
 mkBadFeatures :: String -> [Feature] -> [String] -> IO ()
 mkBadFeatures nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
-  let feats = map (runTFeaturesDiff fs) uniqs
-  forM_ (zip [0..] feats) $ \ (i, (header, features)) -> do
-    let path = "data/" ++ nm ++ "/" ++ show i ++ ".csv"
+  let feats = [ ((h, f), (ss, bad, fix, c))
+              | (ss, p, bad, fix) <- uniqs
+              , let (h, f, c) = runTFeaturesDiff fs (ss,p)
+              ]
+  -- let feats = map (runTFeaturesDiff fs) uniqs
+  forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs))) -> do
+    let fn = printf "%04d" (i :: Int)
+    let path = "data/" ++ nm ++ "/" ++ fn ++ ".csv"
     createDirectoryIfMissing True (takeDirectory path)
     LBSC.writeFile path $ encodeByName header features
+    let path = "data/" ++ nm ++ "/" ++ fn ++ ".ml"
+    writeFile path $ unlines $ [ bad, "", fix, "", "(* changed spans" ] ++ map show ss ++ [ "*)" ]
+                            ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
 
   -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
   -- let path = "data/" ++ nm ++ ".csv"
@@ -97,17 +105,17 @@ traceStats outss = do
   hPrintf stderr "Std: %f\n" std
   return ()
 
-uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog)
+uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog, String, String)
 uniqDiffs = foldl' (\seen json -> seen `mappend` HashSet.fromList (mkDiffs json)) mempty
 
-mkDiffs :: String -> [([SrcSpan], Prog)]
+mkDiffs :: String -> [([SrcSpan], Prog, String, String)]
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
   Right (MkInSample bad' fix')
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
-    -> maybeToList . fmap (,bad) $ mkDiff' bad' fix'
+    -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
   Right (MkInSample bad' fix')
   --Right (MkInSample bads' (fix':_))
@@ -153,8 +161,8 @@ mkDiff' bad fix
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)
-  -> (Header, [NamedRecord])
-runTFeaturesDiff fs (ls, bad) = (header, samples)
+  -> (Header, [NamedRecord], [SrcSpan])
+runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
   where
   header = Vector.fromList
          $ ["L-NoChange", "L-DidChange", "F-InSlice"]
