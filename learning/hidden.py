@@ -62,6 +62,8 @@ def build_model(features, labels, hidden,
 
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
 
+    # saver = tf.train.Saver(Ws + bs + [W] + [b])
+
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
         tf.scalar_summary('cross_entropy', cross_entropy)
@@ -103,6 +105,9 @@ def build_model(features, labels, hidden,
     ## NOTE: must be last!!
     tf.initialize_all_variables().run()
 
+    # saver.restore(sess, 'hidden_model')
+
+
     def train(data, i, validation=None, verbose=False):
         summary_str, _ = sess.run([merged, train_step],
                                   feed_dict={x: data[features], y_: data[labels],
@@ -115,13 +120,22 @@ def build_model(features, labels, hidden,
                 # print ys
                 #top_k = np.argpartition(ys, 3, 0)
                 # print (top_values, top_indices)
+                val['G-NoChange'] = np.transpose(ys)[0]
+                val['G-DidChange'] = np.transpose(ys)[1]
+                # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][val['L-DidChange'] > 0]
+                # print top_indices[1]
+                # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][top_indices[1]]
                 if any(val['L-DidChange'][idx] == 1 for idx in top_indices[1]):
+                    # print 'SUCCESS'
+                    # raise 'die'
                     acc += 1
+            #     print ''
+            # raise 'die'
             acc = float(acc) / len(validation)
             vals = pd.concat(validation)
-            classes = vals.groupby(labels)
-            max_samples = max(len(c) for _, c in classes)
-            vals = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+            # classes = vals.groupby(labels)
+            # max_samples = max(len(c) for _, c in classes)
+            # vals = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
             acci = sess.run(accuracy, feed_dict={x:vals[features], y_:vals[labels], keep_prob:1.0})
             print('accuracy at step {}: {} ({})'.format(i, acc, acci))
 
@@ -208,6 +222,8 @@ def build_model(features, labels, hidden,
         # print('recall: %f' % recall)
         # print('f1 score: %f' % fscore)
 
+
+        # saver.save(sess, 'hidden_model')
 
     def plot():
         w = sess.run(tf.transpose(W))

@@ -91,22 +91,29 @@ def build_model(fs, ls, model_dir):
 
 def train_model(train, dfs, label_names, validation=None):
     i = 0
-    for df in dfs:
-        # balance labels for training
-        # print df.shape
-        classes = list(df.groupby(label_names))
-        if any(len(c) == 0 for _, c in classes):
-            continue
-        max_samples = max(len(c) for _, c in classes)
-        # print max_samples
-        df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
-        # print df.shape
+    # for df in dfs:
+    #     # balance labels for training
+    #     # print df.shape
+    #     classes = list(df.groupby(label_names))
+    #     if any(len(c) == 0 for _, c in classes):
+    #         continue
+    #     max_samples = max(len(c) for _, c in classes)
+    #     # print max_samples
+    #     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+    #     # print df.shape
 
-        train(df, i, validation, verbose=FLAGS.verbose)
-        i += 1
-    # for _, batch in df.groupby(df.index // FLAGS.batch_size):
-    #     train(batch, i, validation, verbose=FLAGS.verbose)
+    #     train(df, i, validation, verbose=FLAGS.verbose)
     #     i += 1
+    print len(dfs)
+    df = pd.concat(dfs)
+    print df.shape
+    classes = list(df.groupby(label_names))
+    max_samples = max(len(c) for _, c in classes)
+    df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes).sample(frac=1).reset_index(drop=True)
+    print df.shape
+    for _, batch in df.groupby(df.index // FLAGS.batch_size):
+        train(batch, i, validation, verbose=FLAGS.verbose)
+        i += 1
 
 def test_model(test, dfs):
     test(dfs)
