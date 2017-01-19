@@ -75,7 +75,8 @@ mkBadFeatures nm fs jsons = do
     createDirectoryIfMissing True (takeDirectory path)
     LBSC.writeFile path $ encodeByName header features
     let path = "data/" ++ nm ++ "/" ++ fn ++ ".ml"
-    writeFile path $ unlines $ [ bad, "", fix, "", "(* changed spans" ] ++ map show ss ++ [ "*)" ]
+    writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                               , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
                             ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
 
   -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
@@ -115,7 +116,8 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
-    -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
+    -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
+    -> [(mkDiff'' bad fix, bad, bad', fix')]
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
   Right (MkInSample bad' fix')
   --Right (MkInSample bads' (fix':_))
@@ -150,14 +152,24 @@ mkDiff' bad fix
   | Right bads <- alexScanTokens bad
   , Right fixs <- alexScanTokens fix
   = let spans = [ foldr1 joinSrcSpan (map getTokenSpan toks)
-                | Diff.First toks <- Diff.getGroupedDiffBy ((==) `on` getToken) bads fixs
+                --- | Diff.First toks <- Diff.getGroupedDiffBy ((==) `on` getToken) bads fixs
+                | Diff.First toks <- Diff.getGroupedDiffBy (eqToken) bads fixs
                 ]
     in Just (assert (not (null spans)) spans)
   | otherwise = Nothing
  where
  getTokenSpan (LToken s _) = s
  getToken (LToken _ t) = t
+ -- FIXME: this is too strict
+ eqToken (LToken s1 t1) (LToken s2 t2) = t1 == t2 && s1 == s2
 
+mkDiff'' :: Prog -> Prog -> [SrcSpan]
+mkDiff'' bad fix =
+--  trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $
+  Set.toList (diffSpans (getDiff $ diffExprsT bs fs))
+  where
+  bs = progExprs bad
+  fs = progExprs fix
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)
@@ -177,8 +189,9 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
 
   (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
     Left e -> traceShow e ([], [], Just e)
+    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat cs)), Nothing)
                                    -- only look at first unsat core for now
-    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)), Nothing)
+    -- Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e
@@ -186,13 +199,14 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
 
   didChange l
     | any (l `isSubSpanOf`) ls
+    --- | any (l ==) ls
     = ["L-DidChange" .= (1::Double), "L-NoChange" .= (0::Double)]
     | otherwise
     = ["L-DidChange" .= (0::Double), "L-NoChange" .= (1::Double)]
 
   inSlice l
-    | any (l `isSubSpanOf`) cores
-    --- | any (l ==) cores
+    --- | any (l `isSubSpanOf`) cores
+    | any (l ==) cores
     = ["F-InSlice" .= (1::Double)]
     | otherwise
     = ["F-InSlice" .= (0::Double)]

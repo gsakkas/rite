@@ -2,6 +2,7 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE ImplicitParams #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -24,7 +25,9 @@ import Data.Monoid hiding (Alt)
 import qualified Data.Set as Set
 import Data.Set (Set)
 import GHC.Generics
+import GHC.Stack
 
+import NanoML.Monad
 import NanoML.Parser
 import NanoML.Pretty
 import NanoML.Prim
@@ -773,7 +776,7 @@ typeProg p = do
 
 typeDecl :: MonadEval m => Decl -> m TDecl
 typeDecl = \case
-  DFun s r pes -> do
+  DFun s r pes -> withCurrentExpr (VU (Just s)) $ do
     -- NOTE: don't forget to generalize
     (bnds, ptes) <- case r of
       Rec -> typeRecBinds pes
@@ -949,27 +952,32 @@ lookupVarType v = do
 -- ill-typed, the choice may make a difference in how we type the bad bits
 typeExpr :: MonadEval m => Expr -> m TExpr
 -- for now let's do a bottom-up thing
-typeExpr e = withCurrentExpr e (typeExpr' e)
+typeExpr e = do
+  -- traceShowM ("typeExpr", pretty e)
+  e' <- withCurrentExpr e (typeExpr' e)
+  -- traceM ""
+  return e'
 
 typeExpr' :: MonadEval m => Expr -> m TExpr
 typeExpr' = \case
   Var ml v -> do
-    t <- lookupVarType v
-    case t of
+    t <- lookupVarType v >>= \t -> case t of
       TAll tvs t' -> do
         su <- fmap Map.fromList $ forM tvs $ \tv ->
           (tv,) . TVar <$> freshTVar
         return (subst su t')
       _ -> return t
     -- traceShowM . ("VAR",v,) . pretty =<< substM t
+    t <- makeType t
     return (T_Var (mkInfo ml t) v)
   Lam ml p e _ -> do
     (ti, bnds) <- typePat p
     te <- withLocalBinds bnds $ typeExpr e
-    let t = ti :-> (getType te)
+    t <- makeType $ ti :-> (getType te)
     return (T_Lam (mkInfo ml t) p te)
   App ml f es -> do
     tf <- typeExpr f
+    -- traceShowM tf
     tes <- mapM typeExpr es
     t <- TVar <$> freshTVar
     -- traceM "APP"
@@ -991,8 +999,11 @@ typeExpr' = \case
         -> return (tCon tINT, tCon tINT, tCon tINT)
       | b `elem` [FPlus .. FExp]
         -> return (tCon tFLOAT, tCon tFLOAT, tCon tFLOAT)
+    t1 <- makeType t1
     tryUnify t1 (getType te1)
+    t2 <- makeType t2
     tryUnify t2 (getType te2)
+    t <- makeType t
     return (T_Bop (mkInfo ml t) b te1 te2)
   Uop ml u e -> do
     te <- typeExpr e
@@ -1002,12 +1013,12 @@ typeExpr' = \case
     tryUnify t (getType te)
     return (T_Uop (mkInfo ml t) u te)
   Lit ml l -> do
-    let t = case l of
-              LI {} -> tCon tINT
-              LD {} -> tCon tFLOAT
-              LB {} -> tCon tBOOL
-              LC {} -> tCon tCHAR
-              LS {} -> tCon tSTRING
+    t <- makeType $ case l of
+                      LI {} -> tCon tINT
+                      LD {} -> tCon tFLOAT
+                      LB {} -> tCon tBOOL
+                      LC {} -> tCon tCHAR
+                      LS {} -> tCon tSTRING
     return (T_Lit (mkInfo ml t) l)
   Let ml r pes e -> do
     -- NOTE: don't forget to generalize
@@ -1033,10 +1044,12 @@ typeExpr' = \case
     (tps, ta:tas) <- unzip <$> mapM typeAlt as
     mapM_ (tryUnify (getType te)) tps
     mapM_ (tryUnify (getType (thd3 ta))) (map (getType.thd3) tas)
-    return (T_Case (mkInfo ml (getType (thd3 ta))) te (ta:tas))
+    t <- makeType $ getType (thd3 ta)
+    return (T_Case (mkInfo ml t) te (ta:tas))
   Tuple ml es -> do
     tes <- mapM typeExpr es
-    return (T_Tuple (mkInfo ml (TTup (map getType tes))) tes)
+    t <- makeType $ TTup (map getType tes)
+    return (T_Tuple (mkInfo ml t) tes)
   ConApp ml c me _ -> do
     d <- lookupDataCon c
     let tvs = tyVars (dType d)
@@ -1054,18 +1067,21 @@ typeExpr' = \case
         return (Just (T_Tuple (mkInfo ml' (TTup (map getType tes))) tes))
       --FIXME:
       x -> trace ("typeExpr: ConApp: " ++ show (c, x)) $ return Nothing
-    let t = subst su (typeDeclType (dType d))
+    t <- makeType $ subst su (typeDeclType (dType d))
     return (T_ConApp (mkInfo ml t) c mte)
   Array ml es _ -> do
     tes <- mapM typeExpr es
     t <- TVar <$> freshTVar
     mapM_ (tryUnify t . getType) tes
-    return (T_Array (mkInfo ml (mkTApps tARRAY [t])) tes)
+    ta <- makeType $ mkTApps tARRAY [t]
+    return (T_Array (mkInfo ml ta) tes)
   List ml es _ -> do
     tes <- mapM typeExpr es
     t <- TVar <$> freshTVar
     mapM_ (tryUnify t . getType) tes
-    return (T_List (mkInfo ml (mkTApps tLIST [t])) tes)
+
+    tl <- makeType $ mkTApps tLIST [t]
+    return (T_List (mkInfo ml tl) tes)
   -- these should not occur in the dataset
   Try ml e as -> do
     otherError "typeExpr: impossible: try"
@@ -1102,17 +1118,17 @@ typePat = \case
     t <- TVar <$> freshTVar
     return (t, [(v,t)])
   LitPat _ l -> do
-    let t = typeOfLit l
+    t <- makeType $ typeOfLit l
     return (t, [])
   IntervalPat _ l1 l2 -> do
-    let t1 = typeOfLit l1
-    let t2 = typeOfLit l2
+    t1 <- makeType $ typeOfLit l1
+    t2 <- makeType $ typeOfLit l2
     tryUnify t1 t2
     return (t1, [])
   ConsPat _ p1 p2 -> do
     (t1, bnds1) <- typePat p1
     (t2, bnds2) <- typePat p2
-    let t = mkTApps tLIST [t1]
+    t <- makeType $ mkTApps tLIST [t1]
     tryUnify t t2
     return (t, bnds1 ++ bnds2)
   ConPat _ c mp -> do
@@ -1132,12 +1148,13 @@ typePat = \case
         return (concat bndss)
       --FIXME:
       x -> trace ("typePat: ConPat: " ++ show (c, x)) $ return []
-    let t = subst su (typeDeclType (dType d))
+    t <- makeType $ subst su (typeDeclType (dType d))
     return (t, bnds)
   ListPat _ ps -> do
     (t:ts, bndss) <- unzip <$> mapM typePat ps
     mapM_ (tryUnify t) ts
-    return (mkTApps tLIST [t], concat bndss)
+    t <- makeType $ mkTApps tLIST [t]
+    return (t, concat bndss)
   TuplePat _ ps -> do
     (ts, bndss) <- unzip <$> mapM typePat ps
     return (TTup ts, concat bndss)
@@ -1173,7 +1190,7 @@ typeAlt (p, mg, e) = do
 typeBind :: MonadEval m => (Pat, Expr) -> m ([(Var, Type)], (Pat, TExpr))
 typeBind (p, e) = do
   te <- typeExpr e
-  t <- substM (getType te)
+  -- t <- substM (getType te)
   -- traceShowM (pretty p, pretty t)
   (tp, bnds) <- typePat p
   tryUnify tp (getType te)
@@ -1193,12 +1210,17 @@ typeRecBinds pes = do
   --   withLocalBinds bnds $ first concat . unzip <$> mapM typeBind pes
 
 -- | Try to unify two types but suppress any errors.
-tryUnify :: MonadEval m => Type -> Type -> m ()
+tryUnify :: (?cs :: CallStack) => MonadEval m => Type -> Type -> m ()
 tryUnify t1 t2 = do
   prv <- getCurrentProv
   -- traceShowM (prv, t1, t2)
   pushConstraints (Set.singleton (mkConstraint prv t1 t2))
-  unify t1 t2 `catchError` \e -> getUnsatCore >>= addUnsatCore
+  unify t1 t2 `catchError` \e -> do
+    t1' <- substM t1
+    t2' <- substM t2
+    -- traceShowM ("tryUnify", pretty t1', pretty t2')
+    -- traceShowM ("tryUnify", showCallStack ?cs, t1, t2)
+    getUnsatCore >>= addUnsatCore
   popConstraints
 
 withLocalBinds :: MonadEval m => [(Var, Type)] -> m a -> m a
@@ -1209,6 +1231,213 @@ withLocalBinds bnds do_this = do
   modify' $ \ s -> s { stVarTypes = tenv }
   return a
 
+makeType :: MonadEval m => Type -> m Type
+makeType t = do
+  tv <- TVar <$> freshTVar
+  tryUnify tv t
+  return tv
+
+-- type Diff = Set MSrcSpan
+
+data Diff
+  = Ins Expr Diff
+  | Del Expr Diff
+  | Cpy Expr Diff
+  | End
+  deriving Show
+
+ins :: Expr -> Diff -> Diff
+ins = Ins
+del :: Expr -> Diff -> Diff
+del = Del
+cpy :: Expr -> Diff -> Diff
+cpy = Cpy
+end :: Diff
+end = End
+
+meet :: Diff -> Diff -> Diff
+meet dx dy = if cost dx <= cost dy then dx else dy
+
+data N = Z | S N deriving (Eq, Ord)
+
+cost :: Diff -> N
+cost = \case
+  Ins e d -> S $ cost d
+  Del e d -> S $ cost d
+  Cpy e d -> S $ cost d
+  End     -> Z
+
+diffSpans :: Diff -> Set SrcSpan
+diffSpans = Set.fromList . catMaybes . go
+  where
+  go = \case
+    Ins e d -> go d -- getSrcSpanMaybe e : go d
+    Del e d -> getSrcSpanMaybe e : go d
+    Cpy e d -> go d -- getSrcSpanMaybe e : go d
+    End     -> []
+
+progExprs :: Prog -> [Expr]
+progExprs [] = []
+progExprs (d:ds) = case d of
+  DFun _ _ pes -> map snd pes ++ progExprs ds
+  DEvl _ e -> e : progExprs ds
+  _ -> progExprs ds
+
+diffExprs :: [Expr] -> [Expr] -> Diff
+diffExprs [] []
+  = end
+diffExprs [] (y:yss)
+  = ins y (diffExprs [] yss)
+diffExprs (x:xss) []
+  = del x (diffExprs xss [])
+diffExprs (x:xss) (y:yss)
+  | exprKind x == exprKind y
+  , length xs == length ys   -- necessary for variadic ctors like case
+  = best_3
+  | otherwise
+  = best_2
+  where
+  xs = subExprs x
+  ys = subExprs y
+
+  best_2 = del x (diffExprs (xs ++ xss) (y : yss))
+           `meet`
+           ins y (diffExprs (x : xss) (ys ++ yss))
+  best_3 = cpy x (diffExprs (xs ++ xss) (ys ++ yss))
+           `meet` best_2
+
+data DiffT
+  = CC Expr Expr Diff DiffT DiffT DiffT
+  | CN Expr Diff DiffT
+  | NC Expr Diff DiffT
+  | NN Diff
+
+getDiff :: DiffT -> Diff
+getDiff = \case
+  CC _ _ d _ _ _ -> d
+  CN _ d _ -> d
+  NC _ d _ -> d
+  NN d -> d
+
+diffExprsT :: [Expr] -> [Expr] -> DiffT
+diffExprsT [] []
+  = NN end
+diffExprsT (x:xss) []
+  = let d = diffExprsT xss []
+    in CN x (del x (getDiff d)) d
+diffExprsT [] (y:yss)
+  = let d = diffExprsT [] yss
+    in NC y (ins y (getDiff d)) d
+diffExprsT (x:xss) (y:yss)
+  = CC x y (bestT x y i d c) i d c
+  where
+  xs = subExprs x
+  ys = subExprs y
+
+  c = diffExprsT (xs ++ xss) (ys ++ yss)
+  i = extendi x c
+  d = extendd y c
+
+extendi :: Expr -> DiffT -> DiffT
+extendi x dt = case dt of
+  NN d     -> CN x (del x d) dt
+  CN _ d _ -> CN x (del x d) dt
+  _        -> extracti dt $ \y dt' ->
+    let i = extendi x dt'
+        d = dt
+        c = dt'
+    in CC x y (bestT x y i d c) i d c
+
+extracti :: DiffT -> (Expr -> DiffT -> r) -> r
+extracti dt k = case dt of
+  CC _ y _ i _ _ -> k y i
+  NC y _ i       -> k y i
+  _              -> error "extracti"
+
+extendd :: Expr -> DiffT -> DiffT
+extendd y dt = case dt of
+  NN d     -> NC y (ins y d) dt
+  NC _ d _ -> NC y (ins y d) dt
+  _        -> extractd dt $ \x dt' ->
+    let i = dt
+        d = extendd y dt'
+        c = dt'
+    in CC x y (bestT x y i d c) i d c
+
+extractd :: DiffT -> (Expr -> DiffT -> r) -> r
+extractd dt k = case dt of
+  CC x _ _ _ d _ -> k x d
+  CN x _ d       -> k x d
+  _              -> error "extractd"
+
+bestT :: Expr -> Expr -> DiffT -> DiffT -> DiffT -> Diff
+bestT x y i d c
+  --- | exprKind x == exprKind y
+  -- , [x1, x2] <- subExprs x
+  -- , [y1, y2] <- subExprs y
+  -- , x1 == y2 && x2 == y1
+  -- -- can we override the behavior for swapping subtrees?
+  -- = trace "hiii" $ del x (getDiff c) -- del x (getDiff d) `meet` ins y (getDiff i)
+  | exprKind x == exprKind y
+  , length (subExprs x) == length (subExprs y)
+  = cpy x (getDiff c) -- del x (getDiff d) `meet` ins y (getDiff i)
+  | otherwise
+  = del x (getDiff d) `meet` ins y (getDiff i)
+    -- `meet`
+
+data ExprKind
+  = VarK Var
+  | LamK Pat
+  | AppK
+  | BopK Bop
+  | UopK Uop
+  | LitK Literal
+  | LetK RecFlag                -- FIXME: how to handle binders?
+  | IteK
+  | SeqK
+  | CaseK
+  | TupleK
+  | ConAppK DCon
+  | ListK
+  deriving (Eq, Show)
+
+exprKind :: Expr -> ExprKind
+exprKind = \case
+  Var _ v -> VarK v
+  Lam _ p _ _ -> LamK p
+  App {} -> AppK
+  Bop _ b _ _ -> BopK b
+  Uop _ u _ -> UopK u
+  Lit _ l -> LitK l
+  Let _ r _ _ -> LetK r
+  Ite {} -> IteK
+  Seq {} -> SeqK
+  Case {} -> CaseK
+  Tuple {} -> TupleK
+  ConApp _ d _ _ -> ConAppK d
+  List {} -> ListK
+  e -> error ("exprKind: " ++ render (pretty e))
+
+subExprs :: Expr -> [Expr]
+subExprs = \case
+  Var {} -> []
+  Lam _ _ e _ -> [e]
+  App _ e es -> e:es
+  Bop _ _ x y -> [x,y]
+  Uop _ _ x -> [x]
+  Lit {} -> []
+  Let _ _ pes e -> map snd pes ++ [e]
+  Ite _ x y z -> [x,y,z]
+  Seq _ x y -> [x,y]
+  Case _ e as -> e : map thd3 as -- FIXME: guards
+  Tuple _ es -> es
+  ConApp _ _ me _ -> case maybeToList me of
+    [Tuple _ es] -> es
+    es -> es
+  List _ es _ -> es
+
+exprSize = const 1
+--exprSize = getSum . fold (const (+1)) (0 :: Sum Int)
 
 Right foo1 = parseTopForm
   "let pipe fs =\
@@ -1253,3 +1482,15 @@ foo4' =
   \  fun f ->\
   \    fun l ->\
   \      List.map (sepConcat \"\" l)"
+
+Right foo5 = parseTopForm foo5'
+foo5' =
+  "let rec mulByDigit i l =\n\
+  \  match List.rev l with\n\
+  \  | [] -> []\n\
+  \  | h::t -> [mulByDigit i t; (h * i) mod 10];;"
+
+Right foo6 = parseTopForm foo6'
+foo6' =
+  "let rec foo x =\n\
+  \  x /. 2\n"

@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveDataTypeable    #-}
 {-# LANGUAGE BangPatterns          #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE DefaultSignatures     #-}
@@ -184,20 +184,28 @@ popConstraints :: MonadEval m => m ()
 popConstraints = modify' $ \s -> s { stConstraintStack = tail $ stConstraintStack s }
 
 recordCurrentConstraints :: MonadEval m => TVar -> m ()
-recordCurrentConstraints v =
+recordCurrentConstraints v = do
+  -- cts <- mconcat <$> gets stConstraintStack
+  -- traceShowM ("recordConstraints", v, cts)
   modify' $ \s -> s { stConstraints = Map.insert v (mconcat (stConstraintStack s)) (stConstraints s) }
 
 retrieveConstraints :: MonadEval m => TVar -> m (Set Constraint)
 retrieveConstraints v = do
   cs <- gets stConstraints
-  return (cs Map.! v)
+  let c = fromMaybe mempty $ Map.lookup v cs
+  -- traceShowM ("retrieveConstraints", v, c)
+  return c
 
 getUnsatCore :: MonadEval m => m (Set Constraint)
 getUnsatCore = do
   mconcat <$> gets stConstraintStack
 
 addUnsatCore :: MonadEval m => Set Constraint -> m ()
-addUnsatCore cs = modify' $ \s -> s { stUnsatCores = cs : stUnsatCores s }
+addUnsatCore cs = do
+  -- traceShowM =<< gets stCurrentExpr
+  -- traceShowM cs
+  -- traceShowM ""
+  modify' $ \s -> s { stUnsatCores = cs : stUnsatCores s }
 
 pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
 pushCallStack loc args = do
@@ -211,8 +219,10 @@ popCallStack = modify' $ \s -> s { stCallStack = tail (stCallStack s) }
 
 addSubst :: MonadEval m => TVar -> Type -> m ()
 addSubst a t = do
+  -- traceShowM ("addSubst", a, t)
   su <- gets stSubst
-  let su' = Map.insert a t su -- (fmap (subst (Map.singleton a t)) su)
+  let su' = Map.insert a t $ assert (not $ a `Map.member` su) su
+            -- (fmap (subst (Map.singleton a t)) su)
   modify' $ \s -> s { stSubst = su' }
 
 getSubst :: MonadEval m => m Subst
@@ -220,6 +230,9 @@ getSubst = gets stSubst
 
 substM :: MonadEval m => Type -> m Type
 substM t = getSubst >>= \su -> return (subst su t)
+
+subst'M :: MonadEval m => Type -> m Type
+subst'M t = getSubst >>= \su -> return (subst' su t)
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
@@ -1216,13 +1229,13 @@ freshTVar = do
   i <- fresh
   return $ 't' : show i
 
--- inst :: MonadEval m
---      => [TVar]
---      -> Type
---      -> m Type
--- inst as t = do
---   as' <- replicateM (length as) freshTVar
---   return $! subst (zip as as') t
+inst :: MonadEval m
+     => [TVar]
+     -> Type
+     -> m Type
+inst as t = do
+  as' <- replicateM (length as) (fmap TVar freshTVar)
+  return $! subst (Map.fromList $ zip as as') t
 
 unify :: MonadEval m
       => Type -- ^ actual type
@@ -1270,8 +1283,12 @@ unify' x y
 
 unifyVar :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
 unifyVar a t = do
+  cs <- retrieveConstraints a
+  css <- mapM retrieveConstraints (freeTyVars t)
+  pushConstraints (mconcat (cs : css))
   ta <- substM (TVar a)
   t' <- substM t
+  -- traceShowM ("unifyVar", (TVar a, ta), (t, t'))
   case ta of
     TVar a'
       | TVar b <- t', a' == b -> return ()
@@ -1281,9 +1298,8 @@ unifyVar a t = do
           addSubst a' t'
           recordCurrentConstraints a'
     _ -> do
-      pushConstraints =<< retrieveConstraints a
       unify ta t'
-      popConstraints
+  popConstraints
 
 -- unifyVar' :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
 -- unifyVar' a t

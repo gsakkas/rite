@@ -47,18 +47,18 @@ tFloat  = mkTypeDecl "float"  []    (mkAlgRhs [])
 tBool   = mkTypeDecl "bool"   []    (mkAlgRhs [])
 tChar   = mkTypeDecl "char"   []    (mkAlgRhs [])
 tString = mkTypeDecl "string" []    (mkAlgRhs [])
-tArray  = mkTypeDecl "array"  ["a1"] (mkAlgRhs [])
+tArray  = mkTypeDecl "array"  ["a"] (mkAlgRhs [])
 tUnit   = mkTypeDecl "unit"   []    (mkAlgRhs [dUnit])
-tList   = mkTypeDecl "list"   ["a2"] (mkAlgRhs [dNil, dCons])
-tOption = mkTypeDecl "option" ["a3"] (mkAlgRhs [dNone, dSome])
+tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
+tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
 tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument, dDivision_by_zero])
-tRef    = mkTypeDecl "ref"    ["a4"] (\td -> TRec [("contents", Mut, TVar "a4")])
+tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
 
 dUnit = DataDecl "()" []
 dNil = DataDecl "[]" []
-dCons = DataDecl "::" [ TVar "a2", TApp "list" [TVar "a2"] ]
+dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
 dNone = DataDecl "None" []
-dSome = DataDecl "Some" [TVar "a3"]
+dSome = DataDecl "Some" [TVar "a"]
 dFailure = DataDecl "Failure" []
 dNot_found = DataDecl "Not_found" []
 dMatch_failure = DataDecl "Match_failure" []
@@ -699,8 +699,8 @@ tU = tCon tUNIT
 tA t = mkTApps tARRAY [t]
 tL t = mkTApps tLIST [t]
 tE = tCon tEXN
-a = TVar "a0"
-b = TVar "b0"
+a = TVar "a"
+b = TVar "b"
 tT x y = TTup [x,y]
 
 
