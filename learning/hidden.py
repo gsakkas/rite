@@ -62,7 +62,7 @@ def build_model(features, labels, hidden,
 
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
 
-    # saver = tf.train.Saver(Ws + bs + [W] + [b])
+    saver = tf.train.Saver(Ws + bs + [W] + [b])
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
@@ -238,7 +238,7 @@ def build_model(features, labels, hidden,
         # print('f1 score: %f' % fscore)
 
 
-        # saver.save(sess, 'hidden_model')
+        saver.save(sess, 'hidden_model')
 
     def plot():
         w = sess.run(tf.transpose(W))
