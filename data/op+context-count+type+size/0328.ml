@@ -1,108 +1,81 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (l1, l2)
-  else
-    if a < b
-    then (((clone 0 (b - a)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then padZero (0 :: l1) l2
-    else padZero l1 (0 :: l2);;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then padZero (0 :: l1) l2
-    else padZero l1 (0 :: l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let c = (fst x) + (snd x) in
-      match a with
-      | h::t -> ((h + c) / 10) :: (h + (c mod 10)) :: t
-      | _ -> [c / 10; c mod 10] in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (l1, l2)
-  else
-    if a < b
-    then (((clone 0 (b - a)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then padZero (0 :: l1) l2
-    else padZero l1 (0 :: l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then padZero (0 :: l1) l2
-    else padZero l1 (0 :: l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,result) = a in
-      let (x1,x2) = x in
-      let res = (x1 + x2) + carry in
-      let newCarry = res / 10 in
-      match result with
-      | [] -> (newCarry, [newCarry; res mod 10])
-      | h::t -> (newCarry, (newCarry :: (res mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(36,11)-(36,14)
-(36,16)-(36,21)
-(36,23)-(36,24)
-(36,26)-(36,29)
-(37,13)-(37,14)
-(38,19)-(38,31)
-(38,36)-(38,42)
-(38,50)-(38,51)
-(39,7)-(39,32)
+(20,25)-(20,61)
 *)
 
 (* type error slice
-(5,11)-(5,25)
+(14,3)-(24,27)
+(15,14)-(15,15)
+(17,28)-(17,32)
+(17,28)-(17,42)
+(17,34)-(17,36)
+(17,34)-(17,42)
+(17,38)-(17,39)
+(17,41)-(17,42)
+(20,25)-(20,29)
+(20,25)-(20,40)
+(20,25)-(20,61)
+(20,31)-(20,34)
+(20,31)-(20,40)
+(20,36)-(20,37)
+(20,39)-(20,40)
+(20,46)-(20,50)
+(20,46)-(20,61)
+(20,52)-(20,55)
+(20,52)-(20,61)
+(20,57)-(20,58)
+(20,60)-(20,61)
 *)

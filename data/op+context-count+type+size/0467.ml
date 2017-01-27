@@ -1,68 +1,101 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 - 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) -> 1.0;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,y)::t -> ((((w + z) + y) / 10), ((((w + y) + z) mod 10) :: t))
-      | [] -> (0, 0) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
 
+(* fix
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 -. 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) -> 1.0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(21,14)-(21,17)
-(21,24)-(21,25)
-(21,32)-(21,36)
-(21,47)-(21,48)
-(21,52)-(21,56)
-(21,71)-(21,72)
-(22,7)-(22,21)
-(23,20)-(23,21)
+(29,13)-(29,22)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(28,7)-(35,21)
+(28,16)-(28,44)
+(28,18)-(28,44)
+(28,22)-(28,44)
+(28,25)-(28,26)
+(28,25)-(28,30)
+(28,29)-(28,30)
+(28,36)-(28,37)
+(29,7)-(29,11)
+(29,7)-(35,21)
+(29,13)-(29,16)
+(29,13)-(29,22)
+(29,19)-(29,22)
+(30,10)-(30,13)
+(30,10)-(35,21)
+(30,14)-(30,17)
+(31,14)-(35,21)
 *)

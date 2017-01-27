@@ -1,23 +1,47 @@
 
-let rec append list1 list2 = match list1 with | [] -> [] | h::t -> h :: list2;;
+let rec digitalRoot n =
+  if n = 0
+  then 0
+  else
+    (let rec r_digitalRoot n m =
+       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
+     match n with | 0 -> r_digitalRoot | _ -> r_digitalRoot n (n mod 10));;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::[] -> l | h::t -> listReverse (append (t [h]));;
 
+(* fix
 
+let rec digitalRoot n =
+  if n = 0
+  then 0
+  else
+    (let rec r_digitalRoot n m =
+       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
+     match n with | 0 -> 0 | _ -> r_digitalRoot n 0);;
 
-let rec append list1 list2 = match list1 with | [] -> [] | h::t -> h :: list2;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::[] -> l | h::t -> listReverse (append t [h]);;
-
+*)
 
 (* changed spans
-(5,70)-(5,71)
-(5,77)-(5,78)
+(8,26)-(8,39)
+(8,64)-(8,65)
+(8,64)-(8,72)
+(8,70)-(8,72)
 *)
 
 (* type error slice
-(5,3)-(5,76)
-(5,71)-(5,76)
+(3,3)-(8,72)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(4,8)-(4,9)
+(6,6)-(8,72)
+(7,30)-(7,43)
+(7,30)-(7,68)
+(7,45)-(7,51)
+(7,55)-(7,68)
+(8,6)-(8,72)
+(8,26)-(8,39)
+(8,47)-(8,60)
+(8,47)-(8,72)
+(8,61)-(8,62)
+(8,64)-(8,72)
 *)

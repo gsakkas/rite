@@ -1,56 +1,39 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | hd::tl ->
+        let seen' = if (List.mem tl [2]) = true then seen else hd :: seen in
+        let rest' = tl in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | hd::tl ->
+        let seen' = if (List.mem hd seen) = true then seen else hd :: seen in
+        let rest' = tl in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,[]) -> (w, [z / 10; z mod 10])
-      | (w,h::t) -> (((w + z) / 10), (((w + z) mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
-
+*)
 
 (* changed spans
-(17,25)-(17,26)
-(17,69)-(17,70)
+(7,34)-(7,36)
+(7,37)-(7,40)
+(7,38)-(7,39)
+(7,44)-(7,48)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(4,5)-(8,47)
+(7,25)-(7,33)
+(7,25)-(7,40)
+(7,34)-(7,36)
+(7,37)-(7,40)
+(7,38)-(7,39)
 *)

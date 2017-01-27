@@ -1,62 +1,37 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (add1,add2) ->
-          ((((add1 + add2) + a) mod 10), (((add1 + add2) + a) / 10)) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec assoc (d,k,l) =
+  match k with
+  | [] -> d
+  | (lk,lv)::ls -> if lk = lk then lv else assoc d k ls;;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | (lk,lv)::ls -> if k = lk then lv else assoc (d, k, ls);;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (carry,rest) ->
-          (match x with
-           | (add1,add2) ->
-               ((((add1 + add2) + carry) / 10),
-                 ((((add1 + add2) + carry) mod 10) :: rest))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(18,30)-(18,31)
-(18,33)-(18,36)
-(18,60)-(18,61)
-(18,63)-(18,64)
-(19,20)-(19,21)
+(3,9)-(3,10)
+(5,23)-(5,25)
+(5,44)-(5,56)
+(5,50)-(5,51)
 *)
 
 (* type error slice
-(5,12)-(5,26)
+(2,4)-(5,58)
+(2,16)-(5,56)
+(3,3)-(5,56)
+(3,9)-(3,10)
+(4,11)-(4,12)
+(5,20)-(5,56)
+(5,36)-(5,38)
+(5,44)-(5,49)
+(5,44)-(5,56)
+(5,50)-(5,51)
+(5,52)-(5,53)
+(5,54)-(5,56)
 *)

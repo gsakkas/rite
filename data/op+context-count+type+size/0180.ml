@@ -6,31 +6,29 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr
-  | DivideByOne of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
   | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (eval (e', x, y))
-  | DivideByOne (e1,e2,e3) ->
-      sin
-        (((1.0 /. (eval (e1, x, y))) + (1.0 /. (eval (e2, x, y)))) +
-           (1.0 /. (eval (e3, x, y))));;
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+
+let rec eval (e,x,y) = float_of_string (((exprToString e) * x) * y);;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -39,36 +37,46 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr
-  | DivideByOne of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
   | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (eval (e', x, y))
-  | DivideByOne (e1,e2,e3) ->
-      sin
-        (((1.0 /. (eval (e1, x, y))) +. (1.0 /. (eval (e2, x, y)))) +.
-           (1.0 /. (eval (e3, x, y))));;
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
+let rec eval (e,x,y) = float_of_string (exprToString e);;
+
+*)
 
 (* changed spans
-(30,38)-(30,39)
-(30,68)-(30,69)
+(28,43)-(28,62)
+(28,43)-(28,67)
+(28,61)-(28,62)
+(28,66)-(28,67)
 *)
 
 (* type error slice
-(30,12)-(30,63)
+(12,3)-(26,73)
+(15,29)-(15,41)
+(15,29)-(15,43)
+(15,42)-(15,43)
+(28,24)-(28,39)
+(28,24)-(28,67)
+(28,43)-(28,55)
+(28,43)-(28,57)
+(28,43)-(28,62)
+(28,43)-(28,67)
+(28,56)-(28,57)
 *)

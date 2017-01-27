@@ -1,34 +1,31 @@
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> a | hd::tl -> a + hd in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else [];;
 
 
+(* fix
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
+*)
 
 (* changed spans
+(3,18)-(3,37)
+(3,18)-(3,52)
+(3,44)-(3,52)
 *)
 
 (* type error slice
-(3,3)-(11,16)
-(9,16)-(9,72)
-(9,34)-(9,72)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,52)
+(3,31)-(3,37)
+(3,44)-(3,52)
 *)

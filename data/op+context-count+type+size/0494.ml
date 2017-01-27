@@ -1,59 +1,44 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,[]) -> (w, ((z / 10) :: (z mod 10)))
-      | (w,h::t) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t -> let seen' = seen :: h in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | hd::tl ->
+        let seen' = hd :: seen in let rest' = tl in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,[]) -> (w, [z / 10; z mod 10])
-      | (w,h::t) -> (((w + z) / 10), (((w + z) mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
-
+*)
 
 (* changed spans
-(18,23)-(18,25)
-(18,31)-(18,37)
-(18,45)-(18,47)
-(19,59)-(19,60)
+(4,5)-(6,77)
+(6,27)-(6,31)
+(6,35)-(6,36)
+(6,52)-(6,53)
 *)
 
 (* type error slice
+(3,3)-(7,26)
+(3,19)-(6,77)
+(4,5)-(6,77)
+(4,11)-(4,15)
+(5,13)-(5,17)
+(6,15)-(6,77)
+(6,27)-(6,36)
+(6,40)-(6,77)
+(6,52)-(6,53)
+(6,57)-(6,63)
+(6,57)-(6,77)
+(6,65)-(6,70)
+(6,65)-(6,77)
+(6,72)-(6,77)
 *)

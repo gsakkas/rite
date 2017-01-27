@@ -1,37 +1,48 @@
 
-let rec wwhile (f,b) =
-  let helper = f b in
-  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let fixpoint (f,b) =
-  wwhile
-    (let g =
-       let self = f b in
-       match self with | b -> (self, true) | _ -> (self, false) in
-     (g, b));;
+let rec digitsOfInt n =
+  if n = 0
+  then [0]
+  else if n > 0 then myAppend [digitsOfInt (n / 10)] (n mod 10) else [];;
 
 
+(* fix
 
-let rec wwhile (f,b) =
-  let helper = f b in
-  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let fixpoint (f,b) =
-  wwhile
-    (let g b =
-       let self = f b in
-       match b with | self -> (self, false) | _ -> (self, true) in
-     (g, b));;
+let rec getDigits n =
+  match n with | 0 -> [] | _ -> myAppend (getDigits (n / 10)) (n mod 10);;
 
+let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
+
+*)
 
 (* changed spans
-(10,14)-(10,18)
-(10,26)-(10,27)
-(10,38)-(10,42)
-(10,58)-(10,63)
+(5,3)-(7,72)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(5,10)-(5,11)
+(6,8)-(6,11)
+(6,9)-(6,10)
+(7,8)-(7,72)
+(7,11)-(7,16)
+(7,15)-(7,16)
+(7,31)-(7,53)
+(7,32)-(7,43)
+(7,70)-(7,72)
 *)
 
 (* type error slice
-(4,57)-(4,69)
-(7,3)-(11,11)
+(4,4)-(7,74)
+(4,21)-(7,72)
+(5,3)-(7,72)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(5,10)-(5,11)
+(6,8)-(6,11)
+(6,9)-(6,10)
+(7,32)-(7,43)
+(7,32)-(7,51)
+(7,45)-(7,51)
 *)

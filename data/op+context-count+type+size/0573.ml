@@ -1,39 +1,39 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let rand = makeRand (10, 39);;
-
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
-
-let x = rand (1, 4);;
-
-let fixpoint (f,b) = wwhile (let g x = f x in (((g b) != x), b));;
+let pipe fs =
+  let f a x y = a (y x) in let base x = x in List.fold_left f base fs;;
 
 
+(* fix
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let pipe fs = let f a x x = a x in let base y = y in List.fold_left f base fs;;
 
-let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
-
+*)
 
 (* changed spans
-(2,5)-(9,4)
-(14,5)-(16,4)
-(16,48)-(16,49)
-(16,50)-(16,51)
-(16,55)-(16,59)
-(16,64)-(16,65)
+(3,13)-(3,23)
+(3,20)-(3,21)
+(3,20)-(3,23)
+(3,37)-(3,42)
+(3,41)-(3,42)
+(3,46)-(3,70)
 *)
 
 (* type error slice
+(3,3)-(3,70)
+(3,9)-(3,23)
+(3,11)-(3,23)
+(3,13)-(3,23)
+(3,17)-(3,18)
+(3,17)-(3,23)
+(3,20)-(3,21)
+(3,20)-(3,23)
+(3,22)-(3,23)
+(3,28)-(3,70)
+(3,37)-(3,42)
+(3,41)-(3,42)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

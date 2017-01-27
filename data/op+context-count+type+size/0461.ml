@@ -1,74 +1,123 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let b = abs_float (eval (b', x, y)) in
+      let my_log l' = let l = min 0.1 l' in (log l) / (log 10.0) in
+      if (eval (c, x, y)) < 0.0
+      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
+      else
+        (-1.0) *.
+          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
 
-let rec mulByDigit i l =
-  let rec helper acc n lis =
-    match n with | 1 -> lis + acc | _ -> helper (n - 1) (bigAdd l lis) in
-  helper [] i l;;
+(* fix
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
+let pi = 4.0 *. (atan 1.0);;
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let b = abs_float (eval (b', x, y)) in
+      let my_log l' = let l = min 0.1 l' in (log l) /. (log 10.0) in
+      if (eval (c, x, y)) < 0.0
+      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
+      else
+        (-1.0) *.
+          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec helper i l acc =
-    match i with | 0 -> [0] | 1 -> l | _ -> helper (i - 1) l (bigAdd acc l) in
-  helper i l [0];;
-
+*)
 
 (* changed spans
-(27,22)-(27,27)
-(28,11)-(28,12)
-(28,25)-(28,34)
-(28,50)-(28,51)
-(28,67)-(28,70)
-(29,10)-(29,12)
+(35,46)-(35,64)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(35,7)-(40,72)
+(35,18)-(35,64)
+(35,23)-(35,64)
+(35,31)-(35,34)
+(35,31)-(35,41)
+(35,35)-(35,38)
+(35,39)-(35,41)
+(35,46)-(35,49)
+(35,46)-(35,51)
+(35,46)-(35,64)
+(35,50)-(35,51)
+(35,56)-(35,59)
+(35,56)-(35,64)
+(35,60)-(35,64)
+(37,14)-(37,20)
+(37,14)-(37,32)
+(37,14)-(37,62)
+(37,22)-(37,32)
+(37,35)-(37,37)
+(37,39)-(37,42)
+(37,39)-(37,62)
+(37,45)-(37,62)
+(39,10)-(39,14)
+(39,10)-(40,72)
+(39,11)-(39,14)
+(40,14)-(40,20)
+(40,14)-(40,32)
+(40,14)-(40,61)
+(40,22)-(40,32)
+(40,35)-(40,37)
+(40,39)-(40,61)
 *)

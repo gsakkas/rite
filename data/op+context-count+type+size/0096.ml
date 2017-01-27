@@ -1,52 +1,37 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let f a x = a + x in
-           let base = 0 in
-           (match [List.fold_left f base (h :: t)] with
-            | [] -> []
-            | a::b ->
-                let rec helper acc v =
-                  if v = 0
-                  then acc
-                  else ((v / 10) mod 10) :: ((v mod 10) :: acc) :: acc in
-                helper [] a));;
+let pipe fs =
+  let f a x = match a with | [] -> x | h::t -> h x in
+  let base = 0 in List.fold_left f base fs;;
 
 
+(* fix
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let f a x = a + x in
-           let base = 0 in
-           (match [List.fold_left f base (h :: t)] with
-            | [] -> []
-            | a::b ->
-                let rec helper acc v =
-                  if v = 0
-                  then acc
-                  else ((v / 10) mod 10) :: (v mod 10) :: acc in
-                helper [] a));;
+let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
 
+*)
 
 (* changed spans
-(19,46)-(19,47)
-(19,63)-(19,71)
+(3,15)-(3,51)
+(3,21)-(3,22)
+(3,48)-(3,49)
+(3,48)-(3,51)
+(3,50)-(3,51)
+(4,14)-(4,15)
+(4,19)-(4,43)
 *)
 
 (* type error slice
-(3,9)-(3,19)
+(3,3)-(4,43)
+(3,9)-(3,51)
+(3,11)-(3,51)
+(3,15)-(3,51)
+(3,21)-(3,22)
+(3,36)-(3,37)
+(4,3)-(4,43)
+(4,14)-(4,15)
+(4,19)-(4,33)
+(4,19)-(4,43)
+(4,34)-(4,35)
+(4,36)-(4,40)
+(4,41)-(4,43)
 *)

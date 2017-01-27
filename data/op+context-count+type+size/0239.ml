@@ -1,25 +1,51 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let next_tail = digitsOfInt (n / 10) in
-     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;
+let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
+
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (g, b);;
 
 
+(* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let g h x = let xx = h x in (xx, (xx = (h x)));;
 
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile ((g f), b);;
+
+*)
 
 (* changed spans
-(6,6)-(6,21)
-(6,43)-(7,40)
-(7,44)-(7,50)
-(7,58)-(7,59)
-(7,60)-(7,61)
+(2,8)-(2,46)
+(2,15)-(2,46)
+(2,24)-(2,25)
+(2,43)-(2,44)
+(6,30)-(6,31)
+(6,33)-(6,34)
 *)
 
 (* type error slice
-(7,44)-(7,58)
+(2,4)-(2,51)
+(2,8)-(2,46)
+(2,15)-(2,46)
+(2,24)-(2,25)
+(2,24)-(2,27)
+(2,26)-(2,27)
+(2,32)-(2,34)
+(2,32)-(2,46)
+(2,37)-(2,46)
+(4,38)-(4,39)
+(4,38)-(4,41)
+(4,40)-(4,41)
+(4,56)-(4,62)
+(4,56)-(4,69)
+(4,64)-(4,65)
+(4,64)-(4,69)
+(4,67)-(4,69)
+(6,22)-(6,28)
+(6,22)-(6,34)
+(6,30)-(6,31)
+(6,30)-(6,34)
+(6,33)-(6,34)
 *)

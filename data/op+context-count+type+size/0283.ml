@@ -1,17 +1,50 @@
 
-let pipe fs = let f a x _ = x a in let base = 0 in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList n in num + (additivePersistence num));;
 
 
+(* fix
 
-let pipe fs = let f a x x = x in let base y = y in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in num + (additivePersistence num));;
+
+*)
 
 (* changed spans
-(2,25)-(2,26)
-(2,31)-(2,32)
-(2,47)-(2,48)
+(14,24)-(14,25)
 *)
 
 (* type error slice
-(2,52)-(2,76)
+(7,22)-(7,70)
+(7,61)-(7,68)
+(7,61)-(7,70)
+(7,69)-(7,70)
+(10,6)-(10,7)
+(10,6)-(10,12)
+(10,10)-(10,12)
+(14,16)-(14,23)
+(14,16)-(14,25)
+(14,24)-(14,25)
 *)

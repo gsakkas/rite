@@ -19,6 +19,7 @@ let rec eval (e,x,y) =
   | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) / 2.;;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -39,11 +40,16 @@ let rec eval (e,x,y) =
   | Cosine m -> cos (pi *. (eval (m, x, y)))
   | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.;;
 
+*)
 
 (* changed spans
-(19,61)-(19,62)
+(19,24)-(19,65)
 *)
 
 (* type error slice
+(14,3)-(19,65)
+(15,14)-(15,15)
+(19,24)-(19,57)
 (19,24)-(19,65)
+(19,63)-(19,65)
 *)

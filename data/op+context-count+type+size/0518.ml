@@ -1,27 +1,54 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
+
+let fixpoint (f,b) = wwhile (let k x = f x in ((b, (b != b)), b));;
+
+
+(* fix
+
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
 let fixpoint (f,b) =
-  wwhile
-    ((if (f b) = b then (true, (failwith "asd")) else failwith "asd"), b);;
+  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
 
-
-
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  wwhile
-    ((if (f b) = b
-      then fun b''  -> ((f b), false)
-      else (fun b''  -> ((f b), true))), b);;
-
+*)
 
 (* changed spans
-(6,26)-(6,31)
-(6,33)-(6,47)
-(6,55)-(6,69)
+(7,30)-(7,64)
+(7,40)-(7,43)
+(7,49)-(7,50)
+(7,49)-(7,59)
+(7,53)-(7,54)
+(7,63)-(7,64)
 *)
 
 (* type error slice
-(6,33)-(6,47)
+(2,4)-(5,17)
+(2,17)-(5,15)
+(3,3)-(5,15)
+(4,19)-(4,20)
+(4,19)-(4,22)
+(4,21)-(4,22)
+(4,53)-(4,61)
+(4,53)-(4,66)
+(4,62)-(4,63)
+(4,64)-(4,66)
+(5,3)-(5,11)
+(5,3)-(5,15)
+(5,12)-(5,13)
+(5,14)-(5,15)
+(7,22)-(7,28)
+(7,22)-(7,64)
+(7,30)-(7,64)
+(7,49)-(7,50)
+(7,49)-(7,59)
+(7,49)-(7,64)
+(7,53)-(7,59)
+(7,63)-(7,64)
 *)

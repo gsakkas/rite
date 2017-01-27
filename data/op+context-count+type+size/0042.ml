@@ -1,15 +1,39 @@
 
-let sqsum xs = let f a x = a * a in let base = [] in List.fold_left f base xs;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> [((h * i) / 10) + (mulByDigit i t); (h * i) mod 10];;
 
 
+(* fix
 
-let sqsum xs = let f a x = a * a in let base = 0 in List.fold_left f base xs;;
+let rec mulByDigit i l =
+  match List.rev l with | [] -> [] | h::t -> [(h * i) mod 10];;
 
+*)
 
 (* changed spans
-(2,48)-(2,50)
+(5,13)-(5,64)
+(5,16)-(5,21)
+(5,16)-(5,27)
+(5,16)-(5,46)
+(5,32)-(5,46)
+(5,50)-(5,63)
 *)
 
 (* type error slice
-(2,54)-(2,78)
+(2,4)-(5,66)
+(2,20)-(5,64)
+(2,22)-(5,64)
+(3,3)-(5,64)
+(3,9)-(3,17)
+(3,9)-(3,19)
+(3,18)-(3,19)
+(4,11)-(4,13)
+(5,16)-(5,21)
+(5,20)-(5,21)
+(5,32)-(5,42)
+(5,32)-(5,46)
+(5,43)-(5,44)
+(5,45)-(5,46)
 *)

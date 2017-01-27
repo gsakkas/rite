@@ -1,78 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Op1 e ->
-      (tan (pi *. (eval (e, x, y)))) -.
-        ((tan (pi *. (eval (e, x, y)))) / 2.0)
-  | Op2 (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (eval (e1, x, y)) -. (eval (e2, x, y));;
+let stringOfList f l = "[" ^ (sepConcat ^ (";" ^ ((List.map f l) ^ "]")));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Op1 e ->
-      (tan (pi *. (eval (e, x, y)))) -.
-        ((tan (pi *. (eval (e, x, y)))) /. 2.0)
-  | Op2 (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (eval (e1, x, y)) -. (eval (e2, x, y));;
-
+*)
 
 (* changed spans
-(29,41)-(29,42)
+(9,31)-(9,40)
+(9,48)-(9,49)
+(9,52)-(9,64)
+(9,66)-(9,67)
 *)
 
 (* type error slice
-(29,11)-(29,36)
-(29,11)-(29,46)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(4,11)-(4,13)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(6,30)-(6,31)
+(9,31)-(9,40)
+(9,31)-(9,71)
+(9,41)-(9,42)
+(9,44)-(9,47)
+(9,44)-(9,71)
+(9,48)-(9,49)
+(9,52)-(9,60)
+(9,52)-(9,64)
+(9,52)-(9,71)
+(9,61)-(9,62)
+(9,63)-(9,64)
+(9,66)-(9,67)
+(9,68)-(9,71)
 *)

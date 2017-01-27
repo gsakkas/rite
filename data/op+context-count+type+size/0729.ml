@@ -1,16 +1,85 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then f b' else b';;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,b) = a in a = (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
+(* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in ([], []) in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+*)
 
 (* changed spans
+(19,37)-(19,38)
+(19,37)-(19,58)
+(19,42)-(19,43)
+(19,47)-(19,48)
+(19,47)-(19,52)
+(19,47)-(19,58)
+(19,51)-(19,52)
+(19,57)-(19,58)
+(20,5)-(21,69)
 *)
 
 (* type error slice
-(2,38)-(2,41)
-(2,45)-(2,68)
-(2,56)-(2,60)
+(19,5)-(21,69)
+(19,11)-(19,58)
+(19,13)-(19,58)
+(19,17)-(19,58)
+(19,32)-(19,33)
+(19,37)-(19,58)
+(19,47)-(19,48)
+(19,47)-(19,52)
+(20,5)-(21,69)
+(20,18)-(20,26)
+(20,18)-(20,29)
+(20,18)-(20,34)
+(20,27)-(20,29)
+(20,32)-(20,34)
+(21,5)-(21,69)
+(21,16)-(21,18)
+(21,36)-(21,50)
+(21,36)-(21,62)
+(21,51)-(21,52)
+(21,53)-(21,57)
+(21,58)-(21,62)
 *)

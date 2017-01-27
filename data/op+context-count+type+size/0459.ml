@@ -1,74 +1,113 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec helper acc n lis =
-    match n with | 1 -> bigAdd lis acc | _ -> helper (n - 1) (bigAdd l lis) in
-  helper [0] i l;;
-
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a',b',c) ->
+      let a = abs (eval (a', x, y)) in
+      let b = abs (eval (b', x, y)) in
+      if (eval (c, x, y)) < 0.0
+      then ((log (a *. 100.0)) ** (sin (b *. 100.0))) -. 1.0
+      else (-1.0) *. (((log (b *. 100.0)) ** (sin (a *. 100.0))) -. 1.0);;
 
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+(* fix
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let b = abs_float (eval (b', x, y)) in
+      if (eval (c, x, y)) < 0.0
+      then ((log (a *. 100.0)) ** (sin (b *. 100.0))) -. 1.0
+      else (-1.0) *. (((log (b *. 100.0)) ** (sin (a *. 100.0))) -. 1.0);;
 
-let rec mulByDigit i l =
-  let rec helper i l acc =
-    match i with | 0 -> [0] | 1 -> l | _ -> helper (i - 1) l (bigAdd acc l) in
-  helper i l [0];;
-
+*)
 
 (* changed spans
-(27,22)-(27,27)
-(28,11)-(28,12)
-(28,25)-(28,39)
-(28,55)-(28,56)
-(28,72)-(28,75)
-(29,14)-(29,17)
+(33,15)-(33,18)
+(34,15)-(34,18)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(16,3)-(37,72)
+(19,27)-(19,31)
+(19,27)-(19,40)
+(19,33)-(19,34)
+(19,33)-(19,40)
+(19,36)-(19,37)
+(19,39)-(19,40)
+(33,15)-(33,18)
+(33,15)-(33,34)
+(33,20)-(33,24)
+(33,20)-(33,34)
+(33,26)-(33,28)
+(33,26)-(33,34)
+(33,30)-(33,31)
+(33,33)-(33,34)
+(34,15)-(34,18)
+(34,15)-(34,34)
+(34,20)-(34,24)
+(34,20)-(34,34)
+(34,26)-(34,28)
+(34,26)-(34,34)
+(34,30)-(34,31)
+(34,33)-(34,34)
+(37,13)-(37,17)
+(37,13)-(37,72)
+(37,14)-(37,17)
 *)

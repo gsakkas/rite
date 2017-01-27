@@ -1,18 +1,33 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else [];;
+let sqsum xs =
+  let f a x = x ** 2.0 in let base = 0 in List.fold_left f base xs;;
 
 
+(* fix
 
-let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
+let sqsum xs = let f a x = x * x in let base = 0 in List.fold_left f base xs;;
 
+*)
 
 (* changed spans
-(3,17)-(3,31)
-(3,37)-(3,44)
-(3,52)-(3,53)
+(3,15)-(3,23)
+(3,17)-(3,19)
+(3,20)-(3,23)
 *)
 
 (* type error slice
-(3,18)-(3,52)
+(3,3)-(3,67)
+(3,9)-(3,23)
+(3,11)-(3,23)
+(3,15)-(3,16)
+(3,15)-(3,23)
+(3,17)-(3,19)
+(3,20)-(3,23)
+(3,27)-(3,67)
+(3,38)-(3,39)
+(3,43)-(3,57)
+(3,43)-(3,67)
+(3,58)-(3,59)
+(3,60)-(3,64)
+(3,65)-(3,67)
 *)

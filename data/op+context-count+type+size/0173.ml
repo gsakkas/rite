@@ -1,33 +1,88 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec aux acc n =
+    if n <= 0 then acc else aux (List.append [x] acc) (n - 1) in
+  aux [] n;;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2;;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if l1 < l2
+  then ((List.append (clone 0 (l2 - l1)) l1), l2)
+  else (l1, (List.append (clone 0 (l1 - l2) l2)));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec aux acc n =
+    if n <= 0 then acc else aux (List.append [x] acc) (n - 1) in
+  aux [] n;;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if l1 < l2
+  then ((List.append (clone 0 (len2 - len1)) l1), l2)
+  else (l1, (List.append (clone 0 (len1 - len2)) l2));;
 
+*)
 
 (* changed spans
-(11,70)-(11,71)
+(11,32)-(11,34)
+(11,37)-(11,39)
+(11,42)-(11,44)
+(12,14)-(12,47)
+(12,27)-(12,47)
+(12,36)-(12,38)
+(12,41)-(12,43)
+(12,45)-(12,47)
 *)
 
 (* type error slice
-(11,59)-(11,71)
+(2,4)-(5,13)
+(2,15)-(5,11)
+(2,17)-(5,11)
+(3,3)-(5,11)
+(4,29)-(4,32)
+(4,29)-(4,61)
+(4,34)-(4,45)
+(4,34)-(4,53)
+(4,46)-(4,49)
+(4,47)-(4,48)
+(4,50)-(4,53)
+(4,56)-(4,61)
+(5,3)-(5,6)
+(5,3)-(5,11)
+(5,7)-(5,9)
+(5,10)-(5,11)
+(8,14)-(8,25)
+(8,14)-(8,28)
+(8,26)-(8,28)
+(9,14)-(9,25)
+(9,14)-(9,28)
+(9,26)-(9,28)
+(10,3)-(12,47)
+(11,10)-(11,21)
+(11,10)-(11,44)
+(11,10)-(11,49)
+(11,23)-(11,28)
+(11,23)-(11,39)
+(11,29)-(11,30)
+(11,32)-(11,34)
+(11,32)-(11,39)
+(11,37)-(11,39)
+(11,42)-(11,44)
+(11,47)-(11,49)
+(12,9)-(12,11)
+(12,9)-(12,47)
+(12,14)-(12,25)
+(12,14)-(12,47)
+(12,27)-(12,32)
+(12,27)-(12,47)
+(12,33)-(12,34)
+(12,36)-(12,38)
+(12,36)-(12,43)
+(12,41)-(12,43)
+(12,45)-(12,47)
 *)

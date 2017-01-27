@@ -1,36 +1,85 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (a, b)
-  else
-    if a < b
-    then (((clone 0 (b - a)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) / 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (l1, l2)
-  else
-    if a < b
-    then (((clone 0 (b - a)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
+
+*)
 
 (* changed spans
-(8,9)-(8,10)
-(8,12)-(8,13)
+(19,28)-(19,73)
+(20,25)-(20,61)
 *)
 
 (* type error slice
-(5,11)-(5,25)
+(14,3)-(24,27)
+(15,14)-(15,15)
+(17,28)-(17,32)
+(17,28)-(17,42)
+(17,34)-(17,36)
+(17,34)-(17,42)
+(17,38)-(17,39)
+(17,41)-(17,42)
+(19,28)-(19,65)
+(19,28)-(19,73)
+(19,71)-(19,73)
+(20,25)-(20,29)
+(20,25)-(20,40)
+(20,25)-(20,61)
+(20,31)-(20,34)
+(20,31)-(20,40)
+(20,36)-(20,37)
+(20,39)-(20,40)
+(20,46)-(20,50)
+(20,46)-(20,61)
+(20,52)-(20,55)
+(20,52)-(20,61)
+(20,57)-(20,58)
+(20,60)-(20,61)
 *)

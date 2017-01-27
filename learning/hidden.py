@@ -176,6 +176,7 @@ def build_model(features, labels, hidden,
     def test(data):
         acc = 0
         acc1 = 0
+        acc2 = 0
         for d in data:
             ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
             # print ys
@@ -185,10 +186,13 @@ def build_model(features, labels, hidden,
                 acc += 1
             if d['L-DidChange'][top_indices[1][0]] == 1:
                 acc1 += 1
+            if d['L-DidChange'][top_indices[1][0]] == 1 or d['L-DidChange'][top_indices[1][1]] == 1:
+                acc2 += 1
 
         acc = float(acc) / len(data)
         acc1 = float(acc1) / len(data)
-        print('final accuracy: %.3f / %.3f' % (acc1, acc))
+        acc2 = float(acc2) / len(data)
+        print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc))
 
         # #data = data.drop_duplicates()
         # print(data[data['L-NoChange'] == 1].shape, data[data['L-DidChange'] == 1].shape)

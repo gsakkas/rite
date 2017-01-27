@@ -31,6 +31,7 @@ let rec eval (e,x,y) =
       else eval (p, x, y);;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -63,6 +64,7 @@ let rec eval (e,x,y) =
       then eval (o, x, y)
       else eval (p, x, y);;
 
+*)
 
 (* changed spans
 (27,32)-(27,33)
@@ -70,4 +72,5 @@ let rec eval (e,x,y) =
 
 (* type error slice
 (27,13)-(27,33)
+(27,32)-(27,33)
 *)

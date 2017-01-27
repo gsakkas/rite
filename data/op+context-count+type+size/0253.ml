@@ -1,77 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (-1.0) * (eval (e3, x, y));;
+let pipe fs = let f a x _ = x a in let base = [] in List.fold_left f base fs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
+let pipe fs = let f a x x = x in let base y = y in List.fold_left f base fs;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (-1.0) *. (eval (e3, x, y));;
-
+*)
 
 (* changed spans
-(33,19)-(33,20)
+(2,25)-(2,32)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,47)-(2,49)
+(2,53)-(2,77)
 *)
 
 (* type error slice
-(33,13)-(33,17)
+(2,15)-(2,77)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,25)-(2,32)
+(2,29)-(2,30)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,36)-(2,77)
+(2,47)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
+(2,75)-(2,77)
 *)

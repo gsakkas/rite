@@ -1,83 +1,54 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      let max' a b = if a < b then b else a in
-      max' (0.0 - 1.0)
-        (min 1.0
-           ((2.71 **
-               (((sin (pi *. (eval (a, x, y)))) +.
-                   (cos (pi *. (eval (b, x, y)))))
-                  -. 1.0))
-              -. 1.0))
-  | SinLog (a',b',c) -> 1.0;;
+let fixpoint (f,b) = wwhile ((let k x = f x in (b, ((k b) != b))), b);;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let pi = 4.0 *. (atan 1.0);;
+let fixpoint (f,b) =
+  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      let max' a b = if a < b then b else a in
-      max' (0.0 -. 1.0)
-        (min 1.0
-           ((2.71 **
-               (((sin (pi *. (eval (a, x, y)))) +.
-                   (cos (pi *. (eval (b, x, y)))))
-                  -. 1.0))
-              -. 1.0))
-  | SinLog (a',b',c) -> 1.0;;
-
+*)
 
 (* changed spans
-(29,17)-(29,18)
+(7,41)-(7,44)
+(7,49)-(7,50)
+(7,54)-(7,55)
+(7,54)-(7,57)
+(7,56)-(7,57)
+(7,68)-(7,69)
 *)
 
 (* type error slice
-(29,13)-(29,22)
+(2,4)-(5,17)
+(2,17)-(5,15)
+(3,3)-(5,15)
+(4,19)-(4,20)
+(4,19)-(4,22)
+(4,21)-(4,22)
+(4,53)-(4,61)
+(4,53)-(4,66)
+(4,62)-(4,63)
+(4,64)-(4,66)
+(5,3)-(5,11)
+(5,3)-(5,15)
+(5,12)-(5,13)
+(5,14)-(5,15)
+(7,22)-(7,28)
+(7,22)-(7,69)
+(7,31)-(7,63)
+(7,31)-(7,69)
+(7,49)-(7,50)
+(7,49)-(7,63)
+(7,54)-(7,63)
+(7,68)-(7,69)
 *)

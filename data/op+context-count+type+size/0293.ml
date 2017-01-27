@@ -1,25 +1,78 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 
+(* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left g base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2.0
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
+
+*)
 
 (* changed spans
-(7,40)-(7,41)
+(28,10)-(28,23)
+(28,30)-(28,43)
+(30,12)-(30,13)
 *)
 
 (* type error slice
-(7,25)-(7,49)
+(28,10)-(30,13)
+(30,12)-(30,13)
 *)

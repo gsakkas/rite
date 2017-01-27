@@ -11,12 +11,14 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = a in
-    let base = 0 in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+    let f a x = match x with | (v1,v2) -> ((v1 :: a), (v2 :: a)) in
+    let base = ([], []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
+(* fix
 
 let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
@@ -31,21 +33,57 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match a with
-      | (list1,list2) ->
-          (match list1 with
-           | [] -> (match x with | (h1,h2) -> (((h1 + h2) :: list1), list2))) in
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (h1::t1,h2::t2) -> ((v1 :: h1 :: t1), (v2 :: h2 :: t2))) in
     let base = ([], []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
+*)
 
 (* changed spans
-(15,16)-(15,17)
-(16,21)-(16,24)
+(14,45)-(14,63)
+(14,51)-(14,52)
+(14,56)-(14,58)
+(14,62)-(14,63)
+(15,5)-(17,52)
+(15,17)-(15,19)
+(15,17)-(15,23)
+(18,15)-(18,18)
+(18,20)-(18,27)
+(18,20)-(18,33)
+(18,28)-(18,30)
+(18,31)-(18,33)
 *)
 
 (* type error slice
-(5,7)-(5,21)
+(14,5)-(17,52)
+(14,11)-(14,63)
+(14,13)-(14,63)
+(14,17)-(14,63)
+(14,23)-(14,24)
+(14,45)-(14,47)
+(14,45)-(14,52)
+(14,45)-(14,63)
+(14,51)-(14,52)
+(14,56)-(14,58)
+(14,56)-(14,63)
+(14,62)-(14,63)
+(15,5)-(17,52)
+(15,17)-(15,19)
+(15,17)-(15,23)
+(15,21)-(15,23)
+(16,5)-(17,52)
+(16,16)-(16,28)
+(16,16)-(16,34)
+(16,29)-(16,31)
+(16,32)-(16,34)
+(17,19)-(17,33)
+(17,19)-(17,45)
+(17,34)-(17,35)
+(17,36)-(17,40)
+(17,41)-(17,45)
 *)

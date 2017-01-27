@@ -1,0 +1,21 @@
+
+let rec digitsOfInt n = match n with | [] -> [] | _ -> if n < 0 then [];;
+
+
+(* fix
+
+let rec digitsOfInt n = match n with | _ when n < 0 -> [];;
+
+*)
+
+(* changed spans
+(2,25)-(2,72)
+(2,56)-(2,72)
+*)
+
+(* type error slice
+(2,25)-(2,72)
+(2,31)-(2,32)
+(2,56)-(2,72)
+(2,70)-(2,72)
+*)

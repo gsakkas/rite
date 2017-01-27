@@ -1,30 +1,29 @@
 
-let rec digitalRoot n =
-  if n <= 9
-  then n
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> (r_digitalRoot n) - 1);;
+let rec clone x n = if n <= 0 then [] else clone [x] (n - 1);;
 
 
+(* fix
 
-let rec digitalRoot n =
-  if n <= 9
-  then n
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> r_digitalRoot n (-1));;
+let rec clone x n = if n <= 0 then [] else clone x (n - 1);;
 
+*)
 
 (* changed spans
-(8,37)-(8,38)
-(8,53)-(8,54)
+(2,50)-(2,53)
 *)
 
 (* type error slice
-(7,30)-(7,68)
-(8,38)-(8,53)
-(8,38)-(8,58)
+(2,4)-(2,63)
+(2,15)-(2,60)
+(2,17)-(2,60)
+(2,21)-(2,60)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,49)
+(2,44)-(2,60)
+(2,50)-(2,53)
+(2,51)-(2,52)
+(2,55)-(2,60)
 *)

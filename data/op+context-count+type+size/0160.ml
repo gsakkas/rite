@@ -1,44 +1,61 @@
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listCompare l k =
-  if ((List.hd l) = []) && ((List.hd k) = [])
-  then true
-  else
-    if (List.hd l) = (List.hd k)
-    then listCompare (List.tl l) (List.tl k)
-    else false;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
-
-let palindrome w = listCompare (explode w) (listReverse (explode w));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Average (x',y') -> ((eval x' y) + (eval x y')) / 2;;
 
 
+(* fix
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
-
-let palindrome w = (explode w) = (listReverse (explode w));;
-
+*)
 
 (* changed spans
-(9,9)-(17,8)
-(20,20)-(20,31)
+(12,3)-(15,55)
+(13,14)-(13,15)
+(15,26)-(15,30)
+(15,26)-(15,35)
+(15,26)-(15,49)
+(15,26)-(15,55)
+(15,31)-(15,33)
+(15,34)-(15,35)
+(15,40)-(15,49)
+(15,54)-(15,55)
 *)
 
 (* type error slice
-(10,8)-(10,17)
+(11,4)-(15,57)
+(11,15)-(15,55)
+(12,3)-(15,55)
+(12,9)-(12,10)
+(13,14)-(13,15)
+(15,26)-(15,30)
+(15,26)-(15,35)
+(15,26)-(15,55)
+(15,31)-(15,33)
+(15,34)-(15,35)
+(15,40)-(15,44)
+(15,40)-(15,49)
+(15,45)-(15,46)
+(15,47)-(15,49)
 *)

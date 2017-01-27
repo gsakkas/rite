@@ -1,58 +1,134 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,b) = a in a = (t, b) in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt (Abs e);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (1, 2) with | 1 -> buildX | 2 -> buildY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 7) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 -> buildAverage (next, next)
+       | 4 -> buildTimes (next, next)
+       | 5 -> buildThresh (next, next, next, next)
+       | 6 -> buildSqrt next
+       | 7 -> buildGauss (next, next, next));;
 
 
+(* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,_) = a in ([], []) in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
 
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt (Abs e);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (1, 2) with | 1 -> VarX | 2 -> VarY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 7) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 -> buildAverage (next, next)
+       | 4 -> buildTimes (next, next)
+       | 5 -> buildThresh (next, next, next, next)
+       | 6 -> buildSqrt next
+       | 7 -> buildGauss (next, next, next));;
+
+*)
 
 (* changed spans
-(19,27)-(19,28)
-(19,37)-(19,40)
-(19,42)-(19,43)
-(19,45)-(19,46)
+(28,12)-(28,21)
+(28,17)-(28,21)
+(30,12)-(30,21)
+(30,17)-(30,21)
+(34,41)-(34,47)
+(34,55)-(34,61)
+(36,7)-(44,43)
+(40,29)-(40,33)
+(40,35)-(40,39)
+(41,27)-(41,31)
+(41,33)-(41,37)
 *)
 
 (* type error slice
-(9,17)-(9,31)
+(20,4)-(20,27)
+(20,15)-(20,25)
+(20,19)-(20,25)
+(20,24)-(20,25)
+(28,4)-(28,23)
+(28,12)-(28,21)
+(28,17)-(28,21)
+(32,4)-(44,47)
+(32,16)-(44,43)
+(33,3)-(44,43)
+(34,11)-(34,61)
+(34,17)-(34,21)
+(34,17)-(34,27)
+(34,23)-(34,24)
+(34,23)-(34,27)
+(34,26)-(34,27)
+(34,41)-(34,47)
+(36,7)-(44,43)
+(36,18)-(36,23)
+(36,18)-(36,41)
+(36,25)-(36,29)
+(36,25)-(36,41)
+(36,32)-(36,37)
+(36,32)-(36,41)
+(37,8)-(44,43)
+(38,15)-(38,24)
+(38,15)-(38,29)
+(38,25)-(38,29)
 *)

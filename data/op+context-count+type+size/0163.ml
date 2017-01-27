@@ -12,17 +12,13 @@ let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e' (e', x, y))))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+  | Sine e' -> sin (pi *. (eval e'))
+  | Cosine e' -> cos (pi *. (eval e'))
+  | Average (x',y') -> (x +. y) /. 2.0
+  | Times (x',y') -> x *. y;;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -37,24 +33,34 @@ let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
   | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (x',y') -> (x +. y) /. 2.0
+  | Times (x',y') -> x *. y;;
 
+*)
 
 (* changed spans
-(17,37)-(17,40)
-(17,49)-(17,50)
-(18,65)-(18,68)
+(15,33)-(15,35)
+(16,18)-(16,37)
+(16,35)-(16,37)
+(17,25)-(17,39)
+(18,22)-(18,23)
+(18,27)-(18,28)
 *)
 
 (* type error slice
-(14,3)-(23,26)
-(17,34)-(17,46)
+(13,4)-(18,30)
+(13,15)-(18,28)
+(14,3)-(18,28)
+(14,9)-(14,10)
+(15,16)-(15,19)
+(15,16)-(15,35)
+(15,21)-(15,35)
+(15,28)-(15,32)
+(15,28)-(15,35)
+(15,33)-(15,35)
+(17,25)-(17,26)
+(17,25)-(17,31)
+(17,30)-(17,31)
 *)

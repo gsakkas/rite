@@ -1,34 +1,38 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
-
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then List.append (clone 0 (b - a)) l1
-  else if b < a then List.append (clone 0 (a - b)) l2;;
+let sqsum xs =
+  let f a x = (a ^ 2) :: x in let base = 0 in List.fold_left f base xs;;
 
 
+(* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let sqsum xs =
+  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
-
+*)
 
 (* changed spans
+(3,16)-(3,17)
+(3,16)-(3,21)
+(3,16)-(3,27)
+(3,18)-(3,19)
+(3,20)-(3,21)
 *)
 
 (* type error slice
-(9,17)-(9,31)
+(3,3)-(3,71)
+(3,9)-(3,27)
+(3,11)-(3,27)
+(3,16)-(3,17)
+(3,16)-(3,21)
+(3,16)-(3,27)
+(3,18)-(3,19)
+(3,20)-(3,21)
+(3,26)-(3,27)
+(3,31)-(3,71)
+(3,42)-(3,43)
+(3,47)-(3,61)
+(3,47)-(3,71)
+(3,62)-(3,63)
+(3,64)-(3,68)
+(3,69)-(3,71)
 *)

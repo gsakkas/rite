@@ -1,22 +1,30 @@
 
-let sqsum xs =
-  let f a x = a * a in
-  let base = match xs with | hd::tl -> (f hd hd) + (f tl tl) in
-  List.fold_left f base xs;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else [];;
 
 
+(* fix
 
-let sqsum xs =
-  let f a x = a * a in
-  let base = match xs with | hd::tl -> (f hd hd) + (f (f hd hd) tl) in
-  List.fold_left f base xs;;
+let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
 
+*)
 
 (* changed spans
-(4,55)-(4,57)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,52)
 *)
 
 (* type error slice
-(3,3)-(5,27)
-(4,53)-(4,60)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,52)
+(3,31)-(3,37)
+(3,44)-(3,52)
 *)

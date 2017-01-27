@@ -1,38 +1,70 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
-  | false  -> ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (("^" exprToString y) ^ ")")))));;
 
 
+(* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))));;
 
+*)
 
 (* changed spans
-(11,17)-(11,19)
-(12,66)-(12,67)
-(12,69)-(12,70)
-(12,72)-(12,74)
+(24,44)-(24,47)
+(24,44)-(24,62)
+(24,48)-(24,60)
 *)
 
 (* type error slice
-(10,10)-(10,24)
+(12,3)-(24,69)
+(15,29)-(15,41)
+(15,29)-(15,43)
+(15,42)-(15,43)
+(24,44)-(24,47)
+(24,44)-(24,62)
+(24,48)-(24,60)
+(24,61)-(24,62)
 *)

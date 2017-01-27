@@ -1,46 +1,50 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, 0, 0)));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = if t = sep then sep else h in
+      let l = sl in List.fold_left f base l;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = if t = [] then sep else h in
+      let l = sl in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
-
+*)
 
 (* changed spans
-(17,36)-(17,37)
-(17,39)-(17,40)
+(7,25)-(7,28)
 *)
 
 (* type error slice
-(17,27)-(17,40)
+(3,3)-(8,44)
+(6,7)-(8,44)
+(6,13)-(6,24)
+(6,15)-(6,24)
+(6,19)-(6,20)
+(6,19)-(6,24)
+(6,21)-(6,22)
+(6,23)-(6,24)
+(7,7)-(8,44)
+(7,18)-(7,44)
+(7,21)-(7,22)
+(7,21)-(7,28)
+(7,25)-(7,28)
+(7,34)-(7,37)
+(7,43)-(7,44)
+(8,7)-(8,44)
+(8,15)-(8,17)
+(8,21)-(8,35)
+(8,21)-(8,44)
+(8,36)-(8,37)
+(8,38)-(8,42)
+(8,43)-(8,44)
 *)

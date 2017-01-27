@@ -1,28 +1,82 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let stringOfList f l = "[" ^ ((stringOfList (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        / 2
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 
+(* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
 
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2.0
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
+
+*)
 
 (* changed spans
+(28,10)-(28,23)
+(28,10)-(28,43)
+(28,10)-(29,45)
+(28,10)-(30,12)
+(30,11)-(30,12)
 *)
 
 (* type error slice
-(7,34)-(7,58)
+(16,3)-(31,74)
+(17,14)-(17,15)
+(28,10)-(29,45)
+(28,10)-(30,12)
 *)

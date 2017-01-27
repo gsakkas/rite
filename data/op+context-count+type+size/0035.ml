@@ -31,6 +31,7 @@ let rec exprToString e =
            ("*" ^ ((exprToString a) ^ (("*" (exprToString a)) ^ ")"))));;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -63,12 +64,21 @@ let rec exprToString e =
         ((exprToString a) ^
            ("*" ^ ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))));;
 
+*)
 
 (* changed spans
-(31,40)-(31,41)
-(31,61)-(31,62)
+(31,41)-(31,60)
+(31,46)-(31,60)
 *)
 
 (* type error slice
+(13,3)-(31,68)
+(16,29)-(16,41)
+(16,29)-(16,43)
+(16,42)-(16,43)
+(31,41)-(31,44)
 (31,41)-(31,60)
+(31,46)-(31,58)
+(31,46)-(31,60)
+(31,59)-(31,60)
 *)

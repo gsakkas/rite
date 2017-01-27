@@ -6,15 +6,32 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | SquareRoot of expr
+  | DivideByOne of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Average (x',y') -> ((eval (VarX, x', y)) + (eval (VarY, x, y'))) / 2;;
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | SquareRoot e' -> sqrt (1 /. (eval (e', x, y)))
+  | DivideByOne (e1,e2,e3) ->
+      sin
+        (((1.0 /. (eval (e1, x, y))) +. (1.0 /. (eval (e2, x, y)))) +.
+           (1.0 /. (eval (e3, x, y))));;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -23,20 +40,37 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | SquareRoot of expr
+  | DivideByOne of expr* expr* expr;;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
+let pi = 4.0 *. (atan 1.0);;
 
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | SquareRoot e' -> sqrt (1.0 /. (eval (e', x, y)))
+  | DivideByOne (e1,e2,e3) ->
+      sin
+        (((1.0 /. (eval (e1, x, y))) +. (1.0 /. (eval (e2, x, y)))) +.
+           (1.0 /. (eval (e3, x, y))));;
+
+*)
 
 (* changed spans
-(13,5)-(15,4)
-(15,25)-(15,60)
-(15,62)-(15,68)
-(15,70)-(15,73)
+(27,28)-(27,29)
 *)
 
 (* type error slice
-(12,3)-(15,73)
-(15,26)-(15,43)
-(15,49)-(15,66)
+(27,28)-(27,29)
+(27,28)-(27,48)
 *)

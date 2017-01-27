@@ -1,56 +1,81 @@
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
+  | Poly (a,b,c) ->
+      "(" ^
+        ((expr a) ^
+           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
+  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
 
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (0, 0) in
-    let base = (0, 0) in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+(* fix
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
+  | Poly (a,b,c) ->
+      "(" ^
+        ((expr a) ^
+           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
+  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([0], [0]) in
-    let base = ([0], [0]) in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
+(30,55)-(30,61)
+(30,55)-(30,66)
 *)
 
 (* type error slice
-(8,14)-(8,28)
+(14,3)-(30,66)
+(14,14)-(14,26)
+(15,3)-(30,66)
+(30,55)-(30,59)
+(30,55)-(30,61)
+(30,55)-(30,66)
+(30,60)-(30,61)
+(30,63)-(30,66)
 *)

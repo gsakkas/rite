@@ -1,30 +1,34 @@
 
-let rec assoc (d,k,l) =
-  let acc = l in
-  let rec helper acc (d,k,l) =
-    match acc with
-    | [] -> d
-    | h::t ->
-        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
-  helper (d, k, l) acc;;
+let rec clone x n = let i = 0 in if i < n then x :: ((clone x n) - 1) else [];;
 
 
+(* fix
 
-let rec assoc (d,k,l) =
-  let acc = l in
-  let rec helper acc (d,k,l) =
-    match acc with
-    | [] -> d
-    | h::t ->
-        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
-  helper acc (d, k, l);;
+let rec clone x n = let i = 0 in if i < n then x :: (clone x (n - 1)) else [];;
 
+*)
 
 (* changed spans
-(9,20)-(9,23)
+(2,55)-(2,69)
+(2,63)-(2,64)
 *)
 
 (* type error slice
-(8,55)-(8,72)
-(9,3)-(9,23)
+(2,4)-(2,80)
+(2,15)-(2,78)
+(2,17)-(2,78)
+(2,21)-(2,78)
+(2,29)-(2,30)
+(2,34)-(2,78)
+(2,37)-(2,38)
+(2,37)-(2,42)
+(2,41)-(2,42)
+(2,48)-(2,49)
+(2,48)-(2,69)
+(2,55)-(2,60)
+(2,55)-(2,64)
+(2,55)-(2,69)
+(2,61)-(2,62)
+(2,63)-(2,64)
+(2,76)-(2,78)
 *)

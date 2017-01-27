@@ -1,37 +1,37 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (a, b)
-  else
-    if a < b
-    then (((clone 0 (a - b)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let padZero l1 l2 =
-  let a = List.length l1 in
-  let b = List.length l2 in
-  if a = b
-  then (l1, l2)
-  else
-    if a < b
-    then (((clone 0 (b - a)) @ l1), l2)
-    else (l1, ((clone 0 (a - b)) @ l2));;
-
+*)
 
 (* changed spans
-(8,9)-(8,10)
-(8,12)-(8,13)
-(11,22)-(11,25)
+(7,21)-(7,49)
+(8,9)-(8,46)
 *)
 
 (* type error slice
-(5,11)-(5,25)
+(7,21)-(7,49)
+(7,24)-(7,32)
+(7,24)-(7,39)
+(7,33)-(7,34)
+(7,35)-(7,39)
+(7,45)-(7,49)
 *)

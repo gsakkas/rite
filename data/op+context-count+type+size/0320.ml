@@ -1,73 +1,61 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (match n with
+     | 0 -> [0]
+     | _ ->
+         if (n / 10) != 0
+         then (digitsOfInt (n / 10)) @ [n mod 10]
+         else [n mod 10]);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Poly (a,b,c) ->
-      (((eval (a, x, y)) *. (eval (a, x, y))) +.
-         ((eval (b, x, y)) *. (eval (c, x, y))))
-        /. 2
-  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) < 9
+  then 0
+  else 1 + (additivePersistence (sumList n));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (match n with
+     | 0 -> [0]
+     | _ ->
+         if (n / 10) != 0
+         then (digitsOfInt (n / 10)) @ [n mod 10]
+         else [n mod 10]);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Poly (a,b,c) ->
-      (((eval (a, x, y)) *. (eval (a, x, y))) +.
-         ((eval (b, x, y)) *. (eval (c, x, y))))
-        /. 2.0
-  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) < 9
+  then 0
+  else 1 + (additivePersistence (sumList (digitsOfInt n)));;
 
+*)
 
 (* changed spans
-(30,12)-(30,13)
+(18,42)-(18,43)
 *)
 
 (* type error slice
-(28,10)-(30,13)
+(10,16)-(10,27)
+(10,16)-(10,35)
+(10,29)-(10,35)
+(13,22)-(13,70)
+(13,61)-(13,68)
+(13,61)-(13,70)
+(13,69)-(13,70)
+(16,16)-(16,27)
+(16,16)-(16,29)
+(16,28)-(16,29)
+(18,34)-(18,41)
+(18,34)-(18,43)
+(18,42)-(18,43)
 *)

@@ -1,19 +1,89 @@
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = f 4 xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,[]) -> (new_carry, (new_carry :: digit))
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
+(* fix
 
-let sqsum xs =
-  let f a x = a * a in let base = f 8 xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,[]) -> (new_carry, [new_carry; digit])
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+*)
 
 (* changed spans
-(3,15)-(3,16)
-(3,21)-(3,26)
-(3,43)-(3,44)
+(30,37)-(30,55)
 *)
 
 (* type error slice
-(3,51)-(3,75)
+(27,11)-(31,70)
+(27,29)-(27,67)
+(28,11)-(31,70)
+(28,25)-(28,65)
+(30,37)-(30,46)
+(30,37)-(30,55)
+(30,50)-(30,55)
 *)

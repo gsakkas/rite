@@ -1,67 +1,79 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec clone x n =
+  match n with | 0 -> [] | _ -> if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+  let ll1 = List.length l1 in
+  let ll2 = List.length l2 in
+  (((clone 0 (ll2 - ll1)) @ l1), ((clone 0 (ll1 - ll2)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+  match l with | h::t -> if h == 0 then removeZero t else h :: t | [] -> [];;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match x with
-      | (w,y)::t -> ((w + y) / 10) :: a :: ((w + y) mod 10)
-      | _ -> a in
-    let base = [] in
-    let args = List.rev ((List.combine l1 l2) :: (0, 0)) in
+    let f (c,ds) (x1,x2) =
+      ((((c + x1) + x2) / 10), ((((c + x1) + x2) mod 10) :: ds)) in
+    let base = (0, 1) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec clone x n =
+  match n with | 0 -> [] | _ -> if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+  let ll1 = List.length l1 in
+  let ll2 = List.length l2 in
+  (((clone 0 (ll2 - ll1)) @ l1), ((clone 0 (ll1 - ll2)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+  match l with | h::t -> if h == 0 then removeZero t else h :: t | [] -> [];;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let f (c,ds) (x1,x2) =
+      ((((c + x1) + x2) / 10), ((((c + x1) + x2) mod 10) :: ds)) in
     let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
+*)
 
 (* changed spans
-(19,7)-(19,12)
-(20,14)-(20,17)
-(20,27)-(20,28)
-(20,36)-(20,43)
-(20,50)-(20,51)
-(21,7)-(21,15)
-(23,26)-(23,27)
-(23,47)-(23,57)
+(17,20)-(17,21)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(15,5)-(19,52)
+(15,12)-(16,63)
+(15,19)-(16,63)
+(16,11)-(16,12)
+(16,11)-(16,17)
+(16,11)-(16,23)
+(16,11)-(16,29)
+(16,11)-(16,63)
+(16,15)-(16,17)
+(16,21)-(16,23)
+(16,36)-(16,56)
+(16,36)-(16,63)
+(16,61)-(16,63)
+(17,5)-(19,52)
+(17,17)-(17,18)
+(17,17)-(17,21)
+(17,20)-(17,21)
+(18,5)-(19,52)
+(18,16)-(18,28)
+(18,16)-(18,34)
+(18,29)-(18,31)
+(18,32)-(18,34)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
+(19,36)-(19,40)
+(19,41)-(19,45)
 *)

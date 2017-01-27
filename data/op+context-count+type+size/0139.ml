@@ -1,61 +1,39 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (lh1::lt1,lh2::lt2) ->
-          (match x with
-           | (h1,h2) ->
-               (((((h1 + h2) + lh1) / 10) :: lt1),
-                 ((((h1 + h2) + lh1) mod 10) :: lt2))
-           | ([],[]) ->
-               (match x with
-                | (h1,h2) -> ([(h1 + h2) / 10], [(h1 + h2) mod 10]))) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | _ -> (digitsOfInt (n / 10)) :: (n mod 10));;
 
 
+(* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) @ [n mod 10]);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (v1,v2) -> ([v1], [v2]) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(15,13)-(17,17)
-(18,15)-(23,22)
-(23,23)-(23,25)
-(23,32)-(23,46)
-(23,50)-(23,66)
-(23,68)-(23,70)
+(5,9)-(5,64)
+(5,30)-(5,49)
+(5,30)-(5,64)
+(5,56)-(5,57)
+(5,56)-(5,64)
+(5,62)-(5,64)
 *)
 
 (* type error slice
-(5,7)-(5,21)
+(2,4)-(5,68)
+(2,21)-(5,64)
+(3,3)-(5,64)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(4,8)-(4,10)
+(5,30)-(5,41)
+(5,30)-(5,49)
+(5,30)-(5,64)
+(5,43)-(5,49)
+(5,56)-(5,64)
 *)

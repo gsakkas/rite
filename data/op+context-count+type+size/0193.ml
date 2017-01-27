@@ -1,22 +1,34 @@
 
-let pipe fs =
-  let f a x = match x with | a -> (fun x  -> x) | h::t -> h in
-  let base = [] in List.fold_left f base fs;;
+let rec clone x n = if n > 0 then x :: (clone (x (n - 1))) else [];;
 
 
+(* fix
 
-let pipe fs =
-  let f a x i = x (a i) in let base y = y in List.fold_left f base fs;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
+*)
 
 (* changed spans
-(3,15)-(3,20)
-(3,23)-(3,34)
-(3,36)-(3,47)
-(3,49)-(3,60)
-(4,14)-(4,16)
+(2,24)-(2,29)
+(2,28)-(2,29)
+(2,35)-(2,56)
+(2,41)-(2,56)
+(2,48)-(2,56)
+(2,65)-(2,67)
 *)
 
 (* type error slice
-(4,20)-(4,44)
+(2,4)-(2,69)
+(2,15)-(2,67)
+(2,17)-(2,67)
+(2,21)-(2,67)
+(2,24)-(2,25)
+(2,24)-(2,29)
+(2,28)-(2,29)
+(2,35)-(2,56)
+(2,41)-(2,46)
+(2,41)-(2,56)
+(2,48)-(2,49)
+(2,48)-(2,56)
+(2,51)-(2,56)
 *)

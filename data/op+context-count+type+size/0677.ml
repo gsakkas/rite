@@ -1,86 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let depth = depth - 1 in
-    match rand (0, 4) with
-    | 0 -> buildSine (build (rand, depth))
-    | 1 -> buildCosine (build (rand, depth))
-    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
-    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
-    | 4 ->
-        buildThresh
-          ((build (rand, depth)), (build (rand, depth)),
-            (build (rand, depth)))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let rec clone x n =
+  let acc = [] in if x = 0 then acc else acc :: ((clone x n) - 1);;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let depth = depth - 1 in
-    match rand (0, 4) with
-    | 0 -> buildSine (build (rand, depth))
-    | 1 -> buildCosine (build (rand, depth))
-    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
-    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
-    | 4 ->
-        buildThresh
-          ((build (rand, depth)), (build (rand, depth)),
-            (build (rand, depth)), (build (rand, depth)))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
-
+*)
 
 (* changed spans
+(3,22)-(3,23)
+(3,22)-(3,27)
+(3,26)-(3,27)
+(3,33)-(3,36)
+(3,42)-(3,45)
+(3,42)-(3,65)
+(3,51)-(3,60)
+(3,51)-(3,65)
+(3,64)-(3,65)
 *)
 
 (* type error slice
-(35,9)-(37,32)
+(2,4)-(3,68)
+(2,15)-(3,65)
+(2,17)-(3,65)
+(3,3)-(3,65)
+(3,13)-(3,15)
+(3,19)-(3,65)
+(3,22)-(3,23)
+(3,22)-(3,27)
+(3,26)-(3,27)
+(3,33)-(3,36)
+(3,42)-(3,45)
+(3,42)-(3,65)
+(3,51)-(3,56)
+(3,51)-(3,60)
+(3,51)-(3,65)
+(3,57)-(3,58)
+(3,59)-(3,60)
 *)

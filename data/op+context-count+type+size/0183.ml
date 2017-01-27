@@ -7,7 +7,8 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr;;
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -15,17 +16,24 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
   | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (abs (eval (e', x, y)));;
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) / 2.0)
+  | Op2 (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (eval (e1, x, y)) -. (eval (e2, x, y));;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -35,7 +43,8 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr;;
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -43,23 +52,33 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
   | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (cos (pi *. (eval (e', x, y))));;
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) /. 2.0)
+  | Op2 (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (eval (e1, x, y)) -. (eval (e2, x, y));;
 
+*)
 
 (* changed spans
-(26,28)-(26,31)
+(29,11)-(29,46)
 *)
 
 (* type error slice
-(18,28)-(18,42)
-(26,28)-(26,47)
-(26,33)-(26,47)
+(28,8)-(29,46)
+(29,11)-(29,14)
+(29,11)-(29,36)
+(29,11)-(29,46)
+(29,16)-(29,36)
+(29,43)-(29,46)
 *)

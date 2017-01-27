@@ -1,40 +1,89 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let rand = makeRand (10, 39);;
-
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
-
-let x = rand (1, 4);;
-
-let fixpoint (f,b) = wwhile ((let g x = (f x) != x in (y, (y != x))), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ [l2])
+  else
+    if (List.length l1) < (List.length l2)
+    then ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
 
 
+(* fix
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
+*)
 
 (* changed spans
-(2,5)-(9,4)
-(14,5)-(16,4)
-(16,41)-(16,42)
-(16,45)-(16,51)
-(16,56)-(16,57)
-(16,60)-(16,61)
-(16,65)-(16,66)
+(10,3)-(14,72)
+(11,8)-(11,69)
+(11,65)-(11,69)
+(13,5)-(14,72)
+(13,9)-(13,20)
+(13,9)-(13,23)
+(13,9)-(13,42)
+(13,21)-(13,23)
+(13,28)-(13,39)
+(13,28)-(13,42)
+(13,40)-(13,42)
+(14,12)-(14,72)
+(14,61)-(14,65)
+(14,70)-(14,72)
 *)
 
 (* type error slice
+(2,4)-(7,26)
+(2,15)-(7,23)
+(2,17)-(7,23)
+(3,3)-(7,23)
+(6,24)-(6,35)
+(6,24)-(6,46)
+(6,36)-(6,38)
+(6,40)-(6,46)
+(7,3)-(7,14)
+(7,3)-(7,23)
+(7,15)-(7,16)
+(7,18)-(7,21)
+(7,18)-(7,23)
+(7,22)-(7,23)
+(10,7)-(10,18)
+(10,7)-(10,21)
+(10,19)-(10,21)
+(10,26)-(10,37)
+(10,26)-(10,40)
+(10,38)-(10,40)
+(11,16)-(11,21)
+(11,16)-(11,59)
+(11,16)-(11,69)
+(11,22)-(11,23)
+(11,26)-(11,59)
+(11,63)-(11,64)
+(11,65)-(11,69)
+(11,66)-(11,68)
+(13,5)-(14,72)
+(14,12)-(14,17)
+(14,12)-(14,55)
+(14,12)-(14,65)
+(14,12)-(14,72)
+(14,18)-(14,19)
+(14,22)-(14,55)
+(14,59)-(14,60)
+(14,61)-(14,65)
+(14,62)-(14,64)
 *)

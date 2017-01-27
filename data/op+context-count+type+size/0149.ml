@@ -8,44 +8,21 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rng = rand (0, 9) in
-  if depth >= 0
-  then match rand 0 2 with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (match rng with
-     | 0 -> build (rand, (depth - 1))
-     | 1 -> build (rand, (depth - 1))
-     | 2 -> buildSine (build (rand, (depth - 1)))
-     | 3 -> buildCosine (build (rand, (depth - 1)))
-     | 4 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 6 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7 -> buildExpwn (build (rand, (depth - 1)))
-     | 8 -> buildLogTen (build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval e' x y))
+  | Cosine e' -> cos (pi *. (eval e' x y))
+  | Average (e1,e2) -> ((eval e1 x y) +. (eval e2 x y)) / 2
+  | Times (e1,e2) -> (eval e1 x y) *. (eval e2 x y)
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval e1 x y) < (eval e2 x y) then eval e3 x y else eval e4 x y;;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -54,55 +31,71 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Expwn of expr
-  | Tan of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
-let buildExpwn e = Expwn e;;
-
-let buildSine e = Sine e;;
-
-let buildTan e = Tan e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rng = rand (0, 9) in
-  if depth >= 0
-  then match rand (0, 2) with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (match rng with
-     | 0 -> build (rand, (depth - 1))
-     | 1 -> build (rand, (depth - 1))
-     | 2 -> buildSine (build (rand, (depth - 1)))
-     | 3 -> buildCosine (build (rand, (depth - 1)))
-     | 4 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 6 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7 -> buildExpwn (build (rand, (depth - 1)))
-     | 8 -> buildTan (build (rand, (depth - 1))));;
-
+*)
 
 (* changed spans
-(46,13)-(46,24)
+(14,3)-(22,73)
+(17,28)-(17,32)
+(17,28)-(17,39)
+(17,33)-(17,35)
+(17,36)-(17,37)
+(17,38)-(17,39)
+(18,18)-(18,21)
+(18,23)-(18,25)
+(18,23)-(18,41)
+(18,30)-(18,41)
+(18,35)-(18,37)
+(19,26)-(19,37)
+(19,26)-(19,60)
+(19,31)-(19,33)
+(19,43)-(19,54)
+(19,48)-(19,50)
+(19,59)-(19,60)
+(20,23)-(20,34)
+(20,28)-(20,30)
+(20,40)-(20,51)
+(20,45)-(20,47)
+(22,11)-(22,22)
+(22,16)-(22,18)
+(22,27)-(22,38)
+(22,32)-(22,34)
+(22,45)-(22,56)
+(22,50)-(22,52)
+(22,62)-(22,73)
+(22,67)-(22,69)
 *)
 
 (* type error slice
+(13,4)-(22,75)
+(13,15)-(22,73)
+(14,3)-(22,73)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,16)-(17,19)
+(17,16)-(17,39)
+(17,21)-(17,39)
+(17,28)-(17,32)
+(17,28)-(17,39)
+(17,33)-(17,35)
+(17,36)-(17,37)
+(17,38)-(17,39)
+(19,26)-(19,54)
+(19,26)-(19,60)
 *)

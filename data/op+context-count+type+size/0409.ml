@@ -1,55 +1,53 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (a + x) mod 10 in
-    let base = 0 in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    ((fun (f,b)  -> if (f b) = b then ((f b), false) else ((f b), true)), b);;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let fixpoint (f,b) =
+  wwhile ((fun a  -> if b = (f b) then (b, false) else ((f b), true)), b);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (add1,add2) ->
-          let new_carry = ((carry + add1) + add2) / 10 in
-          let digit = ((carry + add1) + add2) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(15,17)-(15,18)
-(15,20)-(15,21)
+(7,7)-(7,71)
+(7,21)-(7,71)
+(7,25)-(7,28)
+(7,25)-(7,33)
+(7,32)-(7,33)
+(7,41)-(7,42)
+(7,41)-(7,44)
 *)
 
 (* type error slice
-(5,12)-(5,26)
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,19)-(3,20)
+(3,60)-(3,66)
+(3,60)-(3,73)
+(3,68)-(3,69)
+(3,68)-(3,73)
+(3,71)-(3,73)
+(6,3)-(6,9)
+(6,3)-(7,76)
+(7,7)-(7,71)
+(7,7)-(7,76)
+(7,21)-(7,71)
+(7,25)-(7,26)
+(7,25)-(7,28)
+(7,27)-(7,28)
+(7,41)-(7,42)
+(7,41)-(7,44)
+(7,41)-(7,52)
+(7,43)-(7,44)
+(7,47)-(7,52)
+(7,75)-(7,76)
 *)

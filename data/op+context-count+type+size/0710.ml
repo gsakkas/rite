@@ -1,73 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Log of expr
-  | SumOfSquares of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0
-  | SumOfSquares (e1,e2,e3) ->
-      (((eval (e1, x, y)) ** 2.0) + ((eval (e2, x, y)) ** 2.0)) +
-        ((eval (e3, x, y)) ** 2.0);;
+let stringOfList f l = sepConcat (" " (List.map f l));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Log of expr
-  | SumOfSquares of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
+let stringOfList f l = sepConcat "," (List.map f l);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0
-  | SumOfSquares (e1,e2,e3) ->
-      (((eval (e1, x, y)) ** 2.0) +. ((eval (e2, x, y)) ** 2.0)) +.
-        ((eval (e3, x, y)) ** 2.0);;
-
+*)
 
 (* changed spans
-(29,35)-(29,36)
-(29,65)-(29,66)
+(9,24)-(9,52)
+(9,35)-(9,38)
+(9,35)-(9,52)
 *)
 
 (* type error slice
-(29,10)-(29,33)
-(29,10)-(29,62)
+(9,35)-(9,38)
+(9,35)-(9,52)
+(9,40)-(9,48)
+(9,40)-(9,52)
+(9,49)-(9,50)
+(9,51)-(9,52)
 *)

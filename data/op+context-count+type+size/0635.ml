@@ -1,140 +1,109 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let palindrome w = failwith "TBD";;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
+let palindrome w =
+  match explode w with
+  | [] -> true
+  | head::[] -> true
+  | head::tail ->
+      if head = (List.hd (listReverse tail))
+      then palindrome (List.tl (listReverse tail))
+      else false;;
+
+let palindrome w =
+  match explode w with
+  | [] -> true
+  | hd::[] -> true
+  | hd::tl ->
+      (match listReverse tl with
+       | hdr::tlr -> if hdr = hd then palindrome tlr else false);;
+
+
+(* fix
+
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
+
+let palindrome w =
+  let rec palHelper xs =
+    match xs with
+    | [] -> true
     | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+        (match listReverse tl with
+         | [] -> true
+         | hdr::tlr -> if hdr = hd then palHelper tlr else false) in
+  palHelper (explode w);;
 
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (templ1,l2digit) ->
-        let multres = mulByDigit l2digit templ1 in bigAdd [a; 0] multres in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
-
-
-
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
-
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (l2digit,templ1) ->
-        let (l2digit2,templ12) = a in
-        let multres = mulByDigit l2digit templ1 in
-        (0, (bigAdd (templ12 @ [0]) multres)) in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
-
+*)
 
 (* changed spans
-(53,8)-(53,15)
-(54,60)-(54,62)
-(60,37)-(60,39)
-(60,51)-(60,53)
+(2,16)-(2,34)
+(2,20)-(2,28)
+(2,20)-(2,34)
+(2,29)-(2,34)
+(16,3)-(22,17)
+(16,9)-(16,16)
+(16,9)-(16,18)
+(16,17)-(16,18)
+(17,11)-(17,15)
+(18,17)-(18,21)
+(20,10)-(20,14)
+(20,18)-(20,25)
+(20,18)-(20,43)
+(20,27)-(20,38)
+(20,27)-(20,43)
+(20,39)-(20,43)
+(21,12)-(21,22)
+(21,12)-(21,49)
+(21,24)-(21,31)
+(21,24)-(21,49)
+(21,33)-(21,44)
+(21,45)-(21,49)
+(22,12)-(22,17)
+(24,16)-(30,64)
 *)
 
 (* type error slice
-(10,10)-(10,24)
+(7,4)-(10,9)
+(7,13)-(10,7)
+(8,3)-(10,7)
+(9,14)-(9,27)
+(9,14)-(9,29)
+(9,28)-(9,29)
+(9,56)-(9,58)
+(9,56)-(9,65)
+(9,60)-(9,65)
+(10,3)-(10,5)
+(10,3)-(10,7)
+(10,6)-(10,7)
+(15,4)-(22,19)
+(15,16)-(22,17)
+(16,3)-(22,17)
+(16,9)-(16,16)
+(16,9)-(16,18)
+(16,17)-(16,18)
+(17,11)-(17,15)
+(29,8)-(30,64)
+(30,39)-(30,49)
+(30,39)-(30,53)
+(30,50)-(30,53)
 *)

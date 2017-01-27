@@ -1,22 +1,55 @@
 
-let rec clone x n =
-  let acc = [] in if n = 0 then acc else (clone x) :: ((acc n) - 1);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w = (listReverse (explode w)) == w;;
 
 
+(* fix
 
-let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w = (listReverse (explode w)) == (explode w);;
+
+*)
 
 (* changed spans
-(3,7)-(3,10)
-(3,24)-(3,27)
-(3,33)-(3,36)
-(3,42)-(3,43)
-(3,50)-(3,60)
-(3,62)-(3,68)
+(10,49)-(10,50)
 *)
 
 (* type error slice
-(3,3)-(3,67)
-(3,57)-(3,62)
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(4,14)-(4,27)
+(4,14)-(4,29)
+(4,28)-(4,29)
+(4,56)-(4,58)
+(4,56)-(4,65)
+(4,60)-(4,65)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(5,6)-(5,7)
+(8,3)-(8,58)
+(8,38)-(8,49)
+(8,38)-(8,51)
+(8,50)-(8,51)
+(10,21)-(10,32)
+(10,21)-(10,43)
+(10,21)-(10,50)
+(10,34)-(10,41)
+(10,34)-(10,43)
+(10,42)-(10,43)
+(10,49)-(10,50)
 *)

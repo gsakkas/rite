@@ -1,18 +1,59 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else [digitsOfInt (n / 10); n mod 10];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l2), l2)
+  else (l1, ((clone 0 l) :: l2));;
 
 
+(* fix
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l2), l2)
+  else (l1, ((clone 0 l) @ l2));;
+
+*)
 
 (* changed spans
-(3,25)-(3,26)
-(3,46)-(3,47)
+(8,15)-(8,20)
+(8,15)-(8,31)
 *)
 
 (* type error slice
-(3,26)-(3,45)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,64)
+(5,3)-(8,31)
+(5,12)-(5,23)
+(5,12)-(5,26)
+(5,12)-(5,45)
+(5,24)-(5,26)
+(5,31)-(5,42)
+(5,31)-(5,45)
+(5,43)-(5,45)
+(6,3)-(8,31)
+(7,11)-(7,16)
+(7,11)-(7,28)
+(7,11)-(7,35)
+(7,11)-(7,40)
+(7,17)-(7,18)
+(7,21)-(7,28)
+(7,31)-(7,32)
+(7,33)-(7,35)
+(7,38)-(7,40)
+(8,9)-(8,11)
+(8,9)-(8,31)
+(8,15)-(8,20)
+(8,15)-(8,24)
+(8,15)-(8,31)
+(8,21)-(8,22)
+(8,23)-(8,24)
+(8,29)-(8,31)
 *)

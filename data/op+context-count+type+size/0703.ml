@@ -1,52 +1,31 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) * (eval (e2, x, y))) / 2;;
+let pipe fs = let f a x = a x in let base a = a in List.fold_left f base fs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs = let f a x = a in let base a = a in List.fold_left f base fs;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y))) /. 2.0;;
-
+*)
 
 (* changed spans
-(19,43)-(19,44)
-(19,64)-(19,67)
+(2,27)-(2,30)
+(2,29)-(2,30)
 *)
 
 (* type error slice
-(17,28)-(17,42)
-(19,26)-(19,40)
-(19,26)-(19,60)
+(2,15)-(2,76)
+(2,21)-(2,30)
+(2,23)-(2,30)
+(2,27)-(2,28)
+(2,27)-(2,30)
+(2,29)-(2,30)
+(2,34)-(2,76)
+(2,43)-(2,48)
+(2,47)-(2,48)
+(2,52)-(2,66)
+(2,52)-(2,76)
+(2,67)-(2,68)
+(2,69)-(2,73)
+(2,74)-(2,76)
 *)

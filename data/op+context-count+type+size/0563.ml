@@ -1,28 +1,89 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let fixpoint (f,b) = wwhile ((let k x = (f x) = x in f b), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ [l2])
+  else
+    if (List.length l1) < (List.length l2)
+    then l2 :: ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]);;
 
 
+(* fix
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
+*)
 
 (* changed spans
-(7,35)-(7,36)
-(7,41)-(7,46)
-(7,54)-(7,55)
+(10,3)-(14,71)
+(11,8)-(11,69)
+(11,65)-(11,69)
+(13,5)-(14,71)
+(13,9)-(13,20)
+(13,9)-(13,23)
+(13,9)-(13,42)
+(13,21)-(13,23)
+(13,28)-(13,39)
+(13,28)-(13,42)
+(13,40)-(13,42)
+(14,10)-(14,12)
+(14,10)-(14,71)
+(14,67)-(14,71)
 *)
 
 (* type error slice
-(7,22)-(7,61)
+(2,4)-(7,26)
+(2,15)-(7,23)
+(2,17)-(7,23)
+(3,3)-(7,23)
+(6,24)-(6,35)
+(6,24)-(6,46)
+(6,36)-(6,38)
+(6,40)-(6,46)
+(7,3)-(7,14)
+(7,3)-(7,23)
+(7,15)-(7,16)
+(7,18)-(7,21)
+(7,18)-(7,23)
+(7,22)-(7,23)
+(10,7)-(10,18)
+(10,7)-(10,21)
+(10,19)-(10,21)
+(10,26)-(10,37)
+(10,26)-(10,40)
+(10,38)-(10,40)
+(11,16)-(11,21)
+(11,16)-(11,59)
+(11,16)-(11,69)
+(11,22)-(11,23)
+(11,26)-(11,59)
+(11,63)-(11,64)
+(11,65)-(11,69)
+(11,66)-(11,68)
+(13,5)-(14,71)
+(14,10)-(14,71)
+(14,18)-(14,23)
+(14,18)-(14,61)
+(14,18)-(14,71)
+(14,24)-(14,25)
+(14,28)-(14,61)
+(14,65)-(14,66)
+(14,67)-(14,71)
+(14,68)-(14,70)
 *)

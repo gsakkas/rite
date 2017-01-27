@@ -1,63 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi * (eval (ex, x, y)))
-  | Cosine ex -> cos (pi * (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y);;
+let pipe fs =
+  let f a x f x f a = f a x in let base y z = z in List.fold_left f base fs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs =
+  let f a x z = x (a z) in let base z = z in List.fold_left f base fs;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y);;
-
+*)
 
 (* changed spans
-(17,24)-(17,25)
-(18,26)-(18,27)
-(19,46)-(19,47)
-(19,68)-(19,71)
-(20,43)-(20,44)
+(3,13)-(3,28)
+(3,15)-(3,28)
+(3,17)-(3,28)
+(3,19)-(3,28)
+(3,23)-(3,24)
+(3,23)-(3,28)
+(3,25)-(3,26)
+(3,27)-(3,28)
+(3,32)-(3,76)
+(3,41)-(3,48)
 *)
 
 (* type error slice
-(17,21)-(17,41)
+(3,3)-(3,76)
+(3,9)-(3,28)
+(3,11)-(3,28)
+(3,13)-(3,28)
+(3,15)-(3,28)
+(3,17)-(3,28)
+(3,19)-(3,28)
+(3,23)-(3,24)
+(3,23)-(3,28)
+(3,25)-(3,26)
+(3,27)-(3,28)
+(3,32)-(3,76)
+(3,41)-(3,48)
+(3,43)-(3,48)
+(3,47)-(3,48)
+(3,52)-(3,66)
+(3,52)-(3,76)
+(3,67)-(3,68)
+(3,69)-(3,73)
+(3,74)-(3,76)
 *)

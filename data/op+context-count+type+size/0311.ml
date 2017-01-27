@@ -1,48 +1,31 @@
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let counter = 0;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
+  if n < 0
+  then []
   else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     counter = ((additivePersistence num) + 1));;
+    if n = 0 then [0] else if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10];;
 
 
+(* fix
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+  if n < 0
+  then []
+  else if n = 0 then [n] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     1 + (additivePersistence num));;
-
+*)
 
 (* changed spans
-(5,5)-(7,4)
-(18,6)-(18,17)
-(18,43)-(18,46)
-(18,47)-(18,48)
+(6,20)-(6,21)
+(6,28)-(6,77)
+(6,31)-(6,36)
+(6,35)-(6,36)
 *)
 
 (* type error slice
-(3,27)-(3,61)
+(6,28)-(6,77)
+(6,43)-(6,77)
+(6,65)-(6,66)
+(6,67)-(6,77)
+(6,68)-(6,76)
 *)

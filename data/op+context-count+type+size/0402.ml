@@ -1,56 +1,41 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if not c' then b' else wwhile (f, b');;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (a + x) mod 10 in
-    let base = 0 in
-    let args = 1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile (((f b) != b), b);;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let fixpoint (f,b) =
+  wwhile ((fun f'  -> if (f b) = b then (b, true) else (b, false)), b);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (add1,add2) ->
-          let new_carry = ((carry + add1) + add2) / 10 in
-          let digit = ((carry + add1) + add2) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(15,17)-(15,18)
-(15,20)-(15,21)
-(17,16)-(17,17)
+(3,24)-(3,60)
+(3,27)-(3,30)
+(3,27)-(3,33)
+(5,32)-(5,35)
+(5,32)-(5,41)
+(5,44)-(5,45)
 *)
 
 (* type error slice
-(5,12)-(5,26)
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,19)-(3,20)
+(3,47)-(3,53)
+(3,47)-(3,60)
+(3,55)-(3,56)
+(3,55)-(3,60)
+(3,58)-(3,60)
+(5,22)-(5,28)
+(5,22)-(5,45)
+(5,32)-(5,41)
+(5,32)-(5,45)
+(5,44)-(5,45)
 *)

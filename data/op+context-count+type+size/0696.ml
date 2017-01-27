@@ -1,67 +1,41 @@
 
-let palindrome w = failwith "TBD";;
-
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
-
-let palindrome w =
-  match explode w with
-  | [] -> true
-  | head::[] -> true
-  | head::tail ->
-      if head = (List.hd (listReverse tail))
-      then palindrome (List.tl (listReverse tail))
-      else false;;
-
-let palindrome w =
-  let rec palHelper xs =
-    match xs with
-    | [] -> true
-    | hd::tl ->
-        (match listReverse tl with
-         | [] -> true
-         | hdr::tlr -> if hdr = hd then palindrome tlr else false) in
-  palHelper (explode w);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = "" in List.fold_left f base l;;
 
 
+(* fix
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = t in List.fold_left f base l;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
-
-let palindrome w =
-  let rec palHelper xs =
-    match xs with
-    | [] -> true
-    | hd::tl ->
-        (match listReverse tl with
-         | [] -> true
-         | hdr::tlr -> if hdr = hd then palHelper tlr else false) in
-  palHelper (explode w);;
-
+*)
 
 (* changed spans
-(2,5)-(4,4)
-(16,3)-(22,19)
-(24,5)-(25,6)
-(31,41)-(31,51)
+(7,45)-(7,47)
 *)
 
 (* type error slice
-(2,20)-(2,34)
+(6,7)-(7,74)
+(6,13)-(6,24)
+(6,15)-(6,24)
+(6,19)-(6,20)
+(6,19)-(6,24)
+(6,21)-(6,22)
+(6,23)-(6,24)
+(7,7)-(7,74)
+(7,37)-(7,74)
+(7,45)-(7,47)
+(7,51)-(7,65)
+(7,51)-(7,74)
+(7,66)-(7,67)
+(7,68)-(7,72)
+(7,73)-(7,74)
 *)

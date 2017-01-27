@@ -1,66 +1,30 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (w,y)::t -> ((w + y) / 10) :: ((w + y) mod 10) :: t
-      | _ -> a in
-    let base = [] in
-    let args = List.rev ((List.combine l1 l2) @ (0, 0)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x = 3 + a in let base y = y in List.fold_left f base fs;;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let pipe fs = let f a x = a in let base y = y in List.fold_left f base fs;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(20,14)-(20,17)
-(20,27)-(20,28)
-(20,36)-(20,38)
-(20,45)-(20,46)
-(20,59)-(21,15)
-(23,26)-(23,27)
-(23,47)-(23,56)
+(2,27)-(2,28)
+(2,27)-(2,32)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(2,15)-(2,78)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,27)-(2,32)
+(2,31)-(2,32)
+(2,36)-(2,78)
+(2,45)-(2,50)
+(2,49)-(2,50)
+(2,54)-(2,68)
+(2,54)-(2,78)
+(2,69)-(2,70)
+(2,71)-(2,75)
+(2,76)-(2,78)
 *)

@@ -1,29 +1,30 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then seen cons [h] else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n < 0 then [] else [digitsOfInt (n / 10); n mod 10];;
 
 
+(* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
+*)
 
 (* changed spans
-(7,55)-(7,66)
-(7,67)-(7,68)
+(3,25)-(3,57)
+(3,26)-(3,45)
+(3,48)-(3,56)
 *)
 
 (* type error slice
+(2,4)-(3,59)
+(2,21)-(3,57)
+(3,3)-(3,57)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(3,17)-(3,19)
+(3,26)-(3,37)
+(3,26)-(3,45)
+(3,39)-(3,45)
 *)

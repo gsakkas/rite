@@ -1,30 +1,48 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "pi* " exprToString s;;
 
-let rec digitalRoot n =
-  let sum = 0 in
-  if n < 10 then n + sum else sum = (digitalRoot (sumList (digitsOfInt n)));;
 
+(* fix
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "pi* " ^ (exprToString s);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  let sum = 0 in if n < 10 then n else digitalRoot (sumList (digitsOfInt n));;
-
+*)
 
 (* changed spans
-(9,20)-(9,25)
-(9,31)-(9,38)
-(9,75)-(9,76)
+(15,15)-(15,21)
+(15,22)-(15,34)
 *)
 
 (* type error slice
-(3,18)-(3,52)
+(12,3)-(15,36)
+(15,15)-(15,21)
+(15,15)-(15,36)
+(15,22)-(15,34)
+(15,35)-(15,36)
 *)

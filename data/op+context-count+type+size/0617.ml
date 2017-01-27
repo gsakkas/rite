@@ -1,36 +1,83 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ [l1]), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
+  | Plus (v,w) -> "(" ^ ((exprToString v) ^ (("+" exprToString w) ^ ")"))
+  | Cube (v,w,x) ->
+      "(" ^
+        ((exprToString v) ^
+           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
 
 
+(* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
+  | Plus (v,w) -> "(" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")")))
+  | Cube (v,w,x) ->
+      "(" ^
+        ((exprToString v) ^
+           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
 
+*)
 
 (* changed spans
-(12,67)-(12,68)
-(12,70)-(12,71)
+(27,47)-(27,65)
+(27,51)-(27,63)
 *)
 
 (* type error slice
-(10,10)-(10,24)
+(14,3)-(31,61)
+(17,29)-(17,41)
+(17,29)-(17,43)
+(17,42)-(17,43)
+(27,47)-(27,50)
+(27,47)-(27,65)
+(27,51)-(27,63)
+(27,64)-(27,65)
 *)

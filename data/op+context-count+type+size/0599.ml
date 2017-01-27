@@ -1,18 +1,28 @@
 
-let sqsum xs =
-  let f a x = ((+) a) * a in let base = f 2 xs in List.fold_left f base xs;;
+let rec listReverse l = match l with | [] -> [] | h::t -> [t; listReverse l];;
 
 
+(* fix
 
-let sqsum xs =
-  let f a x = a * a in let base = f 9 xs in List.fold_left f base xs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
+*)
 
 (* changed spans
-(3,15)-(3,19)
-(3,21)-(3,22)
-(3,43)-(3,44)
+(2,59)-(2,77)
+(2,60)-(2,61)
+(2,63)-(2,76)
+(2,75)-(2,76)
 *)
 
 (* type error slice
+(2,4)-(2,79)
+(2,21)-(2,77)
+(2,25)-(2,77)
+(2,31)-(2,32)
+(2,46)-(2,48)
+(2,63)-(2,74)
+(2,63)-(2,76)
+(2,75)-(2,76)
 *)

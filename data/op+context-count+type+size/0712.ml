@@ -1,73 +1,50 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ModF of expr
-  | SumOfSquares of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | ModF e1 -> (match modf ((eval (e1, x, y)) *. 10) with | (f,i) -> f)
-  | SumOfSquares (e1,e2,e3) ->
-      ((((eval (e1, x, y)) ** 2.0) +. ((eval (e2, x, y)) ** 2.0)) +.
-         ((eval (e3, x, y)) ** 2.0))
-        /. 3.0;;
+let stringOfList f l = "[" :: (sepConcat ";" (List.map f l));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ModF of expr
-  | SumOfSquares of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
+let stringOfList f l = sepConcat ";" (List.map f l);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | ModF e1 -> (match modf ((eval (e1, x, y)) *. 10.0) with | (f,i) -> f)
-  | SumOfSquares (e1,e2,e3) ->
-      ((((eval (e1, x, y)) ** 2.0) +. ((eval (e2, x, y)) ** 2.0)) +.
-         ((eval (e3, x, y)) ** 2.0))
-        /. 3.0;;
-
+*)
 
 (* changed spans
-(27,50)-(27,52)
+(9,24)-(9,27)
+(9,24)-(9,59)
 *)
 
 (* type error slice
-(27,30)-(27,52)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(4,11)-(4,13)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(6,30)-(6,31)
+(9,24)-(9,27)
+(9,24)-(9,59)
+(9,32)-(9,41)
+(9,32)-(9,59)
+(9,42)-(9,45)
+(9,47)-(9,55)
+(9,47)-(9,59)
+(9,56)-(9,57)
+(9,58)-(9,59)
 *)

@@ -1,0 +1,91 @@
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | Inverse a -> "1/" ^ (exprToString a)
+  | Max (a,b) ->
+      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+  | Range (a,b,c) ->
+      "range(" ^
+        ((exprToString a) ^
+           (("," exprToString b) ^ ("," ^ ((exprToString c) ^ ")"))));;
+
+
+(* fix
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | Inverse a -> "1/" ^ (exprToString a)
+  | Max (a,b) ->
+      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+  | Range (a,b,c) ->
+      "range(" ^
+        ((exprToString a) ^
+           ("," ^ ((exprToString b) ^ ("," ^ ((exprToString c) ^ ")")))));;
+
+*)
+
+(* changed spans
+(35,14)-(35,32)
+(35,18)-(35,30)
+*)
+
+(* type error slice
+(15,3)-(35,66)
+(18,29)-(18,41)
+(18,29)-(18,43)
+(18,42)-(18,43)
+(35,14)-(35,17)
+(35,14)-(35,32)
+(35,18)-(35,30)
+(35,31)-(35,32)
+*)

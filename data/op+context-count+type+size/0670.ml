@@ -8,18 +8,22 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
 let rec eval (e,x,y) =
   match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) + (eval (w, x, y))) / 2.0
-  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) * pi)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -30,26 +34,31 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
 let rec eval (e,x,y) =
   match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) *. (eval (v, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
+*)
 
 (* changed spans
-(15,40)-(15,41)
-(15,60)-(15,61)
-(16,37)-(16,38)
+(19,21)-(19,41)
 *)
 
 (* type error slice
-(13,20)-(13,33)
-(15,24)-(15,37)
-(15,24)-(15,56)
+(13,4)-(13,29)
+(13,10)-(13,26)
+(19,15)-(19,18)
+(19,15)-(19,41)
+(19,21)-(19,41)
+(19,39)-(19,41)
 *)

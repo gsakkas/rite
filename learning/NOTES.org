@@ -131,8 +131,7 @@ accuracy at step 2500: 0.320 / 0.543 (0.754)
 accuracy at step 2600: 0.355 / 0.586 (0.702)
 accuracy: 0.5859375                           # top-3
 #+END_EXAMPLE
-
-
+** TODO compute some notion of recall
 ** What about just looking at error slices?
 #+BEGIN_EXAMPLE
 > python learning/learn.py --data data/op+context-count+type+size --learn_rate=0.01 --verbose --model=hidden --hidden_layers=500 --batch_size=100

@@ -1,42 +1,81 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec revexp (x,y) = match x with | [] -> y | h::t -> revexp (t, (h ^ y));;
+let digits n = digitsOfInt (abs n);;
 
-let palindrome w = if w = (revexp ((explode w), "")) then true else false;;
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot (abs n) in l;;
 
 
+(* fix
 
-let rec reverse (x,y) =
-  match x with | [] -> y | h::t -> reverse (t, (h :: y));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let digits n = digitsOfInt (abs n);;
 
-let rec listReverse l = match l with | [] -> [] | h::t -> reverse (l, []);;
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
 
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
 
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
+
+*)
 
 (* changed spans
-(7,9)-(7,21)
-(7,30)-(7,31)
-(7,45)-(7,46)
-(7,57)-(7,63)
-(7,65)-(7,66)
-(7,68)-(7,75)
-(9,28)-(9,36)
-(9,47)-(9,51)
-(9,52)-(9,53)
+(16,45)-(16,71)
+(16,76)-(16,77)
 *)
 
 (* type error slice
-(7,57)-(7,74)
-(9,28)-(9,51)
+(3,27)-(3,38)
+(3,27)-(3,46)
+(3,40)-(3,46)
+(5,4)-(5,37)
+(5,12)-(5,34)
+(5,16)-(5,27)
+(5,16)-(5,34)
+(5,29)-(5,32)
+(5,29)-(5,34)
+(5,33)-(5,34)
+(7,22)-(7,70)
+(7,61)-(7,68)
+(7,61)-(7,70)
+(7,69)-(7,70)
+(10,6)-(10,12)
+(10,6)-(10,17)
+(10,15)-(10,17)
+(13,6)-(14,74)
+(13,15)-(13,21)
+(13,15)-(13,28)
+(13,22)-(13,28)
+(14,6)-(14,74)
+(14,19)-(14,26)
+(14,19)-(14,29)
+(14,27)-(14,29)
+(14,33)-(14,52)
+(14,33)-(14,74)
+(14,53)-(14,59)
+(14,61)-(14,74)
+(16,33)-(16,77)
+(16,45)-(16,64)
+(16,45)-(16,71)
+(16,66)-(16,69)
+(16,66)-(16,71)
+(16,70)-(16,71)
 *)

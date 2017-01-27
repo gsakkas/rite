@@ -1,102 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildECosSin (a,b) = ECosSin (a, b);;
-
-let buildSinLog (a,b,c) = SinLog (a, b, c);;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  let r = rand (if depth = 0 then (8, 10) else (1, 8)) in
-  match r with
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | 2 -> buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildECosSin ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildSinLog ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 -> VarX
-  | 9 -> VarY;;
+let rec clone x n =
+  match n = 0 with | true  -> x | false  -> x @ ((clone x n) - 1);;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec clone x n =
+  match n = 0 with | true  -> [] | false  -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildECosSin (a,b) = ECosSin (a, b);;
-
-let buildSinLog (a,b,c) = SinLog (a, b, c);;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  let r = rand (if depth = 0 then (8, 10) else (1, 8)) in
-  match r with
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | 2 -> buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildECosSin ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildSinLog
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))))
-  | 8 -> VarX
-  | 9 -> VarY;;
-
+*)
 
 (* changed spans
+(3,31)-(3,32)
+(3,45)-(3,46)
+(3,45)-(3,65)
+(3,47)-(3,48)
+(3,51)-(3,65)
+(3,59)-(3,60)
 *)
 
 (* type error slice
-(43,7)-(43,73)
+(2,4)-(3,68)
+(2,15)-(3,65)
+(2,17)-(3,65)
+(3,3)-(3,65)
+(3,9)-(3,10)
+(3,9)-(3,14)
+(3,13)-(3,14)
+(3,31)-(3,32)
+(3,45)-(3,46)
+(3,45)-(3,65)
+(3,47)-(3,48)
+(3,51)-(3,56)
+(3,51)-(3,60)
+(3,51)-(3,65)
+(3,57)-(3,58)
+(3,59)-(3,60)
 *)

@@ -1,72 +1,75 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
-
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (h, seen) then helper ((h :: seen), t) in
+        let rest' = helper (seen', t) in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' =
+          if List.mem h seen
+          then helper (seen, t)
+          else helper ((h :: seen), t) in
+        let rest' = helper (seen', t) in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
-
+*)
 
 (* changed spans
+(7,21)-(7,70)
+(7,24)-(7,41)
+(7,34)-(7,41)
+(7,57)-(7,66)
+(9,21)-(9,23)
+(9,25)-(9,26)
 *)
 
 (* type error slice
-(14,3)-(30,66)
-(30,55)-(30,61)
-(30,55)-(30,66)
+(3,3)-(9,26)
+(3,19)-(8,62)
+(4,5)-(8,62)
+(4,11)-(4,15)
+(5,13)-(5,17)
+(7,9)-(8,62)
+(7,21)-(7,70)
+(7,24)-(7,32)
+(7,24)-(7,41)
+(7,34)-(7,35)
+(7,34)-(7,41)
+(7,37)-(7,41)
+(7,48)-(7,54)
+(7,48)-(7,70)
+(7,57)-(7,58)
+(7,57)-(7,66)
+(7,57)-(7,70)
+(7,62)-(7,66)
+(7,69)-(7,70)
+(8,9)-(8,62)
+(8,21)-(8,27)
+(8,21)-(8,37)
+(8,29)-(8,34)
+(8,29)-(8,37)
+(8,36)-(8,37)
+(8,42)-(8,48)
+(8,42)-(8,62)
+(8,50)-(8,55)
+(8,50)-(8,62)
+(8,57)-(8,62)
+(9,3)-(9,11)
+(9,3)-(9,26)
+(9,13)-(9,19)
+(9,13)-(9,26)
+(9,21)-(9,23)
+(9,21)-(9,26)
+(9,25)-(9,26)
 *)

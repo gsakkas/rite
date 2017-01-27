@@ -7,9 +7,10 @@ let rec mulByDigit i l =
                [h * i]
        with
        | [] -> []
-       | h::t -> let rec helper v = [helper (v / 10); h1 mod 10] in helper h);;
+       | h::t -> h);;
 
 
+(* fix
 
 let rec mulByDigit i l =
   match List.rev l with
@@ -19,14 +20,16 @@ let rec mulByDigit i l =
                [h * i]
        with
        | [] -> []
-       | h::t ->
-           let rec helper v = (helper (v / 10)) @ [v mod 10] in helper h);;
+       | h::t -> [h]);;
 
+*)
 
 (* changed spans
-(10,37)-(10,38)
-(10,53)-(10,57)
+(10,18)-(10,19)
 *)
 
 (* type error slice
+(6,8)-(10,19)
+(9,16)-(9,18)
+(10,18)-(10,19)
 *)

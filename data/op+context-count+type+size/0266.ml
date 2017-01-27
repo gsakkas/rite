@@ -1,92 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth <= 0
-  then
-    let bin_rand = rand (1, 2) in
-    (if bin_rand = 1 then buildX () else buildY ())
-  else
-    (let exp_rand = rand (1, 5) in
-     let first_forced = build (rand, (depth - 1)) in
-     match exp_rand with
-     | 1 -> buildSine first_forced
-     | 2 -> buildCosine first_forced
-     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
-     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
-     | 5 ->
-         buildThresh
-           (first_forced, (build (rand, (depth - 1))),
-             (build (rand, (depth - 1)))));;
+let pipe fs = let f a x z = z a in let base y = y in List.fold_left f base fs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs = let f a x z = a z in let base y = y in List.fold_left f base fs;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth <= 0
-  then
-    let bin_rand = rand (1, 2) in
-    (if bin_rand = 1 then buildX () else buildY ())
-  else
-    (let exp_rand = rand (1, 5) in
-     let first_forced = build (rand, (depth - 1)) in
-     match exp_rand with
-     | 1 -> buildSine first_forced
-     | 2 -> buildCosine first_forced
-     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
-     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
-     | 5 ->
-         buildThresh
-           (first_forced, (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
-
+*)
 
 (* changed spans
+(2,29)-(2,30)
+(2,31)-(2,32)
+(2,36)-(2,78)
 *)
 
 (* type error slice
-(39,10)-(41,38)
+(2,15)-(2,78)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,25)-(2,32)
+(2,29)-(2,30)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,36)-(2,78)
+(2,45)-(2,50)
+(2,49)-(2,50)
+(2,54)-(2,68)
+(2,54)-(2,78)
+(2,69)-(2,70)
+(2,71)-(2,75)
+(2,76)-(2,78)
 *)

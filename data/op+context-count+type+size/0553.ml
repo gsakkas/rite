@@ -1,56 +1,48 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) * (evalhelper p2 x y)) / 2 in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a (hd::tl) = a + hd in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) *. (evalhelper p2 x y)) /. 2.0 in
-  evalhelper e x y;;
-
+*)
 
 (* changed spans
-(20,47)-(20,48)
-(20,70)-(20,73)
+(3,15)-(3,31)
+(3,25)-(3,31)
+(11,3)-(11,12)
+(11,13)-(11,14)
+(11,15)-(11,16)
 *)
 
 (* type error slice
-(18,30)-(18,47)
-(20,28)-(20,45)
-(20,28)-(20,67)
+(3,3)-(11,16)
+(3,12)-(3,31)
+(3,15)-(3,31)
+(3,25)-(3,26)
+(3,25)-(3,31)
+(9,16)-(9,28)
+(9,16)-(9,72)
+(9,34)-(9,38)
+(9,34)-(9,72)
+(9,41)-(9,55)
 *)

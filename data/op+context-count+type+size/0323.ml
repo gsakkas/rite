@@ -1,30 +1,35 @@
 
-let rec assoc (d,k,l) =
-  match d k l with
-  | (d,k,l) ->
-      if l = []
-      then d
-      else
-        (match l with
-         | hd::tl ->
-             (match hd with | (a,b) -> if a = k then b else assoc (d, k, t)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
+(* fix
 
-let rec assoc (d,k,l) =
-  if l = []
-  then d
-  else
-    (match l with
-     | h::t -> (match h with | (a,b) -> if a = k then b else assoc (d, k, t)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
+*)
 
 (* changed spans
-(3,3)-(4,15)
-(9,12)-(9,14)
-(9,16)-(9,18)
-(10,21)-(10,23)
+(7,24)-(7,34)
+(7,50)-(7,59)
 *)
 
 (* type error slice
+(7,21)-(7,59)
+(7,24)-(7,32)
+(7,24)-(7,34)
+(7,33)-(7,34)
 *)

@@ -1,31 +1,35 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = seen :: h in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a * a in let base = f xs xs in List.fold_left f base xs;;
 
 
+(* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | hd::tl ->
-        let seen' = hd :: seen in let rest' = tl in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a * a in let base = f 8 xs in List.fold_left f base xs;;
 
+*)
 
 (* changed spans
-(6,7)-(6,8)
-(6,10)-(6,11)
-(6,27)-(6,31)
-(6,35)-(6,36)
-(6,52)-(6,53)
+(3,15)-(3,16)
+(3,19)-(3,20)
+(3,37)-(3,39)
 *)
 
 (* type error slice
-(3,3)-(7,26)
-(6,57)-(6,77)
+(3,3)-(3,70)
+(3,9)-(3,20)
+(3,11)-(3,20)
+(3,15)-(3,16)
+(3,15)-(3,20)
+(3,24)-(3,70)
+(3,35)-(3,36)
+(3,35)-(3,42)
+(3,37)-(3,39)
+(3,40)-(3,42)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

@@ -34,6 +34,7 @@ let rec exprToString e =
       "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ")")));;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -69,12 +70,21 @@ let rec exprToString e =
   | Addition (a,b) ->
       "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")")));;
 
+*)
 
 (* changed spans
+(34,42)-(34,56)
+(34,42)-(34,61)
 *)
 
 (* type error slice
+(14,3)-(34,61)
+(17,29)-(17,41)
 (17,29)-(17,43)
+(17,42)-(17,43)
+(34,42)-(34,54)
 (34,42)-(34,56)
 (34,42)-(34,61)
+(34,55)-(34,56)
+(34,58)-(34,61)
 *)

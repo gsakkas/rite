@@ -1,57 +1,130 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi * (eval (e', x, y)))
+  | Cosine e' -> cos (pi * (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (x + 1) :: a in
-    let base = [] in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
 
+(* fix
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a in
-    let base = ([], []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(19,17)-(19,27)
-(21,16)-(21,20)
-(21,23)-(21,24)
+(14,3)-(25,77)
+(17,21)-(17,41)
+(18,23)-(18,43)
+(25,10)-(25,18)
+(25,19)-(25,77)
 *)
 
 (* type error slice
-(9,17)-(9,31)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(25,79)
+(13,15)-(25,77)
+(14,3)-(25,77)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,16)-(17,19)
+(17,16)-(17,41)
+(17,21)-(17,23)
+(17,21)-(17,41)
+(17,27)-(17,31)
+(17,27)-(17,41)
+(17,33)-(17,35)
+(17,33)-(17,41)
+(17,37)-(17,38)
+(17,40)-(17,41)
+(18,18)-(18,21)
+(18,18)-(18,43)
+(18,23)-(18,25)
+(18,23)-(18,43)
+(19,26)-(19,30)
+(19,26)-(19,40)
+(19,26)-(19,61)
+(19,32)-(19,34)
+(19,32)-(19,40)
+(19,36)-(19,37)
+(19,39)-(19,40)
+(19,47)-(19,51)
+(19,47)-(19,61)
+(19,53)-(19,55)
+(19,53)-(19,61)
+(19,57)-(19,58)
+(19,60)-(19,61)
+(20,23)-(20,27)
+(20,23)-(20,37)
+(20,23)-(20,58)
+(20,29)-(20,31)
+(20,29)-(20,37)
+(20,33)-(20,34)
+(20,36)-(20,37)
+(20,44)-(20,48)
+(20,44)-(20,58)
+(20,50)-(20,52)
+(20,50)-(20,58)
+(20,54)-(20,55)
+(20,57)-(20,58)
+(22,7)-(24,26)
+(23,12)-(23,16)
+(23,12)-(23,26)
+(23,18)-(23,20)
+(23,18)-(23,26)
+(23,22)-(23,23)
+(23,25)-(23,26)
 *)

@@ -1,58 +1,42 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "TBD" in
-    let base = [] in
-    let args = failwith "TBD" in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile (if (f b) = b then ((f b), false) else ((failwith "asd"), b));;
 
 
+(* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let fixpoint (f,b) =
+  wwhile
+    ((if (f b) = b
+      then fun b''  -> ((f b), false)
+      else (fun b''  -> ((f b), true))), b);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
+*)
 
 (* changed spans
-(18,17)-(18,31)
-(20,16)-(20,30)
+(5,11)-(5,69)
+(5,31)-(5,42)
+(5,51)-(5,59)
+(5,51)-(5,69)
+(5,60)-(5,65)
 *)
 
 (* type error slice
-(5,13)-(5,27)
+(2,38)-(2,39)
+(2,38)-(2,41)
+(2,40)-(2,41)
+(2,56)-(2,62)
+(2,56)-(2,69)
+(2,64)-(2,65)
+(2,64)-(2,69)
+(2,67)-(2,69)
+(5,3)-(5,9)
+(5,3)-(5,69)
+(5,11)-(5,69)
+(5,31)-(5,42)
+(5,37)-(5,42)
 *)

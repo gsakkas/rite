@@ -1,36 +1,49 @@
 
-let rec mulByDigit i l =
-  let comb a (hd::tl) = a + hd in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+
+let rec additivePersistence n =
+  match n with | [] -> [] | h::t -> t + (digitsOfInt (additivePersistence h));;
 
 
+(* fix
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10 then 1 else 1 + (additivePersistence (sumList (digitsOfInt n)));;
+
+*)
 
 (* changed spans
-(3,14)-(3,15)
-(3,21)-(3,24)
+(5,29)-(6,76)
+(6,9)-(6,10)
+(6,24)-(6,26)
+(6,37)-(6,38)
+(6,37)-(6,76)
+(6,42)-(6,53)
+(6,42)-(6,76)
+(6,55)-(6,74)
+(6,55)-(6,76)
 *)
 
 (* type error slice
-(3,3)-(11,16)
-(9,16)-(9,72)
-(9,34)-(9,72)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,31)-(3,37)
+(5,4)-(6,80)
+(5,29)-(6,76)
+(6,3)-(6,76)
+(6,9)-(6,10)
+(6,24)-(6,26)
+(6,37)-(6,38)
+(6,37)-(6,76)
+(6,42)-(6,53)
+(6,42)-(6,76)
+(6,55)-(6,74)
+(6,55)-(6,76)
+(6,75)-(6,76)
 *)

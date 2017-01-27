@@ -1,75 +1,53 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) ->
-      if (eval e1) > (eval e2) then eval e3 else - (eval e3);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = "" in
+      let l = [(fun x  -> x ^ sep)] in List.fold_left f base l;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (-1.0) *. (eval (e3, x, y));;
-
+*)
 
 (* changed spans
+(8,15)-(8,36)
+(8,17)-(8,34)
+(8,27)-(8,28)
+(8,27)-(8,34)
+(8,29)-(8,30)
+(8,31)-(8,34)
 *)
 
 (* type error slice
-(19,28)-(19,42)
-(31,11)-(31,18)
+(6,7)-(8,63)
+(6,13)-(6,24)
+(6,15)-(6,24)
+(6,19)-(6,20)
+(6,19)-(6,24)
+(6,21)-(6,22)
+(6,23)-(6,24)
+(7,7)-(8,63)
+(7,18)-(7,20)
+(8,7)-(8,63)
+(8,15)-(8,36)
+(8,17)-(8,34)
+(8,27)-(8,28)
+(8,27)-(8,34)
+(8,29)-(8,30)
+(8,31)-(8,34)
+(8,40)-(8,54)
+(8,40)-(8,63)
+(8,55)-(8,56)
+(8,57)-(8,61)
+(8,62)-(8,63)
 *)

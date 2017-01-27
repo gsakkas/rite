@@ -1,78 +1,72 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Thresh2 of expr* expr
-  | Thresh3 of expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y
-    | Thresh2 (p1,p2) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y) then 1 else 0
-    | Thresh3 (p1,p2) ->
-        if (evalhelper p1 x y) > (evalhelper p2 x y) then 0 else (-1) in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) / 10) != 0
+        then ((hd * i) mod 10) :: (((hd * i) / 10) + (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Thresh2 of expr* expr
-  | Thresh3 of expr* expr;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y
-    | Thresh2 (p1,p2) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y) then 1.0 else 0.0
-    | Thresh3 (p1,p2) ->
-        if (evalhelper p1 x y) > (evalhelper p2 x y) then 0.0 else (-1.0) in
-  evalhelper e x y;;
-
+*)
 
 (* changed spans
-(29,59)-(29,60)
-(29,66)-(29,67)
-(31,59)-(31,60)
-(31,68)-(31,69)
+(3,3)-(10,16)
+(7,14)-(7,26)
+(7,24)-(7,26)
+(8,16)-(8,18)
+(8,16)-(8,22)
+(8,16)-(8,30)
+(8,21)-(8,22)
+(8,28)-(8,30)
+(8,38)-(8,69)
+(8,55)-(8,64)
+(8,65)-(8,66)
+(8,67)-(8,69)
+(9,15)-(9,21)
+(9,15)-(9,41)
+(9,27)-(9,41)
+(10,3)-(10,12)
+(10,3)-(10,16)
+(10,13)-(10,14)
+(10,15)-(10,16)
 *)
 
 (* type error slice
-(17,5)-(31,69)
+(3,3)-(10,16)
+(3,21)-(9,41)
+(3,23)-(9,41)
+(4,5)-(9,41)
+(4,11)-(4,12)
+(5,13)-(5,15)
+(7,14)-(7,20)
+(7,19)-(7,20)
+(8,16)-(8,30)
+(8,16)-(8,69)
+(8,38)-(8,69)
+(8,55)-(8,64)
+(8,55)-(8,69)
+(8,65)-(8,66)
+(8,67)-(8,69)
+(9,15)-(9,21)
+(9,15)-(9,41)
+(9,27)-(9,36)
+(9,27)-(9,41)
+(9,37)-(9,38)
+(9,39)-(9,41)
 *)

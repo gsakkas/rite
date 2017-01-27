@@ -1,33 +1,56 @@
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n = 0
-  then [0]
-  else if n > 0 then myAppend [digitsOfInt (n / 10)] (n mod 10) else [];;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Average (x',y') -> ((eval x') + (eval y')) / 2;;
 
 
+(* fix
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec getDigits n =
-  match n with | 0 -> [] | _ -> myAppend (getDigits (n / 10)) (n mod 10);;
+let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 
-let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
-
+*)
 
 (* changed spans
-(4,9)-(4,20)
-(5,3)-(5,5)
-(5,8)-(5,9)
-(6,3)-(6,7)
-(6,9)-(6,10)
-(7,3)-(7,21)
-(7,31)-(7,43)
-(7,52)-(7,53)
-(7,65)-(7,69)
+(12,3)-(15,51)
+(13,14)-(13,15)
+(15,26)-(15,30)
+(15,26)-(15,33)
+(15,26)-(15,45)
+(15,26)-(15,51)
+(15,31)-(15,33)
+(15,38)-(15,45)
+(15,50)-(15,51)
 *)
 
 (* type error slice
-(7,32)-(7,51)
+(11,4)-(15,53)
+(11,15)-(15,51)
+(12,3)-(15,51)
+(12,9)-(12,10)
+(13,14)-(13,15)
+(14,14)-(14,15)
+(15,26)-(15,30)
+(15,26)-(15,33)
+(15,26)-(15,51)
+(15,31)-(15,33)
 *)

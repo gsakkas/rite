@@ -82,6 +82,7 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
             #                feed_dict={x: validation[features], y_: validation[labels]})
             if verbose and i % 100 == 0:
                 acc = 0
+                acc1 = 0
                 for val in validation:
                     ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: val[features], y_:val[labels], k:min(3, len(val))})
                     # print ys
@@ -89,12 +90,17 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
                     # print top_indices
                     if any(val['L-DidChange'][idx] == 1 for idx in top_indices[1]):
                         acc += 1
+                    if val['L-DidChange'][top_indices[1][0]] == 1:
+                        acc1 += 1
                 acc = float(acc) / len(validation)
-                print('accuracy at step {}: {}'.format(i, acc))
+                acc1 = float(acc1) / len(validation)
+                print('accuracy at step %4d: %.3f / %.3f' % (i, acc1, acc))
 
 
     def test(data):
         acc = 0
+        acc1 = 0
+        acc2 = 0
         for d in data:
             ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
             # print ys
@@ -102,8 +108,15 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
             # print top_indices
             if any(d['L-DidChange'][idx] == 1 for idx in top_indices[1]):
                 acc += 1
+            if d['L-DidChange'][top_indices[1][0]] == 1:
+                acc1 += 1
+            if d['L-DidChange'][top_indices[1][0]] == 1 or d['L-DidChange'][top_indices[1][1]] == 1:
+                acc2 += 1
+
         acc = float(acc) / len(data)
-        print('accuracy: {}'.format(acc))
+        acc1 = float(acc1) / len(data)
+        acc2 = float(acc2) / len(data)
+        print('accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc))
         # acc, truth, observed, raw_max, raw = sess.run(
         #     [accuracy, tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1), tf.nn.softmax(y), y],
         #     {x: data[features], y_: data[labels]})

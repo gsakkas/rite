@@ -7,33 +7,39 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let buildOp1 e = Op1 e;;
+let rec exprToString e =
+  let s = "" in
+  match e with
+  | VarX  -> s ^ "x"
+  | VarY  -> s ^ "y"
+  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
+  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
+  | Average (a,b) ->
+      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
+  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
+  | Thresh (a,b,c,d) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("<" ^
+                 ((exprToString b) ^
+                    ("?" ^
+                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
+  | NewA (a,b) ->
+      s ^
+        ("sin(pi*" ^
+           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
+  | NewB (a,b,c) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("+" ^ ((exprToString b) ^ (("+" + (exprToString c)) ^ ")^0")))));;
 
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth = (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    (if (randNum = 1) && (randNum2 = 3)
-     then buildSine (buildOp1 (buildX ()))
-     else
-       if (randNum = 1) && (randNum2 = 4)
-       then
-         buildSine
-           (buildOp2
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                (build (rand, (depth - 1))))));;
-
-
+(* fix
 
 type expr =
   | VarX
@@ -43,27 +49,55 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let buildSine e = Sine e;;
+let rec exprToString e =
+  let s = "" in
+  match e with
+  | VarX  -> s ^ "x"
+  | VarY  -> s ^ "y"
+  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
+  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
+  | Average (a,b) ->
+      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
+  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
+  | Thresh (a,b,c,d) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("<" ^
+                 ((exprToString b) ^
+                    ("?" ^
+                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
+  | NewA (a,b) ->
+      s ^
+        ("sin(pi*" ^
+           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
+  | NewB (a,b,c) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("+" ^ ((exprToString b) ^ ("+" ^ ((exprToString c) ^ ")^0"))))));;
 
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth = 0 then buildSine (buildX ()) else buildX ();;
-
+*)
 
 (* changed spans
-(13,5)-(17,4)
-(22,14)-(26,40)
-(27,22)-(27,32)
-(27,42)-(27,43)
-(29,8)-(29,10)
-(29,12)-(29,23)
-(29,25)-(34,47)
+(39,44)-(39,65)
+(39,51)-(39,65)
 *)
 
 (* type error slice
-(32,13)-(34,41)
+(15,3)-(39,75)
+(18,34)-(18,46)
+(18,34)-(18,48)
+(18,47)-(18,48)
+(39,44)-(39,47)
+(39,44)-(39,65)
+(39,44)-(39,75)
+(39,51)-(39,63)
+(39,51)-(39,65)
+(39,64)-(39,65)
+(39,68)-(39,69)
+(39,70)-(39,75)
 *)

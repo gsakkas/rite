@@ -1,29 +1,48 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec append first second =
+  match first with | [] -> second | h::t -> h :: (append t second);;
 
-let stringOfList f l = List.map f (sepConcat "" l);;
-
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n = 0 then [] else append ((digitsOfInt (n / 10)) [n mod 10]);;
 
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+(* fix
 
-let stringOfList f l = sepConcat "" (List.map f l);;
+let rec append first second =
+  match first with | [] -> second | h::t -> h :: (append t second);;
 
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n = 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
+
+*)
 
 (* changed spans
-(9,35)-(9,48)
+(8,30)-(8,71)
+(8,39)-(8,58)
 *)
 
 (* type error slice
-(7,36)-(7,59)
+(3,3)-(3,66)
+(3,51)-(3,57)
+(3,51)-(3,66)
+(3,58)-(3,59)
+(3,60)-(3,66)
+(5,4)-(8,74)
+(5,21)-(8,71)
+(6,3)-(8,71)
+(6,6)-(6,7)
+(6,6)-(6,11)
+(6,10)-(6,11)
+(7,8)-(7,10)
+(8,8)-(8,71)
+(8,22)-(8,24)
+(8,30)-(8,36)
+(8,30)-(8,71)
+(8,39)-(8,50)
+(8,39)-(8,58)
+(8,52)-(8,58)
 *)

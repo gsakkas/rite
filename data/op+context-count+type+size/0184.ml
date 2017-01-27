@@ -1,129 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr
-  | FunckyRoot of expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildFunckyRoot (e1,e2,e3) = FunckyRoot (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildSquareRoot e = SquareRoot e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (0, 1) in match num with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let num = rand (0, 8) in
-     match num with
-     | 0 -> buildX ()
-     | 1 -> buildY ()
-     | 2 -> buildSine (build (rand, (depth - 1)))
-     | 3 -> buildCosine (build (rand, (depth - 1)))
-     | 4 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 6 ->
-         buildThresh
-           ((buildX ()), (buildY ()), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))))
-     | 7 -> buildSquareRoot (build (rand, (depth - 1)))
-     | 8 ->
-         buildFunckyRoot
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1)))));;
+let fixpoint (f,b) = wwhile ((), b);;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr;;
+let rec wwhile (f,b) =
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let fixpoint (f,b) =
+  wwhile
+    ((fun x  -> let xi = f x in (xi, (((f xi) != xi) || (f (f xi))))), b);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildSquareRoot e = SquareRoot e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (0, 1) in match num with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let num = rand (0, 8) in
-     match num with
-     | 0 -> buildX ()
-     | 1 -> buildY ()
-     | 2 -> buildSine (build (rand, (depth - 1)))
-     | 3 -> buildCosine (build (rand, (depth - 1)))
-     | 4 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 6 ->
-         buildThresh
-           ((buildX ()), (buildY ()), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))))
-     | 7 -> buildSquareRoot (build (rand, (depth - 1))));;
-
+*)
 
 (* changed spans
-(11,3)-(11,35)
-(13,1)-(21,25)
-(27,5)-(29,4)
-(63,6)-(65,37)
-(65,38)-(66,43)
+(6,30)-(6,32)
+(6,34)-(6,35)
 *)
 
 (* type error slice
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,11)-(3,12)
+(4,44)-(4,50)
+(4,44)-(4,56)
+(4,52)-(4,53)
+(4,52)-(4,56)
+(4,55)-(4,56)
+(6,22)-(6,28)
+(6,22)-(6,35)
+(6,30)-(6,32)
+(6,30)-(6,35)
+(6,34)-(6,35)
 *)

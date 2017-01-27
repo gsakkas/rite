@@ -7,38 +7,30 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | NewA of expr* expr
-  | NewB of expr* expr* expr;;
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let rec exprToString e =
-  let s = "" in
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> s ^ "x"
-  | VarY  -> s ^ "y"
-  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
-  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
-  | Average (a,b) ->
-      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
-  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
-  | Thresh (a,b,c,d) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("<" ^
-                 ((exprToString b) ^
-                    ("?" ^
-                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
-  | NewA (a,b) ->
-      s ^
-        ("sin(pi*" ^
-           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
-  | NewB (a,b,c) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("+" ^ ((exprToString b) ^ (("+" + (exprToString c)) ^ ")^0")))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) -> if e1 > e2 then e3 else - e3;;
 
 
+(* fix
 
 type expr =
   | VarX
@@ -48,44 +40,48 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | NewA of expr* expr
-  | NewB of expr* expr* expr;;
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let rec exprToString e =
-  let s = "" in
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> s ^ "x"
-  | VarY  -> s ^ "y"
-  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
-  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
-  | Average (a,b) ->
-      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
-  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
-  | Thresh (a,b,c,d) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("<" ^
-                 ((exprToString b) ^
-                    ("?" ^
-                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
-  | NewA (a,b) ->
-      s ^
-        ("sin(pi*" ^
-           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
-  | NewB (a,b,c) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("+" ^ ((exprToString b) ^ ("+" ^ ((exprToString c) ^ ")^0"))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (-1.0) *. (eval (e3, x, y));;
 
+*)
 
 (* changed spans
-(39,43)-(39,44)
-(39,48)-(39,49)
-(39,66)-(39,67)
+(29,10)-(29,12)
+(29,16)-(29,18)
+(30,28)-(30,30)
+(30,33)-(30,35)
+(30,41)-(30,43)
+(30,49)-(30,53)
+(30,51)-(30,53)
 *)
 
 (* type error slice
-(39,44)-(39,65)
+(16,3)-(30,53)
+(17,14)-(17,15)
+(30,25)-(30,53)
+(30,41)-(30,43)
+(30,49)-(30,53)
+(30,51)-(30,53)
 *)

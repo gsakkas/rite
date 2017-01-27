@@ -1,84 +1,71 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (h::t,b) = a in
-      if (x + h) > 9
-      then
-        (if t = []
-         then ([], (1 :: ((x + h) - 10) :: b))
-         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
-      else (t, ((x + h) :: b)) in
-    let base = ((List.rev l1), []) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let accum = [] in
-  let rec helper x l accum =
-    if x != 0 then (helper x) - (1 l (bigAdd l accum)) else accum in
-  mulByDigit (helper i l accum);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> float x
+  | VarY  -> float y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
+(* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (h::t,b) = a in
-      if (x + h) > 9
-      then
-        (if t = []
-         then ([], (1 :: ((x + h) - 10) :: b))
-         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
-      else (t, ((x + h) :: b)) in
-    let base = ((List.rev l1), []) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let accum = [] in
-  let rec helper x l accum =
-    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
-  mulByDigit i (helper i l accum);;
-
+*)
 
 (* changed spans
-(34,20)-(34,21)
-(34,29)-(34,30)
-(34,33)-(34,34)
-(34,54)-(34,55)
+(15,14)-(15,19)
+(15,14)-(15,21)
+(16,14)-(16,19)
+(16,14)-(16,21)
+(19,24)-(19,64)
+(19,63)-(19,64)
 *)
 
 (* type error slice
-(9,17)-(9,31)
+(14,3)-(24,25)
+(15,14)-(15,19)
+(15,14)-(15,21)
+(15,20)-(15,21)
+(19,24)-(19,57)
+(19,24)-(19,64)
 *)

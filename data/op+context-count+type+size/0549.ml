@@ -1,51 +1,35 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi * (evalhelper p1))
-    | Cosine p1 -> evalhelper p1 in
-  evalhelper e x y;;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> f 0 [] | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> f 0 0 | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
-  evalhelper e x y;;
-
+*)
 
 (* changed spans
-(18,26)-(18,27)
+(3,20)-(3,21)
+(3,24)-(3,25)
+(4,40)-(4,42)
 *)
 
 (* type error slice
-(18,23)-(18,42)
+(3,3)-(5,27)
+(3,9)-(3,25)
+(3,11)-(3,25)
+(3,15)-(3,16)
+(3,15)-(3,25)
+(3,20)-(3,21)
+(3,20)-(3,25)
+(4,36)-(4,37)
+(4,36)-(4,42)
+(4,38)-(4,39)
+(4,40)-(4,42)
 *)

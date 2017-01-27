@@ -64,9 +64,11 @@ main = do
 mkBadFeatures :: String -> [Feature] -> [String] -> IO ()
 mkBadFeatures nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
-  let feats = [ ((h, f), (ss, bad, fix, c))
+  let feats = [ ((h, f'), (ss, bad, fix, c))
               | (ss, p, bad, fix) <- uniqs
               , let (h, f, c) = runTFeaturesDiff fs (ss,p)
+              , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
+              , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
   forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs))) -> do
@@ -166,8 +168,9 @@ mkDiff' bad fix
 mkDiff'' :: Prog -> Prog -> [SrcSpan]
 mkDiff'' bad fix =
 --  trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $
-  Set.toList (diffSpans (getDiff $ diffExprsT bs fs))
+  assert (not (null x)) x
   where
+  x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
   bs = progExprs bad
   fs = progExprs fix
 
@@ -198,8 +201,8 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
   mkfsD _ = mempty
 
   didChange l
-    | any (l `isSubSpanOf`) ls
-    --- | any (l ==) ls
+    --- | any (l `isSubSpanOf`) ls
+    | any (l ==) ls
     = ["L-DidChange" .= (1::Double), "L-NoChange" .= (0::Double)]
     | otherwise
     = ["L-DidChange" .= (0::Double), "L-NoChange" .= (1::Double)]

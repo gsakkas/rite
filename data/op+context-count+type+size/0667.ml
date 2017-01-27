@@ -1,30 +1,24 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
-
-let rec additivePersistence n =
-  match n with | [] -> [] | h::t -> t + (digitsOfInt (additivePersistence h));;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then f b' else b';;
 
 
+(* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10 then 1 else 1 + (additivePersistence (sumList (digitsOfInt n)));;
-
+*)
 
 (* changed spans
-(5,9)-(5,30)
-(6,9)-(6,10)
-(6,24)-(6,26)
-(6,37)-(6,38)
-(6,42)-(6,53)
-(6,75)-(6,76)
+(2,56)-(2,57)
 *)
 
 (* type error slice
-(3,18)-(3,52)
+(2,38)-(2,39)
+(2,38)-(2,41)
+(2,40)-(2,41)
+(2,45)-(2,68)
+(2,56)-(2,57)
+(2,56)-(2,60)
+(2,58)-(2,60)
+(2,66)-(2,68)
 *)

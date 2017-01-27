@@ -1,20 +1,89 @@
 
-let pipe fs =
-  let f a x y = a (y x) in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then
+      (let y = (clone 0 ((List.length l1) - (List.length l2))) @ l2 in
+       (l1, y))
+    else
+      (let z = (clone 0 ((List.length l2) - (List.length l1))) @ l1 in
+       (z, l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (d1,d2) ->
+          (match a with
+           | (carry,result) ->
+               if ((d1 + d2) + carry) > 9
+               then (1, ((((d1 + d2) + carry) - 10) :: result))
+               else (0, (((d1 + d2) + carry) :: result))) in
+    let base = (0, []) in
+    let args = [0] @ (List.combine (List.rev l1) (List.rev l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
+(* fix
 
-let pipe fs = let f a x x = a x in let base y = y in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then
+      (let y = (clone 0 ((List.length l1) - (List.length l2))) @ l2 in
+       (l1, y))
+    else
+      (let z = (clone 0 ((List.length l2) - (List.length l1))) @ l1 in
+       (z, l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (d1,d2) ->
+          (match a with
+           | (carry,result) ->
+               if ((d1 + d2) + carry) > 9
+               then (1, ((((d1 + d2) + carry) - 10) :: result))
+               else (0, (((d1 + d2) + carry) :: result))) in
+    let base = (0, []) in
+    let args = [(0, 0)] @ (List.combine (List.rev l1) (List.rev l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+*)
 
 (* changed spans
-(3,13)-(3,14)
-(3,19)-(3,21)
-(3,23)-(3,24)
-(3,37)-(3,38)
-(3,41)-(3,42)
+(30,17)-(30,18)
+(30,23)-(30,62)
 *)
 
 (* type error slice
-(3,46)-(3,70)
+(30,16)-(30,19)
+(30,16)-(30,62)
+(30,17)-(30,18)
+(30,20)-(30,21)
+(30,23)-(30,35)
+(30,23)-(30,62)
+(30,37)-(30,45)
+(30,37)-(30,48)
+(30,46)-(30,48)
+(30,51)-(30,59)
+(30,51)-(30,62)
+(30,60)-(30,62)
 *)

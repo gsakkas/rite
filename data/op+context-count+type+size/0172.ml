@@ -1,42 +1,35 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Average (x',y') -> ((eval x' y) + (eval x y')) / 2;;
+let sqsum xs = let f a x = a ** x in let base = 0 in List.fold_left f base xs;;
 
 
+(* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let sqsum xs =
+  let f a x = (a * a) + (x * x) in let base = 0 in List.fold_left f base xs;;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
-
+*)
 
 (* changed spans
-(13,5)-(15,4)
-(15,25)-(15,44)
-(15,47)-(15,50)
-(15,52)-(15,55)
+(2,28)-(2,29)
+(2,28)-(2,34)
+(2,30)-(2,32)
+(2,33)-(2,34)
+(2,38)-(2,78)
 *)
 
 (* type error slice
-(12,3)-(15,55)
-(15,26)-(15,35)
-(15,40)-(15,49)
+(2,16)-(2,78)
+(2,22)-(2,34)
+(2,24)-(2,34)
+(2,28)-(2,29)
+(2,28)-(2,34)
+(2,30)-(2,32)
+(2,33)-(2,34)
+(2,38)-(2,78)
+(2,49)-(2,50)
+(2,54)-(2,68)
+(2,54)-(2,78)
+(2,69)-(2,70)
+(2,71)-(2,75)
+(2,76)-(2,78)
 *)

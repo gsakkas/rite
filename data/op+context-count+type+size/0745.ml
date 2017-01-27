@@ -1,16 +1,26 @@
 
-let rec clone x n = let accum = [] in if n < 1 then [] else (clone x n) - 1;;
+let rec digitsOfInt n = (n mod 10) :: ((digitsOfInt n) / 10);;
 
 
+(* fix
 
-let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
+let rec digitsOfInt n = (n mod 10) :: (digitsOfInt (n / 10));;
 
+*)
 
 (* changed spans
-(2,61)-(2,62)
-(2,71)-(2,76)
+(2,41)-(2,60)
+(2,53)-(2,54)
 *)
 
 (* type error slice
-(2,39)-(2,76)
+(2,4)-(2,63)
+(2,21)-(2,60)
+(2,26)-(2,27)
+(2,26)-(2,34)
+(2,26)-(2,60)
+(2,41)-(2,52)
+(2,41)-(2,54)
+(2,41)-(2,60)
+(2,53)-(2,54)
 *)

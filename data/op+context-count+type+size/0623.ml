@@ -1,47 +1,71 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ [l2])
-  else
-    if (List.length l1) < (List.length l2)
-    then ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
+let stringOfList f l = "[" ^ ((sepConcat ";") ^ ([List.map (f l)] ^ "]"));;
 
 
+(* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
+*)
 
 (* changed spans
-(10,3)-(10,5)
-(11,3)-(11,7)
-(11,11)-(11,13)
-(11,65)-(11,66)
-(11,68)-(11,69)
-(12,3)-(13,23)
-(13,25)-(13,26)
-(13,28)-(14,9)
-(14,61)-(14,62)
-(14,64)-(14,65)
-(14,67)-(14,69)
+(7,31)-(7,33)
+(9,32)-(9,45)
+(9,50)-(9,66)
+(9,51)-(9,64)
+(9,61)-(9,64)
+(9,67)-(9,68)
+(9,69)-(9,72)
 *)
 
 (* type error slice
-(10,7)-(10,21)
+(2,4)-(7,62)
+(2,19)-(7,60)
+(2,23)-(7,60)
+(3,3)-(7,60)
+(4,11)-(4,13)
+(6,7)-(7,60)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,19)-(6,31)
+(6,21)-(6,22)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(6,30)-(6,31)
+(7,7)-(7,60)
+(7,18)-(7,19)
+(7,23)-(7,60)
+(7,31)-(7,33)
+(7,37)-(7,51)
+(7,37)-(7,60)
+(7,52)-(7,53)
+(7,54)-(7,58)
+(7,59)-(7,60)
+(9,32)-(9,41)
+(9,32)-(9,45)
+(9,32)-(9,72)
+(9,42)-(9,45)
+(9,47)-(9,48)
+(9,50)-(9,66)
+(9,50)-(9,72)
+(9,51)-(9,59)
+(9,51)-(9,64)
+(9,67)-(9,68)
+(9,69)-(9,72)
 *)
