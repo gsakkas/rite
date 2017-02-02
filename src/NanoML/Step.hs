@@ -296,6 +296,7 @@ transStep expr' = do
 
 stepAll expr = do
   -- traceShowM $ pretty expr
+  -- traceM ""
   modify' (\s -> s { stStepKind = BoringStep })
   let ?envs = []
   expr' <- step expr

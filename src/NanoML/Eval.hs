@@ -209,7 +209,7 @@ force x t k = do
 
 force' x@(Hole _ _ Nothing) (TVar {}) k = k x -- delay instantiation until we have a concrete type
 force' h@(Hole _ r mt) t k = do
-  x <- lookupStore r
+  -- x <- lookupStore r
   -- traceShowM (h, t, x)
   lookupStore r >>= \case
     Just (_,v) -> do
@@ -244,15 +244,32 @@ forces vts k = go vts []
   go ((v,t):vts) vs = force v t (\v -> go vts (v:vs))
 
 forceSame :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
+forceSame x y k = do
+  x' <- fillHole x
+  y' <- fillHole y
+  forceSame' x' y' k
+
+fillHole :: MonadEval m => Value -> m Value
+fillHole h@(Hole _ r _) = do
+  lookupStore r >>= \case
+    Just (_,v) -> return v
+    Nothing    -> return h
+
+forceSame' :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
 -- forceSame x@(Hole {}) y@(Hole {}) k =
 --   forces [(x,tCon tINT),(y,tCon tINT)] $ \[x,y] -> k x y
-forceSame x@(Hole {}) y k = do
+forceSame' x@(Hole {}) y@(Hole {}) k = do
+  xt <- substM =<< typeOfM x
+  yt <- substM =<< typeOfM y
+  unify xt yt
+  k x y
+forceSame' x@(Hole {}) y k = do
   yt <- substM =<< typeOfM y
   force x yt $ \x -> k x y
-forceSame x y@(Hole {}) k = do
+forceSame' x y@(Hole {}) k = do
   xt <- substM =<< typeOfM x
   force y xt $ \y -> k x y
-forceSame x y k = do
+forceSame' x y k = do
   xt <- substM =<< typeOfM x
   yt <- substM =<< typeOfM y
   unify xt yt
