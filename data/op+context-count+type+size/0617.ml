@@ -1,83 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Plus of expr* expr
-  | Cube of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
-  | Plus (v,w) -> "(" ^ ((exprToString v) ^ (("+" exprToString w) ^ ")"))
-  | Cube (v,w,x) ->
-      "(" ^
-        ((exprToString v) ^
-           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
+let rec digitsOfInt n = if n > 0 then (n / 10) :: (n mod 10) else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Plus of expr* expr
-  | Cube of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
-  | Plus (v,w) -> "(" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")")))
-  | Cube (v,w,x) ->
-      "(" ^
-        ((exprToString v) ^
-           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
+let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
 
 *)
 
 (* changed spans
-(27,47)-(27,65)
-(27,51)-(27,63)
+(2,40)-(2,60)
 *)
 
 (* type error slice
-(14,3)-(31,61)
-(17,29)-(17,41)
-(17,29)-(17,43)
-(17,42)-(17,43)
-(27,47)-(27,50)
-(27,47)-(27,65)
-(27,51)-(27,63)
-(27,64)-(27,65)
+(2,4)-(2,71)
+(2,21)-(2,69)
+(2,25)-(2,69)
+(2,25)-(2,69)
+(2,28)-(2,29)
+(2,28)-(2,33)
+(2,28)-(2,33)
+(2,28)-(2,33)
+(2,32)-(2,33)
+(2,40)-(2,41)
+(2,40)-(2,46)
+(2,40)-(2,60)
+(2,44)-(2,46)
+(2,52)-(2,53)
+(2,52)-(2,60)
+(2,58)-(2,60)
+(2,67)-(2,69)
 *)

@@ -1,73 +1,125 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ (("+" exprToString y) ^ ")/2)"))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 (" ? " ^
-                    ((exprToString y) ^ (" : " ^ ((exprToString z) ^ ")")))))));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) > 9 then sumList (digitsOfInt n);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 (" ? " ^
-                    ((exprToString y) ^ (" : " ^ ((exprToString z) ^ ")")))))));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) > 9 then 0 else 1;;
 
 *)
 
 (* changed spans
-(18,36)-(18,54)
-(18,40)-(18,52)
+(13,3)-(13,63)
+(13,41)-(13,48)
+(13,41)-(13,63)
+(13,50)-(13,63)
 *)
 
 (* type error slice
-(12,3)-(26,73)
-(15,29)-(15,41)
-(15,29)-(15,43)
-(15,42)-(15,43)
-(18,36)-(18,39)
-(18,36)-(18,54)
-(18,40)-(18,52)
-(18,53)-(18,54)
+(2,4)-(3,60)
+(2,21)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,9)-(3,10)
+(3,24)-(3,26)
+(3,38)-(3,49)
+(3,38)-(3,51)
+(3,38)-(3,51)
+(3,38)-(3,58)
+(3,38)-(3,58)
+(3,38)-(3,58)
+(3,50)-(3,51)
+(3,53)-(3,54)
+(3,55)-(3,58)
+(3,55)-(3,58)
+(3,56)-(3,57)
+(5,4)-(8,74)
+(5,21)-(8,68)
+(6,3)-(8,68)
+(6,3)-(8,68)
+(6,6)-(6,7)
+(6,6)-(6,12)
+(6,6)-(6,12)
+(6,6)-(6,12)
+(6,11)-(6,12)
+(7,8)-(7,10)
+(8,8)-(8,19)
+(8,8)-(8,68)
+(8,22)-(8,23)
+(8,22)-(8,30)
+(8,22)-(8,68)
+(8,28)-(8,30)
+(8,36)-(8,47)
+(8,36)-(8,68)
+(8,36)-(8,68)
+(8,49)-(8,60)
+(8,49)-(8,68)
+(8,49)-(8,68)
+(8,62)-(8,63)
+(8,62)-(8,68)
+(8,66)-(8,68)
+(10,4)-(10,73)
+(10,17)-(10,70)
+(10,22)-(10,70)
+(10,22)-(10,70)
+(10,22)-(10,70)
+(10,22)-(10,70)
+(10,22)-(10,70)
+(10,22)-(10,70)
+(10,28)-(10,30)
+(10,44)-(10,45)
+(10,56)-(10,57)
+(10,56)-(10,70)
+(10,56)-(10,70)
+(10,56)-(10,70)
+(10,61)-(10,68)
+(10,61)-(10,70)
+(10,61)-(10,70)
+(10,69)-(10,70)
+(12,4)-(13,66)
+(12,29)-(13,63)
+(13,3)-(13,63)
+(13,3)-(13,63)
+(13,3)-(13,63)
+(13,7)-(13,14)
+(13,7)-(13,29)
+(13,7)-(13,35)
+(13,7)-(13,35)
+(13,16)-(13,27)
+(13,16)-(13,29)
+(13,16)-(13,29)
+(13,28)-(13,29)
+(13,34)-(13,35)
+(13,41)-(13,48)
+(13,41)-(13,63)
+(13,50)-(13,61)
+(13,50)-(13,63)
+(13,62)-(13,63)
 *)

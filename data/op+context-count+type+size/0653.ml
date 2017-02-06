@@ -1,113 +1,78 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Log of expr
-  | SumOfSquares of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0
-  | SumOfSquares (e1,e2,e3) ->
-      (((eval (e1, x, y)) ** 2) + ((eval (e2, x, y)) ** 2)) +
-        ((eval (e3, x, y)) ** 2);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (h, seen) then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Log of expr
-  | SumOfSquares of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0
-  | SumOfSquares (e1,e2,e3) ->
-      (((eval (e1, x, y)) ** 2.0) +. ((eval (e2, x, y)) ** 2.0)) +.
-        ((eval (e3, x, y)) ** 2.0);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(29,10)-(29,31)
-(29,10)-(29,58)
-(29,10)-(30,32)
-(29,30)-(29,31)
-(29,57)-(29,58)
-(30,31)-(30,32)
+(7,24)-(7,41)
+(7,34)-(7,41)
 *)
 
 (* type error slice
-(16,3)-(30,32)
-(17,14)-(17,15)
-(19,28)-(19,32)
-(19,28)-(19,42)
-(19,34)-(19,36)
-(19,34)-(19,42)
-(19,38)-(19,39)
-(19,41)-(19,42)
-(29,10)-(29,14)
-(29,10)-(29,24)
-(29,10)-(29,31)
-(29,10)-(30,32)
-(29,16)-(29,18)
-(29,16)-(29,24)
-(29,20)-(29,21)
-(29,23)-(29,24)
-(29,27)-(29,29)
-(29,30)-(29,31)
-(29,37)-(29,41)
-(29,37)-(29,51)
-(29,37)-(29,58)
-(29,43)-(29,45)
-(29,43)-(29,51)
-(29,47)-(29,48)
-(29,50)-(29,51)
-(29,54)-(29,56)
-(29,57)-(29,58)
-(30,11)-(30,15)
-(30,11)-(30,25)
-(30,11)-(30,32)
-(30,17)-(30,19)
-(30,17)-(30,25)
-(30,21)-(30,22)
-(30,24)-(30,25)
-(30,28)-(30,30)
-(30,31)-(30,32)
+(2,4)-(9,30)
+(2,22)-(9,26)
+(3,3)-(9,26)
+(3,3)-(9,26)
+(3,19)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,11)-(4,15)
+(5,13)-(5,17)
+(7,9)-(8,46)
+(7,9)-(8,46)
+(7,21)-(7,67)
+(7,21)-(7,67)
+(7,21)-(7,67)
+(7,24)-(7,32)
+(7,24)-(7,41)
+(7,24)-(7,41)
+(7,34)-(7,35)
+(7,34)-(7,41)
+(7,37)-(7,41)
+(7,48)-(7,52)
+(7,58)-(7,59)
+(7,58)-(7,67)
+(7,63)-(7,67)
+(8,9)-(8,46)
+(8,9)-(8,46)
+(8,21)-(8,22)
+(8,26)-(8,32)
+(8,26)-(8,46)
+(8,26)-(8,46)
+(8,34)-(8,39)
+(8,34)-(8,46)
+(8,41)-(8,46)
+(9,3)-(9,11)
+(9,3)-(9,26)
+(9,3)-(9,26)
+(9,13)-(9,19)
+(9,13)-(9,26)
+(9,13)-(9,26)
+(9,21)-(9,23)
+(9,21)-(9,26)
+(9,25)-(9,26)
 *)

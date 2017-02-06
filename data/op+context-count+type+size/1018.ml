@@ -1,125 +1,179 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (m,n) ->
-          if (m + n) > 9 then 1 :: ((m + n) - 10) :: a else (m + n) :: a in
-    let base = [] in
-    let args = match List.rev (List.combine l1 l2) with | h::t -> h in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let prevN (n1,n2) = n1 in
-      let prev = prevN a in
-      let sumlist (p1,p2) = p2 in
-      let sum = sumlist a in
-      let add (m,n) = m + n in
-      let digit = (add x) + prev in
-      if digit > 10 then (1, ((digit - 10) :: sum)) else (0, (digit :: sum)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(19,7)-(21,73)
-(19,13)-(19,14)
-(21,11)-(21,73)
-(21,15)-(21,20)
-(21,15)-(21,25)
-(21,24)-(21,25)
-(21,31)-(21,32)
-(21,31)-(21,55)
-(21,38)-(21,39)
-(21,38)-(21,43)
-(21,42)-(21,43)
-(21,54)-(21,55)
-(21,62)-(21,63)
-(21,62)-(21,67)
-(21,62)-(21,73)
-(21,66)-(21,67)
-(21,72)-(21,73)
-(22,5)-(24,52)
-(22,16)-(22,18)
-(23,16)-(23,68)
-(23,32)-(23,44)
-(23,45)-(23,47)
-(23,48)-(23,50)
-(23,67)-(23,68)
-(24,19)-(24,33)
-(24,19)-(24,45)
-(24,34)-(24,35)
-(24,36)-(24,40)
-(24,41)-(24,45)
-(24,49)-(24,52)
-(25,3)-(25,13)
-(25,15)-(25,18)
-(25,15)-(25,33)
-(25,20)-(25,27)
-(25,20)-(25,33)
-(25,28)-(25,30)
-(25,31)-(25,33)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,67)
+(19,66)-(19,67)
 *)
 
 (* type error slice
-(18,5)-(24,52)
-(18,11)-(21,73)
-(18,13)-(21,73)
-(19,7)-(21,73)
-(19,13)-(19,14)
-(21,11)-(21,73)
-(21,15)-(21,16)
-(21,15)-(21,20)
-(21,19)-(21,20)
-(21,31)-(21,55)
-(21,38)-(21,49)
-(21,38)-(21,55)
-(21,54)-(21,55)
-(22,5)-(24,52)
-(22,16)-(22,18)
-(23,5)-(24,52)
-(23,16)-(23,68)
-(23,67)-(23,68)
-(24,19)-(24,33)
-(24,19)-(24,45)
-(24,34)-(24,35)
-(24,36)-(24,40)
-(24,41)-(24,45)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,15)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,3)-(24,30)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,15)-(17,18)
+(17,15)-(17,40)
+(17,20)-(17,22)
+(17,20)-(17,40)
+(17,20)-(17,40)
+(17,27)-(17,31)
+(17,27)-(17,40)
+(17,27)-(17,40)
+(17,33)-(17,34)
+(17,33)-(17,40)
+(17,36)-(17,37)
+(17,39)-(17,40)
+(18,17)-(18,20)
+(18,17)-(18,42)
+(18,22)-(18,24)
+(18,22)-(18,42)
+(18,29)-(18,33)
+(18,29)-(18,42)
+(18,29)-(18,42)
+(18,35)-(18,36)
+(18,35)-(18,42)
+(18,38)-(18,39)
+(18,41)-(18,42)
+(19,26)-(19,30)
+(19,26)-(19,40)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,26)-(19,67)
+(19,32)-(19,34)
+(19,32)-(19,40)
+(19,36)-(19,37)
+(19,39)-(19,40)
+(19,46)-(19,50)
+(19,46)-(19,60)
+(19,46)-(19,60)
+(19,52)-(19,54)
+(19,52)-(19,60)
+(19,56)-(19,57)
+(19,59)-(19,60)
+(19,66)-(19,67)
+(20,23)-(20,27)
+(20,23)-(20,37)
+(20,23)-(20,37)
+(20,23)-(20,58)
+(20,29)-(20,31)
+(20,29)-(20,37)
+(20,33)-(20,34)
+(20,36)-(20,37)
+(20,44)-(20,48)
+(20,44)-(20,58)
+(20,44)-(20,58)
+(20,50)-(20,52)
+(20,50)-(20,58)
+(20,54)-(20,55)
+(20,57)-(20,58)
+(22,7)-(24,30)
+(22,11)-(22,15)
+(22,11)-(22,24)
+(22,11)-(22,24)
+(22,11)-(22,43)
+(22,11)-(22,43)
+(22,17)-(22,18)
+(22,17)-(22,24)
+(22,20)-(22,21)
+(22,23)-(22,24)
+(22,30)-(22,34)
+(22,30)-(22,43)
+(22,30)-(22,43)
+(22,36)-(22,37)
+(22,36)-(22,43)
+(22,39)-(22,40)
+(22,42)-(22,43)
+(23,12)-(23,16)
+(23,12)-(23,30)
+(23,12)-(23,30)
+(23,18)-(23,24)
+(23,18)-(23,30)
+(23,26)-(23,27)
+(23,29)-(23,30)
+(24,12)-(24,16)
+(24,12)-(24,30)
+(24,12)-(24,30)
+(24,18)-(24,24)
+(24,18)-(24,30)
+(24,26)-(24,27)
+(24,29)-(24,30)
 *)

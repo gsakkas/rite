@@ -1,61 +1,75 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-  | _ -> let y = rand (2, 6) in if y = 2 then buildX ();;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input < 10 then input else [loop (input / 10); input mod 10] in
+    loop n
+  else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input < 10
+      then [input]
+      else (let y::[] = loop (input / 10) in [y; input mod 10]) in
+    loop n
+  else [];;
 
 *)
 
 (* changed spans
-(16,3)-(18,56)
-(16,9)-(16,14)
-(17,10)-(17,60)
-(18,33)-(18,56)
-(18,36)-(18,37)
-(18,36)-(18,41)
-(18,40)-(18,41)
+(6,26)-(6,31)
+(6,37)-(6,70)
+(6,57)-(6,69)
 *)
 
 (* type error slice
-(11,4)-(11,23)
-(11,12)-(11,21)
-(11,17)-(11,21)
-(18,33)-(18,56)
-(18,47)-(18,53)
-(18,47)-(18,56)
-(18,54)-(18,56)
+(2,4)-(8,12)
+(2,21)-(8,10)
+(3,3)-(8,10)
+(3,3)-(8,10)
+(3,8)-(3,9)
+(3,8)-(3,15)
+(3,8)-(3,15)
+(3,8)-(3,20)
+(3,8)-(3,20)
+(3,8)-(3,31)
+(3,14)-(3,15)
+(3,19)-(3,20)
+(3,26)-(3,27)
+(3,26)-(3,31)
+(3,26)-(3,31)
+(3,30)-(3,31)
+(5,5)-(7,11)
+(5,5)-(7,11)
+(5,18)-(6,70)
+(6,7)-(6,70)
+(6,7)-(6,70)
+(6,10)-(6,15)
+(6,10)-(6,20)
+(6,10)-(6,20)
+(6,10)-(6,20)
+(6,18)-(6,20)
+(6,26)-(6,31)
+(6,37)-(6,70)
+(6,37)-(6,70)
+(6,37)-(6,70)
+(6,38)-(6,42)
+(6,38)-(6,54)
+(6,38)-(6,54)
+(6,44)-(6,49)
+(6,44)-(6,54)
+(6,52)-(6,54)
+(6,57)-(6,62)
+(6,57)-(6,69)
+(6,67)-(6,69)
+(7,5)-(7,9)
+(7,5)-(7,11)
+(7,10)-(7,11)
+(8,8)-(8,10)
 *)

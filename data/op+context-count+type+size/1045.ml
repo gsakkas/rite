@@ -1,51 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex x y)));;
+let rec listReverse l =
+  match l with | [] -> [] | hd::l' -> 1 + (listReverse l');;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)));;
+let rec listReverse l = match l with | [] -> [] | _::tl -> listReverse tl;;
 
 *)
 
 (* changed spans
-(17,34)-(17,40)
+(3,3)-(3,58)
+(3,39)-(3,40)
+(3,39)-(3,58)
+(3,56)-(3,58)
 *)
 
 (* type error slice
-(14,3)-(17,40)
-(17,34)-(17,36)
-(17,34)-(17,40)
-(17,37)-(17,38)
-(17,39)-(17,40)
+(2,4)-(3,61)
+(2,21)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,9)-(3,10)
+(3,24)-(3,26)
+(3,39)-(3,40)
+(3,39)-(3,58)
+(3,39)-(3,58)
+(3,44)-(3,55)
+(3,44)-(3,58)
+(3,44)-(3,58)
+(3,56)-(3,58)
 *)

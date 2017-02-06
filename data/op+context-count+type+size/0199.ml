@@ -1,147 +1,159 @@
 
-let rec padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2 then padZero (0 :: l1) l2 else padZero l1 (0 :: l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (eFromList1,eFromList2) = x in
-      let (cin,result) = a in
-      let sum = (eFromList1 + eFromList2) + cin in
-      let tens = sum / 10 in
-      let ones = sum mod 10 in (tens, (ones :: result)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
 
-let rec mulByDigit i l =
-  match i with
-  | 0 -> []
-  | 1 -> l
-  | _ -> bigAdd (bigAdd 1 1) (mulByDigit (i - 2) l);;
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  if depth > (-1)
+  then
+    let randNum = rand (1, 2) in
+    let randNum2 = rand (3, 4) in
+    (if (randNum = 1) && (randNum2 = 3)
+     then buildX ()
+     else
+       if (randNum = 1) && (randNum2 = 4)
+       then
+         buildSine
+           (buildOp2
+              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                (build (rand, (depth - 1))))));;
 
 
 (* fix
 
-let rec padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2 then padZero (0 :: l1) l2 else padZero l1 (0 :: l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildSine e = Sine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (eFromList1,eFromList2) = x in
-      let (cin,result) = a in
-      let sum = (eFromList1 + eFromList2) + cin in
-      let tens = sum / 10 in
-      let ones = sum mod 10 in (tens, (ones :: result)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildX () = VarX;;
 
-let rec mulByDigit i l =
-  if i = 0
-  then []
-  else if i = 1 then l else bigAdd (bigAdd l l) (mulByDigit (i - 2) l);;
+let rec build (rand,depth) =
+  if depth = 0 then buildSine (buildX ()) else buildX ();;
 
 *)
 
 (* changed spans
-(27,3)-(30,51)
-(27,9)-(27,10)
-(28,10)-(28,12)
-(29,10)-(29,11)
-(30,25)-(30,26)
-(30,27)-(30,28)
-(30,31)-(30,41)
-(30,31)-(30,51)
-(30,43)-(30,44)
-(30,43)-(30,48)
-(30,47)-(30,48)
+(13,15)-(13,53)
+(13,36)-(13,53)
+(13,41)-(13,42)
+(13,44)-(13,45)
+(13,47)-(13,53)
+(20,3)-(32,41)
+(20,6)-(20,17)
+(20,15)-(20,17)
+(22,5)-(32,41)
+(22,19)-(22,23)
+(22,25)-(22,29)
+(23,5)-(32,41)
 *)
 
 (* type error slice
-(4,17)-(4,28)
-(4,17)-(4,31)
-(4,29)-(4,31)
-(8,31)-(8,38)
-(8,31)-(8,51)
-(8,40)-(8,47)
-(8,49)-(8,51)
-(11,3)-(11,70)
-(11,51)-(11,61)
-(11,51)-(11,63)
-(11,62)-(11,63)
-(13,4)-(24,37)
-(13,12)-(24,33)
-(13,15)-(24,33)
-(14,3)-(24,33)
-(14,12)-(23,52)
-(15,5)-(23,52)
-(15,11)-(20,54)
-(15,13)-(20,54)
-(16,7)-(20,54)
-(16,37)-(16,38)
-(17,7)-(20,54)
-(17,26)-(17,27)
-(18,7)-(20,54)
-(19,7)-(20,54)
-(19,18)-(19,26)
-(20,7)-(20,54)
-(20,33)-(20,37)
-(20,33)-(20,54)
-(20,40)-(20,54)
-(21,5)-(23,52)
-(21,17)-(21,18)
-(21,17)-(21,22)
-(21,20)-(21,22)
-(22,5)-(23,52)
-(22,16)-(22,28)
-(22,16)-(22,68)
-(22,30)-(22,38)
-(22,30)-(22,47)
-(22,40)-(22,41)
-(22,40)-(22,47)
-(22,45)-(22,47)
-(22,51)-(22,59)
-(22,51)-(22,68)
-(22,61)-(22,62)
-(22,61)-(22,68)
-(22,66)-(22,68)
-(23,5)-(23,52)
-(23,19)-(23,33)
-(23,19)-(23,45)
-(23,34)-(23,35)
-(23,36)-(23,40)
-(23,41)-(23,45)
-(23,49)-(23,52)
-(24,3)-(24,13)
-(24,3)-(24,33)
-(24,15)-(24,18)
-(24,15)-(24,33)
-(24,20)-(24,27)
-(24,20)-(24,33)
-(24,28)-(24,30)
-(24,31)-(24,33)
-(30,18)-(30,24)
-(30,18)-(30,28)
-(30,25)-(30,26)
-(30,27)-(30,28)
+(13,4)-(13,56)
+(13,15)-(13,53)
+(13,36)-(13,53)
+(13,41)-(13,42)
+(13,44)-(13,45)
+(13,47)-(13,53)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,23)
+(17,12)-(17,21)
+(17,12)-(17,21)
+(17,17)-(17,21)
+(19,4)-(32,49)
+(19,16)-(32,41)
+(20,6)-(20,11)
+(20,6)-(20,17)
+(20,6)-(20,17)
+(20,6)-(20,17)
+(20,15)-(20,17)
+(22,5)-(32,41)
+(22,19)-(22,23)
+(22,19)-(22,29)
+(22,19)-(22,29)
+(22,25)-(22,26)
+(22,25)-(22,29)
+(22,28)-(22,29)
+(23,5)-(32,41)
+(23,20)-(23,24)
+(23,20)-(23,30)
+(23,26)-(23,27)
+(23,26)-(23,30)
+(23,29)-(23,30)
+(24,6)-(32,41)
+(24,10)-(24,17)
+(24,10)-(24,21)
+(24,10)-(24,21)
+(24,10)-(24,21)
+(24,10)-(24,39)
+(24,20)-(24,21)
+(24,27)-(24,35)
+(24,27)-(24,39)
+(24,27)-(24,39)
+(24,38)-(24,39)
+(25,11)-(25,17)
+(25,11)-(25,20)
+(25,18)-(25,20)
+(27,8)-(32,41)
+(27,12)-(27,19)
+(27,12)-(27,23)
+(27,12)-(27,23)
+(27,12)-(27,41)
+(27,22)-(27,23)
+(27,29)-(27,37)
+(27,29)-(27,41)
+(27,29)-(27,41)
+(27,40)-(27,41)
+(29,10)-(29,19)
+(29,10)-(32,41)
+(30,13)-(30,21)
+(30,13)-(32,41)
+(30,13)-(32,41)
+(31,17)-(31,22)
+(31,17)-(31,40)
+(31,17)-(31,40)
+(31,17)-(32,41)
+(31,24)-(31,28)
+(31,24)-(31,40)
+(31,31)-(31,36)
+(31,31)-(31,40)
+(31,39)-(31,40)
+(31,46)-(31,51)
+(31,46)-(31,69)
+(31,53)-(31,57)
+(31,53)-(31,69)
+(31,60)-(31,65)
+(31,60)-(31,69)
+(31,68)-(31,69)
+(32,18)-(32,23)
+(32,18)-(32,41)
+(32,25)-(32,29)
+(32,25)-(32,41)
+(32,32)-(32,37)
+(32,32)-(32,41)
+(32,40)-(32,41)
 *)

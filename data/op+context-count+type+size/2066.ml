@@ -1,36 +1,100 @@
 
-let pipe fs =
-  let f a x b = (b x) a in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine e -> sin (pi *. e)
+  | Cosine e -> cos (pi *. e)
+  | Average (x,y) -> (x +. y) /. 2.0
+  | Times (x,y) -> x *. y
+  | Thresh (e,f,g,h) -> failwith "sad";;
 
 
 (* fix
 
-let pipe fs =
-  let f a x b = x (a b) in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(3,18)-(3,19)
-(3,18)-(3,21)
-(3,23)-(3,24)
-(3,28)-(3,70)
+(14,3)-(19,39)
+(15,15)-(15,27)
+(15,26)-(15,27)
+(16,17)-(16,29)
+(16,28)-(16,29)
+(17,23)-(17,29)
+(17,23)-(17,37)
+(17,34)-(17,37)
+(18,20)-(18,21)
+(18,25)-(18,26)
+(19,25)-(19,33)
+(19,25)-(19,39)
+(19,34)-(19,39)
 *)
 
 (* type error slice
-(3,3)-(3,70)
-(3,9)-(3,24)
-(3,11)-(3,24)
-(3,13)-(3,24)
-(3,18)-(3,19)
-(3,18)-(3,21)
-(3,20)-(3,21)
-(3,28)-(3,70)
-(3,37)-(3,42)
-(3,41)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
-(3,68)-(3,70)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(19,41)
+(13,15)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,9)-(14,10)
+(15,15)-(15,18)
+(15,15)-(15,27)
+(15,20)-(15,22)
+(15,20)-(15,27)
+(15,20)-(15,27)
+(15,26)-(15,27)
+(16,17)-(16,20)
+(16,22)-(16,24)
+(16,22)-(16,29)
+(16,28)-(16,29)
+(17,23)-(17,24)
+(17,23)-(17,29)
+(17,23)-(17,29)
+(17,28)-(17,29)
+(18,20)-(18,21)
+(18,20)-(18,26)
+(18,20)-(18,26)
+(18,25)-(18,26)
+(19,25)-(19,33)
+(19,25)-(19,39)
 *)

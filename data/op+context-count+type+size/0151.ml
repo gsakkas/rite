@@ -1,71 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e' (e', x, y))))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) :: (n mod 10));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) @ [n mod 10]);;
 
 *)
 
 (* changed spans
-(17,34)-(17,36)
-(17,34)-(17,46)
-(18,26)-(18,68)
-(18,67)-(18,68)
+(5,40)-(5,59)
+(5,40)-(5,74)
+(5,66)-(5,74)
 *)
 
 (* type error slice
-(14,3)-(23,26)
-(15,14)-(15,15)
-(17,34)-(17,36)
-(17,34)-(17,46)
-(17,38)-(17,40)
-(17,38)-(17,46)
-(17,42)-(17,43)
-(17,45)-(17,46)
-(18,26)-(18,61)
-(18,26)-(18,68)
+(2,4)-(5,78)
+(2,21)-(5,74)
+(3,3)-(5,74)
+(3,3)-(5,74)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(4,8)-(4,10)
+(5,9)-(5,74)
+(5,9)-(5,74)
+(5,29)-(5,31)
+(5,40)-(5,51)
+(5,40)-(5,59)
+(5,40)-(5,74)
+(5,66)-(5,74)
 *)

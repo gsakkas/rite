@@ -1,63 +1,70 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n =
+  if n = 0
+  then [0]
+  else if n > 0 then myAppend [digitsOfInt (n / 10)] (n mod 10) else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec getDigits n =
+  match n with | 0 -> [] | _ -> myAppend (getDigits (n / 10)) (n mod 10);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
 
 *)
 
 (* changed spans
-(18,26)-(18,68)
-(18,67)-(18,68)
+(5,3)-(7,72)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(5,10)-(5,11)
+(6,8)-(6,11)
+(6,9)-(6,10)
+(7,8)-(7,72)
+(7,11)-(7,16)
+(7,15)-(7,16)
+(7,31)-(7,53)
+(7,32)-(7,43)
+(7,70)-(7,72)
 *)
 
 (* type error slice
-(14,3)-(23,26)
-(15,14)-(15,15)
-(18,26)-(18,61)
-(18,26)-(18,68)
+(2,4)-(2,80)
+(2,18)-(2,77)
+(2,20)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,24)-(2,77)
+(2,30)-(2,31)
+(2,45)-(2,48)
+(2,45)-(2,48)
+(2,46)-(2,47)
+(2,59)-(2,60)
+(2,59)-(2,77)
+(2,65)-(2,73)
+(2,65)-(2,77)
+(2,65)-(2,77)
+(2,65)-(2,77)
+(2,74)-(2,75)
+(2,76)-(2,77)
+(4,21)-(7,72)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(7,22)-(7,30)
+(7,22)-(7,63)
+(7,22)-(7,63)
+(7,31)-(7,53)
+(7,31)-(7,53)
+(7,32)-(7,43)
+(7,32)-(7,51)
+(7,70)-(7,72)
 *)

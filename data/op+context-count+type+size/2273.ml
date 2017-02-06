@@ -1,59 +1,150 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let leng1 = List.length l1 in
-  let leng2 = List.length l2 in
-  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "to be implemented" in
-    let base = ([], []) in
-    let args = [List.combine (l1, l2)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> ((exprToString x) + "*") ^ (exprToString y)
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let leng1 = List.length l1 in
-  let leng2 = List.length l2 in
-  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
 
 *)
 
 (* changed spans
-(14,17)-(14,25)
-(14,17)-(14,45)
-(14,26)-(14,45)
-(15,17)-(15,19)
-(16,16)-(16,39)
-(16,17)-(16,37)
-(16,31)-(16,37)
+(19,22)-(19,43)
+(19,40)-(19,43)
+(25,20)-(25,38)
+(25,24)-(25,36)
+(25,50)-(25,62)
+(25,63)-(25,64)
 *)
 
 (* type error slice
-(16,17)-(16,29)
-(16,17)-(16,37)
-(16,31)-(16,33)
-(16,31)-(16,37)
-(16,35)-(16,37)
+(11,22)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,3)-(25,64)
+(12,9)-(12,10)
+(15,15)-(15,24)
+(15,15)-(15,50)
+(15,25)-(15,26)
+(15,29)-(15,41)
+(15,29)-(15,43)
+(15,29)-(15,43)
+(15,29)-(15,50)
+(15,29)-(15,50)
+(15,42)-(15,43)
+(15,45)-(15,46)
+(15,47)-(15,50)
+(16,17)-(16,26)
+(16,17)-(16,52)
+(16,27)-(16,28)
+(16,31)-(16,43)
+(16,31)-(16,45)
+(16,31)-(16,52)
+(16,44)-(16,45)
+(16,47)-(16,48)
+(16,49)-(16,52)
+(18,7)-(18,11)
+(18,7)-(18,67)
+(18,12)-(18,13)
+(18,16)-(18,28)
+(18,16)-(18,30)
+(18,16)-(18,67)
+(18,29)-(18,30)
+(18,32)-(18,33)
+(18,35)-(18,38)
+(18,35)-(18,67)
+(18,39)-(18,40)
+(18,43)-(18,55)
+(18,43)-(18,57)
+(18,43)-(18,67)
+(18,56)-(18,57)
+(18,59)-(18,60)
+(18,61)-(18,67)
+(19,22)-(19,34)
+(19,22)-(19,36)
+(19,22)-(19,43)
+(19,22)-(19,43)
+(19,22)-(19,43)
+(19,22)-(19,62)
+(19,22)-(19,62)
+(19,35)-(19,36)
+(19,40)-(19,43)
+(19,45)-(19,46)
+(19,48)-(19,60)
+(19,48)-(19,62)
+(19,61)-(19,62)
+(21,7)-(21,10)
+(21,11)-(21,12)
+(22,11)-(22,23)
+(22,11)-(22,25)
+(22,24)-(22,25)
+(22,27)-(22,28)
+(23,13)-(23,16)
+(23,17)-(23,18)
+(24,17)-(24,29)
+(24,17)-(24,31)
+(24,30)-(24,31)
+(24,33)-(24,34)
+(25,20)-(25,23)
+(25,20)-(25,38)
+(25,24)-(25,36)
+(25,37)-(25,38)
+(25,40)-(25,41)
 *)

@@ -1,40 +1,85 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
+let rec mulByDigit i l =
+  let rec mulHelper l' =
+    match l' with
+    | [] -> (0, [])
     | h::t ->
-        let seen' = if List.mem h seen then seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+        let (carry,rest) = mulHelper t in
+        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
+  let (_,ans) = (mulHelper 0) :: (List.rev l) in ans;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
+let rec mulByDigit i l =
+  let rec mulHelper l' =
+    match l' with
+    | [] -> (0, [])
     | h::t ->
-        let seen' = if List.mem h seen then h :: seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+        let (carry,rest) = mulHelper t in
+        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
+  let (_,ans) = mulHelper (0 :: (List.rev l)) in ans;;
 
 *)
 
 (* changed spans
-(7,21)-(7,49)
-(7,45)-(7,49)
-(8,9)-(8,46)
-(9,21)-(9,23)
-(9,25)-(9,26)
+(9,18)-(9,45)
+(9,28)-(9,29)
 *)
 
 (* type error slice
-(7,21)-(7,49)
-(7,24)-(7,32)
-(7,24)-(7,39)
-(7,33)-(7,34)
-(7,35)-(7,39)
-(7,45)-(7,49)
+(2,4)-(9,55)
+(2,20)-(9,53)
+(2,22)-(9,53)
+(3,3)-(9,53)
+(3,3)-(9,53)
+(3,21)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,5)-(8,75)
+(4,11)-(4,13)
+(5,14)-(5,15)
+(5,14)-(5,19)
+(5,17)-(5,19)
+(7,9)-(8,75)
+(7,9)-(8,75)
+(7,28)-(7,37)
+(7,28)-(7,39)
+(7,28)-(7,39)
+(7,38)-(7,39)
+(8,9)-(8,75)
+(8,9)-(8,75)
+(8,21)-(8,22)
+(8,21)-(8,26)
+(8,21)-(8,26)
+(8,21)-(8,26)
+(8,21)-(8,35)
+(8,21)-(8,35)
+(8,25)-(8,26)
+(8,30)-(8,35)
+(8,41)-(8,45)
+(8,41)-(8,50)
+(8,41)-(8,75)
+(8,48)-(8,50)
+(8,55)-(8,59)
+(8,55)-(8,66)
+(8,55)-(8,75)
+(8,64)-(8,66)
+(8,71)-(8,75)
+(9,3)-(9,53)
+(9,3)-(9,53)
+(9,18)-(9,27)
+(9,18)-(9,29)
+(9,18)-(9,29)
+(9,18)-(9,45)
+(9,28)-(9,29)
+(9,35)-(9,43)
+(9,35)-(9,45)
+(9,35)-(9,45)
+(9,44)-(9,45)
+(9,50)-(9,53)
 *)

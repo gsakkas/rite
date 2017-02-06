@@ -1,100 +1,79 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
-
-let palindrome w = failwith "TBD";;
-
-let palindrome w =
-  match explode w with
-  | [] -> true
-  | head::[] -> true
-  | head::tail ->
-      if head = (List.hd (listReverse [w]))
-      then palindrome (List.tl (listReverse [tail]))
-      else false;;
+let stringOfList f l = "[" ^ ((sepConcat ";") ^ ([List.map (f l)] ^ "]"));;
 
 
 (* fix
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
-
-let palindrome w =
-  let rec palHelper xs =
-    match xs with
-    | [] -> true
-    | hd::tl ->
-        (match listReverse tl with
-         | [] -> true
-         | hdr::tlr -> if hdr = hd then palHelper tlr else false) in
-  palHelper (explode w);;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(13,20)-(13,28)
-(13,20)-(13,34)
-(13,29)-(13,34)
-(15,16)-(22,17)
-(16,3)-(22,17)
-(16,9)-(16,16)
-(16,9)-(16,18)
-(16,17)-(16,18)
-(17,11)-(17,15)
-(18,17)-(18,21)
-(20,10)-(20,14)
-(20,18)-(20,25)
-(20,18)-(20,42)
-(20,27)-(20,38)
-(20,27)-(20,42)
-(20,39)-(20,42)
-(20,40)-(20,41)
-(21,12)-(21,22)
-(21,12)-(21,51)
-(21,24)-(21,31)
-(21,24)-(21,51)
-(22,12)-(22,17)
+(7,31)-(7,33)
+(9,32)-(9,45)
+(9,50)-(9,66)
+(9,51)-(9,64)
+(9,61)-(9,64)
+(9,67)-(9,68)
+(9,69)-(9,72)
 *)
 
 (* type error slice
-(5,4)-(8,9)
-(5,13)-(8,7)
-(6,3)-(8,7)
-(7,14)-(7,27)
-(7,14)-(7,29)
-(7,28)-(7,29)
-(7,56)-(7,58)
-(7,56)-(7,65)
-(7,60)-(7,65)
-(8,3)-(8,5)
-(8,3)-(8,7)
-(8,6)-(8,7)
-(11,3)-(11,67)
-(11,47)-(11,58)
-(11,47)-(11,61)
-(11,59)-(11,61)
-(16,3)-(22,17)
-(16,9)-(16,16)
-(16,9)-(16,18)
-(16,17)-(16,18)
-(21,33)-(21,44)
-(21,33)-(21,51)
-(21,45)-(21,51)
-(21,46)-(21,50)
+(2,4)-(7,62)
+(2,19)-(7,60)
+(2,23)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,9)-(3,11)
+(6,7)-(7,60)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,24)-(6,27)
+(6,30)-(6,31)
+(7,7)-(7,60)
+(7,18)-(7,19)
+(7,23)-(7,60)
+(7,31)-(7,33)
+(7,37)-(7,51)
+(7,37)-(7,60)
+(7,37)-(7,60)
+(7,37)-(7,60)
+(7,52)-(7,53)
+(7,54)-(7,58)
+(7,59)-(7,60)
+(9,4)-(9,76)
+(9,18)-(9,72)
+(9,20)-(9,72)
+(9,32)-(9,41)
+(9,32)-(9,45)
+(9,50)-(9,66)
+(9,50)-(9,66)
+(9,50)-(9,72)
+(9,50)-(9,72)
+(9,51)-(9,59)
+(9,51)-(9,64)
+(9,51)-(9,64)
+(9,61)-(9,62)
+(9,61)-(9,64)
+(9,61)-(9,64)
+(9,63)-(9,64)
+(9,67)-(9,68)
+(9,69)-(9,72)
 *)

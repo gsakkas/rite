@@ -1,85 +1,105 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = x in
-    let base = 0 in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let bigMul l1 l2 =
+  let f a x = match x with | (k,v) -> (k, v) in
+  let base = ([], [0]) in
+  let args =
+    let rec helper acc l1 l2 =
+      match l1 with
+      | [] -> acc
+      | h::t -> helper ((h, l2) :: acc) (List.map (fun x  -> x * 10) t) l2 in
+    helper [] (List.rev l1) l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (list1,list2) ->
-          (match list1 with
-           | [] -> (match x with | (h1,h2) -> (((h1 + h2) :: list1), list2))) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let bigMul l1 l2 =
+  let f a x = match x with | (k,v) -> ([k], v) in
+  let base = ([], [0]) in
+  let args =
+    let rec helper acc l1 l2 =
+      match l1 with
+      | [] -> acc
+      | h::t -> helper ((h, l2) :: acc) (List.map (fun x  -> x * 10) t) l2 in
+    helper [] (List.rev l1) l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(14,17)-(14,18)
-(15,5)-(16,78)
-(15,16)-(15,17)
-(16,5)-(16,78)
-(16,16)-(16,24)
-(16,16)-(16,27)
-(16,25)-(16,27)
-(16,31)-(16,78)
-(16,45)-(16,59)
-(16,45)-(16,71)
-(16,60)-(16,61)
-(16,62)-(16,66)
-(16,67)-(16,71)
-(16,75)-(16,78)
-(17,3)-(17,13)
-(17,3)-(17,33)
-(17,15)-(17,18)
-(17,15)-(17,33)
-(17,20)-(17,27)
+(3,40)-(3,41)
 *)
 
 (* type error slice
-(14,5)-(16,78)
-(14,11)-(14,18)
-(14,13)-(14,18)
-(14,17)-(14,18)
-(15,5)-(16,78)
-(15,16)-(15,17)
-(16,5)-(16,78)
-(16,16)-(16,24)
-(16,16)-(16,27)
-(16,25)-(16,27)
-(16,31)-(16,78)
-(16,45)-(16,59)
-(16,45)-(16,71)
-(16,60)-(16,61)
-(16,62)-(16,66)
-(16,67)-(16,71)
+(2,4)-(11,52)
+(2,12)-(11,50)
+(2,15)-(11,50)
+(3,3)-(11,50)
+(3,9)-(3,44)
+(3,11)-(3,44)
+(3,15)-(3,44)
+(3,15)-(3,44)
+(3,21)-(3,22)
+(3,40)-(3,41)
+(3,40)-(3,44)
+(3,43)-(3,44)
+(4,3)-(11,50)
+(4,15)-(4,17)
+(4,15)-(4,22)
+(5,3)-(11,50)
+(6,5)-(10,31)
+(6,5)-(10,31)
+(6,20)-(9,75)
+(6,24)-(9,75)
+(6,27)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,7)-(9,75)
+(7,13)-(7,15)
+(8,15)-(8,18)
+(9,17)-(9,23)
+(9,17)-(9,75)
+(9,17)-(9,75)
+(9,17)-(9,75)
+(9,17)-(9,75)
+(9,26)-(9,27)
+(9,26)-(9,31)
+(9,26)-(9,39)
+(9,29)-(9,31)
+(9,36)-(9,39)
+(9,42)-(9,50)
+(9,42)-(9,71)
+(9,42)-(9,71)
+(9,42)-(9,71)
+(9,52)-(9,68)
+(9,62)-(9,63)
+(9,62)-(9,68)
+(9,62)-(9,68)
+(9,66)-(9,68)
+(9,70)-(9,71)
+(9,73)-(9,75)
+(10,5)-(10,11)
+(10,5)-(10,31)
+(10,5)-(10,31)
+(10,5)-(10,31)
+(10,5)-(10,31)
+(10,12)-(10,14)
+(10,16)-(10,24)
+(10,16)-(10,27)
+(10,16)-(10,27)
+(10,25)-(10,27)
+(10,29)-(10,31)
+(11,3)-(11,50)
+(11,17)-(11,31)
+(11,17)-(11,43)
+(11,17)-(11,43)
+(11,17)-(11,43)
+(11,17)-(11,43)
+(11,32)-(11,33)
+(11,34)-(11,38)
+(11,39)-(11,43)
 *)

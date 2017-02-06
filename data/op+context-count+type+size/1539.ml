@@ -1,82 +1,104 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append (zeroes l2)))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append (zeroes l1)), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        (expr0 ^ ("<" ^ (expr1 ^ ("?" ^ (expr2 ^ (":" ^ (expr3 ^ ")")))))));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr0) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(11,39)-(11,61)
-(11,52)-(11,61)
-(14,35)-(14,57)
-(14,48)-(14,57)
+(23,10)-(23,15)
+(23,26)-(23,31)
+(23,42)-(23,47)
+(23,58)-(23,63)
+(23,64)-(23,65)
+(23,66)-(23,69)
 *)
 
 (* type error slice
-(3,37)-(3,42)
-(3,37)-(3,51)
-(3,43)-(3,44)
-(3,46)-(3,51)
-(6,17)-(6,28)
-(6,17)-(6,31)
-(6,29)-(6,31)
-(7,17)-(7,28)
-(7,17)-(7,31)
-(7,29)-(7,31)
-(8,3)-(14,63)
-(10,7)-(11,61)
-(10,15)-(10,32)
-(11,7)-(11,61)
-(11,20)-(11,25)
-(11,20)-(11,29)
-(11,26)-(11,27)
-(11,28)-(11,29)
-(11,34)-(11,36)
-(11,34)-(11,61)
-(11,39)-(11,50)
-(11,39)-(11,61)
-(11,52)-(11,58)
-(11,52)-(11,61)
-(11,59)-(11,61)
-(13,7)-(14,63)
-(13,15)-(13,32)
-(14,7)-(14,63)
-(14,20)-(14,25)
-(14,20)-(14,29)
-(14,26)-(14,27)
-(14,28)-(14,29)
-(14,35)-(14,46)
-(14,35)-(14,57)
-(14,35)-(14,63)
-(14,48)-(14,54)
-(14,48)-(14,57)
-(14,55)-(14,57)
-(14,61)-(14,63)
+(11,22)-(23,69)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(12,9)-(12,10)
+(15,30)-(15,42)
+(15,30)-(15,48)
+(22,7)-(22,10)
+(22,11)-(22,12)
+(23,10)-(23,15)
+(23,10)-(23,69)
+(23,10)-(23,69)
+(23,16)-(23,17)
+(23,19)-(23,22)
+(23,19)-(23,69)
+(23,23)-(23,24)
+(23,26)-(23,31)
+(23,26)-(23,69)
+(23,26)-(23,69)
+(23,32)-(23,33)
+(23,35)-(23,38)
+(23,35)-(23,69)
+(23,39)-(23,40)
+(23,42)-(23,47)
+(23,42)-(23,69)
+(23,42)-(23,69)
+(23,48)-(23,49)
+(23,51)-(23,54)
+(23,51)-(23,69)
+(23,55)-(23,56)
+(23,58)-(23,63)
+(23,58)-(23,69)
+(23,58)-(23,69)
+(23,64)-(23,65)
+(23,66)-(23,69)
 *)

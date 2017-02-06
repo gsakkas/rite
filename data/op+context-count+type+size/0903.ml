@@ -1,73 +1,92 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2.0
-  | Cosine e1 -> cos (3.142 *. (eval (e1, x, y)))
-  | Sine e1 -> sin (3.142 *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (x1,x2) ->
+        (match a with
+         | (h1,h2::t2) ->
+             let mul = ((x1 * x2) * h1) + h2 in ((h1 + 1), (mul / 10)) ::
+               (mul mod 10) :: t2
+         | (_,_) -> (0, [0])) in
+  let base = (1, [0]) in
+  let args = List.rev (List.combine l1 l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Cosine e1 -> cos (3.142 *. (eval (e1, x, y)))
-  | Sine e1 -> sin (3.142 *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (x1,x2) ->
+        (match a with
+         | (h1,h2::t2) ->
+             let mul = ((x1 * x2) * h1) + h2 in
+             ((h1 + 1), ((mul / 10) :: (mul mod 10) :: t2))
+         | (_,_) -> (0, [0])) in
+  let base = (1, [0]) in
+  let args = List.rev (List.combine l1 l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(18,26)-(18,70)
+(8,51)-(9,34)
+(8,61)-(8,69)
 *)
 
 (* type error slice
-(12,3)-(22,15)
-(14,7)-(16,26)
-(14,11)-(14,15)
-(14,11)-(14,25)
-(14,17)-(14,19)
-(14,17)-(14,25)
-(14,21)-(14,22)
-(14,24)-(14,25)
-(16,12)-(16,16)
-(16,12)-(16,26)
-(16,18)-(16,20)
-(16,18)-(16,26)
-(16,22)-(16,23)
-(16,25)-(16,26)
-(18,26)-(18,61)
-(18,26)-(18,70)
-(18,67)-(18,70)
+(2,4)-(13,52)
+(2,12)-(13,50)
+(2,15)-(13,50)
+(3,3)-(13,50)
+(3,9)-(10,28)
+(3,11)-(10,28)
+(4,11)-(4,12)
+(6,10)-(10,28)
+(6,10)-(10,28)
+(6,10)-(10,28)
+(6,16)-(6,17)
+(8,14)-(9,34)
+(8,14)-(9,34)
+(8,26)-(8,28)
+(8,26)-(8,33)
+(8,26)-(8,33)
+(8,26)-(8,33)
+(8,26)-(8,39)
+(8,26)-(8,39)
+(8,26)-(8,45)
+(8,26)-(8,45)
+(8,31)-(8,33)
+(8,37)-(8,39)
+(8,43)-(8,45)
+(8,51)-(8,53)
+(8,51)-(8,57)
+(8,51)-(8,69)
+(8,51)-(9,34)
+(8,56)-(8,57)
+(8,61)-(8,64)
+(8,61)-(8,69)
+(8,67)-(8,69)
+(9,17)-(9,20)
+(9,17)-(9,27)
+(9,17)-(9,34)
+(9,25)-(9,27)
+(9,32)-(9,34)
+(12,3)-(13,50)
+(12,14)-(12,22)
+(12,14)-(12,42)
+(12,14)-(12,42)
+(12,24)-(12,36)
+(12,24)-(12,42)
+(12,24)-(12,42)
+(12,24)-(12,42)
+(12,37)-(12,39)
+(12,40)-(12,42)
+(13,17)-(13,31)
+(13,17)-(13,43)
+(13,17)-(13,43)
+(13,17)-(13,43)
+(13,32)-(13,33)
+(13,39)-(13,43)
 *)

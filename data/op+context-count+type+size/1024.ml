@@ -1,122 +1,68 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let add (m,n) = [m + n] in (add x) :: a in
-    let base = [] in
-    let args =
-      match List.rev (List.combine l1 l2) with | [] -> (0, 0) | h::t -> h in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile (let g = let bb = f b in (bb, (bb = b)) in (g, b));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let prevN (n1,n2) = n1 in
-      let prev = prevN a in
-      let sumlist (p1,p2) = p2 in
-      let sum = sumlist a in
-      let add (m,n) = m + n in
-      let digit = (add x) + prev in
-      if digit > 10 then (1, ((digit - 10) :: sum)) else (0, (digit :: sum)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile (let g x = let bb = f x in (bb, (bb = x)) in (g, b));;
 
 *)
 
 (* changed spans
-(18,26)-(18,40)
-(18,33)-(18,40)
-(18,45)-(18,50)
-(18,45)-(18,56)
-(18,55)-(18,56)
-(19,5)-(22,52)
-(19,16)-(19,18)
-(20,5)-(22,52)
-(21,7)-(21,74)
-(21,13)-(21,21)
-(21,13)-(21,41)
-(21,23)-(21,35)
-(21,23)-(21,41)
-(21,36)-(21,38)
-(21,39)-(21,41)
-(21,57)-(21,58)
-(21,57)-(21,61)
-(21,60)-(21,61)
-(21,73)-(21,74)
-(22,5)-(22,52)
-(22,19)-(22,33)
-(22,19)-(22,45)
-(22,34)-(22,35)
-(22,36)-(22,40)
-(22,41)-(22,45)
-(22,49)-(22,52)
-(23,3)-(23,13)
-(23,15)-(23,18)
-(23,15)-(23,33)
-(23,20)-(23,27)
-(23,20)-(23,33)
-(23,28)-(23,30)
-(23,31)-(23,33)
+(6,19)-(6,47)
+(6,30)-(6,31)
+(6,46)-(6,47)
 *)
 
 (* type error slice
-(18,5)-(22,52)
-(18,11)-(18,56)
-(18,13)-(18,56)
-(18,17)-(18,56)
-(18,26)-(18,40)
-(18,33)-(18,40)
-(18,34)-(18,35)
-(18,34)-(18,39)
-(18,38)-(18,39)
-(18,45)-(18,48)
-(18,45)-(18,50)
-(18,45)-(18,56)
-(18,49)-(18,50)
-(18,55)-(18,56)
-(19,5)-(22,52)
-(19,16)-(19,18)
-(20,5)-(22,52)
-(21,7)-(21,74)
-(21,57)-(21,58)
-(21,57)-(21,61)
-(21,60)-(21,61)
-(22,19)-(22,33)
-(22,19)-(22,45)
-(22,34)-(22,35)
-(22,36)-(22,40)
-(22,41)-(22,45)
+(2,4)-(3,66)
+(2,17)-(3,63)
+(3,3)-(3,63)
+(3,3)-(3,63)
+(3,3)-(3,63)
+(3,3)-(3,63)
+(3,3)-(3,63)
+(3,3)-(3,63)
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,9)-(3,12)
+(3,11)-(3,12)
+(3,34)-(3,35)
+(3,51)-(3,57)
+(3,51)-(3,63)
+(3,51)-(3,63)
+(3,59)-(3,60)
+(3,59)-(3,63)
+(3,62)-(3,63)
+(5,4)-(6,62)
+(5,15)-(6,58)
+(6,3)-(6,9)
+(6,3)-(6,58)
+(6,3)-(6,58)
+(6,11)-(6,58)
+(6,11)-(6,58)
+(6,19)-(6,47)
+(6,19)-(6,47)
+(6,28)-(6,29)
+(6,28)-(6,31)
+(6,28)-(6,31)
+(6,30)-(6,31)
+(6,36)-(6,38)
+(6,36)-(6,47)
+(6,41)-(6,43)
+(6,41)-(6,47)
+(6,41)-(6,47)
+(6,41)-(6,47)
+(6,46)-(6,47)
+(6,54)-(6,55)
+(6,54)-(6,58)
+(6,57)-(6,58)
 *)

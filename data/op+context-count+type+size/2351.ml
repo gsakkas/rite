@@ -1,22 +1,42 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [] @ (n mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x * 1.0;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [] @ [n mod 10]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x;;
 
 *)
 
 (* changed spans
-(3,53)-(3,61)
+(11,48)-(11,55)
+(11,52)-(11,55)
 *)
 
 (* type error slice
-(3,47)-(3,49)
-(3,47)-(3,61)
-(3,50)-(3,51)
-(3,53)-(3,61)
+(11,4)-(11,57)
+(11,15)-(11,55)
+(11,30)-(11,31)
+(11,48)-(11,49)
+(11,48)-(11,55)
+(11,48)-(11,55)
+(11,52)-(11,55)
 *)

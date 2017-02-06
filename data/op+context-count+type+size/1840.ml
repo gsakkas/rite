@@ -1,81 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" exprToString expr2)
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^ (":" ^ (exprToString expr4 ")")))))));;
+let pipe fs = let f a x = x a in let base = fs 3 in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))));;
+let pipe fs =
+  let f a x p = x (a p) in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(19,50)-(19,53)
-(19,54)-(19,66)
-(26,53)-(26,65)
-(26,66)-(26,71)
-(26,72)-(26,75)
+(2,27)-(2,30)
+(2,29)-(2,30)
+(2,34)-(2,77)
+(2,45)-(2,47)
+(2,45)-(2,49)
+(2,48)-(2,49)
+(2,53)-(2,77)
 *)
 
 (* type error slice
-(12,3)-(26,75)
-(15,32)-(15,44)
-(15,32)-(15,49)
-(15,45)-(15,49)
-(19,50)-(19,53)
-(19,50)-(19,72)
-(19,54)-(19,66)
-(19,67)-(19,72)
-(26,53)-(26,65)
-(26,53)-(26,75)
-(26,66)-(26,71)
-(26,72)-(26,75)
+(2,4)-(2,79)
+(2,10)-(2,77)
+(2,15)-(2,77)
+(2,15)-(2,77)
+(2,21)-(2,30)
+(2,23)-(2,30)
+(2,27)-(2,28)
+(2,27)-(2,30)
+(2,27)-(2,30)
+(2,29)-(2,30)
+(2,34)-(2,77)
+(2,34)-(2,77)
+(2,45)-(2,47)
+(2,45)-(2,49)
+(2,45)-(2,49)
+(2,48)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,53)-(2,77)
+(2,53)-(2,77)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
+(2,75)-(2,77)
 *)

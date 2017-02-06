@@ -1,63 +1,64 @@
 
-let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then List.append (clone 0 (abs diff)) l1
-  else if diff > 0 then List.append (clone 0 diff) l2;;
+let fixpoint (f,b) = wwhile ((((f b) = b), b), b);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then ((List.append (clone 0 (abs diff)) l1), l2)
-  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
+let fixpoint (f,b) = let fx b' = ((f b'), ((f b') = b')) in wwhile (fx, b);;
 
 *)
 
 (* changed spans
-(10,8)-(10,43)
-(11,8)-(11,54)
-(11,25)-(11,54)
+(4,22)-(4,28)
+(4,22)-(4,49)
+(4,33)-(4,41)
+(4,33)-(4,45)
+(4,33)-(4,49)
+(4,35)-(4,36)
+(4,40)-(4,41)
+(4,44)-(4,45)
+(4,48)-(4,49)
 *)
 
 (* type error slice
-(2,4)-(5,23)
-(2,15)-(5,21)
-(2,17)-(5,21)
-(3,3)-(5,21)
-(4,28)-(4,39)
-(4,28)-(4,59)
+(2,4)-(2,80)
+(2,17)-(2,78)
+(2,24)-(2,78)
+(2,24)-(2,78)
+(2,38)-(2,39)
+(2,38)-(2,41)
+(2,38)-(2,41)
+(2,40)-(2,41)
+(2,45)-(2,78)
+(2,45)-(2,78)
+(2,45)-(2,78)
+(2,48)-(2,50)
+(2,56)-(2,62)
+(2,56)-(2,69)
+(2,56)-(2,69)
+(2,64)-(2,65)
+(2,64)-(2,69)
+(2,67)-(2,69)
+(2,76)-(2,78)
+(4,4)-(4,52)
+(4,15)-(4,49)
+(4,22)-(4,28)
+(4,22)-(4,49)
+(4,22)-(4,49)
+(4,33)-(4,34)
+(4,33)-(4,36)
+(4,33)-(4,36)
+(4,33)-(4,41)
+(4,33)-(4,41)
+(4,33)-(4,41)
+(4,33)-(4,45)
+(4,33)-(4,49)
+(4,35)-(4,36)
 (4,40)-(4,41)
-(4,43)-(4,48)
-(4,51)-(4,59)
-(5,3)-(5,14)
-(5,3)-(5,21)
-(5,15)-(5,16)
-(5,17)-(5,18)
-(5,19)-(5,21)
-(8,3)-(11,54)
-(8,15)-(8,48)
-(8,34)-(8,45)
-(8,34)-(8,48)
-(8,46)-(8,48)
-(11,8)-(11,54)
-(11,25)-(11,36)
-(11,25)-(11,54)
-(11,38)-(11,43)
-(11,38)-(11,50)
-(11,44)-(11,45)
-(11,46)-(11,50)
-(11,52)-(11,54)
+(4,44)-(4,45)
+(4,48)-(4,49)
 *)

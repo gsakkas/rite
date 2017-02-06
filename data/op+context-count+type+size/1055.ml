@@ -1,173 +1,70 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      "((" ^
-        ((exprToString ex1) ^
-           (")*(" ^
-              ((exprToString ex1) ^
-                 ("+" ^
-                    ((exprToString ex2) ^
-                       (")*(" ^
-                          ((exprToString ex1) ^
-                             ("+" ^
-                                ((exprToString ex2) ^
-                                   ("+" ^
-                                      ((exprToString ex3) ^
-                                         (")*(" ^
-                                            ((exprToString ex1) ^
-                                               ("+" ^
-                                                  ((exprToString ex2) ^
-                                                     ("+" ^
-                                                        ((exprToString ex3) ^
-                                                           ("+" ^
-                                                              ((exprToString
-                                                                  ex4)
-                                                                 ^
-                                                                 (")*(" ^
-                                                                    (
-                                                                    (exprToString
-                                                                    ex1) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex2) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex3) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex4) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex5) ^
-                                                                    "))")))))))))))))))))))))))))))))
-  | TheThing (ex1,ex2,ex3) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("*sin(" ^
-              ((exprToString ex2) ^ ((")*cos(" exprToString ex3) ^ (")" ")")))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ (a t)) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      "((" ^
-        ((exprToString ex1) ^
-           (")*(" ^
-              ((exprToString ex1) ^
-                 ("+" ^
-                    ((exprToString ex2) ^
-                       (")*(" ^
-                          ((exprToString ex1) ^
-                             ("+" ^
-                                ((exprToString ex2) ^
-                                   ("+" ^
-                                      ((exprToString ex3) ^
-                                         (")*(" ^
-                                            ((exprToString ex1) ^
-                                               ("+" ^
-                                                  ((exprToString ex2) ^
-                                                     ("+" ^
-                                                        ((exprToString ex3) ^
-                                                           ("+" ^
-                                                              ((exprToString
-                                                                  ex4)
-                                                                 ^
-                                                                 (")*(" ^
-                                                                    (
-                                                                    (exprToString
-                                                                    ex1) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex2) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex3) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex4) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex5) ^
-                                                                    "))")))))))))))))))))))))))))))))
-  | TheThing (ex1,ex2,ex3) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("*sin(" ^
-              ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ "))")))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ a) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(73,39)-(73,64)
-(73,48)-(73,60)
-(73,69)-(73,72)
-(73,69)-(73,76)
-(73,73)-(73,76)
+(6,31)-(6,34)
+(6,33)-(6,34)
 *)
 
 (* type error slice
-(14,3)-(73,76)
-(17,30)-(17,42)
-(17,30)-(17,45)
-(17,43)-(17,45)
-(73,39)-(73,47)
-(73,39)-(73,64)
-(73,48)-(73,60)
-(73,61)-(73,64)
-(73,69)-(73,72)
-(73,69)-(73,76)
-(73,73)-(73,76)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(4,11)-(4,13)
+(6,7)-(7,59)
+(6,7)-(7,59)
+(6,13)-(6,34)
+(6,15)-(6,34)
+(6,19)-(6,20)
+(6,19)-(6,34)
+(6,19)-(6,34)
+(6,21)-(6,22)
+(6,24)-(6,27)
+(6,24)-(6,34)
+(6,24)-(6,34)
+(6,24)-(6,34)
+(6,28)-(6,29)
+(6,31)-(6,32)
+(6,31)-(6,34)
+(6,31)-(6,34)
+(6,33)-(6,34)
+(7,7)-(7,59)
+(7,7)-(7,59)
+(7,18)-(7,19)
+(7,23)-(7,59)
+(7,23)-(7,59)
+(7,31)-(7,32)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,51)-(7,52)
+(7,53)-(7,57)
+(7,58)-(7,59)
 *)

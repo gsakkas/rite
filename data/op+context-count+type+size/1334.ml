@@ -1,10 +1,7 @@
 
 let rec wwhile (f,b) =
   let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
-
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f x in (xx, (xx = b)) in d b), b);;
+  let (value,boo) = func in if boo then wwhile func else value;;
 
 
 (* fix
@@ -13,36 +10,32 @@ let rec wwhile (f,b) =
   let func = f b in
   let (value,boo) = func in if boo then wwhile (f, value) else value;;
 
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f x in (xx, (xx = b)) in d), b);;
-
 *)
 
 (* changed spans
-(7,56)-(7,59)
-(7,62)-(7,63)
+(4,48)-(4,52)
+(4,58)-(4,63)
 *)
 
 (* type error slice
+(2,4)-(4,65)
+(2,17)-(4,63)
+(3,3)-(4,63)
+(3,3)-(4,63)
 (3,14)-(3,15)
 (3,14)-(3,17)
+(3,14)-(3,17)
 (3,16)-(3,17)
+(4,3)-(4,63)
+(4,3)-(4,63)
+(4,21)-(4,25)
+(4,29)-(4,63)
+(4,29)-(4,63)
+(4,29)-(4,63)
+(4,32)-(4,35)
 (4,41)-(4,47)
-(4,41)-(4,57)
-(4,49)-(4,50)
-(4,49)-(4,57)
-(4,52)-(4,57)
-(7,3)-(7,9)
-(7,3)-(7,63)
-(7,12)-(7,59)
-(7,12)-(7,63)
-(7,18)-(7,50)
-(7,22)-(7,50)
-(7,39)-(7,41)
-(7,39)-(7,50)
-(7,44)-(7,50)
-(7,56)-(7,57)
-(7,56)-(7,59)
-(7,58)-(7,59)
-(7,62)-(7,63)
+(4,41)-(4,52)
+(4,41)-(4,52)
+(4,48)-(4,52)
+(4,58)-(4,63)
 *)

@@ -1,81 +1,140 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
+let counter = 0;;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     counter = ((additivePersistence num) + 1));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     1 + (additivePersistence num));;
 
 *)
 
 (* changed spans
-(30,55)-(30,61)
-(30,55)-(30,66)
+(5,15)-(5,16)
+(18,6)-(18,13)
+(18,6)-(18,46)
+(18,18)-(18,46)
+(18,45)-(18,46)
 *)
 
 (* type error slice
-(14,3)-(30,66)
-(14,14)-(14,26)
-(15,3)-(30,66)
-(30,55)-(30,59)
-(30,55)-(30,61)
-(30,55)-(30,66)
-(30,60)-(30,61)
-(30,63)-(30,66)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,11)-(3,12)
+(3,18)-(3,20)
+(3,27)-(3,38)
+(3,27)-(3,46)
+(3,27)-(3,46)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,40)-(3,41)
+(3,40)-(3,46)
+(3,44)-(3,46)
+(3,49)-(3,50)
+(3,51)-(3,61)
+(3,51)-(3,61)
+(3,52)-(3,53)
+(3,52)-(3,60)
+(3,58)-(3,60)
+(5,4)-(5,18)
+(5,15)-(5,16)
+(7,4)-(7,37)
+(7,12)-(7,34)
+(7,16)-(7,27)
+(7,16)-(7,34)
+(7,29)-(7,32)
+(7,29)-(7,34)
+(7,29)-(7,34)
+(7,33)-(7,34)
+(9,4)-(9,73)
+(9,17)-(9,70)
+(9,22)-(9,70)
+(9,22)-(9,70)
+(9,22)-(9,70)
+(9,22)-(9,70)
+(9,22)-(9,70)
+(9,22)-(9,70)
+(9,28)-(9,30)
+(9,44)-(9,45)
+(9,56)-(9,57)
+(9,56)-(9,70)
+(9,56)-(9,70)
+(9,56)-(9,70)
+(9,61)-(9,68)
+(9,61)-(9,70)
+(9,61)-(9,70)
+(9,69)-(9,70)
+(11,29)-(18,46)
+(12,3)-(18,46)
+(12,3)-(18,46)
+(12,6)-(12,7)
+(12,6)-(12,12)
+(12,6)-(12,12)
+(12,6)-(12,12)
+(12,10)-(12,12)
+(13,8)-(13,9)
+(15,6)-(18,46)
+(15,6)-(18,46)
+(15,19)-(15,25)
+(15,19)-(15,27)
+(15,26)-(15,27)
+(16,6)-(18,46)
+(16,6)-(18,46)
+(16,16)-(16,23)
+(16,16)-(16,30)
+(16,16)-(16,30)
+(16,24)-(16,30)
+(17,6)-(18,46)
+(17,6)-(18,46)
+(17,16)-(17,19)
+(17,16)-(17,46)
+(17,16)-(17,46)
+(17,23)-(17,42)
+(17,23)-(17,46)
+(17,23)-(17,46)
+(17,43)-(17,46)
+(18,6)-(18,13)
+(18,6)-(18,46)
+(18,6)-(18,46)
+(18,18)-(18,37)
+(18,18)-(18,41)
+(18,18)-(18,46)
+(18,38)-(18,41)
+(18,45)-(18,46)
 *)

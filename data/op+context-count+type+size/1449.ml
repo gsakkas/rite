@@ -1,32 +1,79 @@
 
-let rec clone x n = if n < 1 then [] else x :: ((clone x n) - 1);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> buildX ()
+  | VarY  -> buildY ()
+  | Sine a -> sin (pi *. VarX)
+  | Cosine a -> cos (pi *. y);;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. y);;
 
 *)
 
 (* changed spans
-(2,50)-(2,64)
-(2,58)-(2,59)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(19,14)-(19,20)
+(19,14)-(19,23)
+(19,21)-(19,23)
+(20,14)-(20,20)
+(20,14)-(20,23)
+(20,21)-(20,23)
+(21,15)-(21,30)
+(22,17)-(22,29)
 *)
 
 (* type error slice
-(2,4)-(2,67)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,29)
-(2,28)-(2,29)
-(2,35)-(2,37)
-(2,43)-(2,44)
-(2,43)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,59)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,58)-(2,59)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(17,4)-(22,32)
+(17,15)-(22,29)
+(18,3)-(22,29)
+(18,3)-(22,29)
+(18,9)-(18,10)
+(19,14)-(19,20)
+(19,14)-(19,23)
+(20,14)-(20,20)
+(20,14)-(20,23)
+(21,20)-(21,30)
+(21,26)-(21,30)
+(22,28)-(22,29)
 *)

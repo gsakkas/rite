@@ -1,90 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Plus of expr* expr
-  | Cube of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | Sine v -> sin (pi *. (eval (v, x, y)))
-  | Cosine v -> cos (pi *. (eval (v, x, y)))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Plus (v,w) -> (eval (v, x, y)) +. (eval (w, x, y))
-  | Cube (a,b,c) -> ((eval a) *. (eval b)) *. (eval c)
-  | VarX  -> x
-  | VarY  -> y;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Plus of expr* expr
-  | Cube of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | Sine v -> sin (pi *. (eval (v, x, y)))
-  | Cosine v -> cos (pi *. (eval (v, x, y)))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Plus (v,w) -> (eval (v, x, y)) +. (eval (w, x, y))
-  | Cube (a,b,c) ->
-      ((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))
-  | VarX  -> x
-  | VarY  -> y;;
+let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
 
 *)
 
 (* changed spans
-(26,28)-(26,29)
-(26,35)-(26,41)
-(26,40)-(26,41)
-(26,48)-(26,52)
-(26,48)-(26,54)
-(26,53)-(26,54)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,52)
 *)
 
 (* type error slice
-(16,3)-(28,15)
-(17,27)-(17,31)
-(17,27)-(17,40)
-(17,33)-(17,34)
-(17,33)-(17,40)
-(17,36)-(17,37)
-(17,39)-(17,40)
-(26,23)-(26,27)
-(26,23)-(26,29)
-(26,28)-(26,29)
-(26,35)-(26,39)
-(26,35)-(26,41)
-(26,40)-(26,41)
-(26,48)-(26,52)
-(26,48)-(26,54)
-(26,53)-(26,54)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,52)
+(3,44)-(3,52)
+(3,59)-(3,61)
 *)

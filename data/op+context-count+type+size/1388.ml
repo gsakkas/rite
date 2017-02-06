@@ -1,116 +1,47 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
-  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
-
-let rec removeZero l = failwith "to be implemented";;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "to be implemented" in
-    let base = failwith "to be implemented" in
-    let args = failwith "to be implemented" in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x l = l (x a) in let base p = p in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (y,z) ->
-          let sum = y + z in
-          (match a with
-           | h::t -> ((sum + h) / 10) :: ((sum + h) mod 10) :: t
-           | _ -> [sum / 10; sum mod 10]) in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x l = x (a l) in let base p = p in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,9)-(6,60)
-(7,9)-(7,60)
-(9,24)-(9,32)
-(9,24)-(9,52)
-(9,33)-(9,52)
-(11,12)-(17,33)
-(13,17)-(13,25)
-(13,17)-(13,45)
-(13,26)-(13,45)
-(14,5)-(16,52)
-(14,16)-(14,24)
-(14,16)-(14,44)
-(14,25)-(14,44)
-(15,5)-(16,52)
-(15,16)-(15,24)
-(15,16)-(15,44)
-(15,25)-(15,44)
-(16,5)-(16,52)
-(16,19)-(16,33)
-(16,19)-(16,45)
-(16,34)-(16,35)
-(16,36)-(16,40)
-(16,41)-(16,45)
-(16,49)-(16,52)
-(17,3)-(17,13)
-(17,15)-(17,18)
-(17,15)-(17,33)
-(17,20)-(17,27)
-(17,20)-(17,33)
-(17,28)-(17,30)
-(17,31)-(17,33)
+(3,17)-(3,18)
+(3,20)-(3,23)
+(3,22)-(3,23)
+(3,28)-(3,70)
 *)
 
 (* type error slice
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,64)
-(4,4)-(7,62)
-(4,13)-(7,60)
-(4,16)-(7,60)
-(5,3)-(7,60)
-(5,7)-(5,18)
-(5,7)-(5,21)
-(5,19)-(5,21)
-(5,26)-(5,37)
-(5,26)-(5,40)
-(5,38)-(5,40)
-(6,9)-(6,14)
-(6,9)-(6,52)
-(6,9)-(6,60)
-(6,15)-(6,16)
-(6,19)-(6,52)
-(6,56)-(6,57)
-(6,58)-(6,60)
-(12,3)-(17,33)
-(12,12)-(16,52)
-(13,5)-(16,52)
-(14,5)-(16,52)
-(15,5)-(16,52)
-(16,5)-(16,52)
-(16,49)-(16,52)
-(17,15)-(17,18)
-(17,15)-(17,33)
-(17,20)-(17,27)
-(17,20)-(17,33)
-(17,28)-(17,30)
-(17,31)-(17,33)
+(2,4)-(3,72)
+(2,10)-(3,70)
+(3,3)-(3,70)
+(3,3)-(3,70)
+(3,9)-(3,23)
+(3,11)-(3,23)
+(3,13)-(3,23)
+(3,17)-(3,18)
+(3,17)-(3,23)
+(3,17)-(3,23)
+(3,20)-(3,21)
+(3,20)-(3,23)
+(3,20)-(3,23)
+(3,22)-(3,23)
+(3,28)-(3,70)
+(3,28)-(3,70)
+(3,37)-(3,42)
+(3,41)-(3,42)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

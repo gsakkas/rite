@@ -1,138 +1,194 @@
 
-let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | t -> t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      let xx = (x1 + x2) + a1 in
-      if xx > 9 then (1, ((xx - 10) :: a2)) else (0, (xx :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec helper i l acc s =
-    let l2 = List.rev l in
-    match l2 with
-    | [] -> s :: acc
-    | h::t ->
-        let n = (i * h) + s in
-        if n > 9
-        then helper i t ((n mod 10) :: acc) (n / 10)
-        else helper i t (n :: acc) 0 in
-  helper i l [] 0;;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (v,l) = x in
-    let (ac,la) = a in
-    let mul = mulByDigit v l in
-    let shift = mulByDigit ac a in ((ac * 10), (bigAdd mul shift)) in
-  let base = (1, []) in
-  let args = List.map (fun x  -> (x, l2)) l1 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1. /. (1. -. (exp (- a)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | t -> t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      let xx = (x1 + x2) + a1 in
-      if xx > 9 then (1, ((xx - 10) :: a2)) else (0, (xx :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec helper i l acc s =
-    let l2 = List.rev l in
-    match l2 with
-    | [] -> s :: acc
-    | h::t ->
-        let n = (i * h) + s in
-        if n > 9
-        then helper i t ((n mod 10) :: acc) (n / 10)
-        else helper i t (n :: acc) 0 in
-  helper i l [] 0;;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (v,l) = x in
-    let (ac,la) = a in
-    let mul = mulByDigit v l in
-    let shift = mulByDigit ac mul in ((ac * 10), (bigAdd shift la)) in
-  let base = (1, []) in
-  let args = List.map (fun x  -> (x, (List.rev l2))) l1 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1. /. (1. -. (exp ((-1.) *. (eval (a, x, y)))))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(46,31)-(46,32)
-(46,56)-(46,59)
-(47,3)-(49,50)
-(48,38)-(48,40)
+(20,37)-(20,40)
+(20,39)-(20,40)
+(21,24)-(21,66)
+(26,12)-(26,16)
+(26,18)-(26,19)
+(26,18)-(26,25)
+(26,21)-(26,22)
+(26,24)-(26,25)
 *)
 
 (* type error slice
-(29,4)-(39,20)
-(29,20)-(39,18)
-(29,22)-(39,18)
-(30,3)-(39,18)
-(32,5)-(38,37)
-(35,18)-(35,19)
-(35,18)-(35,23)
-(37,14)-(37,20)
-(37,14)-(37,52)
-(37,21)-(37,22)
-(37,23)-(37,24)
-(37,27)-(37,43)
-(37,46)-(37,52)
-(39,3)-(39,9)
-(39,3)-(39,18)
-(39,10)-(39,11)
-(39,12)-(39,13)
-(39,14)-(39,16)
-(39,17)-(39,18)
-(44,5)-(46,65)
-(44,19)-(44,20)
-(46,17)-(46,27)
-(46,17)-(46,32)
-(46,28)-(46,30)
-(46,31)-(46,32)
+(12,4)-(12,29)
+(12,10)-(12,26)
+(14,15)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,3)-(26,25)
+(15,9)-(15,10)
+(16,14)-(16,15)
+(17,14)-(17,15)
+(18,15)-(18,18)
+(18,15)-(18,40)
+(18,20)-(18,22)
+(18,20)-(18,40)
+(18,20)-(18,40)
+(18,27)-(18,31)
+(18,27)-(18,40)
+(18,27)-(18,40)
+(18,33)-(18,34)
+(18,33)-(18,40)
+(18,36)-(18,37)
+(18,39)-(18,40)
+(19,17)-(19,20)
+(19,17)-(19,42)
+(19,22)-(19,24)
+(19,22)-(19,42)
+(19,29)-(19,33)
+(19,29)-(19,42)
+(19,29)-(19,42)
+(19,35)-(19,36)
+(19,35)-(19,42)
+(19,38)-(19,39)
+(19,41)-(19,42)
+(20,18)-(20,20)
+(20,18)-(20,40)
+(20,25)-(20,27)
+(20,25)-(20,40)
+(20,25)-(20,40)
+(20,32)-(20,35)
+(20,32)-(20,40)
+(20,32)-(20,40)
+(20,37)-(20,40)
+(20,37)-(20,40)
+(20,39)-(20,40)
+(21,24)-(21,28)
+(21,24)-(21,37)
+(21,24)-(21,37)
+(21,24)-(21,57)
+(21,24)-(21,66)
+(21,30)-(21,31)
+(21,30)-(21,37)
+(21,33)-(21,34)
+(21,36)-(21,37)
+(21,44)-(21,48)
+(21,44)-(21,57)
+(21,44)-(21,57)
+(21,50)-(21,51)
+(21,50)-(21,57)
+(21,53)-(21,54)
+(21,56)-(21,57)
+(21,64)-(21,66)
+(22,21)-(22,25)
+(22,21)-(22,34)
+(22,21)-(22,34)
+(22,21)-(22,54)
+(22,27)-(22,28)
+(22,27)-(22,34)
+(22,30)-(22,31)
+(22,33)-(22,34)
+(22,41)-(22,45)
+(22,41)-(22,54)
+(22,41)-(22,54)
+(22,47)-(22,48)
+(22,47)-(22,54)
+(22,50)-(22,51)
+(22,53)-(22,54)
+(24,11)-(24,15)
+(24,11)-(24,24)
+(24,11)-(24,24)
+(24,11)-(24,43)
+(24,11)-(24,43)
+(24,17)-(24,18)
+(24,17)-(24,24)
+(24,20)-(24,21)
+(24,23)-(24,24)
+(24,30)-(24,34)
+(24,30)-(24,43)
+(24,30)-(24,43)
+(24,36)-(24,37)
+(24,36)-(24,43)
+(24,39)-(24,40)
+(24,42)-(24,43)
+(25,12)-(25,16)
+(25,12)-(25,25)
+(25,12)-(25,25)
+(25,18)-(25,19)
+(25,18)-(25,25)
+(25,21)-(25,22)
+(25,24)-(25,25)
+(26,12)-(26,16)
+(26,12)-(26,25)
+(26,12)-(26,25)
+(26,18)-(26,19)
+(26,18)-(26,25)
+(26,21)-(26,22)
+(26,24)-(26,25)
 *)

@@ -1,87 +1,141 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) -> if e1 > e2 then e3 else - e3;;
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot (abs n) in l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr
-  | Crazy of expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
-        (pi *. pi)
-  | Crazy (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (-1.0) *. (eval (e3, x, y));;
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
 
 *)
 
 (* changed spans
-(29,10)-(29,12)
-(29,16)-(29,18)
-(30,28)-(30,30)
-(30,33)-(30,35)
-(30,41)-(30,43)
-(30,49)-(30,53)
-(30,51)-(30,53)
+(16,45)-(16,71)
+(16,76)-(16,77)
 *)
 
 (* type error slice
-(16,3)-(30,53)
-(17,14)-(17,15)
-(30,25)-(30,53)
-(30,41)-(30,43)
-(30,49)-(30,53)
-(30,51)-(30,53)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,11)-(3,12)
+(3,18)-(3,20)
+(3,27)-(3,38)
+(3,27)-(3,46)
+(3,27)-(3,46)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,40)-(3,41)
+(3,40)-(3,46)
+(3,44)-(3,46)
+(3,49)-(3,50)
+(3,51)-(3,61)
+(3,51)-(3,61)
+(3,52)-(3,53)
+(3,52)-(3,60)
+(3,58)-(3,60)
+(5,4)-(5,37)
+(5,12)-(5,34)
+(5,16)-(5,27)
+(5,16)-(5,34)
+(5,29)-(5,32)
+(5,29)-(5,34)
+(5,29)-(5,34)
+(5,33)-(5,34)
+(7,4)-(7,73)
+(7,17)-(7,70)
+(7,22)-(7,70)
+(7,22)-(7,70)
+(7,22)-(7,70)
+(7,22)-(7,70)
+(7,22)-(7,70)
+(7,22)-(7,70)
+(7,28)-(7,30)
+(7,44)-(7,45)
+(7,56)-(7,57)
+(7,56)-(7,70)
+(7,56)-(7,70)
+(7,56)-(7,70)
+(7,61)-(7,68)
+(7,61)-(7,70)
+(7,61)-(7,70)
+(7,69)-(7,70)
+(9,4)-(14,78)
+(9,29)-(14,74)
+(9,36)-(14,74)
+(10,3)-(14,74)
+(10,3)-(14,74)
+(10,6)-(10,12)
+(10,6)-(10,17)
+(10,6)-(10,17)
+(10,6)-(10,17)
+(10,15)-(10,17)
+(11,9)-(11,18)
+(11,9)-(11,26)
+(11,20)-(11,26)
+(13,6)-(14,74)
+(13,6)-(14,74)
+(13,15)-(13,21)
+(13,15)-(13,28)
+(13,22)-(13,28)
+(14,6)-(14,74)
+(14,6)-(14,74)
+(14,19)-(14,26)
+(14,19)-(14,29)
+(14,19)-(14,29)
+(14,27)-(14,29)
+(14,33)-(14,52)
+(14,33)-(14,74)
+(14,33)-(14,74)
+(14,33)-(14,74)
+(14,53)-(14,59)
+(14,61)-(14,70)
+(14,61)-(14,74)
+(14,61)-(14,74)
+(14,73)-(14,74)
+(16,4)-(16,79)
+(16,29)-(16,77)
+(16,33)-(16,77)
+(16,33)-(16,77)
+(16,45)-(16,64)
+(16,45)-(16,71)
+(16,66)-(16,69)
+(16,66)-(16,71)
+(16,66)-(16,71)
+(16,70)-(16,71)
+(16,76)-(16,77)
 *)

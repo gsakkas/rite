@@ -1,40 +1,36 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> 0
-  | h::t ->
-      let prod = h * i in
-      if prod > 10
-      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t))
-      else prod :: t;;
+let rec wwhile (f,b) =
+  match b with | (f',b') -> if b' then wwhile (f, f') else f';;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      if prod > 10
-      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
-      else (prod mod 10) :: t;;
+let rec wwhile (f,b) =
+  match f b with | (f',x') -> if x' then wwhile (f, f') else f';;
 
 *)
 
 (* changed spans
-(4,11)-(4,12)
-(8,31)-(8,59)
-(9,12)-(9,16)
-(9,20)-(9,21)
+(3,3)-(3,62)
+(3,9)-(3,10)
+(3,32)-(3,34)
 *)
 
 (* type error slice
-(3,3)-(9,21)
-(4,11)-(4,12)
-(6,7)-(9,21)
-(7,7)-(9,21)
-(8,13)-(8,24)
-(8,13)-(8,59)
-(8,31)-(8,59)
+(2,4)-(3,64)
+(2,17)-(3,62)
+(3,3)-(3,62)
+(3,3)-(3,62)
+(3,9)-(3,10)
+(3,29)-(3,62)
+(3,29)-(3,62)
+(3,29)-(3,62)
+(3,32)-(3,34)
+(3,40)-(3,46)
+(3,40)-(3,53)
+(3,40)-(3,53)
+(3,48)-(3,49)
+(3,48)-(3,53)
+(3,51)-(3,53)
+(3,60)-(3,62)
 *)

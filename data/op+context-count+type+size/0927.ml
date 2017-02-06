@@ -1,49 +1,73 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat "; " [["["]; List.map f l; ["]"]];;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in if y == 2 then buildX ();;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l =
-  sepConcat "; " (List.append ("[" :: (List.map f l)) ["]"]);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(9,39)-(9,67)
-(9,40)-(9,45)
-(9,41)-(9,44)
+(16,3)-(18,57)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(18,33)-(18,57)
+(18,36)-(18,37)
+(18,36)-(18,42)
+(18,41)-(18,42)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,24)-(6,27)
-(6,24)-(6,31)
-(6,28)-(6,29)
-(6,30)-(6,31)
-(9,24)-(9,33)
-(9,24)-(9,67)
-(9,34)-(9,38)
-(9,39)-(9,67)
-(9,40)-(9,45)
-(9,41)-(9,44)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(15,4)-(18,59)
+(15,16)-(18,57)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(17,10)-(17,60)
+(17,14)-(17,18)
+(17,14)-(17,24)
+(17,14)-(17,30)
+(17,36)-(17,42)
+(17,36)-(17,45)
+(17,51)-(17,57)
+(17,51)-(17,60)
+(18,33)-(18,57)
+(18,48)-(18,54)
+(18,48)-(18,57)
 *)

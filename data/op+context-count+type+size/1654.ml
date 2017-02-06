@@ -1,35 +1,39 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (!List.mem) h seen then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec listReverse l = match l with | [] -> [] | h::t -> [(listReverse t) h];;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem h seen) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t; [h]);;
 
 *)
 
 (* changed spans
-(7,25)-(7,26)
-(7,25)-(7,42)
-(7,26)-(7,34)
+(2,59)-(2,78)
+(2,61)-(2,77)
+(2,76)-(2,77)
 *)
 
 (* type error slice
-(7,25)-(7,26)
-(7,25)-(7,34)
-(7,26)-(7,34)
+(2,4)-(2,80)
+(2,21)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,31)-(2,32)
+(2,46)-(2,48)
+(2,59)-(2,78)
+(2,59)-(2,78)
+(2,61)-(2,72)
+(2,61)-(2,74)
+(2,61)-(2,74)
+(2,61)-(2,77)
+(2,61)-(2,77)
+(2,73)-(2,74)
+(2,76)-(2,77)
 *)

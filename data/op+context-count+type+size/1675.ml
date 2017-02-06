@@ -1,69 +1,83 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> VarX
-  | 2 -> 22
-  | 3 -> 33
-  | 4 -> 44
-  | 5 -> 55
-  | 6 -> 66
-  | 7 -> 77;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 -> buildX ()
-  | 4 -> buildY ()
-  | 5 -> buildX ()
-  | 6 -> buildY ()
-  | 7 -> buildX ();;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(11,16)-(19,12)
-(13,10)-(13,14)
-(14,10)-(14,12)
-(15,10)-(15,12)
-(16,10)-(16,12)
-(17,10)-(17,12)
-(18,10)-(18,12)
-(19,10)-(19,12)
+(7,21)-(7,57)
+(7,24)-(7,25)
+(7,24)-(7,41)
+(8,9)-(8,46)
 *)
 
 (* type error slice
-(12,3)-(19,12)
-(13,10)-(13,14)
-(14,10)-(14,12)
-(15,10)-(15,12)
-(16,10)-(16,12)
-(17,10)-(17,12)
-(18,10)-(18,12)
-(19,10)-(19,12)
+(2,4)-(9,30)
+(2,22)-(9,26)
+(3,3)-(9,26)
+(3,3)-(9,26)
+(3,19)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,11)-(4,15)
+(5,13)-(5,17)
+(7,9)-(8,46)
+(7,9)-(8,46)
+(7,21)-(7,57)
+(7,21)-(7,57)
+(7,21)-(7,57)
+(7,21)-(7,57)
+(7,24)-(7,25)
+(7,24)-(7,41)
+(7,24)-(7,41)
+(7,26)-(7,34)
+(7,26)-(7,41)
+(7,26)-(7,41)
+(7,26)-(7,41)
+(7,35)-(7,36)
+(7,37)-(7,41)
+(7,48)-(7,49)
+(7,48)-(7,57)
+(7,53)-(7,57)
+(8,9)-(8,46)
+(8,9)-(8,46)
+(8,21)-(8,22)
+(8,26)-(8,32)
+(8,26)-(8,46)
+(8,26)-(8,46)
+(8,34)-(8,39)
+(8,34)-(8,46)
+(8,41)-(8,46)
+(9,3)-(9,11)
+(9,3)-(9,26)
+(9,3)-(9,26)
+(9,13)-(9,19)
+(9,13)-(9,26)
+(9,13)-(9,26)
+(9,21)-(9,23)
+(9,21)-(9,26)
+(9,25)-(9,26)
 *)

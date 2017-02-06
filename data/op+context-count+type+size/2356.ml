@@ -1,29 +1,64 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [digitsOfInt n]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> buildX * 1.0 | VarY  -> buildY * 1.0;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [n mod 10]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x;;
 
 *)
 
 (* changed spans
-(3,48)-(3,59)
-(3,48)-(3,61)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
 *)
 
 (* type error slice
-(2,4)-(3,65)
-(2,21)-(3,62)
-(3,3)-(3,62)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,48)-(3,59)
-(3,48)-(3,61)
-(3,60)-(3,61)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(15,4)-(16,65)
+(15,15)-(16,63)
+(16,3)-(16,63)
+(16,3)-(16,63)
+(16,9)-(16,10)
+(16,27)-(16,33)
+(16,27)-(16,39)
+(16,27)-(16,39)
+(16,27)-(16,39)
+(16,36)-(16,39)
+(16,51)-(16,57)
+(16,51)-(16,63)
+(16,51)-(16,63)
+(16,60)-(16,63)
 *)

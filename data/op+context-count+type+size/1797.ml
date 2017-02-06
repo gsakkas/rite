@@ -1,40 +1,38 @@
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else if (List.length l1) < (List.length l2) then ((List.append [0] l1), l2);;
+let rec wwhile (f,b) = match b with | (e,boo) -> if boo = true then e b;;
 
 
 (* fix
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else if (List.length l1) < (List.length l2) then (l1, l2) else (l1, l2);;
+let rec wwhile (f,b) =
+  let ans = f b in
+  match ans with | (num,boo) -> if boo = true then wwhile (f, num) else num;;
 
 *)
 
 (* changed spans
-(5,8)-(5,77)
-(5,54)-(5,65)
-(5,54)-(5,72)
-(5,66)-(5,69)
-(5,67)-(5,68)
+(2,24)-(2,72)
+(2,30)-(2,31)
+(2,50)-(2,72)
+(2,69)-(2,70)
+(2,71)-(2,72)
 *)
 
 (* type error slice
-(3,7)-(3,18)
-(3,7)-(3,21)
-(3,19)-(3,21)
-(3,26)-(3,37)
-(3,26)-(3,40)
-(3,38)-(3,40)
-(5,8)-(5,77)
-(5,54)-(5,65)
-(5,54)-(5,72)
-(5,54)-(5,77)
-(5,66)-(5,69)
-(5,67)-(5,68)
-(5,70)-(5,72)
-(5,75)-(5,77)
+(2,4)-(2,74)
+(2,17)-(2,72)
+(2,24)-(2,72)
+(2,30)-(2,31)
+(2,50)-(2,72)
+(2,50)-(2,72)
+(2,50)-(2,72)
+(2,53)-(2,56)
+(2,53)-(2,63)
+(2,53)-(2,63)
+(2,53)-(2,63)
+(2,59)-(2,63)
+(2,69)-(2,70)
+(2,69)-(2,72)
+(2,69)-(2,72)
+(2,71)-(2,72)
 *)

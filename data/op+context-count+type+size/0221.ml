@@ -1,87 +1,158 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+let buildCosine e = Cosine e;;
 
-let rec additivePersAndRoot num persCount =
-  let absNum = abs num in
-  if absNum < 10
-  then (persCount, absNum)
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 2)) < 1 then buildX else buildY)
   else
-    (let xs = digits absNum in
-     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
-
-let rec additivePersistence n = let (l,r) = additivePersAndRoot n in l;;
+    (let x = rand (0, 5) in
+     match x with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+let buildCosine e = Cosine e;;
 
-let rec additivePersAndRoot absNum persCount =
-  if absNum < 10
-  then (persCount, absNum)
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
   else
-    (let xs = digits absNum in
-     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
-
-let rec additivePersistence n =
-  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
+    (let x = rand (0, 5) in
+     match x with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(9,29)-(15,74)
-(10,3)-(15,74)
-(10,16)-(10,19)
-(10,16)-(10,23)
-(10,20)-(10,23)
-(17,45)-(17,66)
-(17,65)-(17,66)
-(17,70)-(17,71)
+(27,35)-(27,41)
+(27,47)-(27,53)
+(29,6)-(42,67)
+(35,14)-(35,37)
+(35,43)-(35,66)
+(38,14)-(38,37)
+(38,43)-(38,66)
+(42,58)-(42,63)
+(42,66)-(42,67)
 *)
 
 (* type error slice
-(3,27)-(3,38)
-(3,27)-(3,46)
-(3,40)-(3,46)
-(5,4)-(5,37)
-(5,12)-(5,34)
-(5,16)-(5,27)
-(5,16)-(5,34)
-(5,29)-(5,32)
-(5,29)-(5,34)
-(5,33)-(5,34)
-(7,22)-(7,70)
-(7,61)-(7,68)
-(7,61)-(7,70)
-(7,69)-(7,70)
-(10,3)-(15,74)
-(10,16)-(10,19)
-(10,16)-(10,23)
-(10,20)-(10,23)
-(14,6)-(15,74)
-(14,15)-(14,21)
-(14,15)-(14,28)
-(14,22)-(14,28)
-(15,6)-(15,74)
-(15,19)-(15,26)
-(15,19)-(15,29)
-(15,27)-(15,29)
-(15,33)-(15,52)
-(15,33)-(15,74)
-(15,53)-(15,59)
-(15,61)-(15,74)
-(17,33)-(17,71)
-(17,45)-(17,64)
-(17,45)-(17,66)
-(17,65)-(17,66)
+(11,4)-(11,46)
+(11,19)-(11,43)
+(11,37)-(11,39)
+(11,41)-(11,43)
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,28)-(13,29)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,67)
+(17,47)-(17,48)
+(17,50)-(17,51)
+(17,53)-(17,59)
+(17,61)-(17,67)
+(19,4)-(19,42)
+(19,17)-(19,39)
+(19,33)-(19,35)
+(19,37)-(19,39)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(23,4)-(23,23)
+(23,12)-(23,21)
+(25,16)-(42,67)
+(26,3)-(42,67)
+(26,3)-(42,67)
+(26,6)-(26,11)
+(26,6)-(26,15)
+(27,9)-(27,53)
+(27,9)-(27,53)
+(27,13)-(27,17)
+(27,13)-(27,23)
+(27,13)-(27,29)
+(27,35)-(27,41)
+(27,47)-(27,53)
+(29,6)-(42,67)
+(30,6)-(42,67)
+(30,6)-(42,67)
+(30,6)-(42,67)
+(30,6)-(42,67)
+(30,6)-(42,67)
+(31,13)-(31,22)
+(31,13)-(31,47)
+(31,24)-(31,29)
+(31,24)-(31,47)
+(32,13)-(32,24)
+(32,13)-(32,49)
+(34,10)-(34,22)
+(34,10)-(35,66)
+(37,10)-(37,20)
+(37,10)-(38,66)
+(40,10)-(40,21)
+(40,10)-(42,67)
 *)

@@ -1,134 +1,71 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,res) = a in
-      let tens = (x1 + x2) + (carry / 10) in
-      let ones = (x1 + x2) + (carry mod 10) in (tens, (tens :: ones :: res)) in
-    let base = ([0], [0]) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let stringOfList f l = sepConcat ("" List.map (f l));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,res) = a in
-      if carry <> []
-      then
-        let ch::_ = carry in
-        let tens = ((x1 + x2) + ch) / 10 in
-        let ones = ((x1 + x2) + ch) mod 10 in ([tens], (tens :: ones :: res))
-      else
-        (let tens = (x1 + x2) / 10 in
-         let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let stringOfList f l = let x = List.map f l in sepConcat ";" x;;
 
 *)
 
 (* changed spans
-(22,7)-(23,75)
-(22,19)-(22,41)
-(22,31)-(22,36)
-(22,31)-(22,41)
-(23,19)-(23,43)
-(23,31)-(23,36)
-(23,31)-(23,43)
-(23,49)-(23,53)
-(24,17)-(24,25)
-(24,18)-(24,19)
-(24,22)-(24,25)
-(24,23)-(24,24)
-(25,5)-(26,52)
-(25,16)-(25,24)
-(25,16)-(25,44)
-(25,26)-(25,38)
-(25,26)-(25,44)
-(25,39)-(25,41)
-(25,42)-(25,44)
-(26,19)-(26,33)
-(26,19)-(26,45)
-(26,34)-(26,35)
-(26,36)-(26,40)
-(26,41)-(26,45)
-(26,49)-(26,52)
-(27,3)-(27,13)
-(27,15)-(27,18)
-(27,15)-(27,33)
-(27,20)-(27,27)
-(27,20)-(27,33)
-(27,28)-(27,30)
-(27,31)-(27,33)
+(9,24)-(9,33)
+(9,24)-(9,51)
+(9,35)-(9,37)
+(9,48)-(9,51)
 *)
 
 (* type error slice
-(19,5)-(26,52)
-(19,11)-(23,75)
-(19,13)-(23,75)
-(20,7)-(23,75)
-(20,21)-(20,22)
-(21,7)-(23,75)
-(21,25)-(21,26)
-(22,7)-(23,75)
-(22,19)-(22,41)
-(23,7)-(23,75)
-(23,49)-(23,53)
-(23,49)-(23,75)
-(23,56)-(23,75)
-(24,5)-(26,52)
-(24,17)-(24,20)
-(24,17)-(24,25)
-(24,18)-(24,19)
-(24,22)-(24,25)
-(24,23)-(24,24)
-(25,5)-(26,52)
-(25,16)-(25,24)
-(25,16)-(25,44)
-(25,26)-(25,38)
-(25,26)-(25,44)
-(25,39)-(25,41)
-(25,42)-(25,44)
-(26,19)-(26,33)
-(26,19)-(26,45)
-(26,34)-(26,35)
-(26,36)-(26,40)
-(26,41)-(26,45)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(6,7)-(7,59)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,24)-(6,27)
+(6,30)-(6,31)
+(7,7)-(7,59)
+(7,18)-(7,19)
+(7,23)-(7,59)
+(7,31)-(7,32)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,51)-(7,52)
+(7,53)-(7,57)
+(7,58)-(7,59)
+(9,4)-(9,55)
+(9,18)-(9,51)
+(9,20)-(9,51)
+(9,24)-(9,33)
+(9,24)-(9,51)
+(9,35)-(9,37)
+(9,35)-(9,51)
+(9,35)-(9,51)
+(9,35)-(9,51)
+(9,38)-(9,46)
+(9,48)-(9,49)
+(9,48)-(9,51)
+(9,48)-(9,51)
+(9,50)-(9,51)
 *)

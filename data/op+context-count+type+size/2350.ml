@@ -1,42 +1,68 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sepConcat a x) in
-      let base = h ^ sep in let l = List.rev t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> buildX | VarY  -> buildY | Sine e -> 0.34 * e;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (x ^ a) in
-      let base = h ^ sep in let l = List.rev t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x;;
 
 *)
 
 (* changed spans
-(6,24)-(6,33)
-(6,34)-(6,35)
-(7,7)-(7,74)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
 *)
 
 (* type error slice
-(2,4)-(7,76)
-(2,19)-(7,74)
-(2,23)-(7,74)
-(3,3)-(7,74)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,24)-(6,33)
-(6,24)-(6,37)
-(6,34)-(6,35)
-(6,36)-(6,37)
-(7,18)-(7,19)
-(7,18)-(7,25)
-(7,20)-(7,21)
-(7,22)-(7,25)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(15,4)-(16,74)
+(15,15)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,9)-(16,10)
+(16,27)-(16,33)
+(16,45)-(16,51)
+(16,64)-(16,68)
+(16,64)-(16,72)
+(16,64)-(16,72)
+(16,64)-(16,72)
+(16,71)-(16,72)
 *)

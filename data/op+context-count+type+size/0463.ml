@@ -1,110 +1,158 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let max = ref 0;;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      (2.71 **
-         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
-            -. 1.0))
-        -. 1.0
-  | SinLog (a',b',c) ->
-      let a = abs_float (eval (a', x, y)) in
-      let b = abs_float (eval (b', x, y)) in
-      let max' a b = if a > b then a else b in
-      let my_log l' = let l = max 0.1 l' in (log l) /. (log 10.0) in
-      if (eval (c, x, y)) < 0.0
-      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
-      else
-        (-1.0) *.
-          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = List.rev ((List.combine l1 l2) @ (0, 0)) in
+    let (_,res) = List.fold_left f base args in res in
+  add (padZero l1 l2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      (2.71 **
-         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
-            -. 1.0))
-        -. 1.0
-  | SinLog (a',b',c) ->
-      let a = abs_float (eval (a', x, y)) in
-      let b = abs_float (eval (b', x, y)) in
-      let max' a b = if a > b then a else b in
-      let my_log l' = let l = max' 0.1 l' in (log l) /. (log 10.0) in
-      if (eval (c, x, y)) < 0.0
-      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
-      else
-        (-1.0) *.
-          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  add (padZero l1 l2);;
 
 *)
 
 (* changed spans
-(13,11)-(13,14)
-(13,11)-(13,16)
-(13,15)-(13,16)
-(38,31)-(38,34)
+(19,27)-(19,45)
+(19,47)-(19,48)
+(19,50)-(19,51)
+(19,50)-(19,54)
+(19,53)-(19,54)
 *)
 
 (* type error slice
-(13,4)-(13,18)
-(13,11)-(13,14)
-(13,11)-(13,16)
-(13,15)-(13,16)
-(38,31)-(38,34)
-(38,31)-(38,41)
-(38,35)-(38,38)
-(38,39)-(38,41)
-(42,10)-(42,14)
-(42,10)-(43,72)
-(42,11)-(42,14)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(11,48)
+(4,13)-(11,45)
+(4,16)-(11,45)
+(5,13)-(5,24)
+(5,13)-(5,27)
+(5,13)-(5,27)
+(5,25)-(5,27)
+(5,32)-(5,43)
+(5,32)-(5,46)
+(5,32)-(5,46)
+(5,44)-(5,46)
+(7,11)-(7,13)
+(7,11)-(7,17)
+(7,15)-(7,17)
+(10,13)-(10,15)
+(10,13)-(10,35)
+(10,19)-(10,24)
+(10,19)-(10,29)
+(10,19)-(10,35)
+(10,31)-(10,32)
+(10,33)-(10,35)
+(11,15)-(11,40)
+(11,36)-(11,37)
+(11,38)-(11,40)
+(13,4)-(21,24)
+(13,12)-(21,21)
+(13,15)-(21,21)
+(14,3)-(21,21)
+(14,3)-(21,21)
+(14,12)-(20,52)
+(15,5)-(20,52)
+(15,11)-(17,70)
+(15,13)-(17,70)
+(16,16)-(16,19)
+(16,16)-(16,21)
+(16,16)-(16,21)
+(16,20)-(16,21)
+(16,26)-(16,29)
+(16,26)-(16,31)
+(16,26)-(16,31)
+(16,30)-(16,31)
+(17,13)-(17,14)
+(17,34)-(17,35)
+(17,69)-(17,70)
+(18,5)-(20,52)
+(18,17)-(18,22)
+(18,20)-(18,22)
+(19,5)-(20,52)
+(19,16)-(19,24)
+(19,16)-(19,54)
+(19,16)-(19,54)
+(19,27)-(19,39)
+(19,27)-(19,45)
+(19,27)-(19,45)
+(19,27)-(19,45)
+(19,27)-(19,54)
+(19,27)-(19,54)
+(19,27)-(19,54)
+(19,40)-(19,42)
+(19,43)-(19,45)
+(19,47)-(19,48)
+(19,50)-(19,51)
+(19,50)-(19,54)
+(19,53)-(19,54)
+(20,19)-(20,33)
+(20,19)-(20,45)
+(20,19)-(20,45)
+(20,19)-(20,45)
+(20,34)-(20,35)
+(20,36)-(20,40)
+(20,41)-(20,45)
+(21,3)-(21,6)
+(21,3)-(21,21)
+(21,3)-(21,21)
+(21,8)-(21,15)
+(21,8)-(21,21)
+(21,8)-(21,21)
+(21,16)-(21,18)
+(21,19)-(21,21)
 *)

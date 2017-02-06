@@ -1,91 +1,224 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Inverse a -> "1/" ^ (exprToString a)
-  | Max (a,b) ->
-      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
-  | Range (a,b,c) ->
-      "range(" ^
-        ((exprToString a) ^
-           (("," exprToString b) ^ ("," ^ ((exprToString c) ^ ")"))));;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let ha::_ = a in
+      let (a1,a2) = ha in
+      let tens = (x1 + x2) + (a1 / 10) in
+      let ones = (x1 + x2) + (a1 mod 10) in (tens, ones) in
+    let base = (0, 0) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Inverse a -> "1/" ^ (exprToString a)
-  | Max (a,b) ->
-      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
-  | Range (a,b,c) ->
-      "range(" ^
-        ((exprToString a) ^
-           ("," ^ ((exprToString b) ^ ("," ^ ((exprToString c) ^ ")")))));;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let h::_ = a1 in
+      let tens = (x1 + x2) + (h / 10) in
+      let ones = (x1 + x2) + (h mod 10) in ((tens :: a1), (ones :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(35,14)-(35,32)
-(35,18)-(35,30)
+(22,21)-(22,23)
+(23,31)-(23,33)
+(24,31)-(24,33)
+(24,46)-(24,50)
+(24,52)-(24,56)
+(25,5)-(27,52)
+(25,17)-(25,18)
+(25,20)-(25,21)
+(26,5)-(27,52)
+(28,20)-(28,27)
+(28,28)-(28,30)
+(28,31)-(28,33)
 *)
 
 (* type error slice
-(15,3)-(35,66)
-(18,29)-(18,41)
-(18,29)-(18,43)
-(18,42)-(18,43)
-(35,14)-(35,17)
-(35,14)-(35,32)
-(35,18)-(35,30)
-(35,31)-(35,32)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(9,42)
+(4,13)-(9,38)
+(4,16)-(9,38)
+(5,12)-(5,23)
+(5,12)-(5,26)
+(5,12)-(5,26)
+(5,24)-(5,26)
+(6,12)-(6,23)
+(6,12)-(6,26)
+(6,12)-(6,26)
+(6,24)-(6,26)
+(8,11)-(8,16)
+(8,11)-(8,27)
+(8,11)-(8,34)
+(8,11)-(8,39)
+(8,30)-(8,31)
+(8,32)-(8,34)
+(8,37)-(8,39)
+(9,15)-(9,38)
+(9,34)-(9,35)
+(9,36)-(9,38)
+(11,20)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,9)-(12,10)
+(13,11)-(13,13)
+(14,14)-(14,38)
+(14,14)-(14,38)
+(14,17)-(14,18)
+(14,17)-(14,23)
+(14,29)-(14,30)
+(14,36)-(14,38)
+(15,13)-(15,47)
+(15,13)-(15,47)
+(15,16)-(15,17)
+(15,16)-(15,22)
+(15,28)-(15,29)
+(15,35)-(15,45)
+(15,35)-(15,47)
+(17,4)-(28,37)
+(17,12)-(28,33)
+(17,15)-(28,33)
+(18,3)-(28,33)
+(18,12)-(27,52)
+(19,5)-(27,52)
+(19,5)-(27,52)
+(19,11)-(24,56)
+(19,13)-(24,56)
+(20,7)-(24,56)
+(20,7)-(24,56)
+(20,21)-(20,22)
+(21,7)-(24,56)
+(21,7)-(24,56)
+(21,7)-(24,56)
+(21,7)-(24,56)
+(21,19)-(21,20)
+(22,7)-(24,56)
+(22,7)-(24,56)
+(22,21)-(22,23)
+(23,7)-(24,56)
+(23,7)-(24,56)
+(23,19)-(23,21)
+(23,19)-(23,26)
+(23,19)-(23,26)
+(23,19)-(23,26)
+(23,19)-(23,38)
+(23,24)-(23,26)
+(23,31)-(23,33)
+(23,31)-(23,38)
+(23,31)-(23,38)
+(23,36)-(23,38)
+(24,7)-(24,56)
+(24,7)-(24,56)
+(24,19)-(24,21)
+(24,19)-(24,26)
+(24,19)-(24,40)
+(24,24)-(24,26)
+(24,31)-(24,33)
+(24,31)-(24,40)
+(24,38)-(24,40)
+(24,46)-(24,50)
+(24,46)-(24,56)
+(24,52)-(24,56)
+(25,5)-(27,52)
+(25,5)-(27,52)
+(25,17)-(25,18)
+(25,17)-(25,21)
+(25,20)-(25,21)
+(26,5)-(27,52)
+(26,5)-(27,52)
+(26,16)-(26,24)
+(26,16)-(26,44)
+(26,16)-(26,44)
+(26,26)-(26,38)
+(26,26)-(26,44)
+(26,26)-(26,44)
+(26,26)-(26,44)
+(26,39)-(26,41)
+(26,42)-(26,44)
+(27,5)-(27,52)
+(27,5)-(27,52)
+(27,19)-(27,33)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,34)-(27,35)
+(27,36)-(27,40)
+(27,41)-(27,45)
+(27,49)-(27,52)
+(28,15)-(28,18)
+(28,15)-(28,33)
+(28,15)-(28,33)
+(28,20)-(28,27)
+(28,20)-(28,33)
+(28,20)-(28,33)
+(28,28)-(28,30)
+(28,31)-(28,33)
 *)

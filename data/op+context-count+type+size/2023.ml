@@ -1,47 +1,103 @@
 
-let rec clone x n = failwith "to be implemented";;
+let x = 123;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail -> (listReverse tail) @ head;;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let x = 123;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail -> (listReverse tail) @ [head];;
 
 *)
 
 (* changed spans
-(2,21)-(2,29)
-(2,21)-(2,49)
-(2,30)-(2,49)
-(4,13)-(6,76)
-(5,3)-(6,76)
-(6,37)-(6,48)
-(6,37)-(6,51)
-(6,49)-(6,51)
-(6,56)-(6,67)
-(6,56)-(6,70)
-(6,74)-(6,76)
+(20,40)-(20,44)
 *)
 
 (* type error slice
-(5,3)-(6,76)
-(5,7)-(5,18)
-(5,7)-(5,21)
-(5,19)-(5,21)
-(5,26)-(5,37)
-(5,26)-(5,40)
-(5,38)-(5,40)
-(6,9)-(6,11)
-(6,9)-(6,76)
-(6,14)-(6,25)
-(6,14)-(6,76)
-(6,74)-(6,76)
+(4,21)-(10,62)
+(5,3)-(10,62)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(6,8)-(6,10)
+(10,6)-(10,62)
+(10,33)-(10,35)
+(10,42)-(10,53)
+(10,42)-(10,55)
+(10,42)-(10,62)
+(10,42)-(10,62)
+(10,57)-(10,58)
+(12,17)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,28)-(12,30)
+(12,58)-(12,59)
+(12,63)-(12,70)
+(12,63)-(12,74)
+(12,63)-(12,74)
+(12,71)-(12,74)
+(16,4)-(20,46)
+(16,21)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,3)-(20,44)
+(17,9)-(17,10)
+(18,11)-(18,13)
+(19,14)-(19,17)
+(19,14)-(19,17)
+(19,15)-(19,16)
+(20,20)-(20,31)
+(20,20)-(20,36)
+(20,20)-(20,36)
+(20,20)-(20,44)
+(20,20)-(20,44)
+(20,20)-(20,44)
+(20,32)-(20,36)
+(20,38)-(20,39)
+(20,40)-(20,44)
 *)

@@ -1,86 +1,57 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Flatten of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
-  | Flatten (e1,e2,e3) ->
-      ("(" exprToString e1) ^
-        ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")"))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (List.rev t) ^ a in
+      let base = h ^ sep in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Flatten of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
-  | Flatten (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")")))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = h ^ sep in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(31,8)-(31,27)
-(31,12)-(31,24)
+(6,20)-(6,28)
+(6,20)-(6,30)
+(6,29)-(6,30)
 *)
 
 (* type error slice
-(14,3)-(32,68)
-(17,29)-(17,41)
-(17,29)-(17,43)
-(17,42)-(17,43)
-(31,8)-(31,11)
-(31,8)-(31,27)
-(31,12)-(31,24)
-(31,25)-(31,27)
+(2,4)-(7,68)
+(2,19)-(7,66)
+(2,23)-(7,66)
+(3,3)-(7,66)
+(3,3)-(7,66)
+(3,3)-(7,66)
+(3,3)-(7,66)
+(3,9)-(3,11)
+(6,7)-(7,66)
+(6,13)-(6,35)
+(6,15)-(6,35)
+(6,20)-(6,28)
+(6,20)-(6,30)
+(6,20)-(6,30)
+(6,20)-(6,35)
+(6,20)-(6,35)
+(6,29)-(6,30)
+(6,32)-(6,33)
+(6,34)-(6,35)
+(7,18)-(7,19)
+(7,22)-(7,25)
+(7,29)-(7,66)
+(7,37)-(7,39)
+(7,43)-(7,57)
+(7,43)-(7,66)
+(7,43)-(7,66)
+(7,43)-(7,66)
+(7,58)-(7,59)
+(7,65)-(7,66)
 *)

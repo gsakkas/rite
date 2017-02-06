@@ -1,50 +1,68 @@
 
+let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
+
 let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9 then sumList [1; 2];;
+  match l with | [] -> [] | h::t -> append (listReverse t; [h]);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9 then 0 else 1;;
+let rec listReverse l = match l with | [] -> [] | h::t -> append [h] [h];;
 
 *)
 
 (* changed spans
-(13,3)-(13,55)
-(13,41)-(13,48)
-(13,41)-(13,55)
-(13,49)-(13,55)
+(5,37)-(5,63)
+(5,45)-(5,56)
+(5,45)-(5,58)
+(5,45)-(5,63)
+(5,57)-(5,58)
 *)
 
 (* type error slice
-(10,22)-(10,70)
-(10,61)-(10,68)
-(10,61)-(10,70)
-(10,69)-(10,70)
-(13,3)-(13,55)
-(13,41)-(13,48)
-(13,41)-(13,55)
-(13,49)-(13,55)
-(13,50)-(13,51)
+(2,4)-(2,79)
+(2,16)-(2,76)
+(2,19)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,24)-(2,76)
+(2,30)-(2,32)
+(2,46)-(2,48)
+(2,59)-(2,60)
+(2,59)-(2,76)
+(2,65)-(2,71)
+(2,65)-(2,76)
+(2,65)-(2,76)
+(2,65)-(2,76)
+(2,72)-(2,73)
+(2,74)-(2,76)
+(4,4)-(5,66)
+(4,21)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,3)-(5,63)
+(5,9)-(5,10)
+(5,24)-(5,26)
+(5,37)-(5,43)
+(5,37)-(5,63)
+(5,37)-(5,63)
+(5,45)-(5,56)
+(5,45)-(5,58)
+(5,45)-(5,58)
+(5,45)-(5,63)
+(5,45)-(5,63)
+(5,57)-(5,58)
+(5,60)-(5,63)
+(5,60)-(5,63)
+(5,61)-(5,62)
 *)

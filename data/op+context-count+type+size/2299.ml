@@ -1,177 +1,156 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Special1 of expr* expr* expr
-  | Special2 of expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildSpecial1 (e1,e2,e3) = Special1 (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth < 1
-  then
-    let base = rand (0, 2) in
-    match base with
-    | 0 -> buildX ()
-    | 1 -> buildY ()
-    | _ -> (if base < 0 then buildX () else buildY ())
-  else
-    (let recurse = rand (0, 6) in
-     match recurse with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildSpecial1
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if recurse > 2
-         then buildCosine (build (rand, (depth - 1)))
-         else buildSine (build (rand, (depth - 1))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = ([], []) in
+    let args = List.rev (List.combine (l1, l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Special1 of expr* expr* expr
-  | Special2 of expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildSpecial1 (e1,e2,e3) = Special1 (e1, e2, e3);;
-
-let buildSpecial2 (e1,e2) = Special2 (e1, e2);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth < 1
-  then
-    let base = rand (0, 2) in
-    match base with
-    | 0 -> buildX ()
-    | 1 -> buildY ()
-    | _ -> (if base < 0 then buildX () else buildY ())
-  else
-    (let recurse = rand (0, 6) in
-     match recurse with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 5 ->
-         buildSpecial1
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))))
-     | 6 ->
-         buildSpecial2
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if recurse > 2
-         then buildCosine (build (rand, (depth - 1)))
-         else buildSine (build (rand, (depth - 1))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(21,18)-(21,67)
-(39,6)-(58,49)
-(44,14)-(44,37)
-(44,43)-(44,66)
-(47,14)-(47,37)
-(47,43)-(47,66)
-(54,14)-(54,66)
-(56,10)-(58,49)
-(56,13)-(56,20)
-(56,13)-(56,24)
-(56,23)-(56,24)
-(57,15)-(57,26)
-(57,28)-(57,51)
-(58,15)-(58,24)
-(58,26)-(58,49)
+(14,17)-(14,25)
+(14,17)-(14,45)
+(14,26)-(14,45)
+(15,17)-(15,19)
+(16,16)-(16,24)
+(16,16)-(16,46)
+(16,26)-(16,46)
+(16,40)-(16,46)
 *)
 
 (* type error slice
-(19,4)-(19,55)
-(19,20)-(19,52)
-(19,32)-(19,52)
-(19,42)-(19,44)
-(19,46)-(19,48)
-(19,50)-(19,52)
-(32,16)-(32,20)
-(32,16)-(32,26)
-(32,22)-(32,23)
-(32,22)-(32,26)
-(32,25)-(32,26)
-(40,24)-(40,29)
-(40,24)-(40,47)
-(40,31)-(40,35)
-(40,31)-(40,47)
-(40,38)-(40,47)
-(53,10)-(53,23)
-(53,10)-(54,66)
-(54,14)-(54,19)
-(54,14)-(54,37)
-(54,14)-(54,66)
-(54,21)-(54,25)
-(54,21)-(54,37)
-(54,28)-(54,37)
-(54,43)-(54,48)
-(54,43)-(54,66)
-(54,50)-(54,54)
-(54,50)-(54,66)
-(54,57)-(54,66)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(7,73)
+(4,13)-(7,69)
+(4,16)-(7,69)
+(5,15)-(5,26)
+(5,15)-(5,29)
+(5,15)-(5,29)
+(5,27)-(5,29)
+(6,15)-(6,26)
+(6,15)-(6,29)
+(6,15)-(6,29)
+(6,27)-(6,29)
+(7,6)-(7,11)
+(7,6)-(7,28)
+(7,6)-(7,35)
+(7,31)-(7,32)
+(7,33)-(7,35)
+(7,40)-(7,69)
+(7,65)-(7,66)
+(7,67)-(7,69)
+(9,20)-(10,70)
+(10,3)-(10,70)
+(10,3)-(10,70)
+(10,3)-(10,70)
+(10,3)-(10,70)
+(10,3)-(10,70)
+(10,9)-(10,10)
+(10,24)-(10,26)
+(10,37)-(10,70)
+(10,37)-(10,70)
+(10,40)-(10,41)
+(10,40)-(10,45)
+(10,51)-(10,61)
+(10,51)-(10,63)
+(10,69)-(10,70)
+(12,4)-(18,37)
+(12,12)-(18,33)
+(12,15)-(18,33)
+(13,3)-(18,33)
+(13,12)-(17,52)
+(14,5)-(17,52)
+(14,5)-(17,52)
+(14,11)-(14,45)
+(14,13)-(14,45)
+(14,17)-(14,25)
+(14,17)-(14,45)
+(15,5)-(17,52)
+(15,5)-(17,52)
+(15,17)-(15,19)
+(15,17)-(15,23)
+(15,21)-(15,23)
+(16,5)-(17,52)
+(16,5)-(17,52)
+(16,16)-(16,24)
+(16,16)-(16,46)
+(16,16)-(16,46)
+(16,26)-(16,38)
+(16,26)-(16,46)
+(16,26)-(16,46)
+(16,40)-(16,42)
+(16,40)-(16,46)
+(16,44)-(16,46)
+(17,5)-(17,52)
+(17,5)-(17,52)
+(17,19)-(17,33)
+(17,19)-(17,45)
+(17,19)-(17,45)
+(17,19)-(17,45)
+(17,19)-(17,45)
+(17,34)-(17,35)
+(17,36)-(17,40)
+(17,41)-(17,45)
+(17,49)-(17,52)
+(18,15)-(18,18)
+(18,15)-(18,33)
+(18,15)-(18,33)
+(18,20)-(18,27)
+(18,20)-(18,33)
+(18,20)-(18,33)
+(18,28)-(18,30)
+(18,31)-(18,33)
 *)

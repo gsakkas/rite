@@ -1,87 +1,40 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let x = (List.length l1) - (List.length l2) in
-    let list_p = clone 0 x in (l1, (list_p @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then
-      (let x = (List.length l2) - (List.length l1) in
-       let list_p = clone 0 x in ((list_p @ l1), l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,listy) = a in
-      let (num1,num2) = x in
-      let initsum = (num1 + num2) + carry in
-      if initsum > 9
-      then (1, (listy @ [initsum mod 10]))
-      else (0, (listy @ initsum)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x = List.rev x in let base p = p in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let x = (List.length l1) - (List.length l2) in
-    let list_p = clone 0 x in (l1, (list_p @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then
-      (let x = (List.length l2) - (List.length l1) in
-       let list_p = clone 0 x in ((list_p @ l1), l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,listy) = a in
-      let (num1,num2) = x in
-      let initsum = (num1 + num2) + carry in
-      if initsum > 9
-      then (1, (listy @ [initsum mod 10]))
-      else (0, (listy @ [initsum])) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x = x in let base p = p in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(27,25)-(27,32)
-(29,52)-(29,53)
-(29,55)-(29,56)
+(3,15)-(3,23)
+(3,15)-(3,25)
 *)
 
 (* type error slice
-(24,7)-(27,32)
-(24,22)-(24,42)
-(26,17)-(26,22)
-(26,17)-(26,41)
-(26,23)-(26,24)
-(26,25)-(26,41)
-(26,26)-(26,40)
-(27,17)-(27,22)
-(27,17)-(27,32)
-(27,23)-(27,24)
-(27,25)-(27,32)
+(2,4)-(3,73)
+(2,10)-(3,71)
+(3,3)-(3,71)
+(3,3)-(3,71)
+(3,9)-(3,25)
+(3,11)-(3,25)
+(3,15)-(3,23)
+(3,15)-(3,25)
+(3,15)-(3,25)
+(3,24)-(3,25)
+(3,29)-(3,71)
+(3,29)-(3,71)
+(3,38)-(3,43)
+(3,42)-(3,43)
+(3,47)-(3,61)
+(3,47)-(3,71)
+(3,47)-(3,71)
+(3,47)-(3,71)
+(3,47)-(3,71)
+(3,62)-(3,63)
+(3,64)-(3,68)
+(3,69)-(3,71)
 *)

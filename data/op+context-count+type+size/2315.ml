@@ -1,48 +1,36 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then (seen []) @ [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sumList xs =
+  match xs with | [] -> [] | head::tail -> head + (sumList tail);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then [h] @ seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
 
 *)
 
 (* changed spans
-(7,21)-(7,70)
-(7,56)-(7,60)
-(7,56)-(7,63)
-(7,61)-(7,63)
-(8,9)-(8,46)
+(3,25)-(3,27)
 *)
 
 (* type error slice
-(7,21)-(7,70)
-(7,25)-(7,33)
-(7,25)-(7,40)
-(7,25)-(7,49)
-(7,34)-(7,35)
-(7,36)-(7,40)
-(7,44)-(7,49)
-(7,56)-(7,60)
-(7,56)-(7,63)
-(7,56)-(7,70)
-(7,61)-(7,63)
-(7,65)-(7,66)
-(7,67)-(7,70)
-(7,68)-(7,69)
+(2,17)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,3)-(3,64)
+(3,9)-(3,11)
+(3,25)-(3,27)
+(3,44)-(3,48)
+(3,44)-(3,64)
+(3,44)-(3,64)
+(3,44)-(3,64)
+(3,52)-(3,59)
+(3,52)-(3,64)
+(3,52)-(3,64)
+(3,60)-(3,64)
 *)

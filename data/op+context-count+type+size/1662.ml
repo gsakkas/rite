@@ -1,71 +1,59 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let c1 () = failwith "to be implemented";;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin (eval (s1, x, y))
-  | Cosine c1 -> cos (eval (c1, x, y))
-  | Average (a1,a2) -> ((eval (a1, x, y)) +. (eval (a2, x, y))) / 2.0;;
+let rec additivePersistence n =
+  match digitsOfInt n with | [] -> 0 | h::t -> h + t;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin (pi *. (eval (s1, x, y)))
-  | Cosine c1 -> cos (pi *. (eval (c1, x, y)))
-  | Average (a1,a2) -> ((eval (a1, x, y)) +. (eval (a2, x, y))) /. 2.0
-  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
-  | Thresh (h1,h2,h3,h4) ->
-      if (eval (h1, x, y)) < (eval (h2, x, y))
-      then eval (h3, x, y)
-      else eval (h4, x, y);;
+let rec additivePersistence n =
+  match digitsOfInt n with | [] -> 0 | _ -> sumList (digitsOfInt n);;
 
 *)
 
 (* changed spans
-(11,8)-(11,41)
-(11,13)-(11,21)
-(11,13)-(11,41)
-(11,22)-(11,41)
-(13,15)-(19,70)
-(14,3)-(19,70)
-(17,21)-(17,35)
-(18,23)-(18,37)
-(19,26)-(19,70)
-(19,53)-(19,55)
-(19,57)-(19,58)
-(19,60)-(19,61)
+(7,29)-(8,53)
+(8,3)-(8,53)
+(8,9)-(8,20)
+(8,9)-(8,22)
+(8,21)-(8,22)
+(8,36)-(8,37)
+(8,52)-(8,53)
 *)
 
 (* type error slice
-(14,3)-(19,70)
-(15,14)-(15,22)
-(19,26)-(19,61)
-(19,26)-(19,70)
-(19,67)-(19,70)
+(2,21)-(5,62)
+(3,3)-(5,62)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(4,8)-(4,10)
+(5,8)-(5,16)
+(5,8)-(5,62)
+(5,33)-(5,41)
+(5,33)-(5,62)
+(5,33)-(5,62)
+(5,43)-(5,54)
+(5,43)-(5,62)
+(7,4)-(8,55)
+(7,29)-(8,53)
+(8,3)-(8,53)
+(8,3)-(8,53)
+(8,3)-(8,53)
+(8,21)-(8,22)
+(8,48)-(8,49)
+(8,48)-(8,53)
+(8,48)-(8,53)
+(8,52)-(8,53)
 *)

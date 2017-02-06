@@ -1,70 +1,55 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (eval (e1, x, y))
-  | Cosine e1 -> cos (eval (e1, x, y))
-  | Average (e1,e2) -> (eval (e1, x, y)) + ((eval (e2, x, y)) / 2);;
+let pipe fs =
+  let f a x = a = (fun x  -> fun a  -> fun t  -> x (a t)) in
+  let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (eval (e1, x, y))
-  | Cosine e1 -> cos (eval (e1, x, y))
-  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0);;
+let pipe fs =
+  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(17,25)-(17,66)
-(17,46)-(17,66)
-(17,65)-(17,66)
+(3,15)-(3,16)
+(3,15)-(3,56)
+(3,20)-(3,56)
+(3,30)-(3,56)
+(3,40)-(3,56)
+(3,55)-(3,56)
 *)
 
 (* type error slice
-(12,3)-(17,66)
-(13,14)-(13,15)
-(15,21)-(15,25)
-(15,21)-(15,35)
-(15,27)-(15,29)
-(15,27)-(15,35)
-(15,31)-(15,32)
-(15,34)-(15,35)
-(17,25)-(17,29)
-(17,25)-(17,39)
-(17,25)-(17,66)
-(17,31)-(17,33)
-(17,31)-(17,39)
-(17,35)-(17,36)
-(17,38)-(17,39)
-(17,46)-(17,50)
-(17,46)-(17,60)
-(17,46)-(17,66)
-(17,52)-(17,54)
-(17,52)-(17,60)
-(17,56)-(17,57)
-(17,59)-(17,60)
+(2,4)-(4,47)
+(2,10)-(4,45)
+(3,3)-(4,45)
+(3,3)-(4,45)
+(3,9)-(3,56)
+(3,11)-(3,56)
+(3,15)-(3,16)
+(3,15)-(3,56)
+(3,15)-(3,56)
+(3,20)-(3,56)
+(3,30)-(3,56)
+(3,40)-(3,56)
+(3,50)-(3,51)
+(3,50)-(3,56)
+(3,50)-(3,56)
+(3,53)-(3,54)
+(3,53)-(3,56)
+(3,53)-(3,56)
+(3,55)-(3,56)
+(4,3)-(4,45)
+(4,3)-(4,45)
+(4,12)-(4,17)
+(4,16)-(4,17)
+(4,21)-(4,35)
+(4,21)-(4,45)
+(4,21)-(4,45)
+(4,21)-(4,45)
+(4,21)-(4,45)
+(4,36)-(4,37)
+(4,38)-(4,42)
+(4,43)-(4,45)
 *)

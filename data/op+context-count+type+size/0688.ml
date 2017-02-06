@@ -1,59 +1,116 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let a = List.length l1 in let b = List.length l2 in if 1 < 2 then clone 0 1;;
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> cos ((eval (a, x, y)) *. pi)
+  | Average (a,b) -> (eval (a, x, y)) +. ((eval (b, x, y)) /. 2)
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> cos ((eval (a, x, y)) *. pi)
+  | Average (a,b) -> (eval (a, x, y)) +. ((eval (b, x, y)) /. 2.)
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 *)
 
 (* changed spans
-(9,11)-(9,25)
-(9,29)-(9,78)
-(9,55)-(9,78)
-(9,58)-(9,59)
-(9,62)-(9,63)
-(9,69)-(9,74)
-(9,69)-(9,78)
-(9,77)-(9,78)
+(21,63)-(21,64)
 *)
 
 (* type error slice
-(2,4)-(6,19)
-(2,15)-(6,17)
-(2,17)-(6,17)
-(3,3)-(6,17)
-(3,15)-(3,17)
-(4,3)-(6,17)
-(5,30)-(5,36)
-(5,30)-(5,56)
-(5,38)-(5,48)
-(5,51)-(5,56)
-(6,3)-(6,9)
-(6,3)-(6,17)
-(6,10)-(6,15)
-(6,16)-(6,17)
-(9,55)-(9,78)
-(9,69)-(9,74)
-(9,69)-(9,78)
-(9,75)-(9,76)
-(9,77)-(9,78)
+(13,4)-(13,29)
+(13,10)-(13,26)
+(15,15)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,3)-(23,26)
+(16,9)-(16,10)
+(17,14)-(17,15)
+(18,14)-(18,15)
+(19,15)-(19,18)
+(19,15)-(19,42)
+(19,21)-(19,25)
+(19,21)-(19,34)
+(19,21)-(19,34)
+(19,21)-(19,42)
+(19,21)-(19,42)
+(19,27)-(19,28)
+(19,27)-(19,34)
+(19,30)-(19,31)
+(19,33)-(19,34)
+(19,40)-(19,42)
+(20,17)-(20,20)
+(20,17)-(20,44)
+(20,23)-(20,27)
+(20,23)-(20,36)
+(20,23)-(20,36)
+(20,23)-(20,44)
+(20,29)-(20,30)
+(20,29)-(20,36)
+(20,32)-(20,33)
+(20,35)-(20,36)
+(20,42)-(20,44)
+(21,23)-(21,27)
+(21,23)-(21,36)
+(21,23)-(21,36)
+(21,29)-(21,30)
+(21,29)-(21,36)
+(21,32)-(21,33)
+(21,35)-(21,36)
+(21,44)-(21,48)
+(21,44)-(21,57)
+(21,44)-(21,57)
+(21,44)-(21,64)
+(21,50)-(21,51)
+(21,50)-(21,57)
+(21,53)-(21,54)
+(21,56)-(21,57)
+(21,63)-(21,64)
+(22,20)-(22,21)
+(23,25)-(23,26)
 *)

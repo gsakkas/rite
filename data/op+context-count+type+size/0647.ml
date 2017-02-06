@@ -1,71 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) /. 2.0;;
+let rec sumList xs = match xs with | [] -> [] | hd::tl -> hd + (sumList tl);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
 *)
 
 (* changed spans
-(19,26)-(19,60)
+(2,44)-(2,46)
 *)
 
 (* type error slice
-(14,3)-(19,70)
-(17,28)-(17,32)
-(17,28)-(17,42)
-(17,34)-(17,36)
-(17,34)-(17,42)
-(17,38)-(17,39)
-(17,41)-(17,42)
-(19,26)-(19,30)
-(19,26)-(19,40)
-(19,26)-(19,60)
-(19,26)-(19,70)
-(19,32)-(19,34)
-(19,32)-(19,40)
-(19,36)-(19,37)
-(19,39)-(19,40)
-(19,46)-(19,50)
-(19,46)-(19,60)
-(19,52)-(19,54)
-(19,52)-(19,60)
-(19,56)-(19,57)
-(19,59)-(19,60)
+(2,17)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,22)-(2,75)
+(2,28)-(2,30)
+(2,44)-(2,46)
+(2,59)-(2,61)
+(2,59)-(2,75)
+(2,59)-(2,75)
+(2,59)-(2,75)
+(2,65)-(2,72)
+(2,65)-(2,75)
+(2,65)-(2,75)
+(2,73)-(2,75)
 *)

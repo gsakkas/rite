@@ -8,20 +8,10 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then VarX else VarY)
+  else (let y = rand (2, 6) in if y = 2 then y);;
 
 
 (* fix
@@ -35,32 +25,62 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(19,26)-(19,68)
-(19,67)-(19,68)
+(11,16)-(14,47)
+(13,35)-(13,39)
+(13,45)-(13,49)
+(14,9)-(14,47)
+(14,32)-(14,47)
+(14,35)-(14,36)
+(14,35)-(14,40)
+(14,39)-(14,40)
+(14,46)-(14,47)
 *)
 
 (* type error slice
-(14,3)-(24,26)
-(15,14)-(15,15)
-(19,26)-(19,61)
-(19,26)-(19,68)
+(11,4)-(14,50)
+(11,16)-(14,47)
+(12,3)-(14,47)
+(12,3)-(14,47)
+(12,6)-(12,11)
+(12,6)-(12,15)
+(13,9)-(13,49)
+(13,13)-(13,17)
+(13,13)-(13,23)
+(13,13)-(13,23)
+(13,13)-(13,29)
+(13,13)-(13,29)
+(13,13)-(13,29)
+(13,19)-(13,20)
+(13,19)-(13,23)
+(13,22)-(13,23)
+(13,28)-(13,29)
+(13,35)-(13,39)
+(13,45)-(13,49)
+(14,9)-(14,47)
+(14,9)-(14,47)
+(14,17)-(14,21)
+(14,17)-(14,27)
+(14,23)-(14,24)
+(14,23)-(14,27)
+(14,26)-(14,27)
+(14,32)-(14,47)
+(14,32)-(14,47)
+(14,32)-(14,47)
+(14,35)-(14,36)
+(14,35)-(14,40)
+(14,35)-(14,40)
+(14,39)-(14,40)
+(14,46)-(14,47)
 *)

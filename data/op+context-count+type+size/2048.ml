@@ -1,55 +1,73 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let rec exprToString e =
-  match e with | Thresh (a,b,c,d) -> exprToString a b c d;;
+let x = 1.0;;
+
+let fixpoint (f,b) =
+  wwhile (let y x = let xx = f x in (xx, (xx != x)) in ((y x), b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")");;
+let fixpoint (f,b) =
+  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
 
 *)
 
 (* changed spans
-(12,3)-(12,58)
-(12,38)-(12,50)
-(12,38)-(12,58)
-(12,51)-(12,52)
-(12,53)-(12,54)
-(12,55)-(12,56)
-(12,57)-(12,58)
+(6,9)-(6,12)
+(9,58)-(9,61)
+(9,60)-(9,61)
 *)
 
 (* type error slice
-(11,4)-(12,60)
-(11,22)-(12,58)
-(12,3)-(12,58)
-(12,9)-(12,10)
-(12,38)-(12,50)
-(12,38)-(12,58)
-(12,51)-(12,52)
-(12,53)-(12,54)
-(12,55)-(12,56)
-(12,57)-(12,58)
+(2,4)-(4,51)
+(2,17)-(4,49)
+(3,3)-(4,49)
+(3,3)-(4,49)
+(3,26)-(3,27)
+(3,26)-(3,29)
+(3,26)-(3,29)
+(3,28)-(3,29)
+(4,3)-(4,49)
+(4,3)-(4,49)
+(4,3)-(4,49)
+(4,6)-(4,13)
+(4,19)-(4,25)
+(4,19)-(4,36)
+(4,19)-(4,36)
+(4,27)-(4,28)
+(4,27)-(4,36)
+(4,30)-(4,36)
+(4,43)-(4,49)
+(8,4)-(9,69)
+(8,15)-(9,65)
+(9,3)-(9,9)
+(9,3)-(9,65)
+(9,3)-(9,65)
+(9,11)-(9,65)
+(9,11)-(9,65)
+(9,17)-(9,50)
+(9,21)-(9,50)
+(9,21)-(9,50)
+(9,30)-(9,31)
+(9,30)-(9,33)
+(9,30)-(9,33)
+(9,32)-(9,33)
+(9,38)-(9,40)
+(9,38)-(9,50)
+(9,43)-(9,45)
+(9,43)-(9,50)
+(9,43)-(9,50)
+(9,49)-(9,50)
+(9,58)-(9,59)
+(9,58)-(9,61)
+(9,58)-(9,65)
+(9,64)-(9,65)
 *)

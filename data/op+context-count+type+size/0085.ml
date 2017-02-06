@@ -2,59 +2,55 @@
 let rec mulByDigit i l =
   match List.rev l with
   | [] -> []
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let f a x = a + x in
-           let base = 0 in
-           (match [List.fold_left f base (h :: t)] with
-            | [] -> []
-            | a::b ->
-                let rec helper acc v =
-                  if v = 0
-                  then acc
-                  else ((v / 10) mod 10) :: ((v mod 10) :: acc) :: acc in
-                helper [] a));;
+  | h::t -> [((mulByDigit i (List.rev t)) * 10) + (h * i)];;
 
 
 (* fix
 
 let rec mulByDigit i l =
-  match List.rev l with
+  match l with
   | [] -> []
   | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let f a x = a + x in
-           let base = 0 in
-           (match [List.fold_left f base (h :: t)] with
-            | [] -> []
-            | a::b ->
-                let rec helper acc v =
-                  if v = 0
-                  then acc
-                  else ((v / 10) mod 10) :: (v mod 10) :: acc in
-                helper [] a));;
+      (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i];;
 
 *)
 
 (* changed spans
-(19,47)-(19,63)
-(19,68)-(19,71)
+(3,9)-(3,17)
+(3,9)-(3,19)
+(5,13)-(5,59)
+(5,16)-(5,26)
+(5,16)-(5,47)
+(5,16)-(5,57)
+(5,39)-(5,40)
+(5,45)-(5,47)
+(5,52)-(5,53)
+(5,52)-(5,57)
+(5,56)-(5,57)
 *)
 
 (* type error slice
-(19,26)-(19,40)
-(19,26)-(19,71)
-(19,47)-(19,55)
-(19,47)-(19,63)
-(19,47)-(19,71)
-(19,60)-(19,63)
-(19,68)-(19,71)
+(2,20)-(5,59)
+(2,22)-(5,59)
+(3,3)-(5,59)
+(3,3)-(5,59)
+(3,3)-(5,59)
+(3,3)-(5,59)
+(3,3)-(5,59)
+(3,9)-(3,17)
+(3,9)-(3,19)
+(3,9)-(3,19)
+(3,18)-(3,19)
+(4,11)-(4,13)
+(5,16)-(5,26)
+(5,16)-(5,40)
+(5,16)-(5,40)
+(5,16)-(5,40)
+(5,27)-(5,28)
+(5,30)-(5,38)
+(5,30)-(5,40)
+(5,30)-(5,40)
+(5,39)-(5,40)
+(5,52)-(5,53)
+(5,56)-(5,57)
 *)

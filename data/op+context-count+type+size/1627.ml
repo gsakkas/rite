@@ -1,68 +1,174 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let rec listReverse l =
-  let rec listReverseHelper dec acc =
-    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
-  listReverseHelper l [];;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let palindrome w = (explode w) = (explode (listReverse w));;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | h1::t1 -> (l1, [0; 0; 0; 0]) in
+    let base = (l1, []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let rec listReverse l =
-  let rec listReverseHelper dec acc =
-    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
-  listReverseHelper l [];;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let palindrome w = (explode w) = (listReverse (explode w));;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (h1::t1,_) -> (l1, [0; 0; 0; 0]) in
+    let base = (l1, []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(12,35)-(12,42)
-(12,44)-(12,57)
-(12,56)-(12,57)
+(23,17)-(23,59)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(3,3)-(5,7)
-(4,14)-(4,27)
-(4,14)-(4,29)
-(4,28)-(4,29)
-(4,56)-(4,58)
-(4,56)-(4,65)
-(4,60)-(4,65)
-(5,3)-(5,5)
-(5,3)-(5,7)
-(5,6)-(5,7)
-(7,4)-(10,27)
-(7,21)-(10,25)
-(8,3)-(10,25)
-(9,5)-(9,71)
-(9,42)-(9,59)
-(9,42)-(9,71)
-(9,60)-(9,61)
-(9,63)-(9,71)
-(10,3)-(10,20)
-(10,3)-(10,25)
-(10,21)-(10,22)
-(10,23)-(10,25)
-(12,21)-(12,28)
-(12,21)-(12,30)
-(12,29)-(12,30)
-(12,44)-(12,55)
-(12,44)-(12,57)
-(12,56)-(12,57)
+(2,4)-(3,70)
+(2,15)-(3,68)
+(2,17)-(3,68)
+(3,3)-(3,68)
+(3,3)-(3,68)
+(3,3)-(3,68)
+(3,3)-(3,68)
+(3,9)-(3,10)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,13)-(3,14)
+(3,31)-(3,32)
+(3,31)-(3,51)
+(3,37)-(3,42)
+(3,37)-(3,51)
+(3,37)-(3,51)
+(3,37)-(3,51)
+(3,43)-(3,44)
+(3,46)-(3,47)
+(3,46)-(3,51)
+(3,50)-(3,51)
+(3,66)-(3,68)
+(5,4)-(14,64)
+(5,13)-(14,61)
+(5,16)-(14,61)
+(6,17)-(6,28)
+(6,17)-(6,31)
+(6,17)-(6,31)
+(6,29)-(6,31)
+(7,17)-(7,28)
+(7,17)-(7,31)
+(7,17)-(7,31)
+(7,29)-(7,31)
+(10,7)-(11,60)
+(11,7)-(11,60)
+(11,20)-(11,25)
+(11,20)-(11,29)
+(11,34)-(11,36)
+(11,34)-(11,60)
+(11,39)-(11,50)
+(11,39)-(11,60)
+(11,58)-(11,60)
+(14,35)-(14,46)
+(14,35)-(14,56)
+(14,54)-(14,56)
+(16,20)-(19,55)
+(17,3)-(19,55)
+(17,3)-(19,55)
+(17,3)-(19,55)
+(17,3)-(19,55)
+(17,3)-(19,55)
+(17,9)-(17,10)
+(18,11)-(18,13)
+(19,14)-(19,55)
+(19,20)-(19,21)
+(19,34)-(19,44)
+(19,34)-(19,46)
+(19,34)-(19,46)
+(19,45)-(19,46)
+(19,54)-(19,55)
+(21,4)-(26,37)
+(21,12)-(26,33)
+(21,15)-(26,33)
+(22,3)-(26,33)
+(22,12)-(25,69)
+(23,5)-(25,69)
+(23,5)-(25,69)
+(23,11)-(23,59)
+(23,13)-(23,59)
+(23,17)-(23,59)
+(23,17)-(23,59)
+(23,17)-(23,59)
+(23,17)-(23,59)
+(23,23)-(23,24)
+(23,43)-(23,45)
+(23,43)-(23,59)
+(23,47)-(23,59)
+(23,47)-(23,59)
+(23,48)-(23,49)
+(23,51)-(23,52)
+(23,54)-(23,55)
+(23,57)-(23,58)
+(24,5)-(25,69)
+(24,5)-(25,69)
+(24,17)-(24,19)
+(24,17)-(24,23)
+(24,21)-(24,23)
+(25,5)-(25,69)
+(25,5)-(25,69)
+(25,16)-(25,18)
+(25,22)-(25,69)
+(25,22)-(25,69)
+(25,36)-(25,50)
+(25,36)-(25,62)
+(25,36)-(25,62)
+(25,36)-(25,62)
+(25,36)-(25,62)
+(25,51)-(25,52)
+(25,53)-(25,57)
+(25,58)-(25,62)
+(25,66)-(25,69)
+(26,15)-(26,18)
+(26,15)-(26,33)
+(26,15)-(26,33)
+(26,20)-(26,27)
+(26,20)-(26,33)
+(26,20)-(26,33)
+(26,28)-(26,30)
+(26,31)-(26,33)
 *)

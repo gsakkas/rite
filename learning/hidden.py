@@ -111,31 +111,21 @@ def build_model(features, labels, hidden,
     def train(data, i, validation=None, verbose=False):
         summary_str, _ = sess.run([merged, train_step],
                                   feed_dict={x: data[features], y_: data[labels],
-                                             keep_prob: 1.0})
-        summary_writer.add_summary(summary_str, i)
+                                             # keep_prob: 0.5})
+                                             keep_prob: 1.0})  # TODO: should we use dropout??
+        if i % 100 == 0:
+            summary_writer.add_summary(summary_str, i)
         if validation is not None and i % 100 == 0:
             acc = 0
             acc1 = 0
             for val in validation:
-                ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: val[features], y_:val[labels], k:min(3, len(val)), keep_prob:1.0})
-                # print ys
-                #top_k = np.argpartition(ys, 3, 0)
-                # print (top_values, top_indices)
-                # val['G-NoChange'] = np.transpose(ys)[0]
-                # val['G-DidChange'] = np.transpose(ys)[1]
-                # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][val['L-DidChange'] > 0]
-                # print top_indices[1]
-                # print val[['G-NoChange', 'G-DidChange', 'L-DidChange']][top_indices[1]]
+                ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k],
+                                                         feed_dict={x: val[features], y_:val[labels],
+                                                                    k:min(3, len(val)), keep_prob:1.0})
                 if any(val['L-DidChange'][idx] == 1 for idx in top_indices[1]):
-                    # print 'SUCCESS'
-                    # raise 'die'
                     acc += 1
                 if val['L-DidChange'][top_indices[1][0]] == 1:
-                    # print 'SUCCESS'
-                    # raise 'die'
                     acc1 += 1
-            #     print ''
-            # raise 'die'
             acc = float(acc)  / len(validation)
             acc1 = float(acc1) / len(validation)
             vals = pd.concat(validation)
@@ -177,6 +167,12 @@ def build_model(features, labels, hidden,
         acc = 0
         acc1 = 0
         acc2 = 0
+        ps = []
+        rs = []
+        fs = []
+        cs = []
+        ts = []
+
         for d in data:
             ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
             # print ys
@@ -189,10 +185,48 @@ def build_model(features, labels, hidden,
             if d['L-DidChange'][top_indices[1][0]] == 1 or d['L-DidChange'][top_indices[1][1]] == 1:
                 acc2 += 1
 
+            truth, observed = sess.run(
+                [tf.argmax(y_,1), tf.argmax(y,1)],
+                {x: d[features], y_: d[labels], keep_prob: 1.0})
+            # True positives.
+            tp = np.sum(np.logical_and(truth, observed))
+            # False positives.
+            fp = np.sum(np.logical_and(np.logical_not(truth), observed))
+            # False negatives.
+            fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
+            # True negatives.
+            tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
+            precision = np.float32(tp) / np.float32(tp + fp)
+            recall = np.float32(tp) / np.float32(tp + fn)
+            fscore = np.float32(2.0) * precision * recall / (precision + recall)
+            if not np.isnan(precision):
+                ps.append(precision)
+            if not np.isnan(recall):
+                rs.append(recall)
+            if not np.isnan(fscore):
+                fs.append(fscore)
+            cs.append(tp+fn)
+            ts.append(tp+fp+fn+tn)
+            print('true changes: %d' % (tp+fn))
+            print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
+            print('')
+
         acc = float(acc) / len(data)
         acc1 = float(acc1) / len(data)
         acc2 = float(acc2) / len(data)
         print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc))
+        print('avg p/r/f1: %.3f / %.3f / %.3f' % (np.mean(ps), np.mean(rs), np.mean(fs)))
+        print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
+        print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
+        print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
+
+        # precision = np.float32(tp) / (tp + fp)
+        # recall = np.float32(tp) / (tp + fn)
+        # fscore = 2.0 * precision * recall / (precision + recall)
+        # print('precision: %.3f' % precision)
+        # print('recall:    %.3f' % recall)
+        # print('f1 score:  %.3f' % fscore)
+        # print('')
 
         # #data = data.drop_duplicates()
         # print(data[data['L-NoChange'] == 1].shape, data[data['L-DidChange'] == 1].shape)

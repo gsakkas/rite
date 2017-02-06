@@ -6,22 +6,24 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
+  | Tangent of expr* expr
+  | Square2 of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildTangent (e1,e2) = Tangent (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a x y)) < (eval (b x y))
-      then eval (a_less x y)
-      else eval (b_less x y);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 1 then buildX () else buildY ()
+  | _ ->
+      if (rand (0, 1)) = 1
+      then
+        ((buildTangent (build (rand, (depth - 1)))),
+          (build (rand, (depth - 1))));;
 
 
 (* fix
@@ -33,48 +35,107 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
+  | Tangent of expr* expr
+  | Square2 of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y);;
+let buildTangent (e1,e2) = Tangent (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 1 then buildX () else buildY ()
+  | _ ->
+      if (rand (0, 1)) = 1
+      then
+        buildTangent
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+      else
+        buildAverage
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(22,17)-(22,22)
-(22,34)-(22,39)
-(23,18)-(23,28)
-(24,18)-(24,28)
+(13,28)-(13,43)
+(23,7)-(26,35)
+(25,11)-(26,35)
+(25,25)-(25,48)
+(26,26)-(26,31)
+(26,34)-(26,35)
 *)
 
 (* type error slice
-(14,3)-(24,28)
-(22,17)-(22,18)
-(22,17)-(22,22)
-(22,19)-(22,20)
-(22,21)-(22,22)
-(22,34)-(22,35)
-(22,34)-(22,39)
-(22,36)-(22,37)
-(22,38)-(22,39)
-(23,18)-(23,24)
-(23,18)-(23,28)
-(23,25)-(23,26)
-(23,27)-(23,28)
-(24,18)-(24,24)
-(24,18)-(24,28)
-(24,25)-(24,26)
-(24,27)-(24,28)
+(13,4)-(13,46)
+(13,19)-(13,43)
+(13,28)-(13,43)
+(13,37)-(13,39)
+(13,41)-(13,43)
+(15,4)-(15,23)
+(15,12)-(15,21)
+(15,12)-(15,21)
+(15,17)-(15,21)
+(17,4)-(17,23)
+(17,12)-(17,21)
+(17,12)-(17,21)
+(17,17)-(17,21)
+(19,16)-(26,35)
+(20,3)-(26,35)
+(20,3)-(26,35)
+(20,3)-(26,35)
+(20,9)-(20,14)
+(21,10)-(21,60)
+(21,10)-(21,60)
+(21,14)-(21,18)
+(21,14)-(21,24)
+(21,14)-(21,24)
+(21,14)-(21,30)
+(21,14)-(21,30)
+(21,14)-(21,30)
+(21,20)-(21,21)
+(21,20)-(21,24)
+(21,23)-(21,24)
+(21,29)-(21,30)
+(21,36)-(21,42)
+(21,36)-(21,45)
+(21,43)-(21,45)
+(21,51)-(21,57)
+(21,51)-(21,60)
+(21,58)-(21,60)
+(23,7)-(26,35)
+(23,7)-(26,35)
+(23,7)-(26,35)
+(23,11)-(23,15)
+(23,11)-(23,21)
+(23,11)-(23,27)
+(23,11)-(23,27)
+(23,17)-(23,18)
+(23,17)-(23,21)
+(23,20)-(23,21)
+(23,26)-(23,27)
+(25,11)-(25,23)
+(25,11)-(25,48)
+(25,11)-(25,48)
+(25,11)-(26,35)
+(25,25)-(25,30)
+(25,25)-(25,48)
+(25,25)-(25,48)
+(25,32)-(25,36)
+(25,32)-(25,48)
+(25,39)-(25,44)
+(25,39)-(25,48)
+(25,39)-(25,48)
+(25,47)-(25,48)
+(26,12)-(26,17)
+(26,12)-(26,35)
+(26,19)-(26,23)
+(26,19)-(26,35)
+(26,26)-(26,31)
+(26,26)-(26,35)
+(26,34)-(26,35)
 *)

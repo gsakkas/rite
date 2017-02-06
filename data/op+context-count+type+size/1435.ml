@@ -1,51 +1,25 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. x)
-  | Cosine a -> cos (pi *. a);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10; digitsOfInt (n / 10)];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. x)
-  | Cosine a -> cos (pi *. y);;
+let rec digitsOfInt n = if n <= 0 then [] else [n mod 10];;
 
 *)
 
 (* changed spans
-(18,28)-(18,29)
+(3,26)-(3,58)
+(3,37)-(3,56)
 *)
 
 (* type error slice
-(14,3)-(18,29)
-(18,22)-(18,29)
-(18,28)-(18,29)
+(2,21)-(3,58)
+(3,3)-(3,58)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,18)-(3,20)
+(3,37)-(3,48)
+(3,37)-(3,56)
 *)

@@ -1,62 +1,58 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        if not (List.mem h seen)
-        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e -> pi * e;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 
 *)
 
 (* changed spans
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,27)
-(7,28)-(7,32)
+(11,10)-(11,13)
+(11,10)-(11,26)
+(11,18)-(11,22)
+(11,18)-(11,26)
+(11,23)-(11,26)
 *)
 
 (* type error slice
-(3,3)-(9,26)
-(3,19)-(8,76)
-(4,5)-(8,76)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,27)
-(7,28)-(7,32)
-(8,14)-(8,76)
-(8,26)-(8,35)
-(8,39)-(8,76)
-(8,51)-(8,52)
-(8,56)-(8,62)
-(8,56)-(8,76)
-(8,64)-(8,69)
-(8,64)-(8,76)
-(8,71)-(8,76)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(14,62)
+(13,15)-(14,60)
+(14,3)-(14,60)
+(14,3)-(14,60)
+(14,3)-(14,60)
+(14,3)-(14,60)
+(14,3)-(14,60)
+(14,3)-(14,60)
+(14,9)-(14,10)
+(14,27)-(14,28)
+(14,40)-(14,41)
+(14,54)-(14,56)
+(14,54)-(14,60)
+(14,54)-(14,60)
+(14,59)-(14,60)
 *)

@@ -1,28 +1,63 @@
 
-let rec clone x n = if n > 0 then clone [x] (n - 1) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> buildAverage (a1, a2);;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then clone x (n - 1) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
 
 *)
 
 (* changed spans
-(2,41)-(2,44)
+(11,19)-(11,43)
+(11,28)-(11,43)
+(11,37)-(11,39)
+(11,41)-(11,43)
+(17,24)-(17,36)
+(17,24)-(17,44)
+(17,38)-(17,40)
+(17,38)-(17,44)
+(17,42)-(17,44)
 *)
 
 (* type error slice
-(2,4)-(2,62)
-(2,15)-(2,60)
-(2,17)-(2,60)
-(2,21)-(2,60)
-(2,24)-(2,25)
-(2,24)-(2,29)
-(2,28)-(2,29)
-(2,35)-(2,40)
-(2,35)-(2,51)
-(2,41)-(2,44)
-(2,42)-(2,43)
-(2,46)-(2,51)
+(11,4)-(11,46)
+(11,19)-(11,43)
+(11,37)-(11,39)
+(11,41)-(11,43)
+(13,4)-(17,47)
+(13,15)-(17,44)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,24)-(17,36)
+(17,24)-(17,44)
 *)

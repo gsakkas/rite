@@ -1,59 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let r = rand (0, 1) in
-      if r = 0 then buildX () else if r = 1 then buildY ();;
+let rec wwhile (f,b) =
+  match f with
+  | (x,y) -> let (x,y) = f b in if y = true then wwhile (f, x) else x;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> let r = rand (0, 2) in if r = 0 then buildX () else buildY ();;
+let rec wwhile (f,b) =
+  let (x,y) = f b in if y = true then wwhile (f, x) else x;;
 
 *)
 
 (* changed spans
-(18,24)-(18,25)
-(19,36)-(19,59)
-(19,39)-(19,40)
-(19,39)-(19,44)
-(19,43)-(19,44)
+(3,3)-(4,70)
+(3,9)-(3,10)
 *)
 
 (* type error slice
-(13,4)-(13,23)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(19,36)-(19,59)
-(19,50)-(19,56)
-(19,50)-(19,59)
-(19,57)-(19,59)
+(2,4)-(4,72)
+(2,17)-(4,70)
+(3,3)-(4,70)
+(3,3)-(4,70)
+(3,9)-(3,10)
+(4,14)-(4,70)
+(4,14)-(4,70)
+(4,26)-(4,27)
+(4,26)-(4,29)
+(4,26)-(4,29)
+(4,28)-(4,29)
+(4,33)-(4,70)
+(4,33)-(4,70)
+(4,36)-(4,37)
+(4,36)-(4,44)
+(4,36)-(4,44)
+(4,36)-(4,44)
+(4,40)-(4,44)
+(4,50)-(4,56)
+(4,50)-(4,62)
+(4,50)-(4,62)
+(4,58)-(4,59)
+(4,58)-(4,62)
+(4,61)-(4,62)
+(4,69)-(4,70)
 *)

@@ -1,97 +1,77 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr
-  | Timmy2 of expr* expr* expr;;
+let rec clone x n = failwith "to be implemented";;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,f) ->
-      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
-  | Times (e,f) ->
-      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
-  | Thresh (e,f,g,h) ->
-      "(" ^
-        ((exprToString e) ^
-           ("<" ^
-              ((exprToString f) ^
-                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))))
-  | Timmy1 (e1,e2) ->
-      "sin^2(pi*" ^
-        ((exprToString e1) ^ (")*" ^ ("cos(pi*" ^ ((exprToString e2) ^ ")"))))
-  | Timmy2 (e1,e2,e3) ->
-      "sin^.5(pi*" ^
-        ((exprToString e1) ^
-           (")*" ^
-              ("(cos^2(pi*" ^
-                 ((exprToString e2) ^
-                    (")*" ^ (("cos(" exprToString e3) ^ "))"))))));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr
-  | Timmy2 of expr* expr* expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,f) ->
-      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
-  | Times (e,f) ->
-      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
-  | Thresh (e,f,g,h) ->
-      "(" ^
-        ((exprToString e) ^
-           ("<" ^
-              ((exprToString f) ^
-                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))))
-  | Timmy1 (e1,e2) ->
-      "sin^2(pi*" ^
-        ((exprToString e1) ^ (")*" ^ ("cos(pi*" ^ ((exprToString e2) ^ ")"))))
-  | Timmy2 (e1,e2,e3) ->
-      "sin^.5(pi*" ^
-        ((exprToString e1) ^
-           (")*" ^
-              ("(cos^2(pi*" ^
-                 ((exprToString e2) ^
-                    (")*" ^ ("cos(" ^ ((exprToString e3) ^ "))")))))));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
 *)
 
 (* changed spans
-(38,31)-(38,53)
-(38,38)-(38,50)
+(2,21)-(2,29)
+(2,21)-(2,49)
+(2,30)-(2,49)
+(4,13)-(6,76)
+(5,3)-(6,76)
+(6,37)-(6,48)
+(6,37)-(6,51)
+(6,49)-(6,51)
+(6,56)-(6,67)
+(6,56)-(6,70)
+(6,74)-(6,76)
 *)
 
 (* type error slice
-(14,3)-(38,61)
-(17,29)-(17,41)
-(17,29)-(17,43)
-(17,42)-(17,43)
-(38,31)-(38,37)
-(38,31)-(38,53)
-(38,38)-(38,50)
-(38,51)-(38,53)
+(2,4)-(2,51)
+(2,15)-(2,49)
+(2,17)-(2,49)
+(2,21)-(2,29)
+(2,21)-(2,49)
+(4,4)-(6,80)
+(4,13)-(6,76)
+(4,16)-(6,76)
+(5,3)-(6,76)
+(5,3)-(6,76)
+(5,3)-(6,76)
+(5,7)-(5,18)
+(5,7)-(5,21)
+(5,7)-(5,21)
+(5,7)-(5,40)
+(5,7)-(5,40)
+(5,19)-(5,21)
+(5,26)-(5,37)
+(5,26)-(5,40)
+(5,26)-(5,40)
+(5,38)-(5,40)
+(6,9)-(6,11)
+(6,9)-(6,76)
+(6,14)-(6,25)
+(6,14)-(6,76)
+(6,14)-(6,76)
+(6,14)-(6,76)
+(6,27)-(6,32)
+(6,27)-(6,70)
+(6,27)-(6,70)
+(6,27)-(6,70)
+(6,33)-(6,34)
+(6,37)-(6,48)
+(6,37)-(6,51)
+(6,37)-(6,51)
+(6,37)-(6,70)
+(6,49)-(6,51)
+(6,56)-(6,67)
+(6,56)-(6,70)
+(6,56)-(6,70)
+(6,68)-(6,70)
+(6,74)-(6,76)
 *)

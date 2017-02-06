@@ -1,61 +1,50 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(" ^ (n1 ^ (n2 ^ "/ 2 )"))
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) @ [digitsOfInt (n / 10)];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(n1 + n2 / 2 )"
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let digit = digitsOfInt (n / 10) in digit @ [n mod 10]);;
 
 *)
 
 (* changed spans
-(17,24)-(17,27)
-(17,24)-(17,49)
-(17,28)-(17,29)
-(17,31)-(17,49)
+(3,27)-(3,28)
+(3,27)-(3,35)
+(3,27)-(3,61)
+(3,33)-(3,35)
+(3,37)-(3,38)
+(3,39)-(3,61)
 *)
 
 (* type error slice
-(12,3)-(19,41)
-(17,31)-(17,33)
-(17,31)-(17,49)
-(17,34)-(17,35)
-(17,37)-(17,39)
-(17,37)-(17,49)
-(17,40)-(17,41)
-(17,42)-(17,49)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,11)-(3,12)
+(3,18)-(3,20)
+(3,27)-(3,28)
+(3,27)-(3,35)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,27)-(3,61)
+(3,33)-(3,35)
+(3,37)-(3,38)
+(3,39)-(3,61)
+(3,39)-(3,61)
+(3,40)-(3,51)
+(3,40)-(3,59)
+(3,40)-(3,59)
+(3,53)-(3,54)
+(3,53)-(3,59)
+(3,57)-(3,59)
 *)

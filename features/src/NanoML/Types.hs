@@ -234,8 +234,8 @@ solveCts = mapM_ solveCt
 solveCt :: MonadEval m => Constraint -> m ()
 solveCt ct@(MkConstraint _ t1 t2) = do
   pushConstraints (Set.singleton ct)
-  unify t1 t2 `catchError` \ _e -> do
-  -- (unify t1 t2 >> checkCyclic t1 t2) `catchError` \ _e -> do
+  -- unify t1 t2 `catchError` \ _e -> do
+  (unify t1 t2 >> checkCyclic t1 t2) `catchError` \ _e -> do
     addUnsatCore =<< getUnsatCore
   popConstraints
 

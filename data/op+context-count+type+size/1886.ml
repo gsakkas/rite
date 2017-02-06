@@ -1,147 +1,224 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Inverse a ->
-      let result = eval a in if result = 0. then 0 else 1 /. result
-  | Max (a,b) ->
-      let aResult = eval a in
-      let bResult = eval b in if aResult > bResult then aResult else bResult
-  | Range (a,b,c) ->
-      let aResult = eval a in
-      let bResult = eval b in
-      let cResult = eval c in
-      if aResult < bResult
-      then bResult
-      else if aResult < cResult then cResult else aResult;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let ha::_ = a in
+      let (a1,a2) = ha in
+      let tens = (x1 + x2) + (a1 / 10) in
+      let ones = (x1 + x2) + (a1 mod 10) in (tens, ones) :: a in
+    let base = (0, 0) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Inverse a ->
-      let result = eval (a, x, y) in if result = 0. then 0. else 1. /. result
-  | Max (a,b) ->
-      let aResult = eval (a, x, y) in
-      let bResult = eval (b, x, y) in
-      if aResult > bResult then aResult else bResult
-  | Range (a,b,c) ->
-      let aResult = eval (a, x, y) in
-      let bResult = eval (b, x, y) in
-      let cResult = eval (c, x, y) in
-      if aResult < bResult
-      then bResult
-      else if aResult < cResult then cResult else aResult;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let h::_ = a1 in
+      let tens = (x1 + x2) + (h / 10) in
+      let ones = (x1 + x2) + (h mod 10) in ((tens :: a1), (ones :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(29,25)-(29,26)
-(29,30)-(29,68)
-(29,50)-(29,51)
-(29,57)-(29,58)
-(31,26)-(31,27)
-(32,7)-(32,77)
-(32,26)-(32,27)
-(32,31)-(32,77)
-(34,26)-(34,27)
-(35,7)-(39,58)
-(35,26)-(35,27)
-(36,7)-(39,58)
-(36,21)-(36,25)
-(36,21)-(36,27)
-(36,26)-(36,27)
-(37,7)-(39,58)
-(37,10)-(37,17)
-(37,10)-(37,27)
-(37,20)-(37,27)
-(38,12)-(38,19)
-(39,12)-(39,58)
-(39,15)-(39,22)
-(39,15)-(39,32)
-(39,25)-(39,32)
-(39,38)-(39,45)
-(39,51)-(39,58)
+(22,21)-(22,23)
+(23,31)-(23,33)
+(24,31)-(24,33)
+(24,46)-(24,50)
+(24,46)-(24,62)
+(24,52)-(24,56)
+(24,61)-(24,62)
+(25,17)-(25,18)
+(25,20)-(25,21)
+(26,5)-(27,52)
 *)
 
 (* type error slice
-(17,3)-(39,58)
-(18,14)-(18,15)
-(20,27)-(20,31)
-(20,27)-(20,40)
-(20,33)-(20,34)
-(20,33)-(20,40)
-(20,36)-(20,37)
-(20,39)-(20,40)
-(29,7)-(29,68)
-(29,20)-(29,24)
-(29,20)-(29,26)
-(29,25)-(29,26)
-(29,30)-(29,68)
-(29,50)-(29,51)
-(29,57)-(29,58)
-(29,57)-(29,68)
-(31,21)-(31,25)
-(31,21)-(31,27)
-(31,26)-(31,27)
-(32,21)-(32,25)
-(32,21)-(32,27)
-(32,26)-(32,27)
-(34,21)-(34,25)
-(34,21)-(34,27)
-(34,26)-(34,27)
-(35,21)-(35,25)
-(35,21)-(35,27)
-(35,26)-(35,27)
-(36,21)-(36,25)
-(36,21)-(36,27)
-(36,26)-(36,27)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(9,42)
+(4,13)-(9,38)
+(4,16)-(9,38)
+(5,12)-(5,23)
+(5,12)-(5,26)
+(5,12)-(5,26)
+(5,24)-(5,26)
+(6,12)-(6,23)
+(6,12)-(6,26)
+(6,12)-(6,26)
+(6,24)-(6,26)
+(8,11)-(8,16)
+(8,11)-(8,27)
+(8,11)-(8,34)
+(8,11)-(8,39)
+(8,30)-(8,31)
+(8,32)-(8,34)
+(8,37)-(8,39)
+(9,15)-(9,38)
+(9,34)-(9,35)
+(9,36)-(9,38)
+(11,20)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,3)-(15,47)
+(12,9)-(12,10)
+(13,11)-(13,13)
+(14,14)-(14,38)
+(14,14)-(14,38)
+(14,17)-(14,18)
+(14,17)-(14,23)
+(14,29)-(14,30)
+(14,36)-(14,38)
+(15,13)-(15,47)
+(15,13)-(15,47)
+(15,16)-(15,17)
+(15,16)-(15,22)
+(15,28)-(15,29)
+(15,35)-(15,45)
+(15,35)-(15,47)
+(17,4)-(28,37)
+(17,12)-(28,33)
+(17,15)-(28,33)
+(18,3)-(28,33)
+(18,12)-(27,52)
+(19,5)-(27,52)
+(19,5)-(27,52)
+(19,11)-(24,62)
+(19,13)-(24,62)
+(20,7)-(24,62)
+(20,7)-(24,62)
+(20,21)-(20,22)
+(21,7)-(24,62)
+(21,7)-(24,62)
+(21,7)-(24,62)
+(21,7)-(24,62)
+(21,19)-(21,20)
+(22,7)-(24,62)
+(22,7)-(24,62)
+(22,21)-(22,23)
+(23,7)-(24,62)
+(23,7)-(24,62)
+(23,19)-(23,21)
+(23,19)-(23,26)
+(23,19)-(23,26)
+(23,19)-(23,26)
+(23,19)-(23,38)
+(23,24)-(23,26)
+(23,31)-(23,33)
+(23,31)-(23,38)
+(23,31)-(23,38)
+(23,36)-(23,38)
+(24,7)-(24,62)
+(24,7)-(24,62)
+(24,19)-(24,21)
+(24,19)-(24,26)
+(24,19)-(24,40)
+(24,24)-(24,26)
+(24,31)-(24,33)
+(24,31)-(24,40)
+(24,38)-(24,40)
+(24,46)-(24,50)
+(24,46)-(24,56)
+(24,46)-(24,62)
+(24,52)-(24,56)
+(24,61)-(24,62)
+(25,5)-(27,52)
+(25,5)-(27,52)
+(25,17)-(25,18)
+(25,17)-(25,21)
+(25,20)-(25,21)
+(26,5)-(27,52)
+(26,5)-(27,52)
+(26,16)-(26,24)
+(26,16)-(26,44)
+(26,16)-(26,44)
+(26,26)-(26,38)
+(26,26)-(26,44)
+(26,26)-(26,44)
+(26,26)-(26,44)
+(26,39)-(26,41)
+(26,42)-(26,44)
+(27,5)-(27,52)
+(27,5)-(27,52)
+(27,19)-(27,33)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,19)-(27,45)
+(27,34)-(27,35)
+(27,36)-(27,40)
+(27,41)-(27,45)
+(27,49)-(27,52)
+(28,15)-(28,18)
+(28,15)-(28,33)
+(28,15)-(28,33)
+(28,20)-(28,27)
+(28,20)-(28,33)
+(28,20)-(28,33)
+(28,28)-(28,30)
+(28,31)-(28,33)
 *)

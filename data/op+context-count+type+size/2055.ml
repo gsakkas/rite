@@ -1,118 +1,67 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand 0 100 in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand 0 100 in
-     if (rand mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse ((cat l h) :: t);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand (0, 100) in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand (0, 100) in
-     if (rnd mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse (cat l h);;
 
 *)
 
 (* changed spans
-(28,15)-(28,25)
-(28,20)-(28,21)
-(45,16)-(45,26)
-(45,21)-(45,22)
-(46,10)-(46,14)
+(5,51)-(5,64)
+(5,63)-(5,64)
 *)
 
 (* type error slice
-(28,15)-(28,19)
-(28,15)-(28,25)
-(28,20)-(28,21)
-(28,22)-(28,25)
-(46,10)-(46,14)
-(46,10)-(46,20)
+(2,4)-(2,70)
+(2,13)-(2,67)
+(2,15)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,19)-(2,67)
+(2,25)-(2,26)
+(2,40)-(2,43)
+(2,40)-(2,43)
+(2,41)-(2,42)
+(2,54)-(2,55)
+(2,54)-(2,67)
+(2,60)-(2,63)
+(2,60)-(2,67)
+(2,60)-(2,67)
+(2,60)-(2,67)
+(2,64)-(2,65)
+(2,66)-(2,67)
+(4,4)-(5,67)
+(4,21)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,3)-(5,64)
+(5,9)-(5,10)
+(5,24)-(5,26)
+(5,37)-(5,48)
+(5,37)-(5,64)
+(5,37)-(5,64)
+(5,51)-(5,54)
+(5,51)-(5,58)
+(5,51)-(5,58)
+(5,51)-(5,58)
+(5,51)-(5,64)
+(5,55)-(5,56)
+(5,57)-(5,58)
+(5,63)-(5,64)
 *)

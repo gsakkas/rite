@@ -1,32 +1,87 @@
 
-let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> VarX
+  | 2 -> 22
+  | 3 -> 33
+  | 4 -> 44
+  | 5 -> 55
+  | 6 -> 66
+  | 7 -> 77;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base = (+) 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildX ()
+  | 2 -> buildY ()
+  | 3 -> buildX ()
+  | 4 -> buildY ()
+  | 5 -> buildX ()
+  | 6 -> buildY ()
+  | 7 -> buildX ();;
 
 *)
 
 (* changed spans
-(2,27)-(2,30)
-(2,29)-(2,30)
-(2,45)-(2,47)
-(2,51)-(2,75)
+(11,16)-(19,12)
+(13,10)-(13,14)
+(14,10)-(14,12)
+(15,10)-(15,12)
+(16,10)-(16,12)
+(17,10)-(17,12)
+(18,10)-(18,12)
+(19,10)-(19,12)
 *)
 
 (* type error slice
-(2,15)-(2,75)
-(2,21)-(2,30)
-(2,23)-(2,30)
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,29)-(2,30)
-(2,34)-(2,75)
-(2,45)-(2,47)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,66)-(2,67)
-(2,68)-(2,72)
-(2,73)-(2,75)
+(11,4)-(19,14)
+(11,16)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,3)-(19,12)
+(12,9)-(12,13)
+(12,9)-(12,19)
+(13,10)-(13,14)
+(14,10)-(14,12)
+(15,10)-(15,12)
+(16,10)-(16,12)
+(17,10)-(17,12)
+(18,10)-(18,12)
+(19,10)-(19,12)
 *)

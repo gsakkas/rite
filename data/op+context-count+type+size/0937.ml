@@ -6,28 +6,16 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((-1) * (eval (e1, x, y))) * (eval (e2, x, y))) * (eval (e3, x, y));;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in if y = 2 then y);;
 
 
 (* fix
@@ -39,67 +27,74 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
-        (eval (e3, x, y));;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(30,10)-(30,12)
-(30,10)-(30,31)
-(30,10)-(30,52)
-(30,10)-(30,73)
+(18,32)-(18,47)
+(18,35)-(18,36)
+(18,35)-(18,40)
+(18,39)-(18,40)
+(18,46)-(18,47)
 *)
 
 (* type error slice
-(16,3)-(30,73)
-(17,14)-(17,15)
-(19,28)-(19,32)
-(19,28)-(19,42)
-(19,34)-(19,36)
-(19,34)-(19,42)
-(19,38)-(19,39)
-(19,41)-(19,42)
-(30,10)-(30,31)
-(30,10)-(30,52)
-(30,10)-(30,73)
-(30,17)-(30,21)
-(30,17)-(30,31)
-(30,23)-(30,25)
-(30,23)-(30,31)
-(30,27)-(30,28)
-(30,30)-(30,31)
-(30,38)-(30,42)
-(30,38)-(30,52)
-(30,44)-(30,46)
-(30,44)-(30,52)
-(30,48)-(30,49)
-(30,51)-(30,52)
-(30,59)-(30,63)
-(30,59)-(30,73)
-(30,65)-(30,67)
-(30,65)-(30,73)
-(30,69)-(30,70)
-(30,72)-(30,73)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(15,4)-(18,50)
+(15,16)-(18,47)
+(16,3)-(18,47)
+(16,6)-(16,11)
+(16,6)-(16,15)
+(16,6)-(16,15)
+(16,6)-(16,15)
+(16,14)-(16,15)
+(17,9)-(17,59)
+(17,9)-(17,59)
+(17,13)-(17,17)
+(17,13)-(17,23)
+(17,13)-(17,23)
+(17,13)-(17,29)
+(17,13)-(17,29)
+(17,13)-(17,29)
+(17,19)-(17,20)
+(17,19)-(17,23)
+(17,22)-(17,23)
+(17,28)-(17,29)
+(17,35)-(17,41)
+(17,35)-(17,44)
+(17,42)-(17,44)
+(17,50)-(17,56)
+(17,50)-(17,59)
+(17,57)-(17,59)
+(18,9)-(18,47)
+(18,17)-(18,21)
+(18,17)-(18,27)
+(18,23)-(18,24)
+(18,23)-(18,27)
+(18,26)-(18,27)
+(18,32)-(18,47)
+(18,32)-(18,47)
+(18,32)-(18,47)
+(18,35)-(18,36)
+(18,35)-(18,40)
+(18,35)-(18,40)
+(18,39)-(18,40)
+(18,46)-(18,47)
 *)

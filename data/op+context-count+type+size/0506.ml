@@ -1,72 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) * (evalhelper p2 x y)) /. 2.0 in
-  evalhelper e x y;;
+let pipe fs =
+  let f a x g = (a x) g in let base g = g in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) *. (evalhelper p2 x y)) /. 2.0 in
-  evalhelper e x y;;
+let pipe fs =
+  let f a x g = x (a g) in let base g = g in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(20,28)-(20,67)
+(3,18)-(3,21)
+(3,20)-(3,21)
 *)
 
 (* type error slice
-(15,5)-(20,76)
-(18,30)-(18,40)
-(18,30)-(18,47)
-(18,41)-(18,43)
-(18,44)-(18,45)
-(18,46)-(18,47)
-(20,28)-(20,38)
-(20,28)-(20,45)
-(20,28)-(20,67)
-(20,28)-(20,76)
-(20,39)-(20,41)
-(20,42)-(20,43)
-(20,44)-(20,45)
-(20,50)-(20,60)
-(20,50)-(20,67)
-(20,61)-(20,63)
-(20,64)-(20,65)
-(20,66)-(20,67)
+(2,4)-(3,72)
+(2,10)-(3,70)
+(3,3)-(3,70)
+(3,3)-(3,70)
+(3,9)-(3,24)
+(3,11)-(3,24)
+(3,13)-(3,24)
+(3,18)-(3,19)
+(3,18)-(3,21)
+(3,18)-(3,21)
+(3,18)-(3,24)
+(3,18)-(3,24)
+(3,20)-(3,21)
+(3,23)-(3,24)
+(3,28)-(3,70)
+(3,28)-(3,70)
+(3,37)-(3,42)
+(3,41)-(3,42)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

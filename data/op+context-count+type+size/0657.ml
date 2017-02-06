@@ -8,20 +8,13 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
-  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ("<" ^
-           ((exprToString e2) ^
-              ("?" ^ ((exprToString e3) ^ ("?" exprToString e4)))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, 0, 0)));;
 
 
 (* fix
@@ -35,35 +28,47 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
-  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ("<" ^
-           ((exprToString e2) ^
-              ("?" ^ ((exprToString e3) ^ ("?" ^ (exprToString e4))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
 
 *)
 
 (* changed spans
-(24,44)-(24,47)
-(24,48)-(24,60)
+(17,36)-(17,37)
+(17,39)-(17,40)
 *)
 
 (* type error slice
-(12,3)-(24,63)
-(15,30)-(15,42)
-(15,30)-(15,45)
-(15,43)-(15,45)
-(24,44)-(24,47)
-(24,44)-(24,63)
-(24,48)-(24,60)
-(24,61)-(24,63)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(17,45)
+(13,15)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,3)-(17,40)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,15)-(17,18)
+(17,15)-(17,40)
+(17,20)-(17,22)
+(17,20)-(17,40)
+(17,20)-(17,40)
+(17,27)-(17,31)
+(17,27)-(17,40)
+(17,27)-(17,40)
+(17,33)-(17,34)
+(17,33)-(17,40)
+(17,36)-(17,37)
+(17,39)-(17,40)
 *)

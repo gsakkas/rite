@@ -1,37 +1,83 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let fixpoint (f,b) = wwhile (f, (f b));;
+let rec listReverse l = List.rev l;;
+
+let palindrome w = if (explode w) = (listReverse w) then true else false;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let fixpoint (f,b) =
-  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
+let rec listReverse l = List.rev l;;
+
+let palindrome w =
+  let explosion = explode w in
+  if explosion = (listReverse explosion) then true else false;;
 
 *)
 
 (* changed spans
-(5,30)-(5,31)
-(5,34)-(5,35)
-(5,34)-(5,37)
+(9,20)-(9,73)
+(9,24)-(9,51)
+(9,38)-(9,51)
+(9,50)-(9,51)
 *)
 
 (* type error slice
-(3,9)-(3,10)
-(3,9)-(3,12)
-(3,11)-(3,12)
-(3,50)-(3,56)
-(3,50)-(3,62)
-(3,58)-(3,59)
-(3,58)-(3,62)
-(3,61)-(3,62)
-(5,22)-(5,28)
-(5,22)-(5,37)
-(5,30)-(5,31)
-(5,30)-(5,37)
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(3,3)-(5,7)
+(3,14)-(4,65)
+(4,5)-(4,65)
+(4,5)-(4,65)
+(4,8)-(4,9)
+(4,8)-(4,29)
+(4,8)-(4,29)
+(4,8)-(4,29)
+(4,14)-(4,27)
+(4,14)-(4,29)
+(4,14)-(4,29)
+(4,28)-(4,29)
+(4,36)-(4,38)
+(4,45)-(4,46)
+(4,45)-(4,50)
+(4,45)-(4,50)
+(4,45)-(4,65)
+(4,48)-(4,49)
+(4,56)-(4,58)
+(4,56)-(4,65)
+(4,56)-(4,65)
+(4,60)-(4,61)
+(4,60)-(4,65)
+(4,64)-(4,65)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(5,6)-(5,7)
+(7,4)-(7,37)
+(7,21)-(7,35)
+(7,25)-(7,33)
+(7,25)-(7,35)
+(7,25)-(7,35)
+(7,34)-(7,35)
+(9,4)-(9,75)
+(9,16)-(9,73)
+(9,24)-(9,31)
+(9,24)-(9,33)
+(9,24)-(9,33)
+(9,24)-(9,51)
+(9,24)-(9,51)
+(9,32)-(9,33)
+(9,38)-(9,49)
+(9,38)-(9,51)
+(9,38)-(9,51)
+(9,50)-(9,51)
 *)

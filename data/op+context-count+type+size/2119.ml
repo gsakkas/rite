@@ -1,108 +1,172 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^
-                    ((exprToString expr2) ^
-                       (":" ^ ((exprToString expr3) ")")))))));;
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 < s2
+  then (((clone 0 (s2 - s1)) @ l1), l2)
+  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (x mod 10) :: a in
+    let base = [] in
+    let args = 1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^
-                    ((exprToString expr2) ^
-                       (":" ^ ((exprToString expr3) ^ ")")))))));;
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 < s2
+  then (((clone 0 (s2 - s1)) @ l1), l2)
+  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match snd a with
+      | [] ->
+          (((fst x) + (snd x)),
+            [((fst x) + (snd x)) / 10; ((fst x) + (snd x)) mod 10])
+      | h::t -> (0, []) in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(43,33)-(43,51)
-(43,33)-(43,56)
+(16,18)-(16,19)
+(16,18)-(16,26)
+(16,18)-(16,32)
+(16,24)-(16,26)
+(16,31)-(16,32)
+(17,5)-(18,68)
+(17,16)-(17,18)
+(18,5)-(18,68)
+(18,16)-(18,17)
+(18,21)-(18,68)
+(18,35)-(18,49)
+(18,35)-(18,61)
+(18,50)-(18,51)
+(18,52)-(18,56)
+(18,57)-(18,61)
+(18,65)-(18,68)
+(19,3)-(19,13)
+(19,3)-(19,33)
+(19,15)-(19,18)
+(19,20)-(19,27)
+(19,20)-(19,33)
+(19,28)-(19,30)
+(19,31)-(19,33)
 *)
 
 (* type error slice
-(14,3)-(43,56)
-(17,32)-(17,44)
-(17,32)-(17,49)
-(17,45)-(17,49)
-(43,33)-(43,45)
-(43,33)-(43,51)
-(43,33)-(43,56)
-(43,46)-(43,51)
-(43,53)-(43,56)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(9,72)
+(4,13)-(9,69)
+(4,16)-(9,69)
+(5,12)-(5,23)
+(5,12)-(5,26)
+(5,12)-(5,26)
+(5,24)-(5,26)
+(6,12)-(6,23)
+(6,12)-(6,26)
+(6,12)-(6,26)
+(6,24)-(6,26)
+(8,11)-(8,16)
+(8,11)-(8,27)
+(8,11)-(8,34)
+(8,11)-(8,39)
+(8,30)-(8,31)
+(8,32)-(8,34)
+(8,37)-(8,39)
+(9,31)-(9,54)
+(9,50)-(9,51)
+(9,52)-(9,54)
+(11,20)-(12,76)
+(12,3)-(12,76)
+(12,3)-(12,76)
+(12,3)-(12,76)
+(12,3)-(12,76)
+(12,3)-(12,76)
+(12,9)-(12,10)
+(12,24)-(12,26)
+(12,40)-(12,41)
+(12,40)-(12,46)
+(12,64)-(12,74)
+(12,64)-(12,76)
+(14,4)-(19,37)
+(14,12)-(19,33)
+(14,15)-(19,33)
+(15,3)-(19,33)
+(15,12)-(18,68)
+(16,5)-(18,68)
+(16,5)-(18,68)
+(16,11)-(16,32)
+(16,13)-(16,32)
+(16,18)-(16,19)
+(16,18)-(16,26)
+(16,18)-(16,26)
+(16,18)-(16,32)
+(16,24)-(16,26)
+(16,31)-(16,32)
+(17,5)-(18,68)
+(17,5)-(18,68)
+(17,16)-(17,18)
+(18,5)-(18,68)
+(18,5)-(18,68)
+(18,16)-(18,17)
+(18,21)-(18,68)
+(18,21)-(18,68)
+(18,35)-(18,49)
+(18,35)-(18,61)
+(18,35)-(18,61)
+(18,35)-(18,61)
+(18,35)-(18,61)
+(18,50)-(18,51)
+(18,52)-(18,56)
+(18,57)-(18,61)
+(18,65)-(18,68)
+(19,15)-(19,18)
+(19,15)-(19,33)
+(19,15)-(19,33)
+(19,20)-(19,27)
+(19,20)-(19,33)
+(19,20)-(19,33)
+(19,28)-(19,30)
+(19,31)-(19,33)
 *)

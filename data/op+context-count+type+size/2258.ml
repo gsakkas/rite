@@ -1,34 +1,59 @@
 
-let pipe fs = let f a x a = a x in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  let rec digitsOfIntHelper n result =
+    if n > 0
+    then (digitsOfIntHelper (n / 10) (n mod 10)) :: result
+    else result in
+  digitsOfIntHelper n [];;
 
 
 (* fix
 
-let pipe fs =
-  let f a x c = x (a c) in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  let rec digitsOfIntHelper n result =
+    if n > 0
+    then digitsOfIntHelper (n / 10) ((n mod 10) :: result)
+    else result in
+  digitsOfIntHelper n [];;
 
 *)
 
 (* changed spans
-(2,25)-(2,32)
-(2,29)-(2,30)
-(2,36)-(2,78)
+(5,11)-(5,59)
+(5,39)-(5,47)
 *)
 
 (* type error slice
-(2,15)-(2,78)
-(2,21)-(2,32)
-(2,23)-(2,32)
-(2,25)-(2,32)
-(2,29)-(2,30)
-(2,29)-(2,32)
-(2,31)-(2,32)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(2,4)-(7,27)
+(2,21)-(7,25)
+(3,3)-(7,25)
+(3,3)-(7,25)
+(3,29)-(6,16)
+(3,31)-(6,16)
+(4,5)-(6,16)
+(4,5)-(6,16)
+(4,8)-(4,9)
+(4,8)-(4,13)
+(4,8)-(4,13)
+(4,8)-(4,13)
+(4,12)-(4,13)
+(5,11)-(5,28)
+(5,11)-(5,47)
+(5,11)-(5,47)
+(5,11)-(5,47)
+(5,11)-(5,59)
+(5,30)-(5,31)
+(5,30)-(5,36)
+(5,34)-(5,36)
+(5,39)-(5,40)
+(5,39)-(5,47)
+(5,45)-(5,47)
+(5,53)-(5,59)
+(6,10)-(6,16)
+(7,3)-(7,20)
+(7,3)-(7,25)
+(7,3)-(7,25)
+(7,3)-(7,25)
+(7,21)-(7,22)
+(7,23)-(7,25)
 *)

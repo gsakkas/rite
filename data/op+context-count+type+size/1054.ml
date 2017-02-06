@@ -1,164 +1,119 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      "((" ^
-        ((exprToString ex1) ^
-           (")*(" ^
-              ((exprToString ex1) ^
-                 ("+" ^
-                    ((exprToString ex2) ^
-                       (")*(" ^
-                          ((exprToString ex1) ^
-                             ("+" ^
-                                ((exprToString ex2) ^
-                                   ("+" ^
-                                      ((exprToString ex3) ^
-                                         (")*(" ^
-                                            ((exprToString ex1) ^
-                                               ("+" ^
-                                                  ((exprToString ex2) ^
-                                                     ("+" ^
-                                                        ((exprToString ex3) ^
-                                                           ("+" ^
-                                                              ((exprToString
-                                                                  ex4)
-                                                                 ^
-                                                                 (")*(" ^
-                                                                    (
-                                                                    (exprToString
-                                                                    ex1) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex2) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex3) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex4) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex5) ^
-                                                                    "))")))))))))))))))))))))))))))))
-  | TheThing (ex1,ex2,ex3) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("*sin(" ^
-              ((exprToString ex2) ^
-                 (")*cos(" ^ ((exprToString ex3) ^ (")" ")"))))));;
+let padZero l1 l2 =
+  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
+  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
+  if length1 < length2
+  then clone 0 (length2 - length1)
+  else if length2 < length1 then clone 0 (length1 - length2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      "((" ^
-        ((exprToString ex1) ^
-           (")*(" ^
-              ((exprToString ex1) ^
-                 ("+" ^
-                    ((exprToString ex2) ^
-                       (")*(" ^
-                          ((exprToString ex1) ^
-                             ("+" ^
-                                ((exprToString ex2) ^
-                                   ("+" ^
-                                      ((exprToString ex3) ^
-                                         (")*(" ^
-                                            ((exprToString ex1) ^
-                                               ("+" ^
-                                                  ((exprToString ex2) ^
-                                                     ("+" ^
-                                                        ((exprToString ex3) ^
-                                                           ("+" ^
-                                                              ((exprToString
-                                                                  ex4)
-                                                                 ^
-                                                                 (")*(" ^
-                                                                    (
-                                                                    (exprToString
-                                                                    ex1) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex2) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex3) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex4) ^
-                                                                    ("+" ^
-                                                                    ((exprToString
-                                                                    ex5) ^
-                                                                    "))")))))))))))))))))))))))))))))
-  | TheThing (ex1,ex2,ex3) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("*sin(" ^
-              ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ "))")))));;
+let padZero l1 l2 =
+  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
+  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
+  if length1 = length2
+  then (l1, l2)
+  else
+    if length1 < length2
+    then ((List.append (clone 0 (length2 - length1)) l1), l2)
+    else (l1, (List.append (clone 0 (length1 - length2)) l2));;
 
 *)
 
 (* changed spans
-(74,53)-(74,56)
-(74,53)-(74,60)
-(74,57)-(74,60)
+(7,6)-(7,23)
+(8,8)-(8,13)
+(8,8)-(8,34)
+(9,8)-(9,60)
+(9,11)-(9,18)
+(9,11)-(9,28)
+(9,21)-(9,28)
+(9,34)-(9,39)
+(9,34)-(9,60)
+(9,40)-(9,41)
+(9,43)-(9,50)
+(9,43)-(9,60)
+(9,53)-(9,60)
 *)
 
 (* type error slice
-(74,53)-(74,56)
-(74,53)-(74,60)
-(74,57)-(74,60)
+(2,4)-(2,68)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,24)-(2,30)
+(2,29)-(2,30)
+(2,36)-(2,38)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
+(4,4)-(9,63)
+(4,13)-(9,60)
+(4,16)-(9,60)
+(5,3)-(9,60)
+(5,17)-(5,31)
+(5,17)-(5,68)
+(5,17)-(5,68)
+(5,17)-(5,68)
+(5,33)-(5,62)
+(5,45)-(5,62)
+(5,55)-(5,58)
+(5,55)-(5,62)
+(5,55)-(5,62)
+(5,61)-(5,62)
+(5,64)-(5,65)
+(5,66)-(5,68)
+(6,3)-(9,60)
+(6,17)-(6,31)
+(6,17)-(6,68)
+(6,17)-(6,68)
+(6,17)-(6,68)
+(6,33)-(6,62)
+(6,45)-(6,62)
+(6,55)-(6,58)
+(6,55)-(6,62)
+(6,55)-(6,62)
+(6,61)-(6,62)
+(6,64)-(6,65)
+(6,66)-(6,68)
+(7,6)-(7,13)
+(7,6)-(7,23)
+(7,6)-(7,23)
+(7,16)-(7,23)
+(8,8)-(8,13)
+(8,8)-(8,34)
+(8,8)-(8,34)
+(8,14)-(8,15)
+(8,17)-(8,24)
+(8,17)-(8,34)
+(8,27)-(8,34)
+(9,8)-(9,60)
+(9,8)-(9,60)
+(9,8)-(9,60)
+(9,11)-(9,18)
+(9,11)-(9,28)
+(9,11)-(9,28)
+(9,21)-(9,28)
+(9,34)-(9,39)
+(9,34)-(9,60)
+(9,40)-(9,41)
+(9,43)-(9,50)
+(9,43)-(9,60)
+(9,53)-(9,60)
 *)

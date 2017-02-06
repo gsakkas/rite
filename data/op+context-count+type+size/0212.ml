@@ -1,169 +1,79 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec revexp (x,y) = match x with | [] -> y | h::t -> revexp (t, (h ^ y));;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     if x = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if x = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if x = 2
-         then
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-         else
-           if x = 3
-           then
-             buildTimes
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-           else
-             if x = 4
-             then
-               buildThresh
-                 ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                   (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let palindrome w = if w = (revexp ((explode w), "")) then true else false;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec reverse (x,y) =
+  match x with | [] -> y | h::t -> reverse (t, (h :: y));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let buildCosine e = Cosine e;;
+let rec listReverse l = match l with | [] -> [] | h::t -> reverse (l, []);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let palindrome w =
+  if (explode w) = (listReverse (explode w)) then true else false;;
 
 *)
 
 (* changed spans
-(30,6)-(50,73)
-(30,9)-(30,14)
-(30,13)-(30,14)
-(33,8)-(50,73)
-(33,11)-(33,12)
-(33,11)-(33,16)
-(33,15)-(33,16)
-(36,10)-(50,73)
-(36,13)-(36,14)
-(36,13)-(36,18)
-(36,17)-(36,18)
-(39,16)-(39,39)
-(39,45)-(39,68)
-(41,12)-(50,73)
-(41,15)-(41,16)
-(41,15)-(41,20)
-(41,19)-(41,20)
-(44,18)-(44,41)
-(44,47)-(44,70)
-(46,14)-(50,73)
-(46,17)-(46,18)
-(46,17)-(46,22)
-(46,21)-(46,22)
-(50,21)-(50,44)
-(50,50)-(50,73)
+(2,13)-(5,7)
+(7,17)-(7,74)
+(7,30)-(7,31)
+(7,45)-(7,46)
+(7,57)-(7,63)
+(7,57)-(7,74)
+(7,65)-(7,66)
+(7,69)-(7,70)
+(7,69)-(7,74)
+(7,71)-(7,72)
+(7,73)-(7,74)
+(9,16)-(9,74)
+(9,23)-(9,24)
+(9,28)-(9,34)
+(9,37)-(9,46)
+(9,37)-(9,51)
+(9,49)-(9,51)
 *)
 
 (* type error slice
-(17,4)-(17,70)
-(17,18)-(17,67)
-(17,39)-(17,67)
-(17,47)-(17,48)
-(17,50)-(17,51)
-(17,53)-(17,59)
-(17,61)-(17,67)
-(27,13)-(27,17)
-(27,13)-(27,23)
-(27,19)-(27,20)
-(27,19)-(27,23)
-(27,22)-(27,23)
-(31,22)-(31,27)
-(31,22)-(31,45)
-(31,29)-(31,33)
-(31,29)-(31,45)
-(31,36)-(31,45)
-(46,14)-(50,73)
-(48,16)-(48,27)
-(48,16)-(50,73)
-(49,20)-(49,25)
-(49,20)-(49,43)
-(49,20)-(50,73)
-(49,27)-(49,31)
-(49,27)-(49,43)
-(49,34)-(49,43)
-(49,49)-(49,54)
-(49,49)-(49,72)
-(49,56)-(49,60)
-(49,56)-(49,72)
-(49,63)-(49,72)
-(50,21)-(50,26)
-(50,21)-(50,44)
-(50,28)-(50,32)
-(50,28)-(50,44)
-(50,35)-(50,44)
-(50,50)-(50,55)
-(50,50)-(50,73)
-(50,57)-(50,61)
-(50,57)-(50,73)
-(50,64)-(50,73)
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,14)-(4,65)
+(4,5)-(4,65)
+(4,8)-(4,9)
+(4,8)-(4,29)
+(4,28)-(4,29)
+(4,36)-(4,38)
+(4,56)-(4,58)
+(4,56)-(4,65)
+(7,17)-(7,74)
+(7,24)-(7,74)
+(7,24)-(7,74)
+(7,24)-(7,74)
+(7,24)-(7,74)
+(7,30)-(7,31)
+(7,45)-(7,46)
+(7,57)-(7,63)
+(7,57)-(7,74)
+(7,65)-(7,66)
+(7,69)-(7,70)
+(7,73)-(7,74)
+(9,4)-(9,76)
+(9,16)-(9,74)
+(9,23)-(9,24)
+(9,37)-(9,44)
+(9,37)-(9,46)
+(9,37)-(9,51)
+(9,45)-(9,46)
 *)

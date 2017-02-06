@@ -1,37 +1,73 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h, seen) then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ";" [List.map (f l)]) ^ "]");;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(7,24)-(7,41)
-(7,34)-(7,41)
+(7,31)-(7,33)
+(9,46)-(9,62)
+(9,47)-(9,60)
+(9,57)-(9,60)
 *)
 
 (* type error slice
-(7,21)-(7,67)
-(7,24)-(7,32)
-(7,24)-(7,41)
-(7,34)-(7,35)
-(7,34)-(7,41)
-(7,37)-(7,41)
+(2,4)-(7,62)
+(2,19)-(7,60)
+(2,23)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,3)-(7,60)
+(3,9)-(3,11)
+(6,7)-(7,60)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,24)-(6,27)
+(6,30)-(6,31)
+(7,7)-(7,60)
+(7,18)-(7,19)
+(7,23)-(7,60)
+(7,31)-(7,33)
+(7,37)-(7,51)
+(7,37)-(7,60)
+(7,37)-(7,60)
+(7,37)-(7,60)
+(7,52)-(7,53)
+(7,54)-(7,58)
+(7,59)-(7,60)
+(9,4)-(9,72)
+(9,18)-(9,69)
+(9,20)-(9,69)
+(9,32)-(9,41)
+(9,32)-(9,62)
+(9,32)-(9,62)
+(9,46)-(9,62)
+(9,46)-(9,62)
+(9,47)-(9,55)
+(9,47)-(9,60)
+(9,47)-(9,60)
+(9,57)-(9,58)
+(9,57)-(9,60)
+(9,57)-(9,60)
+(9,59)-(9,60)
 *)

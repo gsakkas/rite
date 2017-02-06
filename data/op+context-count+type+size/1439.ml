@@ -1,64 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (e, x, a))
-  | Cosine a -> cos (pi *. y);;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else ((listReverse n) mod 10) :: (listReverse (digitsOfInt (n / 10)));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (pi *. y);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (listReverse (digitsOfInt (n / 10)));;
 
 *)
 
 (* changed spans
-(17,26)-(17,27)
-(17,29)-(17,30)
-(18,17)-(18,29)
+(8,10)-(8,21)
+(8,10)-(8,23)
 *)
 
 (* type error slice
-(13,4)-(18,32)
-(13,15)-(18,29)
-(14,3)-(18,29)
-(14,9)-(14,10)
-(15,14)-(15,15)
-(16,14)-(16,15)
-(17,20)-(17,24)
-(17,20)-(17,33)
-(17,26)-(17,27)
-(17,26)-(17,33)
-(17,29)-(17,30)
-(17,32)-(17,33)
-(18,22)-(18,29)
-(18,28)-(18,29)
+(2,4)-(3,60)
+(2,21)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,9)-(3,10)
+(3,24)-(3,26)
+(3,38)-(3,49)
+(3,38)-(3,51)
+(3,38)-(3,51)
+(3,38)-(3,58)
+(3,38)-(3,58)
+(3,38)-(3,58)
+(3,50)-(3,51)
+(3,53)-(3,54)
+(3,55)-(3,58)
+(3,55)-(3,58)
+(3,56)-(3,57)
+(5,21)-(8,69)
+(6,3)-(8,69)
+(6,6)-(6,7)
+(6,6)-(6,12)
+(6,6)-(6,12)
+(6,6)-(6,12)
+(6,11)-(6,12)
+(7,8)-(7,10)
+(8,10)-(8,21)
+(8,10)-(8,23)
+(8,10)-(8,23)
+(8,10)-(8,31)
+(8,22)-(8,23)
+(8,29)-(8,31)
+(8,37)-(8,48)
+(8,37)-(8,69)
+(8,37)-(8,69)
+(8,50)-(8,61)
+(8,50)-(8,69)
 *)

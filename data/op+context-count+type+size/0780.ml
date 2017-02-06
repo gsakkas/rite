@@ -1,28 +1,54 @@
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' | b' -> b' in
-  acc b;;
+let pipe fs =
+  let f a x = function | f' -> x (f' a) in
+  let base = function | y -> y in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' in
-  acc b;;
+let pipe fs =
+  let f a x = function | v -> x (a v) in
+  let base = function | y -> y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(5,5)-(5,69)
-(5,67)-(5,69)
+(3,15)-(3,39)
+(3,35)-(3,37)
+(4,3)-(4,59)
 *)
 
 (* type error slice
-(5,5)-(5,69)
-(5,33)-(5,58)
-(5,67)-(5,69)
+(2,4)-(4,61)
+(2,10)-(4,59)
+(3,3)-(4,59)
+(3,3)-(4,59)
+(3,9)-(3,39)
+(3,11)-(3,39)
+(3,15)-(3,39)
+(3,15)-(3,39)
+(3,15)-(3,39)
+(3,15)-(3,39)
+(3,32)-(3,33)
+(3,32)-(3,39)
+(3,32)-(3,39)
+(3,35)-(3,37)
+(3,35)-(3,39)
+(3,35)-(3,39)
+(3,38)-(3,39)
+(4,3)-(4,59)
+(4,3)-(4,59)
+(4,14)-(4,31)
+(4,14)-(4,31)
+(4,14)-(4,31)
+(4,14)-(4,31)
+(4,30)-(4,31)
+(4,35)-(4,49)
+(4,35)-(4,59)
+(4,35)-(4,59)
+(4,35)-(4,59)
+(4,35)-(4,59)
+(4,50)-(4,51)
+(4,52)-(4,56)
+(4,57)-(4,59)
 *)

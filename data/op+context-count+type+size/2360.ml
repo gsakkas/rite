@@ -1,64 +1,75 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        if not (List.mem seen h)
-        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi *. x
+  | Cosine e -> pi *. y
+  | Average (e1,e2) -> buildAverage (e1, e2);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi *. x
+  | Cosine e -> pi *. y
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,30)
-(7,31)-(7,32)
+(11,19)-(11,43)
+(11,28)-(11,43)
+(11,37)-(11,39)
+(11,41)-(11,43)
+(16,3)-(21,44)
+(21,24)-(21,36)
+(21,24)-(21,44)
+(21,38)-(21,40)
+(21,38)-(21,44)
+(21,42)-(21,44)
 *)
 
 (* type error slice
-(3,3)-(9,26)
-(3,19)-(8,76)
-(4,5)-(8,76)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,30)
-(7,31)-(7,32)
-(8,14)-(8,76)
-(8,26)-(8,27)
-(8,26)-(8,35)
-(8,31)-(8,35)
-(8,39)-(8,76)
-(8,51)-(8,52)
-(8,56)-(8,62)
-(8,56)-(8,76)
-(8,64)-(8,69)
-(8,64)-(8,76)
-(8,71)-(8,76)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(11,4)-(11,46)
+(11,19)-(11,43)
+(11,37)-(11,39)
+(11,41)-(11,43)
+(15,4)-(21,47)
+(15,15)-(21,44)
+(16,9)-(16,10)
+(17,14)-(17,15)
+(18,14)-(18,15)
+(19,21)-(19,22)
+(20,23)-(20,24)
+(21,24)-(21,36)
+(21,24)-(21,44)
 *)

@@ -1,44 +1,41 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ sep in
-      let base = h in let l = sepConcat sep t in List.fold_left f base l;;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> [n]
+       | true  -> (digitsOfInt (n / 10)) :: (n mod 10));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ (sepConcat sep t) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> [n]
+       | true  -> (n / 10) :: (digitsOfInt (n / 10)));;
 
 *)
 
 (* changed spans
-(6,23)-(6,26)
-(7,7)-(7,73)
-(7,31)-(7,40)
-(7,31)-(7,46)
-(7,41)-(7,44)
+(8,20)-(8,31)
+(8,20)-(8,39)
+(8,46)-(8,47)
+(8,46)-(8,54)
 *)
 
 (* type error slice
-(2,4)-(7,75)
-(2,19)-(7,73)
-(2,23)-(7,73)
-(3,3)-(7,73)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,19)-(6,20)
-(6,19)-(6,26)
-(6,21)-(6,22)
-(6,23)-(6,26)
-(7,31)-(7,40)
-(7,31)-(7,46)
-(7,41)-(7,44)
-(7,45)-(7,46)
+(2,4)-(8,58)
+(2,21)-(8,54)
+(3,3)-(8,54)
+(3,9)-(3,10)
+(3,9)-(3,14)
+(4,15)-(4,17)
+(8,20)-(8,31)
+(8,20)-(8,39)
+(8,20)-(8,54)
+(8,46)-(8,54)
 *)

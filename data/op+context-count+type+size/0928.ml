@@ -1,60 +1,100 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitalRoot n =
-  let rec digHelper n = if n < 10 then n else digHelper (sumList n) in
-  digHelper n;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in if y = 2 then y;;
 
 
 (* fix
 
-let digitsOfInt n =
-  let rec digitsHelper n l =
-    if n = 0 then l else digitsHelper (n / 10) ((n mod 10) :: l) in
-  if n <= 0 then [] else digitsHelper n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let buildX () = VarX;;
 
-let rec digitalRoot n =
-  let rec digHelper n =
-    if n < 10 then n else digHelper (sumList (digitsOfInt n)) in
-  digHelper n;;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(2,17)-(2,70)
-(2,22)-(2,70)
-(2,28)-(2,30)
-(2,44)-(2,45)
-(2,56)-(2,57)
-(2,56)-(2,70)
-(2,61)-(2,68)
-(2,61)-(2,70)
-(2,69)-(2,70)
-(5,25)-(5,67)
-(5,28)-(5,34)
-(5,32)-(5,34)
-(5,40)-(5,41)
-(5,47)-(5,56)
-(5,47)-(5,67)
-(5,58)-(5,65)
-(5,58)-(5,67)
-(5,66)-(5,67)
-(6,3)-(6,12)
-(6,3)-(6,14)
-(6,13)-(6,14)
+(16,3)-(18,48)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(18,33)-(18,48)
+(18,36)-(18,37)
+(18,36)-(18,41)
+(18,40)-(18,41)
+(18,47)-(18,48)
 *)
 
 (* type error slice
-(2,22)-(2,70)
-(2,61)-(2,68)
-(2,61)-(2,70)
-(2,69)-(2,70)
-(5,28)-(5,29)
-(5,28)-(5,34)
-(5,32)-(5,34)
-(5,58)-(5,65)
-(5,58)-(5,67)
-(5,66)-(5,67)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(15,4)-(18,50)
+(15,16)-(18,48)
+(16,3)-(18,48)
+(16,3)-(18,48)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(17,10)-(17,60)
+(17,14)-(17,18)
+(17,14)-(17,24)
+(17,14)-(17,24)
+(17,14)-(17,30)
+(17,14)-(17,30)
+(17,14)-(17,30)
+(17,20)-(17,21)
+(17,20)-(17,24)
+(17,23)-(17,24)
+(17,29)-(17,30)
+(17,36)-(17,42)
+(17,36)-(17,45)
+(17,43)-(17,45)
+(17,51)-(17,57)
+(17,51)-(17,60)
+(17,58)-(17,60)
+(18,10)-(18,48)
+(18,18)-(18,22)
+(18,18)-(18,28)
+(18,24)-(18,25)
+(18,24)-(18,28)
+(18,27)-(18,28)
+(18,33)-(18,48)
+(18,33)-(18,48)
+(18,33)-(18,48)
+(18,36)-(18,37)
+(18,36)-(18,41)
+(18,36)-(18,41)
+(18,40)-(18,41)
+(18,47)-(18,48)
 *)

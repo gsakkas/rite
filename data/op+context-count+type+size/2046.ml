@@ -1,82 +1,73 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr
-  | Timmy2 of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Timmy1 (e1,e2) ->
-      ((sin (pi *. (eval (e1, x, y)))) ** 2.0) *.
-        (cos (pi *. (eval (e2, x, y))))
-  | Timmy2 (e1,e2,e3) ->
-      ((sin (pi *. (eval (e1, x, y)))) ** 3) *.
-        (((cos (pi *. (eval (e2, x, y)))) ** 2.0) *. (cos (eval (e3, x, y))));;
+let fixpoint (f,b) = wwhile (((f b), ((f b) = b)), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr
-  | Timmy2 of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Timmy1 (e1,e2) ->
-      ((sin (pi *. (eval (e1, x, y)))) ** 2.0) *.
-        (cos (pi *. (eval (e2, x, y))))
-  | Timmy2 (e1,e2,e3) ->
-      ((sin (pi *. (eval (e1, x, y)))) ** 0.5) *.
-        (((cos (pi *. (eval (e2, x, y)))) ** 2.0) *. (cos (eval (e3, x, y))));;
+let fixpoint (f,b) =
+  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
 
 *)
 
 (* changed spans
-(31,43)-(31,44)
+(6,32)-(6,33)
+(6,32)-(6,35)
+(6,32)-(6,48)
+(6,32)-(6,53)
+(6,34)-(6,35)
+(6,40)-(6,43)
+(6,40)-(6,48)
+(6,42)-(6,43)
+(6,47)-(6,48)
+(6,52)-(6,53)
 *)
 
 (* type error slice
-(31,9)-(31,12)
-(31,9)-(31,35)
-(31,9)-(31,44)
-(31,14)-(31,35)
-(31,40)-(31,42)
-(31,43)-(31,44)
+(2,4)-(4,51)
+(2,17)-(4,49)
+(3,3)-(4,49)
+(3,3)-(4,49)
+(3,26)-(3,27)
+(3,26)-(3,29)
+(3,26)-(3,29)
+(3,28)-(3,29)
+(4,3)-(4,49)
+(4,3)-(4,49)
+(4,3)-(4,49)
+(4,6)-(4,13)
+(4,19)-(4,25)
+(4,19)-(4,36)
+(4,19)-(4,36)
+(4,27)-(4,28)
+(4,27)-(4,36)
+(4,30)-(4,36)
+(4,43)-(4,49)
+(6,4)-(6,56)
+(6,15)-(6,53)
+(6,22)-(6,28)
+(6,22)-(6,53)
+(6,22)-(6,53)
+(6,32)-(6,33)
+(6,32)-(6,35)
+(6,32)-(6,35)
+(6,32)-(6,48)
+(6,32)-(6,53)
+(6,34)-(6,35)
+(6,40)-(6,41)
+(6,40)-(6,43)
+(6,40)-(6,43)
+(6,40)-(6,48)
+(6,40)-(6,48)
+(6,40)-(6,48)
+(6,42)-(6,43)
+(6,47)-(6,48)
+(6,52)-(6,53)
 *)

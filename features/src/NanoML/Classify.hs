@@ -1066,11 +1066,12 @@ typeExpr' in_e _to = do
       emitCt to (getType tt)
       emitCt to (getType tf)
       return (T_Ite (mkInfo ml to) tb tt tf)
-    -- Seq ml e1 e2 -> do
-    --   te1 <- typeExpr e1
-    --   te2 <- typeExpr e2
-    --   tryUnify to (getType te2)
-    --   return (T_Seq (mkInfo ml to) te1 te2)
+    Seq ml e1 e2 -> do
+      te1 <- typeExpr e1 (tCon tUNIT)
+      emitCt (tCon tUNIT) (getType te1)
+      te2 <- typeExpr e2 to
+      emitCt to (getType te2)
+      return (T_Seq (mkInfo ml to) te1 te2)
     Case ml e as -> do
       t <- TVar <$> freshTVar
       te <- typeExpr e t
@@ -1113,7 +1114,7 @@ typeExpr' in_e _to = do
           -- tryUnify (foldr (:->) to tis) (foldr (:->) to (map getType tes))
           -- zipWithM_ tryUnify ts (map getType tes)
           -- zipWithM_ emitCt ts (map getType tes)
-          emitCt (foldr (:->) (subst su (typeDeclType (dType d))) ts)
+          emitCt (foldr (:->) t ts)
                  (foldr (:->) to (map getType tes))
           return (Just (T_Tuple (mkInfo ml' (TTup ts)) tes))
         --FIXME: ??

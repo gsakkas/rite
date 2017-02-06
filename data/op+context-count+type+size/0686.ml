@@ -1,66 +1,82 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2));;
+let a = (1, 2);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) * 2)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 *)
 
 (* changed spans
-(12,8)-(12,60)
+(13,15)-(21,26)
+(17,21)-(17,40)
+(17,39)-(17,40)
 *)
 
 (* type error slice
-(2,4)-(6,19)
-(2,15)-(6,17)
-(2,17)-(6,17)
-(3,3)-(6,17)
-(3,15)-(3,17)
-(4,3)-(6,17)
-(5,30)-(5,36)
-(5,30)-(5,56)
-(5,38)-(5,48)
-(5,51)-(5,56)
-(6,3)-(6,9)
-(6,3)-(6,17)
-(6,10)-(6,15)
-(6,16)-(6,17)
-(9,17)-(9,28)
-(9,17)-(9,31)
-(9,29)-(9,31)
-(9,35)-(9,46)
-(9,35)-(9,49)
-(9,47)-(9,49)
-(12,8)-(12,60)
-(12,23)-(12,25)
-(12,23)-(12,60)
-(12,28)-(12,39)
-(12,28)-(12,60)
-(12,41)-(12,46)
-(12,41)-(12,55)
-(12,47)-(12,48)
-(12,50)-(12,55)
-(12,58)-(12,60)
+(13,15)-(21,26)
+(14,3)-(21,26)
+(14,3)-(21,26)
+(14,3)-(21,26)
+(14,9)-(14,10)
+(15,14)-(15,15)
+(16,14)-(16,15)
+(17,15)-(17,18)
+(17,15)-(17,40)
+(17,15)-(17,40)
+(17,21)-(17,25)
+(17,21)-(17,34)
+(17,21)-(17,34)
+(17,21)-(17,40)
+(17,21)-(17,40)
+(17,27)-(17,28)
+(17,27)-(17,34)
+(17,30)-(17,31)
+(17,33)-(17,34)
+(17,39)-(17,40)
+(18,17)-(18,18)
+(19,22)-(19,23)
+(20,20)-(20,21)
+(21,25)-(21,26)
 *)

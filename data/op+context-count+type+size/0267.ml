@@ -1,39 +1,36 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left f base xs;;
+let pipe fs = let f a x _ = x a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left g base xs;;
+let pipe fs = let f a x x = x in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(7,40)-(7,41)
+(2,25)-(2,32)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,47)-(2,48)
+(2,52)-(2,76)
 *)
 
 (* type error slice
-(3,3)-(7,49)
-(6,32)-(6,33)
-(6,32)-(6,35)
-(6,34)-(6,35)
-(7,7)-(7,49)
-(7,18)-(7,19)
-(7,18)-(7,21)
-(7,20)-(7,21)
-(7,25)-(7,39)
-(7,25)-(7,49)
-(7,40)-(7,41)
-(7,42)-(7,46)
-(7,47)-(7,49)
+(2,4)-(2,78)
+(2,10)-(2,76)
+(2,15)-(2,76)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,25)-(2,32)
+(2,29)-(2,30)
+(2,29)-(2,32)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,52)-(2,66)
+(2,52)-(2,76)
+(2,52)-(2,76)
+(2,52)-(2,76)
+(2,67)-(2,68)
+(2,74)-(2,76)
 *)

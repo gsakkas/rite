@@ -1,40 +1,39 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  wwhile (if b = (f b) then (b, false) else ((b, true), b));;
+let rec listReverse l =
+  match l with | [] -> [] | x::l' -> [listReverse l'; x];;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  let helper x = if b = (f b) then (b, false) else (b, true) in
-  wwhile (helper, b);;
+let rec listReverse l =
+  match l with | [] -> [] | x::l' -> (listReverse l') @ [x];;
 
 *)
 
 (* changed spans
-(6,3)-(6,9)
-(6,3)-(6,58)
-(6,11)-(6,58)
-(6,47)-(6,54)
-(6,57)-(6,58)
+(3,38)-(3,57)
+(3,39)-(3,53)
+(3,55)-(3,56)
 *)
 
 (* type error slice
-(6,11)-(6,58)
-(6,14)-(6,15)
-(6,14)-(6,22)
-(6,30)-(6,31)
-(6,30)-(6,38)
-(6,33)-(6,38)
-(6,47)-(6,48)
-(6,47)-(6,54)
-(6,47)-(6,58)
-(6,50)-(6,54)
-(6,57)-(6,58)
+(2,4)-(3,59)
+(2,21)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,3)-(3,57)
+(3,9)-(3,10)
+(3,24)-(3,26)
+(3,38)-(3,57)
+(3,38)-(3,57)
+(3,38)-(3,57)
+(3,39)-(3,50)
+(3,39)-(3,53)
+(3,39)-(3,53)
+(3,51)-(3,53)
+(3,55)-(3,56)
 *)

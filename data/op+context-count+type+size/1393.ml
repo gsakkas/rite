@@ -1,61 +1,89 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  if (sumList (digitsOfInt n)) > 9
-  then sumList (digitsOfInt (sumList (digitsOfInt n)));;
+let stringOfList f l = "[" ^ ((List.map f (sepConcat l)) ^ "]");;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  if (sumList (digitsOfInt n)) > 9
-  then sumList (digitsOfInt (sumList (digitsOfInt n)))
-  else 0;;
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(13,3)-(14,52)
+(9,32)-(9,40)
+(9,44)-(9,53)
+(9,44)-(9,55)
 *)
 
 (* type error slice
-(8,49)-(8,60)
-(8,49)-(8,68)
-(8,62)-(8,68)
-(10,22)-(10,70)
-(10,61)-(10,68)
-(10,61)-(10,70)
-(10,69)-(10,70)
-(13,3)-(14,52)
-(13,16)-(13,27)
-(13,16)-(13,29)
-(13,28)-(13,29)
-(14,8)-(14,15)
-(14,8)-(14,52)
-(14,17)-(14,28)
-(14,17)-(14,52)
-(14,30)-(14,37)
-(14,30)-(14,52)
-(14,39)-(14,50)
-(14,39)-(14,52)
-(14,51)-(14,52)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(4,11)-(4,13)
+(6,7)-(7,59)
+(6,7)-(7,59)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,19)-(6,31)
+(6,19)-(6,31)
+(6,21)-(6,22)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,24)-(6,31)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(6,30)-(6,31)
+(7,7)-(7,59)
+(7,7)-(7,59)
+(7,18)-(7,19)
+(7,23)-(7,59)
+(7,23)-(7,59)
+(7,31)-(7,32)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,51)-(7,52)
+(7,53)-(7,57)
+(7,58)-(7,59)
+(9,4)-(9,66)
+(9,18)-(9,63)
+(9,20)-(9,63)
+(9,24)-(9,27)
+(9,28)-(9,29)
+(9,32)-(9,40)
+(9,32)-(9,55)
+(9,32)-(9,55)
+(9,32)-(9,55)
+(9,32)-(9,63)
+(9,32)-(9,63)
+(9,41)-(9,42)
+(9,44)-(9,53)
+(9,44)-(9,55)
+(9,44)-(9,55)
+(9,54)-(9,55)
+(9,58)-(9,59)
+(9,60)-(9,63)
 *)

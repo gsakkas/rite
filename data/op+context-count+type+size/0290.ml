@@ -1,77 +1,76 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Poly (a,b,c) ->
-      ((eval (a, x, y)) *. (eval (a, x, y))) +
-        ((eval (b, x, y)) *. (eval (c, x, y)));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
 
-let pi = 4.0 *. (atan 1.0);;
+let append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> h :: (append [] t);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Poly (a,b,c) ->
-      ((eval (a, x, y)) *. (eval (a, x, y))) +.
-        ((eval (b, x, y)) *. (eval (c, x, y)));;
+let append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> h :: (append t list2);;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
 
 *)
 
 (* changed spans
-(28,9)-(28,22)
-(28,9)-(28,42)
-(28,9)-(29,44)
+(5,21)-(6,62)
+(6,3)-(6,62)
+(6,9)-(6,10)
+(6,24)-(6,26)
+(6,37)-(6,48)
+(6,37)-(6,62)
+(6,50)-(6,62)
+(6,57)-(6,58)
+(6,59)-(6,62)
+(6,60)-(6,61)
 *)
 
 (* type error slice
-(16,3)-(29,44)
-(17,14)-(17,15)
-(28,9)-(28,42)
-(28,9)-(29,44)
-(29,11)-(29,44)
+(2,4)-(3,60)
+(2,12)-(3,58)
+(2,18)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,3)-(3,58)
+(3,9)-(3,14)
+(3,28)-(3,33)
+(3,44)-(3,49)
+(3,44)-(3,58)
+(3,53)-(3,58)
+(5,4)-(6,65)
+(5,21)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,3)-(6,62)
+(6,9)-(6,10)
+(6,24)-(6,26)
+(6,37)-(6,48)
+(6,37)-(6,62)
+(6,37)-(6,62)
+(6,50)-(6,56)
+(6,50)-(6,62)
+(6,50)-(6,62)
+(6,50)-(6,62)
+(6,57)-(6,58)
+(6,59)-(6,62)
+(6,59)-(6,62)
+(6,60)-(6,61)
 *)

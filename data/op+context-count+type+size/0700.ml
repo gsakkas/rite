@@ -1,32 +1,102 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = if t = "" then sep else h in
-      let l = sl in List.fold_left f base l;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b then List.append (clone 0 (b - a)) l1;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = if t = [] then sep else h in
-      let l = sl in List.fold_left f base l;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(7,25)-(7,27)
+(10,3)-(10,49)
+(10,17)-(10,49)
 *)
 
 (* type error slice
-(3,3)-(8,44)
-(7,21)-(7,22)
-(7,21)-(7,27)
-(7,25)-(7,27)
+(2,4)-(6,19)
+(2,15)-(6,17)
+(2,17)-(6,17)
+(3,3)-(6,17)
+(3,3)-(6,17)
+(3,15)-(3,17)
+(4,3)-(6,17)
+(4,3)-(6,17)
+(4,18)-(5,56)
+(4,24)-(5,56)
+(5,5)-(5,56)
+(5,5)-(5,56)
+(5,8)-(5,9)
+(5,8)-(5,13)
+(5,8)-(5,13)
+(5,8)-(5,13)
+(5,12)-(5,13)
+(5,19)-(5,24)
+(5,30)-(5,36)
+(5,30)-(5,56)
+(5,30)-(5,56)
+(5,30)-(5,56)
+(5,38)-(5,39)
+(5,38)-(5,48)
+(5,43)-(5,48)
+(5,51)-(5,52)
+(5,51)-(5,56)
+(5,55)-(5,56)
+(6,3)-(6,9)
+(6,3)-(6,17)
+(6,3)-(6,17)
+(6,10)-(6,15)
+(6,16)-(6,17)
+(8,4)-(10,51)
+(8,13)-(10,49)
+(8,16)-(10,49)
+(9,3)-(10,49)
+(9,3)-(10,49)
+(9,17)-(9,28)
+(9,17)-(9,31)
+(9,17)-(9,31)
+(9,17)-(9,49)
+(9,29)-(9,31)
+(9,35)-(9,46)
+(9,35)-(9,49)
+(9,35)-(9,49)
+(9,47)-(9,49)
+(10,3)-(10,49)
+(10,3)-(10,49)
+(10,3)-(10,49)
+(10,6)-(10,7)
+(10,6)-(10,11)
+(10,6)-(10,11)
+(10,10)-(10,11)
+(10,17)-(10,28)
+(10,17)-(10,49)
+(10,17)-(10,49)
+(10,17)-(10,49)
+(10,30)-(10,35)
+(10,30)-(10,44)
+(10,30)-(10,44)
+(10,30)-(10,44)
+(10,36)-(10,37)
+(10,39)-(10,40)
+(10,39)-(10,44)
+(10,43)-(10,44)
+(10,47)-(10,49)
 *)

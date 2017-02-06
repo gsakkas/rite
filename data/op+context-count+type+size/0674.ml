@@ -1,102 +1,35 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Foo of expr* expr
-  | Clamp of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin ((eval (a, x, y)) *. pi)
-  | Cosine a -> cos ((eval (a, x, y)) *. pi)
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Foo (a,b) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then 0.9 *. (eval (a, x, y))
-      else (eval 0.1) *. (a, x, y)
-  | Clamp (a,b,c) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (b, x, y)
-      else
-        if (eval (a, x, y)) > (eval (c, x, y))
-        then eval (c, x, y)
-        else eval (a, x, y);;
+let sqsum xs = let f a x = x ** 2 in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Foo of expr* expr
-  | Clamp of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin ((eval (a, x, y)) *. pi)
-  | Cosine a -> cos ((eval (a, x, y)) *. pi)
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Foo (a,b) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then 0.9 *. (eval (a, x, y))
-      else 0.1 *. (eval (a, x, y))
-  | Clamp (a,b,c) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (b, x, y)
-      else
-        if (eval (a, x, y)) > (eval (c, x, y))
-        then eval (c, x, y)
-        else eval (a, x, y);;
+let sqsum xs = let f a x = x * x in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(30,13)-(30,21)
-(30,18)-(30,21)
+(2,28)-(2,34)
+(2,30)-(2,32)
+(2,33)-(2,34)
 *)
 
 (* type error slice
-(16,3)-(37,27)
-(19,21)-(19,25)
-(19,21)-(19,34)
-(19,27)-(19,28)
-(19,27)-(19,34)
-(19,30)-(19,31)
-(19,33)-(19,34)
-(30,13)-(30,17)
-(30,13)-(30,21)
-(30,13)-(30,34)
-(30,18)-(30,21)
-(30,27)-(30,28)
-(30,27)-(30,34)
-(30,30)-(30,31)
-(30,33)-(30,34)
+(2,4)-(2,80)
+(2,11)-(2,78)
+(2,16)-(2,78)
+(2,22)-(2,34)
+(2,24)-(2,34)
+(2,28)-(2,29)
+(2,28)-(2,34)
+(2,28)-(2,34)
+(2,28)-(2,34)
+(2,30)-(2,32)
+(2,33)-(2,34)
+(2,54)-(2,68)
+(2,54)-(2,78)
+(2,54)-(2,78)
+(2,54)-(2,78)
+(2,69)-(2,70)
+(2,76)-(2,78)
 *)

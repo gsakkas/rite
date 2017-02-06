@@ -25,6 +25,7 @@ flags.DEFINE_string("model", "linear",
 flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
 flags.DEFINE_string("hidden_layers", "", "")
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
+flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
@@ -114,7 +115,11 @@ def train_model(train, dfs, label_names, validation=None):
     print df.shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
-    df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes).sample(frac=1).reset_index(drop=True)
+    df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+    if FLAGS.n_batches is not None:
+        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True).reset_index(drop=True)
+    else:
+        df = df.sample(frac=1).reset_index(drop=True)
     print df.shape
     for _, batch in df.groupby(df.index // FLAGS.batch_size):
         train(batch, i, validation, verbose=FLAGS.verbose)

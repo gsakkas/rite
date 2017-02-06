@@ -1,133 +1,94 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX else buildY)
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let stringOfList f l = "[" ^ (sepConcat ^ (";" ^ ((List.map f l) ^ "]")));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(27,35)-(27,41)
-(27,47)-(27,53)
-(29,6)-(42,67)
-(35,14)-(35,37)
-(35,43)-(35,66)
-(38,14)-(38,37)
-(38,43)-(38,66)
-(42,58)-(42,63)
-(42,66)-(42,67)
+(9,31)-(9,40)
+(9,48)-(9,49)
+(9,52)-(9,64)
+(9,66)-(9,67)
 *)
 
 (* type error slice
-(15,4)-(15,27)
-(15,15)-(15,25)
-(15,19)-(15,25)
-(15,24)-(15,25)
-(21,4)-(21,23)
-(21,12)-(21,21)
-(21,17)-(21,21)
-(25,4)-(42,74)
-(25,16)-(42,67)
-(26,3)-(42,67)
-(26,6)-(26,11)
-(26,6)-(26,15)
-(26,14)-(26,15)
-(27,9)-(27,53)
-(27,13)-(27,17)
-(27,13)-(27,23)
-(27,19)-(27,20)
-(27,19)-(27,23)
-(27,22)-(27,23)
-(27,35)-(27,41)
-(29,6)-(42,67)
-(30,6)-(42,67)
-(31,13)-(31,22)
-(31,13)-(31,47)
-(31,24)-(31,29)
-(31,24)-(31,47)
-(31,31)-(31,35)
-(31,31)-(31,47)
-(31,38)-(31,47)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(4,11)-(4,13)
+(6,7)-(7,59)
+(6,7)-(7,59)
+(6,13)-(6,31)
+(6,15)-(6,31)
+(6,19)-(6,20)
+(6,19)-(6,31)
+(6,19)-(6,31)
+(6,21)-(6,22)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,24)-(6,31)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(6,30)-(6,31)
+(7,7)-(7,59)
+(7,7)-(7,59)
+(7,18)-(7,19)
+(7,23)-(7,59)
+(7,23)-(7,59)
+(7,31)-(7,32)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,36)-(7,59)
+(7,51)-(7,52)
+(7,53)-(7,57)
+(7,58)-(7,59)
+(9,4)-(9,76)
+(9,18)-(9,71)
+(9,20)-(9,71)
+(9,24)-(9,27)
+(9,28)-(9,29)
+(9,31)-(9,40)
+(9,31)-(9,71)
+(9,31)-(9,71)
+(9,41)-(9,42)
+(9,44)-(9,47)
+(9,44)-(9,71)
+(9,48)-(9,49)
+(9,52)-(9,60)
+(9,52)-(9,64)
+(9,52)-(9,64)
+(9,52)-(9,64)
+(9,52)-(9,71)
+(9,52)-(9,71)
+(9,61)-(9,62)
+(9,63)-(9,64)
+(9,66)-(9,67)
+(9,68)-(9,71)
 *)

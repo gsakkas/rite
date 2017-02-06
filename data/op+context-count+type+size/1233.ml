@@ -1,37 +1,33 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = List.map (sepConcat ("; " l));;
+let pipe fs = let f a x x a = a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "; " (List.map f l);;
+let pipe fs =
+  let f a x x a = x a in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(9,24)-(9,32)
-(9,24)-(9,51)
-(9,34)-(9,51)
-(9,45)-(9,51)
-(9,50)-(9,51)
+(2,31)-(2,32)
+(2,47)-(2,48)
+(2,52)-(2,76)
 *)
 
 (* type error slice
-(9,45)-(9,49)
-(9,45)-(9,51)
-(9,50)-(9,51)
+(2,4)-(2,78)
+(2,10)-(2,76)
+(2,15)-(2,76)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,25)-(2,32)
+(2,27)-(2,32)
+(2,31)-(2,32)
+(2,52)-(2,66)
+(2,52)-(2,76)
+(2,52)-(2,76)
+(2,52)-(2,76)
+(2,67)-(2,68)
+(2,74)-(2,76)
 *)

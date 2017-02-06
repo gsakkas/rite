@@ -1,45 +1,46 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs2 with | [] -> xs1 | hd::tl -> append (xs1 :: hd) tl in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+let pipe fs =
+  let f a x = function | _ -> x a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+let pipe fs =
+  let f a x = function | v -> x (a v) in
+  let base = function | y -> y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(4,11)-(4,14)
-(4,44)-(4,50)
-(4,44)-(4,65)
-(4,52)-(4,55)
-(4,63)-(4,65)
-(5,3)-(7,11)
+(3,15)-(3,34)
+(3,33)-(3,34)
+(3,38)-(3,78)
+(3,49)-(3,50)
+(3,54)-(3,68)
+(3,54)-(3,78)
+(3,69)-(3,70)
+(3,71)-(3,75)
+(3,76)-(3,78)
 *)
 
 (* type error slice
-(3,3)-(7,11)
-(3,18)-(4,65)
-(3,22)-(4,65)
-(4,5)-(4,65)
-(4,11)-(4,14)
-(4,28)-(4,31)
-(4,44)-(4,50)
-(4,44)-(4,65)
-(4,52)-(4,61)
-(4,63)-(4,65)
-(6,35)-(6,41)
-(6,35)-(6,70)
-(6,60)-(6,70)
-(6,61)-(6,69)
+(2,4)-(3,80)
+(2,10)-(3,78)
+(3,3)-(3,78)
+(3,9)-(3,34)
+(3,11)-(3,34)
+(3,15)-(3,34)
+(3,15)-(3,34)
+(3,15)-(3,34)
+(3,15)-(3,34)
+(3,31)-(3,32)
+(3,31)-(3,34)
+(3,31)-(3,34)
+(3,33)-(3,34)
+(3,54)-(3,68)
+(3,54)-(3,78)
+(3,54)-(3,78)
+(3,54)-(3,78)
+(3,69)-(3,70)
+(3,76)-(3,78)
 *)

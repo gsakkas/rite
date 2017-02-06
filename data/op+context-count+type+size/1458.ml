@@ -1,42 +1,93 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x in
-      let base = "" in let l = sepConcat sep t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> cos (eval (a, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x in
-      let base = "" in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> cos (eval (a, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0;;
 
 *)
 
 (* changed spans
-(7,32)-(7,41)
-(7,32)-(7,47)
-(7,42)-(7,45)
+(17,64)-(17,65)
 *)
 
 (* type error slice
-(2,4)-(7,76)
-(2,19)-(7,74)
-(2,23)-(7,74)
-(3,3)-(7,74)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,52)-(6,53)
-(6,52)-(6,59)
-(6,54)-(6,55)
-(6,56)-(6,59)
-(7,32)-(7,41)
-(7,32)-(7,47)
-(7,42)-(7,45)
-(7,46)-(7,47)
+(11,15)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,3)-(17,65)
+(12,9)-(12,10)
+(13,14)-(13,15)
+(14,14)-(14,15)
+(15,15)-(15,18)
+(15,15)-(15,33)
+(15,15)-(15,33)
+(15,20)-(15,24)
+(15,20)-(15,33)
+(15,20)-(15,33)
+(15,26)-(15,27)
+(15,26)-(15,33)
+(15,29)-(15,30)
+(15,32)-(15,33)
+(16,17)-(16,20)
+(16,17)-(16,35)
+(16,22)-(16,26)
+(16,22)-(16,35)
+(16,22)-(16,35)
+(16,28)-(16,29)
+(16,28)-(16,35)
+(16,31)-(16,32)
+(16,34)-(16,35)
+(17,24)-(17,28)
+(17,24)-(17,37)
+(17,24)-(17,37)
+(17,24)-(17,65)
+(17,30)-(17,31)
+(17,30)-(17,37)
+(17,33)-(17,34)
+(17,36)-(17,37)
+(17,44)-(17,48)
+(17,44)-(17,57)
+(17,44)-(17,57)
+(17,50)-(17,51)
+(17,50)-(17,57)
+(17,53)-(17,54)
+(17,56)-(17,57)
+(17,64)-(17,65)
 *)

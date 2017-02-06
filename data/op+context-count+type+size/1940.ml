@@ -6,19 +6,27 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) * (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) * (eval (b, x, y))) / 2
-  | Cosine a -> cos (pi * (float_of_int (eval (a, x, y))))
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x1,x2) ->
+      "((" ^ ((exprToString x1) ^ ("+" ^ ((exprToString x2) ^ ")/2)")))
+  | Times (x1,x2) -> (exprToString x1) ^ ("*" ^ (exprToString x2))
+  | Thresh (x1,x2,x3,x4) ->
+      "(" ^
+        ((exprToString x1) ^
+           ("<" ^
+              ((exprToString x2) ^
+                 ("?" ^
+                    ((exprToString x3) ^ (":" ^ ((exprToString x4) ^ ")")))))))
+  | CosE (x1,x2,x3) ->
+      "cos(pi*" ^ (x1 ^ ("*" ^ (x2 ^ (")e^(-pi*" ^ (x3 ^ "^2)")))));;
 
 
 (* fix
@@ -30,60 +38,69 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x1,x2) ->
+      "((" ^ ((exprToString x1) ^ ("+" ^ ((exprToString x2) ^ ")/2)")))
+  | Times (x1,x2) -> (exprToString x1) ^ ("*" ^ (exprToString x2))
+  | Thresh (x1,x2,x3,x4) ->
+      "(" ^
+        ((exprToString x1) ^
+           ("<" ^
+              ((exprToString x2) ^
+                 ("?" ^
+                    ((exprToString x3) ^ (":" ^ ((exprToString x4) ^ ")")))))))
+  | CosE (x1,x2,x3) ->
+      "cos(pi*" ^
+        ((exprToString x1) ^
+           ("*" ^
+              ((exprToString x1) ^ (")e^(-pi*" ^ ((exprToString x1) ^ "^2)")))));;
 
 *)
 
 (* changed spans
-(16,21)-(16,53)
-(17,24)-(17,37)
-(17,24)-(17,56)
-(17,24)-(17,63)
-(17,62)-(17,63)
-(18,22)-(18,24)
-(18,22)-(18,55)
-(18,28)-(18,40)
-(18,42)-(18,55)
-(19,20)-(19,22)
-(19,20)-(19,39)
+(29,20)-(29,22)
+(29,33)-(29,35)
+(29,39)-(29,63)
+(29,53)-(29,55)
+(29,56)-(29,57)
+(29,58)-(29,63)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(14,3)-(21,15)
-(15,25)-(15,29)
-(15,25)-(15,38)
-(15,31)-(15,32)
-(15,31)-(15,38)
-(15,34)-(15,35)
-(15,37)-(15,38)
-(18,17)-(18,20)
-(18,17)-(18,55)
-(18,22)-(18,24)
-(18,22)-(18,55)
-(18,28)-(18,40)
-(18,28)-(18,55)
-(18,42)-(18,46)
-(18,42)-(18,55)
-(18,48)-(18,49)
-(18,48)-(18,55)
-(18,51)-(18,52)
-(18,54)-(18,55)
-(19,15)-(19,18)
-(19,15)-(19,39)
-(19,20)-(19,22)
-(19,20)-(19,39)
+(12,22)-(29,63)
+(13,3)-(29,63)
+(13,3)-(29,63)
+(13,3)-(29,63)
+(13,9)-(13,10)
+(16,29)-(16,41)
+(16,29)-(16,43)
+(29,7)-(29,16)
+(29,17)-(29,18)
+(29,20)-(29,22)
+(29,20)-(29,63)
+(29,20)-(29,63)
+(29,23)-(29,24)
+(29,26)-(29,29)
+(29,26)-(29,63)
+(29,30)-(29,31)
+(29,33)-(29,35)
+(29,33)-(29,63)
+(29,33)-(29,63)
+(29,36)-(29,37)
+(29,39)-(29,49)
+(29,39)-(29,63)
+(29,50)-(29,51)
+(29,53)-(29,55)
+(29,53)-(29,63)
+(29,53)-(29,63)
+(29,56)-(29,57)
+(29,58)-(29,63)
 *)

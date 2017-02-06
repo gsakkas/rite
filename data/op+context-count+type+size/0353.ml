@@ -1,36 +1,68 @@
 
-let pipe fs =
-  let f a x f x = f a in let base y = y in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (carry,rest) ->
+        let new_carry = ((i * x) + carry) / 10 in
+        let result = (((i * x) + carry) mod 10) :: rest in
+        if ((List.length result) = (List.length l)) && (new_carry > 0)
+        then (0, (new_carry :: result))
+        else (new_carry, result) in
+  let base = (0, []) in let (_,res) = List.fold_right f base l in res;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x f x f a = f a x in let base y = y in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (carry,rest) ->
+        let new_carry = ((i * x) + carry) / 10 in
+        let result = (((i * x) + carry) mod 10) :: rest in
+        if ((List.length result) = (List.length l)) && (new_carry > 0)
+        then (0, (new_carry :: result))
+        else (new_carry, result) in
+  let base = (0, []) in
+  let (_,res) = List.fold_left f base (List.rev l) in res;;
 
 *)
 
 (* changed spans
-(3,19)-(3,20)
-(3,19)-(3,22)
-(3,26)-(3,68)
+(11,39)-(11,54)
+(11,62)-(11,63)
 *)
 
 (* type error slice
-(3,3)-(3,68)
-(3,9)-(3,22)
-(3,11)-(3,22)
-(3,13)-(3,22)
-(3,15)-(3,22)
-(3,19)-(3,20)
-(3,19)-(3,22)
-(3,21)-(3,22)
-(3,26)-(3,68)
-(3,35)-(3,40)
-(3,39)-(3,40)
-(3,44)-(3,58)
-(3,44)-(3,68)
-(3,59)-(3,60)
-(3,61)-(3,65)
-(3,66)-(3,68)
+(2,4)-(11,72)
+(2,20)-(11,70)
+(2,22)-(11,70)
+(3,3)-(11,70)
+(3,3)-(11,70)
+(3,9)-(10,32)
+(3,11)-(10,32)
+(4,11)-(4,12)
+(6,27)-(6,28)
+(6,31)-(6,32)
+(6,36)-(6,41)
+(7,52)-(7,56)
+(8,14)-(8,25)
+(8,14)-(8,32)
+(8,37)-(8,48)
+(8,37)-(8,50)
+(8,37)-(8,50)
+(8,49)-(8,50)
+(11,3)-(11,70)
+(11,3)-(11,70)
+(11,15)-(11,20)
+(11,18)-(11,20)
+(11,25)-(11,70)
+(11,25)-(11,70)
+(11,39)-(11,54)
+(11,39)-(11,63)
+(11,39)-(11,63)
+(11,39)-(11,63)
+(11,55)-(11,56)
+(11,57)-(11,61)
+(11,62)-(11,63)
+(11,67)-(11,70)
 *)

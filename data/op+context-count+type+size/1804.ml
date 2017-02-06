@@ -1,81 +1,115 @@
 
-let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let l1G = (List.length l1) - (List.length l2) in
-    List.append (l1, ((clone 0 l1G) l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then
-      (let l2G = (List.length l2) - (List.length l1) in
-       List.append (((clone 0 l2G) l1), l2))
-    else (l1, l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ (("*" (exprToString t2)) ^ ")"))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let l1G = (List.length l1) - (List.length l2) in
-    (l1, (List.append (clone 0 l1G) l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then
-      (let l2G = (List.length l2) - (List.length l1) in
-       ((List.append (clone 0 l2G) l1), l2))
-    else (l1, l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ ("*" ^ ((exprToString t2) ^ ")")))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 *)
 
 (* changed spans
-(8,5)-(8,16)
-(8,5)-(8,39)
-(8,24)-(8,29)
-(8,24)-(8,39)
-(13,8)-(13,19)
-(13,8)-(13,43)
-(13,23)-(13,28)
-(13,23)-(13,38)
+(20,36)-(20,56)
+(20,41)-(20,56)
 *)
 
 (* type error slice
-(2,51)-(2,56)
-(2,51)-(2,65)
-(2,57)-(2,58)
-(2,60)-(2,65)
-(5,7)-(5,18)
-(5,7)-(5,21)
-(5,19)-(5,21)
-(5,26)-(5,37)
-(5,26)-(5,40)
-(5,38)-(5,40)
-(7,5)-(8,39)
-(7,16)-(7,49)
-(8,5)-(8,16)
-(8,5)-(8,39)
-(8,18)-(8,20)
-(8,18)-(8,39)
-(8,24)-(8,29)
-(8,24)-(8,35)
-(8,24)-(8,39)
-(8,30)-(8,31)
-(8,32)-(8,35)
-(8,37)-(8,39)
-(12,8)-(13,43)
-(12,19)-(12,52)
-(13,8)-(13,19)
-(13,8)-(13,43)
-(13,23)-(13,28)
-(13,23)-(13,34)
-(13,23)-(13,38)
-(13,23)-(13,43)
-(13,29)-(13,30)
-(13,31)-(13,34)
-(13,36)-(13,38)
-(13,41)-(13,43)
+(11,22)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,3)-(21,43)
+(12,9)-(12,10)
+(15,17)-(15,27)
+(15,17)-(15,55)
+(15,28)-(15,29)
+(15,32)-(15,44)
+(15,32)-(15,48)
+(15,32)-(15,48)
+(15,32)-(15,55)
+(15,32)-(15,55)
+(15,45)-(15,48)
+(15,50)-(15,51)
+(15,52)-(15,55)
+(16,19)-(16,29)
+(16,19)-(16,57)
+(16,30)-(16,31)
+(16,34)-(16,46)
+(16,34)-(16,50)
+(16,34)-(16,57)
+(16,47)-(16,50)
+(16,52)-(16,53)
+(16,54)-(16,57)
+(18,7)-(18,11)
+(18,7)-(18,68)
+(18,12)-(18,13)
+(18,16)-(18,28)
+(18,16)-(18,31)
+(18,16)-(18,68)
+(18,29)-(18,31)
+(18,33)-(18,34)
+(18,36)-(18,39)
+(18,36)-(18,68)
+(18,40)-(18,41)
+(18,44)-(18,56)
+(18,44)-(18,59)
+(18,44)-(18,68)
+(18,57)-(18,59)
+(18,61)-(18,62)
+(18,63)-(18,68)
+(20,7)-(20,10)
+(20,11)-(20,12)
+(20,15)-(20,27)
+(20,15)-(20,30)
+(20,28)-(20,30)
+(20,32)-(20,33)
+(20,36)-(20,39)
+(20,36)-(20,56)
+(20,41)-(20,53)
+(20,41)-(20,56)
+(20,54)-(20,56)
+(20,59)-(20,60)
 *)

@@ -1,37 +1,128 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
+
+let rec digitsOfInt n =
+  let digOfInt n =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: (digitsOfInt (n / 10))
+         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
+  listReverse n;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
+
+let rec digitsOfInt n =
+  listReverse
+    (match n > 0 with
+     | false  -> []
+     | true  ->
+         (match n > 9 with
+          | false  -> n :: (digitsOfInt (n / 10))
+          | true  -> (n mod 10) :: (digitsOfInt (n / 10))));;
+
+let rec digOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> n :: (digitsOfInt (n / 10))
+       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
+
+let rec digitsOfInt n = digOfInt n;;
 
 *)
 
 (* changed spans
-(7,21)-(7,49)
-(7,45)-(7,49)
+(8,3)-(15,16)
+(8,16)-(14,55)
+(9,5)-(14,55)
+(15,3)-(15,14)
+(15,3)-(15,16)
+(15,15)-(15,16)
 *)
 
 (* type error slice
-(7,21)-(7,49)
-(7,24)-(7,32)
-(7,24)-(7,39)
-(7,33)-(7,34)
-(7,35)-(7,39)
-(7,45)-(7,49)
+(2,4)-(5,23)
+(2,17)-(5,21)
+(3,3)-(5,21)
+(3,3)-(5,21)
+(3,25)-(4,63)
+(3,27)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,5)-(4,63)
+(4,11)-(4,12)
+(4,26)-(4,28)
+(4,39)-(4,52)
+(4,39)-(4,63)
+(4,39)-(4,63)
+(4,39)-(4,63)
+(4,53)-(4,54)
+(4,56)-(4,57)
+(4,56)-(4,63)
+(4,61)-(4,63)
+(5,3)-(5,16)
+(5,3)-(5,21)
+(5,3)-(5,21)
+(5,3)-(5,21)
+(5,17)-(5,18)
+(5,19)-(5,21)
+(7,4)-(15,18)
+(7,21)-(15,16)
+(8,3)-(15,16)
+(8,3)-(15,16)
+(8,16)-(14,55)
+(9,5)-(14,55)
+(9,5)-(14,55)
+(9,5)-(14,55)
+(9,5)-(14,55)
+(9,11)-(9,12)
+(9,11)-(9,16)
+(9,11)-(9,16)
+(9,11)-(9,16)
+(9,15)-(9,16)
+(10,17)-(10,19)
+(12,10)-(14,55)
+(12,10)-(14,55)
+(12,10)-(14,55)
+(12,16)-(12,17)
+(12,16)-(12,21)
+(12,16)-(12,21)
+(12,20)-(12,21)
+(13,22)-(13,23)
+(13,22)-(13,47)
+(13,28)-(13,39)
+(13,28)-(13,47)
+(13,28)-(13,47)
+(13,41)-(13,42)
+(13,41)-(13,47)
+(13,45)-(13,47)
+(14,22)-(14,23)
+(14,22)-(14,30)
+(14,22)-(14,55)
+(14,28)-(14,30)
+(14,36)-(14,47)
+(14,36)-(14,55)
+(14,49)-(14,50)
+(14,49)-(14,55)
+(14,53)-(14,55)
+(15,3)-(15,14)
+(15,3)-(15,16)
+(15,3)-(15,16)
+(15,15)-(15,16)
 *)

@@ -1,50 +1,32 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  let helper x = if b = (f b) then (b, false) else (b, true) in
-  wwhile ((helper b), b);;
+let rec digitsOfInt n = if n > 0 then [digitsOfInt (n / 10); n mod 10] else 0;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  let helper x = if b = (f b) then (b, false) else (b, true) in
-  wwhile (helper, b);;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
 *)
 
 (* changed spans
-(7,12)-(7,20)
-(7,23)-(7,24)
+(2,39)-(2,71)
+(2,40)-(2,59)
+(2,62)-(2,70)
+(2,77)-(2,78)
 *)
 
 (* type error slice
-(3,9)-(3,10)
-(3,9)-(3,12)
-(3,11)-(3,12)
-(3,33)-(3,39)
-(3,33)-(3,45)
-(3,41)-(3,42)
-(3,41)-(3,45)
-(3,44)-(3,45)
-(6,3)-(7,24)
-(6,14)-(6,60)
-(6,18)-(6,60)
-(6,21)-(6,22)
-(6,21)-(6,29)
-(6,37)-(6,38)
-(6,37)-(6,45)
-(6,40)-(6,45)
-(7,3)-(7,9)
-(7,3)-(7,24)
-(7,12)-(7,18)
-(7,12)-(7,20)
-(7,12)-(7,24)
-(7,19)-(7,20)
-(7,23)-(7,24)
+(2,21)-(2,78)
+(2,25)-(2,78)
+(2,25)-(2,78)
+(2,28)-(2,29)
+(2,28)-(2,33)
+(2,39)-(2,71)
+(2,39)-(2,71)
+(2,39)-(2,71)
+(2,40)-(2,51)
+(2,40)-(2,59)
+(2,62)-(2,70)
+(2,77)-(2,78)
 *)

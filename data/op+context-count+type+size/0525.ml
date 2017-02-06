@@ -1,247 +1,87 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-    | 1 ->
-        if (rand (0, 1)) = 0
-        then buildSine (buildhelper 0 (depth - 1))
-        else buildCosine (buildhelper 0 (depth - 1))
-    | 2 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-    | 3 -> buildhelper (num - 1) depth expr
-    | 4 ->
-        buildThresh
-          ((buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr)) in
-  buildhelper rand (1, 4) depth "";;
+let fixpoint (f,b) =
+  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-    | 1 ->
-        if (rand (0, 1)) = 0
-        then buildSine (buildhelper 0 0 expr)
-        else buildCosine (buildhelper 0 0 expr)
-    | 2 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-    | 3 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-    | 4 ->
-        buildThresh
-          ((buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr))
-    | _ ->
-        buildThresh
-          ((buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr)) in
-  buildhelper (rand (1, 4)) depth "";;
+let fixpoint (f,b) =
+  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
 
 *)
 
 (* changed spans
-(27,5)-(49,52)
-(31,25)-(31,49)
-(31,40)-(31,45)
-(31,40)-(31,49)
-(31,48)-(31,49)
-(32,14)-(32,51)
-(32,27)-(32,51)
-(32,42)-(32,47)
-(32,42)-(32,51)
-(32,50)-(32,51)
-(34,9)-(42,54)
-(37,28)-(37,31)
-(38,29)-(38,32)
-(41,28)-(41,31)
-(42,29)-(42,32)
-(43,12)-(43,44)
-(43,25)-(43,28)
-(43,34)-(43,39)
-(43,40)-(43,44)
-(45,9)-(45,20)
-(45,9)-(49,52)
-(46,13)-(49,52)
-(46,26)-(46,29)
-(46,32)-(46,33)
-(46,36)-(46,45)
-(47,14)-(47,52)
-(47,27)-(47,30)
-(47,33)-(47,34)
-(47,37)-(47,46)
-(48,27)-(48,30)
-(48,33)-(48,34)
-(48,37)-(48,46)
-(49,14)-(49,52)
-(49,27)-(49,30)
-(49,33)-(49,34)
-(49,37)-(49,46)
-(49,48)-(49,52)
-(50,3)-(50,14)
-(50,3)-(50,35)
-(50,15)-(50,19)
-(50,21)-(50,22)
-(50,21)-(50,25)
-(50,24)-(50,25)
-(50,27)-(50,32)
-(50,33)-(50,35)
+(8,57)-(8,60)
+(8,63)-(8,64)
 *)
 
 (* type error slice
-(21,4)-(21,23)
-(21,12)-(21,21)
-(21,17)-(21,21)
-(26,3)-(50,35)
-(26,23)-(49,52)
-(26,27)-(49,52)
-(26,33)-(49,52)
-(27,5)-(49,52)
-(28,12)-(28,62)
-(28,16)-(28,20)
-(28,16)-(28,26)
-(28,22)-(28,23)
-(28,22)-(28,26)
-(28,25)-(28,26)
-(28,38)-(28,44)
-(28,38)-(28,47)
-(28,45)-(28,47)
-(31,25)-(31,36)
-(31,25)-(31,49)
-(31,37)-(31,38)
-(31,40)-(31,45)
-(31,40)-(31,49)
-(37,15)-(37,26)
-(37,15)-(37,53)
-(37,28)-(37,31)
-(37,28)-(37,35)
-(37,38)-(37,47)
-(37,49)-(37,53)
-(38,16)-(38,27)
-(38,16)-(38,54)
-(38,29)-(38,36)
-(38,39)-(38,48)
-(38,50)-(38,54)
-(41,15)-(41,26)
-(41,15)-(41,53)
-(41,28)-(41,35)
-(41,38)-(41,47)
-(41,49)-(41,53)
-(42,16)-(42,27)
-(42,16)-(42,54)
-(42,29)-(42,36)
-(42,39)-(42,48)
-(42,50)-(42,54)
-(43,12)-(43,23)
-(43,12)-(43,44)
-(43,25)-(43,32)
-(43,34)-(43,39)
-(43,40)-(43,44)
-(46,13)-(46,24)
-(46,13)-(46,51)
-(46,26)-(46,33)
-(46,36)-(46,45)
-(46,47)-(46,51)
-(47,14)-(47,25)
-(47,14)-(47,52)
-(47,27)-(47,34)
-(47,37)-(47,46)
-(47,48)-(47,52)
-(48,14)-(48,25)
-(48,14)-(48,52)
-(48,27)-(48,34)
-(48,37)-(48,46)
-(48,48)-(48,52)
-(49,14)-(49,25)
-(49,14)-(49,52)
-(49,27)-(49,34)
-(49,37)-(49,46)
-(49,48)-(49,52)
-(50,3)-(50,14)
-(50,3)-(50,35)
-(50,15)-(50,19)
-(50,21)-(50,22)
-(50,21)-(50,25)
-(50,24)-(50,25)
-(50,27)-(50,32)
-(50,33)-(50,35)
+(2,4)-(5,17)
+(2,17)-(5,15)
+(3,3)-(5,15)
+(3,3)-(5,15)
+(3,20)-(4,66)
+(3,22)-(4,66)
+(4,5)-(4,66)
+(4,5)-(4,66)
+(4,19)-(4,20)
+(4,19)-(4,22)
+(4,19)-(4,22)
+(4,21)-(4,22)
+(4,26)-(4,66)
+(4,26)-(4,66)
+(4,29)-(4,31)
+(4,29)-(4,39)
+(4,29)-(4,39)
+(4,29)-(4,39)
+(4,34)-(4,39)
+(4,45)-(4,47)
+(4,53)-(4,61)
+(4,53)-(4,66)
+(4,53)-(4,66)
+(4,53)-(4,66)
+(4,62)-(4,63)
+(4,64)-(4,66)
+(5,3)-(5,11)
+(5,3)-(5,15)
+(5,3)-(5,15)
+(5,3)-(5,15)
+(5,12)-(5,13)
+(5,14)-(5,15)
+(7,4)-(8,67)
+(7,15)-(8,64)
+(8,3)-(8,9)
+(8,3)-(8,64)
+(8,3)-(8,64)
+(8,12)-(8,60)
+(8,12)-(8,60)
+(8,12)-(8,64)
+(8,18)-(8,51)
+(8,22)-(8,51)
+(8,22)-(8,51)
+(8,31)-(8,32)
+(8,31)-(8,34)
+(8,31)-(8,34)
+(8,33)-(8,34)
+(8,39)-(8,41)
+(8,39)-(8,51)
+(8,44)-(8,46)
+(8,44)-(8,51)
+(8,44)-(8,51)
+(8,50)-(8,51)
+(8,57)-(8,58)
+(8,57)-(8,60)
+(8,57)-(8,60)
+(8,59)-(8,60)
+(8,63)-(8,64)
 *)

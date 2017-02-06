@@ -8,44 +8,11 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildTimes VarX
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) + (eval (VarY, a1, a2));;
 
 
 (* fix
@@ -59,62 +26,53 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildThresh (VarX, VarX, VarX, VarX)
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
 
 *)
 
 (* changed spans
-(27,10)-(27,20)
-(27,21)-(27,25)
-(28,10)-(28,19)
-(48,59)-(48,64)
-(48,67)-(48,68)
+(15,25)-(15,65)
+(15,59)-(15,61)
+(15,63)-(15,65)
 *)
 
 (* type error slice
-(19,4)-(19,42)
-(19,17)-(19,39)
-(19,26)-(19,39)
-(19,33)-(19,35)
-(19,37)-(19,39)
-(27,10)-(27,20)
-(27,10)-(27,25)
-(27,21)-(27,25)
+(11,15)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,3)-(15,65)
+(12,9)-(12,10)
+(13,14)-(13,15)
+(13,14)-(13,22)
+(13,14)-(13,22)
+(13,19)-(13,22)
+(14,14)-(14,15)
+(14,14)-(14,22)
+(14,14)-(14,22)
+(14,19)-(14,22)
+(15,25)-(15,29)
+(15,25)-(15,41)
+(15,25)-(15,41)
+(15,25)-(15,65)
+(15,25)-(15,65)
+(15,31)-(15,35)
+(15,31)-(15,41)
+(15,37)-(15,38)
+(15,40)-(15,41)
+(15,47)-(15,51)
+(15,47)-(15,65)
+(15,47)-(15,65)
+(15,53)-(15,57)
+(15,53)-(15,65)
+(15,59)-(15,61)
+(15,63)-(15,65)
 *)

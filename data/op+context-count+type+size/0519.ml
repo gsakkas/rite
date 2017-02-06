@@ -1,57 +1,108 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let g x = (f x) = x in ((g b), b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> float x
+    | VarY  -> float y
+    | Sine p1 -> sin (pi *. (evalhelper p1))
+    | Cosine p1 -> cos (pi *. (evalhelper p1)) in
+  evalhelper e x y;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
+    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
+  evalhelper e x y;;
 
 *)
 
 (* changed spans
-(7,30)-(7,62)
-(7,41)-(7,49)
-(7,48)-(7,49)
-(7,55)-(7,56)
-(7,55)-(7,58)
-(7,57)-(7,58)
-(7,61)-(7,62)
+(16,16)-(16,21)
+(16,16)-(16,23)
+(17,16)-(17,21)
+(17,16)-(17,23)
+(18,30)-(18,43)
+(19,20)-(19,45)
+(19,32)-(19,45)
+(20,3)-(20,19)
 *)
 
 (* type error slice
-(2,4)-(5,17)
-(2,17)-(5,15)
-(3,3)-(5,15)
-(4,19)-(4,20)
-(4,19)-(4,22)
-(4,21)-(4,22)
-(4,53)-(4,61)
-(4,53)-(4,66)
-(4,62)-(4,63)
-(4,64)-(4,66)
-(5,3)-(5,11)
-(5,3)-(5,15)
-(5,12)-(5,13)
-(5,14)-(5,15)
-(7,22)-(7,28)
-(7,22)-(7,62)
-(7,30)-(7,62)
-(7,36)-(7,49)
-(7,41)-(7,49)
-(7,55)-(7,56)
-(7,55)-(7,58)
-(7,55)-(7,62)
-(7,57)-(7,58)
-(7,61)-(7,62)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(20,21)
+(13,15)-(20,19)
+(14,3)-(20,19)
+(14,3)-(20,19)
+(14,22)-(19,45)
+(14,24)-(19,45)
+(14,26)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,5)-(19,45)
+(15,11)-(15,12)
+(16,16)-(16,21)
+(16,16)-(16,23)
+(16,16)-(16,23)
+(16,22)-(16,23)
+(17,16)-(17,21)
+(17,16)-(17,23)
+(17,16)-(17,23)
+(17,22)-(17,23)
+(18,18)-(18,21)
+(18,18)-(18,43)
+(18,23)-(18,25)
+(18,23)-(18,43)
+(18,23)-(18,43)
+(18,30)-(18,40)
+(18,30)-(18,43)
+(18,30)-(18,43)
+(18,41)-(18,43)
+(19,20)-(19,23)
+(19,20)-(19,45)
+(19,25)-(19,27)
+(19,25)-(19,45)
+(19,32)-(19,42)
+(19,32)-(19,45)
+(19,43)-(19,45)
+(20,3)-(20,13)
+(20,3)-(20,19)
+(20,3)-(20,19)
+(20,3)-(20,19)
+(20,14)-(20,15)
+(20,16)-(20,17)
+(20,18)-(20,19)
 *)

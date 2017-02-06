@@ -1,53 +1,37 @@
 
-let rec clone x n =
-  let rec helper a x n =
-    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
-  helper [] x n;;
-
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 > length2
-  then (l1, (List.append (clone 0 (length1 - length2)) l2))
-  else
-    if length2 length1
-    then ((List.append (clone 0 (length1 - length2)) l1), l2)
-    else (l1, l2);;
+let sqsum xs =
+  let f a x a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper a x n =
-    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
-  helper [] x n;;
-
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 > length2
-  then (l1, (List.append (clone 0 (length1 - length2)) l2))
-  else
-    if length2 > length1
-    then ((List.append (clone 0 (length1 - length2)) l1), l2)
-    else (l1, l2);;
+let sqsum xs =
+  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(13,8)-(13,23)
+(3,13)-(3,30)
+(3,15)-(3,30)
+(3,20)-(3,21)
+(3,24)-(3,25)
 *)
 
 (* type error slice
-(8,3)-(15,17)
-(8,17)-(8,28)
-(8,17)-(8,31)
-(8,29)-(8,31)
-(9,3)-(15,17)
-(9,17)-(9,28)
-(9,17)-(9,31)
-(9,29)-(9,31)
-(13,8)-(13,15)
-(13,8)-(13,23)
-(13,16)-(13,23)
+(2,4)-(3,76)
+(2,11)-(3,74)
+(3,3)-(3,74)
+(3,9)-(3,30)
+(3,11)-(3,30)
+(3,13)-(3,30)
+(3,15)-(3,30)
+(3,20)-(3,21)
+(3,24)-(3,25)
+(3,29)-(3,30)
+(3,50)-(3,64)
+(3,50)-(3,74)
+(3,50)-(3,74)
+(3,50)-(3,74)
+(3,65)-(3,66)
+(3,72)-(3,74)
 *)

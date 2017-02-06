@@ -1,99 +1,50 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (_,h2::t2) ->
-               let sum = (x1 + x2) + h2 in
-               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
-           | (_,_) -> (0, [0])) in
-    let base = (0, [0]) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (pos,total) = a in
-    ((pos + 1), (mulByDigit (10.0 ** (float_of_int pos)) l2)) in
-  let base = (0, [0]) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let pipe fs =
+  let f a x = (a x) + (x a) in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (_,h2::t2) ->
-               let sum = (x1 + x2) + h2 in
-               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
-           | (_,_) -> (0, [0])) in
-    let base = (0, [0]) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (pos,total) = a in
-    ((pos + 1), (mulByDigit (int_of_float (10.0 ** (float_of_int pos))) l2)) in
-  let base = (0, [0]) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(34,30)-(34,55)
+(3,3)-(3,74)
+(3,16)-(3,17)
+(3,16)-(3,19)
+(3,16)-(3,27)
+(3,24)-(3,25)
+(3,24)-(3,27)
+(3,41)-(3,46)
+(3,45)-(3,46)
 *)
 
 (* type error slice
-(29,43)-(29,53)
-(29,43)-(29,63)
-(29,55)-(29,60)
-(29,62)-(29,63)
-(34,7)-(34,10)
-(34,7)-(34,14)
-(34,18)-(34,28)
-(34,18)-(34,60)
-(34,30)-(34,34)
-(34,30)-(34,55)
-(34,35)-(34,37)
-(34,39)-(34,51)
-(34,39)-(34,55)
-(34,52)-(34,55)
-(34,58)-(34,60)
+(2,4)-(3,76)
+(2,10)-(3,74)
+(3,3)-(3,74)
+(3,3)-(3,74)
+(3,9)-(3,27)
+(3,11)-(3,27)
+(3,16)-(3,17)
+(3,16)-(3,19)
+(3,16)-(3,19)
+(3,18)-(3,19)
+(3,24)-(3,25)
+(3,24)-(3,27)
+(3,24)-(3,27)
+(3,26)-(3,27)
+(3,32)-(3,74)
+(3,32)-(3,74)
+(3,41)-(3,46)
+(3,45)-(3,46)
+(3,50)-(3,64)
+(3,50)-(3,74)
+(3,50)-(3,74)
+(3,50)-(3,74)
+(3,50)-(3,74)
+(3,65)-(3,66)
+(3,67)-(3,71)
+(3,72)-(3,74)
 *)

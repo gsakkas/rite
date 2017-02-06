@@ -3,10 +3,7 @@ let rec sepConcat sep sl =
   match sl with
   | [] -> ""
   | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = List.map (sepConcat "" l);;
+      let f a x = h in let base = "" in let l = h in List.fold_left f base l;;
 
 
 (* fix
@@ -15,34 +12,34 @@ let rec sepConcat sep sl =
   match sl with
   | [] -> ""
   | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "" (List.map f l);;
+      let f a x = h in let base = "" in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(9,24)-(9,32)
-(9,24)-(9,48)
-(9,47)-(9,48)
+(6,49)-(6,50)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
+(2,4)-(6,79)
+(2,19)-(6,77)
+(2,23)-(6,77)
+(3,3)-(6,77)
+(3,3)-(6,77)
+(3,3)-(6,77)
+(3,3)-(6,77)
+(3,3)-(6,77)
 (3,9)-(3,11)
-(4,11)-(4,13)
-(6,24)-(6,27)
-(6,24)-(6,31)
-(6,28)-(6,29)
-(6,30)-(6,31)
-(9,24)-(9,32)
-(9,24)-(9,48)
-(9,34)-(9,43)
-(9,34)-(9,48)
-(9,44)-(9,46)
-(9,47)-(9,48)
+(6,7)-(6,77)
+(6,13)-(6,20)
+(6,15)-(6,20)
+(6,19)-(6,20)
+(6,41)-(6,77)
+(6,49)-(6,50)
+(6,54)-(6,68)
+(6,54)-(6,77)
+(6,54)-(6,77)
+(6,54)-(6,77)
+(6,69)-(6,70)
+(6,76)-(6,77)
 *)

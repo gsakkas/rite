@@ -1,89 +1,94 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | AddThree of expr* expr* expr;;
+let x = 123;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
-  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
-  | Thresh (e7,e8,e9,e10) ->
-      "(" ^
-        ((exprToString e7) ^
-           ("<" ^
-              ((exprToString e8) ^
-                 ("?" ^
-                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
-  | Power (e1,e2) ->
-      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
-  | AddThree (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("+" ^ ((exprToString e2) ^ (("+" exprToString e3) ^ ")"))));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l =
+  match l with | [] -> 0 | x::l' -> (listReverse l') :: x;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | AddThree of expr* expr* expr;;
+let x = 123;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
-  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
-  | Thresh (e7,e8,e9,e10) ->
-      "(" ^
-        ((exprToString e7) ^
-           ("<" ^
-              ((exprToString e8) ^
-                 ("?" ^
-                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
-  | Power (e1,e2) ->
-      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
-  | AddThree (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("+" ^ ((exprToString e2) ^ ("+" ^ ((exprToString e3) ^ ")")))));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail -> (listReverse tail) @ [head];;
 
 *)
 
 (* changed spans
-(34,42)-(34,61)
-(34,46)-(34,58)
+(17,3)-(17,58)
+(17,24)-(17,25)
+(17,38)-(17,52)
+(17,38)-(17,58)
+(17,50)-(17,52)
+(17,57)-(17,58)
 *)
 
 (* type error slice
-(14,3)-(34,68)
-(17,30)-(17,42)
-(17,30)-(17,45)
-(17,43)-(17,45)
-(34,42)-(34,45)
-(34,42)-(34,61)
-(34,46)-(34,58)
-(34,59)-(34,61)
+(4,21)-(10,62)
+(5,3)-(10,62)
+(5,6)-(5,7)
+(5,6)-(5,11)
+(6,8)-(6,10)
+(10,6)-(10,62)
+(10,33)-(10,35)
+(10,42)-(10,53)
+(10,42)-(10,55)
+(10,42)-(10,62)
+(10,42)-(10,62)
+(10,57)-(10,58)
+(12,17)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,22)-(12,74)
+(12,28)-(12,30)
+(12,58)-(12,59)
+(12,63)-(12,70)
+(12,63)-(12,74)
+(12,63)-(12,74)
+(12,71)-(12,74)
+(16,4)-(17,60)
+(16,21)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,3)-(17,58)
+(17,9)-(17,10)
+(17,24)-(17,25)
+(17,38)-(17,49)
+(17,38)-(17,52)
+(17,38)-(17,52)
+(17,38)-(17,58)
+(17,50)-(17,52)
+(17,57)-(17,58)
 *)

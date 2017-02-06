@@ -1,72 +1,86 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Div7 of expr
-  | MultDivPi of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | MultDivPi (e1,e2,e3) ->
-      (((eval (e1, x, y)) *. (eval (e2, x, y))) *. (eval (e3, x, y))) /. pi
-  | Div7 e1 -> (eval (e1, x, y)) /. 7
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let bigMul l1 l2 =
+  let f a x =
+    let (l1',l2') = x in
+    let (pos,total) = a in
+    match l2' with | [] -> [] | h::t -> ((pos + 1), total) in
+  let base = (0, [0]) in
+  let args = ((List.rev l1), (List.rev l2)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Div7 of expr
-  | MultDivPi of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | MultDivPi (e1,e2,e3) ->
-      (((eval (e1, x, y)) *. (eval (e2, x, y))) *. (eval (e3, x, y))) /. pi
-  | Div7 e1 -> (eval (e1, x, y)) /. 7.0
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let bigMul l1 l2 =
+  let f a x = let (pos,total) = a in (pos, l2) in
+  let base = (0, [0]) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(19,37)-(19,38)
+(4,21)-(4,22)
+(5,5)-(6,58)
+(6,5)-(6,58)
+(6,11)-(6,14)
+(6,28)-(6,30)
+(6,43)-(6,50)
+(6,49)-(6,50)
+(6,53)-(6,58)
+(8,16)-(8,42)
+(8,31)-(8,42)
 *)
 
 (* type error slice
-(19,17)-(19,38)
-(19,37)-(19,38)
+(2,4)-(9,52)
+(2,12)-(9,50)
+(2,15)-(9,50)
+(3,3)-(9,50)
+(3,9)-(6,58)
+(3,11)-(6,58)
+(4,5)-(6,58)
+(4,5)-(6,58)
+(4,21)-(4,22)
+(5,5)-(6,58)
+(5,5)-(6,58)
+(5,23)-(5,24)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,5)-(6,58)
+(6,11)-(6,14)
+(6,28)-(6,30)
+(6,43)-(6,46)
+(6,43)-(6,50)
+(6,43)-(6,50)
+(6,43)-(6,58)
+(6,49)-(6,50)
+(6,53)-(6,58)
+(7,3)-(9,50)
+(7,15)-(7,16)
+(7,15)-(7,21)
+(7,18)-(7,21)
+(7,18)-(7,21)
+(7,19)-(7,20)
+(8,3)-(9,50)
+(8,16)-(8,24)
+(8,16)-(8,27)
+(8,16)-(8,27)
+(8,16)-(8,42)
+(8,25)-(8,27)
+(8,31)-(8,39)
+(8,31)-(8,42)
+(8,31)-(8,42)
+(8,40)-(8,42)
+(9,17)-(9,31)
+(9,17)-(9,43)
+(9,17)-(9,43)
+(9,17)-(9,43)
+(9,17)-(9,43)
+(9,32)-(9,33)
+(9,34)-(9,38)
+(9,39)-(9,43)
 *)

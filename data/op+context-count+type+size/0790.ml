@@ -1,90 +1,82 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
-  | Gauss (e1,e2,e3) ->
-      (2.0 *.
-         (exp
-            (-
-               ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
-                  (eval (e3, x, y))))))
-        -. 1.0
-  | _ -> failwith "error";;
+let rec digitsOfInt n =
+  let rec helper x =
+    match x with | 0 -> [] | n -> (n mod 10) :: (helper (n / 10)) in
+  let rec reverse xs =
+    match xs with | [] -> [] | hd::tl -> (reverse tl) :: hd in
+  reverse (helper n);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
-  | Gauss (e1,e2,e3) ->
-      2.0 *.
-        (exp
-           (-.
-              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
-                 (eval (e3, x, y)))));;
+let rec digitsOfInt n =
+  let rec helper x =
+    match x with | 0 -> [] | n -> (helper (n / 10)) @ [n mod 10] in
+  helper n;;
 
 *)
 
 (* changed spans
-(17,3)-(36,26)
-(30,8)-(35,15)
-(32,14)-(34,34)
-(35,12)-(35,15)
-(36,10)-(36,26)
+(4,36)-(4,37)
+(4,36)-(4,44)
+(4,36)-(4,64)
+(4,42)-(4,44)
+(4,50)-(4,64)
+(5,3)-(7,20)
+(5,19)-(6,60)
+(6,5)-(6,60)
+(6,11)-(6,13)
+(6,27)-(6,29)
+(6,43)-(6,60)
+(7,3)-(7,20)
 *)
 
 (* type error slice
-(31,11)-(31,14)
-(31,11)-(34,34)
-(32,14)-(34,34)
-(33,20)-(34,34)
+(2,4)-(7,23)
+(2,21)-(7,20)
+(3,3)-(7,20)
+(3,3)-(7,20)
+(3,18)-(4,64)
+(4,5)-(4,64)
+(4,5)-(4,64)
+(4,5)-(4,64)
+(4,5)-(4,64)
+(4,11)-(4,12)
+(4,25)-(4,27)
+(4,36)-(4,37)
+(4,36)-(4,44)
+(4,36)-(4,44)
+(4,36)-(4,64)
+(4,42)-(4,44)
+(4,50)-(4,56)
+(4,50)-(4,64)
+(4,50)-(4,64)
+(4,58)-(4,59)
+(4,58)-(4,64)
+(4,62)-(4,64)
+(5,3)-(7,20)
+(5,3)-(7,20)
+(5,19)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,5)-(6,60)
+(6,11)-(6,13)
+(6,27)-(6,29)
+(6,43)-(6,50)
+(6,43)-(6,53)
+(6,43)-(6,53)
+(6,43)-(6,60)
+(6,51)-(6,53)
+(6,58)-(6,60)
+(7,3)-(7,10)
+(7,3)-(7,20)
+(7,3)-(7,20)
+(7,12)-(7,18)
+(7,12)-(7,20)
+(7,12)-(7,20)
+(7,19)-(7,20)
 *)

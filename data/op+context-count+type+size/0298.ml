@@ -1,41 +1,49 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, (clone 0 (((List.length l1) - (List.length l2)) @ l2)));;
+let rec wwhile (f,b) =
+  let check = f b in
+  match (f, b) with | (x,y) -> if y = false then x else wwhile (f, x);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+let rec wwhile (f,b) =
+  let check = f b in
+  match check with | (x,y) -> if y = false then x else wwhile (f, x);;
 
 *)
 
 (* changed spans
-(10,16)-(10,21)
-(10,27)-(10,67)
-(10,63)-(10,64)
+(4,10)-(4,11)
+(4,10)-(4,14)
+(4,13)-(4,14)
 *)
 
 (* type error slice
-(5,26)-(5,37)
-(5,26)-(5,40)
-(5,38)-(5,40)
-(10,27)-(10,60)
-(10,27)-(10,67)
-(10,63)-(10,64)
-(10,65)-(10,67)
+(2,4)-(4,72)
+(2,17)-(4,69)
+(3,3)-(4,69)
+(3,3)-(4,69)
+(3,15)-(3,16)
+(3,15)-(3,18)
+(3,15)-(3,18)
+(3,17)-(3,18)
+(4,3)-(4,69)
+(4,3)-(4,69)
+(4,10)-(4,11)
+(4,10)-(4,14)
+(4,13)-(4,14)
+(4,32)-(4,69)
+(4,32)-(4,69)
+(4,35)-(4,36)
+(4,35)-(4,44)
+(4,35)-(4,44)
+(4,35)-(4,44)
+(4,39)-(4,44)
+(4,50)-(4,51)
+(4,57)-(4,63)
+(4,57)-(4,69)
+(4,57)-(4,69)
+(4,65)-(4,66)
+(4,65)-(4,69)
+(4,68)-(4,69)
 *)

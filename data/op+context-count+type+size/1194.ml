@@ -1,39 +1,49 @@
 
-let listReverse l =
-  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
-
-let rec digitsOfInt n =
-  let xxx =
-    match n with
-    | 0 -> []
-    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
-  listReverse (xxx n);;
+let rec listReverse l =
+  let l' = [] in
+  match l with | [] -> l' | l -> (listReverse (List.tl l)) :: (List.hd l);;
 
 
 (* fix
 
-let listReverse l =
-  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
-
-let rec digitsOfInt n =
-  let xxx n =
-    match n with
-    | 0 -> []
-    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
-  listReverse (xxx n);;
+let rec listReverse l =
+  let l' = [] in
+  match l with | [] -> l' | h::t -> (List.hd l) :: (listReverse (List.tl l));;
 
 *)
 
 (* changed spans
-(7,5)-(9,68)
+(4,3)-(4,73)
+(4,35)-(4,46)
+(4,35)-(4,57)
+(4,64)-(4,71)
+(4,64)-(4,73)
+(4,72)-(4,73)
 *)
 
 (* type error slice
-(6,3)-(10,21)
-(7,5)-(9,68)
-(7,11)-(7,12)
-(8,12)-(8,14)
-(10,16)-(10,19)
-(10,16)-(10,21)
-(10,20)-(10,21)
+(2,4)-(4,76)
+(2,21)-(4,73)
+(3,3)-(4,73)
+(3,3)-(4,73)
+(3,12)-(3,14)
+(4,3)-(4,73)
+(4,3)-(4,73)
+(4,3)-(4,73)
+(4,3)-(4,73)
+(4,3)-(4,73)
+(4,9)-(4,10)
+(4,24)-(4,26)
+(4,35)-(4,46)
+(4,35)-(4,57)
+(4,35)-(4,57)
+(4,35)-(4,73)
+(4,48)-(4,55)
+(4,48)-(4,57)
+(4,48)-(4,57)
+(4,56)-(4,57)
+(4,64)-(4,71)
+(4,64)-(4,73)
+(4,64)-(4,73)
+(4,72)-(4,73)
 *)

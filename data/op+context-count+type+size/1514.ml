@@ -1,56 +1,160 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
-let palindrome w =
-  let wList = explode w in
-  let wReverse = listReverse (explode w) in if true then wList;;
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a (x,y) = ((x + y) + a) / 10 in
+    let base = 0 in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
-let palindrome w =
-  let wList = explode w in
-  let wReverse = listReverse (explode w) in
-  if wList = wReverse then true else false;;
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a (x,y) = ((x + y) / 10) :: a in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(12,45)-(12,63)
-(12,48)-(12,52)
+(19,23)-(19,28)
+(19,23)-(19,39)
+(19,32)-(19,33)
+(20,5)-(21,64)
+(20,16)-(20,17)
+(21,38)-(21,64)
+(22,3)-(22,33)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(3,3)-(5,7)
-(4,14)-(4,27)
-(4,14)-(4,29)
-(4,28)-(4,29)
-(4,56)-(4,58)
-(4,56)-(4,65)
-(4,60)-(4,65)
-(5,3)-(5,5)
-(5,3)-(5,7)
-(5,6)-(5,7)
-(11,3)-(12,63)
-(11,15)-(11,22)
-(11,15)-(11,24)
-(11,23)-(11,24)
-(12,45)-(12,63)
-(12,58)-(12,63)
+(2,4)-(3,70)
+(2,15)-(3,66)
+(2,17)-(3,66)
+(3,3)-(3,66)
+(3,3)-(3,66)
+(3,3)-(3,66)
+(3,3)-(3,66)
+(3,9)-(3,10)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,13)-(3,14)
+(3,32)-(3,34)
+(3,46)-(3,47)
+(3,46)-(3,66)
+(3,52)-(3,57)
+(3,52)-(3,66)
+(3,52)-(3,66)
+(3,52)-(3,66)
+(3,58)-(3,59)
+(3,61)-(3,62)
+(3,61)-(3,66)
+(3,65)-(3,66)
+(5,4)-(12,57)
+(5,13)-(12,53)
+(5,16)-(12,53)
+(6,10)-(6,21)
+(6,10)-(6,24)
+(6,10)-(6,24)
+(6,22)-(6,24)
+(6,29)-(6,40)
+(6,29)-(6,43)
+(6,29)-(6,43)
+(6,41)-(6,43)
+(7,15)-(7,17)
+(7,15)-(7,21)
+(7,19)-(7,21)
+(9,22)-(9,33)
+(9,22)-(9,36)
+(9,22)-(9,36)
+(9,34)-(9,36)
+(9,41)-(9,52)
+(9,41)-(9,55)
+(9,41)-(9,55)
+(9,53)-(9,55)
+(11,20)-(11,22)
+(11,20)-(11,47)
+(11,26)-(11,31)
+(11,26)-(11,41)
+(11,26)-(11,47)
+(11,43)-(11,44)
+(11,45)-(11,47)
+(12,23)-(12,48)
+(12,44)-(12,45)
+(12,46)-(12,48)
+(14,20)-(15,58)
+(15,3)-(15,58)
+(15,3)-(15,58)
+(15,3)-(15,58)
+(15,3)-(15,58)
+(15,9)-(15,10)
+(15,24)-(15,26)
+(15,37)-(15,47)
+(15,37)-(15,49)
+(15,57)-(15,58)
+(17,4)-(22,37)
+(17,12)-(22,33)
+(17,15)-(22,33)
+(18,3)-(22,33)
+(18,12)-(21,64)
+(19,5)-(21,64)
+(19,11)-(19,39)
+(19,14)-(19,39)
+(19,23)-(19,24)
+(19,27)-(19,28)
+(19,32)-(19,33)
+(21,5)-(21,64)
+(21,16)-(21,28)
+(21,16)-(21,34)
+(21,16)-(21,34)
+(21,16)-(21,34)
+(21,29)-(21,31)
+(21,32)-(21,34)
+(21,38)-(21,52)
+(21,38)-(21,64)
+(21,38)-(21,64)
+(21,38)-(21,64)
+(21,53)-(21,54)
+(21,60)-(21,64)
+(22,15)-(22,18)
+(22,15)-(22,33)
+(22,15)-(22,33)
+(22,20)-(22,27)
+(22,20)-(22,33)
+(22,20)-(22,33)
+(22,28)-(22,30)
+(22,31)-(22,33)
 *)

@@ -1,72 +1,84 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           (("<" exprToString e2) ^
-              (" ? " ^
-                 ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")"))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then seen @ h in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 (" ? " ^
-                    ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")")))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(23,14)-(23,33)
-(23,18)-(23,30)
+(7,21)-(7,63)
+(7,62)-(7,63)
 *)
 
 (* type error slice
-(12,3)-(25,72)
-(15,29)-(15,41)
-(15,29)-(15,43)
-(15,42)-(15,43)
-(23,14)-(23,17)
-(23,14)-(23,33)
-(23,18)-(23,30)
-(23,31)-(23,33)
+(2,4)-(9,30)
+(2,22)-(9,26)
+(3,3)-(9,26)
+(3,3)-(9,26)
+(3,19)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,5)-(8,46)
+(4,11)-(4,15)
+(5,13)-(5,17)
+(7,9)-(8,46)
+(7,9)-(8,46)
+(7,21)-(7,63)
+(7,21)-(7,63)
+(7,21)-(7,63)
+(7,25)-(7,33)
+(7,25)-(7,40)
+(7,25)-(7,40)
+(7,25)-(7,40)
+(7,25)-(7,49)
+(7,25)-(7,49)
+(7,25)-(7,49)
+(7,34)-(7,35)
+(7,36)-(7,40)
+(7,44)-(7,49)
+(7,55)-(7,59)
+(7,55)-(7,63)
+(7,55)-(7,63)
+(7,55)-(7,63)
+(7,60)-(7,61)
+(7,62)-(7,63)
+(8,9)-(8,46)
+(8,9)-(8,46)
+(8,21)-(8,22)
+(8,26)-(8,32)
+(8,26)-(8,46)
+(8,26)-(8,46)
+(8,34)-(8,39)
+(8,34)-(8,46)
+(8,41)-(8,46)
+(9,3)-(9,11)
+(9,3)-(9,26)
+(9,3)-(9,26)
+(9,13)-(9,19)
+(9,13)-(9,26)
+(9,13)-(9,26)
+(9,21)-(9,23)
+(9,21)-(9,26)
+(9,25)-(9,26)
 *)

@@ -8,20 +8,14 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in if y = 2 then buildX ());;
 
 
 (* fix
@@ -35,29 +29,43 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(19,68)-(19,69)
+(18,32)-(18,55)
+(18,35)-(18,36)
+(18,35)-(18,40)
+(18,39)-(18,40)
 *)
 
 (* type error slice
-(19,26)-(19,69)
-(19,68)-(19,69)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(15,4)-(18,58)
+(15,16)-(18,55)
+(16,6)-(16,11)
+(16,6)-(16,15)
+(17,9)-(17,59)
+(17,9)-(17,59)
+(17,13)-(17,17)
+(17,13)-(17,23)
+(17,13)-(17,29)
+(17,35)-(17,41)
+(17,35)-(17,44)
+(17,50)-(17,56)
+(17,50)-(17,59)
+(18,32)-(18,55)
+(18,46)-(18,52)
+(18,46)-(18,55)
 *)

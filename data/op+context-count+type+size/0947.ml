@@ -1,34 +1,32 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d k t);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(5,51)-(5,56)
+(3,27)-(3,46)
+(3,53)-(3,54)
+(3,53)-(3,61)
+(3,59)-(3,61)
 *)
 
 (* type error slice
-(2,4)-(5,59)
-(2,16)-(5,56)
-(3,3)-(5,56)
-(3,9)-(3,10)
-(4,11)-(4,12)
-(5,13)-(5,56)
-(5,44)-(5,49)
-(5,44)-(5,56)
-(5,51)-(5,52)
-(5,51)-(5,56)
-(5,53)-(5,54)
-(5,55)-(5,56)
+(2,4)-(3,64)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,3)-(3,61)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,18)-(3,20)
+(3,27)-(3,38)
+(3,27)-(3,46)
+(3,27)-(3,61)
+(3,53)-(3,61)
 *)

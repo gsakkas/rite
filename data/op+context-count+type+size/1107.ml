@@ -6,59 +6,19 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumSquared of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildNegate e = Negate e;;
-
-let buildPercent e = Percent e;;
-
-let buildSine e = Sine e;;
-
-let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with
-     | 1|2 -> buildSine (build (rand, (depth - 1)))
-     | 3|4 -> buildCosine (build (rand, (depth - 1)))
-     | 5|6 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7|8 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 9 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if (num mod 2) = 0
-         then buildPercent (rand, (depth - 1))
-         else
-           if (num mod 3) = 0
-           then buildNegate (rand, (depth - 1))
-           else
-             buildSumSquared
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1)))));;
+let rec exprToString e =
+  match e with
+  | VarX  -> VarX
+  | VarY  -> VarY
+  | Sine e1 -> exprToString e1
+  | Cosine e1 -> exprToString e1
+  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
 
 
 (* fix
@@ -70,95 +30,97 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumSquared of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildNegate e = Negate e;;
-
-let buildPercent e = Percent e;;
-
-let buildSine e = Sine e;;
-
-let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with
-     | 1|2 -> buildSine (build (rand, (depth - 1)))
-     | 3|4 -> buildCosine (build (rand, (depth - 1)))
-     | 5|6 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7|8 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 9 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if (num mod 2) = 0
-         then buildPercent (build (rand, (depth - 1)))
-         else
-           if (num mod 3) = 0
-           then buildNegate (build (rand, (depth - 1)))
-           else
-             buildSumSquared
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1)))));;
+let rec exprToString e =
+  match e with
+  | VarX  -> ""
+  | VarY  -> ""
+  | Sine e1 -> exprToString e1
+  | Cosine e1 -> exprToString e1
+  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
 
 *)
 
 (* changed spans
-(44,14)-(44,37)
-(44,43)-(44,66)
-(47,14)-(47,37)
-(47,43)-(47,66)
-(54,29)-(54,45)
-(57,30)-(57,46)
-(61,33)-(61,38)
-(61,41)-(61,42)
+(13,14)-(13,18)
+(14,14)-(14,18)
+(15,16)-(15,31)
 *)
 
 (* type error slice
-(18,4)-(18,31)
-(18,17)-(18,29)
-(18,21)-(18,29)
-(18,28)-(18,29)
-(20,4)-(20,33)
-(20,18)-(20,31)
-(20,22)-(20,31)
-(20,30)-(20,31)
-(36,18)-(36,22)
-(36,18)-(36,29)
-(36,24)-(36,25)
-(36,24)-(36,29)
-(36,27)-(36,29)
-(54,15)-(54,27)
-(54,15)-(54,45)
-(54,29)-(54,33)
-(54,29)-(54,45)
-(54,36)-(54,45)
-(57,17)-(57,28)
-(57,17)-(57,46)
-(57,30)-(57,34)
-(57,30)-(57,46)
-(57,37)-(57,46)
+(11,22)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,3)-(21,67)
+(12,9)-(12,10)
+(13,14)-(13,18)
+(14,14)-(14,18)
+(15,16)-(15,28)
+(15,16)-(15,31)
+(15,16)-(15,31)
+(15,29)-(15,31)
+(16,18)-(16,30)
+(16,18)-(16,33)
+(16,31)-(16,33)
+(17,25)-(17,37)
+(17,25)-(17,40)
+(17,25)-(17,60)
+(17,25)-(17,60)
+(17,38)-(17,40)
+(17,42)-(17,43)
+(17,45)-(17,57)
+(17,45)-(17,60)
+(17,58)-(17,60)
+(18,23)-(18,35)
+(18,23)-(18,38)
+(18,23)-(18,58)
+(18,36)-(18,38)
+(18,40)-(18,41)
+(18,43)-(18,55)
+(18,43)-(18,58)
+(18,56)-(18,58)
+(20,8)-(20,20)
+(20,8)-(20,23)
+(20,8)-(21,67)
+(20,21)-(20,23)
+(20,25)-(20,26)
+(21,11)-(21,23)
+(21,11)-(21,26)
+(21,11)-(21,67)
+(21,24)-(21,26)
+(21,28)-(21,29)
+(21,32)-(21,44)
+(21,32)-(21,47)
+(21,32)-(21,67)
+(21,45)-(21,47)
+(21,49)-(21,50)
+(21,52)-(21,64)
+(21,52)-(21,67)
+(21,65)-(21,67)
 *)

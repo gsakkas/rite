@@ -1,65 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec clone x n = if n < 1 then [] else x :: (clone (x (n - 1)));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(19,24)-(19,64)
-(19,63)-(19,64)
+(2,49)-(2,64)
+(2,56)-(2,64)
 *)
 
 (* type error slice
-(14,3)-(24,25)
-(15,14)-(15,15)
-(19,24)-(19,57)
-(19,24)-(19,64)
+(2,4)-(2,69)
+(2,15)-(2,64)
+(2,17)-(2,64)
+(2,21)-(2,64)
+(2,21)-(2,64)
+(2,24)-(2,25)
+(2,24)-(2,29)
+(2,24)-(2,29)
+(2,24)-(2,29)
+(2,28)-(2,29)
+(2,35)-(2,37)
+(2,43)-(2,44)
+(2,43)-(2,64)
+(2,49)-(2,54)
+(2,49)-(2,64)
+(2,49)-(2,64)
+(2,56)-(2,57)
+(2,56)-(2,64)
+(2,56)-(2,64)
+(2,59)-(2,60)
+(2,59)-(2,64)
+(2,63)-(2,64)
 *)

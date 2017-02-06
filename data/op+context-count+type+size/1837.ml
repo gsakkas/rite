@@ -1,83 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (eval (e, x, y))
-  | Cosine e -> cos (eval (e, x, y))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) /. 2.0) + ((eval (e2, x, y)) /. 2.0)
-  | Times (e1,e2) -> (eval (e1, x, y)) * (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let pipe fs = let f a x = fs x in let base = 3 in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (eval (e, x, y))
-  | Cosine e -> cos (eval (e, x, y))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) /. 2.0) +. ((eval (e2, x, y)) /. 2.0)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let pipe fs =
+  let f a x p = x (a p) in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(18,9)-(18,61)
-(19,23)-(19,57)
+(2,27)-(2,29)
+(2,27)-(2,31)
+(2,35)-(2,75)
+(2,46)-(2,47)
+(2,51)-(2,75)
 *)
 
 (* type error slice
-(12,3)-(23,26)
-(13,14)-(13,15)
-(15,20)-(15,24)
-(15,20)-(15,33)
-(15,26)-(15,27)
-(15,26)-(15,33)
-(15,29)-(15,30)
-(15,32)-(15,33)
-(18,9)-(18,32)
-(18,9)-(18,61)
-(18,38)-(18,61)
-(19,23)-(19,27)
-(19,23)-(19,37)
-(19,23)-(19,57)
-(19,29)-(19,31)
-(19,29)-(19,37)
-(19,33)-(19,34)
-(19,36)-(19,37)
-(19,43)-(19,47)
-(19,43)-(19,57)
-(19,49)-(19,51)
-(19,49)-(19,57)
-(19,53)-(19,54)
-(19,56)-(19,57)
+(2,4)-(2,77)
+(2,10)-(2,75)
+(2,15)-(2,75)
+(2,21)-(2,31)
+(2,23)-(2,31)
+(2,27)-(2,29)
+(2,27)-(2,31)
+(2,27)-(2,31)
+(2,30)-(2,31)
+(2,35)-(2,75)
+(2,46)-(2,47)
+(2,51)-(2,65)
+(2,51)-(2,75)
+(2,51)-(2,75)
+(2,51)-(2,75)
+(2,51)-(2,75)
+(2,66)-(2,67)
+(2,68)-(2,72)
+(2,73)-(2,75)
 *)

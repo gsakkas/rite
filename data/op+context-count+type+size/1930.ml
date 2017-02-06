@@ -1,77 +1,69 @@
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec loop n acc =
-       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> loop n []);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> n :: (digitsOfInt (n / 10))
+       | true  -> [digitsOfInt (n / 10); n mod 10]);;
 
 
 (* fix
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec loop n acc =
-       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> loop n []);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  if (sumList (digits n)) > 9
-  then digitalRoot (sumList (digits n))
-  else sumList (digits n);;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> n :: (digitsOfInt (n / 10))
+       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
 
 *)
 
 (* changed spans
-(15,3)-(15,75)
-(15,11)-(15,28)
-(15,33)-(15,75)
-(15,36)-(15,37)
-(15,36)-(15,41)
-(15,59)-(15,60)
-(15,74)-(15,75)
+(8,19)-(8,51)
+(8,20)-(8,39)
+(8,42)-(8,43)
+(8,42)-(8,50)
+(8,48)-(8,50)
 *)
 
 (* type error slice
-(2,4)-(8,49)
-(2,17)-(8,46)
-(3,3)-(8,46)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(4,8)-(4,10)
-(10,4)-(10,37)
-(10,12)-(10,34)
-(10,16)-(10,27)
-(10,16)-(10,34)
-(10,29)-(10,32)
-(10,29)-(10,34)
-(10,33)-(10,34)
-(12,22)-(12,70)
-(12,61)-(12,68)
-(12,61)-(12,70)
-(12,69)-(12,70)
-(15,3)-(15,75)
-(15,11)-(15,18)
-(15,11)-(15,28)
-(15,20)-(15,26)
-(15,20)-(15,28)
-(15,27)-(15,28)
-(15,66)-(15,73)
-(15,66)-(15,75)
-(15,74)-(15,75)
+(2,21)-(8,51)
+(3,3)-(8,51)
+(3,3)-(8,51)
+(3,3)-(8,51)
+(3,9)-(3,10)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,9)-(3,14)
+(3,13)-(3,14)
+(4,15)-(4,17)
+(6,8)-(8,51)
+(6,8)-(8,51)
+(6,8)-(8,51)
+(6,8)-(8,51)
+(6,14)-(6,15)
+(6,14)-(6,19)
+(6,14)-(6,19)
+(6,18)-(6,19)
+(7,20)-(7,21)
+(7,20)-(7,45)
+(7,26)-(7,37)
+(7,26)-(7,45)
+(7,26)-(7,45)
+(7,39)-(7,40)
+(7,39)-(7,45)
+(7,43)-(7,45)
+(8,19)-(8,51)
+(8,19)-(8,51)
+(8,19)-(8,51)
+(8,20)-(8,31)
+(8,20)-(8,39)
+(8,33)-(8,34)
+(8,33)-(8,39)
+(8,37)-(8,39)
+(8,42)-(8,43)
+(8,42)-(8,50)
+(8,48)-(8,50)
 *)

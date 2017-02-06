@@ -1,46 +1,69 @@
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then ((0 :: l1), (0 :: l2))
-    else ([l1], [l2]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine sin -> "sin"
+  | Cosine cos -> "cos"
+  | Average (n1,n2) -> "(" ^ (n1 ^ (n2 ^ "/ 2 )"))
+  | Times (t1,t2) -> "(t1 * t2)"
+  | Thresh (th1,th2,th3,th4) -> "thresh";;
 
 
 (* fix
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (0 :: l2))
-  else
-    if (List.length l1) < (List.length l2) then ((0 :: l1), l2) else (l1, l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine sin -> "sin"
+  | Cosine cos -> "cos"
+  | Average (n1,n2) -> "(n1 + n2 / 2 )"
+  | Times (t1,t2) -> "(t1 * t2)"
+  | Thresh (th1,th2,th3,th4) -> "thresh";;
 
 *)
 
 (* changed spans
-(3,7)-(3,40)
-(4,13)-(4,15)
-(7,23)-(7,24)
-(7,23)-(7,30)
-(8,11)-(8,15)
-(8,17)-(8,21)
+(17,24)-(17,27)
+(17,24)-(17,49)
+(17,28)-(17,29)
+(17,31)-(17,49)
 *)
 
 (* type error slice
-(3,7)-(3,18)
-(3,7)-(3,21)
-(3,19)-(3,21)
-(3,26)-(3,37)
-(3,26)-(3,40)
-(3,38)-(3,40)
-(6,5)-(8,21)
-(7,12)-(7,19)
-(7,12)-(7,30)
-(7,23)-(7,30)
-(8,11)-(8,15)
-(8,11)-(8,21)
-(8,12)-(8,14)
-(8,17)-(8,21)
-(8,18)-(8,20)
+(11,4)-(19,43)
+(11,22)-(19,41)
+(12,3)-(19,41)
+(12,3)-(19,41)
+(12,9)-(12,10)
+(17,24)-(17,27)
+(17,28)-(17,29)
+(17,31)-(17,33)
+(17,31)-(17,49)
+(17,31)-(17,49)
+(17,34)-(17,35)
+(17,37)-(17,39)
+(17,37)-(17,49)
+(17,37)-(17,49)
+(17,40)-(17,41)
+(17,42)-(17,49)
 *)

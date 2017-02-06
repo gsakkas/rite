@@ -68,7 +68,7 @@ mkBadFeatures nm fs jsons = do
               | (ss, p, bad, fix) <- uniqs
               , let (h, f, c) = runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
-              , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
+              -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
   forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs))) -> do
@@ -188,7 +188,8 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
     , Just e <- me = []
     | null cores = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- FIXME: shouldn't happen!!
     | otherwise
-    = concatMap mkfsD tbad
+    = assert (not (null (intersect cores ls))) $
+      concatMap mkfsD tbad
 
   (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
     Left e -> traceShow e ([], [], Just e)

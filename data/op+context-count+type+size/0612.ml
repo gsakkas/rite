@@ -1,74 +1,100 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let rec eval (e,x,y) =
-  match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let sum = 0 in
+  if n < 10 then n + sum else sum = (digitalRoot (sumList (digitsOfInt n)));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let rec eval (e,x,y) =
-  match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) *. (eval (v, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let sum = 0 in if n < 10 then n else digitalRoot (sumList (digitsOfInt n));;
 
 *)
 
 (* changed spans
-(16,21)-(16,53)
+(9,18)-(9,25)
+(9,22)-(9,25)
+(9,31)-(9,34)
+(9,31)-(9,73)
 *)
 
 (* type error slice
-(12,3)-(20,25)
-(13,15)-(13,18)
-(13,15)-(13,33)
-(13,20)-(13,24)
-(13,20)-(13,33)
-(13,26)-(13,27)
-(13,26)-(13,33)
-(13,29)-(13,30)
-(13,32)-(13,33)
-(16,21)-(16,25)
-(16,21)-(16,34)
-(16,21)-(16,53)
-(16,27)-(16,28)
-(16,27)-(16,34)
-(16,30)-(16,31)
-(16,33)-(16,34)
-(16,40)-(16,44)
-(16,40)-(16,53)
-(16,46)-(16,47)
-(16,46)-(16,53)
-(16,49)-(16,50)
-(16,52)-(16,53)
+(2,4)-(3,62)
+(2,21)-(3,60)
+(3,3)-(3,60)
+(3,3)-(3,60)
+(3,6)-(3,7)
+(3,6)-(3,11)
+(3,6)-(3,11)
+(3,6)-(3,11)
+(3,10)-(3,11)
+(3,18)-(3,29)
+(3,18)-(3,37)
+(3,18)-(3,37)
+(3,18)-(3,52)
+(3,18)-(3,52)
+(3,18)-(3,52)
+(3,31)-(3,32)
+(3,31)-(3,37)
+(3,35)-(3,37)
+(3,40)-(3,41)
+(3,42)-(3,52)
+(3,42)-(3,52)
+(3,43)-(3,44)
+(3,43)-(3,51)
+(3,49)-(3,51)
+(3,58)-(3,60)
+(5,4)-(5,73)
+(5,17)-(5,70)
+(5,22)-(5,70)
+(5,22)-(5,70)
+(5,22)-(5,70)
+(5,22)-(5,70)
+(5,22)-(5,70)
+(5,22)-(5,70)
+(5,28)-(5,30)
+(5,44)-(5,45)
+(5,56)-(5,57)
+(5,56)-(5,70)
+(5,56)-(5,70)
+(5,56)-(5,70)
+(5,61)-(5,68)
+(5,61)-(5,70)
+(5,61)-(5,70)
+(5,69)-(5,70)
+(7,21)-(9,73)
+(8,3)-(9,73)
+(8,13)-(8,14)
+(9,3)-(9,73)
+(9,3)-(9,73)
+(9,6)-(9,7)
+(9,6)-(9,12)
+(9,6)-(9,12)
+(9,6)-(9,12)
+(9,10)-(9,12)
+(9,18)-(9,19)
+(9,18)-(9,25)
+(9,22)-(9,25)
+(9,31)-(9,34)
+(9,31)-(9,73)
+(9,31)-(9,73)
+(9,31)-(9,73)
+(9,38)-(9,49)
+(9,38)-(9,73)
+(9,38)-(9,73)
+(9,51)-(9,58)
+(9,51)-(9,73)
+(9,60)-(9,71)
+(9,60)-(9,73)
+(9,72)-(9,73)
 *)

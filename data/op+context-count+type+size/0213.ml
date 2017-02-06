@@ -1,144 +1,92 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digits (x,y) =
+  if y < 10 then y :: x else digits (((y mod 10) :: x), (y mod 10));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
 
-let buildCosine e = Cosine e;;
+let digits n = digitsOfInt (abs n);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX else buildY)
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine buildX
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digits (x,y) =
+  if y < 10 then y :: x else digits (((y mod 10) :: x), (y / 10));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
 
 *)
 
 (* changed spans
-(27,35)-(27,41)
-(27,47)-(27,53)
-(29,6)-(42,67)
-(31,23)-(31,29)
-(32,13)-(32,24)
-(32,26)-(32,49)
-(34,10)-(34,22)
-(35,14)-(35,66)
-(35,43)-(35,48)
-(37,10)-(37,20)
-(38,14)-(38,37)
-(38,14)-(38,66)
-(38,43)-(38,48)
-(40,10)-(40,21)
-(41,14)-(41,37)
-(41,14)-(42,67)
-(41,43)-(41,48)
-(42,58)-(42,63)
-(42,66)-(42,67)
+(3,58)-(3,66)
+(7,12)-(7,34)
+(9,21)-(9,61)
 *)
 
 (* type error slice
-(15,4)-(15,27)
-(15,15)-(15,25)
-(15,19)-(15,25)
-(15,24)-(15,25)
-(21,4)-(21,23)
-(21,12)-(21,21)
-(21,17)-(21,21)
-(25,4)-(42,74)
-(25,16)-(42,67)
-(26,3)-(42,67)
-(26,6)-(26,11)
-(26,6)-(26,15)
-(26,14)-(26,15)
-(27,9)-(27,53)
-(27,13)-(27,17)
-(27,13)-(27,23)
-(27,19)-(27,20)
-(27,19)-(27,23)
-(27,22)-(27,23)
-(27,35)-(27,41)
-(29,6)-(42,67)
-(30,6)-(42,67)
-(31,13)-(31,22)
-(31,13)-(31,29)
-(31,23)-(31,29)
-(32,26)-(32,31)
-(32,26)-(32,49)
-(32,33)-(32,37)
-(32,33)-(32,49)
-(32,40)-(32,49)
+(2,4)-(3,70)
+(2,17)-(3,66)
+(3,3)-(3,66)
+(3,3)-(3,66)
+(3,6)-(3,7)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,6)-(3,12)
+(3,10)-(3,12)
+(3,18)-(3,19)
+(3,18)-(3,24)
+(3,23)-(3,24)
+(3,30)-(3,36)
+(3,30)-(3,66)
+(3,30)-(3,66)
+(3,40)-(3,41)
+(3,40)-(3,48)
+(3,40)-(3,54)
+(3,40)-(3,66)
+(3,46)-(3,48)
+(3,53)-(3,54)
+(3,58)-(3,59)
+(3,58)-(3,66)
+(3,64)-(3,66)
+(5,4)-(5,64)
+(5,21)-(5,61)
+(5,25)-(5,61)
+(5,25)-(5,61)
+(5,28)-(5,29)
+(5,28)-(5,34)
+(5,28)-(5,34)
+(5,28)-(5,34)
+(5,33)-(5,34)
+(5,40)-(5,42)
+(5,48)-(5,54)
+(5,48)-(5,61)
+(5,48)-(5,61)
+(5,56)-(5,58)
+(5,56)-(5,61)
+(5,60)-(5,61)
+(7,4)-(7,37)
+(7,12)-(7,34)
+(7,16)-(7,27)
+(7,16)-(7,34)
+(7,29)-(7,32)
+(7,29)-(7,34)
+(7,29)-(7,34)
+(7,33)-(7,34)
+(9,4)-(9,64)
+(9,21)-(9,61)
+(9,25)-(9,61)
+(9,25)-(9,61)
+(9,28)-(9,29)
+(9,28)-(9,34)
+(9,28)-(9,34)
+(9,28)-(9,34)
+(9,33)-(9,34)
+(9,40)-(9,42)
+(9,48)-(9,54)
+(9,48)-(9,61)
+(9,48)-(9,61)
+(9,56)-(9,58)
+(9,56)-(9,61)
+(9,60)-(9,61)
 *)

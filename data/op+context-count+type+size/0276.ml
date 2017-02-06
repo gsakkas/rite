@@ -1,98 +1,41 @@
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (([],_),y) -> (([], 0), y)
-      | ((h::t,carry),y) ->
-          let sum = (h + x) + carry in ((t, (sum / 10)), ((sum mod 10) :: y)) in
-    let base = ((0 :: ((List.rev l1), 0)), []) in
-    let args = 0 :: (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x z = z a in let base y = y in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (([],_),y) -> (([], 0), y)
-      | ((h::t,carry),y) ->
-          let sum = (h + x) + carry in ((t, (sum / 10)), ((sum mod 10) :: y)) in
-    let base = (((0 :: (List.rev l1)), 0), []) in
-    let args = 0 :: (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x z = a z in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(25,18)-(25,40)
-(25,25)-(25,40)
+(2,29)-(2,30)
+(2,31)-(2,32)
+(2,36)-(2,78)
 *)
 
 (* type error slice
-(20,5)-(27,52)
-(20,11)-(24,76)
-(20,13)-(24,76)
-(21,7)-(24,76)
-(21,13)-(21,14)
-(22,25)-(22,27)
-(22,25)-(22,30)
-(22,25)-(22,34)
-(22,29)-(22,30)
-(22,33)-(22,34)
-(24,22)-(24,27)
-(24,26)-(24,27)
-(25,5)-(27,52)
-(25,18)-(25,19)
-(25,18)-(25,40)
-(25,18)-(25,46)
-(25,25)-(25,33)
-(25,25)-(25,36)
-(25,25)-(25,40)
-(25,34)-(25,36)
-(25,39)-(25,40)
-(25,44)-(25,46)
-(26,5)-(27,52)
-(26,16)-(26,33)
-(27,19)-(27,33)
-(27,19)-(27,45)
-(27,34)-(27,35)
-(27,36)-(27,40)
-(27,41)-(27,45)
+(2,4)-(2,80)
+(2,10)-(2,78)
+(2,15)-(2,78)
+(2,15)-(2,78)
+(2,21)-(2,32)
+(2,23)-(2,32)
+(2,25)-(2,32)
+(2,29)-(2,30)
+(2,29)-(2,32)
+(2,29)-(2,32)
+(2,31)-(2,32)
+(2,36)-(2,78)
+(2,36)-(2,78)
+(2,45)-(2,50)
+(2,49)-(2,50)
+(2,54)-(2,68)
+(2,54)-(2,78)
+(2,54)-(2,78)
+(2,54)-(2,78)
+(2,54)-(2,78)
+(2,69)-(2,70)
+(2,71)-(2,75)
+(2,76)-(2,78)
 *)

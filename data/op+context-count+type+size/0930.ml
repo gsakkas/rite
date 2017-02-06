@@ -1,23 +1,68 @@
 
-let rec sumList xs = function | [] -> 0 | h::t -> h + (sumList t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in y;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(2,22)-(2,65)
+(16,3)-(18,34)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(18,33)-(18,34)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,17)-(2,65)
-(2,22)-(2,65)
-(2,39)-(2,40)
-(2,56)-(2,63)
-(2,56)-(2,65)
-(2,64)-(2,65)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(15,4)-(18,36)
+(15,16)-(18,34)
+(16,3)-(18,34)
+(16,9)-(16,14)
+(17,10)-(17,60)
+(17,10)-(17,60)
+(17,14)-(17,18)
+(17,14)-(17,24)
+(17,14)-(17,30)
+(17,36)-(17,42)
+(17,36)-(17,45)
+(17,51)-(17,57)
+(17,51)-(17,60)
 *)
