@@ -101,6 +101,7 @@ initState = EvalState
   -- , stExprEnvs = mempty
   , stVarTypes = mempty
   , stConstraints = mempty
+  , stConstraintDeps = mempty
   , stConstraintStack = mempty
   , stUnsatCores = mempty
   }
