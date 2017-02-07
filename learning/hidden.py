@@ -66,7 +66,7 @@ def build_model(features, labels, hidden,
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
-        tf.scalar_summary('cross_entropy', cross_entropy)
+        tf.summary.scalar('cross_entropy', cross_entropy)
         regularizers = sum(tf.nn.l2_loss(W) for W in Ws) + sum(tf.nn.l2_loss(b) for b in bs)
         cross_entropy += beta * regularizers
     with tf.name_scope('train'):
@@ -82,8 +82,8 @@ def build_model(features, labels, hidden,
         # train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
 
     sess = tf.InteractiveSession()
-    merged = tf.merge_all_summaries()
-    summary_writer = tf.train.SummaryWriter(model_dir, sess.graph)
+    merged = tf.summary.merge_all()
+    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -103,7 +103,7 @@ def build_model(features, labels, hidden,
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
 
     ## NOTE: must be last!!
-    tf.initialize_all_variables().run()
+    tf.global_variables_initializer().run()
 
     # saver.restore(sess, 'hidden_model')
 
@@ -207,9 +207,9 @@ def build_model(features, labels, hidden,
                 fs.append(fscore)
             cs.append(tp+fn)
             ts.append(tp+fp+fn+tn)
-            print('true changes: %d' % (tp+fn))
-            print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
-            print('')
+            # print('true changes: %d' % (tp+fn))
+            # print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
+            # print('')
 
         acc = float(acc) / len(data)
         acc1 = float(acc1) / len(data)

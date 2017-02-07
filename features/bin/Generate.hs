@@ -67,6 +67,7 @@ mkBadFeatures nm fs jsons = do
   let feats = [ ((h, f'), (ss, bad, fix, c))
               | (ss, p, bad, fix) <- uniqs
               , let (h, f, c) = runTFeaturesDiff fs (ss,p)
+              , not (null f)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]

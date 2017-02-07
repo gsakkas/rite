@@ -135,6 +135,12 @@ accuracy: 0.5859375                           # top-3
    CLOSED: [2017-01-30 Mon 12:05]
 ** TODO compute some notion of recall
 ** TODO look at random forests
+** TODO how important is type slice?                                    :wes:
+   - random trial, pick random slice of program, pretend it's the slice
+   - does this suck in general? if so, provides confidence in starting with slice
+** TODO can we throw away more parts of the slice?                      :wes:
+   - smaller "buggy" slice was performing better than complete slice
+** TODO what is the average (span) size of a blamed node                :wes:
 ** What about just looking at error slices?
 #+BEGIN_EXAMPLE
 > python learning/learn.py --data data/op+context-count+type+size --learn_rate=0.01 --verbose --model=hidden --hidden_layers=500 --batch_size=100
