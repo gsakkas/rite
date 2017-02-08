@@ -34,7 +34,7 @@ import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
 import System.Mem.StableName
 import Text.Printf
-import GHC.Stack
+import GHC.Stack hiding (pushCallStack, popCallStack)
 
 import NanoML.Eval
 import NanoML.Misc

@@ -19,7 +19,7 @@ module NanoML.Types where
 
 import           Control.Applicative
 import           Control.Arrow
-import           Control.Exception
+import           Control.Exception            hiding (TypeError)
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.Random
