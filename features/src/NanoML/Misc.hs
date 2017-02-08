@@ -10,7 +10,7 @@ import           Data.Map         (Map)
 import qualified Data.Map         as Map
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
-import           GHC.SrcLoc
+-- import           GHC.SrcLoc
 import           GHC.Stack hiding (showCallStack)
 import           System.Directory
 import           System.FilePath
@@ -502,7 +502,7 @@ showCallStack stk = case getCallStack stk of
   _ -> Prelude.error "showCallStack: empty call-stack"
   where
   unlines = foldr1 (\x y -> x ++ "\n" ++ y)
-  format (fn, loc) = printf "  %s, called at %s" fn (showSrcLoc loc)
+  format (fn, loc) = printf "  %s, called at %s" fn (prettySrcLoc loc)
 
 pairwiseNub []
   = []

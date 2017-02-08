@@ -1,4 +1,4 @@
-resolver: lts-6.20
+resolver: lts-7.19
 packages:
 - ./features
 extra-deps:
@@ -6,4 +6,5 @@ extra-deps:
 - fgl-visualize-0.1.0.1
 flags: {}
 extra-package-dbs: []
+# compiler-check: newer-minor
 
