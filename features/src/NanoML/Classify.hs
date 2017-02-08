@@ -789,8 +789,7 @@ typeDecl = \case
     modify' $ \ s -> s { stVarTypes = foldr (uncurry Map.insert) (stVarTypes s) bnds }
     return (TDFun s r ptes)
   DEvl s e -> do
-    t <- TVar <$> freshTVar
-    te <- typeExpr e t
+    te <- typeExpr e
     return (TDEvl s te)
   DTyp s tds -> do
     mapM_ addType tds
@@ -956,17 +955,17 @@ lookupVarType v = do
 -- TODO: do we want to do a traditional HM-style bottom-up inference, or
 -- a bidirectional thing? since the interesting expressions will be
 -- ill-typed, the choice may make a difference in how we type the bad bits
-typeExpr :: MonadEval m => Expr -> Type -> m TExpr
+typeExpr :: MonadEval m => Expr -> m TExpr
 -- for now let's do a bottom-up thing
-typeExpr e t = do
-  e' <- withCurrentExpr e (typeExpr' e t)
-  t <- substM (getType e')
+typeExpr e = do
+  e' <- withCurrentExpr e (typeExpr' e)
+  -- t <- substM (getType e')
   -- traceShowM ("typeExpr", pretty e, pretty t)
   -- traceM ""
   return e'
 
-typeExpr' :: MonadEval m => Expr -> Type -> m TExpr
-typeExpr' in_e _to = do
+typeExpr' :: MonadEval m => Expr -> m TExpr
+typeExpr' in_e = do
   to <- TVar <$> freshTVar
   case in_e of
     Var ml v -> do
@@ -986,17 +985,16 @@ typeExpr' in_e _to = do
       (ti, bnds) <- typePat p
       t <- TVar <$> freshTVar
       -- tryUnify to (ti :-> t)
-      te <- withLocalBinds bnds $ typeExpr e t
+      te <- withLocalBinds bnds $ typeExpr e
       emitCt to (ti :-> (getType te))
       return (T_Lam (mkInfo ml to) p te)
     App ml f es -> do
       -- t1 <- TVar <$> freshTVar
-      ts <- replicateM (length es) (TVar <$> freshTVar)
-      tf <- typeExpr f (foldr (:->) to ts)
+      tf <- typeExpr f
       -- traceShowM tf
-      tes <- zipWithM typeExpr es ts
-      emitCt (getType tf) (foldr (:->) to ts)
-      zipWithM_ emitCt ts (map getType tes)
+      tes <- mapM typeExpr es
+      emitCt (getType tf) (foldr (:->) to (map getType tes))
+      -- zipWithM_ emitCt ts (map getType tes)
       -- tis <- replicateM (length es) (TVar <$> freshTVar)
       -- zipWithM tryUnify tis (map getType tes)
       -- traceM "APP"
@@ -1016,8 +1014,8 @@ typeExpr' in_e _to = do
           -> return (tCon tINT, tCon tINT, tCon tINT)
         | b `elem` [FPlus .. FExp]
           -> return (tCon tFLOAT, tCon tFLOAT, tCon tFLOAT)
-      te1 <- typeExpr e1 t1
-      te2 <- typeExpr e2 t2
+      te1 <- typeExpr e1
+      te2 <- typeExpr e2
       -- t1 <- makeType t1
       -- tryUnify t1 (getType te1)
       -- t2 <- makeType t2
@@ -1032,7 +1030,7 @@ typeExpr' in_e _to = do
       let t = case u of
                 Neg -> tCon tINT
                 FNeg -> tCon tFLOAT
-      te <- typeExpr e t
+      te <- typeExpr e
       -- tryUnify t (getType te)
       emitCt t (getType te)
       emitCt to t
@@ -1052,15 +1050,15 @@ typeExpr' in_e _to = do
       (bnds, ptes) <- case r of
         Rec -> typeRecBinds pes
         NonRec -> first concat . unzip <$> mapM typeBind pes
-      te <- withLocalBinds bnds $ typeExpr e to
+      te <- withLocalBinds bnds $ typeExpr e
       -- tryUnify to (getType te)
       emitCt to (getType te)
       -- let to = getType te
       return (T_Let (mkInfo ml to) r ptes te)
     Ite ml b t f -> do
-      tb <- typeExpr b (tCon tBOOL)
-      tt <- typeExpr t to
-      tf <- typeExpr f to
+      tb <- typeExpr b
+      tt <- typeExpr t
+      tf <- typeExpr f
       -- tryUnify (getType tb) (tCon tBOOL)
       -- tryUnify to (getType tt)
       -- tryUnify to (getType tf)
@@ -1069,15 +1067,15 @@ typeExpr' in_e _to = do
       emitCt to (getType tf)
       return (T_Ite (mkInfo ml to) tb tt tf)
     Seq ml e1 e2 -> do
-      te1 <- typeExpr e1 (tCon tUNIT)
+      te1 <- typeExpr e1
       emitCt (tCon tUNIT) (getType te1)
-      te2 <- typeExpr e2 to
+      te2 <- typeExpr e2
       emitCt to (getType te2)
       -- let to = getType te2
       return (T_Seq (mkInfo ml to) te1 te2)
     Case ml e as -> do
       t <- TVar <$> freshTVar
-      te <- typeExpr e t
+      te <- typeExpr e
       (tps, tas) <- unzip <$> mapM (`typeAlt` to) as
       -- mapM_ (tryUnify (getType te)) tps
       -- mapM_ (tryUnify to) (map (getType.thd3) tas)
@@ -1089,7 +1087,7 @@ typeExpr' in_e _to = do
       return (T_Case (mkInfo ml to) te tas)
     Tuple ml es -> do
       ts <- replicateM (length es) (TVar <$> freshTVar)
-      tes <- zipWithM typeExpr es ts
+      tes <- mapM typeExpr es
       -- tryUnify to (TTup ts)
       emitCt to (TTup (map getType tes))
       -- let to = TTup (map getType tes)
@@ -1106,12 +1104,12 @@ typeExpr' in_e _to = do
         ([], Nothing) -> do
           return Nothing
         ([ti], Just e) -> do
-          te <- typeExpr e ti
+          te <- typeExpr e
           -- tryUnify t (getType te)
           emitCt ti (getType te)
           return (Just te)
         (ts, Just (Tuple ml' es)) -> do
-          tes <- zipWithM typeExpr es ts
+          tes <- mapM typeExpr es
           -- tryUnify (foldr (:->) to tis) (foldr (:->) to (map getType tes))
           -- zipWithM_ tryUnify ts (map getType tes)
           zipWithM_ emitCt ts (map getType tes)
@@ -1126,7 +1124,7 @@ typeExpr' in_e _to = do
       return (T_ConApp (mkInfo ml to) c mte)
     Array ml es _ -> do
       t <- TVar <$> freshTVar
-      tes <- mapM (`typeExpr` t) es
+      tes <- mapM typeExpr es
       -- mapM_ (tryUnify t . getType) tes
       -- tryUnify to (mkTApps tARRAY [t])
       mapM_ (emitCt t . getType) tes
@@ -1135,7 +1133,7 @@ typeExpr' in_e _to = do
       return (T_Array (mkInfo ml to) tes)
     List ml es _ -> do
       t <- TVar <$> freshTVar
-      tes <- mapM (`typeExpr` t) es
+      tes <- mapM typeExpr es
       -- mapM_ (tryUnify t . getType) tes
       -- tryUnify to (mkTApps tLIST [t])
       mapM_ (emitCt t . getType) tes
@@ -1251,17 +1249,17 @@ typeAlt (p, mg, e) t = do
     tg <- case mg of
       Nothing -> return Nothing
       Just g  -> do
-        tg <- typeExpr g (tCon tBOOL)
+        tg <- typeExpr g
         -- tryUnify (tCon tBOOL) (getType tg)
         emitCt (getType tg) (tCon tBOOL)
         return (Just tg)
-    te <- typeExpr e t
+    te <- typeExpr e
     return (tp, (p, tg, te))
 
 typeBind :: MonadEval m => (Pat, Expr) -> m ([(Var, Type)], (Pat, TExpr))
 typeBind (p, e) = do
   (tp, bnds) <- typePat p
-  te <- typeExpr e tp
+  te <- typeExpr e
   -- t <- substM (getType te)
   -- traceShowM (pretty p, pretty t)
   -- tryUnify tp (getType te)
@@ -1275,7 +1273,7 @@ typeRecBinds pes = do
   (tps, bndss) <- unzip <$> mapM typePat ps
   tes <- withLocalBinds (concat bndss) $
          forM (zip tps es) $ \ (tp, e) -> do
-    te <- typeExpr e tp
+    te <- typeExpr e
     -- traceShowM ("typerec", pretty tp, pretty (getType te))
     -- tryUnify tp (getType te)
     emitCt tp (getType te)
@@ -1671,3 +1669,14 @@ foo12' =
   \          (fun x acc -> x ^ (\"; \" ^ acc))\n\
   \          \"\"\n\
   \          (List.map f l) ^ \"]\")\n"
+
+Right foo13 = parseTopForm foo13'
+foo13' =
+  "let removeDuplicates l =\n\
+  \  let rec helper (seen,rest) =\n\
+  \    match rest with\n\
+  \    | [] -> seen\n\
+  \    | h::t ->\n\
+  \        let seen' = if List.mem l seen then seen else h :: seen in\n\
+  \        let rest' = t in helper (seen', rest') in\n\
+  \  List.rev (helper ([], l))\n"

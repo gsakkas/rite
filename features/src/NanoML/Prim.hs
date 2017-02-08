@@ -355,7 +355,7 @@ primVarTypes =
   , ("List.combine", TAll ["a", "b"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "b"] :-> TApp "list" [TTup [TVar "a", TVar "b"]]))
   , ("List.hd", TAll ["a"] (TApp "list" [TVar "a"] :-> TVar "a"))
   , ("List.length", TAll ["a"] (TApp "list" [TVar "a"] :-> tCon tINT))
-  , ("List.mem", TAll ["a"] (TVar "a" :-> TApp "list" [TVar "a"] :-> tCon tINT))
+  , ("List.mem", TAll ["a"] (TVar "a" :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
   , ("List.nth", TAll ["a"] (tL a :-> tI :-> a))
   , ("List.rev", TAll ["a"] (tL a :-> tL a))
   , ("List.split", TAll ["a", "b"] (tL (tT a b) :-> tT (tL a) (tL b)))
