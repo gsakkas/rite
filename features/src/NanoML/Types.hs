@@ -30,6 +30,7 @@ import           Control.Monad.Writer         hiding (Alt)
 import qualified Data.Aeson                   as Aeson
 import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
 import           Data.Data
+import           Data.Function
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -228,23 +229,87 @@ addUnsatCore cs = do
   -- traceShowM ""
   modify' $ \s -> s { stUnsatCores = cs : stUnsatCores s }
 
-solveCts :: MonadEval m => [Constraint] -> m ()
-solveCts = mapM_ solveCt
+minimizeCore :: MonadEval m => Set Constraint -> m (Set Constraint)
+minimizeCore cs = do
+  -- traceShowM ("minimizeCore.cs", Set.size cs)
+  st <- get
+  minimal <- go [] (Set.toList cs)
+  put st
+  -- cands <- flip filterM (subsets (Set.toList cs)) $ \cs' -> do
+  --   st <- get
+  --   put st{ stSubst = mempty, stConstraints = mempty
+  --         , stConstraintDeps = mempty, stConstraintStack = mempty
+  --         }
+  --   b <- (do mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2 -- >> checkCyclic t1 t2
+  --                  ) cs'
+  --            return False)
+  --        `catchError` \e -> return True
+  --   put st
+  --   return b
+  -- traceShowM ("minimizeCore.cands", length cands)
+  -- let minimal = head $ sortBy (compare `on` length) (Set.toList cs : cands)
+  -- when (length minimal /= Set.size cs) $ do
+  --   traceShowM ("minimizeCore.minimal", length minimal)
+    -- mapM_ traceShowM minimal
+  when (length minimal == 1) $ do
+    traceShowM ("minimizeCore", Set.size cs, length minimal)
+    mapM_ (traceShowM) minimal
+    undefined
+  return (Set.fromList minimal)
 
-solveCt :: MonadEval m => Constraint -> m ()
-solveCt ct@(MkConstraint _ t1 t2) = do
+  where
+  go used [] = return used
+  go used (ct:cts) = do
+    st <- get
+    put st{ stSubst = mempty, stConstraints = mempty
+          , stConstraintDeps = mempty, stConstraintStack = mempty
+          }
+    (do mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2 -- >> checkCyclic t1 t2
+              ) (used ++ cts)
+        go (used ++ [ct]) cts)
+      `catchError` \e -> go used cts
+
+subsets :: [a] -> [[a]]
+subsets []     = [[]]
+subsets (x:xs) = subs ++ map (x:) subs
+  where subs = subsets xs
+
+solveCts :: MonadEval m => Bool -> [Constraint] -> m ()
+solveCts produceCore cts = do
+  -- traceM "solveCts.start"
+  -- mapM_ traceShowM cts
+  mapM_ (solveCt produceCore) cts
+  -- traceM "solveCts.done"
+
+solveCt :: MonadEval m => Bool -> Constraint -> m ()
+solveCt produceCore ct@(MkConstraint _ t1 t2) = do
   pushConstraints (Set.singleton ct)
-  -- unify t1 t2 `catchError` \ _e -> do
-  (unify t1 t2 >> checkCyclic t1 t2) `catchError` \ _e -> do
-    addUnsatCore =<< getUnsatCore
+  unify t1 t2 `catchError` \ e -> do
+  -- (unify t1 t2 >> checkCyclic t1 t2) `catchError` \ e -> do
+    if produceCore
+      then addUnsatCore =<< minimizeCore
+           =<< getUnsatCore
+      else throwError e
   popConstraints
 
-checkCyclic :: MonadEval m => Type -> Type -> m ()
-checkCyclic t1 t2 = do
-  tvs1 <- freeTyVars <$> substM t1
-  tvs2 <- freeTyVars <$> substM t2
-  unless (tvs1 \\ tvs2 == tvs1) $
-    typeError t1 t2
+-- checkCyclic :: MonadEval m => Type -> Type -> m ()
+-- checkCyclic t1 t2 = do
+--   -- return ()
+--   -- traceShowM ("checkCyclic.ts", t1, t2)
+--   let tvs1 = freeTyVars t1
+--   pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs1)
+--   let tvs2 = freeTyVars t2
+--   pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs2)
+
+--   t1' <- substM t1
+--   t2' <- substM t2
+--   let tvs1 = freeTyVars t1'
+--       tvs2 = freeTyVars t2'
+--   -- traceShowM ("checkCyclic.ts'", t1', t2')
+--   unless (t1' == t2' || null (tvs1 `intersect` tvs2)) $
+--     typeError t1' t2'
+
+--   popConstraints >> popConstraints
 
 pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
 pushCallStack loc args = do
@@ -262,24 +327,31 @@ addSubst a t = do
   let tvs = freeTyVars t
   pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs)
   t <- substM t
-  when (a `elem` freeTyVars t) $
-    typeError (TVar a) t
-  recordCurrentConstraints a
-  cts <- retrieveConstraints a
-  su <- gets stSubst
-  ctds <- gets stConstraintDeps
-  let vs = [ v | (v, t) <- Map.toList su
-               , a `elem` freeTyVars t
-               ]
-  let ctds' = fmap (\cts' -> cts' `Set.union` cts) ctds
-  let su' = Map.insert a t $ assert (not $ a `Map.member` su)
-            -- su
-            (fmap (subst (Map.singleton a t)) su)
-  let (as,ts) = unzip $ Map.toList su'
-      free    = concatMap freeTyVars ts
-  assert ((free \\ as) == free) $ -- su should range over fully-resolved types
-    modify' $ \s -> s { stSubst = su', stConstraintDeps = ctds' }
-  popConstraints
+  when (TVar a /= t) $ do
+    when (a `elem` freeTyVars t) $ do
+      -- traceShowM ("addSubst.die", a, t)
+      typeError (TVar a) t
+    recordCurrentConstraints a
+    cts <- retrieveConstraints a
+    su <- gets stSubst
+    ctds <- gets stConstraintDeps
+    let vs = [ v | (v, t) <- Map.toList su
+                 , a `elem` freeTyVars t
+                 ]
+    let ctds' = Map.mapWithKey
+                (\v cts' -> if v `elem` vs
+                            then cts' `Set.union` cts
+                            else cts')
+                ctds
+    let su' = Map.insert a t $ assert (not $ a `Map.member` su)
+              -- su
+              (fmap (subst (Map.singleton a t)) su)
+    let (as,ts) = unzip $ Map.toList su'
+        free    = concatMap freeTyVars ts
+    assert (and [ a `notElem` freeTyVars t | (a, t) <- Map.toList su' ]) $
+      assert ((free \\ as) == free) $ -- su should range over fully-resolved types
+        modify' $ \s -> s { stSubst = su', stConstraintDeps = ctds' }
+    popConstraints
 
 getSubst :: MonadEval m => m Subst
 getSubst = gets stSubst
@@ -799,6 +871,12 @@ instance ToJSON Decl where
     where
     addLoc = (:) ("loc" .= getSrcSpan d)
 
+getDecld :: Decl -> [String]
+getDecld = \case
+  DFun _ _ pes -> bindersOfBinds pes
+  DEvl _ _     -> []
+  DTyp _ tds   -> map tyCon tds
+  DExn _ _     -> []
 
 getSrcSpan :: Decl -> SrcSpan
 getSrcSpan d = case d of

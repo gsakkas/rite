@@ -32,7 +32,7 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
             df = None
             return (df, feature_names, label_names)
         df = df[df['F-InSlice'] == 1].reset_index(drop=True)
-        if len(df) == 0:
+        if len(df) == 0 or len(df) == 1:
             df = None
             return (df, feature_names, label_names)
         if len(df[df['L-DidChange'] == 1]) == 0:

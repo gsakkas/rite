@@ -325,7 +325,7 @@ primVarTypes =
   , (":=", TAll ["a"] (TApp "ref" [TVar "a"] :-> TVar "a" :-> tCon tUNIT))
   , ("ref", TAll ["a"] (TVar "a" :-> TApp "ref" [TVar "a"]))
   , ("List.fold_left", TAll ["a", "b"] ((TVar "b" :-> TVar "a" :-> TVar "b") :-> TVar "b" :-> TApp "list" [TVar "a"] :-> TVar "b"))
-  , ("List.fold_right", TAll ["a", "b"] ((TVar "a" :-> TVar "b" :-> TVar "b") :-> TVar "b" :-> TApp "list" [TVar "a"] :-> TVar "b"))
+  , ("List.fold_right", TAll ["a", "b"] ((TVar "a" :-> TVar "b" :-> TVar "b") :-> TApp "list" [TVar "a"] :-> TVar "b" :-> TVar "b"))
   , ("List.assoc", TAll ["a", "b"] (TVar "a" :-> TApp "list" [TTup [TVar "a", TVar "b"]] :-> TVar "b"))
   , ("List.exists", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
   , ("List.for_all", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))

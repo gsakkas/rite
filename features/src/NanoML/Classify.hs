@@ -9,7 +9,7 @@
 {-# LANGUAGE MultiWayIf #-}
 module NanoML.Classify where
 
-import Control.Applicative
+
 import Control.Monad
 import Control.Monad.Except
 import Control.Monad.State
@@ -770,7 +770,7 @@ typeProg p = do
     -- traceShowM ("stSubst", pretty env)
     cts <- gets stConstraints
     -- mapM_ traceShowM cts
-    solveCts cts
+    solveCts True cts
     cs <- gets stUnsatCores
     tp' <- forM tp $ \ td -> case td of
       TDFun {} -> everywhereM (mkM substM) td
@@ -979,6 +979,7 @@ typeExpr' in_e _to = do
       -- t <- makeType t -- NOTE: should this be a "hard" constraint?
       -- tryUnify to t
       emitCt to t
+      -- let to = t
       -- traceShowM . ("VAR",v,,to) . pretty =<< substM t
       return (T_Var (mkInfo ml to) v)
     Lam ml p e _ -> do
@@ -986,7 +987,7 @@ typeExpr' in_e _to = do
       t <- TVar <$> freshTVar
       -- tryUnify to (ti :-> t)
       te <- withLocalBinds bnds $ typeExpr e t
-      emitCt to (ti :-> t)
+      emitCt to (ti :-> (getType te))
       return (T_Lam (mkInfo ml to) p te)
     App ml f es -> do
       -- t1 <- TVar <$> freshTVar
@@ -1034,8 +1035,8 @@ typeExpr' in_e _to = do
       te <- typeExpr e t
       -- tryUnify t (getType te)
       emitCt t (getType te)
-      emitCt t to
-      return (T_Uop (mkInfo ml t) u te)
+      emitCt to t
+      return (T_Uop (mkInfo ml to) u te)
     Lit ml l -> do
       let t = case l of
                 LI {} -> tCon tINT
@@ -1054,6 +1055,7 @@ typeExpr' in_e _to = do
       te <- withLocalBinds bnds $ typeExpr e to
       -- tryUnify to (getType te)
       emitCt to (getType te)
+      -- let to = getType te
       return (T_Let (mkInfo ml to) r ptes te)
     Ite ml b t f -> do
       tb <- typeExpr b (tCon tBOOL)
@@ -1071,6 +1073,7 @@ typeExpr' in_e _to = do
       emitCt (tCon tUNIT) (getType te1)
       te2 <- typeExpr e2 to
       emitCt to (getType te2)
+      -- let to = getType te2
       return (T_Seq (mkInfo ml to) te1 te2)
     Case ml e as -> do
       t <- TVar <$> freshTVar
@@ -1089,6 +1092,7 @@ typeExpr' in_e _to = do
       tes <- zipWithM typeExpr es ts
       -- tryUnify to (TTup ts)
       emitCt to (TTup (map getType tes))
+      -- let to = TTup (map getType tes)
       return (T_Tuple (mkInfo ml to) tes)
     ConApp ml c me _ -> do
       d <- lookupDataCon c
@@ -1100,25 +1104,23 @@ typeExpr' in_e _to = do
       -- tryUnify to (subst su (typeDeclType (dType d)))
       mte <- case (tis, me) of
         ([], Nothing) -> do
-          emitCt to t
           return Nothing
         ([ti], Just e) -> do
           te <- typeExpr e ti
           -- tryUnify t (getType te)
-          emitCt (ti :-> t)
-                 (getType te :-> to)
-          emitCt t (getType te)
+          emitCt ti (getType te)
           return (Just te)
         (ts, Just (Tuple ml' es)) -> do
           tes <- zipWithM typeExpr es ts
           -- tryUnify (foldr (:->) to tis) (foldr (:->) to (map getType tes))
           -- zipWithM_ tryUnify ts (map getType tes)
-          -- zipWithM_ emitCt ts (map getType tes)
-          emitCt (foldr (:->) t ts)
-                 (foldr (:->) to (map getType tes))
+          zipWithM_ emitCt ts (map getType tes)
+          -- emitCt (foldr (:->) t ts)
+          --        (foldr (:->) to (map getType tes))
           return (Just (T_Tuple (mkInfo ml' (TTup ts)) tes))
         --FIXME: ??
         x -> trace ("typeExpr: ConApp: " ++ show (c, x)) $ return Nothing
+      emitCt to t
       -- t <- makeType $ subst su (typeDeclType (dType d))
       -- emitCt to (subst su (typeDeclType (dType d)))
       return (T_ConApp (mkInfo ml to) c mte)
@@ -1129,6 +1131,7 @@ typeExpr' in_e _to = do
       -- tryUnify to (mkTApps tARRAY [t])
       mapM_ (emitCt t . getType) tes
       emitCt to (mkTApps tARRAY [t])
+      -- let to = mkTApps tARRAY [t]
       return (T_Array (mkInfo ml to) tes)
     List ml es _ -> do
       t <- TVar <$> freshTVar
@@ -1137,6 +1140,7 @@ typeExpr' in_e _to = do
       -- tryUnify to (mkTApps tLIST [t])
       mapM_ (emitCt t . getType) tes
       emitCt to (mkTApps tLIST [t])
+      -- let to = mkTApps tLIST [t]
       return (T_List (mkInfo ml to) tes)
     -- these should not occur in the dataset
     Try ml e as -> do
@@ -1466,8 +1470,10 @@ bestT x y i d c
   | exprKind x == exprKind y
   , [x1, x2] <- subExprs x
   , [y1, y2] <- subExprs y
-  , killSpans x1 == killSpans y2 && killSpans x2 == killSpans y1
   -- can we override the behavior for swapping subtrees?
+  , killSpans x1 == killSpans y2 && killSpans x2 == killSpans y1
+  -- it's not a swap if both sides were the same
+  , not (killSpans x1 == killSpans x2)
   = cpy x (del x1
             (ins (onSrcSpanExpr (const (getSrcSpanMaybe x1)) y1) -- y1
               (del x2
@@ -1488,7 +1494,7 @@ data ExprKind
   | BopK Bop
   | UopK Uop
   | LitK Literal
-  | LetK RecFlag                -- FIXME: how to handle binders?
+  | LetK RecFlag [Pat]
   | IteK
   | SeqK
   | CaseK [Pat]
@@ -1505,7 +1511,7 @@ exprKind = \case
   Bop _ b _ _ -> BopK b
   Uop _ u _ -> UopK u
   Lit _ l -> LitK l
-  Let _ r _ _ -> LetK r
+  Let _ r pes _ -> LetK r (map fst pes)
   Ite {} -> IteK
   Seq {} -> SeqK
   Case _ _ as -> CaseK (map (killSpanPat . fst3) as)
@@ -1623,7 +1629,7 @@ foo5' =
 Right foo6 = parseTopForm foo6'
 foo6' =
   "let rec foo x =\n\
-  \  x /. 2\n"
+  \  match x with | 0.0 -> 0 | _ -> let y = foo x in foo (y /. 2.0)\n"
 
 Right foo7 = parseTopForm foo7'
 foo7' =
@@ -1657,3 +1663,11 @@ foo11' =
   \  if x <= 0\n\
   \  then 0\n\
   \  else x * fac (x=1)\n"
+
+Right foo12 = parseTopForm foo12'
+foo12' =
+  "let stringOfList f l =\n\
+  \  \"[\" ^ (List.fold_right\n\
+  \          (fun x acc -> x ^ (\"; \" ^ acc))\n\
+  \          \"\"\n\
+  \          (List.map f l) ^ \"]\")\n"

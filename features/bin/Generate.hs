@@ -73,18 +73,28 @@ mkBadFeatures nm fs jsons = do
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
   forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs))) -> do
-    let fn = printf "%04d" (i :: Int)
-    let path = "data/" ++ nm ++ "/" ++ fn ++ ".csv"
-    createDirectoryIfMissing True (takeDirectory path)
-    LBSC.writeFile path $ encodeByName header features
-    let path = "data/" ++ nm ++ "/" ++ fn ++ ".ml"
-    writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
-                               , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
-                            ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+    when (length cs == 1) $ do
+      putStrLn "SINGLE CONSTRAINT CORE"
+      putStrLn bad
+      print (head cs)
+    if (null (intersect ss cs)) then do
+      putStrLn "NO OVERLAP CORE/DIFF"
+      putStrLn bad
+      print cs
+      putStrLn fix
+    else do
+      let fn = printf "%04d" (i :: Int)
+      let path = "data/" ++ nm ++ "/" ++ fn ++ ".csv"
+      createDirectoryIfMissing True (takeDirectory path)
+      LBSC.writeFile path $ encodeByName header features
+      let path = "data/" ++ nm ++ "/" ++ fn ++ ".ml"
+      writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                 , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
+                              ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
 
-  -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
-  -- let path = "data/" ++ nm ++ ".csv"
-  -- LBSC.writeFile path $ encodeByName (head header) (concat features)
+    -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
+    -- let path = "data/" ++ nm ++ ".csv"
+    -- LBSC.writeFile path $ encodeByName (head header) (concat features)
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
 mkFixFeatures nm fs jsons = do
@@ -115,12 +125,6 @@ uniqDiffs = foldl' (\seen json -> seen `mappend` HashSet.fromList (mkDiffs json)
 mkDiffs :: String -> [([SrcSpan], Prog, String, String)]
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
-  Right (MkInSample bad' fix')
-  --Right (MkInSample bads' (fix':_))
-    | Right fix <- parseTopForm fix'
-    , Right bad <- parseTopForm bad'
-    -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
-    -> [(mkDiff'' bad fix, bad, bad', fix')]
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
   Right (MkInSample bad' fix')
   --Right (MkInSample bads' (fix':_))
@@ -130,6 +134,19 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm bad'
     -> {-trace e-} mempty
+  Right (MkInSample bad' fix')
+  --Right (MkInSample bads' (fix':_))
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    , concatMap getDecld bad /= nub (concatMap getDecld bad)
+    -> -- traceShow (concatMap getDecld bad)
+       mempty
+  Right (MkInSample bad' fix')
+  --Right (MkInSample bads' (fix':_))
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
+    -> [(mkDiff'' bad fix, bad, bad', fix')]
   v -> error (show v)
 
 mkFixes :: String -> [Prog]
@@ -167,9 +184,12 @@ mkDiff' bad fix
  eqToken (LToken s1 t1) (LToken s2 t2) = t1 == t2 && s1 == s2
 
 mkDiff'' :: Prog -> Prog -> [SrcSpan]
-mkDiff'' bad fix =
---  trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $
-  assert (not (null x)) x
+mkDiff'' bad fix
+  --- | null x
+  -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
+  -- | otherwise
+  -- = x
+  = assert (not (null x)) x
   where
   x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
   bs = progExprs bad
@@ -186,14 +206,20 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
 
   samples
     | null cores
+    -- something went wrong other than typechecking success
     , Just e <- me = []
-    | null cores = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- FIXME: shouldn't happen!!
-    | otherwise
-    = assert (not (null (intersect cores ls))) $
-      concatMap mkfsD tbad
+    | null cores
+    = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") undefined -- FIXME: shouldn't happen!!
+    --- | otherwise
+    -- = assert (not (null (intersect cores ls))) $
+    --   concatMap mkfsD tbad
+    --- | null (intersect cores ls)
+    -- = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- FIXME: sigh..
+    | otherwise = concatMap mkfsD tbad
 
   (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
-    Left e -> traceShow e ([], [], Just e)
+    Left e -> -- traceShow e
+              ([], [], Just e)
     Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat cs)), Nothing)
                                    -- only look at first unsat core for now
     -- Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)), Nothing)
