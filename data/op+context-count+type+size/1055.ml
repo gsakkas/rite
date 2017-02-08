@@ -1,70 +1,117 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ (sep ^ (a t)) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y)
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) +. (eval (ex2, x, y)))) *.
+          (((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y))))
+         *.
+         ((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y))))
+        *.
+        (((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y)))
+           +. (eval (ex5, x, y)))
+  | TheThing (ex1,ex2,ex3) ->
+      (((eval (ex1, x, y)) * (sin (pi * (eval (ex2, x, y))))) *
+         (cos (pi * (eval (ex3, x, y)))))
+        / 2;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ (sep ^ a) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y)
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) +. (eval (ex2, x, y)))) *.
+          (((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y))))
+         *.
+         ((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y))))
+        *.
+        (((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y)))
+           +. (eval (ex5, x, y)))
+  | TheThing (ex1,ex2,ex3) ->
+      (((eval (ex1, x, y)) *. (sin (pi *. (eval (ex2, x, y))))) *.
+         (cos (pi *. (eval (ex3, x, y)))))
+        /. 2.;;
 
 *)
 
 (* changed spans
-(6,31)-(6,34)
-(6,33)-(6,34)
+(38,10)-(38,25)
+(38,10)-(38,57)
+(38,10)-(39,37)
+(38,10)-(40,12)
+(38,36)-(38,57)
+(39,16)-(39,37)
+(40,11)-(40,12)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,7)-(7,59)
-(6,7)-(7,59)
-(6,13)-(6,34)
-(6,15)-(6,34)
-(6,19)-(6,20)
-(6,19)-(6,34)
-(6,19)-(6,34)
-(6,21)-(6,22)
-(6,24)-(6,27)
-(6,24)-(6,34)
-(6,24)-(6,34)
-(6,24)-(6,34)
-(6,28)-(6,29)
-(6,31)-(6,32)
-(6,31)-(6,34)
-(6,31)-(6,34)
-(6,33)-(6,34)
-(7,7)-(7,59)
-(7,7)-(7,59)
-(7,18)-(7,19)
-(7,23)-(7,59)
-(7,23)-(7,59)
-(7,31)-(7,32)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,51)-(7,52)
-(7,53)-(7,57)
-(7,58)-(7,59)
+(13,4)-(13,29)
+(13,10)-(13,26)
+(19,21)-(19,42)
+(19,28)-(19,32)
+(19,28)-(19,42)
+(38,31)-(38,34)
+(38,31)-(38,57)
+(38,36)-(38,38)
+(38,36)-(38,57)
+(38,36)-(38,57)
+(38,36)-(38,57)
+(38,42)-(38,46)
+(38,42)-(38,57)
+(39,11)-(39,14)
+(39,11)-(39,37)
+(39,16)-(39,37)
+(39,16)-(39,37)
+(39,22)-(39,26)
+(39,22)-(39,37)
 *)

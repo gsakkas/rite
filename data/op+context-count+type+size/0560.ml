@@ -1,59 +1,43 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> [] | hd::tl -> f 0 hd in
-  List.fold_left f base xs;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] :: tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
-  List.fold_left f base xs;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] @ tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 *)
 
 (* changed spans
-(3,20)-(3,21)
-(3,24)-(3,25)
-(4,36)-(4,38)
+(3,55)-(3,63)
+(3,55)-(3,69)
 *)
 
 (* type error slice
-(2,4)-(5,29)
-(2,11)-(5,27)
-(3,3)-(5,27)
-(3,9)-(3,25)
-(3,11)-(3,25)
-(3,15)-(3,16)
-(3,15)-(3,25)
-(3,15)-(3,25)
-(3,20)-(3,21)
-(3,20)-(3,25)
-(3,20)-(3,25)
-(3,24)-(3,25)
-(4,3)-(5,27)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,14)-(4,57)
-(4,20)-(4,22)
-(4,36)-(4,38)
-(4,51)-(4,52)
-(4,51)-(4,57)
-(4,51)-(4,57)
-(4,53)-(4,54)
-(4,55)-(4,57)
-(5,3)-(5,17)
-(5,3)-(5,27)
-(5,3)-(5,27)
-(5,3)-(5,27)
-(5,3)-(5,27)
-(5,18)-(5,19)
-(5,20)-(5,24)
-(5,25)-(5,27)
+(3,18)-(3,69)
+(3,18)-(3,69)
+(3,55)-(3,63)
+(3,55)-(3,69)
+(3,55)-(3,69)
+(3,56)-(3,62)
+(3,60)-(3,62)
+(3,67)-(3,69)
 *)

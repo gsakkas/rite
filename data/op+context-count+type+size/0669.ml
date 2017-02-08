@@ -8,11 +8,17 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let a = (1, 2);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "pi* " exprToString s;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) * 2)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 
 (* fix
@@ -26,27 +32,30 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "pi* " ^ (exprToString s);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
 
 *)
 
 (* changed spans
-(15,15)-(15,21)
-(15,22)-(15,34)
+(13,15)-(21,26)
+(17,21)-(17,40)
+(17,39)-(17,40)
 *)
 
 (* type error slice
-(11,4)-(15,38)
-(11,22)-(15,36)
-(12,3)-(15,36)
-(12,9)-(12,10)
-(15,15)-(15,21)
-(15,15)-(15,36)
-(15,15)-(15,36)
-(15,22)-(15,34)
-(15,35)-(15,36)
+(17,15)-(17,18)
+(17,15)-(17,40)
+(17,21)-(17,40)
 *)

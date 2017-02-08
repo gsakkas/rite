@@ -8,12 +8,20 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
@@ -27,38 +35,29 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(16,3)-(16,72)
+(19,68)-(19,69)
 *)
 
 (* type error slice
-(11,4)-(11,23)
-(11,12)-(11,21)
-(13,4)-(13,23)
-(13,12)-(13,21)
-(15,4)-(16,75)
-(15,16)-(16,72)
-(16,3)-(16,72)
-(16,6)-(16,11)
-(16,6)-(16,15)
-(16,22)-(16,72)
-(16,22)-(16,72)
-(16,26)-(16,30)
-(16,26)-(16,36)
-(16,26)-(16,42)
-(16,48)-(16,54)
-(16,48)-(16,57)
-(16,63)-(16,69)
-(16,63)-(16,72)
+(19,26)-(19,69)
+(19,68)-(19,69)
 *)

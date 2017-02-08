@@ -1,70 +1,151 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Percent of expr
+  | Negate of expr
+  | SumSquared of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let ans = f b in ((ans, (ans <> b)), b));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildNegate e = Negate e;;
+
+let buildPercent e = Percent e;;
+
+let buildSine e = Sine e;;
+
+let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
+  else
+    (let num = rand (1, 10) in
+     match num with
+     | 1|2 -> buildSine (build (rand, (depth - 1)))
+     | 3|4 -> buildCosine (build (rand, (depth - 1)))
+     | 5|6 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 7|8 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 9 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ ->
+         if (num mod 2) = 0
+         then buildPercent (rand, (depth - 1))
+         else
+           if (num mod 3) = 0
+           then buildNegate (rand, (depth - 1))
+           else
+             buildSumSquared
+               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                 (build (rand, (depth - 1)))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Percent of expr
+  | Negate of expr
+  | SumSquared of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let g x = let xx = f x in (xx, (xx != b)) in (g, b));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildNegate e = Negate e;;
+
+let buildPercent e = Percent e;;
+
+let buildSine e = Sine e;;
+
+let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
+  else
+    (let num = rand (1, 10) in
+     match num with
+     | 1|2 -> buildSine (build (rand, (depth - 1)))
+     | 3|4 -> buildCosine (build (rand, (depth - 1)))
+     | 5|6 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 7|8 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 9 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ ->
+         if (num mod 2) = 0
+         then buildPercent (build (rand, (depth - 1)))
+         else
+           if (num mod 3) = 0
+           then buildNegate (build (rand, (depth - 1)))
+           else
+             buildSumSquared
+               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                 (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(5,40)-(5,43)
-(5,42)-(5,43)
-(5,49)-(5,52)
-(5,49)-(5,68)
-(5,55)-(5,58)
-(5,62)-(5,63)
+(54,29)-(54,45)
+(57,30)-(57,46)
+(61,33)-(61,38)
+(61,41)-(61,42)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,17)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,17)-(3,18)
-(3,17)-(3,20)
-(3,17)-(3,20)
-(3,19)-(3,20)
-(3,24)-(3,64)
-(3,24)-(3,64)
-(3,27)-(3,29)
-(3,27)-(3,36)
-(3,27)-(3,36)
-(3,27)-(3,36)
-(3,32)-(3,36)
-(3,42)-(3,48)
-(3,42)-(3,55)
-(3,42)-(3,55)
-(3,50)-(3,51)
-(3,50)-(3,55)
-(3,53)-(3,55)
-(3,62)-(3,64)
-(5,4)-(5,72)
-(5,15)-(5,68)
-(5,22)-(5,28)
-(5,22)-(5,68)
-(5,22)-(5,68)
-(5,30)-(5,68)
-(5,30)-(5,68)
-(5,40)-(5,41)
-(5,40)-(5,43)
-(5,40)-(5,43)
-(5,42)-(5,43)
-(5,49)-(5,52)
-(5,49)-(5,63)
-(5,49)-(5,68)
-(5,55)-(5,58)
-(5,55)-(5,63)
-(5,55)-(5,63)
-(5,55)-(5,63)
-(5,62)-(5,63)
-(5,67)-(5,68)
+(18,4)-(18,31)
+(18,17)-(18,29)
+(18,21)-(18,29)
+(18,28)-(18,29)
+(20,4)-(20,33)
+(20,18)-(20,31)
+(20,22)-(20,31)
+(20,30)-(20,31)
+(54,15)-(54,27)
+(54,15)-(54,45)
+(54,29)-(54,45)
+(57,17)-(57,28)
+(57,17)-(57,46)
+(57,30)-(57,46)
 *)

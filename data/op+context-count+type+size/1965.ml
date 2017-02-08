@@ -8,17 +8,29 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec exprToString e =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) * (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) * (eval (b, x, y))) / 2
-  | Cosine a -> cos (pi * (eval (a, x, y)))
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | Thresh (a,b,c,d) -> let e' = buildThresh (a, b, c, d) in exprToString e'
+  | Times (a,b) -> let e' = buildTimes (a, b) in exprToString e'
+  | Average (a,b) -> let e' = buildAverage (a, b) in exprToString e'
+  | Cosine a -> let e' = buildCosine a in exprToString e'
+  | Sine a -> let e' = buildSine a in exprToString e'
+  | VarY  -> exprToString buildY
+  | VarX  -> exprToString buildX;;
 
 
 (* fix
@@ -32,124 +44,59 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec exprToString e =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | Thresh (a,b,c,d) -> let e' = buildThresh (a, b, c, d) in exprToString e'
+  | Times (a,b) -> let e' = buildTimes (a, b) in exprToString e'
+  | Average (a,b) -> let e' = buildAverage (a, b) in exprToString e'
+  | Cosine a -> let e' = buildCosine a in exprToString e'
+  | Sine a -> let e' = buildSine a in exprToString e'
+  | VarY  -> exprToString VarX
+  | VarX  -> exprToString VarY;;
 
 *)
 
 (* changed spans
-(16,21)-(16,53)
-(17,24)-(17,37)
-(17,24)-(17,56)
-(17,24)-(17,63)
-(17,62)-(17,63)
-(18,22)-(18,24)
-(18,22)-(18,41)
-(19,20)-(19,22)
-(19,20)-(19,39)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(23,12)-(23,21)
+(23,17)-(23,21)
+(27,25)-(27,77)
+(28,20)-(28,65)
+(29,22)-(29,69)
+(30,17)-(30,58)
+(31,15)-(31,54)
+(32,27)-(32,33)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,15)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,3)-(21,15)
-(14,9)-(14,10)
-(15,25)-(15,29)
-(15,25)-(15,38)
-(15,25)-(15,38)
-(15,31)-(15,32)
-(15,31)-(15,38)
-(15,34)-(15,35)
-(15,37)-(15,38)
-(16,21)-(16,25)
-(16,21)-(16,34)
-(16,21)-(16,34)
-(16,21)-(16,53)
-(16,21)-(16,53)
-(16,27)-(16,28)
-(16,27)-(16,34)
-(16,30)-(16,31)
-(16,33)-(16,34)
-(16,40)-(16,44)
-(16,40)-(16,53)
-(16,40)-(16,53)
-(16,46)-(16,47)
-(16,46)-(16,53)
-(16,49)-(16,50)
-(16,52)-(16,53)
-(17,24)-(17,28)
-(17,24)-(17,37)
-(17,24)-(17,37)
-(17,24)-(17,56)
-(17,24)-(17,63)
-(17,30)-(17,31)
-(17,30)-(17,37)
-(17,33)-(17,34)
-(17,36)-(17,37)
-(17,43)-(17,47)
-(17,43)-(17,56)
-(17,43)-(17,56)
-(17,49)-(17,50)
-(17,49)-(17,56)
-(17,52)-(17,53)
-(17,55)-(17,56)
-(17,62)-(17,63)
-(18,17)-(18,20)
-(18,17)-(18,41)
-(18,17)-(18,41)
-(18,22)-(18,24)
-(18,22)-(18,41)
-(18,22)-(18,41)
-(18,28)-(18,32)
-(18,28)-(18,41)
-(18,28)-(18,41)
-(18,34)-(18,35)
-(18,34)-(18,41)
-(18,37)-(18,38)
-(18,40)-(18,41)
-(19,15)-(19,18)
-(19,15)-(19,39)
-(19,15)-(19,39)
-(19,20)-(19,22)
-(19,20)-(19,39)
-(19,20)-(19,39)
-(19,26)-(19,30)
-(19,26)-(19,39)
-(19,26)-(19,39)
-(19,32)-(19,33)
-(19,32)-(19,39)
-(19,35)-(19,36)
-(19,38)-(19,39)
-(20,14)-(20,15)
-(21,14)-(21,15)
+(17,4)-(17,70)
+(17,18)-(17,67)
+(17,39)-(17,67)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(23,4)-(23,23)
+(23,12)-(23,21)
+(27,25)-(27,77)
+(27,34)-(27,45)
+(27,34)-(27,57)
+(27,62)-(27,74)
+(27,62)-(27,77)
+(27,75)-(27,77)
+(32,14)-(32,26)
+(32,14)-(32,33)
+(32,27)-(32,33)
+(33,14)-(33,26)
+(33,14)-(33,33)
+(33,27)-(33,33)
 *)

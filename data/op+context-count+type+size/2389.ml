@@ -1,83 +1,80 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        if not (List.mem seen h)
-        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
+  | Flatten (e1,e2,e3) ->
+      ("(" exprToString e1) ^
+        ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")"))));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
+  | Flatten (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,30)
-(7,31)-(7,32)
+(31,8)-(31,27)
+(31,12)-(31,24)
 *)
 
 (* type error slice
-(2,4)-(9,30)
-(2,22)-(9,26)
-(3,3)-(9,26)
-(3,3)-(9,26)
-(3,19)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,5)-(8,76)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,76)
-(7,9)-(8,76)
-(7,9)-(8,76)
-(7,12)-(7,15)
-(7,12)-(7,32)
-(7,12)-(7,32)
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,17)-(7,32)
-(7,17)-(7,32)
-(7,26)-(7,30)
-(7,31)-(7,32)
-(8,14)-(8,76)
-(8,14)-(8,76)
-(8,26)-(8,27)
-(8,26)-(8,35)
-(8,31)-(8,35)
-(8,39)-(8,76)
-(8,39)-(8,76)
-(8,51)-(8,52)
-(8,56)-(8,62)
-(8,56)-(8,76)
-(8,56)-(8,76)
-(8,64)-(8,69)
-(8,64)-(8,76)
-(8,71)-(8,76)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(31,8)-(31,11)
+(31,8)-(31,27)
 *)

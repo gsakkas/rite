@@ -1,42 +1,92 @@
 
-let pipe fs = let f a x c = c x in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (carry,h1::t1) ->
+          (match x with
+           | h2::t2 ->
+               ((((h1 + h2) + carry) / 10), (((h1 + h2) mod 10) :: t1))) in
+    let base = [] in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x c = x (let fn d = d in fn) in
-  let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,29)-(2,30)
-(2,45)-(2,50)
+(23,5)-(30,69)
+(23,11)-(28,70)
+(23,13)-(28,70)
+(24,7)-(28,70)
+(24,13)-(24,14)
+(26,12)-(28,70)
+(26,18)-(26,19)
+(28,20)-(28,22)
+(28,20)-(28,27)
+(28,20)-(28,36)
+(28,20)-(28,42)
+(28,20)-(28,70)
+(28,25)-(28,27)
+(28,31)-(28,36)
+(28,40)-(28,42)
+(28,48)-(28,70)
+(29,5)-(30,69)
+(31,3)-(31,33)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,10)-(2,78)
-(2,15)-(2,78)
-(2,15)-(2,78)
-(2,21)-(2,32)
-(2,23)-(2,32)
-(2,25)-(2,32)
-(2,29)-(2,30)
-(2,29)-(2,32)
-(2,29)-(2,32)
-(2,31)-(2,32)
-(2,36)-(2,78)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(23,5)-(30,69)
+(23,11)-(28,70)
+(24,7)-(28,70)
+(24,13)-(24,14)
+(29,5)-(30,69)
+(29,16)-(29,18)
+(30,36)-(30,50)
+(30,36)-(30,62)
+(30,51)-(30,52)
+(30,53)-(30,57)
 *)

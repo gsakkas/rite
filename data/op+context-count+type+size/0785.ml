@@ -1,115 +1,102 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Quad of expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec additivePersistence n =
-  let rec helper count x =
-    match x with
-    | [] -> count
-    | hd::tl -> helper (count + 1) (sumList (digits n)) in
-  helper 0;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Quad (e1,e2,e3) ->
+      (((eval (e1, x, y)) ** 2.0) +. ((eval (e1, x, y)) * (eval (e2, x, y))))
+        +. (eval (e3, x, y))
+  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec additivePersistence n =
-  let rec helper count x =
-    if x < 10 then count else helper (count + 1) (sumList (digits n)) in
-  helper 0 n;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
 *)
 
 (* changed spans
-(15,5)-(17,54)
-(15,11)-(15,12)
-(16,13)-(16,18)
-(18,3)-(18,11)
+(17,3)-(32,77)
+(30,10)-(30,14)
+(30,10)-(30,24)
+(30,10)-(30,33)
+(30,10)-(30,74)
+(30,10)-(31,27)
+(30,16)-(30,18)
+(30,16)-(30,24)
+(30,20)-(30,21)
+(30,23)-(30,24)
+(30,30)-(30,33)
+(30,40)-(30,74)
+(31,13)-(31,27)
+(32,10)-(32,77)
 *)
 
 (* type error slice
-(2,4)-(7,13)
-(2,21)-(7,11)
-(3,3)-(7,11)
-(3,18)-(4,64)
-(3,22)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,11)-(4,14)
-(4,28)-(4,31)
-(4,44)-(4,46)
-(4,44)-(4,64)
-(4,51)-(4,57)
-(4,51)-(4,64)
-(4,51)-(4,64)
-(4,51)-(4,64)
-(4,58)-(4,60)
-(4,61)-(4,64)
-(5,18)-(6,70)
-(6,5)-(6,70)
-(6,11)-(6,12)
-(6,25)-(6,27)
-(6,35)-(6,41)
-(6,35)-(6,70)
-(6,35)-(6,70)
-(6,43)-(6,49)
-(6,43)-(6,57)
-(6,51)-(6,52)
-(7,10)-(7,11)
-(9,4)-(9,37)
-(9,12)-(9,34)
-(9,16)-(9,27)
-(9,16)-(9,34)
-(9,33)-(9,34)
-(11,17)-(11,74)
-(11,22)-(11,74)
-(11,22)-(11,74)
-(11,22)-(11,74)
-(11,22)-(11,74)
-(11,28)-(11,30)
-(11,58)-(11,60)
-(11,64)-(11,71)
-(11,64)-(11,74)
-(11,64)-(11,74)
-(11,72)-(11,74)
-(13,4)-(18,13)
-(13,29)-(18,11)
-(14,18)-(17,54)
-(14,24)-(17,54)
-(15,5)-(17,54)
-(15,5)-(17,54)
-(15,5)-(17,54)
-(15,5)-(17,54)
-(15,5)-(17,54)
-(15,11)-(15,12)
-(16,13)-(16,18)
-(17,17)-(17,23)
-(17,17)-(17,54)
-(17,25)-(17,30)
-(17,46)-(17,52)
-(17,46)-(17,54)
-(17,53)-(17,54)
+(20,21)-(20,42)
+(20,28)-(20,32)
+(20,28)-(20,42)
+(30,10)-(30,74)
+(30,40)-(30,44)
+(30,40)-(30,54)
+(30,40)-(30,74)
+(30,40)-(30,74)
+(30,40)-(30,74)
+(30,60)-(30,64)
+(30,60)-(30,74)
 *)

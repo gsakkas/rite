@@ -1,36 +1,79 @@
 
-let pipe fs = let f a x = 3 + a in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> evalhelper (buildSine p1) x y
+    | Cosine p1 -> evalhelper buildCosine p1 x y in
+  evalhelper e x y;;
 
 
 (* fix
 
-let pipe fs = let f a x = a in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
+    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
+  evalhelper e x y;;
 
 *)
 
 (* changed spans
-(2,27)-(2,28)
-(2,27)-(2,32)
+(11,17)-(11,29)
+(11,21)-(11,29)
+(11,28)-(11,29)
+(13,15)-(13,25)
+(13,19)-(13,25)
+(13,24)-(13,25)
+(15,15)-(22,19)
+(16,3)-(22,19)
+(20,18)-(20,47)
+(20,30)-(20,39)
+(20,30)-(20,42)
+(21,20)-(21,30)
+(21,20)-(21,49)
+(21,31)-(21,42)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,10)-(2,78)
-(2,15)-(2,78)
-(2,21)-(2,32)
-(2,23)-(2,32)
-(2,27)-(2,32)
-(2,27)-(2,32)
-(2,31)-(2,32)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(11,4)-(11,31)
+(11,17)-(11,29)
+(13,4)-(13,27)
+(13,15)-(13,25)
+(13,19)-(13,25)
+(20,18)-(20,28)
+(20,18)-(20,47)
+(20,30)-(20,39)
+(20,30)-(20,42)
+(21,20)-(21,30)
+(21,20)-(21,49)
+(21,31)-(21,42)
 *)

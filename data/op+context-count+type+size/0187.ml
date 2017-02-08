@@ -1,53 +1,77 @@
 
-let pipe fs =
-  let f a x = match a with | [] -> x | _ -> x a in
-  let base = [] in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+
+let rec eval (e,x,y) = string_of_float (exprToString eval);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x i = x (a i) in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+
+let rec eval (e,x,y) = float_of_string (exprToString e);;
 
 *)
 
 (* changed spans
-(3,15)-(3,48)
-(3,21)-(3,22)
-(3,36)-(3,37)
-(3,47)-(3,48)
-(4,3)-(4,44)
-(4,14)-(4,16)
-(4,20)-(4,44)
+(28,24)-(28,39)
+(28,54)-(28,58)
 *)
 
 (* type error slice
-(2,4)-(4,46)
-(2,10)-(4,44)
-(3,3)-(4,44)
-(3,3)-(4,44)
-(3,9)-(3,48)
-(3,11)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,21)-(3,22)
-(3,36)-(3,37)
-(3,45)-(3,46)
-(3,45)-(3,48)
-(3,45)-(3,48)
-(3,47)-(3,48)
-(4,3)-(4,44)
-(4,3)-(4,44)
-(4,14)-(4,16)
-(4,20)-(4,34)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,35)-(4,36)
-(4,37)-(4,41)
-(4,42)-(4,44)
+(15,29)-(15,41)
+(15,29)-(15,43)
+(15,29)-(15,50)
+(15,45)-(15,46)
+(28,24)-(28,39)
+(28,24)-(28,58)
+(28,41)-(28,53)
+(28,41)-(28,58)
 *)

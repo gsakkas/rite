@@ -1,63 +1,54 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> buildX | VarY  -> buildY | Sine e1 -> buildSine e1;;
+let fixpoint (f,b) =
+  wwhile
+    ((let (x,y) = f b in
+      if (x <> b) && (y = true) then (x, true) else if x = b then (x, false)),
+      b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
 
-let rec eval (e,x,y) = match e with | VarX  -> x;;
+let fixpoint (f,b) =
+  wwhile ((let a x = let xx = f x in (xx, (x <> b)) in a), b);;
 
 *)
 
 (* changed spans
-(11,15)-(11,25)
-(11,19)-(11,25)
-(11,24)-(11,25)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(15,12)-(15,21)
+(7,7)-(8,76)
+(7,19)-(7,22)
+(7,21)-(7,22)
+(8,7)-(8,76)
+(8,11)-(8,17)
+(8,11)-(8,31)
+(8,16)-(8,17)
+(8,23)-(8,24)
+(8,23)-(8,31)
+(8,27)-(8,31)
+(8,39)-(8,40)
+(8,42)-(8,46)
+(8,53)-(8,76)
 *)
 
 (* type error slice
-(11,4)-(11,27)
-(11,15)-(11,25)
-(11,24)-(11,25)
-(13,4)-(13,23)
-(13,12)-(13,21)
-(15,4)-(15,23)
-(15,12)-(15,21)
-(17,4)-(18,79)
-(17,15)-(18,77)
-(18,3)-(18,77)
-(18,3)-(18,77)
-(18,3)-(18,77)
-(18,9)-(18,10)
-(18,27)-(18,33)
-(18,45)-(18,51)
-(18,65)-(18,74)
-(18,65)-(18,77)
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,33)-(3,39)
+(3,33)-(3,45)
+(3,41)-(3,42)
+(3,41)-(3,45)
+(6,3)-(6,9)
+(6,3)-(9,8)
+(7,7)-(8,76)
+(7,7)-(9,8)
+(8,7)-(8,76)
+(8,53)-(8,76)
+(8,53)-(8,76)
+(8,53)-(8,76)
+(8,68)-(8,76)
 *)

@@ -1,42 +1,46 @@
 
-let rec listReverse l =
-  match l with | h::[] -> h | h::t -> [listReverse t; h];;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> ((((clone 0) - lendiff) @ l1), l2));;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> h :: (listReverse t);;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
 *)
 
 (* changed spans
-(3,3)-(3,57)
-(3,27)-(3,28)
-(3,39)-(3,57)
-(3,55)-(3,56)
+(12,24)-(12,31)
+(12,24)-(12,42)
+(12,35)-(12,42)
 *)
 
 (* type error slice
-(2,4)-(3,59)
-(2,21)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,9)-(3,10)
-(3,27)-(3,28)
-(3,39)-(3,57)
-(3,39)-(3,57)
-(3,39)-(3,57)
-(3,40)-(3,51)
-(3,40)-(3,53)
-(3,40)-(3,53)
-(3,52)-(3,53)
-(3,55)-(3,56)
+(11,26)-(11,31)
+(11,26)-(11,41)
+(12,24)-(12,29)
+(12,24)-(12,31)
+(12,24)-(12,42)
+(12,24)-(12,42)
+(12,24)-(12,48)
+(12,44)-(12,45)
 *)

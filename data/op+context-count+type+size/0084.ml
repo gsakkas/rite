@@ -1,51 +1,48 @@
 
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+
 let rec mulByDigit i l =
-  match l with
+  match List.rev l with
   | [] -> []
-  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;
+  | h::t ->
+      sqsum
+        ((mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i]);;
 
 
 (* fix
 
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+
 let rec mulByDigit i l =
-  match l with
+  match List.rev l with
   | [] -> []
   | h::t ->
-      (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i];;
+      [sqsum
+         ((mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i])];;
 
 *)
 
 (* changed spans
-(5,13)-(5,77)
-(5,14)-(5,24)
-(5,71)-(5,76)
+(9,7)-(10,77)
 *)
 
 (* type error slice
-(2,4)-(5,79)
-(2,20)-(5,77)
-(2,22)-(5,77)
-(3,3)-(5,77)
-(3,3)-(5,77)
-(3,3)-(5,77)
-(3,3)-(5,77)
-(3,3)-(5,77)
-(3,9)-(3,10)
-(4,11)-(4,13)
-(5,13)-(5,77)
-(5,14)-(5,24)
-(5,14)-(5,67)
-(5,14)-(5,67)
-(5,14)-(5,67)
-(5,25)-(5,26)
-(5,28)-(5,36)
-(5,28)-(5,67)
-(5,28)-(5,67)
-(5,38)-(5,46)
-(5,38)-(5,67)
-(5,38)-(5,67)
-(5,48)-(5,64)
-(5,58)-(5,59)
-(5,66)-(5,67)
-(5,75)-(5,76)
+(2,4)-(3,72)
+(2,11)-(3,70)
+(3,3)-(3,70)
+(3,3)-(3,70)
+(3,9)-(3,25)
+(3,15)-(3,16)
+(3,15)-(3,25)
+(3,30)-(3,70)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(6,3)-(10,77)
+(6,3)-(10,77)
+(7,11)-(7,13)
+(9,7)-(9,12)
+(9,7)-(10,77)
 *)

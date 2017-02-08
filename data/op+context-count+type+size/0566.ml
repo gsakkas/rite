@@ -1,103 +1,53 @@
 
-let rec mulByDigit i l =
-  let rec mBDhelper i x =
-    match x with
-    | [] -> 0
-    | hd::tl ->
-        if ((hd * i) / 10) != 0
-        then ((hd * i) mod 10) :: (((hd * i) / 10) + (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (clone 0 ((List.length l1) - (List.length l2))) @ l2
+  else
+    if (List.length l1) < (List.length l2)
+    then (clone 0 ((List.length l2) - (List.length l1))) @ l1;;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(3,3)-(10,16)
-(5,13)-(5,14)
-(7,14)-(7,26)
-(7,24)-(7,26)
-(8,16)-(8,18)
-(8,16)-(8,22)
-(8,16)-(8,30)
-(8,21)-(8,22)
-(8,28)-(8,30)
-(8,38)-(8,69)
-(8,55)-(8,64)
-(8,65)-(8,66)
-(8,67)-(8,69)
-(9,15)-(9,21)
-(9,15)-(9,41)
-(9,27)-(9,41)
-(10,3)-(10,12)
-(10,3)-(10,16)
-(10,13)-(10,14)
-(10,15)-(10,16)
+(10,3)-(14,62)
+(11,9)-(11,60)
+(13,5)-(14,62)
+(13,9)-(13,20)
+(13,9)-(13,23)
+(13,9)-(13,42)
+(13,21)-(13,23)
+(13,28)-(13,39)
+(13,28)-(13,42)
+(13,40)-(13,42)
+(14,60)-(14,62)
 *)
 
 (* type error slice
-(2,4)-(10,18)
-(2,20)-(10,16)
-(2,22)-(10,16)
-(3,21)-(9,41)
-(3,23)-(9,41)
-(4,5)-(9,41)
-(4,5)-(9,41)
-(4,5)-(9,41)
-(4,5)-(9,41)
-(4,11)-(4,12)
-(7,9)-(9,41)
-(7,9)-(9,41)
-(7,14)-(7,16)
-(7,14)-(7,20)
-(7,14)-(7,20)
-(7,14)-(7,20)
-(7,14)-(7,26)
-(7,14)-(7,32)
-(7,14)-(7,32)
-(7,19)-(7,20)
-(7,24)-(7,26)
-(7,31)-(7,32)
-(8,16)-(8,18)
-(8,16)-(8,22)
-(8,16)-(8,30)
-(8,16)-(8,69)
-(8,21)-(8,22)
-(8,28)-(8,30)
-(8,38)-(8,40)
-(8,38)-(8,44)
-(8,38)-(8,50)
-(8,38)-(8,69)
-(8,38)-(8,69)
-(8,43)-(8,44)
-(8,48)-(8,50)
-(8,55)-(8,64)
-(8,55)-(8,69)
-(8,55)-(8,69)
-(8,55)-(8,69)
-(8,65)-(8,66)
-(8,67)-(8,69)
-(9,15)-(9,17)
-(9,15)-(9,21)
-(9,15)-(9,41)
-(9,20)-(9,21)
-(9,27)-(9,36)
-(9,27)-(9,41)
-(9,37)-(9,38)
-(9,39)-(9,41)
-(10,13)-(10,14)
-(10,15)-(10,16)
+(13,5)-(14,62)
+(13,5)-(14,62)
+(13,5)-(14,62)
+(14,11)-(14,62)
+(14,58)-(14,59)
 *)

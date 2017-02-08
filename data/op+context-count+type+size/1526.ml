@@ -1,37 +1,60 @@
 
-let rec sumList xs = match xs with | [] -> 0 | (x::y)::[] -> x + (sumList y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr0 -> sin (eval (expr0, x, y))
+  | Cosine expr0 -> cos (eval (expr0, x, y))
+  | Average (expr0,expr1) ->
+      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2
+  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
+       | true  -> eval (expr2, x, y)
+       | false  -> eval (expr3, x, y));;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | x::y -> x + (sumList y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr0 -> sin (eval (expr0, x, y))
+  | Cosine expr0 -> cos (eval (expr0, x, y))
+  | Average (expr0,expr1) ->
+      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
+       | true  -> eval (expr2, x, y)
+       | false  -> eval (expr3, x, y));;
 
 *)
 
 (* changed spans
-(2,22)-(2,76)
+(18,57)-(18,58)
 *)
 
 (* type error slice
-(2,4)-(2,79)
-(2,17)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,22)-(2,76)
-(2,28)-(2,30)
-(2,44)-(2,45)
-(2,62)-(2,63)
-(2,62)-(2,76)
-(2,62)-(2,76)
-(2,62)-(2,76)
-(2,67)-(2,74)
-(2,67)-(2,76)
-(2,67)-(2,76)
-(2,75)-(2,76)
+(18,9)-(18,58)
+(18,57)-(18,58)
 *)

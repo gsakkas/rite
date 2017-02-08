@@ -1,144 +1,93 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let digitSum = ((fst x) + (snd x)) + (fst a) in
+      ((digitSum / 10), ((digitSum mod 10) :: (snd a))) in
+    let base = (0, []) in
+    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let f x a =
+    let digitRes = (x * i) + (fst a) in
+    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
+  let base = (0, []) in
+  let (_,result) = List.fold_right f (0 :: l) base in removeZero result;;
+
+let bigMul l1 l2 =
+  let f a x = let value = mulByDigit l1 x in (0, (bigAdd value x)) in
+  let base = ([], []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let digitSum = ((fst x) + (snd x)) + (fst a) in
+      ((digitSum / 10), ((digitSum mod 10) :: (snd a))) in
+    let base = (0, []) in
+    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let f x a =
+    let digitRes = (x * i) + (fst a) in
+    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
+  let base = (0, []) in
+  let (_,result) = List.fold_right f (0 :: l) base in removeZero result;;
+
+let bigMul l1 l2 =
+  let f a x = let value = mulByDigit x l1 in (0, (bigAdd value (snd a))) in
+  let base = (0, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(25,20)-(25,38)
-(25,24)-(25,36)
+(30,38)-(30,40)
+(30,47)-(30,65)
+(30,64)-(30,65)
+(31,3)-(32,76)
+(31,15)-(31,17)
 *)
 
 (* type error slice
-(11,22)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,3)-(25,64)
-(12,9)-(12,10)
-(15,15)-(15,24)
-(15,15)-(15,50)
-(15,25)-(15,26)
-(15,29)-(15,41)
-(15,29)-(15,43)
-(15,29)-(15,43)
-(15,29)-(15,50)
-(15,29)-(15,50)
-(15,42)-(15,43)
-(15,45)-(15,46)
-(15,47)-(15,50)
-(16,17)-(16,26)
-(16,17)-(16,52)
-(16,27)-(16,28)
-(16,31)-(16,43)
-(16,31)-(16,45)
-(16,31)-(16,52)
-(16,44)-(16,45)
-(16,47)-(16,48)
-(16,49)-(16,52)
-(18,7)-(18,11)
-(18,7)-(18,67)
-(18,12)-(18,13)
-(18,16)-(18,28)
-(18,16)-(18,30)
-(18,16)-(18,67)
-(18,29)-(18,30)
-(18,32)-(18,33)
-(18,35)-(18,38)
-(18,35)-(18,67)
-(18,39)-(18,40)
-(18,43)-(18,55)
-(18,43)-(18,57)
-(18,43)-(18,67)
-(18,56)-(18,57)
-(18,59)-(18,60)
-(18,61)-(18,67)
-(19,21)-(19,33)
-(19,21)-(19,35)
-(19,21)-(19,61)
-(19,34)-(19,35)
-(19,37)-(19,38)
-(19,40)-(19,43)
-(19,40)-(19,61)
-(19,44)-(19,45)
-(19,47)-(19,59)
-(19,47)-(19,61)
-(19,60)-(19,61)
-(21,7)-(21,10)
-(21,11)-(21,12)
-(22,11)-(22,23)
-(22,11)-(22,25)
-(22,24)-(22,25)
-(22,27)-(22,28)
-(23,13)-(23,16)
-(23,17)-(23,18)
-(24,17)-(24,29)
-(24,17)-(24,31)
-(24,30)-(24,31)
-(24,33)-(24,34)
-(25,20)-(25,23)
-(25,20)-(25,38)
-(25,24)-(25,36)
-(25,37)-(25,38)
-(25,40)-(25,41)
+(30,3)-(32,76)
+(30,9)-(30,65)
+(30,11)-(30,65)
+(30,15)-(30,65)
+(30,47)-(30,48)
+(30,47)-(30,65)
+(31,3)-(32,76)
+(31,15)-(31,17)
+(31,15)-(31,21)
+(32,43)-(32,57)
+(32,43)-(32,69)
+(32,58)-(32,59)
+(32,60)-(32,64)
 *)

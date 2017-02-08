@@ -1,41 +1,57 @@
 
-let rec wwhile (f,b) =
-  match b with | (e,boo) -> if boo = true then e else wwhile b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ (("*" (exprToString t2)) ^ ")"))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let ans = f b in
-  match ans with | (num,boo) -> if boo = true then wwhile (f, num) else num;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ ("*" ^ ((exprToString t2) ^ ")")))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 *)
 
 (* changed spans
-(3,3)-(3,63)
-(3,9)-(3,10)
-(3,29)-(3,63)
-(3,48)-(3,49)
-(3,55)-(3,61)
-(3,62)-(3,63)
+(20,36)-(20,56)
+(20,41)-(20,56)
 *)
 
 (* type error slice
-(2,4)-(3,65)
-(2,17)-(3,63)
-(3,3)-(3,63)
-(3,3)-(3,63)
-(3,9)-(3,10)
-(3,29)-(3,63)
-(3,29)-(3,63)
-(3,32)-(3,35)
-(3,32)-(3,42)
-(3,32)-(3,42)
-(3,32)-(3,42)
-(3,38)-(3,42)
-(3,48)-(3,49)
-(3,55)-(3,61)
-(3,55)-(3,63)
-(3,55)-(3,63)
-(3,62)-(3,63)
+(20,36)-(20,39)
+(20,36)-(20,56)
 *)

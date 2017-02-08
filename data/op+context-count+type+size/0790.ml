@@ -1,82 +1,101 @@
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (n mod 10) :: (helper (n / 10)) in
-  let rec reverse xs =
-    match xs with | [] -> [] | hd::tl -> (reverse tl) :: hd in
-  reverse (helper n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (eval (e', x, y))
+  | Cosine e' -> cos (eval (e', x, y))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) * (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | _ -> failwith "are we writing a lisp compiler now";;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (helper (n / 10)) @ [n mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
 *)
 
 (* changed spans
-(4,36)-(4,37)
-(4,36)-(4,44)
-(4,36)-(4,64)
-(4,42)-(4,44)
-(4,50)-(4,64)
-(5,3)-(7,20)
-(5,19)-(6,60)
-(6,5)-(6,60)
-(6,11)-(6,13)
-(6,27)-(6,29)
-(6,43)-(6,60)
-(7,3)-(7,20)
+(11,15)-(23,55)
+(12,3)-(23,55)
+(15,21)-(15,35)
+(16,23)-(16,37)
+(17,26)-(17,40)
+(17,26)-(17,60)
+(17,26)-(17,67)
+(17,66)-(17,67)
+(18,23)-(18,37)
+(18,23)-(18,57)
+(22,12)-(22,16)
+(22,18)-(22,20)
+(22,18)-(22,26)
+(22,22)-(22,23)
+(22,25)-(22,26)
+(23,10)-(23,18)
+(23,19)-(23,55)
 *)
 
 (* type error slice
-(2,4)-(7,23)
-(2,21)-(7,20)
-(3,3)-(7,20)
-(3,3)-(7,20)
-(3,18)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,11)-(4,12)
-(4,25)-(4,27)
-(4,36)-(4,37)
-(4,36)-(4,44)
-(4,36)-(4,44)
-(4,36)-(4,64)
-(4,42)-(4,44)
-(4,50)-(4,56)
-(4,50)-(4,64)
-(4,50)-(4,64)
-(4,58)-(4,59)
-(4,58)-(4,64)
-(4,62)-(4,64)
-(5,3)-(7,20)
-(5,3)-(7,20)
-(5,19)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,5)-(6,60)
-(6,11)-(6,13)
-(6,27)-(6,29)
-(6,43)-(6,50)
-(6,43)-(6,53)
-(6,43)-(6,53)
-(6,43)-(6,60)
-(6,51)-(6,53)
-(6,58)-(6,60)
-(7,3)-(7,10)
-(7,3)-(7,20)
-(7,3)-(7,20)
-(7,12)-(7,18)
-(7,12)-(7,20)
-(7,12)-(7,20)
-(7,19)-(7,20)
+(15,16)-(15,19)
+(15,16)-(15,35)
+(15,21)-(15,25)
+(15,21)-(15,35)
+(17,26)-(17,30)
+(17,26)-(17,40)
+(17,26)-(17,60)
+(17,26)-(17,60)
+(17,46)-(17,50)
+(17,46)-(17,60)
+(18,23)-(18,27)
+(18,23)-(18,37)
+(18,23)-(18,57)
+(18,23)-(18,57)
+(18,43)-(18,47)
+(18,43)-(18,57)
 *)

@@ -1,57 +1,37 @@
 
-let rec listReverse l =
-  let a = [] in
-  let rec get a = match a with | [] -> [] | x::xs -> [get xs; x] in get l;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec listReverse l =
-  let rec getList a b = match a with | [] -> [] in getList [] l;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(3,3)-(4,74)
-(3,11)-(3,13)
-(4,19)-(4,65)
-(4,25)-(4,26)
-(4,54)-(4,65)
-(4,55)-(4,58)
-(4,55)-(4,61)
-(4,59)-(4,61)
-(4,63)-(4,64)
-(4,69)-(4,74)
+(7,24)-(7,25)
+(7,24)-(7,41)
+(7,48)-(7,57)
+(7,63)-(7,67)
 *)
 
 (* type error slice
-(2,4)-(4,76)
-(2,21)-(4,74)
-(3,3)-(4,74)
-(3,3)-(4,74)
-(3,11)-(3,13)
-(4,3)-(4,74)
-(4,3)-(4,74)
-(4,15)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,19)-(4,65)
-(4,25)-(4,26)
-(4,40)-(4,42)
-(4,54)-(4,65)
-(4,54)-(4,65)
-(4,54)-(4,65)
-(4,55)-(4,58)
-(4,55)-(4,61)
-(4,55)-(4,61)
-(4,59)-(4,61)
-(4,63)-(4,64)
-(4,69)-(4,72)
-(4,69)-(4,74)
-(4,69)-(4,74)
-(4,73)-(4,74)
+(7,24)-(7,25)
+(7,24)-(7,41)
+(7,26)-(7,34)
+(7,26)-(7,41)
 *)

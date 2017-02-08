@@ -4,7 +4,18 @@ let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 let padZero l1 l2 =
   let leng1 = List.length l1 in
   let leng2 = List.length l2 in
-  ((((clone 0 leng1) - leng2) @ l1), (((clone 0 leng2) - leng1) @ l2));;
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = failwith "to be implemeneted" in
+    let args = [List.combine (l1, l2)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
@@ -14,78 +25,36 @@ let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 let padZero l1 l2 =
   let leng1 = List.length l1 in
   let leng2 = List.length l2 in
-  (((clone 0 (leng1 - leng2)) @ l1), ((clone 0 (leng2 - leng1)) @ l2));;
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(7,7)-(7,29)
-(7,15)-(7,20)
-(7,41)-(7,63)
-(7,49)-(7,54)
+(14,17)-(14,25)
+(14,17)-(14,45)
+(14,26)-(14,45)
+(15,16)-(15,24)
+(15,16)-(15,45)
+(15,25)-(15,45)
+(16,5)-(17,52)
+(16,16)-(16,39)
+(16,17)-(16,37)
+(16,31)-(16,37)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(7,73)
-(4,13)-(7,69)
-(4,16)-(7,69)
-(5,3)-(7,69)
-(5,3)-(7,69)
-(5,15)-(5,26)
-(5,15)-(5,29)
-(5,15)-(5,29)
-(5,27)-(5,29)
-(6,3)-(7,69)
-(6,3)-(7,69)
-(6,15)-(6,26)
-(6,15)-(6,29)
-(6,15)-(6,29)
-(6,27)-(6,29)
-(7,7)-(7,12)
-(7,7)-(7,20)
-(7,7)-(7,20)
-(7,7)-(7,29)
-(7,7)-(7,29)
-(7,7)-(7,35)
-(7,7)-(7,35)
-(7,7)-(7,35)
-(7,7)-(7,69)
-(7,13)-(7,14)
-(7,15)-(7,20)
-(7,24)-(7,29)
-(7,31)-(7,32)
-(7,33)-(7,35)
-(7,41)-(7,46)
-(7,41)-(7,54)
-(7,41)-(7,63)
-(7,41)-(7,63)
-(7,41)-(7,69)
-(7,41)-(7,69)
-(7,41)-(7,69)
-(7,47)-(7,48)
-(7,49)-(7,54)
-(7,58)-(7,63)
-(7,65)-(7,66)
-(7,67)-(7,69)
+(16,17)-(16,29)
+(16,17)-(16,37)
+(16,31)-(16,37)
 *)

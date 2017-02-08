@@ -1,102 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2;;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0
+  then (l1, (List.append (clone 0 a) l2))
+  else List.append (clone 0 (0 - a)) l2;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> (eval (a, x, y)) +. (eval (b, x, y));;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0
+  then (l1, (List.append (clone 0 a) l2))
+  else ((List.append (clone 0 (0 - a)) l1), l2);;
 
 *)
 
 (* changed spans
-(17,24)-(17,64)
-(17,63)-(17,64)
+(8,8)-(8,40)
+(8,38)-(8,40)
 *)
 
 (* type error slice
-(11,15)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,3)-(17,64)
-(12,9)-(12,10)
-(13,14)-(13,15)
-(14,14)-(14,15)
-(15,15)-(15,18)
-(15,15)-(15,33)
-(15,15)-(15,33)
-(15,20)-(15,24)
-(15,20)-(15,33)
-(15,20)-(15,33)
-(15,26)-(15,27)
-(15,26)-(15,33)
-(15,29)-(15,30)
-(15,32)-(15,33)
-(16,17)-(16,20)
-(16,17)-(16,35)
-(16,22)-(16,26)
-(16,22)-(16,35)
-(16,22)-(16,35)
-(16,28)-(16,29)
-(16,28)-(16,35)
-(16,31)-(16,32)
-(16,34)-(16,35)
-(17,24)-(17,28)
-(17,24)-(17,37)
-(17,24)-(17,37)
-(17,24)-(17,57)
-(17,24)-(17,64)
-(17,24)-(17,64)
-(17,30)-(17,31)
-(17,30)-(17,37)
-(17,33)-(17,34)
-(17,36)-(17,37)
-(17,44)-(17,48)
-(17,44)-(17,57)
-(17,44)-(17,57)
-(17,50)-(17,51)
-(17,50)-(17,57)
-(17,53)-(17,54)
-(17,56)-(17,57)
-(17,63)-(17,64)
+(6,3)-(8,40)
+(6,3)-(8,40)
+(7,9)-(7,40)
+(8,8)-(8,19)
+(8,8)-(8,40)
 *)

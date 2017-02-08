@@ -1,61 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin s1
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let fixpoint (f,b) = wwhile ((if (f b) = b then b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin (eval (s1, x, y))
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let fixpoint (f,b) =
+  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
 
 *)
 
 (* changed spans
-(15,20)-(15,22)
-(16,25)-(16,64)
-(16,54)-(16,58)
-(16,60)-(16,61)
-(16,63)-(16,64)
+(5,31)-(5,50)
+(5,35)-(5,36)
+(5,35)-(5,38)
+(5,35)-(5,43)
+(5,42)-(5,43)
+(5,49)-(5,50)
+(5,53)-(5,54)
 *)
 
 (* type error slice
-(11,15)-(16,64)
-(12,3)-(16,64)
-(12,9)-(12,10)
-(13,14)-(13,15)
-(14,14)-(14,15)
-(15,16)-(15,19)
-(15,16)-(15,22)
-(15,16)-(15,22)
-(15,20)-(15,22)
-(16,25)-(16,29)
-(16,25)-(16,41)
-(16,48)-(16,52)
-(16,48)-(16,64)
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,50)-(3,56)
+(3,50)-(3,62)
+(3,58)-(3,59)
+(3,58)-(3,62)
+(5,22)-(5,28)
+(5,22)-(5,54)
+(5,31)-(5,50)
+(5,31)-(5,50)
+(5,31)-(5,54)
 *)

@@ -1,73 +1,47 @@
 
-let t x = x + 1;;
+let rec clone x n =
+  let rec helper a x n =
+    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
+  helper [] x n;;
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if x = "a" then a ^ x in
-      let base = sep in let l = t in List.fold_left f base l;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  if length1 > length2
+  then (l1, (List.append (clone 0 (length1 - length2)) l2))
+  else
+    if length2 length1
+    then ((List.append (clone 0 (length1 - length2)) l1), l2)
+    else (l1, l2);;
 
 
 (* fix
 
-let t x = x + 1;;
+let rec clone x n =
+  let rec helper a x n =
+    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
+  helper [] x n;;
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = sep in let l = t in List.fold_left f base l;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  if length1 > length2
+  then (l1, (List.append (clone 0 (length1 - length2)) l2))
+  else
+    if length2 > length1
+    then ((List.append (clone 0 (length1 - length2)) l1), l2)
+    else (l1, l2);;
 
 *)
 
 (* changed spans
-(8,19)-(8,40)
-(8,22)-(8,23)
-(8,22)-(8,29)
-(8,26)-(8,29)
-(8,35)-(8,36)
+(13,8)-(13,23)
 *)
 
 (* type error slice
-(2,4)-(2,18)
-(2,7)-(2,16)
-(2,11)-(2,12)
-(4,4)-(9,63)
-(4,19)-(9,61)
-(4,23)-(9,61)
-(5,3)-(9,61)
-(5,3)-(9,61)
-(5,3)-(9,61)
-(5,3)-(9,61)
-(5,3)-(9,61)
-(5,9)-(5,11)
-(8,7)-(9,61)
-(8,13)-(8,40)
-(8,15)-(8,40)
-(8,19)-(8,40)
-(8,19)-(8,40)
-(8,19)-(8,40)
-(8,22)-(8,23)
-(8,22)-(8,29)
-(8,22)-(8,29)
-(8,22)-(8,29)
-(8,26)-(8,29)
-(8,35)-(8,36)
-(8,35)-(8,40)
-(8,35)-(8,40)
-(8,37)-(8,38)
-(8,39)-(8,40)
-(9,7)-(9,61)
-(9,18)-(9,21)
-(9,25)-(9,61)
-(9,33)-(9,34)
-(9,38)-(9,52)
-(9,38)-(9,61)
-(9,38)-(9,61)
-(9,38)-(9,61)
-(9,53)-(9,54)
-(9,55)-(9,59)
-(9,60)-(9,61)
+(9,3)-(15,17)
+(9,17)-(9,28)
+(9,17)-(9,31)
+(13,8)-(13,15)
+(13,8)-(13,23)
 *)

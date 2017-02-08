@@ -1,38 +1,30 @@
 
-let rec wwhile (f,b) =
-  let calc = f b in let (b',c') = calc in if c' then f b' else b';;
+let rec sumDigits n1 =
+  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+
+let rec digitalRoot n = if n > 10 then digitalRoot sumDigits n else n;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let calc = f b in let (b',c') = calc in if c' then wwhile (f, b') else b';;
+let rec sumDigits n1 =
+  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+
+let rec digitalRoot n = if n > 10 then digitalRoot (sumDigits n) else n;;
 
 *)
 
 (* changed spans
-(3,54)-(3,55)
+(5,40)-(5,63)
+(5,52)-(5,61)
 *)
 
 (* type error slice
-(2,4)-(3,68)
-(2,17)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,14)-(3,15)
-(3,14)-(3,17)
-(3,14)-(3,17)
-(3,16)-(3,17)
-(3,21)-(3,66)
-(3,21)-(3,66)
-(3,35)-(3,39)
-(3,43)-(3,66)
-(3,43)-(3,66)
-(3,43)-(3,66)
-(3,46)-(3,48)
-(3,54)-(3,55)
-(3,54)-(3,58)
-(3,54)-(3,58)
-(3,56)-(3,58)
-(3,64)-(3,66)
+(5,4)-(5,72)
+(5,21)-(5,70)
+(5,25)-(5,70)
+(5,40)-(5,51)
+(5,40)-(5,63)
+(5,62)-(5,63)
+(5,69)-(5,70)
 *)

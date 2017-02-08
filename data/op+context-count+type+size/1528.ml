@@ -1,75 +1,84 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n == 0
-    then [0]
-    else
-      if (n / 10) == 0 then n mod 10 else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        (expr0 ^ ("<" ^ (expr1 ^ ("?" ^ (expr2 ^ (":" ^ (expr3 ^ ")")))))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n == 0
-    then [0]
-    else
-      if (n / 10) == 0
-      then [n mod 10]
-      else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr0) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(9,29)-(9,37)
+(23,10)-(23,15)
+(23,26)-(23,31)
+(23,42)-(23,47)
+(23,58)-(23,63)
+(23,64)-(23,65)
+(23,66)-(23,69)
 *)
 
 (* type error slice
-(2,21)-(9,78)
-(3,3)-(9,78)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(4,8)-(4,10)
-(6,5)-(9,78)
-(6,5)-(9,78)
-(6,8)-(6,9)
-(6,8)-(6,14)
-(6,8)-(6,14)
-(6,13)-(6,14)
-(7,10)-(7,13)
-(7,10)-(7,13)
-(7,11)-(7,12)
-(9,7)-(9,78)
-(9,7)-(9,78)
-(9,11)-(9,12)
-(9,11)-(9,17)
-(9,11)-(9,23)
-(9,11)-(9,23)
-(9,15)-(9,17)
-(9,22)-(9,23)
-(9,29)-(9,30)
-(9,29)-(9,37)
-(9,35)-(9,37)
-(9,44)-(9,55)
-(9,44)-(9,63)
-(9,44)-(9,63)
-(9,44)-(9,78)
-(9,44)-(9,78)
-(9,44)-(9,78)
-(9,57)-(9,58)
-(9,57)-(9,63)
-(9,61)-(9,63)
-(9,66)-(9,67)
-(9,68)-(9,78)
-(9,68)-(9,78)
-(9,69)-(9,70)
-(9,69)-(9,77)
-(9,75)-(9,77)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(12,3)-(23,69)
+(23,10)-(23,15)
+(23,10)-(23,69)
+(23,16)-(23,17)
+(23,26)-(23,31)
+(23,26)-(23,69)
+(23,32)-(23,33)
+(23,42)-(23,47)
+(23,42)-(23,69)
+(23,48)-(23,49)
+(23,58)-(23,63)
+(23,58)-(23,69)
+(23,64)-(23,65)
 *)

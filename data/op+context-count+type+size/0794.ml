@@ -8,24 +8,44 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
   | Sqrt of expr
-  | Abs of expr;;
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs (eval e))
-  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
+let buildCosine e = Cosine e;;
+
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (0, 2) with | 0 -> VarX | 1 -> VarY | _ -> VarY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 8) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 ->
+           buildAverage
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 4 -> buildTimes (next, (build (rand, (depth - 1))))
+       | 5 ->
+           buildThresh
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))))
+       | 6 -> buildSqrt next
+       | 7 ->
+           buildGauss
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | _ -> abs next);;
 
 
 (* fix
@@ -42,163 +62,62 @@ type expr =
   | Abs of expr
   | Gauss of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAbs e = Abs e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
-  | Gauss (e1,e2,e3) ->
-      2.0 *.
-        (exp
-           (-.
-              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
-                 (eval (e3, x, y)))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (0, 2) with | 0 -> VarX | 1 -> VarY | _ -> VarY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 8) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 ->
+           buildAverage
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 4 -> buildTimes (next, (build (rand, (depth - 1))))
+       | 5 ->
+           buildThresh
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))))
+       | 6 -> buildSqrt next
+       | 7 ->
+           buildGauss
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | _ -> buildAbs next);;
 
 *)
 
 (* changed spans
-(16,3)-(28,77)
-(27,21)-(27,24)
-(27,31)-(27,32)
-(28,10)-(28,18)
-(28,10)-(28,77)
-(28,19)-(28,77)
+(14,19)-(14,43)
+(32,7)-(48,23)
+(48,15)-(48,18)
+(48,19)-(48,23)
 *)
 
 (* type error slice
-(13,4)-(13,29)
-(13,10)-(13,26)
-(15,15)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,3)-(28,77)
-(16,9)-(16,10)
-(17,14)-(17,15)
-(18,14)-(18,15)
-(19,16)-(19,19)
-(19,16)-(19,42)
-(19,21)-(19,23)
-(19,21)-(19,42)
-(19,21)-(19,42)
-(19,28)-(19,32)
-(19,28)-(19,42)
-(19,28)-(19,42)
-(19,34)-(19,36)
-(19,34)-(19,42)
-(19,38)-(19,39)
-(19,41)-(19,42)
-(20,18)-(20,21)
-(20,18)-(20,44)
-(20,23)-(20,25)
-(20,23)-(20,44)
-(20,30)-(20,34)
-(20,30)-(20,44)
-(20,30)-(20,44)
-(20,36)-(20,38)
-(20,36)-(20,44)
-(20,40)-(20,41)
-(20,43)-(20,44)
-(21,26)-(21,30)
-(21,26)-(21,40)
-(21,26)-(21,40)
-(21,26)-(21,61)
-(21,26)-(21,71)
-(21,32)-(21,34)
-(21,32)-(21,40)
-(21,36)-(21,37)
-(21,39)-(21,40)
-(21,47)-(21,51)
-(21,47)-(21,61)
-(21,47)-(21,61)
-(21,53)-(21,55)
-(21,53)-(21,61)
-(21,57)-(21,58)
-(21,60)-(21,61)
-(21,68)-(21,71)
-(22,23)-(22,27)
-(22,23)-(22,37)
-(22,23)-(22,37)
-(22,23)-(22,58)
-(22,29)-(22,31)
-(22,29)-(22,37)
-(22,33)-(22,34)
-(22,36)-(22,37)
-(22,44)-(22,48)
-(22,44)-(22,58)
-(22,44)-(22,58)
-(22,50)-(22,52)
-(22,50)-(22,58)
-(22,54)-(22,55)
-(22,57)-(22,58)
-(24,7)-(26,26)
-(24,11)-(24,15)
-(24,11)-(24,25)
-(24,11)-(24,25)
-(24,11)-(24,45)
-(24,11)-(24,45)
-(24,17)-(24,19)
-(24,17)-(24,25)
-(24,21)-(24,22)
-(24,24)-(24,25)
-(24,31)-(24,35)
-(24,31)-(24,45)
-(24,31)-(24,45)
-(24,37)-(24,39)
-(24,37)-(24,45)
-(24,41)-(24,42)
-(24,44)-(24,45)
-(25,12)-(25,16)
-(25,12)-(25,26)
-(25,12)-(25,26)
-(25,18)-(25,20)
-(25,18)-(25,26)
-(25,22)-(25,23)
-(25,25)-(25,26)
-(26,12)-(26,16)
-(26,12)-(26,26)
-(26,12)-(26,26)
-(26,18)-(26,20)
-(26,18)-(26,26)
-(26,22)-(26,23)
-(26,25)-(26,26)
-(27,15)-(27,19)
-(27,15)-(27,32)
-(27,15)-(27,32)
-(27,21)-(27,24)
-(27,21)-(27,32)
-(27,21)-(27,32)
-(27,26)-(27,30)
-(27,26)-(27,32)
-(27,26)-(27,32)
-(27,31)-(27,32)
-(28,10)-(28,18)
-(28,10)-(28,77)
+(20,4)-(20,27)
+(20,15)-(20,25)
+(20,19)-(20,25)
+(20,24)-(20,25)
+(34,15)-(34,24)
+(34,15)-(34,29)
+(34,25)-(34,29)
+(48,15)-(48,18)
+(48,15)-(48,23)
+(48,19)-(48,23)
 *)

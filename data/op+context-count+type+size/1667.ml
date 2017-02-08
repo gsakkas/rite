@@ -1,120 +1,35 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let rec additivePersistence n =
-  let x = [0] in
-  if (sumList (digitsOfInt n)) > 9
-  then 1 :: (x additivePersistence (sumList (digitsOfInt n)))
-  else sumList x;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let rec additivePersistence n =
-  let x = [0] in
-  if (sumList (digitsOfInt n)) > 9
-  then (1 :: x; additivePersistence (sumList (digitsOfInt n)))
-  else sumList x;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(13,8)-(13,59)
-(13,14)-(13,59)
-(13,16)-(13,35)
+(7,24)-(7,25)
+(7,24)-(7,41)
 *)
 
 (* type error slice
-(2,4)-(5,68)
-(2,21)-(5,62)
-(3,3)-(5,62)
-(3,3)-(5,62)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(4,8)-(4,10)
-(5,8)-(5,16)
-(5,8)-(5,62)
-(5,8)-(5,62)
-(5,19)-(5,20)
-(5,19)-(5,27)
-(5,19)-(5,62)
-(5,25)-(5,27)
-(5,33)-(5,41)
-(5,33)-(5,62)
-(5,33)-(5,62)
-(5,43)-(5,54)
-(5,43)-(5,62)
-(5,43)-(5,62)
-(5,56)-(5,57)
-(5,56)-(5,62)
-(5,60)-(5,62)
-(7,4)-(8,66)
-(7,17)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,9)-(8,11)
-(8,25)-(8,26)
-(8,37)-(8,38)
-(8,37)-(8,51)
-(8,37)-(8,51)
-(8,37)-(8,51)
-(8,42)-(8,49)
-(8,42)-(8,51)
-(8,42)-(8,51)
-(8,50)-(8,51)
-(8,61)-(8,63)
-(10,4)-(14,19)
-(10,29)-(14,17)
-(11,3)-(14,17)
-(11,11)-(11,14)
-(11,11)-(11,14)
-(11,12)-(11,13)
-(12,3)-(14,17)
-(12,3)-(14,17)
-(12,7)-(12,14)
-(12,7)-(12,29)
-(12,7)-(12,35)
-(12,7)-(12,35)
-(12,16)-(12,27)
-(12,16)-(12,29)
-(12,16)-(12,29)
-(12,28)-(12,29)
-(12,34)-(12,35)
-(13,8)-(13,9)
-(13,8)-(13,59)
-(13,14)-(13,15)
-(13,14)-(13,59)
-(13,14)-(13,59)
-(13,14)-(13,59)
-(13,16)-(13,35)
-(13,37)-(13,44)
-(13,37)-(13,59)
-(13,46)-(13,57)
-(13,46)-(13,59)
-(13,58)-(13,59)
-(14,8)-(14,15)
-(14,8)-(14,17)
-(14,16)-(14,17)
+(7,24)-(7,25)
+(7,24)-(7,41)
+(7,26)-(7,34)
+(7,26)-(7,41)
 *)

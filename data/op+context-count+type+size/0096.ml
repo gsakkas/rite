@@ -1,63 +1,96 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
+    let base = ([], []) in
+    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
   | h::t ->
-      let f a x = a ^ (sep ^ (" " ^ x)) in
-      let base = [] in let l = t in List.fold_left f base l;;
+      let rec helper acc v =
+        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
+      bigAdd (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
+    let base = ([], []) in
+    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
   | h::t ->
-      let f a x = a ^ (sep ^ (" " ^ x)) in
-      let base = "" in let l = t in List.fold_left f base l;;
+      let rec helper acc v =
+        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
+      bigAdd (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)))
+        (helper [] (h * i));;
 
 *)
 
 (* changed spans
-(7,18)-(7,20)
+(37,7)-(37,68)
 *)
 
 (* type error slice
-(2,4)-(7,62)
-(2,19)-(7,60)
-(2,23)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,9)-(3,11)
-(6,7)-(7,60)
-(6,13)-(6,38)
-(6,15)-(6,38)
-(6,19)-(6,20)
-(6,19)-(6,38)
-(6,19)-(6,38)
-(6,21)-(6,22)
-(6,24)-(6,27)
-(6,24)-(6,38)
-(6,24)-(6,38)
-(6,28)-(6,29)
-(6,31)-(6,34)
-(6,31)-(6,38)
-(6,31)-(6,38)
-(6,35)-(6,36)
-(6,37)-(6,38)
-(7,7)-(7,60)
-(7,18)-(7,20)
-(7,24)-(7,60)
-(7,32)-(7,33)
-(7,37)-(7,51)
-(7,37)-(7,60)
-(7,37)-(7,60)
-(7,37)-(7,60)
-(7,37)-(7,60)
-(7,52)-(7,53)
-(7,54)-(7,58)
-(7,59)-(7,60)
+(12,4)-(29,37)
+(12,12)-(29,33)
+(12,15)-(29,33)
+(32,3)-(37,68)
+(32,3)-(37,68)
+(33,11)-(33,13)
+(35,7)-(37,68)
+(37,7)-(37,13)
+(37,7)-(37,68)
 *)

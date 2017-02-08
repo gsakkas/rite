@@ -1,44 +1,89 @@
 
-let pipe fs =
-  let f a x c = x (c a) in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | ah::at -> (match x with | xh::xt -> ah + at) in
+    let base = l1 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs = let f a x c = x c in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,20)-(3,23)
-(3,22)-(3,23)
+(23,5)-(25,69)
+(23,11)-(23,75)
+(23,13)-(23,75)
+(23,17)-(23,75)
+(23,23)-(23,24)
+(23,43)-(23,75)
+(23,49)-(23,50)
+(23,68)-(23,70)
+(23,68)-(23,75)
+(23,73)-(23,75)
+(24,5)-(25,69)
+(24,16)-(24,18)
+(25,5)-(25,69)
+(25,22)-(25,69)
+(26,3)-(26,33)
 *)
 
 (* type error slice
-(2,4)-(3,72)
-(2,10)-(3,70)
-(3,3)-(3,70)
-(3,3)-(3,70)
-(3,9)-(3,23)
-(3,11)-(3,23)
-(3,13)-(3,23)
-(3,17)-(3,18)
-(3,17)-(3,23)
-(3,17)-(3,23)
-(3,20)-(3,21)
-(3,20)-(3,23)
-(3,20)-(3,23)
-(3,22)-(3,23)
-(3,28)-(3,70)
-(3,28)-(3,70)
-(3,37)-(3,42)
-(3,41)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
-(3,68)-(3,70)
+(23,5)-(25,69)
+(23,11)-(23,75)
+(23,13)-(23,75)
+(23,17)-(23,75)
+(23,17)-(23,75)
+(23,17)-(23,75)
+(23,17)-(23,75)
+(23,23)-(23,24)
+(23,43)-(23,75)
+(23,68)-(23,75)
+(23,68)-(23,75)
+(23,73)-(23,75)
+(25,36)-(25,50)
+(25,36)-(25,62)
+(25,51)-(25,52)
 *)

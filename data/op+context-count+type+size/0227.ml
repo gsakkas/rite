@@ -1,10 +1,19 @@
 
 let rec digitsOfInt n =
-  if n <= 0
-  then []
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
   else
-    (let next_tail = digitsOfInt (n / 10) in
-     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot abs n in l;;
 
 
 (* fix
@@ -12,52 +21,39 @@ let rec digitsOfInt n =
 let rec digitsOfInt n =
   if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
+
 *)
 
 (* changed spans
-(6,6)-(7,60)
-(6,22)-(6,41)
-(7,6)-(7,60)
-(7,12)-(7,21)
-(7,38)-(7,40)
-(7,38)-(7,60)
-(7,41)-(7,42)
+(16,33)-(16,75)
+(16,65)-(16,68)
+(16,74)-(16,75)
 *)
 
 (* type error slice
-(2,4)-(7,63)
-(2,21)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(4,8)-(4,10)
-(6,6)-(7,60)
-(6,6)-(7,60)
-(6,22)-(6,33)
-(6,22)-(6,41)
-(6,22)-(6,41)
-(6,35)-(6,36)
-(6,35)-(6,41)
-(6,39)-(6,41)
-(7,6)-(7,60)
-(7,6)-(7,60)
-(7,6)-(7,60)
-(7,6)-(7,60)
-(7,12)-(7,21)
-(7,38)-(7,40)
-(7,38)-(7,60)
-(7,38)-(7,60)
-(7,38)-(7,60)
-(7,41)-(7,42)
-(7,43)-(7,60)
-(7,43)-(7,60)
-(7,44)-(7,45)
-(7,44)-(7,58)
-(7,50)-(7,51)
-(7,50)-(7,58)
-(7,56)-(7,58)
+(7,56)-(7,70)
+(7,61)-(7,68)
+(7,61)-(7,70)
+(14,6)-(14,74)
+(14,19)-(14,26)
+(14,19)-(14,29)
+(14,33)-(14,52)
+(14,33)-(14,74)
+(14,53)-(14,59)
+(16,45)-(16,64)
+(16,45)-(16,70)
+(16,65)-(16,68)
 *)

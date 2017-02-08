@@ -1,74 +1,81 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | Comp of expr* expr* expr;;
 
-let stringOfList f l =
-  sepConcat "; " (List.append ("[" :: (List.map f l)) "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Power (e1,e2) -> (eval (e1, x, y)) ** (abs (eval (e2, x, y)))
+  | Comp (e1,e2,e3) ->
+      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
+        (eval (e3, x, y));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | Comp of expr* expr* expr;;
 
-let stringOfList f l =
-  sepConcat "; " (List.append ("[" :: (List.map f l)) ["]"]);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Power (e1,e2) -> (eval (e1, x, y)) ** (abs_float (eval (e2, x, y)))
+  | Comp (e1,e2,e3) ->
+      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
+        (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(10,55)-(10,58)
+(28,44)-(28,47)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,9)-(3,11)
-(6,7)-(7,59)
-(6,13)-(6,31)
-(6,15)-(6,31)
-(6,19)-(6,20)
-(6,24)-(6,27)
-(6,30)-(6,31)
-(7,7)-(7,59)
-(7,18)-(7,19)
-(7,23)-(7,59)
-(7,31)-(7,32)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,51)-(7,52)
-(7,53)-(7,57)
-(7,58)-(7,59)
-(9,4)-(10,61)
-(9,18)-(10,58)
-(9,20)-(10,58)
-(10,3)-(10,12)
-(10,3)-(10,58)
-(10,19)-(10,30)
-(10,19)-(10,58)
-(10,19)-(10,58)
-(10,19)-(10,58)
-(10,32)-(10,35)
-(10,32)-(10,52)
-(10,40)-(10,48)
-(10,40)-(10,52)
-(10,40)-(10,52)
-(10,40)-(10,52)
-(10,49)-(10,50)
-(10,51)-(10,52)
-(10,55)-(10,58)
+(19,21)-(19,42)
+(19,28)-(19,32)
+(19,28)-(19,42)
+(28,44)-(28,47)
+(28,44)-(28,63)
+(28,49)-(28,53)
+(28,49)-(28,63)
 *)

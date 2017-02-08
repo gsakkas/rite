@@ -8,15 +8,19 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "%s" e
-  | VarY  -> "%s" e
-  | Sine e1 -> "%s" e1
-  | Cosine e2 -> "%s" e2
-  | Average (e3,e4) -> "%s %s" e3 e4
-  | Times (e5,e6) -> "%s %s" e5 e6
-  | Thresh (e7,e8,e9,e0) -> "%s %s %s %s" e7 e8 e9 e0;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand with
+     | 0 -> buildSine (build ((rand (0, 6)), (depth - 1)))
+     | 1 -> buildCosine (build ((rand (0, 6)), (depth - 1))));;
 
 
 (* fix
@@ -30,98 +34,80 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
-  | Cosine e2 -> Printf.sprintf "%s" (exprToString e2)
-  | Average (e3,e4) ->
-      Printf.sprintf "%s %s" (exprToString e3) (exprToString e4)
-  | Times (e5,e6) ->
-      Printf.sprintf "%s %s" (exprToString e5) (exprToString e6)
-  | Thresh (e7,e8,e9,e0) ->
-      Printf.sprintf "%s %s %s %s" (exprToString e7) (exprToString e8)
-        (exprToString e9) (exprToString e0)
-  | _ -> "";;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then buildX ()
+  else
+    (match rand (0, 4) with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 2))), (build (rand, (depth - 2))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 2))), (build (rand, (depth - 2))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 4))), (build (rand, (depth - 4))),
+             (build (rand, (depth - 4))), (build (rand, (depth - 4))))
+     | _ -> buildY ());;
 
 *)
 
 (* changed spans
-(12,3)-(19,54)
-(12,9)-(12,10)
-(13,14)-(13,18)
-(13,14)-(13,20)
-(14,14)-(14,18)
-(14,14)-(14,20)
-(14,19)-(14,20)
-(15,16)-(15,20)
-(16,18)-(16,22)
-(16,18)-(16,25)
-(16,23)-(16,25)
-(17,24)-(17,31)
-(17,24)-(17,37)
-(17,32)-(17,34)
-(17,35)-(17,37)
-(18,22)-(18,29)
-(18,22)-(18,35)
-(18,30)-(18,32)
-(18,33)-(18,35)
-(19,29)-(19,42)
-(19,29)-(19,54)
-(19,43)-(19,45)
-(19,46)-(19,48)
-(19,49)-(19,51)
-(19,52)-(19,54)
+(11,17)-(11,29)
+(15,12)-(15,21)
+(17,16)-(23,58)
+(18,6)-(18,15)
+(21,6)-(23,58)
+(21,12)-(21,16)
+(22,13)-(22,56)
+(22,32)-(22,42)
+(22,38)-(22,39)
+(22,38)-(22,42)
+(22,41)-(22,42)
+(22,47)-(22,52)
+(22,55)-(22,56)
+(23,13)-(23,24)
+(23,26)-(23,31)
+(23,34)-(23,38)
+(23,34)-(23,58)
+(23,40)-(23,41)
+(23,40)-(23,44)
+(23,43)-(23,44)
+(23,49)-(23,54)
+(23,49)-(23,58)
+(23,57)-(23,58)
 *)
 
 (* type error slice
-(11,4)-(19,56)
-(11,22)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,3)-(19,54)
-(12,9)-(12,10)
-(13,14)-(13,18)
-(13,14)-(13,20)
-(13,14)-(13,20)
-(13,19)-(13,20)
-(14,14)-(14,18)
-(14,14)-(14,20)
-(14,14)-(14,20)
-(14,19)-(14,20)
-(15,16)-(15,20)
-(15,16)-(15,23)
-(15,21)-(15,23)
-(16,18)-(16,22)
-(16,18)-(16,25)
-(16,23)-(16,25)
-(17,24)-(17,31)
-(17,24)-(17,37)
-(17,32)-(17,34)
-(17,35)-(17,37)
-(18,22)-(18,29)
-(18,22)-(18,35)
-(18,30)-(18,32)
-(18,33)-(18,35)
-(19,29)-(19,42)
-(19,29)-(19,54)
-(19,43)-(19,45)
-(19,46)-(19,48)
-(19,49)-(19,51)
-(19,52)-(19,54)
+(17,4)-(23,64)
+(17,16)-(23,58)
+(21,6)-(23,58)
+(21,6)-(23,58)
+(21,6)-(23,58)
+(21,6)-(23,58)
+(21,12)-(21,16)
+(22,24)-(22,29)
+(22,24)-(22,56)
+(22,32)-(22,36)
+(22,32)-(22,42)
+(22,32)-(22,56)
+(23,34)-(23,38)
+(23,34)-(23,44)
 *)

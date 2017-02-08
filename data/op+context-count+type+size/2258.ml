@@ -1,59 +1,90 @@
 
-let rec digitsOfInt n =
-  let rec digitsOfIntHelper n result =
-    if n > 0
-    then (digitsOfIntHelper (n / 10) (n mod 10)) :: result
-    else result in
-  digitsOfIntHelper n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Halve x -> "(" ^ (exprToString ^ ")/2")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))))
+  | Wow (x,y,z) ->
+      "sqrt(" ^
+        ("abs(" ^
+           ((exprToString x) ^
+              (")*" ^
+                 ("abs(" ^
+                    ((exprToString y) ^
+                       (")*" ^ ("abs(" ^ ((exprToString z) ^ "))"))))))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec digitsOfIntHelper n result =
-    if n > 0
-    then digitsOfIntHelper (n / 10) ((n mod 10) :: result)
-    else result in
-  digitsOfIntHelper n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Halve x -> "(" ^ ((exprToString x) ^ ")/2")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))))
+  | Wow (x,y,z) ->
+      "sqrt(" ^
+        ("abs(" ^
+           ((exprToString x) ^
+              (")*" ^
+                 ("abs(" ^
+                    ((exprToString y) ^
+                       (")*" ^ ("abs(" ^ ((exprToString z) ^ "))"))))))));;
 
 *)
 
 (* changed spans
-(5,11)-(5,59)
-(5,39)-(5,47)
+(19,23)-(19,35)
+(19,38)-(19,43)
 *)
 
 (* type error slice
-(2,4)-(7,27)
-(2,21)-(7,25)
-(3,3)-(7,25)
-(3,3)-(7,25)
-(3,29)-(6,16)
-(3,31)-(6,16)
-(4,5)-(6,16)
-(4,5)-(6,16)
-(4,8)-(4,9)
-(4,8)-(4,13)
-(4,8)-(4,13)
-(4,8)-(4,13)
-(4,12)-(4,13)
-(5,11)-(5,28)
-(5,11)-(5,47)
-(5,11)-(5,47)
-(5,11)-(5,47)
-(5,11)-(5,59)
-(5,30)-(5,31)
-(5,30)-(5,36)
-(5,34)-(5,36)
-(5,39)-(5,40)
-(5,39)-(5,47)
-(5,45)-(5,47)
-(5,53)-(5,59)
-(6,10)-(6,16)
-(7,3)-(7,20)
-(7,3)-(7,25)
-(7,3)-(7,25)
-(7,3)-(7,25)
-(7,21)-(7,22)
-(7,23)-(7,25)
+(17,29)-(17,41)
+(17,29)-(17,43)
+(19,23)-(19,35)
+(19,23)-(19,43)
+(19,36)-(19,37)
 *)

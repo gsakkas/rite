@@ -1,33 +1,66 @@
 
-let rec wwhile (f,b) = match f with | (x,true ) -> f x | (x,false ) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           (("<" exprToString e2) ^
+              (" ? " ^
+                 ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")"))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 (" ? " ^
+                    ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(2,30)-(2,31)
-(2,54)-(2,55)
-(2,72)-(2,73)
+(23,14)-(23,33)
+(23,18)-(23,30)
 *)
 
 (* type error slice
-(2,4)-(2,75)
-(2,17)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,30)-(2,31)
-(2,52)-(2,53)
-(2,52)-(2,55)
-(2,52)-(2,55)
-(2,54)-(2,55)
-(2,72)-(2,73)
+(23,14)-(23,17)
+(23,14)-(23,33)
 *)

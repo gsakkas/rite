@@ -1,32 +1,45 @@
 
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else [((digitsOfInt (n / 10)), (n mod 10))];;
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n > 9 then (additivePersistence sumList (digitsOfInt n)) + 1 else 0;;
 
 
 (* fix
 
-let rec digitsOfInt n = if n <= 0 then [] else [n mod 10];;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n > 9 then (additivePersistence (sumList (digitsOfInt n))) + 1 else 0;;
 
 *)
 
 (* changed spans
-(3,29)-(3,40)
-(3,29)-(3,48)
-(3,29)-(3,61)
-(3,42)-(3,48)
+(13,18)-(13,60)
+(13,38)-(13,45)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,21)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,18)-(3,20)
-(3,26)-(3,64)
-(3,26)-(3,64)
-(3,29)-(3,40)
-(3,29)-(3,48)
-(3,29)-(3,61)
+(12,4)-(13,75)
+(12,29)-(13,73)
+(13,3)-(13,73)
+(13,18)-(13,37)
+(13,18)-(13,60)
+(13,18)-(13,66)
 *)

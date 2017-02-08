@@ -1,44 +1,93 @@
 
-let pipe fs = let f a x = a x in let base j y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "%s" e
+  | VarY  -> "%s" e
+  | Sine e1 -> "%s" e1
+  | Cosine e2 -> "%s" e2
+  | Average (e3,e4) -> "%s %s" e3 e4
+  | Times (e5,e6) -> "%s %s" e5 e6
+  | Thresh (e7,e8,e9,e0) -> "%s %s %s %s" e7 e8 e9 e0;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base z = z in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
+  | Cosine e2 -> Printf.sprintf "%s" (exprToString e2)
+  | Average (e3,e4) ->
+      Printf.sprintf "%s %s" (exprToString e3) (exprToString e4)
+  | Times (e5,e6) ->
+      Printf.sprintf "%s %s" (exprToString e5) (exprToString e6)
+  | Thresh (e7,e8,e9,e0) ->
+      Printf.sprintf "%s %s %s %s" (exprToString e7) (exprToString e8)
+        (exprToString e9) (exprToString e0)
+  | _ -> "";;
 
 *)
 
 (* changed spans
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,43)-(2,50)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,78)
+(12,3)-(19,54)
+(12,9)-(12,10)
+(13,14)-(13,18)
+(13,14)-(13,20)
+(14,14)-(14,18)
+(14,14)-(14,20)
+(14,19)-(14,20)
+(15,16)-(15,20)
+(16,18)-(16,22)
+(16,18)-(16,25)
+(16,23)-(16,25)
+(17,24)-(17,31)
+(17,24)-(17,37)
+(17,32)-(17,34)
+(17,35)-(17,37)
+(18,22)-(18,29)
+(18,22)-(18,35)
+(18,30)-(18,32)
+(18,33)-(18,35)
+(19,29)-(19,42)
+(19,29)-(19,54)
+(19,43)-(19,45)
+(19,46)-(19,48)
+(19,49)-(19,51)
+(19,52)-(19,54)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,10)-(2,78)
-(2,15)-(2,78)
-(2,15)-(2,78)
-(2,21)-(2,30)
-(2,23)-(2,30)
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,27)-(2,30)
-(2,29)-(2,30)
-(2,34)-(2,78)
-(2,34)-(2,78)
-(2,43)-(2,50)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(13,14)-(13,18)
+(13,14)-(13,20)
+(14,14)-(14,18)
+(14,14)-(14,20)
+(15,16)-(15,20)
+(15,16)-(15,23)
+(16,18)-(16,22)
+(16,18)-(16,25)
+(17,24)-(17,31)
+(17,24)-(17,37)
+(18,22)-(18,29)
+(18,22)-(18,35)
+(19,29)-(19,42)
+(19,29)-(19,54)
 *)

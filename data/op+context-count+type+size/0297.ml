@@ -1,84 +1,76 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then [seen; h] else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2.0
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 *)
 
 (* changed spans
-(7,55)-(7,64)
-(7,56)-(7,60)
-(8,9)-(8,46)
+(30,12)-(30,13)
 *)
 
 (* type error slice
-(2,4)-(9,30)
-(2,22)-(9,26)
-(3,3)-(9,26)
-(3,3)-(9,26)
-(3,19)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,46)
-(7,9)-(8,46)
-(7,21)-(7,74)
-(7,21)-(7,74)
-(7,25)-(7,33)
-(7,25)-(7,40)
-(7,25)-(7,40)
-(7,25)-(7,40)
-(7,25)-(7,49)
-(7,25)-(7,49)
-(7,25)-(7,49)
-(7,34)-(7,35)
-(7,36)-(7,40)
-(7,44)-(7,49)
-(7,55)-(7,64)
-(7,55)-(7,64)
-(7,55)-(7,64)
-(7,56)-(7,60)
-(7,62)-(7,63)
-(7,70)-(7,74)
-(8,9)-(8,46)
-(8,9)-(8,46)
-(8,21)-(8,22)
-(8,26)-(8,32)
-(8,26)-(8,46)
-(8,26)-(8,46)
-(8,34)-(8,39)
-(8,34)-(8,46)
-(8,41)-(8,46)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(28,10)-(30,13)
+(30,12)-(30,13)
 *)

@@ -1,52 +1,83 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (let x = n / 10
-        and y = n mod 10 in (digitsOfInt x) @ y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | AddThree of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
+  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
+  | Thresh (e7,e8,e9,e10) ->
+      "(" ^
+        ((exprToString e7) ^
+           ("<" ^
+              ((exprToString e8) ^
+                 ("?" ^
+                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
+  | Power (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
+  | AddThree (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("+" ^ ((exprToString e2) ^ (("+" exprToString e3) ^ ")"))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (let x = n / 10
-        and y = n mod 10 in (digitsOfInt x) @ [y]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | AddThree of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
+  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
+  | Thresh (e7,e8,e9,e10) ->
+      "(" ^
+        ((exprToString e7) ^
+           ("<" ^
+              ((exprToString e8) ^
+                 ("?" ^
+                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
+  | Power (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
+  | AddThree (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("+" ^ ((exprToString e2) ^ ("+" ^ ((exprToString e3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(6,47)-(6,48)
+(34,42)-(34,61)
+(34,46)-(34,58)
 *)
 
 (* type error slice
-(2,4)-(6,51)
-(2,21)-(6,48)
-(3,3)-(6,48)
-(3,3)-(6,48)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(4,8)-(4,10)
-(5,9)-(6,48)
-(5,9)-(6,48)
-(5,9)-(6,48)
-(5,17)-(5,18)
-(5,17)-(5,23)
-(5,21)-(5,23)
-(6,17)-(6,18)
-(6,17)-(6,25)
-(6,23)-(6,25)
-(6,30)-(6,41)
-(6,30)-(6,43)
-(6,30)-(6,43)
-(6,30)-(6,48)
-(6,30)-(6,48)
-(6,30)-(6,48)
-(6,42)-(6,43)
-(6,45)-(6,46)
-(6,47)-(6,48)
+(34,42)-(34,45)
+(34,42)-(34,61)
 *)

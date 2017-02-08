@@ -1,78 +1,118 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  let f' = if (f b) = b then (b, true) else (b, false) in wwhile (f', b);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      if x = []
+      then
+        (if rem = 1
+         then (0, (1 :: acc))
+         else
+           (let (el1,el2) = x in
+            let new_sum = (rem + el1) + el2 in
+            let new_rem = if new_sum > 9 then 1 else 0 in
+            let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+            (new_rem, (norm_sum :: acc)))) in
+    let base = (0, []) in
+    let args = List.rev ([] @ (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  let f' b' = if (f b') = b' then (b', true) else (b', false) in
-  wwhile (f', b);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      if
+        ((List.length acc) = (List.length l1)) ||
+          ((List.length acc) = (List.length l2))
+      then (if rem = 1 then (0, (1 :: acc)) else (0, acc))
+      else
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(6,12)-(6,54)
-(6,18)-(6,19)
-(6,23)-(6,24)
-(6,31)-(6,32)
-(6,31)-(6,38)
-(6,46)-(6,47)
+(18,7)-(27,39)
+(18,10)-(18,11)
+(18,10)-(18,16)
+(18,14)-(18,16)
+(20,10)-(27,39)
+(23,13)-(27,39)
+(23,29)-(23,30)
+(24,13)-(27,39)
+(25,13)-(27,39)
+(26,13)-(27,39)
+(29,26)-(29,28)
+(29,29)-(29,30)
+(29,32)-(29,50)
+(31,3)-(31,13)
+(31,15)-(31,18)
+(31,15)-(31,33)
+(31,20)-(31,27)
+(31,20)-(31,33)
+(31,28)-(31,30)
+(31,31)-(31,33)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,17)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,17)-(3,18)
-(3,17)-(3,20)
-(3,17)-(3,20)
-(3,19)-(3,20)
-(3,24)-(3,64)
-(3,24)-(3,64)
-(3,27)-(3,29)
-(3,27)-(3,36)
-(3,27)-(3,36)
-(3,27)-(3,36)
-(3,32)-(3,36)
-(3,42)-(3,48)
-(3,42)-(3,55)
-(3,42)-(3,55)
-(3,50)-(3,51)
-(3,50)-(3,55)
-(3,53)-(3,55)
-(3,62)-(3,64)
-(5,4)-(6,75)
-(5,15)-(6,72)
-(6,3)-(6,72)
-(6,3)-(6,72)
-(6,12)-(6,54)
-(6,12)-(6,54)
-(6,16)-(6,17)
-(6,16)-(6,19)
-(6,16)-(6,19)
-(6,16)-(6,24)
-(6,16)-(6,24)
-(6,16)-(6,24)
-(6,18)-(6,19)
-(6,23)-(6,24)
-(6,31)-(6,32)
-(6,31)-(6,38)
-(6,34)-(6,38)
-(6,46)-(6,47)
-(6,46)-(6,54)
-(6,49)-(6,54)
-(6,59)-(6,65)
-(6,59)-(6,72)
-(6,59)-(6,72)
-(6,67)-(6,69)
-(6,67)-(6,72)
-(6,71)-(6,72)
+(16,5)-(30,52)
+(16,11)-(27,39)
+(16,13)-(27,39)
+(18,7)-(27,39)
+(18,7)-(27,39)
+(18,7)-(27,39)
+(18,10)-(18,11)
+(18,10)-(18,16)
+(18,10)-(18,16)
+(18,14)-(18,16)
+(20,10)-(27,39)
+(21,16)-(21,28)
+(23,13)-(27,39)
+(23,29)-(23,30)
+(29,5)-(30,52)
+(29,16)-(29,24)
+(29,16)-(29,50)
+(29,26)-(29,50)
+(29,29)-(29,30)
+(29,32)-(29,44)
+(29,32)-(29,50)
+(30,19)-(30,33)
+(30,19)-(30,45)
+(30,34)-(30,35)
+(30,41)-(30,45)
 *)

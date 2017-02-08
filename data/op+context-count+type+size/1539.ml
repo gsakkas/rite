@@ -1,104 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
-  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
-  | Average (expr0,expr1) ->
-      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr0,expr1) ->
-      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      "(" ^
-        (expr0 ^ ("<" ^ (expr1 ^ ("?" ^ (expr2 ^ (":" ^ (expr3 ^ ")")))))));;
+let fixpoint (f,b) = wwhile (((f b) <> b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with
+  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
-  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
-  | Average (expr0,expr1) ->
-      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr0,expr1) ->
-      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr0) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^
-                    ((exprToString expr2) ^
-                       (":" ^ ((exprToString expr3) ^ ")")))))));;
+let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 
 *)
 
 (* changed spans
-(23,10)-(23,15)
-(23,26)-(23,31)
-(23,42)-(23,47)
-(23,58)-(23,63)
-(23,64)-(23,65)
-(23,66)-(23,69)
+(3,31)-(3,64)
+(5,32)-(5,33)
+(5,32)-(5,35)
+(5,32)-(5,41)
+(5,32)-(5,45)
+(5,40)-(5,41)
+(5,44)-(5,45)
 *)
 
 (* type error slice
-(11,22)-(23,69)
-(12,3)-(23,69)
-(12,3)-(23,69)
-(12,3)-(23,69)
-(12,3)-(23,69)
-(12,9)-(12,10)
-(15,30)-(15,42)
-(15,30)-(15,48)
-(22,7)-(22,10)
-(22,11)-(22,12)
-(23,10)-(23,15)
-(23,10)-(23,69)
-(23,10)-(23,69)
-(23,16)-(23,17)
-(23,19)-(23,22)
-(23,19)-(23,69)
-(23,23)-(23,24)
-(23,26)-(23,31)
-(23,26)-(23,69)
-(23,26)-(23,69)
-(23,32)-(23,33)
-(23,35)-(23,38)
-(23,35)-(23,69)
-(23,39)-(23,40)
-(23,42)-(23,47)
-(23,42)-(23,69)
-(23,42)-(23,69)
-(23,48)-(23,49)
-(23,51)-(23,54)
-(23,51)-(23,69)
-(23,55)-(23,56)
-(23,58)-(23,63)
-(23,58)-(23,69)
-(23,58)-(23,69)
-(23,64)-(23,65)
-(23,66)-(23,69)
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,42)-(3,48)
+(3,42)-(3,55)
+(3,50)-(3,51)
+(3,50)-(3,55)
+(5,22)-(5,28)
+(5,22)-(5,45)
+(5,32)-(5,41)
+(5,32)-(5,45)
 *)

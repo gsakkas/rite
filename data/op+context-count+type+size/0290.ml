@@ -1,76 +1,54 @@
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then []
+  else
+    (let myList = digits n in
+     let num = sumList myList in num + (additivePersistence num));;
 
 
 (* fix
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> h :: (append [] t);;
+let digits n = digitsOfInt (abs n);;
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> h :: (append t list2);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     1 + (additivePersistence num));;
 
 *)
 
 (* changed spans
-(5,21)-(6,62)
-(6,3)-(6,62)
-(6,9)-(6,10)
-(6,24)-(6,26)
-(6,37)-(6,48)
-(6,37)-(6,62)
-(6,50)-(6,62)
-(6,57)-(6,58)
-(6,59)-(6,62)
-(6,60)-(6,61)
+(11,8)-(11,10)
+(14,34)-(14,64)
 *)
 
 (* type error slice
-(2,4)-(3,60)
-(2,12)-(3,58)
-(2,18)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,9)-(3,14)
-(3,28)-(3,33)
-(3,44)-(3,49)
-(3,44)-(3,58)
-(3,53)-(3,58)
-(5,4)-(6,65)
-(5,21)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,3)-(6,62)
-(6,9)-(6,10)
-(6,24)-(6,26)
-(6,37)-(6,48)
-(6,37)-(6,62)
-(6,37)-(6,62)
-(6,50)-(6,56)
-(6,50)-(6,62)
-(6,50)-(6,62)
-(6,50)-(6,62)
-(6,57)-(6,58)
-(6,59)-(6,62)
-(6,59)-(6,62)
-(6,60)-(6,61)
+(9,4)-(14,68)
+(9,29)-(14,64)
+(10,3)-(14,64)
+(10,3)-(14,64)
+(11,8)-(11,10)
+(13,6)-(14,64)
+(14,6)-(14,64)
+(14,34)-(14,64)
+(14,34)-(14,64)
+(14,41)-(14,60)
+(14,41)-(14,64)
 *)

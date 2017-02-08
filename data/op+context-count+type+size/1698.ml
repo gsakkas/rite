@@ -1,87 +1,25 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> VarX
-  | 2 -> 22
-  | 3 -> 33
-  | 4 -> 44
-  | 5 -> 55
-  | 6 -> 66
-  | 7 -> 77;;
+let rec clone x n =
+  let acc = [] in if n > 0 then clone (x :: x) (n - 1) else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 -> buildX ()
-  | 4 -> buildY ()
-  | 5 -> buildX ()
-  | 6 -> buildY ()
-  | 7 -> buildX ();;
+let rec clone x n = let acc = [x] in if n > 0 then clone x (n - 1) else [];;
 
 *)
 
 (* changed spans
-(11,16)-(19,12)
-(13,10)-(13,14)
-(14,10)-(14,12)
-(15,10)-(15,12)
-(16,10)-(16,12)
-(17,10)-(17,12)
-(18,10)-(18,12)
-(19,10)-(19,12)
+(3,3)-(3,63)
+(3,13)-(3,15)
+(3,19)-(3,63)
+(3,40)-(3,46)
+(3,45)-(3,46)
 *)
 
 (* type error slice
-(11,4)-(19,14)
-(11,16)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,3)-(19,12)
-(12,9)-(12,13)
-(12,9)-(12,19)
-(13,10)-(13,14)
-(14,10)-(14,12)
-(15,10)-(15,12)
-(16,10)-(16,12)
-(17,10)-(17,12)
-(18,10)-(18,12)
-(19,10)-(19,12)
+(3,40)-(3,41)
+(3,40)-(3,46)
+(3,40)-(3,46)
+(3,45)-(3,46)
 *)

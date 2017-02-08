@@ -1,100 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in if y = 2 then y);;
+let rec listReverse l =
+  let rec listHelper l l2 =
+    match l with | [] -> l2 | h::t -> (listHelper t h) :: l2 in
+  listHelper l [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let rec listReverse l =
+  let rec listHelper l l2 =
+    match l with | [] -> l2 | h::t -> listHelper t (h :: l2) in
+  listHelper l [];;
 
 *)
 
 (* changed spans
-(18,32)-(18,47)
-(18,35)-(18,36)
-(18,35)-(18,40)
-(18,39)-(18,40)
-(18,46)-(18,47)
+(4,40)-(4,61)
+(4,53)-(4,54)
 *)
 
 (* type error slice
-(11,4)-(11,23)
-(11,12)-(11,21)
-(11,12)-(11,21)
-(11,17)-(11,21)
-(13,4)-(13,23)
-(13,12)-(13,21)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(15,4)-(18,50)
-(15,16)-(18,47)
-(16,3)-(18,47)
-(16,6)-(16,11)
-(16,6)-(16,15)
-(16,6)-(16,15)
-(16,6)-(16,15)
-(16,14)-(16,15)
-(17,9)-(17,59)
-(17,9)-(17,59)
-(17,13)-(17,17)
-(17,13)-(17,23)
-(17,13)-(17,23)
-(17,13)-(17,29)
-(17,13)-(17,29)
-(17,13)-(17,29)
-(17,19)-(17,20)
-(17,19)-(17,23)
-(17,22)-(17,23)
-(17,28)-(17,29)
-(17,35)-(17,41)
-(17,35)-(17,44)
-(17,42)-(17,44)
-(17,50)-(17,56)
-(17,50)-(17,59)
-(17,57)-(17,59)
-(18,9)-(18,47)
-(18,17)-(18,21)
-(18,17)-(18,27)
-(18,23)-(18,24)
-(18,23)-(18,27)
-(18,26)-(18,27)
-(18,32)-(18,47)
-(18,32)-(18,47)
-(18,32)-(18,47)
-(18,35)-(18,36)
-(18,35)-(18,40)
-(18,35)-(18,40)
-(18,39)-(18,40)
-(18,46)-(18,47)
+(3,3)-(5,18)
+(3,22)-(4,61)
+(3,24)-(4,61)
+(4,5)-(4,61)
+(4,26)-(4,28)
+(4,40)-(4,50)
+(4,40)-(4,54)
+(4,40)-(4,61)
+(4,40)-(4,61)
+(4,59)-(4,61)
 *)

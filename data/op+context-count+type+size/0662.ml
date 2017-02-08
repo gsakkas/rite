@@ -1,123 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval e1) *. (eval e2);;
+let digits n = digitsOfInt (abs n);;
+
+let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digits n)) < 10
+  then numdigits (digits n)
+  else additivePersistence (sumList n);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+let digits n = digitsOfInt (abs n);;
+
+let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digits n)) < 10
+  then numdigits (digits n)
+  else additivePersistence (sumList (digits n));;
 
 *)
 
 (* changed spans
-(20,28)-(20,30)
-(20,36)-(20,40)
-(20,36)-(20,43)
-(20,41)-(20,43)
+(20,37)-(20,38)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,15)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,3)-(20,43)
-(14,9)-(14,10)
-(15,14)-(15,15)
-(16,14)-(16,15)
-(17,16)-(17,19)
-(17,16)-(17,42)
-(17,21)-(17,23)
-(17,21)-(17,42)
-(17,21)-(17,42)
-(17,28)-(17,32)
-(17,28)-(17,42)
-(17,28)-(17,42)
-(17,34)-(17,36)
-(17,34)-(17,42)
-(17,38)-(17,39)
-(17,41)-(17,42)
-(18,18)-(18,21)
-(18,18)-(18,44)
-(18,23)-(18,25)
-(18,23)-(18,44)
-(18,30)-(18,34)
-(18,30)-(18,44)
-(18,30)-(18,44)
-(18,36)-(18,38)
-(18,36)-(18,44)
-(18,40)-(18,41)
-(18,43)-(18,44)
-(19,26)-(19,30)
-(19,26)-(19,40)
-(19,26)-(19,40)
-(19,26)-(19,61)
-(19,26)-(19,71)
-(19,32)-(19,34)
-(19,32)-(19,40)
-(19,36)-(19,37)
-(19,39)-(19,40)
-(19,47)-(19,51)
-(19,47)-(19,61)
-(19,47)-(19,61)
-(19,53)-(19,55)
-(19,53)-(19,61)
-(19,57)-(19,58)
-(19,60)-(19,61)
-(19,68)-(19,71)
-(20,23)-(20,27)
-(20,23)-(20,30)
-(20,23)-(20,30)
-(20,28)-(20,30)
-(20,36)-(20,40)
-(20,36)-(20,43)
-(20,36)-(20,43)
-(20,41)-(20,43)
+(11,4)-(11,37)
+(11,12)-(11,34)
+(11,29)-(11,32)
+(11,29)-(11,34)
+(11,33)-(11,34)
+(15,22)-(15,70)
+(15,22)-(15,70)
+(15,61)-(15,68)
+(15,61)-(15,70)
+(15,69)-(15,70)
+(18,16)-(18,22)
+(18,16)-(18,24)
+(18,23)-(18,24)
+(20,29)-(20,36)
+(20,29)-(20,38)
+(20,37)-(20,38)
 *)

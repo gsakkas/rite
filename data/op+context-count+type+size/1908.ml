@@ -6,22 +6,33 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi * (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | Inverse a -> "1/" ^ (exprToString a)
+  | Max (a,b) ->
+      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+  | Range (a,b,c) ->
+      "range(" ^
+        ((exprToString a) ^
+           (("," exprToString b) ^ ("," ^ ((exprToString c) ^ ")"))));;
 
 
 (* fix
@@ -33,143 +44,42 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | Inverse a -> "1/" ^ (exprToString a)
+  | Max (a,b) ->
+      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+  | Range (a,b,c) ->
+      "range(" ^
+        ((exprToString a) ^
+           ("," ^ ((exprToString b) ^ ("," ^ ((exprToString c) ^ ")")))));;
 
 *)
 
 (* changed spans
-(18,22)-(18,41)
-(19,64)-(19,65)
+(35,14)-(35,32)
+(35,18)-(35,30)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,15)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,3)-(24,25)
-(14,9)-(14,10)
-(15,14)-(15,15)
-(16,14)-(16,15)
-(17,15)-(17,18)
-(17,15)-(17,40)
-(17,20)-(17,22)
-(17,20)-(17,40)
-(17,20)-(17,40)
-(17,27)-(17,31)
-(17,27)-(17,40)
-(17,27)-(17,40)
-(17,33)-(17,34)
-(17,33)-(17,40)
-(17,36)-(17,37)
-(17,39)-(17,40)
-(18,17)-(18,20)
-(18,17)-(18,41)
-(18,17)-(18,41)
-(18,22)-(18,24)
-(18,22)-(18,41)
-(18,22)-(18,41)
-(18,22)-(18,41)
-(18,28)-(18,32)
-(18,28)-(18,41)
-(18,28)-(18,41)
-(18,34)-(18,35)
-(18,34)-(18,41)
-(18,37)-(18,38)
-(18,40)-(18,41)
-(19,24)-(19,28)
-(19,24)-(19,37)
-(19,24)-(19,37)
-(19,24)-(19,57)
-(19,24)-(19,65)
-(19,24)-(19,65)
-(19,30)-(19,31)
-(19,30)-(19,37)
-(19,33)-(19,34)
-(19,36)-(19,37)
-(19,44)-(19,48)
-(19,44)-(19,57)
-(19,44)-(19,57)
-(19,50)-(19,51)
-(19,50)-(19,57)
-(19,53)-(19,54)
-(19,56)-(19,57)
-(19,64)-(19,65)
-(20,21)-(20,25)
-(20,21)-(20,34)
-(20,21)-(20,34)
-(20,21)-(20,54)
-(20,27)-(20,28)
-(20,27)-(20,34)
-(20,30)-(20,31)
-(20,33)-(20,34)
-(20,41)-(20,45)
-(20,41)-(20,54)
-(20,41)-(20,54)
-(20,47)-(20,48)
-(20,47)-(20,54)
-(20,50)-(20,51)
-(20,53)-(20,54)
-(22,11)-(22,15)
-(22,11)-(22,24)
-(22,11)-(22,24)
-(22,11)-(22,43)
-(22,11)-(22,43)
-(22,17)-(22,18)
-(22,17)-(22,24)
-(22,20)-(22,21)
-(22,23)-(22,24)
-(22,30)-(22,34)
-(22,30)-(22,43)
-(22,30)-(22,43)
-(22,36)-(22,37)
-(22,36)-(22,43)
-(22,39)-(22,40)
-(22,42)-(22,43)
-(23,12)-(23,16)
-(23,12)-(23,25)
-(23,12)-(23,25)
-(23,18)-(23,19)
-(23,18)-(23,25)
-(23,21)-(23,22)
-(23,24)-(23,25)
-(24,12)-(24,16)
-(24,12)-(24,25)
-(24,12)-(24,25)
-(24,18)-(24,19)
-(24,18)-(24,25)
-(24,21)-(24,22)
-(24,24)-(24,25)
+(35,14)-(35,17)
+(35,14)-(35,32)
 *)

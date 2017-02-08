@@ -1,58 +1,55 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let fixpoint (f,b) = wwhile ((not f), b);;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes), l2);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
 *)
 
 (* changed spans
-(3,31)-(3,64)
-(5,31)-(5,34)
-(5,31)-(5,36)
-(5,31)-(5,40)
-(5,35)-(5,36)
-(5,39)-(5,40)
+(14,35)-(14,53)
+(14,56)-(14,58)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,17)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,9)-(3,10)
-(3,9)-(3,12)
-(3,9)-(3,12)
-(3,11)-(3,12)
-(3,31)-(3,64)
-(3,31)-(3,64)
-(3,31)-(3,64)
-(3,34)-(3,36)
-(3,42)-(3,48)
-(3,42)-(3,55)
-(3,42)-(3,55)
-(3,50)-(3,51)
-(3,50)-(3,55)
-(3,53)-(3,55)
-(3,62)-(3,64)
-(5,4)-(5,43)
-(5,15)-(5,40)
-(5,22)-(5,28)
-(5,22)-(5,40)
-(5,22)-(5,40)
-(5,31)-(5,34)
-(5,31)-(5,36)
-(5,31)-(5,36)
-(5,31)-(5,40)
-(5,35)-(5,36)
-(5,39)-(5,40)
+(6,17)-(6,28)
+(6,17)-(6,31)
+(6,29)-(6,31)
+(8,3)-(14,58)
+(8,3)-(14,58)
+(10,7)-(11,60)
+(11,7)-(11,60)
+(11,34)-(11,36)
+(11,34)-(11,60)
+(13,7)-(14,58)
+(14,7)-(14,58)
+(14,35)-(14,46)
+(14,35)-(14,53)
+(14,35)-(14,58)
 *)

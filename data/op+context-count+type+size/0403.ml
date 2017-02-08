@@ -1,41 +1,34 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ (n mod 10);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+
+let fixpoint (f,b) = wwhile (((f b) = b), b);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile ((fun f'  -> if (f b) = b then (b, true) else (b, false)), b);;
 
 *)
 
 (* changed spans
-(3,51)-(3,59)
+(5,32)-(5,40)
+(5,43)-(5,44)
 *)
 
 (* type error slice
-(2,4)-(3,62)
-(2,21)-(3,59)
-(3,3)-(3,59)
-(3,3)-(3,59)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,17)-(3,19)
-(3,26)-(3,37)
-(3,26)-(3,45)
-(3,26)-(3,45)
-(3,26)-(3,59)
-(3,26)-(3,59)
-(3,26)-(3,59)
-(3,39)-(3,40)
-(3,39)-(3,45)
-(3,43)-(3,45)
-(3,48)-(3,49)
-(3,51)-(3,52)
-(3,51)-(3,59)
-(3,57)-(3,59)
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,60)-(3,66)
+(3,60)-(3,73)
+(3,68)-(3,69)
+(3,68)-(3,73)
+(5,22)-(5,28)
+(5,22)-(5,44)
+(5,32)-(5,40)
+(5,32)-(5,44)
 *)

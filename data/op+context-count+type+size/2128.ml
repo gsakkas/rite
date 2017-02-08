@@ -1,37 +1,82 @@
 
-let rec digitsOfInt n = if n > 0 then [5] @ ((digitsOfInt n) / 10) else [1];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Squa expr ->
+      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
+  | Nom (expr,expr1,expr2) ->
+      let (r1,r2,r3) =
+        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
+      ((r1 +. r2) +. r3) /.
+        ((((abs_float r1) +. (abs_float r2)) +. (abs_float r3)) +. 1)
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n = if n > 0 then [5] @ (digitsOfInt (n / 10)) else [1];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Squa expr ->
+      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
+  | Nom (expr,expr1,expr2) ->
+      let (r1,r2,r3) =
+        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
+      ((r1 +. r2) +. r3) /.
+        ((((abs_float r1) +. (abs_float r2)) +. (abs_float r3)) +. 1.)
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(2,47)-(2,66)
-(2,59)-(2,60)
+(30,68)-(30,69)
 *)
 
 (* type error slice
-(2,21)-(2,76)
-(2,28)-(2,29)
-(2,28)-(2,33)
-(2,28)-(2,33)
-(2,28)-(2,33)
-(2,32)-(2,33)
-(2,39)-(2,42)
-(2,39)-(2,42)
-(2,39)-(2,66)
-(2,39)-(2,66)
-(2,39)-(2,66)
-(2,40)-(2,41)
-(2,43)-(2,44)
-(2,47)-(2,58)
-(2,47)-(2,60)
-(2,47)-(2,60)
-(2,47)-(2,66)
-(2,47)-(2,66)
-(2,59)-(2,60)
-(2,64)-(2,66)
+(30,13)-(30,69)
+(30,68)-(30,69)
 *)

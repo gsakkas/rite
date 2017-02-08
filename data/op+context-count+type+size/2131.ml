@@ -1,81 +1,106 @@
 
-let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let rec digitsOfInt n =
-  if n >= 10 then (app digitsOfInt (n / 10)) @ [n mod 10] else [n];;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ")")))))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n >= 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(2,13)-(2,65)
-(2,15)-(2,65)
-(2,19)-(2,65)
-(2,25)-(2,26)
-(2,40)-(2,41)
-(2,52)-(2,53)
-(2,52)-(2,65)
-(2,58)-(2,61)
-(2,58)-(2,65)
-(2,62)-(2,63)
-(2,64)-(2,65)
-(5,20)-(5,43)
-(5,48)-(5,58)
-(5,64)-(5,67)
+(43,33)-(43,51)
+(43,33)-(43,56)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,13)-(2,65)
-(2,15)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,19)-(2,65)
-(2,25)-(2,26)
-(2,40)-(2,41)
-(2,52)-(2,53)
-(2,52)-(2,65)
-(2,58)-(2,61)
-(2,58)-(2,65)
-(2,58)-(2,65)
-(2,58)-(2,65)
-(2,62)-(2,63)
-(2,64)-(2,65)
-(4,4)-(5,69)
-(4,21)-(5,67)
-(5,3)-(5,67)
-(5,6)-(5,7)
-(5,6)-(5,13)
-(5,6)-(5,13)
-(5,6)-(5,13)
-(5,11)-(5,13)
-(5,20)-(5,23)
-(5,20)-(5,43)
-(5,20)-(5,43)
-(5,20)-(5,43)
-(5,20)-(5,58)
-(5,20)-(5,58)
-(5,20)-(5,58)
-(5,24)-(5,35)
-(5,37)-(5,38)
-(5,37)-(5,43)
-(5,41)-(5,43)
-(5,46)-(5,47)
-(5,48)-(5,58)
-(5,48)-(5,58)
-(5,49)-(5,50)
-(5,49)-(5,57)
-(5,55)-(5,57)
-(5,64)-(5,67)
-(5,64)-(5,67)
-(5,65)-(5,66)
+(17,32)-(17,44)
+(17,32)-(17,49)
+(17,32)-(17,56)
+(17,51)-(17,52)
+(43,33)-(43,45)
+(43,33)-(43,51)
+(43,33)-(43,56)
 *)

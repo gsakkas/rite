@@ -1,76 +1,108 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = h in let rest' = List.mem h l in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e' x y)))
+  | Cosine e' -> cos (pi *. (eval e' x y))
+  | Average (e1,e2) -> ((eval e1 x y) +. (eval e2 x y)) /. 2
+  | Times (e1,e2) -> (eval e1 x y) *. (eval e2 x y)
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a x y)) < (eval (b x y))
+      then eval (a_less x y)
+      else eval (b_less x y);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(7,21)-(7,22)
-(7,26)-(7,74)
-(7,49)-(7,50)
-(7,54)-(7,74)
-(8,13)-(8,19)
-(8,21)-(8,23)
-(8,21)-(8,26)
-(8,25)-(8,26)
+(17,34)-(17,40)
+(18,30)-(18,41)
+(18,35)-(18,37)
+(19,26)-(19,37)
+(19,31)-(19,33)
+(19,43)-(19,54)
+(19,48)-(19,50)
+(19,60)-(19,61)
+(20,23)-(20,34)
+(20,28)-(20,30)
+(20,40)-(20,51)
+(20,45)-(20,47)
+(22,17)-(22,22)
+(22,34)-(22,39)
+(23,18)-(23,28)
+(24,18)-(24,24)
+(24,18)-(24,28)
+(24,25)-(24,26)
+(24,27)-(24,28)
 *)
 
 (* type error slice
-(2,4)-(8,30)
-(2,22)-(8,26)
-(3,3)-(8,26)
-(3,3)-(8,26)
-(3,19)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,5)-(7,74)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(7,74)
-(7,9)-(7,74)
-(7,21)-(7,22)
-(7,26)-(7,74)
-(7,26)-(7,74)
-(7,38)-(7,46)
-(7,38)-(7,50)
-(7,38)-(7,50)
-(7,38)-(7,50)
-(7,47)-(7,48)
-(7,49)-(7,50)
-(7,54)-(7,60)
-(7,54)-(7,74)
-(7,54)-(7,74)
-(7,62)-(7,67)
-(7,62)-(7,74)
-(7,69)-(7,74)
-(8,3)-(8,11)
-(8,3)-(8,26)
-(8,3)-(8,26)
-(8,13)-(8,19)
-(8,13)-(8,26)
-(8,13)-(8,26)
-(8,21)-(8,23)
-(8,21)-(8,26)
-(8,25)-(8,26)
+(14,3)-(24,28)
+(14,3)-(24,28)
+(14,3)-(24,28)
+(14,3)-(24,28)
+(14,3)-(24,28)
+(17,21)-(17,40)
+(17,28)-(17,32)
+(17,28)-(17,40)
+(17,34)-(17,36)
+(17,34)-(17,40)
+(18,30)-(18,34)
+(18,30)-(18,41)
+(19,26)-(19,30)
+(19,26)-(19,37)
+(19,26)-(19,61)
+(19,43)-(19,47)
+(19,43)-(19,54)
+(19,60)-(19,61)
+(20,23)-(20,27)
+(20,23)-(20,34)
+(20,40)-(20,44)
+(20,40)-(20,51)
+(22,17)-(22,18)
+(22,17)-(22,22)
+(22,34)-(22,35)
+(22,34)-(22,39)
+(23,18)-(23,24)
+(23,18)-(23,28)
+(24,18)-(24,24)
+(24,18)-(24,28)
 *)

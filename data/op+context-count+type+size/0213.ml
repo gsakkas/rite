@@ -1,92 +1,103 @@
 
-let rec digits (x,y) =
-  if y < 10 then y :: x else digits (((y mod 10) :: x), (y mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
+let rec exprToString e =
+  let s = "" in
+  match e with
+  | VarX  -> s ^ "x"
+  | VarY  -> s ^ "y"
+  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
+  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
+  | Average (a,b) ->
+      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
+  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
+  | Thresh (a,b,c,d) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("<" ^
+                 ((exprToString b) ^
+                    ("?" ^
+                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
+  | NewA (a,b) ->
+      s ^
+        ("sin(pi*" ^
+           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
+  | NewB (a,b,c) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("+" ^ ((exprToString b) ^ (("+" + (exprToString c)) ^ ")^0")))));;
 
 
 (* fix
 
-let rec digits (x,y) =
-  if y < 10 then y :: x else digits (((y mod 10) :: x), (y / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let rec digitsOfInt n = if n <= 0 then [] else digits ([], n);;
+let rec exprToString e =
+  let s = "" in
+  match e with
+  | VarX  -> s ^ "x"
+  | VarY  -> s ^ "y"
+  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
+  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
+  | Average (a,b) ->
+      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
+  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
+  | Thresh (a,b,c,d) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("<" ^
+                 ((exprToString b) ^
+                    ("?" ^
+                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
+  | NewA (a,b) ->
+      s ^
+        ("sin(pi*" ^
+           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
+  | NewB (a,b,c) ->
+      s ^
+        ("(" ^
+           ((exprToString a) ^
+              ("+" ^ ((exprToString b) ^ ("+" ^ ((exprToString c) ^ ")^0"))))));;
 
 *)
 
 (* changed spans
-(3,58)-(3,66)
-(7,12)-(7,34)
-(9,21)-(9,61)
+(39,44)-(39,65)
+(39,51)-(39,65)
 *)
 
 (* type error slice
-(2,4)-(3,70)
-(2,17)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,10)-(3,12)
-(3,18)-(3,19)
-(3,18)-(3,24)
-(3,23)-(3,24)
-(3,30)-(3,36)
-(3,30)-(3,66)
-(3,30)-(3,66)
-(3,40)-(3,41)
-(3,40)-(3,48)
-(3,40)-(3,54)
-(3,40)-(3,66)
-(3,46)-(3,48)
-(3,53)-(3,54)
-(3,58)-(3,59)
-(3,58)-(3,66)
-(3,64)-(3,66)
-(5,4)-(5,64)
-(5,21)-(5,61)
-(5,25)-(5,61)
-(5,25)-(5,61)
-(5,28)-(5,29)
-(5,28)-(5,34)
-(5,28)-(5,34)
-(5,28)-(5,34)
-(5,33)-(5,34)
-(5,40)-(5,42)
-(5,48)-(5,54)
-(5,48)-(5,61)
-(5,48)-(5,61)
-(5,56)-(5,58)
-(5,56)-(5,61)
-(5,60)-(5,61)
-(7,4)-(7,37)
-(7,12)-(7,34)
-(7,16)-(7,27)
-(7,16)-(7,34)
-(7,29)-(7,32)
-(7,29)-(7,34)
-(7,29)-(7,34)
-(7,33)-(7,34)
-(9,4)-(9,64)
-(9,21)-(9,61)
-(9,25)-(9,61)
-(9,25)-(9,61)
-(9,28)-(9,29)
-(9,28)-(9,34)
-(9,28)-(9,34)
-(9,28)-(9,34)
-(9,33)-(9,34)
-(9,40)-(9,42)
-(9,48)-(9,54)
-(9,48)-(9,61)
-(9,48)-(9,61)
-(9,56)-(9,58)
-(9,56)-(9,61)
-(9,60)-(9,61)
+(18,34)-(18,46)
+(18,34)-(18,48)
+(18,34)-(18,55)
+(18,50)-(18,51)
+(39,44)-(39,47)
+(39,44)-(39,65)
+(39,44)-(39,65)
+(39,44)-(39,65)
+(39,44)-(39,75)
+(39,51)-(39,63)
+(39,51)-(39,65)
+(39,68)-(39,69)
 *)

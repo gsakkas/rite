@@ -1,76 +1,80 @@
 
-let g x y = ((y x), false);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile ((g b f), b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) + (eval (e3, x, y))) / 2
+  | Times (e4,e5) -> (eval (e4, x, y)) * (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 
 (* fix
 
-let h x = ((x * x), (x < 100));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile (h, b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 *)
 
 (* changed spans
-(2,9)-(2,26)
-(2,15)-(2,16)
-(2,15)-(2,18)
-(2,21)-(2,26)
-(4,17)-(5,62)
-(7,31)-(7,32)
-(7,31)-(7,36)
-(7,33)-(7,34)
-(7,35)-(7,36)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,67)
+(19,66)-(19,67)
+(20,23)-(20,37)
+(20,23)-(20,57)
 *)
 
 (* type error slice
-(2,4)-(2,29)
-(2,7)-(2,26)
-(2,9)-(2,26)
-(2,15)-(2,16)
-(2,15)-(2,18)
-(2,15)-(2,18)
-(2,15)-(2,26)
-(2,17)-(2,18)
-(4,4)-(5,65)
-(4,17)-(5,62)
-(5,3)-(5,62)
-(5,3)-(5,62)
-(5,9)-(5,10)
-(5,9)-(5,12)
-(5,9)-(5,12)
-(5,11)-(5,12)
-(5,29)-(5,62)
-(5,29)-(5,62)
-(5,32)-(5,35)
-(5,32)-(5,37)
-(5,32)-(5,37)
-(5,36)-(5,37)
-(5,43)-(5,44)
-(5,50)-(5,56)
-(5,50)-(5,62)
-(5,50)-(5,62)
-(5,58)-(5,59)
-(5,58)-(5,62)
-(5,61)-(5,62)
-(7,4)-(7,43)
-(7,15)-(7,40)
-(7,22)-(7,28)
-(7,22)-(7,40)
-(7,22)-(7,40)
-(7,31)-(7,32)
-(7,31)-(7,36)
-(7,31)-(7,36)
-(7,31)-(7,36)
-(7,31)-(7,40)
-(7,33)-(7,34)
-(7,35)-(7,36)
-(7,39)-(7,40)
+(17,21)-(17,42)
+(17,28)-(17,32)
+(17,28)-(17,42)
+(19,26)-(19,30)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,46)-(19,50)
+(19,46)-(19,60)
+(20,23)-(20,27)
+(20,23)-(20,37)
+(20,23)-(20,57)
+(20,23)-(20,57)
+(20,43)-(20,47)
+(20,43)-(20,57)
 *)

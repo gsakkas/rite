@@ -1,121 +1,98 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then []
-  else
-    (let myList = digits n in
-     let num = sumList myList in num + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (eval ((a, x, y) *. (a, x, y))) + ((b, x, y) *. (c, x, y));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     1 + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (a, x, y))) +.
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(11,8)-(11,10)
-(14,34)-(14,64)
+(28,8)-(28,35)
+(28,8)-(28,63)
+(28,15)-(28,35)
+(28,28)-(28,35)
+(28,43)-(28,50)
+(28,56)-(28,57)
+(28,56)-(28,63)
+(28,59)-(28,60)
+(28,62)-(28,63)
 *)
 
 (* type error slice
-(2,4)-(3,63)
-(2,21)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,27)-(3,38)
-(3,27)-(3,46)
-(3,27)-(3,46)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,40)-(3,41)
-(3,40)-(3,46)
-(3,44)-(3,46)
-(3,49)-(3,50)
-(3,51)-(3,61)
-(3,51)-(3,61)
-(3,52)-(3,53)
-(3,52)-(3,60)
-(3,58)-(3,60)
-(5,4)-(5,37)
-(5,12)-(5,34)
-(5,16)-(5,27)
-(5,16)-(5,34)
-(5,29)-(5,32)
-(5,29)-(5,34)
-(5,29)-(5,34)
-(5,33)-(5,34)
-(7,4)-(7,73)
-(7,17)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,28)-(7,30)
-(7,44)-(7,45)
-(7,56)-(7,57)
-(7,56)-(7,70)
-(7,56)-(7,70)
-(7,56)-(7,70)
-(7,61)-(7,68)
-(7,61)-(7,70)
-(7,61)-(7,70)
-(7,69)-(7,70)
-(9,29)-(14,64)
-(10,3)-(14,64)
-(10,3)-(14,64)
-(10,6)-(10,7)
-(10,6)-(10,12)
-(10,6)-(10,12)
-(10,6)-(10,12)
-(10,10)-(10,12)
-(11,8)-(11,10)
-(13,6)-(14,64)
-(13,6)-(14,64)
-(13,19)-(13,25)
-(13,19)-(13,27)
-(13,26)-(13,27)
-(14,6)-(14,64)
-(14,6)-(14,64)
-(14,16)-(14,23)
-(14,16)-(14,30)
-(14,16)-(14,30)
-(14,24)-(14,30)
-(14,34)-(14,37)
-(14,34)-(14,64)
-(14,34)-(14,64)
-(14,41)-(14,60)
-(14,41)-(14,64)
-(14,41)-(14,64)
-(14,61)-(14,64)
+(16,3)-(28,63)
+(16,3)-(28,63)
+(19,15)-(19,18)
+(19,15)-(19,40)
+(19,27)-(19,31)
+(19,27)-(19,40)
+(19,33)-(19,40)
+(28,8)-(28,12)
+(28,8)-(28,35)
+(28,8)-(28,63)
+(28,8)-(28,63)
+(28,15)-(28,22)
+(28,15)-(28,35)
+(28,15)-(28,35)
+(28,15)-(28,35)
+(28,28)-(28,35)
+(28,43)-(28,50)
+(28,43)-(28,63)
+(28,43)-(28,63)
+(28,43)-(28,63)
+(28,56)-(28,63)
 *)

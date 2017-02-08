@@ -1,35 +1,38 @@
 
-let rec sumList xs = match xs with | [] -> [] | x::xs -> x + x;;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+
+let rec digitsOfInt n =
+  let xxx =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
+  listReverse (xxx n);;
 
 
 (* fix
 
-let rec sumList xs =
-  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+
+let rec digitsOfInt n =
+  let xxx n =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
+  listReverse (xxx n);;
 
 *)
 
 (* changed spans
-(2,22)-(2,63)
-(2,44)-(2,46)
-(2,58)-(2,59)
-(2,62)-(2,63)
+(7,5)-(9,68)
 *)
 
 (* type error slice
-(2,4)-(2,65)
-(2,17)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,22)-(2,63)
-(2,28)-(2,30)
-(2,44)-(2,46)
-(2,58)-(2,59)
-(2,58)-(2,63)
-(2,58)-(2,63)
-(2,62)-(2,63)
+(6,3)-(10,21)
+(7,5)-(9,68)
+(9,12)-(9,68)
+(9,35)-(9,68)
+(10,16)-(10,19)
+(10,16)-(10,21)
 *)

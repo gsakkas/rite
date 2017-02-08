@@ -1,45 +1,43 @@
 
 let rec clone x n =
-  let accum = [] in if n < 1 then [] else (clone x) :: ((accum n) - 1);;
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then List.append (clone 0 (b - a)) l1
+  else if b < a then List.append (clone 0 (a - b)) l2;;
 
 
 (* fix
 
-let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,44)-(3,51)
-(3,44)-(3,70)
-(3,58)-(3,70)
+(11,8)-(11,40)
+(12,8)-(12,54)
+(12,22)-(12,54)
 *)
 
 (* type error slice
-(2,4)-(3,73)
-(2,15)-(3,70)
-(2,17)-(3,70)
-(3,3)-(3,70)
-(3,3)-(3,70)
-(3,15)-(3,17)
-(3,21)-(3,70)
-(3,21)-(3,70)
-(3,24)-(3,25)
-(3,24)-(3,29)
-(3,24)-(3,29)
-(3,24)-(3,29)
-(3,28)-(3,29)
-(3,35)-(3,37)
-(3,44)-(3,49)
-(3,44)-(3,51)
-(3,44)-(3,51)
-(3,44)-(3,70)
-(3,50)-(3,51)
-(3,58)-(3,63)
-(3,58)-(3,65)
-(3,58)-(3,65)
-(3,58)-(3,70)
-(3,58)-(3,70)
-(3,64)-(3,65)
-(3,69)-(3,70)
+(12,8)-(12,54)
+(12,8)-(12,54)
+(12,8)-(12,54)
+(12,22)-(12,33)
+(12,22)-(12,54)
 *)

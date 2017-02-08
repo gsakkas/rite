@@ -1,78 +1,50 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h then h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with | Thresh (a,b,c,d) -> exprToString a b c d;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")");;
 
 *)
 
 (* changed spans
-(7,21)-(7,41)
-(7,24)-(7,34)
-(7,40)-(7,41)
-(8,9)-(8,46)
-(9,21)-(9,23)
-(9,25)-(9,26)
+(12,3)-(12,58)
+(12,38)-(12,50)
+(12,38)-(12,58)
+(12,51)-(12,52)
+(12,53)-(12,54)
+(12,55)-(12,56)
+(12,57)-(12,58)
 *)
 
 (* type error slice
-(2,4)-(9,30)
-(2,22)-(9,26)
-(3,3)-(9,26)
-(3,3)-(9,26)
-(3,19)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,46)
-(7,9)-(8,46)
-(7,21)-(7,41)
-(7,21)-(7,41)
-(7,21)-(7,41)
-(7,21)-(7,41)
-(7,24)-(7,32)
-(7,24)-(7,34)
-(7,24)-(7,34)
-(7,33)-(7,34)
-(7,40)-(7,41)
-(8,9)-(8,46)
-(8,9)-(8,46)
-(8,21)-(8,22)
-(8,26)-(8,32)
-(8,26)-(8,46)
-(8,26)-(8,46)
-(8,34)-(8,39)
-(8,34)-(8,46)
-(8,41)-(8,46)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(11,4)-(12,60)
+(11,22)-(12,58)
+(12,3)-(12,58)
+(12,38)-(12,50)
+(12,38)-(12,58)
 *)

@@ -4,8 +4,49 @@ let rec clone x n =
   then []
   else
     (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> (helper (f :: acc) f x) - 1 in
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
      helper [] x n);;
+
+let padZero l1 l2 =
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
+
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          let sum = b + c in
+          if sum < 10
+          then
+            (match a with
+             | (len,[]) -> (len, [sum])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then
+                   (if sum = 9
+                    then (len, ((-1) :: 0 :: xs'))
+                    else (len, ((sum + 1) :: xs')))
+                 else (len, (sum :: x' :: xs')))
+          else
+            (match a with
+             | (len,[]) -> (len, [(-1); sum mod 10])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then (-1) :: ((sum mod 10) + 1) :: a
+                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
+    let base = ((List.length l1), []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
@@ -18,55 +59,64 @@ let rec clone x n =
        match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
      helper [] x n);;
 
+let padZero l1 l2 =
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
+
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          let sum = b + c in
+          if sum < 10
+          then
+            (match a with
+             | (len,[]) -> (len, [sum])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then
+                   (if sum = 9
+                    then (len, ((-1) :: 0 :: xs'))
+                    else (len, ((sum + 1) :: xs')))
+                 else (len, (sum :: x' :: xs')))
+          else
+            (match a with
+             | (len,[]) -> (len, [(-1); sum mod 10])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then (len, ((-1) :: ((sum mod 10) + 1) :: xs'))
+                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
+    let base = ((List.length l1), []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
 *)
 
 (* changed spans
-(7,40)-(7,66)
-(7,60)-(7,61)
+(44,24)-(44,54)
+(44,53)-(44,54)
 *)
 
 (* type error slice
-(2,4)-(8,22)
-(2,15)-(8,19)
-(2,17)-(8,19)
-(3,3)-(8,19)
-(3,3)-(8,19)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(4,8)-(4,10)
-(6,6)-(8,19)
-(6,6)-(8,19)
-(6,21)-(7,66)
-(6,25)-(7,66)
-(6,27)-(7,66)
-(7,8)-(7,66)
-(7,8)-(7,66)
-(7,8)-(7,66)
-(7,8)-(7,66)
-(7,8)-(7,66)
-(7,14)-(7,15)
-(7,28)-(7,31)
-(7,40)-(7,46)
-(7,40)-(7,61)
-(7,40)-(7,61)
-(7,40)-(7,61)
-(7,40)-(7,61)
-(7,40)-(7,66)
-(7,40)-(7,66)
-(7,48)-(7,49)
-(7,48)-(7,56)
-(7,53)-(7,56)
-(7,58)-(7,59)
-(7,60)-(7,61)
-(7,65)-(7,66)
-(8,6)-(8,12)
-(8,6)-(8,19)
-(8,6)-(8,19)
-(8,6)-(8,19)
-(8,13)-(8,15)
-(8,16)-(8,17)
-(8,18)-(8,19)
+(30,14)-(38,46)
+(30,20)-(30,21)
+(40,14)-(45,63)
+(40,14)-(45,63)
+(41,29)-(41,52)
+(43,18)-(45,63)
+(43,18)-(45,63)
+(44,24)-(44,54)
+(44,33)-(44,54)
+(44,53)-(44,54)
+(45,24)-(45,63)
 *)

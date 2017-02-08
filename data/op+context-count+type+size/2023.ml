@@ -1,103 +1,61 @@
 
-let x = 123;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let x = n / 10
-     and y = n mod 10 in
-     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let x = sumList (digitsOfInt 30);;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail -> (listReverse tail) @ head;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi * (eval (e, x, y)))
+  | Cosine e -> cos (pi * (eval (e, x, y)));;
 
 
 (* fix
 
-let x = 123;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let x = n / 10
-     and y = n mod 10 in
-     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let x = sumList (digitsOfInt 30);;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail -> (listReverse tail) @ [head];;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)));;
 
 *)
 
 (* changed spans
-(20,40)-(20,44)
+(17,20)-(17,39)
+(18,22)-(18,41)
 *)
 
 (* type error slice
-(4,21)-(10,62)
-(5,3)-(10,62)
-(5,6)-(5,7)
-(5,6)-(5,11)
-(6,8)-(6,10)
-(10,6)-(10,62)
-(10,33)-(10,35)
-(10,42)-(10,53)
-(10,42)-(10,55)
-(10,42)-(10,62)
-(10,42)-(10,62)
-(10,57)-(10,58)
-(12,17)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,28)-(12,30)
-(12,58)-(12,59)
-(12,63)-(12,70)
-(12,63)-(12,74)
-(12,63)-(12,74)
-(12,71)-(12,74)
-(16,4)-(20,46)
-(16,21)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,3)-(20,44)
-(17,9)-(17,10)
-(18,11)-(18,13)
-(19,14)-(19,17)
-(19,14)-(19,17)
-(19,15)-(19,16)
-(20,20)-(20,31)
-(20,20)-(20,36)
-(20,20)-(20,36)
-(20,20)-(20,44)
-(20,20)-(20,44)
-(20,20)-(20,44)
-(20,32)-(20,36)
-(20,38)-(20,39)
-(20,40)-(20,44)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(17,15)-(17,18)
+(17,15)-(17,39)
+(17,20)-(17,22)
+(17,20)-(17,39)
+(17,20)-(17,39)
+(18,17)-(18,20)
+(18,17)-(18,41)
+(18,22)-(18,24)
+(18,22)-(18,41)
+(18,22)-(18,41)
 *)

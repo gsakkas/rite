@@ -1,79 +1,117 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = if (wwhile (f, b)) = b then b else wwhile (f, (f b));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | _ -> buildTimes VarX
+  | 1 -> buildX ()
+  | 2 -> buildY ()
+  | 3 ->
+      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
+  | 4 ->
+      buildCosine
+        (if depth = 0 then buildY () else build (rand, (depth - 1)))
+  | 5 ->
+      buildAverage
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))))
+  | 6 ->
+      buildTimes
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))))
+  | 7 ->
+      buildThresh
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))),
+          (if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | _ -> buildThresh (VarX, VarX, VarX, VarX)
+  | 1 -> buildX ()
+  | 2 -> buildY ()
+  | 3 ->
+      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
+  | 4 ->
+      buildCosine
+        (if depth = 0 then buildY () else build (rand, (depth - 1)))
+  | 5 ->
+      buildAverage
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))))
+  | 6 ->
+      buildTimes
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))))
+  | 7 ->
+      buildThresh
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))),
+          (if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(5,22)-(5,72)
-(5,26)-(5,44)
-(5,34)-(5,35)
-(5,37)-(5,38)
-(5,43)-(5,44)
-(5,50)-(5,51)
-(5,57)-(5,63)
-(5,57)-(5,72)
-(5,65)-(5,66)
-(5,65)-(5,72)
-(5,69)-(5,70)
-(5,69)-(5,72)
+(27,10)-(27,20)
+(27,21)-(27,25)
+(28,10)-(28,19)
+(48,59)-(48,64)
+(48,67)-(48,68)
 *)
 
 (* type error slice
-(2,4)-(3,65)
-(2,17)-(3,62)
-(3,3)-(3,62)
-(3,3)-(3,62)
-(3,9)-(3,10)
-(3,9)-(3,12)
-(3,9)-(3,12)
-(3,11)-(3,12)
-(3,29)-(3,62)
-(3,29)-(3,62)
-(3,32)-(3,35)
-(3,32)-(3,37)
-(3,32)-(3,37)
-(3,36)-(3,37)
-(3,43)-(3,44)
-(3,50)-(3,56)
-(3,50)-(3,62)
-(3,50)-(3,62)
-(3,58)-(3,59)
-(3,58)-(3,62)
-(3,61)-(3,62)
-(5,4)-(5,76)
-(5,15)-(5,72)
-(5,22)-(5,72)
-(5,22)-(5,72)
-(5,26)-(5,32)
-(5,26)-(5,38)
-(5,26)-(5,38)
-(5,26)-(5,44)
-(5,26)-(5,44)
-(5,26)-(5,44)
-(5,34)-(5,35)
-(5,34)-(5,38)
-(5,37)-(5,38)
-(5,43)-(5,44)
-(5,50)-(5,51)
-(5,57)-(5,63)
-(5,57)-(5,72)
-(5,57)-(5,72)
-(5,65)-(5,66)
-(5,65)-(5,72)
-(5,69)-(5,70)
-(5,69)-(5,72)
-(5,69)-(5,72)
-(5,71)-(5,72)
+(19,4)-(19,42)
+(19,17)-(19,39)
+(27,10)-(27,20)
+(27,10)-(27,25)
+(27,21)-(27,25)
 *)

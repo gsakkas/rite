@@ -1,74 +1,85 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map (fun c  -> f l));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | Cosine a -> cos (pi * (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) + (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(9,39)-(9,62)
-(9,49)-(9,62)
-(9,59)-(9,62)
+(17,20)-(17,39)
+(18,22)-(18,41)
+(19,24)-(19,56)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,9)-(3,11)
-(6,7)-(7,59)
-(6,13)-(6,72)
-(6,15)-(6,72)
-(6,23)-(6,34)
-(6,23)-(6,37)
-(6,23)-(6,37)
-(6,35)-(6,37)
-(6,48)-(6,49)
-(6,53)-(6,56)
-(6,59)-(6,60)
-(7,7)-(7,59)
-(7,18)-(7,19)
-(7,23)-(7,59)
-(7,31)-(7,32)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,51)-(7,52)
-(7,53)-(7,57)
-(7,58)-(7,59)
-(9,4)-(9,66)
-(9,18)-(9,62)
-(9,20)-(9,62)
-(9,24)-(9,33)
-(9,24)-(9,62)
-(9,24)-(9,62)
-(9,39)-(9,47)
-(9,39)-(9,62)
-(9,39)-(9,62)
-(9,49)-(9,62)
-(9,59)-(9,60)
-(9,59)-(9,62)
-(9,59)-(9,62)
-(9,61)-(9,62)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(17,15)-(17,18)
+(17,15)-(17,39)
+(17,20)-(17,22)
+(17,20)-(17,39)
+(17,20)-(17,39)
+(17,20)-(17,39)
+(17,26)-(17,30)
+(17,26)-(17,39)
+(18,17)-(18,20)
+(18,17)-(18,41)
+(18,22)-(18,24)
+(18,22)-(18,41)
+(18,22)-(18,41)
+(19,24)-(19,56)
+(19,24)-(19,65)
+(20,21)-(20,25)
+(20,21)-(20,34)
+(20,21)-(20,54)
+(20,21)-(20,54)
+(20,41)-(20,45)
+(20,41)-(20,54)
 *)

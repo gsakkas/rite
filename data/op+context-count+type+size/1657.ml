@@ -1,40 +1,63 @@
 
 let rec digitsOfInt n =
-  let myList = [] in if n <= 0 then [] else (n mod 10) @ myList;;
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let rec additivePersistence n =
+  let count = [0] in
+  if (sumList (digitsOfInt n)) > 9
+  then 1 :: (count additivePersistence (sumList (digitsOfInt n)))
+  else sumList count;;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  let myList = [] in if n <= 0 then [] else (n mod 10) :: myList;;
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let rec additivePersistence n =
+  let x = 1 in
+  x + 1;
+  if (sumList (digitsOfInt n)) > 9
+  then additivePersistence (sumList (digitsOfInt n))
+  else x;;
 
 *)
 
 (* changed spans
-(3,46)-(3,64)
-(3,56)-(3,57)
+(11,3)-(14,21)
+(11,15)-(11,18)
+(11,16)-(11,17)
+(12,3)-(14,21)
+(13,8)-(13,9)
+(13,8)-(13,63)
+(13,14)-(13,19)
+(13,14)-(13,63)
+(14,8)-(14,15)
+(14,8)-(14,21)
+(14,16)-(14,21)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,21)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,16)-(3,18)
-(3,22)-(3,64)
-(3,22)-(3,64)
-(3,25)-(3,26)
-(3,25)-(3,31)
-(3,25)-(3,31)
-(3,25)-(3,31)
-(3,30)-(3,31)
-(3,37)-(3,39)
-(3,46)-(3,47)
-(3,46)-(3,54)
-(3,46)-(3,64)
-(3,46)-(3,64)
-(3,46)-(3,64)
-(3,52)-(3,54)
-(3,56)-(3,57)
-(3,58)-(3,64)
+(8,37)-(8,51)
+(8,42)-(8,49)
+(8,42)-(8,51)
+(11,3)-(14,21)
+(11,15)-(11,18)
+(12,3)-(14,21)
+(12,3)-(14,21)
+(13,8)-(13,63)
+(13,14)-(13,19)
+(13,14)-(13,63)
+(14,8)-(14,15)
+(14,8)-(14,21)
 *)

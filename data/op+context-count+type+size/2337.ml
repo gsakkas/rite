@@ -1,85 +1,61 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then seen @ [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec build (rand,depth) = failwith "to be implemented";;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> buildX | VarY  -> buildY | Sine e -> build (pi * e);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then seen @ [h] else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x;;
 
 *)
 
 (* changed spans
-(7,21)-(7,65)
+(11,16)-(11,58)
+(11,30)-(11,38)
+(11,30)-(11,58)
+(11,39)-(11,58)
+(13,12)-(13,21)
+(15,12)-(15,21)
+(17,10)-(17,26)
 *)
 
 (* type error slice
-(2,4)-(9,30)
-(2,22)-(9,26)
-(3,3)-(9,26)
-(3,3)-(9,26)
-(3,19)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,46)
-(7,9)-(8,46)
-(7,21)-(7,65)
-(7,21)-(7,65)
-(7,21)-(7,65)
-(7,25)-(7,33)
-(7,25)-(7,40)
-(7,25)-(7,40)
-(7,25)-(7,40)
-(7,25)-(7,49)
-(7,25)-(7,49)
-(7,25)-(7,49)
-(7,34)-(7,35)
-(7,36)-(7,40)
-(7,44)-(7,49)
-(7,55)-(7,59)
-(7,55)-(7,65)
-(7,55)-(7,65)
-(7,55)-(7,65)
-(7,60)-(7,61)
-(7,62)-(7,65)
-(7,62)-(7,65)
-(7,63)-(7,64)
-(8,9)-(8,46)
-(8,9)-(8,46)
-(8,21)-(8,22)
-(8,26)-(8,32)
-(8,26)-(8,46)
-(8,26)-(8,46)
-(8,34)-(8,39)
-(8,34)-(8,46)
-(8,41)-(8,46)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(11,4)-(11,60)
+(11,16)-(11,58)
+(17,4)-(17,29)
+(17,10)-(17,26)
+(20,3)-(20,77)
+(20,64)-(20,69)
+(20,64)-(20,77)
+(20,71)-(20,73)
+(20,71)-(20,77)
+(20,71)-(20,77)
+(20,71)-(20,77)
+(20,76)-(20,77)
 *)

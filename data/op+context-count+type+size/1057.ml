@@ -1,206 +1,163 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2
-    then ((List.append (clone 0 (length2 - length1)) l1), l2)
-    else (l1, (List.append (clone 0 (length1 - length2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> l | x::l' -> if x = 0 then removeZero l' else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,acc) = a in
-      let (x1,x2) = x in
-      let sumInit = (x1 + x2) + carry in
-      let carry2 = sumInit / 10 in
-      let dig = sumInit mod 10 in (carry2, (carry2 :: dig)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^
+                 (")*cos(" ^ ((exprToString ex3) ^ (")" ")"))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2
-    then ((List.append (clone 0 (length2 - length1)) l1), l2)
-    else (l1, (List.append (clone 0 (length1 - length2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> l | x::l' -> if x = 0 then removeZero l' else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,acc) = a in
-      let (x1,x2) = x in
-      let sumInit = (x1 + x2) + carry in
-      let carry2 = sumInit / 10 in
-      let dig = sumInit mod 10 in (carry2, [carry2; dig]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ "))")))));;
 
 *)
 
 (* changed spans
-(24,45)-(24,58)
+(74,53)-(74,56)
+(74,53)-(74,60)
+(74,57)-(74,60)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(12,64)
-(4,13)-(12,60)
-(4,16)-(12,60)
-(5,17)-(5,31)
-(5,17)-(5,68)
-(5,17)-(5,68)
-(5,17)-(5,68)
-(5,33)-(5,62)
-(5,45)-(5,62)
-(5,55)-(5,58)
-(5,66)-(5,68)
-(6,17)-(6,31)
-(6,17)-(6,68)
-(6,17)-(6,68)
-(6,17)-(6,68)
-(6,33)-(6,62)
-(6,45)-(6,62)
-(6,55)-(6,58)
-(6,66)-(6,68)
-(8,9)-(8,11)
-(8,9)-(8,15)
-(8,13)-(8,15)
-(11,12)-(11,23)
-(11,12)-(11,56)
-(11,12)-(11,61)
-(11,25)-(11,30)
-(11,25)-(11,51)
-(11,54)-(11,56)
-(11,59)-(11,61)
-(12,16)-(12,27)
-(12,16)-(12,60)
-(12,58)-(12,60)
-(14,20)-(15,71)
-(15,3)-(15,71)
-(15,3)-(15,71)
-(15,3)-(15,71)
-(15,3)-(15,71)
-(15,3)-(15,71)
-(15,9)-(15,10)
-(15,24)-(15,25)
-(15,37)-(15,71)
-(15,37)-(15,71)
-(15,40)-(15,41)
-(15,40)-(15,45)
-(15,51)-(15,61)
-(15,51)-(15,64)
-(15,70)-(15,71)
-(17,4)-(28,37)
-(17,12)-(28,33)
-(17,15)-(28,33)
-(18,3)-(28,33)
-(18,12)-(27,52)
-(19,5)-(27,52)
-(19,5)-(27,52)
-(19,11)-(24,58)
-(19,13)-(24,58)
-(20,7)-(24,58)
-(20,7)-(24,58)
-(20,25)-(20,26)
-(21,7)-(24,58)
-(21,7)-(24,58)
-(21,21)-(21,22)
-(22,7)-(24,58)
-(22,7)-(24,58)
-(22,22)-(22,24)
-(22,22)-(22,38)
-(22,27)-(22,29)
-(22,33)-(22,38)
-(23,7)-(24,58)
-(23,7)-(24,58)
-(23,20)-(23,27)
-(23,20)-(23,32)
-(23,30)-(23,32)
-(24,7)-(24,58)
-(24,7)-(24,58)
-(24,17)-(24,24)
-(24,17)-(24,31)
-(24,29)-(24,31)
-(24,36)-(24,42)
-(24,36)-(24,58)
-(24,45)-(24,51)
-(24,45)-(24,58)
-(24,55)-(24,58)
-(25,5)-(27,52)
-(25,5)-(27,52)
-(25,17)-(25,22)
-(25,20)-(25,22)
-(26,5)-(27,52)
-(26,5)-(27,52)
-(26,16)-(26,24)
-(26,16)-(26,44)
-(26,16)-(26,44)
-(26,26)-(26,38)
-(26,26)-(26,44)
-(26,26)-(26,44)
-(26,26)-(26,44)
-(26,39)-(26,41)
-(26,42)-(26,44)
-(27,5)-(27,52)
-(27,5)-(27,52)
-(27,19)-(27,33)
-(27,19)-(27,45)
-(27,19)-(27,45)
-(27,19)-(27,45)
-(27,19)-(27,45)
-(27,34)-(27,35)
-(27,36)-(27,40)
-(27,41)-(27,45)
-(27,49)-(27,52)
-(28,15)-(28,18)
-(28,15)-(28,33)
-(28,15)-(28,33)
-(28,20)-(28,27)
-(28,20)-(28,33)
-(28,20)-(28,33)
-(28,28)-(28,30)
-(28,31)-(28,33)
+(74,53)-(74,56)
+(74,53)-(74,60)
 *)

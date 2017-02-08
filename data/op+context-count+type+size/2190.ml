@@ -1,71 +1,45 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = ((wwhile (wwhile (f, (f b)))), b);;
+let l1 = [9; 9; 9];;
+
+let rec mulByDigit i l =
+  let f a x =
+    let (i,j) = x in
+    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args =
+    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
+let l1 = [9; 9; 9];;
+
+let rec mulByDigit i l =
+  let f a x =
+    let (i,j) = x in
+    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args =
+    List.combine (List.rev (0 :: l1)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(6,24)-(6,54)
-(6,32)-(6,38)
-(6,32)-(6,47)
-(6,40)-(6,41)
-(6,44)-(6,47)
+(12,50)-(12,61)
+(12,50)-(12,68)
+(12,64)-(12,65)
+(13,3)-(13,50)
 *)
 
 (* type error slice
-(2,4)-(4,17)
-(2,17)-(4,14)
-(3,3)-(4,14)
-(3,3)-(4,14)
-(3,19)-(3,67)
-(3,28)-(3,67)
-(3,28)-(3,67)
-(3,31)-(3,33)
-(3,31)-(3,40)
-(3,31)-(3,40)
-(3,31)-(3,40)
-(3,36)-(3,40)
-(3,46)-(3,52)
-(3,46)-(3,58)
-(3,46)-(3,58)
-(3,54)-(3,55)
-(3,54)-(3,58)
-(3,54)-(3,58)
-(3,56)-(3,58)
-(3,65)-(3,67)
-(4,3)-(4,9)
-(4,3)-(4,14)
-(4,3)-(4,14)
-(4,11)-(4,12)
-(4,11)-(4,14)
-(4,11)-(4,14)
-(4,13)-(4,14)
-(6,4)-(6,57)
-(6,15)-(6,54)
-(6,24)-(6,30)
-(6,24)-(6,47)
-(6,24)-(6,47)
-(6,24)-(6,54)
-(6,32)-(6,38)
-(6,32)-(6,47)
-(6,32)-(6,47)
-(6,40)-(6,41)
-(6,40)-(6,47)
-(6,44)-(6,45)
-(6,44)-(6,47)
-(6,44)-(6,47)
-(6,46)-(6,47)
-(6,53)-(6,54)
+(12,50)-(12,61)
+(12,50)-(12,65)
+(12,50)-(12,65)
+(12,50)-(12,68)
 *)

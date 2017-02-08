@@ -1,37 +1,31 @@
 
-let pipe fs = let f a x a x = a in let base d = d in List.fold_left f base fs;;
+let pipe fs =
+  let f a x d = a x d in
+  let base p = p in List.fold_left f base (List.rev fs);;
 
 
 (* fix
 
-let pipe fs = let f a x a = a in let base d = d in List.fold_left f base fs;;
+let pipe fs =
+  let f a x d = d in let base p = p in List.fold_left f base (List.rev fs);;
 
 *)
 
 (* changed spans
-(2,27)-(2,32)
+(3,17)-(3,18)
+(3,17)-(3,22)
+(3,19)-(3,20)
+(4,3)-(4,55)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,10)-(2,78)
-(2,15)-(2,78)
-(2,15)-(2,78)
-(2,21)-(2,32)
-(2,23)-(2,32)
-(2,25)-(2,32)
-(2,27)-(2,32)
-(2,31)-(2,32)
-(2,36)-(2,78)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(3,3)-(4,55)
+(3,9)-(3,22)
+(3,11)-(3,22)
+(3,13)-(3,22)
+(3,17)-(3,18)
+(3,17)-(3,22)
+(4,21)-(4,35)
+(4,21)-(4,55)
+(4,36)-(4,37)
 *)

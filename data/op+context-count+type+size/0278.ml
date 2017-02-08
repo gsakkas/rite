@@ -1,92 +1,73 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let stringOfList f l = "[" ^ ((stringOfList (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([0], [0]) in
+    let base = ([0], [0]) in
+    let args = (l1, 2) in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (0, []) in
+    let base = (0, []) in
+    let args = clone 0 (List.length l1) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,32)-(9,58)
-(9,46)-(9,58)
+(20,18)-(20,21)
+(20,23)-(20,26)
+(20,24)-(20,25)
+(21,17)-(21,20)
+(21,22)-(21,25)
+(21,23)-(21,24)
+(22,17)-(22,19)
+(22,17)-(22,22)
+(22,21)-(22,22)
+(22,27)-(22,74)
 *)
 
 (* type error slice
-(2,4)-(7,67)
-(2,18)-(7,65)
-(2,20)-(7,65)
-(3,3)-(7,65)
-(3,3)-(7,65)
-(3,3)-(7,65)
-(3,3)-(7,65)
-(3,3)-(7,65)
-(3,3)-(7,65)
-(3,9)-(3,10)
-(4,11)-(4,15)
-(6,7)-(7,65)
-(6,7)-(7,65)
-(6,13)-(6,35)
-(6,15)-(6,35)
-(6,19)-(6,20)
-(6,19)-(6,35)
-(6,19)-(6,35)
-(6,21)-(6,22)
-(6,24)-(6,28)
-(6,24)-(6,35)
-(6,24)-(6,35)
-(6,29)-(6,30)
-(6,32)-(6,33)
-(6,32)-(6,35)
-(6,32)-(6,35)
-(6,34)-(6,35)
-(7,7)-(7,65)
-(7,7)-(7,65)
-(7,18)-(7,21)
-(7,18)-(7,28)
-(7,22)-(7,23)
-(7,25)-(7,26)
-(7,25)-(7,28)
-(7,25)-(7,28)
-(7,27)-(7,28)
-(7,34)-(7,48)
-(7,34)-(7,58)
-(7,34)-(7,58)
-(7,34)-(7,58)
-(7,34)-(7,65)
-(7,49)-(7,50)
-(7,51)-(7,55)
-(7,56)-(7,58)
-(7,60)-(7,61)
-(7,62)-(7,65)
-(9,4)-(9,69)
-(9,18)-(9,66)
-(9,20)-(9,66)
-(9,24)-(9,27)
-(9,28)-(9,29)
-(9,32)-(9,44)
-(9,32)-(9,58)
-(9,32)-(9,58)
-(9,46)-(9,54)
-(9,46)-(9,58)
-(9,46)-(9,58)
-(9,46)-(9,58)
-(9,55)-(9,56)
-(9,57)-(9,58)
-(9,61)-(9,62)
+(22,5)-(22,74)
+(22,17)-(22,22)
+(22,41)-(22,55)
+(22,41)-(22,67)
+(22,63)-(22,67)
 *)

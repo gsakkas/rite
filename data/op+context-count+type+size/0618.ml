@@ -1,27 +1,64 @@
 
-let rec digitsOfInt n =
-  if n > 0 then [(digitsOfInt n) / 10; n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (("^" exprToString y) ^ ")")))));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n > 0 then [n; n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "X"
+  | VarY  -> "Y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))));;
 
 *)
 
 (* changed spans
-(3,19)-(3,30)
-(3,19)-(3,32)
-(3,19)-(3,38)
-(3,36)-(3,38)
-(3,55)-(3,57)
+(24,44)-(24,47)
+(24,44)-(24,62)
+(24,48)-(24,60)
 *)
 
 (* type error slice
-(2,21)-(3,57)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,19)-(3,30)
-(3,19)-(3,32)
-(3,55)-(3,57)
+(24,44)-(24,47)
+(24,44)-(24,62)
 *)

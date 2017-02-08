@@ -1,64 +1,75 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l = match l with | [] -> [] | h::t -> (cat l h) :: t;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (x,y) -> (x +. y) /. 2.0
+  | Times (x,y) -> x *. y
+  | Thresh (e,f,g,h) -> failwith "sad";;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (cat l h);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(4,60)-(4,67)
-(4,60)-(4,73)
-(4,72)-(4,73)
+(14,3)-(19,39)
+(15,15)-(15,40)
+(17,23)-(17,24)
+(17,34)-(17,37)
+(18,20)-(18,21)
+(18,25)-(18,26)
+(19,25)-(19,33)
+(19,25)-(19,39)
+(19,34)-(19,39)
 *)
 
 (* type error slice
-(2,4)-(2,70)
-(2,13)-(2,67)
-(2,15)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,25)-(2,26)
-(2,40)-(2,43)
-(2,40)-(2,43)
-(2,41)-(2,42)
-(2,54)-(2,55)
-(2,54)-(2,67)
-(2,60)-(2,63)
-(2,60)-(2,67)
-(2,60)-(2,67)
-(2,60)-(2,67)
-(2,64)-(2,65)
-(2,66)-(2,67)
-(4,4)-(4,75)
-(4,21)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,25)-(4,73)
-(4,31)-(4,32)
-(4,46)-(4,48)
-(4,60)-(4,63)
-(4,60)-(4,67)
-(4,60)-(4,67)
-(4,60)-(4,67)
-(4,60)-(4,73)
-(4,64)-(4,65)
-(4,66)-(4,67)
-(4,72)-(4,73)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(14,3)-(19,39)
+(17,23)-(17,24)
+(17,23)-(17,29)
+(17,23)-(17,29)
+(17,28)-(17,29)
+(18,20)-(18,21)
+(18,20)-(18,26)
+(18,20)-(18,26)
+(18,25)-(18,26)
 *)

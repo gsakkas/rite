@@ -1,81 +1,112 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> helper (append [m / 10] [m mod 10]) in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt (Abs e);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> VarX
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 7) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 -> buildAverage (next next)
+       | 4 -> buildTimes next next
+       | 5 -> buildThresh next next next next
+       | 6 -> buildSqrt next
+       | 7 -> buildGauss next next next);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt (Abs e);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> VarX
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 7) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 -> buildAverage (next, next)
+       | 4 -> buildTimes (next, next)
+       | 5 -> buildThresh (next, next, next, next)
+       | 6 -> buildSqrt next
+       | 7 -> buildGauss (next, next, next));;
 
 *)
 
 (* changed spans
-(6,35)-(6,41)
-(6,35)-(6,69)
-(6,50)-(6,58)
-(6,51)-(6,57)
+(36,29)-(36,38)
+(37,15)-(37,35)
+(37,26)-(37,30)
+(38,15)-(38,46)
+(38,27)-(38,31)
+(40,15)-(40,40)
+(40,26)-(40,30)
 *)
 
 (* type error slice
-(2,4)-(7,13)
-(2,21)-(7,11)
-(3,3)-(7,11)
-(3,3)-(7,11)
-(3,18)-(4,64)
-(3,22)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,11)-(4,14)
-(4,28)-(4,31)
-(4,44)-(4,50)
-(4,44)-(4,64)
-(4,44)-(4,64)
-(4,44)-(4,64)
-(4,51)-(4,53)
-(4,55)-(4,57)
-(4,55)-(4,64)
-(4,61)-(4,64)
-(5,3)-(7,11)
-(5,3)-(7,11)
-(5,18)-(6,69)
-(6,5)-(6,69)
-(6,5)-(6,69)
-(6,5)-(6,69)
-(6,5)-(6,69)
-(6,11)-(6,12)
-(6,25)-(6,27)
-(6,35)-(6,41)
-(6,35)-(6,69)
-(6,35)-(6,69)
-(6,43)-(6,49)
-(6,43)-(6,69)
-(6,43)-(6,69)
-(6,50)-(6,58)
-(6,50)-(6,58)
-(6,51)-(6,52)
-(6,51)-(6,57)
-(6,51)-(6,57)
-(6,55)-(6,57)
-(6,59)-(6,69)
-(6,59)-(6,69)
-(6,60)-(6,61)
-(6,60)-(6,68)
-(6,66)-(6,68)
-(7,3)-(7,9)
-(7,3)-(7,11)
-(7,10)-(7,11)
+(20,4)-(20,27)
+(20,15)-(20,25)
+(20,19)-(20,25)
+(20,24)-(20,25)
+(26,4)-(26,42)
+(26,17)-(26,39)
+(26,26)-(26,39)
+(34,15)-(34,24)
+(34,15)-(34,29)
+(34,25)-(34,29)
+(36,29)-(36,33)
+(36,29)-(36,38)
+(37,15)-(37,25)
+(37,15)-(37,35)
 *)

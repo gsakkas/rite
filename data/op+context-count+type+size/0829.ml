@@ -1,161 +1,106 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | PowerUp of expr* expr
+  | Square2 of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ((x / 10), 1) in
-    let base = (0, 0) in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | PowerUp (e1,e2) -> (abs (eval (e1, x, y))) ** (abs (eval (e2, x, y)))
+  | Square2 (e1,e2,e3) ->
+      (sqrt
+         ((((eval (e1, x, y)) ** 2.) +. ((eval (e2, x, y)) ** 2.)) +.
+            ((eval (e3, x, y)) ** 2.)))
+        /. 2.
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | PowerUp of expr* expr
+  | Square2 of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      ((if addit > 10 then addit mod 10 else 0), ((addit / 10) :: num)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Square2 (e1,e2,e3) ->
+      (sqrt
+         ((((eval (e1, x, y)) ** 2.) +. ((eval (e2, x, y)) ** 2.)) +.
+            ((eval (e3, x, y)) ** 2.)))
+        /. 2.
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(13,19)-(13,20)
-(13,19)-(13,25)
-(13,19)-(13,29)
-(13,23)-(13,25)
-(13,28)-(13,29)
-(14,17)-(14,18)
-(14,17)-(14,21)
-(14,20)-(14,21)
-(15,5)-(15,75)
-(15,17)-(15,19)
-(15,21)-(15,23)
-(15,28)-(15,75)
-(15,42)-(15,56)
-(15,42)-(15,68)
-(15,57)-(15,58)
-(15,59)-(15,63)
-(15,64)-(15,68)
-(15,72)-(15,75)
-(16,3)-(16,13)
-(16,15)-(16,18)
-(16,15)-(16,33)
-(16,20)-(16,27)
-(16,20)-(16,33)
-(16,28)-(16,30)
-(16,31)-(16,33)
+(16,3)-(32,30)
+(23,25)-(23,28)
+(23,25)-(23,44)
+(23,25)-(23,71)
+(23,30)-(23,34)
+(23,30)-(23,44)
+(23,36)-(23,38)
+(23,36)-(23,44)
+(23,40)-(23,41)
+(23,43)-(23,44)
+(23,48)-(23,50)
+(23,52)-(23,55)
+(23,52)-(23,71)
+(23,57)-(23,61)
+(23,57)-(23,71)
+(23,63)-(23,65)
+(23,63)-(23,71)
+(23,67)-(23,68)
+(23,70)-(23,71)
+(31,12)-(31,30)
+(32,12)-(32,30)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(6,55)
-(4,13)-(6,51)
-(4,16)-(6,51)
-(5,15)-(5,26)
-(5,15)-(5,29)
-(5,15)-(5,29)
-(5,27)-(5,29)
-(5,34)-(5,45)
-(5,34)-(5,48)
-(5,34)-(5,48)
-(5,46)-(5,48)
-(6,6)-(6,11)
-(6,6)-(6,18)
-(6,6)-(6,24)
-(6,20)-(6,21)
-(6,22)-(6,24)
-(6,29)-(6,51)
-(6,47)-(6,48)
-(6,49)-(6,51)
-(8,20)-(9,69)
-(9,3)-(9,69)
-(9,3)-(9,69)
-(9,3)-(9,69)
-(9,3)-(9,69)
-(9,3)-(9,69)
-(9,9)-(9,10)
-(9,24)-(9,25)
-(9,36)-(9,69)
-(9,36)-(9,69)
-(9,39)-(9,40)
-(9,39)-(9,44)
-(9,50)-(9,60)
-(9,50)-(9,62)
-(9,68)-(9,69)
-(11,4)-(16,37)
-(11,12)-(16,33)
-(11,15)-(16,33)
-(12,3)-(16,33)
-(12,12)-(15,75)
-(13,5)-(15,75)
-(13,11)-(13,29)
-(13,13)-(13,29)
-(13,19)-(13,20)
-(14,5)-(15,75)
-(14,17)-(14,18)
-(14,17)-(14,21)
-(14,20)-(14,21)
-(15,5)-(15,75)
-(15,17)-(15,19)
-(15,17)-(15,23)
-(15,21)-(15,23)
-(15,42)-(15,56)
-(15,42)-(15,68)
-(15,42)-(15,68)
-(15,42)-(15,68)
-(15,42)-(15,68)
-(15,57)-(15,58)
-(15,59)-(15,63)
-(15,64)-(15,68)
-(16,15)-(16,18)
-(16,15)-(16,33)
-(16,15)-(16,33)
-(16,20)-(16,27)
-(16,20)-(16,33)
-(16,20)-(16,33)
-(16,28)-(16,30)
-(16,31)-(16,33)
+(19,20)-(19,40)
+(19,27)-(19,31)
+(19,27)-(19,40)
+(23,25)-(23,28)
+(23,25)-(23,44)
+(23,30)-(23,34)
+(23,30)-(23,44)
+(23,52)-(23,55)
+(23,52)-(23,71)
+(23,57)-(23,61)
+(23,57)-(23,71)
 *)

@@ -1,43 +1,77 @@
 
-let rec digitsOfInt n =
-  if n > 0 then [[(digitsOfInt n) / 10]; n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
+  | Plus (v,w) -> "(" ^ ((exprToString v) ^ (("+" exprToString w) ^ ")"))
+  | Cube (v,w,x) ->
+      "(" ^
+        ((exprToString v) ^
+           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n > 0 then [n; n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
+  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
+  | Average (v,w) ->
+      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
+  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
+  | Thresh (v,w,x,y) ->
+      (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))))
+  | Plus (v,w) -> "(" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")")))
+  | Cube (v,w,x) ->
+      "(" ^
+        ((exprToString v) ^
+           ("*" ^ ((exprToString w) ^ ("*" ^ (exprToString x)))));;
 
 *)
 
 (* changed spans
-(3,18)-(3,40)
-(3,20)-(3,31)
-(3,20)-(3,33)
-(3,20)-(3,39)
-(3,37)-(3,39)
-(3,57)-(3,59)
+(27,47)-(27,65)
+(27,51)-(27,63)
 *)
 
 (* type error slice
-(2,21)-(3,59)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,17)-(3,51)
-(3,17)-(3,51)
-(3,18)-(3,40)
-(3,18)-(3,40)
-(3,20)-(3,31)
-(3,20)-(3,33)
-(3,20)-(3,33)
-(3,20)-(3,39)
-(3,20)-(3,39)
-(3,32)-(3,33)
-(3,37)-(3,39)
-(3,42)-(3,43)
-(3,42)-(3,50)
-(3,48)-(3,50)
-(3,57)-(3,59)
+(27,47)-(27,50)
+(27,47)-(27,65)
 *)

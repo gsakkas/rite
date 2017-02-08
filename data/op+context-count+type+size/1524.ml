@@ -1,31 +1,53 @@
 
-let rec listReverse l = match l with | [] -> [] | a::b::[] -> 0;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+
+let palindrome w =
+  let wList = explode w in
+  let wReverse = listReverse (explode w) in if true then wList;;
 
 
 (* fix
 
-let rec listReverse l = match l with | [] -> [] | a::b::[] -> [a];;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+
+let palindrome w =
+  let wList = explode w in
+  let wReverse = listReverse (explode w) in
+  if wList = wReverse then true else false;;
 
 *)
 
 (* changed spans
-(2,63)-(2,64)
+(12,45)-(12,63)
+(12,48)-(12,52)
 *)
 
 (* type error slice
-(2,4)-(2,66)
-(2,21)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,25)-(2,64)
-(2,31)-(2,32)
-(2,46)-(2,48)
-(2,63)-(2,64)
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(4,45)-(4,65)
+(4,56)-(4,58)
+(4,56)-(4,65)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(11,3)-(12,63)
+(11,15)-(11,22)
+(11,15)-(11,24)
+(12,45)-(12,63)
+(12,45)-(12,63)
+(12,45)-(12,63)
+(12,58)-(12,63)
 *)

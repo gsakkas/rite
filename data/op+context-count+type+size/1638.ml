@@ -1,69 +1,59 @@
 
-let rec wwhile (f,b) =
-  let calc = f b in let (b',c') = calc in if c' then wwhile (f, b') else b';;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let fixpoint (f,b) = wwhile ((let f x = wwhile (f, x) in f b), b);;
+let rec listReverse l =
+  let rec listReverseHelper dec acc =
+    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
+  listReverseHelper l [];;
+
+let palindrome w = (explode w) = (explode (listReverse w));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let calc = f b in let (b',c') = calc in if c' then wwhile (f, b') else b';;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> (x, (x = b))), b);;
+let rec listReverse l =
+  let rec listReverseHelper dec acc =
+    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
+  listReverseHelper l [];;
+
+let palindrome w = (explode w) = (listReverse (explode w));;
 
 *)
 
 (* changed spans
-(5,31)-(5,61)
-(5,41)-(5,47)
-(5,41)-(5,53)
-(5,49)-(5,50)
-(5,58)-(5,61)
-(5,64)-(5,65)
+(12,35)-(12,42)
+(12,44)-(12,57)
+(12,56)-(12,57)
 *)
 
 (* type error slice
-(2,4)-(3,78)
-(2,17)-(3,76)
-(3,3)-(3,76)
-(3,3)-(3,76)
-(3,14)-(3,15)
-(3,14)-(3,17)
-(3,14)-(3,17)
-(3,16)-(3,17)
-(3,21)-(3,76)
-(3,21)-(3,76)
-(3,35)-(3,39)
-(3,43)-(3,76)
-(3,43)-(3,76)
-(3,43)-(3,76)
-(3,46)-(3,48)
-(3,54)-(3,60)
-(3,54)-(3,67)
-(3,54)-(3,67)
-(3,62)-(3,63)
-(3,62)-(3,67)
-(3,65)-(3,67)
-(3,74)-(3,76)
-(5,4)-(5,68)
-(5,15)-(5,65)
-(5,22)-(5,28)
-(5,22)-(5,65)
-(5,22)-(5,65)
-(5,31)-(5,61)
-(5,31)-(5,61)
-(5,31)-(5,65)
-(5,37)-(5,53)
-(5,41)-(5,47)
-(5,41)-(5,53)
-(5,41)-(5,53)
-(5,49)-(5,50)
-(5,49)-(5,53)
-(5,52)-(5,53)
-(5,58)-(5,59)
-(5,58)-(5,61)
-(5,58)-(5,61)
-(5,60)-(5,61)
-(5,64)-(5,65)
+(2,4)-(5,9)
+(2,13)-(5,7)
+(4,14)-(4,27)
+(4,14)-(4,29)
+(4,28)-(4,29)
+(7,4)-(10,27)
+(7,21)-(10,25)
+(9,5)-(9,71)
+(9,5)-(9,71)
+(9,42)-(9,59)
+(9,42)-(9,71)
+(9,60)-(9,61)
+(10,3)-(10,20)
+(10,3)-(10,25)
+(10,21)-(10,22)
+(12,21)-(12,28)
+(12,21)-(12,30)
+(12,29)-(12,30)
+(12,44)-(12,55)
+(12,44)-(12,57)
+(12,56)-(12,57)
 *)

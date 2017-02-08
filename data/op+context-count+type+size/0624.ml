@@ -1,81 +1,59 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec additivePersistence n =
-  match n with | [] -> [] | h::t -> t + (digitsOfInt (additivePersistence h));;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (let y = clone l1 ((List.length l1) - (List.length l2)) in (y, l2))
+    else (let z = clone l2 ((List.length l2) - (List.length l1)) in (z, l1));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10 then 1 else 1 + (additivePersistence (sumList (digitsOfInt n)));;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then
+      (let y = clone (List.hd l1) ((List.length l1) - (List.length l2)) in
+       (y, l2))
+    else
+      (let z = clone (List.hd l2) ((List.length l2) - (List.length l1)) in
+       (z, l1));;
 
 *)
 
 (* changed spans
-(5,29)-(6,76)
-(6,9)-(6,10)
-(6,24)-(6,26)
-(6,37)-(6,38)
-(6,37)-(6,76)
-(6,42)-(6,53)
-(6,42)-(6,76)
-(6,55)-(6,74)
-(6,55)-(6,76)
+(9,11)-(9,75)
+(9,25)-(9,27)
+(10,11)-(10,75)
+(10,25)-(10,27)
+(10,70)-(10,71)
+(10,73)-(10,75)
 *)
 
 (* type error slice
-(2,4)-(3,62)
-(2,21)-(3,60)
-(3,3)-(3,60)
-(3,3)-(3,60)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,18)-(3,29)
-(3,18)-(3,37)
-(3,18)-(3,37)
-(3,18)-(3,52)
-(3,18)-(3,52)
-(3,18)-(3,52)
-(3,31)-(3,32)
-(3,31)-(3,37)
-(3,35)-(3,37)
-(3,40)-(3,41)
-(3,42)-(3,52)
-(3,42)-(3,52)
-(3,43)-(3,44)
-(3,43)-(3,51)
-(3,49)-(3,51)
-(3,58)-(3,60)
-(5,4)-(6,80)
-(5,29)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,3)-(6,76)
-(6,9)-(6,10)
-(6,24)-(6,26)
-(6,37)-(6,38)
-(6,37)-(6,76)
-(6,37)-(6,76)
-(6,37)-(6,76)
-(6,42)-(6,53)
-(6,42)-(6,76)
-(6,42)-(6,76)
-(6,55)-(6,74)
-(6,55)-(6,76)
-(6,55)-(6,76)
-(6,75)-(6,76)
+(2,44)-(2,45)
+(2,44)-(2,64)
+(2,44)-(2,64)
+(2,50)-(2,55)
+(2,50)-(2,64)
+(2,56)-(2,57)
+(5,3)-(10,75)
+(5,3)-(10,75)
+(6,9)-(6,11)
+(6,9)-(6,15)
+(8,5)-(10,75)
+(9,11)-(9,75)
+(9,11)-(9,75)
+(9,19)-(9,24)
+(9,19)-(9,63)
+(9,25)-(9,27)
+(9,70)-(9,71)
+(9,70)-(9,75)
 *)

@@ -1,44 +1,79 @@
 
-let pipe fs =
-  let f a x f x = f a in let base y = y in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith in
+    let base = failwith in
+    let args = failwith in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x f x f a = f a x in let base y = y in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (add1,add2) ->
+          let new_carry = ((carry + add1) + add2) / 10 in
+          let digit = ((carry + add1) + add2) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,19)-(3,20)
-(3,19)-(3,22)
-(3,26)-(3,68)
+(15,17)-(15,25)
+(16,5)-(17,75)
+(16,16)-(16,24)
+(17,5)-(17,75)
+(17,16)-(17,24)
+(17,28)-(17,75)
+(17,42)-(17,56)
+(17,42)-(17,68)
+(17,57)-(17,58)
+(17,59)-(17,63)
+(17,64)-(17,68)
+(17,72)-(17,75)
+(18,3)-(18,13)
+(18,3)-(18,33)
+(18,15)-(18,18)
+(18,15)-(18,33)
+(18,20)-(18,27)
+(18,20)-(18,33)
+(18,28)-(18,30)
+(18,31)-(18,33)
 *)
 
 (* type error slice
-(2,4)-(3,70)
-(2,10)-(3,68)
-(3,3)-(3,68)
-(3,3)-(3,68)
-(3,9)-(3,22)
-(3,11)-(3,22)
-(3,13)-(3,22)
-(3,15)-(3,22)
-(3,19)-(3,20)
-(3,19)-(3,22)
-(3,19)-(3,22)
-(3,21)-(3,22)
-(3,26)-(3,68)
-(3,26)-(3,68)
-(3,35)-(3,40)
-(3,39)-(3,40)
-(3,44)-(3,58)
-(3,44)-(3,68)
-(3,44)-(3,68)
-(3,44)-(3,68)
-(3,44)-(3,68)
-(3,59)-(3,60)
-(3,61)-(3,65)
-(3,66)-(3,68)
+(17,5)-(17,75)
+(17,16)-(17,24)
+(17,42)-(17,56)
+(17,42)-(17,68)
+(17,64)-(17,68)
 *)

@@ -1,55 +1,40 @@
 
-let pipe fs =
-  let f a x = a x in
-  let base = match fs with | 0 -> 0 | _ -> fs in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ("; " (List.map f l))) ^ "]");;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = function | g -> g in
-  let base = function | x -> x in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(3,15)-(3,16)
-(3,15)-(3,18)
-(3,17)-(3,18)
-(4,3)-(4,74)
-(4,14)-(4,46)
-(4,20)-(4,22)
-(4,35)-(4,36)
-(4,44)-(4,46)
-(4,50)-(4,74)
+(9,32)-(9,61)
+(9,43)-(9,61)
 *)
 
 (* type error slice
-(2,4)-(4,76)
-(2,10)-(4,74)
-(3,3)-(4,74)
-(3,3)-(4,74)
-(3,9)-(3,18)
-(3,11)-(3,18)
-(3,15)-(3,16)
-(3,15)-(3,18)
-(3,15)-(3,18)
-(3,17)-(3,18)
-(4,3)-(4,74)
-(4,3)-(4,74)
-(4,14)-(4,46)
-(4,14)-(4,46)
-(4,14)-(4,46)
-(4,14)-(4,46)
-(4,20)-(4,22)
-(4,35)-(4,36)
-(4,44)-(4,46)
-(4,50)-(4,64)
-(4,50)-(4,74)
-(4,50)-(4,74)
-(4,50)-(4,74)
-(4,50)-(4,74)
-(4,65)-(4,66)
-(4,67)-(4,71)
-(4,72)-(4,74)
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(9,32)-(9,41)
+(9,32)-(9,61)
+(9,32)-(9,70)
+(9,43)-(9,47)
+(9,43)-(9,61)
+(9,65)-(9,66)
 *)

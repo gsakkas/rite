@@ -8,10 +8,20 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e -> sin (pi * (eval e));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ("<" ^
+           ((exprToString e2) ^
+              ("?" ^ ((exprToString e3) ^ ("?" exprToString e4)))));;
 
 
 (* fix
@@ -25,46 +35,29 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ("<" ^
+           ((exprToString e2) ^
+              ("?" ^ ((exprToString e3) ^ ("?" ^ (exprToString e4))))));;
 
 *)
 
 (* changed spans
-(14,59)-(14,71)
-(14,70)-(14,71)
+(24,44)-(24,47)
+(24,48)-(24,60)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,4)-(14,75)
-(13,15)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,3)-(14,71)
-(14,9)-(14,10)
-(14,27)-(14,28)
-(14,40)-(14,41)
-(14,54)-(14,57)
-(14,54)-(14,71)
-(14,54)-(14,71)
-(14,59)-(14,61)
-(14,59)-(14,71)
-(14,59)-(14,71)
-(14,59)-(14,71)
-(14,65)-(14,69)
-(14,65)-(14,71)
-(14,65)-(14,71)
-(14,70)-(14,71)
+(24,44)-(24,47)
+(24,44)-(24,63)
 *)

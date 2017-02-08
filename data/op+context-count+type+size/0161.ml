@@ -1,169 +1,47 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  ((List.append (clone 0 (len2 - len1)) l1),
-    (List.append (clone 0 (len1 - len2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (i,l) ->
-          (match x with
-           | (x1,x2) ->
-               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l = if i > 0 then bigAdd l (mulByDigit (i - 1) l);;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Average (x',y') -> (x' + y') / 2;;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  ((List.append (clone 0 (len2 - len1)) l1),
-    (List.append (clone 0 (len1 - len2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (i,l) ->
-          (match x with
-           | (x1,x2) ->
-               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> l | _ -> bigAdd l (mulByDigit (i - 1) l);;
+let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 
 *)
 
 (* changed spans
-(26,26)-(26,70)
-(26,29)-(26,34)
-(26,33)-(26,34)
+(12,3)-(12,76)
+(12,27)-(12,28)
+(12,64)-(12,66)
+(12,64)-(12,71)
+(12,64)-(12,76)
+(12,69)-(12,71)
+(12,75)-(12,76)
 *)
 
 (* type error slice
-(2,4)-(2,67)
-(2,15)-(2,63)
-(2,17)-(2,63)
-(2,21)-(2,63)
-(2,21)-(2,63)
-(2,24)-(2,25)
-(2,24)-(2,29)
-(2,24)-(2,29)
-(2,24)-(2,29)
-(2,28)-(2,29)
-(2,35)-(2,37)
-(2,43)-(2,44)
-(2,43)-(2,63)
-(2,49)-(2,54)
-(2,49)-(2,63)
-(2,49)-(2,63)
-(2,49)-(2,63)
-(2,55)-(2,56)
-(2,58)-(2,59)
-(2,58)-(2,63)
-(2,62)-(2,63)
-(4,4)-(8,48)
-(4,13)-(8,44)
-(4,16)-(8,44)
-(5,14)-(5,25)
-(5,14)-(5,28)
-(5,14)-(5,28)
-(5,26)-(5,28)
-(6,14)-(6,25)
-(6,14)-(6,28)
-(6,14)-(6,28)
-(6,26)-(6,28)
-(7,5)-(7,16)
-(7,5)-(7,43)
-(7,18)-(7,23)
-(7,18)-(7,38)
-(7,41)-(7,43)
-(8,6)-(8,17)
-(8,6)-(8,44)
-(8,42)-(8,44)
-(10,20)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,9)-(11,10)
-(11,24)-(11,26)
-(11,37)-(11,75)
-(11,40)-(11,41)
-(11,40)-(11,45)
-(11,51)-(11,61)
-(11,51)-(11,63)
-(13,4)-(24,37)
-(13,12)-(24,33)
-(13,15)-(24,33)
-(14,3)-(24,33)
-(14,12)-(23,52)
-(15,5)-(23,52)
-(15,11)-(20,71)
-(15,13)-(20,71)
-(16,13)-(16,14)
-(18,18)-(18,19)
-(20,20)-(20,22)
-(20,25)-(20,27)
-(20,31)-(20,32)
-(20,70)-(20,71)
-(21,5)-(23,52)
-(21,17)-(21,22)
-(21,20)-(21,22)
-(22,16)-(22,24)
-(22,16)-(22,57)
-(22,26)-(22,38)
-(22,26)-(22,57)
-(22,45)-(22,47)
-(22,55)-(22,57)
-(23,19)-(23,33)
-(23,19)-(23,45)
-(23,19)-(23,45)
-(23,34)-(23,35)
-(23,36)-(23,40)
-(24,15)-(24,18)
-(24,15)-(24,33)
-(24,20)-(24,27)
-(24,20)-(24,33)
-(24,20)-(24,33)
-(24,28)-(24,30)
-(24,31)-(24,33)
-(26,4)-(26,73)
-(26,20)-(26,70)
-(26,22)-(26,70)
-(26,26)-(26,70)
-(26,29)-(26,30)
-(26,29)-(26,34)
-(26,40)-(26,46)
-(26,40)-(26,70)
-(26,40)-(26,70)
-(26,47)-(26,48)
-(26,50)-(26,60)
-(26,50)-(26,70)
-(26,50)-(26,70)
-(26,69)-(26,70)
+(12,3)-(12,76)
+(12,3)-(12,76)
+(12,64)-(12,66)
+(12,64)-(12,71)
+(12,64)-(12,71)
+(12,69)-(12,71)
 *)

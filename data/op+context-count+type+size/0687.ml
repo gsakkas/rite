@@ -1,83 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let a = (1, 2);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin ((eval (a, x, y)) * 2.)
-  | Cosine a -> x
-  | Average (a,b) -> x
-  | Times (a,b) -> x
-  | Thresh (a,b,c,d) -> x;;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if true then List.append (clone 0 1) l1;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let a = (1, 2);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin ((eval (a, x, y)) *. pi)
-  | Cosine a -> x
-  | Average (a,b) -> x
-  | Times (a,b) -> x
-  | Thresh (a,b,c,d) -> x;;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(13,15)-(21,26)
-(17,21)-(17,41)
-(17,39)-(17,41)
+(10,3)-(10,42)
+(10,6)-(10,10)
+(10,16)-(10,42)
+(10,37)-(10,38)
 *)
 
 (* type error slice
-(13,15)-(21,26)
-(14,3)-(21,26)
-(14,3)-(21,26)
-(14,3)-(21,26)
-(14,9)-(14,10)
-(15,14)-(15,15)
-(16,14)-(16,15)
-(17,15)-(17,18)
-(17,15)-(17,41)
-(17,15)-(17,41)
-(17,21)-(17,25)
-(17,21)-(17,34)
-(17,21)-(17,34)
-(17,21)-(17,41)
-(17,21)-(17,41)
-(17,21)-(17,41)
-(17,27)-(17,28)
-(17,27)-(17,34)
-(17,30)-(17,31)
-(17,33)-(17,34)
-(17,39)-(17,41)
-(18,17)-(18,18)
-(19,22)-(19,23)
-(20,20)-(20,21)
-(21,25)-(21,26)
+(10,3)-(10,42)
+(10,3)-(10,42)
+(10,3)-(10,42)
+(10,16)-(10,27)
+(10,16)-(10,42)
 *)

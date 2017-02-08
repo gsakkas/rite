@@ -6,7 +6,11 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr
+  | ArcSin of expr* expr;;
+
+let e_num = 2.718281828;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -14,9 +18,18 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine x -> sin (pi *. (eval x))
-  | Cosine x -> cos (pi *. (eval x))
-  | Average (x1,x2) -> ((eval x1) +. (eval x2)) /. 2.;;
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y)))) *.
+        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)))
+  | ArcSin (x1,x2) -> (asin ((eval (x1, x, y)) ** 2)) /. 1.6;;
 
 
 (* fix
@@ -28,7 +41,11 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr
+  | ArcSin of expr* expr;;
+
+let e_num = 2.718281828;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -38,65 +55,25 @@ let rec eval (e,x,y) =
   | VarY  -> y
   | Sine x1 -> sin (pi *. (eval (x1, x, y)))
   | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.;;
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y)))) *.
+        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)))
+  | ArcSin (x1,x2) -> (asin ((eval (x1, x, y)) ** 2.)) /. 1.6;;
 
 *)
 
 (* changed spans
-(14,3)-(19,54)
-(17,32)-(17,33)
-(18,17)-(18,35)
-(18,34)-(18,35)
-(19,26)-(19,54)
-(19,31)-(19,33)
-(19,39)-(19,43)
-(19,44)-(19,46)
+(32,51)-(32,52)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,4)-(19,56)
-(13,15)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,3)-(19,54)
-(14,9)-(14,10)
-(15,14)-(15,15)
-(16,14)-(16,15)
-(17,15)-(17,18)
-(17,15)-(17,33)
-(17,20)-(17,22)
-(17,20)-(17,33)
-(17,20)-(17,33)
-(17,27)-(17,31)
-(17,27)-(17,33)
-(17,27)-(17,33)
-(17,32)-(17,33)
-(18,17)-(18,20)
-(18,17)-(18,35)
-(18,22)-(18,24)
-(18,22)-(18,35)
-(18,29)-(18,33)
-(18,29)-(18,35)
-(18,34)-(18,35)
-(19,26)-(19,30)
-(19,26)-(19,33)
-(19,26)-(19,46)
-(19,26)-(19,54)
-(19,31)-(19,33)
-(19,39)-(19,43)
-(19,39)-(19,46)
-(19,44)-(19,46)
-(19,52)-(19,54)
+(32,31)-(32,52)
+(32,48)-(32,50)
+(32,51)-(32,52)
 *)

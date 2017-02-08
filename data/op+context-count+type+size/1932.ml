@@ -1,128 +1,105 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr;;
 
-let rec digitsOfInt n =
-  let digOfInt n =
-    match n > 0 with
-    | false  -> []
-    | true  ->
-        (match n > 9 with
-         | false  -> n :: (digitsOfInt (n / 10))
-         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
-  listReverse n;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) *. (eval (x2, x, y)))) *.
+        (e ** ((- pi) *. ((eval (x3, x, y)) ** 2.)));;
 
 
 (* fix
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | CosE of expr* expr* expr;;
 
-let rec digitsOfInt n =
-  listReverse
-    (match n > 0 with
-     | false  -> []
-     | true  ->
-         (match n > 9 with
-          | false  -> n :: (digitsOfInt (n / 10))
-          | true  -> (n mod 10) :: (digitsOfInt (n / 10))));;
+let e_num = 2.718281828;;
 
-let rec digOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec digitsOfInt n = digOfInt n;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) *. (eval (x2, x, y)))) *.
+        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)));;
 
 *)
 
 (* changed spans
-(8,3)-(15,16)
-(8,16)-(14,55)
-(9,5)-(14,55)
-(15,3)-(15,14)
-(15,3)-(15,16)
-(15,15)-(15,16)
+(12,10)-(12,26)
+(28,10)-(28,11)
+(28,17)-(28,21)
 *)
 
 (* type error slice
-(2,4)-(5,23)
-(2,17)-(5,21)
-(3,3)-(5,21)
-(3,3)-(5,21)
-(3,25)-(4,63)
-(3,27)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,5)-(4,63)
-(4,11)-(4,12)
-(4,26)-(4,28)
-(4,39)-(4,52)
-(4,39)-(4,63)
-(4,39)-(4,63)
-(4,39)-(4,63)
-(4,53)-(4,54)
-(4,56)-(4,57)
-(4,56)-(4,63)
-(4,61)-(4,63)
-(5,3)-(5,16)
-(5,3)-(5,21)
-(5,3)-(5,21)
-(5,3)-(5,21)
-(5,17)-(5,18)
-(5,19)-(5,21)
-(7,4)-(15,18)
-(7,21)-(15,16)
-(8,3)-(15,16)
-(8,3)-(15,16)
-(8,16)-(14,55)
-(9,5)-(14,55)
-(9,5)-(14,55)
-(9,5)-(14,55)
-(9,5)-(14,55)
-(9,11)-(9,12)
-(9,11)-(9,16)
-(9,11)-(9,16)
-(9,11)-(9,16)
-(9,15)-(9,16)
-(10,17)-(10,19)
-(12,10)-(14,55)
-(12,10)-(14,55)
-(12,10)-(14,55)
-(12,16)-(12,17)
-(12,16)-(12,21)
-(12,16)-(12,21)
-(12,20)-(12,21)
-(13,22)-(13,23)
-(13,22)-(13,47)
-(13,28)-(13,39)
-(13,28)-(13,47)
-(13,28)-(13,47)
-(13,41)-(13,42)
-(13,41)-(13,47)
-(13,45)-(13,47)
-(14,22)-(14,23)
-(14,22)-(14,30)
-(14,22)-(14,55)
-(14,28)-(14,30)
-(14,36)-(14,47)
-(14,36)-(14,55)
-(14,49)-(14,50)
-(14,49)-(14,55)
-(14,53)-(14,55)
-(15,3)-(15,14)
-(15,3)-(15,16)
-(15,3)-(15,16)
-(15,15)-(15,16)
+(12,4)-(12,29)
+(12,10)-(12,26)
+(14,4)-(28,55)
+(14,15)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,3)-(28,50)
+(15,9)-(15,10)
+(18,28)-(18,32)
+(18,28)-(18,42)
+(18,34)-(18,36)
+(18,34)-(18,42)
+(28,10)-(28,11)
+(28,10)-(28,50)
+(28,12)-(28,14)
+(28,17)-(28,21)
+(28,17)-(28,21)
+(28,17)-(28,50)
+(28,19)-(28,21)
 *)

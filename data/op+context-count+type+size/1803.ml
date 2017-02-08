@@ -1,69 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(" ^ (n1 ^ (n2 ^ "/ 2 )"))
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10 then (prod mod 10) :: (prod / 10) else prod :: t;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(n1 + n2 / 2 )"
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else prod :: t;;
 
 *)
 
 (* changed spans
-(17,24)-(17,27)
-(17,24)-(17,49)
-(17,28)-(17,29)
-(17,31)-(17,49)
+(7,43)-(7,52)
+(7,59)-(7,63)
+(7,59)-(7,68)
+(7,67)-(7,68)
 *)
 
 (* type error slice
-(11,4)-(19,43)
-(11,22)-(19,41)
-(12,3)-(19,41)
-(12,3)-(19,41)
-(12,9)-(12,10)
-(17,24)-(17,27)
-(17,28)-(17,29)
-(17,31)-(17,33)
-(17,31)-(17,49)
-(17,31)-(17,49)
-(17,34)-(17,35)
-(17,37)-(17,39)
-(17,37)-(17,49)
-(17,37)-(17,49)
-(17,40)-(17,41)
-(17,42)-(17,49)
+(7,26)-(7,52)
+(7,43)-(7,52)
 *)

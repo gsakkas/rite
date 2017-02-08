@@ -1,33 +1,33 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | x::xs -> (List.fold_left x) + xs;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (match n with
+     | 0 -> [0]
+     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10]);;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (match n with
+     | 0 -> [0]
+     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10] else []);;
 
 *)
 
 (* changed spans
-(3,3)-(3,61)
-(3,39)-(3,61)
+(8,13)-(8,70)
 *)
 
 (* type error slice
-(2,4)-(3,63)
-(2,17)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,9)-(3,11)
-(3,39)-(3,53)
-(3,39)-(3,55)
-(3,39)-(3,55)
-(3,39)-(3,61)
-(3,39)-(3,61)
-(3,54)-(3,55)
-(3,59)-(3,61)
+(8,13)-(8,70)
+(8,13)-(8,70)
+(8,13)-(8,70)
+(8,36)-(8,70)
+(8,58)-(8,59)
 *)

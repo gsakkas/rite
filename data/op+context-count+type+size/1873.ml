@@ -1,44 +1,120 @@
 
-let sqsum xs =
-  let f a x = a +. (x ** 2.0) in let base = 0 in List.fold_left f base xs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if res <> []
+      then
+        let lastTens::rest = res in
+        (if carry <> []
+         then
+           let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: rest))
+         else
+           (let tens = (x1 + x2) / 10 in
+            let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: rest))))
+      else
+        if carry <> []
+        then
+          (let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: res)))
+        else
+          (let tens = (x1 + x2) / 10 in
+           let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = if i <> 0 then mulByDigit (i - 1) bigAdd l l else l;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (int_of_float ((float_of_int x) ** 2.0)) in
-  let base = 0 in List.fold_left f base xs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if res <> []
+      then
+        let lastTens::rest = res in
+        (if carry <> []
+         then
+           let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: rest))
+         else
+           (let tens = (x1 + x2) / 10 in
+            let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: rest))))
+      else
+        if carry <> []
+        then
+          (let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: res)))
+        else
+          (let tens = (x1 + x2) / 10 in
+           let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i <> 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 
 *)
 
 (* changed spans
-(3,15)-(3,29)
-(3,21)-(3,22)
-(3,21)-(3,29)
+(49,41)-(49,70)
+(49,60)-(49,66)
 *)
 
 (* type error slice
-(2,4)-(3,76)
-(2,11)-(3,74)
-(3,3)-(3,74)
-(3,9)-(3,29)
-(3,11)-(3,29)
-(3,15)-(3,16)
-(3,15)-(3,29)
-(3,15)-(3,29)
-(3,21)-(3,22)
-(3,21)-(3,29)
-(3,21)-(3,29)
-(3,23)-(3,25)
-(3,26)-(3,29)
-(3,34)-(3,74)
-(3,45)-(3,46)
-(3,50)-(3,64)
-(3,50)-(3,74)
-(3,50)-(3,74)
-(3,50)-(3,74)
-(3,50)-(3,74)
-(3,65)-(3,66)
-(3,67)-(3,71)
-(3,72)-(3,74)
+(49,4)-(49,79)
+(49,20)-(49,77)
+(49,22)-(49,77)
+(49,26)-(49,77)
+(49,41)-(49,51)
+(49,41)-(49,70)
+(49,69)-(49,70)
+(49,76)-(49,77)
 *)

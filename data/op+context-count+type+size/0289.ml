@@ -1,67 +1,60 @@
 
-let rec append list1 list2 = match list1 with | [] -> [] | h::t -> h :: list2;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::[] -> l | h::t -> listReverse (append (t [h]));;
+let counter = 0;;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     counter = ((additivePersistence num) + 1));;
 
 
 (* fix
 
-let rec append list1 list2 = match list1 with | [] -> [] | h::t -> h :: list2;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::[] -> l | h::t -> listReverse (append t [h]);;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     1 + (additivePersistence num));;
 
 *)
 
 (* changed spans
-(5,63)-(5,76)
-(5,71)-(5,76)
+(5,15)-(5,16)
+(15,6)-(18,46)
+(16,6)-(18,46)
+(17,6)-(18,46)
+(18,6)-(18,13)
+(18,6)-(18,46)
+(18,18)-(18,46)
+(18,45)-(18,46)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,16)-(2,78)
-(2,22)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,30)-(2,78)
-(2,36)-(2,41)
-(2,55)-(2,57)
-(2,68)-(2,69)
-(2,68)-(2,78)
-(2,73)-(2,78)
-(4,4)-(5,80)
-(4,21)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,3)-(5,76)
-(5,9)-(5,10)
-(5,24)-(5,26)
-(5,38)-(5,39)
-(5,50)-(5,61)
-(5,50)-(5,76)
-(5,50)-(5,76)
-(5,63)-(5,69)
-(5,63)-(5,76)
-(5,63)-(5,76)
-(5,71)-(5,72)
-(5,71)-(5,76)
-(5,71)-(5,76)
-(5,73)-(5,76)
-(5,73)-(5,76)
-(5,74)-(5,75)
+(12,3)-(18,46)
+(12,3)-(18,46)
+(13,8)-(13,9)
+(15,6)-(18,46)
+(16,6)-(18,46)
+(17,6)-(18,46)
+(18,6)-(18,46)
 *)

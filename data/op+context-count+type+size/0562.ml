@@ -1,60 +1,62 @@
 
-let sqsum xs =
-  let f a x = match xs with | [] -> a | hd::tl -> a + (x * x) in
-  let base = f 0 xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ [l1]), l2);;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
-  List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(3,15)-(3,61)
-(3,21)-(3,23)
-(3,37)-(3,38)
-(3,56)-(3,57)
-(3,60)-(3,61)
-(4,14)-(4,20)
-(4,18)-(4,20)
+(12,67)-(12,71)
 *)
 
 (* type error slice
-(2,4)-(4,50)
-(2,11)-(4,48)
-(3,3)-(4,48)
-(3,9)-(3,61)
-(3,11)-(3,61)
-(3,15)-(3,61)
-(3,15)-(3,61)
-(3,15)-(3,61)
-(3,15)-(3,61)
-(3,15)-(3,61)
-(3,15)-(3,61)
-(3,21)-(3,23)
-(3,37)-(3,38)
-(3,51)-(3,52)
-(3,51)-(3,61)
-(3,51)-(3,61)
-(3,56)-(3,57)
-(3,56)-(3,61)
-(3,56)-(3,61)
-(3,60)-(3,61)
-(4,3)-(4,48)
-(4,14)-(4,15)
-(4,14)-(4,20)
-(4,14)-(4,20)
-(4,16)-(4,17)
-(4,18)-(4,20)
-(4,24)-(4,38)
-(4,24)-(4,48)
-(4,24)-(4,48)
-(4,24)-(4,48)
-(4,39)-(4,40)
-(4,41)-(4,45)
-(4,46)-(4,48)
+(2,4)-(7,26)
+(2,15)-(7,23)
+(2,17)-(7,23)
+(3,3)-(7,23)
+(6,17)-(6,19)
+(6,17)-(6,46)
+(6,17)-(6,46)
+(6,24)-(6,35)
+(6,24)-(6,46)
+(6,36)-(6,38)
+(7,3)-(7,14)
+(7,3)-(7,23)
+(7,15)-(7,16)
+(11,21)-(11,26)
+(11,21)-(11,64)
+(11,27)-(11,28)
+(12,18)-(12,23)
+(12,18)-(12,61)
+(12,18)-(12,71)
+(12,47)-(12,58)
+(12,47)-(12,61)
+(12,59)-(12,61)
+(12,65)-(12,66)
+(12,67)-(12,71)
+(12,67)-(12,71)
+(12,68)-(12,70)
 *)

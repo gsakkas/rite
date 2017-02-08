@@ -1,52 +1,62 @@
 
-let pipe fs =
-  let f a x = match a with | _ -> x a | [] -> x in
-  let base = [] in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x i = x (a i) in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(3,15)-(3,48)
-(3,21)-(3,22)
-(3,37)-(3,38)
-(3,47)-(3,48)
-(4,14)-(4,16)
-(4,20)-(4,44)
+(19,68)-(19,69)
 *)
 
 (* type error slice
-(2,4)-(4,46)
-(2,10)-(4,44)
-(3,3)-(4,44)
-(3,3)-(4,44)
-(3,9)-(3,48)
-(3,11)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,15)-(3,48)
-(3,21)-(3,22)
-(3,35)-(3,36)
-(3,35)-(3,38)
-(3,35)-(3,38)
-(3,37)-(3,38)
-(3,47)-(3,48)
-(4,3)-(4,44)
-(4,3)-(4,44)
-(4,14)-(4,16)
-(4,20)-(4,34)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,20)-(4,44)
-(4,35)-(4,36)
-(4,37)-(4,41)
-(4,42)-(4,44)
+(19,26)-(19,69)
+(19,68)-(19,69)
 *)

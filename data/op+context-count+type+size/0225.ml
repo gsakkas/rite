@@ -1,6 +1,19 @@
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else ((digitsOfInt n) / 10) @ [n mod 10];;
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot (abs n) in l;;
 
 
 (* fix
@@ -8,35 +21,33 @@ let rec digitsOfInt n =
 let rec digitsOfInt n =
   if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
+
 *)
 
 (* changed spans
-(3,28)-(3,47)
-(3,40)-(3,41)
+(16,33)-(16,77)
+(16,45)-(16,64)
+(16,45)-(16,71)
+(16,76)-(16,77)
 *)
 
 (* type error slice
-(2,21)-(3,61)
-(3,3)-(3,61)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,28)-(3,39)
-(3,28)-(3,41)
-(3,28)-(3,41)
-(3,28)-(3,47)
-(3,28)-(3,47)
-(3,28)-(3,61)
-(3,28)-(3,61)
-(3,40)-(3,41)
-(3,45)-(3,47)
-(3,49)-(3,50)
-(3,51)-(3,61)
-(3,51)-(3,61)
-(3,52)-(3,53)
-(3,52)-(3,60)
-(3,58)-(3,60)
+(14,33)-(14,52)
+(14,33)-(14,74)
+(16,33)-(16,77)
+(16,45)-(16,64)
+(16,45)-(16,71)
 *)

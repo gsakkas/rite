@@ -1,93 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = sep in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(17,64)-(17,65)
+(7,32)-(7,35)
 *)
 
 (* type error slice
-(11,15)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,3)-(17,65)
-(12,9)-(12,10)
-(13,14)-(13,15)
-(14,14)-(14,15)
-(15,15)-(15,18)
-(15,15)-(15,33)
-(15,15)-(15,33)
-(15,20)-(15,24)
-(15,20)-(15,33)
-(15,20)-(15,33)
-(15,26)-(15,27)
-(15,26)-(15,33)
-(15,29)-(15,30)
-(15,32)-(15,33)
-(16,17)-(16,20)
-(16,17)-(16,35)
-(16,22)-(16,26)
-(16,22)-(16,35)
-(16,22)-(16,35)
-(16,28)-(16,29)
-(16,28)-(16,35)
-(16,31)-(16,32)
-(16,34)-(16,35)
-(17,24)-(17,28)
-(17,24)-(17,37)
-(17,24)-(17,37)
-(17,24)-(17,65)
-(17,30)-(17,31)
-(17,30)-(17,37)
-(17,33)-(17,34)
-(17,36)-(17,37)
-(17,44)-(17,48)
-(17,44)-(17,57)
-(17,44)-(17,57)
-(17,50)-(17,51)
-(17,50)-(17,57)
-(17,53)-(17,54)
-(17,56)-(17,57)
-(17,64)-(17,65)
+(6,24)-(6,27)
+(6,24)-(6,31)
+(6,28)-(6,29)
+(7,24)-(7,62)
+(7,32)-(7,35)
+(7,39)-(7,53)
+(7,39)-(7,62)
+(7,61)-(7,62)
 *)

@@ -1,83 +1,54 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l = List.rev l;;
-
-let palindrome w = if (explode w) = (listReverse w) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, a1, a2));;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l = List.rev l;;
-
-let palindrome w =
-  let explosion = explode w in
-  if explosion = (listReverse explosion) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
 
 *)
 
 (* changed spans
-(9,20)-(9,73)
-(9,24)-(9,51)
-(9,38)-(9,51)
-(9,50)-(9,51)
+(15,60)-(15,62)
+(15,64)-(15,66)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(3,3)-(5,7)
-(3,3)-(5,7)
-(3,14)-(4,65)
-(4,5)-(4,65)
-(4,5)-(4,65)
-(4,8)-(4,9)
-(4,8)-(4,29)
-(4,8)-(4,29)
-(4,8)-(4,29)
-(4,14)-(4,27)
-(4,14)-(4,29)
-(4,14)-(4,29)
-(4,28)-(4,29)
-(4,36)-(4,38)
-(4,45)-(4,46)
-(4,45)-(4,50)
-(4,45)-(4,50)
-(4,45)-(4,65)
-(4,48)-(4,49)
-(4,56)-(4,58)
-(4,56)-(4,65)
-(4,56)-(4,65)
-(4,60)-(4,61)
-(4,60)-(4,65)
-(4,64)-(4,65)
-(5,3)-(5,5)
-(5,3)-(5,7)
-(5,6)-(5,7)
-(7,4)-(7,37)
-(7,21)-(7,35)
-(7,25)-(7,33)
-(7,25)-(7,35)
-(7,25)-(7,35)
-(7,34)-(7,35)
-(9,4)-(9,75)
-(9,16)-(9,73)
-(9,24)-(9,31)
-(9,24)-(9,33)
-(9,24)-(9,33)
-(9,24)-(9,51)
-(9,24)-(9,51)
-(9,32)-(9,33)
-(9,38)-(9,49)
-(9,38)-(9,51)
-(9,38)-(9,51)
-(9,50)-(9,51)
+(12,3)-(15,66)
+(14,14)-(14,15)
+(14,14)-(14,22)
+(15,25)-(15,29)
+(15,25)-(15,41)
+(15,31)-(15,41)
+(15,40)-(15,41)
+(15,48)-(15,52)
+(15,48)-(15,66)
+(15,54)-(15,66)
+(15,64)-(15,66)
 *)

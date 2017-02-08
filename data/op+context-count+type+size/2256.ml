@@ -1,39 +1,65 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (n mod 10) :: ((digitsOfInt n) / 10) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (n mod 10) :: (digitsOfInt (n / 10)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
 
 *)
 
 (* changed spans
-(3,33)-(3,52)
-(3,45)-(3,46)
+(25,20)-(25,38)
+(25,24)-(25,36)
 *)
 
 (* type error slice
-(2,21)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,18)-(3,19)
-(3,18)-(3,26)
-(3,18)-(3,52)
-(3,24)-(3,26)
-(3,33)-(3,44)
-(3,33)-(3,46)
-(3,33)-(3,46)
-(3,33)-(3,52)
-(3,33)-(3,52)
-(3,45)-(3,46)
-(3,50)-(3,52)
-(3,59)-(3,61)
+(25,20)-(25,23)
+(25,20)-(25,38)
 *)

@@ -1,140 +1,83 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let counter = 0;;
+let pi = 4.0 *. (atan 1.0);;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     counter = ((additivePersistence num) + 1));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) * (eval (a, x, y))) +
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     1 + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (a, x, y))) +.
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(5,15)-(5,16)
-(18,6)-(18,13)
-(18,6)-(18,46)
-(18,18)-(18,46)
-(18,45)-(18,46)
+(28,9)-(28,22)
+(28,9)-(28,41)
+(28,9)-(29,44)
 *)
 
 (* type error slice
-(2,4)-(3,63)
-(2,21)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,27)-(3,38)
-(3,27)-(3,46)
-(3,27)-(3,46)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,40)-(3,41)
-(3,40)-(3,46)
-(3,44)-(3,46)
-(3,49)-(3,50)
-(3,51)-(3,61)
-(3,51)-(3,61)
-(3,52)-(3,53)
-(3,52)-(3,60)
-(3,58)-(3,60)
-(5,4)-(5,18)
-(5,15)-(5,16)
-(7,4)-(7,37)
-(7,12)-(7,34)
-(7,16)-(7,27)
-(7,16)-(7,34)
-(7,29)-(7,32)
-(7,29)-(7,34)
-(7,29)-(7,34)
-(7,33)-(7,34)
-(9,4)-(9,73)
-(9,17)-(9,70)
-(9,22)-(9,70)
-(9,22)-(9,70)
-(9,22)-(9,70)
-(9,22)-(9,70)
-(9,22)-(9,70)
-(9,22)-(9,70)
-(9,28)-(9,30)
-(9,44)-(9,45)
-(9,56)-(9,57)
-(9,56)-(9,70)
-(9,56)-(9,70)
-(9,56)-(9,70)
-(9,61)-(9,68)
-(9,61)-(9,70)
-(9,61)-(9,70)
-(9,69)-(9,70)
-(11,29)-(18,46)
-(12,3)-(18,46)
-(12,3)-(18,46)
-(12,6)-(12,7)
-(12,6)-(12,12)
-(12,6)-(12,12)
-(12,6)-(12,12)
-(12,10)-(12,12)
-(13,8)-(13,9)
-(15,6)-(18,46)
-(15,6)-(18,46)
-(15,19)-(15,25)
-(15,19)-(15,27)
-(15,26)-(15,27)
-(16,6)-(18,46)
-(16,6)-(18,46)
-(16,16)-(16,23)
-(16,16)-(16,30)
-(16,16)-(16,30)
-(16,24)-(16,30)
-(17,6)-(18,46)
-(17,6)-(18,46)
-(17,16)-(17,19)
-(17,16)-(17,46)
-(17,16)-(17,46)
-(17,23)-(17,42)
-(17,23)-(17,46)
-(17,23)-(17,46)
-(17,43)-(17,46)
-(18,6)-(18,13)
-(18,6)-(18,46)
-(18,6)-(18,46)
-(18,18)-(18,37)
-(18,18)-(18,41)
-(18,18)-(18,46)
-(18,38)-(18,41)
-(18,45)-(18,46)
+(19,20)-(19,40)
+(19,27)-(19,31)
+(19,27)-(19,40)
+(28,9)-(28,13)
+(28,9)-(28,22)
+(28,9)-(28,41)
+(28,9)-(28,41)
+(28,9)-(29,44)
+(28,28)-(28,32)
+(28,28)-(28,41)
+(29,11)-(29,44)
 *)

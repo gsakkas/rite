@@ -1,46 +1,64 @@
 
-let rec digitsOfInt n =
-  if n > 0 then ((digitsOfInt n) / 10) @ [n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n = if n > 0 then [2] else [1];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(3,19)-(3,30)
-(3,19)-(3,32)
-(3,19)-(3,38)
-(3,19)-(3,52)
-(3,31)-(3,32)
-(3,36)-(3,38)
-(3,40)-(3,41)
-(3,58)-(3,60)
+(20,56)-(20,57)
 *)
 
 (* type error slice
-(2,21)-(3,60)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,19)-(3,30)
-(3,19)-(3,32)
-(3,19)-(3,32)
-(3,19)-(3,38)
-(3,19)-(3,38)
-(3,19)-(3,52)
-(3,19)-(3,52)
-(3,31)-(3,32)
-(3,36)-(3,38)
-(3,40)-(3,41)
-(3,42)-(3,52)
-(3,42)-(3,52)
-(3,43)-(3,44)
-(3,43)-(3,51)
-(3,49)-(3,51)
-(3,58)-(3,60)
+(20,9)-(20,57)
+(20,56)-(20,57)
 *)

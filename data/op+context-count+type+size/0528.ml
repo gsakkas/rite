@@ -1,88 +1,153 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let xx = (b * b) * b in ((xx, (xx < 100)), b));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let rec buildhelper num depth expr =
+    match num with
+    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+    | 1 ->
+        if (rand (0, 1)) = 0
+        then buildSine (buildhelper 0 0 expr)
+        else buildCosine (buildhelper 0 0 expr)
+    | 2 ->
+        if (rand (0, 1)) = 0
+        then
+          buildAverage
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+        else
+          buildTimes
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+    | 3 ->
+        if (rand (0, 1)) = 0
+        then
+          buildAverage
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+        else
+          buildTimes
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+    | 4 ->
+        buildTimes
+          ((buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr))
+    | _ ->
+        buildTimes
+          ((buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr)) in
+  buildhelper (rand (1, 4)) depth "";;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let rec buildhelper num depth expr =
+    match num with
+    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+    | 1 ->
+        if (rand (0, 1)) = 0
+        then buildSine (buildhelper 0 0 expr)
+        else buildCosine (buildhelper 0 0 expr)
+    | 2 ->
+        if (rand (0, 1)) = 0
+        then
+          buildAverage
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+        else
+          buildTimes
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+    | 3 ->
+        if (rand (0, 1)) = 0
+        then
+          buildAverage
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+        else
+          buildTimes
+            ((buildhelper (depth - 1) (depth - 1) expr),
+              (buildhelper (depth - 1) (depth - 1) expr))
+    | 4 ->
+        buildThresh
+          ((buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr))
+    | _ ->
+        buildThresh
+          ((buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr),
+            (buildhelper (depth - 1) (depth - 1) expr)) in
+  buildhelper (rand (1, 4)) depth "";;
 
 *)
 
 (* changed spans
-(7,30)-(7,74)
-(7,40)-(7,41)
-(7,40)-(7,45)
-(7,40)-(7,50)
-(7,44)-(7,45)
-(7,49)-(7,50)
-(7,56)-(7,69)
-(7,61)-(7,69)
-(7,66)-(7,69)
+(17,17)-(17,39)
+(24,3)-(63,37)
+(52,9)-(52,19)
+(58,9)-(58,19)
+(63,22)-(63,23)
+(63,25)-(63,26)
 *)
 
 (* type error slice
-(2,4)-(5,17)
-(2,17)-(5,15)
-(3,3)-(5,15)
-(3,3)-(5,15)
-(3,20)-(4,66)
-(3,22)-(4,66)
-(4,5)-(4,66)
-(4,5)-(4,66)
-(4,19)-(4,20)
-(4,19)-(4,22)
-(4,19)-(4,22)
-(4,21)-(4,22)
-(4,26)-(4,66)
-(4,26)-(4,66)
-(4,29)-(4,31)
-(4,29)-(4,39)
-(4,29)-(4,39)
-(4,29)-(4,39)
-(4,34)-(4,39)
-(4,45)-(4,47)
-(4,53)-(4,61)
-(4,53)-(4,66)
-(4,53)-(4,66)
-(4,53)-(4,66)
-(4,62)-(4,63)
-(4,64)-(4,66)
-(5,3)-(5,11)
-(5,3)-(5,15)
-(5,3)-(5,15)
-(5,3)-(5,15)
-(5,12)-(5,13)
-(5,14)-(5,15)
-(7,4)-(7,78)
-(7,15)-(7,74)
-(7,22)-(7,28)
-(7,22)-(7,74)
-(7,22)-(7,74)
-(7,30)-(7,74)
-(7,30)-(7,74)
-(7,40)-(7,41)
-(7,40)-(7,45)
-(7,40)-(7,45)
-(7,40)-(7,50)
-(7,44)-(7,45)
-(7,49)-(7,50)
-(7,56)-(7,58)
-(7,56)-(7,69)
-(7,56)-(7,74)
-(7,61)-(7,63)
-(7,61)-(7,69)
-(7,61)-(7,69)
-(7,66)-(7,69)
-(7,73)-(7,74)
+(17,4)-(17,42)
+(17,17)-(17,39)
+(52,9)-(52,19)
+(52,9)-(56,54)
+(53,13)-(56,54)
+(58,9)-(58,19)
+(58,9)-(62,54)
+(59,13)-(62,54)
 *)

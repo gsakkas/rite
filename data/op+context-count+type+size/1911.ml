@@ -1,306 +1,137 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let num1 = (List.length l2) - (List.length l1) in
+  let num2 = (List.length l1) - (List.length l2) in
+  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Inverse a ->
-      let result = eval a in if result = 0. then 0 else 1 /. result
-  | Max (a,b) ->
-      let aResult = eval a in
-      let bResult = eval b in if aResult > bResult then aResult else bResult
-  | Range (a,b,c) ->
-      let aResult = eval a in
-      let bResult = eval b in
-      let cResult = eval c in
-      if aResult < bResult
-      then bResult
-      else if aResult < cResult then cResult else aResult;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let rec intlist x =
+        if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+      match x with
+      | (z,y) ->
+          (match a with
+           | [] -> let sum = z + y in intlist sum
+           | h::t ->
+               let sum = (h + z) + y in
+               let result = (intlist sum) @ t in
+               if sum < 10 then 0 :: result else result) in
+    let base = [0] in
+    let args = List.rev (List.combine l1 l2) in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec intlist x = if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+  match l with
+  | [] -> [0]
+  | h::t ->
+      let zeroList =
+        match t with
+        | [] -> []
+        | h'::t' -> (match padZero t [0] with | (a,b) -> b) in
+      let mult = intlist (h * i) in
+      let res = mult @ zeroList in bigAdd res (mulByDigit i t);;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with | (b,c) -> ((b @ [0]), (bigAdd ((mulByDigit x l2) @ b) a)) in
+  let base = ([], 0) in
+  let args = l1 in let res = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec clone x n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let num1 = (List.length l2) - (List.length l1) in
+  let num2 = (List.length l1) - (List.length l2) in
+  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Inverse a ->
-      let result = eval (a, x, y) in if result = 0. then 0. else 1. /. result
-  | Max (a,b) ->
-      let aResult = eval (a, x, y) in
-      let bResult = eval (b, x, y) in
-      if aResult > bResult then aResult else bResult
-  | Range (a,b,c) ->
-      let aResult = eval (a, x, y) in
-      let bResult = eval (b, x, y) in
-      let cResult = eval (c, x, y) in
-      if aResult < bResult
-      then bResult
-      else if aResult < cResult then cResult else aResult;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let rec intlist x =
+        if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+      match x with
+      | (z,y) ->
+          (match a with
+           | [] -> let sum = z + y in intlist sum
+           | h::t ->
+               let sum = (h + z) + y in
+               let result = (intlist sum) @ t in
+               if sum < 10 then 0 :: result else result) in
+    let base = [0] in
+    let args = List.rev (List.combine l1 l2) in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec intlist x = if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+  match l with
+  | [] -> [0]
+  | h::t ->
+      let zeroList =
+        match t with
+        | [] -> []
+        | h'::t' -> (match padZero t [0] with | (a,b) -> b) in
+      let mult = intlist (h * i) in
+      let res = mult @ zeroList in bigAdd res (mulByDigit i t);;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with | (b,c) -> ((b @ [0]), (bigAdd ((mulByDigit x l2) @ b) c)) in
+  let base = ([], [0]) in
+  let args = l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(29,25)-(29,26)
-(29,30)-(29,68)
-(29,50)-(29,51)
-(29,57)-(29,58)
-(31,26)-(31,27)
-(32,7)-(32,77)
-(32,26)-(32,27)
-(32,31)-(32,77)
-(34,26)-(34,27)
-(35,7)-(39,58)
-(35,26)-(35,27)
-(36,7)-(39,58)
-(36,21)-(36,25)
-(36,21)-(36,27)
-(36,26)-(36,27)
-(37,7)-(39,58)
-(37,10)-(37,17)
-(37,10)-(37,27)
-(37,20)-(37,27)
-(38,12)-(38,19)
-(39,12)-(39,58)
-(39,15)-(39,22)
-(39,15)-(39,32)
-(39,25)-(39,32)
-(39,38)-(39,45)
-(39,51)-(39,58)
+(47,73)-(47,74)
+(48,19)-(48,20)
+(49,20)-(49,63)
 *)
 
 (* type error slice
-(14,4)-(14,29)
-(14,10)-(14,26)
-(16,15)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,3)-(39,58)
-(17,9)-(17,10)
-(18,14)-(18,15)
-(19,14)-(19,15)
-(20,15)-(20,18)
-(20,15)-(20,40)
-(20,20)-(20,22)
-(20,20)-(20,40)
-(20,20)-(20,40)
-(20,27)-(20,31)
-(20,27)-(20,40)
-(20,27)-(20,40)
-(20,33)-(20,34)
-(20,33)-(20,40)
-(20,36)-(20,37)
-(20,39)-(20,40)
-(21,17)-(21,20)
-(21,17)-(21,42)
-(21,22)-(21,24)
-(21,22)-(21,42)
-(21,29)-(21,33)
-(21,29)-(21,42)
-(21,29)-(21,42)
-(21,35)-(21,36)
-(21,35)-(21,42)
-(21,38)-(21,39)
-(21,41)-(21,42)
-(22,24)-(22,28)
-(22,24)-(22,37)
-(22,24)-(22,37)
-(22,24)-(22,57)
-(22,24)-(22,66)
-(22,30)-(22,31)
-(22,30)-(22,37)
-(22,33)-(22,34)
-(22,36)-(22,37)
-(22,44)-(22,48)
-(22,44)-(22,57)
-(22,44)-(22,57)
-(22,50)-(22,51)
-(22,50)-(22,57)
-(22,53)-(22,54)
-(22,56)-(22,57)
-(22,64)-(22,66)
-(23,21)-(23,25)
-(23,21)-(23,34)
-(23,21)-(23,34)
-(23,21)-(23,54)
-(23,27)-(23,28)
-(23,27)-(23,34)
-(23,30)-(23,31)
-(23,33)-(23,34)
-(23,41)-(23,45)
-(23,41)-(23,54)
-(23,41)-(23,54)
-(23,47)-(23,48)
-(23,47)-(23,54)
-(23,50)-(23,51)
-(23,53)-(23,54)
-(25,7)-(27,25)
-(25,11)-(25,15)
-(25,11)-(25,24)
-(25,11)-(25,24)
-(25,11)-(25,43)
-(25,11)-(25,43)
-(25,17)-(25,18)
-(25,17)-(25,24)
-(25,20)-(25,21)
-(25,23)-(25,24)
-(25,30)-(25,34)
-(25,30)-(25,43)
-(25,30)-(25,43)
-(25,36)-(25,37)
-(25,36)-(25,43)
-(25,39)-(25,40)
-(25,42)-(25,43)
-(26,12)-(26,16)
-(26,12)-(26,25)
-(26,12)-(26,25)
-(26,18)-(26,19)
-(26,18)-(26,25)
-(26,21)-(26,22)
-(26,24)-(26,25)
-(27,12)-(27,16)
-(27,12)-(27,25)
-(27,12)-(27,25)
-(27,18)-(27,19)
-(27,18)-(27,25)
-(27,21)-(27,22)
-(27,24)-(27,25)
-(29,7)-(29,68)
-(29,7)-(29,68)
-(29,20)-(29,24)
-(29,20)-(29,26)
-(29,20)-(29,26)
-(29,25)-(29,26)
-(29,30)-(29,68)
-(29,30)-(29,68)
-(29,33)-(29,39)
-(29,33)-(29,44)
-(29,33)-(29,44)
-(29,42)-(29,44)
-(29,50)-(29,51)
-(29,57)-(29,58)
-(29,57)-(29,68)
-(29,57)-(29,68)
-(29,62)-(29,68)
-(31,7)-(32,77)
-(31,7)-(32,77)
-(31,21)-(31,25)
-(31,21)-(31,27)
-(31,21)-(31,27)
-(31,26)-(31,27)
-(32,7)-(32,77)
-(32,7)-(32,77)
-(32,21)-(32,25)
-(32,21)-(32,27)
-(32,21)-(32,27)
-(32,26)-(32,27)
-(32,31)-(32,77)
-(32,34)-(32,41)
-(32,34)-(32,51)
-(32,34)-(32,51)
-(32,44)-(32,51)
-(32,57)-(32,64)
-(32,70)-(32,77)
-(34,7)-(39,58)
-(34,7)-(39,58)
-(34,21)-(34,25)
-(34,21)-(34,27)
-(34,21)-(34,27)
-(34,26)-(34,27)
-(35,7)-(39,58)
-(35,7)-(39,58)
-(35,21)-(35,25)
-(35,21)-(35,27)
-(35,21)-(35,27)
-(35,26)-(35,27)
-(36,7)-(39,58)
-(36,7)-(39,58)
-(36,21)-(36,25)
-(36,21)-(36,27)
-(36,21)-(36,27)
-(36,26)-(36,27)
-(37,7)-(39,58)
-(37,10)-(37,17)
-(37,10)-(37,27)
-(37,10)-(37,27)
-(37,20)-(37,27)
-(38,12)-(38,19)
-(39,12)-(39,58)
-(39,15)-(39,22)
-(39,15)-(39,32)
-(39,15)-(39,32)
-(39,25)-(39,32)
-(39,38)-(39,45)
-(39,51)-(39,58)
+(7,4)-(10,51)
+(7,13)-(10,47)
+(7,16)-(10,47)
+(10,29)-(10,47)
+(10,43)-(10,44)
+(10,45)-(10,47)
+(15,4)-(31,37)
+(15,12)-(31,33)
+(15,15)-(31,33)
+(31,20)-(31,27)
+(31,20)-(31,33)
+(31,31)-(31,33)
+(46,3)-(49,63)
+(46,9)-(47,74)
+(46,11)-(47,74)
+(47,5)-(47,74)
+(47,5)-(47,74)
+(47,11)-(47,12)
+(47,31)-(47,74)
+(47,42)-(47,48)
+(47,42)-(47,74)
+(47,73)-(47,74)
+(49,30)-(49,44)
+(49,30)-(49,56)
+(49,45)-(49,46)
 *)

@@ -1,54 +1,84 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sepConcat a x) in
-      let base = h ^ sep in let l = List.rev t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Root of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Squared e -> eval (e ** 2)
+  | Root e -> eval (e ** (1 / 2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (x ^ a) in
-      let base = h ^ sep in let l = List.rev t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Root of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Squared e -> (eval (e, x, y)) ** 2.
+  | Root e -> (eval (e, x, y)) ** 0.5;;
 
 *)
 
 (* changed spans
-(6,24)-(6,33)
-(6,34)-(6,35)
-(7,7)-(7,74)
+(27,18)-(27,22)
+(27,18)-(27,30)
+(27,24)-(27,25)
+(27,29)-(27,30)
+(28,21)-(28,22)
+(28,21)-(28,32)
+(28,27)-(28,28)
+(28,27)-(28,32)
+(28,31)-(28,32)
 *)
 
 (* type error slice
-(2,4)-(7,76)
-(2,19)-(7,74)
-(2,23)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,9)-(3,11)
-(6,7)-(7,74)
-(6,13)-(6,37)
-(6,15)-(6,37)
-(6,19)-(6,20)
-(6,24)-(6,33)
-(6,24)-(6,37)
-(6,24)-(6,37)
-(6,24)-(6,37)
-(6,34)-(6,35)
-(6,36)-(6,37)
-(7,18)-(7,19)
-(7,22)-(7,25)
-(7,37)-(7,45)
-(7,37)-(7,47)
-(7,51)-(7,65)
-(7,51)-(7,74)
-(7,51)-(7,74)
-(7,66)-(7,67)
+(16,3)-(28,32)
+(16,3)-(28,32)
+(27,24)-(27,25)
+(27,24)-(27,30)
+(27,26)-(27,28)
+(28,21)-(28,22)
+(28,21)-(28,32)
+(28,23)-(28,25)
 *)

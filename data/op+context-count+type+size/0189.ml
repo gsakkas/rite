@@ -6,26 +6,31 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
-
-let rec eval (e,x,y) = float_of_string (exprToString eval);;
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) / 2.0)
+  | Op2 (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (eval (e1, x, y)) -. (eval (e2, x, y));;
 
 
 (* fix
@@ -37,145 +42,44 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
-
-let rec eval (e,x,y) = float_of_string (exprToString e);;
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) /. 2.0)
+  | Op2 (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (eval (e1, x, y)) -. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(28,54)-(28,58)
+(29,11)-(29,46)
 *)
 
 (* type error slice
-(11,4)-(26,82)
-(11,22)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,3)-(26,73)
-(12,9)-(12,10)
-(13,14)-(13,17)
-(14,14)-(14,17)
-(15,15)-(15,24)
-(15,15)-(15,50)
-(15,25)-(15,26)
-(15,29)-(15,41)
-(15,29)-(15,43)
-(15,29)-(15,43)
-(15,29)-(15,50)
-(15,29)-(15,50)
-(15,42)-(15,43)
-(15,45)-(15,46)
-(15,47)-(15,50)
-(16,17)-(16,26)
-(16,17)-(16,52)
-(16,27)-(16,28)
-(16,31)-(16,43)
-(16,31)-(16,45)
-(16,31)-(16,52)
-(16,44)-(16,45)
-(16,47)-(16,48)
-(16,49)-(16,52)
-(18,7)-(18,11)
-(18,7)-(18,69)
-(18,12)-(18,13)
-(18,16)-(18,28)
-(18,16)-(18,31)
-(18,16)-(18,69)
-(18,29)-(18,31)
-(18,33)-(18,34)
-(18,36)-(18,39)
-(18,36)-(18,69)
-(18,40)-(18,41)
-(18,44)-(18,56)
-(18,44)-(18,59)
-(18,44)-(18,69)
-(18,57)-(18,59)
-(18,61)-(18,62)
-(18,63)-(18,69)
-(19,23)-(19,35)
-(19,23)-(19,38)
-(19,23)-(19,65)
-(19,36)-(19,38)
-(19,40)-(19,41)
-(19,43)-(19,46)
-(19,43)-(19,65)
-(19,47)-(19,48)
-(19,50)-(19,62)
-(19,50)-(19,65)
-(19,63)-(19,65)
-(21,7)-(21,10)
-(21,7)-(26,73)
-(21,11)-(21,12)
-(22,11)-(22,23)
-(22,11)-(22,26)
-(22,11)-(26,73)
-(22,24)-(22,26)
-(22,28)-(22,29)
-(23,13)-(23,16)
-(23,13)-(26,73)
-(23,17)-(23,18)
-(24,17)-(24,29)
-(24,17)-(24,32)
-(24,17)-(26,73)
-(24,30)-(24,32)
-(24,34)-(24,35)
-(25,19)-(25,22)
-(25,19)-(26,73)
-(25,23)-(25,24)
-(26,23)-(26,35)
-(26,23)-(26,38)
-(26,23)-(26,73)
-(26,36)-(26,38)
-(26,40)-(26,41)
-(26,43)-(26,46)
-(26,43)-(26,73)
-(26,47)-(26,48)
-(26,51)-(26,63)
-(26,51)-(26,66)
-(26,51)-(26,73)
-(26,64)-(26,66)
-(26,68)-(26,69)
-(26,70)-(26,73)
-(28,4)-(28,61)
-(28,15)-(28,58)
-(28,24)-(28,39)
-(28,24)-(28,58)
-(28,41)-(28,53)
-(28,41)-(28,58)
-(28,41)-(28,58)
-(28,54)-(28,58)
+(28,8)-(29,46)
+(29,11)-(29,14)
+(29,11)-(29,36)
+(29,11)-(29,46)
+(29,11)-(29,46)
+(29,11)-(29,46)
+(29,43)-(29,46)
 *)

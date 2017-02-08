@@ -1,25 +1,25 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else [n mod 10; digitsOfInt (n / 10)];;
+let rec wwhile (f,b) =
+  match f with
+  | (x,y) -> let (x,y) = f b in if y = true then wwhile (f, x) else x;;
 
 
 (* fix
 
-let rec digitsOfInt n = if n <= 0 then [] else [n mod 10];;
+let rec wwhile (f,b) =
+  let (x,y) = f b in if y = true then wwhile (f, x) else x;;
 
 *)
 
 (* changed spans
-(3,26)-(3,58)
-(3,37)-(3,56)
+(3,3)-(4,70)
+(3,9)-(3,10)
+(4,14)-(4,70)
 *)
 
 (* type error slice
-(2,21)-(3,58)
-(3,3)-(3,58)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,18)-(3,20)
-(3,37)-(3,48)
-(3,37)-(3,56)
+(3,3)-(4,70)
+(3,9)-(3,10)
+(4,26)-(4,27)
+(4,26)-(4,29)
 *)

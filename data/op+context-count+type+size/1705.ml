@@ -1,37 +1,41 @@
 
-let rec clone x n = if n > 0 then clone [x] (n - 1) else [];;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then ((clone 0 ((l_diff * (-1)) @ l1)), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then clone x (n - 1) else [];;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
 
 *)
 
 (* changed spans
-(2,41)-(2,44)
+(11,10)-(11,15)
+(11,20)-(11,39)
+(11,35)-(11,36)
 *)
 
 (* type error slice
-(2,4)-(2,62)
-(2,15)-(2,60)
-(2,17)-(2,60)
-(2,21)-(2,60)
-(2,21)-(2,60)
-(2,24)-(2,25)
-(2,24)-(2,29)
-(2,24)-(2,29)
-(2,24)-(2,29)
-(2,28)-(2,29)
-(2,35)-(2,40)
-(2,35)-(2,51)
-(2,35)-(2,51)
-(2,35)-(2,51)
-(2,41)-(2,44)
-(2,41)-(2,44)
-(2,42)-(2,43)
-(2,46)-(2,47)
-(2,46)-(2,51)
-(2,50)-(2,51)
-(2,58)-(2,60)
+(11,20)-(11,32)
+(11,20)-(11,39)
+(11,35)-(11,36)
 *)

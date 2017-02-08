@@ -1,65 +1,79 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi * (eval (ex, x, y)))
+  | Cosine ex -> cos (pi * (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10] else []);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 *)
 
 (* changed spans
-(8,13)-(8,70)
+(17,21)-(17,41)
+(18,23)-(18,43)
+(19,28)-(19,43)
+(19,28)-(19,64)
+(19,28)-(19,71)
+(19,70)-(19,71)
+(20,25)-(20,40)
+(20,25)-(20,61)
 *)
 
 (* type error slice
-(2,21)-(8,70)
-(3,3)-(8,70)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(4,8)-(4,10)
-(6,6)-(8,70)
-(6,12)-(6,13)
-(7,13)-(7,16)
-(7,13)-(7,16)
-(7,14)-(7,15)
-(8,13)-(8,70)
-(8,13)-(8,70)
-(8,13)-(8,70)
-(8,17)-(8,18)
-(8,17)-(8,23)
-(8,17)-(8,29)
-(8,17)-(8,29)
-(8,21)-(8,23)
-(8,28)-(8,29)
-(8,36)-(8,47)
-(8,36)-(8,55)
-(8,36)-(8,55)
-(8,36)-(8,70)
-(8,36)-(8,70)
-(8,36)-(8,70)
-(8,49)-(8,50)
-(8,49)-(8,55)
-(8,53)-(8,55)
-(8,58)-(8,59)
-(8,60)-(8,70)
-(8,60)-(8,70)
-(8,61)-(8,62)
-(8,61)-(8,69)
-(8,67)-(8,69)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(17,16)-(17,19)
+(17,16)-(17,41)
+(17,21)-(17,23)
+(17,21)-(17,41)
+(17,21)-(17,41)
+(18,18)-(18,21)
+(18,18)-(18,43)
+(18,23)-(18,25)
+(18,23)-(18,43)
+(18,23)-(18,43)
 *)

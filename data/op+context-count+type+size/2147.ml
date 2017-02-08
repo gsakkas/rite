@@ -1,105 +1,48 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+let g x f = ((f x), ((f x) = x));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ (")+" 1 ")")))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((g b f), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+let h x = ((x * x), (x < 100));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(35,64)-(35,68)
-(35,64)-(35,74)
-(35,69)-(35,70)
-(35,71)-(35,74)
+(2,9)-(2,31)
+(2,15)-(2,16)
+(2,15)-(2,18)
+(2,23)-(2,24)
+(2,23)-(2,26)
+(2,23)-(2,31)
+(2,30)-(2,31)
+(4,17)-(5,62)
 *)
 
 (* type error slice
-(13,22)-(41,75)
-(14,9)-(14,10)
-(17,32)-(17,44)
-(17,32)-(17,49)
-(35,64)-(35,68)
-(35,64)-(35,74)
-(35,69)-(35,70)
-(35,71)-(35,74)
+(2,4)-(2,35)
+(2,7)-(2,31)
+(2,9)-(2,31)
+(2,15)-(2,31)
+(5,9)-(5,10)
+(5,9)-(5,12)
+(5,50)-(5,56)
+(5,50)-(5,62)
+(5,58)-(5,59)
+(5,58)-(5,62)
+(7,22)-(7,28)
+(7,22)-(7,40)
+(7,31)-(7,32)
+(7,31)-(7,36)
+(7,31)-(7,40)
 *)

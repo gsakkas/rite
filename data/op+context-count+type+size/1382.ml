@@ -1,44 +1,160 @@
 
-let pipe fs =
-  let f a x = x fs in let base p = p in List.fold_left f base (List.rev fs);;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ [initsum])) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (List.rev (add (padZero l1 l2)));;
+
+let mulByDigit i l =
+  let rec helpy p q carry accList =
+    let numsList = List.rev q in
+    match numsList with
+    | [] -> [carry] @ accList
+    | h::t ->
+        let initMul = (h * p) + carry in
+        let intKeep = initMul mod 10 in
+        let carrying = (initMul - intKeep) / 10 in
+        let v = List.rev t in (helpy p v carrying [intKeep]) @ accList in
+  removeZero (helpy i l 0 []);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (bottom_mult,total) = a in
+    match bottom_mult with
+    | [] -> total
+    | h::t ->
+        let newTotal = mulByDigit h x in
+        let updateTotal = bigAdd newTotal total in (t, updateTotal) in
+  let base = (l1, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = x in let base p = p in List.fold_left f base (List.rev fs);;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ [initsum])) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (List.rev (add (padZero l1 l2)));;
+
+let mulByDigit i l =
+  let rec helpy p q carry accList =
+    let numsList = List.rev q in
+    match numsList with
+    | [] -> [carry] @ accList
+    | h::t ->
+        let initMul = (h * p) + carry in
+        let intKeep = initMul mod 10 in
+        let carrying = (initMul - intKeep) / 10 in
+        let v = List.rev t in (helpy p v carrying [intKeep]) @ accList in
+  removeZero (helpy i l 0 []);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (upper_mult,total) = a in
+    let newTotal = mulByDigit x upper_mult in
+    let updateTotal = bigAdd newTotal total in
+    ((upper_mult @ [0]), updateTotal) in
+  let base = (l1, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(3,15)-(3,19)
-(3,17)-(3,19)
+(47,5)-(52,67)
+(48,5)-(52,67)
+(48,11)-(48,22)
+(49,13)-(49,18)
+(51,9)-(52,67)
+(51,35)-(51,36)
+(52,9)-(52,67)
+(52,27)-(52,48)
+(52,53)-(52,54)
+(52,56)-(52,67)
+(53,3)-(54,67)
+(54,3)-(54,67)
+(54,20)-(54,67)
 *)
 
 (* type error slice
-(2,4)-(3,78)
-(2,10)-(3,75)
-(3,3)-(3,75)
-(3,3)-(3,75)
-(3,9)-(3,19)
-(3,11)-(3,19)
-(3,15)-(3,16)
-(3,15)-(3,19)
-(3,15)-(3,19)
-(3,17)-(3,19)
-(3,23)-(3,75)
-(3,23)-(3,75)
-(3,32)-(3,37)
-(3,36)-(3,37)
-(3,41)-(3,55)
-(3,41)-(3,75)
-(3,41)-(3,75)
-(3,41)-(3,75)
-(3,41)-(3,75)
-(3,56)-(3,57)
-(3,58)-(3,62)
-(3,64)-(3,72)
-(3,64)-(3,75)
-(3,64)-(3,75)
-(3,73)-(3,75)
+(4,4)-(14,20)
+(4,13)-(14,17)
+(4,16)-(14,17)
+(8,37)-(8,48)
+(8,44)-(8,45)
+(8,46)-(8,48)
+(19,4)-(31,48)
+(19,12)-(31,43)
+(19,15)-(31,43)
+(31,30)-(31,37)
+(31,30)-(31,43)
+(31,41)-(31,43)
+(46,3)-(54,67)
+(46,9)-(52,67)
+(46,11)-(52,67)
+(47,5)-(52,67)
+(47,5)-(52,67)
+(47,31)-(47,32)
+(48,5)-(52,67)
+(48,5)-(52,67)
+(49,13)-(49,18)
+(51,9)-(52,67)
+(52,9)-(52,67)
+(52,27)-(52,33)
+(52,27)-(52,48)
+(52,43)-(52,48)
+(52,53)-(52,67)
+(54,34)-(54,48)
+(54,34)-(54,60)
+(54,49)-(54,50)
 *)

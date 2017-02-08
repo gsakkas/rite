@@ -12,14 +12,10 @@ let buildX () = VarX;;
 
 let buildY () = VarY;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> buildX ()
-  | VarY  -> buildY ()
-  | Sine a -> sin (pi *. VarX)
-  | Cosine a -> cos (pi *. y);;
+let rec build (rand,depth) =
+  match depth with
+  | 0 ->
+      let r = rand (0, 2) in if r = 0 then buildX else if r = 1 then buildY;;
 
 
 (* fix
@@ -33,47 +29,31 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. x)
-  | Cosine a -> cos (pi *. y);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> let r = rand (0, 2) in if r = 0 then buildX () else buildY ();;
 
 *)
 
 (* changed spans
-(11,12)-(11,21)
-(11,17)-(11,21)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(19,14)-(19,20)
-(19,14)-(19,23)
-(19,21)-(19,23)
-(20,14)-(20,20)
-(20,14)-(20,23)
-(20,21)-(20,23)
-(21,15)-(21,30)
-(22,17)-(22,29)
+(18,7)-(18,76)
+(18,44)-(18,50)
+(18,56)-(18,76)
+(18,59)-(18,60)
+(18,59)-(18,64)
+(18,63)-(18,64)
+(18,70)-(18,76)
 *)
 
 (* type error slice
-(11,4)-(11,23)
-(11,12)-(11,21)
 (13,4)-(13,23)
 (13,12)-(13,21)
-(17,4)-(22,32)
-(17,15)-(22,29)
-(18,3)-(22,29)
-(18,3)-(22,29)
-(18,9)-(18,10)
-(19,14)-(19,20)
-(19,14)-(19,23)
-(20,14)-(20,20)
-(20,14)-(20,23)
-(21,20)-(21,30)
-(21,26)-(21,30)
-(22,28)-(22,29)
+(18,56)-(18,76)
+(18,56)-(18,76)
+(18,56)-(18,76)
+(18,70)-(18,76)
 *)

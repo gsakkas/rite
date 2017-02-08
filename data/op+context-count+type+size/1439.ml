@@ -1,68 +1,51 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else ((listReverse n) mod 10) :: (listReverse (digitsOfInt (n / 10)));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. a);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: (listReverse (digitsOfInt (n / 10)));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. y);;
 
 *)
 
 (* changed spans
-(8,10)-(8,21)
-(8,10)-(8,23)
+(18,28)-(18,29)
 *)
 
 (* type error slice
-(2,4)-(3,60)
-(2,21)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,9)-(3,10)
-(3,24)-(3,26)
-(3,38)-(3,49)
-(3,38)-(3,51)
-(3,38)-(3,51)
-(3,38)-(3,58)
-(3,38)-(3,58)
-(3,38)-(3,58)
-(3,50)-(3,51)
-(3,53)-(3,54)
-(3,55)-(3,58)
-(3,55)-(3,58)
-(3,56)-(3,57)
-(5,21)-(8,69)
-(6,3)-(8,69)
-(6,6)-(6,7)
-(6,6)-(6,12)
-(6,6)-(6,12)
-(6,6)-(6,12)
-(6,11)-(6,12)
-(7,8)-(7,10)
-(8,10)-(8,21)
-(8,10)-(8,23)
-(8,10)-(8,23)
-(8,10)-(8,31)
-(8,22)-(8,23)
-(8,29)-(8,31)
-(8,37)-(8,48)
-(8,37)-(8,69)
-(8,37)-(8,69)
-(8,50)-(8,61)
-(8,50)-(8,69)
+(14,3)-(18,29)
+(18,22)-(18,29)
+(18,28)-(18,29)
 *)

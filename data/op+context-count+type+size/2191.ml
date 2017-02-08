@@ -1,70 +1,54 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((f :: ((f b) = b)), b);;
+let rec mulByDigit i l =
+  let f a x =
+    match i with
+    | 0 -> []
+    | _ ->
+        let (i,j) = x in
+        let (s,t) = a in
+        ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
+let rec mulByDigit i l =
+  let f a x =
+    match i with
+    | 0 -> (0, [])
+    | _ ->
+        let (i,j) = x in
+        let (s,t) = a in
+        ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(6,31)-(6,32)
-(6,31)-(6,46)
-(6,38)-(6,46)
+(7,12)-(7,14)
 *)
 
 (* type error slice
-(2,4)-(4,17)
-(2,17)-(4,14)
-(3,3)-(4,14)
-(3,3)-(4,14)
-(3,19)-(3,67)
-(3,28)-(3,67)
-(3,28)-(3,67)
-(3,31)-(3,33)
-(3,31)-(3,40)
-(3,31)-(3,40)
-(3,31)-(3,40)
-(3,36)-(3,40)
-(3,46)-(3,52)
-(3,46)-(3,58)
-(3,46)-(3,58)
-(3,54)-(3,55)
-(3,54)-(3,58)
-(3,54)-(3,58)
-(3,56)-(3,58)
-(3,65)-(3,67)
-(4,3)-(4,9)
-(4,3)-(4,14)
-(4,3)-(4,14)
-(4,11)-(4,12)
-(4,11)-(4,14)
-(4,11)-(4,14)
-(4,13)-(4,14)
-(6,4)-(6,54)
-(6,15)-(6,51)
-(6,22)-(6,28)
-(6,22)-(6,51)
-(6,22)-(6,51)
-(6,31)-(6,32)
-(6,31)-(6,46)
-(6,31)-(6,51)
-(6,38)-(6,39)
-(6,38)-(6,41)
-(6,38)-(6,41)
-(6,38)-(6,46)
-(6,38)-(6,46)
-(6,38)-(6,46)
-(6,40)-(6,41)
-(6,45)-(6,46)
-(6,50)-(6,51)
+(5,3)-(14,50)
+(5,9)-(11,60)
+(5,11)-(11,60)
+(6,5)-(11,60)
+(6,5)-(11,60)
+(7,12)-(7,14)
+(9,9)-(11,60)
+(10,9)-(11,60)
+(10,9)-(11,60)
+(10,21)-(10,22)
+(11,13)-(11,60)
+(14,17)-(14,31)
+(14,17)-(14,43)
+(14,32)-(14,33)
 *)

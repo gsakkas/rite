@@ -1,58 +1,47 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | ((s,i) as h)::t -> if s = k then i else assoc (d k t);;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then List.append ((clone 0 (abs diff)), l1)
+  else if diff > 0 then List.append ((clone 0 diff), l2);;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((List.append (clone 0 (abs diff)) l1), l2)
+  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,3)-(5,57)
-(5,27)-(5,28)
-(5,31)-(5,32)
-(5,38)-(5,39)
-(5,45)-(5,50)
-(5,52)-(5,53)
-(5,52)-(5,57)
-(5,54)-(5,55)
-(5,56)-(5,57)
+(10,8)-(10,19)
+(10,8)-(10,45)
+(10,22)-(10,27)
+(11,8)-(11,56)
+(11,25)-(11,36)
+(11,25)-(11,56)
+(11,39)-(11,44)
+(11,39)-(11,51)
 *)
 
 (* type error slice
-(2,4)-(5,60)
-(2,16)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,3)-(5,57)
-(3,9)-(3,10)
-(4,11)-(4,12)
-(5,24)-(5,57)
-(5,24)-(5,57)
-(5,27)-(5,28)
-(5,27)-(5,32)
-(5,27)-(5,32)
-(5,27)-(5,32)
-(5,31)-(5,32)
-(5,38)-(5,39)
-(5,45)-(5,50)
-(5,45)-(5,57)
-(5,45)-(5,57)
-(5,52)-(5,53)
-(5,52)-(5,57)
-(5,52)-(5,57)
-(5,52)-(5,57)
-(5,54)-(5,55)
-(5,56)-(5,57)
+(10,8)-(10,19)
+(10,8)-(10,45)
+(10,22)-(10,45)
+(11,25)-(11,36)
+(11,25)-(11,56)
+(11,39)-(11,56)
 *)

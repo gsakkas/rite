@@ -1,60 +1,66 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
+
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (0, []) in
+    let base = (0, []) in
+    let args = (0, (clone 0 (List.length l1))) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = f x in List.fold_left g base xs;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
+
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (0, []) in
+    let base = (0, []) in
+    let args = clone 0 (List.length l1) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(7,40)-(7,41)
+(22,17)-(22,18)
+(22,17)-(22,44)
 *)
 
 (* type error slice
-(2,4)-(7,51)
-(2,18)-(7,49)
-(2,20)-(7,49)
-(3,3)-(7,49)
-(3,3)-(7,49)
-(3,3)-(7,49)
-(3,3)-(7,49)
-(3,9)-(3,10)
-(6,7)-(7,49)
-(6,13)-(6,35)
-(6,15)-(6,35)
-(6,19)-(6,20)
-(6,19)-(6,35)
-(6,19)-(6,35)
-(6,21)-(6,22)
-(6,24)-(6,28)
-(6,24)-(6,35)
-(6,24)-(6,35)
-(6,29)-(6,30)
-(6,32)-(6,33)
-(6,32)-(6,35)
-(6,32)-(6,35)
-(6,34)-(6,35)
-(7,7)-(7,49)
-(7,18)-(7,19)
-(7,18)-(7,21)
-(7,18)-(7,21)
-(7,20)-(7,21)
-(7,25)-(7,39)
-(7,25)-(7,49)
-(7,25)-(7,49)
-(7,40)-(7,41)
-(7,42)-(7,46)
-(7,47)-(7,49)
+(22,5)-(23,52)
+(22,17)-(22,44)
+(23,19)-(23,33)
+(23,19)-(23,45)
+(23,41)-(23,45)
 *)

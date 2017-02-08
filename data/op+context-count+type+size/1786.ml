@@ -1,122 +1,94 @@
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let palindrome w = (listReverse (explode w)) = w;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = (fst x) + (snd x) in
+      match a with
+      | h::t -> ((h + carry) / 10) :: ((h + carry) mod 10) :: t
+      | _ -> [carry / 10; carry mod 10] in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let palindrome w = (listReverse (explode w)) = (explode w);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (addend_a,addend_b) ->
+          let new_carry = ((carry + addend_a) + addend_b) / 10 in
+          let digit = ((carry + addend_a) + addend_b) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(13,48)-(13,49)
+(15,20)-(15,23)
+(15,20)-(15,25)
+(15,20)-(15,35)
+(15,24)-(15,25)
+(15,30)-(15,33)
+(15,30)-(15,35)
+(16,7)-(18,40)
+(16,13)-(16,14)
+(17,19)-(17,20)
+(17,19)-(17,64)
+(17,23)-(17,28)
+(17,32)-(17,34)
+(17,41)-(17,42)
+(17,41)-(17,58)
+(17,41)-(17,64)
+(17,56)-(17,58)
+(17,63)-(17,64)
+(18,14)-(18,40)
+(18,15)-(18,20)
+(18,15)-(18,25)
+(18,23)-(18,25)
+(18,27)-(18,32)
+(18,27)-(18,39)
+(18,37)-(18,39)
+(19,5)-(21,52)
+(19,16)-(19,18)
+(20,5)-(21,52)
+(21,5)-(21,52)
 *)
 
 (* type error slice
-(2,4)-(3,61)
-(2,22)-(3,58)
-(2,24)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,9)-(3,10)
-(3,24)-(3,25)
-(3,36)-(3,37)
-(3,36)-(3,58)
-(3,42)-(3,54)
-(3,42)-(3,58)
-(3,42)-(3,58)
-(3,42)-(3,58)
-(3,55)-(3,56)
-(3,57)-(3,58)
-(5,4)-(8,9)
-(5,13)-(8,7)
-(6,3)-(8,7)
-(6,3)-(8,7)
-(6,14)-(7,65)
-(7,5)-(7,65)
-(7,5)-(7,65)
-(7,8)-(7,9)
-(7,8)-(7,29)
-(7,8)-(7,29)
-(7,8)-(7,29)
-(7,14)-(7,27)
-(7,14)-(7,29)
-(7,14)-(7,29)
-(7,28)-(7,29)
-(7,36)-(7,38)
-(7,45)-(7,46)
-(7,45)-(7,50)
-(7,45)-(7,50)
-(7,45)-(7,65)
-(7,48)-(7,49)
-(7,56)-(7,58)
-(7,56)-(7,65)
-(7,56)-(7,65)
-(7,60)-(7,61)
-(7,60)-(7,65)
-(7,64)-(7,65)
-(8,3)-(8,5)
-(8,3)-(8,7)
-(8,6)-(8,7)
-(10,4)-(11,71)
-(10,21)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,3)-(11,69)
-(11,9)-(11,10)
-(11,24)-(11,26)
-(11,37)-(11,49)
-(11,37)-(11,69)
-(11,37)-(11,69)
-(11,37)-(11,69)
-(11,51)-(11,62)
-(11,51)-(11,64)
-(11,51)-(11,64)
-(11,63)-(11,64)
-(11,66)-(11,69)
-(11,66)-(11,69)
-(11,67)-(11,68)
-(13,4)-(13,51)
-(13,16)-(13,49)
-(13,21)-(13,32)
-(13,21)-(13,43)
-(13,21)-(13,43)
-(13,21)-(13,49)
-(13,21)-(13,49)
-(13,34)-(13,41)
-(13,34)-(13,43)
-(13,34)-(13,43)
-(13,42)-(13,43)
-(13,48)-(13,49)
+(14,5)-(21,52)
+(14,11)-(18,40)
+(16,7)-(18,40)
+(16,7)-(18,40)
+(16,13)-(16,14)
+(21,5)-(21,52)
+(21,19)-(21,33)
+(21,19)-(21,45)
+(21,34)-(21,35)
 *)

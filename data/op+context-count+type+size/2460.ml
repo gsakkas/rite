@@ -1,73 +1,72 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let l1 = [0; 0; 9; 9];;
 
-let stringOfList f l = List.map (sepConcat "" (f l)) l;;
+let l2 = [1; 0; 0; 2];;
+
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = x in
+    let base = (0, []) in
+    let args = (0, l1) in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let l1 = [0; 0; 9; 9];;
 
-let stringOfList f l = sepConcat "" (List.map f l);;
+let l2 = [1; 0; 0; 2];;
+
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = x in
+    let base = (0, []) in
+    let args = [(0, [])] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,24)-(9,32)
-(9,34)-(9,51)
-(9,48)-(9,49)
-(9,48)-(9,51)
-(9,54)-(9,55)
+(25,17)-(25,22)
+(25,20)-(25,22)
+(25,27)-(25,74)
+(25,41)-(25,67)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(2,23)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,3)-(7,59)
-(3,9)-(3,11)
-(6,7)-(7,59)
-(6,13)-(6,31)
-(6,15)-(6,31)
-(6,19)-(6,20)
-(6,24)-(6,27)
-(6,30)-(6,31)
-(7,7)-(7,59)
-(7,18)-(7,19)
-(7,23)-(7,59)
-(7,31)-(7,32)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,36)-(7,59)
-(7,51)-(7,52)
-(7,53)-(7,57)
-(7,58)-(7,59)
-(9,4)-(9,57)
-(9,18)-(9,55)
-(9,20)-(9,55)
-(9,24)-(9,32)
-(9,24)-(9,55)
-(9,24)-(9,55)
-(9,24)-(9,55)
-(9,34)-(9,43)
-(9,34)-(9,51)
-(9,34)-(9,51)
-(9,48)-(9,49)
-(9,48)-(9,51)
-(9,48)-(9,51)
-(9,50)-(9,51)
-(9,54)-(9,55)
+(25,5)-(25,74)
+(25,17)-(25,22)
+(25,41)-(25,55)
+(25,41)-(25,67)
+(25,63)-(25,67)
 *)

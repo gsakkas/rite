@@ -1,40 +1,38 @@
 
-let rec sumList xs =
-  match xs with | [] -> [] | _ -> (List.hd xs) + (sumList List.tl);;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (b', (b' = fOfB)) in
+      whilesFun (f, b)), b);;
 
 
 (* fix
 
-let rec sumList xs =
-  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (b', (b' = fOfB)) in
+      whilesFun f), b);;
 
 *)
 
 (* changed spans
-(3,3)-(3,66)
-(3,25)-(3,27)
-(3,59)-(3,66)
+(9,18)-(9,22)
+(9,26)-(9,27)
 *)
 
 (* type error slice
-(2,4)-(3,69)
-(2,17)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,9)-(3,11)
-(3,25)-(3,27)
-(3,36)-(3,43)
-(3,36)-(3,46)
-(3,36)-(3,46)
-(3,36)-(3,66)
-(3,36)-(3,66)
-(3,36)-(3,66)
-(3,44)-(3,46)
-(3,51)-(3,58)
-(3,51)-(3,66)
-(3,51)-(3,66)
-(3,59)-(3,66)
+(8,7)-(9,22)
+(8,21)-(8,64)
+(8,40)-(8,42)
+(8,40)-(8,45)
+(9,7)-(9,16)
+(9,7)-(9,22)
+(9,18)-(9,22)
 *)

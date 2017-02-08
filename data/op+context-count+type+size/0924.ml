@@ -1,87 +1,55 @@
 
-let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let buildX () = VarX;;
 
-let fixpoint (f,b) = let y = f b in if b = y then b else fixpoint (f, y);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = let f' b = ((f b), (b != (f b))) in wwhile (f', b);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(5,22)-(5,28)
-(5,22)-(5,34)
-(5,30)-(5,31)
-(5,30)-(5,34)
-(5,33)-(5,34)
-(7,15)-(7,72)
-(7,30)-(7,33)
-(7,37)-(7,72)
-(7,40)-(7,45)
-(7,44)-(7,45)
-(7,51)-(7,52)
-(7,58)-(7,66)
+(16,3)-(16,72)
 *)
 
 (* type error slice
-(2,4)-(3,79)
-(2,17)-(3,77)
-(3,3)-(3,77)
-(3,3)-(3,77)
-(3,11)-(3,12)
-(3,11)-(3,14)
-(3,11)-(3,14)
-(3,13)-(3,14)
-(3,18)-(3,77)
-(3,18)-(3,77)
-(3,24)-(3,25)
-(3,44)-(3,77)
-(3,44)-(3,77)
-(3,44)-(3,77)
-(3,47)-(3,49)
-(3,55)-(3,61)
-(3,55)-(3,68)
-(3,55)-(3,68)
-(3,63)-(3,64)
-(3,63)-(3,68)
-(3,66)-(3,68)
-(3,75)-(3,77)
-(5,4)-(5,37)
-(5,15)-(5,34)
-(5,22)-(5,28)
-(5,22)-(5,34)
-(5,22)-(5,34)
-(5,30)-(5,31)
-(5,30)-(5,34)
-(5,33)-(5,34)
-(7,4)-(7,75)
-(7,15)-(7,72)
-(7,22)-(7,72)
-(7,22)-(7,72)
-(7,30)-(7,31)
-(7,30)-(7,33)
-(7,30)-(7,33)
-(7,32)-(7,33)
-(7,37)-(7,72)
-(7,37)-(7,72)
-(7,40)-(7,41)
-(7,40)-(7,45)
-(7,40)-(7,45)
-(7,40)-(7,45)
-(7,44)-(7,45)
-(7,51)-(7,52)
-(7,58)-(7,66)
-(7,58)-(7,72)
-(7,58)-(7,72)
-(7,68)-(7,69)
-(7,68)-(7,72)
-(7,71)-(7,72)
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,3)-(16,72)
+(16,22)-(16,72)
+(16,48)-(16,54)
+(16,48)-(16,57)
 *)

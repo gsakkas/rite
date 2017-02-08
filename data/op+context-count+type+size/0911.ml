@@ -1,173 +1,67 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
+let buildSine e = Sine e;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let buildX () = VarX;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (h1,h2) -> ((h1 + h2) / 10) :: ((h1 + h2) mod 10) :: a
-      | _ -> a in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ ->
+      let y = rand (2, 6) in
+      if y = 2 then buildSine (build (rand, (depth - 1)));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (h1,h2) -> ((h1 + h2) / 10) :: ((h1 + h2) mod 10) :: a
-      | _ -> a in
-    let base = [] in
-    let args = List.combine l1 l2 in
-    let res = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in build (rand, (y - 1));;
 
 *)
 
 (* changed spans
-(19,17)-(19,23)
-(19,21)-(19,23)
+(11,15)-(11,25)
+(11,19)-(11,25)
+(11,24)-(11,25)
+(21,7)-(22,55)
+(22,7)-(22,55)
+(22,10)-(22,11)
+(22,10)-(22,15)
+(22,14)-(22,15)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(8,60)
-(4,17)-(8,57)
-(4,20)-(8,57)
-(5,19)-(5,30)
-(5,19)-(5,33)
-(5,19)-(5,33)
-(5,31)-(5,33)
-(5,38)-(5,49)
-(5,38)-(5,52)
-(5,38)-(5,52)
-(5,50)-(5,52)
-(7,9)-(7,11)
-(7,9)-(7,47)
-(7,14)-(7,25)
-(7,14)-(7,47)
-(7,27)-(7,32)
-(7,27)-(7,43)
-(7,45)-(7,47)
-(8,10)-(8,21)
-(8,10)-(8,52)
-(8,50)-(8,52)
-(10,20)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,3)-(11,75)
-(11,9)-(11,10)
-(11,24)-(11,26)
-(11,37)-(11,75)
-(11,40)-(11,41)
-(11,40)-(11,45)
-(11,51)-(11,61)
-(11,51)-(11,63)
-(13,4)-(22,37)
-(13,12)-(22,33)
-(13,15)-(22,33)
-(14,3)-(22,33)
-(14,12)-(21,52)
-(15,5)-(21,52)
-(15,5)-(21,52)
-(15,11)-(18,15)
-(15,13)-(18,15)
-(16,7)-(18,15)
-(16,7)-(18,15)
-(16,7)-(18,15)
-(16,13)-(16,14)
-(17,22)-(17,24)
-(17,22)-(17,29)
-(17,22)-(17,29)
-(17,22)-(17,29)
-(17,22)-(17,35)
-(17,22)-(17,63)
-(17,27)-(17,29)
-(17,33)-(17,35)
-(17,42)-(17,44)
-(17,42)-(17,49)
-(17,42)-(17,57)
-(17,42)-(17,63)
-(17,47)-(17,49)
-(17,55)-(17,57)
-(17,62)-(17,63)
-(18,14)-(18,15)
-(19,5)-(21,52)
-(19,5)-(21,52)
-(19,17)-(19,19)
-(19,17)-(19,23)
-(19,21)-(19,23)
-(20,5)-(21,52)
-(20,5)-(21,52)
-(20,16)-(20,28)
-(20,16)-(20,34)
-(20,16)-(20,34)
-(20,16)-(20,34)
-(20,29)-(20,31)
-(20,32)-(20,34)
-(21,5)-(21,52)
-(21,5)-(21,52)
-(21,19)-(21,33)
-(21,19)-(21,45)
-(21,19)-(21,45)
-(21,19)-(21,45)
-(21,19)-(21,45)
-(21,34)-(21,35)
-(21,36)-(21,40)
-(21,41)-(21,45)
-(21,49)-(21,52)
-(22,15)-(22,18)
-(22,15)-(22,33)
-(22,15)-(22,33)
-(22,20)-(22,27)
-(22,20)-(22,33)
-(22,20)-(22,33)
-(22,28)-(22,30)
-(22,31)-(22,33)
+(11,4)-(11,27)
+(11,15)-(11,25)
+(11,19)-(11,25)
+(22,7)-(22,55)
+(22,7)-(22,55)
+(22,7)-(22,55)
+(22,21)-(22,30)
+(22,21)-(22,55)
 *)

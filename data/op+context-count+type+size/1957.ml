@@ -1,92 +1,75 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let listReverse l =
-  let rec helper xs = function | [] -> xs | hd::tl -> helper (hd :: xs) tl in
-  helper [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w =
-  if (listReverse (explode w)) = (explode w) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (a,b,c,d) -> eval (a, x, y)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
+  | Cosine a -> cos (pi * (float_of_int (eval (a, x, y))))
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | VarY  -> x
+  | VarX  -> y;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let listReverse l =
-  let rec helper xs l =
-    match l with | [] -> [] | hd::tl -> helper (hd :: xs) l in
-  helper [] l;;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w =
-  if (listReverse (explode w)) = (explode w) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (a,b,c,d) -> eval (a, x, y)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
+  | Cosine a -> cos (pi ** (eval (a, x, y)))
+  | Sine a -> sin (pi ** (eval (a, x, y)))
+  | VarY  -> x
+  | VarX  -> y;;
 
 *)
 
 (* changed spans
-(8,23)-(8,75)
-(8,40)-(8,42)
-(8,55)-(8,75)
-(8,73)-(8,75)
-(9,3)-(9,9)
-(9,3)-(9,12)
-(11,16)-(12,66)
+(18,22)-(18,24)
+(18,22)-(18,55)
+(18,28)-(18,40)
+(18,42)-(18,55)
+(19,20)-(19,22)
+(19,20)-(19,39)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(3,14)-(4,65)
-(4,5)-(4,65)
-(4,8)-(4,9)
-(4,8)-(4,29)
-(4,28)-(4,29)
-(4,36)-(4,38)
-(4,56)-(4,58)
-(4,56)-(4,65)
-(7,4)-(9,14)
-(7,17)-(9,12)
-(8,3)-(9,12)
-(8,3)-(9,12)
-(8,18)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,23)-(8,75)
-(8,40)-(8,42)
-(8,55)-(8,61)
-(8,55)-(8,75)
-(8,55)-(8,75)
-(8,55)-(8,75)
-(8,63)-(8,65)
-(8,63)-(8,71)
-(8,69)-(8,71)
-(8,73)-(8,75)
-(9,3)-(9,9)
-(9,3)-(9,12)
-(9,3)-(9,12)
-(9,10)-(9,12)
-(11,4)-(12,68)
-(11,16)-(12,66)
-(12,7)-(12,18)
-(12,7)-(12,29)
-(12,7)-(12,29)
-(12,7)-(12,44)
-(12,7)-(12,44)
-(12,20)-(12,27)
-(12,20)-(12,29)
-(12,28)-(12,29)
-(12,35)-(12,42)
-(12,35)-(12,44)
+(16,21)-(16,25)
+(16,21)-(16,34)
+(16,21)-(16,54)
+(18,17)-(18,20)
+(18,17)-(18,55)
+(18,22)-(18,55)
+(18,28)-(18,40)
+(18,28)-(18,55)
+(18,42)-(18,46)
+(18,42)-(18,55)
+(19,15)-(19,18)
+(19,15)-(19,39)
+(19,20)-(19,39)
+(19,20)-(19,39)
+(19,26)-(19,30)
+(19,26)-(19,39)
 *)

@@ -8,13 +8,41 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> 1.0
-  | VarY  -> 1.0
-  | Sine e1 -> sin (pi * (eval (e1, x, y)));;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> let num = rand (1, 5) in if num > 3 then buildX () else buildY ()
+  | 1 ->
+      let num = rand (1, 10) in
+      if (num mod 2) = 0
+      then buildSine (build (rand, (depth - 1)))
+      else buildCosine (build (rand, (depth - 1)))
+  | 2 ->
+      let num = rand (1, 3) in
+      if (num mod 2) == 0
+      then
+        buildTimes
+          ((buildSine (build (rand, (depth - 1)))),
+            (build (rand, (depth - 1))))
+      else
+        buildTimes
+          ((buildCosine (build (rand, (depth - 1)))),
+            (build (rand, (depth - 1))))
+  | 3 ->
+      buildTimes
+        (buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 
 (* fix
@@ -28,50 +56,57 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> let num = rand (1, 5) in if num > 3 then buildX () else buildY ()
+  | 1 ->
+      let num = rand (1, 10) in
+      if (num mod 2) = 0
+      then buildSine (build (rand, (depth - 1)))
+      else buildCosine (build (rand, (depth - 1)))
+  | 2 ->
+      let num = rand (1, 3) in
+      if (num mod 2) == 0
+      then
+        buildTimes
+          ((buildSine (build (rand, (depth - 1)))),
+            (build (rand, (depth - 1))))
+      else
+        buildTimes
+          ((buildCosine (build (rand, (depth - 1)))),
+            (build (rand, (depth - 1))))
+  | 3 ->
+      buildTimes
+        ((buildAverage
+            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
+          (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(11,10)-(11,13)
-(11,10)-(11,26)
-(11,18)-(11,22)
-(11,18)-(11,26)
-(11,23)-(11,26)
-(15,14)-(15,17)
-(16,14)-(16,17)
-(17,16)-(17,41)
-(17,21)-(17,23)
-(17,21)-(17,41)
+(44,10)-(45,66)
 *)
 
 (* type error slice
-(11,4)-(11,29)
-(11,10)-(11,26)
-(13,4)-(17,46)
-(13,15)-(17,41)
-(14,3)-(17,41)
-(14,3)-(17,41)
-(14,3)-(17,41)
-(14,3)-(17,41)
-(14,3)-(17,41)
-(14,3)-(17,41)
-(14,9)-(14,10)
-(15,14)-(15,17)
-(16,14)-(16,17)
-(17,16)-(17,19)
-(17,16)-(17,41)
-(17,16)-(17,41)
-(17,21)-(17,23)
-(17,21)-(17,41)
-(17,21)-(17,41)
-(17,21)-(17,41)
-(17,27)-(17,31)
-(17,27)-(17,41)
-(17,27)-(17,41)
-(17,33)-(17,35)
-(17,33)-(17,41)
-(17,37)-(17,38)
-(17,40)-(17,41)
+(11,4)-(11,46)
+(11,19)-(11,43)
+(11,28)-(11,43)
+(17,4)-(17,42)
+(17,17)-(17,39)
+(43,7)-(43,17)
+(43,7)-(45,66)
+(44,10)-(44,22)
+(44,10)-(45,66)
 *)

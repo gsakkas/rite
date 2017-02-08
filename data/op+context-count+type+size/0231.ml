@@ -1,151 +1,62 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot num persCount =
-  let absNum = abs num in
-  if absNum < 10
-  then (persCount, absNum)
-  else
-    (let xs = digits absNum in
-     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
-
-let rec additivePersistence n = let (l,r) = additivePersAndRoot n in l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot absNum persCount =
-  if absNum < 10
-  then (persCount, absNum)
-  else
-    (let xs = digits absNum in
-     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
-
-let rec additivePersistence n =
-  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(9,29)-(15,74)
-(10,3)-(15,74)
-(10,16)-(10,19)
-(10,16)-(10,23)
-(10,20)-(10,23)
-(17,45)-(17,66)
-(17,65)-(17,66)
-(17,70)-(17,71)
+(19,68)-(19,69)
 *)
 
 (* type error slice
-(2,4)-(3,63)
-(2,21)-(3,61)
-(3,3)-(3,61)
-(3,3)-(3,61)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,27)-(3,38)
-(3,27)-(3,46)
-(3,27)-(3,46)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,27)-(3,61)
-(3,40)-(3,41)
-(3,40)-(3,46)
-(3,44)-(3,46)
-(3,49)-(3,50)
-(3,51)-(3,61)
-(3,51)-(3,61)
-(3,52)-(3,53)
-(3,52)-(3,60)
-(3,58)-(3,60)
-(5,4)-(5,37)
-(5,12)-(5,34)
-(5,16)-(5,27)
-(5,16)-(5,34)
-(5,29)-(5,32)
-(5,29)-(5,34)
-(5,29)-(5,34)
-(5,33)-(5,34)
-(7,4)-(7,73)
-(7,17)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,22)-(7,70)
-(7,28)-(7,30)
-(7,44)-(7,45)
-(7,56)-(7,57)
-(7,56)-(7,70)
-(7,56)-(7,70)
-(7,56)-(7,70)
-(7,61)-(7,68)
-(7,61)-(7,70)
-(7,61)-(7,70)
-(7,69)-(7,70)
-(9,4)-(15,78)
-(9,29)-(15,74)
-(9,33)-(15,74)
-(10,3)-(15,74)
-(10,3)-(15,74)
-(10,16)-(10,19)
-(10,16)-(10,23)
-(10,16)-(10,23)
-(10,20)-(10,23)
-(11,3)-(15,74)
-(11,3)-(15,74)
-(11,6)-(11,12)
-(11,6)-(11,17)
-(11,6)-(11,17)
-(11,15)-(11,17)
-(12,9)-(12,18)
-(12,9)-(12,26)
-(12,20)-(12,26)
-(14,6)-(15,74)
-(14,6)-(15,74)
-(14,15)-(14,21)
-(14,15)-(14,28)
-(14,22)-(14,28)
-(15,6)-(15,74)
-(15,6)-(15,74)
-(15,19)-(15,26)
-(15,19)-(15,29)
-(15,19)-(15,29)
-(15,27)-(15,29)
-(15,33)-(15,52)
-(15,33)-(15,74)
-(15,33)-(15,74)
-(15,33)-(15,74)
-(15,53)-(15,59)
-(15,61)-(15,70)
-(15,61)-(15,74)
-(15,61)-(15,74)
-(15,73)-(15,74)
-(17,4)-(17,73)
-(17,29)-(17,71)
-(17,33)-(17,71)
-(17,33)-(17,71)
-(17,45)-(17,64)
-(17,45)-(17,66)
-(17,45)-(17,66)
-(17,65)-(17,66)
-(17,70)-(17,71)
+(19,26)-(19,69)
+(19,68)-(19,69)
 *)

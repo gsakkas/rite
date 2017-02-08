@@ -1,50 +1,127 @@
 
-let (x,y) = ("5", 5);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  let f b = (x, y) in if x = true then wwhile (f, x) else x;;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildMagic e1 = Magic e1;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildWeird (e1,e2,e3,e4) = Weird (e1, e2, e3);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand (1, 10) with
+     | 1 -> buildSine (build (rand, (depth - 1)))
+     | 2 -> buildCosine (build (rand, (depth - 1)))
+     | 3 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 -> buildX ()
+     | 7 -> buildY ()
+     | 8 -> buildMagic (build (rand, (depth - 1)))
+     | 9 ->
+         buildWeird
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (a',b') = f b in if b' = true then wwhile (f, b') else a';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildMagic e1 = Magic e1;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildWeird (e1,e2,e3) = Weird (e1, e2, e3);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand (1, 10) with
+     | 1 -> buildSine (build (rand, (depth - 1)))
+     | 2 -> buildCosine (build (rand, (depth - 1)))
+     | 3 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 -> buildX ()
+     | 7 -> buildY ()
+     | 8 -> buildMagic (build (rand, (depth - 1)))
+     | 9 ->
+         buildWeird
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 *)
 
 (* changed spans
-(2,14)-(2,17)
-(2,14)-(2,20)
-(2,19)-(2,20)
-(5,9)-(5,18)
-(5,14)-(5,15)
-(5,14)-(5,18)
-(5,17)-(5,18)
-(5,23)-(5,60)
-(5,26)-(5,27)
-(5,59)-(5,60)
+(25,17)-(25,49)
 *)
 
 (* type error slice
-(2,4)-(2,23)
-(2,14)-(2,17)
-(2,14)-(2,20)
-(2,19)-(2,20)
-(4,4)-(5,62)
-(4,17)-(5,60)
-(5,3)-(5,60)
-(5,9)-(5,18)
-(5,14)-(5,15)
-(5,14)-(5,18)
-(5,17)-(5,18)
-(5,23)-(5,60)
-(5,26)-(5,27)
-(5,26)-(5,34)
-(5,26)-(5,34)
-(5,30)-(5,34)
-(5,40)-(5,46)
-(5,40)-(5,52)
-(5,40)-(5,52)
-(5,48)-(5,49)
-(5,48)-(5,52)
+(25,4)-(25,52)
+(25,17)-(25,49)
+(52,10)-(52,20)
+(52,10)-(54,38)
+(53,14)-(54,38)
 *)

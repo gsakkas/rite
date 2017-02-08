@@ -1,69 +1,70 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let fixpoint (f,b) = wwhile ((not f), ((f b) = b), b);;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append (zeroes l2)))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append (zeroes l1)), l2);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
 *)
 
 (* changed spans
-(3,31)-(3,64)
-(5,31)-(5,34)
-(5,31)-(5,36)
-(5,31)-(5,53)
-(5,35)-(5,36)
-(5,41)-(5,42)
-(5,41)-(5,44)
-(5,41)-(5,49)
-(5,43)-(5,44)
+(11,39)-(11,61)
+(11,52)-(11,61)
+(14,35)-(14,57)
+(14,48)-(14,57)
 *)
 
 (* type error slice
-(2,4)-(3,66)
-(2,17)-(3,64)
-(3,3)-(3,64)
-(3,3)-(3,64)
-(3,9)-(3,10)
-(3,9)-(3,12)
-(3,9)-(3,12)
-(3,11)-(3,12)
-(3,31)-(3,64)
-(3,31)-(3,64)
-(3,31)-(3,64)
-(3,34)-(3,36)
-(3,42)-(3,48)
-(3,42)-(3,55)
-(3,42)-(3,55)
-(3,50)-(3,51)
-(3,50)-(3,55)
-(3,53)-(3,55)
-(3,62)-(3,64)
-(5,4)-(5,56)
-(5,15)-(5,53)
-(5,22)-(5,28)
-(5,22)-(5,53)
-(5,22)-(5,53)
-(5,31)-(5,34)
-(5,31)-(5,36)
-(5,31)-(5,36)
-(5,31)-(5,53)
-(5,35)-(5,36)
-(5,41)-(5,42)
-(5,41)-(5,44)
-(5,41)-(5,44)
-(5,41)-(5,49)
-(5,41)-(5,49)
-(5,41)-(5,49)
-(5,43)-(5,44)
-(5,48)-(5,49)
-(5,52)-(5,53)
+(3,31)-(3,51)
+(3,37)-(3,42)
+(3,37)-(3,51)
+(7,17)-(7,28)
+(7,17)-(7,31)
+(7,29)-(7,31)
+(8,3)-(14,63)
+(8,3)-(14,63)
+(10,7)-(11,61)
+(11,7)-(11,61)
+(11,7)-(11,61)
+(11,20)-(11,25)
+(11,20)-(11,29)
+(11,34)-(11,61)
+(11,39)-(11,50)
+(11,39)-(11,61)
+(11,52)-(11,58)
+(11,52)-(11,61)
+(13,7)-(14,63)
+(14,7)-(14,63)
+(14,7)-(14,63)
+(14,20)-(14,25)
+(14,20)-(14,29)
+(14,35)-(14,63)
+(14,48)-(14,54)
+(14,48)-(14,57)
+(14,61)-(14,63)
 *)

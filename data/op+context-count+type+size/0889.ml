@@ -1,45 +1,45 @@
 
-let pipe fs =
-  let f a x = a + (x a) in let base x = x in List.fold_left f base fs;;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (x1,x2) ->
+        (match a with
+         | (h1,h2::t2) ->
+             let mul = ((x1 * x2) * h1) + h2 in ((h1 + 1), (mul / 10)) ::
+               (mul mod 10) :: t2
+         | (_,_) -> (0, [0])) in
+  let base = (1, [0]) in
+  let args = List.rev (List.combine l1 l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (x1,x2) ->
+        (match a with
+         | (h1,h2::t2) ->
+             let mul = ((x1 * x2) * h1) + h2 in
+             ((h1 + 1), ((mul / 10) :: (mul mod 10) :: t2))
+         | (_,_) -> (0, [0])) in
+  let base = (1, [0]) in
+  let args = List.rev (List.combine l1 l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(3,3)-(3,70)
-(3,15)-(3,16)
-(3,15)-(3,23)
-(3,37)-(3,42)
-(3,41)-(3,42)
+(8,51)-(9,34)
+(8,61)-(8,69)
 *)
 
 (* type error slice
-(2,4)-(3,72)
-(2,10)-(3,70)
-(3,3)-(3,70)
-(3,9)-(3,23)
-(3,11)-(3,23)
-(3,15)-(3,16)
-(3,15)-(3,23)
-(3,15)-(3,23)
-(3,15)-(3,23)
-(3,20)-(3,21)
-(3,20)-(3,23)
-(3,20)-(3,23)
-(3,22)-(3,23)
-(3,28)-(3,70)
-(3,37)-(3,42)
-(3,41)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
-(3,68)-(3,70)
+(8,51)-(8,69)
+(8,51)-(9,34)
+(8,51)-(9,34)
+(9,17)-(9,27)
+(9,17)-(9,34)
+(9,17)-(9,34)
 *)

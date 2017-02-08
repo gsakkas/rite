@@ -1,51 +1,39 @@
 
-let rec listReverse l =
-  if (List.length l) > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem seen h then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec listReverse l = if (List.length l) > 0 then [List.hd l] else [];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(3,32)-(3,43)
-(3,32)-(3,53)
-(3,32)-(3,68)
-(3,44)-(3,51)
-(3,52)-(3,53)
-(3,55)-(3,56)
-(3,74)-(3,76)
+(7,33)-(7,37)
+(7,55)-(7,64)
 *)
 
 (* type error slice
-(2,4)-(3,78)
-(2,21)-(3,76)
-(3,3)-(3,76)
-(3,3)-(3,76)
-(3,7)-(3,18)
-(3,7)-(3,20)
-(3,7)-(3,20)
-(3,7)-(3,25)
-(3,7)-(3,25)
-(3,19)-(3,20)
-(3,24)-(3,25)
-(3,32)-(3,43)
-(3,32)-(3,53)
-(3,32)-(3,53)
-(3,32)-(3,53)
-(3,32)-(3,68)
-(3,32)-(3,68)
-(3,32)-(3,68)
-(3,44)-(3,51)
-(3,52)-(3,53)
-(3,55)-(3,56)
-(3,57)-(3,68)
-(3,57)-(3,68)
-(3,58)-(3,65)
-(3,58)-(3,67)
-(3,58)-(3,67)
-(3,66)-(3,67)
-(3,74)-(3,76)
+(7,24)-(7,32)
+(7,24)-(7,39)
+(7,33)-(7,37)
+(7,38)-(7,39)
+(7,55)-(7,56)
+(7,55)-(7,64)
+(7,55)-(7,64)
+(7,60)-(7,64)
 *)

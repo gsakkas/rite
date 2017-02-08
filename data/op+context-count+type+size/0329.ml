@@ -1,69 +1,80 @@
 
-let append x l = match l with | [] -> [x] | h::t -> x :: l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
 (* fix
 
-let append x l =
-  let rec helper x l acc =
-    match x with | [] -> l | h::t -> helper t l (h :: acc) in
-  helper x l [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 *)
 
 (* changed spans
-(2,18)-(2,59)
-(2,24)-(2,25)
-(2,39)-(2,42)
-(2,53)-(2,54)
-(2,53)-(2,59)
-(4,21)-(5,66)
-(5,26)-(5,32)
-(5,34)-(5,45)
-(5,34)-(5,53)
-(5,47)-(5,48)
-(5,47)-(5,53)
-(5,51)-(5,53)
-(5,56)-(5,66)
-(5,57)-(5,58)
-(5,57)-(5,65)
-(5,63)-(5,65)
+(19,28)-(19,43)
+(19,28)-(19,64)
+(19,28)-(19,71)
+(19,70)-(19,71)
+(20,25)-(20,40)
+(20,25)-(20,61)
 *)
 
 (* type error slice
-(2,4)-(2,61)
-(2,12)-(2,59)
-(2,14)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,18)-(2,59)
-(2,24)-(2,25)
-(2,39)-(2,42)
-(2,39)-(2,42)
-(2,40)-(2,41)
-(2,53)-(2,54)
-(2,53)-(2,59)
-(2,58)-(2,59)
-(4,4)-(5,68)
-(4,21)-(5,66)
-(5,3)-(5,66)
-(5,3)-(5,66)
-(5,6)-(5,7)
-(5,6)-(5,12)
-(5,18)-(5,20)
-(5,26)-(5,32)
-(5,26)-(5,66)
-(5,26)-(5,66)
-(5,34)-(5,45)
-(5,34)-(5,53)
+(17,21)-(17,42)
+(17,28)-(17,32)
+(17,28)-(17,42)
+(19,28)-(19,32)
+(19,28)-(19,43)
+(19,28)-(19,64)
+(19,28)-(19,64)
+(19,49)-(19,53)
+(19,49)-(19,64)
+(20,25)-(20,29)
+(20,25)-(20,40)
+(20,25)-(20,61)
+(20,25)-(20,61)
+(20,46)-(20,50)
+(20,46)-(20,61)
 *)

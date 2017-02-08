@@ -6,17 +6,30 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let buildCosine e = Cosine e;;
+let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
 
 let buildSine e = Sine e;;
 
-let buildY () = VarY;;
+let buildX () = VarX;;
 
 let rec build (rand,depth) =
-  let randNum = rand (1, 2) in
-  if randNum = 1 then buildSine (buildY ()) else buildCosine buildY;;
+  if depth > (-1)
+  then
+    let randNum = rand (1, 2) in
+    let randNum2 = rand (3, 4) in
+    (if (randNum = 1) && (randNum2 = 3)
+     then buildX ()
+     else
+       if (randNum = 1) && (randNum2 = 4)
+       then
+         buildSine
+           (buildOp2
+              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                (build (rand, (depth - 1))))));;
 
 
 (* fix
@@ -28,66 +41,57 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
 let buildSine e = Sine e;;
 
 let buildX () = VarX;;
 
-let buildY () = VarY;;
-
 let rec build (rand,depth) =
-  let randNum = rand (1, 2) in
-  if randNum = 1 then buildSine (buildX ()) else buildCosine (buildY ());;
+  if depth = 0 then buildSine (buildX ()) else buildX ();;
 
 *)
 
 (* changed spans
-(15,17)-(15,21)
-(19,34)-(19,40)
-(19,62)-(19,68)
+(13,15)-(13,53)
+(13,36)-(13,53)
+(13,41)-(13,42)
+(13,44)-(13,45)
+(13,47)-(13,53)
+(20,3)-(32,41)
+(20,6)-(20,17)
+(20,15)-(20,17)
+(22,5)-(32,41)
+(22,19)-(22,23)
+(22,25)-(22,29)
+(23,5)-(32,41)
 *)
 
 (* type error slice
-(11,4)-(11,31)
-(11,17)-(11,29)
-(11,21)-(11,29)
-(11,28)-(11,29)
-(13,4)-(13,27)
-(13,15)-(13,25)
-(13,19)-(13,25)
-(13,24)-(13,25)
-(15,4)-(15,23)
-(15,12)-(15,21)
-(15,12)-(15,21)
-(15,17)-(15,21)
-(17,4)-(19,70)
-(17,16)-(19,68)
-(18,3)-(19,68)
-(18,3)-(19,68)
-(18,17)-(18,21)
-(18,17)-(18,27)
-(18,17)-(18,27)
-(18,23)-(18,24)
-(18,23)-(18,27)
-(18,26)-(18,27)
-(19,3)-(19,68)
-(19,3)-(19,68)
-(19,6)-(19,13)
-(19,6)-(19,17)
-(19,6)-(19,17)
-(19,6)-(19,17)
-(19,16)-(19,17)
-(19,23)-(19,32)
-(19,23)-(19,43)
-(19,23)-(19,43)
-(19,34)-(19,40)
-(19,34)-(19,43)
-(19,41)-(19,43)
-(19,50)-(19,61)
-(19,50)-(19,68)
-(19,50)-(19,68)
-(19,62)-(19,68)
+(13,4)-(13,56)
+(13,15)-(13,53)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(17,4)-(17,23)
+(17,12)-(17,21)
+(17,17)-(17,21)
+(20,3)-(32,41)
+(20,3)-(32,41)
+(20,3)-(32,41)
+(22,5)-(32,41)
+(23,5)-(32,41)
+(24,6)-(32,41)
+(25,11)-(25,17)
+(25,11)-(25,20)
+(27,8)-(32,41)
+(27,8)-(32,41)
+(27,8)-(32,41)
+(29,10)-(29,19)
+(29,10)-(32,41)
+(30,13)-(30,21)
+(30,13)-(32,41)
+(31,17)-(32,41)
 *)

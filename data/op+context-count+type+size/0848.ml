@@ -1,39 +1,84 @@
 
-let rec wwhile (f,b) = let (a,b) = f b in if b then wwhile (f a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial ((eval (e', x, y)), 1)
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (a,b) = f b in 5;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial (eval (e', x, y)) 1.0
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(2,43)-(2,72)
-(2,46)-(2,47)
-(2,53)-(2,64)
-(2,71)-(2,72)
+(30,21)-(30,52)
+(30,33)-(30,52)
+(30,51)-(30,52)
 *)
 
 (* type error slice
-(2,4)-(2,74)
-(2,17)-(2,72)
-(2,24)-(2,72)
-(2,24)-(2,72)
-(2,36)-(2,37)
-(2,36)-(2,39)
-(2,36)-(2,39)
-(2,38)-(2,39)
-(2,43)-(2,72)
-(2,43)-(2,72)
-(2,43)-(2,72)
-(2,46)-(2,47)
-(2,53)-(2,59)
-(2,53)-(2,64)
-(2,53)-(2,64)
-(2,61)-(2,62)
-(2,61)-(2,64)
-(2,61)-(2,64)
-(2,63)-(2,64)
-(2,71)-(2,72)
+(14,28)-(14,37)
+(14,28)-(14,58)
+(14,39)-(14,47)
+(30,21)-(30,30)
+(30,21)-(30,52)
+(30,33)-(30,52)
 *)

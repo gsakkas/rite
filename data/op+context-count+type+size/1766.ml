@@ -1,24 +1,27 @@
 
-let rec digitsOfInt n = if n <= 0 then [] else 1;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ [digitsOfInt (n / 10)];;
 
 
 (* fix
 
-let rec digitsOfInt n = if n <= 0 then [] else [1];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(2,48)-(2,49)
+(3,39)-(3,61)
 *)
 
 (* type error slice
-(2,4)-(2,51)
-(2,21)-(2,49)
-(2,25)-(2,49)
-(2,25)-(2,49)
-(2,28)-(2,29)
-(2,28)-(2,34)
-(2,40)-(2,42)
-(2,48)-(2,49)
+(2,4)-(3,63)
+(2,21)-(3,61)
+(3,3)-(3,61)
+(3,26)-(3,61)
+(3,37)-(3,38)
+(3,39)-(3,61)
+(3,39)-(3,61)
+(3,40)-(3,51)
+(3,40)-(3,59)
 *)

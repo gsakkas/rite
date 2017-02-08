@@ -1,62 +1,106 @@
 
-let rec assoc (d,k,l) =
-  let rec helper (a,b,c) =
-    match c with
-    | [] -> a
-    | (n,v)::t -> if n = c then v else helper (a, b, t) in
-  helper (d, k, l);;
+let rec clone x n =
+  match n with | 0 -> [] | a -> if a < 0 then [] else (clone x (n - 1)) @ [x];;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (f,[]) -> f | (f',g'::h) -> g' in
+      let newc =
+        match x with | (f,g) -> if ((f + g) + carry) > 9 then 1 else 0 in
+      let digit = match x with | (f,g) -> ((f + g) + carry) mod 10 in
+      match a with
+      | (o,p::q) -> (0, (newc :: digit :: q))
+      | (o,p) -> (0, (newc :: digit :: p)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0
+  then l
+  else
+    (let a = [i] in bigAdd ((mulByDigit i) - (1 l)) ((mulByDigit i) - (1 l)));;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  let rec helper (a,b,c) =
-    match c with
-    | [] -> a
-    | (n,v)::t -> if n = b then v else helper (a, b, t) in
-  helper (d, k, l);;
+let rec clone x n =
+  match n with | 0 -> [] | a -> if a < 0 then [] else (clone x (n - 1)) @ [x];;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (f,[]) -> f | (f',g'::h) -> g' in
+      let newc =
+        match x with | (f,g) -> if ((f + g) + carry) > 9 then 1 else 0 in
+      let digit = match x with | (f,g) -> ((f + g) + carry) mod 10 in
+      match a with
+      | (o,p::q) -> (0, (newc :: digit :: q))
+      | (o,p) -> (0, (newc :: digit :: p)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0
+  then l
+  else (let a = [i] in bigAdd (mulByDigit (i - 1) l) (mulByDigit (i - 1) l));;
 
 *)
 
 (* changed spans
-(6,26)-(6,27)
+(32,6)-(32,75)
+(32,30)-(32,42)
+(32,30)-(32,50)
+(32,41)-(32,42)
+(32,47)-(32,50)
+(32,55)-(32,67)
+(32,55)-(32,75)
+(32,66)-(32,67)
+(32,72)-(32,75)
 *)
 
 (* type error slice
-(2,4)-(7,21)
-(2,16)-(7,18)
-(3,3)-(7,18)
-(3,3)-(7,18)
-(3,19)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,5)-(6,55)
-(4,11)-(4,12)
-(5,13)-(5,14)
-(6,19)-(6,55)
-(6,19)-(6,55)
-(6,22)-(6,23)
-(6,22)-(6,27)
-(6,22)-(6,27)
-(6,22)-(6,27)
-(6,26)-(6,27)
-(6,33)-(6,34)
-(6,40)-(6,46)
-(6,40)-(6,55)
-(6,40)-(6,55)
-(6,48)-(6,49)
-(6,48)-(6,55)
-(6,51)-(6,52)
-(6,54)-(6,55)
-(7,3)-(7,9)
-(7,3)-(7,18)
-(7,3)-(7,18)
-(7,11)-(7,12)
-(7,11)-(7,18)
-(7,14)-(7,15)
-(7,17)-(7,18)
+(5,4)-(8,80)
+(5,13)-(8,77)
+(8,52)-(8,63)
+(8,52)-(8,66)
+(8,64)-(8,66)
+(13,4)-(26,37)
+(13,12)-(26,33)
+(26,20)-(26,27)
+(26,20)-(26,33)
+(26,28)-(26,30)
+(28,4)-(32,80)
+(28,20)-(32,75)
+(28,22)-(32,75)
+(32,21)-(32,27)
+(32,21)-(32,75)
+(32,30)-(32,40)
+(32,30)-(32,42)
+(32,30)-(32,50)
+(32,30)-(32,50)
+(32,47)-(32,48)
+(32,47)-(32,50)
+(32,72)-(32,73)
+(32,72)-(32,75)
 *)

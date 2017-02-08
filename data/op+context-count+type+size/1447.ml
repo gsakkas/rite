@@ -1,45 +1,54 @@
 
-let rec wwhile (f,b) =
-  match f with
-  | (x,y) -> let (x,y) = f b in if y = true then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> cos (eval (a, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (x,y) = f b in if y = true then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> cos (eval (a, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0;;
 
 *)
 
 (* changed spans
-(3,3)-(4,70)
-(3,9)-(3,10)
+(17,24)-(17,64)
+(17,63)-(17,64)
 *)
 
 (* type error slice
-(2,4)-(4,72)
-(2,17)-(4,70)
-(3,3)-(4,70)
-(3,3)-(4,70)
-(3,9)-(3,10)
-(4,14)-(4,70)
-(4,14)-(4,70)
-(4,26)-(4,27)
-(4,26)-(4,29)
-(4,26)-(4,29)
-(4,28)-(4,29)
-(4,33)-(4,70)
-(4,33)-(4,70)
-(4,36)-(4,37)
-(4,36)-(4,44)
-(4,36)-(4,44)
-(4,36)-(4,44)
-(4,40)-(4,44)
-(4,50)-(4,56)
-(4,50)-(4,62)
-(4,50)-(4,62)
-(4,58)-(4,59)
-(4,58)-(4,62)
-(4,61)-(4,62)
-(4,69)-(4,70)
+(12,3)-(17,64)
+(12,3)-(17,64)
+(15,15)-(15,18)
+(15,15)-(15,33)
+(17,24)-(17,57)
+(17,24)-(17,64)
+(17,24)-(17,64)
 *)

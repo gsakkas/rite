@@ -1,62 +1,71 @@
 
-let x = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail::t::s::l -> s :: t :: tail :: head;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> float_of_int x
+  | VarY  -> float_of_int y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2;;
 
 
 (* fix
 
-let x = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | x::[] -> [x] | head::tail::third -> [head; tail];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.;;
 
 *)
 
 (* changed spans
-(5,3)-(8,50)
-(8,28)-(8,29)
-(8,28)-(8,50)
-(8,33)-(8,34)
-(8,33)-(8,50)
-(8,38)-(8,50)
+(15,14)-(15,26)
+(15,14)-(15,28)
+(16,14)-(16,26)
+(16,14)-(16,28)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,67)
+(19,66)-(19,67)
 *)
 
 (* type error slice
-(4,4)-(8,52)
-(4,21)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,3)-(8,50)
-(5,9)-(5,10)
-(6,11)-(6,13)
-(7,14)-(7,17)
-(7,14)-(7,17)
-(7,15)-(7,16)
-(8,28)-(8,29)
-(8,28)-(8,50)
-(8,33)-(8,34)
-(8,33)-(8,50)
-(8,38)-(8,42)
-(8,38)-(8,50)
-(8,46)-(8,50)
+(14,3)-(19,67)
+(14,3)-(19,67)
+(15,14)-(15,26)
+(15,14)-(15,28)
+(17,20)-(17,40)
+(17,27)-(17,31)
+(17,27)-(17,40)
+(19,26)-(19,30)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,26)-(19,67)
+(19,46)-(19,50)
+(19,46)-(19,60)
 *)

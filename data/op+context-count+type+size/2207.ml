@@ -1,103 +1,80 @@
 
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let l1 = [9; 9; 9];;
+let padZero l1 l2 =
+  let first = List.length l1 in
+  let sec = List.length l2 in
+  if first < sec
+  then ((List.append (clone 0 (sec - first)) l1), l2)
+  else
+    if first > sec
+    then (l1, (List.append (clone 0 (first - sec)) l2))
+    else (l1, l2);;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (i,j) = x in
+      let (s,t) = a in ((((i + j) + s) / 10), (t :: (((i + j) + s) mod 10))) in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let l1 = [9; 9; 9];;
+let padZero l1 l2 =
+  let first = List.length l1 in
+  let sec = List.length l2 in
+  if first < sec
+  then ((List.append (clone 0 (sec - first)) l1), l2)
+  else
+    if first > sec
+    then (l1, (List.append (clone 0 (first - sec)) l2))
+    else (l1, l2);;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (i,j) = x in
+      let (s,t) = a in ((((i + j) + s) / 10), ((((i + j) + s) mod 10) :: t)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(12,50)-(12,61)
-(12,50)-(12,68)
-(12,64)-(12,65)
-(13,3)-(13,50)
+(21,48)-(21,49)
+(21,56)-(21,74)
+(22,5)-(24,52)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(6,4)-(13,52)
-(6,20)-(13,50)
-(6,22)-(13,50)
-(7,3)-(13,50)
-(7,9)-(9,73)
-(7,11)-(9,73)
-(8,5)-(9,73)
-(8,17)-(8,18)
-(9,5)-(9,73)
-(9,17)-(9,18)
-(9,26)-(9,27)
-(9,30)-(9,31)
-(9,35)-(9,36)
-(9,72)-(9,73)
-(10,3)-(13,50)
-(10,15)-(10,20)
-(10,18)-(10,20)
-(11,3)-(13,50)
-(12,5)-(12,17)
-(12,5)-(12,68)
-(12,5)-(12,68)
-(12,19)-(12,27)
-(12,19)-(12,36)
-(12,40)-(12,45)
-(12,40)-(12,68)
-(12,40)-(12,68)
-(12,46)-(12,47)
-(12,50)-(12,61)
-(12,50)-(12,65)
-(12,50)-(12,65)
-(12,50)-(12,68)
-(12,50)-(12,68)
-(12,64)-(12,65)
-(12,67)-(12,68)
-(13,17)-(13,31)
-(13,17)-(13,43)
-(13,17)-(13,43)
-(13,17)-(13,43)
-(13,32)-(13,33)
-(13,34)-(13,38)
-(13,39)-(13,43)
+(19,5)-(24,52)
+(19,11)-(21,74)
+(19,13)-(21,74)
+(20,7)-(21,74)
+(21,7)-(21,74)
+(21,7)-(21,74)
+(21,19)-(21,20)
+(21,28)-(21,74)
+(21,48)-(21,49)
+(21,48)-(21,74)
+(21,48)-(21,74)
+(21,48)-(21,74)
+(21,56)-(21,74)
+(24,19)-(24,33)
+(24,19)-(24,45)
+(24,34)-(24,35)
 *)

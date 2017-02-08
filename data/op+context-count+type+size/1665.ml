@@ -1,115 +1,40 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let rec additivePersistence n =
-  let count = [0] in
-  if (sumList (digitsOfInt n)) > 9 then 1 :: count else sumList count;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (!List.mem) h seen then h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let rec additivePersistence n =
-  let x = 1 in
-  x + 1;
-  if (sumList (digitsOfInt n)) > 9
-  then additivePersistence (sumList (digitsOfInt n))
-  else x;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(11,15)-(11,18)
-(11,16)-(11,17)
-(12,3)-(12,70)
-(12,41)-(12,42)
-(12,41)-(12,51)
-(12,46)-(12,51)
-(12,57)-(12,64)
-(12,65)-(12,70)
+(7,21)-(7,57)
+(7,25)-(7,26)
+(7,25)-(7,34)
+(8,9)-(8,46)
 *)
 
 (* type error slice
-(2,4)-(5,68)
-(2,21)-(5,62)
-(3,3)-(5,62)
-(3,3)-(5,62)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(4,8)-(4,10)
-(5,8)-(5,16)
-(5,8)-(5,62)
-(5,8)-(5,62)
-(5,19)-(5,20)
-(5,19)-(5,27)
-(5,19)-(5,62)
-(5,25)-(5,27)
-(5,33)-(5,41)
-(5,33)-(5,62)
-(5,33)-(5,62)
-(5,43)-(5,54)
-(5,43)-(5,62)
-(5,43)-(5,62)
-(5,56)-(5,57)
-(5,56)-(5,62)
-(5,60)-(5,62)
-(7,4)-(8,66)
-(7,17)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,3)-(8,63)
-(8,9)-(8,11)
-(8,25)-(8,26)
-(8,37)-(8,38)
-(8,37)-(8,51)
-(8,37)-(8,51)
-(8,37)-(8,51)
-(8,42)-(8,49)
-(8,42)-(8,51)
-(8,42)-(8,51)
-(8,50)-(8,51)
-(8,61)-(8,63)
-(10,4)-(12,72)
-(10,29)-(12,70)
-(11,3)-(12,70)
-(11,15)-(11,18)
-(11,15)-(11,18)
-(11,16)-(11,17)
-(12,3)-(12,70)
-(12,3)-(12,70)
-(12,7)-(12,14)
-(12,7)-(12,29)
-(12,7)-(12,35)
-(12,7)-(12,35)
-(12,16)-(12,27)
-(12,16)-(12,29)
-(12,16)-(12,29)
-(12,28)-(12,29)
-(12,34)-(12,35)
-(12,41)-(12,42)
-(12,41)-(12,51)
-(12,46)-(12,51)
-(12,57)-(12,64)
-(12,57)-(12,70)
-(12,65)-(12,70)
+(7,21)-(7,57)
+(7,21)-(7,57)
+(7,21)-(7,57)
+(7,25)-(7,26)
+(7,25)-(7,34)
+(7,26)-(7,34)
+(7,48)-(7,57)
 *)

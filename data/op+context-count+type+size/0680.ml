@@ -1,180 +1,116 @@
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
-let digits n = digitsOfInt (abs n);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits n
-  else additivePersistence sumList n;;
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then (helper x) - (1 l (bigAdd l accum)) else accum in
+  mulByDigit (helper i l accum);;
 
 
 (* fix
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
-let digits n = digitsOfInt (abs n);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits (digits n)
-  else additivePersistence (sumList (digits n));;
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
+  mulByDigit i (helper i l accum);;
 
 *)
 
 (* changed spans
-(19,18)-(19,19)
-(20,8)-(20,37)
-(20,28)-(20,35)
-(20,36)-(20,37)
+(34,21)-(34,29)
+(34,21)-(34,53)
+(34,28)-(34,29)
+(34,34)-(34,53)
+(35,3)-(35,31)
+(35,15)-(35,31)
 *)
 
 (* type error slice
-(2,4)-(2,76)
-(2,16)-(2,73)
-(2,18)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,22)-(2,73)
-(2,28)-(2,29)
-(2,43)-(2,46)
-(2,43)-(2,46)
-(2,44)-(2,45)
-(2,57)-(2,58)
-(2,57)-(2,73)
-(2,63)-(2,69)
-(2,63)-(2,73)
-(2,63)-(2,73)
-(2,63)-(2,73)
-(2,70)-(2,71)
-(2,72)-(2,73)
-(4,4)-(9,57)
-(4,21)-(9,53)
-(5,3)-(9,53)
-(5,3)-(9,53)
-(5,6)-(5,7)
-(5,6)-(5,11)
-(5,6)-(5,11)
-(5,6)-(5,11)
-(5,10)-(5,11)
-(6,8)-(6,10)
-(8,6)-(9,53)
-(8,6)-(9,53)
-(8,20)-(8,21)
-(8,20)-(8,28)
-(8,20)-(8,38)
-(8,26)-(8,28)
-(8,32)-(8,33)
-(8,32)-(8,38)
-(8,36)-(8,38)
-(9,6)-(9,53)
-(9,9)-(9,10)
-(9,9)-(9,15)
-(9,9)-(9,15)
-(9,13)-(9,15)
-(9,21)-(9,24)
-(9,21)-(9,24)
-(9,22)-(9,23)
-(9,30)-(9,36)
-(9,30)-(9,53)
-(9,30)-(9,53)
-(9,30)-(9,53)
-(9,37)-(9,38)
-(9,40)-(9,51)
-(9,40)-(9,53)
-(9,40)-(9,53)
-(9,52)-(9,53)
-(11,4)-(11,37)
-(11,12)-(11,34)
-(11,16)-(11,27)
-(11,16)-(11,34)
-(11,29)-(11,32)
-(11,29)-(11,34)
-(11,29)-(11,34)
-(11,33)-(11,34)
-(13,4)-(13,75)
-(13,19)-(13,72)
-(13,23)-(13,72)
-(13,23)-(13,72)
-(13,23)-(13,72)
-(13,23)-(13,72)
-(13,23)-(13,72)
-(13,23)-(13,72)
-(13,29)-(13,30)
-(13,44)-(13,45)
-(13,56)-(13,57)
-(13,56)-(13,72)
-(13,56)-(13,72)
-(13,61)-(13,70)
-(13,61)-(13,72)
-(13,61)-(13,72)
-(13,71)-(13,72)
-(15,4)-(15,73)
-(15,17)-(15,70)
-(15,22)-(15,70)
-(15,22)-(15,70)
-(15,22)-(15,70)
-(15,22)-(15,70)
-(15,22)-(15,70)
-(15,22)-(15,70)
-(15,28)-(15,30)
-(15,44)-(15,45)
-(15,56)-(15,57)
-(15,56)-(15,70)
-(15,56)-(15,70)
-(15,56)-(15,70)
-(15,61)-(15,68)
-(15,61)-(15,70)
-(15,61)-(15,70)
-(15,69)-(15,70)
-(17,4)-(20,39)
-(17,29)-(20,37)
-(18,3)-(20,37)
-(18,3)-(20,37)
-(18,7)-(18,14)
-(18,7)-(18,24)
-(18,7)-(18,24)
-(18,7)-(18,31)
-(18,7)-(18,31)
-(18,16)-(18,22)
-(18,16)-(18,24)
-(18,16)-(18,24)
-(18,23)-(18,24)
-(18,29)-(18,31)
-(19,8)-(19,17)
-(19,8)-(19,19)
-(19,8)-(19,19)
-(19,18)-(19,19)
-(20,8)-(20,27)
-(20,8)-(20,37)
-(20,8)-(20,37)
-(20,8)-(20,37)
-(20,28)-(20,35)
-(20,36)-(20,37)
+(8,4)-(12,78)
+(8,13)-(12,75)
+(8,16)-(12,75)
+(12,28)-(12,39)
+(12,28)-(12,60)
+(12,58)-(12,60)
+(17,4)-(29,37)
+(17,12)-(29,33)
+(17,15)-(29,33)
+(29,20)-(29,27)
+(29,20)-(29,33)
+(29,31)-(29,33)
+(33,3)-(35,31)
+(33,18)-(34,66)
+(33,20)-(34,66)
+(34,5)-(34,66)
+(34,5)-(34,66)
+(34,21)-(34,27)
+(34,21)-(34,29)
+(34,21)-(34,53)
+(34,21)-(34,53)
+(34,34)-(34,35)
+(34,34)-(34,53)
+(34,39)-(34,45)
+(34,39)-(34,53)
+(34,48)-(34,53)
+(34,61)-(34,66)
+(35,15)-(35,21)
+(35,15)-(35,31)
 *)

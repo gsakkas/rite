@@ -1,82 +1,108 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> ex1 ^ ("*" ^ ex2)
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then (helper 0 num) :: (xs' xs)
+               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
+                 (xs' xs))
+        else
+          (let num = x * i in
+           if num < 10
+           then (helper 0 num) :: (accum xs)
+           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
+  helper 0 [] lre;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then helper 0 (num :: xs') xs
+               else helper 1 (((num / 10) mod 10) :: (num mod 10) :: xs') xs)
+        else
+          (let num = x * i in
+           if num < 10
+           then helper 0 (num :: accum) xs
+           else helper 1 (((num / 10) mod 10) :: (num mod 10) :: accum) xs) in
+  helper 0 [] lre;;
 
 *)
 
 (* changed spans
-(19,24)-(19,27)
-(19,37)-(19,40)
-(26,52)-(26,64)
-(26,65)-(26,68)
+(17,22)-(17,34)
+(17,22)-(17,46)
+(17,31)-(17,34)
+(17,40)-(17,46)
+(18,22)-(18,49)
+(18,22)-(19,25)
+(18,33)-(18,49)
+(19,19)-(19,25)
+(21,12)-(24,76)
+(23,18)-(23,30)
+(23,18)-(23,44)
+(23,27)-(23,30)
+(23,36)-(23,44)
+(24,18)-(24,45)
+(24,18)-(24,76)
+(24,29)-(24,45)
+(24,68)-(24,76)
 *)
 
 (* type error slice
-(11,22)-(26,75)
-(12,3)-(26,75)
-(12,3)-(26,75)
-(12,9)-(12,10)
-(15,30)-(15,42)
-(15,30)-(15,45)
-(19,24)-(19,27)
-(19,24)-(19,40)
-(19,24)-(19,40)
-(19,28)-(19,29)
-(19,31)-(19,34)
-(19,31)-(19,40)
-(19,31)-(19,40)
-(19,35)-(19,36)
-(19,37)-(19,40)
+(3,3)-(3,70)
+(3,3)-(3,70)
+(3,41)-(3,51)
+(3,41)-(3,54)
+(3,52)-(3,54)
+(7,3)-(25,18)
+(7,18)-(24,76)
+(7,24)-(24,76)
+(7,30)-(24,76)
+(9,13)-(9,23)
+(9,13)-(9,29)
+(9,24)-(9,29)
+(13,12)-(19,25)
+(13,12)-(19,25)
+(17,40)-(17,43)
+(17,40)-(17,46)
+(18,22)-(18,28)
+(18,22)-(18,49)
+(18,22)-(19,25)
+(18,22)-(19,25)
+(18,56)-(18,66)
+(18,56)-(19,25)
+(18,56)-(19,25)
+(19,19)-(19,22)
+(19,19)-(19,25)
+(23,36)-(23,41)
+(23,36)-(23,44)
+(24,68)-(24,73)
+(24,68)-(24,76)
+(25,3)-(25,9)
+(25,3)-(25,18)
 *)

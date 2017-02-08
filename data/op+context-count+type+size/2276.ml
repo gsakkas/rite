@@ -1,79 +1,56 @@
 
-let rec mulByDigit i l =
-  let f x a =
-    let digitRes = (x * i) + (fst a) in
-    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
-  let base = (0, []) in
-  let (_,result) = List.fold_right f ((0, 0) :: l) base in result;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = ([], []) in
+    let args = List.combine (l1, l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  let f x a =
-    let digitRes = (x * i) + (fst a) in
-    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
-  let base = (0, []) in
-  let (_,result) = List.fold_right f (0 :: l) base in result;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(7,40)-(7,44)
-(7,43)-(7,44)
+(14,17)-(14,25)
+(14,17)-(14,45)
+(14,26)-(14,45)
+(15,17)-(15,19)
+(16,16)-(16,36)
+(16,30)-(16,36)
 *)
 
 (* type error slice
-(2,4)-(7,68)
-(2,20)-(7,66)
-(2,22)-(7,66)
-(3,3)-(7,66)
-(3,3)-(7,66)
-(3,9)-(5,51)
-(3,11)-(5,51)
-(4,5)-(5,51)
-(4,5)-(5,51)
-(4,21)-(4,22)
-(4,21)-(4,26)
-(4,21)-(4,26)
-(4,21)-(4,26)
-(4,21)-(4,36)
-(4,21)-(4,36)
-(4,25)-(4,26)
-(4,31)-(4,34)
-(4,31)-(4,36)
-(4,31)-(4,36)
-(4,35)-(4,36)
-(5,7)-(5,15)
-(5,7)-(5,20)
-(5,7)-(5,51)
-(5,18)-(5,20)
-(5,25)-(5,33)
-(5,25)-(5,40)
-(5,25)-(5,51)
-(5,38)-(5,40)
-(5,46)-(5,49)
-(5,46)-(5,51)
-(5,46)-(5,51)
-(5,50)-(5,51)
-(6,3)-(7,66)
-(6,3)-(7,66)
-(6,15)-(6,16)
-(6,15)-(6,20)
-(6,18)-(6,20)
-(7,3)-(7,66)
-(7,3)-(7,66)
-(7,20)-(7,35)
-(7,20)-(7,56)
-(7,20)-(7,56)
-(7,20)-(7,56)
-(7,20)-(7,56)
-(7,36)-(7,37)
-(7,40)-(7,41)
-(7,40)-(7,44)
-(7,40)-(7,50)
-(7,43)-(7,44)
-(7,49)-(7,50)
-(7,52)-(7,56)
-(7,60)-(7,66)
+(16,16)-(16,28)
+(16,16)-(16,36)
+(16,30)-(16,36)
 *)

@@ -1,42 +1,58 @@
 
-let pipe fs = let f a x = a x in let base = [] in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = ([], []) in
+    let args = List.rev (List.combine (l1, l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x c = x (a c) in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,34)-(2,75)
-(2,45)-(2,47)
-(2,51)-(2,75)
+(14,17)-(14,25)
+(14,17)-(14,45)
+(14,26)-(14,45)
+(15,17)-(15,19)
+(16,16)-(16,24)
+(16,16)-(16,46)
+(16,26)-(16,46)
+(16,40)-(16,46)
 *)
 
 (* type error slice
-(2,4)-(2,77)
-(2,10)-(2,75)
-(2,15)-(2,75)
-(2,15)-(2,75)
-(2,21)-(2,30)
-(2,23)-(2,30)
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,27)-(2,30)
-(2,29)-(2,30)
-(2,34)-(2,75)
-(2,34)-(2,75)
-(2,45)-(2,47)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,51)-(2,75)
-(2,51)-(2,75)
-(2,51)-(2,75)
-(2,66)-(2,67)
-(2,68)-(2,72)
-(2,73)-(2,75)
+(16,26)-(16,38)
+(16,26)-(16,46)
+(16,40)-(16,46)
 *)

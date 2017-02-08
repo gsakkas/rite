@@ -1,60 +1,64 @@
 
-let x = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail::t::s -> s :: t :: tail :: head;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) /. 2;;
 
 
 (* fix
 
-let x = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | x::[] -> [x] | head::tail::third -> [head; tail];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.;;
 
 *)
 
 (* changed spans
-(5,3)-(8,47)
-(8,25)-(8,26)
-(8,25)-(8,47)
-(8,30)-(8,31)
-(8,30)-(8,47)
-(8,35)-(8,47)
+(19,26)-(19,60)
+(19,67)-(19,68)
 *)
 
 (* type error slice
-(4,4)-(8,49)
-(4,21)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,3)-(8,47)
-(5,9)-(5,10)
-(6,11)-(6,13)
-(7,14)-(7,17)
-(7,14)-(7,17)
-(7,15)-(7,16)
-(8,25)-(8,26)
-(8,25)-(8,47)
-(8,30)-(8,31)
-(8,30)-(8,47)
-(8,35)-(8,39)
-(8,35)-(8,47)
-(8,43)-(8,47)
+(17,20)-(17,40)
+(17,27)-(17,31)
+(17,27)-(17,40)
+(19,26)-(19,30)
+(19,26)-(19,40)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,26)-(19,60)
+(19,26)-(19,68)
+(19,26)-(19,68)
+(19,46)-(19,50)
+(19,46)-(19,60)
+(19,67)-(19,68)
 *)

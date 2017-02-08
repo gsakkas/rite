@@ -1,56 +1,80 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = sepConcat sep t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | POS of expr* expr* expr* expr
+  | SOP of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | POS (a,b,c,d) ->
+      ((eval (a, x, y)) +. (eval (b, x, y))) *.
+        ((eval (c, x, y)) +. (eval (d, x, y)))
+  | SOP (f,g,h) -> (eval (f, x, y)) + ((eval (g, x, y)) *. (eval (h, x, y)));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | POS of expr* expr* expr* expr
+  | SOP of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | POS (a,b,c,d) ->
+      ((eval (a, x, y)) +. (eval (b, x, y))) *.
+        ((eval (c, x, y)) +. (eval (d, x, y)))
+  | SOP (f,g,h) -> (eval (f, x, y)) +. ((eval (g, x, y)) *. (eval (h, x, y)));;
 
 *)
 
 (* changed spans
-(7,31)-(7,40)
-(7,31)-(7,46)
-(7,41)-(7,44)
+(30,21)-(30,74)
 *)
 
 (* type error slice
-(2,4)-(7,75)
-(2,19)-(7,73)
-(2,23)-(7,73)
-(3,3)-(7,73)
-(3,3)-(7,73)
-(3,3)-(7,73)
-(3,3)-(7,73)
-(3,9)-(3,11)
-(6,7)-(7,73)
-(6,13)-(6,31)
-(6,15)-(6,31)
-(6,19)-(6,20)
-(6,24)-(6,27)
-(6,30)-(6,31)
-(7,7)-(7,73)
-(7,18)-(7,19)
-(7,23)-(7,73)
-(7,31)-(7,40)
-(7,31)-(7,46)
-(7,31)-(7,46)
-(7,45)-(7,46)
-(7,50)-(7,64)
-(7,50)-(7,73)
-(7,50)-(7,73)
-(7,50)-(7,73)
-(7,65)-(7,66)
-(7,67)-(7,71)
-(7,72)-(7,73)
+(19,21)-(19,42)
+(19,28)-(19,32)
+(19,28)-(19,42)
+(30,21)-(30,25)
+(30,21)-(30,34)
+(30,21)-(30,74)
+(30,21)-(30,74)
+(30,41)-(30,74)
 *)

@@ -1,77 +1,42 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let fixpoint (f,b) = let g b = b in wwhile ((g, true), b);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else ([l1], ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 
 (* fix
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(7,32)-(7,33)
-(7,37)-(7,43)
-(7,46)-(7,53)
-(7,49)-(7,53)
+(10,9)-(10,13)
 *)
 
 (* type error slice
-(2,4)-(5,28)
-(2,13)-(5,25)
-(3,3)-(5,25)
-(3,3)-(5,25)
-(3,19)-(4,62)
-(3,25)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,11)-(4,12)
-(4,29)-(4,35)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,37)-(4,38)
-(4,37)-(4,41)
-(4,40)-(4,41)
-(4,44)-(4,45)
-(4,44)-(4,47)
-(4,44)-(4,47)
-(4,46)-(4,47)
-(4,61)-(4,62)
-(5,3)-(5,9)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,11)-(5,12)
-(5,11)-(5,15)
-(5,14)-(5,15)
-(5,18)-(5,19)
-(5,18)-(5,25)
-(5,21)-(5,25)
-(7,4)-(7,60)
-(7,15)-(7,57)
-(7,22)-(7,57)
-(7,22)-(7,57)
-(7,28)-(7,33)
-(7,32)-(7,33)
-(7,37)-(7,43)
-(7,37)-(7,57)
-(7,37)-(7,57)
-(7,46)-(7,47)
-(7,46)-(7,53)
-(7,46)-(7,57)
-(7,49)-(7,53)
-(7,56)-(7,57)
+(8,3)-(10,68)
+(8,3)-(10,68)
+(9,11)-(9,62)
+(9,11)-(9,67)
+(9,58)-(9,59)
+(9,60)-(9,62)
+(10,9)-(10,13)
+(10,9)-(10,13)
+(10,9)-(10,68)
+(10,10)-(10,12)
 *)

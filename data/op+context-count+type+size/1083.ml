@@ -1,40 +1,67 @@
 
-let pipe fs = let f a x = x fs in let base = fs in List.fold_left f base fs;;
+let rec reverseHelper (original,sofar) =
+  match original with
+  | [] -> sofar
+  | hd::tl -> reverseHelper (tl, (hd :: sofar));;
+
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l = reverseHelper (l, []);;
+
+let palindrome w =
+  let converted = explode w in
+  if converted = (listReverse w) then true else false;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base q = q in List.fold_left f base fs;;
+let rec reverseHelper (original,sofar) =
+  match original with
+  | [] -> sofar
+  | hd::tl -> reverseHelper (tl, (hd :: sofar));;
+
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l = reverseHelper (l, []);;
+
+let palindrome w =
+  let converted = explode w in
+  if converted = (listReverse converted) then true else false;;
 
 *)
 
 (* changed spans
-(2,27)-(2,31)
-(2,29)-(2,31)
-(2,46)-(2,48)
-(2,52)-(2,76)
+(16,31)-(16,32)
 *)
 
 (* type error slice
-(2,4)-(2,78)
-(2,10)-(2,76)
-(2,15)-(2,76)
-(2,15)-(2,76)
-(2,21)-(2,31)
-(2,23)-(2,31)
-(2,27)-(2,28)
-(2,27)-(2,31)
-(2,27)-(2,31)
-(2,29)-(2,31)
-(2,35)-(2,76)
-(2,35)-(2,76)
-(2,46)-(2,48)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,52)-(2,76)
-(2,52)-(2,76)
-(2,52)-(2,76)
-(2,67)-(2,68)
-(2,69)-(2,73)
-(2,74)-(2,76)
+(3,3)-(5,46)
+(3,3)-(5,46)
+(5,15)-(5,28)
+(5,15)-(5,46)
+(5,30)-(5,32)
+(5,30)-(5,46)
+(7,4)-(10,9)
+(7,13)-(10,7)
+(9,14)-(9,27)
+(9,14)-(9,29)
+(9,28)-(9,29)
+(12,4)-(12,48)
+(12,21)-(12,45)
+(12,25)-(12,38)
+(12,25)-(12,45)
+(12,40)-(12,41)
+(12,40)-(12,45)
+(15,19)-(15,26)
+(15,19)-(15,28)
+(15,27)-(15,28)
+(16,19)-(16,30)
+(16,19)-(16,32)
+(16,31)-(16,32)
 *)

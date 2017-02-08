@@ -1,76 +1,90 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewExprA of expr* expr
+  | NewExprB of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | NewExprA (e1,e2) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e1, x, y)
+      else eval (e2, x, y)
+  | NewExprB (e1,e2,e3) ->
+      ((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewExprA of expr* expr
+  | NewExprB of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | NewExprA (e1,e2) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e1, x, y)
+      else eval (e2, x, y)
+  | NewExprB (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) -. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(7,24)-(7,34)
-(7,50)-(7,59)
+(32,9)-(32,23)
+(32,9)-(32,43)
+(32,9)-(32,64)
 *)
 
 (* type error slice
-(2,4)-(9,30)
-(2,22)-(9,26)
-(3,3)-(9,26)
-(3,3)-(9,26)
-(3,19)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,5)-(8,46)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(8,46)
-(7,9)-(8,46)
-(7,21)-(7,59)
-(7,21)-(7,59)
-(7,21)-(7,59)
-(7,24)-(7,32)
-(7,24)-(7,34)
-(7,24)-(7,34)
-(7,33)-(7,34)
-(7,40)-(7,44)
-(7,50)-(7,51)
-(7,50)-(7,59)
-(7,55)-(7,59)
-(8,9)-(8,46)
-(8,9)-(8,46)
-(8,21)-(8,22)
-(8,26)-(8,32)
-(8,26)-(8,46)
-(8,26)-(8,46)
-(8,34)-(8,39)
-(8,34)-(8,46)
-(8,41)-(8,46)
-(9,3)-(9,11)
-(9,3)-(9,26)
-(9,3)-(9,26)
-(9,13)-(9,19)
-(9,13)-(9,26)
-(9,13)-(9,26)
-(9,21)-(9,23)
-(9,21)-(9,26)
-(9,25)-(9,26)
+(19,20)-(19,40)
+(19,27)-(19,31)
+(19,27)-(19,40)
+(32,9)-(32,13)
+(32,9)-(32,23)
+(32,9)-(32,43)
+(32,9)-(32,43)
+(32,9)-(32,64)
+(32,29)-(32,33)
+(32,29)-(32,43)
+(32,50)-(32,54)
+(32,50)-(32,64)
 *)

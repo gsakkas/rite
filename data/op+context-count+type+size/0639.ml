@@ -1,73 +1,57 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = sl in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" [List.map (f l)]) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e -> sin (pi * (eval e));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
 
 *)
 
 (* changed spans
-(7,31)-(7,33)
-(9,46)-(9,62)
-(9,47)-(9,60)
-(9,57)-(9,60)
+(14,59)-(14,71)
+(14,70)-(14,71)
 *)
 
 (* type error slice
-(2,4)-(7,62)
-(2,19)-(7,60)
-(2,23)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,3)-(7,60)
-(3,9)-(3,11)
-(6,7)-(7,60)
-(6,13)-(6,31)
-(6,15)-(6,31)
-(6,19)-(6,20)
-(6,24)-(6,27)
-(6,30)-(6,31)
-(7,7)-(7,60)
-(7,18)-(7,19)
-(7,23)-(7,60)
-(7,31)-(7,33)
-(7,37)-(7,51)
-(7,37)-(7,60)
-(7,37)-(7,60)
-(7,37)-(7,60)
-(7,52)-(7,53)
-(7,54)-(7,58)
-(7,59)-(7,60)
-(9,4)-(9,72)
-(9,18)-(9,69)
-(9,20)-(9,69)
-(9,32)-(9,41)
-(9,32)-(9,62)
-(9,32)-(9,62)
-(9,46)-(9,62)
-(9,46)-(9,62)
-(9,47)-(9,55)
-(9,47)-(9,60)
-(9,47)-(9,60)
-(9,57)-(9,58)
-(9,57)-(9,60)
-(9,57)-(9,60)
-(9,59)-(9,60)
+(11,4)-(11,29)
+(11,10)-(11,26)
+(13,4)-(14,75)
+(13,15)-(14,71)
+(14,3)-(14,71)
+(14,54)-(14,57)
+(14,54)-(14,71)
+(14,59)-(14,61)
+(14,59)-(14,71)
+(14,59)-(14,71)
+(14,65)-(14,69)
+(14,65)-(14,71)
+(14,70)-(14,71)
 *)

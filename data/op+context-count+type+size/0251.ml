@@ -1,76 +1,52 @@
 
-let g (f,x) = let xx = f x in (xx, (xx = (f xx)));;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((g f), b);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append ((clone 0 (- diff)), len1)), len2)
+  else ((List.append ((clone 0 diff), len2)), len1);;
 
 
 (* fix
 
-let g h x = let xx = h x in (xx, (xx = (h x)));;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((g f), b);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else ((List.append (clone 0 diff) l2), l1);;
 
 *)
 
 (* changed spans
-(2,8)-(2,47)
-(2,15)-(2,47)
-(2,24)-(2,25)
-(2,43)-(2,44)
-(2,45)-(2,47)
-(4,17)-(4,78)
+(12,10)-(12,47)
+(12,24)-(12,47)
+(12,43)-(12,47)
+(12,51)-(12,55)
+(13,10)-(13,43)
+(13,10)-(13,51)
+(13,24)-(13,43)
+(13,39)-(13,43)
+(13,47)-(13,51)
 *)
 
 (* type error slice
-(2,4)-(2,52)
-(2,8)-(2,47)
-(2,15)-(2,47)
-(2,15)-(2,47)
-(2,24)-(2,25)
-(2,24)-(2,27)
-(2,24)-(2,27)
-(2,26)-(2,27)
-(2,32)-(2,34)
-(2,32)-(2,47)
-(2,37)-(2,39)
-(2,37)-(2,47)
-(2,37)-(2,47)
-(2,43)-(2,44)
-(2,43)-(2,47)
-(2,43)-(2,47)
-(2,45)-(2,47)
-(4,4)-(4,80)
-(4,17)-(4,78)
-(4,24)-(4,78)
-(4,24)-(4,78)
-(4,38)-(4,39)
-(4,38)-(4,41)
-(4,38)-(4,41)
-(4,40)-(4,41)
-(4,45)-(4,78)
-(4,45)-(4,78)
-(4,45)-(4,78)
-(4,48)-(4,50)
-(4,56)-(4,62)
-(4,56)-(4,69)
-(4,56)-(4,69)
-(4,64)-(4,65)
-(4,64)-(4,69)
-(4,67)-(4,69)
-(4,76)-(4,78)
-(6,4)-(6,41)
-(6,15)-(6,38)
-(6,22)-(6,28)
-(6,22)-(6,38)
-(6,22)-(6,38)
-(6,31)-(6,32)
-(6,31)-(6,34)
-(6,31)-(6,34)
-(6,31)-(6,38)
-(6,33)-(6,34)
-(6,37)-(6,38)
+(12,10)-(12,21)
+(12,10)-(12,47)
+(12,24)-(12,47)
+(13,10)-(13,21)
+(13,10)-(13,43)
+(13,24)-(13,43)
 *)

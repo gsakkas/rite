@@ -1,39 +1,49 @@
 
-let rec clone x n = if n <= 0 then [] else x :: ((clone x n) - 1);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  if (sumList (digitsOfInt n)) > 9
+  then sumList (digitsOfInt (sumList (digitsOfInt n)));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  if (sumList (digitsOfInt n)) > 9
+  then sumList (digitsOfInt (sumList (digitsOfInt n)))
+  else 0;;
 
 *)
 
 (* changed spans
-(2,51)-(2,65)
-(2,59)-(2,60)
+(13,3)-(14,52)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,65)
-(2,17)-(2,65)
-(2,21)-(2,65)
-(2,21)-(2,65)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,65)
-(2,51)-(2,56)
-(2,51)-(2,60)
-(2,51)-(2,60)
-(2,51)-(2,60)
-(2,51)-(2,65)
-(2,51)-(2,65)
-(2,57)-(2,58)
-(2,59)-(2,60)
-(2,64)-(2,65)
+(10,56)-(10,70)
+(10,61)-(10,68)
+(10,61)-(10,70)
+(13,3)-(14,52)
+(13,3)-(14,52)
+(13,3)-(14,52)
+(14,8)-(14,15)
+(14,8)-(14,52)
 *)

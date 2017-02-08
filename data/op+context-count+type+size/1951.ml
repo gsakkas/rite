@@ -1,65 +1,62 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = sep ^ h in
-      let base = h in let l = sepConcat t in List.fold_left f base l;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = sep ^ h in
-      let base = h in let l = t in List.fold_left f base l;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  if (sumList (digits n)) > 9
+  then digitalRoot (sumList (digits n))
+  else sumList (digits n);;
 
 *)
 
 (* changed spans
-(7,31)-(7,40)
-(7,31)-(7,42)
+(15,3)-(15,75)
+(15,11)-(15,28)
+(15,33)-(15,75)
+(15,36)-(15,37)
+(15,36)-(15,41)
+(15,59)-(15,60)
+(15,74)-(15,75)
 *)
 
 (* type error slice
-(2,4)-(7,71)
-(2,19)-(7,69)
-(2,23)-(7,69)
-(3,3)-(7,69)
-(3,3)-(7,69)
-(3,3)-(7,69)
-(3,3)-(7,69)
-(3,3)-(7,69)
-(3,3)-(7,69)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,7)-(7,69)
-(6,7)-(7,69)
-(6,13)-(6,26)
-(6,15)-(6,26)
-(6,19)-(6,22)
-(6,19)-(6,26)
-(6,19)-(6,26)
-(6,19)-(6,26)
-(6,23)-(6,24)
-(6,25)-(6,26)
-(7,7)-(7,69)
-(7,7)-(7,69)
-(7,18)-(7,19)
-(7,23)-(7,69)
-(7,23)-(7,69)
-(7,31)-(7,40)
-(7,31)-(7,42)
-(7,31)-(7,42)
-(7,41)-(7,42)
-(7,46)-(7,60)
-(7,46)-(7,69)
-(7,46)-(7,69)
-(7,46)-(7,69)
-(7,46)-(7,69)
-(7,61)-(7,62)
-(7,63)-(7,67)
-(7,68)-(7,69)
+(12,22)-(12,70)
+(12,22)-(12,70)
+(12,56)-(12,70)
+(12,61)-(12,68)
+(12,61)-(12,70)
+(12,69)-(12,70)
+(15,3)-(15,75)
+(15,11)-(15,18)
+(15,11)-(15,28)
+(15,66)-(15,73)
+(15,66)-(15,75)
+(15,74)-(15,75)
 *)

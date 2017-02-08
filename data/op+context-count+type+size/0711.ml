@@ -1,66 +1,131 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = sepConcat sep t in let l = "" in List.fold_left f base l;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
+  helper i l accum;;
+
+let bigMul l1 l2 =
+  let f a x = let (q,w) = a in mulByDigit x q in
+  let base = (l1, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = sepConcat sep t in let l = t in List.fold_left f base l;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
+  helper i l accum;;
+
+let bigMul l1 l2 =
+  let f a x = let (q,w) = a in ((mulByDigit x q), []) in
+  let base = (l1, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(7,45)-(7,47)
+(38,32)-(38,46)
+(39,3)-(40,76)
 *)
 
 (* type error slice
-(2,4)-(7,76)
-(2,19)-(7,74)
-(2,23)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,3)-(7,74)
-(3,9)-(3,11)
-(4,11)-(4,13)
-(6,7)-(7,74)
-(6,7)-(7,74)
-(6,13)-(6,24)
-(6,15)-(6,24)
-(6,19)-(6,20)
-(6,19)-(6,24)
-(6,19)-(6,24)
-(6,19)-(6,24)
-(6,21)-(6,22)
-(6,23)-(6,24)
-(7,7)-(7,74)
-(7,7)-(7,74)
-(7,18)-(7,27)
-(7,18)-(7,33)
-(7,18)-(7,33)
-(7,18)-(7,33)
-(7,28)-(7,31)
-(7,32)-(7,33)
-(7,37)-(7,74)
-(7,37)-(7,74)
-(7,45)-(7,47)
-(7,51)-(7,65)
-(7,51)-(7,74)
-(7,51)-(7,74)
-(7,51)-(7,74)
-(7,51)-(7,74)
-(7,66)-(7,67)
-(7,68)-(7,72)
-(7,73)-(7,74)
+(8,4)-(12,78)
+(8,13)-(12,75)
+(8,16)-(12,75)
+(12,28)-(12,39)
+(12,28)-(12,60)
+(12,58)-(12,60)
+(17,4)-(29,37)
+(17,12)-(29,33)
+(17,15)-(29,33)
+(29,20)-(29,27)
+(29,20)-(29,33)
+(29,31)-(29,33)
+(31,4)-(35,21)
+(31,20)-(35,19)
+(31,22)-(35,19)
+(32,3)-(35,19)
+(33,3)-(35,19)
+(34,5)-(34,64)
+(34,5)-(34,64)
+(34,20)-(34,26)
+(34,20)-(34,52)
+(34,38)-(34,44)
+(34,38)-(34,52)
+(34,47)-(34,52)
+(34,59)-(34,64)
+(35,3)-(35,9)
+(35,3)-(35,19)
+(38,3)-(40,76)
+(38,9)-(38,46)
+(38,11)-(38,46)
+(38,15)-(38,46)
+(38,15)-(38,46)
+(38,27)-(38,28)
+(38,32)-(38,42)
+(38,32)-(38,46)
+(40,43)-(40,57)
+(40,43)-(40,69)
+(40,58)-(40,59)
 *)

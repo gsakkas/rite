@@ -1,77 +1,41 @@
 
-let rec clone x n = failwith "to be implemented";;
-
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h t then h @ [] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(2,21)-(2,29)
-(2,21)-(2,49)
-(2,30)-(2,49)
-(4,13)-(6,76)
-(5,3)-(6,76)
-(6,37)-(6,48)
-(6,37)-(6,51)
-(6,49)-(6,51)
-(6,56)-(6,67)
-(6,56)-(6,70)
-(6,74)-(6,76)
+(7,21)-(7,48)
+(7,35)-(7,36)
+(7,42)-(7,43)
+(7,42)-(7,48)
+(7,44)-(7,45)
+(7,46)-(7,48)
+(8,9)-(8,46)
 *)
 
 (* type error slice
-(2,4)-(2,51)
-(2,15)-(2,49)
-(2,17)-(2,49)
-(2,21)-(2,29)
-(2,21)-(2,49)
-(4,4)-(6,80)
-(4,13)-(6,76)
-(4,16)-(6,76)
-(5,3)-(6,76)
-(5,3)-(6,76)
-(5,3)-(6,76)
-(5,7)-(5,18)
-(5,7)-(5,21)
-(5,7)-(5,21)
-(5,7)-(5,40)
-(5,7)-(5,40)
-(5,19)-(5,21)
-(5,26)-(5,37)
-(5,26)-(5,40)
-(5,26)-(5,40)
-(5,38)-(5,40)
-(6,9)-(6,11)
-(6,9)-(6,76)
-(6,14)-(6,25)
-(6,14)-(6,76)
-(6,14)-(6,76)
-(6,14)-(6,76)
-(6,27)-(6,32)
-(6,27)-(6,70)
-(6,27)-(6,70)
-(6,27)-(6,70)
-(6,33)-(6,34)
-(6,37)-(6,48)
-(6,37)-(6,51)
-(6,37)-(6,51)
-(6,37)-(6,70)
-(6,49)-(6,51)
-(6,56)-(6,67)
-(6,56)-(6,70)
-(6,56)-(6,70)
-(6,68)-(6,70)
-(6,74)-(6,76)
+(7,21)-(7,48)
+(7,21)-(7,48)
+(7,21)-(7,48)
+(7,42)-(7,48)
+(7,44)-(7,45)
 *)

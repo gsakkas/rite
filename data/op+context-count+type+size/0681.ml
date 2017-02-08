@@ -1,82 +1,90 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = h in
-        let rest' = if List.mem h seen then rest else h :: rest in
-        helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
+  mulByDigit (helper i l accum);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x + h) > 9
+      then
+        (if t = []
+         then ([], (1 :: ((x + h) - 10) :: b))
+         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let accum = [] in
+  let rec helper x l accum =
+    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
+  mulByDigit i (helper i l accum);;
 
 *)
 
 (* changed spans
-(7,21)-(7,22)
-(8,9)-(9,29)
-(8,45)-(8,49)
-(8,60)-(8,64)
-(9,9)-(9,29)
+(35,3)-(35,31)
+(35,15)-(35,31)
 *)
 
 (* type error slice
-(2,4)-(10,30)
-(2,22)-(10,26)
-(3,3)-(10,26)
-(3,3)-(10,26)
-(3,19)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,5)-(9,29)
-(4,11)-(4,15)
-(5,13)-(5,17)
-(7,9)-(9,29)
-(7,9)-(9,29)
-(7,21)-(7,22)
-(8,9)-(9,29)
-(8,9)-(9,29)
-(8,21)-(8,64)
-(8,21)-(8,64)
-(8,21)-(8,64)
-(8,24)-(8,32)
-(8,24)-(8,39)
-(8,24)-(8,39)
-(8,24)-(8,39)
-(8,33)-(8,34)
-(8,35)-(8,39)
-(8,45)-(8,49)
-(8,55)-(8,56)
-(8,55)-(8,64)
-(8,60)-(8,64)
-(9,9)-(9,15)
-(9,9)-(9,29)
-(9,9)-(9,29)
-(9,17)-(9,22)
-(9,17)-(9,29)
-(9,24)-(9,29)
-(10,3)-(10,11)
-(10,3)-(10,26)
-(10,3)-(10,26)
-(10,13)-(10,19)
-(10,13)-(10,26)
-(10,13)-(10,26)
-(10,21)-(10,23)
-(10,21)-(10,26)
-(10,25)-(10,26)
+(31,4)-(35,34)
+(31,20)-(35,31)
+(31,22)-(35,31)
+(32,3)-(35,31)
+(33,3)-(35,31)
+(35,3)-(35,13)
+(35,3)-(35,31)
 *)

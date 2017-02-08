@@ -1,76 +1,87 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let l1 = [0; 0; 9; 9];;
 
-let fixpoint (f,b) = wwhile ((let f b = b in b), b);;
+let l2 = [1; 0; 0; 2];;
+
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (o,p) = a in
+      let (d1,d2) = x in
+      ((((d1 + d2) + o) / 10), ((((d1 + d2) + o) mod 10) :: p)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = (mulByDigit i) - (1 (bigAdd l l));;
 
 
 (* fix
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let l1 = [0; 0; 9; 9];;
 
-let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
+let l2 = [1; 0; 0; 2];;
+
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (o,p) = a in
+      let (d1,d2) = x in
+      ((((d1 + d2) + o) / 10), ((((d1 + d2) + o) mod 10) :: p)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = mulByDigit (i - 1) (bigAdd l l);;
 
 *)
 
 (* changed spans
-(7,22)-(7,28)
-(7,22)-(7,51)
-(7,31)-(7,51)
-(7,41)-(7,42)
-(7,50)-(7,51)
+(32,27)-(32,39)
+(32,27)-(32,57)
+(32,38)-(32,39)
+(32,44)-(32,57)
 *)
 
 (* type error slice
-(2,4)-(5,28)
-(2,13)-(5,25)
-(3,3)-(5,25)
-(3,3)-(5,25)
-(3,19)-(4,62)
-(3,25)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,11)-(4,12)
-(4,29)-(4,35)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,37)-(4,38)
-(4,37)-(4,41)
-(4,40)-(4,41)
-(4,44)-(4,45)
-(4,44)-(4,47)
-(4,44)-(4,47)
-(4,46)-(4,47)
-(4,61)-(4,62)
-(5,3)-(5,9)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,11)-(5,12)
-(5,11)-(5,15)
-(5,14)-(5,15)
-(5,18)-(5,19)
-(5,18)-(5,25)
-(5,21)-(5,25)
-(7,4)-(7,54)
-(7,15)-(7,51)
-(7,22)-(7,28)
-(7,22)-(7,51)
-(7,22)-(7,51)
-(7,31)-(7,47)
-(7,31)-(7,47)
-(7,31)-(7,51)
-(7,37)-(7,42)
-(7,41)-(7,42)
-(7,46)-(7,47)
-(7,50)-(7,51)
+(32,4)-(32,61)
+(32,20)-(32,57)
+(32,22)-(32,57)
+(32,27)-(32,37)
+(32,27)-(32,39)
+(32,27)-(32,57)
+(32,44)-(32,45)
+(32,44)-(32,57)
 *)

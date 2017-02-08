@@ -1,41 +1,34 @@
 
-let rec clone x n =
-  let acc = [x] in if n > 0 then clone (x :: acc) (n - 1) else [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (h ^ sep) ^ x in
+      let base = "" in let l = h in List.fold_left f base l;;
 
 
 (* fix
 
-let rec clone x n = let acc = [0] in if n > 0 then clone x (n - 1) else [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (h ^ sep) ^ x in
+      let base = "" in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(3,14)-(3,15)
-(3,41)-(3,49)
-(3,46)-(3,49)
+(7,32)-(7,33)
 *)
 
 (* type error slice
-(2,4)-(3,68)
-(2,15)-(3,66)
-(2,17)-(3,66)
-(3,3)-(3,66)
-(3,3)-(3,66)
-(3,13)-(3,16)
-(3,13)-(3,16)
-(3,14)-(3,15)
-(3,20)-(3,66)
-(3,20)-(3,66)
-(3,23)-(3,24)
-(3,23)-(3,28)
-(3,23)-(3,28)
-(3,23)-(3,28)
-(3,27)-(3,28)
-(3,34)-(3,39)
-(3,34)-(3,57)
-(3,34)-(3,57)
-(3,41)-(3,42)
-(3,41)-(3,49)
-(3,46)-(3,49)
-(3,64)-(3,66)
+(6,20)-(6,21)
+(6,20)-(6,27)
+(6,22)-(6,23)
+(7,24)-(7,60)
+(7,32)-(7,33)
+(7,37)-(7,51)
+(7,37)-(7,60)
+(7,59)-(7,60)
 *)

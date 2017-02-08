@@ -1,92 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let a = (1, 2);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | Cosine a -> x
-  | Average (a,b) -> x
-  | Times (a,b) -> x
-  | Thresh (a,b,c,d) -> x;;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let a = (1, 2);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> x
-  | Average (a,b) -> x
-  | Times (a,b) -> x
-  | Thresh (a,b,c,d) -> x;;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(13,10)-(13,13)
-(13,10)-(13,26)
-(13,18)-(13,22)
-(13,18)-(13,26)
-(13,23)-(13,26)
-(19,20)-(19,22)
-(19,20)-(19,39)
+(12,8)-(12,60)
 *)
 
 (* type error slice
-(13,4)-(13,29)
-(13,10)-(13,26)
-(15,15)-(23,26)
-(16,3)-(23,26)
-(16,3)-(23,26)
-(16,3)-(23,26)
-(16,3)-(23,26)
-(16,3)-(23,26)
-(16,3)-(23,26)
-(16,9)-(16,10)
-(17,14)-(17,15)
-(18,14)-(18,15)
-(19,15)-(19,18)
-(19,15)-(19,39)
-(19,15)-(19,39)
-(19,20)-(19,22)
-(19,20)-(19,39)
-(19,20)-(19,39)
-(19,20)-(19,39)
-(19,26)-(19,30)
-(19,26)-(19,39)
-(19,26)-(19,39)
-(19,32)-(19,33)
-(19,32)-(19,39)
-(19,35)-(19,36)
-(19,38)-(19,39)
-(20,17)-(20,18)
-(21,22)-(21,23)
-(22,20)-(22,21)
-(23,25)-(23,26)
+(12,8)-(12,60)
+(12,8)-(12,60)
+(12,8)-(12,60)
+(12,23)-(12,60)
 *)

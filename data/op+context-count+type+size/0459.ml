@@ -1,184 +1,110 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a,b,c) ->
+      if (eval (c, x, y)) < 0.0
+      then
+        ((log ((eval (a, x, y)) *. 100)) ** (sin ((eval (b, x, y)) *. 100)))
+          -. 1.0
+      else
+        (-1.0) *.
+          (((log ((eval (b, x, y)) *. 100)) **
+              (sin ((eval (a, x, y)) *. 100)))
+             -. 1.0);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a,b,c) ->
+      if (eval (c, x, y)) < 0.0
+      then
+        ((log ((eval (a, x, y)) *. 100.0)) **
+           (sin ((eval (b, x, y)) *. 100.0)))
+          -. 1.0
+      else
+        (-1.0) *.
+          (((log ((eval (b, x, y)) *. 100.0)) **
+              (sin ((eval (a, x, y)) *. 100.0)))
+             -. 1.0);;
 
 *)
 
 (* changed spans
-(21,16)-(21,18)
+(35,36)-(35,39)
+(35,71)-(35,74)
+(39,39)-(39,42)
+(40,41)-(40,44)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(11,48)
-(4,13)-(11,45)
-(4,16)-(11,45)
-(5,13)-(5,24)
-(5,13)-(5,27)
-(5,13)-(5,27)
-(5,25)-(5,27)
-(5,32)-(5,43)
-(5,32)-(5,46)
-(5,32)-(5,46)
-(5,44)-(5,46)
-(7,11)-(7,13)
-(7,11)-(7,17)
-(7,15)-(7,17)
-(10,13)-(10,15)
-(10,13)-(10,35)
-(10,19)-(10,24)
-(10,19)-(10,29)
-(10,19)-(10,35)
-(10,31)-(10,32)
-(10,33)-(10,35)
-(11,15)-(11,40)
-(11,36)-(11,37)
-(11,38)-(11,40)
-(13,20)-(14,76)
-(14,3)-(14,76)
-(14,3)-(14,76)
-(14,3)-(14,76)
-(14,3)-(14,76)
-(14,3)-(14,76)
-(14,9)-(14,10)
-(14,24)-(14,26)
-(14,37)-(14,76)
-(14,40)-(14,41)
-(14,40)-(14,46)
-(14,52)-(14,62)
-(14,52)-(14,64)
-(16,4)-(24,37)
-(16,12)-(24,33)
-(16,15)-(24,33)
-(17,3)-(24,33)
-(17,12)-(23,52)
-(18,5)-(23,52)
-(18,11)-(20,70)
-(18,13)-(20,70)
-(19,7)-(20,70)
-(19,7)-(20,70)
-(19,16)-(19,19)
-(19,16)-(19,21)
-(19,16)-(19,21)
-(19,16)-(19,31)
-(19,16)-(19,31)
-(19,16)-(19,31)
-(19,20)-(19,21)
-(19,26)-(19,29)
-(19,26)-(19,31)
-(19,26)-(19,31)
-(19,30)-(19,31)
-(20,7)-(20,70)
-(20,7)-(20,70)
-(20,13)-(20,14)
-(20,34)-(20,35)
-(20,34)-(20,39)
-(20,34)-(20,39)
-(20,34)-(20,45)
-(20,34)-(20,70)
-(20,38)-(20,39)
-(20,43)-(20,45)
-(20,51)-(20,52)
-(20,51)-(20,56)
-(20,51)-(20,64)
-(20,51)-(20,70)
-(20,55)-(20,56)
-(20,62)-(20,64)
-(20,69)-(20,70)
-(21,5)-(23,52)
-(21,16)-(21,18)
-(22,5)-(23,52)
-(22,16)-(22,24)
-(22,16)-(22,44)
-(22,16)-(22,44)
-(22,26)-(22,38)
-(22,26)-(22,44)
-(22,26)-(22,44)
-(22,26)-(22,44)
-(22,39)-(22,41)
-(22,42)-(22,44)
-(23,19)-(23,33)
-(23,19)-(23,45)
-(23,19)-(23,45)
-(23,19)-(23,45)
-(23,19)-(23,45)
-(23,34)-(23,35)
-(23,36)-(23,40)
-(23,41)-(23,45)
-(24,15)-(24,18)
-(24,15)-(24,33)
-(24,15)-(24,33)
-(24,20)-(24,27)
-(24,20)-(24,33)
-(24,20)-(24,33)
-(24,28)-(24,30)
-(24,31)-(24,33)
+(35,17)-(35,39)
+(35,36)-(35,39)
+(35,52)-(35,74)
+(35,71)-(35,74)
+(38,10)-(38,14)
+(38,10)-(38,14)
+(38,10)-(41,20)
+(38,11)-(38,14)
+(39,20)-(39,42)
+(39,39)-(39,42)
+(40,22)-(40,44)
+(40,41)-(40,44)
 *)

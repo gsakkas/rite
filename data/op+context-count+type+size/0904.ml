@@ -1,86 +1,63 @@
 
-let bigMul l1 l2 =
-  let f a x =
-    let (l1',l2') = x in
-    let (pos,total) = a in
-    match l2' with | [] -> [] | h::t -> ((pos + 1), total) in
-  let base = (0, [0]) in
-  let args = ((List.rev l1), (List.rev l2)) in
-  let (_,res) = List.fold_left f base args in res;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
+
+let palindrome w =
+  let wEx = explode w in
+  let rec palHelper lst =
+    if (List.length lst) < 2
+    then []
+    else
+      if (List.tl lst) == (List.hd lst)
+      then
+        (let b::rest = lst in
+         let b2::rest2 = listReverse rest in palHelper rest2)
+      else [1] in
+  if (List.length (palHelper wEx)) = 0 then true else false;;
 
 
 (* fix
 
-let bigMul l1 l2 =
-  let f a x = let (pos,total) = a in (pos, l2) in
-  let base = (0, [0]) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
+
+let palindrome w =
+  let wEx = explode w in
+  let rec palHelper lst =
+    if (List.length lst) < 2
+    then []
+    else
+      if (List.tl lst) = lst
+      then
+        (let b::rest = lst in
+         let b2::rest2 = listReverse rest in palHelper rest2)
+      else [1] in
+  if (List.length (palHelper wEx)) = 0 then true else false;;
 
 *)
 
 (* changed spans
-(4,21)-(4,22)
-(5,5)-(6,58)
-(6,5)-(6,58)
-(6,11)-(6,14)
-(6,28)-(6,30)
-(6,43)-(6,50)
-(6,49)-(6,50)
-(6,53)-(6,58)
-(8,16)-(8,42)
-(8,31)-(8,42)
+(16,28)-(16,35)
+(16,28)-(16,39)
 *)
 
 (* type error slice
-(2,4)-(9,52)
-(2,12)-(9,50)
-(2,15)-(9,50)
-(3,3)-(9,50)
-(3,9)-(6,58)
-(3,11)-(6,58)
-(4,5)-(6,58)
-(4,5)-(6,58)
-(4,21)-(4,22)
-(5,5)-(6,58)
-(5,5)-(6,58)
-(5,23)-(5,24)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,5)-(6,58)
-(6,11)-(6,14)
-(6,28)-(6,30)
-(6,43)-(6,46)
-(6,43)-(6,50)
-(6,43)-(6,50)
-(6,43)-(6,58)
-(6,49)-(6,50)
-(6,53)-(6,58)
-(7,3)-(9,50)
-(7,15)-(7,16)
-(7,15)-(7,21)
-(7,18)-(7,21)
-(7,18)-(7,21)
-(7,19)-(7,20)
-(8,3)-(9,50)
-(8,16)-(8,24)
-(8,16)-(8,27)
-(8,16)-(8,27)
-(8,16)-(8,42)
-(8,25)-(8,27)
-(8,31)-(8,39)
-(8,31)-(8,42)
-(8,31)-(8,42)
-(8,40)-(8,42)
-(9,17)-(9,31)
-(9,17)-(9,43)
-(9,17)-(9,43)
-(9,17)-(9,43)
-(9,17)-(9,43)
-(9,32)-(9,33)
-(9,34)-(9,38)
-(9,39)-(9,43)
+(16,11)-(16,18)
+(16,11)-(16,22)
+(16,11)-(16,39)
+(16,11)-(16,39)
+(16,19)-(16,22)
+(16,28)-(16,35)
+(16,28)-(16,39)
+(16,36)-(16,39)
 *)

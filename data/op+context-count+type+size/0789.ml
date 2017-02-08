@@ -1,86 +1,88 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | n -> append (helper (n / 10)) (n mod 10) in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (((- ((eval (e1, x, y)) -. (eval (e2, x, y)))) ** 2.0) /.
+              (eval (e3, x, y))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (helper (n / 10)) @ [n mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
 *)
 
 (* changed spans
-(3,18)-(4,64)
-(3,22)-(4,64)
-(4,5)-(4,64)
-(4,11)-(4,14)
-(4,28)-(4,31)
-(4,44)-(4,50)
-(4,44)-(4,64)
-(4,51)-(4,53)
-(4,55)-(4,57)
-(4,55)-(4,64)
-(4,61)-(4,64)
-(5,3)-(7,11)
-(6,35)-(6,41)
-(6,61)-(6,69)
-(7,3)-(7,11)
+(32,15)-(32,54)
+(32,15)-(33,30)
 *)
 
 (* type error slice
-(2,4)-(7,13)
-(2,21)-(7,11)
-(3,3)-(7,11)
-(3,3)-(7,11)
-(3,18)-(4,64)
-(3,22)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,5)-(4,64)
-(4,11)-(4,14)
-(4,28)-(4,31)
-(4,44)-(4,50)
-(4,44)-(4,64)
-(4,44)-(4,64)
-(4,44)-(4,64)
-(4,51)-(4,53)
-(4,55)-(4,57)
-(4,55)-(4,64)
-(4,61)-(4,64)
-(5,3)-(7,11)
-(5,3)-(7,11)
-(5,18)-(6,69)
-(6,5)-(6,69)
-(6,5)-(6,69)
-(6,5)-(6,69)
-(6,11)-(6,12)
-(6,25)-(6,27)
-(6,35)-(6,41)
-(6,35)-(6,69)
-(6,35)-(6,69)
-(6,35)-(6,69)
-(6,43)-(6,49)
-(6,43)-(6,57)
-(6,43)-(6,57)
-(6,51)-(6,52)
-(6,51)-(6,57)
-(6,51)-(6,57)
-(6,55)-(6,57)
-(6,61)-(6,62)
-(6,61)-(6,69)
-(6,67)-(6,69)
-(7,3)-(7,9)
-(7,3)-(7,11)
-(7,10)-(7,11)
+(30,7)-(33,30)
+(31,10)-(31,13)
+(31,10)-(33,30)
+(32,15)-(32,54)
+(32,15)-(32,54)
+(32,15)-(32,65)
+(32,19)-(32,54)
+(32,59)-(32,61)
 *)

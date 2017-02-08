@@ -1,33 +1,44 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then f b' else b';;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if 1 then List.append (clone 0 1) l1;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(2,56)-(2,57)
+(10,3)-(10,39)
+(10,6)-(10,7)
+(10,13)-(10,39)
+(10,34)-(10,35)
 *)
 
 (* type error slice
-(2,4)-(2,70)
-(2,17)-(2,68)
-(2,24)-(2,68)
-(2,24)-(2,68)
-(2,38)-(2,39)
-(2,38)-(2,41)
-(2,38)-(2,41)
-(2,40)-(2,41)
-(2,45)-(2,68)
-(2,45)-(2,68)
-(2,45)-(2,68)
-(2,48)-(2,50)
-(2,56)-(2,57)
-(2,56)-(2,60)
-(2,56)-(2,60)
-(2,58)-(2,60)
-(2,66)-(2,68)
+(10,3)-(10,39)
+(10,3)-(10,39)
+(10,3)-(10,39)
+(10,3)-(10,39)
+(10,6)-(10,7)
+(10,13)-(10,24)
+(10,13)-(10,39)
 *)

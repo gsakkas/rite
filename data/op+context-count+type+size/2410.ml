@@ -1,75 +1,57 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let fixpoint (f,b) = let f x = x in wwhile (f, b);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then
+    List.append [(clone 0 ((List.length l2) - (List.length l1))) @ l1] [l2]
+  else
+    (List.length l2) <
+      ((List.length l1) List.append [l1]
+         [(clone 0 ((List.length l1) - (List.length l2))) @ l2]);;
 
 
 (* fix
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(7,28)-(7,33)
-(7,32)-(7,33)
-(7,37)-(7,43)
-(7,37)-(7,49)
-(7,45)-(7,46)
+(10,5)-(10,16)
+(10,5)-(10,76)
+(10,17)-(10,71)
+(10,72)-(10,76)
+(12,6)-(12,20)
+(12,6)-(14,64)
+(12,18)-(12,20)
+(13,9)-(14,64)
+(13,21)-(13,23)
+(13,25)-(13,36)
+(13,37)-(13,41)
+(13,38)-(13,40)
+(14,10)-(14,64)
+(14,12)-(14,63)
 *)
 
 (* type error slice
-(2,4)-(5,28)
-(2,13)-(5,25)
-(3,3)-(5,25)
-(3,3)-(5,25)
-(3,19)-(4,62)
-(3,25)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,5)-(4,62)
-(4,11)-(4,12)
-(4,29)-(4,35)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,29)-(4,47)
-(4,37)-(4,38)
-(4,37)-(4,41)
-(4,40)-(4,41)
-(4,44)-(4,45)
-(4,44)-(4,47)
-(4,44)-(4,47)
-(4,46)-(4,47)
-(4,61)-(4,62)
-(5,3)-(5,9)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,3)-(5,25)
-(5,11)-(5,12)
-(5,11)-(5,15)
-(5,14)-(5,15)
-(5,18)-(5,19)
-(5,18)-(5,25)
-(7,4)-(7,52)
-(7,15)-(7,49)
-(7,22)-(7,49)
-(7,22)-(7,49)
-(7,28)-(7,33)
-(7,32)-(7,33)
-(7,37)-(7,43)
-(7,37)-(7,49)
-(7,37)-(7,49)
-(7,45)-(7,46)
-(7,45)-(7,49)
-(7,48)-(7,49)
+(8,3)-(14,64)
+(8,3)-(14,64)
+(10,5)-(10,16)
+(10,5)-(10,76)
+(12,6)-(14,64)
+(13,9)-(13,20)
+(13,9)-(13,23)
+(13,9)-(14,64)
 *)

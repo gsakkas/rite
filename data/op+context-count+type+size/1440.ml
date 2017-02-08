@@ -1,89 +1,55 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n = if (sumList (digitsOfInt n)) > 9 then 20;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. a)
+  | Cosine a -> cos (pi *. a);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9 then 0 else 1;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. y);;
 
 *)
 
 (* changed spans
-(12,33)-(12,73)
-(12,71)-(12,73)
+(17,26)-(17,27)
+(18,28)-(18,29)
 *)
 
 (* type error slice
-(2,4)-(3,60)
-(2,21)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,3)-(3,58)
-(3,9)-(3,10)
-(3,24)-(3,26)
-(3,38)-(3,49)
-(3,38)-(3,51)
-(3,38)-(3,51)
-(3,38)-(3,58)
-(3,38)-(3,58)
-(3,38)-(3,58)
-(3,50)-(3,51)
-(3,53)-(3,54)
-(3,55)-(3,58)
-(3,55)-(3,58)
-(3,56)-(3,57)
-(5,21)-(8,68)
-(6,3)-(8,68)
-(6,6)-(6,7)
-(6,6)-(6,12)
-(7,8)-(7,10)
-(8,8)-(8,19)
-(8,36)-(8,47)
-(8,36)-(8,68)
-(8,36)-(8,68)
-(8,49)-(8,60)
-(8,49)-(8,68)
-(10,17)-(10,70)
-(10,22)-(10,70)
-(10,22)-(10,70)
-(10,22)-(10,70)
-(10,22)-(10,70)
-(10,28)-(10,30)
-(10,56)-(10,57)
-(10,61)-(10,68)
-(10,61)-(10,70)
-(10,61)-(10,70)
-(10,69)-(10,70)
-(12,4)-(12,75)
-(12,29)-(12,73)
-(12,33)-(12,73)
-(12,33)-(12,73)
-(12,33)-(12,73)
-(12,58)-(12,59)
-(12,71)-(12,73)
+(14,3)-(18,29)
+(14,3)-(18,29)
+(17,20)-(17,27)
+(17,26)-(17,27)
+(18,22)-(18,29)
+(18,28)-(18,29)
 *)

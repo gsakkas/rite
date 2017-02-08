@@ -1,67 +1,89 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse ((cat l h) :: t);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) + (cos (pi *. (eval (e, x, y))))) *
+        (cos (pi *. (eval (e, x, y))));;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (cat l h);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) +. (cos (pi *. (eval (e, x, y))))) *.
+        (cos (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      (sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))));;
 
 *)
 
 (* changed spans
-(5,51)-(5,64)
-(5,63)-(5,64)
+(16,3)-(29,35)
+(28,9)-(28,34)
+(28,9)-(28,67)
+(28,9)-(29,35)
 *)
 
 (* type error slice
-(2,4)-(2,70)
-(2,13)-(2,67)
-(2,15)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,19)-(2,67)
-(2,25)-(2,26)
-(2,40)-(2,43)
-(2,40)-(2,43)
-(2,41)-(2,42)
-(2,54)-(2,55)
-(2,54)-(2,67)
-(2,60)-(2,63)
-(2,60)-(2,67)
-(2,60)-(2,67)
-(2,60)-(2,67)
-(2,64)-(2,65)
-(2,66)-(2,67)
-(4,4)-(5,67)
-(4,21)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,3)-(5,64)
-(5,9)-(5,10)
-(5,24)-(5,26)
-(5,37)-(5,48)
-(5,37)-(5,64)
-(5,37)-(5,64)
-(5,51)-(5,54)
-(5,51)-(5,58)
-(5,51)-(5,58)
-(5,51)-(5,58)
-(5,51)-(5,64)
-(5,55)-(5,56)
-(5,57)-(5,58)
-(5,63)-(5,64)
+(16,3)-(29,35)
+(16,3)-(29,35)
+(19,15)-(19,18)
+(19,15)-(19,40)
+(28,9)-(28,12)
+(28,9)-(28,34)
+(28,9)-(28,67)
+(28,9)-(28,67)
+(28,9)-(29,35)
+(28,9)-(29,35)
+(28,42)-(28,45)
+(28,42)-(28,67)
+(29,10)-(29,13)
+(29,10)-(29,35)
 *)

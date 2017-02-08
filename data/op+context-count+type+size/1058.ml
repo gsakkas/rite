@@ -1,38 +1,166 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (n mod 10) :: ((digitsOfInt n) * 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^ ((")*cos(" exprToString ex3) ^ (")" ")")))));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [] else (n mod 10) :: (digitsOfInt n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ "))")))));;
 
 *)
 
 (* changed spans
-(3,41)-(3,60)
-(3,58)-(3,60)
+(73,39)-(73,64)
+(73,48)-(73,60)
+(73,69)-(73,72)
+(73,69)-(73,76)
+(73,73)-(73,76)
 *)
 
 (* type error slice
-(2,21)-(3,60)
-(3,3)-(3,60)
-(3,3)-(3,60)
-(3,6)-(3,7)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,6)-(3,11)
-(3,10)-(3,11)
-(3,17)-(3,19)
-(3,26)-(3,27)
-(3,26)-(3,34)
-(3,26)-(3,60)
-(3,32)-(3,34)
-(3,41)-(3,52)
-(3,41)-(3,54)
-(3,41)-(3,54)
-(3,41)-(3,60)
-(3,41)-(3,60)
-(3,53)-(3,54)
-(3,58)-(3,60)
+(73,39)-(73,47)
+(73,39)-(73,64)
+(73,69)-(73,72)
+(73,69)-(73,76)
 *)

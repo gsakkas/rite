@@ -1,119 +1,149 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 < length2
-  then clone 0 (length2 - length1)
-  else if length2 < length1 then clone 0 (length1 - length2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y)
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) + (eval (ex2, x, y)))) *
+          (((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y))))
+         *
+         ((((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y))) +
+            (eval (ex4, x, y))))
+        *
+        (((((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y))) +
+            (eval (ex4, x, y)))
+           + (eval (ex5, x, y)));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2
-    then ((List.append (clone 0 (length2 - length1)) l1), l2)
-    else (l1, (List.append (clone 0 (length1 - length2)) l2));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y)
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) +. (eval (ex2, x, y)))) *.
+          (((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y))))
+         *.
+         ((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y))))
+        *.
+        (((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
+            +. (eval (ex4, x, y)))
+           +. (eval (ex5, x, y)));;
 
 *)
 
 (* changed spans
-(7,6)-(7,23)
-(8,8)-(8,13)
-(8,8)-(8,34)
-(9,8)-(9,60)
-(9,11)-(9,18)
-(9,11)-(9,28)
-(9,21)-(9,28)
-(9,34)-(9,39)
-(9,34)-(9,60)
-(9,40)-(9,41)
-(9,43)-(9,50)
-(9,43)-(9,60)
-(9,53)-(9,60)
+(28,11)-(28,26)
+(28,11)-(29,72)
+(28,11)-(32,29)
+(28,11)-(36,30)
+(28,34)-(28,70)
+(29,14)-(29,29)
+(29,14)-(29,50)
+(29,14)-(29,72)
+(31,14)-(31,29)
+(31,14)-(31,50)
+(31,14)-(31,72)
+(31,14)-(32,29)
+(34,14)-(34,29)
+(34,14)-(34,50)
+(34,14)-(34,72)
+(34,14)-(35,29)
+(34,14)-(36,30)
 *)
 
 (* type error slice
-(2,4)-(2,68)
-(2,15)-(2,64)
-(2,17)-(2,64)
-(2,21)-(2,64)
-(2,21)-(2,64)
-(2,24)-(2,25)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,24)-(2,30)
-(2,29)-(2,30)
-(2,36)-(2,38)
-(2,44)-(2,45)
-(2,44)-(2,64)
-(2,50)-(2,55)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,50)-(2,64)
-(2,56)-(2,57)
-(2,59)-(2,60)
-(2,59)-(2,64)
-(2,63)-(2,64)
-(4,4)-(9,63)
-(4,13)-(9,60)
-(4,16)-(9,60)
-(5,3)-(9,60)
-(5,17)-(5,31)
-(5,17)-(5,68)
-(5,17)-(5,68)
-(5,17)-(5,68)
-(5,33)-(5,62)
-(5,45)-(5,62)
-(5,55)-(5,58)
-(5,55)-(5,62)
-(5,55)-(5,62)
-(5,61)-(5,62)
-(5,64)-(5,65)
-(5,66)-(5,68)
-(6,3)-(9,60)
-(6,17)-(6,31)
-(6,17)-(6,68)
-(6,17)-(6,68)
-(6,17)-(6,68)
-(6,33)-(6,62)
-(6,45)-(6,62)
-(6,55)-(6,58)
-(6,55)-(6,62)
-(6,55)-(6,62)
-(6,61)-(6,62)
-(6,64)-(6,65)
-(6,66)-(6,68)
-(7,6)-(7,13)
-(7,6)-(7,23)
-(7,6)-(7,23)
-(7,16)-(7,23)
-(8,8)-(8,13)
-(8,8)-(8,34)
-(8,8)-(8,34)
-(8,14)-(8,15)
-(8,17)-(8,24)
-(8,17)-(8,34)
-(8,27)-(8,34)
-(9,8)-(9,60)
-(9,8)-(9,60)
-(9,8)-(9,60)
-(9,11)-(9,18)
-(9,11)-(9,28)
-(9,11)-(9,28)
-(9,21)-(9,28)
-(9,34)-(9,39)
-(9,34)-(9,60)
-(9,40)-(9,41)
-(9,43)-(9,50)
-(9,43)-(9,60)
-(9,53)-(9,60)
+(19,21)-(19,42)
+(19,28)-(19,32)
+(19,28)-(19,42)
+(28,11)-(28,70)
+(28,11)-(28,70)
+(28,11)-(29,72)
+(28,34)-(28,38)
+(28,34)-(28,49)
+(28,34)-(28,70)
+(28,34)-(28,70)
+(28,34)-(28,70)
+(28,55)-(28,59)
+(28,55)-(28,70)
+(29,14)-(29,18)
+(29,14)-(29,29)
+(29,14)-(29,50)
+(29,14)-(29,50)
+(29,14)-(29,72)
+(29,35)-(29,39)
+(29,35)-(29,50)
+(29,57)-(29,61)
+(29,57)-(29,72)
+(31,14)-(31,18)
+(31,14)-(31,29)
+(31,14)-(31,50)
+(31,14)-(31,50)
+(31,14)-(31,72)
+(31,14)-(32,29)
+(31,35)-(31,39)
+(31,35)-(31,50)
+(31,57)-(31,61)
+(31,57)-(31,72)
+(32,14)-(32,18)
+(32,14)-(32,29)
+(34,14)-(34,18)
+(34,14)-(34,29)
+(34,14)-(34,50)
+(34,14)-(34,50)
+(34,14)-(34,72)
+(34,14)-(35,29)
+(34,14)-(36,30)
+(34,35)-(34,39)
+(34,35)-(34,50)
+(34,57)-(34,61)
+(34,57)-(34,72)
+(35,14)-(35,18)
+(35,14)-(35,29)
+(36,15)-(36,19)
+(36,15)-(36,30)
 *)

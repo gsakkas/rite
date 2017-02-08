@@ -1,51 +1,77 @@
 
-let rec listReverse l =
-  match l with
-  | _ -> []
-  | x -> [x]
-  | head::tail -> (listReverse tail) :: head;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> float_of_int x
+  | VarY  -> float_of_int y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) ->
+      (float_of_int ((eval (e1, x, y)) + (eval (e2, x, y)))) / 2;;
 
 
 (* fix
 
-let x = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail::t::s -> head :: tail :: t :: s;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.;;
 
 *)
 
 (* changed spans
-(2,21)-(6,45)
-(3,3)-(6,45)
-(6,20)-(6,31)
-(6,20)-(6,36)
-(6,32)-(6,36)
+(15,14)-(15,26)
+(15,14)-(15,28)
+(16,14)-(16,26)
+(16,14)-(16,28)
+(20,8)-(20,20)
+(20,8)-(20,57)
+(20,8)-(20,65)
+(20,23)-(20,37)
+(20,23)-(20,57)
+(20,64)-(20,65)
 *)
 
 (* type error slice
-(2,4)-(6,47)
-(2,21)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,3)-(6,45)
-(3,9)-(3,10)
-(4,10)-(4,12)
-(5,10)-(5,13)
-(5,10)-(5,13)
-(5,11)-(5,12)
-(6,20)-(6,31)
-(6,20)-(6,36)
-(6,20)-(6,36)
-(6,20)-(6,45)
-(6,32)-(6,36)
-(6,41)-(6,45)
+(14,3)-(20,65)
+(14,3)-(20,65)
+(15,14)-(15,26)
+(15,14)-(15,28)
+(17,20)-(17,40)
+(17,27)-(17,31)
+(17,27)-(17,40)
+(20,8)-(20,20)
+(20,8)-(20,57)
+(20,8)-(20,65)
+(20,8)-(20,65)
+(20,23)-(20,27)
+(20,23)-(20,37)
+(20,23)-(20,57)
+(20,23)-(20,57)
+(20,43)-(20,47)
+(20,43)-(20,57)
 *)

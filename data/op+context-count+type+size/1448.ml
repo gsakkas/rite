@@ -1,42 +1,67 @@
 
-let rec wwhile (f,b) =
-  let (x,y) = b f in if y = true then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ (("+" exprToString y) ^ ")/2)"))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 (" ? " ^
+                    ((exprToString y) ^ (" : " ^ ((exprToString z) ^ ")")))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (x,y) = f b in if y = true then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 (" ? " ^
+                    ((exprToString y) ^ (" : " ^ ((exprToString z) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(3,15)-(3,16)
-(3,17)-(3,18)
-(3,22)-(3,59)
+(18,36)-(18,54)
+(18,40)-(18,52)
 *)
 
 (* type error slice
-(2,4)-(3,61)
-(2,17)-(3,59)
-(3,3)-(3,59)
-(3,3)-(3,59)
-(3,15)-(3,16)
-(3,15)-(3,18)
-(3,15)-(3,18)
-(3,17)-(3,18)
-(3,22)-(3,59)
-(3,22)-(3,59)
-(3,25)-(3,26)
-(3,25)-(3,33)
-(3,25)-(3,33)
-(3,25)-(3,33)
-(3,29)-(3,33)
-(3,39)-(3,45)
-(3,39)-(3,51)
-(3,39)-(3,51)
-(3,47)-(3,48)
-(3,47)-(3,51)
-(3,50)-(3,51)
-(3,58)-(3,59)
+(18,36)-(18,39)
+(18,36)-(18,54)
 *)

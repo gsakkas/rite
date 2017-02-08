@@ -1,162 +1,137 @@
 
-let x = 123;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec digitsOfInt n =
-  if n < 0
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h != 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (list2,res) ->
+          (match list2 with
+           | [] -> ([], res)
+           | h::t ->
+               (match res with
+                | [] -> (t, ((h + x) :: res))
+                | h2::t2 ->
+                    if h2 >= 10
+                    then
+                      (t,
+                        ((if t != []
+                          then ((h + x) + 1) :: (h2 mod 10) :: t2
+                          else
+                            if ((h + x) + 1) >= 10
+                            then 1 :: (((h + x) + 1) mod 10) :: (h2 mod 10)
+                              :: t2
+                            else ((h + x) + 1) :: (h2 mod 10) :: t2)))
+                    else
+                      (t,
+                        (if t != []
+                         then (h + x) :: res
+                         else
+                           if (h + x) >= 10
+                           then 1 :: ((h + x) mod 10) :: res
+                           else (h + x) :: res)))) in
+    let base = ((List.rev l2), []) in
+    let args = List.rev l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0
   then []
   else
-    (let x = n / 10
-     and y = n mod 10 in
-     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
-
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let x = sumList (digitsOfInt 30);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail -> (listReverse tail) @ [head];;
-
-let palindrome w = if (listReverse (explode w)) = w then true else false;;
+    if i = 1
+    then l
+    else bigAdd (mulByDigit (i - 2) l) ((mulByDigit i) - (2 l));;
 
 
 (* fix
 
-let x = 123;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec digitsOfInt n =
-  if n < 0
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h != 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (list2,res) ->
+          (match list2 with
+           | [] -> ([], res)
+           | h::t ->
+               (match res with
+                | [] -> (t, ((h + x) :: res))
+                | h2::t2 ->
+                    if h2 >= 10
+                    then
+                      (t,
+                        ((if t != []
+                          then ((h + x) + 1) :: (h2 mod 10) :: t2
+                          else
+                            if ((h + x) + 1) >= 10
+                            then 1 :: (((h + x) + 1) mod 10) :: (h2 mod 10)
+                              :: t2
+                            else ((h + x) + 1) :: (h2 mod 10) :: t2)))
+                    else
+                      (t,
+                        (if t != []
+                         then (h + x) :: res
+                         else
+                           if (h + x) >= 10
+                           then 1 :: ((h + x) mod 10) :: res
+                           else (h + x) :: res)))) in
+    let base = ((List.rev l2), []) in
+    let args = List.rev l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0
   then []
   else
-    (let x = n / 10
-     and y = n mod 10 in
-     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
-
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let x = sumList (digitsOfInt 30);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail -> (listReverse tail) @ [head];;
-
-let palindrome w =
-  if (listReverse (explode w)) = (explode w) then true else false;;
+    if i = 1 then l else bigAdd (mulByDigit (i - 2) l) (mulByDigit (i - 2) l);;
 
 *)
 
 (* changed spans
-(27,51)-(27,52)
+(51,42)-(51,54)
+(51,42)-(51,62)
+(51,53)-(51,54)
+(51,59)-(51,62)
 *)
 
 (* type error slice
-(4,21)-(10,62)
-(5,3)-(10,62)
-(5,6)-(5,7)
-(5,6)-(5,11)
-(6,8)-(6,10)
-(10,6)-(10,62)
-(10,33)-(10,35)
-(10,42)-(10,53)
-(10,42)-(10,55)
-(10,42)-(10,62)
-(10,42)-(10,62)
-(10,57)-(10,58)
-(12,17)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,22)-(12,74)
-(12,28)-(12,30)
-(12,58)-(12,59)
-(12,63)-(12,70)
-(12,63)-(12,74)
-(12,63)-(12,74)
-(12,71)-(12,74)
-(16,4)-(19,9)
-(16,13)-(19,7)
-(17,3)-(19,7)
-(17,3)-(19,7)
-(17,14)-(18,65)
-(18,5)-(18,65)
-(18,5)-(18,65)
-(18,8)-(18,9)
-(18,8)-(18,29)
-(18,8)-(18,29)
-(18,8)-(18,29)
-(18,14)-(18,27)
-(18,14)-(18,29)
-(18,14)-(18,29)
-(18,28)-(18,29)
-(18,36)-(18,38)
-(18,45)-(18,46)
-(18,45)-(18,50)
-(18,45)-(18,50)
-(18,45)-(18,65)
-(18,48)-(18,49)
-(18,56)-(18,58)
-(18,56)-(18,65)
-(18,56)-(18,65)
-(18,60)-(18,61)
-(18,60)-(18,65)
-(18,64)-(18,65)
-(19,3)-(19,5)
-(19,3)-(19,7)
-(19,6)-(19,7)
-(21,4)-(25,48)
-(21,21)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,3)-(25,46)
-(22,9)-(22,10)
-(23,11)-(23,13)
-(24,14)-(24,17)
-(24,14)-(24,17)
-(24,15)-(24,16)
-(25,20)-(25,31)
-(25,20)-(25,36)
-(25,20)-(25,36)
-(25,20)-(25,46)
-(25,20)-(25,46)
-(25,20)-(25,46)
-(25,32)-(25,36)
-(25,38)-(25,39)
-(25,40)-(25,46)
-(25,40)-(25,46)
-(25,41)-(25,45)
-(27,4)-(27,75)
-(27,16)-(27,73)
-(27,24)-(27,35)
-(27,24)-(27,46)
-(27,24)-(27,46)
-(27,24)-(27,52)
-(27,24)-(27,52)
-(27,37)-(27,44)
-(27,37)-(27,46)
-(27,37)-(27,46)
-(27,45)-(27,46)
-(27,51)-(27,52)
+(4,4)-(7,80)
+(4,13)-(7,77)
+(4,16)-(7,77)
+(6,56)-(6,67)
+(6,56)-(6,70)
+(6,68)-(6,70)
+(12,4)-(43,37)
+(12,12)-(43,33)
+(12,15)-(43,33)
+(43,20)-(43,27)
+(43,20)-(43,33)
+(43,31)-(43,33)
+(51,10)-(51,16)
+(51,10)-(51,62)
+(51,18)-(51,28)
+(51,18)-(51,38)
+(51,42)-(51,52)
+(51,42)-(51,54)
+(51,42)-(51,62)
+(51,42)-(51,62)
+(51,59)-(51,60)
+(51,59)-(51,62)
 *)

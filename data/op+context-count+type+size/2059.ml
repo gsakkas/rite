@@ -1,32 +1,83 @@
 
-let rec digitsOfInt n =
-  match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) :: (n mod 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))))) *.
+        (sin (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      ((sin (pi *. (eval (e, x, y)))) -. (cos (pi *. (eval (e, x, y))))) / 3;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n with | 0 -> [] | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))))) *.
+        (sin (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      ((sin (pi *. (eval (e, x, y)))) -. (cos (pi *. (eval (e, x, y))))) /.
+        3.0;;
 
 *)
 
 (* changed spans
-(3,34)-(3,53)
-(3,60)-(3,61)
-(3,60)-(3,68)
-(3,66)-(3,68)
+(31,9)-(31,77)
+(31,76)-(31,77)
 *)
 
 (* type error slice
-(2,4)-(3,71)
-(2,21)-(3,68)
-(3,3)-(3,68)
-(3,3)-(3,68)
-(3,9)-(3,10)
-(3,23)-(3,25)
-(3,34)-(3,45)
-(3,34)-(3,53)
-(3,34)-(3,68)
-(3,47)-(3,48)
-(3,60)-(3,68)
+(16,3)-(31,77)
+(16,3)-(31,77)
+(19,15)-(19,18)
+(19,15)-(19,40)
+(31,9)-(31,68)
+(31,9)-(31,77)
+(31,9)-(31,77)
 *)

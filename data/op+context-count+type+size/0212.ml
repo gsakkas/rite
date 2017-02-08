@@ -1,79 +1,77 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let rec revexp (x,y) = match x with | [] -> y | h::t -> revexp (t, (h ^ y));;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w = if w = (revexp ((explode w), "")) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | NewA (a,b) ->
+      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
+  | NewB (a,b,c) ->
+      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) exp 0;;
 
 
 (* fix
 
-let rec reverse (x,y) =
-  match x with | [] -> y | h::t -> reverse (t, (h :: y));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec listReverse l = match l with | [] -> [] | h::t -> reverse (l, []);;
-
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | NewA (a,b) ->
+      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
+  | NewB (a,b,c) ->
+      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) -.
+        (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(2,13)-(5,7)
-(7,17)-(7,74)
-(7,30)-(7,31)
-(7,45)-(7,46)
-(7,57)-(7,63)
-(7,57)-(7,74)
-(7,65)-(7,66)
-(7,69)-(7,70)
-(7,69)-(7,74)
-(7,71)-(7,72)
-(7,73)-(7,74)
-(9,16)-(9,74)
-(9,23)-(9,24)
-(9,28)-(9,34)
-(9,37)-(9,46)
-(9,37)-(9,51)
-(9,49)-(9,51)
+(30,10)-(30,73)
+(30,68)-(30,71)
+(30,72)-(30,73)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(3,14)-(4,65)
-(4,5)-(4,65)
-(4,8)-(4,9)
-(4,8)-(4,29)
-(4,28)-(4,29)
-(4,36)-(4,38)
-(4,56)-(4,58)
-(4,56)-(4,65)
-(7,17)-(7,74)
-(7,24)-(7,74)
-(7,24)-(7,74)
-(7,24)-(7,74)
-(7,24)-(7,74)
-(7,30)-(7,31)
-(7,45)-(7,46)
-(7,57)-(7,63)
-(7,57)-(7,74)
-(7,65)-(7,66)
-(7,69)-(7,70)
-(7,73)-(7,74)
-(9,4)-(9,76)
-(9,16)-(9,74)
-(9,23)-(9,24)
-(9,37)-(9,44)
-(9,37)-(9,46)
-(9,37)-(9,51)
-(9,45)-(9,46)
+(30,10)-(30,64)
+(30,10)-(30,73)
 *)

@@ -1,90 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) -> (exprToString e1) ^ ("+" ^ ((exprToString e2) ^ "/2"))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) -> e1 ^ ("<" ^ (e2 ^ ("?" ^ (e3 ^ (":" ^ e4)))));;
+let fixpoint (f,b) = let f x = (f, ((f b) = b)) in wwhile ((f b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) -> (exprToString e1) ^ ("+" ^ ((exprToString e2) ^ "/2"))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ("<" ^
-           ((exprToString e2) ^
-              ("?" ^ ((exprToString e3) ^ (":" ^ (exprToString e4))))));;
+let fixpoint (f,b) = let f x = ((f x), ((f b) = b)) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(19,29)-(19,31)
-(19,42)-(19,44)
-(19,55)-(19,57)
-(19,61)-(19,64)
-(19,65)-(19,66)
-(19,67)-(19,69)
+(7,33)-(7,34)
+(7,38)-(7,46)
+(7,61)-(7,64)
+(7,67)-(7,68)
 *)
 
 (* type error slice
-(11,22)-(19,69)
-(12,3)-(19,69)
-(12,3)-(19,69)
-(12,3)-(19,69)
-(12,3)-(19,69)
-(12,9)-(12,10)
-(15,26)-(15,38)
-(15,26)-(15,40)
-(19,29)-(19,31)
-(19,29)-(19,69)
-(19,29)-(19,69)
-(19,32)-(19,33)
-(19,35)-(19,38)
-(19,35)-(19,69)
-(19,39)-(19,40)
-(19,42)-(19,44)
-(19,42)-(19,69)
-(19,42)-(19,69)
-(19,45)-(19,46)
-(19,48)-(19,51)
-(19,48)-(19,69)
-(19,52)-(19,53)
-(19,55)-(19,57)
-(19,55)-(19,69)
-(19,55)-(19,69)
-(19,58)-(19,59)
-(19,61)-(19,64)
-(19,61)-(19,69)
-(19,61)-(19,69)
-(19,65)-(19,66)
-(19,67)-(19,69)
+(2,4)-(5,28)
+(2,13)-(5,25)
+(4,29)-(4,35)
+(4,29)-(4,47)
+(4,37)-(4,38)
+(4,37)-(4,41)
+(4,44)-(4,45)
+(4,44)-(4,47)
+(5,3)-(5,9)
+(5,3)-(5,25)
+(5,11)-(5,12)
+(5,11)-(5,15)
+(7,22)-(7,68)
+(7,28)-(7,46)
+(7,33)-(7,46)
+(7,52)-(7,58)
+(7,52)-(7,68)
+(7,61)-(7,62)
+(7,61)-(7,64)
+(7,61)-(7,68)
 *)
