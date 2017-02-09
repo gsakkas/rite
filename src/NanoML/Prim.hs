@@ -5,6 +5,7 @@ module NanoML.Prim
   ( baseEnv, baseTypeEnv, baseDataEnv, baseFieldEnv
   , tB, tL, tU, pand, por, getField, setField
   , maybeThrow
+  , primVars, primVarTypes
   ) where
 
 import Control.Arrow
@@ -20,7 +21,7 @@ import Text.Read
 import NanoML.Gen
 import NanoML.Types
 
-baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td)) 
+baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td))
   [ tInt, tFloat, tBool, tChar, tString, tArray
   , tUnit, tList, tOption, tExn, tRef
   ]
@@ -46,18 +47,18 @@ tFloat  = mkTypeDecl "float"  []    (mkAlgRhs [])
 tBool   = mkTypeDecl "bool"   []    (mkAlgRhs [])
 tChar   = mkTypeDecl "char"   []    (mkAlgRhs [])
 tString = mkTypeDecl "string" []    (mkAlgRhs [])
-tArray  = mkTypeDecl "array"  ["a1"] (mkAlgRhs [])
+tArray  = mkTypeDecl "array"  ["a"] (mkAlgRhs [])
 tUnit   = mkTypeDecl "unit"   []    (mkAlgRhs [dUnit])
-tList   = mkTypeDecl "list"   ["a2"] (mkAlgRhs [dNil, dCons])
-tOption = mkTypeDecl "option" ["a3"] (mkAlgRhs [dNone, dSome])
+tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
+tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
 tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument, dDivision_by_zero])
-tRef    = mkTypeDecl "ref"    ["a4"] (\td -> TRec [("contents", Mut, TVar "a4")])
+tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
 
 dUnit = DataDecl "()" []
 dNil = DataDecl "[]" []
-dCons = DataDecl "::" [ TVar "a2", TApp "list" [TVar "a2"] ]
+dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
 dNone = DataDecl "None" []
-dSome = DataDecl "Some" [TVar "a3"]
+dSome = DataDecl "Some" [TVar "a"]
 dFailure = DataDecl "Failure" []
 dNot_found = DataDecl "Not_found" []
 dMatch_failure = DataDecl "Match_failure" []
@@ -192,7 +193,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,mkConAppD "[]" [])
+                              ,varD "[]")
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,mkConAppD "::"
@@ -210,7 +211,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,mkConAppD "[]" [])
+                              ,varD "[]")
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,seqD
@@ -313,6 +314,92 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
            , ("raise", mkPrim1Fun $ P1 "raise" praise tE)
            , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string tE)
            ]
+
+primVarTypes :: [(Var, Type)]
+primVarTypes =
+  [ ("min_float", tCon tFLOAT)
+  , ("max_float", tCon tFLOAT)
+  , ("max", TAll ["a"] (TVar "a" :-> TVar "a" :-> TVar "a"))
+  , ("min", TAll ["a"] (TVar "a" :-> TVar "a" :-> TVar "a"))
+  , ("!", TAll ["a"] (TApp "ref" [TVar "a"] :-> TVar "a"))
+  , (":=", TAll ["a"] (TApp "ref" [TVar "a"] :-> TVar "a" :-> tCon tUNIT))
+  , ("ref", TAll ["a"] (TVar "a" :-> TApp "ref" [TVar "a"]))
+  , ("List.fold_left", TAll ["a", "b"] ((TVar "b" :-> TVar "a" :-> TVar "b") :-> TVar "b" :-> TApp "list" [TVar "a"] :-> TVar "b"))
+  , ("List.fold_right", TAll ["a", "b"] ((TVar "a" :-> TVar "b" :-> TVar "b") :-> TApp "list" [TVar "a"] :-> TVar "b" :-> TVar "b"))
+  , ("List.assoc", TAll ["a", "b"] (TVar "a" :-> TApp "list" [TTup [TVar "a", TVar "b"]] :-> TVar "b"))
+  , ("List.exists", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
+  , ("List.for_all", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
+  , ("List.filter", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("List.map", TAll ["a", "b"] ((TVar "a" :-> TVar "b") :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "b"]))
+  , ("List.iter", TAll ["a"] ((TVar "a" :-> tCon tUNIT) :-> TApp "list" [TVar "a"] :-> tCon tUNIT))
+  , ("List.partition", TAll ["a"] ((TVar "a" :-> tCon tBOOL) :-> TApp "list" [TVar "a"] :-> TTup [TApp "list" [TVar "a"], TApp "list" [TVar "a"]]))
+  , ("Sys.argv", TApp "array" [tCon tSTRING])
+  , ("**", tCon tFLOAT :-> tCon tFLOAT :-> tCon tFLOAT)
+  , ("@", TAll ["a"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("^", tCon tSTRING :-> tCon tSTRING :-> tCon tSTRING)
+  , ("&&", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("&", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("||", tCon tBOOL :-> tCon tBOOL :-> tCon tBOOL)
+  , ("not", tCon tBOOL :-> tCon tBOOL)
+  , ("fst", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "a"))
+  , ("snd", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "b"))
+  , ("failwith", TAll ["a"] (tCon tSTRING :-> TVar "a"))
+  , ("Array.get", TAll ["a"] (TApp "array" [TVar "a"] :-> tCon tINT :-> TVar "a"))
+  , ("Char.code", tCon tCHAR :-> tCon tINT)
+  -- FIXME: support module types
+  -- , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare tC tC)
+  , ("Char.escaped", tCon tCHAR :-> tCon tSTRING)
+  , ("Char.lowercase", tCon tCHAR :-> tCon tCHAR)
+  , ("Char.uppercase", tCon tCHAR :-> tCon tCHAR)
+  , ("List.append", TAll ["a"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"] :-> TApp "list" [TVar "a"]))
+  , ("List.combine", TAll ["a", "b"] (TApp "list" [TVar "a"] :-> TApp "list" [TVar "b"] :-> TApp "list" [TTup [TVar "a", TVar "b"]]))
+  , ("List.hd", TAll ["a"] (TApp "list" [TVar "a"] :-> TVar "a"))
+  , ("List.length", TAll ["a"] (TApp "list" [TVar "a"] :-> tCon tINT))
+  , ("List.mem", TAll ["a"] (TVar "a" :-> TApp "list" [TVar "a"] :-> tCon tBOOL))
+  , ("List.nth", TAll ["a"] (tL a :-> tI :-> a))
+  , ("List.rev", TAll ["a"] (tL a :-> tL a))
+  , ("List.split", TAll ["a", "b"] (tL (tT a b) :-> tT (tL a) (tL b)))
+  , ("List.tl", TAll ["a"] (tL a :-> tL a))
+  , ("String.create", tI :-> tS)
+  , ("String.get", tS :-> tI :-> tC)
+  , ("String.length", tS :-> tI)
+  , ("String.make", tI :-> tC :-> tS)
+  , ("print_char", tC :-> tU)
+  , ("print_int", tI :-> tU)
+  , ("print_float", tF :-> tU)
+  , ("print_string", tS :-> tU)
+  , ("print_endline", tS :-> tU)
+  , ("print_newline", tU :-> tU)
+  , ("char_of_int", tI :-> tC)
+  , ("int_of_char", tC :-> tI)
+  , ("int_of_float", tF :-> tI)
+  , ("int_of_string", tS :-> tI)
+  , ("float", tI :-> tF)
+  , ("float_of_int", tI :-> tF)
+  , ("float_of_string", tS :-> tF)
+  , ("string_of_bool", tB :-> tS)
+  , ("string_of_int", tI :-> tS)
+  , ("string_of_float", tF :-> tS)
+  , ("abs", tI :-> tI)
+  , ("abs_float", tF :-> tF)
+  , ("exp", tF :-> tF :-> tF)
+  , ("log", tF :-> tF)
+  , ("log10", tF :-> tF)
+  , ("mod_float", tF :-> tF :-> tF)
+  , ("modf", tF :-> tF)
+  , ("sqrt", tF :-> tF)
+  , ("acos", tF :-> tF)
+  , ("asin", tF :-> tF)
+  , ("atan", tF :-> tF)
+  , ("cos", tF :-> tF)
+  , ("sin", tF :-> tF)
+  , ("tan", tF :-> tF)
+  , ("tanh", tF :-> tF)
+  , ("truncate", tF :-> tI)
+  , ("compare", TAll ["a"] (a :-> a :-> tI))
+  , ("raise", TAll ["a"] (tE :-> a))
+  , ("Printexc.to_string", tE :-> tS)
+  ]
 
 pfailwith :: MonadEval m => Value -> m Value
 pfailwith (VS _ s) = withCurrentProvM $ \prv -> maybeThrow $ MLException (mkExn "Failure" [VS prv s] prv)
@@ -612,8 +699,8 @@ tU = tCon tUNIT
 tA t = mkTApps tARRAY [t]
 tL t = mkTApps tLIST [t]
 tE = tCon tEXN
-a = TVar "a0"
-b = TVar "b0"
+a = TVar "a"
+b = TVar "b"
 tT x y = TTup [x,y]
 
 
