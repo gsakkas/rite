@@ -1,0 +1,4 @@
+File "./20060421-17:38:10-9fedad806a399da07f601d1c08599c98.seminal.ml", line 165, characters 26-32:
+Error: This expression has type string * unit * access -> unit
+       but an expression was expected of type string * unit * access -> bool
+       Type unit is not compatible with type bool 

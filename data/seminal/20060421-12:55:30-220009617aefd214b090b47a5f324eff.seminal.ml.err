@@ -1,0 +1,3 @@
+File "./20060421-12:55:30-220009617aefd214b090b47a5f324eff.seminal.ml", line 169, characters 1-8:
+Error: The variant type typ has no constructor RecordV
+Did you mean RecordT?

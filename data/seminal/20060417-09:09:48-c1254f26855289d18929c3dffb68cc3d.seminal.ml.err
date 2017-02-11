@@ -1,0 +1,4 @@
+File "./20060417-09:09:48-c1254f26855289d18929c3dffb68cc3d.seminal.ml", line 106, characters 31-47:
+Error: This expression has type typ -> string
+       but an expression was expected of type typ -> 'a -> 'a
+       Type string is not compatible with type 'a -> 'a 

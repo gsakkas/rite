@@ -1,0 +1,3 @@
+File "./20060420-14:37:50-f4603d9b9411817f0e5686e3dc20bc8c.seminal.ml", line 105, characters 49-58:
+Error: This expression has type 'a * 'b
+       but an expression was expected of type typ

@@ -1,0 +1,4 @@
+File "./20060308-16:27:14-d2561594acb510c00ce747e7e54b07de.seminal.ml", line 73, characters 35-50:
+Error: This expression has type char -> string -> string
+       but an expression was expected of type char -> char -> char
+       Type string is not compatible with type char 

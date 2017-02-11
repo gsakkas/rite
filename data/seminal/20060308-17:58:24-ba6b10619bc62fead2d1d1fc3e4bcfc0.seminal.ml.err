@@ -1,0 +1,3 @@
+File "./20060308-17:58:24-ba6b10619bc62fead2d1d1fc3e4bcfc0.seminal.ml", line 77, characters 37-56:
+Error: This expression has type caseTester
+       but an expression was expected of type string

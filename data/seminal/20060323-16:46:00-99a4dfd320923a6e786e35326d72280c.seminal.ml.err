@@ -1,0 +1,4 @@
+File "./20060323-16:46:00-99a4dfd320923a6e786e35326d72280c.seminal.ml", line 125, characters 12-31:
+Error: This pattern matches values of type 'a * 'b * 'c * 'd
+       but a pattern was expected which matches values of type
+         'e list * float * 'f list

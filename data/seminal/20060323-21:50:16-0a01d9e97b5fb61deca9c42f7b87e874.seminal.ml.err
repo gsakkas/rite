@@ -1,0 +1,3 @@
+File "./20060323-21:50:16-0a01d9e97b5fb61deca9c42f7b87e874.seminal.ml", line 110, characters 2-3:
+Error: This expression has type int but an expression was expected of type
+         (float * float) list

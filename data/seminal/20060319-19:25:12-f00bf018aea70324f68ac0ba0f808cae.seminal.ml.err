@@ -1,0 +1,5 @@
+File "./20060319-19:25:12-f00bf018aea70324f68ac0ba0f808cae.seminal.ml", line 18, characters 18-62:
+Error: This expression has type 'a but an expression was expected of type
+         (float * float) list -> ('b list -> 'b list -> 'b list) -> 'a
+       The type variable 'a occurs inside
+       (float * float) list -> ('b list -> 'b list -> 'b list) -> 'a

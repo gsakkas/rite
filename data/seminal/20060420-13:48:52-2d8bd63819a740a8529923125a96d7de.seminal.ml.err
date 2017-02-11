@@ -1,0 +1,4 @@
+File "./20060420-13:48:52-2d8bd63819a740a8529923125a96d7de.seminal.ml", line 162, characters 44-47:
+Error: This expression has type (string * exp) list
+       but an expression was expected of type exp list
+       Type string * exp is not compatible with type exp 

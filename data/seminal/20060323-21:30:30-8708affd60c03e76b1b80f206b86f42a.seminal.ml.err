@@ -1,0 +1,3 @@
+File "./20060323-21:30:30-8708affd60c03e76b1b80f206b86f42a.seminal.ml", line 99, characters 1-58:
+Error: This expression has type 'a list
+       but an expression was expected of type (float * float) list * float

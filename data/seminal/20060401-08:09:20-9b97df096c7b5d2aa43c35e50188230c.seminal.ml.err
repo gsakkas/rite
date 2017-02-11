@@ -1,0 +1,3 @@
+File "./20060401-08:09:20-9b97df096c7b5d2aa43c35e50188230c.seminal.ml", line 47, characters 13-14:
+Error: This expression has type int but an expression was expected of type
+         exp

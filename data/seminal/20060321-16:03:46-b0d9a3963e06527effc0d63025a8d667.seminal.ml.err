@@ -1,0 +1,4 @@
+File "./20060321-16:03:46-b0d9a3963e06527effc0d63025a8d667.seminal.ml", line 72, characters 19-28:
+Error: This expression has type (string * int) list
+       but an expression was expected of type heap_elt list
+       Type string * int is not compatible with type heap_elt 

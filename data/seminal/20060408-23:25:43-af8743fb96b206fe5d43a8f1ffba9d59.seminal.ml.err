@@ -1,0 +1,3 @@
+File "./20060408-23:25:43-af8743fb96b206fe5d43a8f1ffba9d59.seminal.ml", line 41, characters 16-17:
+Error: This expression has type exp but an expression was expected of type
+         unit * exp

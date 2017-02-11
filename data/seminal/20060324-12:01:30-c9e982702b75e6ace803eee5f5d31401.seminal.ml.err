@@ -1,0 +1,4 @@
+File "./20060324-12:01:30-c9e982702b75e6ace803eee5f5d31401.seminal.ml", line 136, characters 20-26:
+Error: This expression has type
+         float -> float -> float -> (float * float) list * float
+       but an expression was expected of type ('a * 'b) list * 'c

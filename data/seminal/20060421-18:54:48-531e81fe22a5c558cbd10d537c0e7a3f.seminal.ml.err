@@ -1,0 +1,3 @@
+File "./20060421-18:54:48-531e81fe22a5c558cbd10d537c0e7a3f.seminal.ml", line 165, characters 24-43:
+Error: This expression has type (typ * access) option
+       but an expression was expected of type typ

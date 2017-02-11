@@ -1,0 +1,3 @@
+File "./20060324-22:33:45-794856d6d57de6aec959bc9221c45eb6.seminal.ml", line 14, characters 34-35:
+Error: This expression has type int but an expression was expected of type
+         float

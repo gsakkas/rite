@@ -1,0 +1,4 @@
+File "./20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml", line 23, characters 23-24:
+Error: This expression has type heap = (string * int) list
+       but an expression was expected of type (string * heapVar) list
+       Type int is not compatible with type heapVar 

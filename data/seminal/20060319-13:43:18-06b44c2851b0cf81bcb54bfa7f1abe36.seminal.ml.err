@@ -1,0 +1,3 @@
+File "./20060319-13:43:18-06b44c2851b0cf81bcb54bfa7f1abe36.seminal.ml", line 40, characters 33-42:
+Error: This expression has type heapVar
+       but an expression was expected of type int

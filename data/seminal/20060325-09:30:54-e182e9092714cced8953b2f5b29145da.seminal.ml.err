@@ -1,0 +1,4 @@
+File "./20060325-09:30:54-e182e9092714cced8953b2f5b29145da.seminal.ml", line 54, characters 19-26:
+Error: This expression has type stmt list
+       but an expression was expected of type heap = node list
+       Type stmt is not compatible with type node 

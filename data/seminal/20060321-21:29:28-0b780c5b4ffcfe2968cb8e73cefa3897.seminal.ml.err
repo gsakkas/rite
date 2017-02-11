@@ -1,0 +1,3 @@
+File "./20060321-21:29:28-0b780c5b4ffcfe2968cb8e73cefa3897.seminal.ml", line 7, characters 65-69:
+Error: The type constructor list expects 1 argument(s),
+       but is here applied to 0 argument(s)
