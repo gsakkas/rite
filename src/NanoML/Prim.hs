@@ -193,7 +193,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,varD "[]")
+                              ,mkConAppD "[]" [])
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,mkConAppD "::"
@@ -211,7 +211,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
-                              ,varD "[]")
+                              ,mkConAppD "[]" [])
                              ,(consPatD (varPatD "y") (varPatD "ys")
                               ,Nothing
                               ,seqD
