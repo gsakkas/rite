@@ -1,0 +1,4 @@
+
+let listReverse l =
+  let rec r e a = match a with | [] -> e | x::l' -> (r e l') :: x :: e in
+  r [] l;;
