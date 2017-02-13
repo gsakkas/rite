@@ -1,0 +1,4 @@
+File "./20060321-15:25:48-2255f168a336d2981038c536d51364a3.seminal.ml", line 22, characters 23-24:
+Error: This expression has type heap = heap_elt list
+       but an expression was expected of type ('a * int) list
+       Type heap_elt is not compatible with type 'a * int 

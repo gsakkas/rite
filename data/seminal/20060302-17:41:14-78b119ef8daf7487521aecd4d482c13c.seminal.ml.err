@@ -1,0 +1,3 @@
+File "./20060302-17:41:14-78b119ef8daf7487521aecd4d482c13c.seminal.ml", line 9, characters 20-36:
+Error: This expression has type unit but an expression was expected of type
+         string

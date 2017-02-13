@@ -1,0 +1,3 @@
+File "./20060324-22:00:17-ecdfe52e272243e86b6b7a8128d95dd3.seminal.ml", line 38, characters 33-47:
+Error: This expression has type int but an expression was expected of type
+         storage

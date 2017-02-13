@@ -1,0 +1,3 @@
+File "./20060422-14:36:42-0f5feccefb217a4914f337274357c84a.seminal.ml", line 155, characters 49-76:
+Error: This expression has type 'a * typ * access
+       This is not a function; it cannot be applied.

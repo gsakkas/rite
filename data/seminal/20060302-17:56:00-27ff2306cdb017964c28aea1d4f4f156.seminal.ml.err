@@ -1,0 +1,3 @@
+File "./20060302-17:56:00-27ff2306cdb017964c28aea1d4f4f156.seminal.ml", line 13, characters 20-42:
+Error: This expression has type bool but an expression was expected of type
+         string

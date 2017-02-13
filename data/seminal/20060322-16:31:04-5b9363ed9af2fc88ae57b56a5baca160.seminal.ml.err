@@ -1,0 +1,3 @@
+File "./20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml", line 71, characters 11-50:
+Error: This expression has type move list * float * float * float
+       but an expression was expected of type 'a list

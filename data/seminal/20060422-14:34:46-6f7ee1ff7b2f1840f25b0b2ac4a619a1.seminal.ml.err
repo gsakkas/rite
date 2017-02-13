@@ -1,0 +1,5 @@
+File "./20060422-14:34:46-6f7ee1ff7b2f1840f25b0b2ac4a619a1.seminal.ml", line 155, characters 25-82:
+Error: This expression has type ((string * typ) * access) list
+       but an expression was expected of type (string * typ * access) list
+       Type (string * typ) * access is not compatible with type
+         string * typ * access 

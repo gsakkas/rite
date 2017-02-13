@@ -1,0 +1,3 @@
+File "./20060308-15:14:15-b4673217f9f876ace714063f276c1cb7.seminal.ml", line 23, characters 21-34:
+Error: This expression has type string -> int
+       but an expression was expected of type int

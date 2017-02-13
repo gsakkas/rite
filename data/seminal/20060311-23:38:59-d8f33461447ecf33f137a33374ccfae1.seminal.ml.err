@@ -1,0 +1,3 @@
+File "./20060311-23:38:59-d8f33461447ecf33f137a33374ccfae1.seminal.ml", line 21, characters 39-40:
+Error: This expression has type heap = heapElement list
+       but an expression was expected of type int

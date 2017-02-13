@@ -1,0 +1,4 @@
+File "./20060308-19:58:35-73bc04d94b0b091a44df19c1baaf55f3.seminal.ml", line 132, characters 24-32:
+Error: This expression has type char list
+       but an expression was expected of type int list
+       Type char is not compatible with type int 

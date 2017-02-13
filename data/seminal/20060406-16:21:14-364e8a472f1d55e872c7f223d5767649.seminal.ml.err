@@ -1,0 +1,3 @@
+File "./20060406-16:21:14-364e8a472f1d55e872c7f223d5767649.seminal.ml", line 179, characters 39-46:
+Error: This expression has type string list -> string
+       but an expression was expected of type string

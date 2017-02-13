@@ -1,0 +1,4 @@
+File "./20060322-20:08:36-a8f43066cc9b2fd09808dd2eb10c07f9.seminal.ml", line 22, characters 39-42:
+Error: This expression has type 'a list
+       but an expression was expected of type 'a
+       The type variable 'a occurs inside 'a list

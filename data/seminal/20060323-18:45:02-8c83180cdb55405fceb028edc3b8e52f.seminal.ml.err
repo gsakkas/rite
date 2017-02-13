@@ -1,0 +1,3 @@
+File "./20060323-18:45:02-8c83180cdb55405fceb028edc3b8e52f.seminal.ml", line 93, characters 37-54:
+Error: This expression has type unit but an expression was expected of type
+         move list * float * float * float

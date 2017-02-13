@@ -1,0 +1,4 @@
+File "./20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml", line 35, characters 22-23:
+Error: This expression has type heap = (string * intorheap) list
+       but an expression was expected of type (string * exp) list
+       Type intorheap is not compatible with type exp 

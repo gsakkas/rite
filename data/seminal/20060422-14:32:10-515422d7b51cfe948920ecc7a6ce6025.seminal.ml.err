@@ -1,0 +1,3 @@
+File "./20060422-14:32:10-515422d7b51cfe948920ecc7a6ce6025.seminal.ml", line 156, characters 20-24:
+Error: This expression has type ((string * typ) * access) list
+       but an expression was expected of type typ

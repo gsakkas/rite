@@ -254,6 +254,7 @@ fillHole h@(Hole _ r _) = do
   lookupStore r >>= \case
     Just (_,v) -> return v
     Nothing    -> return h
+fillHole x = return x
 
 forceSame' :: MonadEval m => Value -> Value -> (Value -> Value -> m a) -> m a
 -- forceSame x@(Hole {}) y@(Hole {}) k =

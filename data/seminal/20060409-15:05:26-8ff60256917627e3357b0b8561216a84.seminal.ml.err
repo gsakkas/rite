@@ -1,0 +1,4 @@
+File "./20060409-15:05:26-8ff60256917627e3357b0b8561216a84.seminal.ml", line 60, characters 22-25:
+Error: This expression has type (string * 'a) list
+       but an expression was expected of type string list
+       Type string * 'a is not compatible with type string 

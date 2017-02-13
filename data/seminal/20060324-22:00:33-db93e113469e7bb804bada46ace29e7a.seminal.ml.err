@@ -1,0 +1,4 @@
+File "./20060324-22:00:33-db93e113469e7bb804bada46ace29e7a.seminal.ml", line 25, characters 29-30:
+Error: This expression has type heap = (string * storage) list
+       but an expression was expected of type (string * int) list
+       Type storage is not compatible with type int 

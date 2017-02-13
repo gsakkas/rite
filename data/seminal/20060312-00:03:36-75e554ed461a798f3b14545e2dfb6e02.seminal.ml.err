@@ -1,0 +1,4 @@
+File "./20060312-00:03:36-75e554ed461a798f3b14545e2dfb6e02.seminal.ml", line 27, characters 23-24:
+Error: This expression has type heap = (string * heapElement) list
+       but an expression was expected of type (string * int) list
+       Type heapElement is not compatible with type int 
