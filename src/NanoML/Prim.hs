@@ -117,7 +117,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                              ]))
              )
            , ("List.fold_right"
-             ,(mkLams baseEnv [varPatD "f", varPatD "b", varPatD "xs"]
+             ,(mkLams baseEnv [varPatD "f", varPatD "xs", varPatD "b"]
                             (caseD (varD "xs")
                              [(conPatD "[]" Nothing
                               ,Nothing
@@ -127,7 +127,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
                               ,mkAppsD (varD "f")
                                       [varD "y"
                                       ,mkAppsD (varD "List.fold_right")
-                                              [varD "f",varD "b", varD "ys"]
+                                              [varD "f",varD "ys", varD "b"]
                                       ]
                               )
                              ]))
@@ -505,6 +505,7 @@ pstring_of_float (VD _ i) = withCurrentProv $ \prv -> (VS prv (show i))
 pstring_of_bool :: MonadEval m => Value -> m Value
 pstring_of_bool (VB _ b) = withCurrentProv $ \prv -> (VS prv (if b then "true" else "false"))
 
+-- TODO:
 -- pstring_concat :: MonadEval m => Value -> Value -> m Value
 -- pstring_concat (VS s) (VL xs) = return (VL ())
 

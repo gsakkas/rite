@@ -18,7 +18,10 @@ main = do
                       [file, func] -> (file, Just func)
                       _ -> error "usage: nano-check <file> [function]"
   prog <- parseFile file
-  res <- maybe (fromJust <$> check Nothing prog) (\v -> fromJust <$> checkWith (stdOpts {maxTests=1000, produceTrace=False}) (Just v) prog) func
+  let opts = stdOpts {maxTests=1000, produceTrace=False}
+  res <- maybe (fromJust <$> check Nothing prog)
+               (\v -> fromJust <$> checkWith opts (Just v) prog)
+               func
   case res of
     Success n _ _ -> do
       printf "Could not find a counter-example after %d tests..\n" n
@@ -28,5 +31,6 @@ main = do
       -- st <- findRoot gr (stCurrentExpr finalState)
       -- explore gr st
       print counterExample
+      print (pretty (fst (stCurrentExpr finalState)))
       print (pretty errorMsg)
       exitFailure

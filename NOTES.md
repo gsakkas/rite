@@ -873,3 +873,7 @@ let rec additivePersistence n =
 
 - [ ] analyze by hand random subset of bad programs that we can't crash
   - would concolic execution help for them??
+
+- [ ] String.concat
+- [ ] prog3754.ml: unbound variable 'n', looks bogus, perhaps buggy guard handling?
+- [ ] 'assert' is syntax, not unbound
