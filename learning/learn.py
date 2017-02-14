@@ -54,11 +54,17 @@ def main(_):
     if FLAGS.n_folds > 1:
         kf = KFold(n_splits=FLAGS.n_folds)
         # print(len(dfs))
+        rs = []
         for i, (train, test) in enumerate(kf.split(dfs)):
             print('fold {}'.format(i))
             # print(len(train), len(test))
-            train_and_eval(dfs, fs, ls, i=i, train_idxs=train, test_idxs=test)
+            rs.append(train_and_eval(dfs, fs, ls, i=i, train_idxs=train, test_idxs=test))
             print('')
+        print('cross-fold average')
+        print('accuracy: %.3f / %.3f / %.3f' % (np.mean([r['top-1'] for r in rs]),
+                                                np.mean([r['top-2'] for r in rs]),
+                                                np.mean([r['top-3'] for r in rs])))
+        print('recall: %.3f' % (np.mean([r['recall'] for r in rs])))
         # FIXME: wrong cross-validation, want to slice data into
         # n_folds segments and train on n_folds-1
         # for i, fold in df.groupby(df.index % FLAGS.n_folds):
@@ -76,7 +82,9 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None):
 
     if train_idxs is not None and test_idxs is not None:
         train_model(train, [dfs[idx] for idx in train_idxs], ls)
-        test_model(test, [dfs[idx] for idx in test_idxs])
+        r = test_model(test, [dfs[idx] for idx in test_idxs])
+        close()
+        return r
 
     else:
         n = len(dfs) / 10
@@ -93,7 +101,7 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None):
         if FLAGS.plot:
             plot()
 
-    close()
+        close()
 
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
@@ -126,7 +134,10 @@ def train_model(train, dfs, label_names, validation=None):
     #     i += 1
     # print len(dfs)
     df = pd.concat(dfs)
-    # print df.shape
+    print df.shape
+    feature_names = [c for c in df.columns if c[0] == 'F']
+    print df.drop_duplicates().shape
+    print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
@@ -134,13 +145,13 @@ def train_model(train, dfs, label_names, validation=None):
         df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True).reset_index(drop=True)
     else:
         df = df.sample(frac=1).reset_index(drop=True)
-    # print df.shape
+    print df.shape
     for _, batch in df.groupby(df.index // FLAGS.batch_size):
         train(batch, i, validation, verbose=FLAGS.verbose)
         i += 1
 
 def test_model(test, dfs):
-    test(dfs)
+    return test(dfs)
 
 if __name__ == '__main__':
     tf.app.run()
