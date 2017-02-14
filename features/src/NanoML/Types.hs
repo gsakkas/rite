@@ -254,7 +254,7 @@ minimizeCore cs = do
   when (length minimal == 1) $ do
     traceShowM ("minimizeCore", Set.size cs, length minimal)
     mapM_ (traceShowM) minimal
-    undefined
+    -- undefined
   return (Set.fromList minimal)
 
   where

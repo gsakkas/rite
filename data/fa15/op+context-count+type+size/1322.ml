@@ -1,0 +1,103 @@
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Circ of expr* expr
+  | NatLog of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin (pi *. (eval (sine, x, y)))
+  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (th1,th2,th3,th4) ->
+      if (eval (th1, x, y)) < (eval (th2, x, y))
+      then eval (th3, x, y)
+      else eval (th4, x, y)
+  | Circ (circ1,circ2) -> ((eval circ1) ** 2) + ((eval circ2) ** 2)
+  | NatLog nlog -> log nlog;;
+
+
+(* fix
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Circ of expr* expr
+  | NatLog of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin (pi *. (eval (sine, x, y)))
+  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (th1,th2,th3,th4) ->
+      if (eval (th1, x, y)) < (eval (th2, x, y))
+      then eval (th3, x, y)
+      else eval (th4, x, y)
+  | Circ (circ1,circ2) ->
+      ((eval (circ1, x, y)) ** 2.0) +. ((eval (circ2, x, y)) ** 2.0)
+  | NatLog nlog -> log (eval (nlog, x, y));;
+
+*)
+
+(* changed spans
+(27,29)-(27,67)
+(27,34)-(27,39)
+(27,44)-(27,45)
+(27,51)-(27,67)
+(27,56)-(27,61)
+(27,66)-(27,67)
+(28,20)-(28,23)
+(28,20)-(28,28)
+(28,24)-(28,28)
+*)
+
+(* type error slice
+(16,3)-(28,28)
+(16,3)-(28,28)
+(16,3)-(28,28)
+(16,3)-(28,28)
+(16,3)-(28,28)
+(19,18)-(19,21)
+(19,18)-(19,46)
+(19,30)-(19,34)
+(19,30)-(19,46)
+(19,36)-(19,46)
+(27,29)-(27,33)
+(27,29)-(27,39)
+(27,29)-(27,45)
+(27,29)-(27,67)
+(27,34)-(27,39)
+(27,41)-(27,43)
+(27,44)-(27,45)
+(27,51)-(27,55)
+(27,51)-(27,61)
+(27,51)-(27,67)
+(27,56)-(27,61)
+(27,63)-(27,65)
+(27,66)-(27,67)
+(28,20)-(28,23)
+(28,20)-(28,28)
+(28,24)-(28,28)
+*)

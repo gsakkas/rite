@@ -40,35 +40,36 @@ import Debug.Trace
 
 main :: IO ()
 main = do
-  jsons <- lines <$> readFile "data/raw.json"
-  [cls] <- getArgs
+  [src, cls] <- getArgs
+  jsons <- lines <$> (readFile $ "data" </> src </> "raw.json")
   case cls of
     "ops"
-      -> mkBadFeatures cls preds_thas jsons
+      -> mkBadFeatures src cls preds_thas jsons
     "ops+context"
-      -> mkBadFeatures cls preds_thas_ctx jsons
+      -> mkBadFeatures src cls preds_thas_ctx jsons
     "op+context"
-      -> mkBadFeatures cls preds_tis_ctx jsons
+      -> mkBadFeatures src cls preds_tis_ctx jsons
     "op+context-count"
-      -> mkBadFeatures cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op+context-count+size"
-      -> mkBadFeatures cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op+context-count+type+size"
-      -> mkBadFeatures cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
     "type-inference"
       -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     "type-inference+vars"
       -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
 
 
-mkBadFeatures :: String -> [Feature] -> [String] -> IO ()
-mkBadFeatures nm fs jsons = do
+mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
+mkBadFeatures yr nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
   let feats = [ ((h, f'), (ss, bad, fix, c))
               | (ss, p, bad, fix) <- uniqs
               , let (h, f, c) = runTFeaturesDiff fs (ss,p)
-              , not (null f)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
+                -- a one-constraint core is bogus, this should be impossible
+              , length f' > 1
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
@@ -84,10 +85,10 @@ mkBadFeatures nm fs jsons = do
       putStrLn fix
     else do
       let fn = printf "%04d" (i :: Int)
-      let path = "data/" ++ nm ++ "/" ++ fn ++ ".csv"
+      let path = "data" </> yr </> nm </> fn <.> "csv"
       createDirectoryIfMissing True (takeDirectory path)
       LBSC.writeFile path $ encodeByName header features
-      let path = "data/" ++ nm ++ "/" ++ fn ++ ".ml"
+      let path = "data" </> yr </> nm </> fn <.> "ml"
       writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                  , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
                               ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
@@ -208,8 +209,8 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
     | null cores
     -- something went wrong other than typechecking success
     , Just e <- me = []
-    | null cores
-    = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") undefined -- FIXME: shouldn't happen!!
+    | null cores || length cores == 1
+    = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- undefined -- FIXME: shouldn't happen!!
     --- | otherwise
     -- = assert (not (null (intersect cores ls))) $
     --   concatMap mkfsD tbad
