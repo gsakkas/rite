@@ -207,9 +207,9 @@ def build_model(features, labels, hidden,
                 fs.append(fscore)
             cs.append(tp+fn)
             ts.append(tp+fp+fn+tn)
-            # print('true changes: %d' % (tp+fn))
-            # print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
-            # print('')
+            #print('true changes: %d' % (tp+fn))
+            #print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
+            #print('')
 
         acc = float(acc) / len(data)
         acc1 = float(acc1) / len(data)

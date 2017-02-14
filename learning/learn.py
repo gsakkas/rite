@@ -21,6 +21,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_bool("verbose", False, "Print verbose output.")
 flags.DEFINE_string("data", "", "Path to the data.")
+flags.DEFINE_string("test_data", "", "Path to test data (if separate from training).")
 flags.DEFINE_string("model", "linear",
                     "Valid model types: {'linear', 'svm', 'hidden'}.")
 flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
@@ -32,12 +33,12 @@ flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
 
-def main(_):
-    csvs = [f for f in os.listdir(FLAGS.data) if f.endswith('.csv')]
+def load_data(path):
+    csvs = [f for f in os.listdir(path) if f.endswith('.csv')]
     random.shuffle(csvs)
     dfs = []
     for i, csv in enumerate(csvs):
-        df, fs, ls = input.load_csv(os.path.join(FLAGS.data, csv),
+        df, fs, ls = input.load_csv(os.path.join(path, csv),
                                     only_slice=FLAGS.only_slice)
         if df is None:
             print i
@@ -46,6 +47,10 @@ def main(_):
             print i
             continue
         dfs.append(df)
+    return (dfs, fs, ls)
+
+def main(_):
+    dfs, fs, ls = load_data(FLAGS.data)
     # train_and_eval(dfs, fs, ls)
 
     # # shuffle the data
@@ -67,14 +72,24 @@ def main(_):
         #     train_and_eval(fold.reset_index(drop=True), fs, ls, i)
         #     print('')
     else:
-        train_and_eval(dfs, fs, ls)
+        if FLAGS.test_data == '':
+            train_and_eval(dfs, fs, ls)
+        else:
+            tdfs, _, _ = load_data(FLAGS.test_data)
+            train_and_eval(dfs, fs, ls, test_data=tdfs)
 
 
-def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None):
+
+def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=None):
     train, test, plot, close = build_model(
         fs, ls, os.path.join(FLAGS.model_dir, 'run{}'.format(i)))
 
-    if train_idxs is not None and test_idxs is not None:
+    if test_data is not None:
+        train_model(train, dfs, ls)
+        test_model(test, test_data)
+
+
+    elif train_idxs is not None and test_idxs is not None:
         train_model(train, [dfs[idx] for idx in train_idxs], ls)
         test_model(test, [dfs[idx] for idx in test_idxs])
 
