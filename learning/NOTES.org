@@ -161,3 +161,20 @@ much better, but 75% of the programs don't change any of the exprs in the slice,
   - features are inputs
   - labels are outputs
 - slide 37: same color for all boxes, might be confusing
+* Compressing hidden features
+| hidden features | top-1 | top-2 | top-3 | recall |
+|        baseline | 30.0% | 53.3% | 70.8% |        |
+|             500 | 80.2% | 90.0% | 94.3% |  69.4% |
+|             250 | 78.5% | 89.6% | 94.2% |  68.4% |
+|             100 | 77.0% | 88.7% | 93.4% |  67.1% |
+|              50 | 74.8% | 88.0% | 93.0% |  65.8% |
+|              25 | 72.3% | 87.2% | 92.7% |  64.9% |
+|              10 | 69.8% | 85.3% | 91.2% |  62.7% |
+|               5 | 68.7% | 84.2% | 90.8% |  62.0% |
+|               2 | 59.0% | 74.4% | 82.5% |  55.1% |
+|               1 | 55.1% | 72.4% | 80.2% |  53.0% |
+
+
+(Note about the 1 and 2-feature cases, they don't cross-validate very
+well, there are folds where the accuracy tanks, i.e. worse than the
+baseline)

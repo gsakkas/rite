@@ -164,9 +164,9 @@ def build_model(features, labels, hidden,
 
 
     def test(data):
-        acc = 0
         acc1 = 0
         acc2 = 0
+        acc3 = 0
         ps = []
         rs = []
         fs = []
@@ -178,12 +178,25 @@ def build_model(features, labels, hidden,
             # print ys
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices
-            if any(d['L-DidChange'][idx] == 1 for idx in top_indices[1]):
-                acc += 1
+            inc1 = 0
+            inc2 = 0
+            inc3 = 0
+            correct = 0
             if d['L-DidChange'][top_indices[1][0]] == 1:
-                acc1 += 1
-            if d['L-DidChange'][top_indices[1][0]] == 1 or d['L-DidChange'][top_indices[1][1]] == 1:
-                acc2 += 1
+                inc1 = 1
+                inc2 = 1
+                inc3 = 1
+                correct += 1
+            if len(top_indices[1]) > 1 and d['L-DidChange'][top_indices[1][1]] == 1:
+                inc2 = 1
+                inc3 = 1
+                correct += 1
+            if len(top_indices[1]) > 2 and d['L-DidChange'][top_indices[1][2]] == 1:
+                inc3 = 1
+                correct += 1
+            acc1 += inc1
+            acc2 += inc2
+            acc3 += inc3
 
             truth, observed = sess.run(
                 [tf.argmax(y_,1), tf.argmax(y,1)],
@@ -196,83 +209,35 @@ def build_model(features, labels, hidden,
             fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
             # True negatives.
             tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-            precision = np.float32(tp) / np.float32(tp + fp)
-            recall = np.float32(tp) / np.float32(tp + fn)
-            fscore = np.float32(2.0) * precision * recall / (precision + recall)
-            if not np.isnan(precision):
-                ps.append(precision)
+            # precision = np.float32(tp) / np.float32(tp + fp)
+            # modified recall where top-3 predictions are the only "true" predictions
+            recall = np.float32(correct) / np.float32(tp + fn)
+            # fscore = np.float32(2.0) * precision * recall / (precision + recall)
+            # if not np.isnan(precision):
+            #     ps.append(precision)
             if not np.isnan(recall):
                 rs.append(recall)
-            if not np.isnan(fscore):
-                fs.append(fscore)
+            # if not np.isnan(fscore):
+            #     fs.append(fscore)
             cs.append(tp+fn)
             ts.append(tp+fp+fn+tn)
             #print('true changes: %d' % (tp+fn))
             #print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
             #print('')
 
-        acc = float(acc) / len(data)
         acc1 = float(acc1) / len(data)
         acc2 = float(acc2) / len(data)
-        print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc))
-        print('avg p/r/f1: %.3f / %.3f / %.3f' % (np.mean(ps), np.mean(rs), np.mean(fs)))
-        print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
+        acc3 = float(acc3) / len(data)
+        print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc3))
+        print('avg/std recall: %.3f / %.3f' % (np.mean(rs), np.std(rs)))
+        # print('avg p/r/f1: %.3f / %.3f / %.3f' % (np.mean(ps), np.mean(rs), np.mean(fs)))
+        # print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
         print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
         print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
-        # precision = np.float32(tp) / (tp + fp)
-        # recall = np.float32(tp) / (tp + fn)
-        # fscore = 2.0 * precision * recall / (precision + recall)
-        # print('precision: %.3f' % precision)
-        # print('recall:    %.3f' % recall)
-        # print('f1 score:  %.3f' % fscore)
-        # print('')
-
-        # #data = data.drop_duplicates()
-        # print(data[data['L-NoChange'] == 1].shape, data[data['L-DidChange'] == 1].shape)
-        # acc, truth, observed = sess.run(
-        #     [accuracy, tf.argmax(y_,1), tf.argmax(y,1)],
-        #     {x: data[features], y_: data[labels], keep_prob: 1.0})
-        # # True positives.
-        # tp = np.sum(np.logical_and(truth, observed))
-        # # False positives.
-        # fp = np.sum(np.logical_and(np.logical_not(truth), observed))
-        # # False negatives.
-        # fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
-        # # True negatives.
-        # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-        # precision = np.float32(tp) / (tp + fp)
-        # recall = np.float32(tp) / (tp + fn)
-        # fscore = 2.0 * precision * recall / (precision + recall)
-        # print('accuracy: %f' % acc)
-        # print('precision: %f' % precision)
-        # print('recall: %f' % recall)
-        # print('f1 score: %f' % fscore)
-        # print('')
-
-        # data = data.drop_duplicates()
-        # print(data[data['L-NoChange'] == 1].shape, data[data['L-DidChange'] == 1].shape)
-        # acc, truth, observed = sess.run(
-        #     [accuracy, tf.argmax(y_,1), tf.argmax(y,1)],
-        #     {x: data[features], y_: data[labels], keep_prob: 1.0})
-        # # True positives.
-        # tp = np.sum(np.logical_and(truth, observed))
-        # # False positives.
-        # fp = np.sum(np.logical_and(np.logical_not(truth), observed))
-        # # False negatives.
-        # fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
-        # # True negatives.
-        # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-        # precision = np.float32(tp) / (tp + fp)
-        # recall = np.float32(tp) / (tp + fn)
-        # fscore = 2.0 * precision * recall / (precision + recall)
-        # print('accuracy: %f' % acc)
-        # print('precision: %f' % precision)
-        # print('recall: %f' % recall)
-        # print('f1 score: %f' % fscore)
-
-
         saver.save(sess, 'hidden_model')
+
+        return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 
     def plot():
         w = sess.run(tf.transpose(W))
