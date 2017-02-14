@@ -1,26 +1,78 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Root of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Pivot of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((let f' x = ((f x), ((not f x) = x)) in f'), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Root x3 -> sqrt (eval (x3, x, y))
+  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
+  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
+  | Thresh (x8,x9,x10,x11) ->
+      if (eval (x8, x, y)) < (eval (x9, x, y))
+      then eval (x10, x, y)
+      else eval (x11, x, y)
+  | Pivot (x12,x13,x14) ->
+      if (eval (x12, x, y)) < 0 then eval (x13, x, y) else eval (x14, x, y);;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Root of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Pivot of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile ((let f' x = ((f x), (not ((f x) = x))) in f'), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Root x3 -> sqrt (eval (x3, x, y))
+  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
+  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
+  | Thresh (x8,x9,x10,x11) ->
+      if (eval (x8, x, y)) < (eval (x9, x, y))
+      then eval (x10, x, y)
+      else eval (x11, x, y)
+  | Pivot (x12,x13,x14) ->
+      if (eval (x12, x, y)) < 0. then eval (x13, x, y) else eval (x14, x, y);;
 
 *)
 
 (* changed spans
-(4,31)-(4,72)
-(4,52)-(4,59)
-(4,52)-(4,64)
-(4,56)-(4,57)
+(29,30)-(29,31)
 *)
 
 (* type error slice
-(4,52)-(4,55)
-(4,52)-(4,59)
+(19,19)-(19,44)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(29,9)-(29,27)
+(29,9)-(29,31)
+(29,9)-(29,31)
+(29,10)-(29,14)
+(29,30)-(29,31)
 *)

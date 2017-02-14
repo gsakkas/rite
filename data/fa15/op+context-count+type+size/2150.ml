@@ -1,29 +1,43 @@
 
-let rec wwhile (f,b) =
-  let x = f b in
-  match x with | h::t -> if t = false then h else wwhile (f, h);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with | VarX  -> "x" | VarY  -> "y" | Sine i -> "sin" ^ i;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let x = f b in
-  match x with | (x,y) -> if y = false then x else wwhile (f, x);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine i -> "sin" ^ (exprToString i);;
 
 *)
 
 (* changed spans
-(4,3)-(4,63)
-(4,29)-(4,30)
-(4,44)-(4,45)
-(4,62)-(4,63)
+(12,65)-(12,66)
 *)
 
 (* type error slice
-(4,3)-(4,63)
-(4,3)-(4,63)
-(4,29)-(4,30)
-(4,29)-(4,38)
-(4,29)-(4,38)
-(4,33)-(4,38)
+(12,2)-(12,66)
+(12,57)-(12,66)
+(12,63)-(12,64)
+(12,65)-(12,66)
 *)

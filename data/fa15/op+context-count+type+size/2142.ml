@@ -1,83 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squares of expr
-  | Volume of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
-  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
-  | Volume (j,k,l) ->
-      (exprToString e) ^ ("*" ^ (exprToString e "*" exprToString e));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem = h) then h :: seen else seen in
+        let rest' = [t] in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squares of expr
-  | Volume of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
-  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
-  | Volume (j,k,l) ->
-      (exprToString e) ^
-        ("*" ^ ((exprToString e) ^ ("*" ^ (exprToString e))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(30,34)-(30,46)
-(30,34)-(30,67)
-(30,49)-(30,52)
-(30,53)-(30,65)
-(30,66)-(30,67)
+(7,27)-(7,41)
+(7,47)-(7,56)
+(8,20)-(8,23)
 *)
 
 (* type error slice
-(17,29)-(17,41)
-(17,29)-(17,43)
-(17,29)-(17,50)
-(17,45)-(17,46)
-(30,34)-(30,46)
-(30,34)-(30,67)
+(3,2)-(9,27)
+(3,18)-(8,48)
+(4,4)-(8,48)
+(4,4)-(8,48)
+(4,10)-(4,14)
+(8,8)-(8,48)
+(8,20)-(8,23)
+(8,20)-(8,23)
+(8,21)-(8,22)
+(8,27)-(8,33)
+(8,27)-(8,48)
+(8,34)-(8,48)
+(8,42)-(8,47)
 *)

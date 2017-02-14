@@ -1,40 +1,26 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ h) in
-      let base = "" in let l = sepConcat sep t in List.fold_left f base l;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile b' c' else b';;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ h) in
-      let base = "" in let l = sl in List.fold_left f base l;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
 *)
 
 (* changed spans
-(7,32)-(7,41)
-(7,32)-(7,47)
-(7,42)-(7,45)
-(7,46)-(7,47)
+(2,55)-(2,67)
+(2,62)-(2,64)
+(2,65)-(2,67)
 *)
 
 (* type error slice
-(2,4)-(7,76)
-(2,19)-(7,74)
-(2,23)-(7,74)
-(3,3)-(7,74)
-(4,11)-(4,13)
-(7,24)-(7,74)
-(7,32)-(7,41)
-(7,32)-(7,47)
-(7,51)-(7,65)
-(7,51)-(7,74)
-(7,73)-(7,74)
+(2,3)-(2,77)
+(2,16)-(2,75)
+(2,23)-(2,75)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,67)
+(2,62)-(2,64)
 *)

@@ -13,10 +13,9 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match (a, x) with | ((w,b),(y,z)) -> b @ ([w mod 10] @ [w / 10]) in
+    let f a x = match (a, x) with | ((w,b),(y,z)) -> ((y + z), (b @ [w])) in
     let base = (0, []) in
-    let args = List.combine l1 l2 in
+    let args = List.rev List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
@@ -37,37 +36,20 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match (a, x) with
-      | ((w,b),(y,z)) -> ((y + z), (b @ ([w mod 10] @ [w / 10]))) in
+    let f a x = match (a, x) with | ((w,b),(y,z)) -> ((y + z), (b @ [w])) in
     let base = (0, []) in
-    let args = List.combine l1 l2 in
+    let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,44)-(17,70)
-(18,5)-(20,52)
-(19,5)-(20,52)
-(20,5)-(20,52)
-(21,20)-(21,27)
-(21,28)-(21,30)
-(21,31)-(21,33)
+(18,15)-(18,42)
+(18,24)-(18,36)
 *)
 
 (* type error slice
-(16,5)-(20,52)
-(16,11)-(17,70)
-(16,13)-(17,70)
-(17,7)-(17,70)
-(17,7)-(17,70)
-(17,14)-(17,15)
-(17,14)-(17,18)
-(17,44)-(17,70)
-(17,46)-(17,47)
-(20,19)-(20,33)
-(20,19)-(20,45)
-(20,34)-(20,35)
+(18,15)-(18,23)
+(18,15)-(18,42)
 *)

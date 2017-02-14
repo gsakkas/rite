@@ -1,32 +1,43 @@
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
-
-let rec digitsOfInt n =
-  if n <= 0 then n else append ((digitsOfInt (n / 10)), [n mod 10]);;
+let rec wwhile (f,b) =
+  let x = wwhile (f, b) in
+  let h::t = x in match [t] with | false  -> h | true  -> wwhile (f, h);;
 
 
 (* fix
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
-
-let rec digitsOfInt n =
-  if n <= 0 then [n] else append (digitsOfInt (n / 10)) [n mod 10];;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
 *)
 
 (* changed spans
-(5,18)-(5,19)
-(5,25)-(5,67)
-(5,34)-(5,67)
+(3,2)-(4,71)
+(3,10)-(3,16)
+(3,17)-(3,23)
+(4,2)-(4,71)
+(4,13)-(4,14)
+(4,24)-(4,27)
+(4,25)-(4,26)
+(4,45)-(4,46)
+(4,58)-(4,71)
 *)
 
 (* type error slice
-(2,22)-(2,71)
-(2,22)-(2,71)
-(2,61)-(2,67)
-(2,61)-(2,71)
-(2,68)-(2,69)
-(5,25)-(5,31)
-(5,25)-(5,67)
-(5,34)-(5,67)
+(3,2)-(4,71)
+(3,10)-(3,16)
+(3,10)-(3,23)
+(4,2)-(4,71)
+(4,2)-(4,71)
+(4,13)-(4,14)
+(4,18)-(4,71)
+(4,18)-(4,71)
+(4,18)-(4,71)
+(4,18)-(4,71)
+(4,18)-(4,71)
+(4,18)-(4,71)
+(4,24)-(4,27)
+(4,45)-(4,46)
+(4,58)-(4,64)
+(4,58)-(4,71)
 *)

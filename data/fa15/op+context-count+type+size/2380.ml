@@ -1,34 +1,18 @@
 
-let getHead h = match h with | [] -> [] | h::t -> h;;
-
-let getTail t = match t with | [] -> [] | h::t -> t;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
 let explode s =
   let rec go i =
     if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
   go 0;;
 
-let rec listList xs = match xs with | [] -> [[]] | h::t -> [h] @ (listList t);;
-
-let rec matchHeads x =
-  match x with
-  | [] -> true
-  | h::t ->
-      if h = (getHead t) then matchHeads (getTail (listReverse t)) else false;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads (listList w);;
+  match explode w with | [] -> true | h::t -> listReverse (explode w);;
 
 
 (* fix
 
-let getHead h = match h with | [] -> [] | h::t -> h;;
-
-let getTail t = match t with | [] -> [] | h::t -> t;;
-
 let rec listReverse l =
   match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
@@ -37,44 +21,45 @@ let explode s =
     if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
   go 0;;
 
-let rec listList xs =
-  match xs with | [] -> [[]] | h::t -> [[h]] @ (listList t);;
-
-let rec matchHeads x =
-  match x with
+let rec matchHeads w =
+  match w with
   | [] -> true
-  | h::t ->
-      if h = (getHead t) then matchHeads (getTail (listReverse t)) else false;;
+  | h::t -> if h = (List.hd (listReverse w)) then true else false;;
 
 let palindrome w =
-  match explode w with
-  | [] -> true
-  | h::t -> matchHeads (listList (explode w));;
+  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
 
 *)
 
 (* changed spans
-(14,61)-(14,62)
-(23,68)-(23,69)
+(2,12)-(5,6)
+(3,2)-(5,6)
+(7,20)-(8,57)
+(8,2)-(8,57)
+(8,8)-(8,9)
+(8,23)-(8,25)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,49)-(8,50)
+(8,52)-(8,53)
+(8,54)-(8,57)
+(8,55)-(8,56)
+(11,8)-(11,15)
+(11,8)-(11,17)
+(11,46)-(11,57)
+(11,46)-(11,69)
+(11,59)-(11,66)
 *)
 
 (* type error slice
-(9,4)-(12,9)
-(9,13)-(12,7)
-(11,14)-(11,27)
-(11,14)-(11,29)
-(11,28)-(11,29)
-(14,23)-(14,77)
-(14,23)-(14,77)
-(14,23)-(14,77)
-(14,23)-(14,77)
-(14,67)-(14,75)
-(14,67)-(14,77)
-(14,76)-(14,77)
-(23,9)-(23,16)
-(23,9)-(23,18)
-(23,17)-(23,18)
-(23,59)-(23,67)
-(23,59)-(23,69)
-(23,68)-(23,69)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,52)-(8,53)
+(11,2)-(11,69)
+(11,2)-(11,69)
+(11,31)-(11,35)
+(11,46)-(11,57)
+(11,46)-(11,69)
 *)

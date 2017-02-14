@@ -4,23 +4,27 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Neg of expr
   | Average of expr* expr
   | Times of expr* expr
-  | AveThree of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Neg e -> (-1.0) *. (eval (e, x, y))
-  | AveThree (e1,e2,e3) ->
-      ((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y));;
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    match rand with
+    | (0,2) -> buildX (build (rand, (depth - 1)))
+    | (3,5) -> buildY ()
+    | (6,10) -> buildSine (build (rand, (depth - 1)))
+    | (11,18) -> buildCosine (build (rand, (depth - 1)))
+  else ();;
 
 
 (* fix
@@ -30,47 +34,74 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Neg of expr
   | Average of expr* expr
   | Times of expr* expr
-  | AveThree of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Neg e -> (-1.0) *. (eval (e, x, y))
-  | AveThree (e1,e2,e3) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, (depth - 1)))
+    | 1 -> buildCosine (build (rand, (depth - 1)))
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 *)
 
 (* changed spans
-(23,9)-(23,23)
-(23,9)-(23,43)
-(23,9)-(23,64)
+(22,4)-(26,56)
+(22,10)-(22,14)
+(23,15)-(23,21)
+(23,15)-(23,49)
+(23,23)-(23,28)
+(23,29)-(23,48)
+(23,36)-(23,47)
+(23,37)-(23,42)
+(23,45)-(23,46)
+(24,15)-(24,21)
+(24,15)-(24,24)
+(24,22)-(24,24)
+(25,16)-(25,53)
+(27,7)-(27,9)
 *)
 
 (* type error slice
-(19,20)-(19,40)
-(19,27)-(19,31)
-(19,27)-(19,40)
-(21,15)-(21,19)
-(21,15)-(21,19)
-(21,15)-(21,38)
-(21,16)-(21,19)
-(23,9)-(23,13)
-(23,9)-(23,23)
-(23,9)-(23,43)
-(23,9)-(23,43)
-(23,9)-(23,64)
-(23,29)-(23,33)
-(23,29)-(23,43)
-(23,50)-(23,54)
-(23,50)-(23,64)
+(11,3)-(11,30)
+(11,16)-(11,28)
+(11,20)-(11,28)
+(11,27)-(11,28)
+(13,3)-(13,26)
+(13,14)-(13,24)
+(13,18)-(13,24)
+(13,23)-(13,24)
+(15,3)-(15,22)
+(15,11)-(15,20)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(19,3)-(27,11)
+(19,15)-(27,9)
+(20,2)-(27,9)
+(20,2)-(27,9)
+(22,4)-(26,56)
+(23,15)-(23,21)
+(23,15)-(23,49)
+(23,22)-(23,49)
+(23,23)-(23,28)
+(25,16)-(25,25)
+(25,16)-(25,53)
+(25,26)-(25,53)
+(25,27)-(25,32)
+(26,17)-(26,28)
+(26,17)-(26,56)
+(26,29)-(26,56)
+(26,30)-(26,35)
+(27,7)-(27,9)
 *)

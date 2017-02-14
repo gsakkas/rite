@@ -43,9 +43,9 @@ let bigMul l1 l2 =
     let (s,t) = x in
     match a with
     | (r,v) ->
-        let sum = mulByDigit (intListToInt l1) s in
+        let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then (((sum + r) / 10), (((sum + r) mod 10) :: v))
+        then ((int_of_float ((sum + r) / 10)), (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
@@ -100,47 +100,23 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then (((sum + r) / 10), (((sum + r) mod 10) :: v))
+        then ((sum + r), (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = List.combine l2 l2 in
+  let args = List.rev (List.combine l2 l2) in
   let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(46,19)-(46,49)
-(46,48)-(46,49)
-(51,14)-(51,22)
-(51,14)-(51,42)
+(48,14)-(48,45)
+(48,15)-(48,27)
+(48,28)-(48,44)
+(48,41)-(48,43)
 *)
 
 (* type error slice
-(4,4)-(10,20)
-(4,13)-(10,17)
-(4,16)-(10,17)
-(9,46)-(9,57)
-(9,46)-(9,60)
-(9,58)-(9,60)
-(15,4)-(27,37)
-(15,12)-(27,33)
-(15,15)-(27,33)
-(27,20)-(27,27)
-(27,20)-(27,33)
-(27,31)-(27,33)
-(39,17)-(39,23)
-(39,17)-(39,47)
-(39,27)-(39,37)
-(39,27)-(39,47)
-(46,9)-(49,42)
-(46,19)-(46,29)
-(46,19)-(46,49)
-(47,13)-(47,16)
-(47,13)-(47,20)
-(48,17)-(48,20)
-(48,17)-(48,24)
-(48,36)-(48,39)
-(48,36)-(48,43)
-(49,21)-(49,24)
-(49,21)-(49,28)
+(48,14)-(48,45)
+(48,15)-(48,27)
+(48,28)-(48,44)
 *)

@@ -6,29 +6,15 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SumInts of expr
-  | Power of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr1,expr2) ->
-      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
-  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      if (eval (expr1, x, y)) < (eval (expr2, x, y))
-      then eval (expr3, x, y)
-      else eval (expr4, x, y)
-  | SumInts expr ->
-      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2
-  | Power (expr1,expr2,expr3) ->
-      (eval expr1) ** (abs ((eval (expr1, x, y)) +. (eval (expr2, x, y))));;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ());;
 
 
 (* fix
@@ -40,53 +26,42 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SumInts of expr
-  | Power of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr1,expr2) ->
-      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
-  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      if (eval (expr1, x, y)) < (eval (expr2, x, y))
-      then eval (expr3, x, y)
-      else eval (expr4, x, y)
-  | SumInts expr ->
-      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2.0
-  | Power (expr1,expr2,expr3) ->
-      (eval (expr1, x, y)) **
-        (abs_float ((eval (expr2, x, y)) +. (eval (expr3, x, y))));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ())
+  else
+    (let subtreeSize1 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeSize2 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeSize3 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeeSize4 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let x = rand (1, 5) in
+     match x with | _ -> buildSine (build (rand, subtreeSize1)));;
 
 *)
 
 (* changed spans
-(29,64)-(29,65)
-(31,13)-(31,18)
-(31,24)-(31,27)
-(31,24)-(31,71)
-(31,36)-(31,41)
-(31,60)-(31,65)
+(11,11)-(11,20)
+(16,2)-(17,70)
+(17,7)-(17,70)
 *)
 
 (* type error slice
-(16,3)-(31,71)
-(19,30)-(19,34)
-(19,30)-(19,46)
-(19,36)-(19,46)
-(29,9)-(29,65)
-(29,64)-(29,65)
-(31,8)-(31,12)
-(31,8)-(31,18)
-(31,13)-(31,18)
-(31,24)-(31,27)
-(31,24)-(31,71)
-(31,30)-(31,71)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(17,70)
+(16,2)-(17,70)
+(16,2)-(17,70)
+(17,7)-(17,70)
+(17,30)-(17,70)
+(17,45)-(17,51)
+(17,45)-(17,54)
 *)

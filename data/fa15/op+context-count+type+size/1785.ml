@@ -4,7 +4,7 @@ let removeDuplicates l =
     match rest with
     | [] -> seen
     | h::t ->
-        let seen' = if not (List.mem (h, seen)) then h :: seen else seen in
+        let seen' = if not List.mem (h, seen) then h :: seen else seen in
         let rest' = t in helper (seen', rest') in
   List.rev (helper ([], l));;
 
@@ -23,13 +23,12 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,29)-(7,46)
-(7,39)-(7,46)
+(7,23)-(7,45)
+(7,27)-(7,35)
+(7,36)-(7,45)
 *)
 
 (* type error slice
-(7,24)-(7,27)
-(7,24)-(7,46)
-(7,29)-(7,37)
-(7,29)-(7,46)
+(7,23)-(7,26)
+(7,23)-(7,45)
 *)

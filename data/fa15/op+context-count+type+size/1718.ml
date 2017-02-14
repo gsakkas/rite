@@ -1,78 +1,23 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Root of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Pivot of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
-  | Root x3 -> sqrt (eval (x3, x, y))
-  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
-  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
-  | Thresh (x8,x9,x10,x11) ->
-      if (eval (x8, x, y)) < (eval (x9, x, y))
-      then eval (x10, x, y)
-      else eval (x11, x, y)
-  | Pivot (x12,x13,x14) ->
-      if (eval (x12, x, y)) < 0 then eval (x13, x, y) else eval (x14, x, y);;
+let rec clone x n = if n > 1 then x :: (clone x (n - 1));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Root of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Pivot of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
-  | Root x3 -> sqrt (eval (x3, x, y))
-  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
-  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
-  | Thresh (x8,x9,x10,x11) ->
-      if (eval (x8, x, y)) < (eval (x9, x, y))
-      then eval (x10, x, y)
-      else eval (x11, x, y)
-  | Pivot (x12,x13,x14) ->
-      if (eval (x12, x, y)) < 0. then eval (x13, x, y) else eval (x14, x, y);;
+let rec clone x n = x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(29,31)-(29,32)
+(2,20)-(2,56)
+(2,23)-(2,24)
+(2,23)-(2,28)
+(2,27)-(2,28)
 *)
 
 (* type error slice
-(19,21)-(19,42)
-(19,28)-(19,32)
-(19,28)-(19,42)
-(29,11)-(29,15)
-(29,11)-(29,26)
-(29,11)-(29,32)
-(29,11)-(29,32)
-(29,31)-(29,32)
+(2,20)-(2,56)
+(2,20)-(2,56)
+(2,20)-(2,56)
+(2,34)-(2,56)
 *)

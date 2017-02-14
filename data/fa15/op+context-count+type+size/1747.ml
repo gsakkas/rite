@@ -16,14 +16,14 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       match a with
-      | h::t ->
-          if (((fst x) + (snd x)) + h) > 9
-          then (1, (((((fst x) + (snd x)) + h) mod 10) :: t))
-          else (0, (((((fst x) + (snd x)) + h) mod 10) :: t))
+      | (a,h::t) ->
+          if (((fst x) + (snd x)) + a) > 9
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10)))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10)))
       | _ ->
           if ((fst x) + (snd x)) > 9
-          then (1, ((((fst x) + (snd x)) mod 10) :: a))
-          else (0, ((((fst x) + (snd x)) mod 10) :: a)) in
+          then (1, [((fst x) + (snd x)) mod 10])
+          else (0, [((fst x) + (snd x)) mod 10]) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -49,10 +49,10 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       match a with
-      | (a,b) ->
+      | (a,h::t) ->
           if (((fst x) + (snd x)) + a) > 9
-          then (1, (((((fst x) + (snd x)) + a) mod 10) :: b))
-          else (0, (((((fst x) + (snd x)) + a) mod 10) :: b))
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
       | _ ->
           if ((fst x) + (snd x)) > 9
           then (1, [((fst x) + (snd x)) mod 10])
@@ -65,28 +65,18 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,7)-(26,54)
-(20,37)-(20,38)
-(21,45)-(21,46)
-(21,59)-(21,60)
-(22,45)-(22,46)
-(22,59)-(22,60)
-(25,24)-(25,54)
-(25,53)-(25,54)
-(26,24)-(26,54)
-(26,53)-(26,54)
+(21,25)-(21,59)
+(22,15)-(22,61)
+(22,25)-(22,59)
+(24,10)-(26,48)
+(30,19)-(30,26)
+(30,27)-(30,29)
+(30,30)-(30,32)
 *)
 
 (* type error slice
-(17,5)-(29,52)
-(17,11)-(26,54)
-(17,13)-(26,54)
-(18,7)-(26,54)
-(20,11)-(22,60)
-(21,17)-(21,60)
-(25,24)-(25,54)
-(25,53)-(25,54)
-(29,19)-(29,33)
-(29,19)-(29,45)
-(29,34)-(29,35)
+(21,19)-(21,60)
+(21,25)-(21,59)
+(22,19)-(22,60)
+(22,25)-(22,59)
 *)

@@ -1,49 +1,80 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((let f' x = ((f x), ((f x not) = x)) in f'), b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX _ -> x
+  | VarY _ -> y
+  | Sine x1 -> eval ((buildSine x1), x, y)
+  | Cosine x2 -> eval ((buildCosine x2), x, y)
+  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
+  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
+  | Thresh (x7,x8,x9,x0) -> eval (buildThresh (x7, x8, x9, x0));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile ((let f' x = ((f x), (not ((f x) = x))) in f'), b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX _ -> x
+  | VarY _ -> y
+  | Sine x1 -> eval ((buildSine x1), x, y)
+  | Cosine x2 -> eval ((buildCosine x2), x, y)
+  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
+  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
+  | Thresh (x7,x8,x9,x0) -> eval ((buildThresh (x7, x8, x9, x0)), x, y);;
 
 *)
 
 (* changed spans
-(4,31)-(4,72)
-(4,52)-(4,59)
-(4,52)-(4,64)
-(4,56)-(4,59)
+(29,33)-(29,63)
 *)
 
 (* type error slice
-(2,4)-(2,80)
-(2,17)-(2,78)
-(2,24)-(2,78)
-(2,38)-(2,39)
-(2,38)-(2,41)
-(2,40)-(2,41)
-(2,56)-(2,62)
-(2,56)-(2,69)
-(2,64)-(2,69)
-(2,67)-(2,69)
-(4,22)-(4,28)
-(4,22)-(4,76)
-(4,31)-(4,72)
-(4,31)-(4,72)
-(4,31)-(4,76)
-(4,38)-(4,64)
-(4,44)-(4,45)
-(4,44)-(4,47)
-(4,44)-(4,64)
-(4,52)-(4,53)
-(4,52)-(4,59)
-(4,52)-(4,64)
-(4,52)-(4,64)
-(4,63)-(4,64)
-(4,70)-(4,72)
+(17,3)-(17,69)
+(17,17)-(17,67)
+(17,38)-(17,67)
+(28,21)-(28,25)
+(28,21)-(28,55)
+(28,26)-(28,55)
+(29,28)-(29,32)
+(29,28)-(29,63)
+(29,33)-(29,63)
+(29,34)-(29,45)
 *)

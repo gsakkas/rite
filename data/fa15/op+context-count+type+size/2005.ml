@@ -1,6 +1,10 @@
 
 let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else x :: ((clone x n) - 1);;
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then ((((clone 0) - n) :: l1), l2) else (l1, ((clone 0 n) :: l2));;
 
 
 (* fix
@@ -8,25 +12,26 @@ let rec clone x n =
 let rec clone x n =
   if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
+
 *)
 
 (* changed spans
-(3,49)-(3,50)
-(3,49)-(3,70)
-(3,56)-(3,70)
-(3,64)-(3,65)
+(7,17)-(7,40)
+(7,18)-(7,33)
+(7,19)-(7,28)
+(7,20)-(7,25)
+(7,31)-(7,32)
+(7,56)-(7,75)
+(7,58)-(7,63)
 *)
 
 (* type error slice
-(2,4)-(3,73)
-(2,15)-(3,70)
-(2,17)-(3,70)
-(3,3)-(3,70)
-(3,26)-(3,70)
-(3,40)-(3,43)
-(3,49)-(3,70)
-(3,56)-(3,61)
-(3,56)-(3,65)
-(3,56)-(3,70)
-(3,56)-(3,70)
+(3,54)-(3,71)
+(3,55)-(3,60)
+(7,18)-(7,33)
+(7,19)-(7,28)
+(7,20)-(7,25)
 *)

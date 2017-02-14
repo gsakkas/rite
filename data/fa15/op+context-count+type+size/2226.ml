@@ -24,7 +24,7 @@ let rec eval (e,x,y) =
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | Arctan e1 -> (2. *. (atan eval (e1, x, y))) /. pi
+  | Arctan e1 -> atan eval (e1, x, y)
   | Strange (e1,e2,e3) ->
       ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
           ((eval (e2, x, y)) *. (eval (e2, x, y))))
@@ -69,15 +69,11 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(27,19)-(27,21)
-(27,19)-(27,45)
-(27,19)-(27,54)
-(27,26)-(27,45)
-(27,31)-(27,35)
-(27,52)-(27,54)
+(27,17)-(27,37)
+(27,22)-(27,26)
 *)
 
 (* type error slice
-(27,26)-(27,30)
-(27,26)-(27,45)
+(27,17)-(27,21)
+(27,17)-(27,37)
 *)

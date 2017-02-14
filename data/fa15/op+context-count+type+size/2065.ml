@@ -19,8 +19,11 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = let (x1,x2) = x in (((x1 + x2) mod 10), [(x1 + x2) / 10]) in
-    let base = [] in
+    let f a x =
+      let (x1,x2) = x in
+      let a1::a2 = a in
+      let (c,ax) = a1 in ([(x1 + x2) / 10], [(x1 + x2) mod 10]) in
+    let base = ([], []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -48,7 +51,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = let (x1,x2) = x in ([(x1 + x2) mod 10], [(x1 + x2) / 10]) in
+    let f a x = let (x1,x2) = x in ([(x1 + x2) / 10], [(x1 + x2) mod 10]) in
     let base = ([], []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
@@ -57,21 +60,28 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,39)-(22,54)
-(23,16)-(23,18)
-(24,5)-(25,52)
+(23,6)-(25,63)
+(24,6)-(25,63)
+(24,19)-(24,20)
+(25,6)-(25,63)
+(25,19)-(25,21)
+(26,4)-(28,51)
+(27,4)-(28,51)
+(28,4)-(28,51)
 *)
 
 (* type error slice
-(22,5)-(25,52)
-(22,11)-(22,73)
-(22,13)-(22,73)
-(22,17)-(22,73)
-(22,39)-(22,73)
-(23,5)-(25,52)
-(23,16)-(23,18)
-(25,19)-(25,33)
-(25,19)-(25,45)
-(25,34)-(25,35)
-(25,36)-(25,40)
+(22,4)-(28,51)
+(22,10)-(25,63)
+(22,12)-(25,63)
+(23,6)-(25,63)
+(24,6)-(25,63)
+(24,6)-(25,63)
+(24,6)-(25,63)
+(24,19)-(24,20)
+(25,6)-(25,63)
+(25,25)-(25,63)
+(28,18)-(28,32)
+(28,18)-(28,44)
+(28,33)-(28,34)
 *)

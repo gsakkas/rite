@@ -1,39 +1,24 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n = 0
-    then 0
-    else (let x = n mod 10
-          and r = n / 10 in (digitsOfInt r) @ [x]);;
+let rec sumList xs = if (List.length xs) > 0 then (List.hd xs) + (sumList xs);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n = 0
-    then []
-    else (let x = n mod 10
-          and r = n / 10 in (digitsOfInt r) @ [x]);;
+let rec sumList xs = if xs = [] then 0 else (List.hd xs) + (sumList xs);;
 
 *)
 
 (* changed spans
-(7,10)-(7,11)
+(2,21)-(2,77)
+(2,24)-(2,40)
+(2,24)-(2,44)
+(2,25)-(2,36)
+(2,43)-(2,44)
 *)
 
 (* type error slice
-(3,3)-(9,50)
-(3,3)-(9,50)
-(4,8)-(4,10)
-(6,5)-(9,50)
-(6,5)-(9,50)
-(7,10)-(7,11)
-(8,11)-(9,50)
-(9,30)-(9,50)
-(9,45)-(9,46)
+(2,21)-(2,77)
+(2,21)-(2,77)
+(2,21)-(2,77)
+(2,50)-(2,77)
 *)

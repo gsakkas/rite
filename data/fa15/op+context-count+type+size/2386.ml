@@ -1,42 +1,29 @@
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let rec addNumbs n = match n with | [] -> 0 | h::t -> h + (addNumbs t);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec additivePersistence n =
-  match digits n with
-  | [] -> 0
-  | h::t -> if (addNumbs (h :: t)) >= 10 then false else true;;
+  if n <= 0 then [] else [(digitsOfInt n) / 10; n mod 10];;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let rec addNumbs n = match n with | [] -> 0 | h::t -> h + (addNumbs t);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec additivePersistence n =
-  match digits n with
-  | [] -> 0
-  | h::t -> if (addNumbs (h :: t)) >= 10 then 1 else 2;;
+let rec digitsOfInt n = if n <= 0 then [] else [n mod 10];;
 
 *)
 
 (* changed spans
-(12,47)-(12,52)
-(12,58)-(12,62)
+(3,25)-(3,57)
+(3,26)-(3,41)
+(3,26)-(3,46)
+(3,27)-(3,38)
+(3,39)-(3,40)
+(3,48)-(3,56)
 *)
 
 (* type error slice
-(10,3)-(12,62)
-(10,3)-(12,62)
-(11,11)-(11,12)
-(12,13)-(12,62)
-(12,47)-(12,52)
+(2,3)-(3,59)
+(2,20)-(3,57)
+(3,2)-(3,57)
+(3,25)-(3,57)
+(3,26)-(3,41)
+(3,26)-(3,46)
+(3,27)-(3,38)
 *)

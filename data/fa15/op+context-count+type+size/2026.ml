@@ -15,12 +15,15 @@ let bigAdd l1 l2 =
       let (x1,x2) = x in
       let (a1,a2) = a in
       if ((a1 + x1) + x2) >= 10
-      then (1, (a2 @ (((a1 + x1) + x2) - 10)))
-      else (0, (a2 @ ((a1 + x1) + x2))) in
+      then (1, ((((a1 + x1) + x2) - 10) :: a2))
+      else (0, (((a1 + x1) + x2) :: a2)) in
     let base = (0, []) in
-    let args = List.combine l1 l2 in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then 0 else if i = 1 then l else mulByDigit (i - 1) bigAdd l l;;
 
 
 (* fix
@@ -41,25 +44,30 @@ let bigAdd l1 l2 =
       let (x1,x2) = x in
       let (a1,a2) = a in
       if ((a1 + x1) + x2) >= 10
-      then (1, (a2 @ [((a1 + x1) + x2) - 10]))
-      else (0, (a2 @ [(a1 + x1) + x2])) in
+      then (1, ((((a1 + x1) + x2) - 10) :: a2))
+      else (0, (((a1 + x1) + x2) :: a2)) in
     let base = (0, []) in
-    let args = List.combine l1 l2 in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else if i = 1 then l else mulByDigit (i - 1) (bigAdd l l);;
 
 *)
 
 (* changed spans
-(18,25)-(18,44)
-(19,24)-(19,37)
+(26,16)-(26,17)
+(26,44)-(26,73)
+(26,63)-(26,69)
 *)
 
 (* type error slice
-(18,17)-(18,44)
-(18,20)-(18,21)
-(18,25)-(18,44)
-(19,17)-(19,37)
-(19,20)-(19,21)
-(19,24)-(19,37)
+(25,3)-(26,75)
+(25,19)-(26,73)
+(25,21)-(26,73)
+(26,2)-(26,73)
+(26,23)-(26,73)
+(26,44)-(26,54)
+(26,44)-(26,73)
 *)

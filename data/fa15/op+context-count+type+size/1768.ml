@@ -47,10 +47,12 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((carryFunc (sum + r)), (((sum + r) mod 10) :: v))
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+            (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = List.rev (List.combine l2 l2) in
+  let args = List.rev ((List.combine l2 l2) @ [((0, 0), (0, 0), (0, 0))]) in
   let (_,res) = List.fold_left f base args in res;;
 
 
@@ -92,6 +94,8 @@ let rec sepConcat sep sl =
 
 let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
 
+let rec helper n x = if n > 0 then helper (n - 1) (x / 10) else [];;
+
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -110,32 +114,41 @@ let bigMul l1 l2 =
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
-  let (_,res) = List.fold_left f base args in res;;
+  let (x,res) = List.fold_left f base args in
+  res @ (helper ((List.length l2) * 2) x);;
 
 *)
 
 (* changed spans
-(50,16)-(50,25)
-(50,27)-(50,30)
-(50,27)-(50,34)
-(50,33)-(50,34)
-(50,41)-(50,62)
-(52,3)-(54,50)
-(53,3)-(54,50)
-(54,3)-(54,50)
-(54,17)-(54,31)
-(54,32)-(54,33)
-(54,34)-(54,38)
-(54,39)-(54,43)
+(38,17)-(38,76)
+(44,2)-(56,49)
+(45,4)-(53,43)
+(48,8)-(53,43)
+(54,2)-(56,49)
+(55,2)-(56,49)
+(55,23)-(55,43)
+(55,44)-(55,45)
+(55,46)-(55,72)
+(55,47)-(55,71)
+(55,48)-(55,54)
+(55,49)-(55,50)
+(55,52)-(55,53)
+(55,56)-(55,62)
+(55,57)-(55,58)
+(55,60)-(55,61)
+(55,64)-(55,70)
+(55,65)-(55,66)
+(55,68)-(55,69)
+(56,2)-(56,49)
+(56,46)-(56,49)
 *)
 
 (* type error slice
-(36,4)-(36,76)
-(36,15)-(36,74)
-(36,27)-(36,35)
-(36,27)-(36,37)
-(36,36)-(36,37)
-(50,16)-(50,25)
-(50,16)-(50,34)
-(50,27)-(50,34)
+(55,22)-(55,73)
+(55,23)-(55,43)
+(55,24)-(55,36)
+(55,44)-(55,45)
+(55,46)-(55,72)
+(55,46)-(55,72)
+(55,47)-(55,71)
 *)

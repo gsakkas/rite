@@ -2,7 +2,7 @@
 let rec wwhile (f,b) =
   match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
 
-let fixpoint (f,b) = wwhile (if true then b else ((f b), b));;
+let fixpoint (f,b) = wwhile (if (f b) = b then b else (false, b));;
 
 
 (* fix
@@ -18,17 +18,18 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(5,30)-(5,59)
-(5,33)-(5,37)
-(5,43)-(5,44)
-(5,52)-(5,55)
-(5,58)-(5,59)
+(5,28)-(5,65)
+(5,32)-(5,37)
+(5,32)-(5,41)
+(5,40)-(5,41)
+(5,47)-(5,48)
+(5,55)-(5,60)
 *)
 
 (* type error slice
-(5,30)-(5,59)
-(5,30)-(5,59)
-(5,43)-(5,44)
-(5,52)-(5,59)
-(5,58)-(5,59)
+(5,28)-(5,65)
+(5,28)-(5,65)
+(5,47)-(5,48)
+(5,54)-(5,64)
+(5,62)-(5,63)
 *)

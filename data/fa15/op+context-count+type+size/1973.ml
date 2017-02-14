@@ -1,48 +1,54 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec sumListHelper total xs =
+  match xs with | [] -> total | hd::tail -> sumListHelper (total + hd) tail;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else if n >= 10 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [n];;
 
-let palindrome w = explode (listReverse w);;
+let rec digitsOfInt n = digitsOfIntHelper n;;
+
+let rec sumList xs = sumListHelper 0 xs;;
+
+let rec additivePersistence n = sumList digitsOfInt n;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec sumListHelper total xs =
+  match xs with | [] -> total | hd::tail -> sumListHelper (total + hd) tail;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else if n >= 10 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [n];;
 
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec digitsOfInt n = digitsOfIntHelper n;;
+
+let rec sumList xs = sumListHelper 0 xs;;
+
+let rec additivePersistence n = sumList (digitsOfInt n);;
 
 *)
 
 (* changed spans
-(10,20)-(10,42)
-(10,29)-(10,40)
-(10,29)-(10,42)
+(14,32)-(14,53)
+(14,40)-(14,51)
 *)
 
 (* type error slice
-(2,4)-(5,9)
-(2,13)-(5,7)
-(4,14)-(4,27)
-(4,14)-(4,29)
-(4,28)-(4,29)
-(8,41)-(8,52)
-(8,41)-(8,57)
-(8,41)-(8,64)
-(8,59)-(8,60)
-(10,20)-(10,27)
-(10,20)-(10,42)
-(10,29)-(10,40)
-(10,29)-(10,42)
+(3,2)-(3,75)
+(3,2)-(3,75)
+(3,24)-(3,29)
+(3,44)-(3,57)
+(3,44)-(3,75)
+(3,58)-(3,70)
+(3,59)-(3,64)
+(12,3)-(12,41)
+(12,16)-(12,39)
+(12,21)-(12,34)
+(12,21)-(12,39)
+(14,32)-(14,39)
+(14,32)-(14,53)
 *)

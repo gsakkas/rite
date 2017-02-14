@@ -1,48 +1,83 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Arctan of expr
+  | Strange of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let helper f b = (((f b) = b), (f b)) in wwhile ((helper f b), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Arctan e1 -> (2. *. (atan eval (e1, x, y))) /. pi
+  | Strange (e1,e2,e3) ->
+      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
+          ((eval (e2, x, y)) *. (eval (e2, x, y))))
+         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
+        /. 3.;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Arctan of expr
+  | Strange of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let helper b = let fb = f b in if fb = b then (true, fb) else (false, fb) in
-  wwhile (helper, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Arctan e1 -> atan (eval (e1, x, y))
+  | Strange (e1,e2,e3) ->
+      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
+          ((eval (e2, x, y)) *. (eval (e2, x, y))))
+         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
+        /. 3.;;
 
 *)
 
 (* changed spans
-(5,14)-(5,38)
-(5,23)-(5,31)
-(5,23)-(5,38)
-(5,30)-(5,31)
-(5,35)-(5,36)
-(5,35)-(5,38)
-(5,37)-(5,38)
-(5,44)-(5,67)
-(5,53)-(5,63)
-(5,60)-(5,61)
-(5,66)-(5,67)
+(27,17)-(27,47)
+(27,17)-(27,53)
+(27,18)-(27,20)
+(27,24)-(27,46)
+(27,30)-(27,34)
+(27,51)-(27,53)
 *)
 
 (* type error slice
-(2,38)-(2,39)
-(2,38)-(2,41)
-(2,56)-(2,62)
-(2,56)-(2,69)
-(2,64)-(2,65)
-(2,64)-(2,69)
-(5,3)-(5,67)
-(5,14)-(5,38)
-(5,16)-(5,38)
-(5,23)-(5,38)
-(5,44)-(5,50)
-(5,44)-(5,67)
-(5,53)-(5,59)
-(5,53)-(5,63)
-(5,53)-(5,67)
+(27,24)-(27,46)
+(27,25)-(27,29)
 *)

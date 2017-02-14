@@ -1,27 +1,34 @@
 
-let pipe fs = let f a x = a x in let base n = n in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sl ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 
 (* fix
 
-let pipe fs = let f a x n = x n in let base n = n in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,34)-(2,76)
-(2,43)-(2,48)
+(6,23)-(6,25)
 *)
 
 (* type error slice
-(2,15)-(2,76)
-(2,21)-(2,30)
-(2,23)-(2,30)
-(2,27)-(2,28)
-(2,27)-(2,30)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,67)-(2,68)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,8)-(3,10)
+(6,22)-(6,30)
+(6,23)-(6,25)
+(6,26)-(6,27)
 *)

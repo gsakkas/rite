@@ -6,7 +6,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Squares of expr
+  | Substract of expr* expr;;
 
 let rec exprToString e =
   match e with
@@ -18,10 +20,14 @@ let rec exprToString e =
       "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
   | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
   | Thresh (w,x,y,z) ->
-      (exprToString w) ^
-        ("*" ^
-           ((exprToString x) ^
-              ("*" ^ ((exprToString y) ^ ("*" exprToString z)))));;
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
+  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+  | Substract (j,k) ->
+      "(" ^ ((exprToString e) ^ ("-" ^ (exprToString e ")")));;
 
 
 (* fix
@@ -33,7 +39,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Squares of expr
+  | Substract of expr* expr;;
 
 let rec exprToString e =
   match e with
@@ -45,19 +53,28 @@ let rec exprToString e =
       "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
   | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
   | Thresh (w,x,y,z) ->
-      (exprToString w) ^
-        ("*" ^
-           ((exprToString x) ^
-              ("*" ^ ((exprToString y) ^ ("*" ^ (exprToString z))))));;
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
+  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+  | Substract (j,k) -> (exprToString e) ^ ("-" ^ (exprToString e));;
 
 *)
 
 (* changed spans
-(24,43)-(24,46)
-(24,47)-(24,59)
+(30,6)-(30,9)
+(30,12)-(30,61)
+(30,30)-(30,31)
+(30,39)-(30,59)
 *)
 
 (* type error slice
-(24,43)-(24,46)
-(24,43)-(24,61)
+(17,26)-(17,50)
+(17,27)-(17,43)
+(17,28)-(17,40)
+(17,44)-(17,45)
+(30,39)-(30,59)
+(30,40)-(30,52)
 *)

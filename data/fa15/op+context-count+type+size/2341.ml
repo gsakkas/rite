@@ -1,6 +1,5 @@
 
-let rec listReverse l =
-  match l with | [] -> 0 | h::t -> (listReverse t) @ [h];;
+let rec listReverse l = match l with | [] -> 0 | h::t -> [h];;
 
 
 (* fix
@@ -11,13 +10,14 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(3,24)-(3,25)
+(2,45)-(2,46)
+(2,57)-(2,60)
+(2,58)-(2,59)
 *)
 
 (* type error slice
-(3,3)-(3,57)
-(3,3)-(3,57)
-(3,24)-(3,25)
-(3,37)-(3,57)
-(3,52)-(3,53)
+(2,24)-(2,60)
+(2,24)-(2,60)
+(2,45)-(2,46)
+(2,57)-(2,60)
 *)

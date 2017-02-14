@@ -1,45 +1,77 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = (x h) :: a in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) + ")")))))));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(6,20)-(6,21)
-(6,20)-(6,23)
-(6,20)-(6,29)
-(6,22)-(6,23)
-(6,28)-(6,29)
-(7,7)-(7,59)
+(26,48)-(26,73)
+(26,49)-(26,66)
 *)
 
 (* type error slice
-(3,3)-(7,59)
-(3,3)-(7,59)
-(6,7)-(7,59)
-(6,13)-(6,29)
-(6,15)-(6,29)
-(6,20)-(6,21)
-(6,20)-(6,23)
-(6,22)-(6,23)
-(7,23)-(7,59)
-(7,31)-(7,32)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,51)-(7,52)
-(7,58)-(7,59)
+(15,27)-(15,52)
+(15,28)-(15,45)
+(15,29)-(15,41)
+(15,46)-(15,47)
+(26,41)-(26,74)
+(26,46)-(26,47)
+(26,48)-(26,73)
+(26,48)-(26,73)
+(26,48)-(26,73)
+(26,49)-(26,66)
+(26,50)-(26,62)
+(26,69)-(26,72)
 *)

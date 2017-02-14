@@ -1,28 +1,23 @@
 
-let rec listReverse l =
-  let rec listReverseHelper l =
-    match l with | [] -> l | h::t -> listReverseHelper (h :: l) t in
-  listReverseHelper [] l;;
+let rec digitsOfInt n =
+  let numL = [] in if n > 0 then (n mod 10) :: (numL digitsOfInt n) else numL;;
 
 
 (* fix
 
-let rec listReverse l =
-  let rec listReverseHelper l =
-    function | [] -> l | h::t -> listReverseHelper (h :: l) t in
-  listReverseHelper [] l;;
+let rec digitsOfInt n =
+  let numL = [] in if n > 0 then (n mod 10) :: (digitsOfInt n) else numL;;
 
 *)
 
 (* changed spans
-(4,5)-(4,66)
-(4,11)-(4,12)
+(3,47)-(3,67)
+(3,48)-(3,52)
 *)
 
 (* type error slice
-(3,3)-(5,25)
-(3,29)-(4,66)
-(4,5)-(4,66)
-(4,38)-(4,55)
-(4,38)-(4,66)
+(3,2)-(3,77)
+(3,13)-(3,15)
+(3,47)-(3,67)
+(3,48)-(3,52)
 *)

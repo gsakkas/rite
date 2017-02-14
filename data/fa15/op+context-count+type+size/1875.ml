@@ -1,43 +1,38 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n < 10 then [n] else (let d = digitsOfInt (n / 10) in d @ [n mod 10]);;
+let rec wwhile (f,b) =
+  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> let s = sumList t in h + s;;
-
-let rec digitalRoot n =
-  if n < 10 then n else digitalRoot sumList digitsOfInt n;;
+let fixpoint (f,b) = wwhile (if (f b) = b then b else ((f b), b));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n < 10 then [n] else (let d = digitsOfInt (n / 10) in d @ [n mod 10]);;
+let rec wwhile (f,b) =
+  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> let s = sumList t in h + s;;
-
-let rec digitalRoot n =
-  if n < 10 then n else digitalRoot (sumList (digitsOfInt n));;
+let fixpoint (f,b) =
+  wwhile
+    ((let g b = let t = f b in if b = t then (b, false) else (t, true) in g),
+      b);;
 
 *)
 
 (* changed spans
-(12,25)-(12,58)
-(12,37)-(12,44)
-(12,45)-(12,56)
+(5,28)-(5,65)
+(5,32)-(5,37)
+(5,32)-(5,41)
+(5,40)-(5,41)
+(5,47)-(5,48)
+(5,54)-(5,64)
+(5,55)-(5,60)
+(5,56)-(5,57)
+(5,62)-(5,63)
 *)
 
 (* type error slice
-(11,4)-(12,60)
-(11,21)-(12,58)
-(12,3)-(12,58)
-(12,25)-(12,36)
-(12,25)-(12,58)
+(5,28)-(5,65)
+(5,28)-(5,65)
+(5,47)-(5,48)
+(5,54)-(5,64)
+(5,62)-(5,63)
 *)

@@ -8,21 +8,18 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildX () = VarX;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
+  let a = exprToString in
   match e with
-  | VarX  -> buildX ()
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) -> buildThresh (a, b, a_less, b_less);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine t -> "sin(pi*" ^ ((e t) ^ ")")
+  | Cosine t -> "cos(pi*" ^ ((e t) ^ ")")
+  | Average (s,t) -> "((" ^ ((e s) ^ ("+" ^ ((e t) ^ ")/2)")))
+  | Times (s,t) -> (e s) ^ ("*" ^ (e t))
+  | Thresh (s,t,u,v) ->
+      "(" ^
+        ((e s) ^ ("<" ^ ((e t) ^ ("?" ^ ((e u) ^ (":" ^ ((e v) ^ ")")))))));;
 
 
 (* fix
@@ -36,56 +33,55 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | buildX -> x
-  | buildY -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) -> 0.0;;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine t -> "sin(pi*" ^ ((exprToString t) ^ ")")
+  | Cosine t -> "cos(pi*" ^ ((exprToString t) ^ ")")
+  | Average (s,t) ->
+      "((" ^ ((exprToString s) ^ ("+" ^ ((exprToString t) ^ ")/2)")))
+  | Times (s,t) -> (exprToString s) ^ ("*" ^ (exprToString t))
+  | Thresh (s,t,u,v) ->
+      "(" ^
+        ((exprToString s) ^
+           ("<" ^
+              ((exprToString t) ^
+                 ("?" ^ ((exprToString u) ^ (":" ^ ((exprToString v) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(11,18)-(11,67)
-(11,39)-(11,67)
-(11,47)-(11,48)
-(11,50)-(11,51)
-(11,53)-(11,59)
-(11,61)-(11,67)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(18,3)-(25,68)
-(19,14)-(19,20)
-(19,14)-(19,23)
-(19,21)-(19,23)
-(25,35)-(25,68)
+(12,2)-(22,75)
+(12,10)-(12,22)
+(16,28)-(16,29)
+(17,30)-(17,31)
+(18,30)-(18,31)
+(18,46)-(18,47)
+(19,20)-(19,21)
+(19,35)-(19,36)
+(22,10)-(22,11)
+(22,26)-(22,27)
+(22,42)-(22,43)
+(22,58)-(22,59)
 *)
 
 (* type error slice
-(13,4)-(13,23)
-(13,12)-(13,21)
-(13,17)-(13,21)
-(17,4)-(25,71)
-(17,15)-(25,68)
-(18,3)-(25,68)
-(18,3)-(25,68)
-(18,3)-(25,68)
-(18,3)-(25,68)
-(18,3)-(25,68)
-(19,14)-(19,20)
-(19,14)-(19,23)
-(21,15)-(21,18)
-(21,15)-(21,40)
-(21,20)-(21,40)
-(21,27)-(21,31)
-(21,27)-(21,40)
-(22,17)-(22,20)
-(22,17)-(22,42)
-(23,26)-(23,71)
-(24,23)-(24,58)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,2)-(22,75)
+(13,8)-(13,9)
+(16,27)-(16,32)
+(16,28)-(16,29)
 *)

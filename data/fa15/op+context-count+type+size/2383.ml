@@ -1,117 +1,48 @@
 
-let getHead y = match y with | [] -> [] | h::t -> h;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let getTail i = match i with | [] -> [] | h::t -> t;;
+let rec addNumbs n = match n with | [] -> 0 | h::t -> h + (addNumbs t);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let digits n = digitsOfInt (abs n);;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec matchHeads x =
-  match x with
-  | [] -> true
-  | h::t ->
-      if h = (getHead t) then matchHeads (getTail (listReverse t)) else false;;
-
-let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
+let rec additivePersistence n =
+  match digits n with | [] -> 0 | h::t -> addNumbs n;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec matchHeads x = match x with | [] -> true | h::t -> true;;
+let rec addNumbs n = match n with | [] -> 0 | h::t -> h + (addNumbs t);;
 
-let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
+let digits n = digitsOfInt (abs n);;
+
+let rec additivePersistence n =
+  match digits n with | [] -> 0 | h::t -> addNumbs (h :: t);;
 
 *)
 
 (* changed spans
-(2,13)-(2,52)
-(2,17)-(2,52)
-(2,23)-(2,24)
-(2,38)-(2,40)
-(2,51)-(2,52)
-(4,13)-(4,52)
-(4,17)-(4,52)
-(4,23)-(4,24)
-(4,38)-(4,40)
-(4,51)-(4,52)
-(6,21)-(7,58)
-(7,3)-(7,58)
-(7,9)-(7,10)
-(7,24)-(7,26)
-(7,38)-(7,49)
-(7,38)-(7,51)
-(7,38)-(7,58)
-(7,50)-(7,51)
-(7,53)-(7,54)
-(7,55)-(7,58)
-(7,56)-(7,57)
-(10,3)-(12,7)
-(14,20)-(18,78)
-(20,16)-(21,68)
+(10,51)-(10,52)
 *)
 
 (* type error slice
-(2,4)-(2,54)
-(2,13)-(2,52)
-(2,17)-(2,52)
-(2,17)-(2,52)
-(2,17)-(2,52)
-(2,17)-(2,52)
-(2,23)-(2,24)
-(2,38)-(2,40)
-(2,51)-(2,52)
-(4,4)-(4,54)
-(4,13)-(4,52)
-(4,17)-(4,52)
-(4,17)-(4,52)
-(4,17)-(4,52)
-(4,23)-(4,24)
-(4,51)-(4,52)
-(7,3)-(7,58)
-(7,3)-(7,58)
-(7,38)-(7,49)
-(7,38)-(7,51)
-(7,38)-(7,58)
-(7,50)-(7,51)
-(7,53)-(7,54)
-(7,55)-(7,58)
-(7,55)-(7,58)
-(7,56)-(7,57)
-(9,4)-(12,9)
-(9,13)-(12,7)
-(10,3)-(12,7)
-(11,45)-(11,50)
-(11,45)-(11,50)
-(11,45)-(11,65)
-(11,45)-(11,65)
-(11,56)-(11,58)
-(11,56)-(11,65)
-(12,3)-(12,5)
-(12,3)-(12,7)
-(18,15)-(18,22)
-(18,15)-(18,24)
-(18,23)-(18,24)
-(18,31)-(18,41)
-(18,31)-(18,65)
-(18,43)-(18,50)
-(18,43)-(18,65)
-(18,52)-(18,63)
-(18,52)-(18,65)
-(18,64)-(18,65)
-(21,47)-(21,57)
-(21,47)-(21,68)
-(21,59)-(21,66)
-(21,59)-(21,68)
+(5,21)-(5,70)
+(5,21)-(5,70)
+(5,58)-(5,70)
+(5,59)-(5,67)
+(5,68)-(5,69)
+(7,3)-(7,36)
+(7,11)-(7,34)
+(7,27)-(7,34)
+(7,28)-(7,31)
+(7,32)-(7,33)
+(10,8)-(10,14)
+(10,8)-(10,16)
+(10,15)-(10,16)
+(10,42)-(10,50)
+(10,42)-(10,52)
+(10,51)-(10,52)
 *)

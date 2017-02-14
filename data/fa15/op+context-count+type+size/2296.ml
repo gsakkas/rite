@@ -6,7 +6,7 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
-let stringOfList f l = sepConcat ("; ", (List.map (f, l)));;
+let stringOfList f l = sepConcat "; " List.map (f, l);;
 
 
 (* fix
@@ -23,21 +23,17 @@ let stringOfList f l = sepConcat "; " l;;
 *)
 
 (* changed spans
-(9,24)-(9,56)
-(9,35)-(9,56)
-(9,42)-(9,56)
+(9,23)-(9,53)
+(9,38)-(9,46)
+(9,47)-(9,53)
 *)
 
 (* type error slice
-(2,4)-(7,61)
-(2,19)-(7,59)
-(6,24)-(6,27)
-(6,24)-(6,31)
-(6,28)-(6,29)
-(9,24)-(9,33)
-(9,24)-(9,56)
-(9,35)-(9,56)
-(9,42)-(9,50)
-(9,42)-(9,56)
-(9,52)-(9,56)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(4,10)-(4,12)
+(9,23)-(9,32)
+(9,23)-(9,53)
 *)

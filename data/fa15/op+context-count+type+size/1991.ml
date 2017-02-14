@@ -1,27 +1,25 @@
 
-let rec sumList xs = match xs with | [] -> [] | h::xs' -> h + (sumList xs');;
+let rec listReverse l = match l with | [] -> [] | h::t -> [t; h];;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(2,22)-(2,75)
-(2,44)-(2,46)
-(2,72)-(2,75)
+(2,58)-(2,64)
+(2,59)-(2,60)
+(2,62)-(2,63)
 *)
 
 (* type error slice
-(2,4)-(2,78)
-(2,17)-(2,75)
-(2,22)-(2,75)
-(2,22)-(2,75)
-(2,44)-(2,46)
-(2,59)-(2,75)
-(2,59)-(2,75)
-(2,64)-(2,71)
-(2,64)-(2,75)
+(2,24)-(2,64)
+(2,24)-(2,64)
+(2,58)-(2,64)
+(2,58)-(2,64)
+(2,59)-(2,60)
+(2,62)-(2,63)
 *)

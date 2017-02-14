@@ -45,7 +45,7 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((int_of_float (sum + r)), (((sum + r) mod 10) :: v))
+        then ((int_of_float ((sum + r) mod 10)), (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
@@ -109,12 +109,14 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(48,16)-(48,28)
-(48,16)-(48,37)
+(48,14)-(48,47)
+(48,15)-(48,27)
+(48,28)-(48,46)
+(48,43)-(48,45)
 *)
 
 (* type error slice
-(48,16)-(48,28)
-(48,16)-(48,37)
-(48,30)-(48,37)
+(48,14)-(48,47)
+(48,15)-(48,27)
+(48,28)-(48,46)
 *)

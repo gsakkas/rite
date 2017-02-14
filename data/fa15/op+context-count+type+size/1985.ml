@@ -1,33 +1,40 @@
 
-let rec digitsOfIntHelper n =
-  if n < 1
-  then []
-  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec digitsOfInt n = digitsOfIntHelper [n > 10];;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence sumList digitsOfInt n)
+  else 0;;
 
 
 (* fix
 
-let rec digitsOfIntHelper n =
-  if n < 1
-  then []
-  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec digitsOfInt n = digitsOfIntHelper n;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence (sumList (digitsOfInt n)))
+  else 0;;
 
 *)
 
 (* changed spans
-(7,43)-(7,51)
-(7,44)-(7,50)
+(9,11)-(9,54)
+(9,32)-(9,39)
+(9,40)-(9,51)
 *)
 
 (* type error slice
-(5,22)-(5,39)
-(5,22)-(5,61)
-(5,41)-(5,61)
-(7,25)-(7,42)
-(7,25)-(7,51)
-(7,43)-(7,51)
+(7,3)-(10,10)
+(7,28)-(10,8)
+(8,2)-(10,8)
+(9,7)-(9,54)
+(9,11)-(9,54)
+(9,12)-(9,31)
 *)

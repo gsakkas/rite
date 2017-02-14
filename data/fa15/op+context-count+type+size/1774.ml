@@ -44,15 +44,20 @@ let bigMul l1 l2 =
   let f a x =
     match a with
     | (r,v) ->
-        let sum = intListToInt (mulByDigit (intListToInt l1) x) in
+        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
         if (sum + r) > 9
         then
-          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) x))),
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
             (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = [0; 0; 0; 0; 0; 0; 0] @ l2 in
-  let (_,res) = List.fold_left f base args in res;;
+  let args = l2 in
+  let (x,res) = List.fold_left f base args in
+  (List.rev
+     ([(x / 10000) mod 10] @
+        ([(x / 1000) mod 10] @
+           ([(x / 100) mod 10] @ ([(x / 10) mod 10] @ [((x / 1) x) mod 10])))))
+    @ res;;
 
 
 (* fix
@@ -109,57 +114,22 @@ let bigMul l1 l2 =
             (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+  let args = l2 in
+  let (x,res) = List.fold_left f base args in
+  (List.rev
+     ([(x / 10000) mod 10] @
+        ([(x / 1000) mod 10] @
+           ([(x / 100) mod 10] @ ([(x / 10) mod 10] @ [(x / 1) mod 10])))))
+    @ res;;
 
 *)
 
 (* changed spans
-(47,62)-(47,63)
-(50,67)-(50,68)
-(54,14)-(54,35)
-(54,14)-(54,40)
-(54,15)-(54,16)
-(54,18)-(54,19)
-(54,21)-(54,22)
-(54,24)-(54,25)
-(54,27)-(54,28)
-(54,30)-(54,31)
-(54,33)-(54,34)
-(54,36)-(54,37)
-(55,3)-(55,50)
+(59,55)-(59,66)
+(59,64)-(59,65)
 *)
 
 (* type error slice
-(4,4)-(10,20)
-(4,13)-(10,17)
-(6,40)-(6,51)
-(6,40)-(6,54)
-(6,52)-(6,54)
-(15,4)-(27,37)
-(15,12)-(27,33)
-(27,20)-(27,27)
-(27,20)-(27,33)
-(27,28)-(27,30)
-(41,17)-(41,23)
-(41,17)-(41,47)
-(41,24)-(41,25)
-(41,27)-(41,37)
-(41,27)-(41,47)
-(41,46)-(41,47)
-(44,3)-(55,50)
-(44,9)-(52,42)
-(44,11)-(52,42)
-(47,33)-(47,43)
-(47,33)-(47,63)
-(47,62)-(47,63)
-(54,3)-(55,50)
-(54,14)-(54,35)
-(54,14)-(54,35)
-(54,14)-(54,40)
-(54,15)-(54,16)
-(54,36)-(54,37)
-(55,17)-(55,31)
-(55,17)-(55,43)
-(55,32)-(55,33)
-(55,39)-(55,43)
+(59,55)-(59,66)
+(59,56)-(59,63)
 *)

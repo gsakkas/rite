@@ -1,80 +1,43 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e' -> "sin (pi * " ^ ((exprToString e') ^ ")")
-  | Cosine e' -> "cos (pi * " ^ ((exprToString e') ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ (" + " ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ (" * " ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^ (a ^ ("< " ^ (b ^ (" ? " ^ (c ^ (" : " ^ (d ^ ")")))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem seen h then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e' -> "sin (pi * " ^ ((exprToString e') ^ ")")
-  | Cosine e' -> "cos (pi * " ^ ((exprToString e') ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ (" + " ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ (" * " ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("< " ^
-              ((exprToString b) ^
-                 (" ? " ^
-                    ((exprToString c) ^ (" : " ^ ((exprToString d) ^ ")")))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(21,14)-(21,15)
-(21,27)-(21,28)
-(21,41)-(21,42)
-(21,55)-(21,56)
-(21,57)-(21,58)
-(21,59)-(21,62)
+(7,8)-(8,46)
+(7,20)-(7,63)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,36)
+(7,37)-(7,38)
+(7,59)-(7,63)
+(8,8)-(8,46)
 *)
 
 (* type error slice
-(12,3)-(21,62)
-(12,3)-(21,62)
-(12,3)-(21,62)
-(12,3)-(21,62)
-(21,14)-(21,15)
-(21,14)-(21,62)
-(21,16)-(21,17)
-(21,27)-(21,28)
-(21,27)-(21,62)
-(21,29)-(21,30)
-(21,41)-(21,42)
-(21,41)-(21,62)
-(21,43)-(21,44)
-(21,55)-(21,56)
-(21,55)-(21,62)
-(21,57)-(21,58)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,36)
+(7,37)-(7,38)
+(7,44)-(7,45)
+(7,44)-(7,53)
+(7,44)-(7,53)
+(7,49)-(7,53)
 *)

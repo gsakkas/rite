@@ -26,7 +26,11 @@ let rec mulByDigit i l =
   if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
 
 let bigMul l1 l2 =
-  let f a x = (0, (mulByDigit a x)) in
+  let f a x =
+    let (place,res) = a in
+    if place <= 0
+    then ((place + 1), (res + (mulByDigit l2 a)))
+    else ((place + 1), (mulByDigit ((x * 10) * place) res)) in
   let base = (0, []) in
   let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
@@ -60,30 +64,58 @@ let rec mulByDigit i l =
   if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
 
 let bigMul l1 l2 =
-  let f a x = let (0,res) = a in (0, (mulByDigit x res)) in
+  let f a x =
+    let (place,res) = a in
+    if place <= 0
+    then ((place + 1), (mulByDigit x res))
+    else ((place + 1), (mulByDigit ((x * 10) * place) res)) in
   let base = (0, []) in
   let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(29,16)-(29,34)
-(29,31)-(29,32)
-(30,3)-(31,76)
+(32,23)-(32,48)
+(32,24)-(32,27)
+(32,42)-(32,44)
+(32,45)-(32,46)
+(33,9)-(33,59)
 *)
 
 (* type error slice
-(26,36)-(26,46)
-(26,36)-(26,56)
-(26,48)-(26,53)
-(29,3)-(31,76)
-(29,9)-(29,34)
-(29,11)-(29,34)
-(29,16)-(29,34)
-(29,20)-(29,30)
-(29,20)-(29,34)
-(29,31)-(29,32)
-(31,43)-(31,57)
-(31,43)-(31,69)
-(31,58)-(31,59)
+(4,3)-(9,77)
+(4,12)-(9,75)
+(9,22)-(9,56)
+(9,23)-(9,34)
+(9,53)-(9,55)
+(14,3)-(23,36)
+(14,11)-(23,34)
+(23,18)-(23,33)
+(23,19)-(23,26)
+(23,27)-(23,29)
+(26,25)-(26,31)
+(26,25)-(26,56)
+(26,32)-(26,33)
+(26,34)-(26,56)
+(26,35)-(26,45)
+(26,54)-(26,55)
+(29,2)-(35,75)
+(29,8)-(33,59)
+(30,4)-(33,59)
+(30,22)-(30,23)
+(32,23)-(32,48)
+(32,24)-(32,27)
+(32,30)-(32,47)
+(32,31)-(32,41)
+(32,45)-(32,46)
+(33,23)-(33,58)
+(33,24)-(33,34)
+(33,54)-(33,57)
+(34,2)-(35,75)
+(34,13)-(34,20)
+(34,17)-(34,19)
+(35,42)-(35,56)
+(35,42)-(35,68)
+(35,57)-(35,58)
+(35,59)-(35,63)
 *)

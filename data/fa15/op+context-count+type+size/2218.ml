@@ -8,6 +8,8 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let buildCosine e = Cosine e;;
+
 let buildSine e = Sine e;;
 
 let buildX () = VarX;;
@@ -15,9 +17,11 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand mod 2) == 0 then buildX else buildY
-  | n -> buildSine (build (rand, (depth - 1)));;
+  match ((rand (243, 98723)), depth) with
+  | (x,0) when (x mod 2) = 0 -> buildY ()
+  | (x,0) when (x mod 2) = 1 -> buildX ()
+  | (x,n) when (n mod 5) = 0 -> buildSine (build (x, (n - 1)))
+  | (x,n) when (n mod 5) = 4 -> buildCosine (build (x, (n - 1)));;
 
 
 (* fix
@@ -31,45 +35,65 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
 let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
 
 let buildX () = VarX;;
 
+let buildY () = VarY;;
+
 let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | n -> buildSine (build (rand, (depth - 1)));;
+  match ((rand (243, 98723)), depth) with
+  | (x,0) when (x mod 2) = 0 -> buildY ()
+  | (x,0) when (x mod 2) = 1 -> buildX ()
+  | (x,n) when (n > 0) && ((x mod 5) = 0) ->
+      buildSine (build (rand, (n - 1)))
+  | (x,n) when (n > 0) && ((x mod 5) = 1) ->
+      buildCosine (build (rand, (n - 1)))
+  | (x,n) when (n > 0) && ((x mod 5) = 2) ->
+      buildAverage ((build (rand, (n - 1))), (build (rand, (n - 1))))
+  | (x,n) when (n > 0) && ((x mod 5) = 3) ->
+      buildTimes ((build (rand, (n - 1))), (build (rand, (n - 1))))
+  | (x,n) when (n > 0) && ((x mod 5) = 4) ->
+      buildThresh
+        ((build (rand, (n - 1))), (build (rand, (n - 1))),
+          (build (rand, (n - 1))), (build (rand, (n - 1))));;
 
 *)
 
 (* changed spans
-(15,12)-(15,21)
-(15,17)-(15,21)
-(19,10)-(19,54)
-(19,14)-(19,18)
-(19,14)-(19,24)
-(19,14)-(19,30)
-(19,23)-(19,24)
-(19,29)-(19,30)
-(19,48)-(19,54)
+(11,16)-(11,28)
+(15,11)-(15,20)
+(20,2)-(24,64)
+(23,50)-(23,51)
+(23,53)-(23,60)
+(23,54)-(23,55)
+(23,58)-(23,59)
+(24,32)-(24,43)
+(24,45)-(24,50)
+(24,51)-(24,63)
+(24,52)-(24,53)
+(24,55)-(24,62)
+(24,56)-(24,57)
+(24,60)-(24,61)
 *)
 
 (* type error slice
-(11,4)-(11,27)
-(11,15)-(11,25)
-(11,19)-(11,25)
-(11,19)-(11,25)
-(11,24)-(11,25)
-(13,4)-(13,23)
-(13,12)-(13,21)
-(17,4)-(20,49)
-(17,16)-(20,44)
-(18,3)-(20,44)
-(18,3)-(20,44)
-(19,10)-(19,54)
-(19,36)-(19,42)
-(20,10)-(20,19)
-(20,10)-(20,44)
-(20,21)-(20,26)
-(20,21)-(20,44)
+(19,3)-(24,66)
+(19,15)-(24,64)
+(20,2)-(24,64)
+(20,8)-(20,36)
+(20,9)-(20,28)
+(20,10)-(20,14)
+(23,42)-(23,62)
+(23,43)-(23,48)
+(23,49)-(23,61)
+(23,50)-(23,51)
 *)

@@ -1,83 +1,28 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Logx of expr
-  | TripMult of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine b -> sin (pi *. (eval (b, x, y)))
-  | Cosine b -> cos (pi *. (eval (b, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Logx a -> log (eval a)
-  | TripMult (a,b,c) ->
-      ((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))
-  | _ -> 0.0;;
+let rec assoc (d,k,l) =
+  match l with | [] -> (-1) | h::l' -> let (x,y) = h in print_int h;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | TripMult of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine b -> sin (pi *. (eval (b, x, y)))
-  | Cosine b -> cos (pi *. (eval (b, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | TripMult (a,b,c) ->
-      ((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))
-  | _ -> 0.0;;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> (-1)
+  | h::l' -> let (x,y) = h in (match x with | k -> y | _ -> assoc (d, k, l'));;
 
 *)
 
 (* changed spans
-(16,3)-(30,13)
-(27,15)-(27,18)
-(27,15)-(27,26)
-(27,20)-(27,24)
-(27,20)-(27,26)
-(27,25)-(27,26)
-(30,10)-(30,13)
+(3,39)-(3,67)
+(3,56)-(3,65)
+(3,56)-(3,67)
+(3,66)-(3,67)
 *)
 
 (* type error slice
-(16,3)-(30,13)
-(19,27)-(19,31)
-(19,27)-(19,40)
-(19,33)-(19,40)
-(27,20)-(27,24)
-(27,20)-(27,26)
-(27,25)-(27,26)
+(3,39)-(3,67)
+(3,51)-(3,52)
+(3,56)-(3,65)
+(3,56)-(3,67)
+(3,66)-(3,67)
 *)

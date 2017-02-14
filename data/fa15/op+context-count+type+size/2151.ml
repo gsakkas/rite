@@ -1,27 +1,70 @@
 
-let rec wwhile (f,b) =
-  let x = f b in match x with | h::t -> if t then wwhile (f, h) else h;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine i -> "sin" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+  | Cosine i -> "cos" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+  | Average (i1,i2) ->
+      "((" ^ ((exprToString i1) ^ (" + " ^ (exprToString i2 ")/2)")))
+  | Times (i1,i2) -> (exprToString i1) ^ (" * " ^ (exprToString i2))
+  | Thresh (i1,i2,i3,i4) ->
+      "(" ^
+        ((exprToString i1) ^
+           ("<" ^
+              ((exprToString i2) ^
+                 (" ? " ^
+                    ((exprToString i3) ^ (" : " ^ ((exprToString i3) ^ ")")))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let x = f b in
-  match x with | (x,y) -> if y = false then x else wwhile (f, x);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine i -> "sin" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+  | Cosine i -> "cos" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+  | Average (i1,i2) ->
+      "((" ^ ((exprToString i1) ^ (" + " ^ ((exprToString i2) ^ ")/2)")))
+  | Times (i1,i2) -> (exprToString i1) ^ (" * " ^ (exprToString i2))
+  | Thresh (i1,i2,i3,i4) ->
+      "(" ^
+        ((exprToString i1) ^
+           ("<" ^
+              ((exprToString i2) ^
+                 (" ? " ^
+                    ((exprToString i3) ^ (" : " ^ ((exprToString i3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(3,18)-(3,71)
-(3,44)-(3,45)
-(3,51)-(3,63)
-(3,62)-(3,63)
-(3,70)-(3,71)
+(18,44)-(18,56)
 *)
 
 (* type error slice
-(3,18)-(3,71)
-(3,18)-(3,71)
-(3,41)-(3,71)
-(3,44)-(3,45)
+(15,32)-(15,56)
+(15,33)-(15,49)
+(15,34)-(15,46)
+(15,50)-(15,51)
+(18,43)-(18,67)
+(18,44)-(18,56)
 *)

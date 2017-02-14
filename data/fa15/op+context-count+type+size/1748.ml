@@ -16,10 +16,10 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       match a with
-      | h::t ->
-          if (((fst x) + (snd x)) + h) > 9
-          then (1, (((((fst x) + (snd x)) + h) mod 10) :: t))
-          else (0, (((((fst x) + (snd x)) + h) mod 10) :: t))
+      | (a,h::t) ->
+          if (((fst x) + (snd x)) + a) > 9
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t :: t))
       | _ ->
           if ((fst x) + (snd x)) > 9
           then (1, [((fst x) + (snd x)) mod 10])
@@ -49,10 +49,10 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       match a with
-      | (a,b) ->
+      | (a,h::t) ->
           if (((fst x) + (snd x)) + a) > 9
-          then (1, (((((fst x) + (snd x)) + a) mod 10) :: b))
-          else (0, (((((fst x) + (snd x)) + a) mod 10) :: b))
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
       | _ ->
           if ((fst x) + (snd x)) > 9
           then (1, [((fst x) + (snd x)) mod 10])
@@ -65,25 +65,13 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,7)-(26,48)
-(20,37)-(20,38)
-(21,45)-(21,46)
-(21,59)-(21,60)
-(22,45)-(22,46)
-(22,59)-(22,60)
+(22,63)-(22,69)
+(22,68)-(22,69)
 *)
 
 (* type error slice
-(17,5)-(29,52)
-(17,11)-(26,48)
-(17,13)-(26,48)
-(18,7)-(26,48)
-(18,7)-(26,48)
-(18,7)-(26,48)
-(18,13)-(18,14)
-(20,11)-(22,60)
-(21,17)-(21,60)
-(29,19)-(29,33)
-(29,19)-(29,45)
-(29,34)-(29,35)
+(22,63)-(22,64)
+(22,63)-(22,69)
+(22,63)-(22,69)
+(22,68)-(22,69)
 *)

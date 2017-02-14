@@ -1,65 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*%s)" e
-  | Cosine e -> "cos (pi*%s)"
-  | Average expr -> "Average"
-  | Times e -> "Times"
-  | Thresh e -> "Thresh";;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem seen h then seen else seen @ h in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos (pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,ex) ->
-      "((" ^ ((exprToString e) ^ ("+" ^ ((exprToString ex) ^ ")/2)")))
-  | Times (e,ex) -> (exprToString e) ^ ("*" ^ (exprToString ex))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(12,3)-(19,25)
-(15,15)-(15,28)
-(15,15)-(15,30)
-(16,17)-(16,30)
-(17,21)-(17,30)
-(18,16)-(18,23)
-(19,17)-(19,25)
+(7,32)-(7,36)
+(7,54)-(7,62)
+(7,61)-(7,62)
 *)
 
 (* type error slice
-(15,15)-(15,28)
-(15,15)-(15,30)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,36)
+(7,37)-(7,38)
+(7,54)-(7,58)
+(7,54)-(7,62)
+(7,59)-(7,60)
+(7,61)-(7,62)
 *)

@@ -6,24 +6,18 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SqDist of expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | SqDist (a,b) -> ((eval (a, x, y)) ** 2) +. ((eval (b, x, y)) ** 2);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand mod 2) = 0 then buildX else buildY
+  | n when n > 0 -> buildSine (build (rand, (depth - 1)));;
 
 
 (* fix
@@ -35,37 +29,48 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SqDist of expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | SqDist (a,b) -> ((eval (a, x, y)) ** 2.0) +. ((eval (b, x, y)) ** 2.0);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if true then buildX () else buildY ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(26,42)-(26,43)
-(26,69)-(26,70)
+(19,12)-(19,24)
+(19,12)-(19,28)
+(19,13)-(19,17)
+(19,22)-(19,23)
+(19,27)-(19,28)
+(19,34)-(19,40)
+(19,46)-(19,52)
+(20,20)-(20,57)
 *)
 
 (* type error slice
-(26,23)-(26,43)
-(26,39)-(26,41)
-(26,42)-(26,43)
-(26,50)-(26,70)
-(26,66)-(26,68)
-(26,69)-(26,70)
+(11,3)-(11,26)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(13,3)-(13,22)
+(13,11)-(13,20)
+(17,3)-(20,59)
+(17,15)-(20,57)
+(18,2)-(20,57)
+(18,2)-(20,57)
+(19,9)-(19,52)
+(19,34)-(19,40)
+(20,20)-(20,29)
+(20,20)-(20,57)
+(20,30)-(20,57)
+(20,31)-(20,36)
 *)

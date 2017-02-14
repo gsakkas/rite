@@ -1,73 +1,60 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let x = List.mem h seen in
-        if x
-        then helper (seen, t)
-        else
-          (let seen' = seen :: h in let rest' = t in helper (seen', rest')) in
-  helper ([], l);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 
 (* fix
 
-let rec append (x,y) =
-  match y with | [] -> x | h::t -> let z = h :: x in append (z, t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let x = List.mem h seen in
-        if x
-        then helper (seen, t)
-        else
-          (let seen' = append (seen, [h]) in
-           let rest' = t in helper (seen', rest')) in
-  helper ([], l);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(2,22)-(12,16)
-(3,3)-(12,16)
-(7,9)-(11,74)
-(11,12)-(11,74)
-(11,24)-(11,28)
-(11,24)-(11,33)
-(11,32)-(11,33)
-(11,37)-(11,74)
-(11,49)-(11,50)
-(11,54)-(11,60)
-(11,62)-(11,67)
-(11,69)-(11,74)
-(12,3)-(12,9)
-(12,11)-(12,13)
-(12,11)-(12,16)
-(12,15)-(12,16)
+(19,23)-(19,67)
+(19,66)-(19,67)
 *)
 
 (* type error slice
-(7,17)-(7,25)
-(7,17)-(7,32)
-(7,26)-(7,27)
-(7,28)-(7,32)
-(9,14)-(9,20)
-(9,14)-(9,29)
-(9,22)-(9,26)
-(9,22)-(9,29)
-(11,12)-(11,74)
-(11,24)-(11,28)
-(11,24)-(11,33)
-(11,24)-(11,33)
-(11,24)-(11,33)
-(11,32)-(11,33)
-(11,54)-(11,60)
-(11,54)-(11,74)
-(11,62)-(11,67)
-(11,62)-(11,74)
+(14,2)-(20,59)
+(14,2)-(20,59)
+(17,14)-(17,17)
+(17,14)-(17,42)
+(19,23)-(19,63)
+(19,23)-(19,67)
+(19,23)-(19,67)
 *)

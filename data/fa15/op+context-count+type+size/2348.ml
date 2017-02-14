@@ -1,70 +1,32 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let x = n mod 10
-        and n = n / 10 in (digitsOfInt n) @ [x]);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  if n >= 10
-  then let n = digitsOfInt n
-       and f = sumList n in digitalRoot n
-  else n;;
+let rec sumList xs =
+  if xs = [] then 0 else (List.hd xs) + (sumList List.tl xs);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let x = n mod 10
-        and n = n / 10 in (digitsOfInt n) @ [x]);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec helper n = let n = digitsOfInt n in sumList n;;
-
-let rec digitalRoot n = if n < 10 then n else helper n;;
+let rec sumList xs =
+  if xs = [] then 0 else (let h::t = xs in h + (sumList t));;
 
 *)
 
 (* changed spans
-(11,3)-(14,9)
-(11,6)-(11,7)
-(11,6)-(11,13)
-(11,11)-(11,13)
-(12,8)-(13,42)
-(13,29)-(13,40)
-(13,29)-(13,42)
-(13,41)-(13,42)
-(14,8)-(14,9)
+(3,25)-(3,37)
+(3,25)-(3,60)
+(3,26)-(3,33)
+(3,34)-(3,36)
+(3,40)-(3,60)
+(3,49)-(3,56)
+(3,57)-(3,59)
 *)
 
 (* type error slice
-(6,28)-(6,39)
-(6,28)-(6,41)
-(6,28)-(6,48)
-(6,43)-(6,44)
-(8,22)-(8,70)
-(8,22)-(8,70)
-(8,61)-(8,68)
-(8,61)-(8,70)
-(8,69)-(8,70)
-(10,4)-(14,11)
-(10,21)-(14,9)
-(11,6)-(11,7)
-(11,6)-(11,13)
-(11,6)-(11,13)
-(11,11)-(11,13)
-(12,8)-(13,42)
-(12,16)-(12,27)
-(12,16)-(12,29)
-(13,16)-(13,23)
-(13,16)-(13,25)
-(13,24)-(13,25)
-(13,29)-(13,40)
-(13,29)-(13,42)
-(13,41)-(13,42)
+(2,3)-(3,62)
+(2,16)-(3,60)
+(3,25)-(3,37)
+(3,26)-(3,33)
+(3,34)-(3,36)
+(3,40)-(3,60)
+(3,41)-(3,48)
+(3,49)-(3,56)
 *)

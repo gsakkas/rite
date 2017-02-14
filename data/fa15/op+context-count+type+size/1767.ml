@@ -33,6 +33,8 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -45,10 +47,12 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((int_of_float ((sum + r) mod 10)), (((sum + r) mod 10) :: v))
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+            (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = List.rev (List.combine l2 l2) in
+  let args = (List.rev (List.combine l2 l2)) @ [((0, 0), (0, 0))] in
   let (_,res) = List.fold_left f base args in res;;
 
 
@@ -88,6 +92,8 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -100,7 +106,9 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((sum + r), (((sum + r) mod 10) :: v))
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+            (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
@@ -109,14 +117,61 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(48,16)-(48,28)
-(48,16)-(48,46)
-(48,31)-(48,46)
-(48,44)-(48,46)
+(55,13)-(55,65)
+(55,45)-(55,46)
+(55,47)-(55,65)
+(55,48)-(55,64)
+(55,49)-(55,55)
+(55,50)-(55,51)
+(55,53)-(55,54)
+(55,57)-(55,63)
 *)
 
 (* type error slice
-(48,16)-(48,28)
-(48,16)-(48,46)
-(48,31)-(48,46)
+(2,42)-(2,43)
+(2,42)-(2,64)
+(2,42)-(2,64)
+(2,47)-(2,64)
+(2,48)-(2,53)
+(2,54)-(2,55)
+(4,3)-(10,19)
+(4,12)-(10,17)
+(6,8)-(6,62)
+(6,9)-(6,56)
+(6,10)-(6,15)
+(6,16)-(6,17)
+(6,57)-(6,58)
+(6,59)-(6,61)
+(15,3)-(27,36)
+(15,11)-(27,34)
+(27,18)-(27,33)
+(27,19)-(27,26)
+(27,27)-(27,29)
+(41,16)-(41,22)
+(41,16)-(41,47)
+(41,23)-(41,24)
+(41,25)-(41,47)
+(41,26)-(41,36)
+(41,45)-(41,46)
+(44,2)-(56,49)
+(44,8)-(53,43)
+(44,10)-(53,43)
+(45,4)-(53,43)
+(45,16)-(45,17)
+(48,31)-(48,65)
+(48,32)-(48,42)
+(48,61)-(48,64)
+(48,61)-(48,64)
+(48,62)-(48,63)
+(55,2)-(56,49)
+(55,13)-(55,65)
+(55,45)-(55,46)
+(55,47)-(55,65)
+(55,47)-(55,65)
+(55,48)-(55,64)
+(55,49)-(55,55)
+(56,16)-(56,30)
+(56,16)-(56,42)
+(56,31)-(56,32)
+(56,38)-(56,42)
 *)

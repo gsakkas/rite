@@ -16,10 +16,14 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       match a with
-      | (c,d) ->
+      | (c,h::t) ->
           if (((fst x) + (snd x)) + c) > 9
-          then (1, ((((fst x) + (snd x)) + c) mod 10))
-          else (0, ((((fst x) + (snd x)) + c) mod 10)) in
+          then (1, (((((fst x) + (snd x)) + c) mod 10) :: t))
+          else (0, (((((fst x) + (snd x)) + c) mod 10) :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, (((fst x) + (snd x)) mod 10))
+          else (0, (((fst x) + (snd x)) mod 10)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -48,7 +52,11 @@ let bigAdd l1 l2 =
       | (c,h::t) ->
           if (((fst x) + (snd x)) + c) > 9
           then (1, (((((fst x) + (snd x)) + c) mod 10) :: t))
-          else (0, (((((fst x) + (snd x)) + c) mod 10) :: t)) in
+          else (0, (((((fst x) + (snd x)) + c) mod 10) :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, [((fst x) + (snd x)) mod 10])
+          else (0, [((fst x) + (snd x)) mod 10]) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -57,29 +65,17 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,7)-(22,53)
-(21,24)-(21,53)
-(22,17)-(22,53)
-(22,24)-(22,53)
-(23,5)-(25,52)
-(26,20)-(26,27)
-(26,28)-(26,30)
-(26,31)-(26,33)
+(25,19)-(25,47)
+(26,19)-(26,47)
 *)
 
 (* type error slice
-(17,5)-(25,52)
-(17,11)-(22,53)
-(17,13)-(22,53)
-(18,7)-(22,53)
-(20,11)-(22,53)
-(21,17)-(21,53)
-(21,24)-(21,53)
-(23,5)-(25,52)
-(23,17)-(23,22)
-(23,20)-(23,22)
-(25,19)-(25,33)
-(25,19)-(25,45)
-(25,34)-(25,35)
-(25,36)-(25,40)
+(18,6)-(26,48)
+(18,6)-(26,48)
+(20,10)-(22,61)
+(21,15)-(21,61)
+(21,19)-(21,60)
+(24,10)-(26,48)
+(25,15)-(25,48)
+(25,19)-(25,47)
 *)

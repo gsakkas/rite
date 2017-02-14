@@ -33,6 +33,8 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -45,7 +47,7 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((int_of_float ((sum + r) / 10)), (((sum + r) mod 10) :: v))
+        then ((carryFunc (sum + r)), (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
@@ -88,6 +90,8 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -100,7 +104,9 @@ let bigMul l1 l2 =
     | (r,v) ->
         let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
         if (sum + r) > 9
-        then ((sum + r), (((sum + r) mod 10) :: v))
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+            (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
   let args = List.rev (List.combine l2 l2) in
@@ -109,14 +115,27 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(48,16)-(48,28)
-(48,16)-(48,44)
-(48,31)-(48,44)
-(48,42)-(48,44)
+(50,15)-(50,24)
+(50,25)-(50,34)
+(50,26)-(50,29)
+(50,32)-(50,33)
+(50,37)-(50,62)
+(52,2)-(54,49)
+(53,2)-(54,49)
+(54,2)-(54,49)
+(54,16)-(54,30)
+(54,31)-(54,32)
+(54,33)-(54,37)
+(54,38)-(54,42)
 *)
 
 (* type error slice
-(48,16)-(48,28)
-(48,16)-(48,44)
-(48,31)-(48,44)
+(36,3)-(36,75)
+(36,14)-(36,73)
+(36,26)-(36,34)
+(36,26)-(36,36)
+(36,35)-(36,36)
+(50,14)-(50,35)
+(50,15)-(50,24)
+(50,25)-(50,34)
 *)

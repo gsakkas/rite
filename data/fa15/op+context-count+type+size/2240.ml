@@ -1,35 +1,28 @@
 
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | h::t -> h + (digitsOfInt t));;
+  if n <= 0 then [n] else append digitsOfInt (n / 10) [n mod 10];;
 
 
 (* fix
 
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+  if n <= 0 then [n] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 *)
 
 (* changed spans
-(3,27)-(3,68)
-(3,33)-(3,34)
-(3,50)-(3,51)
-(3,50)-(3,68)
-(3,55)-(3,68)
-(3,67)-(3,68)
+(5,26)-(5,64)
+(5,33)-(5,44)
 *)
 
 (* type error slice
-(3,3)-(3,68)
-(3,3)-(3,68)
-(3,6)-(3,7)
-(3,6)-(3,12)
-(3,6)-(3,12)
-(3,11)-(3,12)
-(3,18)-(3,20)
-(3,27)-(3,68)
-(3,27)-(3,68)
-(3,27)-(3,68)
-(3,33)-(3,34)
-(3,50)-(3,68)
+(2,54)-(2,71)
+(2,59)-(2,71)
+(2,60)-(2,66)
+(5,26)-(5,32)
+(5,26)-(5,64)
 *)

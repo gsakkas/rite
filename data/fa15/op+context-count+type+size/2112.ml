@@ -1,45 +1,36 @@
 
 let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | x::x' ->
-      if (x * i) < 9
-      then [(x * i) / 10] @ (mulByDigit i x')
-      else [(x * i) / 10] @ ([(x * i) mod 10] + (mulByDigit i x'));;
+  if (List.length l) = 1
+  then [l * i]
+  else
+    (match l with
+     | [] -> []
+     | z::x::x' ->
+         [(z * i) / 10] @ ((mulByDigit i [((z * i) mod 10) + x]) @ x'));;
 
 
 (* fix
 
 let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | x::x' -> [(x * i) / 10; (x * i) mod 10] @ (mulByDigit i x');;
+  if (List.length l) = 1
+  then let x::x' = l in [x * i]
+  else
+    (match l with
+     | [] -> []
+     | z::x::x' ->
+         [(z * i) / 10] @ ((mulByDigit i [((z * i) mod 10) + x]) @ x'));;
 
 *)
 
 (* changed spans
-(6,7)-(8,65)
-(6,11)-(6,12)
-(6,11)-(6,16)
-(6,11)-(6,21)
-(6,15)-(6,16)
-(6,20)-(6,21)
-(7,12)-(7,26)
-(7,30)-(7,45)
-(8,12)-(8,65)
+(4,7)-(4,14)
+(4,8)-(4,9)
 *)
 
 (* type error slice
-(7,12)-(7,45)
-(7,27)-(7,28)
-(7,30)-(7,40)
-(7,30)-(7,45)
-(8,12)-(8,65)
-(8,27)-(8,28)
-(8,30)-(8,46)
-(8,30)-(8,65)
-(8,30)-(8,65)
-(8,30)-(8,65)
-(8,50)-(8,60)
-(8,50)-(8,65)
+(3,5)-(3,20)
+(3,6)-(3,17)
+(3,18)-(3,19)
+(4,8)-(4,9)
+(4,8)-(4,13)
 *)

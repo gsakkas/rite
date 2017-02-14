@@ -1,71 +1,36 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SqDist of expr* expr;;
-
-let rec exprToString e =
-  let ex = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((ex x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((ex x) ^ ")")
-  | Average (x,y) -> "((" ^ ((ex x) ^ ("+" ^ ((ex y) ^ ")/2)")))
-  | Times (x,y) -> (ex x) ^ ("*" ^ (ex y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((ex w) ^
-           ("<" ^ ((ex x) ^ ("?" ^ ((ex y) ^ (":" ^ ((ex z) ^ ")")))))))
-  | SqDist (x,y) ->
-      "(" ^ ((ex x) ^ (")" ^ ("^2+" ^ ("(" ^ ((ex y ")") ^ "^2")))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (seen, h) then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SqDist of expr* expr;;
-
-let rec exprToString e =
-  let ex = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((ex x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((ex x) ^ ")")
-  | Average (x,y) -> "((" ^ ((ex x) ^ ("+" ^ ((ex y) ^ ")/2)")))
-  | Times (x,y) -> (ex x) ^ ("*" ^ (ex y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((ex w) ^
-           ("<" ^ ((ex x) ^ ("?" ^ ((ex y) ^ (":" ^ ((ex z) ^ ")")))))))
-  | SqDist (x,y) ->
-      "(" ^ ((ex x) ^ (")" ^ ("^2+" ^ ("(" ^ ((ex y) ^ (")" ^ "^2"))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(26,48)-(26,56)
-(26,53)-(26,56)
+(7,23)-(7,41)
+(7,32)-(7,41)
+(7,33)-(7,37)
+(7,57)-(7,66)
 *)
 
 (* type error slice
-(17,29)-(17,31)
-(17,29)-(17,33)
-(17,29)-(17,40)
-(17,35)-(17,36)
-(26,48)-(26,50)
-(26,48)-(26,56)
+(7,20)-(7,66)
+(7,23)-(7,31)
+(7,23)-(7,41)
 *)

@@ -10,26 +10,43 @@ type expr =
   | Arctan of expr
   | Strange of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildArctan e1 = Arctan e1;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Arctan e1 -> (2 *. (atan eval (e1, x, y))) /. pi
-  | Strange (e1,e2,e3) ->
-      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
-          ((eval (e2, x, y)) *. (eval (e2, x, y))))
-         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
-        /. 3.;;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildStrange (e1,e2,e3) = Strange (e1, e2, e3);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let result = rand (0, 2) in
+    match result with | 0 -> buildX () | _ -> buildY ()
+  else
+    (let result = rand (0, 7) in
+     let build1 = build (rand, (depth - 1)) in
+     let build2 = build (rand, (depth - 1)) in
+     let build3 = build (rand, (depth - 1)) in
+     let build4 = build (rand, (depth - 1)) in
+     match result with
+     | 0 -> buildSine build1
+     | 1 -> buildCosine build1
+     | 2 -> buildAverage (build1, build2)
+     | 3 -> buildTimes (build1, build2)
+     | 4 -> buildThresh (build1, build2, build3, build4)
+     | 5 -> buildArctan (build1, build2)
+     | 6 -> buildStrange (build1, build2, build3));;
 
 
 (* fix
@@ -45,39 +62,57 @@ type expr =
   | Arctan of expr
   | Strange of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildArctan e1 = Arctan e1;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Arctan e1 -> atan (eval (e1, x, y))
-  | Strange (e1,e2,e3) ->
-      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
-          ((eval (e2, x, y)) *. (eval (e2, x, y))))
-         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
-        /. 3.;;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildStrange (e1,e2,e3) = Strange (e1, e2, e3);;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let result = rand (0, 2) in
+    match result with | 0 -> buildX () | _ -> buildY ()
+  else
+    (let result = rand (0, 7) in
+     let build1 = build (rand, (depth - 1)) in
+     let build2 = build (rand, (depth - 1)) in
+     let build3 = build (rand, (depth - 1)) in
+     let build4 = build (rand, (depth - 1)) in
+     match result with
+     | 0 -> buildSine build1
+     | 1 -> buildCosine build1
+     | 2 -> buildAverage (build1, build2)
+     | 3 -> buildTimes (build1, build2)
+     | 4 -> buildThresh (build1, build2, build3, build4)
+     | 5 -> buildArctan build1
+     | 6 -> buildStrange (build1, build2, build3));;
 
 *)
 
 (* changed spans
-(27,19)-(27,20)
-(27,19)-(27,44)
-(27,19)-(27,53)
-(27,25)-(27,44)
-(27,30)-(27,34)
-(27,51)-(27,53)
+(48,24)-(48,40)
+(48,33)-(48,39)
 *)
 
 (* type error slice
-(27,25)-(27,29)
-(27,25)-(27,44)
+(13,3)-(13,32)
+(13,16)-(13,30)
+(13,21)-(13,30)
+(13,28)-(13,30)
+(48,12)-(48,23)
+(48,12)-(48,40)
+(48,24)-(48,40)
 *)

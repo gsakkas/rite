@@ -35,8 +35,6 @@ let rec sepConcat sep sl =
 
 let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
 
-let rec helper n x = if n > 0 then helper (n - 1) (x / 10);;
-
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -44,19 +42,17 @@ let rec mulByDigit i l =
 
 let bigMul l1 l2 =
   let f a x =
-    let (s,t) = x in
     match a with
     | (r,v) ->
-        let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
+        let sum = intListToInt (mulByDigit (intListToInt l1) x) in
         if (sum + r) > 9
         then
-          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) x))),
             (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = List.rev (List.combine l2 l2) in
-  let (x,res) = List.fold_left f base args in
-  res @ [helper ((List.length l2) * 2) x];;
+  let args = [0; 0; 0; 0; 0; 0; 0] @ l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
@@ -97,8 +93,6 @@ let rec sepConcat sep sl =
 
 let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
 
-let rec helper n x = if n > 0 then helper (n - 1) (x / 10) else [];;
-
 let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
 
 let rec mulByDigit i l =
@@ -106,50 +100,66 @@ let rec mulByDigit i l =
 
 let bigMul l1 l2 =
   let f a x =
-    let (s,t) = x in
     match a with
     | (r,v) ->
-        let sum = intListToInt (mulByDigit (intListToInt l1) [s]) in
+        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
         if (sum + r) > 9
         then
-          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [s]))),
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
             (((sum + r) mod 10) :: v))
         else (0, (((sum + r) mod 10) :: v)) in
   let base = (0, []) in
-  let args = List.rev (List.combine l2 l2) in
-  let (x,res) = List.fold_left f base args in
-  res @ (helper ((List.length l2) * 2) x);;
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(38,22)-(38,58)
-(59,9)-(59,42)
+(47,61)-(47,62)
+(50,66)-(50,67)
+(54,13)-(54,34)
+(54,13)-(54,39)
+(54,14)-(54,15)
+(54,17)-(54,18)
+(54,20)-(54,21)
+(54,23)-(54,24)
+(54,26)-(54,27)
+(54,29)-(54,30)
+(54,32)-(54,33)
+(54,35)-(54,36)
+(55,2)-(55,49)
 *)
 
 (* type error slice
-(38,22)-(38,58)
-(38,22)-(38,58)
-(38,22)-(38,58)
-(38,36)-(38,42)
-(38,36)-(38,58)
-(46,3)-(59,42)
-(46,9)-(55,42)
-(48,5)-(55,42)
-(48,11)-(48,12)
-(54,16)-(54,31)
-(54,16)-(54,37)
-(54,16)-(54,37)
-(54,36)-(54,37)
-(58,3)-(59,42)
-(58,17)-(58,31)
-(58,17)-(58,43)
-(58,32)-(58,33)
-(59,3)-(59,6)
-(59,3)-(59,42)
-(59,7)-(59,8)
-(59,9)-(59,42)
-(59,9)-(59,42)
-(59,10)-(59,16)
-(59,10)-(59,41)
+(4,3)-(10,19)
+(4,12)-(10,17)
+(6,38)-(6,54)
+(6,39)-(6,50)
+(6,51)-(6,53)
+(15,3)-(27,36)
+(15,11)-(27,34)
+(27,18)-(27,33)
+(27,19)-(27,26)
+(27,27)-(27,29)
+(41,16)-(41,22)
+(41,16)-(41,47)
+(41,23)-(41,24)
+(41,25)-(41,47)
+(41,26)-(41,36)
+(41,45)-(41,46)
+(44,2)-(55,49)
+(44,8)-(52,43)
+(44,10)-(52,43)
+(47,31)-(47,63)
+(47,32)-(47,42)
+(47,61)-(47,62)
+(54,2)-(55,49)
+(54,13)-(54,34)
+(54,13)-(54,34)
+(54,13)-(54,39)
+(54,14)-(54,15)
+(54,35)-(54,36)
+(55,16)-(55,30)
+(55,16)-(55,42)
+(55,31)-(55,32)
+(55,38)-(55,42)
 *)

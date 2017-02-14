@@ -139,7 +139,7 @@ TopForm :: { [Decl] }
 : Structure                         { $1 }
 
 Structure :: { [Decl] }
-: GetPosition SeqExpr GetPosition DeclList 
+: GetPosition SeqExpr GetPosition DeclList
   { locDecl $1 $3 (\s -> DEvl s $2) : $4 }
 | DeclList
   { $1 }
@@ -251,7 +251,7 @@ PatternSemiList :: { [Pat] }
 
 SeqExpr :: { Expr }
 : Expr     %prec below_SEMI  { $1 }
-| Expr ';'                   { $1 }
+| Expr ';'                   { relocExp (mergeLocated $1 $2) $1 }
 | Expr ';' SeqExpr           { Seq (mergeLocated $1 $3) $1 $3 }
 
 Expr :: { Expr }
@@ -297,10 +297,10 @@ SimpleExpr :: { Expr }
 | SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "Array.get")  [$1, $4] }
 | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
 | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
-| '(' SeqExpr ')'       { $2 }
+| '(' SeqExpr ')'       { relocExp (mergeLocated $1 $3) $2 }
 | "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) Nothing }
 | '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
-| "begin" SeqExpr "end" { $2 }
+| "begin" SeqExpr "end" { relocExp (mergeLocated $1 $3) $2 }
 | "begin" "end"         { VU (mergeLocated $1 $2) }
 | '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) Nothing }
 
@@ -460,6 +460,9 @@ GetPosition :: { (Int, Int) }
 
 locDecl :: (Int,Int) -> (Int,Int) -> (SrcSpan -> Decl) -> Decl
 locDecl (sl,sc) (el,ec) f = f (SrcSpan sl sc el ec)
+
+relocExp :: MSrcSpan -> Expr -> Expr
+relocExp span = onSrcSpanExpr (const span)
 
 parseError :: LToken -> Alex a
 parseError (LToken loc t) = do

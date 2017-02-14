@@ -2,24 +2,39 @@
 let rec digitsOfInt n =
   if n < 0
   then []
-  else (fun n  -> let d = digitsOfInt (n / 10) in (n mod 10) :: d);;
+  else
+    if n < 10 then [n] else (let d = digitsOfInt (n / 10) in d :: (n mod 10));;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  if n < 0 then [] else (let d = digitsOfInt (n / 10) in (n mod 10) :: d);;
+  if n < 0
+  then []
+  else
+    if n < 10
+    then [n]
+    else (let d::[] = digitsOfInt (n / 10) in [d; n mod 10]);;
 
 *)
 
 (* changed spans
-(5,9)-(5,66)
-(5,19)-(5,66)
+(6,28)-(6,77)
+(6,61)-(6,76)
 *)
 
 (* type error slice
-(3,3)-(5,66)
-(3,3)-(5,66)
-(4,8)-(4,10)
-(5,9)-(5,66)
+(2,3)-(6,79)
+(2,20)-(6,77)
+(3,2)-(6,77)
+(6,4)-(6,77)
+(6,28)-(6,77)
+(6,28)-(6,77)
+(6,37)-(6,48)
+(6,37)-(6,57)
+(6,61)-(6,62)
+(6,61)-(6,76)
+(6,61)-(6,76)
+(6,61)-(6,76)
+(6,66)-(6,76)
 *)

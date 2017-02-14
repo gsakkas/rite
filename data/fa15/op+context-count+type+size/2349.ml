@@ -1,24 +1,29 @@
 
-let rec sumList xs = if (List.length xs) > 0 then (List.hd xs) + (sumList xs);;
+let rec sumList xs =
+  match xs with | [] -> [] | h::t -> let h::t = xs in h + (sumList t);;
 
 
 (* fix
 
-let rec sumList xs = if xs = [] then 0 else (List.hd xs) + (sumList xs);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
 *)
 
 (* changed spans
-(2,22)-(2,77)
-(2,26)-(2,37)
-(2,26)-(2,40)
-(2,26)-(2,45)
-(2,44)-(2,45)
+(3,24)-(3,26)
+(3,37)-(3,69)
+(3,48)-(3,50)
 *)
 
 (* type error slice
-(2,22)-(2,77)
-(2,22)-(2,77)
-(2,22)-(2,77)
-(2,52)-(2,77)
+(2,3)-(3,71)
+(2,16)-(3,69)
+(3,2)-(3,69)
+(3,2)-(3,69)
+(3,24)-(3,26)
+(3,37)-(3,69)
+(3,54)-(3,69)
+(3,54)-(3,69)
+(3,58)-(3,69)
+(3,59)-(3,66)
 *)

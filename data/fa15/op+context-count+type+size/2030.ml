@@ -1,95 +1,45 @@
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if ((a1 + x1) + x2) >= 10
-      then (1, ((((a1 + x1) + x2) - 10) :: a2))
-      else (0, (((a1 + x1) + x2) :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0
-  then [0]
-  else if i = 1 then l else (mulByDigit (i - 1) l) + (bigAdd l l);;
+let stringOfList f l = "[" ^ ((List.map (sepConcat "; " l) l) ^ "]");;
 
 
 (* fix
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if ((a1 + x1) + x2) >= 10
-      then (1, ((((a1 + x1) + x2) - 10) :: a2))
-      else (0, (((a1 + x1) + x2) :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else bigAdd (mulByDigit (i - 1) l) l;;
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(28,30)-(28,40)
-(28,30)-(28,65)
-(28,55)-(28,61)
-(28,55)-(28,65)
-(28,64)-(28,65)
+(9,23)-(9,26)
+(9,27)-(9,28)
+(9,29)-(9,68)
+(9,30)-(9,61)
+(9,40)-(9,58)
+(9,62)-(9,63)
+(9,64)-(9,67)
 *)
 
 (* type error slice
-(10,3)-(10,70)
-(10,3)-(10,70)
-(10,9)-(10,10)
-(10,37)-(10,70)
-(10,37)-(10,70)
-(10,51)-(10,61)
-(10,51)-(10,63)
-(10,69)-(10,70)
-(12,4)-(23,37)
-(12,12)-(23,33)
-(12,15)-(23,33)
-(13,3)-(23,33)
-(23,3)-(23,13)
-(23,3)-(23,33)
-(25,4)-(28,68)
-(25,20)-(28,65)
-(25,22)-(28,65)
-(26,3)-(28,65)
-(27,8)-(27,11)
-(28,30)-(28,40)
-(28,30)-(28,50)
-(28,30)-(28,65)
-(28,30)-(28,65)
-(28,55)-(28,61)
-(28,55)-(28,65)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(4,10)-(4,12)
+(9,30)-(9,61)
+(9,31)-(9,39)
+(9,40)-(9,58)
+(9,41)-(9,50)
 *)

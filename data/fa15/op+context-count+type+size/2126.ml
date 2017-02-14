@@ -1,41 +1,86 @@
 
-let pipe fs = let f a x a = a x in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" exprToString e ")"
+  | Cosine e -> "cos(pi*" exprToString e ")"
+  | Average e ->
+      ("((" exprToString e) ^ ("+" ^ ((exprToString e ")") / (2 ")")))
+  | Times e -> exprToString e "*" exprToString e;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = let c y = x (a y) in c in
-  let base = let g y = y in g in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y));;
 
 *)
 
 (* changed spans
-(2,15)-(2,78)
-(2,25)-(2,32)
-(2,29)-(2,30)
-(2,29)-(2,32)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
-(2,76)-(2,78)
+(12,2)-(19,48)
+(15,14)-(15,23)
+(15,14)-(15,42)
+(15,24)-(15,36)
+(16,16)-(16,25)
+(16,16)-(16,44)
+(16,26)-(16,38)
+(18,6)-(18,27)
+(18,12)-(18,24)
+(18,25)-(18,26)
+(18,37)-(18,69)
+(18,39)-(18,51)
+(18,52)-(18,53)
+(18,54)-(18,57)
+(18,62)-(18,63)
+(18,64)-(18,67)
+(19,15)-(19,48)
+(19,28)-(19,29)
+(19,30)-(19,33)
+(19,34)-(19,46)
+(19,47)-(19,48)
 *)
 
 (* type error slice
-(2,15)-(2,78)
-(2,21)-(2,32)
-(2,23)-(2,32)
-(2,25)-(2,32)
-(2,29)-(2,30)
-(2,29)-(2,32)
-(2,36)-(2,78)
-(2,45)-(2,50)
-(2,49)-(2,50)
-(2,54)-(2,68)
-(2,54)-(2,78)
-(2,69)-(2,70)
-(2,71)-(2,75)
+(15,14)-(15,23)
+(15,14)-(15,42)
+(16,16)-(16,25)
+(16,16)-(16,44)
+(18,6)-(18,27)
+(18,7)-(18,11)
+(18,30)-(18,70)
+(18,35)-(18,36)
+(18,37)-(18,69)
+(18,37)-(18,69)
+(18,38)-(18,58)
+(18,39)-(18,51)
+(18,61)-(18,68)
+(18,62)-(18,63)
+(19,15)-(19,27)
+(19,15)-(19,48)
 *)

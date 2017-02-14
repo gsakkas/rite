@@ -14,8 +14,10 @@ let bigAdd l1 l2 =
     let f a x =
       let (x1,x2) = x in
       let (a1,a2) = a in
-      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
-    let base = [(0, 0)] in
+      if ((a1 + x1) + x2) >= 10
+      then (1, (a2 @ (((a1 + x1) + x2) - 10)))
+      else (0, (a2 @ ((a1 + x1) + x2))) in
+    let base = (0, []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -38,8 +40,10 @@ let bigAdd l1 l2 =
     let f a x =
       let (x1,x2) = x in
       let (a1,a2) = a in
-      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
-    let base = (0, [0]) in
+      if ((a1 + x1) + x2) >= 10
+      then (1, (a2 @ [((a1 + x1) + x2) - 10]))
+      else (0, (a2 @ [(a1 + x1) + x2])) in
+    let base = (0, []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -47,19 +51,15 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,16)-(18,24)
-(18,21)-(18,22)
+(18,21)-(18,44)
+(19,21)-(19,37)
 *)
 
 (* type error slice
-(14,5)-(20,52)
-(14,11)-(17,74)
-(16,7)-(17,74)
-(16,21)-(16,22)
-(18,5)-(20,52)
-(18,16)-(18,24)
-(20,19)-(20,33)
-(20,19)-(20,45)
-(20,34)-(20,35)
-(20,36)-(20,40)
+(18,15)-(18,45)
+(18,19)-(18,20)
+(18,21)-(18,44)
+(19,15)-(19,38)
+(19,19)-(19,20)
+(19,21)-(19,37)
 *)

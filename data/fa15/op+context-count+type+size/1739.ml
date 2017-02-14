@@ -15,10 +15,9 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let sum = (fst x) + (snd x) in
+      let (a,b) = x in
       match a with
-      | h::t -> (h + (sum / 10)) :: ((h + sum) mod 10) :: t
-      | _ -> (((fst x) + (snd x)) / 10) :: (((fst x) + (snd x)) mod 10) in
+      | hd::tl -> (((a + b) + hd) / 10) :: (((a + b) + hd) mod 10) :: tl in
     let base = [] in
     let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
   removeZero (add (padZero l1 l2));;
@@ -42,44 +41,35 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let sum = (fst x) + (snd x) in
-      match a with | h::t -> ((h + sum) / 10) :: ((h + sum) mod 10) :: t in
+      match a with
+      | hd::tl -> ((((fst x) + (snd x)) + hd) / 10) ::
+          ((((fst x) + (snd x)) + hd) mod 10) :: tl in
     let base = [] in
-    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
+    let args = List.combine l1 l2 in List.fold_left f base args in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(19,7)-(21,71)
-(20,18)-(20,31)
-(20,23)-(20,31)
-(21,17)-(21,20)
-(21,17)-(21,22)
-(21,17)-(21,32)
-(21,17)-(21,39)
-(21,17)-(21,71)
-(21,21)-(21,22)
-(21,27)-(21,30)
-(21,27)-(21,32)
-(21,31)-(21,32)
-(21,37)-(21,39)
-(21,47)-(21,50)
-(21,47)-(21,52)
-(21,47)-(21,62)
-(21,47)-(21,71)
-(21,51)-(21,52)
-(21,57)-(21,60)
-(21,57)-(21,62)
-(21,61)-(21,62)
-(21,69)-(21,71)
-(22,5)-(23,75)
-(23,5)-(23,75)
-(23,49)-(23,75)
-(24,3)-(24,33)
+(18,6)-(20,72)
+(18,18)-(18,19)
+(20,21)-(20,22)
+(20,25)-(20,26)
+(20,30)-(20,32)
+(20,46)-(20,47)
+(20,50)-(20,51)
+(20,55)-(20,57)
+(22,15)-(22,23)
+(22,15)-(22,44)
+(23,19)-(23,26)
+(23,27)-(23,29)
+(23,30)-(23,32)
 *)
 
 (* type error slice
-(21,17)-(21,71)
-(21,47)-(21,71)
+(19,6)-(20,72)
+(19,6)-(20,72)
+(19,12)-(19,13)
+(20,20)-(20,27)
+(20,21)-(20,22)
 *)

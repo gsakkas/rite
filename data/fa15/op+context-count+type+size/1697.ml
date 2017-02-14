@@ -1,92 +1,60 @@
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i <= 0 then [0] else bigAdd l ((mulByDigit i) - (1 l));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x a in
+      let base = h ^ (sepConcat sep t) in
+      let l = t in List.fold_left f base l;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i <= 0 then l else bigAdd l (mulByDigit (i - 1) l);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a in
+      let base = if (List.length t) <> 0 then "" else sep in
+      let l = if (List.length t) <> 0 then t else [] in
+      List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(26,18)-(26,21)
-(26,19)-(26,20)
-(26,38)-(26,50)
-(26,38)-(26,58)
-(26,49)-(26,50)
-(26,55)-(26,58)
+(6,18)-(6,19)
+(6,18)-(6,21)
+(7,17)-(7,18)
+(7,17)-(7,38)
+(7,19)-(7,20)
+(7,21)-(7,38)
+(7,22)-(7,31)
+(7,32)-(7,35)
+(7,36)-(7,37)
+(8,6)-(8,42)
+(8,14)-(8,15)
+(8,19)-(8,33)
+(8,19)-(8,42)
+(8,34)-(8,35)
+(8,36)-(8,40)
+(8,41)-(8,42)
 *)
 
 (* type error slice
-(4,4)-(9,78)
-(4,13)-(9,75)
-(4,16)-(9,75)
-(8,14)-(8,25)
-(8,14)-(8,46)
-(8,44)-(8,46)
-(14,4)-(23,37)
-(14,12)-(23,33)
-(14,15)-(23,33)
-(23,20)-(23,27)
-(23,20)-(23,33)
-(23,31)-(23,33)
-(25,4)-(26,62)
-(25,20)-(26,58)
-(25,22)-(26,58)
-(26,27)-(26,33)
-(26,27)-(26,58)
-(26,38)-(26,48)
-(26,38)-(26,50)
-(26,38)-(26,58)
-(26,38)-(26,58)
-(26,55)-(26,56)
-(26,55)-(26,58)
+(3,2)-(8,42)
+(3,2)-(8,42)
+(6,6)-(8,42)
+(6,12)-(6,21)
+(6,14)-(6,21)
+(6,18)-(6,19)
+(6,18)-(6,21)
+(7,17)-(7,18)
+(7,17)-(7,38)
+(7,19)-(7,20)
+(8,6)-(8,42)
+(8,14)-(8,15)
+(8,19)-(8,33)
+(8,19)-(8,42)
+(8,34)-(8,35)
+(8,41)-(8,42)
 *)

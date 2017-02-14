@@ -24,8 +24,8 @@ let bigAdd l1 l2 =
     let f a x =
       let (x1,x2) = x in
       let (a1,a2) = a in
-      let s::s' = a2 in
-      ((((x1 + x2) + a1) / 10), ([s + c] @ (s' @ [((x1 + x2) + c) mod 10]))) in
+      let c::c' = a2 in
+      ([((x1 + x2) + c) / 10], (a2 @ [((x1 + x2) + c) mod 10])) in
     let base = (0, [0]) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
@@ -36,6 +36,8 @@ let bigAdd l1 l2 =
 
 let rec clone x n =
   if n < 1 then [] else (match n with | _ -> x :: (clone x (n - 1)));;
+
+let c y = y;;
 
 let padZero l1 l2 =
   let s1 = List.length l1 in
@@ -56,9 +58,9 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       let (x1,x2) = x in
-      let (c,a2) = a in
-      let s::s' = a2 in
-      ((((x1 + x2) + c) / 10), ([s + c] @ (s' @ [((x1 + x2) + c) mod 10]))) in
+      let (a1,a2) = a in
+      let c::c' = a2 in
+      ((((x1 + x2) + c) / 10), (a2 @ [((x1 + x2) + c) mod 10])) in
     let base = (0, [0]) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
@@ -67,27 +69,23 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(5,7)-(5,12)
-(5,11)-(5,12)
-(8,3)-(15,41)
-(9,3)-(15,41)
-(20,9)-(20,66)
-(23,3)-(32,33)
-(24,5)-(31,52)
-(25,7)-(28,74)
-(26,7)-(28,74)
-(27,7)-(28,74)
-(28,22)-(28,24)
-(29,5)-(31,52)
-(30,5)-(31,52)
-(31,5)-(31,52)
+(28,7)-(28,29)
 *)
 
 (* type error slice
-(5,4)-(5,14)
-(5,7)-(5,12)
-(28,35)-(28,40)
-(28,39)-(28,40)
-(28,53)-(28,65)
-(28,64)-(28,65)
+(24,4)-(31,51)
+(24,10)-(28,63)
+(24,12)-(28,63)
+(25,6)-(28,63)
+(26,6)-(28,63)
+(27,6)-(28,63)
+(28,6)-(28,63)
+(28,7)-(28,29)
+(29,4)-(31,51)
+(29,15)-(29,23)
+(29,16)-(29,17)
+(31,18)-(31,32)
+(31,18)-(31,44)
+(31,33)-(31,34)
+(31,35)-(31,39)
 *)

@@ -21,14 +21,17 @@ let bigAdd l1 l2 =
         if (fst + sec) > 9 then (((fst + sec) - 10), 1) else ((fst + sec), 0) in
       let (carry,digits) = a in
       let (carry',digits') =
-        if sec' = 1
-        then (1, ([(fst', sec')] @ digits))
-        else (0, ([(fst', sec')] @ digits)) in
+        if (carry + fst') > 9
+        then (1, (digits @ [fst' - 9]))
+        else
+          if sec' = 1
+          then (1, (digits @ [fst' + carry]))
+          else (0, (digits @ [fst' + carry])) in
       (carry', digits') in
     let base = (0, []) in
     let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+  removeZero (add (List.rev (padZero l1 l2)));;
 
 
 (* fix
@@ -55,7 +58,12 @@ let bigAdd l1 l2 =
         if (fst + sec) > 9 then (((fst + sec) - 10), 1) else ((fst + sec), 0) in
       let (carry,digits) = a in
       let (carry',digits') =
-        if sec' = 1 then (1, (digits @ [fst'])) else (0, (digits @ [fst'])) in
+        if (carry + fst') > 9
+        then (1, (digits @ [fst' - 9]))
+        else
+          if sec' = 1
+          then (1, (digits @ [fst' + carry]))
+          else (0, (digits @ [fst' + carry])) in
       (carry', digits') in
     let base = (0, []) in
     let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
@@ -65,52 +73,18 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(25,19)-(25,33)
-(25,21)-(25,31)
-(25,27)-(25,31)
-(25,36)-(25,42)
-(26,19)-(26,33)
-(26,21)-(26,31)
-(26,27)-(26,31)
-(26,36)-(26,42)
-(28,5)-(30,52)
-(29,5)-(30,52)
-(30,5)-(30,52)
+(34,18)-(34,44)
+(34,19)-(34,27)
 *)
 
 (* type error slice
-(14,3)-(14,69)
-(14,3)-(14,69)
-(14,39)-(14,40)
-(14,39)-(14,44)
-(14,39)-(14,44)
-(14,43)-(14,44)
-(14,50)-(14,60)
-(14,50)-(14,62)
-(14,61)-(14,62)
-(17,3)-(31,33)
-(17,12)-(30,52)
-(18,5)-(30,52)
-(18,5)-(30,52)
-(18,11)-(27,23)
-(22,7)-(27,23)
-(22,28)-(22,29)
-(25,19)-(25,33)
-(25,19)-(25,33)
-(25,19)-(25,42)
-(25,21)-(25,31)
-(25,34)-(25,35)
-(25,36)-(25,42)
-(28,5)-(30,52)
-(29,5)-(30,52)
-(30,5)-(30,52)
-(30,5)-(30,52)
-(30,19)-(30,33)
-(30,19)-(30,45)
-(30,34)-(30,35)
-(30,49)-(30,52)
-(31,3)-(31,13)
-(31,3)-(31,33)
-(31,15)-(31,18)
-(31,15)-(31,33)
+(5,3)-(11,37)
+(5,12)-(11,35)
+(5,15)-(11,35)
+(6,2)-(11,35)
+(7,9)-(7,17)
+(34,18)-(34,44)
+(34,19)-(34,27)
+(34,28)-(34,43)
+(34,29)-(34,36)
 *)

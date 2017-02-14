@@ -1,28 +1,33 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | (h::tail)::[] -> listReverse tail;;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
+
+let rec digitsOfInt n = digitsOfIntHelper [n > 10];;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
+
+let rec digitsOfInt n = digitsOfIntHelper n;;
 
 *)
 
 (* changed spans
-(3,3)-(3,62)
-(3,46)-(3,62)
+(7,42)-(7,50)
+(7,43)-(7,49)
 *)
 
 (* type error slice
-(2,4)-(3,64)
-(2,21)-(3,62)
-(3,3)-(3,62)
-(3,3)-(3,62)
-(3,3)-(3,62)
-(3,9)-(3,10)
-(3,46)-(3,57)
-(3,46)-(3,62)
-(3,58)-(3,62)
+(5,20)-(5,63)
+(5,21)-(5,38)
+(5,39)-(5,62)
+(7,24)-(7,41)
+(7,24)-(7,50)
+(7,42)-(7,50)
 *)

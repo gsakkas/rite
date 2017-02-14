@@ -24,12 +24,9 @@ let bigAdd l1 l2 =
     let f a x =
       let (x1,x2) = x in
       let (a1,a2) = a in
-      if (List.length a1) = 0
-      then ((((x1 + x2) / 10) :: 0), ((x1 + x2) mod 10))
-      else
-        (let c::c' = a1 in
-         ((a1 @ [((x1 + x2) + c) / 10]), (a2 @ (((x1 + x2) + c) mod 10)))) in
-    let base = ([], []) in
+      let s::s' = a2 in
+      ((((x1 + x2) + a1) / 10), ([s + c] @ (s' @ [((x1 + x2) + c) mod 10]))) in
+    let base = (0, [0]) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -39,8 +36,6 @@ let bigAdd l1 l2 =
 
 let rec clone x n =
   if n < 1 then [] else (match n with | _ -> x :: (clone x (n - 1)));;
-
-let c y = y;;
 
 let padZero l1 l2 =
   let s1 = List.length l1 in
@@ -61,13 +56,10 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       let (x1,x2) = x in
-      let (a1,a2) = a in
-      if (List.length a1) = 0
-      then ([(x1 + x2) / 10; 0], [(x1 + x2) mod 10])
-      else
-        (let c::c' = a1 in
-         ((a1 @ [((x1 + x2) + c) / 10]), (a2 @ [((x1 + x2) + c) mod 10]))) in
-    let base = ([], []) in
+      let (c,a2) = a in
+      let s::s' = a2 in
+      ((((x1 + x2) + c) / 10), ([s + c] @ (s' @ [((x1 + x2) + c) mod 10]))) in
+    let base = (0, [0]) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -75,29 +67,27 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(28,16)-(28,35)
-(28,40)-(28,55)
-(31,51)-(31,71)
+(5,6)-(5,11)
+(5,10)-(5,11)
+(8,2)-(15,41)
+(9,2)-(15,41)
+(20,7)-(20,66)
+(23,2)-(32,34)
+(24,4)-(31,51)
+(25,6)-(28,76)
+(26,6)-(28,76)
+(27,6)-(28,76)
+(28,21)-(28,23)
+(29,4)-(31,51)
+(30,4)-(31,51)
+(31,4)-(31,51)
 *)
 
 (* type error slice
-(24,5)-(34,52)
-(24,11)-(31,71)
-(24,13)-(31,71)
-(25,7)-(31,71)
-(26,7)-(31,71)
-(26,7)-(31,71)
-(26,21)-(26,22)
-(27,7)-(31,71)
-(28,16)-(28,35)
-(28,16)-(28,55)
-(28,34)-(28,35)
-(28,40)-(28,55)
-(31,43)-(31,45)
-(31,43)-(31,71)
-(31,46)-(31,47)
-(31,51)-(31,71)
-(34,19)-(34,33)
-(34,19)-(34,45)
-(34,34)-(34,35)
+(5,3)-(5,13)
+(5,6)-(5,11)
+(28,34)-(28,39)
+(28,38)-(28,39)
+(28,50)-(28,65)
+(28,63)-(28,64)
 *)
