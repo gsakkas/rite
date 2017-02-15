@@ -65,7 +65,7 @@ def build_model(features, labels, hidden,
     saver = tf.train.Saver(Ws + bs + [W] + [b])
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
+        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_), name='xentropy_mean')
         tf.summary.scalar('cross_entropy', cross_entropy)
         regularizers = sum(tf.nn.l2_loss(W) for W in Ws) + sum(tf.nn.l2_loss(b) for b in bs)
         cross_entropy += beta * regularizers

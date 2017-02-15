@@ -83,13 +83,13 @@ def variable_summaries(var, name):
   """Attach a lot of summaries to a Tensor."""
   with tf.name_scope('summaries'):
     mean = tf.reduce_mean(var)
-    tf.scalar_summary('mean/' + name, mean)
+    tf.summary.scalar('mean/' + name, mean)
     with tf.name_scope('stddev'):
       stddev = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
-    tf.scalar_summary('stddev/' + name, stddev)
-    tf.scalar_summary('max/' + name, tf.reduce_max(var))
-    tf.scalar_summary('min/' + name, tf.reduce_min(var))
-    tf.histogram_summary(name, var)
+    tf.summary.scalar('stddev/' + name, stddev)
+    tf.summary.scalar('max/' + name, tf.reduce_max(var))
+    tf.summary.scalar('min/' + name, tf.reduce_min(var))
+    tf.summary.histogram(name, var)
 
 N_HIDDEN = 30
 N_HIDDEN_2 = 100
@@ -140,8 +140,8 @@ with tf.name_scope('linear'):
 y_ = tf.placeholder(tf.float32, [None, N_OUTS], name='y_')
 
 with tf.name_scope('cross_entropy'):
-    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
-    tf.scalar_summary('cross_entropy', cross_entropy)
+    cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_), name='xentropy_mean')
+    tf.summary.scalar('cross_entropy', cross_entropy)
 with tf.name_scope('train'):
     train_step = tf.train.GradientDescentOptimizer(5).minimize(cross_entropy)
     #train_step = tf.train.AdamOptimizer(0.001).minimize(cross_entropy)
@@ -185,9 +185,9 @@ for k in range(N_FOLDS):
     labels_train = df_train[label_names]
 
     sess = tf.InteractiveSession()
-    merged = tf.merge_all_summaries()
-    summary_writer = tf.train.SummaryWriter('/tmp', sess.graph)
-    tf.initialize_all_variables().run()
+    merged = tf.summary.merge_all()
+    summary_writer = tf.summary.FileWriter('/tmp', sess.graph)
+    tf.global_variables_initializer().run()
 
     if N_OUTS >= 2:
         correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))

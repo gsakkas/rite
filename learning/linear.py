@@ -35,8 +35,8 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y, y_), name='xentropy_mean')
-        tf.scalar_summary('cross_entropy', cross_entropy)
+        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_), name='xentropy_mean')
+        tf.summary.scalar('cross_entropy', cross_entropy)
     with tf.name_scope('train'):
         global_step = tf.Variable(0, trainable=False)
         learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -50,8 +50,8 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
         # train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
 
     sess = tf.InteractiveSession()
-    merged = tf.merge_all_summaries()
-    summary_writer = tf.train.SummaryWriter(model_dir, sess.graph)
+    merged = tf.summary.merge_all()
+    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -67,7 +67,7 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
     # recall, recall_op = tf.contrib.metrics.streaming_recall(yb, y_b)
 
     ## NOTE: must be last!!
-    tf.initialize_all_variables().run()
+    tf.global_variables_initializer().run()
 
     k = tf.placeholder(tf.int32, [], name='k')
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)

@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
 import tensorflow as tf
-import tensorflow.contrib.learn.python.learn as learn
 
 # local modules
 import hidden
