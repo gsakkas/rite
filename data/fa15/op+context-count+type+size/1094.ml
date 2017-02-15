@@ -1,33 +1,53 @@
 
-let pipe fs = let f a x = a ^ x in let base = [] in List.fold_left f base fs;;
+let rec filter l a =
+  match l with
+  | [] -> []
+  | h::t -> if h = a then filter t a else h :: (filter t a);;
+
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = seen @ h in
+        let rest' = filter (t, h) in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let pipe fs = let f a x b = x b in let base b = b in List.fold_left f base fs;;
+let rec filter l a =
+  match l with
+  | [] -> []
+  | h::t -> if h = a then filter t a else h :: (filter t a);;
+
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = h :: seen in
+        let rest' = filter t h in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(2,26)-(2,27)
-(2,26)-(2,31)
-(2,28)-(2,29)
-(2,30)-(2,31)
-(2,35)-(2,76)
-(2,46)-(2,48)
-(2,52)-(2,76)
+(12,20)-(12,24)
+(12,20)-(12,28)
+(12,25)-(12,26)
+(13,8)-(13,58)
+(13,20)-(13,33)
+(13,27)-(13,33)
 *)
 
 (* type error slice
-(2,14)-(2,76)
-(2,20)-(2,31)
-(2,26)-(2,27)
-(2,26)-(2,31)
-(2,28)-(2,29)
-(2,35)-(2,76)
-(2,46)-(2,48)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,67)-(2,68)
-(2,69)-(2,73)
+(3,2)-(5,59)
+(3,2)-(5,59)
+(5,47)-(5,59)
+(5,48)-(5,54)
+(5,55)-(5,56)
+(13,20)-(13,26)
+(13,20)-(13,33)
+(13,27)-(13,33)
 *)

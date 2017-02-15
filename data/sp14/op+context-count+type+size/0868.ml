@@ -1,28 +1,41 @@
 
-let pipe fs = let f a x = fs a x in let base = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e);;
 
 
 (* fix
 
-let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
 
 *)
 
 (* changed spans
-(2,14)-(2,76)
-(2,20)-(2,32)
-(2,26)-(2,28)
-(2,26)-(2,32)
-(2,29)-(2,30)
-(2,36)-(2,76)
-(2,47)-(2,48)
-(2,52)-(2,76)
+(12,64)-(12,65)
 *)
 
 (* type error slice
-(2,26)-(2,28)
-(2,26)-(2,32)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,74)-(2,76)
+(11,3)-(12,68)
+(11,14)-(12,66)
+(12,58)-(12,66)
+(12,59)-(12,63)
+(12,64)-(12,65)
 *)

@@ -1,43 +1,30 @@
 
-let pipe fs =
-  let f a x = function | g -> g (a x) in
-  let base = function | x -> x in List.fold_left f base fs;;
+let rec sumDigits n1 =
+  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+
+let rec digitalRoot n = if n > 10 then digitalRoot sumDigits n else n;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = function | g -> a (x g) in
-  let base = function | x -> x in List.fold_left f base fs;;
+let rec sumDigits n1 =
+  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+
+let rec digitalRoot n = if n > 10 then digitalRoot (sumDigits n) else n;;
 
 *)
 
 (* changed spans
-(3,30)-(3,31)
-(3,32)-(3,37)
-(3,35)-(3,36)
-(4,2)-(4,58)
+(5,39)-(5,62)
+(5,51)-(5,60)
 *)
 
 (* type error slice
-(3,2)-(4,58)
-(3,8)-(3,37)
-(3,10)-(3,37)
-(3,14)-(3,37)
-(3,14)-(3,37)
-(3,14)-(3,37)
-(3,30)-(3,31)
-(3,30)-(3,37)
-(3,32)-(3,37)
-(3,33)-(3,34)
-(4,2)-(4,58)
-(4,13)-(4,30)
-(4,13)-(4,30)
-(4,13)-(4,30)
-(4,13)-(4,30)
-(4,29)-(4,30)
-(4,34)-(4,48)
-(4,34)-(4,58)
-(4,49)-(4,50)
-(4,51)-(4,55)
+(5,3)-(5,71)
+(5,20)-(5,69)
+(5,24)-(5,69)
+(5,39)-(5,50)
+(5,39)-(5,62)
+(5,61)-(5,62)
+(5,68)-(5,69)
 *)

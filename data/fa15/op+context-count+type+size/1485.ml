@@ -1,32 +1,28 @@
 
-let pipe fs = let f a x x a = x in let base f = f in List.fold_left f base fs;;
+let stringOfList f l =
+  let fx a b = match b with | [] -> "" | h::t -> List.append a b in
+  let base = "" in List.fold_left fx base l;;
 
 
 (* fix
 
-let pipe fs = let f a x x a = a in let base x = x in List.fold_left f base fs;;
+let stringOfList f l =
+  let fx a b = a ^ b in let base = "" in List.fold_left fx base l;;
 
 *)
 
 (* changed spans
-(2,30)-(2,31)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,77)
+(3,15)-(3,64)
+(3,21)-(3,22)
+(3,36)-(3,38)
+(3,49)-(3,60)
+(4,2)-(4,43)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
-(2,70)-(2,74)
+(3,15)-(3,64)
+(3,15)-(3,64)
+(3,36)-(3,38)
+(3,49)-(3,60)
+(3,49)-(3,64)
 *)

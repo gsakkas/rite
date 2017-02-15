@@ -1,37 +1,41 @@
 
-let rec mulByDigit i l =
-  let f a x =
-    let (carry,acc) = a in
-    let res = (x * i) + carry in ((res / 10), ((res mod 10) :: acc)) in
-  let base = (0, []) in let args = List.rev in List.fold_left f base args;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h @ seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  let f a x =
-    let (carry,acc) = a in
-    let res = (x * i) + carry in ((res / 10), ((res mod 10) :: acc)) in
-  let base = (0, []) in
-  let args = List.rev (0 :: l) in
-  let (_,res) = List.fold_left f base args in res;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(6,24)-(6,73)
-(6,35)-(6,43)
-(6,47)-(6,61)
-(6,47)-(6,73)
-(6,62)-(6,63)
-(6,64)-(6,68)
-(6,69)-(6,73)
+(7,54)-(7,55)
+(7,54)-(7,62)
+(7,56)-(7,57)
+(9,20)-(9,22)
 *)
 
 (* type error slice
-(6,24)-(6,73)
-(6,35)-(6,43)
-(6,47)-(6,61)
-(6,47)-(6,73)
-(6,69)-(6,73)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,33)
+(7,34)-(7,38)
+(7,54)-(7,55)
+(7,54)-(7,62)
+(7,56)-(7,57)
+(7,58)-(7,62)
 *)

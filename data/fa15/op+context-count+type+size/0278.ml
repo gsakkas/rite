@@ -1,70 +1,39 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w =
-  match w with
-  | [] -> true
-  | h::t ->
-      let separated = explode w in
-      let reversed = listReverse separated in
-      if w == reversed then true else false;;
+let rec digitsOfInt n =
+  match n < 0 with
+  | true  -> []
+  | false  ->
+      let remainder = n mod 10 in
+      if n = 0 then [remainder] else ((digitsOfInt n) / 10) @ [remainder];;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w =
-  let separated = explode w in
-  let reversed = listReverse separated in
-  if separated == reversed then true else false;;
+let rec digitsOfInt n =
+  match n < 0 with
+  | true  -> []
+  | false  ->
+      let remainder = n mod 10 in
+      if n = 0 then [remainder] else (digitsOfInt (n / 10)) @ [remainder];;
 
 *)
 
 (* changed spans
-(11,2)-(16,43)
-(11,8)-(11,9)
-(12,10)-(12,14)
-(14,6)-(16,43)
-(15,6)-(16,43)
-(16,9)-(16,10)
+(7,37)-(7,59)
+(7,51)-(7,52)
 *)
 
 (* type error slice
-(2,3)-(5,8)
-(2,12)-(5,6)
-(4,12)-(4,29)
-(4,13)-(4,26)
-(4,27)-(4,28)
-(8,36)-(8,51)
-(8,36)-(8,57)
-(8,37)-(8,48)
-(8,52)-(8,53)
-(11,2)-(16,43)
-(11,2)-(16,43)
-(11,2)-(16,43)
-(11,2)-(16,43)
-(11,8)-(11,9)
-(14,22)-(14,29)
-(14,22)-(14,31)
-(14,30)-(14,31)
-(15,6)-(16,43)
-(15,21)-(15,32)
-(15,21)-(15,42)
-(16,9)-(16,10)
-(16,9)-(16,22)
-(16,9)-(16,22)
-(16,14)-(16,22)
+(2,3)-(7,75)
+(2,20)-(7,73)
+(3,2)-(7,73)
+(6,6)-(7,73)
+(7,6)-(7,73)
+(7,20)-(7,31)
+(7,37)-(7,59)
+(7,37)-(7,59)
+(7,37)-(7,73)
+(7,38)-(7,53)
+(7,39)-(7,50)
+(7,60)-(7,61)
 *)

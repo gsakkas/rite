@@ -1,116 +1,27 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand 0 100 in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand 0 100 in
-     if (rand mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [digitsOfInt (n / 10); n mod 10];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand (0, 100) in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand (0, 100) in
-     if (rnd mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
 *)
 
 (* changed spans
-(28,14)-(28,24)
-(28,19)-(28,20)
-(45,15)-(45,25)
-(45,20)-(45,21)
-(46,9)-(46,13)
+(3,25)-(3,57)
+(3,26)-(3,46)
+(3,48)-(3,56)
 *)
 
 (* type error slice
-(28,14)-(28,18)
-(28,14)-(28,24)
-(46,8)-(46,20)
-(46,9)-(46,13)
+(2,3)-(3,59)
+(2,20)-(3,57)
+(3,2)-(3,57)
+(3,25)-(3,57)
+(3,25)-(3,57)
+(3,26)-(3,37)
+(3,26)-(3,46)
 *)

@@ -1,27 +1,102 @@
 
-let rec clone x n = if n = 0 then [] else x :: ((clone x n) - 1);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ()
+  else
+    (match rand (2, 6) with
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 
 (* fix
 
-let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ()
+  else
+    (match rand (2, 6) with
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(2,47)-(2,64)
-(2,57)-(2,58)
+(17,16)-(17,39)
+(37,9)-(37,19)
+(39,50)-(39,54)
+(39,56)-(39,67)
+(39,57)-(39,62)
+(39,65)-(39,66)
 *)
 
 (* type error slice
-(2,3)-(2,66)
-(2,14)-(2,64)
-(2,16)-(2,64)
-(2,20)-(2,64)
-(2,42)-(2,64)
-(2,42)-(2,64)
-(2,47)-(2,64)
-(2,47)-(2,64)
-(2,48)-(2,59)
-(2,49)-(2,54)
+(17,3)-(17,41)
+(17,16)-(17,39)
+(37,9)-(37,19)
+(37,9)-(39,70)
+(38,11)-(39,70)
 *)

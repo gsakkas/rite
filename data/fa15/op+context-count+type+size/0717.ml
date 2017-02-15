@@ -1,84 +1,54 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  let rec loop x listX =
+    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
+  match n with | 0 -> [0] | x' -> loop x' [];;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> 0 | _ -> bigAdd (bigAdd l l) (mulByDigit (i - 1) l);;
+let rec additivePersistence n =
+  let rec loop x y =
+    if x < 10 then y else loop ((sumList (digitsOfInt x)) + y) in
+  match n with | 0 -> 0 | x' -> loop x' 0;;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  let rec loop x listX =
+    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
+  match n with | 0 -> [0] | x' -> loop x' [];;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [0] | _ -> bigAdd (bigAdd l l) (mulByDigit (i - 1) l);;
+let rec additivePersistence n =
+  let rec loop x y =
+    if x < 10
+    then y
+    else loop (sumList (digitsOfInt x)) ((sumList (digitsOfInt x)) + y) in
+  match n with | 0 -> 0 | x' -> loop x' 0;;
 
 *)
 
 (* changed spans
-(28,22)-(28,23)
+(11,26)-(11,62)
+(11,31)-(11,62)
+(12,32)-(12,36)
+(12,37)-(12,39)
+(12,40)-(12,41)
 *)
 
 (* type error slice
-(15,12)-(15,60)
-(15,12)-(15,60)
-(15,33)-(15,43)
-(15,33)-(15,45)
-(15,53)-(15,59)
-(17,3)-(25,36)
-(17,11)-(25,34)
-(17,14)-(25,34)
-(18,2)-(25,34)
-(25,2)-(25,12)
-(25,2)-(25,34)
-(28,2)-(28,73)
-(28,2)-(28,73)
-(28,22)-(28,23)
-(28,31)-(28,37)
-(28,31)-(28,73)
+(10,2)-(12,41)
+(10,15)-(11,62)
+(10,17)-(11,62)
+(11,4)-(11,62)
+(11,4)-(11,62)
+(11,19)-(11,20)
+(11,26)-(11,30)
+(11,26)-(11,62)
+(11,31)-(11,62)
+(11,60)-(11,61)
+(12,32)-(12,36)
+(12,32)-(12,41)
 *)

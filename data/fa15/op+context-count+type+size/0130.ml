@@ -8,15 +8,20 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval t x y))
-  | Cosine t -> cos (pi *. (eval t x y))
-  | Average (t,s) -> ((eval t x y) +. (eval s x y)) /. 2;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, depth) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX else buildY
+  | d ->
+      if r = 0
+      then buildSine build (rand, (d - 1))
+      else build (rand, (d - 1));;
 
 
 (* fix
@@ -30,37 +35,47 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, depth) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
+  | d ->
+      if r = 0
+      then buildSine (build (rand, (depth - 1)))
+      else build (rand, (d - 1));;
 
 *)
 
 (* changed spans
-(17,25)-(17,37)
-(17,31)-(17,32)
-(18,27)-(18,39)
-(18,33)-(18,34)
-(19,22)-(19,34)
-(19,28)-(19,29)
-(19,38)-(19,50)
-(19,44)-(19,45)
-(19,55)-(19,56)
+(20,31)-(20,37)
+(20,43)-(20,49)
+(22,6)-(24,32)
+(23,11)-(23,42)
+(23,21)-(23,26)
+(23,35)-(23,36)
+(24,18)-(24,22)
+(24,24)-(24,31)
+(24,25)-(24,26)
+(24,29)-(24,30)
 *)
 
 (* type error slice
-(13,3)-(19,58)
-(13,14)-(19,56)
-(14,2)-(19,56)
-(17,25)-(17,37)
-(17,26)-(17,30)
-(17,31)-(17,32)
-(19,21)-(19,56)
-(19,55)-(19,56)
+(11,3)-(11,26)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(17,3)-(24,34)
+(17,15)-(24,32)
+(23,11)-(23,20)
+(23,11)-(23,42)
+(23,21)-(23,26)
+(24,11)-(24,16)
+(24,11)-(24,32)
 *)

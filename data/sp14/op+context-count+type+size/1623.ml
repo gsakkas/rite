@@ -8,20 +8,17 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ (("*" (exprToString t2)) ^ ")"))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 
 (* fix
@@ -35,28 +32,26 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+  | Times (t1,t2) ->
+      "(" ^ ((exprToString t1) ^ ("*" ^ ((exprToString t2) ^ ")")))
+  | Thresh (th1,th2,th3,th4) -> "bullshit";;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
+(20,34)-(20,57)
+(20,39)-(20,56)
 *)
 
 (* type error slice
-(19,21)-(19,64)
-(19,63)-(19,64)
+(20,34)-(20,57)
+(20,35)-(20,38)
 *)

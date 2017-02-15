@@ -1,73 +1,110 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildECosSin (a,b) = ECosSin (a, b);;
+
+let buildSinLog (a,b,c) = SinLog (a, b, c);;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  let r = rand (if depth = 0 then (8, 10) else (1, 8)) in
+  match r with
+  | 1 -> buildSine (build (rand, (depth - 1)))
+  | 2 -> buildCosine (build (rand, (depth - 1)))
+  | 3 ->
+      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 4 ->
+      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 5 ->
+      buildThresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 6 ->
+      buildECosSin ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 7 ->
+      buildSinLog ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 8 -> VarX
+  | 9 -> VarY;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildECosSin (a,b) = ECosSin (a, b);;
+
+let buildSinLog (a,b,c) = SinLog (a, b, c);;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  let r = rand (if depth = 0 then (8, 10) else (1, 8)) in
+  match r with
+  | 1 -> buildSine (build (rand, (depth - 1)))
+  | 2 -> buildCosine (build (rand, (depth - 1)))
+  | 3 ->
+      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 4 ->
+      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 5 ->
+      buildThresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 6 ->
+      buildECosSin ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 7 ->
+      buildSinLog
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))))
+  | 8 -> VarX
+  | 9 -> VarY;;
 
 *)
 
 (* changed spans
-(21,19)-(21,20)
+(43,18)-(43,76)
+(44,9)-(44,13)
 *)
 
 (* type error slice
-(18,4)-(23,51)
-(18,10)-(20,71)
-(20,6)-(20,71)
-(20,12)-(20,13)
-(20,47)-(20,70)
-(20,68)-(20,69)
-(21,4)-(23,51)
-(21,15)-(21,21)
-(21,19)-(21,20)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
-(23,35)-(23,39)
+(19,3)-(19,44)
+(19,17)-(19,42)
+(43,6)-(43,17)
+(43,6)-(43,76)
+(43,18)-(43,76)
 *)

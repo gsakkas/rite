@@ -1,75 +1,44 @@
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
-
-let addition (x,y) = x + y;;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then (((clone 0 ((-1) * diff)) @ l1), l2)
-  else if diff > 0 then (l1, ((clone 0 diff) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | hd::tl -> if hd = 0 then removeZero tl else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (m,n) = x in
-      let (y,z) = a in
-      (((((addition (m, n)) + y) / 10) @ z),
-        ([((addition (m, n)) + y) mod 10] @ z)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile (let fin b' = (b', ((f b') = b')) in ((fin b), b));;
 
 
 (* fix
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
-
-let addition (x,y) = x + y;;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then (((clone 0 ((-1) * diff)) @ l1), l2)
-  else if diff > 0 then (l1, ((clone 0 diff) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | hd::tl -> if hd = 0 then removeZero tl else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (m,n) = x in
-      let (y,z) = a in
-      ((((addition (m, n)) + y) / 10),
-        ([((addition (m, n)) + y) mod 10] @ z)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile (let fin bt = (bt, ((f bt) = bt)) in (fin, b));;
 
 *)
 
 (* changed spans
-(23,7)-(23,43)
-(23,39)-(23,40)
-(23,41)-(23,42)
-(26,15)-(26,23)
-(26,15)-(26,44)
+(5,9)-(5,59)
+(5,18)-(5,42)
+(5,23)-(5,42)
+(5,24)-(5,26)
+(5,32)-(5,34)
+(5,38)-(5,40)
+(5,46)-(5,58)
+(5,47)-(5,54)
+(5,56)-(5,57)
 *)
 
 (* type error slice
-(23,7)-(23,43)
-(23,8)-(23,38)
-(23,39)-(23,40)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(5,2)-(5,8)
+(5,2)-(5,59)
+(5,9)-(5,59)
+(5,9)-(5,59)
+(5,18)-(5,42)
+(5,23)-(5,42)
+(5,46)-(5,58)
+(5,47)-(5,54)
+(5,48)-(5,51)
 *)

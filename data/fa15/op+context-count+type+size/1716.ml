@@ -4,29 +4,26 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Root of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Pivot of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
-  | Root x3 -> sqrt (eval (x3, x, y))
-  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
-  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
-  | Thresh (x8,x9,x10,x11) ->
-      if (eval (x8, x, y)) < (eval (x9, x, y))
-      then eval (x10, x, y)
-      else eval (x11, x, y)
-  | Pivot (x12,x13,x14) ->
-      if (eval (x12, x, y)) < 0 then eval (x13, x, y) else eval (x14, x, y);;
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    match rand with
+    | (0,2) -> buildX ()
+    | (3,5) -> buildY ()
+    | (6,10) -> buildSine (build (rand, (depth - 1)))
+    | (11,18) -> buildCosine (build (rand, (depth - 1)));;
 
 
 (* fix
@@ -36,43 +33,48 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Root of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Pivot of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
-  | Root x3 -> sqrt (eval (x3, x, y))
-  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
-  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
-  | Thresh (x8,x9,x10,x11) ->
-      if (eval (x8, x, y)) < (eval (x9, x, y))
-      then eval (x10, x, y)
-      else eval (x11, x, y)
-  | Pivot (x12,x13,x14) ->
-      if (eval (x12, x, y)) < 0. then eval (x13, x, y) else eval (x14, x, y);;
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, (depth - 1)))
+    | 1 -> buildCosine (build (rand, (depth - 1)))
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 *)
 
 (* changed spans
-(29,30)-(29,31)
+(20,2)-(26,56)
+(22,4)-(26,56)
+(22,10)-(22,14)
+(23,15)-(23,21)
+(23,15)-(23,24)
+(23,22)-(23,24)
+(24,15)-(24,21)
+(24,22)-(24,24)
+(25,16)-(25,53)
 *)
 
 (* type error slice
-(19,19)-(19,44)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(29,9)-(29,27)
-(29,9)-(29,31)
-(29,9)-(29,31)
-(29,10)-(29,14)
-(29,30)-(29,31)
+(15,3)-(15,22)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(20,2)-(26,56)
+(20,2)-(26,56)
+(20,2)-(26,56)
+(22,4)-(26,56)
+(23,15)-(23,21)
+(23,15)-(23,24)
 *)

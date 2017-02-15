@@ -1,40 +1,37 @@
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if not result then value else wwhile (f, value);;
-
-let fixpoint (f,b) =
-  wwhile ((let func output = ((f b), ((f b) = b)) in func b), b);;
+let pipe fs =
+  let f a x = x a in let base = List.hd fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if not result then value else wwhile (f, value);;
-
-let fixpoint (f,b) =
-  wwhile ((let func output = ((f b), ((f b) = b)) in func), b);;
+let pipe fs =
+  let f a x y = x (a y) in let base i = i in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,53)-(6,59)
-(6,62)-(6,63)
+(3,14)-(3,17)
+(3,16)-(3,17)
+(3,21)-(3,70)
+(3,32)-(3,39)
+(3,40)-(3,42)
+(3,46)-(3,70)
 *)
 
 (* type error slice
-(3,23)-(3,24)
-(3,23)-(3,26)
-(3,60)-(3,66)
-(3,60)-(3,77)
-(3,67)-(3,77)
-(3,68)-(3,69)
-(6,2)-(6,8)
-(6,2)-(6,64)
-(6,9)-(6,64)
-(6,10)-(6,60)
-(6,10)-(6,60)
-(6,20)-(6,49)
-(6,29)-(6,49)
-(6,53)-(6,57)
-(6,53)-(6,59)
+(3,2)-(3,70)
+(3,8)-(3,17)
+(3,10)-(3,17)
+(3,14)-(3,15)
+(3,14)-(3,17)
+(3,21)-(3,70)
+(3,32)-(3,39)
+(3,32)-(3,42)
+(3,40)-(3,42)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

@@ -1,124 +1,69 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Log of expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([], []) in
-    let base = ([], []) in
-    let args = f l1 l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Log of expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (addend_a,addend_b) ->
-          let new_carry = ((carry + addend_a) + addend_b) / 10 in
-          let digit = ((carry + addend_a) + addend_b) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0;;
 
 *)
 
 (* changed spans
-(23,16)-(23,24)
-(23,17)-(23,19)
-(23,21)-(23,23)
-(24,4)-(25,73)
-(24,15)-(24,23)
-(24,16)-(24,18)
-(24,20)-(24,22)
-(25,4)-(25,73)
-(25,15)-(25,16)
-(25,15)-(25,22)
-(25,17)-(25,19)
-(25,20)-(25,22)
-(25,26)-(25,73)
-(25,40)-(25,54)
-(25,40)-(25,66)
-(25,55)-(25,56)
-(25,57)-(25,61)
-(25,62)-(25,66)
-(25,70)-(25,73)
-(26,2)-(26,12)
-(26,2)-(26,34)
-(26,13)-(26,34)
-(26,14)-(26,17)
-(26,18)-(26,33)
-(26,19)-(26,26)
-(26,27)-(26,29)
-(26,30)-(26,32)
+(26,68)-(26,69)
 *)
 
 (* type error slice
-(9,3)-(12,76)
-(9,12)-(12,74)
-(9,15)-(12,74)
-(10,2)-(12,74)
-(11,13)-(11,73)
-(11,14)-(11,16)
-(12,45)-(12,61)
-(12,46)-(12,57)
-(12,58)-(12,60)
-(22,2)-(26,34)
-(22,11)-(25,73)
-(23,4)-(25,73)
-(23,10)-(23,24)
-(23,12)-(23,24)
-(23,16)-(23,24)
-(25,4)-(25,73)
-(25,15)-(25,16)
-(25,15)-(25,22)
-(25,17)-(25,19)
-(25,40)-(25,54)
-(25,40)-(25,66)
-(25,55)-(25,56)
-(25,62)-(25,66)
-(26,13)-(26,34)
-(26,14)-(26,17)
-(26,18)-(26,33)
-(26,19)-(26,26)
+(26,41)-(26,69)
+(26,41)-(26,69)
+(26,57)-(26,60)
+(26,57)-(26,62)
+(26,68)-(26,69)
 *)

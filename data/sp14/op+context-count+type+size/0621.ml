@@ -1,122 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let d = depth - 1 in
-    match rand (0, 4) with
-    | 0 -> buildSine (build (rand, d))
-    | 1 -> buildCosine (build (rand, depth))
-    | 2 -> buildAverage (build (rand, depth))
-    | 3 -> buildTimes (build (rand, depth))
-    | 4 -> buildThresh (build (rand, depth));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if 1 then List.append (clone 0 1) l1;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let depth = depth - 1 in
-    match rand (0, 4) with
-    | 0 -> buildSine (build (rand, depth))
-    | 1 -> buildCosine (build (rand, depth))
-    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
-    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
-    | 4 ->
-        buildThresh
-          ((build (rand, depth)), (build (rand, depth)),
-            (build (rand, depth)), (build (rand, depth)))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(21,15)-(30,44)
-(22,2)-(30,44)
-(24,4)-(30,44)
-(26,35)-(26,36)
-(28,24)-(28,45)
-(29,11)-(29,21)
-(29,22)-(29,43)
-(30,11)-(30,22)
-(30,23)-(30,44)
-(30,31)-(30,35)
-(30,37)-(30,42)
+(10,2)-(10,38)
+(10,5)-(10,6)
+(10,12)-(10,38)
+(10,33)-(10,34)
 *)
 
 (* type error slice
-(11,3)-(11,45)
-(11,18)-(11,43)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(17,3)-(17,69)
-(17,17)-(17,67)
-(19,3)-(19,41)
-(19,16)-(19,39)
-(22,2)-(30,44)
-(22,2)-(30,44)
-(22,2)-(30,44)
-(24,4)-(30,44)
-(25,4)-(30,44)
-(26,11)-(26,20)
-(26,11)-(26,38)
-(26,21)-(26,38)
-(26,22)-(26,27)
-(28,11)-(28,23)
-(28,11)-(28,45)
-(28,24)-(28,45)
-(28,25)-(28,30)
-(29,11)-(29,21)
-(29,11)-(29,43)
-(29,22)-(29,43)
-(29,23)-(29,28)
-(30,11)-(30,22)
-(30,11)-(30,44)
-(30,23)-(30,44)
-(30,24)-(30,29)
+(10,2)-(10,38)
+(10,2)-(10,38)
+(10,2)-(10,38)
+(10,2)-(10,38)
+(10,5)-(10,6)
+(10,12)-(10,23)
+(10,12)-(10,38)
 *)

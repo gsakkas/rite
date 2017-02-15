@@ -1,26 +1,40 @@
 
-let rec clone x n = match n with | 1 -> [x] | n' -> [clone x (n - 1)];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat (List.map f l) l;;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | 1 -> [x] | n' -> List.append (clone x (n - 1)) [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat "" (List.map f l);;
 
 *)
 
 (* changed spans
-(2,52)-(2,69)
-(2,53)-(2,58)
+(9,33)-(9,47)
+(9,48)-(9,49)
 *)
 
 (* type error slice
-(2,3)-(2,71)
-(2,14)-(2,69)
-(2,16)-(2,69)
-(2,20)-(2,69)
-(2,52)-(2,69)
-(2,52)-(2,69)
-(2,53)-(2,58)
-(2,53)-(2,68)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(6,22)-(6,31)
+(6,23)-(6,26)
+(6,27)-(6,28)
+(9,23)-(9,32)
+(9,23)-(9,49)
+(9,33)-(9,47)
+(9,34)-(9,42)
 *)

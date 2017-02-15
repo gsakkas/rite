@@ -1,65 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*%s)" e
-  | Cosine e -> "cos (pi*%s)"
-  | Average expr -> "Average"
-  | Times e -> "Times"
-  | Thresh e -> "Thresh";;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x' ->
+      if (x * i) < 9
+      then [(x * i) / 10] @ (mulByDigit i x')
+      else [(x * i) / 10] @ ([(x * i) mod 10] + (mulByDigit i x'));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos (pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,ex) ->
-      "((" ^ ((exprToString e) ^ ("+" ^ ((exprToString ex) ^ ")/2)")))
-  | Times (e,ex) -> (exprToString e) ^ ("*" ^ (exprToString ex))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x' -> [(x * i) / 10; (x * i) mod 10] @ (mulByDigit i x');;
 
 *)
 
 (* changed spans
-(12,2)-(19,24)
-(15,14)-(15,27)
-(15,14)-(15,29)
-(16,16)-(16,29)
-(17,20)-(17,29)
-(18,15)-(18,22)
-(19,16)-(19,24)
+(6,6)-(8,66)
+(6,9)-(6,16)
+(6,9)-(6,20)
+(6,10)-(6,11)
+(6,14)-(6,15)
+(6,19)-(6,20)
+(7,11)-(7,25)
+(7,28)-(7,45)
+(8,11)-(8,66)
 *)
 
 (* type error slice
-(15,14)-(15,27)
-(15,14)-(15,29)
+(7,11)-(7,45)
+(7,26)-(7,27)
+(7,28)-(7,45)
+(7,29)-(7,39)
+(8,11)-(8,66)
+(8,26)-(8,27)
+(8,28)-(8,66)
+(8,28)-(8,66)
+(8,28)-(8,66)
+(8,29)-(8,45)
+(8,48)-(8,65)
+(8,49)-(8,59)
 *)

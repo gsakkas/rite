@@ -1,32 +1,71 @@
 
-let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in 0 :: a in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in ([], []) in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,26)-(2,29)
-(2,28)-(2,29)
-(2,33)-(2,74)
-(2,44)-(2,46)
-(2,50)-(2,74)
+(19,36)-(19,37)
+(19,36)-(19,42)
+(19,41)-(19,42)
+(20,4)-(21,68)
 *)
 
 (* type error slice
-(2,14)-(2,74)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,33)-(2,74)
-(2,44)-(2,46)
-(2,50)-(2,64)
-(2,50)-(2,74)
-(2,65)-(2,66)
-(2,67)-(2,71)
-(2,72)-(2,74)
+(19,4)-(21,68)
+(19,10)-(19,42)
+(19,12)-(19,42)
+(19,16)-(19,42)
+(19,16)-(19,42)
+(19,31)-(19,32)
+(19,36)-(19,42)
+(19,36)-(19,42)
+(19,41)-(19,42)
+(21,35)-(21,49)
+(21,35)-(21,61)
+(21,50)-(21,51)
 *)

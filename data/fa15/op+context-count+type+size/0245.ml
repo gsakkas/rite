@@ -1,30 +1,58 @@
 
-let sqsum xs =
-  let f a x a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  match w with
+  | [] -> true
+  | h::t ->
+      let separated = explode w in
+      let reversed = listReverse separated in
+      if separated == reversed then true else false;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  let separated = explode w in
+  let reversed = listReverse separated in
+  if separated == reversed then true else false;;
 
 *)
 
 (* changed spans
-(3,12)-(3,29)
-(3,14)-(3,29)
-(3,33)-(3,73)
+(11,2)-(16,51)
+(11,8)-(11,9)
+(12,10)-(12,14)
+(14,6)-(16,51)
+(15,6)-(16,51)
 *)
 
 (* type error slice
-(3,2)-(3,73)
-(3,8)-(3,29)
-(3,10)-(3,29)
-(3,12)-(3,29)
-(3,33)-(3,73)
-(3,44)-(3,45)
-(3,49)-(3,63)
-(3,49)-(3,73)
-(3,64)-(3,65)
-(3,66)-(3,70)
+(2,3)-(5,8)
+(2,12)-(5,6)
+(4,12)-(4,29)
+(4,13)-(4,26)
+(4,27)-(4,28)
+(11,2)-(16,51)
+(11,2)-(16,51)
+(11,2)-(16,51)
+(11,2)-(16,51)
+(11,8)-(11,9)
+(14,22)-(14,29)
+(14,22)-(14,31)
+(14,30)-(14,31)
 *)

@@ -1,42 +1,84 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | AbsThresh of expr* expr* expr
+  | ModThresh of expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map (fun f  -> f l));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | AbsThresh (e1,e2,e3) ->
+      let s = eval (e3, x, y) in
+      if (abs_float (eval (e1, x, y))) < (abs_float (eval (e2, x, y)))
+      then s
+      else abs_float s
+  | ModThresh (e1,e2,e3) ->
+      if ((truncate (100 *. (eval (e1, x, y)))) mod 5) = 0
+      then eval (e2, x, y)
+      else eval (e3, x, y);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | AbsThresh of expr* expr* expr
+  | ModThresh of expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | AbsThresh (e1,e2,e3) ->
+      let s = eval (e3, x, y) in
+      if (abs_float (eval (e1, x, y))) < (abs_float (eval (e2, x, y)))
+      then s
+      else abs_float s
+  | ModThresh (e1,e2,e3) ->
+      if ((truncate (100. *. (eval (e1, x, y)))) mod 5) = 0
+      then eval (e2, x, y)
+      else eval (e3, x, y);;
 
 *)
 
 (* changed spans
-(9,37)-(9,63)
-(9,47)-(9,62)
-(9,58)-(9,61)
+(33,21)-(33,24)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(6,21)-(6,37)
-(6,22)-(6,33)
-(6,34)-(6,36)
-(9,23)-(9,32)
-(9,23)-(9,63)
-(9,37)-(9,63)
-(9,38)-(9,46)
+(33,20)-(33,46)
+(33,21)-(33,24)
 *)

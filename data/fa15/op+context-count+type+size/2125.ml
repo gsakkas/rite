@@ -1,75 +1,124 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let getHead h = match h with | [] -> [] | h::t -> h;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^
-        ((exprToString e) ^ ("+" ^ ((exprToString e) ^ (")" / (2 ")")))))
-  | Times (x,y) -> exprToString e "*" exprToString e;;
+let getTail t = match t with | [] -> [] | h::t -> t;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec matchHeads x =
+  match x with
+  | [] -> true
+  | h::t ->
+      if (getHead x) = (getHead (listReverse x))
+      then matchHeads (getTail (listReverse t))
+      else false;;
+
+let palindrome w =
+  match explode w with | [] -> true | h::t -> matchHeads ((explode w) @ []);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y));;
+let rec matchHeads x = match x with | [] -> true | h::t -> false;;
+
+let palindrome w =
+  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
 
 *)
 
 (* changed spans
-(19,23)-(19,24)
-(19,50)-(19,51)
-(19,55)-(19,70)
-(19,56)-(19,59)
-(19,62)-(19,69)
-(19,63)-(19,64)
-(19,65)-(19,68)
-(20,19)-(20,52)
-(20,32)-(20,33)
-(20,34)-(20,37)
-(20,38)-(20,50)
-(20,51)-(20,52)
+(2,12)-(2,51)
+(2,16)-(2,51)
+(2,22)-(2,23)
+(2,37)-(2,39)
+(2,50)-(2,51)
+(4,12)-(4,51)
+(4,16)-(4,51)
+(4,22)-(4,23)
+(4,37)-(4,39)
+(4,50)-(4,51)
+(6,20)-(7,57)
+(7,2)-(7,57)
+(7,8)-(7,9)
+(7,23)-(7,25)
+(7,36)-(7,51)
+(7,36)-(7,57)
+(7,37)-(7,48)
+(7,49)-(7,50)
+(7,52)-(7,53)
+(7,54)-(7,57)
+(7,55)-(7,56)
+(10,2)-(12,6)
+(12,2)-(12,4)
+(12,5)-(12,6)
+(14,19)-(20,16)
 *)
 
 (* type error slice
-(15,26)-(15,50)
-(15,27)-(15,43)
-(15,28)-(15,40)
-(15,44)-(15,45)
-(19,35)-(19,71)
-(19,53)-(19,54)
-(19,55)-(19,70)
-(19,55)-(19,70)
-(19,56)-(19,59)
-(19,62)-(19,69)
-(19,63)-(19,64)
-(20,19)-(20,31)
-(20,19)-(20,52)
+(2,3)-(2,53)
+(2,12)-(2,51)
+(2,16)-(2,51)
+(2,16)-(2,51)
+(2,16)-(2,51)
+(2,16)-(2,51)
+(2,22)-(2,23)
+(2,37)-(2,39)
+(2,50)-(2,51)
+(4,3)-(4,53)
+(4,12)-(4,51)
+(4,16)-(4,51)
+(4,16)-(4,51)
+(4,16)-(4,51)
+(4,22)-(4,23)
+(4,50)-(4,51)
+(7,2)-(7,57)
+(7,2)-(7,57)
+(7,36)-(7,51)
+(7,36)-(7,57)
+(7,37)-(7,48)
+(7,49)-(7,50)
+(7,52)-(7,53)
+(7,54)-(7,57)
+(7,54)-(7,57)
+(7,55)-(7,56)
+(9,3)-(12,8)
+(9,12)-(12,6)
+(10,2)-(12,6)
+(11,43)-(11,50)
+(11,43)-(11,66)
+(11,43)-(11,66)
+(11,44)-(11,49)
+(11,54)-(11,66)
+(11,55)-(11,57)
+(12,2)-(12,4)
+(12,2)-(12,6)
+(18,9)-(18,20)
+(18,10)-(18,17)
+(18,18)-(18,19)
+(18,32)-(18,47)
+(18,33)-(18,44)
+(18,45)-(18,46)
+(19,11)-(19,21)
+(19,11)-(19,47)
+(19,22)-(19,47)
+(19,23)-(19,30)
+(19,31)-(19,46)
+(19,32)-(19,43)
+(23,46)-(23,56)
+(23,46)-(23,75)
+(23,57)-(23,75)
+(23,58)-(23,69)
+(23,59)-(23,66)
+(23,70)-(23,71)
 *)

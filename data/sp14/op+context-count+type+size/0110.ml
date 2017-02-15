@@ -1,44 +1,59 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let stringOfList f l = sepConcat (List.map f l);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (list1,list2) -> list1 in
+    let base = ([0], [0]) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (list1,list2) -> (list1, list2) in
+    let base = ([0], [0]) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,23)-(9,32)
-(9,23)-(9,47)
-(9,33)-(9,47)
-(9,34)-(9,42)
-(9,43)-(9,44)
-(9,45)-(9,46)
+(14,48)-(14,53)
+(15,4)-(17,51)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(6,22)-(6,31)
-(6,23)-(6,26)
-(6,27)-(6,28)
-(9,23)-(9,32)
-(9,23)-(9,47)
-(9,33)-(9,47)
-(9,34)-(9,42)
+(14,4)-(17,51)
+(14,10)-(14,53)
+(14,12)-(14,53)
+(14,16)-(14,53)
+(14,16)-(14,53)
+(14,22)-(14,23)
+(14,48)-(14,53)
+(17,18)-(17,32)
+(17,18)-(17,44)
+(17,33)-(17,34)
 *)

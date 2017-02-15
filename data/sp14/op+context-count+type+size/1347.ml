@@ -1,33 +1,30 @@
 
-let pipe fs =
-  let f a x = List.map x in let base = 0 in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> (n mod 10) :: ((digitsOfInt n) / 10);;
 
 
 (* fix
 
-let pipe fs = let f a x x = x in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  match n <= 0 with | true  -> [] | false  -> (n mod 10) :: (digitsOfInt n);;
 
 *)
 
 (* changed spans
-(3,2)-(3,68)
-(3,14)-(3,22)
-(3,14)-(3,24)
-(3,28)-(3,68)
-(3,39)-(3,40)
-(3,44)-(3,68)
+(5,28)-(5,50)
+(5,47)-(5,49)
 *)
 
 (* type error slice
-(3,2)-(3,68)
-(3,8)-(3,24)
-(3,10)-(3,24)
-(3,14)-(3,22)
-(3,14)-(3,24)
-(3,28)-(3,68)
-(3,39)-(3,40)
-(3,44)-(3,58)
-(3,44)-(3,68)
-(3,59)-(3,60)
-(3,61)-(3,65)
+(2,3)-(5,52)
+(2,20)-(5,50)
+(3,2)-(5,50)
+(5,14)-(5,50)
+(5,14)-(5,50)
+(5,28)-(5,50)
+(5,28)-(5,50)
+(5,29)-(5,44)
+(5,30)-(5,41)
 *)

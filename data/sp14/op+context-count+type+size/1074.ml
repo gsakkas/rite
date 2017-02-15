@@ -1,32 +1,42 @@
 
-let pipe fs = let f a x a = a x in let base a = a in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (b', (fOfB = b')) in
+      ((whilesFun f), b)), b);;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base a = a in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (b', (fOfB = b')) in
+      whilesFun f), b);;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,35)-(2,77)
+(9,6)-(9,24)
+(9,27)-(9,28)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
-(2,70)-(2,74)
+(3,11)-(3,12)
+(3,11)-(3,14)
+(4,52)-(4,58)
+(4,52)-(4,66)
+(4,59)-(4,66)
+(4,60)-(4,61)
+(7,2)-(7,8)
+(7,2)-(9,29)
+(8,4)-(9,29)
+(8,5)-(9,25)
+(9,6)-(9,24)
 *)

@@ -1,46 +1,44 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let stringOfList f l = List.map (sepConcat f) (f l);;
+let fixpoint (f,b) = wwhile (((f b), ((f b) = b)), b);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let fixpoint (f,b) =
+  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-(9,32)-(9,45)
-(9,33)-(9,42)
-(9,43)-(9,44)
-(9,46)-(9,51)
-(9,47)-(9,48)
-(9,49)-(9,50)
+(6,28)-(6,53)
+(6,29)-(6,49)
+(6,30)-(6,35)
+(6,31)-(6,32)
+(6,33)-(6,34)
+(6,37)-(6,48)
+(6,38)-(6,43)
+(6,41)-(6,42)
+(6,46)-(6,47)
+(6,51)-(6,52)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(6,22)-(6,31)
-(6,23)-(6,26)
-(6,27)-(6,28)
-(9,32)-(9,45)
-(9,33)-(9,42)
-(9,43)-(9,44)
-(9,46)-(9,51)
-(9,47)-(9,48)
+(3,25)-(3,26)
+(3,25)-(3,28)
+(4,18)-(4,24)
+(4,18)-(4,36)
+(4,25)-(4,36)
+(4,26)-(4,27)
+(6,21)-(6,27)
+(6,21)-(6,53)
+(6,28)-(6,53)
+(6,29)-(6,49)
 *)

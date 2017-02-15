@@ -1,26 +1,90 @@
 
-let rec digitsOfInt n = if n > 0 then [digitsOfInt (n mod 10)] else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (r,s) = x in r + s in
+    let base = 0 in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n > 0 then [n mod 100; n mod 10] else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,38)-(2,62)
-(2,39)-(2,50)
-(2,39)-(2,61)
-(2,58)-(2,60)
+(19,16)-(19,38)
+(19,28)-(19,29)
+(19,33)-(19,34)
+(19,33)-(19,38)
+(20,4)-(22,51)
+(20,15)-(20,16)
+(21,4)-(22,51)
+(21,15)-(21,33)
+(22,4)-(22,51)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
+(22,35)-(22,39)
+(22,40)-(22,44)
+(22,48)-(22,51)
+(23,2)-(23,12)
+(23,2)-(23,34)
+(23,14)-(23,17)
+(23,18)-(23,33)
+(23,19)-(23,26)
+(23,27)-(23,29)
+(23,30)-(23,32)
 *)
 
 (* type error slice
-(2,3)-(2,72)
-(2,20)-(2,70)
-(2,24)-(2,70)
-(2,38)-(2,62)
-(2,38)-(2,62)
-(2,39)-(2,50)
-(2,39)-(2,61)
+(19,4)-(22,51)
+(19,10)-(19,38)
+(19,12)-(19,38)
+(19,16)-(19,38)
+(19,33)-(19,38)
+(22,4)-(22,51)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
 *)

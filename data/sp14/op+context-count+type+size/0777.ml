@@ -1,48 +1,84 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs2 with | [] -> xs1 | hd::tl -> append (xs1 :: hd) tl in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial ((eval (e', x, y)), 1)
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial (eval (e', x, y)) 1.0
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(4,10)-(4,13)
-(4,43)-(4,49)
-(4,43)-(4,64)
-(4,51)-(4,54)
-(4,62)-(4,64)
-(5,2)-(7,10)
+(30,20)-(30,52)
+(30,30)-(30,52)
+(30,50)-(30,51)
 *)
 
 (* type error slice
-(3,2)-(7,10)
-(3,17)-(4,64)
-(4,4)-(4,64)
-(4,4)-(4,64)
-(4,43)-(4,49)
-(4,43)-(4,64)
-(4,50)-(4,61)
-(4,50)-(4,61)
-(4,50)-(4,61)
-(4,51)-(4,54)
-(4,58)-(4,60)
-(4,62)-(4,64)
-(6,34)-(6,40)
-(6,34)-(6,69)
-(6,59)-(6,69)
-(6,59)-(6,69)
-(6,60)-(6,68)
+(14,27)-(14,36)
+(14,27)-(14,58)
+(14,37)-(14,47)
+(30,20)-(30,29)
+(30,20)-(30,52)
+(30,30)-(30,52)
 *)

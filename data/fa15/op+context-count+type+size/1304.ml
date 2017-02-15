@@ -1,37 +1,59 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h, t) then [] else [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let carry x y = (x * y) / 10;;
+
+let remainder x y = (x * y) mod 10;;
+
+let rec mulByDigit i l =
+  if (i = 0) || (i > 9)
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t ->
+         (match t with
+          | [] -> if (i * h) > 10 then [carry i h] @ [remainder i h] else []
+          | h'::t' ->
+              let multNext x = match x with | [] -> 0 | h1::t1 -> h1 in
+              if (i * h) > 10
+              then
+                (mulByDigit i t') @
+                  ([(carry i h') + (remainder h' i)] @ [remainder h i])
+              else i * h));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then [] else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let carry x y = (x * y) / 10;;
+
+let remainder x y = (x * y) mod 10;;
+
+let rec mulByDigit i l =
+  if (i = 0) || (i > 9)
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t ->
+         (match t with
+          | [] -> if (i * h) > 10 then [carry i h] @ [remainder i h] else []
+          | h'::t' ->
+              let multNext x = match x with | [] -> 0 | h1::t1 -> h1 in
+              if (i * h) > 10
+              then
+                (mulByDigit i t') @
+                  ([(carry i h') + (remainder h' i)] @ [remainder h i])
+              else [i * h]));;
 
 *)
 
 (* changed spans
-(7,23)-(7,38)
-(7,32)-(7,38)
-(7,36)-(7,37)
-(7,52)-(7,55)
-(8,8)-(8,46)
+(21,19)-(21,24)
 *)
 
 (* type error slice
-(7,20)-(7,55)
-(7,23)-(7,31)
-(7,23)-(7,38)
+(17,14)-(21,24)
+(17,14)-(21,24)
+(19,16)-(20,71)
+(19,34)-(19,35)
+(21,19)-(21,24)
 *)

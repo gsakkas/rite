@@ -1,32 +1,63 @@
 
-let pipe fs = let f a x y = y a in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + 1], [x + 2]) in
+    let base = ([], []) in
+    let args = (l1, l2) in let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x fn = x (fun a  -> a) in
-  let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + 1], [x + 2]) in
+    let base = ([], []) in
+    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,14)-(2,77)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,30)-(2,31)
-(2,35)-(2,77)
+(21,15)-(21,23)
+(21,20)-(21,22)
+(21,27)-(21,76)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(21,4)-(21,76)
+(21,15)-(21,23)
+(21,43)-(21,57)
+(21,43)-(21,69)
+(21,65)-(21,69)
 *)

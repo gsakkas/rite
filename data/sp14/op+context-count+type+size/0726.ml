@@ -1,69 +1,123 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,_) = a in [] :: a in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (0, 2) with | 0 -> VarX | 1 -> VarY | _ -> VarY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 8) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 ->
+           buildAverage
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 4 -> buildTimes (next, (build (rand, (depth - 1))))
+       | 5 ->
+           buildThresh
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))))
+       | 6 -> buildSqrt next
+       | 7 ->
+           buildGauss
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | _ -> abs next);;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let buildAbs e = Abs e;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,_) = a in ([], []) in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildCosine e = Cosine e;;
+
+let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+
+let buildSine e = Sine e;;
+
+let buildSqrt e = Sqrt e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (0, 2) with | 0 -> VarX | 1 -> VarY | _ -> VarY)
+  | _ ->
+      let next = build (rand, (depth - 1)) in
+      (match rand (1, 8) with
+       | 1 -> buildSine next
+       | 2 -> buildCosine next
+       | 3 ->
+           buildAverage
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 4 -> buildTimes (next, (build (rand, (depth - 1))))
+       | 5 ->
+           buildThresh
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))))
+       | 6 -> buildSqrt next
+       | 7 ->
+           buildGauss
+             (next, (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | _ -> buildAbs next);;
 
 *)
 
 (* changed spans
-(19,36)-(19,43)
-(19,42)-(19,43)
+(14,18)-(14,43)
+(32,6)-(48,23)
+(48,14)-(48,17)
+(48,18)-(48,22)
 *)
 
 (* type error slice
-(19,4)-(21,68)
-(19,10)-(19,43)
-(19,12)-(19,43)
-(19,16)-(19,43)
-(19,16)-(19,43)
-(19,31)-(19,32)
-(19,36)-(19,43)
-(19,36)-(19,43)
-(19,42)-(19,43)
-(21,35)-(21,49)
-(21,35)-(21,61)
-(21,50)-(21,51)
+(20,3)-(20,26)
+(20,14)-(20,24)
+(20,18)-(20,24)
+(20,23)-(20,24)
+(34,14)-(34,23)
+(34,14)-(34,28)
+(34,24)-(34,28)
+(48,14)-(48,17)
+(48,14)-(48,22)
+(48,18)-(48,22)
 *)

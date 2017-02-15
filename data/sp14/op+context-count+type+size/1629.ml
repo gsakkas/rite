@@ -1,38 +1,44 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff >= 0
-  then (l1, ((clone 0 diff) @ l2))
-  else ((((clone 0) - diff) @ l1), l2);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t))
+      else prod :: t;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff >= 0
-  then (l1, ((clone 0 diff) @ l2))
-  else (((clone 0 (abs diff)) @ l1), l2);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(8,9)-(8,27)
-(8,10)-(8,19)
-(8,22)-(8,26)
+(8,28)-(8,60)
+(9,11)-(9,15)
+(9,19)-(9,20)
 *)
 
 (* type error slice
-(7,13)-(7,27)
-(7,14)-(7,19)
-(8,8)-(8,33)
-(8,9)-(8,27)
-(8,9)-(8,27)
-(8,10)-(8,19)
-(8,11)-(8,16)
-(8,28)-(8,29)
+(2,3)-(9,22)
+(2,19)-(9,20)
+(2,21)-(9,20)
+(3,2)-(9,20)
+(6,6)-(9,20)
+(7,6)-(9,20)
+(8,11)-(8,60)
+(8,11)-(8,60)
+(8,28)-(8,60)
+(8,28)-(8,60)
+(8,43)-(8,59)
+(8,44)-(8,54)
 *)

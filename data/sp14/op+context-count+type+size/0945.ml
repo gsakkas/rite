@@ -1,39 +1,120 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((((f b) = b), (f b)), b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let case = rand (0, 6) in
+  if depth = 0
+  then
+    let case = rand (0, 1) in
+    match case with
+    | 0 -> buildX ()
+    | 1 -> buildY
+    | 2 -> buildSine (build (rand, (depth - 1)))
+    | 3 -> buildCosine (build (rand, (depth - 1)))
+    | 4 ->
+        buildAverage
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+    | 5 ->
+        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+    | 6 ->
+        buildThresh
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+            (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = let fx b' = ((f b'), ((f b') = b')) in wwhile (fx, b);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let case = rand (0, 6) in
+  match case with
+  | 0 -> buildX ()
+  | 1 -> buildY ()
+  | 2 -> buildSine (build (rand, (depth - 1)))
+  | 3 -> buildCosine (build (rand, (depth - 1)))
+  | 4 ->
+      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 5 ->
+      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 6 ->
+      buildThresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(4,21)-(4,27)
-(4,21)-(4,53)
-(4,28)-(4,53)
-(4,29)-(4,49)
-(4,30)-(4,41)
-(4,34)-(4,35)
-(4,39)-(4,40)
-(4,43)-(4,48)
-(4,46)-(4,47)
-(4,51)-(4,52)
+(27,2)-(43,69)
+(27,5)-(27,10)
+(27,5)-(27,14)
+(27,13)-(27,14)
+(29,4)-(43,69)
+(29,15)-(29,19)
+(29,15)-(29,26)
+(29,20)-(29,26)
+(29,21)-(29,22)
+(29,24)-(29,25)
+(32,11)-(32,17)
+(33,11)-(33,48)
+(43,48)-(43,67)
 *)
 
 (* type error slice
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,63)-(2,64)
-(4,21)-(4,27)
-(4,21)-(4,53)
-(4,28)-(4,53)
-(4,29)-(4,49)
+(21,3)-(21,22)
+(21,11)-(21,20)
+(21,16)-(21,20)
+(23,3)-(23,22)
+(23,11)-(23,20)
+(27,2)-(43,69)
+(27,2)-(43,69)
+(27,2)-(43,69)
+(29,4)-(43,69)
+(30,4)-(43,69)
+(30,4)-(43,69)
+(31,11)-(31,17)
+(31,11)-(31,20)
+(32,11)-(32,17)
 *)

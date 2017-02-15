@@ -1,55 +1,40 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
-
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f in (ff, (x = (ff x))) in (n, b));;
+let sqsum xs =
+  let f a x = match x with | [] -> 0 | x::d -> x * x in
+  let base = List.hd xs in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
-
-let fixpoint (f,b) = wwhile (let n x = ((f x), (x = (f x))) in (n, b));;
+let sqsum xs =
+  let f a x = (a * a) + (x * x) in
+  let base = List.hd xs in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(7,9)-(7,63)
-(7,20)-(7,52)
-(7,29)-(7,30)
-(7,35)-(7,37)
-(7,39)-(7,51)
-(7,45)-(7,47)
+(3,14)-(3,52)
+(3,20)-(3,21)
+(3,35)-(3,36)
+(3,47)-(3,48)
 *)
 
 (* type error slice
-(2,3)-(4,73)
-(2,16)-(4,71)
-(3,2)-(4,71)
-(3,13)-(3,14)
-(3,13)-(3,16)
-(3,15)-(3,16)
-(4,2)-(4,71)
-(4,8)-(4,12)
-(4,51)-(4,57)
-(4,51)-(4,64)
-(4,58)-(4,64)
-(4,62)-(4,63)
-(7,2)-(7,8)
-(7,2)-(7,63)
-(7,9)-(7,63)
-(7,9)-(7,63)
-(7,16)-(7,52)
-(7,20)-(7,52)
-(7,34)-(7,52)
-(7,35)-(7,37)
-(7,44)-(7,50)
-(7,45)-(7,47)
-(7,48)-(7,49)
-(7,56)-(7,62)
-(7,57)-(7,58)
+(3,2)-(4,51)
+(3,8)-(3,52)
+(3,10)-(3,52)
+(3,14)-(3,52)
+(3,14)-(3,52)
+(3,14)-(3,52)
+(3,20)-(3,21)
+(3,35)-(3,36)
+(4,2)-(4,51)
+(4,13)-(4,20)
+(4,13)-(4,23)
+(4,21)-(4,23)
+(4,27)-(4,41)
+(4,27)-(4,51)
+(4,42)-(4,43)
+(4,44)-(4,48)
+(4,49)-(4,51)
 *)

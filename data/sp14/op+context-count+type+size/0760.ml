@@ -1,46 +1,107 @@
 
-let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | PowerUp of expr* expr
+  | Square2 of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2 then (((clone 0 (len1 - len2)) @ len2), len1);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | PowerUp (e1,e2) -> (abs (eval (e1, x, y))) ** (abs (eval (e2, x, y)))
+  | Square2 (e1,e2,e3) ->
+      (sqrt
+         ((((eval (e1, x, y)) ** 2.) +. ((eval (e2, x, y)) ** 2.)) +.
+            ((eval (e3, x, y)) ** 2.)))
+        /. 2.
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | PowerUp of expr* expr
+  | Square2 of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (((clone 0 (len1 - len2)) @ l2), l1)
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Square2 (e1,e2,e3) ->
+      (sqrt
+         ((((eval (e1, x, y)) ** 2.) +. ((eval (e2, x, y)) ** 2.)) +.
+            ((eval (e3, x, y)) ** 2.)))
+        /. 2.
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(10,2)-(10,62)
-(10,50)-(10,54)
-(10,57)-(10,61)
+(16,2)-(32,30)
+(23,23)-(23,46)
+(23,23)-(23,73)
+(23,24)-(23,27)
+(23,28)-(23,45)
+(23,29)-(23,33)
+(23,34)-(23,44)
+(23,35)-(23,37)
+(23,39)-(23,40)
+(23,42)-(23,43)
+(23,47)-(23,49)
+(23,50)-(23,73)
+(23,51)-(23,54)
+(23,55)-(23,72)
+(23,56)-(23,60)
+(23,61)-(23,71)
+(23,62)-(23,64)
+(23,66)-(23,67)
+(23,69)-(23,70)
+(30,29)-(30,33)
+(30,34)-(30,43)
+(30,35)-(30,36)
 *)
 
 (* type error slice
-(9,2)-(10,62)
-(9,13)-(9,24)
-(9,13)-(9,27)
-(10,2)-(10,62)
-(10,2)-(10,62)
-(10,2)-(10,62)
-(10,22)-(10,62)
-(10,23)-(10,55)
-(10,48)-(10,49)
-(10,50)-(10,54)
+(19,18)-(19,42)
+(19,25)-(19,41)
+(19,26)-(19,30)
+(23,23)-(23,46)
+(23,24)-(23,27)
+(23,28)-(23,45)
+(23,29)-(23,33)
+(23,50)-(23,73)
+(23,51)-(23,54)
+(23,55)-(23,72)
+(23,56)-(23,60)
 *)

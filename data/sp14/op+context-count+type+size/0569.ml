@@ -1,58 +1,46 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1,
-        (List.append ((clone 0 ((List.length l1) - (List.length l2))) l2)))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let stringOfList f l = "[" ^ ((sepConcat ";") ^ ([List.map (f l)] ^ "]"));;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(13,8)-(13,74)
-(13,21)-(13,73)
+(7,30)-(7,32)
+(9,30)-(9,45)
+(9,49)-(9,65)
+(9,50)-(9,64)
+(9,59)-(9,64)
+(9,60)-(9,61)
+(9,66)-(9,67)
 *)
 
 (* type error slice
-(2,3)-(7,25)
-(2,14)-(7,23)
-(2,16)-(7,23)
-(3,2)-(7,23)
-(6,16)-(6,47)
-(6,22)-(6,47)
-(6,23)-(6,34)
-(7,2)-(7,13)
-(7,2)-(7,23)
-(13,21)-(13,73)
-(13,22)-(13,69)
-(13,23)-(13,28)
-(15,7)-(15,71)
-(15,8)-(15,19)
-(15,20)-(15,67)
-(15,21)-(15,26)
+(2,3)-(7,61)
+(2,18)-(7,59)
+(2,22)-(7,59)
+(9,29)-(9,73)
+(9,30)-(9,45)
+(9,31)-(9,40)
+(9,46)-(9,47)
+(9,48)-(9,72)
+(9,49)-(9,65)
+(9,66)-(9,67)
 *)

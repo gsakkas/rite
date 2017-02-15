@@ -1,31 +1,40 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ t) in
-      let base = "" in let l = sl in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence sumList digitsOfInt n)
+  else 0;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = "" in let l = sl in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence (sumList (digitsOfInt n)))
+  else 0;;
 
 *)
 
 (* changed spans
-(6,29)-(6,30)
+(9,11)-(9,54)
+(9,32)-(9,39)
+(9,40)-(9,51)
 *)
 
 (* type error slice
-(3,2)-(7,60)
-(3,2)-(7,60)
-(6,22)-(6,31)
-(6,27)-(6,28)
-(6,29)-(6,30)
+(7,3)-(10,10)
+(7,28)-(10,8)
+(8,2)-(10,8)
+(9,7)-(9,54)
+(9,11)-(9,54)
+(9,12)-(9,31)
 *)

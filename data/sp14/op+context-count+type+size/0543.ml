@@ -1,32 +1,101 @@
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = f 4 xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = [] in
+    let args = l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a * a in let base = f 8 xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (addend_a,addend_b) ->
+          let new_carry = ((carry + addend_a) + addend_b) / 10 in
+          let digit = ((carry + addend_a) + addend_b) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,14)-(3,25)
-(3,24)-(3,25)
-(3,29)-(3,74)
-(3,42)-(3,43)
+(23,16)-(23,17)
+(23,16)-(23,21)
+(24,4)-(25,68)
+(24,15)-(24,17)
+(25,4)-(25,68)
+(25,15)-(25,17)
+(25,21)-(25,68)
+(25,35)-(25,49)
+(25,35)-(25,61)
+(25,50)-(25,51)
+(25,52)-(25,56)
+(25,57)-(25,61)
+(25,65)-(25,68)
+(26,2)-(26,12)
+(26,2)-(26,34)
+(26,13)-(26,34)
+(26,14)-(26,17)
+(26,18)-(26,33)
+(26,19)-(26,26)
+(26,27)-(26,29)
+(26,30)-(26,32)
 *)
 
 (* type error slice
-(3,2)-(3,74)
-(3,8)-(3,25)
-(3,10)-(3,25)
-(3,14)-(3,25)
-(3,24)-(3,25)
-(3,40)-(3,41)
-(3,40)-(3,46)
-(3,44)-(3,46)
-(3,50)-(3,64)
-(3,50)-(3,74)
-(3,72)-(3,74)
+(23,4)-(25,68)
+(23,10)-(23,21)
+(23,16)-(23,17)
+(23,16)-(23,21)
+(24,4)-(25,68)
+(24,15)-(24,17)
+(25,35)-(25,49)
+(25,35)-(25,61)
+(25,50)-(25,51)
+(25,52)-(25,56)
 *)

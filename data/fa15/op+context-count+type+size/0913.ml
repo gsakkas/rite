@@ -7,8 +7,8 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | OneOver of expr
+  | OneOverAvg of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -24,8 +24,15 @@ let rec eval (e,x,y) =
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | Op1 e1 -> (eval (e1, x, y)) /. ((eval (e1, x, y)) *. (eval (e1, x, y)))
-  | Op2 (e1,e2,e3) -> 1.0 /. (((eval e1) +. (eval e2)) +. (eval e3));;
+  | OneOver e ->
+      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
+  | OneOverAvg (e1,e2,e3) ->
+      if
+        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
+      then
+        1.0 /.
+          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
+      else (-1.0) / 3.0;;
 
 
 (* fix
@@ -38,8 +45,8 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | OneOver of expr
+  | OneOverAvg of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -55,35 +62,29 @@ let rec eval (e,x,y) =
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | Op1 e1 -> (eval (e1, x, y)) /. ((eval (e1, x, y)) *. (eval (e1, x, y)))
-  | Op2 (e1,e2,e3) ->
-      1.0 /. (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)));;
+  | OneOver e ->
+      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
+  | OneOverAvg (e1,e2,e3) ->
+      if
+        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
+      then
+        1.0 /.
+          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
+      else (-1.0) /. 3.0;;
 
 *)
 
 (* changed spans
-(28,37)-(28,39)
-(28,44)-(28,53)
-(28,50)-(28,52)
-(28,58)-(28,67)
-(28,59)-(28,63)
-(28,64)-(28,66)
+(35,11)-(35,23)
 *)
 
 (* type error slice
-(16,2)-(28,68)
-(16,2)-(28,68)
-(16,2)-(28,68)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(19,32)-(19,42)
-(28,31)-(28,40)
-(28,32)-(28,36)
-(28,37)-(28,39)
-(28,44)-(28,53)
-(28,45)-(28,49)
-(28,50)-(28,52)
-(28,58)-(28,67)
-(28,59)-(28,63)
-(28,64)-(28,66)
+(30,6)-(35,23)
+(30,6)-(35,23)
+(33,8)-(34,73)
+(35,11)-(35,17)
+(35,11)-(35,23)
+(35,11)-(35,23)
+(35,13)-(35,16)
+(35,20)-(35,23)
 *)

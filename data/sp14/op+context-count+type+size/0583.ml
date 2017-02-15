@@ -1,157 +1,57 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (l2digit,templ1) ->
-        let multres = mulByDigit l2digit templ1 in bigAdd (a @ [0]) multres in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e -> sin (pi * (eval e));;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (l2digit,templ1) ->
-        let (l2digit2,templ12) = a in
-        let multres = mulByDigit l2digit templ1 in
-        (0, (bigAdd (templ12 @ [0]) multres)) in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
 
 *)
 
 (* changed spans
-(54,8)-(54,75)
-(54,22)-(54,47)
-(54,51)-(54,75)
-(54,59)-(54,60)
-(55,2)-(62,49)
-(56,2)-(62,49)
-(57,4)-(61,18)
-(57,21)-(60,75)
-(62,2)-(62,49)
+(14,57)-(14,72)
+(14,69)-(14,70)
 *)
 
 (* type error slice
-(51,2)-(62,49)
-(51,8)-(54,75)
-(54,58)-(54,67)
-(54,59)-(54,60)
-(54,61)-(54,62)
-(55,2)-(62,49)
-(55,13)-(55,20)
-(62,16)-(62,30)
-(62,16)-(62,42)
-(62,31)-(62,32)
-(62,33)-(62,37)
+(11,3)-(11,28)
+(11,9)-(11,26)
+(13,3)-(14,74)
+(13,14)-(14,72)
+(14,2)-(14,72)
+(14,53)-(14,56)
+(14,53)-(14,72)
+(14,57)-(14,72)
+(14,57)-(14,72)
+(14,58)-(14,60)
+(14,63)-(14,71)
+(14,64)-(14,68)
+(14,69)-(14,70)
 *)

@@ -1,21 +1,22 @@
 
-let rec additivePersistence n n = additivePersistence (n mod 10);;
+let rec sumList xs = function | [] -> 0 | xf::xb -> xf + (sumList xb);;
 
 
 (* fix
 
-let rec additivePersistence n = (additivePersistence (n mod 10)) + n;;
+let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
 
 *)
 
 (* changed spans
-(2,30)-(2,64)
+(2,21)-(2,69)
 *)
 
 (* type error slice
-(2,3)-(2,66)
-(2,28)-(2,64)
-(2,30)-(2,64)
-(2,34)-(2,53)
-(2,34)-(2,64)
+(2,3)-(2,71)
+(2,16)-(2,69)
+(2,21)-(2,69)
+(2,52)-(2,69)
+(2,57)-(2,69)
+(2,58)-(2,65)
 *)

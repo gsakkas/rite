@@ -1,30 +1,66 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (a,b) = h in if a = k then b else assoc t;;
+let modulus ss = ss mod 10;;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
+
+let lt10 q = q < 10;;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if lt10 n
+  then n
+  else (match n with | n -> let x_ = digitsOfInt n in [sumList x_]);;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (a,b) = h in if a = k then b else assoc (d, k, t);;
+let modulus ss = ss mod 10;;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
+
+let lt10 q = q < 10;;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if lt10 n
+  then n
+  else
+    (match n with
+     | n ->
+         let n1 = let x0 = digitsOfInt n in sumList x0 in
+         additivePersistence n1);;
 
 *)
 
 (* changed spans
-(5,56)-(5,57)
+(16,28)-(16,66)
+(16,37)-(16,50)
+(16,54)-(16,66)
+(16,63)-(16,65)
 *)
 
 (* type error slice
-(2,3)-(5,59)
-(2,15)-(5,57)
-(3,2)-(5,57)
-(3,2)-(5,57)
-(3,8)-(3,9)
-(5,50)-(5,55)
-(5,50)-(5,57)
-(5,56)-(5,57)
+(9,3)-(9,21)
+(9,9)-(9,19)
+(9,13)-(9,14)
+(9,13)-(9,19)
+(9,13)-(9,19)
+(9,17)-(9,19)
+(14,2)-(16,67)
+(14,2)-(16,67)
+(14,5)-(14,9)
+(14,5)-(14,11)
+(14,10)-(14,11)
+(15,7)-(15,8)
+(16,7)-(16,67)
+(16,28)-(16,66)
+(16,54)-(16,66)
 *)

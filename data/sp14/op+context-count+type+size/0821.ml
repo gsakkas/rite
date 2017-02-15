@@ -1,60 +1,60 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (l1,l2) = x in (0, (l2 :: a)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in y = 2);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (carry,num) = a in let (l1,l2) = x in (0, (l1 :: num)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(13,16)-(13,49)
-(13,30)-(13,31)
-(13,40)-(13,42)
-(13,46)-(13,47)
-(14,4)-(16,51)
+(18,31)-(18,32)
+(18,31)-(18,36)
+(18,35)-(18,36)
 *)
 
 (* type error slice
-(13,4)-(16,51)
-(13,10)-(13,49)
-(13,12)-(13,49)
-(13,16)-(13,49)
-(13,35)-(13,49)
-(13,39)-(13,48)
-(13,46)-(13,47)
-(16,18)-(16,32)
-(16,18)-(16,44)
-(16,33)-(16,34)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(18,37)
+(16,2)-(18,37)
+(17,7)-(17,59)
+(17,34)-(17,40)
+(17,34)-(17,43)
+(18,7)-(18,37)
+(18,31)-(18,36)
 *)

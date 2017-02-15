@@ -1,84 +1,59 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if x = []
-      then c :: s
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match depth with
+  | 0 ->
+      let r = rand (0, 2) in if r = 0 then buildX else if r = 1 then buildY;;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      match (c, s) with
-      | (c,[]) -> (c, (c :: s))
-      | _ -> ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> let r = rand (0, 2) in if r = 0 then buildX () else buildY ();;
 
 *)
 
 (* changed spans
-(18,6)-(20,70)
-(18,9)-(18,10)
-(18,9)-(18,15)
-(18,13)-(18,15)
-(19,11)-(19,17)
+(18,6)-(18,75)
+(18,43)-(18,49)
+(18,55)-(18,75)
+(18,58)-(18,59)
+(18,58)-(18,63)
+(18,62)-(18,63)
+(18,69)-(18,75)
 *)
 
 (* type error slice
-(15,4)-(23,51)
-(15,10)-(20,70)
-(15,12)-(20,70)
-(16,6)-(20,70)
-(16,6)-(20,70)
-(16,21)-(16,22)
-(17,6)-(20,70)
-(17,6)-(20,70)
-(17,18)-(17,19)
-(18,6)-(20,70)
-(18,6)-(20,70)
-(18,9)-(18,10)
-(18,9)-(18,15)
-(18,9)-(18,15)
-(18,13)-(18,15)
-(19,11)-(19,17)
-(20,11)-(20,70)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
+(13,3)-(13,22)
+(13,11)-(13,20)
+(18,55)-(18,75)
+(18,55)-(18,75)
+(18,55)-(18,75)
+(18,69)-(18,75)
 *)

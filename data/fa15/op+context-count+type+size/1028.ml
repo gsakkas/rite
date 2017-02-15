@@ -1,46 +1,50 @@
 
-let rec add current next =
-  match current with | [] -> [next] | front::back -> front :: (add back next);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in
+  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else add (digitsOfInt (n / 10)) (n mod 10);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
-
-let rec additivePersistence n =
-  let x = sumList digits n in
-  if x > 9 then 1 + (additivePersistence x) else 1;;
+let fixpoint (f,b) =
+  wwhile
+    ((let x = f b in match x with | b -> (x, false) | _ -> (x, true)), b);;
 
 
 (* fix
 
-let rec add current next =
-  match current with | [] -> [next] | front::back -> front :: (add back next);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else add (digitsOfInt (n / 10)) (n mod 10);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
-
-let rec additivePersistence n =
-  let x = sumList (digits n) in
-  if x > 9 then 1 + (additivePersistence x) else 1;;
+let fixpoint (f,b) =
+  wwhile
+    ((let helper x = let y = f x in if y = x then (y, false) else (y, true) in
+      helper), b);;
 
 *)
 
 (* changed spans
-(13,10)-(13,26)
-(13,18)-(13,24)
+(4,28)-(4,36)
+(4,33)-(4,35)
+(8,5)-(8,69)
+(8,14)-(8,17)
+(8,16)-(8,17)
+(8,21)-(8,68)
+(8,41)-(8,51)
+(8,42)-(8,43)
+(8,45)-(8,50)
+(8,60)-(8,61)
+(8,71)-(8,72)
 *)
 
 (* type error slice
-(10,57)-(10,74)
-(10,62)-(10,74)
-(10,63)-(10,70)
-(13,10)-(13,17)
-(13,10)-(13,26)
+(3,16)-(3,17)
+(3,16)-(3,19)
+(4,48)-(4,54)
+(4,48)-(4,62)
+(4,55)-(4,62)
+(4,56)-(4,57)
+(7,2)-(7,8)
+(7,2)-(8,73)
+(8,4)-(8,73)
+(8,5)-(8,69)
+(8,21)-(8,68)
+(8,41)-(8,51)
 *)

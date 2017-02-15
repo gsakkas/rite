@@ -1,25 +1,34 @@
 
-let rec sumList xs = match xs with | [] -> [] | hd::tl -> hd + (sumList tl);;
+let sqsum xs =
+  let rec f a x = match xs with | [] -> a | hd::tl -> f (f a hd) tl in
+  let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let sqsum xs =
+  let f a x = a * a in
+  let base = match xs with | [] -> 4 | hd::tl -> f (f 2 hd) tl in
+  List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(2,43)-(2,45)
+(3,2)-(4,42)
+(3,18)-(3,67)
+(3,40)-(3,41)
+(3,59)-(3,60)
+(4,2)-(4,42)
+(4,13)-(4,14)
 *)
 
 (* type error slice
-(2,3)-(2,77)
-(2,16)-(2,75)
-(2,21)-(2,75)
-(2,21)-(2,75)
-(2,43)-(2,45)
-(2,58)-(2,75)
-(2,58)-(2,75)
-(2,63)-(2,75)
-(2,64)-(2,71)
+(3,18)-(3,67)
+(3,18)-(3,67)
+(3,54)-(3,55)
+(3,54)-(3,67)
+(3,56)-(3,64)
+(3,57)-(3,58)
+(3,61)-(3,63)
+(3,65)-(3,67)
 *)

@@ -1,46 +1,51 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = List.map f (sepConcat f l);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ (("+" exprToString e4) ^ ")/2)"));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")));;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-(9,32)-(9,33)
-(9,34)-(9,49)
-(9,35)-(9,44)
-(9,45)-(9,46)
-(9,47)-(9,48)
+(18,35)-(18,56)
+(18,40)-(18,52)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(6,22)-(6,31)
-(6,23)-(6,26)
-(6,27)-(6,28)
-(9,23)-(9,31)
-(9,23)-(9,49)
-(9,32)-(9,33)
-(9,34)-(9,49)
-(9,35)-(9,44)
-(9,45)-(9,46)
+(18,35)-(18,56)
+(18,36)-(18,39)
 *)

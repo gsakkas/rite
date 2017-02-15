@@ -1,44 +1,68 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = sepConcat (List.map f l);;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff > 0
+  then (l1, ((clone 0 diff) @ l2))
+  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (n1,n2) = x in
+      let sum = n1 + n2 in
+      match a with
+      | [] -> [sum]
+      | c::x' -> if c > 9 then (sum + 1) :: (c - 10) :: x' else sum :: a in
+    let base = [] in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff > 0
+  then (l1, ((clone 0 diff) @ l2))
+  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (n1,n2) = x in
+      let sum = n1 + n2 in
+      match a with
+      | [] -> [sum]
+      | c::x' -> if c > 9 then (sum + 1) :: (c - 10) :: x' else sum :: a in
+    let base = [] in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,23)-(9,32)
-(9,23)-(9,47)
-(9,33)-(9,47)
-(9,34)-(9,42)
-(9,43)-(9,44)
-(9,45)-(9,46)
+(23,4)-(23,51)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(6,22)-(6,31)
-(6,23)-(6,26)
-(6,27)-(6,28)
-(9,23)-(9,32)
-(9,23)-(9,47)
-(9,33)-(9,47)
-(9,34)-(9,42)
+(15,4)-(23,51)
+(15,10)-(20,72)
+(20,64)-(20,72)
+(20,71)-(20,72)
+(23,4)-(23,51)
+(23,18)-(23,32)
+(23,18)-(23,44)
+(23,33)-(23,34)
 *)

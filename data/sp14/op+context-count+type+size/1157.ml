@@ -1,96 +1,79 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let c = 3;;
 
-let buildCosine e = Cosine e;;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let e = build (rand, (depth - 1)) in
-  if depth > 0
-  then
-    match rand 0 4 with
-    | 0 -> buildSine e
-    | 1 -> buildCosine e
-    | 2 -> buildAverage (e, e)
-    | 3 -> buildTimes (e, e)
-    | 4 -> buildTimes (e, e, e, e)
-  else (match rand 0 1 with | 0 -> buildX () | 1 -> buildY ());;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (s,t) = x in ((((c + s) + t) / 10), (((c + s) + t) mod 10)) :: a in
+    let base = [(0, 0)] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let e = build (rand, (depth - 1)) in
-  if depth > 1
-  then
-    match rand (0, 4) with
-    | 0 -> buildSine e
-    | 1 -> buildCosine e
-    | 2 -> buildAverage (e, e)
-    | 3 -> buildTimes (e, e)
-    | 4 -> buildThresh (e, e, e, e)
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x',x'') = x in
+      let (c,s) = a in
+      ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,16)-(17,39)
-(24,2)-(33,62)
-(25,13)-(25,14)
-(27,10)-(27,18)
-(27,15)-(27,16)
-(32,11)-(32,21)
-(33,14)-(33,22)
-(33,19)-(33,20)
-(33,35)-(33,41)
-(33,42)-(33,44)
-(33,52)-(33,58)
-(33,59)-(33,61)
+(5,8)-(5,9)
+(16,2)-(22,34)
+(17,4)-(21,51)
+(18,6)-(18,74)
+(18,23)-(18,69)
+(18,23)-(18,74)
+(18,31)-(18,32)
+(18,36)-(18,37)
+(18,41)-(18,43)
+(18,46)-(18,68)
+(18,53)-(18,54)
+(18,58)-(18,59)
+(18,65)-(18,67)
+(18,73)-(18,74)
+(19,15)-(19,23)
+(19,20)-(19,21)
 *)
 
 (* type error slice
-(17,3)-(17,41)
-(17,16)-(17,39)
-(32,11)-(32,21)
-(32,11)-(32,34)
-(32,22)-(32,34)
+(17,4)-(21,51)
+(17,10)-(18,74)
+(18,23)-(18,74)
+(18,73)-(18,74)
+(21,4)-(21,51)
+(21,18)-(21,32)
+(21,18)-(21,44)
+(21,33)-(21,34)
 *)

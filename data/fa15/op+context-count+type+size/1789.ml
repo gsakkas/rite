@@ -6,9 +6,7 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SumInts of expr
-  | Power of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -16,20 +14,15 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr1,expr2) ->
-      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
-  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      if (eval (expr1, x, y)) < (eval (expr2, x, y))
-      then eval (expr3, x, y)
-      else eval (expr4, x, y)
-  | SumInts expr ->
-      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2.0
-  | Power (expr1,expr2,expr3) ->
-      (eval (expr1, x, y)) **
-        (abs ((eval (expr2, x, y)) +. (eval (expr3, x, y))));;
+  | Sine b -> sin (pi *. (eval (b, x, y)))
+  | Cosine b -> cos (pi *. (eval (b, x, y)))
+  | Average (a,b) -> (eval (a, x, y)) +. ((eval (b, x, y)) /. 2)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | _ -> 0.0;;
 
 
 (* fix
@@ -41,9 +34,7 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SumInts of expr
-  | Power of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -51,29 +42,23 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr1,expr2) ->
-      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
-  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      if (eval (expr1, x, y)) < (eval (expr2, x, y))
-      then eval (expr3, x, y)
-      else eval (expr4, x, y)
-  | SumInts expr ->
-      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2.0
-  | Power (expr1,expr2,expr3) ->
-      (eval (expr1, x, y)) **
-        (abs_float ((eval (expr2, x, y)) +. (eval (expr3, x, y))));;
+  | Sine b -> sin (pi *. (eval (b, x, y)))
+  | Cosine b -> cos (pi *. (eval (b, x, y)))
+  | Average (a,b) -> (eval (a, x, y)) +. ((eval (b, x, y)) /. 2.0)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | _ -> 0.0;;
 
 *)
 
 (* changed spans
-(32,9)-(32,12)
+(19,62)-(19,63)
 *)
 
 (* type error slice
-(32,8)-(32,60)
-(32,9)-(32,12)
-(32,13)-(32,59)
+(19,41)-(19,64)
+(19,62)-(19,63)
 *)

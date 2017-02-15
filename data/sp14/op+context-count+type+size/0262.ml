@@ -1,31 +1,80 @@
 
-let pipe fs = let f a x _ = x a in let base = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
+  | Poly (a,b,c) ->
+      "(" ^
+        ((expr a) ^
+           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
+  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
 
 
 (* fix
 
-let pipe fs = let f a x x = x in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
+  | Poly (a,b,c) ->
+      "(" ^
+        ((expr a) ^
+           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
+  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,75)
-(2,46)-(2,47)
-(2,51)-(2,75)
+(30,52)-(30,66)
+(30,53)-(30,61)
 *)
 
 (* type error slice
-(2,14)-(2,75)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,35)-(2,75)
-(2,46)-(2,47)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,66)-(2,67)
-(2,68)-(2,72)
+(18,26)-(18,42)
+(18,27)-(18,35)
+(18,28)-(18,32)
+(18,36)-(18,37)
+(30,52)-(30,66)
+(30,53)-(30,61)
+(30,54)-(30,58)
 *)

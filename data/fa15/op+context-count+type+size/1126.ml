@@ -1,39 +1,72 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (match n with | n' -> (digitsOfInt (n / 10)) :: (n' mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e1less,e2less) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e1less, x, y)
+      else eval (e2less, x, y);;
 
 
 (* fix
 
-let modulus ss = ss mod 10;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (match n with | n' -> (digitsOfInt (n / 10)) @ [modulus n']);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e1less,e2less) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e1less, x, y)
+      else eval (e2less, x, y);;
 
 *)
 
 (* changed spans
-(2,20)-(5,67)
-(5,29)-(5,51)
-(5,29)-(5,66)
-(5,55)-(5,66)
-(5,56)-(5,58)
-(5,63)-(5,65)
+(19,23)-(19,62)
+(19,23)-(19,66)
+(19,24)-(19,41)
+(19,65)-(19,66)
 *)
 
 (* type error slice
-(2,3)-(5,69)
-(2,20)-(5,67)
-(3,2)-(5,67)
-(5,7)-(5,67)
-(5,29)-(5,51)
-(5,29)-(5,66)
-(5,29)-(5,66)
-(5,29)-(5,66)
-(5,30)-(5,41)
-(5,55)-(5,66)
+(17,18)-(17,42)
+(17,25)-(17,41)
+(17,26)-(17,30)
+(19,23)-(19,62)
+(19,23)-(19,62)
+(19,24)-(19,41)
+(19,25)-(19,29)
+(19,44)-(19,61)
+(19,45)-(19,49)
 *)

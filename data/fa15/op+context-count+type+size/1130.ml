@@ -1,37 +1,29 @@
 
-let pipe fs =
-  let f a x a x = x a in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (y,true ) -> wwhile (f, y);;
+
+let fixpoint (f,b) = wwhile (fun x  -> ((x, ((f x) = x)), b));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (y,true ) -> wwhile (f, y);;
+
+let fixpoint (f,b) = wwhile ((fun x  -> (x, ((f x) = x))), b);;
 
 *)
 
 (* changed spans
-(3,12)-(3,21)
-(3,14)-(3,21)
-(3,20)-(3,21)
-(3,25)-(3,67)
-(3,34)-(3,39)
+(5,28)-(5,61)
+(5,40)-(5,56)
 *)
 
 (* type error slice
-(3,2)-(3,67)
-(3,8)-(3,21)
-(3,10)-(3,21)
-(3,12)-(3,21)
-(3,14)-(3,21)
-(3,18)-(3,19)
-(3,18)-(3,21)
-(3,20)-(3,21)
-(3,25)-(3,67)
-(3,34)-(3,39)
-(3,38)-(3,39)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
-(3,60)-(3,64)
+(3,50)-(3,56)
+(3,50)-(3,63)
+(3,57)-(3,63)
+(5,21)-(5,27)
+(5,21)-(5,61)
+(5,28)-(5,61)
 *)

@@ -1,53 +1,39 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let mult (x,y) = x * y;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (clone 0 ((List.length l1) - (List.length l2))) @ l1
-  else
-    if (List.length l1) < (List.length l2)
-    then [(clone 0 ((List.length l2) - (List.length l1))) @ l1] @ [l2]
-    else [];;
+let bigMul l1 l2 =
+  let f a x =
+    let (m,n) = x in
+    let (y,z) = a in
+    ((((mult (m, n)) + y) / 10), [((mult (m, n)) + y) mod 10]) @ z in
+  let base = (0, []) in
+  let args = List.rev (List.combine l1 l2) in
+  let (cin,res) = List.fold_left f base args in [cin] @ res;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let mult (x,y) = x * y;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, l2);;
+let bigMul l1 l2 =
+  let f a x =
+    let (m,n) = x in
+    let (y,z) = a in
+    ((((mult (m, n)) + y) / 10), ([((mult (m, n)) + y) mod 10] @ z)) in
+  let base = (0, []) in
+  let args = List.rev (List.combine l1 l2) in
+  let (cin,res) = List.fold_left f base args in [cin] @ res;;
 
 *)
 
 (* changed spans
-(6,7)-(6,59)
-(6,57)-(6,59)
-(9,9)-(9,63)
-(9,9)-(9,70)
-(9,64)-(9,65)
-(9,66)-(9,70)
-(10,9)-(10,11)
+(8,4)-(8,66)
+(8,33)-(8,61)
+(8,63)-(8,64)
 *)
 
 (* type error slice
-(5,2)-(10,11)
-(5,2)-(10,11)
-(6,7)-(6,54)
-(6,7)-(6,59)
-(6,8)-(6,13)
-(6,55)-(6,56)
-(8,4)-(10,11)
-(9,9)-(9,63)
-(9,9)-(9,63)
-(9,9)-(9,70)
-(9,10)-(9,57)
-(9,10)-(9,62)
-(9,11)-(9,16)
-(9,58)-(9,59)
-(9,64)-(9,65)
+(8,4)-(8,62)
+(8,4)-(8,66)
+(8,63)-(8,64)
 *)

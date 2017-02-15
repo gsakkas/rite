@@ -1,45 +1,32 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let l1 = [9; 9; 9];;
-
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
-  let (_,res) = List.fold_left f base args in res;;
+let pipe fs = let f a x f = f x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let l1 = [9; 9; 9];;
-
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(12,47)-(12,68)
-(12,49)-(12,60)
-(12,63)-(12,64)
-(13,2)-(13,49)
+(2,24)-(2,31)
+(2,28)-(2,29)
+(2,28)-(2,31)
+(2,35)-(2,77)
 *)
 
 (* type error slice
-(12,47)-(12,68)
-(12,48)-(12,65)
-(12,48)-(12,65)
-(12,49)-(12,60)
+(2,14)-(2,77)
+(2,20)-(2,31)
+(2,22)-(2,31)
+(2,24)-(2,31)
+(2,28)-(2,29)
+(2,28)-(2,31)
+(2,35)-(2,77)
+(2,44)-(2,49)
+(2,48)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
 *)

@@ -1,27 +1,32 @@
 
-let rec wwhile (f,b) = match b with | (e,boo) -> if boo = true then e b;;
+let pipe fs =
+  let f a x c d = a x in let base b = b in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let ans = f b in
-  match ans with | (num,boo) -> if boo = true then wwhile (f, num) else num;;
+let pipe fs =
+  let f a x y = a (x y) in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,23)-(2,71)
-(2,29)-(2,30)
-(2,49)-(2,71)
-(2,68)-(2,69)
-(2,70)-(2,71)
+(3,12)-(3,21)
+(3,14)-(3,21)
+(3,20)-(3,21)
+(3,25)-(3,67)
+(3,34)-(3,39)
 *)
 
 (* type error slice
-(2,23)-(2,71)
-(2,29)-(2,30)
-(2,68)-(2,69)
-(2,68)-(2,71)
-(2,70)-(2,71)
+(3,2)-(3,67)
+(3,8)-(3,21)
+(3,10)-(3,21)
+(3,12)-(3,21)
+(3,14)-(3,21)
+(3,18)-(3,19)
+(3,18)-(3,21)
+(3,43)-(3,57)
+(3,43)-(3,67)
+(3,58)-(3,59)
 *)

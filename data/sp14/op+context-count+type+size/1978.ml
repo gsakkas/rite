@@ -1,30 +1,32 @@
 
-let pipe fs = let f a x = a x in let base y = y in List.fold_left f base fs;;
+let pipe fs =
+  let f a x g = a (x g) in
+  let base = match fs with | h::t -> f h t | [] -> (fun x  -> x) in
+  List.fold_left f base fs;;
 
 
 (* fix
 
 let pipe fs =
-  let f a x y = a (x y) in let base b = b in List.fold_left f base fs;;
+  let f a x g = a (x g) in
+  let base = match fs with | h::t -> f h h | [] -> (fun x  -> x) in
+  List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,14)-(2,75)
-(2,26)-(2,29)
-(2,28)-(2,29)
-(2,33)-(2,75)
-(2,42)-(2,47)
-(2,51)-(2,75)
+(4,41)-(4,42)
 *)
 
 (* type error slice
-(2,14)-(2,75)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,66)-(2,67)
+(3,2)-(5,26)
+(3,8)-(3,23)
+(3,10)-(3,23)
+(3,18)-(3,23)
+(3,19)-(3,20)
+(4,13)-(4,64)
+(4,13)-(4,64)
+(4,37)-(4,38)
+(4,37)-(4,42)
+(4,41)-(4,42)
 *)

@@ -1,71 +1,96 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Quad of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,_) = a in ((x + h), []) in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Quad (e1,e2,e3) ->
+      (((eval (e1, x, y)) + (eval (e2, x, y))) ** 2) + (eval (e3, x, y))
+  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (h::t,_) = a in ([], []) in
-    let base = ((List.rev l1), []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
 *)
 
 (* changed spans
-(19,37)-(19,44)
-(19,38)-(19,39)
-(19,42)-(19,43)
-(20,4)-(21,68)
+(17,2)-(31,76)
+(30,6)-(30,52)
+(30,6)-(30,72)
+(30,7)-(30,46)
+(30,50)-(30,51)
+(31,9)-(31,17)
+(31,9)-(31,76)
+(31,18)-(31,76)
 *)
 
 (* type error slice
-(19,4)-(21,68)
-(19,10)-(19,49)
-(19,12)-(19,49)
-(19,16)-(19,49)
-(19,16)-(19,49)
-(19,16)-(19,49)
-(19,31)-(19,32)
-(19,36)-(19,49)
-(19,37)-(19,44)
-(21,35)-(21,49)
-(21,35)-(21,61)
-(21,50)-(21,51)
+(20,19)-(20,44)
+(20,26)-(20,43)
+(20,27)-(20,31)
+(30,6)-(30,52)
+(30,7)-(30,46)
+(30,7)-(30,46)
+(30,7)-(30,46)
+(30,8)-(30,25)
+(30,9)-(30,13)
+(30,28)-(30,45)
+(30,29)-(30,33)
+(30,47)-(30,49)
 *)

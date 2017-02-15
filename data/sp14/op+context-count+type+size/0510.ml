@@ -1,76 +1,76 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> p1 *. p2
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y in
-  evalhelper e x y;;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
+  | false  -> ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y in
-  evalhelper e x y;;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(21,23)-(21,25)
-(21,29)-(21,31)
-(23,8)-(25,30)
-(26,2)-(26,12)
-(26,13)-(26,14)
-(26,15)-(26,16)
-(26,17)-(26,18)
+(11,13)-(11,73)
+(12,14)-(12,76)
+(12,65)-(12,69)
 *)
 
 (* type error slice
-(15,4)-(25,30)
-(15,4)-(25,30)
-(21,23)-(21,25)
-(21,23)-(21,31)
-(21,23)-(21,31)
-(21,29)-(21,31)
+(2,3)-(7,25)
+(2,14)-(7,23)
+(2,16)-(7,23)
+(3,2)-(7,23)
+(6,16)-(6,18)
+(6,16)-(6,47)
+(6,16)-(6,47)
+(6,22)-(6,47)
+(6,23)-(6,34)
+(6,35)-(6,37)
+(7,2)-(7,13)
+(7,2)-(7,23)
+(7,14)-(7,15)
+(11,13)-(11,15)
+(11,13)-(11,73)
+(11,13)-(11,73)
+(11,19)-(11,73)
+(11,20)-(11,67)
+(11,21)-(11,26)
+(11,27)-(11,28)
+(11,30)-(11,46)
+(11,31)-(11,42)
+(11,43)-(11,45)
+(11,68)-(11,69)
+(11,70)-(11,72)
+(12,14)-(12,70)
+(12,14)-(12,76)
+(12,14)-(12,76)
+(12,15)-(12,62)
+(12,16)-(12,21)
+(12,44)-(12,60)
+(12,45)-(12,56)
+(12,57)-(12,59)
+(12,63)-(12,64)
+(12,65)-(12,69)
+(12,65)-(12,69)
+(12,66)-(12,68)
+(12,74)-(12,76)
 *)

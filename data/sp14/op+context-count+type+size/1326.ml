@@ -1,90 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | MyExpr1 (e1,e2,e3) -> ((sqrt e1) *. (sqrt e2)) *. e3
-  | MyExpr2 e -> e *. 0.5;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x in
+      let base = "" in let l = sepConcat sep t in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | MyExpr1 (e1,e2,e3) ->
-      ((sqrt (eval (e1, x, y))) *. (sqrt (eval (e2, x, y)))) *.
-        (eval (e3, x, y))
-  | MyExpr2 e -> (eval (e, x, y)) *. 0.5;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x in
+      let base = "" in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(27,33)-(27,35)
-(27,40)-(27,49)
-(27,46)-(27,48)
-(27,54)-(27,56)
-(28,17)-(28,18)
-(28,17)-(28,25)
-(28,22)-(28,25)
+(7,31)-(7,40)
+(7,31)-(7,46)
+(7,41)-(7,44)
 *)
 
 (* type error slice
-(16,2)-(28,25)
-(16,2)-(28,25)
-(16,2)-(28,25)
-(16,2)-(28,25)
-(27,26)-(27,56)
-(27,27)-(27,36)
-(27,28)-(27,32)
-(27,33)-(27,35)
-(27,40)-(27,49)
-(27,41)-(27,45)
-(27,46)-(27,48)
-(27,54)-(27,56)
-(28,17)-(28,18)
-(28,17)-(28,25)
+(2,3)-(7,75)
+(2,18)-(7,73)
+(2,22)-(7,73)
+(3,2)-(7,73)
+(4,10)-(4,12)
+(7,23)-(7,73)
+(7,31)-(7,40)
+(7,31)-(7,46)
+(7,50)-(7,64)
+(7,50)-(7,73)
+(7,72)-(7,73)
 *)

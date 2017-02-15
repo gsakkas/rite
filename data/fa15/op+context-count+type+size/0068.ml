@@ -1,28 +1,46 @@
 
-let rec clone x n = if n <= 0 then [] else [x] :: ((clone x n) - 1);;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+
+let fixpoint (f,b) = let fx x = x in wwhile (b, b);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(2,43)-(2,46)
-(2,50)-(2,67)
-(2,60)-(2,61)
+(6,21)-(6,50)
+(6,28)-(6,33)
+(6,32)-(6,33)
+(6,37)-(6,43)
+(6,37)-(6,50)
+(6,44)-(6,50)
+(6,48)-(6,49)
 *)
 
 (* type error slice
-(2,3)-(2,69)
-(2,14)-(2,67)
-(2,16)-(2,67)
-(2,20)-(2,67)
-(2,43)-(2,67)
-(2,43)-(2,67)
-(2,50)-(2,67)
-(2,50)-(2,67)
-(2,51)-(2,62)
-(2,52)-(2,57)
+(3,2)-(4,68)
+(3,12)-(3,13)
+(3,12)-(3,15)
+(4,2)-(4,68)
+(4,8)-(4,11)
+(4,42)-(4,48)
+(4,42)-(4,55)
+(4,49)-(4,55)
+(4,50)-(4,51)
+(4,53)-(4,54)
+(6,37)-(6,43)
+(6,37)-(6,50)
+(6,44)-(6,50)
+(6,45)-(6,46)
+(6,48)-(6,49)
 *)

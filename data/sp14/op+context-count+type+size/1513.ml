@@ -1,20 +1,74 @@
 
-let rec listReverse l = match l with | [] -> [] | a::b::[] -> 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let c1 () = failwith "to be implemented";;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Sine s1 -> sin (eval (s1, x, y))
+  | Cosine c1 -> cos (eval (c1, x, y))
+  | Average (a1,a2) -> ((eval (a1, x, y)) +. (eval (a2, x, y))) / 2.0;;
 
 
 (* fix
 
-let rec listReverse l = match l with | [] -> [] | a::b::[] -> [a];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Sine s1 -> sin (pi *. (eval (s1, x, y)))
+  | Cosine c1 -> cos (pi *. (eval (c1, x, y)))
+  | Average (a1,a2) -> ((eval (a1, x, y)) +. (eval (a2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (h1,h2,h3,h4) ->
+      if (eval (h1, x, y)) < (eval (h2, x, y))
+      then eval (h3, x, y)
+      else eval (h4, x, y);;
 
 *)
 
 (* changed spans
-(2,62)-(2,63)
+(11,7)-(11,40)
+(11,12)-(11,20)
+(11,12)-(11,40)
+(11,21)-(11,40)
+(13,14)-(19,69)
+(14,2)-(19,69)
+(17,19)-(17,36)
+(18,21)-(18,38)
+(19,23)-(19,69)
+(19,52)-(19,54)
+(19,56)-(19,57)
+(19,59)-(19,60)
 *)
 
 (* type error slice
-(2,24)-(2,63)
-(2,24)-(2,63)
-(2,45)-(2,47)
-(2,62)-(2,63)
+(14,2)-(19,69)
+(14,2)-(19,69)
+(15,13)-(15,21)
+(19,23)-(19,63)
+(19,23)-(19,69)
+(19,23)-(19,69)
+(19,23)-(19,69)
+(19,66)-(19,69)
 *)

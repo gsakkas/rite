@@ -1,25 +1,29 @@
 
-let rec sumList xs = match xs with | [] -> [] | x::xs' -> x + (sumList xs');;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  let retTuple = (l1, l2) in if difference1 > 0 then retTuple;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  let retTuple = (l1, l2) in retTuple;;
 
 *)
 
 (* changed spans
-(2,43)-(2,45)
+(5,29)-(5,61)
+(5,32)-(5,47)
 *)
 
 (* type error slice
-(2,3)-(2,77)
-(2,16)-(2,75)
-(2,21)-(2,75)
-(2,21)-(2,75)
-(2,43)-(2,45)
-(2,58)-(2,75)
-(2,58)-(2,75)
-(2,62)-(2,75)
-(2,63)-(2,70)
+(5,2)-(5,61)
+(5,17)-(5,25)
+(5,29)-(5,61)
+(5,29)-(5,61)
+(5,29)-(5,61)
+(5,53)-(5,61)
 *)

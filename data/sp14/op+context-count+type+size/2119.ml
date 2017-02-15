@@ -1,51 +1,32 @@
 
-let rec app l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (app t l2);;
-
-let rec digitsOfInt n =
-  if n >= 10 then (app digitsOfInt n) / (10 [n mod 10]) else app [3] [8];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (List.rev t) ^ a in
+      let base = h ^ sep in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-let rec app l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (app t l2);;
-
-let rec digitsOfInt n =
-  if n >= 10 then app (digitsOfInt (n / 10)) [n mod 10] else app [3] [8];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = h ^ sep in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(5,18)-(5,55)
-(5,23)-(5,34)
-(5,35)-(5,36)
-(5,40)-(5,55)
+(6,18)-(6,30)
+(6,19)-(6,27)
+(6,28)-(6,29)
 *)
 
 (* type error slice
-(2,20)-(2,70)
-(2,20)-(2,70)
-(2,42)-(2,44)
-(2,55)-(2,70)
-(2,55)-(2,70)
-(2,60)-(2,70)
-(2,61)-(2,64)
-(2,67)-(2,69)
-(4,3)-(5,74)
-(4,20)-(5,72)
-(5,2)-(5,72)
-(5,2)-(5,72)
-(5,5)-(5,6)
-(5,5)-(5,12)
-(5,5)-(5,12)
-(5,10)-(5,12)
-(5,18)-(5,37)
-(5,18)-(5,55)
-(5,19)-(5,22)
-(5,23)-(5,34)
-(5,35)-(5,36)
-(5,40)-(5,55)
-(5,41)-(5,43)
-(5,61)-(5,64)
-(5,61)-(5,72)
-(5,65)-(5,68)
+(6,18)-(6,30)
+(6,18)-(6,34)
+(6,19)-(6,27)
+(6,31)-(6,32)
 *)

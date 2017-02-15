@@ -1,62 +1,86 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e1less, x, y)
-      else eval (e2less, x, y);;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else mulByDigit ((i - 1) bigAdd l l);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e1less, x, y)
-      else eval (e2less, x, y);;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = if i = 0 then [0] else bigAdd l l;;
 
 *)
 
 (* changed spans
-(19,67)-(19,68)
+(31,25)-(31,35)
+(31,25)-(31,56)
+(31,36)-(31,56)
+(31,37)-(31,44)
+(31,38)-(31,39)
+(31,42)-(31,43)
 *)
 
 (* type error slice
-(19,23)-(19,68)
-(19,67)-(19,68)
+(30,3)-(31,58)
+(30,19)-(31,56)
+(30,21)-(31,56)
+(31,2)-(31,56)
+(31,25)-(31,35)
+(31,25)-(31,56)
+(31,36)-(31,56)
+(31,37)-(31,44)
 *)

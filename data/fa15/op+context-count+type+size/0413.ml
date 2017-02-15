@@ -1,28 +1,35 @@
 
-let rec clone x n = if n <= 0 then [] else [x] :: ((clone x n) - 1);;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let rec additivePersistence n =
+  if n < 10 then n else additivePersistence sumList digitsOfInt n;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let rec additivePersistence n =
+  if n < 10 then n else additivePersistence (sumList (digitsOfInt n));;
 
 *)
 
 (* changed spans
-(2,43)-(2,46)
-(2,50)-(2,67)
-(2,60)-(2,61)
+(8,24)-(8,65)
+(8,44)-(8,51)
+(8,52)-(8,63)
 *)
 
 (* type error slice
-(2,3)-(2,69)
-(2,14)-(2,67)
-(2,16)-(2,67)
-(2,20)-(2,67)
-(2,43)-(2,67)
-(2,43)-(2,67)
-(2,50)-(2,67)
-(2,50)-(2,67)
-(2,51)-(2,62)
-(2,52)-(2,57)
+(7,3)-(8,67)
+(7,28)-(8,65)
+(8,2)-(8,65)
+(8,24)-(8,43)
+(8,24)-(8,65)
 *)

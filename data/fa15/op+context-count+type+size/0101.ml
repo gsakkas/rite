@@ -3,7 +3,12 @@ let rec wwhile (f,b) =
   let res = f b in
   match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let fixpoint (f,b) = let funt = ((f b), ((f b) = b)) in wwhile (funt, b);;
+let fixpoint (f,b) =
+  let gs x =
+    let isFPoint s = ((f s) - s) < 0 in
+    let iterate (t,y) = t y in
+    let rec go r = if isFPoint r then r else go (iterate (x, r)) in go x in
+  wwhile (gs, b);;
 
 
 (* fix
@@ -13,32 +18,40 @@ let rec wwhile (f,b) =
   match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
 let fixpoint (f,b) =
-  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
+  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(6,21)-(6,72)
-(6,32)-(6,52)
-(6,33)-(6,38)
-(6,40)-(6,51)
-(6,41)-(6,46)
-(6,42)-(6,43)
-(6,49)-(6,50)
-(6,56)-(6,72)
+(8,4)-(10,72)
+(9,4)-(10,72)
+(9,17)-(9,27)
+(9,24)-(9,25)
+(9,26)-(9,27)
+(10,4)-(10,72)
+(10,15)-(10,64)
+(10,19)-(10,64)
+(10,22)-(10,32)
+(10,31)-(10,32)
+(10,38)-(10,39)
+(10,45)-(10,64)
+(10,49)-(10,56)
+(10,68)-(10,72)
 *)
 
 (* type error slice
-(3,12)-(3,13)
-(3,12)-(3,15)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(6,21)-(6,72)
-(6,32)-(6,52)
-(6,56)-(6,62)
-(6,56)-(6,72)
-(6,63)-(6,72)
-(6,64)-(6,68)
+(9,4)-(10,72)
+(9,17)-(9,27)
+(9,24)-(9,25)
+(9,24)-(9,27)
+(10,45)-(10,47)
+(10,45)-(10,64)
+(10,48)-(10,64)
+(10,49)-(10,56)
+(10,57)-(10,63)
+(10,58)-(10,59)
+(10,68)-(10,70)
+(10,68)-(10,72)
+(10,71)-(10,72)
 *)

@@ -1,37 +1,72 @@
 
-let pipe fs =
-  let f a x = (fun result  -> fun x  -> a + x) 0 in
-  let base = 1 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(3,14)-(3,46)
-(3,14)-(3,48)
-(3,30)-(3,45)
-(3,40)-(3,41)
-(3,40)-(3,45)
-(3,47)-(3,48)
-(4,2)-(4,42)
-(4,13)-(4,14)
+(19,23)-(19,62)
+(19,23)-(19,66)
+(19,24)-(19,41)
+(19,65)-(19,66)
 *)
 
 (* type error slice
-(3,2)-(4,42)
-(3,8)-(3,48)
-(3,10)-(3,48)
-(3,14)-(3,46)
-(3,14)-(3,48)
-(3,30)-(3,45)
-(3,40)-(3,41)
-(3,40)-(3,45)
-(4,18)-(4,32)
-(4,18)-(4,42)
-(4,33)-(4,34)
+(17,19)-(17,44)
+(17,26)-(17,43)
+(17,27)-(17,31)
+(19,23)-(19,62)
+(19,23)-(19,62)
+(19,24)-(19,41)
+(19,25)-(19,29)
+(19,44)-(19,61)
+(19,45)-(19,49)
 *)

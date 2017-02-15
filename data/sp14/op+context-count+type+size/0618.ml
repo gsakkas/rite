@@ -1,64 +1,28 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (("^" exprToString y) ^ ")")))));;
+let rec clone x n = let accum = [] in if n < 1 then [] else (clone x n) - 1;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))));;
+let rec clone x n = let accum = [] in if n < 1 then [] else clone x (n - 1);;
 
 *)
 
 (* changed spans
-(24,42)-(24,62)
-(24,43)-(24,46)
-(24,47)-(24,59)
+(2,60)-(2,75)
+(2,69)-(2,70)
 *)
 
 (* type error slice
-(24,42)-(24,62)
-(24,43)-(24,46)
+(2,3)-(2,77)
+(2,14)-(2,75)
+(2,16)-(2,75)
+(2,20)-(2,75)
+(2,38)-(2,75)
+(2,38)-(2,75)
+(2,52)-(2,54)
+(2,60)-(2,71)
+(2,60)-(2,75)
+(2,60)-(2,75)
+(2,61)-(2,66)
 *)

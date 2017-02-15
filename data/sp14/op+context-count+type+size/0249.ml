@@ -1,28 +1,29 @@
 
-let rec clone x n =
-  let rec clone_RT acc n = if n <= 0 then acc else clone (x :: acc) (n - 1) in
-  clone_RT [] n;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [digitsOfInt (n / 10); n mod 10];;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(3,51)-(3,56)
+(3,25)-(3,57)
+(3,26)-(3,46)
+(3,48)-(3,49)
+(3,48)-(3,56)
+(3,54)-(3,56)
 *)
 
 (* type error slice
-(2,3)-(4,17)
-(2,14)-(4,15)
-(3,51)-(3,56)
-(3,51)-(3,75)
-(3,57)-(3,67)
-(3,57)-(3,67)
-(3,58)-(3,59)
+(2,3)-(3,59)
+(2,20)-(3,57)
+(3,2)-(3,57)
+(3,25)-(3,57)
+(3,25)-(3,57)
+(3,26)-(3,37)
+(3,26)-(3,46)
 *)

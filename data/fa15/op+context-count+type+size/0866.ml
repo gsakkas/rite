@@ -1,43 +1,26 @@
 
-let bigMul l1 l2 =
-  let f a x =
-    let (val1,val2) = x in
-    let (lastCarry,lastTupleMult) = a in
-    let tupleMult = (val1 * val2) + lastCarry in
-    let newCarry = tupleMult / 10 in
-    let nextDigit = tupleMult mod 10 in
-    (newCarry, (nextDigit :: lastTupleMult)) in
-  let base = (1, []) in
-  let args = List.rev ((List.combine 0) :: (l1 0) :: l2) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec listReverse l = match l with | h::t -> [h] @ (listReverse [t]);;
 
 
 (* fix
 
-let bigMul l1 l2 =
-  let f a x =
-    let (val1,val2) = x in
-    let (lastCarry,lastTupleMult) = a in
-    let tupleMult = (val1 * val2) + lastCarry in
-    let newCarry = tupleMult / 10 in
-    let nextDigit = tupleMult mod 10 in
-    (newCarry, (nextDigit :: lastTupleMult)) in
-  let base = (1, []) in
-  let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec listReverse l = match l with | h::t -> [h] @ (listReverse t);;
 
 *)
 
 (* changed spans
-(11,22)-(11,56)
-(11,23)-(11,39)
-(11,37)-(11,38)
-(11,43)-(11,49)
-(11,47)-(11,48)
+(2,66)-(2,69)
 *)
 
 (* type error slice
-(11,23)-(11,39)
-(11,24)-(11,36)
-(11,37)-(11,38)
+(2,3)-(2,72)
+(2,20)-(2,70)
+(2,24)-(2,70)
+(2,24)-(2,70)
+(2,30)-(2,31)
+(2,53)-(2,70)
+(2,54)-(2,65)
+(2,66)-(2,69)
+(2,66)-(2,69)
+(2,67)-(2,68)
 *)

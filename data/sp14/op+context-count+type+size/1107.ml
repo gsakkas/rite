@@ -1,60 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (1, 10) in
-    (if (rand mod 2) = 0 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with | _ -> build (rand, (depth - 1)));;
+let pipe fs =
+  let f a x x' a = x (a x') in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (1, 10) in
-    (if (num mod 2) = 0 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with | _ -> build (rand, (depth - 1)));;
+let pipe fs =
+  let f a x x' = x (a x') in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(19,9)-(19,13)
+(3,15)-(3,27)
+(3,31)-(3,73)
 *)
 
 (* type error slice
-(18,14)-(18,18)
-(18,14)-(18,26)
-(19,8)-(19,20)
-(19,9)-(19,13)
+(3,2)-(3,73)
+(3,8)-(3,27)
+(3,10)-(3,27)
+(3,12)-(3,27)
+(3,15)-(3,27)
+(3,21)-(3,27)
+(3,22)-(3,23)
+(3,24)-(3,26)
+(3,31)-(3,73)
+(3,40)-(3,45)
+(3,44)-(3,45)
+(3,49)-(3,63)
+(3,49)-(3,73)
+(3,64)-(3,65)
+(3,66)-(3,70)
 *)

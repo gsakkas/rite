@@ -8,13 +8,25 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec eval (e,x,y) =
   match e with
-  | Sine e1 -> sin e1
-  | Cosine e1 -> cos e1
-  | Average (e1,e2) -> (e1 + e2) / 2
-  | Times (e1,e2) -> e1 * e2
-  | Thresh (e1,e2,e3,e4) -> ((e1 * e2) * e3) * e4;;
+  | VarX _ -> x
+  | VarY _ -> y
+  | Sine x1 -> eval ((buildSine x1), x, y)
+  | Cosine x2 -> eval ((buildCosine x2), x, y)
+  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
+  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
+  | Thresh (x7,x8,x9,x0) -> eval (buildThresh (x7, x8, x9, x0));;
 
 
 (* fix
@@ -28,79 +40,41 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin (pi * " ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos (pi * " ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (") + " ^ ((exprToString e2) ^ "/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ (" * " ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 (" ? " ^
-                    ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")")))))));;
+  | VarX _ -> x
+  | VarY _ -> y
+  | Sine x1 -> eval ((buildSine x1), x, y)
+  | Cosine x2 -> eval ((buildCosine x2), x, y)
+  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
+  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
+  | Thresh (x7,x8,x9,x0) -> eval ((buildThresh (x7, x8, x9, x0)), x, y);;
 
 *)
 
 (* changed spans
-(12,2)-(17,49)
-(13,15)-(13,18)
-(13,15)-(13,21)
-(14,17)-(14,20)
-(14,17)-(14,23)
-(14,21)-(14,23)
-(15,23)-(15,32)
-(15,23)-(15,36)
-(15,24)-(15,26)
-(15,29)-(15,31)
-(15,35)-(15,36)
-(16,21)-(16,23)
-(16,21)-(16,28)
-(16,26)-(16,28)
-(17,28)-(17,44)
-(17,28)-(17,49)
-(17,29)-(17,38)
-(17,35)-(17,37)
-(17,41)-(17,43)
-(17,47)-(17,49)
+(29,33)-(29,63)
 *)
 
 (* type error slice
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(12,2)-(17,49)
-(13,15)-(13,18)
-(13,15)-(13,21)
-(13,19)-(13,21)
-(14,17)-(14,20)
-(14,17)-(14,23)
-(14,21)-(14,23)
-(15,23)-(15,32)
-(15,23)-(15,32)
-(15,24)-(15,26)
-(15,29)-(15,31)
-(16,21)-(16,23)
-(16,21)-(16,28)
-(16,21)-(16,28)
-(16,26)-(16,28)
-(17,28)-(17,44)
-(17,28)-(17,49)
-(17,29)-(17,38)
-(17,29)-(17,38)
-(17,30)-(17,32)
-(17,35)-(17,37)
-(17,41)-(17,43)
-(17,47)-(17,49)
+(17,3)-(17,69)
+(17,17)-(17,67)
+(17,38)-(17,67)
+(28,21)-(28,25)
+(28,21)-(28,55)
+(28,26)-(28,55)
+(29,28)-(29,32)
+(29,28)-(29,63)
+(29,33)-(29,63)
+(29,34)-(29,45)
 *)

@@ -1,117 +1,92 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (h1::t1,rh::rt) ->
-          (t1, ((((h1 + x) + rh) / 10) :: (((h1 + x) + rh) mod 10) :: rt))
-      | _ -> ([], []) in
-    let base = ((List.rev l1), [0]) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i mod 2 with
+let rec build (rand,depth) =
+  let newRand = rand (0, 4) in
+  match depth with
   | 0 ->
-      (match i with
-       | 0 -> []
-       | 2 -> bigAdd l l
-       | _ -> bigAdd (mulByDigit (i / 2) l) (mulByDigit (i / 2) l))
-  | _ -> (match i with | 1 -> l | _ -> bigAdd l (mulByDigit (i - 1) l));;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (h1::t1,r) -> ((h1 :: t1), (bigAdd ((mulByDigit x h1) :: t1) r))
-    | _ -> ([], []) in
-  let base = ((List.rev l1), [1]) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (newRand, (depth - 1)))
+      else Sine (build (newRand, (depth - 1)))
+  | 2 ->
+      Average
+        ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))))
+  | 3 ->
+      Times ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (h1::t1,rh::rt) ->
-          (t1, ((((h1 + x) + rh) / 10) :: (((h1 + x) + rh) mod 10) :: rt))
-      | _ -> ([], []) in
-    let base = ((List.rev l1), [0]) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i mod 2 with
+let rec build (rand,depth) =
+  match depth with
   | 0 ->
-      (match i with
-       | 0 -> []
-       | 2 -> bigAdd l l
-       | _ -> bigAdd (mulByDigit (i / 2) l) (mulByDigit (i / 2) l))
-  | _ -> (match i with | 1 -> l | _ -> bigAdd l (mulByDigit (i - 1) l));;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (h1::t1,r) -> ((h1 :: t1), (bigAdd (mulByDigit x (h1 :: t1)) r))
-    | _ -> ([], []) in
-  let base = ((List.rev l1), [1]) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (rand, (depth - 1)))
+      else Sine (build (rand, (depth - 1)))
+  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(44,41)-(44,66)
-(44,56)-(44,58)
+(18,2)-(31,76)
+(18,16)-(18,20)
+(18,16)-(18,27)
+(18,21)-(18,27)
+(18,22)-(18,23)
+(18,25)-(18,26)
+(21,6)-(21,75)
+(23,6)-(26,46)
+(25,26)-(25,33)
+(26,24)-(26,31)
+(29,17)-(29,24)
+(29,49)-(29,56)
+(31,21)-(31,28)
+(31,53)-(31,60)
 *)
 
 (* type error slice
-(38,14)-(38,20)
-(38,14)-(38,66)
-(38,21)-(38,43)
-(38,22)-(38,32)
-(44,33)-(44,69)
-(44,34)-(44,40)
-(44,41)-(44,66)
-(44,41)-(44,66)
-(44,42)-(44,59)
-(44,43)-(44,53)
+(17,3)-(31,78)
+(17,15)-(31,76)
+(18,2)-(31,76)
+(18,16)-(18,20)
+(18,16)-(18,27)
+(25,18)-(25,48)
+(25,19)-(25,24)
+(25,25)-(25,47)
+(25,26)-(25,33)
 *)

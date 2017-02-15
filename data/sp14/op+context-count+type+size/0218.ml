@@ -1,134 +1,63 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX else buildY)
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine buildX
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then List.append ((List.append ((clone 0 (- diff)), len1)), len2)
+  else List.append ((List.append ((clone 0 diff), len2)), len1);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else ((List.append (clone 0 diff) l2), l1);;
 
 *)
 
 (* changed spans
-(27,34)-(27,40)
-(27,46)-(27,52)
-(29,4)-(42,71)
-(31,22)-(31,28)
-(32,12)-(32,23)
-(42,28)-(42,33)
-(42,36)-(42,37)
-(42,43)-(42,48)
-(42,49)-(42,68)
-(42,50)-(42,54)
-(42,56)-(42,67)
-(42,57)-(42,62)
-(42,65)-(42,66)
+(12,7)-(12,18)
+(12,7)-(12,67)
+(12,20)-(12,60)
+(12,33)-(12,59)
+(12,54)-(12,58)
+(12,62)-(12,66)
+(13,7)-(13,18)
+(13,7)-(13,63)
+(13,19)-(13,63)
+(13,20)-(13,56)
+(13,33)-(13,55)
+(13,43)-(13,47)
+(13,50)-(13,54)
+(13,58)-(13,62)
 *)
 
 (* type error slice
-(13,3)-(13,30)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(13,27)-(13,28)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(25,3)-(42,73)
-(25,15)-(42,71)
-(26,2)-(42,71)
-(26,2)-(42,71)
-(27,7)-(27,53)
-(27,34)-(27,40)
-(29,4)-(42,71)
-(30,5)-(42,70)
-(31,12)-(31,21)
-(31,12)-(31,28)
-(31,22)-(31,28)
-(32,12)-(32,23)
-(32,12)-(32,51)
-(32,24)-(32,51)
-(32,25)-(32,30)
+(12,7)-(12,18)
+(12,7)-(12,67)
+(12,19)-(12,67)
+(12,20)-(12,60)
+(12,21)-(12,32)
+(12,33)-(12,59)
+(13,7)-(13,18)
+(13,7)-(13,63)
+(13,19)-(13,63)
+(13,20)-(13,56)
+(13,21)-(13,32)
+(13,33)-(13,55)
 *)

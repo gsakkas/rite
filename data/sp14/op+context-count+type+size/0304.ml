@@ -1,76 +1,50 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,result) = a in
-      let (b,c) = x in
-      let res = (x + x) + carry in
-      let newCarry = res / 10 in
-      match result with
-      | [] -> (newCarry, [newCarry; res mod 10])
-      | h::t -> (newCarry, (newCarry :: (res mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (carry,rest) ->
+        let new_carry = ((i * x) + carry) / 10 in
+        let result = (((i * x) + carry) mod 10) :: rest in
+        if ((List.length result) = (List.length l)) && (new_carry > 0)
+        then (0, (new_carry :: result))
+        else (new_carry, result) in
+  let base = (0, []) in let (_,res) = List.fold_right f base l in res;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,result) = a in
-      let (b,c) = x in
-      let res = (b + c) + carry in
-      let newCarry = res / 10 in
-      match result with
-      | [] -> (newCarry, [newCarry; res mod 10])
-      | h::t -> (newCarry, (newCarry :: (res mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (carry,rest) ->
+        let new_carry = ((i * x) + carry) / 10 in
+        let result = (((i * x) + carry) mod 10) :: rest in
+        if ((List.length result) = (List.length l)) && (new_carry > 0)
+        then (0, (new_carry :: result))
+        else (new_carry, result) in
+  let base = (0, []) in
+  let (_,res) = List.fold_left f base (List.rev l) in res;;
 
 *)
 
 (* changed spans
-(20,17)-(20,18)
-(20,21)-(20,22)
-(20,26)-(20,31)
+(11,24)-(11,69)
+(11,38)-(11,53)
+(11,61)-(11,62)
 *)
 
 (* type error slice
-(19,6)-(24,59)
-(19,18)-(19,19)
-(20,16)-(20,23)
-(20,16)-(20,23)
-(20,17)-(20,18)
-(20,21)-(20,22)
+(3,2)-(11,69)
+(3,8)-(10,32)
+(3,10)-(10,32)
+(4,4)-(10,32)
+(6,8)-(10,32)
+(6,25)-(6,32)
+(6,30)-(6,31)
+(7,8)-(10,32)
+(8,8)-(10,32)
+(9,13)-(9,39)
+(11,38)-(11,53)
+(11,38)-(11,62)
+(11,54)-(11,55)
 *)

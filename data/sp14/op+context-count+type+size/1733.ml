@@ -1,66 +1,89 @@
 
 let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
 
 let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+  let num1 = (List.length l2) - (List.length l1) in
+  let num2 = (List.length l1) - (List.length l2) in
+  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = ([x + a], [x + a]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+    let f a x =
+      let rec intlist x =
+        if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+      match x with
+      | (z,y) ->
+          (match a with
+           | [] -> let sum = z + y in intlist sum
+           | h::t -> let sum = (h + z) + y in (intlist sum) :: t) in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let res = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
 let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
 
 let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+  let num1 = (List.length l2) - (List.length l1) in
+  let num2 = (List.length l1) - (List.length l2) in
+  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = ([x + 1], [x + 1]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+    let f a x =
+      let rec intlist x =
+        if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
+      match x with
+      | (z,y) ->
+          (match a with
+           | [] -> let sum = z + y in intlist sum
+           | h::t -> let sum = (h + z) + y in (intlist sum) @ t) in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let res = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(19,22)-(19,23)
-(19,31)-(19,32)
+(24,46)-(24,59)
+(24,46)-(24,64)
 *)
 
 (* type error slice
-(19,4)-(21,70)
-(19,10)-(19,34)
-(19,12)-(19,34)
-(19,16)-(19,34)
-(19,18)-(19,23)
-(19,22)-(19,23)
-(21,37)-(21,51)
-(21,37)-(21,63)
-(21,52)-(21,53)
+(19,32)-(19,50)
+(19,32)-(19,63)
+(19,33)-(19,40)
+(19,51)-(19,52)
+(22,10)-(24,65)
+(22,10)-(24,65)
+(22,10)-(24,65)
+(22,10)-(24,65)
+(23,19)-(23,49)
+(23,38)-(23,45)
+(23,38)-(23,49)
+(24,21)-(24,64)
+(24,31)-(24,38)
+(24,32)-(24,33)
+(24,46)-(24,59)
+(24,46)-(24,64)
+(24,46)-(24,64)
+(24,46)-(24,64)
+(24,47)-(24,54)
+(24,63)-(24,64)
 *)

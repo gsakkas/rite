@@ -2,32 +2,20 @@
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 < s2
+  then (((clone 0 (s2 - s1)) @ l1), l2)
+  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
+  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match x with
-      | h::t ->
-          let (x1,x2) = h in
-          let ha::_ = a in
-          let (a1,a2) = ha in
-          let tens = (x1 + x2) + (a1 / 10) in
-          let ones = (x1 + x2) + (a1 mod 10) in (tens, ones) :: a
-      | [] -> a in
-    let base = [(0, 0)] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
+    let f a x = (x mod 10) :: a in
+    let base = (match l1 with | h -> h) + (match l2 with | h -> h) in
+    let args = [] in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
@@ -36,74 +24,92 @@ let bigAdd l1 l2 =
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 < s2
+  then (((clone 0 (s2 - s1)) @ l1), l2)
+  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
+  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      let h::_ = a1 in
-      let tens = (x1 + x2) + (h / 10) in
-      let ones = (x1 + x2) + (h mod 10) in ((tens :: a1), (ones :: a2)) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
+      match snd a with
+      | [] ->
+          (((fst x) + (snd x)),
+            [((fst x) + (snd x)) / 10; ((fst x) + (snd x)) mod 10])
+      | h::t -> (0, []) in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(20,6)-(27,15)
-(22,10)-(26,65)
-(22,24)-(22,25)
-(23,10)-(26,65)
-(24,10)-(26,65)
-(24,24)-(24,26)
-(25,10)-(26,65)
-(25,21)-(25,42)
-(25,34)-(25,36)
-(26,10)-(26,65)
-(26,34)-(26,36)
-(26,48)-(26,65)
-(26,49)-(26,53)
-(26,55)-(26,59)
-(26,64)-(26,65)
-(27,14)-(27,15)
-(28,4)-(30,51)
-(28,15)-(28,23)
-(28,16)-(28,22)
-(28,17)-(28,18)
-(28,20)-(28,21)
-(29,4)-(30,51)
-(29,15)-(29,44)
-(30,4)-(30,51)
+(16,16)-(16,26)
+(16,16)-(16,31)
+(16,17)-(16,18)
+(16,23)-(16,25)
+(16,30)-(16,31)
+(17,4)-(18,68)
+(17,15)-(17,39)
+(17,22)-(17,24)
+(17,37)-(17,38)
+(17,42)-(17,66)
+(17,49)-(17,51)
+(17,64)-(17,65)
+(18,4)-(18,68)
+(18,15)-(18,17)
+(18,21)-(18,68)
+(18,35)-(18,49)
+(18,35)-(18,61)
+(18,50)-(18,51)
+(18,52)-(18,56)
+(18,57)-(18,61)
+(18,65)-(18,68)
+(19,2)-(19,12)
+(19,13)-(19,34)
+(19,14)-(19,17)
+(19,18)-(19,33)
+(19,19)-(19,26)
+(19,27)-(19,29)
+(19,30)-(19,32)
 *)
 
 (* type error slice
-(19,4)-(30,51)
-(19,10)-(27,15)
-(19,12)-(27,15)
-(20,6)-(27,15)
-(20,6)-(27,15)
-(20,12)-(20,13)
-(29,4)-(30,51)
-(29,15)-(29,23)
-(29,15)-(29,44)
-(29,24)-(29,44)
-(29,25)-(29,37)
-(30,18)-(30,32)
-(30,18)-(30,44)
-(30,33)-(30,34)
-(30,40)-(30,44)
+(4,3)-(9,71)
+(4,12)-(9,69)
+(4,15)-(9,69)
+(5,2)-(9,69)
+(6,2)-(9,69)
+(7,2)-(9,69)
+(8,7)-(8,39)
+(8,36)-(8,38)
+(9,28)-(9,54)
+(9,49)-(9,50)
+(9,51)-(9,53)
+(15,2)-(19,34)
+(15,11)-(18,68)
+(16,4)-(18,68)
+(16,10)-(16,31)
+(16,16)-(16,31)
+(16,30)-(16,31)
+(17,4)-(18,68)
+(17,15)-(17,66)
+(17,15)-(17,66)
+(17,42)-(17,66)
+(17,42)-(17,66)
+(17,49)-(17,51)
+(17,64)-(17,65)
+(18,35)-(18,49)
+(18,35)-(18,61)
+(18,50)-(18,51)
+(18,52)-(18,56)
+(19,13)-(19,34)
+(19,14)-(19,17)
+(19,18)-(19,33)
+(19,19)-(19,26)
 *)

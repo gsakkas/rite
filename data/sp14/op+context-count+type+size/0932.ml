@@ -1,22 +1,27 @@
 
-let rec sumList xs = function | [] -> 0 | h::t -> h + (sumList t);;
+let rec digitsOfInt n =
+  if n < 0 then [] else (n mod 10) :: ((digitsOfInt n) * 10);;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec digitsOfInt n = if n < 0 then [] else (n mod 10) :: (digitsOfInt n);;
 
 *)
 
 (* changed spans
-(2,21)-(2,65)
+(3,38)-(3,60)
+(3,57)-(3,59)
 *)
 
 (* type error slice
-(2,3)-(2,67)
-(2,16)-(2,65)
-(2,21)-(2,65)
-(2,50)-(2,65)
-(2,54)-(2,65)
-(2,55)-(2,62)
+(2,3)-(3,62)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,24)-(3,60)
+(3,24)-(3,60)
+(3,38)-(3,60)
+(3,38)-(3,60)
+(3,39)-(3,54)
+(3,40)-(3,51)
 *)

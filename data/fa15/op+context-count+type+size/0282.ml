@@ -1,27 +1,61 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) :: h;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (("+" exprToString e2) ^ ")/2)"))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("?" ^ ((exprToString e2) ^ (":" ^ ((exprToString e4) ^ ")")))));;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("?" ^ ((exprToString e2) ^ (":" ^ ((exprToString e4) ^ ")")))));;
 
 *)
 
 (* changed spans
-(3,36)-(3,51)
-(3,36)-(3,56)
-(3,55)-(3,56)
+(18,35)-(18,56)
+(18,40)-(18,52)
 *)
 
 (* type error slice
-(2,3)-(3,58)
-(2,20)-(3,56)
-(3,2)-(3,56)
-(3,36)-(3,51)
-(3,36)-(3,56)
-(3,36)-(3,56)
-(3,37)-(3,48)
+(18,35)-(18,56)
+(18,36)-(18,39)
 *)

@@ -1,32 +1,24 @@
 
 let rec digitsOfInt n =
-  match n <= 0 with
-  | true  -> []
-  | false  -> [(digitsOfInt n) / 10; n mod 10];;
+  let myList = [] in
+  if n <= 0 then [] else ((n mod 10) :: myList) :: digitsOfInt;;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  match n <= 0 with | true  -> [] | false  -> (n mod 10) :: (digitsOfInt n);;
+  let myList = [] in if n <= 0 then [] else (n mod 10) :: myList;;
 
 *)
 
 (* changed spans
-(5,14)-(5,46)
-(5,15)-(5,30)
-(5,15)-(5,35)
-(5,16)-(5,27)
-(5,28)-(5,29)
-(5,33)-(5,35)
+(4,25)-(4,47)
+(4,51)-(4,62)
 *)
 
 (* type error slice
-(2,3)-(5,48)
-(2,20)-(5,46)
-(3,2)-(5,46)
-(5,14)-(5,46)
-(5,15)-(5,30)
-(5,15)-(5,35)
-(5,16)-(5,27)
+(2,3)-(4,64)
+(2,20)-(4,62)
+(4,25)-(4,62)
+(4,51)-(4,62)
 *)

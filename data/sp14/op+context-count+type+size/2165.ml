@@ -1,110 +1,31 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. e0)
-  | Cosine e1 -> cos (pi *. e1)
-  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
-  | Times (e4,e5) -> (eval e4) * (eval e5)
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval e6) < (eval e7) then eval e8 else eval e9;;
+let sqsum xs =
+  let f a x f _ = a * a in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let sqsum xs = let f a x = a * x in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(17,26)-(17,28)
-(18,17)-(18,31)
-(18,28)-(18,30)
-(19,23)-(19,46)
-(19,23)-(19,50)
-(19,24)-(19,33)
-(19,30)-(19,32)
-(19,36)-(19,45)
-(19,42)-(19,44)
-(19,49)-(19,50)
-(20,21)-(20,30)
-(20,21)-(20,42)
-(20,27)-(20,29)
-(20,33)-(20,42)
-(20,34)-(20,38)
-(20,39)-(20,41)
-(22,9)-(22,18)
-(22,9)-(22,30)
-(22,10)-(22,14)
-(22,15)-(22,17)
-(22,21)-(22,30)
-(22,22)-(22,26)
-(22,27)-(22,29)
-(22,36)-(22,40)
-(22,36)-(22,43)
-(22,41)-(22,43)
-(22,49)-(22,53)
-(22,49)-(22,56)
-(22,54)-(22,56)
+(3,2)-(3,67)
+(3,12)-(3,23)
+(3,14)-(3,23)
+(3,22)-(3,23)
+(3,27)-(3,67)
+(3,38)-(3,39)
 *)
 
 (* type error slice
-(13,3)-(22,58)
-(13,14)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(14,2)-(22,56)
-(17,15)-(17,18)
-(17,15)-(17,29)
-(17,19)-(17,29)
-(17,26)-(17,28)
-(18,21)-(18,31)
-(18,28)-(18,30)
-(19,23)-(19,46)
-(19,23)-(19,50)
-(19,24)-(19,33)
-(19,25)-(19,29)
-(19,30)-(19,32)
-(20,21)-(20,42)
-(22,6)-(22,56)
-(22,36)-(22,40)
-(22,36)-(22,43)
+(3,2)-(3,67)
+(3,8)-(3,23)
+(3,10)-(3,23)
+(3,12)-(3,23)
+(3,18)-(3,19)
+(3,18)-(3,23)
+(3,43)-(3,57)
+(3,43)-(3,67)
+(3,58)-(3,59)
 *)

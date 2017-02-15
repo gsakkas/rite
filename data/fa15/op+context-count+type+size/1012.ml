@@ -1,62 +1,55 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let checkSame (x,y) = x == y;;
 
-let pi = 4.0 *. (atan 1.0);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), (explode w))
+  then true
+  else explode w;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let checkSame (x,y) = x == y;;
 
-let pi = 4.0 *. (atan 1.0);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), (explode w)) then true else false;;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
+(15,7)-(15,14)
+(15,7)-(15,16)
+(15,15)-(15,16)
 *)
 
 (* type error slice
-(19,21)-(19,64)
-(19,63)-(19,64)
+(4,3)-(7,8)
+(4,12)-(7,6)
+(5,2)-(7,6)
+(6,43)-(6,66)
+(6,54)-(6,66)
+(6,55)-(6,57)
+(7,2)-(7,4)
+(7,2)-(7,6)
+(13,2)-(15,16)
+(13,2)-(15,16)
+(14,7)-(14,11)
+(15,7)-(15,14)
+(15,7)-(15,16)
 *)

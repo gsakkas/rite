@@ -1,37 +1,73 @@
 
-let rec listReverse l =
-  if List.length > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | ArcSine of expr
+  | ArcCosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> sin (pi *. (eval (e, x, y)))
+  | ArcSine e -> 1 /. (sin (pi *. (eval (e, x, y))))
+  | ArcCosine e -> 1 /. (cos (pi *. (eval (e, x, y))))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec listReverse l = if (List.length l) > 0 then [List.hd l] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | ArcSine of expr
+  | ArcCosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> sin (pi *. (eval (e, x, y)))
+  | ArcSine e -> 1. /. (sin (pi *. (eval (e, x, y))))
+  | ArcCosine e -> 1. /. (cos (pi *. (eval (e, x, y))))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(3,5)-(3,16)
-(3,19)-(3,20)
-(3,26)-(3,49)
-(3,26)-(3,63)
-(3,27)-(3,38)
-(3,39)-(3,46)
-(3,50)-(3,51)
-(3,52)-(3,63)
-(3,69)-(3,71)
+(21,17)-(21,18)
+(22,19)-(22,20)
 *)
 
 (* type error slice
-(2,3)-(3,73)
-(2,20)-(3,71)
-(3,5)-(3,16)
-(3,5)-(3,20)
-(3,5)-(3,20)
-(3,19)-(3,20)
-(3,26)-(3,49)
-(3,27)-(3,38)
-(3,39)-(3,46)
-(3,53)-(3,60)
-(3,53)-(3,62)
-(3,61)-(3,62)
+(21,17)-(21,18)
+(21,17)-(21,52)
+(22,19)-(22,20)
+(22,19)-(22,54)
 *)

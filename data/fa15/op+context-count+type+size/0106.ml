@@ -1,55 +1,55 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let funt b = if f b then (1, b) else (1, b) in wwhile (funt, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(" @ ((exprToString x) @ ")");;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let funt b = if f b then (b, b) else (b, b) in wwhile (funt, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(" ^ ((exprToString x) ^ ")");;
 
 *)
 
 (* changed spans
-(7,28)-(7,29)
-(7,39)-(7,45)
-(7,40)-(7,41)
-(7,49)-(7,65)
+(15,21)-(15,22)
+(15,41)-(15,42)
 *)
 
 (* type error slice
-(2,3)-(4,70)
-(2,16)-(4,68)
-(3,2)-(4,68)
-(3,12)-(3,13)
-(3,12)-(3,15)
-(3,14)-(3,15)
-(4,2)-(4,68)
-(4,8)-(4,11)
-(4,30)-(4,31)
-(4,30)-(4,38)
-(4,30)-(4,38)
-(4,34)-(4,38)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,53)-(4,54)
-(7,2)-(7,65)
-(7,11)-(7,45)
-(7,15)-(7,45)
-(7,27)-(7,33)
-(7,28)-(7,29)
-(7,31)-(7,32)
-(7,49)-(7,55)
-(7,49)-(7,65)
-(7,56)-(7,65)
-(7,57)-(7,61)
+(11,3)-(15,49)
+(11,21)-(15,47)
+(12,2)-(15,47)
+(13,13)-(13,16)
+(15,14)-(15,20)
+(15,14)-(15,47)
+(15,21)-(15,22)
+(15,23)-(15,47)
+(15,24)-(15,40)
+(15,25)-(15,37)
+(15,41)-(15,42)
+(15,43)-(15,46)
 *)

@@ -1,93 +1,88 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr* expr
-  | Timmy2 of expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Timmy1 (e1,e2,e3) ->
-      ((sin (pi *. (eval (e, x, y)))) +. (cos (pi *. (eval (e, x, y))))) *
-        (cos (pi *. (eval (e, x, y))))
-  | Timmy2 (e1,e2) ->
-      (sin (pi *. (eval (e, x, y)))) / (cos (pi *. (eval (e, x, y))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | [] -> a
+      | h::t -> ((((fst h) + (snd h)) / 10), (((fst h) + (snd h)) mod 10)) ::
+          t in
+    let base = (0, []) in
+    let args = [((List.combine l1), l2)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr* expr
-  | Timmy2 of expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Timmy1 (e1,e2,e3) ->
-      ((sin (pi *. (eval (e, x, y)))) +. (cos (pi *. (eval (e, x, y))))) *.
-        (cos (pi *. (eval (e, x, y))))
-  | Timmy2 (e1,e2) ->
-      (sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(28,6)-(29,38)
-(31,6)-(31,69)
+(15,6)-(18,11)
+(15,12)-(15,13)
+(17,16)-(18,11)
+(17,17)-(17,43)
+(17,18)-(17,37)
+(17,19)-(17,26)
+(17,20)-(17,23)
+(17,24)-(17,25)
+(17,29)-(17,36)
+(17,30)-(17,33)
+(17,34)-(17,35)
+(17,40)-(17,42)
+(17,45)-(17,73)
+(17,46)-(17,65)
+(17,47)-(17,54)
+(17,48)-(17,51)
+(17,52)-(17,53)
+(17,57)-(17,64)
+(17,58)-(17,61)
+(17,62)-(17,63)
+(17,70)-(17,72)
+(18,10)-(18,11)
+(19,4)-(21,51)
+(19,15)-(19,22)
+(20,4)-(21,51)
 *)
 
 (* type error slice
-(16,2)-(31,69)
-(16,2)-(31,69)
-(16,2)-(31,69)
-(19,14)-(19,17)
-(19,14)-(19,42)
-(28,6)-(28,72)
-(28,6)-(29,38)
-(28,6)-(29,38)
-(28,6)-(29,38)
-(29,8)-(29,38)
-(29,9)-(29,12)
-(31,6)-(31,36)
-(31,6)-(31,69)
-(31,6)-(31,69)
-(31,6)-(31,69)
-(31,7)-(31,10)
-(31,39)-(31,69)
-(31,40)-(31,43)
+(14,4)-(21,51)
+(14,10)-(18,11)
+(15,6)-(18,11)
+(15,6)-(18,11)
+(16,14)-(16,15)
+(17,16)-(18,11)
+(19,4)-(21,51)
+(19,15)-(19,22)
+(21,18)-(21,32)
+(21,18)-(21,44)
+(21,33)-(21,34)
+(21,35)-(21,39)
 *)

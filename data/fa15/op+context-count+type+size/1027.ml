@@ -1,55 +1,36 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  let rec recurse original reverse =
-    match original with
-    | [] -> reverse
-    | front::back -> recurse back (front :: reverse) in
-  recurse l [];;
-
-let palindrome w = (explode w) = (listReverse explode w);;
+let pipe fs =
+  let f a x y z = z y in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  let rec recurse original reverse =
-    match original with
-    | [] -> reverse
-    | front::back -> recurse back (front :: reverse) in
-  recurse l [];;
-
-let palindrome w = (explode w) = (listReverse (explode w));;
+let pipe fs =
+  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(14,33)-(14,56)
-(14,46)-(14,53)
+(3,14)-(3,21)
+(3,18)-(3,19)
+(3,20)-(3,21)
+(3,25)-(3,67)
 *)
 
 (* type error slice
-(7,3)-(12,16)
-(7,20)-(12,14)
-(8,2)-(12,14)
-(9,4)-(11,52)
-(9,4)-(11,52)
-(10,12)-(10,19)
-(11,21)-(11,28)
-(11,21)-(11,52)
-(11,34)-(11,52)
-(11,44)-(11,51)
-(12,2)-(12,9)
-(12,2)-(12,14)
-(14,33)-(14,56)
-(14,34)-(14,45)
+(3,2)-(3,67)
+(3,8)-(3,21)
+(3,10)-(3,21)
+(3,12)-(3,21)
+(3,14)-(3,21)
+(3,18)-(3,19)
+(3,18)-(3,21)
+(3,20)-(3,21)
+(3,25)-(3,67)
+(3,34)-(3,39)
+(3,38)-(3,39)
+(3,43)-(3,57)
+(3,43)-(3,67)
+(3,58)-(3,59)
+(3,60)-(3,64)
 *)

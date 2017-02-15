@@ -1,76 +1,89 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
-  | false  -> ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine v -> sin (pi *. (eval (v, x, y)))
+  | Cosine v -> cos (pi *. (eval (v, x, y)))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Plus (v,w) -> (eval (v, x, y)) +. (eval (w, x, y))
+  | Cube (a,b,c) -> ((eval a) *. (eval b)) *. (eval c)
+  | VarX  -> x
+  | VarY  -> y;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Plus of expr* expr
+  | Cube of expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine v -> sin (pi *. (eval (v, x, y)))
+  | Cosine v -> cos (pi *. (eval (v, x, y)))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Plus (v,w) -> (eval (v, x, y)) +. (eval (w, x, y))
+  | Cube (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))
+  | VarX  -> x
+  | VarY  -> y;;
 
 *)
 
 (* changed spans
-(11,13)-(11,73)
-(12,14)-(12,76)
-(12,65)-(12,69)
+(26,27)-(26,28)
+(26,33)-(26,41)
+(26,39)-(26,40)
+(26,46)-(26,54)
+(26,47)-(26,51)
+(26,52)-(26,53)
 *)
 
 (* type error slice
-(2,3)-(7,25)
-(2,14)-(7,23)
-(2,16)-(7,23)
-(3,2)-(7,23)
-(6,16)-(6,18)
-(6,16)-(6,47)
-(6,16)-(6,47)
-(6,22)-(6,47)
-(6,23)-(6,34)
-(6,35)-(6,37)
-(7,2)-(7,13)
-(7,2)-(7,23)
-(7,14)-(7,15)
-(11,13)-(11,15)
-(11,13)-(11,73)
-(11,13)-(11,73)
-(11,19)-(11,73)
-(11,20)-(11,67)
-(11,21)-(11,26)
-(11,27)-(11,28)
-(11,30)-(11,46)
-(11,31)-(11,42)
-(11,43)-(11,45)
-(11,68)-(11,69)
-(11,70)-(11,72)
-(12,14)-(12,70)
-(12,14)-(12,76)
-(12,14)-(12,76)
-(12,15)-(12,62)
-(12,16)-(12,21)
-(12,44)-(12,60)
-(12,45)-(12,56)
-(12,57)-(12,59)
-(12,63)-(12,64)
-(12,65)-(12,69)
-(12,65)-(12,69)
-(12,66)-(12,68)
-(12,74)-(12,76)
+(16,2)-(28,14)
+(16,2)-(28,14)
+(16,2)-(28,14)
+(17,25)-(17,41)
+(17,26)-(17,30)
+(17,31)-(17,40)
+(26,21)-(26,29)
+(26,22)-(26,26)
+(26,27)-(26,28)
+(26,33)-(26,41)
+(26,34)-(26,38)
+(26,39)-(26,40)
+(26,46)-(26,54)
+(26,47)-(26,51)
+(26,52)-(26,53)
 *)

@@ -6,34 +6,43 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Golden of expr
-  | MeanPi of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr1,expr2) ->
-      "(" ^ ((exprToString expr1) ^ ("+" ^ ((exprToString expr2) ^ ")/2")))
-  | Times (expr1,expr2) ->
-      (exprToString expr1) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr1) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))))
-  | Golden expr -> "cos(" ^ (exprToString expr "^2-" exprToString expr "-1)")
-  | MeanPi (expr1,expr2,expr3) ->
-      "sin(" ^
-        ((exprToString expr1) ^
-           ("+" ^
-              ((exprToString expr2) ^ ("+" ^ ((exprToString expr3) ^ ")")))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand 0 1) = 0 then buildX () else buildY ())
+  else
+    (let x = rand 0 6 in
+     match x with
+     | 0 -> buildX ()
+     | 1 -> buildY ()
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ -> []);;
 
 
 (* fix
@@ -45,56 +54,61 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Golden of expr
-  | MeanPi of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr1,expr2) ->
-      "(" ^ ((exprToString expr1) ^ ("+" ^ ((exprToString expr2) ^ ")/2")))
-  | Times (expr1,expr2) ->
-      (exprToString expr1) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr1) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))))
-  | Golden expr ->
-      "cos(" ^
-        ((exprToString expr) ^ ("^2-" ^ ((exprToString expr) ^ "-1)")))
-  | MeanPi (expr1,expr2,expr3) ->
-      "sin(" ^
-        ((exprToString expr1) ^
-           ("+" ^
-              ((exprToString expr2) ^ ("+" ^ ((exprToString expr3) ^ ")")))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else
+    (let x = rand (0, 6) in
+     match x with
+     | 0 -> buildX ()
+     | 1 -> buildY ()
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 *)
 
 (* changed spans
-(31,28)-(31,77)
-(31,29)-(31,41)
-(31,47)-(31,52)
-(31,53)-(31,65)
-(36,46)-(36,66)
-(36,47)-(36,59)
-(36,60)-(36,65)
-(36,67)-(36,68)
-(36,69)-(36,72)
+(27,11)-(27,21)
+(27,17)-(27,18)
+(29,13)-(29,21)
+(29,18)-(29,19)
+(45,12)-(45,14)
 *)
 
 (* type error slice
-(17,29)-(17,56)
-(17,30)-(17,49)
-(17,31)-(17,43)
-(17,50)-(17,51)
-(31,28)-(31,77)
-(31,29)-(31,41)
+(21,3)-(21,22)
+(21,11)-(21,20)
+(21,16)-(21,20)
+(30,5)-(45,14)
+(30,5)-(45,14)
+(31,12)-(31,18)
+(31,12)-(31,21)
+(45,12)-(45,14)
 *)

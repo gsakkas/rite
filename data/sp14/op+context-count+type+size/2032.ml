@@ -1,44 +1,90 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (((f b), ((f b) = b)), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Halve x -> "(" ^ (exprToString ^ ")/2")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))))
+  | Wow (x,y,z) ->
+      "sqrt(" ^
+        ("abs(" ^
+           ((exprToString x) ^
+              (")*" ^
+                 ("abs(" ^
+                    ((exprToString y) ^
+                       (")*" ^ ("abs(" ^ ((exprToString z) ^ "))"))))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Halve x -> "(" ^ ((exprToString x) ^ ")/2")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))))
+  | Wow (x,y,z) ->
+      "sqrt(" ^
+        ("abs(" ^
+           ((exprToString x) ^
+              (")*" ^
+                 ("abs(" ^
+                    ((exprToString y) ^
+                       (")*" ^ ("abs(" ^ ((exprToString z) ^ "))"))))))));;
 
 *)
 
 (* changed spans
-(6,28)-(6,53)
-(6,29)-(6,49)
-(6,30)-(6,35)
-(6,31)-(6,32)
-(6,33)-(6,34)
-(6,37)-(6,48)
-(6,38)-(6,43)
-(6,41)-(6,42)
-(6,46)-(6,47)
-(6,51)-(6,52)
+(19,22)-(19,34)
+(19,37)-(19,42)
 *)
 
 (* type error slice
-(3,25)-(3,26)
-(3,25)-(3,28)
-(4,18)-(4,24)
-(4,18)-(4,36)
-(4,25)-(4,36)
-(4,26)-(4,27)
-(6,21)-(6,27)
-(6,21)-(6,53)
-(6,28)-(6,53)
-(6,29)-(6,49)
+(17,27)-(17,43)
+(17,28)-(17,40)
+(19,21)-(19,43)
+(19,22)-(19,34)
+(19,35)-(19,36)
 *)

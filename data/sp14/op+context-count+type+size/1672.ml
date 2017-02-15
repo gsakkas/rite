@@ -1,54 +1,21 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, a1, a2));;
+let rec sumList xs = let x::t = xs in x + (if t != [] then sumList t);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let rec sumList xs = let x::t = xs in x + (if t = [] then 0 else sumList t);;
 
 *)
 
 (* changed spans
-(15,59)-(15,61)
-(15,63)-(15,65)
+(2,43)-(2,68)
+(2,46)-(2,53)
+(2,59)-(2,68)
 *)
 
 (* type error slice
-(12,2)-(15,67)
-(14,13)-(14,14)
-(14,13)-(14,21)
-(15,23)-(15,42)
-(15,24)-(15,28)
-(15,29)-(15,41)
-(15,39)-(15,40)
-(15,46)-(15,67)
-(15,47)-(15,51)
-(15,52)-(15,66)
-(15,63)-(15,65)
+(2,38)-(2,69)
+(2,42)-(2,69)
+(2,43)-(2,68)
 *)

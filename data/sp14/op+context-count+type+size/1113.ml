@@ -1,39 +1,33 @@
 
-let t x = x + 1;;
-
 let rec sepConcat sep sl =
   match sl with
   | [] -> ""
   | h::t ->
-      let f a x = if x = "a" then a ^ x in
-      let base = sep in let l = t in List.fold_left f base l;;
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = List.map sepConcat "; ";;
 
 
 (* fix
 
-let t x = x + 1;;
-
 let rec sepConcat sep sl =
   match sl with
   | [] -> ""
   | h::t ->
-      let f a x = x ^ a in
-      let base = sep in let l = t in List.fold_left f base l;;
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(8,18)-(8,39)
-(8,21)-(8,22)
-(8,21)-(8,28)
-(8,25)-(8,28)
-(8,34)-(8,35)
+(9,23)-(9,31)
 *)
 
 (* type error slice
-(8,18)-(8,39)
-(8,18)-(8,39)
-(8,18)-(8,39)
-(8,34)-(8,39)
-(8,36)-(8,37)
+(9,23)-(9,31)
+(9,23)-(9,46)
+(9,42)-(9,46)
 *)

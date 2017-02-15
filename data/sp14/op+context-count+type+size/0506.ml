@@ -1,78 +1,60 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> evalhelper buildSine p1 x y
-    | Cosine p1 -> evalhelper buildCosine p1 x y in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (((hd * i) mod 10) + (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 *)
 
 (* changed spans
-(11,16)-(11,28)
-(11,20)-(11,28)
-(11,27)-(11,28)
-(13,14)-(13,24)
-(13,18)-(13,24)
-(13,23)-(13,24)
-(15,14)-(22,18)
-(16,2)-(22,18)
-(20,17)-(20,27)
-(20,17)-(20,44)
-(20,28)-(20,37)
-(21,19)-(21,29)
-(21,19)-(21,48)
-(21,30)-(21,41)
-(22,2)-(22,12)
-(22,13)-(22,14)
-(22,15)-(22,16)
-(22,17)-(22,18)
+(3,2)-(10,15)
+(3,20)-(9,41)
+(8,32)-(8,70)
+(8,33)-(8,50)
+(9,13)-(9,21)
+(9,14)-(9,16)
+(9,19)-(9,20)
+(9,26)-(9,35)
+(9,36)-(9,37)
+(9,38)-(9,40)
+(10,2)-(10,11)
+(10,2)-(10,15)
+(10,12)-(10,13)
+(10,14)-(10,15)
 *)
 
 (* type error slice
-(16,2)-(22,18)
-(16,21)-(21,48)
-(16,23)-(21,48)
-(16,25)-(21,48)
-(17,4)-(21,48)
-(21,19)-(21,29)
-(21,19)-(21,48)
+(3,2)-(10,15)
+(3,20)-(9,41)
+(3,22)-(9,41)
+(4,4)-(9,41)
+(7,8)-(9,41)
+(8,13)-(8,70)
+(8,13)-(8,70)
+(8,32)-(8,70)
+(8,32)-(8,70)
+(8,53)-(8,69)
+(8,54)-(8,63)
+(9,13)-(9,41)
+(9,25)-(9,41)
+(9,26)-(9,35)
 *)

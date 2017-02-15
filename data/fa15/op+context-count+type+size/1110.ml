@@ -1,23 +1,22 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = 0 "to be implemented" in List.fold_left f base xs;;
+let rec digitsOfInt n = if n < 0 then [1];;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let rec digitsOfInt n = if n < 0 then [] else [1; 2];;
 
 *)
 
 (* changed spans
-(4,2)-(4,62)
-(4,13)-(4,34)
-(4,15)-(4,34)
+(2,24)-(2,41)
+(2,38)-(2,41)
+(2,39)-(2,40)
 *)
 
 (* type error slice
-(4,13)-(4,14)
-(4,13)-(4,34)
+(2,24)-(2,41)
+(2,24)-(2,41)
+(2,24)-(2,41)
+(2,38)-(2,41)
 *)

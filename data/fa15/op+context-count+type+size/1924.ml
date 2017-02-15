@@ -1,38 +1,35 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((sepConcat "; " List.map f l) ^ "]");;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(9,30)-(9,59)
-(9,46)-(9,54)
+(7,27)-(7,42)
+(7,37)-(7,41)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,30)-(9,59)
-(9,31)-(9,40)
+(7,23)-(7,26)
+(7,23)-(7,42)
+(7,27)-(7,42)
+(7,28)-(7,36)
 *)

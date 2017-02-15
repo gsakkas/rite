@@ -1,80 +1,24 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
-
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
+let rec clone x n = if x <= 0 then [] else clone [x] (n - 1);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
-
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
+let rec clone x n = if n <= 0 then [] else clone x (n - 1);;
 
 *)
 
 (* changed spans
-(30,52)-(30,66)
-(30,53)-(30,61)
+(2,23)-(2,24)
+(2,49)-(2,52)
 *)
 
 (* type error slice
-(18,26)-(18,42)
-(18,27)-(18,35)
-(18,28)-(18,32)
-(18,36)-(18,37)
-(30,52)-(30,66)
-(30,53)-(30,61)
-(30,54)-(30,58)
+(2,3)-(2,62)
+(2,14)-(2,60)
+(2,43)-(2,48)
+(2,43)-(2,60)
+(2,49)-(2,52)
+(2,49)-(2,52)
+(2,50)-(2,51)
 *)

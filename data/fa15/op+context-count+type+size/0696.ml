@@ -1,87 +1,65 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
-
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = 0 in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let rec mulByDigit i l =
+  let f a x =
+    let y = i * x in
+    match a with
+    | h::t -> ((h + y) / 10) :: ((h + y) mod 10) :: t
+    | _ -> [y / 10; y mod 10] in
+  let base = [] in removeZero (List.fold_left f base (List.rev l));;
+
+let bigMul l1 l2 =
+  let f a x = ((mulByDigit x l1) @ (clone 0 (List.length a))) :: a in
+  let base = (0, []) in
+  let args = List.rev l2 in
+  let (carry,res) = List.fold_left f base args in carry :: res;;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
-
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let rec mulByDigit i l =
+  let f a x =
+    let y = i * x in
+    match a with
+    | h::t -> ((h + y) / 10) :: ((h + y) mod 10) :: t
+    | _ -> [y / 10; y mod 10] in
+  let base = [] in removeZero (List.fold_left f base (List.rev l));;
+
+let bigMul l1 l2 =
+  let f a x = ((mulByDigit x l1) @ (clone 0 (List.length a))) @ a in
+  let base = [] in
+  let args = List.rev l2 in let res = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(19,16)-(19,21)
-(19,20)-(19,21)
-(20,4)-(21,68)
-(20,15)-(20,16)
-(21,4)-(21,68)
-(21,15)-(21,17)
-(21,21)-(21,68)
-(21,35)-(21,49)
-(21,35)-(21,61)
-(21,50)-(21,51)
-(21,52)-(21,56)
-(21,57)-(21,61)
-(21,65)-(21,68)
-(22,2)-(22,12)
-(22,2)-(22,34)
-(22,13)-(22,34)
-(22,14)-(22,17)
-(22,18)-(22,33)
-(22,19)-(22,26)
-(22,27)-(22,29)
-(22,30)-(22,32)
+(16,14)-(16,66)
+(16,16)-(16,26)
+(17,13)-(17,20)
+(17,14)-(17,15)
+(19,2)-(19,62)
+(19,50)-(19,62)
 *)
 
 (* type error slice
-(19,4)-(21,68)
-(19,10)-(19,21)
-(19,16)-(19,17)
-(19,16)-(19,21)
-(21,21)-(21,68)
-(21,35)-(21,49)
-(21,35)-(21,61)
-(21,50)-(21,51)
+(16,2)-(19,62)
+(16,8)-(16,66)
+(16,44)-(16,59)
+(16,45)-(16,56)
+(16,57)-(16,58)
+(17,2)-(19,62)
+(17,13)-(17,20)
+(19,20)-(19,34)
+(19,20)-(19,46)
+(19,35)-(19,36)
+(19,37)-(19,41)
 *)

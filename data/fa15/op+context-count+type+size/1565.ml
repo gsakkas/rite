@@ -1,38 +1,77 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
 
-let rec additivePersistence n =
-  if (n / 10) <= 0
-  then n mod 10
-  else additivePersistence (sumList digitsOfInt n);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (a,h::t) ->
+          if (((fst x) + (snd x)) + a) > 9
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, [((fst x) + (snd x)) mod 10])
+          else (0, [((fst x) + (snd x)) mod 10]) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
 
-let rec additivePersistence n =
-  if (n / 10) <= 0
-  then n mod 10
-  else additivePersistence (sumList (digitsOfInt n));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (a,h::t) ->
+          if (((fst x) + (snd x)) + a) > 9
+          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, [((fst x) + (snd x)) mod 10])
+          else (0, [((fst x) + (snd x)) mod 10]) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(10,27)-(10,50)
-(10,36)-(10,47)
+(22,63)-(22,69)
+(22,68)-(22,69)
 *)
 
 (* type error slice
-(5,55)-(5,70)
-(5,59)-(5,70)
-(5,60)-(5,67)
-(10,27)-(10,50)
-(10,28)-(10,35)
+(22,63)-(22,64)
+(22,63)-(22,69)
+(22,63)-(22,69)
+(22,68)-(22,69)
 *)

@@ -1,68 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let pipe fs =
+  let f a x result x = a x in let base = 1 in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let pipe fs =
+  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(19,21)-(19,63)
-(19,62)-(19,63)
+(3,12)-(3,26)
+(3,19)-(3,26)
+(3,23)-(3,24)
+(3,30)-(3,70)
+(3,41)-(3,42)
+(3,46)-(3,70)
 *)
 
 (* type error slice
-(14,2)-(24,25)
-(14,2)-(24,25)
-(17,14)-(17,17)
-(17,14)-(17,42)
-(19,21)-(19,59)
-(19,21)-(19,63)
-(19,21)-(19,63)
+(3,2)-(3,70)
+(3,8)-(3,26)
+(3,10)-(3,26)
+(3,12)-(3,26)
+(3,19)-(3,26)
+(3,23)-(3,24)
+(3,23)-(3,26)
+(3,46)-(3,60)
+(3,46)-(3,70)
+(3,61)-(3,62)
 *)

@@ -1,117 +1,74 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y)
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) +. (eval (ex2, x, y)))) *.
-          (((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y))))
-         *.
-         ((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
-            +. (eval (ex4, x, y))))
-        *.
-        (((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
-            +. (eval (ex4, x, y)))
-           +. (eval (ex5, x, y)))
-  | TheThing (ex1,ex2,ex3) ->
-      (((eval (ex1, x, y)) * (sin (pi * (eval (ex2, x, y))))) *
-         (cos (pi * (eval (ex3, x, y)))))
-        / 2;;
+let rec removeZero l = match l with | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match (a, x) with
+      | ((b,c),(d,e)) ->
+          ((((d + e) + b) / 10), ((((d + e) + b) mod 10) :: c)) in
+    let base = (0, []) in
+    let args = List.rev ((List.combine 0) :: (l1 0) :: l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | FiboPlus of expr* expr* expr* expr* expr
-  | TheThing of expr* expr* expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y)
-  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
-      ((((eval (ex1, x, y)) *. ((eval (ex1, x, y)) +. (eval (ex2, x, y)))) *.
-          (((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y))))
-         *.
-         ((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
-            +. (eval (ex4, x, y))))
-        *.
-        (((((eval (ex1, x, y)) +. (eval (ex2, x, y))) +. (eval (ex3, x, y)))
-            +. (eval (ex4, x, y)))
-           +. (eval (ex5, x, y)))
-  | TheThing (ex1,ex2,ex3) ->
-      (((eval (ex1, x, y)) *. (sin (pi *. (eval (ex2, x, y))))) *.
-         (cos (pi *. (eval (ex3, x, y)))))
-        /. 2.;;
+let rec removeZero l = match l with | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match (a, x) with
+      | ((b,c),(d,e)) ->
+          ((((d + e) + b) / 10), ((((d + e) + b) mod 10) :: c)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(38,6)-(39,41)
-(38,6)-(40,11)
-(38,7)-(38,61)
-(38,8)-(38,26)
-(38,34)-(38,59)
-(39,14)-(39,39)
-(40,10)-(40,11)
+(18,24)-(18,58)
+(18,25)-(18,41)
+(18,39)-(18,40)
+(18,45)-(18,51)
+(18,49)-(18,50)
 *)
 
 (* type error slice
-(13,3)-(13,28)
-(13,9)-(13,26)
-(19,19)-(19,44)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(38,29)-(38,60)
-(38,30)-(38,33)
-(38,34)-(38,59)
-(38,34)-(38,59)
-(38,34)-(38,59)
-(38,35)-(38,37)
-(38,40)-(38,58)
-(38,41)-(38,45)
-(39,9)-(39,40)
-(39,10)-(39,13)
-(39,14)-(39,39)
-(39,14)-(39,39)
-(39,20)-(39,38)
-(39,21)-(39,25)
+(13,4)-(19,51)
+(13,10)-(16,63)
+(13,12)-(16,63)
+(14,6)-(16,63)
+(14,12)-(14,18)
+(14,16)-(14,17)
+(18,4)-(19,51)
+(18,15)-(18,23)
+(18,15)-(18,58)
+(18,24)-(18,58)
+(18,24)-(18,58)
+(18,25)-(18,41)
+(18,26)-(18,38)
+(18,39)-(18,40)
+(19,18)-(19,32)
+(19,18)-(19,44)
+(19,33)-(19,34)
+(19,40)-(19,44)
 *)

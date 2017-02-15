@@ -1,63 +1,56 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let r = List.rev t in
-        if List.mem h r
-        then
-          let seen' = h :: seen in
-          let seen' = seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::[] -> "[" ^ (x ^ "]")
+  | l -> sepConcat (" " (List.map (f, l)));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let r = List.rev t in
-        let seen' = seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::[] -> "[" ^ (x ^ "]")
+  | l -> sepConcat "" (List.map f l);;
 
 *)
 
 (* changed spans
-(8,8)-(11,68)
-(8,11)-(8,19)
-(8,11)-(8,23)
-(8,20)-(8,21)
-(8,22)-(8,23)
-(10,10)-(11,68)
-(10,22)-(10,23)
-(10,22)-(10,31)
-(10,27)-(10,31)
-(11,10)-(11,68)
-(11,30)-(11,68)
+(13,9)-(13,42)
+(13,19)-(13,42)
+(13,20)-(13,23)
+(13,24)-(13,41)
+(13,25)-(13,33)
+(13,34)-(13,40)
 *)
 
 (* type error slice
-(3,2)-(12,27)
-(3,18)-(11,68)
-(4,4)-(11,68)
-(4,4)-(11,68)
-(5,12)-(5,16)
-(7,8)-(11,68)
-(8,8)-(11,68)
-(8,8)-(11,68)
-(8,8)-(11,68)
-(10,10)-(11,68)
-(10,22)-(10,31)
-(10,27)-(10,31)
-(11,10)-(11,68)
-(11,30)-(11,68)
-(11,47)-(11,53)
-(11,47)-(11,68)
-(12,2)-(12,10)
-(12,2)-(12,27)
-(12,11)-(12,27)
-(12,12)-(12,18)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(10,2)-(13,42)
+(10,2)-(13,42)
+(11,10)-(11,14)
+(13,9)-(13,18)
+(13,9)-(13,42)
+(13,19)-(13,42)
+(13,20)-(13,23)
+(13,24)-(13,41)
+(13,25)-(13,33)
+(13,34)-(13,40)
 *)

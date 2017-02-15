@@ -1,85 +1,90 @@
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n ->
+      if n < 0
+      then (((clone 0 (n * (-1))) @ l1), l2)
+      else (((clone 0 n) @ l2), l1);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = [((List.hd l1) + (List.hd l2)) mod 10] in
-    let base = List.rev l1 in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-
-(* fix
-
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
+      let (fst,sec) = x in
+      let (fst',sec') =
+        if (fst + sec) > 9 then (((fst + sec) - 10), 1) else ((fst + sec), 0) in
+      let (carry,digits) = a in
+      let (carry',digits') =
+        if (carry + fst') > 9
+        then (1, (digits @ [fst' - 9]))
+        else
+          if sec' = 1
+          then (1, (digits @ [fst' + carry]))
+          else (0, (digits @ [fst' + carry])) in
+      (carry', digits') in
     let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (List.rev (padZero l1 l2)));;
+
+
+(* fix
+
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n ->
+      if n < 0
+      then (((clone 0 (n * (-1))) @ l1), l2)
+      else (((clone 0 n) @ l2), l1);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (fst,sec) = x in
+      let (fst',sec') =
+        if (fst + sec) > 9 then (((fst + sec) - 10), 1) else ((fst + sec), 0) in
+      let (carry,digits) = a in
+      let (carry',digits') =
+        if (carry + fst') > 9
+        then (1, (digits @ [fst' - 9]))
+        else
+          if sec' = 1
+          then (1, (digits @ [fst' + carry]))
+          else (0, (digits @ [fst' + carry])) in
+      (carry', digits') in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(16,16)-(16,54)
-(16,17)-(16,46)
-(16,17)-(16,53)
-(16,18)-(16,30)
-(16,19)-(16,26)
-(16,27)-(16,29)
-(16,33)-(16,45)
-(16,34)-(16,41)
-(16,42)-(16,44)
-(16,51)-(16,53)
-(17,4)-(18,77)
-(17,15)-(17,26)
-(17,24)-(17,26)
-(18,4)-(18,77)
-(18,15)-(18,23)
-(18,15)-(18,26)
-(18,30)-(18,77)
-(19,2)-(19,12)
-(19,13)-(19,34)
-(19,14)-(19,17)
-(19,18)-(19,33)
-(19,19)-(19,26)
-(19,27)-(19,29)
-(19,30)-(19,32)
+(34,18)-(34,44)
+(34,19)-(34,27)
 *)
 
 (* type error slice
-(16,4)-(18,77)
-(16,10)-(16,54)
-(16,12)-(16,54)
-(16,16)-(16,54)
-(18,30)-(18,77)
-(18,44)-(18,58)
-(18,44)-(18,70)
-(18,59)-(18,60)
+(5,3)-(11,37)
+(5,12)-(11,35)
+(5,15)-(11,35)
+(6,2)-(11,35)
+(7,9)-(7,17)
+(34,18)-(34,44)
+(34,19)-(34,27)
+(34,28)-(34,43)
+(34,29)-(34,36)
 *)

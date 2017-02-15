@@ -1,75 +1,106 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let rec digitsOfInt n =
-  let digOfInt n r =
-    match n > 0 with
-    | false  -> []
-    | true  ->
-        (match n > 9 with
-         | false  -> n :: (digitsOfInt (n / 10))
-         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
-  listReverse n;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ")")))))));;
 
 
 (* fix
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let rec digitsOfInt n =
-  listReverse
-    (match n > 0 with
-     | false  -> []
-     | true  ->
-         (match n > 9 with
-          | false  -> n :: (digitsOfInt (n / 10))
-          | true  -> (n mod 10) :: (digitsOfInt (n / 10))));;
-
-let rec digOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
-
-let rec digitsOfInt n = digOfInt n;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(8,2)-(15,15)
-(8,15)-(14,57)
-(8,17)-(14,57)
-(9,4)-(14,57)
-(15,2)-(15,13)
-(15,2)-(15,15)
-(15,14)-(15,15)
+(43,30)-(43,56)
+(43,31)-(43,51)
 *)
 
 (* type error slice
-(2,3)-(5,22)
-(2,16)-(5,20)
-(4,4)-(4,63)
-(4,4)-(4,63)
-(4,38)-(4,51)
-(4,38)-(4,63)
-(4,52)-(4,53)
-(5,2)-(5,15)
-(5,2)-(5,20)
-(5,16)-(5,17)
-(7,3)-(15,17)
-(7,20)-(15,15)
-(13,26)-(13,48)
-(13,27)-(13,38)
-(13,39)-(13,47)
-(15,2)-(15,13)
-(15,2)-(15,15)
-(15,14)-(15,15)
+(17,29)-(17,56)
+(17,30)-(17,49)
+(17,31)-(17,43)
+(17,50)-(17,51)
+(43,30)-(43,56)
+(43,31)-(43,51)
+(43,32)-(43,44)
 *)

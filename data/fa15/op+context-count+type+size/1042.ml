@@ -1,34 +1,58 @@
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | head::[] -> [head]
-  | head::tail -> (listReverse [tail]) @ [head];;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then (cloneHelper 0) - (1 * diff)
+  else if diff > 0 then (cloneHelper 0 diff) @ l2;;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | head::[] -> [head]
-  | head::tail -> (listReverse tail) @ [head];;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+
+let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((l1 @ (clone 0 diff)), l2)
+  else if diff > 0 then (l1, (l2 @ (clone 0 diff))) else (l1, l2);;
 
 *)
 
 (* changed spans
-(6,31)-(6,37)
+(5,12)-(9,49)
+(6,2)-(9,49)
+(8,7)-(8,22)
+(8,7)-(8,35)
+(8,8)-(8,19)
+(8,20)-(8,21)
+(8,25)-(8,35)
+(8,26)-(8,27)
+(8,30)-(8,34)
+(9,7)-(9,49)
+(9,10)-(9,14)
+(9,10)-(9,18)
+(9,17)-(9,18)
+(9,24)-(9,44)
+(9,25)-(9,36)
 *)
 
 (* type error slice
-(2,3)-(6,49)
-(2,20)-(6,47)
-(3,2)-(6,47)
-(3,2)-(6,47)
-(3,8)-(3,9)
-(6,18)-(6,38)
-(6,19)-(6,30)
-(6,31)-(6,37)
-(6,31)-(6,37)
-(6,32)-(6,36)
+(3,24)-(3,35)
+(3,24)-(3,54)
+(8,7)-(8,22)
+(8,7)-(8,35)
+(8,8)-(8,19)
+(9,7)-(9,49)
+(9,7)-(9,49)
+(9,7)-(9,49)
+(9,24)-(9,44)
+(9,24)-(9,49)
+(9,25)-(9,36)
+(9,45)-(9,46)
 *)

@@ -1,40 +1,47 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
+let h x y = ((y x), (x < 100));;
 
-let fixpoint (f,b) =
-  let (b',c) = ((f b), ((f b) <> b)) in wwhile ((b', c), b);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((h b f), b);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
+let h x = ((x * x), (x < 100));;
 
-let fixpoint (f,b) =
-  let f b = let b' = f b in (b', ((f b) <> b)) in wwhile (f, b);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(6,2)-(6,59)
-(6,15)-(6,36)
-(6,16)-(6,21)
-(6,23)-(6,35)
-(6,48)-(6,55)
-(6,49)-(6,51)
-(6,53)-(6,54)
+(2,8)-(2,30)
+(2,13)-(2,18)
+(2,14)-(2,15)
+(2,20)-(2,29)
+(7,29)-(7,36)
+(7,34)-(7,35)
+(7,38)-(7,39)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,33)-(3,39)
-(3,33)-(3,47)
-(3,40)-(3,47)
-(3,41)-(3,42)
-(6,40)-(6,46)
-(6,40)-(6,59)
-(6,47)-(6,59)
-(6,48)-(6,55)
+(2,3)-(2,32)
+(2,6)-(2,30)
+(2,8)-(2,30)
+(2,12)-(2,30)
+(5,8)-(5,9)
+(5,8)-(5,11)
+(5,49)-(5,55)
+(5,49)-(5,62)
+(5,56)-(5,62)
+(5,57)-(5,58)
+(7,21)-(7,27)
+(7,21)-(7,40)
+(7,28)-(7,40)
+(7,29)-(7,36)
+(7,30)-(7,31)
 *)

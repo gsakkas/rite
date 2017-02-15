@@ -1,41 +1,46 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x in let base = h in let l = [t] in List.fold_left f base l;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem seen h then seen else [h] @ [seen] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x in let base = h in let l = t in List.fold_left f base l;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(6,47)-(6,50)
+(7,32)-(7,36)
+(7,54)-(7,57)
+(7,54)-(7,66)
+(7,60)-(7,66)
+(7,61)-(7,65)
 *)
 
 (* type error slice
-(3,2)-(6,77)
-(3,2)-(6,77)
-(6,6)-(6,77)
-(6,12)-(6,19)
-(6,14)-(6,19)
-(6,18)-(6,19)
-(6,23)-(6,77)
-(6,34)-(6,35)
-(6,39)-(6,77)
-(6,47)-(6,50)
-(6,47)-(6,50)
-(6,48)-(6,49)
-(6,54)-(6,68)
-(6,54)-(6,77)
-(6,69)-(6,70)
-(6,71)-(6,75)
-(6,76)-(6,77)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,36)
+(7,37)-(7,38)
+(7,54)-(7,57)
+(7,54)-(7,57)
+(7,54)-(7,66)
+(7,55)-(7,56)
+(7,58)-(7,59)
+(7,60)-(7,66)
+(7,60)-(7,66)
+(7,61)-(7,65)
 *)

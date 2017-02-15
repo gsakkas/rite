@@ -6,19 +6,28 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | POS of expr* expr* expr* expr
+  | SOP of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi * (eval (a, x, y)))
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | POS (a,b,c,d) ->
+      ((eval (a, x, y)) +. (eval (b, x, y))) *.
+        ((eval (c, x, y)) +. (eval (d, x, y)))
+  | SOP (f,g,h) -> (eval (f, x, y)) + ((eval (g, x, y)) *. (eval (h, x, y)));;
 
 
 (* fix
@@ -30,47 +39,42 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | POS of expr* expr* expr* expr
+  | SOP of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | POS (a,b,c,d) ->
+      ((eval (a, x, y)) +. (eval (b, x, y))) *.
+        ((eval (c, x, y)) +. (eval (d, x, y)))
+  | SOP (f,g,h) -> (eval (f, x, y)) +. ((eval (g, x, y)) *. (eval (h, x, y)));;
 
 *)
 
 (* changed spans
-(18,20)-(18,43)
-(18,21)-(18,23)
-(19,18)-(19,41)
-(19,19)-(19,21)
+(30,19)-(30,76)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(16,19)-(16,35)
-(16,19)-(16,55)
-(16,20)-(16,24)
-(18,16)-(18,19)
-(18,16)-(18,43)
-(18,20)-(18,43)
-(18,20)-(18,43)
-(18,20)-(18,43)
-(18,21)-(18,23)
-(18,26)-(18,42)
-(18,27)-(18,31)
-(19,14)-(19,17)
-(19,14)-(19,41)
-(19,18)-(19,41)
-(19,18)-(19,41)
-(19,24)-(19,40)
-(19,25)-(19,29)
+(19,19)-(19,44)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(30,19)-(30,35)
+(30,19)-(30,76)
+(30,19)-(30,76)
+(30,20)-(30,24)
+(30,38)-(30,76)
 *)

@@ -1,29 +1,74 @@
 
-let pipe fs = let f a x = a x in let base = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Special1 of expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) ->
+      ((eval (var3, x, y)) +. (eval (var4, x, y))) /. 2.0
+  | Times (var5,var6) -> (eval (var5, x, y)) *. (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y)
+  | Special1 (var11,var12) ->
+      ((sin (pi *. (eval (var11, x, y)))) *.
+         (cos (pi *. (eval (var12, x, y)))))
+        /. 2;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = (fun a  -> x) a in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Special1 of expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) ->
+      ((eval (var3, x, y)) +. (eval (var4, x, y))) /. 2.0
+  | Times (var5,var6) -> (eval (var5, x, y)) *. (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y)
+  | Special1 (var11,var12) ->
+      ((sin (pi *. (eval (var11, x, y)))) *.
+         (cos (pi *. (eval (var12, x, y)))))
+        /. 2.0;;
 
 *)
 
 (* changed spans
-(2,14)-(2,73)
-(2,26)-(2,27)
-(2,28)-(2,29)
-(2,33)-(2,73)
-(2,44)-(2,45)
+(30,11)-(30,12)
 *)
 
 (* type error slice
-(2,14)-(2,73)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,49)-(2,63)
-(2,49)-(2,73)
-(2,64)-(2,65)
+(28,6)-(30,12)
+(30,11)-(30,12)
 *)

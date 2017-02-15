@@ -1,117 +1,43 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildTimes VarX
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let stringOfList f l = let x = List.map (f l) in sepConcat ";" x;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildThresh (VarX, VarX, VarX, VarX)
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let stringOfList f l = let x = List.map f l in sepConcat ";" x;;
 
 *)
 
 (* changed spans
-(27,9)-(27,19)
-(27,20)-(27,24)
-(28,9)-(28,18)
-(48,58)-(48,63)
-(48,66)-(48,67)
+(9,31)-(9,45)
+(9,40)-(9,45)
 *)
 
 (* type error slice
-(19,3)-(19,41)
-(19,16)-(19,39)
-(27,9)-(27,19)
-(27,9)-(27,24)
-(27,20)-(27,24)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,8)-(3,10)
+(9,23)-(9,64)
+(9,31)-(9,39)
+(9,31)-(9,45)
+(9,49)-(9,58)
+(9,49)-(9,64)
+(9,63)-(9,64)
 *)

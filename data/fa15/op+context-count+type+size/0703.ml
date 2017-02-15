@@ -1,71 +1,29 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = (List.combine (List.rev l1) (List.rev l2)) @ (0, 0) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ ((digitsOfInt n) / 10);;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n = if n <= 0 then [] else [n mod 10];;
 
 *)
 
 (* changed spans
-(23,15)-(23,57)
-(23,39)-(23,41)
-(23,53)-(23,55)
-(23,58)-(23,59)
-(23,60)-(23,66)
-(23,61)-(23,62)
-(24,4)-(24,51)
+(3,25)-(3,60)
+(3,36)-(3,37)
+(3,38)-(3,60)
 *)
 
 (* type error slice
-(23,15)-(23,66)
-(23,58)-(23,59)
-(23,60)-(23,66)
+(2,3)-(3,62)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,17)-(3,19)
+(3,25)-(3,60)
+(3,36)-(3,37)
+(3,38)-(3,60)
+(3,38)-(3,60)
+(3,39)-(3,54)
+(3,40)-(3,51)
 *)

@@ -1,132 +1,52 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     if x = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if x = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if x = 2
-         then
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-         else
-           if x = 3
-           then
-             buildTimes
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-           else
-             if x = 4
-             then
-               buildThresh
-                 ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                   (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append ((clone 0 (- diff)), len1)), len2)
+  else ((List.append ((clone 0 diff), len2)), len1);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else ((List.append (clone 0 diff) l2), l1);;
 
 *)
 
 (* changed spans
-(30,5)-(50,76)
-(30,8)-(30,13)
-(30,12)-(30,13)
-(33,7)-(50,76)
-(33,10)-(33,11)
-(33,10)-(33,15)
-(33,14)-(33,15)
-(36,9)-(50,76)
-(36,12)-(36,13)
-(36,12)-(36,17)
-(36,16)-(36,17)
-(41,11)-(50,76)
-(41,14)-(41,15)
-(41,14)-(41,19)
-(41,18)-(41,19)
-(46,13)-(50,76)
-(46,16)-(46,17)
-(46,16)-(46,21)
-(46,20)-(46,21)
-(50,19)-(50,46)
-(50,48)-(50,75)
+(12,8)-(12,48)
+(12,21)-(12,47)
+(12,42)-(12,46)
+(12,50)-(12,54)
+(13,7)-(13,51)
+(13,8)-(13,44)
+(13,21)-(13,43)
+(13,38)-(13,42)
+(13,46)-(13,50)
 *)
 
 (* type error slice
-(17,3)-(17,69)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(46,13)-(50,76)
-(46,13)-(50,76)
-(46,13)-(50,76)
-(48,15)-(48,26)
-(48,15)-(50,76)
+(12,8)-(12,48)
+(12,9)-(12,20)
+(12,21)-(12,47)
+(13,8)-(13,44)
+(13,9)-(13,20)
+(13,21)-(13,43)
 *)

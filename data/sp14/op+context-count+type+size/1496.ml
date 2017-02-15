@@ -1,46 +1,54 @@
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> ((((clone 0) - lendiff) @ l1), l2));;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let rec additivePersistence n =
+  let x = [0] in
+  if (sumList (digitsOfInt n)) > 9
+  then 1 :: (x additivePersistence (sumList (digitsOfInt n)))
+  else sumList x;;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let rec additivePersistence n =
+  let x = [0] in
+  if (sumList (digitsOfInt n)) > 9
+  then (1 :: x; additivePersistence (sumList (digitsOfInt n)))
+  else sumList x;;
 
 *)
 
 (* changed spans
-(12,21)-(12,42)
-(12,22)-(12,31)
-(12,34)-(12,41)
+(13,7)-(13,61)
+(13,12)-(13,61)
+(13,15)-(13,34)
 *)
 
 (* type error slice
-(11,24)-(11,41)
-(11,25)-(11,30)
-(12,20)-(12,48)
-(12,21)-(12,42)
-(12,21)-(12,42)
-(12,22)-(12,31)
-(12,23)-(12,28)
-(12,43)-(12,44)
+(8,36)-(8,51)
+(8,40)-(8,51)
+(8,41)-(8,48)
+(11,2)-(14,16)
+(11,10)-(11,13)
+(12,2)-(14,16)
+(12,2)-(14,16)
+(13,7)-(13,61)
+(13,12)-(13,61)
+(13,13)-(13,14)
+(14,7)-(14,14)
+(14,7)-(14,16)
 *)

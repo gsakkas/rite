@@ -13,12 +13,11 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let lr1 = List.rev x in
-      let lr2 = List.rev l2 in
-      let h1::t1 = lr1 in
-      let h2::t2 = lr2 in
-      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
-    let base = (0, []) in
+      let (a1,a2) = a in
+      let (x1,x2) = x in
+      let val1 = (a1 + x1) + x2 in
+      let val2 = (x1 + x2) / 10 in (val2, (val1 :: a2)) in
+    let base = [] in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -40,36 +39,32 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let lr1 = List.rev l1 in
-      let lr2 = List.rev l2 in
-      let h1::t1 = lr1 in
-      let h2::t2 = lr2 in
-      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
+      let (a1,a2) = a in
+      let (x1,x2) = x in
+      let val1 = (a1 + x1) + x2 in
+      let val2 = (x1 + x2) / 10 in (val2, (val1 :: a2)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
+let _ = bigAdd [9; 9; 9; 9] [9; 9; 9];;
+
 *)
 
 (* changed spans
-(16,25)-(16,26)
+(20,15)-(20,17)
 *)
 
 (* type error slice
-(15,4)-(23,51)
-(15,10)-(20,69)
-(15,12)-(20,69)
-(16,16)-(16,24)
-(16,16)-(16,26)
-(16,25)-(16,26)
-(22,4)-(23,51)
-(22,15)-(22,23)
-(22,15)-(22,44)
-(22,24)-(22,44)
-(22,25)-(22,37)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
-(23,40)-(23,44)
+(15,4)-(22,51)
+(15,10)-(19,55)
+(16,6)-(19,55)
+(16,20)-(16,21)
+(20,4)-(22,51)
+(20,15)-(20,17)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
+(22,35)-(22,39)
 *)

@@ -1,30 +1,22 @@
 
-let count = 0;;
-
-let lt10 q = q < 10;;
-
-let rec additivePersistence n = if lt10 n then count;;
+let rec wwhile (f,b) = if f then f (f, b) else b;;
 
 
 (* fix
 
-let count = 0;;
-
-let lt10 q = q < 10;;
-
-let rec additivePersistence n = if lt10 n then count else 8;;
+let rec wwhile (f,b) = b;;
 
 *)
 
 (* changed spans
-(6,32)-(6,52)
+(2,23)-(2,48)
+(2,26)-(2,27)
+(2,33)-(2,41)
 *)
 
 (* type error slice
-(2,3)-(2,15)
-(2,12)-(2,13)
-(6,32)-(6,52)
-(6,32)-(6,52)
-(6,32)-(6,52)
-(6,47)-(6,52)
+(2,33)-(2,34)
+(2,33)-(2,41)
+(2,35)-(2,41)
+(2,36)-(2,37)
 *)

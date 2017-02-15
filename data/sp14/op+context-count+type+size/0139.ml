@@ -1,73 +1,81 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  ((List.append (clone 0 (len2 - len1)) l1),
+    (List.append (clone 0 (len1 - len2)) l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (v1,v2) ->
-          (match a with
-           | (list1,list2) ->
-               (match list1 with
-                | [] ->
-                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
-                      list2))
-                | h::t ->
-                    (((((v1 + v2) + h) / 10) :: list1),
-                      ((((v1 + v2) + h) mod 10) :: list2)))) in
-    let base = ([], []) in
-    let args = List.append (List.rev (List.combine l1 l2)) (0, 0) in
+      match a with
+      | (i,l) ->
+          (match x with
+           | (x1,x2) ->
+               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then l else mulByDigit ((i - 1), (bigAdd l l));;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  ((List.append (clone 0 (len2 - len1)) l1),
+    (List.append (clone 0 (len1 - len2)) l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (v1,v2) ->
-          (match a with
-           | (list1,list2) ->
-               (match list1 with
-                | [] ->
-                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
-                      list2))
-                | h::t ->
-                    (((((v1 + v2) + h) / 10) :: list1),
-                      ((((v1 + v2) + h) mod 10) :: list2)))) in
-    let base = ([], []) in
-    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
+      match a with
+      | (i,l) ->
+          (match x with
+           | (x1,x2) ->
+               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = bigAdd l (mulByDigit (i - 1) l);;
 
 *)
 
 (* changed spans
-(27,59)-(27,65)
+(27,2)-(27,57)
+(27,5)-(27,6)
+(27,5)-(27,10)
+(27,9)-(27,10)
+(27,16)-(27,17)
+(27,23)-(27,57)
+(27,34)-(27,57)
+(27,44)-(27,56)
 *)
 
 (* type error slice
-(27,15)-(27,26)
-(27,15)-(27,65)
-(27,59)-(27,65)
+(26,3)-(27,59)
+(26,19)-(27,57)
+(27,5)-(27,6)
+(27,5)-(27,10)
+(27,5)-(27,10)
+(27,9)-(27,10)
+(27,23)-(27,33)
+(27,23)-(27,57)
+(27,34)-(27,57)
 *)

@@ -1,49 +1,32 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
-
-let fixpoint (f,b) =
-  let funt b = if (f b) = b then (b, b) else (b, b) in wwhile ((funt b), b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.rev h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
-
-let fixpoint (f,b) = let funt x = (2, ((f b) = b)) in wwhile (funt, b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(7,2)-(7,75)
-(7,11)-(7,51)
-(7,15)-(7,51)
-(7,18)-(7,27)
-(7,33)-(7,39)
-(7,34)-(7,35)
-(7,37)-(7,38)
-(7,45)-(7,51)
-(7,46)-(7,47)
-(7,55)-(7,75)
+(7,23)-(7,31)
 *)
 
 (* type error slice
-(3,12)-(3,13)
-(3,12)-(3,15)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(7,2)-(7,75)
-(7,11)-(7,51)
-(7,15)-(7,51)
-(7,33)-(7,39)
-(7,55)-(7,61)
-(7,55)-(7,75)
-(7,62)-(7,75)
-(7,63)-(7,71)
-(7,64)-(7,68)
+(7,23)-(7,31)
+(7,23)-(7,38)
 *)

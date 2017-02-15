@@ -1,37 +1,25 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in l1 (pad @ l2)
-  else (let pad = clone 0 (- sizDif) in (pad @ l1) l2);;
+let rec sumList xs =
+  match xs with | [] -> 0 | h -> h | h::t -> h + (sumList t);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::_ -> h | h::t -> h + (sumList t);;
 
 *)
 
 (* changed spans
-(7,35)-(7,48)
-(8,40)-(8,53)
+(3,2)-(3,60)
 *)
 
 (* type error slice
-(5,15)-(5,31)
-(5,16)-(5,27)
-(5,28)-(5,30)
-(7,35)-(7,37)
-(7,35)-(7,48)
-(8,40)-(8,50)
-(8,40)-(8,53)
-(8,45)-(8,46)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,24)-(3,25)
+(3,33)-(3,34)
 *)

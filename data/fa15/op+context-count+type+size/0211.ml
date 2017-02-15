@@ -1,79 +1,40 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  (((clone 0 ((List.length l2) - (List.length l1))) @ l1),
-    ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (num1,num2) = x in ((a * 10) + num1) + num2 in
-    let base = 0 in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let sqsum xs =
+  let f a x a x = a + (x * x) in
+  let base base = base in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  (((clone 0 ((List.length l2) - (List.length l1))) @ l1),
-    ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (num1,num2) = x in
-      let (carry,sum) = a in
-      ((((num1 + num2) + carry) / 10), ((((num1 + num2) + carry) mod 10) ::
-        sum)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let sqsum xs =
+  let f a x a x = a + x in
+  let base = 0 in List.fold_left (fun a  -> fun x  -> a + (x * x)) 0 xs;;
 
 *)
 
 (* changed spans
-(13,16)-(13,63)
-(13,39)-(13,63)
-(13,40)-(13,48)
-(13,41)-(13,42)
-(13,45)-(13,47)
-(13,51)-(13,55)
-(14,4)-(16,51)
-(14,15)-(14,16)
-(15,4)-(16,51)
-(15,15)-(15,33)
-(16,4)-(16,51)
-(16,18)-(16,32)
-(16,33)-(16,34)
-(16,35)-(16,39)
-(16,40)-(16,44)
-(17,2)-(17,12)
-(17,13)-(17,34)
-(17,14)-(17,17)
-(17,18)-(17,33)
-(17,19)-(17,26)
-(17,27)-(17,29)
-(17,30)-(17,32)
+(3,22)-(3,29)
+(3,27)-(3,28)
+(4,11)-(4,22)
+(4,18)-(4,22)
+(4,41)-(4,42)
+(4,43)-(4,47)
+(4,48)-(4,50)
 *)
 
 (* type error slice
-(13,4)-(16,51)
-(13,10)-(13,63)
-(13,40)-(13,48)
-(13,41)-(13,42)
-(16,4)-(16,51)
-(16,18)-(16,32)
-(16,18)-(16,44)
-(16,33)-(16,34)
+(3,2)-(4,50)
+(3,8)-(3,29)
+(3,10)-(3,29)
+(3,12)-(3,29)
+(3,14)-(3,29)
+(3,18)-(3,19)
+(3,18)-(3,29)
+(4,2)-(4,50)
+(4,11)-(4,22)
+(4,18)-(4,22)
+(4,26)-(4,40)
+(4,26)-(4,50)
+(4,41)-(4,42)
+(4,43)-(4,47)
 *)

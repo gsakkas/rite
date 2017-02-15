@@ -1,51 +1,33 @@
 
-let rec digitsOfInt n =
-  if ((n mod 2) = 0) && (n > 0)
-  then
-    let rec loop input =
-      if input < 10 then input else [loop (input / 10); input mod 10] in
-    loop n
-  else [];;
+let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if ((n mod 2) = 0) && (n > 0)
-  then
-    let rec loop input =
-      if input < 10
-      then [input]
-      else (let y::[] = loop (input / 10) in [y; input mod 10]) in
-    loop n
-  else [];;
+let pipe fs num =
+  let f a x = x a in let base = num in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,25)-(6,30)
-(6,36)-(6,69)
-(6,56)-(6,68)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,74)
 *)
 
 (* type error slice
-(3,2)-(8,9)
-(3,2)-(8,9)
-(5,4)-(7,10)
-(6,6)-(6,69)
-(6,6)-(6,69)
-(6,9)-(6,14)
-(6,9)-(6,19)
-(6,9)-(6,19)
-(6,17)-(6,19)
-(6,25)-(6,30)
-(6,36)-(6,69)
-(6,36)-(6,69)
-(6,36)-(6,69)
-(6,37)-(6,41)
-(6,37)-(6,54)
-(6,56)-(6,68)
-(7,4)-(7,8)
-(7,4)-(7,10)
-(8,7)-(8,9)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
+(2,67)-(2,71)
+(2,72)-(2,74)
 *)

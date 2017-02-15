@@ -1,74 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi * (evalhelper p1))
-    | Cosine p1 -> evalhelper p1 in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a (hd::tl) = a + hd in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 *)
 
 (* changed spans
-(18,21)-(18,43)
-(18,27)-(18,42)
-(19,19)-(19,29)
-(19,19)-(19,32)
-(19,30)-(19,32)
-(20,2)-(20,18)
-(20,13)-(20,14)
+(3,14)-(3,30)
+(3,24)-(3,30)
+(11,2)-(11,11)
+(11,12)-(11,13)
+(11,14)-(11,15)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(15,4)-(19,32)
-(15,4)-(19,32)
-(18,17)-(18,20)
-(18,17)-(18,43)
-(18,21)-(18,43)
-(18,21)-(18,43)
-(18,21)-(18,43)
-(18,22)-(18,24)
-(18,27)-(18,42)
-(18,28)-(18,38)
-(19,19)-(19,29)
-(19,19)-(19,32)
-(20,2)-(20,12)
-(20,2)-(20,18)
+(3,2)-(11,15)
+(3,11)-(3,30)
+(3,14)-(3,30)
+(3,24)-(3,30)
+(9,13)-(9,73)
+(9,32)-(9,73)
+(9,33)-(9,37)
 *)

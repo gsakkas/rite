@@ -1,42 +1,84 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((List.map f (sepConcat "; " l)) ^ "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        (expr0 ^ ("<" ^ (expr1 ^ ("?" ^ (expr2 ^ (":" ^ (expr3 ^ ")")))))));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr0 -> "sin(" ^ ((exprToString expr0) ^ ")")
+  | Cosine expr0 -> "cos(" ^ ((exprToString expr0) ^ ")")
+  | Average (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr0,expr1) ->
+      "(" ^ ((exprToString expr0) ^ ("*" ^ ((exprToString expr1) ^ ")")))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr0) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(9,31)-(9,39)
-(9,40)-(9,41)
-(9,42)-(9,60)
-(9,58)-(9,59)
+(23,9)-(23,14)
+(23,25)-(23,30)
+(23,41)-(23,46)
+(23,57)-(23,62)
+(23,63)-(23,64)
+(23,65)-(23,68)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,30)-(9,61)
-(9,31)-(9,39)
-(9,42)-(9,60)
-(9,43)-(9,52)
+(12,2)-(23,75)
+(12,2)-(23,75)
+(12,2)-(23,75)
+(12,2)-(23,75)
+(23,8)-(23,75)
+(23,9)-(23,14)
+(23,15)-(23,16)
+(23,24)-(23,73)
+(23,25)-(23,30)
+(23,31)-(23,32)
+(23,40)-(23,71)
+(23,41)-(23,46)
+(23,47)-(23,48)
+(23,56)-(23,69)
+(23,57)-(23,62)
+(23,63)-(23,64)
 *)

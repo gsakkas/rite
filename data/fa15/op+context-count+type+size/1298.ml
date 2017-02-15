@@ -1,38 +1,41 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let fixpoint (f,b) =
-  wwhile (let fin bt = (bt, ((f bt) = bt)) in ((fin b), b));;
+let rec mulByDigit i l =
+  match i with
+  | i -> []
+  | h::t ->
+      if (List.length t) = 0
+      then [h * i] @ (mulByDigit i t)
+      else (remainder i h) :: (mulByDigit i t);;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let fixpoint (f,b) = wwhile (let fin bt = (bt, ((f bt) = bt)) in (fin, b));;
+let rec mulByDigit i l =
+  match i with
+  | i -> []
+  | _ ->
+      (match l with
+       | [] -> []
+       | h::t ->
+           if (List.length t) = 0
+           then [h * i] @ (mulByDigit i t)
+           else (remainder i h) :: (mulByDigit i t));;
 
 *)
 
 (* changed spans
-(5,9)-(5,59)
-(5,47)-(5,54)
-(5,56)-(5,57)
+(5,2)-(10,46)
+(8,6)-(10,46)
 *)
 
 (* type error slice
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,63)-(2,64)
-(5,2)-(5,8)
-(5,2)-(5,59)
-(5,9)-(5,59)
-(5,9)-(5,59)
-(5,18)-(5,42)
-(5,23)-(5,42)
-(5,46)-(5,58)
-(5,47)-(5,54)
-(5,48)-(5,51)
+(5,2)-(10,46)
+(5,2)-(10,46)
+(5,8)-(5,9)
+(9,12)-(9,17)
+(9,16)-(9,17)
 *)

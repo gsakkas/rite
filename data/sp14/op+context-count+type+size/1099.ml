@@ -1,65 +1,21 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 -> if rand > 1 then buildSine (build (rand, (depth - 1)))
-  | _ -> buildCosine (build (rand, (depth - 1)));;
+let pipe fs = let f a x = x x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | _ -> buildCosine (build (rand, (depth - 1)));;
+let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(20,9)-(20,63)
-(20,12)-(20,16)
-(20,12)-(20,20)
-(20,19)-(20,20)
+(2,26)-(2,29)
+(2,28)-(2,29)
+(2,33)-(2,75)
 *)
 
 (* type error slice
-(13,3)-(13,26)
-(13,14)-(13,24)
-(13,18)-(13,24)
-(20,9)-(20,63)
-(20,9)-(20,63)
-(20,9)-(20,63)
-(20,26)-(20,35)
-(20,26)-(20,63)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,28)-(2,29)
 *)

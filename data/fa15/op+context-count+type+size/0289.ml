@@ -1,45 +1,44 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
-
-let palindrome w = if (explode w) = (listReverse (explode w)) then true;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e x y);;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
-
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin x;;
 
 *)
 
 (* changed spans
-(14,19)-(14,71)
+(12,58)-(12,70)
+(12,59)-(12,63)
+(12,64)-(12,65)
+(12,68)-(12,69)
 *)
 
 (* type error slice
-(14,19)-(14,71)
-(14,19)-(14,71)
-(14,19)-(14,71)
-(14,67)-(14,71)
+(11,3)-(12,72)
+(11,14)-(12,70)
+(12,58)-(12,70)
+(12,59)-(12,63)
+(12,64)-(12,65)
 *)

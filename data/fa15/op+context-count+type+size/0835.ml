@@ -1,49 +1,70 @@
 
-let rec wwhile (f,b) =
-  let pair = f b in
-  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (f, (b, (b != (f b))));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin" ^ (exprToString e)
+  | Cosine e -> "cos" ^ (exprToString e)
+  | Average (e,e1) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e1) ^ (")" ^ "/2"))))
+  | Times (e,e1) -> (exprToString e) ^ ("*" ^ (exprToString e1))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2 "?") ^
+                 ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")"))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let pair = f b in
-  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> ((f x), (x != (f x)))), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin" ^ (exprToString e)
+  | Cosine e -> "cos" ^ (exprToString e)
+  | Average (e,e1) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e1) ^ (")" ^ "/2"))))
+  | Times (e,e1) -> (exprToString e) ^ ("*" ^ (exprToString e1))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(6,29)-(6,30)
-(6,33)-(6,34)
-(6,36)-(6,48)
-(6,37)-(6,38)
-(6,45)-(6,46)
+(24,15)-(24,36)
+(24,32)-(24,35)
 *)
 
 (* type error slice
-(3,2)-(4,65)
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,2)-(4,65)
-(4,16)-(4,20)
-(4,51)-(4,57)
-(4,51)-(4,65)
-(4,58)-(4,65)
-(4,59)-(4,60)
-(4,62)-(4,64)
-(6,21)-(6,27)
-(6,21)-(6,50)
-(6,28)-(6,50)
-(6,29)-(6,30)
-(6,32)-(6,49)
-(6,33)-(6,34)
-(6,36)-(6,48)
-(6,36)-(6,48)
-(6,37)-(6,38)
-(6,42)-(6,47)
-(6,43)-(6,44)
+(15,14)-(15,38)
+(15,20)-(15,21)
+(15,22)-(15,38)
+(15,23)-(15,35)
+(24,15)-(24,36)
+(24,16)-(24,28)
 *)

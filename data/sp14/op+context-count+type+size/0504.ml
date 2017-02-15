@@ -1,63 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1))
-    | Cosine p1 -> cos (pi *. (evalhelper p1)) in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> a | hd::tl -> a + hd in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
-  evalhelper e x y;;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
 *)
 
 (* changed spans
-(18,28)-(18,43)
-(19,19)-(19,46)
-(19,30)-(19,45)
-(20,2)-(20,18)
+(3,38)-(3,39)
+(3,52)-(3,58)
 *)
 
 (* type error slice
-(14,2)-(20,18)
-(14,21)-(19,46)
-(14,23)-(19,46)
-(18,21)-(18,44)
-(18,28)-(18,43)
-(18,29)-(18,39)
-(20,2)-(20,12)
-(20,2)-(20,18)
+(3,2)-(11,15)
+(3,11)-(3,58)
+(3,13)-(3,58)
+(3,17)-(3,58)
+(3,38)-(3,39)
+(3,52)-(3,53)
+(3,52)-(3,58)
+(9,13)-(9,73)
+(9,32)-(9,73)
+(9,33)-(9,37)
 *)

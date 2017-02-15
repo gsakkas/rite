@@ -7,51 +7,28 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | OneOver of expr
+  | OneOverAvg of expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (e1,e2,e3) = Op2 (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let r = rand (0, 2) in match r with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let r = rand (0, 11) in
-     let d = depth - 1 in
-     match r with
-     | 0 -> buildAverage ((build (rand, d)), (build (rand, d)))
-     | 1 -> buildCosine (build (rand, d))
-     | 2 -> buildSine (build (rand, d))
-     | 3 -> buildTimes ((build (rand, d)), (build (rand, d)))
-     | 4 ->
-         buildThresh
-           ((build (rand, d)), (build (rand, d)), (build (rand, d)),
-             (build (rand, d)))
-     | 5 ->
-         buildOp2
-           ((build (rand, d)), (build (rand, d)), (build (rand, d)),
-             (build (rand, d)))
-     | 6 -> buildSine (build (rand, d))
-     | 7 -> buildCosine (build (rand, d))
-     | 8 -> buildOp1 (build (rand, d))
-     | 9 -> buildSine (build (rand, d))
-     | 10 -> buildCosine (build (rand, d)));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | OneOver e -> if (eval (e, x, y)) > 1 then 1 / (eval (e, x, y)) else 1 / 3
+  | OneOverAvg (e1,e2,e3) ->
+      if (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y))) > 1
+      then 1 / (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y)))
+      else (-1) / 3;;
 
 
 (* fix
@@ -64,65 +41,80 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | OneOver of expr
+  | OneOverAvg of expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (e1,e2,e3) = Op2 (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let r = rand (0, 2) in match r with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let r = rand (0, 11) in
-     let d = depth - 1 in
-     match r with
-     | 0 -> buildAverage ((build (rand, d)), (build (rand, d)))
-     | 1 -> buildCosine (build (rand, d))
-     | 2 -> buildSine (build (rand, d))
-     | 3 -> buildTimes ((build (rand, d)), (build (rand, d)))
-     | 4 ->
-         buildThresh
-           ((build (rand, d)), (build (rand, d)), (build (rand, d)),
-             (build (rand, d)))
-     | 5 ->
-         buildOp2 ((build (rand, d)), (build (rand, d)), (build (rand, d)))
-     | 6 -> buildSine (build (rand, d))
-     | 7 -> buildCosine (build (rand, d))
-     | 8 -> buildOp1 (build (rand, d))
-     | 9 -> buildSine (build (rand, d))
-     | 10 -> buildCosine (build (rand, d)));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | OneOver e ->
+      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
+  | OneOverAvg (e1,e2,e3) ->
+      if
+        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
+      then
+        1.0 /.
+          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
+      else (-1.0) /. 3.0;;
 
 *)
 
 (* changed spans
-(48,11)-(49,31)
-(48,12)-(48,29)
-(48,13)-(48,18)
-(48,19)-(48,28)
-(48,20)-(48,24)
-(48,26)-(48,27)
+(27,39)-(27,40)
+(27,46)-(27,47)
+(27,46)-(27,66)
+(27,50)-(27,66)
+(27,72)-(27,73)
+(27,72)-(27,77)
+(27,76)-(27,77)
+(29,6)-(31,19)
+(29,9)-(29,70)
+(29,10)-(29,49)
+(29,11)-(29,28)
+(29,73)-(29,74)
+(30,11)-(30,12)
+(30,11)-(30,76)
+(30,15)-(30,76)
+(30,16)-(30,55)
+(30,17)-(30,34)
+(31,11)-(31,15)
+(31,11)-(31,19)
+(31,18)-(31,19)
 *)
 
 (* type error slice
-(19,3)-(19,44)
-(19,14)-(19,42)
-(47,9)-(47,17)
-(47,9)-(49,31)
-(48,11)-(49,31)
+(19,19)-(19,44)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(27,20)-(27,36)
+(27,20)-(27,40)
+(27,20)-(27,40)
+(27,21)-(27,25)
+(27,39)-(27,40)
+(27,46)-(27,66)
+(27,50)-(27,66)
+(27,51)-(27,55)
+(29,10)-(29,49)
+(29,10)-(29,49)
+(29,11)-(29,28)
+(29,12)-(29,16)
+(29,31)-(29,48)
+(29,32)-(29,36)
+(30,16)-(30,55)
+(30,16)-(30,55)
+(30,17)-(30,34)
+(30,18)-(30,22)
+(30,37)-(30,54)
+(30,38)-(30,42)
 *)

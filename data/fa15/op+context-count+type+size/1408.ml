@@ -1,34 +1,70 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec endChar l =
+  match l with | [] -> [] | h::[] -> [h] | h::t -> endChar t;;
 
-let stringOfList f l = ("[" sepConcat "" (List.map f l)) ^ "]";;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec removeLast l =
+  match l with | [] -> [] | h::[] -> [] | h::t -> h :: (removeLast t);;
+
+let palindrome w =
+  let rec palin ls =
+    match ls with
+    | [] -> true
+    | h::[] -> true
+    | h::t -> if h = (endChar t) then palin (removeLast t) else false in
+  palin (explode w);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec endChar l =
+  match l with | [] -> [] | h::[] -> [h] | h::t -> endChar t;;
 
-let stringOfList f l = "[" ^ ((sepConcat " " (List.map f l)) ^ "]");;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec removeLast l =
+  match l with | [] -> [] | h::[] -> [] | h::t -> h :: (removeLast t);;
+
+let palindrome w =
+  let rec palin ls =
+    match ls with
+    | [] -> true
+    | h::[] -> true
+    | h::t -> if [h] = (endChar t) then palin (removeLast t) else false in
+  palin (explode w);;
 
 *)
 
 (* changed spans
-(9,23)-(9,56)
-(9,28)-(9,37)
-(9,38)-(9,40)
+(18,17)-(18,18)
 *)
 
 (* type error slice
-(9,23)-(9,56)
-(9,24)-(9,27)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,2)-(3,60)
+(3,37)-(3,40)
+(3,37)-(3,40)
+(3,38)-(3,39)
+(3,51)-(3,58)
+(3,51)-(3,60)
+(3,59)-(3,60)
+(15,4)-(18,69)
+(15,4)-(18,69)
+(18,17)-(18,18)
+(18,17)-(18,32)
+(18,17)-(18,32)
+(18,21)-(18,32)
+(18,22)-(18,29)
+(18,30)-(18,31)
 *)

@@ -1,75 +1,70 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Tan of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | TimesMod of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (w,t,u,z) ->
-      if (eval (w, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (z, x, y)
-  | TimesMod (w,t,u) ->
-      ((eval (w, x, y)) *. (eval (t, x, y))) /.
-        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y)))
-  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
-  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Tan t -> mod_float (tan (pi *. (eval (t, x, y)))) 1
-  | VarX  -> x
-  | VarY  -> y;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Tan of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | TimesMod of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (w,t,u,z) ->
-      if (eval (w, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (z, x, y)
-  | TimesMod (w,t,u) ->
-      ((eval (w, x, y)) *. (eval (t, x, y))) /.
-        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y)))
-  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
-  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Tan t -> mod_float (tan (pi *. (eval (t, x, y)))) 1.0
-  | VarX  -> x
-  | VarY  -> y;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(28,54)-(28,55)
+(21,15)-(21,17)
 *)
 
 (* type error slice
-(28,13)-(28,22)
-(28,13)-(28,55)
-(28,54)-(28,55)
+(18,4)-(23,51)
+(18,10)-(20,71)
+(20,6)-(20,71)
+(20,12)-(20,13)
+(21,4)-(23,51)
+(21,15)-(21,17)
+(23,18)-(23,32)
+(23,18)-(23,44)
+(23,33)-(23,34)
+(23,35)-(23,39)
 *)

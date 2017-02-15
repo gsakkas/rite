@@ -1,60 +1,79 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let counter = 0;;
+let pi = 4.0 *. (atan 1.0);;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     counter = ((additivePersistence num) + 1));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi * (eval (ex, x, y)))
+  | Cosine ex -> cos (pi * (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     1 + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 *)
 
 (* changed spans
-(5,14)-(5,15)
-(15,4)-(18,47)
-(16,5)-(18,46)
-(17,5)-(18,46)
-(18,5)-(18,12)
-(18,5)-(18,46)
-(18,15)-(18,46)
-(18,44)-(18,45)
+(17,19)-(17,43)
+(18,21)-(18,45)
+(19,25)-(19,66)
+(19,25)-(19,70)
+(19,26)-(19,44)
+(19,69)-(19,70)
+(20,23)-(20,41)
+(20,23)-(20,62)
 *)
 
 (* type error slice
-(12,2)-(18,47)
-(12,2)-(18,47)
-(13,7)-(13,8)
-(15,4)-(18,47)
-(16,5)-(18,46)
-(17,5)-(18,46)
-(18,5)-(18,46)
+(11,3)-(11,28)
+(11,9)-(11,26)
+(17,15)-(17,18)
+(17,15)-(17,43)
+(17,19)-(17,43)
+(17,19)-(17,43)
+(17,20)-(17,22)
+(18,17)-(18,20)
+(18,17)-(18,45)
+(18,21)-(18,45)
+(18,21)-(18,45)
+(18,22)-(18,24)
 *)

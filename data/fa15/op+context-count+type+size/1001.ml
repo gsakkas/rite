@@ -1,120 +1,138 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e -> if (eval (e, x, y)) > 1 then 1 / (eval (e, x, y)) else 1 / 3
-  | OneOverAvg (e1,e2,e3) ->
-      if (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y))) > 1
-      then 1 / (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y)))
-      else (-1) / 3;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match (a, x) with
+      | ((out,sum),[]) -> (0, sum)
+      | ((out,sum),(b,c)::l') ->
+          let d = (b + c) + out in
+          if d < 10 then (0, (d :: sum)) else (1, ((d - 10) :: sum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) /. 3.0;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          (match a with
+           | (carry,sum) ->
+               (match sum with
+                | [] ->
+                    if ((carry + b) + c) < 10
+                    then (0, ([carry] @ [(carry + b) + c]))
+                    else
+                      ((carry + 1),
+                        ([carry + 1] @ [((carry + b) + c) mod 10]))
+                | h::t ->
+                    if ((b + c) + h) < 10
+                    then (0, ([0] @ ([(b + c) + h] @ t)))
+                    else
+                      ((carry + 1),
+                        ([((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t))))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(27,39)-(27,40)
-(27,46)-(27,47)
-(27,46)-(27,66)
-(27,50)-(27,66)
-(27,72)-(27,73)
-(27,72)-(27,77)
-(27,76)-(27,77)
-(29,6)-(31,19)
-(29,9)-(29,70)
-(29,10)-(29,49)
-(29,11)-(29,28)
-(29,73)-(29,74)
-(30,11)-(30,12)
-(30,11)-(30,76)
-(30,15)-(30,76)
-(30,16)-(30,55)
-(30,17)-(30,34)
-(31,11)-(31,15)
-(31,11)-(31,19)
-(31,18)-(31,19)
+(18,6)-(22,68)
+(18,12)-(18,18)
+(18,13)-(18,14)
+(19,26)-(19,34)
+(19,27)-(19,28)
+(19,30)-(19,33)
+(21,10)-(22,68)
+(21,18)-(21,31)
+(21,19)-(21,20)
+(21,28)-(21,31)
+(22,10)-(22,68)
+(22,13)-(22,14)
+(22,13)-(22,19)
+(22,29)-(22,39)
+(22,30)-(22,31)
+(22,35)-(22,38)
+(22,46)-(22,68)
+(22,47)-(22,48)
+(22,50)-(22,67)
+(22,51)-(22,59)
+(22,52)-(22,53)
+(22,56)-(22,58)
+(22,63)-(22,66)
+(23,4)-(25,51)
+(23,15)-(23,22)
+(23,19)-(23,21)
+(24,4)-(25,51)
+(24,15)-(24,23)
+(24,15)-(24,44)
+(24,25)-(24,37)
+(24,38)-(24,40)
+(24,41)-(24,43)
+(25,4)-(25,51)
+(25,18)-(25,32)
+(25,18)-(25,44)
+(25,33)-(25,34)
+(25,35)-(25,39)
+(25,40)-(25,44)
+(25,48)-(25,51)
+(26,2)-(26,12)
+(26,2)-(26,34)
+(26,13)-(26,34)
+(26,14)-(26,17)
+(26,18)-(26,33)
+(26,19)-(26,26)
+(26,27)-(26,29)
+(26,30)-(26,32)
 *)
 
 (* type error slice
-(19,19)-(19,44)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(27,20)-(27,36)
-(27,20)-(27,40)
-(27,20)-(27,40)
-(27,21)-(27,25)
-(27,39)-(27,40)
-(27,46)-(27,66)
-(27,50)-(27,66)
-(27,51)-(27,55)
-(29,10)-(29,49)
-(29,10)-(29,49)
-(29,11)-(29,28)
-(29,12)-(29,16)
-(29,31)-(29,48)
-(29,32)-(29,36)
-(30,16)-(30,55)
-(30,16)-(30,55)
-(30,17)-(30,34)
-(30,18)-(30,22)
-(30,37)-(30,54)
-(30,38)-(30,42)
+(17,4)-(25,51)
+(17,10)-(22,68)
+(17,12)-(22,68)
+(18,6)-(22,68)
+(18,6)-(22,68)
+(18,12)-(18,18)
+(18,16)-(18,17)
+(24,4)-(25,51)
+(24,15)-(24,23)
+(24,15)-(24,44)
+(24,24)-(24,44)
+(24,25)-(24,37)
+(25,18)-(25,32)
+(25,18)-(25,44)
+(25,33)-(25,34)
+(25,40)-(25,44)
 *)

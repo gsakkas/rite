@@ -1,48 +1,80 @@
 
-let g x f = ((f x), ((f x) = x));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((g b f), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
+  | Flatten (e1,e2,e3) ->
+      ("(" exprToString e1) ^
+        ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")"))));;
 
 
 (* fix
 
-let h x = ((x * x), (x < 100));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile (h, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
+  | Flatten (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("/" ^ ((exprToString e2) ^ ("/" ^ ((exprToString e3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(2,8)-(2,32)
-(2,13)-(2,18)
-(2,14)-(2,15)
-(2,20)-(2,31)
-(2,21)-(2,26)
-(2,22)-(2,23)
-(2,29)-(2,30)
-(4,16)-(5,62)
+(31,6)-(31,27)
+(31,11)-(31,23)
 *)
 
 (* type error slice
-(2,3)-(2,34)
-(2,6)-(2,32)
-(2,8)-(2,32)
-(2,12)-(2,32)
-(5,8)-(5,9)
-(5,8)-(5,11)
-(5,49)-(5,55)
-(5,49)-(5,62)
-(5,56)-(5,62)
-(5,57)-(5,58)
-(7,21)-(7,27)
-(7,21)-(7,40)
-(7,28)-(7,40)
-(7,29)-(7,36)
-(7,30)-(7,31)
+(31,6)-(31,27)
+(31,7)-(31,10)
 *)

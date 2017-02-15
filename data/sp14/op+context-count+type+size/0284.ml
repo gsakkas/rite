@@ -1,54 +1,61 @@
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then helper ((h :: seen), t) in
+        let rest' = helper (seen', t) in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
-
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> h :: (append [] t);;
-
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> h :: (append t list2);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' =
+          if List.mem h seen
+          then helper (seen, t)
+          else helper ((h :: seen), t) in
+        let rest' = helper (seen', t) in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(5,20)-(6,62)
-(6,2)-(6,62)
-(6,8)-(6,9)
-(6,23)-(6,25)
-(6,36)-(6,47)
-(6,36)-(6,62)
-(6,48)-(6,62)
-(6,56)-(6,57)
-(6,58)-(6,61)
-(6,59)-(6,60)
+(7,20)-(7,67)
+(7,52)-(7,63)
+(8,8)-(8,62)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)
 
 (* type error slice
-(2,3)-(3,59)
-(2,11)-(3,57)
-(2,17)-(3,57)
-(3,43)-(3,48)
-(3,43)-(3,57)
-(3,43)-(3,57)
-(3,52)-(3,57)
-(6,2)-(6,62)
-(6,2)-(6,62)
-(6,48)-(6,62)
-(6,49)-(6,55)
-(6,56)-(6,57)
-(6,58)-(6,61)
-(6,58)-(6,61)
-(6,59)-(6,60)
+(3,2)-(9,27)
+(3,18)-(8,62)
+(4,4)-(8,62)
+(5,12)-(5,16)
+(7,8)-(8,62)
+(7,20)-(7,67)
+(7,20)-(7,67)
+(7,20)-(7,67)
+(7,44)-(7,50)
+(7,44)-(7,67)
+(7,51)-(7,67)
+(7,52)-(7,63)
+(8,20)-(8,26)
+(8,20)-(8,37)
+(8,27)-(8,37)
+(8,28)-(8,33)
+(8,41)-(8,47)
+(8,41)-(8,62)
+(8,48)-(8,62)
+(8,49)-(8,54)
+(9,2)-(9,10)
+(9,2)-(9,27)
+(9,11)-(9,27)
+(9,12)-(9,18)
 *)

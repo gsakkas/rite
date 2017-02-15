@@ -1,22 +1,32 @@
 
-let rec digitsOfInt n = if n < 0 then [] else [[]; n mod 10];;
+let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [] else [] @ [n mod 10];;
+let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,46)-(2,60)
-(2,47)-(2,49)
-(2,51)-(2,59)
+(2,26)-(2,29)
+(2,28)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,74)
 *)
 
 (* type error slice
-(2,46)-(2,60)
-(2,46)-(2,60)
-(2,47)-(2,49)
-(2,51)-(2,59)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
+(2,67)-(2,71)
+(2,72)-(2,74)
 *)

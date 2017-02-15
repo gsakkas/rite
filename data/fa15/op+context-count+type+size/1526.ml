@@ -1,81 +1,46 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) -> (eval (m, x, y)) ** (eval (n, x, y))
-  | Op (m,n,o) ->
-      (sqrt
-         (abs (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y)))))
-        /. 3.0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = match x with | [] -> "none" | hea::tail -> a ^ (sep ^ hea) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) -> (eval (m, x, y)) ** (eval (n, x, y))
-  | Op (m,n,o) ->
-      let d = ((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y)) in
-      (sqrt (d ** d)) /. 3.0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = match x with | [] -> "none" | hea::tail -> a ^ (sep ^ hea) in
+      let base = h in let l = [t] in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(29,6)-(30,76)
-(29,6)-(31,14)
-(29,7)-(29,11)
-(30,9)-(30,75)
-(30,10)-(30,13)
-(31,11)-(31,14)
+(7,30)-(7,31)
 *)
 
 (* type error slice
-(30,9)-(30,75)
-(30,10)-(30,13)
-(30,14)-(30,74)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(6,6)-(7,58)
+(6,12)-(6,76)
+(6,14)-(6,76)
+(6,18)-(6,76)
+(6,18)-(6,76)
+(6,24)-(6,25)
+(6,61)-(6,62)
+(6,61)-(6,76)
+(6,63)-(6,64)
+(7,6)-(7,58)
+(7,17)-(7,18)
+(7,22)-(7,58)
+(7,30)-(7,31)
+(7,35)-(7,49)
+(7,35)-(7,58)
+(7,50)-(7,51)
+(7,52)-(7,56)
+(7,57)-(7,58)
 *)

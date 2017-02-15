@@ -4,23 +4,19 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Neg of expr
   | Average of expr* expr
   | Times of expr* expr
-  | AveThree of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Neg e -> (-1.0) *. (eval (e, x, y))
-  | AveThree (e1,e2,e3) ->
-      ((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2)")))
+  | Times (x,y) -> exprToString e "*" exprToString e;;
 
 
 (* fix
@@ -30,47 +26,38 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Neg of expr
   | Average of expr* expr
   | Times of expr* expr
-  | AveThree of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Neg e -> (-1.0) *. (eval (e, x, y))
-  | AveThree (e1,e2,e3) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y));;
 
 *)
 
 (* changed spans
-(23,6)-(23,45)
-(23,6)-(23,65)
-(23,7)-(23,24)
+(18,28)-(18,29)
+(18,55)-(18,56)
+(19,19)-(19,31)
+(19,19)-(19,52)
+(19,32)-(19,33)
+(19,34)-(19,37)
+(19,38)-(19,50)
+(19,51)-(19,52)
 *)
 
 (* type error slice
-(19,18)-(19,42)
-(19,25)-(19,41)
-(19,26)-(19,30)
-(21,13)-(21,19)
-(21,13)-(21,19)
-(21,13)-(21,39)
-(21,15)-(21,18)
-(23,6)-(23,45)
-(23,6)-(23,45)
-(23,6)-(23,65)
-(23,7)-(23,24)
-(23,8)-(23,12)
-(23,27)-(23,44)
-(23,28)-(23,32)
-(23,48)-(23,65)
-(23,49)-(23,53)
+(15,26)-(15,50)
+(15,27)-(15,43)
+(15,28)-(15,40)
+(15,44)-(15,45)
+(19,19)-(19,31)
+(19,19)-(19,52)
 *)

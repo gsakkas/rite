@@ -1,79 +1,51 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr
-  | ArcSin of expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let e_num = 2.718281828;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
-  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
-  | Thresh (x1,x2,x3,x4) ->
-      if (eval (x1, x, y)) < (eval (x2, x, y))
-      then eval (x3, x, y)
-      else eval (x4, x, y)
-  | CosE (x1,x2,x3) ->
-      (cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y)))) *.
-        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)))
-  | ArcSin (x1,x2) -> (asin ((eval (x1, x, y)) ** 2)) /. 1.6;;
+let fixpoint (f,b) = wwhile (let h x y = ((y x), (x = x)) in ((h b f), b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr
-  | ArcSin of expr* expr;;
+let h x = ((x * x), (x < 100));;
 
-let e_num = 2.718281828;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
-  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
-  | Thresh (x1,x2,x3,x4) ->
-      if (eval (x1, x, y)) < (eval (x2, x, y))
-      then eval (x3, x, y)
-      else eval (x4, x, y)
-  | CosE (x1,x2,x3) ->
-      (cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y)))) *.
-        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)))
-  | ArcSin (x1,x2) -> (asin ((eval (x1, x, y)) ** 2.)) /. 1.6;;
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(32,50)-(32,51)
+(2,16)-(3,62)
+(5,28)-(5,74)
+(5,35)-(5,57)
+(5,37)-(5,57)
+(5,42)-(5,47)
+(5,43)-(5,44)
+(5,45)-(5,46)
+(5,49)-(5,56)
+(5,50)-(5,51)
+(5,54)-(5,55)
+(5,61)-(5,73)
+(5,62)-(5,69)
 *)
 
 (* type error slice
-(32,28)-(32,52)
-(32,47)-(32,49)
-(32,50)-(32,51)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(5,21)-(5,27)
+(5,21)-(5,74)
+(5,28)-(5,74)
+(5,28)-(5,74)
+(5,35)-(5,57)
+(5,37)-(5,57)
+(5,41)-(5,57)
+(5,61)-(5,73)
+(5,62)-(5,69)
+(5,63)-(5,64)
 *)

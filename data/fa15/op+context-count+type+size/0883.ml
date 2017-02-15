@@ -1,76 +1,59 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let digits n = digitsOfInt (abs n);;
 
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,sum) = a in
-      (((x1 + x2) / 10), (sum :: (((x1 + x2) + carry) mod 10))) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitalRoot n =
+  match digits n with | x::[] -> x | h::t -> t + (digitalRoot (sumList h));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let digits n = digitsOfInt (abs n);;
 
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,sum) = a in
-      (((x1 + x2) / 10), ((((x1 + x2) + carry) mod 10) :: sum)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitalRoot n =
+  match digits n with | x::[] -> x | h::t -> h + (digitalRoot (sumList t));;
 
 *)
 
 (* changed spans
-(19,26)-(19,29)
-(19,33)-(19,61)
-(20,4)-(22,51)
+(10,45)-(10,46)
+(10,71)-(10,72)
 *)
 
 (* type error slice
-(16,4)-(22,51)
-(16,10)-(19,63)
-(16,12)-(19,63)
-(17,6)-(19,63)
-(18,6)-(19,63)
-(18,6)-(19,63)
-(18,24)-(18,25)
-(19,6)-(19,63)
-(19,25)-(19,62)
-(19,25)-(19,62)
-(19,25)-(19,62)
-(19,26)-(19,29)
-(19,33)-(19,61)
-(22,18)-(22,32)
-(22,18)-(22,44)
-(22,33)-(22,34)
+(3,25)-(3,47)
+(3,25)-(3,60)
+(3,26)-(3,37)
+(3,48)-(3,49)
+(3,50)-(3,60)
+(3,50)-(3,60)
+(3,51)-(3,59)
+(5,3)-(5,36)
+(5,11)-(5,34)
+(5,15)-(5,26)
+(5,15)-(5,34)
+(7,21)-(7,70)
+(7,21)-(7,70)
+(7,59)-(7,70)
+(7,60)-(7,67)
+(7,68)-(7,69)
+(10,2)-(10,74)
+(10,2)-(10,74)
+(10,2)-(10,74)
+(10,8)-(10,14)
+(10,8)-(10,16)
+(10,45)-(10,46)
+(10,45)-(10,74)
+(10,62)-(10,73)
+(10,63)-(10,70)
+(10,71)-(10,72)
 *)

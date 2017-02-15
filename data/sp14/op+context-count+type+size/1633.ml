@@ -1,30 +1,42 @@
 
-let rec sumDigits n1 =
-  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
-
-let rec digitalRoot n = if n > 10 then digitalRoot sumDigits n else n;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t))
+      else (prod mod 10) :: t;;
 
 
 (* fix
 
-let rec sumDigits n1 =
-  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
-
-let rec digitalRoot n = if n > 10 then digitalRoot (sumDigits n) else n;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(5,39)-(5,62)
-(5,51)-(5,60)
+(8,28)-(8,60)
 *)
 
 (* type error slice
-(5,3)-(5,71)
-(5,20)-(5,69)
-(5,24)-(5,69)
-(5,39)-(5,50)
-(5,39)-(5,62)
-(5,61)-(5,62)
-(5,68)-(5,69)
+(2,3)-(9,31)
+(2,19)-(9,29)
+(2,21)-(9,29)
+(3,2)-(9,29)
+(6,6)-(9,29)
+(7,6)-(9,29)
+(8,11)-(8,60)
+(8,11)-(8,60)
+(8,28)-(8,60)
+(8,28)-(8,60)
+(8,43)-(8,59)
+(8,44)-(8,54)
 *)

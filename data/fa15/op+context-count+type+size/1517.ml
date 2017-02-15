@@ -1,95 +1,89 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
-  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
-  | Power (x,y) -> (exprToString x) ^ ("**" ^ (exprToString y))
-  | Op (x,y,z) ->
-      "(" ^
-        ((exprToString x) ^
-           ("*" ^
-              ((exprToString y) ^
-                 ("*" ^
-                    ((exprToString z) ^
-                       (")/(" ^
-                          ((exprToString x) ^
-                             ("+" ^
-                                ((exprToString y) ^
-                                   (("+" (exprToString z)) ^ ")"))))))))));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then (l1, (List.append (clone 0 (x - y)) l2))
+  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (lh1,lh2) = x in
+      let (carry,res) = a in
+      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x = (0, (mulByDigit a x)) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
-  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
-  | Power (x,y) -> (exprToString x) ^ ("**" ^ (exprToString y))
-  | Op (x,y,z) ->
-      "(" ^
-        ((exprToString x) ^
-           ("*" ^
-              ((exprToString y) ^
-                 ("*" ^
-                    ((exprToString z) ^
-                       (")/(" ^
-                          ((exprToString x) ^
-                             ("+" ^
-                                ((exprToString y) ^
-                                   ("+" ^ ((exprToString z) ^ ")")))))))))));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then (l1, (List.append (clone 0 (x - y)) l2))
+  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (lh1,lh2) = x in
+      let (carry,res) = a in
+      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x = let (0,res) = a in (0, (mulByDigit x res)) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(40,36)-(40,58)
-(40,41)-(40,57)
+(29,14)-(29,35)
+(29,30)-(29,31)
+(30,2)-(31,75)
 *)
 
 (* type error slice
-(40,36)-(40,58)
-(40,37)-(40,40)
+(26,34)-(26,56)
+(26,35)-(26,45)
+(26,46)-(26,53)
+(29,2)-(31,75)
+(29,8)-(29,35)
+(29,10)-(29,35)
+(29,14)-(29,35)
+(29,18)-(29,34)
+(29,19)-(29,29)
+(29,30)-(29,31)
+(31,42)-(31,56)
+(31,42)-(31,68)
+(31,57)-(31,58)
 *)

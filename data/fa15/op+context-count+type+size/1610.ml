@@ -1,57 +1,89 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SumInts of expr
+  | Power of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let numZeros = (List.length l1) - (List.length l2) in
-  if numZeros = 0
-  then (l1, l2)
-  else
-    if numZeros > 0
-    then (l1, ((clone (0, numZeros)) @ l2))
-    else (((clone (0, (abs numZeros))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr1,expr2) ->
+      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
+  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
+  | Thresh (expr1,expr2,expr3,expr4) ->
+      if (eval (expr1, x, y)) < (eval (expr2, x, y))
+      then eval (expr3, x, y)
+      else eval (expr4, x, y)
+  | SumInts expr ->
+      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2.0
+  | Power (expr1,expr2,expr3) ->
+      (eval expr1) ** (abs ((eval (expr1, x, y)) +. (eval (expr2, x, y))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SumInts of expr
+  | Power of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let numZeros = (List.length l1) - (List.length l2) in
-  let absNumZeros = abs numZeros in
-  if numZeros = 0
-  then (l1, l2)
-  else
-    (let listZeros = clone 0 absNumZeros in
-     if numZeros > 0 then (l1, (listZeros @ l2)) else ((listZeros @ l1), l2));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr1,expr2) ->
+      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
+  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
+  | Thresh (expr1,expr2,expr3,expr4) ->
+      if (eval (expr1, x, y)) < (eval (expr2, x, y))
+      then eval (expr3, x, y)
+      else eval (expr4, x, y)
+  | SumInts expr ->
+      ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) /. 2.0
+  | Power (expr1,expr2,expr3) ->
+      (eval (expr1, x, y)) **
+        (abs_float ((eval (expr2, x, y)) +. (eval (expr3, x, y))));;
 
 *)
 
 (* changed spans
-(6,2)-(11,49)
-(9,4)-(11,49)
-(10,15)-(10,36)
-(10,16)-(10,21)
-(10,22)-(10,35)
-(10,23)-(10,24)
-(10,26)-(10,34)
-(11,11)-(11,38)
-(11,12)-(11,17)
-(11,18)-(11,37)
-(11,19)-(11,20)
-(11,22)-(11,36)
-(11,23)-(11,26)
-(11,27)-(11,35)
+(31,12)-(31,17)
+(31,22)-(31,74)
+(31,23)-(31,26)
+(31,35)-(31,40)
+(31,59)-(31,64)
 *)
 
 (* type error slice
-(2,48)-(2,65)
-(2,49)-(2,54)
-(10,14)-(10,42)
-(10,15)-(10,36)
-(10,16)-(10,21)
-(10,37)-(10,38)
-(11,10)-(11,44)
-(11,11)-(11,38)
-(11,12)-(11,17)
-(11,39)-(11,40)
+(16,2)-(31,74)
+(19,28)-(19,47)
+(19,29)-(19,33)
+(19,34)-(19,46)
+(31,6)-(31,18)
+(31,7)-(31,11)
+(31,12)-(31,17)
+(31,22)-(31,74)
+(31,23)-(31,26)
+(31,27)-(31,73)
 *)

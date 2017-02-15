@@ -1,46 +1,83 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | AddThree of expr* expr* expr;;
 
-let stringOfList f l = List.map f ((sepConcat "") l);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
+  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
+  | Thresh (e7,e8,e9,e10) ->
+      "(" ^
+        ((exprToString e7) ^
+           ("<" ^
+              ((exprToString e8) ^
+                 ("?" ^
+                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
+  | Power (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
+  | AddThree (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("+" ^ ((exprToString e2) ^ (("+" exprToString e3) ^ ")"))));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | AddThree of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+  | Average (e3,e4) ->
+      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
+  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
+  | Thresh (e7,e8,e9,e10) ->
+      "(" ^
+        ((exprToString e7) ^
+           ("<" ^
+              ((exprToString e8) ^
+                 ("?" ^
+                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
+  | Power (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
+  | AddThree (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("+" ^ ((exprToString e2) ^ ("+" ^ ((exprToString e3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-(9,32)-(9,33)
-(9,34)-(9,52)
-(9,35)-(9,49)
-(9,36)-(9,45)
-(9,46)-(9,48)
-(9,50)-(9,51)
+(34,40)-(34,61)
+(34,45)-(34,57)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,23)-(9,31)
-(9,23)-(9,52)
-(9,34)-(9,52)
-(9,35)-(9,49)
-(9,36)-(9,45)
+(34,40)-(34,61)
+(34,41)-(34,44)
 *)

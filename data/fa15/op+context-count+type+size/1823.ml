@@ -1,30 +1,40 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else ((digitsOfInt n) / 10) @ (n mod 10);;
+let rec clone x n =
+  if n < 1 then [] else (match n with | _ -> [x] @ (clone x (n - 1)));;
+
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 = s2
+  then (l1, l2)
+  else if s1 > s2 then (l1, (clone 0 (s1 - s2))) else clone 0 (s2 - s1);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n =
+  if n < 1 then [] else (match n with | _ -> [x] @ (clone x (n - 1)));;
+
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 = s2
+  then (l1, l2)
+  else
+    if s1 > s2 then (l1, (clone 0 (s1 - s2))) else ((clone 0 (s2 - s1)), l2);;
 
 *)
 
 (* changed spans
-(3,24)-(3,46)
-(3,38)-(3,39)
-(3,49)-(3,59)
+(10,54)-(10,71)
 *)
 
 (* type error slice
-(2,3)-(3,61)
-(2,20)-(3,59)
-(3,2)-(3,59)
-(3,16)-(3,18)
-(3,24)-(3,46)
-(3,24)-(3,46)
-(3,24)-(3,59)
-(3,25)-(3,40)
-(3,26)-(3,37)
-(3,47)-(3,48)
+(10,7)-(10,71)
+(10,7)-(10,71)
+(10,23)-(10,48)
+(10,28)-(10,47)
+(10,29)-(10,34)
+(10,54)-(10,59)
+(10,54)-(10,71)
 *)

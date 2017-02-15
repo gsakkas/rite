@@ -1,99 +1,52 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ (")+" 1 ")")))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        if List.mem h seen
+        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       (")/(abs(" ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
+  helper ([], l);;
 
 *)
 
 (* changed spans
-(35,62)-(35,74)
-(35,63)-(35,67)
-(35,68)-(35,69)
-(35,70)-(35,73)
+(7,8)-(8,76)
+(7,11)-(7,19)
+(7,11)-(7,26)
+(7,20)-(7,21)
+(7,22)-(7,26)
+(8,13)-(8,76)
+(8,38)-(8,76)
+(9,2)-(9,10)
 *)
 
 (* type error slice
-(35,62)-(35,74)
-(35,63)-(35,67)
+(4,4)-(8,76)
+(4,4)-(8,76)
+(5,12)-(5,16)
+(7,8)-(8,76)
+(7,8)-(8,76)
+(7,8)-(8,76)
+(7,11)-(7,19)
+(7,11)-(7,26)
+(7,22)-(7,26)
+(8,13)-(8,76)
+(8,38)-(8,76)
+(8,55)-(8,61)
+(8,55)-(8,76)
+(9,2)-(9,10)
+(9,2)-(9,27)
+(9,11)-(9,27)
+(9,12)-(9,18)
 *)

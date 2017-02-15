@@ -1,31 +1,127 @@
 
-let pipe fs =
-  let f a x x' y = (x a) + a in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildMagic e1 = Magic e1;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildWeird (e1,e2,e3,e4) = Weird (e1, e2, e3);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand (1, 10) with
+     | 1 -> buildSine (build (rand, (depth - 1)))
+     | 2 -> buildCosine (build (rand, (depth - 1)))
+     | 3 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 -> buildX ()
+     | 7 -> buildY ()
+     | 8 -> buildMagic (build (rand, (depth - 1)))
+     | 9 ->
+         buildWeird
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildMagic e1 = Magic e1;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildWeird (e1,e2,e3) = Weird (e1, e2, e3);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand (1, 10) with
+     | 1 -> buildSine (build (rand, (depth - 1)))
+     | 2 -> buildCosine (build (rand, (depth - 1)))
+     | 3 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 -> buildX ()
+     | 7 -> buildY ()
+     | 8 -> buildMagic (build (rand, (depth - 1)))
+     | 9 ->
+         buildWeird
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 *)
 
 (* changed spans
-(3,2)-(3,74)
-(3,12)-(3,28)
-(3,15)-(3,28)
-(3,19)-(3,28)
-(3,27)-(3,28)
-(3,32)-(3,74)
+(25,16)-(25,49)
 *)
 
 (* type error slice
-(3,2)-(3,74)
-(3,8)-(3,28)
-(3,10)-(3,28)
-(3,12)-(3,28)
-(3,19)-(3,28)
-(3,27)-(3,28)
-(3,50)-(3,64)
-(3,50)-(3,74)
-(3,65)-(3,66)
+(25,3)-(25,51)
+(25,16)-(25,49)
+(52,9)-(52,19)
+(52,9)-(54,41)
+(53,11)-(54,41)
 *)

@@ -1,84 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Tan of expr
-  | Arc of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | _ -> "_"
-  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
-  | Arc (a,b,c) -> "sin(pi*" ^ ((exprToString (a (b, c))) ^ ")");;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> 0
+  | h::t -> [((h * i) / 10) + (mulByDigit i t); (h * i) mod 10];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Tan of expr
-  | Sin_Avg of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | _ -> "_"
-  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
-  | Sin_Avg (a,b,c) ->
-      "sin(pi*(" ^
-        ((exprToString a) ^
-           ("+" ^ ((exprToString b) ^ ((exprToString c) ^ ")/3)"))));;
+let rec mulByDigit i l =
+  match List.rev l with | [] -> [] | h::t -> [(h * i) mod 10];;
 
 *)
 
 (* changed spans
-(14,2)-(30,64)
-(30,19)-(30,28)
-(30,46)-(30,56)
-(30,49)-(30,55)
-(30,50)-(30,51)
-(30,53)-(30,54)
-(30,60)-(30,63)
+(4,10)-(4,11)
+(5,12)-(5,63)
+(5,13)-(5,27)
+(5,13)-(5,46)
+(5,14)-(5,21)
+(5,30)-(5,46)
+(5,48)-(5,62)
 *)
 
 (* type error slice
-(14,2)-(30,64)
-(30,46)-(30,56)
-(30,47)-(30,48)
+(3,2)-(5,63)
+(3,2)-(5,63)
+(4,10)-(4,11)
+(5,12)-(5,63)
 *)

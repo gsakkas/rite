@@ -1,31 +1,66 @@
 
-let pipe fs = let f a x a = a x in let base d = d in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a (x,y) = ((x + y) / 10) :: a in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base d = d in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a (x,y) = ((x + y) / 10) :: a in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,28)-(2,29)
-(2,30)-(2,31)
-(2,35)-(2,77)
+(22,4)-(22,51)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
-(2,70)-(2,74)
+(19,4)-(22,51)
+(19,10)-(19,39)
+(19,20)-(19,39)
+(19,38)-(19,39)
+(22,4)-(22,51)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
 *)

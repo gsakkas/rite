@@ -1,64 +1,122 @@
 
 let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
 
 let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then List.append ((clone 0 (abs diff)) l1)
-  else if diff > 0 then List.append ((clone 0 diff) l2);;
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
+
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          let sum = b + c in
+          if sum < 10
+          then
+            (match a with
+             | (len,[]) -> (len, [sum])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then
+                   (if sum = 9
+                    then (len, ((-1) :: 0 :: xs'))
+                    else (len, ((sum + 1) :: xs')))
+                 else (len, (sum :: x' :: xs')))
+          else
+            (match a with
+             | (len,[]) -> (len, [(-1); sum mod 10])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then (-1) :: ((sum mod 10) + 1) :: a
+                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
+    let base = ((List.length l1), []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
 let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
 
 let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then ((List.append (clone 0 (abs diff)) l1), l2)
-  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
+
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          let sum = b + c in
+          if sum < 10
+          then
+            (match a with
+             | (len,[]) -> (len, [sum])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then
+                   (if sum = 9
+                    then (len, ((-1) :: 0 :: xs'))
+                    else (len, ((sum + 1) :: xs')))
+                 else (len, (sum :: x' :: xs')))
+          else
+            (match a with
+             | (len,[]) -> (len, [(-1); sum mod 10])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then (len, ((-1) :: ((sum mod 10) + 1) :: xs'))
+                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
+    let base = ((List.length l1), []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(10,7)-(10,18)
-(10,7)-(10,44)
-(10,19)-(10,44)
-(11,7)-(11,55)
-(11,24)-(11,35)
-(11,24)-(11,55)
-(11,36)-(11,55)
+(44,22)-(44,53)
+(44,52)-(44,53)
 *)
 
 (* type error slice
-(2,3)-(5,22)
-(2,14)-(5,20)
-(2,16)-(5,20)
-(3,2)-(5,20)
-(4,4)-(4,59)
-(4,4)-(4,59)
-(4,18)-(4,21)
-(4,27)-(4,38)
-(4,27)-(4,59)
-(4,49)-(4,59)
-(4,55)-(4,58)
-(5,2)-(5,13)
-(5,2)-(5,20)
-(10,19)-(10,44)
-(10,20)-(10,40)
-(10,21)-(10,26)
-(11,7)-(11,55)
-(11,7)-(11,55)
-(11,7)-(11,55)
-(11,24)-(11,35)
-(11,24)-(11,55)
-(11,36)-(11,55)
-(11,37)-(11,51)
-(11,38)-(11,43)
+(30,12)-(38,48)
+(30,19)-(30,20)
+(40,12)-(45,65)
+(40,12)-(45,65)
+(41,27)-(41,52)
+(43,17)-(45,64)
+(43,17)-(45,64)
+(44,22)-(44,53)
+(44,30)-(44,53)
+(44,52)-(44,53)
+(45,22)-(45,64)
 *)

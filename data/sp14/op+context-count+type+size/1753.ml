@@ -1,83 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand with
-  | (a,b) ->
-      let rdm = rand (a, b) in
-      (match rdm with
-       | 0 -> buildY ()
-       | 1 -> buildX ()
-       | 2 -> Cosine (build (rand, (depth - 1)))
-       | 3 -> Sine (build (rand, (depth - 1)))
-       | 4 ->
-           Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 5 ->
-           Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 6 ->
-           Thresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let fixpoint (f,b) =
+  let (b',c) = ((f b), ((f b) <> b)) in wwhile ((b', c), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rdm = rand (0, 7) in
-  match rdm with
-  | 0 -> buildY ()
-  | 1 -> buildX ()
-  | 2 -> Cosine (build (rand, (depth - 1)))
-  | 3 -> Sine (build (rand, (depth - 1)))
-  | 4 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      Thresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let fixpoint (f,b) =
+  let f b = let b' = f b in (b', ((f b) <> b)) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(18,2)-(33,73)
-(18,8)-(18,12)
-(20,6)-(33,73)
-(20,22)-(20,23)
-(20,25)-(20,26)
-(21,6)-(33,73)
+(6,2)-(6,59)
+(6,15)-(6,36)
+(6,16)-(6,21)
+(6,23)-(6,35)
+(6,48)-(6,55)
+(6,49)-(6,51)
+(6,53)-(6,54)
 *)
 
 (* type error slice
-(18,2)-(33,73)
-(18,8)-(18,12)
-(20,16)-(20,20)
-(20,16)-(20,27)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,33)-(3,39)
+(3,33)-(3,47)
+(3,40)-(3,47)
+(3,41)-(3,42)
+(6,40)-(6,46)
+(6,40)-(6,59)
+(6,47)-(6,59)
+(6,48)-(6,55)
 *)

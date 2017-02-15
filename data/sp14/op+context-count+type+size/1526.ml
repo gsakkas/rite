@@ -8,19 +8,19 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr0 -> sin (eval (expr0, x, y))
-  | Cosine expr0 -> cos (eval (expr0, x, y))
-  | Average (expr0,expr1) ->
-      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2
-  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  -> eval (expr2, x, y)
-       | false  -> eval (expr3, x, y));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildX (buildY ())
+  | 2 -> buildY ()
+  | 3 -> buildX ()
+  | 4 -> buildY ()
+  | 5 -> buildX ()
+  | 6 -> buildY ()
+  | 7 -> buildX ();;
 
 
 (* fix
@@ -34,27 +34,41 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr0 -> sin (eval (expr0, x, y))
-  | Cosine expr0 -> cos (eval (expr0, x, y))
-  | Average (expr0,expr1) ->
-      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2.
-  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  -> eval (expr2, x, y)
-       | false  -> eval (expr3, x, y));;
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildSine (buildX ())
+  | 2 -> buildY ()
+  | 3 -> buildX ()
+  | 4 -> buildY ()
+  | 5 -> buildX ()
+  | 6 -> buildY ()
+  | 7 -> buildX ();;
 
 *)
 
 (* changed spans
-(18,56)-(18,57)
+(11,11)-(11,20)
+(17,9)-(17,15)
+(17,17)-(17,23)
+(23,9)-(23,15)
+(23,16)-(23,18)
 *)
 
 (* type error slice
-(18,6)-(18,57)
-(18,56)-(18,57)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,11)-(11,20)
+(13,3)-(13,22)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(17,9)-(17,15)
+(17,9)-(17,27)
+(17,16)-(17,27)
+(17,17)-(17,23)
 *)

@@ -1,105 +1,87 @@
 
-let rec rmzhelp l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
-
-let rec foldr f b x n = if n > 0 then f x (foldr f b x (n - 1)) else b;;
-
-let rec clone x n = foldr (fun y  -> fun m  -> y :: m) [] x n;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (clone 0 ((List.length l1) - (List.length l2))) @ l2
-  else (clone 0 ((List.length l2) - (List.length l1))) @ l1;;
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match x with
-      | (c,d) ->
-          (match a with
-           | (n,listSum) ->
-               (match listSum with
-                | [] ->
-                    if ((n + c) + d) < 10
-                    then (0, ([n] @ [(n + c) + d]))
-                    else ((n + 1), ([n + 1] @ [((n + c) + d) mod 10]))
-                | h::t ->
-                    if ((n + c) + d) < 10
-                    then (0, ([0] @ ([(c + d) + h] @ t)))
-                    else
-                      ((n + 1),
-                        ([((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let f a x = let (x1,x2) = x in ([0], (x1 + x2)) :: a in
+    let base = [(0, 0)] in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec rmzhelp l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
-
-let rec foldr f b x n = if n > 0 then f x (foldr f b x (n - 1)) else b;;
-
-let rec clone x n = foldr (fun y  -> fun m  -> y :: m) [] x n;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (c,d) ->
-          (match a with
-           | (n,listSum) ->
-               (match listSum with
-                | [] ->
-                    if ((n + c) + d) < 10
-                    then (0, ([n] @ [(n + c) + d]))
-                    else ((n + 1), ([n + 1] @ [((n + c) + d) mod 10]))
-                | h::t ->
-                    if ((n + c) + d) < 10
-                    then (0, ([0] @ ([(c + d) + h] @ t)))
-                    else
-                      ((n + 1),
-                        ([((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
+    let base = (0, [0]) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(11,7)-(11,59)
-(12,7)-(12,59)
-(14,19)-(15,77)
-(38,19)-(38,26)
-(38,27)-(38,29)
-(38,30)-(38,32)
+(14,16)-(14,56)
+(14,35)-(14,51)
+(14,35)-(14,56)
+(14,36)-(14,39)
+(14,37)-(14,38)
+(14,41)-(14,50)
+(14,42)-(14,44)
+(14,55)-(14,56)
+(15,4)-(17,51)
+(15,15)-(15,23)
+(15,16)-(15,22)
+(15,20)-(15,21)
+(16,4)-(17,51)
+(17,4)-(17,51)
+(18,2)-(18,12)
+(18,13)-(18,34)
+(18,14)-(18,17)
+(18,18)-(18,33)
+(18,19)-(18,26)
+(18,27)-(18,29)
+(18,30)-(18,32)
 *)
 
 (* type error slice
-(9,3)-(12,61)
-(9,12)-(12,59)
-(9,15)-(12,59)
-(10,2)-(12,59)
-(11,7)-(11,59)
-(11,55)-(11,56)
-(18,2)-(38,34)
-(18,11)-(37,51)
-(38,13)-(38,34)
-(38,14)-(38,17)
-(38,18)-(38,33)
-(38,19)-(38,26)
+(14,4)-(17,51)
+(14,10)-(14,56)
+(14,35)-(14,51)
+(14,35)-(14,56)
+(14,35)-(14,56)
+(14,36)-(14,39)
+(14,55)-(14,56)
+(15,4)-(17,51)
+(15,15)-(15,23)
+(15,15)-(15,23)
+(15,16)-(15,22)
+(15,17)-(15,18)
+(17,18)-(17,32)
+(17,18)-(17,44)
+(17,33)-(17,34)
+(17,35)-(17,39)
 *)

@@ -1,94 +1,111 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let x x = x;;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
 let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then (l1, (List.append (clone 0 (first - sec)) l2))
-    else (l1, l2);;
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x = a + x in
-    let base = List.combine (List.rev l1) (List.rev l2) in
-    let args = List.split base in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+    let base = [1] in
+    let args = [(l1, l2)] in let (_,res) = List.fold_left f base args in res in
+  (removeZero (add (padZero l1 l2)) 0 0 9 9) + (1 0 0 2);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let l1 = [0; 0; 9; 9];;
+
+let l2 = [1; 0; 0; 2];;
+
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
 let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then (l1, (List.append (clone 0 (first - sec)) l2))
-    else (l1, l2);;
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      let (i,j) = x in
-      let (s,t) = a in ((((i + j) + s) / 10), ((((i + j) + s) mod 10) :: t)) in
+    let f a x = x in
     let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
+    let args = [(0, [])] in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
+(2,6)-(2,11)
+(2,10)-(2,11)
+(4,10)-(7,15)
+(5,2)-(7,15)
+(18,2)-(22,56)
+(19,4)-(21,76)
 (19,16)-(19,17)
 (19,16)-(19,21)
-(20,4)-(22,51)
-(20,15)-(20,55)
-(20,43)-(20,51)
-(20,52)-(20,54)
-(21,4)-(22,51)
+(20,4)-(21,76)
+(20,15)-(20,18)
+(20,16)-(20,17)
+(21,4)-(21,76)
 (21,15)-(21,25)
-(21,15)-(21,30)
-(21,26)-(21,30)
-(22,4)-(22,51)
-(22,18)-(22,32)
-(22,18)-(22,44)
-(22,33)-(22,34)
-(22,35)-(22,39)
-(22,40)-(22,44)
-(22,48)-(22,51)
-(23,2)-(23,12)
-(23,2)-(23,34)
-(23,14)-(23,17)
-(23,18)-(23,33)
-(23,19)-(23,26)
-(23,27)-(23,29)
-(23,30)-(23,32)
+(21,17)-(21,19)
+(21,21)-(21,23)
+(21,29)-(21,76)
+(21,43)-(21,69)
+(22,2)-(22,44)
+(22,2)-(22,56)
+(22,15)-(22,18)
+(22,19)-(22,34)
+(22,20)-(22,27)
+(22,28)-(22,30)
+(22,31)-(22,33)
+(22,36)-(22,37)
+(22,38)-(22,39)
+(22,40)-(22,41)
+(22,42)-(22,43)
+(22,47)-(22,56)
+(22,48)-(22,49)
+(22,50)-(22,51)
+(22,52)-(22,53)
+(22,54)-(22,55)
 *)
 
 (* type error slice
-(19,4)-(22,51)
+(15,37)-(15,77)
+(15,37)-(15,77)
+(15,51)-(15,61)
+(15,51)-(15,64)
+(15,70)-(15,77)
+(19,4)-(21,76)
 (19,10)-(19,21)
 (19,16)-(19,17)
 (19,16)-(19,21)
-(21,15)-(21,25)
-(21,15)-(21,30)
-(21,26)-(21,30)
-(22,18)-(22,32)
-(22,18)-(22,44)
-(22,33)-(22,34)
-(22,35)-(22,39)
+(20,4)-(21,76)
+(20,15)-(20,18)
+(21,43)-(21,57)
+(21,43)-(21,69)
+(21,58)-(21,59)
+(21,60)-(21,64)
+(22,2)-(22,44)
+(22,3)-(22,13)
+(22,47)-(22,56)
+(22,48)-(22,49)
 *)

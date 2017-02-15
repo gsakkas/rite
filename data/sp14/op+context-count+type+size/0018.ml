@@ -1,67 +1,36 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Square of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine m -> sin (pi *. (eval (m, x, y)))
-  | Cosine m -> cos (pi *. (eval (m, x, y)))
-  | Square m -> (eval (m, x, y)) ** 2
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y);;
+let fixpoint (f,b) = let f' = ((f b), ((f b) = b)) in wwhile (f', b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Square of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine m -> sin (pi *. (eval (m, x, y)))
-  | Cosine m -> cos (pi *. (eval (m, x, y)))
-  | Square m -> (eval (m, x, y)) ** 2.0
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y);;
+let fixpoint (f,b) = let f b = ((f b), (b = (f b))) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(20,36)-(20,37)
+(4,21)-(4,68)
+(4,30)-(4,50)
+(4,39)-(4,44)
+(4,47)-(4,48)
+(4,62)-(4,64)
 *)
 
 (* type error slice
-(20,16)-(20,37)
-(20,33)-(20,35)
-(20,36)-(20,37)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(4,21)-(4,68)
+(4,30)-(4,50)
+(4,54)-(4,60)
+(4,54)-(4,68)
+(4,61)-(4,68)
+(4,62)-(4,64)
 *)

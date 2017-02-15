@@ -1,29 +1,34 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile func else value;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0
+  then (l1, (List.append (clone 0 a) l2))
+  else List.append (clone 0 (0 - a)) l2;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0
+  then (l1, (List.append (clone 0 a) l2))
+  else ((List.append (clone 0 (0 - a)) l1), l2);;
 
 *)
 
 (* changed spans
-(4,47)-(4,51)
-(4,57)-(4,62)
+(8,7)-(8,39)
+(8,37)-(8,39)
 *)
 
 (* type error slice
-(2,3)-(4,64)
-(2,16)-(4,62)
-(3,2)-(4,62)
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,40)-(4,46)
-(4,40)-(4,51)
-(4,47)-(4,51)
+(6,2)-(8,39)
+(6,2)-(8,39)
+(7,7)-(7,41)
+(8,7)-(8,18)
+(8,7)-(8,39)
 *)

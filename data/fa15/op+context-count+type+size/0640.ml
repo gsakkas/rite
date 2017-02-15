@@ -1,53 +1,123 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile (let n x = (f, (b = (f b))) in (n, b));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [0] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (b,c) = a in
+    let r = bigAdd (mulByDigit x (List.rev l2)) [b] in
+    match r with | [] -> (0, ([0] :: c)) | h::t -> (h, ((List.hd t) :: c)) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [0] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (b,c) = a in
+    let r = bigAdd (mulByDigit x (List.rev l2)) [b] in
+    match r with | [] -> (0, (0 :: c)) | h::t -> (h, ((List.hd t) :: c)) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(6,28)-(6,66)
-(6,39)-(6,55)
-(6,40)-(6,41)
-(6,43)-(6,54)
-(6,44)-(6,45)
-(6,60)-(6,61)
+(34,30)-(34,33)
 *)
 
 (* type error slice
-(3,2)-(4,71)
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,2)-(4,71)
-(4,8)-(4,12)
-(4,51)-(4,57)
-(4,51)-(4,64)
-(4,58)-(4,64)
-(4,59)-(4,60)
-(4,62)-(4,63)
-(6,21)-(6,27)
-(6,21)-(6,66)
-(6,28)-(6,66)
-(6,28)-(6,66)
-(6,35)-(6,55)
-(6,39)-(6,55)
-(6,40)-(6,41)
-(6,48)-(6,53)
-(6,49)-(6,50)
-(6,51)-(6,52)
-(6,59)-(6,65)
-(6,60)-(6,61)
-(6,63)-(6,64)
+(15,12)-(15,60)
+(15,12)-(15,60)
+(15,12)-(15,60)
+(15,12)-(15,60)
+(15,19)-(15,20)
+(15,33)-(15,43)
+(15,33)-(15,45)
+(15,53)-(15,54)
+(15,53)-(15,59)
+(15,53)-(15,59)
+(17,3)-(25,36)
+(17,11)-(25,34)
+(17,14)-(25,34)
+(18,2)-(25,34)
+(25,2)-(25,12)
+(25,2)-(25,34)
+(33,4)-(34,74)
+(33,12)-(33,18)
+(33,12)-(33,51)
+(34,4)-(34,74)
+(34,4)-(34,74)
+(34,4)-(34,74)
+(34,4)-(34,74)
+(34,4)-(34,74)
+(34,10)-(34,11)
+(34,25)-(34,40)
+(34,26)-(34,27)
+(34,29)-(34,39)
+(34,29)-(34,39)
+(34,30)-(34,33)
+(34,37)-(34,38)
+(34,51)-(34,74)
+(34,52)-(34,53)
+(34,55)-(34,73)
+(34,55)-(34,73)
+(34,56)-(34,67)
+(34,57)-(34,64)
+(34,65)-(34,66)
+(34,71)-(34,72)
 *)

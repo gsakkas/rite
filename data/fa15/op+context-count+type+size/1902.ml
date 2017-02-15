@@ -1,40 +1,36 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem seen h then seen else seen @ h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec mulByDigit i l =
+  if (List.length l) = 1
+  then [l * i]
+  else
+    (match l with
+     | [] -> []
+     | z::x::x' ->
+         [(z * i) / 10] @ ((mulByDigit i [((z * i) mod 10) + x]) @ x'));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else seen @ [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec mulByDigit i l =
+  if (List.length l) = 1
+  then let x::x' = l in [x * i]
+  else
+    (match l with
+     | [] -> []
+     | z::x::x' ->
+         [(z * i) / 10] @ ((mulByDigit i [((z * i) mod 10) + x]) @ x'));;
 
 *)
 
 (* changed spans
-(7,32)-(7,36)
-(7,54)-(7,62)
-(7,61)-(7,62)
+(4,7)-(4,14)
+(4,8)-(4,9)
 *)
 
 (* type error slice
-(7,23)-(7,31)
-(7,23)-(7,38)
-(7,32)-(7,36)
-(7,37)-(7,38)
-(7,54)-(7,58)
-(7,54)-(7,62)
-(7,59)-(7,60)
-(7,61)-(7,62)
+(3,5)-(3,20)
+(3,6)-(3,17)
+(3,18)-(3,19)
+(4,8)-(4,9)
+(4,8)-(4,13)
 *)

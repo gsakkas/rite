@@ -1,72 +1,63 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Hoi of expr* expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  let exp = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
-  | Average (a,b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
-  | Times (a,b) -> (exp a) ^ ("*" ^ (exp b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exp a) ^
-           ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
-  | Hoi (a,b) ->
-      "sin(pi*" ^ ((exp a) ^ (")/(" ("cos(pi*" ^ ((exp b) ^ ")")) ")"));;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | hd::tl -> ((((fst x) + (snd x)) + hd) / 10) ::
+          ((((fst x) + (snd x)) + hd) mod 10) :: tl
+      | _ -> (((fst x) + (snd x)) / 10) :: (((fst x) + (snd x)) mod 10) in
+    let base = [] in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Hoi of expr* expr* expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  let exp = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
-  | Average (a,b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
-  | Times (a,b) -> (exp a) ^ ("*" ^ (exp b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exp a) ^
-           ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
-  | Hoi (a,b,c) ->
-      "sin(pi*" ^
-        ((exp a) ^ (")*cos(pi*" ^ ((exp b) ^ (")/(" ^ ((exp c) ^ ")")))));;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | hd::tl -> ((((fst x) + (snd x)) + hd) / 10) ::
+          ((((fst x) + (snd x)) + hd) mod 10) :: tl
+      | _ -> (((fst x) + (snd x)) / 10) :: (((fst x) + (snd x)) mod 10) :: a in
+    let base = [] in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(14,2)-(26,71)
-(26,30)-(26,35)
-(26,36)-(26,65)
-(26,37)-(26,46)
-(26,60)-(26,63)
-(26,66)-(26,69)
+(21,43)-(21,71)
+(22,4)-(23,63)
 *)
 
 (* type error slice
-(26,29)-(26,70)
-(26,30)-(26,35)
+(21,13)-(21,71)
+(21,43)-(21,71)
 *)

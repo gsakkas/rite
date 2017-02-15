@@ -1,22 +1,27 @@
 
-let pipe fs =
-  let f a x = x in let base p = p in List.fold_left f base List.rev fs;;
+let rec sumList xs =
+  match xs with | [] -> 0 | x::[] -> x | (x::y)::[] -> x + (sumList y);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = x in let base p = p in List.fold_left f base (List.rev fs);;
+let rec sumList xs = match xs with | [] -> 0 | x::y -> x + (sumList y);;
 
 *)
 
 (* changed spans
-(3,37)-(3,70)
-(3,59)-(3,67)
+(3,2)-(3,70)
+(3,37)-(3,38)
 *)
 
 (* type error slice
-(3,37)-(3,51)
-(3,37)-(3,70)
-(3,59)-(3,67)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,2)-(3,70)
+(3,24)-(3,25)
+(3,37)-(3,38)
 *)

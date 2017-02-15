@@ -1,72 +1,35 @@
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a (x,y) =
-      match a with
-      | [] -> (x + y) :: a
-      | h::t -> [(x + y) + (h / 10); h mod 10] @ t in
-    let base = [] in
-    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a (x,y) =
-      match a with
-      | [] -> (x + y) :: a
-      | h::t -> [(x + y) + (h / 10); h mod 10] @ t in
-    let base = [] in
-    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
-    let res = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(25,4)-(25,51)
+(7,23)-(7,24)
+(7,23)-(7,41)
 *)
 
 (* type error slice
-(19,4)-(25,51)
-(19,10)-(22,50)
-(21,14)-(21,26)
-(21,25)-(21,26)
-(25,4)-(25,51)
-(25,18)-(25,32)
-(25,18)-(25,44)
-(25,33)-(25,34)
+(7,23)-(7,24)
+(7,23)-(7,41)
+(7,24)-(7,41)
+(7,25)-(7,33)
 *)

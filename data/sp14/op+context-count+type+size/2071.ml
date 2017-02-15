@@ -1,40 +1,81 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let s1 = List.length l1 in
-  let s2 = List.length l2 in
-  if s1 < s2
-  then (((clone 0 (s2 - s1)) @ l1), l2)
-  else if s2 < s1 then (l1, (((clone 0 s1) - s2) @ l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) -> ((eval (var3, x, y)) + (eval (var4, x, y))) / 2
+  | Times (var5,var6) -> (eval (var5, x, y)) * (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let s1 = List.length l1 in
-  let s2 = List.length l2 in
-  if s1 < s2
-  then (((clone 0 (s2 - s1)) @ l1), l2)
-  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) ->
+      ((eval (var3, x, y)) +. (eval (var4, x, y))) /. 2.0
+  | Times (var5,var6) -> (eval (var5, x, y)) *. (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y);;
 
 *)
 
 (* changed spans
-(9,29)-(9,48)
-(9,39)-(9,41)
+(19,27)-(19,70)
+(19,27)-(19,74)
+(19,28)-(19,47)
+(19,73)-(19,74)
+(20,25)-(20,44)
+(20,25)-(20,66)
 *)
 
 (* type error slice
-(2,43)-(2,65)
-(2,48)-(2,65)
-(2,49)-(2,54)
-(9,28)-(9,54)
-(9,29)-(9,48)
-(9,29)-(9,48)
-(9,30)-(9,42)
-(9,31)-(9,36)
-(9,49)-(9,50)
+(17,21)-(17,48)
+(17,28)-(17,47)
+(17,29)-(17,33)
+(19,27)-(19,70)
+(19,27)-(19,70)
+(19,28)-(19,47)
+(19,29)-(19,33)
+(19,50)-(19,69)
+(19,51)-(19,55)
+(20,25)-(20,44)
+(20,25)-(20,66)
+(20,25)-(20,66)
+(20,26)-(20,30)
+(20,47)-(20,66)
+(20,48)-(20,52)
 *)

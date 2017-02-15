@@ -1,34 +1,68 @@
 
-let sqsum xs = let f a x = a ** x in let base = 0 in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + (x * x) in let base = 0 in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(2,15)-(2,77)
-(2,27)-(2,28)
-(2,27)-(2,33)
-(2,29)-(2,31)
-(2,32)-(2,33)
-(2,37)-(2,77)
-(2,48)-(2,49)
+(19,21)-(19,63)
+(19,62)-(19,63)
 *)
 
 (* type error slice
-(2,15)-(2,77)
-(2,21)-(2,33)
-(2,27)-(2,28)
-(2,27)-(2,33)
-(2,29)-(2,31)
-(2,37)-(2,77)
-(2,48)-(2,49)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
-(2,70)-(2,74)
+(14,2)-(24,25)
+(14,2)-(24,25)
+(17,14)-(17,17)
+(17,14)-(17,42)
+(19,21)-(19,59)
+(19,21)-(19,63)
+(19,21)-(19,63)
 *)

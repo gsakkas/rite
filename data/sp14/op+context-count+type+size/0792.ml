@@ -1,124 +1,91 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diffsize = (List.length l1) - (List.length l2) in
+  if diffsize > 0
+  then (l1, (List.append (clone 0 diffsize) l2))
+  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (_,h2::t2) ->
+               let sum = (x1 + x2) + h2 in
+               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
+           | (_,_) -> (0, [0])) in
+    let base = (0, [0]) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildSine e = Sine e;;
+let rec mulByDigit i l =
+  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
 
-let buildSqrt e = Sqrt (Abs e);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> (match rand (1, 2) with | 1 -> buildX | 2 -> buildY)
-  | _ ->
-      let next = build (rand, (depth - 1)) in
-      (match rand (1, 7) with
-       | 1 -> buildSine next
-       | 2 -> buildCosine next
-       | 3 -> buildAverage (next, next)
-       | 4 -> buildTimes (next, next)
-       | 5 -> buildThresh (next, next, next, next)
-       | 6 -> buildSqrt next
-       | 7 -> buildGauss (next, next, next));;
+let bigMul l1 l2 =
+  let f a x = let (pos,total) = a in ((pos + 1), (mulByDigit (10 ** pos) l2)) in
+  let base = (0, [0]) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diffsize = (List.length l1) - (List.length l2) in
+  if diffsize > 0
+  then (l1, (List.append (clone 0 diffsize) l2))
+  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (_,h2::t2) ->
+               let sum = (x1 + x2) + h2 in
+               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
+           | (_,_) -> (0, [0])) in
+    let base = (0, [0]) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildSine e = Sine e;;
+let rec mulByDigit i l =
+  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
 
-let buildSqrt e = Sqrt (Abs e);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> (match rand (1, 2) with | 1 -> VarX | 2 -> VarY)
-  | _ ->
-      let next = build (rand, (depth - 1)) in
-      (match rand (1, 7) with
-       | 1 -> buildSine next
-       | 2 -> buildCosine next
-       | 3 -> buildAverage (next, next)
-       | 4 -> buildTimes (next, next)
-       | 5 -> buildThresh (next, next, next, next)
-       | 6 -> buildSqrt next
-       | 7 -> buildGauss (next, next, next));;
+let bigMul l1 l2 =
+  let f a x =
+    let (pos,total) = a in
+    ((pos + 1), (mulByDigit (int_of_float (10.0 ** (float_of_int pos))) l2)) in
+  let base = (0, [0]) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(28,11)-(28,20)
-(28,16)-(28,20)
-(30,11)-(30,20)
-(30,16)-(30,20)
-(34,40)-(34,46)
-(34,54)-(34,60)
-(36,6)-(44,44)
-(36,17)-(36,42)
+(32,14)-(32,77)
+(32,61)-(32,72)
+(32,62)-(32,64)
+(32,68)-(32,71)
+(33,2)-(34,75)
+(34,2)-(34,75)
+(34,28)-(34,75)
 *)
 
 (* type error slice
-(20,3)-(20,26)
-(20,14)-(20,24)
-(20,18)-(20,24)
-(20,18)-(20,24)
-(20,23)-(20,24)
-(28,3)-(28,22)
-(28,11)-(28,20)
-(32,3)-(44,46)
-(32,15)-(44,44)
-(33,2)-(44,44)
-(33,2)-(44,44)
-(34,9)-(34,61)
-(34,40)-(34,46)
-(36,6)-(44,44)
-(36,6)-(44,44)
-(36,17)-(36,22)
-(36,17)-(36,42)
-(37,6)-(44,44)
-(38,14)-(38,23)
-(38,14)-(38,28)
-(38,24)-(38,28)
+(32,61)-(32,72)
+(32,62)-(32,64)
+(32,65)-(32,67)
 *)

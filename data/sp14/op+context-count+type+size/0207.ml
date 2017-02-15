@@ -1,42 +1,121 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ (sepConcat ^ (";" ^ ((List.map f l) ^ "]")));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      let res1 = eval (e1, x, y) in
+      let res2 = eval (e2, x, y) in
+      let res3 = eval (e3, x, y) in
+      if res1 > res2
+      then ((res1 +. res2) +. res3) /. 3.0
+      else
+        if res2 > res3
+        then ((res1 *. res2) +. res3) /. 2.0
+        else
+          if res1 > res3
+          then
+            ((((atan res1) +. (atan res2)) -. (atan res3)) *. 2.0) /
+              (3.0 *. pi)
+          else eval ((-1.0) *. res3);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      let res1 = eval (e1, x, y) in
+      let res2 = eval (e2, x, y) in
+      let res3 = eval (e3, x, y) in
+      if res1 > res2
+      then ((res1 +. res2) +. res3) /. 3.0
+      else
+        if res2 > res3
+        then ((res1 *. res2) +. res3) /. 2.0
+        else
+          if res1 > res3
+          then
+            ((((atan res1) +. (atan res2)) -. (atan res3)) *. 2.0) /.
+              (3.0 *. pi)
+          else (-1.0) *. res3;;
 
 *)
 
 (* changed spans
-(9,30)-(9,39)
-(9,47)-(9,48)
-(9,50)-(9,64)
-(9,65)-(9,66)
+(42,12)-(43,25)
+(44,15)-(44,19)
+(44,15)-(44,36)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(9,29)-(9,73)
-(9,30)-(9,39)
-(9,40)-(9,41)
-(9,49)-(9,71)
-(9,50)-(9,64)
-(9,51)-(9,59)
-(9,65)-(9,66)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(19,32)-(19,42)
+(37,8)-(44,36)
+(37,8)-(44,36)
+(38,13)-(38,44)
+(40,10)-(44,36)
+(42,12)-(42,66)
+(42,12)-(43,25)
+(42,12)-(43,25)
+(42,12)-(43,25)
+(43,14)-(43,25)
+(44,15)-(44,19)
+(44,15)-(44,36)
+(44,20)-(44,36)
+(44,20)-(44,36)
+(44,21)-(44,27)
+(44,21)-(44,27)
+(44,23)-(44,26)
 *)

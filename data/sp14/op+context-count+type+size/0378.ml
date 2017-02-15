@@ -2,21 +2,31 @@
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = match x with | _ -> a mod 10 | h::t -> (a + h) mod 10 in
-    let base = [] in
-    let args = List.combine l1 l2 in
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec helper acc n lis =
+    match n with | 1 -> lis + acc | _ -> helper (n - 1) (bigAdd l lis) in
+  helper [] i l;;
 
 
 (* fix
@@ -24,72 +34,79 @@ let bigAdd l1 l2 =
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (add1,add2) ->
-          let new_carry = ((carry + add1) + add2) / 10 in
-          let digit = ((carry + add1) + add2) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
     let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec helper i l acc =
+    match i with | 0 -> [0] | 1 -> l | _ -> helper (i - 1) l (bigAdd acc l) in
+  helper i l [0];;
 
 *)
 
 (* changed spans
-(15,16)-(15,69)
-(15,22)-(15,23)
-(15,36)-(15,37)
-(15,36)-(15,44)
-(15,42)-(15,44)
-(15,55)-(15,69)
-(15,56)-(15,57)
-(15,60)-(15,61)
-(15,67)-(15,69)
-(16,4)-(18,51)
-(16,15)-(16,17)
-(17,4)-(18,51)
-(17,15)-(17,27)
-(17,15)-(17,33)
-(17,28)-(17,30)
-(17,31)-(17,33)
-(18,4)-(18,51)
-(18,18)-(18,32)
-(18,18)-(18,44)
-(18,33)-(18,34)
-(18,35)-(18,39)
-(18,40)-(18,44)
-(18,48)-(18,51)
-(19,2)-(19,12)
-(19,2)-(19,34)
-(19,14)-(19,17)
-(19,18)-(19,33)
-(19,19)-(19,26)
-(19,27)-(19,29)
-(19,30)-(19,32)
+(27,17)-(28,70)
+(27,21)-(28,70)
+(27,23)-(28,70)
+(28,4)-(28,70)
+(28,10)-(28,11)
+(28,24)-(28,27)
+(28,24)-(28,33)
+(28,30)-(28,33)
+(28,41)-(28,47)
+(28,41)-(28,70)
+(28,49)-(28,50)
+(28,56)-(28,70)
+(28,64)-(28,65)
+(28,66)-(28,69)
+(29,9)-(29,11)
 *)
 
 (* type error slice
-(15,4)-(18,51)
-(15,10)-(15,69)
-(15,36)-(15,37)
-(15,36)-(15,44)
-(16,4)-(18,51)
-(16,15)-(16,17)
-(18,18)-(18,32)
-(18,18)-(18,44)
-(18,33)-(18,34)
-(18,35)-(18,39)
+(4,3)-(11,47)
+(4,12)-(11,45)
+(4,15)-(11,45)
+(10,16)-(10,35)
+(10,30)-(10,31)
+(10,32)-(10,34)
+(16,3)-(24,36)
+(16,11)-(24,34)
+(16,14)-(24,34)
+(24,18)-(24,33)
+(24,19)-(24,26)
+(24,30)-(24,32)
+(27,2)-(29,15)
+(27,17)-(28,70)
+(27,21)-(28,70)
+(27,23)-(28,70)
+(28,4)-(28,70)
+(28,24)-(28,27)
+(28,24)-(28,33)
+(28,41)-(28,47)
+(28,41)-(28,70)
+(28,48)-(28,55)
+(28,56)-(28,70)
+(28,57)-(28,63)
+(28,66)-(28,69)
+(29,2)-(29,8)
+(29,2)-(29,15)
+(29,9)-(29,11)
 *)

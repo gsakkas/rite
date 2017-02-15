@@ -1,36 +1,39 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((f :: ((f b) = b)), b);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ sep in
+      let base = "" in let l = sepConcat sep t in List.fold_left f base l;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ sep in
+      let base = "" in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(6,29)-(6,47)
-(6,30)-(6,31)
-(6,35)-(6,46)
+(7,31)-(7,40)
+(7,31)-(7,46)
+(7,41)-(7,44)
 *)
 
 (* type error slice
-(2,3)-(4,16)
-(2,16)-(4,14)
-(4,9)-(4,14)
-(4,10)-(4,11)
-(6,21)-(6,27)
-(6,21)-(6,51)
-(6,28)-(6,51)
-(6,29)-(6,47)
-(6,29)-(6,47)
-(6,35)-(6,46)
+(2,3)-(7,75)
+(2,18)-(7,73)
+(2,22)-(7,73)
+(3,2)-(7,73)
+(4,10)-(4,12)
+(7,23)-(7,73)
+(7,31)-(7,40)
+(7,31)-(7,46)
+(7,50)-(7,64)
+(7,50)-(7,73)
+(7,72)-(7,73)
 *)

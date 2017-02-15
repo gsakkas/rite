@@ -1,42 +1,70 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let stringOfList f l = "[" ^ (sepConcat ^ (";" ^ ((List.map f l) ^ "]")));;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | ([],[]) ->
+          (match x with
+           | (h1,h2) -> ([(h1 + h2) / 10], [(h1 + h2) mod 10])
+           | (list1,list2) -> (list1, list2)) in
+    let base = ([], []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | ([],[]) ->
+          (match x with
+           | (h1,h2) -> ([(h1 + h2) / 10], [(h1 + h2) mod 10])
+           | (list1,list2) -> ([1], [1])) in
+    let base = ([], []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,30)-(9,39)
-(9,47)-(9,48)
-(9,50)-(9,64)
-(9,65)-(9,66)
+(19,31)-(19,36)
+(19,38)-(19,43)
+(20,4)-(22,51)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(9,29)-(9,73)
-(9,30)-(9,39)
-(9,40)-(9,41)
-(9,49)-(9,71)
-(9,50)-(9,64)
-(9,51)-(9,59)
-(9,65)-(9,66)
+(17,10)-(19,45)
+(17,10)-(19,45)
+(17,10)-(19,45)
+(17,10)-(19,45)
+(18,24)-(18,62)
+(18,26)-(18,35)
+(18,32)-(18,34)
+(18,43)-(18,61)
+(19,30)-(19,44)
+(19,38)-(19,43)
 *)

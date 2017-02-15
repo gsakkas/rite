@@ -1,39 +1,69 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let n2 = [n mod 10] @ ((digitsOfInt n) / 10) in listReverse n2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (a,b,c,d) -> eval (a, x, y)
+  | Times (a,b) -> (eval (a, x, y)) * (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) * (eval (b, x, y))) / 2
+  | Cosine a -> cos (pi * (float_of_int eval (a, x, y)))
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | VarY  -> x
+  | VarX  -> y;;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let n2 = [n mod 10] @ (digitsOfInt (n / 10)) in listReverse n2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (a,b,c,d) -> eval (a, x, y)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
+  | Cosine a -> cos (pi ** (eval (a, x, y)))
+  | Sine a -> sin (pi ** (eval (a, x, y)))
+  | VarY  -> x
+  | VarX  -> y;;
 
 *)
 
 (* changed spans
-(8,30)-(8,52)
-(8,44)-(8,45)
+(16,19)-(16,54)
+(17,21)-(17,58)
+(17,21)-(17,62)
+(17,22)-(17,38)
+(17,61)-(17,62)
+(18,20)-(18,56)
+(18,21)-(18,23)
+(18,27)-(18,39)
+(18,40)-(18,44)
+(19,18)-(19,41)
+(19,19)-(19,21)
 *)
 
 (* type error slice
-(5,3)-(8,73)
-(5,20)-(8,71)
-(6,2)-(8,71)
-(7,7)-(7,9)
-(8,17)-(8,52)
-(8,28)-(8,29)
-(8,30)-(8,52)
-(8,30)-(8,52)
-(8,31)-(8,46)
-(8,32)-(8,43)
+(18,26)-(18,55)
+(18,27)-(18,39)
+(19,14)-(19,17)
+(19,14)-(19,41)
+(19,18)-(19,41)
 *)

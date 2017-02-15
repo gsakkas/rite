@@ -1,52 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2;;
+let rec digitsOfInt n =
+  let rec digitsOfIntHelper n result =
+    if n > 0
+    then (digitsOfIntHelper (n / 10) (n mod 10)) :: result
+    else result in
+  digitsOfIntHelper n [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.;;
+let rec digitsOfInt n =
+  let rec digitsOfIntHelper n result =
+    if n > 0
+    then digitsOfIntHelper (n / 10) ((n mod 10) :: result)
+    else result in
+  digitsOfIntHelper n [];;
 
 *)
 
 (* changed spans
-(19,67)-(19,68)
+(5,9)-(5,58)
+(5,37)-(5,47)
 *)
 
 (* type error slice
-(19,23)-(19,68)
-(19,67)-(19,68)
+(3,2)-(7,24)
+(3,28)-(6,15)
+(3,30)-(6,15)
+(5,9)-(5,48)
+(5,9)-(5,58)
+(5,10)-(5,27)
+(5,37)-(5,47)
+(5,52)-(5,58)
+(7,2)-(7,19)
+(7,2)-(7,24)
+(7,22)-(7,24)
 *)

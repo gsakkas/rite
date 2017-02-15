@@ -1,32 +1,30 @@
 
-let pipe fs =
-  let f a x g = (g x) a in let base g = g in List.fold_left f base fs;;
+let sqsum xs = let f a x = a * a in let base = [] in List.fold_left f base xs;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x g = x (a g) in let base g = g in List.fold_left f base fs;;
+let sqsum xs =
+  let f a x = a * a in let base = f 2 xs in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(3,16)-(3,21)
-(3,17)-(3,18)
-(3,22)-(3,23)
-(3,27)-(3,69)
+(2,15)-(2,77)
+(2,36)-(2,77)
+(2,47)-(2,49)
+(2,53)-(2,77)
 *)
 
 (* type error slice
-(3,2)-(3,69)
-(3,8)-(3,23)
-(3,10)-(3,23)
-(3,12)-(3,23)
-(3,16)-(3,21)
-(3,16)-(3,23)
-(3,17)-(3,18)
-(3,22)-(3,23)
-(3,45)-(3,59)
-(3,45)-(3,69)
-(3,60)-(3,61)
+(2,15)-(2,77)
+(2,21)-(2,32)
+(2,27)-(2,28)
+(2,27)-(2,32)
+(2,36)-(2,77)
+(2,47)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
 *)

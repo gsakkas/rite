@@ -1,59 +1,57 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
 let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (let y = clone l1 ((List.length l1) - (List.length l2)) in (y, l2))
-    else (let z = clone l2 ((List.length l2) - (List.length l1)) in (z, l1));;
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b then List.append ((clone 0 b) - a) l1;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
 let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then
-      (let y = clone (List.hd l1) ((List.length l1) - (List.length l2)) in
-       (y, l2))
-    else
-      (let z = clone (List.hd l2) ((List.length l2) - (List.length l1)) in
-       (z, l1));;
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(9,9)-(9,76)
-(9,24)-(9,26)
-(10,9)-(10,76)
-(10,24)-(10,26)
-(10,69)-(10,70)
-(10,72)-(10,74)
+(10,2)-(10,48)
+(10,16)-(10,48)
+(10,28)-(10,45)
+(10,38)-(10,39)
 *)
 
 (* type error slice
-(2,43)-(2,44)
-(2,43)-(2,65)
-(2,43)-(2,65)
-(2,48)-(2,65)
-(2,49)-(2,54)
-(2,55)-(2,56)
-(5,2)-(10,76)
-(5,2)-(10,76)
-(6,7)-(6,15)
-(6,8)-(6,10)
-(8,4)-(10,76)
-(9,9)-(9,76)
-(9,9)-(9,76)
-(9,18)-(9,23)
-(9,18)-(9,64)
-(9,24)-(9,26)
-(9,68)-(9,75)
-(9,69)-(9,70)
+(2,3)-(6,18)
+(2,14)-(6,16)
+(2,16)-(6,16)
+(3,2)-(6,16)
+(4,2)-(6,16)
+(5,4)-(5,56)
+(5,4)-(5,56)
+(5,18)-(5,23)
+(5,29)-(5,35)
+(5,29)-(5,56)
+(5,36)-(5,48)
+(5,42)-(5,47)
+(6,2)-(6,8)
+(6,2)-(6,16)
+(10,16)-(10,27)
+(10,16)-(10,48)
+(10,28)-(10,45)
+(10,28)-(10,45)
+(10,29)-(10,40)
+(10,30)-(10,35)
 *)

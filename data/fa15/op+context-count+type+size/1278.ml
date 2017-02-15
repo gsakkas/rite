@@ -1,69 +1,37 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Zero;;
+let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Zero  -> 0;;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (clone 0 (len1 - l2)) @ l2
+  else (clone 0 (len2 - len1)) @ l1;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Zero;;
+let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Zero  -> 0.0;;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (l1, ((clone 0 (len1 - len2)) @ l2))
+  else (((clone 0 (len2 - len1)) @ l1), l2);;
 
 *)
 
 (* changed spans
-(26,13)-(26,14)
+(8,7)-(8,33)
+(8,24)-(8,26)
+(9,7)-(9,35)
 *)
 
 (* type error slice
-(15,2)-(26,14)
-(15,2)-(26,14)
-(18,15)-(18,18)
-(18,15)-(18,44)
-(26,13)-(26,14)
+(6,13)-(6,24)
+(6,13)-(6,27)
+(6,25)-(6,27)
+(8,16)-(8,27)
+(8,24)-(8,26)
 *)

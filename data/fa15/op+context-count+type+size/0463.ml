@@ -1,35 +1,30 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
-
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let rec additivePersistence n =
-  if n < 10 then n else additivePersistence sumList digitsOfInt n;;
+let sqsum xs =
+  let f a x x = (x * x) + a in let base = [] in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
-
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let rec additivePersistence n =
-  if n < 10 then n else additivePersistence (sumList (digitsOfInt n));;
+let sqsum xs =
+  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(8,24)-(8,65)
-(8,44)-(8,51)
-(8,52)-(8,63)
+(3,12)-(3,27)
+(3,31)-(3,72)
+(3,42)-(3,44)
+(3,48)-(3,72)
 *)
 
 (* type error slice
-(7,3)-(8,67)
-(7,28)-(8,65)
-(8,2)-(8,65)
-(8,24)-(8,43)
-(8,24)-(8,65)
+(3,2)-(3,72)
+(3,8)-(3,27)
+(3,10)-(3,27)
+(3,12)-(3,27)
+(3,16)-(3,27)
+(3,26)-(3,27)
+(3,48)-(3,62)
+(3,48)-(3,72)
+(3,63)-(3,64)
 *)

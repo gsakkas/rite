@@ -1,69 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2.0
-  | Times (a,b) -> (eval (a, x, y)) /. (eval (b, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      let x1 = eval (a, x, y) in
-      let x2 = eval (b, x, y) in
-      if x1 < x2 then eval (a_less, x, y) else eval (b_less, x, y);;
+let stringOfList f l = sepConcat "; " List.map f l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) /. (eval (b, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      let x1 = eval (a, x, y) in
-      let x2 = eval (b, x, y) in
-      if x1 < x2 then eval (a_less, x, y) else eval (b_less, x, y);;
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(19,21)-(19,65)
+(9,23)-(9,50)
+(9,38)-(9,46)
 *)
 
 (* type error slice
-(14,2)-(24,66)
-(14,2)-(24,66)
-(17,14)-(17,17)
-(17,14)-(17,42)
-(19,21)-(19,59)
-(19,21)-(19,65)
-(19,21)-(19,65)
-(19,21)-(19,65)
-(19,62)-(19,65)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(4,10)-(4,12)
+(9,23)-(9,32)
+(9,23)-(9,50)
 *)

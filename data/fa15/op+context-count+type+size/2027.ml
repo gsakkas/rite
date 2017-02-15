@@ -1,100 +1,52 @@
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+let helper (x,r) = let m = x r in match m with | r -> (r, false);;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if ((a1 + x1) + x2) >= 10
-      then (1, ((((a1 + x1) + x2) - 10) :: a2))
-      else (0, (((a1 + x1) + x2) :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then 0 else if i = 1 then l else mulByDigit (i - 1) (bigAdd l l);;
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
 
 
 (* fix
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+let helper (f,b) = let f b = let x = f b in (x, (x != b)) in f;;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if ((a1 + x1) + x2) >= 10
-      then (1, ((((a1 + x1) + x2) - 10) :: a2))
-      else (0, (((a1 + x1) + x2) :: a2)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else mulByDigit (i - 1) (bigAdd l l);;
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
 
 *)
 
 (* changed spans
-(26,16)-(26,17)
+(2,12)-(2,64)
+(2,19)-(2,64)
+(2,27)-(2,28)
+(2,27)-(2,30)
+(2,29)-(2,30)
+(2,34)-(2,64)
+(2,40)-(2,41)
+(2,54)-(2,64)
+(2,55)-(2,56)
+(2,58)-(2,63)
+(4,16)-(5,72)
 *)
 
 (* type error slice
-(5,3)-(7,76)
-(5,12)-(7,74)
-(7,17)-(7,39)
-(7,34)-(7,35)
-(7,36)-(7,38)
-(10,2)-(10,69)
-(10,2)-(10,69)
-(10,8)-(10,9)
-(10,36)-(10,69)
-(10,36)-(10,69)
-(10,50)-(10,60)
-(10,50)-(10,62)
-(10,68)-(10,69)
-(12,3)-(23,36)
-(12,11)-(23,34)
-(12,14)-(23,34)
-(13,2)-(23,34)
-(23,2)-(23,12)
-(23,2)-(23,34)
-(23,18)-(23,33)
-(23,19)-(23,26)
-(23,27)-(23,29)
-(25,3)-(26,77)
-(25,19)-(26,75)
-(25,21)-(26,75)
-(26,2)-(26,75)
-(26,2)-(26,75)
-(26,16)-(26,17)
-(26,23)-(26,75)
-(26,23)-(26,75)
-(26,37)-(26,38)
-(26,44)-(26,54)
-(26,44)-(26,75)
-(26,63)-(26,75)
-(26,64)-(26,70)
-(26,71)-(26,72)
+(2,3)-(2,66)
+(2,12)-(2,64)
+(2,19)-(2,64)
+(2,34)-(2,64)
+(2,54)-(2,64)
+(5,14)-(5,15)
+(5,14)-(5,17)
+(5,59)-(5,65)
+(5,59)-(5,72)
+(5,66)-(5,72)
+(5,67)-(5,68)
+(7,21)-(7,27)
+(7,21)-(7,48)
+(7,28)-(7,48)
+(7,29)-(7,44)
+(7,30)-(7,36)
 *)

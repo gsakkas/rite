@@ -1,37 +1,54 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x x' = a ^ (x' ^ x) in
-      let base = h in let l = sl in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> x
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = sl in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> x
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(6,16)-(6,33)
-(6,26)-(6,28)
+(19,67)-(19,68)
 *)
 
 (* type error slice
-(6,6)-(7,59)
-(6,12)-(6,33)
-(6,14)-(6,33)
-(6,16)-(6,33)
-(6,21)-(6,22)
-(6,21)-(6,33)
-(6,23)-(6,24)
-(7,36)-(7,50)
-(7,36)-(7,59)
-(7,51)-(7,52)
+(19,23)-(19,68)
+(19,67)-(19,68)
 *)

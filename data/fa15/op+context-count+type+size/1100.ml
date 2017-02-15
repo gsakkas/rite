@@ -1,21 +1,22 @@
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ (n mod 10);;
+  if n < 0 then print_int 0 else print_int digitsOfInt (n / 10);;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+  if n < 0 then print_int 0 else print_int (n / 10); digitsOfInt (n / 10);;
 
 *)
 
 (* changed spans
-(3,50)-(3,60)
+(3,2)-(3,63)
+(3,33)-(3,63)
+(3,43)-(3,54)
 *)
 
 (* type error slice
-(3,25)-(3,60)
-(3,48)-(3,49)
-(3,50)-(3,60)
+(3,33)-(3,42)
+(3,33)-(3,63)
 *)

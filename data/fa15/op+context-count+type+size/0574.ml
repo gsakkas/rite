@@ -1,65 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval e))
-  | Cosine e -> cos (pi *. (eval e))
-  | Average (e1,e2) -> ((eval e1) +. (eval e2)) /. 2;;
+let fixpoint (f,b) = wwhile ((let n z = (f, (b = (f b))) in n), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
+let fixpoint (f,b) =
+  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
 
 *)
 
 (* changed spans
-(17,31)-(17,32)
-(18,16)-(18,36)
-(18,33)-(18,34)
-(19,23)-(19,52)
-(19,30)-(19,32)
-(19,38)-(19,42)
-(19,43)-(19,45)
-(19,51)-(19,52)
+(6,28)-(6,66)
+(6,29)-(6,62)
+(6,36)-(6,56)
+(6,40)-(6,56)
+(6,41)-(6,42)
+(6,44)-(6,55)
+(6,45)-(6,46)
+(6,49)-(6,54)
+(6,60)-(6,61)
 *)
 
 (* type error slice
-(13,3)-(19,54)
-(13,14)-(19,52)
-(14,2)-(19,52)
-(17,25)-(17,33)
-(17,26)-(17,30)
-(17,31)-(17,32)
-(19,23)-(19,52)
-(19,51)-(19,52)
+(3,2)-(4,71)
+(3,13)-(3,14)
+(3,13)-(3,16)
+(4,2)-(4,71)
+(4,8)-(4,12)
+(4,51)-(4,57)
+(4,51)-(4,64)
+(4,58)-(4,64)
+(4,59)-(4,60)
+(4,62)-(4,63)
+(6,21)-(6,27)
+(6,21)-(6,66)
+(6,28)-(6,66)
+(6,29)-(6,62)
+(6,29)-(6,62)
+(6,36)-(6,56)
+(6,40)-(6,56)
+(6,41)-(6,42)
+(6,49)-(6,54)
+(6,50)-(6,51)
+(6,52)-(6,53)
+(6,60)-(6,61)
+(6,64)-(6,65)
 *)

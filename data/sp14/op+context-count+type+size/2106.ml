@@ -1,29 +1,55 @@
 
-let rec help n = if n > 0 then (n mod 10) + (help (n / 10)) else 0;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
 
-let rec additivePersistence n =
-  if n > 0 then 1 + (additivePersistence help n) else 0;;
+let fixpoint (f,b) =
+  wwhile
+    ((let (x,y) = f b in
+      if (x <> b) && (y = true) then (x, y) else if x = b then (x, false)),
+      b);;
 
 
 (* fix
 
-let rec help n = if n > 0 then (n mod 10) + (help (n / 10)) else 0;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
 
-let rec additivePersistence n =
-  if n > 0 then 1 + (additivePersistence (help n)) else 0;;
+let fixpoint (f,b) =
+  wwhile ((let a x = let xx = f x in (xx, (x <> b)) in a), b);;
 
 *)
 
 (* changed spans
-(5,20)-(5,48)
-(5,41)-(5,45)
+(7,5)-(8,74)
+(7,18)-(7,21)
+(7,20)-(7,21)
+(8,6)-(8,73)
+(8,9)-(8,17)
+(8,9)-(8,31)
+(8,15)-(8,16)
+(8,21)-(8,31)
+(8,22)-(8,23)
+(8,26)-(8,30)
+(8,38)-(8,39)
+(8,41)-(8,42)
+(8,49)-(8,73)
+(8,52)-(8,53)
 *)
 
 (* type error slice
-(4,3)-(5,57)
-(4,28)-(5,55)
-(5,2)-(5,55)
-(5,16)-(5,48)
-(5,20)-(5,48)
-(5,21)-(5,40)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,32)-(3,38)
+(3,32)-(3,45)
+(3,39)-(3,45)
+(3,40)-(3,41)
+(6,2)-(6,8)
+(6,2)-(9,8)
+(7,4)-(9,8)
+(7,5)-(8,74)
+(8,6)-(8,73)
+(8,49)-(8,73)
+(8,49)-(8,73)
+(8,49)-(8,73)
+(8,63)-(8,73)
 *)

@@ -1,27 +1,29 @@
 
-let rec assoc (d,k,l) =
-  match (d, k, l) with
-  | (ki,vi::t) -> if k = ki then vi else assoc (d, k, t)
-  | [] -> d;;
+let pipe fs = let f a x = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | (ki,vi)::t -> if k = ki then vi else assoc (d, k, t)
-  | [] -> d;;
+let pipe fs =
+  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,2)-(5,11)
-(3,8)-(3,17)
-(3,9)-(3,10)
-(3,12)-(3,13)
+(2,14)-(2,75)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,75)
+(2,42)-(2,47)
 *)
 
 (* type error slice
-(3,2)-(5,11)
-(3,8)-(3,17)
+(2,14)-(2,75)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,51)-(2,65)
+(2,51)-(2,75)
+(2,66)-(2,67)
 *)

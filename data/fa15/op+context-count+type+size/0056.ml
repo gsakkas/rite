@@ -1,28 +1,25 @@
 
 let rec digitsOfInt n =
-  let return = [] in if n < 0 then return else digitsOfInt - 1;;
+  let return = [] in
+  if n <> 0 then (n mod 10) :: (return digitsOfInt 0) else return;;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  let return = [] in if n < 0 then return else digitsOfInt 1;;
+  let return = [] in if n <> 0 then (n mod 10) :: return else return;;
 
 *)
 
 (* changed spans
-(3,47)-(3,62)
+(4,31)-(4,53)
+(4,39)-(4,50)
+(4,51)-(4,52)
 *)
 
 (* type error slice
-(2,3)-(3,64)
-(2,20)-(3,62)
-(3,2)-(3,62)
+(3,2)-(4,65)
 (3,15)-(3,17)
-(3,21)-(3,62)
-(3,21)-(3,62)
-(3,35)-(3,41)
-(3,47)-(3,58)
-(3,47)-(3,62)
-(3,47)-(3,62)
+(4,31)-(4,53)
+(4,32)-(4,38)
 *)

@@ -1,90 +1,62 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Thresh2 of expr* expr
-  | Thresh3 of expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y
-    | Thresh2 (p1,p2) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y) then 1 else 0
-    | Thresh3 (p1,p2) ->
-        if (evalhelper p1 x y) > (evalhelper p2 x y) then 0 else (-1) in
-  evalhelper e x y;;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ [l1]), l2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Thresh2 of expr* expr
-  | Thresh3 of expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y
-    | Thresh2 (p1,p2) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y) then 1.0 else 0.0
-    | Thresh3 (p1,p2) ->
-        if (evalhelper p1 x y) > (evalhelper p2 x y) then 0.0 else (-1.0) in
-  evalhelper e x y;;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(29,58)-(29,59)
-(29,65)-(29,66)
-(31,8)-(31,69)
-(31,58)-(31,59)
-(31,65)-(31,69)
-(32,2)-(32,18)
+(12,66)-(12,70)
 *)
 
 (* type error slice
-(17,4)-(31,69)
-(17,4)-(31,69)
-(17,4)-(31,69)
-(20,17)-(20,20)
-(20,17)-(20,48)
-(29,8)-(29,66)
-(29,58)-(29,59)
-(31,8)-(31,69)
-(31,58)-(31,59)
+(2,3)-(7,25)
+(2,14)-(7,23)
+(2,16)-(7,23)
+(3,2)-(7,23)
+(6,16)-(6,18)
+(6,16)-(6,47)
+(6,16)-(6,47)
+(6,22)-(6,47)
+(6,23)-(6,34)
+(6,35)-(6,37)
+(7,2)-(7,13)
+(7,2)-(7,23)
+(7,14)-(7,15)
+(11,19)-(11,66)
+(11,20)-(11,25)
+(11,26)-(11,27)
+(12,15)-(12,71)
+(12,16)-(12,63)
+(12,17)-(12,22)
+(12,45)-(12,61)
+(12,46)-(12,57)
+(12,58)-(12,60)
+(12,64)-(12,65)
+(12,66)-(12,70)
+(12,66)-(12,70)
+(12,67)-(12,69)
 *)

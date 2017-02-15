@@ -1,84 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Factorial of expr
-  | Sum3 of expr* expr* expr;;
-
-let rec factorial x acc =
-  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | Factorial e' -> factorial ((eval (e', x, y)), 1)
-  | Sum3 (e1,e2,e3) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
+  cloneHelper x n [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Factorial of expr
-  | Sum3 of expr* expr* expr;;
-
-let rec factorial x acc =
-  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | Factorial e' -> factorial (eval (e', x, y)) 1.0
-  | Sum3 (e1,e2,e3) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
+let rec clone x n =
+  let rec cloneHelper (x,n,acc) =
+    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
+  cloneHelper (x, n, []);;
 
 *)
 
 (* changed spans
-(30,20)-(30,52)
-(30,30)-(30,52)
-(30,50)-(30,51)
+(3,22)-(4,63)
+(3,24)-(4,63)
+(3,26)-(4,63)
+(5,2)-(5,20)
+(5,14)-(5,15)
 *)
 
 (* type error slice
-(14,27)-(14,36)
-(14,27)-(14,58)
-(14,37)-(14,47)
-(30,20)-(30,29)
-(30,20)-(30,52)
-(30,30)-(30,52)
+(3,2)-(5,20)
+(3,22)-(4,63)
+(4,4)-(4,63)
+(4,4)-(4,63)
+(4,18)-(4,21)
+(4,27)-(4,38)
+(4,27)-(4,63)
+(4,39)-(4,63)
+(4,52)-(4,62)
+(4,52)-(4,62)
+(4,52)-(4,62)
+(4,53)-(4,54)
+(4,58)-(4,61)
+(5,2)-(5,13)
+(5,2)-(5,20)
 *)

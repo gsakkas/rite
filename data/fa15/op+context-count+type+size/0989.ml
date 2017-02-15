@@ -1,37 +1,30 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c) -> if c = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (let b = f b in ((b, (b != b)), b));;
+let rec mulByDigit i l =
+  match l with | [] -> [] | h::t -> [h * i] @ (0 * (mulByDigit i t));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (b',c) -> if c = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((fun x  -> let b = f x in (b, (b != x))), b);;
+let rec mulByDigit i l =
+  match l with | [] -> [] | h::t -> [h * i] @ (mulByDigit i t);;
 
 *)
 
 (* changed spans
-(5,28)-(5,63)
-(5,37)-(5,40)
-(5,39)-(5,40)
-(5,44)-(5,62)
-(5,55)-(5,56)
+(3,46)-(3,68)
+(3,47)-(3,48)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,46)-(3,52)
-(3,46)-(3,60)
-(3,53)-(3,60)
-(3,54)-(3,55)
-(5,21)-(5,27)
-(5,21)-(5,63)
-(5,28)-(5,63)
-(5,44)-(5,62)
-(5,45)-(5,58)
+(2,3)-(3,70)
+(2,19)-(3,68)
+(2,21)-(3,68)
+(3,2)-(3,68)
+(3,23)-(3,25)
+(3,36)-(3,68)
+(3,44)-(3,45)
+(3,46)-(3,68)
+(3,46)-(3,68)
+(3,51)-(3,67)
+(3,52)-(3,62)
 *)

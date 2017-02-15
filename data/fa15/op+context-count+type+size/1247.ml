@@ -1,102 +1,87 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi * (eval e))
-  | Cosine e -> cos (pi * (eval e))
-  | Average (e1,e2) -> ((eval e1) + (eval e2)) / 2
-  | Times (e1,e2) -> (eval e1) * (eval e2)
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval e1) < (eval e2) then eval e1less else eval e2less;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else mulByDigit ((i - 1) (bigAdd l l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e1less, x, y)
-      else eval (e2less, x, y);;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = if i = 0 then [0] else bigAdd l l;;
 
 *)
 
 (* changed spans
-(17,18)-(17,33)
-(17,30)-(17,31)
-(18,16)-(18,35)
-(18,20)-(18,35)
-(18,32)-(18,33)
-(19,23)-(19,46)
-(19,23)-(19,50)
-(19,24)-(19,33)
-(19,30)-(19,32)
-(19,36)-(19,45)
-(19,42)-(19,44)
-(19,49)-(19,50)
-(20,21)-(20,30)
-(20,21)-(20,42)
-(20,27)-(20,29)
-(20,33)-(20,42)
-(20,39)-(20,41)
-(22,9)-(22,18)
-(22,9)-(22,30)
-(22,10)-(22,14)
-(22,15)-(22,17)
-(22,21)-(22,30)
-(22,22)-(22,26)
-(22,27)-(22,29)
-(22,36)-(22,40)
-(22,36)-(22,47)
-(22,41)-(22,47)
-(22,53)-(22,57)
-(22,53)-(22,64)
-(22,58)-(22,64)
+(31,25)-(31,35)
+(31,25)-(31,58)
+(31,36)-(31,58)
+(31,37)-(31,44)
+(31,38)-(31,39)
+(31,42)-(31,43)
+(31,46)-(31,52)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(14,2)-(22,64)
-(14,2)-(22,64)
-(17,14)-(17,17)
-(17,14)-(17,33)
-(17,18)-(17,33)
-(17,18)-(17,33)
-(17,19)-(17,21)
-(18,16)-(18,19)
-(18,16)-(18,35)
-(18,20)-(18,35)
-(18,20)-(18,35)
-(18,21)-(18,23)
-(19,23)-(19,50)
+(30,3)-(31,60)
+(30,19)-(31,58)
+(30,21)-(31,58)
+(31,2)-(31,58)
+(31,25)-(31,35)
+(31,25)-(31,58)
+(31,36)-(31,58)
+(31,37)-(31,44)
 *)

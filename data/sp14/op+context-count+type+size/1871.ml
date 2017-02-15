@@ -1,26 +1,36 @@
 
-let sqsum xs =
-  let f a x = a + (x ** 2) in let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+
+let fixpoint (f,b) = wwhile (b, b);;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (int_of_float ((float_of_int x) ** 2.0)) in
-  let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+
+let fixpoint (f,b) = wwhile ((fun x  -> let y = f x in (y, (y != x))), b);;
 
 *)
 
 (* changed spans
-(3,18)-(3,26)
-(3,19)-(3,20)
-(3,24)-(3,25)
-(3,30)-(3,70)
-(3,41)-(3,42)
+(5,29)-(5,30)
+(5,32)-(5,33)
 *)
 
 (* type error slice
-(3,18)-(3,26)
-(3,21)-(3,23)
-(3,24)-(3,25)
+(3,2)-(3,74)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,59)-(3,65)
+(3,59)-(3,74)
+(3,66)-(3,74)
+(3,67)-(3,68)
+(3,70)-(3,73)
+(5,21)-(5,27)
+(5,21)-(5,34)
+(5,28)-(5,34)
+(5,29)-(5,30)
+(5,32)-(5,33)
 *)

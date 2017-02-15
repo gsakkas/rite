@@ -1,78 +1,101 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (h::t,b) = a in
-      if (x + h) > 9
-      then
-        let asd2 = (x + h) - 10 in
-        let h2::t2 = t in let asd3 = (h2 + 1) :: t2 in (asd3, (asd2 :: b))
-      else
-        if (t = []) && ((x + h) > 9)
-        then (let asd2 = (x + h) - 10 in ([], (1 :: asd2 :: b)))
-        else (t, ((x + h) :: b)) in
-    let base = (((List.rev 0) :: l1), []) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+      match x with
+      | ([],[]) ->
+          let (carry,num) = a in
+          (0, (if carry > 0 then carry :: num else num))
+      | (l1,l2) ->
+          let (carry,num) = a in
+          let addit = ((List.hd l1) + (List.hd l2)) + carry in
+          ((if addit > 10 then addit mod 10 else 0), ((addit / 10) :: num)) in
+    let base = (0, 0) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (h::t,b) = a in
-      if (x + h) > 9
-      then
-        let asd2 = (x + h) - 10 in
-        let h2::t2 = t in let asd3 = (h2 + 1) :: t2 in (asd3, (asd2 :: b))
-      else
-        if (t = []) && ((x + h) > 9)
-        then (let asd2 = (x + h) - 10 in ([], (1 :: asd2 :: b)))
-        else (t, ((x + h) :: b)) in
-    let base = ((List.rev (0 :: l1)), []) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+      let (carry,num) = a in
+      let (l1',l2') = x in
+      let addit = (l1' + l2') + carry in
+      ((if addit > 10 then addit mod 10 else 0), ((addit / 10) :: num)) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(29,16)-(29,36)
-(29,27)-(29,28)
+(14,6)-(21,75)
+(14,12)-(14,13)
+(16,10)-(17,56)
+(16,28)-(16,29)
+(17,10)-(17,56)
+(17,11)-(17,12)
+(17,14)-(17,55)
+(17,18)-(17,23)
+(17,18)-(17,27)
+(17,26)-(17,27)
+(17,33)-(17,38)
+(17,33)-(17,45)
+(17,42)-(17,45)
+(17,51)-(17,54)
+(19,10)-(21,75)
+(20,10)-(21,75)
+(20,22)-(20,59)
+(20,23)-(20,35)
+(20,24)-(20,31)
+(20,32)-(20,34)
+(20,38)-(20,50)
+(20,39)-(20,46)
+(20,47)-(20,49)
+(20,54)-(20,59)
+(22,4)-(24,51)
+(22,19)-(22,20)
+(23,4)-(24,51)
+(23,15)-(23,33)
+(24,4)-(24,51)
+(24,18)-(24,32)
+(24,18)-(24,44)
 *)
 
 (* type error slice
-(29,17)-(29,29)
-(29,18)-(29,26)
-(29,27)-(29,28)
+(13,4)-(24,51)
+(13,10)-(21,75)
+(16,10)-(17,56)
+(16,28)-(16,29)
+(17,33)-(17,45)
+(17,42)-(17,45)
+(22,4)-(24,51)
+(22,15)-(22,21)
+(22,19)-(22,20)
+(24,18)-(24,32)
+(24,18)-(24,44)
+(24,33)-(24,34)
+(24,35)-(24,39)
 *)

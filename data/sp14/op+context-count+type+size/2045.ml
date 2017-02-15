@@ -1,30 +1,56 @@
 
-let rec digitsOfInt n =
-  match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) :: (n mod 10);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = ([], []) in
+    let args = List.combine (l1, l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n with | 0 -> [] | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,32)-(3,54)
-(3,58)-(3,68)
-(3,59)-(3,60)
-(3,65)-(3,67)
+(14,16)-(14,24)
+(14,16)-(14,44)
+(14,25)-(14,44)
+(15,16)-(15,18)
+(16,15)-(16,36)
+(16,28)-(16,36)
 *)
 
 (* type error slice
-(2,3)-(3,70)
-(2,20)-(3,68)
-(3,2)-(3,68)
-(3,32)-(3,54)
-(3,32)-(3,68)
-(3,32)-(3,68)
-(3,32)-(3,68)
-(3,33)-(3,44)
-(3,58)-(3,68)
+(16,15)-(16,27)
+(16,15)-(16,36)
+(16,28)-(16,36)
 *)

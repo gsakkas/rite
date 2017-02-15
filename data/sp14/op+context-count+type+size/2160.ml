@@ -1,68 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) / 2
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let fixpoint (f,b) = let y = ((f b), (b = (f b))) in wwhile (y, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let fixpoint (f,b) = let y x = ((f b), (b = (f b))) in wwhile (y, b);;
 
 *)
 
 (* changed spans
-(19,23)-(19,67)
-(19,66)-(19,67)
+(7,29)-(7,49)
 *)
 
 (* type error slice
-(14,2)-(24,26)
-(14,2)-(24,26)
-(17,15)-(17,18)
-(17,15)-(17,44)
-(19,23)-(19,63)
-(19,23)-(19,67)
-(19,23)-(19,67)
+(2,3)-(5,27)
+(2,12)-(5,25)
+(4,28)-(4,34)
+(4,28)-(4,47)
+(4,35)-(4,41)
+(4,36)-(4,37)
+(4,42)-(4,47)
+(4,43)-(4,44)
+(5,2)-(5,8)
+(5,2)-(5,25)
+(5,9)-(5,15)
+(5,10)-(5,11)
+(7,21)-(7,66)
+(7,29)-(7,49)
+(7,53)-(7,59)
+(7,53)-(7,66)
+(7,60)-(7,66)
+(7,61)-(7,62)
 *)

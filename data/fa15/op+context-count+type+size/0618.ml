@@ -1,43 +1,93 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
 
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 10 then 1 + additivePersistence else 0;;
+let pairHelper x = let (r,s) = x in r + s;;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (pairHelper x) :: a in
+    let base = 0 in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let digits n = digitsOfInt (abs n);;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
 
-let rec additivePersistence n =
-  let x = sumList (digits n) in
-  if x > 10 then 1 + (additivePersistence x) else 0;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(5,16)-(5,70)
-(8,2)-(8,71)
-(8,5)-(8,35)
-(8,15)-(8,26)
-(8,33)-(8,35)
-(8,41)-(8,42)
-(8,41)-(8,64)
-(8,45)-(8,64)
-(8,70)-(8,71)
+(12,15)-(12,41)
+(12,19)-(12,41)
+(12,31)-(12,32)
+(12,36)-(12,37)
+(12,36)-(12,41)
+(12,40)-(12,41)
+(20,2)-(25,34)
+(21,4)-(24,51)
+(21,16)-(21,30)
+(21,16)-(21,35)
+(21,17)-(21,27)
+(21,28)-(21,29)
+(22,4)-(24,51)
+(22,15)-(22,16)
+(23,4)-(24,51)
+(25,2)-(25,12)
+(25,13)-(25,34)
+(25,14)-(25,17)
+(25,18)-(25,33)
+(25,19)-(25,26)
+(25,27)-(25,29)
+(25,30)-(25,32)
 *)
 
 (* type error slice
-(7,3)-(8,73)
-(7,28)-(8,71)
-(8,41)-(8,64)
-(8,45)-(8,64)
+(21,4)-(24,51)
+(21,10)-(21,35)
+(21,16)-(21,35)
+(21,34)-(21,35)
+(22,4)-(24,51)
+(22,15)-(22,16)
+(24,18)-(24,32)
+(24,18)-(24,44)
+(24,33)-(24,34)
+(24,35)-(24,39)
 *)

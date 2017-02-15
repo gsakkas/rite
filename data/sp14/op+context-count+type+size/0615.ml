@@ -6,18 +6,35 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Foo of expr* expr
+  | Clamp of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) + (eval (w, x, y))) / 2.0
-  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> cos ((eval (a, x, y)) *. pi)
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
   | Thresh (a,b,c,d) ->
       if (eval (a, x, y)) < (eval (b, x, y))
       then eval (c, x, y)
-      else eval (d, x, y);;
+      else eval (d, x, y)
+  | Foo (a,b) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then 0.9 *. (eval (a, x, y))
+      else (eval 0.1) *. (a, x, y)
+  | Clamp (a,b,c) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (b, x, y)
+      else
+        if (eval (a, x, y)) > (eval (c, x, y))
+        then eval (c, x, y)
+        else eval (a, x, y);;
 
 
 (* fix
@@ -29,45 +46,50 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Foo of expr* expr
+  | Clamp of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) *. (eval (v, x, y))
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> cos ((eval (a, x, y)) *. pi)
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
   | Thresh (a,b,c,d) ->
       if (eval (a, x, y)) < (eval (b, x, y))
       then eval (c, x, y)
-      else eval (d, x, y);;
+      else eval (d, x, y)
+  | Foo (a,b) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then 0.9 *. (eval (a, x, y))
+      else 0.1 *. (eval (a, x, y))
+  | Clamp (a,b,c) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (b, x, y)
+      else
+        if (eval (a, x, y)) > (eval (c, x, y))
+        then eval (c, x, y)
+        else eval (a, x, y);;
 
 *)
 
 (* changed spans
-(15,21)-(15,58)
-(15,21)-(15,64)
-(15,22)-(15,38)
-(16,19)-(16,54)
+(30,11)-(30,21)
+(30,17)-(30,20)
 *)
 
 (* type error slice
-(13,14)-(13,17)
-(13,14)-(13,34)
-(13,18)-(13,34)
-(13,19)-(13,23)
-(15,21)-(15,58)
-(15,21)-(15,58)
-(15,21)-(15,64)
-(15,22)-(15,38)
-(15,23)-(15,27)
-(15,41)-(15,57)
-(15,42)-(15,46)
-(15,61)-(15,64)
-(16,19)-(16,35)
-(16,19)-(16,54)
-(16,19)-(16,54)
-(16,20)-(16,24)
-(16,38)-(16,54)
-(16,39)-(16,43)
+(19,19)-(19,35)
+(19,20)-(19,24)
+(19,25)-(19,34)
+(30,11)-(30,21)
+(30,11)-(30,34)
+(30,12)-(30,16)
+(30,17)-(30,20)
+(30,25)-(30,34)
 *)

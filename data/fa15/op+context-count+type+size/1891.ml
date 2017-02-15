@@ -1,38 +1,37 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e = match e with | VarX  -> "%s" VarX;;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x' -> [[(x * i) / 10]; ((x * i) mod 10) + [mulByDigit i x']];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e = match e with | VarX  -> "VarX";;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x'::x'' ->
+      [(x * i) / 10] @
+        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
 
 *)
 
 (* changed spans
-(11,49)-(11,53)
-(11,49)-(11,58)
-(11,54)-(11,58)
+(3,2)-(5,67)
+(5,13)-(5,67)
+(5,14)-(5,28)
+(5,30)-(5,66)
+(5,49)-(5,66)
+(5,50)-(5,60)
+(5,50)-(5,65)
+(5,61)-(5,62)
 *)
 
 (* type error slice
-(11,49)-(11,53)
-(11,49)-(11,58)
+(5,13)-(5,67)
+(5,13)-(5,67)
+(5,14)-(5,28)
+(5,30)-(5,66)
+(5,30)-(5,66)
+(5,49)-(5,66)
 *)

@@ -1,40 +1,49 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let next_tail = digitsOfInt (n / 10) in
-     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = "" in
+      let l = [(fun x  -> x ^ sep)] in List.fold_left f base l;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(6,4)-(7,60)
-(6,21)-(6,41)
-(7,5)-(7,59)
-(7,11)-(7,20)
-(7,37)-(7,39)
-(7,37)-(7,59)
-(7,40)-(7,41)
+(8,6)-(8,62)
+(8,14)-(8,35)
+(8,15)-(8,34)
+(8,26)-(8,27)
+(8,26)-(8,33)
+(8,28)-(8,29)
+(8,30)-(8,33)
+(8,39)-(8,53)
+(8,39)-(8,62)
 *)
 
 (* type error slice
-(7,5)-(7,59)
-(7,5)-(7,59)
-(7,37)-(7,39)
-(7,37)-(7,59)
-(7,40)-(7,41)
-(7,42)-(7,59)
-(7,42)-(7,59)
-(7,43)-(7,44)
-(7,43)-(7,58)
-(7,43)-(7,58)
-(7,43)-(7,58)
-(7,48)-(7,58)
+(6,6)-(8,62)
+(6,12)-(6,23)
+(6,14)-(6,23)
+(6,18)-(6,19)
+(6,18)-(6,23)
+(6,20)-(6,21)
+(8,6)-(8,62)
+(8,14)-(8,35)
+(8,14)-(8,35)
+(8,15)-(8,34)
+(8,39)-(8,53)
+(8,39)-(8,62)
+(8,54)-(8,55)
+(8,61)-(8,62)
 *)

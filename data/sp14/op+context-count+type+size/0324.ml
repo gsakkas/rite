@@ -1,68 +1,96 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h, seen) then helper ((h :: seen), t) in
-        let rest' = helper (seen', t) in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match x with | _ -> a mod 10 | h::t -> (a + h) mod 10 in
+    let base = [0] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' =
-          if List.mem h seen
-          then helper (seen, t)
-          else helper ((h :: seen), t) in
-        let rest' = helper (seen', t) in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (add1,add2) ->
+          let new_carry = ((carry + add1) + add2) / 10 in
+          let digit = ((carry + add1) + add2) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(7,20)-(7,70)
-(7,23)-(7,41)
-(7,32)-(7,41)
-(7,55)-(7,66)
-(8,8)-(8,62)
-(9,20)-(9,22)
-(9,24)-(9,25)
+(15,16)-(15,69)
+(15,22)-(15,23)
+(15,36)-(15,37)
+(15,36)-(15,44)
+(15,42)-(15,44)
+(15,55)-(15,69)
+(15,56)-(15,57)
+(15,60)-(15,61)
+(15,67)-(15,69)
+(16,4)-(18,51)
+(16,15)-(16,18)
+(16,16)-(16,17)
+(17,4)-(18,51)
+(17,15)-(17,44)
+(17,25)-(17,37)
+(17,38)-(17,40)
+(17,41)-(17,43)
+(18,4)-(18,51)
+(18,18)-(18,32)
+(18,18)-(18,44)
+(18,33)-(18,34)
+(18,35)-(18,39)
+(18,40)-(18,44)
+(18,48)-(18,51)
+(19,2)-(19,12)
+(19,2)-(19,34)
+(19,14)-(19,17)
+(19,18)-(19,33)
+(19,19)-(19,26)
+(19,27)-(19,29)
+(19,30)-(19,32)
 *)
 
 (* type error slice
-(3,2)-(9,27)
-(3,18)-(8,62)
-(4,4)-(8,62)
-(5,12)-(5,16)
-(7,8)-(8,62)
-(7,20)-(7,70)
-(7,20)-(7,70)
-(7,20)-(7,70)
-(7,20)-(7,70)
-(7,23)-(7,31)
-(7,23)-(7,41)
-(7,47)-(7,53)
-(7,47)-(7,70)
-(7,54)-(7,70)
-(7,55)-(7,66)
-(7,55)-(7,66)
-(7,61)-(7,65)
-(8,20)-(8,26)
-(8,20)-(8,37)
-(8,27)-(8,37)
-(8,28)-(8,33)
-(8,41)-(8,47)
-(8,41)-(8,62)
-(8,48)-(8,62)
-(8,49)-(8,54)
-(9,2)-(9,10)
-(9,2)-(9,27)
-(9,11)-(9,27)
-(9,12)-(9,18)
+(15,4)-(18,51)
+(15,10)-(15,69)
+(15,36)-(15,37)
+(15,36)-(15,44)
+(16,4)-(18,51)
+(16,15)-(16,18)
+(18,18)-(18,32)
+(18,18)-(18,44)
+(18,33)-(18,34)
+(18,35)-(18,39)
 *)

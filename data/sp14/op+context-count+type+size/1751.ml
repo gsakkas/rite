@@ -1,87 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand with
-  | 0 ->
-      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
-  | 1 ->
-      let halff = rand in
-      if halff = 0
-      then Cosine (build (rand, (depth - 1)))
-      else Sine (build (rand, (depth - 1)))
-  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let fixpoint (f,b) = wwhile (((f b), (b <> (f b))), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
-  | 1 ->
-      let halff = rand (0, 2) in
-      if halff = 0
-      then Cosine (build (rand, (depth - 1)))
-      else Sine (build (rand, (depth - 1)))
-  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let fixpoint (f,b) =
+  let f b = let b' = f b in (b', ((f b) <> b)) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(18,8)-(18,12)
-(22,18)-(22,22)
-(23,6)-(25,43)
-(27,60)-(27,65)
-(27,68)-(27,69)
+(5,21)-(5,27)
+(5,21)-(5,54)
+(5,28)-(5,54)
+(5,29)-(5,50)
+(5,30)-(5,35)
+(5,37)-(5,49)
+(5,38)-(5,39)
 *)
 
 (* type error slice
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,2)-(27,73)
-(18,8)-(18,12)
-(20,18)-(20,22)
-(20,18)-(20,29)
-(22,6)-(25,43)
-(22,18)-(22,22)
-(23,9)-(23,14)
-(23,9)-(23,18)
-(23,9)-(23,18)
-(23,17)-(23,18)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,33)-(3,39)
+(3,33)-(3,47)
+(3,40)-(3,47)
+(3,41)-(3,42)
+(5,21)-(5,27)
+(5,21)-(5,54)
+(5,28)-(5,54)
+(5,29)-(5,50)
 *)

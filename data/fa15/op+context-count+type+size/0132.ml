@@ -1,85 +1,53 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Trip of expr* expr* expr;;
+let rec digitsOfInt n =
+  let rec helper n l = if n = 0 then l else helper (n / 10) ((n mod 10) :: l) in
+  match n with | 0 -> [0] | _ -> helper n [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
-  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
-  | Thresh (t,r,s,q) ->
-      if (eval (t, x, y)) < (eval (r, x, y))
-      then eval (s, x, y)
-      else eval (q, x, y)
-  | Trip (t,r,s) ->
-      ((eval (t, x, y)) / 30) +. ((eval (r, x, y)) / (eval (s, x, y)));;
+let rec additivePersistence n =
+  if (List.length (digits n)) = 1
+  then List.hd (digits n)
+  else additivePersistence (digits n);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Trip of expr* expr* expr;;
+let rec digitsOfInt n =
+  let rec helper n l = if n = 0 then l else helper (n / 10) ((n mod 10) :: l) in
+  match n with | 0 -> [0] | _ -> helper n [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
-  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
-  | Thresh (t,r,s,q) ->
-      if (eval (t, x, y)) < (eval (r, x, y))
-      then eval (s, x, y)
-      else eval (q, x, y)
-  | Trip (t,r,s) ->
-      ((eval (t, x, y)) /. 30.0) +. ((eval (r, x, y)) /. (eval (s, x, y)));;
+let rec additivePersistence n =
+  if (List.length (digits n)) = 1
+  then List.hd (digits n)
+  else additivePersistence (n / 10);;
 
 *)
 
 (* changed spans
-(27,6)-(27,29)
-(27,26)-(27,28)
-(27,33)-(27,70)
-(27,34)-(27,50)
+(11,27)-(11,37)
+(11,28)-(11,34)
 *)
 
 (* type error slice
-(18,18)-(18,42)
-(18,25)-(18,41)
-(18,26)-(18,30)
-(27,6)-(27,29)
-(27,6)-(27,29)
-(27,6)-(27,70)
-(27,6)-(27,70)
-(27,7)-(27,23)
-(27,8)-(27,12)
-(27,33)-(27,70)
-(27,33)-(27,70)
-(27,33)-(27,70)
-(27,34)-(27,50)
-(27,35)-(27,39)
-(27,53)-(27,69)
-(27,54)-(27,58)
+(6,3)-(6,36)
+(6,11)-(6,34)
+(6,27)-(6,34)
+(6,28)-(6,31)
+(6,32)-(6,33)
+(8,3)-(11,39)
+(8,28)-(11,37)
+(9,18)-(9,28)
+(9,19)-(9,25)
+(9,26)-(9,27)
+(10,7)-(10,14)
+(10,7)-(10,25)
+(10,15)-(10,25)
+(10,16)-(10,22)
+(11,7)-(11,26)
+(11,7)-(11,37)
+(11,27)-(11,37)
+(11,28)-(11,34)
 *)

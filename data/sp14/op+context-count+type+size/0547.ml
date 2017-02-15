@@ -1,31 +1,37 @@
 
-let sqsum xs =
-  let f a x = match xs with | [] -> a | hd::tl -> a + (hd * hd) in
-  let base = [] in List.fold_left f base xs;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let sum = 0 in
+  if n < 10 then n + sum else sum = (digitalRoot (sumList (digitsOfInt n)));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = match xs with | [] -> a | hd::tl -> a + (hd * hd) in
-  let base = f 4 xs in List.fold_left f base xs;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let sum = 0 in if n < 10 then n else digitalRoot (sumList (digitsOfInt n));;
 
 *)
 
 (* changed spans
-(4,13)-(4,15)
-(4,19)-(4,43)
+(9,17)-(9,24)
+(9,21)-(9,24)
+(9,30)-(9,33)
+(9,30)-(9,75)
+(9,59)-(9,70)
 *)
 
 (* type error slice
-(3,2)-(4,43)
-(3,8)-(3,63)
-(3,50)-(3,51)
-(3,50)-(3,63)
-(4,2)-(4,43)
-(4,13)-(4,15)
-(4,19)-(4,33)
-(4,19)-(4,43)
-(4,34)-(4,35)
-(4,36)-(4,40)
+(9,2)-(9,75)
+(9,2)-(9,75)
+(9,17)-(9,24)
+(9,30)-(9,75)
 *)

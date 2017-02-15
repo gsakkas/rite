@@ -1,63 +1,60 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let rec helperAppend l n =
+  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) = let (_,res) = 0; [0; 0; 0; 0] in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (listReverse (explode w)) = w;;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let rec helperAppend l n =
+  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) = let (_,res) = (0, [0; 0; 0; 0]) in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (listReverse (explode w)) = (explode w);;
 
 *)
 
 (* changed spans
-(22,34)-(22,49)
+(13,47)-(13,48)
 *)
 
 (* type error slice
-(22,20)-(22,56)
-(22,34)-(22,35)
-(22,34)-(22,49)
-(22,34)-(22,49)
-(22,37)-(22,49)
+(3,2)-(3,58)
+(3,2)-(3,58)
+(3,40)-(3,58)
+(3,41)-(3,53)
+(3,54)-(3,55)
+(5,3)-(8,8)
+(5,12)-(8,6)
+(7,12)-(7,29)
+(7,13)-(7,26)
+(7,27)-(7,28)
+(11,36)-(11,48)
+(11,36)-(11,68)
+(11,49)-(11,64)
+(11,50)-(11,61)
+(13,19)-(13,44)
+(13,19)-(13,48)
+(13,19)-(13,48)
+(13,20)-(13,31)
+(13,32)-(13,43)
+(13,33)-(13,40)
+(13,41)-(13,42)
+(13,47)-(13,48)
 *)

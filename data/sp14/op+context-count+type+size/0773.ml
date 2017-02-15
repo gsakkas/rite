@@ -1,61 +1,115 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | n -> append [helper (n / 10)] [n mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial (eval e')
+  | Sum3 (e1,e2,e3) -> ((eval e1) +. (eval e2)) +. (eval e3);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (helper (n / 10)) @ [n mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(3,2)-(7,10)
-(3,17)-(4,64)
-(3,21)-(4,64)
-(4,4)-(4,64)
-(4,10)-(4,13)
-(4,27)-(4,30)
-(4,43)-(4,49)
-(4,43)-(4,64)
-(4,50)-(4,52)
-(4,53)-(4,64)
-(4,54)-(4,56)
-(4,60)-(4,63)
-(5,2)-(7,10)
-(6,34)-(6,40)
-(6,41)-(6,58)
-(6,59)-(6,69)
-(7,2)-(7,10)
+(13,18)-(14,58)
+(13,20)-(14,58)
+(14,2)-(14,58)
+(14,5)-(14,6)
+(14,5)-(14,12)
+(14,9)-(14,12)
+(14,18)-(14,21)
+(14,27)-(14,36)
+(14,27)-(14,58)
+(14,37)-(14,47)
+(14,38)-(14,39)
+(14,43)-(14,46)
+(14,49)-(14,50)
+(14,54)-(14,57)
+(16,9)-(16,26)
+(19,2)-(31,60)
+(28,16)-(28,30)
+(28,25)-(28,26)
+(29,11)-(29,30)
+(31,23)-(31,60)
 *)
 
 (* type error slice
-(4,4)-(4,64)
-(4,4)-(4,64)
-(4,43)-(4,49)
-(4,43)-(4,64)
-(4,50)-(4,52)
-(4,53)-(4,64)
-(4,53)-(4,64)
-(4,54)-(4,56)
-(5,2)-(7,10)
-(5,17)-(6,69)
-(6,4)-(6,69)
-(6,24)-(6,26)
-(6,34)-(6,40)
-(6,34)-(6,69)
-(6,41)-(6,58)
-(6,41)-(6,58)
-(6,42)-(6,48)
-(6,42)-(6,57)
-(6,59)-(6,69)
-(6,59)-(6,69)
-(6,60)-(6,68)
+(14,27)-(14,36)
+(14,27)-(14,58)
+(19,2)-(31,60)
+(19,2)-(31,60)
+(19,2)-(31,60)
+(19,2)-(31,60)
+(19,2)-(31,60)
+(19,2)-(31,60)
+(22,15)-(22,18)
+(22,15)-(22,44)
+(22,26)-(22,43)
+(22,27)-(22,31)
+(22,32)-(22,42)
+(30,20)-(30,29)
+(30,20)-(30,39)
+(30,30)-(30,39)
+(30,31)-(30,35)
+(30,36)-(30,38)
+(31,24)-(31,33)
+(31,25)-(31,29)
+(31,30)-(31,32)
+(31,37)-(31,46)
+(31,38)-(31,42)
+(31,43)-(31,45)
+(31,51)-(31,60)
+(31,52)-(31,56)
+(31,57)-(31,59)
 *)

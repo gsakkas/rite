@@ -1,86 +1,63 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,[]) -> (new_carry, (new_carry :: digit))
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ("<" ^
+           ((exprToString e2) ^
+              ("?" ^ ((exprToString e3) ^ ("?" exprToString e4)))));;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,[]) -> (new_carry, [new_carry; digit])
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ("<" ^
+           ((exprToString e2) ^
+              ("?" ^ ((exprToString e3) ^ ("?" ^ (exprToString e4))))));;
 
 *)
 
 (* changed spans
-(30,35)-(30,55)
+(24,43)-(24,46)
+(24,47)-(24,59)
 *)
 
 (* type error slice
-(28,10)-(31,72)
-(28,22)-(28,64)
-(30,35)-(30,55)
-(30,49)-(30,54)
+(24,42)-(24,63)
+(24,43)-(24,46)
 *)

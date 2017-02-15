@@ -1,33 +1,61 @@
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((), b);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match x with | 5 -> a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((fun x  -> let y = f x in (y, (y != x))), b);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match x with | (_,_) -> a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(5,29)-(5,31)
-(5,33)-(5,34)
+(14,16)-(14,37)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,59)-(3,65)
-(3,59)-(3,74)
-(3,66)-(3,74)
-(3,67)-(3,68)
-(5,21)-(5,27)
-(5,21)-(5,35)
-(5,28)-(5,35)
-(5,29)-(5,31)
+(14,4)-(17,51)
+(14,10)-(14,37)
+(14,12)-(14,37)
+(14,16)-(14,37)
+(14,16)-(14,37)
+(14,22)-(14,23)
+(16,4)-(17,51)
+(16,15)-(16,27)
+(16,15)-(16,33)
+(17,18)-(17,32)
+(17,18)-(17,44)
+(17,33)-(17,34)
+(17,40)-(17,44)
 *)

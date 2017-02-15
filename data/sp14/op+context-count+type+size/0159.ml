@@ -1,81 +1,37 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  ((List.append (clone 0 (len2 - len1)) l1),
-    (List.append (clone 0 (len1 - len2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (i,l) ->
-          (match x with
-           | (x1,x2) ->
-               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then l else mulByDigit ((i - 1), (bigAdd l l));;
+let fixpoint (f,b) = wwhile ((), b);;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  ((List.append (clone 0 (len2 - len1)) l1),
-    (List.append (clone 0 (len1 - len2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (i,l) ->
-          (match x with
-           | (x1,x2) ->
-               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l = bigAdd l (mulByDigit (i - 1) l);;
+let fixpoint (f,b) =
+  wwhile
+    ((fun x  -> let xi = f x in (xi, (((f xi) != xi) || (f (f xi))))), b);;
 
 *)
 
 (* changed spans
-(27,2)-(27,57)
-(27,5)-(27,6)
-(27,5)-(27,10)
-(27,9)-(27,10)
-(27,16)-(27,17)
-(27,23)-(27,57)
-(27,34)-(27,57)
-(27,44)-(27,56)
+(6,29)-(6,31)
+(6,33)-(6,34)
 *)
 
 (* type error slice
-(26,3)-(27,59)
-(26,19)-(27,57)
-(27,5)-(27,6)
-(27,5)-(27,10)
-(27,5)-(27,10)
-(27,9)-(27,10)
-(27,23)-(27,33)
-(27,23)-(27,57)
-(27,34)-(27,57)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(4,43)-(4,49)
+(4,43)-(4,56)
+(4,50)-(4,56)
+(4,51)-(4,52)
+(6,21)-(6,27)
+(6,21)-(6,35)
+(6,28)-(6,35)
+(6,29)-(6,31)
 *)

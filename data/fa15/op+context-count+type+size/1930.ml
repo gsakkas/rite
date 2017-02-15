@@ -1,38 +1,27 @@
 
-let pipe fs =
-  let f a x = x a in let base = List.hd fs in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let x = f b in match x with | h::t -> if t then wwhile (f, h) else h;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let x = f b in
+  match x with | (x,y) -> if y = false then x else wwhile (f, x);;
 
 *)
 
 (* changed spans
-(3,2)-(3,70)
-(3,14)-(3,17)
-(3,16)-(3,17)
-(3,21)-(3,70)
-(3,32)-(3,39)
-(3,32)-(3,42)
-(3,40)-(3,42)
-(3,46)-(3,70)
+(3,17)-(3,70)
+(3,43)-(3,44)
+(3,50)-(3,63)
+(3,61)-(3,62)
+(3,69)-(3,70)
 *)
 
 (* type error slice
-(3,2)-(3,70)
-(3,8)-(3,17)
-(3,10)-(3,17)
-(3,14)-(3,15)
-(3,14)-(3,17)
-(3,21)-(3,70)
-(3,32)-(3,39)
-(3,32)-(3,42)
-(3,40)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
-(3,68)-(3,70)
+(3,17)-(3,70)
+(3,17)-(3,70)
+(3,40)-(3,70)
+(3,43)-(3,44)
 *)

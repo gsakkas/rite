@@ -1,54 +1,47 @@
 
-let rec clone x n = if n <= 0 then [] else [x] :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) :: l1), l2)
-    else clone (List.length l1) (0 :: l2);;
+let fixpoint (f,b) = let funt b = if f b then 0 else 1 in wwhile (funt, b);;
 
 
 (* fix
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then ((0 :: l1), l2)
-    else (l1, (0 :: l2));;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(2,14)-(2,67)
-(2,16)-(2,67)
-(2,20)-(2,67)
-(2,23)-(2,24)
-(2,23)-(2,29)
-(2,28)-(2,29)
-(2,35)-(2,37)
-(2,43)-(2,46)
-(2,43)-(2,67)
-(2,44)-(2,45)
-(2,50)-(2,67)
-(2,51)-(2,56)
-(2,57)-(2,58)
-(2,59)-(2,66)
-(2,60)-(2,61)
-(2,64)-(2,65)
-(8,26)-(8,42)
-(9,9)-(9,70)
-(10,9)-(10,41)
+(6,21)-(6,74)
+(6,46)-(6,47)
+(6,53)-(6,54)
+(6,58)-(6,74)
+(6,66)-(6,70)
+(6,72)-(6,73)
 *)
 
 (* type error slice
-(2,50)-(2,67)
-(2,51)-(2,56)
-(2,59)-(2,66)
-(10,9)-(10,14)
-(10,9)-(10,41)
-(10,32)-(10,41)
+(3,2)-(4,68)
+(3,12)-(3,13)
+(3,12)-(3,15)
+(4,2)-(4,68)
+(4,8)-(4,11)
+(4,42)-(4,48)
+(4,42)-(4,55)
+(4,49)-(4,55)
+(4,50)-(4,51)
+(6,21)-(6,74)
+(6,30)-(6,54)
+(6,34)-(6,54)
+(6,46)-(6,47)
+(6,58)-(6,64)
+(6,58)-(6,74)
+(6,65)-(6,74)
+(6,66)-(6,70)
 *)

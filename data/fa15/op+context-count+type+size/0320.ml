@@ -1,92 +1,100 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Volume of expr* expr* expr
-  | Tan of expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | Volume (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1 "*") ^
-           ((exprToString e2 "*") ^ ((exprToString e3) ^ ")")))
-  | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")");;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  if difference2 > 0
+  then (((clone 0 difference2) @ l1), l2)
+  else
+    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = x + a in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Volume of expr* expr* expr
-  | Tan of expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | Volume (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("*" ^ ((exprToString e2) ^ ("*" ^ ((exprToString e3) ^ ")")))))
-  | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")");;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  if difference2 > 0
+  then (((clone 0 difference2) @ l1), l2)
+  else
+    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,temp) = a in
+      let s = (x1 + x2) + carry in
+      let carry' = s / 10 in
+      let rem = s mod 10 in
+      let acc = rem :: temp in
+      if (List.length acc) = (List.length l1)
+      then (0, (carry' :: acc))
+      else (carry', acc) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(31,9)-(31,30)
-(31,26)-(31,29)
-(32,12)-(32,33)
-(32,13)-(32,25)
-(32,29)-(32,32)
-(33,28)-(33,40)
-(33,41)-(33,43)
+(19,16)-(19,21)
+(19,20)-(19,21)
+(20,4)-(22,51)
+(20,15)-(20,17)
+(21,4)-(22,51)
+(21,15)-(21,27)
+(21,15)-(21,33)
+(21,28)-(21,30)
+(21,31)-(21,33)
+(22,4)-(22,51)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
+(22,35)-(22,39)
+(22,40)-(22,44)
+(22,48)-(22,51)
+(23,2)-(23,12)
+(23,2)-(23,34)
+(23,13)-(23,34)
+(23,14)-(23,17)
+(23,18)-(23,33)
+(23,19)-(23,26)
+(23,27)-(23,29)
+(23,30)-(23,32)
 *)
 
 (* type error slice
-(17,27)-(17,52)
-(17,28)-(17,45)
-(17,29)-(17,41)
-(17,46)-(17,47)
-(31,9)-(31,30)
-(31,10)-(31,22)
-(32,12)-(32,33)
-(32,13)-(32,25)
+(19,4)-(22,51)
+(19,10)-(19,21)
+(19,16)-(19,21)
+(19,20)-(19,21)
+(20,4)-(22,51)
+(20,15)-(20,17)
+(22,18)-(22,32)
+(22,18)-(22,44)
+(22,33)-(22,34)
+(22,35)-(22,39)
 *)

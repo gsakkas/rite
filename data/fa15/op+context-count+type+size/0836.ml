@@ -1,35 +1,67 @@
 
-let rec wwhile (f,b) =
-  let pair = f b in
-  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (true, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" exprToString e2)
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let pair = f b in
-  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> ((f x), (x != (f x)))), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(6,29)-(6,33)
-(6,35)-(6,36)
+(19,42)-(19,45)
+(19,46)-(19,58)
 *)
 
 (* type error slice
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,51)-(4,57)
-(4,51)-(4,65)
-(4,58)-(4,65)
-(4,59)-(4,60)
-(6,21)-(6,27)
-(6,21)-(6,37)
-(6,28)-(6,37)
-(6,29)-(6,33)
+(19,41)-(19,62)
+(19,42)-(19,45)
 *)

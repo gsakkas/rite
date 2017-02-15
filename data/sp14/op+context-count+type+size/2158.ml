@@ -1,95 +1,70 @@
 
-let rec clone x n =
-  let rec helper xs sub depth =
-    match depth > 0 with
-    | false  -> xs
-    | true  -> helper (sub :: xs) sub (depth - 1) in
-  helper [] x n;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let rec padZero l1 l2 =
-  let sizeDif = (List.length l1) - (List.length l2) in
-  let appendS = clone 0 (abs sizeDif) in
-  if sizeDif < 0 then ((appendS @ l1), l2) else (l1, (appendS @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (op1,op2) ->
-          let res = op1 + op2 in
-          let (p1,p2) = a in
-          (match p2 with
-           | [] -> [res / 10; res mod 10]
-           | a::b ->
-               let re = a + (res mod 10) in (re / 10) :: (re mod 10) :: b) in
-    let base = ([], []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  if b != (f b)
+  then let f b = (b, true) in wwhile (f, (f b))
+  else wwhile (f b);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper xs sub depth =
-    match depth > 0 with
-    | false  -> xs
-    | true  -> helper (sub :: xs) sub (depth - 1) in
-  helper [] x n;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let rec padZero l1 l2 =
-  let sizeDif = (List.length l1) - (List.length l2) in
-  let appendS = clone 0 (abs sizeDif) in
-  if sizeDif < 0 then ((appendS @ l1), l2) else (l1, (appendS @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (op1,op2) ->
-          let res = op1 + op2 in
-          let (p1,p2) = a in
-          (match p2 with
-           | [] -> (p1, [res / 10; res mod 10])
-           | a::b ->
-               let re = a + (res mod 10) in
-               (p1, ((re / 10) :: (re mod 10) :: b))) in
-    let base = ([], []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  if b = (f b) then f b else (let g b = ((f b), true) in wwhile (g, (f b)));;
 
 *)
 
 (* changed spans
-(25,19)-(25,41)
-(27,44)-(27,73)
-(28,4)-(30,51)
-(29,4)-(30,51)
-(30,4)-(30,51)
-(31,19)-(31,26)
-(31,27)-(31,29)
-(31,30)-(31,32)
+(8,5)-(8,15)
+(9,7)-(9,47)
+(9,13)-(9,26)
+(9,17)-(9,26)
+(9,18)-(9,19)
+(9,21)-(9,25)
+(9,30)-(9,36)
+(9,37)-(9,47)
+(9,41)-(9,46)
+(10,7)-(10,19)
+(10,14)-(10,19)
 *)
 
 (* type error slice
-(19,4)-(30,51)
-(19,10)-(27,74)
-(19,12)-(27,74)
-(20,6)-(27,74)
-(22,10)-(27,74)
-(23,10)-(27,74)
-(23,10)-(27,74)
-(23,24)-(23,25)
-(24,10)-(27,74)
-(25,19)-(25,41)
-(30,18)-(30,32)
-(30,18)-(30,44)
-(30,33)-(30,34)
+(2,3)-(5,27)
+(2,12)-(5,25)
+(4,28)-(4,34)
+(4,28)-(4,47)
+(4,35)-(4,41)
+(4,36)-(4,37)
+(4,42)-(4,47)
+(4,43)-(4,44)
+(5,2)-(5,8)
+(5,2)-(5,25)
+(5,9)-(5,15)
+(5,10)-(5,11)
+(5,16)-(5,25)
+(5,17)-(5,18)
+(8,5)-(8,6)
+(8,5)-(8,15)
+(8,5)-(8,15)
+(8,10)-(8,15)
+(8,11)-(8,12)
+(9,30)-(9,36)
+(9,30)-(9,47)
+(9,37)-(9,47)
+(9,38)-(9,39)
+(9,41)-(9,46)
+(9,42)-(9,43)
+(9,44)-(9,45)
+(10,7)-(10,13)
+(10,7)-(10,19)
+(10,14)-(10,19)
+(10,15)-(10,16)
 *)

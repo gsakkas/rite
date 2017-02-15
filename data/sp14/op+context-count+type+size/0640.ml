@@ -1,49 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e -> sin (pi *. (eval e));;
+let stringOfList f l = failwith List.map (sepConcat "") l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, 0.0, 0.0)));;
+let stringOfList f l = sepConcat "," (List.map f l);;
 
 *)
 
 (* changed spans
-(14,70)-(14,71)
+(9,23)-(9,31)
+(9,23)-(9,57)
+(9,32)-(9,40)
+(9,41)-(9,55)
+(9,52)-(9,54)
+(9,56)-(9,57)
 *)
 
 (* type error slice
-(13,3)-(14,75)
-(13,14)-(14,73)
-(14,2)-(14,73)
-(14,64)-(14,72)
-(14,65)-(14,69)
-(14,70)-(14,71)
+(9,23)-(9,31)
+(9,23)-(9,57)
+(9,32)-(9,40)
 *)

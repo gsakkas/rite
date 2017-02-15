@@ -1,68 +1,39 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
-
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([x :: a], [x :: a]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> n :: (digitsOfInt n)
+       | true  -> (digitsOfInt n) mod 10);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
-
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([x + 1], [x + 1]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  match n > 0 with
+  | false  -> []
+  | true  ->
+      (match n > 9 with
+       | false  -> n :: (digitsOfInt n)
+       | true  -> digitsOfInt (n mod 10));;
 
 *)
 
 (* changed spans
-(19,18)-(19,24)
-(19,23)-(19,24)
-(19,28)-(19,34)
-(19,33)-(19,34)
+(8,18)-(8,40)
+(8,31)-(8,32)
 *)
 
 (* type error slice
-(19,4)-(21,70)
-(19,10)-(19,36)
-(19,12)-(19,36)
-(19,16)-(19,36)
-(19,18)-(19,24)
-(19,23)-(19,24)
-(21,37)-(21,51)
-(21,37)-(21,63)
-(21,52)-(21,53)
+(6,6)-(8,41)
+(6,6)-(8,41)
+(7,19)-(7,39)
+(7,19)-(7,39)
+(7,24)-(7,39)
+(7,25)-(7,36)
+(8,18)-(8,33)
+(8,18)-(8,40)
+(8,18)-(8,40)
+(8,19)-(8,30)
 *)

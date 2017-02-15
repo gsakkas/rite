@@ -1,73 +1,87 @@
 
-let carry x y = (x * y) / 10;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Divide of expr* expr
+  | Super of expr* expr;;
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
-
-let rec mulByDigit i l =
-  if i <= 0
-  then []
-  else
-    (match List.rev l with
-     | [] -> []
-     | h::t -> [(mulByDigit i t) + (carry h i)] @ [remainder i t]);;
+let rec eval (e,x,y) =
+  let pi = 3.142 in
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine v -> sin (pi *. (eval (v, x, y)))
+  | Cosine v -> cos (pi *. (eval (v, x, y)))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
+  | Thresh (v,w,q,r) ->
+      if (eval (v, x, y)) < (eval (w, x, y))
+      then eval (q, x, y)
+      else eval (r, x, y)
+  | Divide (v,w) -> (eval (v, x, y)) / (eval (w, x, y))
+  | Super (v,w) -> ((eval (v, x, y)) + (eval (w, x, y))) * (eval (v, x, y));;
 
 
 (* fix
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Divide of expr* expr
+  | Super of expr* expr;;
 
-let rec mulByDigit i l =
-  if i <= 0
-  then []
-  else
-    (match List.rev l with
-     | [] -> []
-     | h::t ->
-         (match t with
-          | [] -> [remainder i h]
-          | h'::t' -> [h' * i] @ (mulByDigit i t')));;
+let rec eval (e,x,y) =
+  let pi = 3.142 in
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine v -> sin (pi *. (eval (v, x, y)))
+  | Cosine v -> cos (pi *. (eval (v, x, y)))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (w, x, y))
+  | Thresh (v,w,q,r) ->
+      if (eval (v, x, y)) < (eval (w, x, y))
+      then eval (q, x, y)
+      else eval (r, x, y)
+  | Divide (v,w) -> (eval (v, x, y)) /. (eval (w, x, y))
+  | Super (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) *. (eval (v, x, y));;
 
 *)
 
 (* changed spans
-(2,16)-(2,23)
-(2,16)-(2,28)
-(2,17)-(2,18)
-(2,21)-(2,22)
-(2,26)-(2,28)
-(4,14)-(4,62)
-(4,16)-(4,62)
-(12,15)-(12,65)
-(12,16)-(12,32)
-(12,16)-(12,46)
-(12,17)-(12,27)
-(12,28)-(12,29)
-(12,30)-(12,31)
-(12,36)-(12,41)
-(12,42)-(12,43)
-(12,48)-(12,49)
-(12,50)-(12,65)
+(26,20)-(26,55)
+(27,19)-(27,56)
+(27,19)-(27,75)
+(27,20)-(27,36)
 *)
 
 (* type error slice
-(4,3)-(4,64)
-(4,14)-(4,62)
-(4,16)-(4,62)
-(4,23)-(4,30)
-(4,28)-(4,29)
-(6,3)-(12,68)
-(6,19)-(12,66)
-(6,21)-(12,66)
-(7,2)-(12,66)
-(10,4)-(12,66)
-(10,4)-(12,66)
-(10,4)-(12,66)
-(12,15)-(12,65)
-(12,16)-(12,32)
-(12,16)-(12,46)
-(12,17)-(12,27)
-(12,48)-(12,49)
-(12,51)-(12,60)
-(12,51)-(12,64)
-(12,63)-(12,64)
+(18,18)-(18,42)
+(18,25)-(18,41)
+(18,26)-(18,30)
+(26,20)-(26,36)
+(26,20)-(26,55)
+(26,20)-(26,55)
+(26,21)-(26,25)
+(26,39)-(26,55)
+(26,40)-(26,44)
+(27,19)-(27,56)
+(27,19)-(27,56)
+(27,19)-(27,75)
+(27,20)-(27,36)
+(27,21)-(27,25)
+(27,39)-(27,55)
+(27,40)-(27,44)
+(27,59)-(27,75)
+(27,60)-(27,64)
 *)

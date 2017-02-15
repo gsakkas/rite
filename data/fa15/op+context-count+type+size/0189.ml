@@ -1,40 +1,23 @@
 
-let pipe fs =
-  let f a x = match fs with | x::y -> x in
-  let base = [fs] in List.fold_left f base fs;;
+let bigMul l1 l2 =
+  let f a x = a @ 0 in
+  let base = [] in let args = l2 in List.fold_left f base args;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
+let bigMul l1 l2 =
+  let f a x = a @ [0] in
+  let base = [] in let args = l2 in List.fold_left f base args;;
 
 *)
 
 (* changed spans
-(3,2)-(4,45)
-(3,14)-(3,39)
-(3,20)-(3,22)
-(4,2)-(4,45)
-(4,13)-(4,17)
-(4,14)-(4,16)
-(4,21)-(4,45)
+(3,18)-(3,19)
 *)
 
 (* type error slice
-(3,2)-(4,45)
-(3,8)-(3,39)
-(3,10)-(3,39)
-(3,14)-(3,39)
-(3,14)-(3,39)
-(3,14)-(3,39)
-(3,20)-(3,22)
-(3,38)-(3,39)
-(4,2)-(4,45)
-(4,13)-(4,17)
-(4,13)-(4,17)
-(4,14)-(4,16)
-(4,21)-(4,35)
-(4,21)-(4,45)
-(4,36)-(4,37)
-(4,38)-(4,42)
+(3,14)-(3,19)
+(3,16)-(3,17)
+(3,18)-(3,19)
 *)

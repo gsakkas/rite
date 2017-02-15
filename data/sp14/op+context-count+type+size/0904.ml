@@ -1,63 +1,32 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
-
-let palindrome w =
-  let wEx = explode w in
-  let rec palHelper lst =
-    if (List.length lst) < 2
-    then []
-    else
-      if (List.tl lst) == (List.hd lst)
-      then
-        (let b::rest = lst in
-         let b2::rest2 = listReverse rest in palHelper rest2)
-      else [1] in
-  if (List.length (palHelper wEx)) = 0 then true else false;;
+let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
-
-let palindrome w =
-  let wEx = explode w in
-  let rec palHelper lst =
-    if (List.length lst) < 2
-    then []
-    else
-      if (List.tl lst) = lst
-      then
-        (let b::rest = lst in
-         let b2::rest2 = listReverse rest in palHelper rest2)
-      else [1] in
-  if (List.length (palHelper wEx)) = 0 then true else false;;
+let pipe fs p = let f a x = x a in let base = p in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(16,26)-(16,39)
-(16,27)-(16,34)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,74)
 *)
 
 (* type error slice
-(16,9)-(16,22)
-(16,9)-(16,39)
-(16,9)-(16,39)
-(16,10)-(16,17)
-(16,18)-(16,21)
-(16,26)-(16,39)
-(16,27)-(16,34)
-(16,35)-(16,38)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
+(2,67)-(2,71)
+(2,72)-(2,74)
 *)

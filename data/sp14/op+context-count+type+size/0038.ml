@@ -1,39 +1,30 @@
 
-let rec assoc (d,k,l) =
-  let acc = l in
-  let rec helper acc (d,k,l) =
-    match acc with
-    | [] -> d
-    | h::t ->
-        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
-  helper (d, k, l) acc;;
+let rec mulByDigit i l =
+  match List.rev l with | [] -> [] | h::t -> [mulByDigit i t; (h * i) mod 10];;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  let acc = l in
-  let rec helper acc (d,k,l) =
-    match acc with
-    | [] -> d
-    | h::t ->
-        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
-  helper acc (d, k, l);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> List.append (mulByDigit i t) [(h * i) mod 10];;
 
 *)
 
 (* changed spans
-(9,9)-(9,18)
-(9,19)-(9,22)
+(3,45)-(3,77)
+(3,46)-(3,56)
+(3,62)-(3,76)
 *)
 
 (* type error slice
-(5,4)-(8,73)
-(5,4)-(8,73)
-(8,54)-(8,60)
-(8,54)-(8,72)
-(8,61)-(8,62)
-(9,2)-(9,8)
-(9,2)-(9,22)
-(9,9)-(9,18)
+(2,3)-(3,79)
+(2,19)-(3,77)
+(2,21)-(3,77)
+(3,2)-(3,77)
+(3,45)-(3,77)
+(3,45)-(3,77)
+(3,46)-(3,56)
+(3,46)-(3,60)
 *)

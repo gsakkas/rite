@@ -1,157 +1,92 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  match (List.length l1) <= (List.length l2) with
+  | true  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  | false  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine (build (rand', (depth - 1)))
-    | 2 -> buildCosine build (rand', (depth - 1))
-    | 3 -> buildTimes ((build (rand', (depth - 1))), buildY)
-    | 4 -> buildAverage ((build (rand', (depth - 1))), buildY)
-    | 5 ->
-        buildThresh
-          (buildX, buildY, (build (rand', (depth - 1))),
-            (build (rand', (depth - 1))))
-  else buildX;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = (fst x) + (snd x) in
+      match a with
+      | [] -> (0, ((sum / 10) :: (0, (sum mod 10)) :: a))
+      | (h1,h)::t -> (0, (sum / 10)) :: (0, (h + (sum mod 10))) :: t in
+    let base = [] in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  match (List.length l1) <= (List.length l2) with
+  | true  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  | false  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine (build (rand, (depth - 1)))
-    | 2 -> buildCosine (build (rand, (depth - 1)))
-    | 3 -> buildTimes ((build (rand, (depth - 1))), (buildY ()))
-    | 4 -> buildAverage ((build (rand, (depth - 1))), (buildY ()))
-    | 5 ->
-        buildThresh
-          ((buildX ()), (buildY ()), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))))
-  else buildX ();;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let b = (fst x) + (snd x) in
+      match a with
+      | (0,[]) -> ((b / 10), [b mod 10])
+      | (y,h::t) -> ((b / 10), ((b mod 10) :: (h + y) :: t)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(30,29)-(30,34)
-(31,11)-(31,49)
-(31,23)-(31,28)
-(31,30)-(31,35)
-(32,31)-(32,36)
-(32,53)-(32,59)
-(33,11)-(33,62)
-(33,33)-(33,38)
-(33,55)-(33,61)
-(35,8)-(37,41)
-(36,11)-(36,17)
-(36,19)-(36,25)
-(36,27)-(36,55)
-(36,35)-(36,40)
-(37,13)-(37,18)
-(37,19)-(37,39)
-(37,20)-(37,25)
-(37,27)-(37,38)
-(37,28)-(37,33)
-(37,36)-(37,37)
-(38,7)-(38,13)
+(20,6)-(23,68)
+(21,6)-(23,68)
+(22,15)-(22,16)
+(22,18)-(22,56)
+(22,20)-(22,23)
+(22,33)-(22,50)
+(22,33)-(22,55)
+(22,34)-(22,35)
+(22,38)-(22,41)
+(22,54)-(22,55)
+(23,21)-(23,68)
+(23,22)-(23,23)
+(23,26)-(23,29)
+(23,40)-(23,63)
+(23,41)-(23,42)
+(23,44)-(23,62)
+(23,45)-(23,46)
+(23,50)-(23,53)
+(23,67)-(23,68)
+(24,15)-(24,17)
+(27,19)-(27,26)
 *)
 
 (* type error slice
-(13,3)-(13,30)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(13,20)-(13,28)
-(13,27)-(13,28)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(17,3)-(17,69)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(17,49)-(17,50)
-(19,3)-(19,41)
-(19,16)-(19,39)
-(19,25)-(19,39)
-(19,36)-(19,38)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(23,3)-(23,22)
-(23,11)-(23,20)
-(25,3)-(38,15)
-(25,15)-(38,13)
-(26,2)-(38,13)
-(26,2)-(38,13)
-(28,4)-(37,41)
-(28,16)-(28,20)
-(28,16)-(28,27)
-(29,4)-(37,41)
-(29,4)-(37,41)
-(29,4)-(37,41)
-(29,10)-(29,15)
-(30,11)-(30,20)
-(30,11)-(30,49)
-(30,21)-(30,49)
-(30,22)-(30,27)
-(30,28)-(30,48)
-(30,29)-(30,34)
-(31,11)-(31,22)
-(31,11)-(31,49)
-(31,23)-(31,28)
-(32,11)-(32,21)
-(32,11)-(32,60)
-(32,22)-(32,60)
-(32,53)-(32,59)
-(35,8)-(35,19)
-(35,8)-(37,41)
-(36,10)-(37,41)
-(36,19)-(36,25)
-(38,7)-(38,13)
+(22,18)-(22,56)
+(22,18)-(22,56)
+(22,19)-(22,29)
+(22,33)-(22,50)
+(22,33)-(22,55)
+(22,33)-(22,55)
 *)

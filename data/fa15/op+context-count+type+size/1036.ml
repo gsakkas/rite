@@ -1,28 +1,23 @@
 
-let rec sumList xs = function | [] -> 0 | x::1 -> x + (sumList xs);;
+let rec clone x n = if x <= 0 then [] else List.fold_left n;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
+let rec cloneHelper x n = if x <= 0 then [] else cloneHelper x (n - 1);;
 
 *)
 
 (* changed spans
-(2,21)-(2,66)
-(2,38)-(2,39)
-(2,50)-(2,51)
-(2,63)-(2,65)
+(2,43)-(2,57)
+(2,43)-(2,59)
+(2,58)-(2,59)
 *)
 
 (* type error slice
-(2,3)-(2,68)
-(2,16)-(2,66)
-(2,21)-(2,66)
-(2,21)-(2,66)
-(2,21)-(2,66)
-(2,21)-(2,66)
-(2,50)-(2,66)
-(2,54)-(2,66)
-(2,55)-(2,62)
+(2,20)-(2,59)
+(2,20)-(2,59)
+(2,35)-(2,37)
+(2,43)-(2,57)
+(2,43)-(2,59)
 *)

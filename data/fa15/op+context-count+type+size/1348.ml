@@ -1,74 +1,34 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = if x < 10 then a @ (0, x) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      List.map combine (List.rev (List.combine l1 l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x a = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match a with | (o,[]) -> (o, [x]) | (o,l) -> (o, (x :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      List.map combine (List.rev (List.combine l1 l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x a = a in let base f = f in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(18,16)-(18,41)
-(18,19)-(18,20)
-(18,19)-(18,25)
-(18,23)-(18,25)
-(18,31)-(18,41)
-(18,33)-(18,34)
-(18,36)-(18,37)
-(18,39)-(18,40)
-(19,4)-(23,51)
+(2,28)-(2,31)
+(2,30)-(2,31)
+(2,35)-(2,77)
+(2,44)-(2,49)
+(2,48)-(2,49)
+(2,53)-(2,77)
 *)
 
 (* type error slice
-(18,16)-(18,41)
-(18,16)-(18,41)
-(18,16)-(18,41)
-(18,31)-(18,41)
-(18,33)-(18,34)
-(18,35)-(18,41)
+(2,14)-(2,77)
+(2,20)-(2,31)
+(2,22)-(2,31)
+(2,24)-(2,31)
+(2,28)-(2,29)
+(2,28)-(2,31)
+(2,35)-(2,77)
+(2,44)-(2,49)
+(2,48)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
 *)

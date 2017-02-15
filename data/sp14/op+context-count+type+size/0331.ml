@@ -1,85 +1,87 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> let ex1 = eval (ex, x, y) in sin (pi * ex1)
-  | Cosine ex -> cos (pi * (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (a + x) mod 10 in
+    let base = [] in
+    let args = [] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l1), l2)
+  else (l1, ((clone 0 l) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (add1,add2) ->
+          let new_carry = ((carry + add1) + add2) / 10 in
+          let digit = ((carry + add1) + add2) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,15)-(17,58)
-(17,25)-(17,29)
-(17,44)-(17,47)
-(17,48)-(17,58)
-(17,49)-(17,51)
-(17,54)-(17,57)
-(18,17)-(18,45)
-(18,21)-(18,45)
-(19,25)-(19,66)
-(19,25)-(19,70)
-(19,26)-(19,44)
-(19,69)-(19,70)
-(20,23)-(20,41)
-(20,23)-(20,62)
+(15,16)-(15,23)
+(15,16)-(15,30)
+(15,17)-(15,18)
+(15,28)-(15,30)
+(16,4)-(17,68)
+(16,15)-(16,17)
+(17,4)-(17,68)
+(17,15)-(17,17)
+(17,21)-(17,68)
+(17,35)-(17,49)
+(17,35)-(17,61)
+(17,50)-(17,51)
+(17,52)-(17,56)
+(17,57)-(17,61)
+(17,65)-(17,68)
+(18,2)-(18,12)
+(18,2)-(18,34)
+(18,13)-(18,34)
+(18,14)-(18,17)
+(18,18)-(18,33)
+(18,19)-(18,26)
+(18,27)-(18,29)
+(18,30)-(18,32)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(17,44)-(17,47)
-(17,44)-(17,58)
-(17,48)-(17,58)
-(17,48)-(17,58)
-(17,49)-(17,51)
-(18,17)-(18,20)
-(18,17)-(18,45)
-(18,21)-(18,45)
-(18,21)-(18,45)
-(18,22)-(18,24)
+(15,4)-(17,68)
+(15,10)-(15,30)
+(15,16)-(15,23)
+(15,17)-(15,18)
+(16,4)-(17,68)
+(16,15)-(16,17)
+(17,35)-(17,49)
+(17,35)-(17,61)
+(17,50)-(17,51)
+(17,52)-(17,56)
 *)

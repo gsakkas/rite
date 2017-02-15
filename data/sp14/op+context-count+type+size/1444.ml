@@ -1,55 +1,108 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> ((eval (a, x, y)), (eval (b, x, y))) / 2;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (carry,h1::t1) ->
+          (match x with
+           | h2::t2 ->
+               ((((h1 + h2) + carry) / 10), (((h1 + h2) mod 10) :: t1))) in
+    let base = l1 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> (eval (a, x, y)) +. (eval (b, x, y));;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,21)-(17,57)
-(17,21)-(17,61)
-(17,60)-(17,61)
+(23,4)-(30,68)
+(23,10)-(28,72)
+(23,12)-(28,72)
+(24,6)-(28,72)
+(24,12)-(24,13)
+(26,10)-(28,72)
+(26,17)-(26,18)
+(28,15)-(28,71)
+(28,16)-(28,42)
+(28,17)-(28,36)
+(28,18)-(28,27)
+(28,19)-(28,21)
+(28,24)-(28,26)
+(28,30)-(28,35)
+(28,39)-(28,41)
+(28,44)-(28,70)
+(28,46)-(28,55)
+(28,47)-(28,49)
+(29,4)-(30,68)
 *)
 
 (* type error slice
-(12,2)-(17,61)
-(12,2)-(17,61)
-(15,14)-(15,17)
-(15,14)-(15,34)
-(17,21)-(17,57)
-(17,21)-(17,61)
-(17,21)-(17,61)
+(5,3)-(14,63)
+(5,12)-(14,61)
+(5,15)-(14,61)
+(6,2)-(14,61)
+(7,2)-(14,61)
+(8,2)-(14,61)
+(10,6)-(11,61)
+(11,6)-(11,61)
+(11,32)-(11,61)
+(11,33)-(11,35)
+(14,33)-(14,56)
+(14,34)-(14,45)
+(14,53)-(14,55)
+(22,2)-(31,34)
+(22,11)-(30,68)
+(29,4)-(30,68)
+(29,15)-(29,17)
+(30,21)-(30,68)
+(30,35)-(30,49)
+(30,35)-(30,61)
+(30,52)-(30,56)
+(31,13)-(31,34)
+(31,14)-(31,17)
+(31,18)-(31,33)
+(31,19)-(31,26)
 *)

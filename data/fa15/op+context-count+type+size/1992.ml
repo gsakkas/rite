@@ -1,26 +1,60 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = b in match c' with | true  -> wwhile (f, b') | false  -> b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if rand mod 2 then buildX () else buildY ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | true  -> wwhile (f, b') | false  -> b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> buildX ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(3,16)-(3,17)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(19,9)-(19,52)
+(19,12)-(19,16)
+(19,12)-(19,22)
+(19,21)-(19,22)
+(19,43)-(19,49)
+(19,50)-(19,52)
+(20,9)-(20,18)
 *)
 
 (* type error slice
-(2,3)-(3,77)
-(2,16)-(3,75)
-(3,2)-(3,75)
-(3,16)-(3,17)
-(3,46)-(3,52)
-(3,46)-(3,60)
-(3,53)-(3,60)
-(3,57)-(3,59)
+(19,9)-(19,52)
+(19,12)-(19,22)
 *)

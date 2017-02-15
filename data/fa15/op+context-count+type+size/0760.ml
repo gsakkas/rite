@@ -1,74 +1,37 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let pair = f b in
+  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
 
-let rec padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  match diff with
-  | diff when diff > 0 -> (l1, (List.append (clone 0 diff) l2))
-  | diff when diff < 0 -> ((List.append (clone 0 (0 - diff)) l1), l2)
-  | 0 -> (l1, l2)
-  | _ -> ([], []);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      ([(x1 + x2) / 10], ((((a1 + x1) + x2) mod 10) :: a2)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile ((f, true), b);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let pair = f b in
+  let (b',c') = pair in if c' = false then b' else wwhile (f, b');;
 
-let rec padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  match diff with
-  | diff when diff > 0 -> (l1, (List.append (clone 0 diff) l2))
-  | diff when diff < 0 -> ((List.append (clone 0 (0 - diff)) l1), l2)
-  | 0 -> (l1, l2)
-  | _ -> ([], []);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      (((x1 + x2) / 10), ((((a1 + x1) + x2) mod 10) :: a2)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile ((fun x  -> ((f x), (x != (f x)))), b);;
 
 *)
 
 (* changed spans
-(20,7)-(20,23)
+(6,29)-(6,38)
+(6,30)-(6,31)
+(6,33)-(6,37)
+(6,40)-(6,41)
 *)
 
 (* type error slice
-(17,4)-(23,51)
-(17,10)-(20,59)
-(17,12)-(20,59)
-(18,6)-(20,59)
-(19,6)-(20,59)
-(19,6)-(20,59)
-(19,20)-(19,21)
-(20,6)-(20,59)
-(20,7)-(20,23)
-(20,28)-(20,37)
-(20,29)-(20,31)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
+(3,13)-(3,14)
+(3,13)-(3,16)
+(4,51)-(4,57)
+(4,51)-(4,65)
+(4,58)-(4,65)
+(4,59)-(4,60)
+(6,21)-(6,27)
+(6,21)-(6,42)
+(6,28)-(6,42)
+(6,29)-(6,38)
 *)

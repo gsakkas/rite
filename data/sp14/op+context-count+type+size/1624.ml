@@ -6,22 +6,37 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | Cosine a -> cos (pi * (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) + (eval (b, x, y))) / 2
-  | Times (a,b) -> (eval (a, x, y)) * (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;
 
 
 (* fix
@@ -33,47 +48,55 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) ^ "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ ("*" ^ ((exprToString tm3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(17,18)-(17,41)
-(18,20)-(18,43)
-(19,21)-(19,58)
-(19,21)-(19,62)
-(19,22)-(19,38)
-(19,61)-(19,62)
-(20,19)-(20,35)
-(20,19)-(20,54)
+(35,49)-(35,74)
+(35,50)-(35,68)
+(39,41)-(39,65)
+(39,46)-(39,64)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(17,14)-(17,17)
-(17,14)-(17,41)
-(17,18)-(17,41)
-(17,18)-(17,41)
-(17,19)-(17,21)
-(18,16)-(18,19)
-(18,16)-(18,43)
-(18,20)-(18,43)
-(18,20)-(18,43)
-(18,21)-(18,23)
+(17,28)-(17,54)
+(17,29)-(17,47)
+(17,30)-(17,42)
+(17,48)-(17,49)
+(35,49)-(35,74)
+(35,50)-(35,68)
+(35,51)-(35,63)
+(39,41)-(39,65)
+(39,42)-(39,45)
 *)

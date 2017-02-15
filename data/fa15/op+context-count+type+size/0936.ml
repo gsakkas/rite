@@ -1,71 +1,55 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
+let rec listReverse l =
+  let rec recurse original reverse =
+    match original with
+    | [] -> reverse
+    | front::back -> recurse back (front :: reverse) in
+  recurse l [];;
 
-let rec removeZero l =
-  match l with | h::t -> if h = 0 then removeZero t else l | _ -> [];;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let sum = (fst x) + (snd x) in
-      match a with
-      | h::t -> ((h + sum) / 10) :: ((h + sum) mod 10) :: t
-      | _ -> [sum / 10; sum mod 10] in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (explode w) = (listReverse explode w);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
+let rec listReverse l =
+  let rec recurse original reverse =
+    match original with
+    | [] -> reverse
+    | front::back -> recurse back (front :: reverse) in
+  recurse l [];;
 
-let rec removeZero l =
-  match l with | h::t -> if h = 0 then removeZero t else l | _ -> [];;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let sum = (fst x) + (snd x) in
-      match a with
-      | h::t -> ((h + sum) / 10) :: ((h + sum) mod 10) :: t
-      | _ -> [sum / 10; sum mod 10] in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (explode w) = (listReverse (explode w));;
 
 *)
 
 (* changed spans
-(24,4)-(24,51)
-(24,48)-(24,51)
+(14,33)-(14,56)
+(14,46)-(14,53)
 *)
 
 (* type error slice
-(17,4)-(24,51)
-(17,10)-(21,35)
-(19,6)-(21,35)
-(19,6)-(21,35)
-(19,12)-(19,13)
-(24,4)-(24,51)
-(24,18)-(24,32)
-(24,18)-(24,44)
-(24,33)-(24,34)
+(7,3)-(12,16)
+(7,20)-(12,14)
+(8,2)-(12,14)
+(9,4)-(11,52)
+(9,4)-(11,52)
+(10,12)-(10,19)
+(11,21)-(11,28)
+(11,21)-(11,52)
+(11,34)-(11,52)
+(11,44)-(11,51)
+(12,2)-(12,9)
+(12,2)-(12,14)
+(14,33)-(14,56)
+(14,34)-(14,45)
 *)

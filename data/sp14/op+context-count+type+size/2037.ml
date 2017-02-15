@@ -1,41 +1,31 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l = match l with | [] -> [] | h::t -> (cat l h) :: t;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = "" in List.fold_left f base l;;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (cat l h);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = [] in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(4,58)-(4,67)
-(4,58)-(4,72)
-(4,71)-(4,72)
+(7,31)-(7,33)
 *)
 
 (* type error slice
-(2,18)-(2,67)
-(2,18)-(2,67)
-(2,39)-(2,42)
-(2,39)-(2,42)
-(2,40)-(2,41)
-(2,53)-(2,67)
-(2,53)-(2,67)
-(2,58)-(2,67)
-(2,59)-(2,62)
-(2,65)-(2,66)
-(4,24)-(4,72)
-(4,24)-(4,72)
-(4,58)-(4,67)
-(4,58)-(4,72)
-(4,58)-(4,72)
-(4,59)-(4,62)
-(4,65)-(4,66)
-(4,71)-(4,72)
+(7,23)-(7,60)
+(7,31)-(7,33)
+(7,37)-(7,51)
+(7,37)-(7,60)
+(7,59)-(7,60)
 *)

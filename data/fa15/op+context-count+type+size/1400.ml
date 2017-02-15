@@ -1,38 +1,73 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Tangent of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat " " List.map l;;
+let rec exprToString e =
+  let exp = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+  | Average (a,b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+  | Times (a,b) -> (exp a) ^ ("*" ^ (exp b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exp a) ^
+           ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
+  | Tangent a ->
+      "sin(pi*" ^ ((exp a) ^ (")/(" ("cos(pi*" ^ ((exp a) ^ ")")) ")"));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Hoi of expr* expr* expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat " " l;;
+let rec exprToString e =
+  let exp = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+  | Average (a,b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+  | Times (a,b) -> (exp a) ^ ("*" ^ (exp b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exp a) ^
+           ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
+  | Hoi (a,b,c) ->
+      "sin(pi*" ^
+        ((exp a) ^ (")*cos(pi*" ^ ((exp b) ^ (")/(" ^ ((exp c) ^ ")")))));;
 
 *)
 
 (* changed spans
-(9,23)-(9,47)
-(9,37)-(9,45)
+(14,2)-(26,71)
+(26,30)-(26,35)
+(26,36)-(26,65)
+(26,37)-(26,46)
+(26,55)-(26,56)
+(26,60)-(26,63)
+(26,66)-(26,69)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,23)-(9,32)
-(9,23)-(9,47)
+(26,29)-(26,70)
+(26,30)-(26,35)
 *)

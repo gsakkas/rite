@@ -1,94 +1,98 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if (List.hd l) != (List.hd k)
+    then false
+    else listCompare (List.tl l) (List.tl k);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (lh1::lt1,lh2::lt2) ->
-          (match x with
-           | (h1,h2) ->
-               (((((h1 + h2) + lh1) / 10) :: lt1),
-                 ((((h1 + h2) + lh1) mod 10) :: lt2))
-           | ([],[]) ->
-               (match x with
-                | (h1,h2) -> ([(h1 + h2) / 10], [(h1 + h2) mod 10]))) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
+
+let palindrome w = listCompare (explode w) (listReverse (explode w));;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (v1,v2) -> ([v1], [v2]) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (explode w) = (listReverse (explode w));;
 
 *)
 
 (* changed spans
-(15,6)-(23,69)
-(15,12)-(15,13)
-(17,10)-(23,69)
-(17,17)-(17,18)
-(19,15)-(20,53)
-(19,16)-(19,49)
-(19,17)-(19,41)
-(19,18)-(19,35)
-(19,19)-(19,28)
-(19,20)-(19,22)
-(19,25)-(19,27)
-(19,31)-(19,34)
-(19,38)-(19,40)
-(19,45)-(19,48)
-(20,17)-(20,52)
-(20,18)-(20,44)
-(20,19)-(20,36)
-(20,20)-(20,29)
-(20,21)-(20,23)
-(20,26)-(20,28)
-(20,32)-(20,35)
-(20,41)-(20,43)
-(20,48)-(20,51)
-(22,15)-(23,68)
-(23,31)-(23,40)
-(23,31)-(23,45)
-(23,32)-(23,34)
-(23,37)-(23,39)
-(23,43)-(23,45)
-(24,4)-(26,51)
-(27,2)-(27,34)
+(9,22)-(15,44)
+(10,2)-(15,44)
+(10,5)-(10,23)
+(10,5)-(10,45)
+(10,6)-(10,17)
+(10,7)-(10,14)
+(10,27)-(10,45)
+(10,29)-(10,36)
+(10,37)-(10,38)
+(10,42)-(10,44)
+(11,7)-(11,11)
+(13,4)-(15,44)
+(13,7)-(13,18)
+(13,7)-(13,33)
+(13,8)-(13,15)
+(13,16)-(13,17)
+(14,9)-(14,14)
+(15,9)-(15,20)
+(15,9)-(15,44)
+(17,20)-(18,62)
+(20,15)-(20,68)
 *)
 
 (* type error slice
-(17,10)-(23,69)
-(17,10)-(23,69)
-(17,17)-(17,18)
-(22,15)-(23,68)
-(22,22)-(22,23)
-(23,31)-(23,40)
-(23,32)-(23,34)
+(4,3)-(7,8)
+(4,12)-(7,6)
+(5,2)-(7,6)
+(6,43)-(6,50)
+(6,43)-(6,66)
+(6,43)-(6,66)
+(6,44)-(6,49)
+(6,54)-(6,66)
+(6,55)-(6,57)
+(7,2)-(7,4)
+(7,2)-(7,6)
+(10,27)-(10,45)
+(10,27)-(10,45)
+(10,28)-(10,39)
+(10,29)-(10,36)
+(10,37)-(10,38)
+(10,42)-(10,44)
+(13,7)-(13,18)
+(13,7)-(13,33)
+(13,7)-(13,33)
+(13,8)-(13,15)
+(13,16)-(13,17)
+(13,22)-(13,33)
+(13,23)-(13,30)
+(13,31)-(13,32)
+(15,9)-(15,20)
+(15,9)-(15,44)
+(15,21)-(15,32)
+(15,22)-(15,29)
+(15,30)-(15,31)
+(20,19)-(20,30)
+(20,19)-(20,68)
+(20,31)-(20,42)
+(20,32)-(20,39)
 *)

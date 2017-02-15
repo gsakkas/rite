@@ -1,53 +1,23 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Average (a1,a2) -> eval (VarX, a1, a2);;
+let rec digitsOfInt n = (n mod 10) :: (if n > 0 then digitsOfInt (n / 10));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let rec digitsOfInt n =
+  let int list digInt = n mod 10 in
+  if n > 0 then digitsOfInt (n / 10) else [];;
 
 *)
 
 (* changed spans
-(15,23)-(15,42)
-(15,35)-(15,37)
-(15,39)-(15,41)
+(2,24)-(2,34)
+(2,24)-(2,74)
+(2,39)-(2,73)
 *)
 
 (* type error slice
-(11,3)-(15,44)
-(11,14)-(15,42)
-(12,2)-(15,42)
-(14,13)-(14,14)
-(14,13)-(14,21)
-(15,23)-(15,27)
-(15,23)-(15,42)
-(15,28)-(15,42)
-(15,39)-(15,41)
+(2,24)-(2,74)
+(2,38)-(2,74)
+(2,39)-(2,73)
 *)

@@ -1,61 +1,29 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev ((List.combine l1 l2) @ (0, 0)) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
+let pipe fs =
+  let f a x g = (a x) g in let base g = g in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  add (padZero l1 l2);;
+let pipe fs =
+  let f a x g = x (a g) in let base g = g in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(19,25)-(19,45)
-(19,46)-(19,47)
-(19,48)-(19,54)
-(19,49)-(19,50)
-(19,52)-(19,53)
+(3,16)-(3,21)
+(3,19)-(3,20)
 *)
 
 (* type error slice
-(19,24)-(19,55)
-(19,46)-(19,47)
-(19,48)-(19,54)
+(3,2)-(3,69)
+(3,8)-(3,23)
+(3,10)-(3,23)
+(3,12)-(3,23)
+(3,16)-(3,21)
+(3,16)-(3,23)
+(3,17)-(3,18)
+(3,45)-(3,59)
+(3,45)-(3,69)
+(3,60)-(3,61)
 *)

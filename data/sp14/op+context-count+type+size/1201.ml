@@ -1,73 +1,92 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if (List.length s) = ((List.length l1) - 1)
-      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else bigAdd [0];;
+let rec exprToString ex =
+  match ex with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | _ -> "" ^ (ex ^ "");;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if (List.length s) = ((List.length l1) - 1)
-      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
+let rec exprToString ex =
+  match ex with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | _ -> "";;
 
 *)
 
 (* changed spans
-(27,53)-(27,59)
-(27,53)-(27,63)
+(27,9)-(27,23)
+(27,12)-(27,13)
+(27,14)-(27,23)
 *)
 
 (* type error slice
-(27,2)-(27,63)
-(27,2)-(27,63)
-(27,16)-(27,22)
-(27,16)-(27,47)
-(27,53)-(27,59)
-(27,53)-(27,63)
+(11,3)-(27,25)
+(11,21)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,2)-(27,23)
+(12,8)-(12,10)
+(15,27)-(15,43)
+(15,28)-(15,40)
+(15,41)-(15,42)
+(27,14)-(27,23)
+(27,15)-(27,17)
+(27,18)-(27,19)
 *)

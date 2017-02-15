@@ -1,44 +1,73 @@
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] @ [tl] in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine v -> sin (eval (v, x, y))
+  | Cosine v -> cos (eval (v, x, y))
+  | Average (v,w) -> ((eval (v, x, y)) + (eval (w, x, y))) / 2.0
+  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> [a + hd] @ tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine v -> sin (eval (v, x, y))
+  | Cosine v -> cos (eval (v, x, y))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (v, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(3,65)-(3,69)
+(15,21)-(15,58)
+(15,21)-(15,64)
+(15,22)-(15,38)
+(16,19)-(16,54)
 *)
 
 (* type error slice
-(3,17)-(3,69)
-(3,17)-(3,69)
-(3,54)-(3,62)
-(3,54)-(3,62)
-(3,54)-(3,69)
-(3,55)-(3,61)
-(3,63)-(3,64)
-(3,65)-(3,69)
-(3,65)-(3,69)
-(3,66)-(3,68)
+(13,14)-(13,17)
+(13,14)-(13,34)
+(13,18)-(13,34)
+(13,19)-(13,23)
+(15,21)-(15,58)
+(15,21)-(15,58)
+(15,21)-(15,64)
+(15,22)-(15,38)
+(15,23)-(15,27)
+(15,41)-(15,57)
+(15,42)-(15,46)
+(15,61)-(15,64)
+(16,19)-(16,35)
+(16,19)-(16,54)
+(16,19)-(16,54)
+(16,20)-(16,24)
+(16,38)-(16,54)
+(16,39)-(16,43)
 *)

@@ -1,29 +1,39 @@
 
-let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10 then 0 else 1 + (additivePersistence sumList (digits n));;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10 then 0 else 1 + (additivePersistence (sumList (digits n)));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
+(10,28)-(10,68)
+(10,49)-(10,56)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(9,3)-(10,70)
+(9,28)-(10,68)
+(10,2)-(10,68)
+(10,17)-(10,18)
+(10,28)-(10,68)
+(10,29)-(10,48)
 *)

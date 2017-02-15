@@ -1,94 +1,32 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = eval (n, x, y) in
-      if d < 0
-      then (eval (m, x, y)) ** (d *. (-1.0))
-      else (eval (m, x, y)) ** d
-  | Op (m,n,o) ->
-      (sqrt (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y)))) /.
-        3.0;;
+let pipe fs = let f a x d = x a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = eval (n, x, y) in
-      if d < 0.0
-      then (eval (m, x, y)) ** (d *. (-1.0))
-      else (eval (m, x, y)) ** d
-  | Op (m,n,o) ->
-      (sqrt (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y)))) /.
-        3.0;;
+let pipe fs =
+  let f a x y = x (a y) in let base i = i in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(29,13)-(29,14)
+(2,14)-(2,75)
+(2,24)-(2,31)
+(2,30)-(2,31)
+(2,35)-(2,75)
+(2,46)-(2,47)
+(2,51)-(2,75)
 *)
 
 (* type error slice
-(19,18)-(19,42)
-(19,25)-(19,41)
-(19,26)-(19,30)
-(28,6)-(31,32)
-(28,14)-(28,18)
-(28,14)-(28,28)
-(29,9)-(29,10)
-(29,9)-(29,14)
-(29,9)-(29,14)
-(29,13)-(29,14)
-(30,31)-(30,44)
-(30,37)-(30,43)
-(30,37)-(30,43)
-(30,39)-(30,42)
+(2,14)-(2,75)
+(2,20)-(2,31)
+(2,22)-(2,31)
+(2,24)-(2,31)
+(2,35)-(2,75)
+(2,46)-(2,47)
+(2,51)-(2,65)
+(2,51)-(2,75)
+(2,66)-(2,67)
+(2,68)-(2,72)
 *)

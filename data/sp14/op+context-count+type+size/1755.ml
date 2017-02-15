@@ -1,27 +1,29 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) :: h;;
+let rec clone x n =
+  let rec helper = match n with | 0 -> [] | _ -> x :: ((helper n) - 1) in
+  helper n;;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> h :: (listReverse l);;
+let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(3,36)-(3,51)
-(3,49)-(3,50)
-(3,55)-(3,56)
+(3,2)-(4,10)
+(3,54)-(3,70)
+(3,55)-(3,65)
+(3,56)-(3,62)
+(4,2)-(4,10)
 *)
 
 (* type error slice
-(2,3)-(3,58)
-(2,20)-(3,56)
-(3,2)-(3,56)
-(3,36)-(3,51)
-(3,36)-(3,56)
-(3,36)-(3,56)
-(3,37)-(3,48)
+(3,2)-(4,10)
+(3,19)-(3,70)
+(3,39)-(3,41)
+(3,49)-(3,70)
+(3,54)-(3,70)
+(3,55)-(3,65)
+(3,56)-(3,62)
 *)

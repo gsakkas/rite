@@ -1,120 +1,50 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = eval (n, x, y) in
-      if d > 1.0
-      then eval (m, x, y)
-      else (eval (m, x, y)) ** (eval (n, x, y))
-  | Op (m,n,o) ->
-      let d =
-        (((eval (m, x, y)) * (eval (n, x, y))) * (eval (o, x, y))) /
-          (((eval (m, x, y)) + (eval (n, x, y))) + (eval (o, x, y))) in
-      if d > 1.0 then 1.0 else if d < (-1.0) then (-1.0) else d;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = if (List.length t) <> 0 then t else [] in
+      let l = if (List.length t) <> 0 then "" else sep in
+      List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = eval (n, x, y) in
-      if d > 1.0
-      then eval (m, x, y)
-      else (eval (m, x, y)) ** (eval (n, x, y))
-  | Op (m,n,o) ->
-      let d =
-        (((eval (m, x, y)) *. (eval (n, x, y))) *. (eval (o, x, y))) /.
-          (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y))) in
-      if d > 1.0 then 1.0 else if d < (-1.0) then (-1.0) else d;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = if (List.length t) <> 0 then "" else sep in
+      let l = if (List.length t) <> 0 then t else [] in
+      List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(34,8)-(34,66)
-(34,8)-(35,68)
-(34,9)-(34,46)
-(34,10)-(34,26)
-(35,10)-(35,68)
-(35,11)-(35,48)
-(35,12)-(35,28)
+(7,46)-(7,47)
+(7,53)-(7,55)
+(8,6)-(9,29)
+(8,43)-(8,45)
+(8,51)-(8,54)
+(9,6)-(9,29)
 *)
 
 (* type error slice
-(19,18)-(19,42)
-(19,25)-(19,41)
-(19,26)-(19,30)
-(33,6)-(36,63)
-(34,8)-(35,68)
-(34,9)-(34,46)
-(34,9)-(34,46)
-(34,10)-(34,26)
-(34,11)-(34,15)
-(34,29)-(34,45)
-(34,30)-(34,34)
-(35,11)-(35,48)
-(35,11)-(35,48)
-(35,12)-(35,28)
-(35,13)-(35,17)
-(35,31)-(35,47)
-(35,32)-(35,36)
-(36,6)-(36,63)
-(36,6)-(36,63)
-(36,9)-(36,10)
-(36,9)-(36,16)
-(36,9)-(36,16)
-(36,13)-(36,16)
-(36,22)-(36,25)
-(36,31)-(36,63)
-(36,38)-(36,44)
-(36,40)-(36,43)
-(36,50)-(36,56)
-(36,50)-(36,56)
-(36,52)-(36,55)
+(6,6)-(9,29)
+(6,12)-(6,23)
+(6,18)-(6,23)
+(6,20)-(6,21)
+(6,22)-(6,23)
+(7,6)-(9,29)
+(7,17)-(7,55)
+(7,46)-(7,47)
+(8,17)-(8,32)
+(8,18)-(8,29)
+(8,30)-(8,31)
+(9,6)-(9,20)
+(9,6)-(9,29)
+(9,21)-(9,22)
+(9,23)-(9,27)
 *)

@@ -1,39 +1,45 @@
 
-let mult (x,y) = x * y;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let bigMul l1 l2 =
-  let f a x =
-    let (m,n) = x in
-    let (y,z) = a in
-    ((((mult (m, n)) + y) / 10), [((mult (m, n)) + y) mod 10]) @ z in
-  let base = (0, []) in
-  let args = List.rev (List.combine l1 l2) in
-  let (cin,res) = List.fold_left f base args in [cin] @ res;;
+let fixpoint (f,b) =
+  wwhile (let fin (f',b') = (b', ((f' b') = b')) in ((fin (f, b)), b));;
 
 
 (* fix
 
-let mult (x,y) = x * y;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let bigMul l1 l2 =
-  let f a x =
-    let (m,n) = x in
-    let (y,z) = a in
-    ((((mult (m, n)) + y) / 10), ([((mult (m, n)) + y) mod 10] @ z)) in
-  let base = (0, []) in
-  let args = List.rev (List.combine l1 l2) in
-  let (cin,res) = List.fold_left f base args in [cin] @ res;;
+let fixpoint (f,b) = wwhile (let fin bt = (bt, ((f bt) = bt)) in (fin, b));;
 
 *)
 
 (* changed spans
-(8,4)-(8,66)
-(8,33)-(8,61)
-(8,63)-(8,64)
+(5,9)-(5,70)
+(5,19)-(5,48)
+(5,28)-(5,48)
+(5,29)-(5,31)
+(5,35)-(5,37)
+(5,38)-(5,40)
+(5,44)-(5,46)
+(5,52)-(5,69)
+(5,53)-(5,65)
+(5,58)-(5,64)
 *)
 
 (* type error slice
-(8,4)-(8,62)
-(8,4)-(8,66)
-(8,63)-(8,64)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(5,2)-(5,8)
+(5,2)-(5,70)
+(5,9)-(5,70)
+(5,9)-(5,70)
+(5,19)-(5,48)
+(5,28)-(5,48)
+(5,52)-(5,69)
+(5,53)-(5,65)
+(5,54)-(5,57)
 *)

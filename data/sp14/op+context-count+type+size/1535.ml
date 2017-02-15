@@ -1,51 +1,27 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
-
-let fixpoint (f,b) =
-  wwhile (let func x y = (x, ((x y) <> y)) in ((func f b), b));;
+let rec clone x n =
+  let acc = [x] in if n > 0 then clone (x :: acc) (n - 1) else [];;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
-
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
+let rec clone x n = let acc = [0] in if n > 0 then clone x (n - 1) else [];;
 
 *)
 
 (* changed spans
-(7,9)-(7,62)
-(7,21)-(7,42)
-(7,26)-(7,27)
-(7,29)-(7,41)
-(7,30)-(7,35)
-(7,31)-(7,32)
-(7,33)-(7,34)
-(7,39)-(7,40)
-(7,46)-(7,61)
-(7,47)-(7,57)
-(7,59)-(7,60)
+(3,2)-(3,65)
+(3,13)-(3,14)
+(3,39)-(3,49)
+(3,45)-(3,48)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(4,41)-(4,47)
-(4,41)-(4,55)
-(4,48)-(4,55)
-(4,49)-(4,50)
-(7,2)-(7,8)
-(7,2)-(7,62)
-(7,9)-(7,62)
-(7,9)-(7,62)
-(7,19)-(7,42)
-(7,21)-(7,42)
-(7,25)-(7,42)
-(7,46)-(7,61)
-(7,47)-(7,57)
-(7,48)-(7,52)
+(2,3)-(3,67)
+(2,14)-(3,65)
+(3,33)-(3,38)
+(3,33)-(3,57)
+(3,39)-(3,49)
+(3,39)-(3,49)
+(3,40)-(3,41)
 *)

@@ -8,24 +8,38 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) = float_of_string (exprToString eval);;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 2)) < 1 then buildX else buildY)
+  else
+    (let x = rand (0, 5) in
+     match x with
+     | 0 -> buildSine buildX
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 
 (* fix
@@ -39,39 +53,82 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) = float_of_string (exprToString e);;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
+  else
+    (let x = rand (0, 5) in
+     match x with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(28,53)-(28,57)
+(27,34)-(27,40)
+(27,46)-(27,52)
+(29,4)-(42,71)
+(31,22)-(31,28)
+(32,12)-(32,23)
+(42,28)-(42,33)
+(42,36)-(42,37)
+(42,43)-(42,48)
+(42,49)-(42,68)
+(42,50)-(42,54)
+(42,56)-(42,67)
+(42,57)-(42,62)
+(42,65)-(42,66)
 *)
 
 (* type error slice
-(12,2)-(26,79)
-(15,27)-(15,43)
-(15,28)-(15,40)
-(15,41)-(15,42)
-(28,3)-(28,60)
-(28,14)-(28,58)
-(28,39)-(28,58)
-(28,40)-(28,52)
-(28,53)-(28,57)
+(13,3)-(13,30)
+(13,16)-(13,28)
+(13,20)-(13,28)
+(13,27)-(13,28)
+(15,3)-(15,26)
+(15,14)-(15,24)
+(15,18)-(15,24)
+(15,18)-(15,24)
+(15,23)-(15,24)
+(21,3)-(21,22)
+(21,11)-(21,20)
+(25,3)-(42,73)
+(25,15)-(42,71)
+(26,2)-(42,71)
+(26,2)-(42,71)
+(27,7)-(27,53)
+(27,34)-(27,40)
+(29,4)-(42,71)
+(30,5)-(42,70)
+(31,12)-(31,21)
+(31,12)-(31,28)
+(31,22)-(31,28)
+(32,12)-(32,23)
+(32,12)-(32,51)
+(32,24)-(32,51)
+(32,25)-(32,30)
 *)

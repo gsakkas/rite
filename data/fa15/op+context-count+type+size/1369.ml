@@ -1,106 +1,107 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | Op of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with | (o,l) -> ((10 * o), (bigAdd (mulByDigit (o * (x l1))) l)) in
-  let base = (1, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
+  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (x,y,z,w) ->
+      "(" ^
+        ((exprToString x) ^
+           ("<" ^
+              ((exprToString y) ^
+                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
+  | Power (x,y) -> (exprToString x) ^ ("**" ^ (exprToString y))
+  | Op (x,y,z) ->
+      "(" ^
+        ((exprToString x) ^
+           ("*" ^
+              (exprToString ^
+                 ("*" ^
+                    ((exprToString ")/(") ^
+                       ((exprToString x) ^
+                          ("+" ^
+                             ((exprToString y) ^ (("+" exprToString) ^ ")")))))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | Op of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (o,l) ->
-        let prod = o * x in ((10 * o), (bigAdd (mulByDigit prod l1) l)) in
-  let base = (1, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
+  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (x,y,z,w) ->
+      "(" ^
+        ((exprToString x) ^
+           ("<" ^
+              ((exprToString y) ^
+                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
+  | Power (x,y) -> (exprToString x) ^ ("**" ^ (exprToString y))
+  | Op (x,y,z) ->
+      "(" ^
+        ((exprToString x) ^
+           ("*" ^
+              ((exprToString y) ^
+                 ("*" ^
+                    ((exprToString z) ^
+                       (")/(" ^
+                          ((exprToString x) ^
+                             ("+" ^
+                                ((exprToString y) ^
+                                   ("+" ^ ((exprToString z) ^ ")")))))))))));;
 
 *)
 
 (* changed spans
-(35,28)-(35,76)
-(35,47)-(35,72)
-(35,59)-(35,71)
-(35,60)-(35,61)
-(35,64)-(35,70)
-(35,65)-(35,66)
-(36,2)-(37,66)
-(37,2)-(37,66)
-(37,19)-(37,66)
+(33,15)-(33,27)
+(34,17)-(38,80)
+(35,35)-(35,40)
+(38,50)-(38,68)
+(38,55)-(38,67)
+(38,71)-(38,74)
 *)
 
 (* type error slice
-(31,46)-(31,52)
-(31,46)-(31,77)
-(31,53)-(31,54)
-(31,55)-(31,77)
-(31,56)-(31,66)
-(31,75)-(31,76)
-(35,39)-(35,75)
-(35,40)-(35,46)
-(35,47)-(35,72)
-(35,48)-(35,58)
+(14,2)-(38,83)
+(17,27)-(17,43)
+(17,28)-(17,40)
+(17,41)-(17,42)
+(33,14)-(38,81)
+(33,15)-(33,27)
+(33,28)-(33,29)
+(35,21)-(35,41)
+(35,22)-(35,34)
+(35,35)-(35,40)
+(38,50)-(38,68)
+(38,51)-(38,54)
 *)

@@ -1,35 +1,36 @@
 
-let rec digitalRoot n =
-  if n <= 9
-  then n
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> (r_digitalRoot n) - 1);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = h in let l = "" in List.fold_left f base l;;
 
 
 (* fix
 
-let rec digitalRoot n =
-  if n <= 9
-  then n
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> r_digitalRoot n (-1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x in let base = h in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(8,36)-(8,53)
-(8,36)-(8,57)
-(8,56)-(8,57)
+(6,18)-(6,19)
+(6,18)-(6,23)
+(6,20)-(6,21)
+(7,6)-(7,59)
+(7,22)-(7,59)
+(7,30)-(7,32)
+(7,36)-(7,59)
 *)
 
 (* type error slice
-(7,29)-(7,42)
-(7,29)-(7,68)
-(8,36)-(8,53)
-(8,36)-(8,57)
-(8,37)-(8,50)
+(7,22)-(7,59)
+(7,30)-(7,32)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,58)-(7,59)
 *)

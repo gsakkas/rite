@@ -1,52 +1,62 @@
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then l2 @ (clone 0 (((-1) * diff) - 1))
-  else if diff > 0 then clone 0 diff else (l1, l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2;;
 
 
 (* fix
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then ((l1 @ (clone 0 diff)), l2)
-  else if diff > 0 then (l1, (l2 @ (clone 0 diff))) else (l1, l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
 
 *)
 
 (* changed spans
-(10,7)-(10,9)
-(10,7)-(10,41)
-(10,21)-(10,40)
-(10,22)-(10,35)
-(10,23)-(10,27)
-(10,38)-(10,39)
-(11,24)-(11,29)
-(11,24)-(11,36)
-(11,43)-(11,45)
-(11,47)-(11,49)
+(19,23)-(19,62)
+(19,23)-(19,66)
+(19,24)-(19,41)
+(19,65)-(19,66)
 *)
 
 (* type error slice
-(10,7)-(10,41)
-(10,10)-(10,11)
-(10,12)-(10,41)
-(10,13)-(10,18)
-(11,7)-(11,50)
-(11,7)-(11,50)
-(11,24)-(11,29)
-(11,24)-(11,36)
-(11,42)-(11,50)
+(17,19)-(17,44)
+(17,26)-(17,43)
+(17,27)-(17,31)
+(19,23)-(19,62)
+(19,23)-(19,62)
+(19,24)-(19,41)
+(19,25)-(19,29)
+(19,44)-(19,61)
+(19,45)-(19,49)
 *)

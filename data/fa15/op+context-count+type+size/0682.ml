@@ -1,116 +1,75 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  match diff with
+  | diff when diff > 0 -> (l1, (List.append (clone 0 diff) l2))
+  | diff when diff < 0 -> ((List.append (clone 0 (0 - diff)) l1), l2)
+  | 0 -> (l1, l2)
+  | _ -> ([], []);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  let r = ((rand 1), 6) in
-  match r with
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | 2 -> buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      ([(x1 + x2) / 10], ((((a1 + x1) + x2) mod 10) :: a2)) in
+    let base = ([0], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  match diff with
+  | diff when diff > 0 -> (l1, (List.append (clone 0 diff) l2))
+  | diff when diff < 0 -> ((List.append (clone 0 (0 - diff)) l1), l2)
+  | 0 -> (l1, l2)
+  | _ -> ([], []);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 -> buildY ()
-  | _ ->
-      let r = rand (1, 6) in
-      (match r with
-       | 1 -> buildSine (build (rand, (depth - 1)))
-       | 2 -> buildCosine (build (rand, (depth - 1)))
-       | 3 ->
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 4 ->
-           buildTimes
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 5 ->
-           buildThresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      (((x1 + x2) / 10), ((((a1 + x1) + x2) mod 10) :: a2)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(21,15)-(33,67)
-(22,2)-(33,67)
-(22,10)-(22,23)
-(22,11)-(22,19)
-(22,12)-(22,16)
-(22,17)-(22,18)
-(33,18)-(33,22)
-(33,24)-(33,35)
-(33,25)-(33,30)
-(33,33)-(33,34)
-(33,40)-(33,45)
-(33,46)-(33,65)
-(33,47)-(33,51)
-(33,53)-(33,64)
-(33,54)-(33,59)
-(33,62)-(33,63)
+(20,7)-(20,23)
+(21,16)-(21,19)
 *)
 
 (* type error slice
-(22,2)-(33,67)
-(22,10)-(22,23)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,2)-(33,67)
-(23,8)-(23,9)
+(17,4)-(23,51)
+(17,10)-(20,59)
+(17,12)-(20,59)
+(18,6)-(20,59)
+(19,6)-(20,59)
+(19,6)-(20,59)
+(19,20)-(19,21)
+(20,6)-(20,59)
+(20,7)-(20,23)
+(20,28)-(20,37)
+(20,29)-(20,31)
+(23,18)-(23,32)
+(23,18)-(23,44)
+(23,33)-(23,34)
 *)

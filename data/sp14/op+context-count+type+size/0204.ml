@@ -1,97 +1,137 @@
 
-let rec padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2 then padZero (0 :: l1) l2 else padZero l1 (0 :: l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (eFromList1,eFromList2) = x in
-      let (cin,result) = a in
-      let sum = (eFromList1 + eFromList2) + cin in
-      let tens = sum / 10 in
-      let ones = sum mod 10 in (tens, (ones :: result)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with
-  | 0 -> []
-  | 1 -> l
-  | _ -> bigAdd ((bigAdd 1 1) (mulByDigit (i - 2) l));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      let res1 = eval (e1, x, y) in
+      let res2 = eval (e2, x, y) in
+      let res3 = eval (e3, x, y) in
+      if res1 > res2
+      then ((res1 +. res2) +. res3) /. 3.0
+      else
+        if res2 > res3
+        then ((res1 *. res2) +. res3) /. 2.0
+        else
+          if res1 > res3
+          then
+            ((((atan res1) + (atan res2)) - (atan res3)) *. 2) / (3.0 *. pi)
+          else eval ((-1.0) *. res3);;
 
 
 (* fix
 
-let rec padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2 then padZero (0 :: l1) l2 else padZero l1 (0 :: l2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (eFromList1,eFromList2) = x in
-      let (cin,result) = a in
-      let sum = (eFromList1 + eFromList2) + cin in
-      let tens = sum / 10 in
-      let ones = sum mod 10 in (tens, (ones :: result)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0
-  then []
-  else if i = 1 then l else bigAdd (bigAdd l l) (mulByDigit (i - 2) l);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      let res1 = eval (e1, x, y) in
+      let res2 = eval (e2, x, y) in
+      let res3 = eval (e3, x, y) in
+      if res1 > res2
+      then ((res1 +. res2) +. res3) /. 3.0
+      else
+        if res2 > res3
+        then ((res1 *. res2) +. res3) /. 2.0
+        else
+          if res1 > res3
+          then
+            ((((atan res1) +. (atan res2)) -. (atan res3)) *. 2.0) /.
+              (3.0 *. pi)
+          else (-1.0) *. res3;;
 
 *)
 
 (* changed spans
-(27,2)-(30,53)
-(27,8)-(27,9)
-(28,9)-(28,11)
-(29,9)-(29,10)
-(30,9)-(30,53)
-(30,16)-(30,53)
-(30,25)-(30,26)
-(30,27)-(30,28)
-(30,30)-(30,52)
-(30,43)-(30,44)
-(30,47)-(30,48)
+(42,12)-(42,76)
+(42,13)-(42,56)
+(42,14)-(42,41)
+(42,15)-(42,26)
+(42,60)-(42,61)
+(43,15)-(43,19)
+(43,15)-(43,36)
 *)
 
 (* type error slice
-(8,30)-(8,37)
-(8,30)-(8,50)
-(8,38)-(8,47)
-(13,3)-(24,36)
-(13,11)-(24,34)
-(24,18)-(24,33)
-(24,19)-(24,26)
-(24,27)-(24,29)
-(27,2)-(30,53)
-(27,2)-(30,53)
-(28,9)-(28,11)
-(30,9)-(30,15)
-(30,9)-(30,53)
-(30,17)-(30,29)
-(30,18)-(30,24)
-(30,25)-(30,26)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(19,32)-(19,42)
+(37,8)-(43,36)
+(37,8)-(43,36)
+(38,13)-(38,44)
+(40,10)-(43,36)
+(42,12)-(42,62)
+(42,12)-(42,62)
+(42,12)-(42,62)
+(42,12)-(42,76)
+(42,12)-(42,76)
+(42,12)-(42,76)
+(42,13)-(42,56)
+(42,13)-(42,56)
+(42,14)-(42,41)
+(42,14)-(42,41)
+(42,15)-(42,26)
+(42,16)-(42,20)
+(42,29)-(42,40)
+(42,30)-(42,34)
+(42,44)-(42,55)
+(42,45)-(42,49)
+(42,60)-(42,61)
+(42,65)-(42,76)
+(43,15)-(43,19)
+(43,15)-(43,36)
+(43,20)-(43,36)
+(43,20)-(43,36)
+(43,21)-(43,27)
+(43,21)-(43,27)
+(43,23)-(43,26)
 *)

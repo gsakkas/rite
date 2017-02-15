@@ -1,55 +1,27 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in l1 :: pad :: l2
-  else (let pad = clone 0 (- sizDif) in (pad :: l1) :: l2);;
+let rec listReverse l = match l with | [] -> [] | h::t -> [listReverse t] @ h;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(7,35)-(7,50)
-(7,41)-(7,44)
-(7,41)-(7,50)
-(8,40)-(8,51)
-(8,40)-(8,57)
-(8,41)-(8,44)
+(2,58)-(2,73)
+(2,76)-(2,77)
 *)
 
 (* type error slice
-(7,7)-(7,50)
-(7,17)-(7,22)
-(7,17)-(7,31)
-(7,35)-(7,37)
-(7,35)-(7,50)
-(7,35)-(7,50)
-(7,41)-(7,44)
-(7,41)-(7,50)
-(7,41)-(7,50)
-(7,41)-(7,50)
-(7,48)-(7,50)
-(8,7)-(8,58)
-(8,18)-(8,23)
-(8,18)-(8,36)
-(8,40)-(8,51)
-(8,40)-(8,51)
-(8,40)-(8,51)
-(8,40)-(8,57)
-(8,40)-(8,57)
-(8,41)-(8,44)
-(8,48)-(8,50)
-(8,55)-(8,57)
+(2,3)-(2,79)
+(2,20)-(2,77)
+(2,24)-(2,77)
+(2,58)-(2,73)
+(2,58)-(2,73)
+(2,58)-(2,77)
+(2,59)-(2,70)
+(2,59)-(2,72)
+(2,74)-(2,75)
 *)

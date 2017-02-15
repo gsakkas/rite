@@ -1,52 +1,97 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((let g b = (f, ((f b) = b)) in g), b);;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          (match a with
+           | (carry,sum) ->
+               (match sum with
+                | [] ->
+                    if ((carry + b) + c) < 10
+                    then (0, [carry; (carry + b) + c])
+                    else ((carry + 1), [carry + 1; ((carry + b) + c) mod 10])
+                | h::t ->
+                    if ((b + c) + h) < 10
+                    then (0, ([0] @ ([(b + c) + h] @ t)))
+                    else
+                      ((carry + 1),
+                        ([[((h + b) + c) / 10]; ((h + b) + c) mod 10] @ t)))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile (let g x = let calcfx = f x in (calcfx, (calcfx = x)) in (g, b));;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          (match a with
+           | (carry,sum) ->
+               (match sum with
+                | [] ->
+                    if ((carry + b) + c) < 10
+                    then (0, [carry; (carry + b) + c])
+                    else ((carry + 1), [carry + 1; ((carry + b) + c) mod 10])
+                | h::t ->
+                    if ((b + c) + h) < 10
+                    then (0, ([0] @ ([(b + c) + h] @ t)))
+                    else
+                      ((carry + 1),
+                        ([((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t))))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(4,28)-(4,66)
-(4,29)-(4,62)
-(4,36)-(4,56)
-(4,40)-(4,56)
-(4,41)-(4,42)
-(4,44)-(4,55)
-(4,45)-(4,50)
-(4,48)-(4,49)
-(4,53)-(4,54)
-(4,60)-(4,61)
+(32,25)-(32,69)
+(32,48)-(32,68)
 *)
 
 (* type error slice
-(2,3)-(2,79)
-(2,16)-(2,77)
-(2,23)-(2,77)
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,39)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,66)-(2,68)
-(4,21)-(4,27)
-(4,21)-(4,66)
-(4,28)-(4,66)
-(4,29)-(4,62)
-(4,29)-(4,62)
-(4,36)-(4,56)
-(4,40)-(4,56)
-(4,41)-(4,42)
-(4,45)-(4,50)
-(4,46)-(4,47)
-(4,48)-(4,49)
-(4,60)-(4,61)
+(22,15)-(32,76)
+(22,15)-(32,76)
+(28,23)-(28,36)
+(28,34)-(28,35)
+(32,24)-(32,74)
+(32,25)-(32,69)
+(32,25)-(32,69)
+(32,25)-(32,69)
+(32,26)-(32,46)
+(32,48)-(32,68)
+(32,70)-(32,71)
+(32,72)-(32,73)
 *)

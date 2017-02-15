@@ -1,37 +1,38 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | hd::tl ->
-        let seen' = if (List.mem tl hd) = true then seen else hd :: seen in
-        let rest' = tl in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> [] | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | hd::tl ->
-        let seen' = if (List.mem hd seen) = true then seen else hd :: seen in
-        let rest' = tl in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(7,33)-(7,35)
-(7,42)-(7,46)
+(4,35)-(4,37)
 *)
 
 (* type error slice
-(4,4)-(8,47)
-(4,4)-(8,47)
-(7,23)-(7,39)
-(7,24)-(7,32)
-(7,33)-(7,35)
-(7,36)-(7,38)
+(3,2)-(5,26)
+(3,8)-(3,25)
+(3,10)-(3,25)
+(3,14)-(3,15)
+(3,14)-(3,25)
+(3,14)-(3,25)
+(4,2)-(5,26)
+(4,13)-(4,56)
+(4,13)-(4,56)
+(4,35)-(4,37)
+(4,50)-(4,51)
+(4,50)-(4,56)
+(5,2)-(5,16)
+(5,2)-(5,26)
+(5,17)-(5,18)
+(5,19)-(5,23)
 *)

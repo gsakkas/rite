@@ -1,74 +1,104 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (x * x) + a in
-    let base = 0 in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Inverse a ->
+      let result = eval (a, x, y) in if result = 0. then 0 else 1 /. result
+  | Max (a,b) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      if aResult > bResult then aResult else bResult
+  | Range (a,b,c) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      let cResult = eval (c, x, y) in
+      if aResult < bResult
+      then bResult
+      else if aResult < cResult then cResult else aResult;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([x + 1], [x + 1]) in
-    let base = ([], []) in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Inverse a ->
+      let result = eval (a, x, y) in if result = 0. then 0. else 1. /. result
+  | Max (a,b) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      if aResult > bResult then aResult else bResult
+  | Range (a,b,c) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      let cResult = eval (c, x, y) in
+      if aResult < bResult
+      then bResult
+      else if aResult < cResult then cResult else aResult;;
 
 *)
 
 (* changed spans
-(19,16)-(19,23)
-(19,16)-(19,27)
-(19,21)-(19,22)
-(19,26)-(19,27)
-(20,15)-(20,16)
-(21,4)-(21,68)
-(22,14)-(22,17)
-(22,18)-(22,33)
-(22,19)-(22,26)
-(22,27)-(22,29)
-(22,30)-(22,32)
+(29,57)-(29,58)
+(29,64)-(29,65)
 *)
 
 (* type error slice
-(19,4)-(21,68)
-(19,10)-(19,27)
-(19,16)-(19,27)
-(19,26)-(19,27)
-(21,21)-(21,68)
-(21,35)-(21,49)
-(21,35)-(21,61)
-(21,50)-(21,51)
+(17,2)-(40,57)
+(17,2)-(40,57)
+(20,14)-(20,17)
+(20,14)-(20,42)
+(29,6)-(29,75)
+(29,37)-(29,75)
+(29,37)-(29,75)
+(29,57)-(29,58)
+(29,64)-(29,65)
+(29,64)-(29,75)
+(29,64)-(29,75)
 *)

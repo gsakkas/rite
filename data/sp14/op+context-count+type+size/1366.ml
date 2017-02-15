@@ -1,26 +1,28 @@
 
-let pipe fs = let f a x = a x in let base p = p in List.fold_left f base fs;;
+let rec listReverse l =
+  match l with | [] -> [] | a::b::[] -> (listReverse b) @ a;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base p = p in List.fold_left f base fs;;
+let rec listReverse l =
+  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
 
 *)
 
 (* changed spans
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,33)-(2,75)
+(3,2)-(3,59)
+(3,58)-(3,59)
 *)
 
 (* type error slice
-(2,14)-(2,75)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,66)-(2,67)
+(2,3)-(3,61)
+(2,20)-(3,59)
+(3,2)-(3,59)
+(3,2)-(3,59)
+(3,2)-(3,59)
+(3,8)-(3,9)
+(3,40)-(3,55)
+(3,41)-(3,52)
+(3,53)-(3,54)
 *)

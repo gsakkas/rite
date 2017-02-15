@@ -11,9 +11,20 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = match x with | (h1,h2) -> (a, (h1 + h2)) in
-    let base = 0 in
-    let args = List.combine l1 l2 in
+    let f a x =
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
+    let base = ([], []) in
+    let args = (List.rev (List.combine l1 l2)) :: (0, 0) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
@@ -33,42 +44,45 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match a with
-      | (list1,list2) ->
-          (match list1 with
-           | [] -> (match x with | (h1,h2) -> (((h1 + h2) :: list1), list2))) in
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
     let base = ([], []) in
-    let args = List.combine l1 l2 in
+    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(14,16)-(14,56)
-(14,43)-(14,44)
-(15,4)-(17,51)
-(15,15)-(15,16)
-(16,4)-(17,51)
-(16,15)-(16,33)
-(17,4)-(17,51)
-(18,2)-(18,12)
-(18,13)-(18,34)
-(18,14)-(18,17)
-(18,18)-(18,33)
-(18,19)-(18,26)
-(18,27)-(18,29)
-(18,30)-(18,32)
+(27,15)-(27,46)
+(27,15)-(27,56)
+(27,50)-(27,56)
 *)
 
 (* type error slice
-(14,4)-(17,51)
-(14,10)-(14,56)
-(14,12)-(14,56)
-(14,16)-(14,56)
-(14,42)-(14,56)
-(14,43)-(14,44)
-(17,18)-(17,32)
-(17,18)-(17,44)
-(17,33)-(17,34)
+(14,4)-(28,51)
+(14,10)-(25,60)
+(14,12)-(25,60)
+(15,6)-(25,60)
+(15,12)-(15,13)
+(27,4)-(28,51)
+(27,15)-(27,46)
+(27,15)-(27,56)
+(27,15)-(27,56)
+(27,15)-(27,56)
+(27,16)-(27,24)
+(27,50)-(27,56)
+(28,18)-(28,32)
+(28,18)-(28,44)
+(28,33)-(28,34)
+(28,40)-(28,44)
 *)

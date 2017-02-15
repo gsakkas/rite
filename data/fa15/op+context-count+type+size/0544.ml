@@ -7,26 +7,37 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Mirana of expr
-  | Darius of expr* expr* expr;;
+  | Harmonic of expr* expr
+  | Log of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
   | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Mirana e -> abs_float (eval (e, x, y))
-  | Darius (e1,e2,e3) ->
-      ((eval (e1, x, y)) + (eval (e2, x, y))) log eval (e3, x, y);;
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Harmonic (e1,e2) ->
+      "((" ^
+        ((exprToString e1) ^
+           ("*" ^
+              ((exprToString e2) ^
+                 (")/(" ^
+                    ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")")))))))
+  | Log (e1,e2,e3) ->
+      "(log(" ^
+        ((exprToString e1) ^
+           ("/" ^
+              ((exprToString e2 ")/") ^ ("log(" ^ ((exprToString e3) ^ "))")))));;
 
 
 (* fix
@@ -39,48 +50,51 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Mirana of expr
-  | Darius of expr* expr* expr;;
+  | Harmonic of expr* expr
+  | Log of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
   | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Mirana e -> abs_float (eval (e, x, y))
-  | Darius (e1,e2,e3) ->
-      let comb = (eval (e1, x, y)) +. (eval (e2, x, y)) in
-      mod_float comb (eval (e3, x, y));;
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Harmonic (e1,e2) ->
+      "((" ^
+        ((exprToString e1) ^
+           ("*" ^
+              ((exprToString e2) ^
+                 (")/(" ^
+                    ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")")))))))
+  | Log (e1,e2,e3) ->
+      "(log(" ^
+        ((exprToString e1) ^
+           ("/" ^
+              ((exprToString e2) ^
+                 (")/" ^ ("log(" ^ ((exprToString e3) ^ "))"))))));;
 
 *)
 
 (* changed spans
-(29,6)-(29,45)
-(29,6)-(29,65)
-(29,7)-(29,24)
-(29,46)-(29,49)
-(29,50)-(29,54)
+(40,15)-(40,37)
+(40,32)-(40,36)
 *)
 
 (* type error slice
-(19,18)-(19,42)
-(19,25)-(19,41)
-(19,26)-(19,30)
-(29,6)-(29,45)
-(29,6)-(29,45)
-(29,6)-(29,45)
-(29,6)-(29,65)
-(29,7)-(29,24)
-(29,8)-(29,12)
-(29,27)-(29,44)
-(29,28)-(29,32)
+(17,27)-(17,52)
+(17,28)-(17,45)
+(17,29)-(17,41)
+(17,46)-(17,47)
+(40,15)-(40,37)
+(40,16)-(40,28)
 *)

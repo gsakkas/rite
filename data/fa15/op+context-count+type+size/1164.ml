@@ -1,85 +1,50 @@
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
-
-let addition (x,y) = x + y;;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then (((clone 0 ((-1) * diff)) @ l1), l2)
-  else if diff > 0 then (l1, ((clone 0 diff) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | hd::tl -> if hd = 0 then removeZero tl else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (m,n) = x in
-      let (y,z) = a in
-      (((((addition (m, n)) + y) / 10) :: z),
-        ([((addition (m, n)) + y) mod 10] @ z)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    (let fin (f',b') = let nfb = f' b' in (nfb, (nfb = b')) in
+     ((fin (f, b)), b));;
 
 
 (* fix
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
-
-let addition (x,y) = x + y;;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then (((clone 0 ((-1) * diff)) @ l1), l2)
-  else if diff > 0 then (l1, ((clone 0 diff) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | hd::tl -> if hd = 0 then removeZero tl else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (m,n) = x in
-      let (y,z) = a in
-      ((((addition (m, n)) + y) / 10),
-        ([((addition (m, n)) + y) mod 10] @ z)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile (let fin bt = (bt, ((f bt) = bt)) in (fin, b));;
 
 *)
 
 (* changed spans
-(23,7)-(23,44)
-(23,42)-(23,43)
-(26,15)-(26,23)
-(26,15)-(26,44)
+(6,4)-(7,23)
+(6,14)-(6,59)
+(6,23)-(6,59)
+(6,33)-(6,35)
+(6,33)-(6,38)
+(6,36)-(6,38)
+(6,42)-(6,59)
+(6,43)-(6,46)
+(6,49)-(6,52)
+(6,55)-(6,57)
+(7,5)-(7,22)
+(7,7)-(7,10)
 *)
 
 (* type error slice
-(20,4)-(27,51)
-(20,10)-(24,47)
-(20,12)-(24,47)
-(21,6)-(24,47)
-(22,6)-(24,47)
-(22,6)-(24,47)
-(22,18)-(22,19)
-(23,6)-(24,47)
-(23,7)-(23,44)
-(23,9)-(23,32)
-(23,30)-(23,31)
-(27,18)-(27,32)
-(27,18)-(27,44)
-(27,33)-(27,34)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(5,2)-(5,8)
+(5,2)-(7,23)
+(6,4)-(7,23)
+(6,4)-(7,23)
+(6,14)-(6,59)
+(6,23)-(6,59)
+(6,42)-(6,59)
+(7,5)-(7,22)
+(7,6)-(7,18)
+(7,7)-(7,10)
 *)

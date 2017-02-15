@@ -1,45 +1,77 @@
 
-let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
 
-let fixpoint (f,b) = wwhile ((g (f, b)), b);;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (([],_),y) -> (([], 0), y)
+      | ((h::t,carry),y) ->
+          let sum = (h + x) + carry in ((t, (sum / 10)), ((sum mod 10) :: y)) in
+    let base = ((((List.rev 0) :: l1), 0), []) in
+    let args = (List.rev 0) :: l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let g h x = let xx = h x in (xx, (xx = (h x)));;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
 
-let fixpoint (f,b) = wwhile ((g f), b);;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (([],_),y) -> (([], 0), y)
+      | ((h::t,carry),y) ->
+          let sum = (h + x) + carry in ((t, (sum / 10)), ((sum mod 10) :: y)) in
+    let base = (((List.rev (0 :: l1)), 0), []) in
+    let args = List.rev (0 :: l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,7)-(2,48)
-(2,14)-(2,48)
-(2,23)-(2,24)
-(2,23)-(2,26)
-(2,42)-(2,43)
-(6,32)-(6,38)
-(6,41)-(6,42)
+(25,17)-(25,37)
+(25,28)-(25,29)
+(26,15)-(26,33)
+(26,25)-(26,26)
 *)
 
 (* type error slice
-(2,3)-(2,50)
-(2,7)-(2,48)
-(2,14)-(2,48)
-(2,30)-(2,48)
-(4,37)-(4,38)
-(4,37)-(4,40)
-(4,55)-(4,61)
-(4,55)-(4,69)
-(4,62)-(4,69)
-(4,63)-(4,64)
-(6,21)-(6,27)
-(6,21)-(6,43)
-(6,28)-(6,43)
-(6,29)-(6,39)
-(6,30)-(6,31)
+(25,18)-(25,30)
+(25,19)-(25,27)
+(25,28)-(25,29)
+(26,15)-(26,27)
+(26,16)-(26,24)
+(26,25)-(26,26)
 *)

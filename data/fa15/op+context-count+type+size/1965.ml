@@ -1,73 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> 1 *. x
-  | VarY  -> 1 *. y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sl ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> 1.0 *. x
-  | VarY  -> 1.0 *. y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(15,13)-(15,14)
-(16,13)-(16,14)
-(19,23)-(19,67)
-(19,66)-(19,67)
+(6,23)-(6,25)
 *)
 
 (* type error slice
-(14,2)-(24,25)
-(14,2)-(24,25)
-(15,13)-(15,14)
-(15,13)-(15,19)
-(15,13)-(15,19)
-(16,13)-(16,14)
-(16,13)-(16,19)
-(19,23)-(19,63)
-(19,23)-(19,67)
-(19,23)-(19,67)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,2)-(7,58)
+(3,8)-(3,10)
+(6,22)-(6,30)
+(6,23)-(6,25)
+(6,26)-(6,27)
 *)

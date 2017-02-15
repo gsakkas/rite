@@ -1,35 +1,25 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem (h, seen)) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sumList xs = match xs with | [] -> [] | h::t -> h + (sumList t);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem h seen) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
 *)
 
 (* changed spans
-(7,27)-(7,47)
-(7,37)-(7,46)
+(2,43)-(2,45)
 *)
 
 (* type error slice
-(7,23)-(7,26)
-(7,23)-(7,47)
-(7,27)-(7,47)
-(7,28)-(7,36)
+(2,3)-(2,73)
+(2,16)-(2,71)
+(2,21)-(2,71)
+(2,21)-(2,71)
+(2,43)-(2,45)
+(2,56)-(2,71)
+(2,56)-(2,71)
+(2,60)-(2,71)
+(2,61)-(2,68)
 *)

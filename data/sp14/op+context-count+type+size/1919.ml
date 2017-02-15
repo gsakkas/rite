@@ -1,39 +1,71 @@
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt n)
-       | true  -> (digitsOfInt n) mod 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) -> ((eval (expr x y)) +. (eval (expr1 x y))) /. 2
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt n)
-       | true  -> digitsOfInt (n mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) -> (eval (expr, x, y)) +. (eval (expr1, x, y))
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(8,18)-(8,40)
-(8,31)-(8,32)
+(19,28)-(19,74)
+(19,35)-(19,45)
+(19,56)-(19,67)
+(19,73)-(19,74)
 *)
 
 (* type error slice
-(6,6)-(8,41)
-(6,6)-(8,41)
-(7,19)-(7,39)
-(7,19)-(7,39)
-(7,24)-(7,39)
-(7,25)-(7,36)
-(8,18)-(8,33)
-(8,18)-(8,40)
-(8,18)-(8,40)
-(8,19)-(8,30)
+(14,2)-(24,29)
+(14,2)-(24,29)
+(19,28)-(19,74)
+(19,35)-(19,45)
+(19,36)-(19,40)
+(19,56)-(19,67)
+(19,57)-(19,62)
+(19,73)-(19,74)
 *)

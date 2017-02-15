@@ -8,15 +8,20 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. t)
-  | Cosine t -> cos (pi *. t)
-  | Average (t,s) -> (t +. s) /. 2;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, depth) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX else buildY
+  | d ->
+      if r = 0
+      then buildSine build (rand, (depth - 1))
+      else build (rand, (d - 1));;
 
 
 (* fix
@@ -30,42 +35,46 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, depth) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
+  | d ->
+      if r = 0
+      then buildSine (build (rand, (depth - 1)))
+      else build (rand, (d - 1));;
 
 *)
 
 (* changed spans
-(17,25)-(17,26)
-(18,16)-(18,29)
-(18,27)-(18,28)
-(19,21)-(19,29)
-(19,21)-(19,34)
-(19,22)-(19,23)
-(19,27)-(19,28)
-(19,33)-(19,34)
+(20,31)-(20,37)
+(20,43)-(20,49)
+(22,6)-(24,32)
+(23,11)-(23,46)
+(23,21)-(23,26)
+(24,18)-(24,22)
+(24,24)-(24,31)
+(24,25)-(24,26)
+(24,29)-(24,30)
 *)
 
 (* type error slice
-(14,2)-(19,34)
-(14,2)-(19,34)
-(14,2)-(19,34)
-(14,2)-(19,34)
-(17,18)-(17,27)
-(17,25)-(17,26)
-(18,20)-(18,29)
-(18,27)-(18,28)
-(19,21)-(19,29)
-(19,21)-(19,29)
-(19,21)-(19,34)
-(19,22)-(19,23)
-(19,27)-(19,28)
-(19,33)-(19,34)
+(11,3)-(11,26)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(17,3)-(24,34)
+(17,15)-(24,32)
+(23,11)-(23,20)
+(23,11)-(23,46)
+(23,21)-(23,26)
+(24,11)-(24,16)
+(24,11)-(24,32)
 *)

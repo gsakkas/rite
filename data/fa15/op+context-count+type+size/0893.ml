@@ -1,25 +1,39 @@
 
-let sqsum xs = let f a x = x * x in let base = 0 in List.fold_right f base xs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h @ seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(2,15)-(2,77)
-(2,27)-(2,32)
-(2,36)-(2,77)
-(2,52)-(2,67)
+(7,54)-(7,55)
+(8,8)-(8,46)
 *)
 
 (* type error slice
-(2,36)-(2,77)
-(2,47)-(2,48)
-(2,52)-(2,67)
-(2,52)-(2,77)
-(2,70)-(2,74)
+(7,23)-(7,31)
+(7,23)-(7,38)
+(7,32)-(7,33)
+(7,34)-(7,38)
+(7,54)-(7,55)
+(7,54)-(7,62)
+(7,56)-(7,57)
+(7,58)-(7,62)
 *)

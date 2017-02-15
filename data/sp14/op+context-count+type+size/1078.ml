@@ -1,122 +1,27 @@
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
-     helper [] x n);;
-
-let padZero l1 l2 =
-  let x = (List.length l1) - (List.length l2) in
-  if x != 0
-  then
-    (if x < 0
-     then (((clone 0 (abs x)) @ l1), l2)
-     else (l1, ((clone 0 (abs x)) @ l2)))
-  else (l1, l2);;
-
-let rec removeZero l =
-  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (b,c) ->
-          let sum = b + c in
-          if sum < 10
-          then
-            (match a with
-             | (len,[]) -> (len, [sum])
-             | (len,x'::xs') ->
-                 if x' = (-1)
-                 then
-                   (if sum = 9
-                    then (len, ((-1) :: 0 :: xs'))
-                    else (len, ((sum + 1) :: xs')))
-                 else (len, (sum :: x' :: xs')))
-          else
-            (match a with
-             | (len,[]) -> (len, [(-1); sum mod 10])
-             | (len,x'::xs') ->
-                 if x' = (-1)
-                 then (-1) :: ((sum mod 10) + 1) :: a
-                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
-    let base = ((List.length l1), []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x = a x in let base = [] in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
-     helper [] x n);;
-
-let padZero l1 l2 =
-  let x = (List.length l1) - (List.length l2) in
-  if x != 0
-  then
-    (if x < 0
-     then (((clone 0 (abs x)) @ l1), l2)
-     else (l1, ((clone 0 (abs x)) @ l2)))
-  else (l1, l2);;
-
-let rec removeZero l =
-  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (b,c) ->
-          let sum = b + c in
-          if sum < 10
-          then
-            (match a with
-             | (len,[]) -> (len, [sum])
-             | (len,x'::xs') ->
-                 if x' = (-1)
-                 then
-                   (if sum = 9
-                    then (len, ((-1) :: 0 :: xs'))
-                    else (len, ((sum + 1) :: xs')))
-                 else (len, (sum :: x' :: xs')))
-          else
-            (match a with
-             | (len,[]) -> (len, [(-1); sum mod 10])
-             | (len,x'::xs') ->
-                 if x' = (-1)
-                 then (len, ((-1) :: ((sum mod 10) + 1) :: xs'))
-                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
-    let base = ((List.length l1), []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x a = a in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(44,22)-(44,53)
-(44,52)-(44,53)
+(2,26)-(2,29)
+(2,28)-(2,29)
+(2,44)-(2,46)
+(2,50)-(2,74)
 *)
 
 (* type error slice
-(30,12)-(38,48)
-(30,19)-(30,20)
-(40,12)-(45,65)
-(40,12)-(45,65)
-(41,27)-(41,52)
-(43,17)-(45,64)
-(43,17)-(45,64)
-(44,22)-(44,53)
-(44,30)-(44,53)
-(44,52)-(44,53)
-(45,22)-(45,64)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
 *)

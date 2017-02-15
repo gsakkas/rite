@@ -1,25 +1,34 @@
 
-let rec sumList xs = match xs with | [] -> 0 | (h::t)::[] -> h + (sumList t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = List.map sepConcat f l;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat " " (List.map f l);;
 
 *)
 
 (* changed spans
-(2,21)-(2,76)
+(9,23)-(9,31)
+(9,23)-(9,45)
+(9,42)-(9,43)
 *)
 
 (* type error slice
-(2,3)-(2,78)
-(2,16)-(2,76)
-(2,21)-(2,76)
-(2,21)-(2,76)
-(2,21)-(2,76)
-(2,27)-(2,29)
-(2,65)-(2,76)
-(2,66)-(2,73)
-(2,74)-(2,75)
+(9,23)-(9,31)
+(9,23)-(9,45)
 *)

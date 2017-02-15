@@ -12,13 +12,17 @@ let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) / 2
-  | Cosine a -> cos (pi * (float_of_int (eval (a, x, y))))
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | _ -> "ya dun f*cked up";;
 
 
 (* fix
@@ -36,44 +40,28 @@ let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 *)
 
 (* changed spans
-(17,21)-(17,63)
-(17,62)-(17,63)
-(18,20)-(18,58)
-(18,21)-(18,23)
-(18,27)-(18,39)
-(18,40)-(18,56)
-(19,18)-(19,41)
-(19,19)-(19,21)
+(14,2)-(25,27)
+(25,9)-(25,27)
 *)
 
 (* type error slice
-(16,19)-(16,35)
-(16,19)-(16,55)
-(16,20)-(16,24)
-(17,21)-(17,59)
-(17,21)-(17,63)
-(18,16)-(18,19)
-(18,16)-(18,58)
-(18,20)-(18,58)
-(18,26)-(18,57)
-(18,27)-(18,39)
-(18,40)-(18,56)
-(18,41)-(18,45)
-(19,14)-(19,17)
-(19,14)-(19,41)
-(19,18)-(19,41)
-(19,18)-(19,41)
-(19,24)-(19,40)
-(19,25)-(19,29)
+(14,2)-(25,27)
+(14,2)-(25,27)
+(17,15)-(17,18)
+(17,15)-(17,44)
+(25,9)-(25,27)
 *)

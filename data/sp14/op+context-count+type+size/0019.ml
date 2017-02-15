@@ -1,76 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Square of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | MyExpr of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine m -> sin (pi *. (eval (m, x, y)))
-  | Cosine m -> cos (pi *. (eval (m, x, y)))
-  | Square m -> (eval (m, x, y)) ** 2.0
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | MyExpr (m,n,o) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then sqrt (abs_float (eval (o, x, y)))
-      else (eval (o, x, y)) /. 2
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y);;
+let fixpoint (f,b) = let b' = (b, ((f b) = b)) in wwhile (f, b');;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Square of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | MyExpr of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine m -> sin (pi *. (eval (m, x, y)))
-  | Cosine m -> cos (pi *. (eval (m, x, y)))
-  | Square m -> (eval (m, x, y)) ** 2.0
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | MyExpr (m,n,o) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then sqrt (abs_float (eval (o, x, y)))
-      else (eval (o, x, y)) /. 2.
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y);;
+let fixpoint (f,b) = let f b = ((f b), (b = (f b))) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(27,31)-(27,32)
+(4,21)-(4,64)
+(4,30)-(4,46)
+(4,31)-(4,32)
+(4,35)-(4,40)
+(4,43)-(4,44)
+(4,58)-(4,59)
+(4,61)-(4,63)
 *)
 
 (* type error slice
-(27,11)-(27,32)
-(27,31)-(27,32)
+(2,23)-(2,77)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(2,66)-(2,68)
+(4,21)-(4,64)
+(4,30)-(4,46)
+(4,31)-(4,32)
+(4,34)-(4,45)
+(4,34)-(4,45)
+(4,35)-(4,40)
+(4,36)-(4,37)
+(4,43)-(4,44)
+(4,50)-(4,56)
+(4,50)-(4,64)
+(4,57)-(4,64)
+(4,58)-(4,59)
+(4,61)-(4,63)
 *)

@@ -1,74 +1,120 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildX () = VarX;;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let buildY () = VarY;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
 
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX (buildY ())
-  | 2 -> buildY ()
-  | 3 -> buildX ()
-  | 4 -> buildY ()
-  | 5 -> buildX ()
-  | 6 -> buildY ()
-  | 7 -> buildX ();;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if res <> []
+      then
+        let lastTens::rest = res in
+        (if carry <> []
+         then
+           let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: rest))
+         else
+           (let tens = (x1 + x2) / 10 in
+            let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: rest))))
+      else
+        if carry <> []
+        then
+          (let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: res)))
+        else
+          (let tens = (x1 + x2) / 10 in
+           let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = if i <> 0 then mulByDigit (i - 1) bigAdd l l else l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildSine e = Sine e;;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let buildX () = VarX;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
 
-let buildY () = VarY;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if res <> []
+      then
+        let lastTens::rest = res in
+        (if carry <> []
+         then
+           let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: rest))
+         else
+           (let tens = (x1 + x2) / 10 in
+            let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: rest))))
+      else
+        if carry <> []
+        then
+          (let ch::_ = carry in
+           let tens = ((x1 + x2) + ch) / 10 in
+           let ones = ((x1 + x2) + ch) mod 10 in
+           ([tens], (tens :: ones :: res)))
+        else
+          (let tens = (x1 + x2) / 10 in
+           let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildSine (buildX ())
-  | 2 -> buildY ()
-  | 3 -> buildX ()
-  | 4 -> buildY ()
-  | 5 -> buildX ()
-  | 6 -> buildY ()
-  | 7 -> buildX ();;
+let rec mulByDigit i l =
+  if i <> 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 
 *)
 
 (* changed spans
-(11,11)-(11,20)
-(17,9)-(17,15)
-(17,17)-(17,23)
-(23,9)-(23,15)
-(23,16)-(23,18)
+(49,40)-(49,69)
+(49,59)-(49,65)
 *)
 
 (* type error slice
-(11,3)-(11,22)
-(11,11)-(11,20)
-(11,11)-(11,20)
-(13,3)-(13,22)
-(13,11)-(13,20)
-(13,16)-(13,20)
-(17,9)-(17,15)
-(17,9)-(17,27)
-(17,16)-(17,27)
-(17,17)-(17,23)
+(49,3)-(49,78)
+(49,19)-(49,76)
+(49,21)-(49,76)
+(49,25)-(49,76)
+(49,40)-(49,50)
+(49,40)-(49,69)
+(49,68)-(49,69)
+(49,75)-(49,76)
 *)

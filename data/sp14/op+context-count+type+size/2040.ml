@@ -1,41 +1,34 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (t :: (cat l h));;
+let pipe fs = let f a x a = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (cat l h);;
+let pipe fs =
+  let f a x c = x (a c) in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(5,48)-(5,64)
-(5,49)-(5,50)
+(2,14)-(2,77)
+(2,24)-(2,31)
+(2,28)-(2,29)
+(2,35)-(2,77)
+(2,44)-(2,49)
 *)
 
 (* type error slice
-(2,18)-(2,67)
-(2,18)-(2,67)
-(2,39)-(2,42)
-(2,39)-(2,42)
-(2,40)-(2,41)
+(2,14)-(2,77)
+(2,20)-(2,31)
+(2,22)-(2,31)
+(2,24)-(2,31)
+(2,28)-(2,29)
+(2,28)-(2,31)
+(2,35)-(2,77)
+(2,44)-(2,49)
+(2,48)-(2,49)
 (2,53)-(2,67)
-(2,53)-(2,67)
-(2,58)-(2,67)
-(2,59)-(2,62)
-(2,65)-(2,66)
-(5,2)-(5,64)
-(5,2)-(5,64)
-(5,48)-(5,64)
-(5,48)-(5,64)
-(5,49)-(5,50)
-(5,54)-(5,63)
-(5,55)-(5,58)
-(5,61)-(5,62)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
 *)

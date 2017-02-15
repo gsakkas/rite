@@ -1,80 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
-
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | MyExpr1 (e1,e2,e3) ->
-      "(sqrt(" ^
-        ((exprToString e1) ^
-           (")*sqrt(" ^ ((exprToString e2) ^ ((")*" exprToString e3) ^ ")"))));;
+let pipe fs =
+  let f a x = function | g -> g x in
+  let base = function | x -> x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
-
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | MyExpr1 (e1,e2,e3) ->
-      "(sqrt(" ^
-        ((exprToString e1) ^
-           (")*sqrt(" ^
-              ((exprToString e2) ^ (")*" ^ ((exprToString e3) ^ ")")))));;
+let pipe fs =
+  let f a x = function | g -> g in
+  let base = function | x -> x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(32,46)-(32,68)
-(32,52)-(32,64)
+(3,30)-(3,33)
+(3,32)-(3,33)
 *)
 
 (* type error slice
-(32,46)-(32,68)
-(32,47)-(32,51)
+(3,2)-(4,58)
+(3,8)-(3,33)
+(3,10)-(3,33)
+(3,14)-(3,33)
+(3,14)-(3,33)
+(3,14)-(3,33)
+(3,14)-(3,33)
+(3,30)-(3,31)
+(3,30)-(3,33)
+(4,2)-(4,58)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,29)-(4,30)
+(4,34)-(4,48)
+(4,34)-(4,58)
+(4,49)-(4,50)
+(4,51)-(4,55)
 *)

@@ -1,39 +1,92 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
-let fixpoint (f,b) = let f' f b = ((f b), (b = (f b))) in wwhile (f', b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +
+          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
+         + (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
+        /. 3.0;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
-let fixpoint (f,b) = let f b = ((f b), ((f b) = b)) in wwhile (f, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +.
+          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
+         +. (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
+        /. 3.0;;
 
 *)
 
 (* changed spans
-(4,21)-(4,72)
-(4,28)-(4,54)
-(4,43)-(4,44)
-(4,47)-(4,52)
-(4,58)-(4,72)
-(4,66)-(4,68)
+(29,6)-(31,56)
+(29,7)-(30,55)
+(29,8)-(29,52)
 *)
 
 (* type error slice
-(2,23)-(2,77)
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,63)-(2,64)
-(4,21)-(4,72)
-(4,28)-(4,54)
-(4,30)-(4,54)
-(4,58)-(4,64)
-(4,58)-(4,72)
-(4,65)-(4,72)
-(4,66)-(4,68)
+(21,21)-(21,59)
+(21,22)-(21,38)
+(21,23)-(21,27)
+(29,6)-(31,56)
+(29,6)-(31,56)
+(29,6)-(32,14)
+(29,7)-(30,55)
+(29,7)-(30,55)
+(29,8)-(29,52)
+(29,9)-(29,13)
+(30,10)-(30,54)
+(30,11)-(30,15)
+(31,11)-(31,55)
+(31,12)-(31,16)
 *)

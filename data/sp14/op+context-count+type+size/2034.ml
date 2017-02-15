@@ -1,48 +1,37 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
-
-let x = 1.0;;
-
-let fixpoint (f,b) =
-  wwhile (let y x = let xx = f x in (xx, (xx != x)) in ((y x), b));;
+let rec mulByDigit i l =
+  let f x a =
+    let digitRes = (x * i) + (fst a) in
+    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
+  let base = (0, []) in
+  let (_,result) = List.fold_right f ((0, 0) :: l) base in result;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
-
-let fixpoint (f,b) =
-  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
+let rec mulByDigit i l =
+  let f x a =
+    let digitRes = (x * i) + (fst a) in
+    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
+  let base = (0, []) in
+  let (_,result) = List.fold_right f (0 :: l) base in result;;
 
 *)
 
 (* changed spans
-(6,8)-(6,11)
-(9,9)-(9,66)
-(9,20)-(9,51)
-(9,56)-(9,61)
-(9,59)-(9,60)
+(7,38)-(7,44)
+(7,42)-(7,43)
 *)
 
 (* type error slice
-(3,25)-(3,26)
-(3,25)-(3,28)
-(4,18)-(4,24)
-(4,18)-(4,36)
-(4,25)-(4,36)
-(4,26)-(4,27)
-(9,2)-(9,8)
-(9,2)-(9,66)
-(9,9)-(9,66)
-(9,9)-(9,66)
-(9,16)-(9,51)
-(9,20)-(9,51)
-(9,36)-(9,51)
-(9,55)-(9,65)
-(9,56)-(9,61)
-(9,57)-(9,58)
+(3,2)-(7,65)
+(3,8)-(5,53)
+(4,19)-(4,26)
+(4,20)-(4,21)
+(7,19)-(7,34)
+(7,19)-(7,55)
+(7,35)-(7,36)
+(7,37)-(7,50)
+(7,37)-(7,50)
+(7,38)-(7,44)
 *)

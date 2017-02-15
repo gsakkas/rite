@@ -1,67 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y)
-  | _ -> "ya dun f*cked up";;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else ([l1], ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(14,2)-(25,27)
-(25,9)-(25,27)
+(10,8)-(10,12)
 *)
 
 (* type error slice
-(14,2)-(25,27)
-(14,2)-(25,27)
-(17,15)-(17,18)
-(17,15)-(17,44)
-(25,9)-(25,27)
+(8,2)-(10,69)
+(8,2)-(10,69)
+(9,7)-(9,67)
+(9,8)-(9,62)
+(9,57)-(9,58)
+(9,59)-(9,61)
+(10,7)-(10,69)
+(10,8)-(10,12)
+(10,8)-(10,12)
+(10,9)-(10,11)
 *)

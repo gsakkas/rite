@@ -1,44 +1,29 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with | VarX  -> "VarX" | VarY  -> "VarY" | Sine e1 -> sin e1;;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  if difference1 > 0 then (l1, l2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine e1 -> "sin";;
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  let retTuple = (l1, l2) in retTuple;;
 
 *)
 
 (* changed spans
-(12,26)-(12,32)
-(12,44)-(12,50)
-(12,64)-(12,67)
-(12,64)-(12,70)
-(12,68)-(12,70)
+(5,2)-(5,34)
+(5,5)-(5,16)
+(5,5)-(5,20)
+(5,19)-(5,20)
 *)
 
 (* type error slice
-(12,2)-(12,70)
-(12,64)-(12,67)
-(12,64)-(12,70)
-(12,68)-(12,70)
+(5,2)-(5,34)
+(5,2)-(5,34)
+(5,2)-(5,34)
+(5,26)-(5,34)
 *)

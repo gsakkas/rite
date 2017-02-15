@@ -1,57 +1,47 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
 
-let fixpoint (f,b) = wwhile (let f' b = (f, ((f b) = b)) in ((f b), b));;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then List.append ((clone 0 (abs diff)), l1)
+  else if diff > 0 then List.append ((clone 0 diff), l2);;
 
 
 (* fix
 
-let h x = let xx = (x * x) * x in (xx, (xx < 512));;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (h, b);;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((List.append (clone 0 (abs diff)) l1), l2)
+  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(2,16)-(2,77)
-(2,23)-(2,77)
-(4,28)-(4,71)
-(4,36)-(4,56)
-(4,41)-(4,42)
-(4,44)-(4,55)
-(4,45)-(4,50)
-(4,46)-(4,47)
-(4,48)-(4,49)
-(4,53)-(4,54)
-(4,60)-(4,70)
-(4,61)-(4,66)
-(4,62)-(4,63)
-(4,64)-(4,65)
+(10,7)-(10,18)
+(10,7)-(10,45)
+(10,21)-(10,26)
+(11,7)-(11,56)
+(11,24)-(11,35)
+(11,24)-(11,56)
+(11,37)-(11,51)
+(11,38)-(11,43)
 *)
 
 (* type error slice
-(2,23)-(2,77)
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,63)-(2,64)
-(2,66)-(2,68)
-(4,21)-(4,27)
-(4,21)-(4,71)
-(4,28)-(4,71)
-(4,44)-(4,55)
-(4,44)-(4,55)
-(4,45)-(4,50)
-(4,46)-(4,47)
-(4,48)-(4,49)
-(4,53)-(4,54)
-(4,60)-(4,70)
-(4,61)-(4,66)
-(4,62)-(4,63)
-(4,64)-(4,65)
-(4,68)-(4,69)
+(10,7)-(10,18)
+(10,7)-(10,45)
+(10,19)-(10,45)
+(11,24)-(11,35)
+(11,24)-(11,56)
+(11,36)-(11,56)
 *)

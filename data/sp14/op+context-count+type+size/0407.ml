@@ -1,37 +1,77 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if not c' then b' else wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((), b);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = List.rev ((List.combine l1 l2) :: (0, 0)) in
+    let (_,res) = List.fold_left f base args in res in
+  add (padZero l1 l2);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile ((fun f'  -> if (f b) = b then (b, true) else (b, false)), b);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  add (padZero l1 l2);;
 
 *)
 
 (* changed spans
-(3,23)-(3,60)
-(3,26)-(3,29)
-(3,26)-(3,32)
-(5,29)-(5,31)
-(5,33)-(5,34)
+(19,24)-(19,56)
+(19,49)-(19,55)
+(19,50)-(19,51)
+(19,53)-(19,54)
+(21,7)-(21,14)
 *)
 
 (* type error slice
-(3,16)-(3,17)
-(3,16)-(3,19)
-(3,46)-(3,52)
-(3,46)-(3,60)
-(3,53)-(3,60)
-(3,54)-(3,55)
-(5,21)-(5,27)
-(5,21)-(5,35)
-(5,28)-(5,35)
-(5,29)-(5,31)
+(15,4)-(20,51)
+(15,10)-(17,71)
+(15,12)-(17,71)
+(16,24)-(16,31)
+(16,25)-(16,28)
+(16,29)-(16,30)
+(19,4)-(20,51)
+(19,15)-(19,23)
+(19,15)-(19,56)
+(19,24)-(19,56)
+(19,24)-(19,56)
+(19,24)-(19,56)
+(19,25)-(19,45)
+(19,26)-(19,38)
+(19,49)-(19,55)
+(20,18)-(20,32)
+(20,18)-(20,44)
+(20,33)-(20,34)
+(20,40)-(20,44)
 *)

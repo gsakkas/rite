@@ -1,36 +1,33 @@
 
-let stringOfList f l =
-  match l with
+let rec sepConcat sep sl =
+  match sl with
   | [] -> ""
   | h::t ->
-      let g a x = a ^ (";" ^ x) in
-      let base = f h in let x = f t in List.fold_left g base x;;
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = List.map sepConcat "";;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
+let rec sepConcat sep sl =
+  match sl with
   | [] -> ""
   | h::t ->
-      let g a x = a ^ (";" ^ x) in
-      let base = f h in let x = t in List.fold_left g base l;;
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat "" (List.map f l);;
 
 *)
 
 (* changed spans
-(7,32)-(7,33)
-(7,32)-(7,35)
-(7,61)-(7,62)
+(9,23)-(9,31)
 *)
 
 (* type error slice
-(3,2)-(7,62)
-(3,2)-(7,62)
-(7,17)-(7,18)
-(7,17)-(7,20)
-(7,19)-(7,20)
-(7,32)-(7,33)
-(7,32)-(7,35)
-(7,34)-(7,35)
+(9,23)-(9,31)
+(9,23)-(9,44)
+(9,42)-(9,44)
 *)

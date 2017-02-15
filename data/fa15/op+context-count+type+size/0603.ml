@@ -1,77 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Boring of expr* expr
-  | SumTan of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Boring (e1,e2) -> 3 *. ((eval (e1, x, y)) +. (4 *. (eval (e2, x, y))))
-  | SumTan (e1,e2,e3) ->
-      ((tan (eval (e1, x, y))) +. (tan (eval (e2, x, y)))) +.
-        (tan (eval (e3, x, y)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = List.mem h t in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Boring of expr* expr
-  | SumTan of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Boring (e1,e2) -> 3. *. ((eval (e1, x, y)) +. (4. *. (eval (e2, x, y))))
-  | SumTan (e1,e2,e3) ->
-      ((tan (eval (e1, x, y))) +. (tan (eval (e2, x, y)))) +.
-        (tan (eval (e3, x, y)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(27,22)-(27,23)
-(27,50)-(27,51)
+(7,20)-(7,32)
+(7,31)-(7,32)
+(7,36)-(7,74)
+(7,48)-(7,49)
+(8,12)-(8,18)
+(8,19)-(8,26)
+(8,20)-(8,22)
+(8,24)-(8,25)
 *)
 
 (* type error slice
-(27,22)-(27,23)
-(27,22)-(27,74)
-(27,49)-(27,73)
-(27,50)-(27,51)
+(7,8)-(7,74)
+(7,20)-(7,28)
+(7,20)-(7,32)
+(7,53)-(7,59)
+(7,53)-(7,74)
+(7,60)-(7,74)
+(7,61)-(7,66)
+(8,11)-(8,27)
+(8,12)-(8,18)
+(8,19)-(8,26)
+(8,20)-(8,22)
 *)

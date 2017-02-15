@@ -1,55 +1,71 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" [List.map (f l)]) ^ "]");;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | h::t -> if h = 0 then removeZero t else l | _ -> [];;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = (fst x) + (snd x) in
+      match a with
+      | h::t -> ((h + sum) / 10) :: ((h + sum) mod 10) :: t
+      | _ -> [sum / 10; sum mod 10] in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | h::t -> if h = 0 then removeZero t else l | _ -> [];;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = (fst x) + (snd x) in
+      match a with
+      | h::t -> ((h + sum) / 10) :: ((h + sum) mod 10) :: t
+      | _ -> [sum / 10; sum mod 10] in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,45)-(9,61)
-(9,46)-(9,60)
-(9,55)-(9,60)
+(24,4)-(24,51)
+(24,48)-(24,51)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(3,2)-(7,58)
-(3,8)-(3,10)
-(6,6)-(7,58)
-(6,12)-(6,31)
-(6,18)-(6,19)
-(6,18)-(6,31)
-(6,20)-(6,21)
-(7,6)-(7,58)
-(7,17)-(7,18)
-(7,35)-(7,49)
-(7,35)-(7,58)
-(7,50)-(7,51)
-(7,52)-(7,56)
-(9,30)-(9,62)
-(9,31)-(9,40)
-(9,45)-(9,61)
-(9,45)-(9,61)
-(9,46)-(9,54)
-(9,46)-(9,60)
+(17,4)-(24,51)
+(17,10)-(21,35)
+(19,6)-(21,35)
+(19,6)-(21,35)
+(19,12)-(19,13)
+(24,4)-(24,51)
+(24,18)-(24,32)
+(24,18)-(24,44)
+(24,33)-(24,34)
 *)

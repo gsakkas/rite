@@ -1,26 +1,46 @@
 
-let pipe fs = let f a x x = x a in let base d = d in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> ((((clone 0) - lendiff) @ l1), l2));;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base d = d in List.fold_left f base fs;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
+(12,21)-(12,42)
+(12,22)-(12,31)
+(12,34)-(12,41)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(11,24)-(11,41)
+(11,25)-(11,30)
+(12,20)-(12,48)
+(12,21)-(12,42)
+(12,21)-(12,42)
+(12,22)-(12,31)
+(12,23)-(12,28)
+(12,43)-(12,44)
 *)

@@ -1,37 +1,88 @@
 
-let pipe fs =
-  let f a x fn x a = fn in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (a,b) = List.hd x in ([(List.hd a) + 1], [(List.hd b) + 2]) in
+    let base = ([], []) in
+    let args = [(l1, l2)] in
+    let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x fn = x (fun a  -> a) in
-  let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + 1], [x + 2]) in
+    let base = ([], []) in
+    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,15)-(3,23)
-(3,17)-(3,23)
-(3,21)-(3,23)
-(3,27)-(3,69)
-(3,36)-(3,41)
+(20,6)-(20,69)
+(20,18)-(20,25)
+(20,18)-(20,27)
+(20,26)-(20,27)
+(20,33)-(20,44)
+(20,34)-(20,41)
+(20,42)-(20,43)
+(20,52)-(20,63)
+(20,53)-(20,60)
+(20,61)-(20,62)
+(21,4)-(23,53)
+(22,4)-(23,53)
+(22,15)-(22,25)
+(22,16)-(22,24)
+(22,21)-(22,23)
+(23,4)-(23,53)
+(24,2)-(24,12)
 *)
 
 (* type error slice
-(3,2)-(3,69)
-(3,8)-(3,23)
-(3,10)-(3,23)
-(3,12)-(3,23)
-(3,15)-(3,23)
-(3,17)-(3,23)
-(3,21)-(3,23)
-(3,27)-(3,69)
-(3,36)-(3,41)
-(3,40)-(3,41)
-(3,45)-(3,59)
-(3,45)-(3,69)
-(3,60)-(3,61)
-(3,62)-(3,66)
+(19,4)-(23,53)
+(19,10)-(20,69)
+(19,12)-(20,69)
+(20,18)-(20,25)
+(20,18)-(20,27)
+(20,26)-(20,27)
+(22,4)-(23,53)
+(22,15)-(22,25)
+(22,15)-(22,25)
+(22,16)-(22,24)
+(23,20)-(23,34)
+(23,20)-(23,46)
+(23,35)-(23,36)
+(23,42)-(23,46)
 *)

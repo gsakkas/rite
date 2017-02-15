@@ -1,29 +1,62 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> b :: (listReverse a);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) + (eval (VarY, a1, a2));;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
 
 *)
 
 (* changed spans
-(3,36)-(3,37)
-(3,36)-(3,56)
-(3,41)-(3,56)
-(3,54)-(3,55)
+(15,23)-(15,66)
+(15,58)-(15,60)
+(15,62)-(15,64)
 *)
 
 (* type error slice
-(2,3)-(3,58)
-(2,20)-(3,56)
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,8)-(3,9)
-(3,41)-(3,56)
-(3,42)-(3,53)
-(3,54)-(3,55)
+(11,3)-(15,68)
+(11,14)-(15,66)
+(12,2)-(15,66)
+(12,2)-(15,66)
+(12,2)-(15,66)
+(13,13)-(13,21)
+(14,13)-(14,14)
+(14,13)-(14,21)
+(15,23)-(15,42)
+(15,23)-(15,66)
+(15,23)-(15,66)
+(15,24)-(15,28)
+(15,29)-(15,41)
+(15,39)-(15,40)
+(15,45)-(15,66)
+(15,46)-(15,50)
+(15,51)-(15,65)
+(15,62)-(15,64)
 *)

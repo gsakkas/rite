@@ -1,51 +1,44 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let x = [0];;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) < 9
-  then (1 :: x; additivePersistence (sumList (digitsOfInt n)))
-  else 1 :: x;
-  sumList x;;
+let stringOfList f l = "[" ^ ((sepConcat ";") ^ ((List.map (f l)) ^ "]"));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let x = [0];;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) < 9
-  then (1 :: x; additivePersistence (sumList (digitsOfInt n)))
-  else sumList x;;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(13,2)-(16,11)
-(15,7)-(15,8)
-(15,7)-(15,13)
-(15,12)-(15,13)
+(9,30)-(9,45)
+(9,49)-(9,65)
+(9,59)-(9,64)
+(9,66)-(9,67)
 *)
 
 (* type error slice
-(13,2)-(15,13)
-(13,2)-(16,11)
-(14,7)-(14,62)
-(14,8)-(14,14)
-(15,7)-(15,13)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(9,29)-(9,73)
+(9,30)-(9,45)
+(9,31)-(9,40)
+(9,46)-(9,47)
+(9,48)-(9,72)
+(9,49)-(9,65)
+(9,50)-(9,58)
+(9,66)-(9,67)
 *)

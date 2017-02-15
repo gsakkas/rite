@@ -1,92 +1,31 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareAv of expr* expr
-  | MultHalf of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | SquareAv (a,b) ->
-      (((eval (a, x, y)) *. (eval (a, x, y))) +.
-         ((eval (b, x, y)) *. (eval (b, x, y))))
-        / 2.0
-  | MultHalf (a,b,c) ->
-      (((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))) / 2.0;;
+let pipe fs =
+  let f a x result = a x in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareAv of expr* expr
-  | MultHalf of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | SquareAv (a,b) ->
-      (((eval (a, x, y)) *. (eval (a, x, y))) +.
-         ((eval (b, x, y)) *. (eval (b, x, y))))
-        /. 2.0
-  | MultHalf (a,b,c) ->
-      (((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))) /. 2.0;;
+let pipe fs =
+  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(28,6)-(30,13)
-(32,6)-(32,72)
+(3,12)-(3,24)
+(3,21)-(3,22)
+(3,28)-(3,68)
+(3,39)-(3,40)
 *)
 
 (* type error slice
-(16,2)-(32,72)
-(16,2)-(32,72)
-(16,2)-(32,72)
-(19,14)-(19,17)
-(19,14)-(19,42)
-(28,6)-(29,48)
-(28,6)-(30,13)
-(28,6)-(30,13)
-(28,6)-(30,13)
-(30,10)-(30,13)
-(32,6)-(32,66)
-(32,6)-(32,72)
-(32,6)-(32,72)
-(32,6)-(32,72)
-(32,69)-(32,72)
+(3,2)-(3,68)
+(3,8)-(3,24)
+(3,21)-(3,22)
+(3,21)-(3,24)
+(3,28)-(3,68)
+(3,39)-(3,40)
+(3,44)-(3,58)
+(3,44)-(3,68)
+(3,59)-(3,60)
+(3,61)-(3,65)
 *)

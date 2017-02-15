@@ -1,41 +1,92 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
+let rec clone x n =
+  let rec helper a x n =
+    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
+  helper [] x n;;
 
-let fixpoint (f,b) =
-  wwhile (let g = let bb = f b in (bb, (bb = b)) in (g, b));;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  if length1 > length2
+  then (l1, (List.append (clone 0 (length1 - length2)) l2))
+  else
+    if length2 > length1
+    then ((List.append (clone 0 (length2 - length1)) l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (o,z) ->
+               if ((o + x1) + x2) > 9
+               then (1, ((((o + x1) + x2) mod 10) :: z))
+               else (0, (((o + x1) + x2) :: z))) in
+    let base = (0, []) in
+    let args =
+      let rec pair list1 list2 =
+        match (list1, list2) with
+        | (h1::t1,h2::t2) -> (h1, h2) :: (pair t1 t2)
+        | (_,_) -> (0, 0) in
+      pair (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
+let rec clone x n =
+  let rec helper a x n =
+    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
+  helper [] x n;;
 
-let fixpoint (f,b) =
-  wwhile (let g x = let bb = f x in (bb, (bb = x)) in (g, b));;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  if length1 > length2
+  then (l1, (List.append (clone 0 (length1 - length2)) l2))
+  else
+    if length2 > length1
+    then ((List.append (clone 0 (length2 - length1)) l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (o,z) ->
+               if ((o + x1) + x2) > 9
+               then (1, ((((o + x1) + x2) mod 10) :: z))
+               else (0, (((o + x1) + x2) :: z))) in
+    let base = (0, []) in
+    let args =
+      let rec pair list1 list2 =
+        match (list1, list2) with
+        | (h1::t1,h2::t2) -> (h1, h2) :: (pair t1 t2)
+        | (_,_) -> [(0, 0)] in
+      pair (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(6,18)-(6,48)
-(6,27)-(6,30)
-(6,29)-(6,30)
-(6,45)-(6,46)
+(35,19)-(35,25)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,50)-(3,56)
-(3,50)-(3,63)
-(3,57)-(3,63)
-(3,58)-(3,59)
-(6,2)-(6,8)
-(6,2)-(6,59)
-(6,9)-(6,59)
-(6,9)-(6,59)
-(6,18)-(6,48)
-(6,34)-(6,48)
-(6,52)-(6,58)
-(6,53)-(6,54)
+(33,8)-(35,25)
+(33,8)-(35,25)
+(34,29)-(34,53)
+(35,19)-(35,25)
 *)

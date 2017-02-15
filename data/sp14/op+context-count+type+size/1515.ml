@@ -1,25 +1,47 @@
 
-let rec sumList xs = match xs with | [] -> 0 | (x::y)::[] -> x + (sumList y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "sin(pi*" ^ (s ^ ")");;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | x::y -> x + (sumList y);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "sin(pi*" ^ ((Format.sprintf "%expr" 1.0) ^ ")");;
 
 *)
 
 (* changed spans
-(2,21)-(2,76)
+(15,27)-(15,28)
+(15,31)-(15,34)
 *)
 
 (* type error slice
-(2,3)-(2,78)
-(2,16)-(2,76)
-(2,21)-(2,76)
-(2,21)-(2,76)
-(2,21)-(2,76)
-(2,27)-(2,29)
-(2,65)-(2,76)
-(2,66)-(2,73)
-(2,74)-(2,75)
+(12,2)-(15,35)
+(15,26)-(15,35)
+(15,27)-(15,28)
+(15,29)-(15,30)
 *)

@@ -1,34 +1,72 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) :: (n mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SquareRoot of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | SquareRoot e' -> sqrt (abs (eval (e', x, y)));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) @ [n mod 10]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SquareRoot of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | SquareRoot e' -> sqrt (cos (pi *. (eval (e', x, y))));;
 
 *)
 
 (* changed spans
-(5,38)-(5,60)
-(5,38)-(5,74)
-(5,64)-(5,74)
+(26,27)-(26,30)
+(26,31)-(26,48)
 *)
 
 (* type error slice
-(2,3)-(5,77)
-(2,20)-(5,75)
-(3,2)-(5,75)
-(5,7)-(5,75)
-(5,38)-(5,60)
-(5,38)-(5,74)
-(5,38)-(5,74)
-(5,38)-(5,74)
-(5,39)-(5,50)
-(5,64)-(5,74)
+(18,19)-(18,44)
+(18,26)-(18,43)
+(18,27)-(18,31)
+(26,26)-(26,49)
+(26,27)-(26,30)
+(26,31)-(26,48)
+(26,32)-(26,36)
 *)

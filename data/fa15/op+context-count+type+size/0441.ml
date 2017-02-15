@@ -1,74 +1,42 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
-  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
-
-let rec removeZero l =
-  let f a x =
-    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a @ [x] in
-  let base = [] in List.fold_left f base l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (l1e,l2e) ->
-          (match a with
-           | (carry,list) ->
-               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let stringOfList f l = "[" ^ ((List.map f (sepConcat "; " l)) ^ "]");;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
-  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
-
-let rec removeZero l =
-  let f a x =
-    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a @ [x] in
-  let base = [] in List.fold_left f base l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (l1e,l2e) ->
-          (match a with
-           | (carry,list) ->
-               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add ((padZero l1 l2), l2));;
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(25,18)-(25,33)
+(9,31)-(9,39)
+(9,40)-(9,41)
+(9,42)-(9,60)
+(9,58)-(9,59)
 *)
 
 (* type error slice
-(4,3)-(7,61)
-(4,12)-(7,59)
-(4,15)-(7,59)
-(5,2)-(7,59)
-(6,7)-(6,59)
-(6,55)-(6,56)
-(15,2)-(25,34)
-(15,11)-(24,51)
-(25,13)-(25,34)
-(25,14)-(25,17)
-(25,18)-(25,33)
-(25,19)-(25,26)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(4,10)-(4,12)
+(9,30)-(9,61)
+(9,31)-(9,39)
+(9,42)-(9,60)
+(9,43)-(9,52)
 *)

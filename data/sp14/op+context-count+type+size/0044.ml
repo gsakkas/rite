@@ -1,6 +1,10 @@
 
 let rec mulByDigit i l =
-  match List.rev l with | [] -> [] | h::t -> [mulByDigit i t; (h * i) mod 10];;
+  match List.rev l with
+  | [] -> []
+  | h::m::t ->
+      ((mulByDigit i m) :: t) @
+        [((h * i) / 10) + ((m * i) mod 10); (h * i) mod 10];;
 
 
 (* fix
@@ -8,23 +12,26 @@ let rec mulByDigit i l =
 let rec mulByDigit i l =
   match List.rev l with
   | [] -> []
-  | h::t -> List.append (mulByDigit i t) [(h * i) mod 10];;
+  | h::m::t ->
+      (mulByDigit i (m :: t)) @
+        [((h * i) / 10) + ((m * i) mod 10); (h * i) mod 10];;
 
 *)
 
 (* changed spans
-(3,45)-(3,77)
-(3,46)-(3,56)
-(3,62)-(3,76)
+(6,6)-(6,29)
+(6,21)-(6,22)
 *)
 
 (* type error slice
-(2,3)-(3,79)
-(2,19)-(3,77)
-(2,21)-(3,77)
-(3,2)-(3,77)
-(3,45)-(3,77)
-(3,45)-(3,77)
-(3,46)-(3,56)
-(3,46)-(3,60)
+(2,3)-(7,61)
+(2,19)-(7,59)
+(2,21)-(7,59)
+(3,2)-(7,59)
+(6,6)-(6,29)
+(6,6)-(6,29)
+(6,6)-(7,59)
+(6,7)-(6,23)
+(6,8)-(6,18)
+(6,30)-(6,31)
 *)

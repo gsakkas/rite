@@ -1,89 +1,122 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ [l2])
-  else
-    if (List.length l1) < (List.length l2)
-    then l2 :: ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    let d = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, d))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage (build (rand, depth))
+    | 3 -> buildTimes (build (rand, depth))
+    | 4 -> buildThresh (build (rand, depth));;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    let depth = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, depth))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
+    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
+    | 4 ->
+        buildThresh
+          ((build (rand, depth)), (build (rand, depth)),
+            (build (rand, depth)), (build (rand, depth)))
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 *)
 
 (* changed spans
-(10,2)-(14,71)
-(11,7)-(11,69)
-(11,64)-(11,68)
-(13,4)-(14,71)
-(13,7)-(13,23)
-(13,7)-(13,42)
-(13,8)-(13,19)
-(13,20)-(13,22)
-(13,26)-(13,42)
-(13,27)-(13,38)
-(13,39)-(13,41)
-(14,9)-(14,11)
-(14,9)-(14,71)
-(14,66)-(14,70)
+(21,15)-(30,44)
+(22,2)-(30,44)
+(24,4)-(30,44)
+(26,35)-(26,36)
+(28,24)-(28,45)
+(29,11)-(29,21)
+(29,22)-(29,43)
+(30,11)-(30,22)
+(30,23)-(30,44)
+(30,31)-(30,35)
+(30,37)-(30,42)
 *)
 
 (* type error slice
-(2,3)-(7,25)
-(2,14)-(7,23)
-(2,16)-(7,23)
-(3,2)-(7,23)
-(6,16)-(6,18)
-(6,16)-(6,47)
-(6,16)-(6,47)
-(6,22)-(6,47)
-(6,23)-(6,34)
-(6,35)-(6,37)
-(7,2)-(7,13)
-(7,2)-(7,23)
-(7,14)-(7,15)
-(11,13)-(11,69)
-(11,14)-(11,61)
-(11,15)-(11,20)
-(11,21)-(11,22)
-(11,43)-(11,59)
-(11,44)-(11,55)
-(11,56)-(11,58)
-(11,62)-(11,63)
-(11,64)-(11,68)
-(11,64)-(11,68)
-(11,65)-(11,67)
-(13,4)-(14,71)
-(13,4)-(14,71)
-(13,4)-(14,71)
-(14,9)-(14,71)
-(14,15)-(14,71)
-(14,16)-(14,63)
-(14,17)-(14,22)
-(14,45)-(14,61)
-(14,46)-(14,57)
-(14,58)-(14,60)
-(14,64)-(14,65)
-(14,66)-(14,70)
-(14,66)-(14,70)
-(14,67)-(14,69)
+(11,3)-(11,45)
+(11,18)-(11,43)
+(15,3)-(15,26)
+(15,14)-(15,24)
+(15,18)-(15,24)
+(15,18)-(15,24)
+(15,23)-(15,24)
+(17,3)-(17,69)
+(17,17)-(17,67)
+(19,3)-(19,41)
+(19,16)-(19,39)
+(22,2)-(30,44)
+(22,2)-(30,44)
+(22,2)-(30,44)
+(24,4)-(30,44)
+(25,4)-(30,44)
+(26,11)-(26,20)
+(26,11)-(26,38)
+(26,21)-(26,38)
+(26,22)-(26,27)
+(28,11)-(28,23)
+(28,11)-(28,45)
+(28,24)-(28,45)
+(28,25)-(28,30)
+(29,11)-(29,21)
+(29,11)-(29,43)
+(29,22)-(29,43)
+(29,23)-(29,28)
+(30,11)-(30,22)
+(30,11)-(30,44)
+(30,23)-(30,44)
+(30,24)-(30,29)
 *)

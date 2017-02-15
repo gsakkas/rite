@@ -1,54 +1,83 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> [0]
-  | h::t ->
-      let (cin,res) = mulByDigit i t in
-      let sum = (i * h) + cin in ((sum / 10), ((sum mod 10) :: res));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
+  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
+
+let rec removeZero l =
+  let f a x =
+    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a @ [x] in
+  let base = [] in List.fold_left f base l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (l1e,l2e) ->
+          (match a with
+           | (carry,list) ->
+               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero ((add (padZero l1 l2)), l2);;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  let rec helper acc cin =
-    match l with
-    | [] -> cin :: acc
-    | h::t ->
-        let sum = (i * h) + cin in helper ((sum mod 10) :: acc) (sum / 10) in
-  helper [] 0;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
+  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
+
+let rec removeZero l =
+  let f a x =
+    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a @ [x] in
+  let base = [] in List.fold_left f base l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (l1e,l2e) ->
+          (match a with
+           | (carry,list) ->
+               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add ((padZero l1 l2), l2));;
 
 *)
 
 (* changed spans
-(3,2)-(7,68)
-(4,10)-(4,13)
-(4,11)-(4,12)
-(6,6)-(7,68)
-(6,22)-(6,32)
-(6,22)-(6,36)
-(6,33)-(6,34)
-(6,35)-(6,36)
-(7,6)-(7,68)
-(7,16)-(7,29)
-(7,33)-(7,68)
-(7,34)-(7,44)
-(7,35)-(7,38)
-(7,41)-(7,43)
-(7,46)-(7,67)
-(7,63)-(7,66)
+(25,13)-(25,40)
+(25,19)-(25,34)
 *)
 
 (* type error slice
-(2,3)-(7,70)
-(2,19)-(7,68)
-(2,21)-(7,68)
-(3,2)-(7,68)
-(3,2)-(7,68)
-(4,10)-(4,13)
-(6,6)-(7,68)
-(6,6)-(7,68)
-(6,22)-(6,32)
-(6,22)-(6,36)
-(7,6)-(7,68)
-(7,33)-(7,68)
+(4,3)-(7,61)
+(4,12)-(7,59)
+(4,15)-(7,59)
+(5,2)-(7,59)
+(6,7)-(6,59)
+(6,55)-(6,56)
+(9,3)-(12,44)
+(9,19)-(12,42)
+(12,19)-(12,33)
+(12,19)-(12,42)
+(12,41)-(12,42)
+(15,2)-(25,40)
+(15,11)-(24,51)
+(25,2)-(25,12)
+(25,2)-(25,40)
+(25,13)-(25,40)
+(25,14)-(25,35)
+(25,15)-(25,18)
+(25,19)-(25,34)
+(25,20)-(25,27)
 *)

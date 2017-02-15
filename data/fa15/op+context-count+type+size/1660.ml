@@ -1,34 +1,42 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = List.map sepConcat ";" l;;
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n ->
+      if n < 0
+      then (((clone 0 abs n) @ l1), l2)
+      else (((clone 0 n) @ l2), l1);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n ->
+      if n < 0
+      then (((clone 0 (n * (-1))) @ l1), l2)
+      else (((clone 0 n) @ l2), l1);;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-(9,23)-(9,47)
-(9,46)-(9,47)
+(10,13)-(10,28)
+(10,22)-(10,25)
+(10,31)-(10,33)
 *)
 
 (* type error slice
-(9,23)-(9,31)
-(9,23)-(9,47)
+(3,59)-(3,76)
+(3,60)-(3,65)
+(3,68)-(3,75)
+(10,13)-(10,28)
+(10,14)-(10,19)
+(10,22)-(10,25)
 *)

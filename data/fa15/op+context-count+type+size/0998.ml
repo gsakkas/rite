@@ -1,103 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 / (eval (e, x, y)) else 1 / 3
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) / 3.0;;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else
+      if (List.length l2) < (List.length l1)
+      then (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) /. 3.0;;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(28,37)-(28,59)
-(28,65)-(28,66)
-(28,65)-(28,70)
-(28,69)-(28,70)
-(30,6)-(35,23)
-(35,11)-(35,23)
+(11,6)-(12,63)
+(11,9)-(11,25)
+(11,9)-(11,44)
+(11,10)-(11,21)
+(11,22)-(11,24)
+(11,28)-(11,44)
+(11,29)-(11,40)
+(12,41)-(12,52)
 *)
 
 (* type error slice
-(19,19)-(19,44)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(28,37)-(28,40)
-(28,37)-(28,59)
-(28,37)-(28,59)
-(28,43)-(28,59)
-(28,44)-(28,48)
-(30,6)-(35,23)
-(30,6)-(35,23)
-(33,8)-(34,73)
-(35,11)-(35,17)
-(35,11)-(35,23)
-(35,11)-(35,23)
-(35,13)-(35,16)
-(35,20)-(35,23)
+(8,4)-(12,63)
+(8,4)-(12,63)
+(9,9)-(9,69)
+(11,6)-(12,63)
+(11,6)-(12,63)
+(11,6)-(12,63)
+(12,11)-(12,63)
+(12,59)-(12,60)
 *)

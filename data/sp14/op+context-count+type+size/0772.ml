@@ -1,44 +1,71 @@
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (n mod 10) :: (helper (n / 10)) in
-  let rec reverse xs =
-    match xs with | [] -> xs | hd::tl -> (reverse tl) :: hd in
-  reverse (helper n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b x y))
+      then eval (a_less x y)
+      else eval (b_less x y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (helper (n / 10)) @ [n mod 10] in
-  helper n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(4,34)-(4,44)
-(4,34)-(4,65)
-(4,35)-(4,36)
-(4,41)-(4,43)
-(4,48)-(4,65)
-(5,2)-(7,20)
-(5,18)-(6,59)
-(6,4)-(6,59)
-(6,10)-(6,12)
-(6,26)-(6,28)
-(6,41)-(6,59)
-(7,2)-(7,20)
+(22,34)-(22,41)
+(23,16)-(23,28)
+(24,16)-(24,28)
 *)
 
 (* type error slice
-(6,4)-(6,59)
-(6,4)-(6,59)
-(6,4)-(6,59)
-(6,4)-(6,59)
-(6,10)-(6,12)
-(6,26)-(6,28)
-(6,41)-(6,59)
-(6,41)-(6,59)
-(6,57)-(6,59)
+(14,2)-(24,28)
+(14,2)-(24,28)
+(14,2)-(24,28)
+(22,34)-(22,41)
+(22,35)-(22,36)
+(23,16)-(23,28)
+(23,17)-(23,23)
+(24,16)-(24,28)
+(24,17)-(24,23)
 *)

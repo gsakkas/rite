@@ -1,55 +1,83 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((let g x = (f, (b = (f b))) in g), b);;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = (List.combine (List.rev l1) (List.rev l2)) :: (0, 0) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(6,28)-(6,66)
-(6,29)-(6,62)
-(6,40)-(6,56)
-(6,41)-(6,42)
-(6,44)-(6,55)
-(6,45)-(6,46)
-(6,60)-(6,61)
-(6,64)-(6,65)
+(23,15)-(23,67)
+(23,39)-(23,41)
+(23,53)-(23,55)
+(23,61)-(23,67)
+(23,62)-(23,63)
+(24,4)-(24,51)
 *)
 
 (* type error slice
-(3,2)-(4,71)
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,2)-(4,71)
-(4,8)-(4,12)
-(4,51)-(4,57)
-(4,51)-(4,64)
-(4,58)-(4,64)
-(4,59)-(4,60)
-(4,62)-(4,63)
-(6,21)-(6,27)
-(6,21)-(6,66)
-(6,28)-(6,66)
-(6,29)-(6,62)
-(6,29)-(6,62)
-(6,36)-(6,56)
-(6,40)-(6,56)
-(6,41)-(6,42)
-(6,49)-(6,54)
-(6,50)-(6,51)
-(6,52)-(6,53)
-(6,60)-(6,61)
-(6,64)-(6,65)
+(19,4)-(24,51)
+(19,10)-(21,75)
+(19,12)-(21,75)
+(21,6)-(21,75)
+(21,18)-(21,19)
+(23,4)-(24,51)
+(23,15)-(23,57)
+(23,15)-(23,67)
+(23,15)-(23,67)
+(23,15)-(23,67)
+(23,16)-(23,28)
+(23,61)-(23,67)
+(24,18)-(24,32)
+(24,18)-(24,44)
+(24,33)-(24,34)
+(24,40)-(24,44)
 *)

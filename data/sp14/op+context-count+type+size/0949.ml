@@ -1,34 +1,88 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d k t);;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then helper 0 (num :: xs') xs
+               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
+                 (xs' xs))
+        else
+          (let num = x * i in
+           if num < 10
+           then (helper 0 num) :: (accum xs)
+           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
+  helper 0 [] lre;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then helper 0 (num :: xs') xs
+               else helper 1 (((num / 10) mod 10) :: (num mod 10) :: xs') xs)
+        else
+          (let num = x * i in
+           if num < 10
+           then helper 0 (num :: accum) xs
+           else helper 1 (((num / 10) mod 10) :: (num mod 10) :: accum) xs) in
+  helper 0 [] lre;;
 
 *)
 
 (* changed spans
-(5,49)-(5,56)
+(18,20)-(18,50)
+(18,20)-(19,25)
+(18,30)-(18,49)
+(19,17)-(19,25)
+(21,10)-(24,77)
+(23,16)-(23,30)
+(23,16)-(23,44)
+(23,26)-(23,29)
+(23,34)-(23,44)
+(24,16)-(24,46)
+(24,16)-(24,76)
+(24,26)-(24,45)
+(24,66)-(24,76)
 *)
 
 (* type error slice
-(3,2)-(5,56)
-(3,2)-(5,56)
-(3,2)-(5,56)
-(3,2)-(5,56)
-(4,10)-(4,11)
-(5,12)-(5,56)
-(5,32)-(5,35)
-(5,32)-(5,37)
-(5,36)-(5,37)
-(5,49)-(5,56)
-(5,50)-(5,51)
-(5,54)-(5,55)
+(13,10)-(19,26)
+(13,10)-(19,26)
+(17,20)-(17,26)
+(17,20)-(17,44)
+(17,29)-(17,41)
+(18,20)-(18,50)
+(18,20)-(19,25)
+(18,20)-(19,25)
+(18,21)-(18,27)
+(18,30)-(18,49)
+(18,54)-(18,66)
+(18,54)-(19,25)
+(18,54)-(19,25)
+(19,17)-(19,25)
+(19,18)-(19,21)
 *)

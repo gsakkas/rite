@@ -1,141 +1,33 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (i,j) = x in
-      match a with
-      | (c,d) ->
-          if ((i + j) + c) > 9
-          then (1, ((((i + j) + c) mod 10) :: d))
-          else (0, ((((i + j) + c) mod 10) :: d)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
-
-let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
-
-let rec mulByDigit i l =
-  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [];;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (r,v) ->
-        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
-        if (sum + r) > 9
-        then
-          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
-            (((sum + r) mod 10) :: v))
-        else (0, (((sum + r) mod 10) :: v)) in
-  let base = (0, []) in
-  let args = l2 in
-  let (x,res) = List.fold_left f base args in
-  [List.map (fun i  -> i mod 10) x] @ res;;
+let rec digitsOfInt n = digitsOfIntHelper [n > 10];;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else [n mod 10] @ (digitsOfIntHelper (n - ((n mod 10) / 10)));;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (i,j) = x in
-      match a with
-      | (c,d) ->
-          if ((i + j) + c) > 9
-          then (1, ((((i + j) + c) mod 10) :: d))
-          else (0, ((((i + j) + c) mod 10) :: d)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
-
-let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
-
-let rec mulByDigit i l =
-  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [];;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (r,v) ->
-        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
-        if (sum + r) > 9
-        then
-          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
-            (((sum + r) mod 10) :: v))
-        else (0, (((sum + r) mod 10) :: v)) in
-  let base = (0, []) in
-  let args = l2 in
-  let (x,res) = List.fold_left f base args in [x mod 10] @ res;;
+let rec digitsOfInt n = digitsOfIntHelper n;;
 
 *)
 
 (* changed spans
-(56,3)-(56,11)
-(56,3)-(56,34)
-(56,12)-(56,32)
-(56,23)-(56,24)
-(56,29)-(56,31)
-(56,38)-(56,41)
+(7,42)-(7,50)
+(7,43)-(7,49)
 *)
 
 (* type error slice
-(44,2)-(56,41)
-(44,8)-(52,43)
-(45,4)-(52,43)
-(45,10)-(45,11)
-(48,11)-(48,20)
-(48,18)-(48,19)
-(55,2)-(56,41)
-(55,16)-(55,30)
-(55,16)-(55,42)
-(55,31)-(55,32)
-(56,3)-(56,11)
-(56,3)-(56,34)
-(56,33)-(56,34)
+(5,20)-(5,63)
+(5,21)-(5,38)
+(5,39)-(5,62)
+(7,24)-(7,41)
+(7,24)-(7,50)
+(7,42)-(7,50)
 *)

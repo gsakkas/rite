@@ -1,23 +1,90 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone (x (n - 1)));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) -> if e1 > e2 then e3 else - e3;;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (-1.0) *. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(2,47)-(2,66)
-(2,54)-(2,65)
+(30,27)-(30,29)
+(30,32)-(30,34)
+(30,40)-(30,42)
+(30,48)-(30,52)
+(30,50)-(30,52)
 *)
 
 (* type error slice
-(2,3)-(2,68)
-(2,14)-(2,66)
-(2,47)-(2,66)
-(2,48)-(2,53)
-(2,54)-(2,65)
-(2,55)-(2,56)
+(16,2)-(30,52)
+(16,2)-(30,52)
+(16,2)-(30,52)
+(19,15)-(19,18)
+(19,15)-(19,44)
+(30,24)-(30,52)
+(30,24)-(30,52)
+(30,40)-(30,42)
+(30,48)-(30,52)
+(30,48)-(30,52)
+(30,50)-(30,52)
 *)

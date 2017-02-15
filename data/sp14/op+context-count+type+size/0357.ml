@@ -1,35 +1,75 @@
 
-let pipe fs =
-  let f a x f x = f (x a) in let base z = z in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Tan of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | TimesMod of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (w,t,u,z) ->
+      if (eval (w, x, y)) < (eval (t, x, y))
+      then eval (u, x, y)
+      else eval (z, x, y)
+  | TimesMod (w,t,u) ->
+      ((eval (w, x, y)) *. (eval (t, x, y))) /.
+        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) u)
+  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
+  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | VarX  -> x
+  | VarY  -> y;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x z = x (a z) in let base z = z in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Tan of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | TimesMod of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (w,t,u,z) ->
+      if (eval (w, x, y)) < (eval (t, x, y))
+      then eval (u, x, y)
+      else eval (z, x, y)
+  | TimesMod (w,t,u) ->
+      ((eval (w, x, y)) *. (eval (t, x, y))) /.
+        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y)))
+  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
+  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | VarX  -> x
+  | VarY  -> y;;
 
 *)
 
 (* changed spans
-(3,12)-(3,25)
-(3,14)-(3,25)
-(3,18)-(3,19)
-(3,18)-(3,25)
-(3,23)-(3,24)
-(3,29)-(3,71)
-(3,38)-(3,43)
+(23,58)-(23,59)
+(24,19)-(24,55)
 *)
 
 (* type error slice
-(3,2)-(3,71)
-(3,8)-(3,25)
-(3,10)-(3,25)
-(3,12)-(3,25)
-(3,14)-(3,25)
-(3,20)-(3,25)
-(3,21)-(3,22)
-(3,23)-(3,24)
-(3,47)-(3,61)
-(3,47)-(3,71)
-(3,62)-(3,63)
+(16,2)-(29,14)
+(23,8)-(23,60)
+(23,9)-(23,18)
+(23,58)-(23,59)
 *)

@@ -1,39 +1,32 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile (f, (f b));;
+let sqsum xs =
+  let f a x = a +. (x ** 2.0) in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) =
-  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
+let sqsum xs =
+  let f a x = a + (int_of_float ((float_of_int x) ** 2.0)) in
+  let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(5,29)-(5,30)
-(5,32)-(5,37)
-(5,33)-(5,34)
+(3,14)-(3,29)
+(3,19)-(3,29)
+(3,20)-(3,21)
+(3,33)-(3,73)
 *)
 
 (* type error slice
-(3,2)-(3,62)
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,49)-(3,55)
-(3,49)-(3,62)
-(3,56)-(3,62)
-(3,57)-(3,58)
-(3,60)-(3,61)
-(5,21)-(5,27)
-(5,21)-(5,38)
-(5,28)-(5,38)
-(5,29)-(5,30)
-(5,32)-(5,37)
-(5,33)-(5,34)
+(3,2)-(3,73)
+(3,8)-(3,29)
+(3,14)-(3,15)
+(3,14)-(3,29)
+(3,33)-(3,73)
+(3,44)-(3,45)
+(3,49)-(3,63)
+(3,49)-(3,73)
+(3,64)-(3,65)
+(3,66)-(3,70)
 *)

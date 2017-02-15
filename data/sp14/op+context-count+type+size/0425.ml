@@ -1,88 +1,101 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "TBD" in
-    let base = failwith "TBD" in
-    let args = List.rev ((List.combine l1 l2) :: (0, 0)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 - 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) -> 1.0;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 -. 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) -> 1.0;;
 
 *)
 
 (* changed spans
-(18,16)-(18,24)
-(18,16)-(18,30)
-(18,25)-(18,30)
-(19,4)-(21,51)
-(19,15)-(19,23)
-(19,15)-(19,29)
-(19,24)-(19,29)
-(20,4)-(21,51)
-(20,15)-(20,23)
-(20,15)-(20,56)
-(20,24)-(20,56)
-(20,25)-(20,45)
-(20,26)-(20,38)
-(20,39)-(20,41)
-(20,42)-(20,44)
-(20,49)-(20,55)
-(20,53)-(20,54)
-(21,4)-(21,51)
-(21,18)-(21,32)
-(21,18)-(21,44)
-(21,33)-(21,34)
-(21,35)-(21,39)
-(21,40)-(21,44)
-(21,48)-(21,51)
-(22,2)-(22,12)
-(22,2)-(22,34)
-(22,13)-(22,34)
-(22,14)-(22,17)
-(22,19)-(22,26)
+(29,11)-(29,22)
 *)
 
 (* type error slice
-(20,24)-(20,56)
-(20,49)-(20,55)
+(28,6)-(35,22)
+(28,15)-(28,43)
+(28,17)-(28,43)
+(28,24)-(28,25)
+(28,24)-(28,29)
+(28,24)-(28,29)
+(28,28)-(28,29)
+(29,6)-(29,10)
+(29,6)-(35,22)
+(29,11)-(29,22)
+(29,11)-(29,22)
+(29,11)-(29,22)
+(29,12)-(29,15)
+(29,18)-(29,21)
+(30,8)-(35,22)
+(30,9)-(30,12)
+(30,13)-(30,16)
 *)

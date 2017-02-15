@@ -6,24 +6,27 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" exprToString expr2)
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^ (":" ^ (exprToString expr4 ")")))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) + (cos (pi *. (eval (e, x, y))))) *
+        (cos (pi *. (eval (e, x, y))));;
 
 
 (* fix
@@ -35,43 +38,52 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) +. (cos (pi *. (eval (e, x, y))))) *.
+        (cos (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      (sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))));;
 
 *)
 
 (* changed spans
-(19,49)-(19,52)
-(19,53)-(19,65)
-(26,52)-(26,64)
-(26,65)-(26,70)
-(26,71)-(26,74)
+(16,2)-(29,38)
+(28,6)-(28,71)
+(28,6)-(29,38)
+(28,7)-(28,37)
 *)
 
 (* type error slice
-(15,29)-(15,56)
-(15,30)-(15,49)
-(15,31)-(15,43)
-(15,50)-(15,51)
-(19,48)-(19,72)
-(19,49)-(19,52)
-(26,51)-(26,75)
-(26,52)-(26,64)
+(16,2)-(29,38)
+(16,2)-(29,38)
+(19,14)-(19,17)
+(19,14)-(19,42)
+(28,6)-(28,71)
+(28,6)-(28,71)
+(28,6)-(29,38)
+(28,6)-(29,38)
+(28,7)-(28,37)
+(28,8)-(28,11)
+(28,40)-(28,70)
+(28,41)-(28,44)
+(29,8)-(29,38)
+(29,9)-(29,12)
 *)

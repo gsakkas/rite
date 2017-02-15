@@ -1,29 +1,36 @@
 
-let sqsum xs =
-  let f a x mb x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((f, ((f b) != b)), b);;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((fun x  -> ((f b), (3 < 4))), b);;
 
 *)
 
 (* changed spans
-(3,12)-(3,30)
-(3,15)-(3,30)
-(3,34)-(3,74)
+(5,29)-(5,46)
+(5,30)-(5,31)
+(5,33)-(5,45)
+(5,43)-(5,44)
+(5,48)-(5,49)
 *)
 
 (* type error slice
-(3,2)-(3,74)
-(3,8)-(3,30)
-(3,10)-(3,30)
-(3,12)-(3,30)
-(3,19)-(3,30)
-(3,29)-(3,30)
-(3,50)-(3,64)
-(3,50)-(3,74)
-(3,65)-(3,66)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(5,21)-(5,27)
+(5,21)-(5,50)
+(5,28)-(5,50)
+(5,29)-(5,46)
 *)

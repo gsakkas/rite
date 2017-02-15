@@ -1,49 +1,33 @@
 
 let rec mulByDigit i l =
-  match l with
+  match List.rev l with
   | [] -> []
-  | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [helper [] (h * i)]
-       with
-       | [] -> []
-       | h::t -> h);;
+  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;
 
 
 (* fix
 
 let rec mulByDigit i l =
-  match l with
+  match List.rev l with
   | [] -> []
   | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-        ((helper [] (h * i)) @ []);;
+      (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i];;
 
 *)
 
 (* changed spans
-(8,6)-(12,19)
-(9,15)-(9,34)
-(9,16)-(9,22)
-(12,17)-(12,18)
+(5,12)-(5,76)
+(5,13)-(5,23)
+(5,70)-(5,75)
 *)
 
 (* type error slice
-(2,3)-(12,21)
-(2,19)-(12,19)
-(2,21)-(12,19)
-(3,2)-(12,19)
-(6,6)-(12,19)
-(8,6)-(12,19)
-(8,6)-(12,19)
-(8,6)-(12,19)
-(8,13)-(8,70)
-(8,13)-(9,34)
-(8,14)-(8,24)
-(8,71)-(8,72)
-(12,17)-(12,18)
+(2,3)-(5,78)
+(2,19)-(5,76)
+(2,21)-(5,76)
+(3,2)-(5,76)
+(5,12)-(5,76)
+(5,12)-(5,76)
+(5,13)-(5,23)
+(5,13)-(5,68)
 *)

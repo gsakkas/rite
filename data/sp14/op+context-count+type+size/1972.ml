@@ -1,34 +1,45 @@
 
-let sqsum xs =
-  let f a x = a ^ (2 + x) in let base = 0 in List.fold_left f base xs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let l1 = [9; 9; 9];;
+
+let rec mulByDigit i l =
+  let f a x =
+    let (i,j) = x in
+    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args =
+    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let l1 = [9; 9; 9];;
+
+let rec mulByDigit i l =
+  let f a x =
+    let (i,j) = x in
+    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args =
+    List.combine (List.rev (0 :: l1)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(3,14)-(3,15)
-(3,14)-(3,25)
-(3,16)-(3,17)
-(3,19)-(3,20)
-(3,23)-(3,24)
+(12,47)-(12,68)
+(12,49)-(12,60)
+(12,63)-(12,64)
+(13,2)-(13,49)
 *)
 
 (* type error slice
-(3,2)-(3,69)
-(3,8)-(3,25)
-(3,14)-(3,15)
-(3,14)-(3,25)
-(3,16)-(3,17)
-(3,18)-(3,25)
-(3,29)-(3,69)
-(3,40)-(3,41)
-(3,45)-(3,59)
-(3,45)-(3,69)
-(3,60)-(3,61)
-(3,62)-(3,66)
+(12,47)-(12,68)
+(12,48)-(12,65)
+(12,48)-(12,65)
+(12,49)-(12,60)
 *)

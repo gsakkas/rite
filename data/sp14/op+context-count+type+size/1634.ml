@@ -1,23 +1,35 @@
 
-let rec listReverse l = function | [] -> l | h::t -> listReverse (h :: l);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + [mulByDigit i t])
+      else (prod mod 10) :: t;;
 
 
 (* fix
 
-let rec listReverse l = match l with | [] -> l | (_::tail::[])::[] -> l;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(2,24)-(2,73)
-(2,53)-(2,73)
+(8,28)-(8,60)
+(8,43)-(8,59)
 *)
 
 (* type error slice
-(2,3)-(2,75)
-(2,20)-(2,73)
-(2,24)-(2,73)
-(2,24)-(2,73)
-(2,53)-(2,64)
-(2,53)-(2,73)
+(8,11)-(8,60)
+(8,28)-(8,60)
+(8,28)-(8,60)
+(8,43)-(8,59)
 *)

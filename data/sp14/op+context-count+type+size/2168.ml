@@ -1,62 +1,58 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then
+    List.append [(clone 0 ((List.length l2) - (List.length l1))) @ l1] [l2]
+  else
+    (List.length l2) <
+      ((List.length l1) List.append [l1]
+         [(clone 0 ((List.length l1) - (List.length l2))) @ l2]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(19,67)-(19,68)
+(10,4)-(10,15)
+(10,4)-(10,75)
+(10,16)-(10,70)
+(10,71)-(10,75)
+(12,4)-(12,20)
+(12,4)-(14,64)
+(12,17)-(12,19)
+(13,6)-(14,64)
+(13,20)-(13,22)
+(13,24)-(13,35)
+(13,36)-(13,40)
+(13,37)-(13,39)
+(14,9)-(14,63)
+(14,10)-(14,62)
+(14,58)-(14,59)
 *)
 
 (* type error slice
-(19,23)-(19,68)
-(19,67)-(19,68)
+(8,2)-(14,64)
+(8,2)-(14,64)
+(10,4)-(10,15)
+(10,4)-(10,75)
+(12,4)-(14,64)
+(13,6)-(14,64)
+(13,7)-(13,23)
+(13,8)-(13,19)
 *)

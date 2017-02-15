@@ -1,74 +1,32 @@
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = 0 in
-    let base = 0 in
-    let args = (l1, l1) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n = 0 then [0] else if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10];;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([0], [0]) in
-    let base = ([0], [0]) in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n = 0 then [n] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
 *)
 
 (* changed spans
-(20,16)-(20,17)
-(21,4)-(22,74)
-(21,15)-(21,16)
-(22,4)-(22,74)
-(22,15)-(22,23)
-(22,20)-(22,22)
-(22,27)-(22,74)
-(23,14)-(23,17)
-(23,18)-(23,33)
-(23,19)-(23,26)
-(23,27)-(23,29)
-(23,30)-(23,32)
+(6,19)-(6,20)
+(6,27)-(6,76)
+(6,30)-(6,35)
+(6,34)-(6,35)
+(6,67)-(6,68)
 *)
 
 (* type error slice
-(22,4)-(22,74)
-(22,15)-(22,23)
-(22,41)-(22,55)
-(22,41)-(22,67)
-(22,63)-(22,67)
+(6,27)-(6,76)
+(6,27)-(6,76)
+(6,27)-(6,76)
+(6,41)-(6,76)
+(6,64)-(6,65)
 *)

@@ -7,28 +7,71 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      float_of_int -
-        (((1 *. (eval (e1, x, y))) *. (eval (e2, x, y))) *. (eval (e3, x, y)));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^
+                 (")*cos(" ^ ((exprToString ex3) ^ (")" ")"))))));;
 
 
 (* fix
@@ -41,48 +84,80 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+  | FiboPlus of expr* expr* expr* expr* expr
+  | TheThing of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
-        (eval (e3, x, y));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | FiboPlus (ex1,ex2,ex3,ex4,ex5) ->
+      "((" ^
+        ((exprToString ex1) ^
+           (")*(" ^
+              ((exprToString ex1) ^
+                 ("+" ^
+                    ((exprToString ex2) ^
+                       (")*(" ^
+                          ((exprToString ex1) ^
+                             ("+" ^
+                                ((exprToString ex2) ^
+                                   ("+" ^
+                                      ((exprToString ex3) ^
+                                         (")*(" ^
+                                            ((exprToString ex1) ^
+                                               ("+" ^
+                                                  ((exprToString ex2) ^
+                                                     ("+" ^
+                                                        ((exprToString ex3) ^
+                                                           ("+" ^
+                                                              ((exprToString
+                                                                  ex4)
+                                                                 ^
+                                                                 (")*(" ^
+                                                                    (
+                                                                    (exprToString
+                                                                    ex1) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex2) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex3) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex4) ^
+                                                                    ("+" ^
+                                                                    ((exprToString
+                                                                    ex5) ^
+                                                                    "))")))))))))))))))))))))))))))))
+  | TheThing (ex1,ex2,ex3) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("*sin(" ^
+              ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ "))")))));;
 
 *)
 
 (* changed spans
-(30,6)-(30,18)
-(30,6)-(31,78)
-(31,11)-(31,12)
-(31,17)-(31,21)
+(74,51)-(74,60)
+(74,52)-(74,55)
+(74,56)-(74,59)
 *)
 
 (* type error slice
-(16,2)-(31,78)
-(16,2)-(31,78)
-(19,15)-(19,18)
-(19,15)-(19,44)
-(30,6)-(30,18)
-(30,6)-(31,78)
-(30,6)-(31,78)
-(30,6)-(31,78)
-(31,8)-(31,78)
-(31,10)-(31,34)
-(31,11)-(31,12)
+(74,51)-(74,60)
+(74,52)-(74,55)
 *)

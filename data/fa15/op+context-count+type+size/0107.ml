@@ -1,49 +1,78 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Trip of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let funt b1 = if (f b1) = b then (1, b) else (1, b) in wwhile ((funt b), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (x,y,z,s) ->
+      "(" ^
+        ((exprToString x) ^
+           ("<" ^
+              ((exprToString y) ^
+                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))))
+  | Trip (x,y,z) ->
+      "((" ^
+        ((exprToString x) ^
+           ("%30.0)" ^ (exprToString ^ ("%" ^ ((exprToString z) ^ ")")))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Trip of expr* expr* expr;;
 
-let fixpoint (f,b) = let funt x = (2, ((f b) = b)) in wwhile (funt, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (x,y,z,s) ->
+      "(" ^
+        ((exprToString x) ^
+           ("<" ^
+              ((exprToString y) ^
+                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))))
+  | Trip (x,y,z) ->
+      "((" ^
+        ((exprToString x) ^
+           ("%30.0)" ^ ((exprToString y) ^ ("%" ^ ((exprToString z) ^ ")")))));;
 
 *)
 
 (* changed spans
-(7,2)-(7,77)
-(7,11)-(7,53)
-(7,16)-(7,53)
-(7,19)-(7,29)
-(7,22)-(7,24)
-(7,35)-(7,41)
-(7,36)-(7,37)
-(7,47)-(7,53)
-(7,48)-(7,49)
-(7,57)-(7,77)
+(30,24)-(30,36)
+(30,39)-(30,71)
 *)
 
 (* type error slice
-(3,12)-(3,13)
-(3,12)-(3,15)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(7,2)-(7,77)
-(7,11)-(7,53)
-(7,16)-(7,53)
-(7,35)-(7,41)
-(7,57)-(7,63)
-(7,57)-(7,77)
-(7,64)-(7,77)
-(7,65)-(7,73)
-(7,66)-(7,70)
+(16,27)-(16,43)
+(16,28)-(16,40)
+(30,23)-(30,72)
+(30,24)-(30,36)
+(30,37)-(30,38)
 *)

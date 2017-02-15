@@ -1,40 +1,51 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> 0 | x::xs' -> a * a in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec digitsOfInt n =
+  let rec loop x listX =
+    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
+  match n with | 0 -> [0] | x' -> loop x' [];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  let rec itt x i =
+    if x < 10
+    then i
+    else
+      (let x' = sumList (digitsOfInt x) in
+       if x' > 9 then 1 + (itt x' i) else 1) in
+  match n with | 0 -> 0 | y' -> itt y';;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + (x * x) in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec digitsOfInt n =
+  let rec loop x listX =
+    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
+  match n with | 0 -> [0] | x' -> loop x' [];;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  let rec itt x i =
+    if x < 10
+    then i
+    else
+      (let x' = sumList (digitsOfInt x) in
+       if x' > 9 then 1 + (itt x' i) else 1) in
+  match n with | 0 -> 0 | y' -> itt y' 0;;
 
 *)
 
 (* changed spans
-(3,14)-(3,54)
-(3,20)-(3,21)
-(3,35)-(3,36)
-(4,2)-(4,51)
+(16,32)-(16,38)
 *)
 
 (* type error slice
-(3,2)-(4,51)
-(3,8)-(3,54)
-(3,10)-(3,54)
-(3,14)-(3,54)
-(3,14)-(3,54)
-(3,20)-(3,21)
-(3,49)-(3,50)
-(3,49)-(3,54)
-(4,2)-(4,51)
-(4,13)-(4,20)
-(4,13)-(4,23)
-(4,21)-(4,23)
-(4,27)-(4,41)
-(4,27)-(4,51)
-(4,42)-(4,43)
-(4,44)-(4,48)
-(4,49)-(4,51)
+(15,26)-(15,36)
+(15,27)-(15,30)
+(16,2)-(16,38)
+(16,2)-(16,38)
+(16,22)-(16,23)
+(16,32)-(16,35)
+(16,32)-(16,38)
 *)

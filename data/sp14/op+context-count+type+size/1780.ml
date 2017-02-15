@@ -1,43 +1,33 @@
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
-
-let rec digitsOfInt n =
-  if n <= 0 then [] else helperAppend (digitsOfInt (n / 10)) [n mod 10];;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n <= 0 then [] else sumList (digitsOfInt n);;
+let rec assoc (d,k,l) =
+  let rec helper (a,b,c) =
+    match c with
+    | [] -> a
+    | (n,v)::t -> if n = c then v else helper (a, b, t) in
+  helper (d, k, l);;
 
 
 (* fix
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
-
-let rec digitsOfInt n =
-  if n <= 0 then [] else helperAppend (digitsOfInt (n / 10)) [n mod 10];;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n = if n < 10 then 0 else sumList (digitsOfInt n);;
+let rec assoc (d,k,l) =
+  let rec helper (a,b,c) =
+    match c with
+    | [] -> a
+    | (n,v)::t -> if n = b then v else helper (a, b, t) in
+  helper (d, k, l);;
 
 *)
 
 (* changed spans
-(11,5)-(11,11)
-(11,10)-(11,11)
-(11,17)-(11,19)
+(6,25)-(6,26)
 *)
 
 (* type error slice
-(8,55)-(8,70)
-(8,59)-(8,70)
-(8,60)-(8,67)
-(11,2)-(11,48)
-(11,2)-(11,48)
-(11,17)-(11,19)
-(11,25)-(11,32)
-(11,25)-(11,48)
+(4,4)-(6,55)
+(4,4)-(6,55)
+(4,10)-(4,11)
+(6,21)-(6,22)
+(6,21)-(6,26)
+(6,21)-(6,26)
+(6,25)-(6,26)
 *)

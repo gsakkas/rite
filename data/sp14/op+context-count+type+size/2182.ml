@@ -1,31 +1,28 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile (f, ((f b) = b), b);;
+let pipe fs = let f a x = () in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
+let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,28)-(6,47)
-(6,29)-(6,30)
-(6,32)-(6,43)
+(2,26)-(2,28)
+(2,32)-(2,74)
+(2,41)-(2,46)
 *)
 
 (* type error slice
-(2,3)-(4,16)
-(2,16)-(4,14)
-(6,21)-(6,27)
-(6,21)-(6,47)
-(6,28)-(6,47)
+(2,14)-(2,74)
+(2,20)-(2,28)
+(2,22)-(2,28)
+(2,26)-(2,28)
+(2,32)-(2,74)
+(2,41)-(2,46)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
+(2,67)-(2,71)
 *)

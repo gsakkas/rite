@@ -1,109 +1,79 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (list1,result) -> (match x with | (h1::t1,h2::t2) -> (0, [])) in
-    let base = (l1, []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match rand with
+  | 0 -> let halff = rand in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (rand, (depth - 1)))
+      else Sine (build (rand, (depth - 1)))
+  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match depth with
+  | 0 ->
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (rand, (depth - 1)))
+      else Sine (build (rand, (depth - 1)))
+  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(23,4)-(27,68)
-(23,10)-(25,69)
-(23,12)-(25,69)
-(24,6)-(25,69)
-(24,12)-(24,13)
-(25,26)-(25,69)
-(25,33)-(25,34)
-(25,61)-(25,68)
-(25,65)-(25,67)
-(26,4)-(27,68)
-(26,15)-(26,23)
-(26,16)-(26,18)
-(26,20)-(26,22)
-(27,4)-(27,68)
-(28,2)-(28,34)
+(18,8)-(18,12)
+(19,9)-(19,71)
+(19,21)-(19,25)
+(19,29)-(19,71)
+(21,6)-(24,43)
+(26,60)-(26,65)
+(26,68)-(26,69)
 *)
 
 (* type error slice
-(5,3)-(14,63)
-(5,12)-(14,61)
-(5,15)-(14,61)
-(6,2)-(14,61)
-(7,2)-(14,61)
-(8,2)-(14,61)
-(10,6)-(11,61)
-(11,6)-(11,61)
-(11,32)-(11,61)
-(11,33)-(11,35)
-(14,33)-(14,56)
-(14,34)-(14,45)
-(14,53)-(14,55)
-(22,2)-(28,34)
-(22,11)-(27,68)
-(23,4)-(27,68)
-(23,10)-(25,69)
-(23,12)-(25,69)
-(24,6)-(25,69)
-(25,26)-(25,69)
-(25,61)-(25,68)
-(25,62)-(25,63)
-(26,4)-(27,68)
-(26,15)-(26,23)
-(26,16)-(26,18)
-(27,35)-(27,49)
-(27,35)-(27,61)
-(27,50)-(27,51)
-(27,52)-(27,56)
-(28,13)-(28,34)
-(28,14)-(28,17)
-(28,18)-(28,33)
-(28,19)-(28,26)
+(19,9)-(19,71)
+(19,21)-(19,25)
+(19,32)-(19,37)
+(19,32)-(19,41)
+(19,32)-(19,41)
+(19,40)-(19,41)
+(21,18)-(21,22)
+(21,18)-(21,29)
 *)

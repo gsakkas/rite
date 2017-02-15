@@ -1,53 +1,67 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let numZeros = (List.length l1) - (List.length l2) in
-  if numZeros = 0
-  then (l1, l2)
-  else
-    (let listZeros = clone (0, (abs numZeros)) in
-     if numZeros > 0 then (l1, (listZeros @ l2)));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ());;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let numZeros = (List.length l1) - (List.length l2) in
-  let absNumZeros = abs numZeros in
-  if numZeros = 0
-  then (l1, l2)
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ())
   else
-    (let listZeros = clone 0 absNumZeros in
-     if numZeros > 0 then (l1, (listZeros @ l2)) else ((listZeros @ l1), l2));;
+    (let subtreeSize1 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeSize2 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeSize3 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let subtreeeSize4 = if depth = 1 then 0 else rand (1, (depth - 1)) in
+     let x = rand (1, 5) in
+     match x with | _ -> buildSine (build (rand, subtreeSize1)));;
 
 *)
 
 (* changed spans
-(6,2)-(10,49)
-(9,4)-(10,49)
-(9,21)-(9,26)
-(9,21)-(9,46)
-(9,27)-(9,46)
-(9,31)-(9,45)
-(9,32)-(9,35)
-(9,36)-(9,44)
-(10,5)-(10,48)
+(11,11)-(11,20)
+(16,2)-(17,70)
+(17,7)-(17,70)
 *)
 
 (* type error slice
-(2,48)-(2,65)
-(2,49)-(2,54)
-(9,4)-(10,49)
-(9,21)-(9,26)
-(9,21)-(9,46)
-(10,5)-(10,48)
-(10,5)-(10,48)
-(10,5)-(10,48)
-(10,26)-(10,48)
-(10,31)-(10,47)
-(10,32)-(10,41)
-(10,42)-(10,43)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(17,70)
+(16,2)-(17,70)
+(16,2)-(17,70)
+(17,7)-(17,70)
+(17,30)-(17,70)
+(17,45)-(17,51)
+(17,45)-(17,54)
 *)

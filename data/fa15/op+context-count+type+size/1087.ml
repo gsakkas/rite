@@ -1,30 +1,25 @@
 
-let rec mulByDigit i l =
-  match l with | [] -> [] | h::t -> [h * i] @ (0 * (mulByDigit i t));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = false then wwhile (f b') else b';;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  match l with | [] -> [] | h::t -> [h * i] @ (mulByDigit i t);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
 *)
 
 (* changed spans
-(3,46)-(3,68)
-(3,47)-(3,48)
+(3,31)-(3,36)
+(3,49)-(3,55)
 *)
 
 (* type error slice
-(2,3)-(3,70)
-(2,19)-(3,68)
-(2,21)-(3,68)
-(3,2)-(3,68)
-(3,23)-(3,25)
-(3,36)-(3,68)
-(3,44)-(3,45)
-(3,46)-(3,68)
-(3,46)-(3,68)
-(3,51)-(3,67)
-(3,52)-(3,62)
+(2,3)-(3,65)
+(2,16)-(3,63)
+(3,42)-(3,48)
+(3,42)-(3,55)
+(3,49)-(3,55)
+(3,50)-(3,51)
 *)

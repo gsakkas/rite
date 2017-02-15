@@ -1,34 +1,63 @@
 
-let pipe fs =
-  let f a x a x = x a in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let a = n mod 10 in
+     let b = n / 10 in
+     match b with
+     | 0 -> if a = 0 then [] else (digitsOfInt b) @ [a]
+     | x -> (digitsOfInt b) @ [a]);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let oneRoot n =
+  let y = sumList (digits n) in
+  match y / 10 with | 0 -> if (y mod 10) = 0 then 0 else y | z -> y;;
+
+let rec addHelp (n,m) =
+  let y = oneRoot n in
+  match y / 10 with | 0 -> m + 1 | z -> addHelp (y, (m + 1));;
+
+let rec additivePersistence n = if n / 10 then 0 else addHelp (n, 0);;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let a = n mod 10 in
+     let b = n / 10 in
+     match b with
+     | 0 -> if a = 0 then [] else (digitsOfInt b) @ [a]
+     | x -> (digitsOfInt b) @ [a]);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let oneRoot n =
+  let y = sumList (digits n) in
+  match y / 10 with | 0 -> if (y mod 10) = 0 then 0 else y | z -> y;;
+
+let rec addHelp (n,m) =
+  let y = oneRoot n in
+  match y / 10 with | 0 -> m + 1 | z -> addHelp (y, (m + 1));;
+
+let rec additivePersistence n = if (n / 10) = 0 then 0 else addHelp (n, 0);;
 
 *)
 
 (* changed spans
-(3,2)-(3,67)
-(3,14)-(3,21)
-(3,25)-(3,67)
+(24,35)-(24,41)
+(24,54)-(24,68)
 *)
 
 (* type error slice
-(3,2)-(3,67)
-(3,8)-(3,21)
-(3,10)-(3,21)
-(3,12)-(3,21)
-(3,14)-(3,21)
-(3,18)-(3,19)
-(3,18)-(3,21)
-(3,20)-(3,21)
-(3,25)-(3,67)
-(3,34)-(3,39)
-(3,38)-(3,39)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
-(3,60)-(3,64)
+(24,32)-(24,68)
+(24,35)-(24,41)
 *)

@@ -1,73 +1,39 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*%s)" e
-  | Cosine e -> "cos (pi*%s)" e
-  | Average e -> "(%s + %s)/2" e
-  | Times e -> "Times"
-  | Thresh e -> "Thresh";;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x'::x'' ->
+      [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i [x' :: x'']));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos (pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,ex) ->
-      "((" ^ ((exprToString e) ^ ("+" ^ ((exprToString ex) ^ ")/2)")))
-  | Times (e,ex) -> (exprToString e) ^ ("*" ^ (exprToString ex))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x'::x'' ->
+      [(x * i) / 10] @
+        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
 
 *)
 
 (* changed spans
-(12,2)-(19,24)
-(15,14)-(15,27)
-(15,14)-(15,29)
-(15,28)-(15,29)
-(16,16)-(16,29)
-(16,16)-(16,31)
-(16,30)-(16,31)
-(17,17)-(17,30)
-(17,17)-(17,32)
-(18,15)-(18,22)
-(19,16)-(19,24)
+(6,51)-(6,61)
+(6,65)-(6,74)
 *)
 
 (* type error slice
-(15,14)-(15,27)
-(15,14)-(15,29)
-(16,16)-(16,29)
-(16,16)-(16,31)
-(17,17)-(17,30)
-(17,17)-(17,32)
+(2,3)-(6,79)
+(2,19)-(6,77)
+(2,21)-(6,77)
+(3,2)-(6,77)
+(3,2)-(6,77)
+(3,8)-(3,9)
+(6,7)-(6,14)
+(6,8)-(6,9)
+(6,50)-(6,76)
+(6,51)-(6,61)
+(6,64)-(6,75)
+(6,64)-(6,75)
+(6,65)-(6,74)
 *)

@@ -12,10 +12,17 @@ let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ (("+" exprToString e4) ^ ")/2)"));;
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
 
 
 (* fix
@@ -33,19 +40,26 @@ let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")));;
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
 
 *)
 
 (* changed spans
-(18,35)-(18,56)
-(18,40)-(18,52)
+(25,18)-(25,38)
+(25,23)-(25,35)
 *)
 
 (* type error slice
-(18,35)-(18,56)
-(18,36)-(18,39)
+(25,18)-(25,38)
+(25,19)-(25,22)
 *)

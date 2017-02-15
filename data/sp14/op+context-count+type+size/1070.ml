@@ -1,32 +1,42 @@
 
-let pipe fs = let f a x = x fs in let base = fs in List.fold_left f base fs;;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+
+let rec digitsOfInt n =
+  let this =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
+  this listReverse n;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base q = q in List.fold_left f base fs;;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+
+let rec digitsOfInt n =
+  let xxx n =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
+  listReverse (xxx n);;
 
 *)
 
 (* changed spans
-(2,26)-(2,30)
-(2,28)-(2,30)
-(2,34)-(2,75)
-(2,45)-(2,47)
-(2,51)-(2,75)
+(6,2)-(10,20)
+(7,4)-(9,69)
+(10,2)-(10,6)
+(10,2)-(10,20)
+(10,19)-(10,20)
 *)
 
 (* type error slice
-(2,14)-(2,75)
-(2,20)-(2,30)
-(2,22)-(2,30)
-(2,26)-(2,27)
-(2,26)-(2,30)
-(2,34)-(2,75)
-(2,45)-(2,47)
-(2,51)-(2,65)
-(2,51)-(2,75)
-(2,66)-(2,67)
-(2,68)-(2,72)
-(2,73)-(2,75)
+(6,2)-(10,20)
+(7,4)-(9,69)
+(9,11)-(9,69)
+(9,33)-(9,69)
+(10,2)-(10,6)
+(10,2)-(10,20)
 *)

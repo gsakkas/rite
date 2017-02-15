@@ -1,38 +1,45 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> [0]
-  | x::x' -> [(x * i) / 10] @ [((x * i) mod 10) + (mulByDigit i x')];;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let palindrome w = match explode w with | [] -> [] | h::t -> w;;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | x::x'::x'' ->
-      [(x * i) / 10] @
-        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec matchHeads x = match explode x with | h::t -> false;;
+
+let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
 
 *)
 
 (* changed spans
-(3,2)-(5,68)
-(4,10)-(4,13)
-(4,11)-(4,12)
-(5,30)-(5,68)
-(5,50)-(5,67)
-(5,51)-(5,61)
-(5,62)-(5,63)
+(7,15)-(7,62)
+(7,19)-(7,62)
+(7,25)-(7,34)
+(7,33)-(7,34)
+(7,48)-(7,50)
+(7,61)-(7,62)
 *)
 
 (* type error slice
-(2,3)-(5,70)
-(2,19)-(5,68)
-(2,21)-(5,68)
-(3,2)-(5,68)
-(4,10)-(4,13)
-(5,31)-(5,67)
-(5,50)-(5,67)
-(5,51)-(5,61)
+(2,3)-(5,8)
+(2,12)-(5,6)
+(4,12)-(4,29)
+(4,13)-(4,26)
+(4,27)-(4,28)
+(7,19)-(7,62)
+(7,19)-(7,62)
+(7,25)-(7,32)
+(7,25)-(7,34)
+(7,33)-(7,34)
+(7,48)-(7,50)
+(7,61)-(7,62)
 *)

@@ -1,35 +1,39 @@
 
-let rec digitsOfInt n =
-  let rec integers a b =
-    if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-  integers n 0;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (f, (f b));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n = 0
-  then [0]
-  else
-    (let rec integers a b =
-       if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-     integers n []);;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) =
+  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
 
 *)
 
 (* changed spans
-(3,2)-(5,14)
-(3,19)-(4,60)
-(5,2)-(5,10)
-(5,11)-(5,12)
-(5,13)-(5,14)
+(5,29)-(5,30)
+(5,32)-(5,37)
+(5,33)-(5,34)
 *)
 
 (* type error slice
-(4,25)-(4,33)
-(4,25)-(4,60)
-(4,43)-(4,60)
-(5,2)-(5,10)
-(5,2)-(5,14)
-(5,13)-(5,14)
+(3,2)-(3,62)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(3,60)-(3,61)
+(5,21)-(5,27)
+(5,21)-(5,38)
+(5,28)-(5,38)
+(5,29)-(5,30)
+(5,32)-(5,37)
+(5,33)-(5,34)
 *)

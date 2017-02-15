@@ -1,93 +1,116 @@
 
-let rec clone x n =
-  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) <= (List.length l2) with
-  | true  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  | false  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let sum = (fst x) + (snd x) in
-      match a with
-      | [] -> (0, ((sum / 10) :: (sum mod 10) :: a))
-      | (h1,h)::t -> (0, ((sum / 10) :: (h + (sum mod 10)) :: t)) in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  let r = ((rand 1), 6) in
+  match r with
+  | 1 -> buildSine (build (rand, (depth - 1)))
+  | 2 -> buildCosine (build (rand, (depth - 1)))
+  | 3 ->
+      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 4 ->
+      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 5 ->
+      buildThresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) <= (List.length l2) with
-  | true  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  | false  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let b = (fst x) + (snd x) in
-      match a with
-      | (0,[]) -> ((b / 10), [b mod 10])
-      | (y,h::t) -> ((b / 10), ((b mod 10) :: (h + y) :: t)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> buildX ()
+  | 1 -> buildY ()
+  | _ ->
+      let r = rand (1, 6) in
+      (match r with
+       | 1 -> buildSine (build (rand, (depth - 1)))
+       | 2 -> buildCosine (build (rand, (depth - 1)))
+       | 3 ->
+           buildAverage
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 4 ->
+           buildTimes
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 5 ->
+           buildThresh
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(20,6)-(23,65)
-(21,6)-(23,65)
-(22,15)-(22,16)
-(22,18)-(22,51)
-(22,20)-(22,23)
-(22,33)-(22,50)
-(22,34)-(22,37)
-(22,49)-(22,50)
-(23,22)-(23,23)
-(23,25)-(23,64)
-(23,27)-(23,30)
-(23,40)-(23,58)
-(23,41)-(23,42)
-(23,46)-(23,49)
-(23,62)-(23,63)
-(24,15)-(24,17)
+(21,15)-(33,67)
+(22,2)-(33,67)
+(22,10)-(22,23)
+(22,11)-(22,19)
+(22,12)-(22,16)
+(22,17)-(22,18)
+(33,18)-(33,22)
+(33,24)-(33,35)
+(33,25)-(33,30)
+(33,33)-(33,34)
+(33,40)-(33,45)
+(33,46)-(33,65)
+(33,47)-(33,51)
+(33,53)-(33,64)
+(33,54)-(33,59)
+(33,62)-(33,63)
 *)
 
 (* type error slice
-(21,6)-(23,65)
-(21,6)-(23,65)
-(21,6)-(23,65)
-(21,12)-(21,13)
-(22,33)-(22,45)
-(22,33)-(22,50)
-(22,33)-(22,50)
-(22,49)-(22,50)
-(23,40)-(23,58)
-(23,40)-(23,63)
-(23,40)-(23,63)
-(23,62)-(23,63)
+(22,2)-(33,67)
+(22,10)-(22,23)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,2)-(33,67)
+(23,8)-(23,9)
 *)

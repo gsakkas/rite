@@ -1,44 +1,100 @@
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> [digitsOfInt (n / 10); n mod 10]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ (")+" 1 ")")))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
 
 *)
 
 (* changed spans
-(8,18)-(8,50)
-(8,19)-(8,39)
-(8,41)-(8,42)
-(8,41)-(8,49)
-(8,47)-(8,49)
+(35,62)-(35,74)
+(35,63)-(35,67)
+(35,68)-(35,69)
+(35,70)-(35,73)
+(41,56)-(41,68)
 *)
 
 (* type error slice
-(6,6)-(8,51)
-(6,6)-(8,51)
-(7,19)-(7,46)
-(7,19)-(7,46)
-(7,24)-(7,46)
-(7,25)-(7,36)
-(8,18)-(8,50)
-(8,18)-(8,50)
-(8,18)-(8,50)
-(8,19)-(8,30)
-(8,19)-(8,39)
-(8,41)-(8,49)
+(35,62)-(35,74)
+(35,63)-(35,67)
 *)

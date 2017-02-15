@@ -1,50 +1,87 @@
 
-let rec digitsOfInt n =
-  let rec loop x listX =
-    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
-  match n with | 0 -> [0] | x' -> loop x' [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then
+    let n = (List.length l2) - (List.length l1) in (((clone 0 n) @ l1), l2)
+  else
+    if (List.length l2) < (List.length l1)
+    then
+      (let n = (List.length l1) - (List.length l2) in
+       (l1, ((clone 0 n) @ l2)))
+    else (l1, l2);;
 
-let rec additivePersistence n =
-  let rec loop x y =
-    if x < 10 then y else (sumList (digitsOfInt (loop x))) + y in
-  match n with | 0 -> 0 | x' -> loop x' 0;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (val1,val2) = x in
+      let (lastCarry,lastTupleSum) = a in
+      let tupleSum = (val1 + val2) + lastCarry in
+      let newCarry = tupleSum / 10 in
+      let nextDigit = tupleSum mod 10 in
+      (newCarry, (nextDigit :: lastTupleSum)) in
+    let base = (0, []) in
+    let args = List.combine ((List.rev l1) (List.rev l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec loop x listX =
-    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
-  match n with | 0 -> [0] | x' -> loop x' [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then
+    let n = (List.length l2) - (List.length l1) in (((clone 0 n) @ l1), l2)
+  else
+    if (List.length l2) < (List.length l1)
+    then
+      (let n = (List.length l1) - (List.length l2) in
+       (l1, ((clone 0 n) @ l2)))
+    else (l1, l2);;
 
-let rec additivePersistence n =
-  let rec loop x y = if x < 10 then y else (sumList (digitsOfInt x)) + y in
-  match n with | 0 -> 0 | x' -> loop x' 0;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (val1,val2) = x in
+      let (lastCarry,lastTupleSum) = a in
+      let tupleSum = (val1 + val2) + lastCarry in
+      let newCarry = tupleSum / 10 in
+      let nextDigit = tupleSum mod 10 in
+      (newCarry, (nextDigit :: lastTupleSum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(11,48)-(11,56)
-(11,49)-(11,53)
+(28,15)-(28,27)
+(28,28)-(28,57)
+(28,29)-(28,42)
+(28,39)-(28,41)
+(28,43)-(28,56)
+(28,44)-(28,52)
+(28,53)-(28,55)
 *)
 
 (* type error slice
-(2,3)-(5,46)
-(2,20)-(5,44)
-(5,2)-(5,44)
-(5,2)-(5,44)
-(5,8)-(5,9)
-(10,2)-(12,41)
-(10,15)-(11,62)
-(10,17)-(11,62)
-(11,35)-(11,57)
-(11,36)-(11,47)
-(11,48)-(11,56)
-(11,49)-(11,53)
-(12,32)-(12,36)
-(12,32)-(12,41)
+(28,4)-(29,51)
+(28,15)-(28,27)
+(28,15)-(28,57)
+(28,28)-(28,57)
+(28,29)-(28,42)
+(28,30)-(28,38)
+(29,18)-(29,32)
+(29,18)-(29,44)
+(29,40)-(29,44)
 *)

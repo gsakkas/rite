@@ -1,28 +1,27 @@
 
-let rec wwhile (f,b) =
-  match b with | (f',b') -> if b' then wwhile (f, f') else f';;
+let rec clone x n = match n with | 0 -> [] | 1 -> [clone x (n - 1); x];;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (f',x') -> if x' then wwhile (f, f') else f';;
+let rec clone x n = match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x];;
 
 *)
 
 (* changed spans
-(3,2)-(3,61)
-(3,8)-(3,9)
-(3,31)-(3,33)
+(2,20)-(2,70)
+(2,50)-(2,70)
+(2,51)-(2,56)
+(2,68)-(2,69)
 *)
 
 (* type error slice
-(2,3)-(3,63)
-(2,16)-(3,61)
-(3,2)-(3,61)
-(3,8)-(3,9)
-(3,39)-(3,45)
-(3,39)-(3,53)
-(3,46)-(3,53)
-(3,50)-(3,52)
+(2,3)-(2,72)
+(2,14)-(2,70)
+(2,16)-(2,70)
+(2,20)-(2,70)
+(2,50)-(2,70)
+(2,50)-(2,70)
+(2,51)-(2,56)
+(2,51)-(2,66)
 *)

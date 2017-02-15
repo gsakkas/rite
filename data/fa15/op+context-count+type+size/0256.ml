@@ -1,81 +1,57 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfIntHelper n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfIntHelper (n / 10));;
 
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
+let rec digitsOfInt n = List.rev (digitsOfIntHelper n);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let digits n = digitsOfInt (abs n);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if (x1 + x2) > 10
-      then (1, (((x1 + x2) + a1) - 10))
-      else (0, ((x1 + x2) + a1)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  if ((sumList digits n) / 10) = 0
+  then sumList digits n
+  else additivePersistence (sumList digits n);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfIntHelper n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfIntHelper (n / 10));;
 
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
+let rec digitsOfInt n = List.rev (digitsOfIntHelper n);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let digits n = digitsOfInt (abs n);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if (x1 + x2) > 10
-      then (1, ((((x1 + x2) + a1) - 10) :: a2))
-      else (0, (((x1 + x2) + a1) :: a2)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  if ((sumList (digits n)) / 10) = 0
+  then sumList (digits n)
+  else additivePersistence (sumList (digits n));;
 
 *)
 
 (* changed spans
-(19,15)-(19,38)
-(20,11)-(20,32)
-(20,15)-(20,31)
-(21,4)-(23,51)
-(24,19)-(24,26)
-(24,27)-(24,29)
-(24,30)-(24,32)
+(13,6)-(13,24)
+(13,15)-(13,21)
+(14,7)-(14,23)
+(14,15)-(14,21)
+(15,27)-(15,45)
+(15,36)-(15,42)
+(15,43)-(15,44)
 *)
 
 (* type error slice
-(15,4)-(23,51)
-(15,10)-(20,32)
-(15,12)-(20,32)
-(16,6)-(20,32)
-(17,6)-(20,32)
-(18,6)-(20,32)
-(19,11)-(19,39)
-(19,15)-(19,38)
-(21,4)-(23,51)
-(21,15)-(21,22)
-(21,19)-(21,21)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
-(23,35)-(23,39)
+(10,42)-(10,63)
+(10,49)-(10,63)
+(10,50)-(10,57)
+(13,6)-(13,24)
+(13,7)-(13,14)
+(14,7)-(14,14)
+(14,7)-(14,23)
+(15,27)-(15,45)
+(15,28)-(15,35)
 *)

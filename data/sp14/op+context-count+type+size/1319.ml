@@ -1,65 +1,43 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if (List.length s) = (List.length a)
-      then (c, (c :: s))
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0 then l1 * (clone 0 a) else l1 * l2;;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if (List.length s) = (List.length l1)
-      then (c, (c :: s))
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0 then (l1, (clone 0 a)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(18,40)-(18,41)
+(6,16)-(6,32)
+(6,38)-(6,45)
 *)
 
 (* type error slice
-(17,6)-(20,70)
-(17,18)-(17,19)
-(18,27)-(18,42)
-(18,28)-(18,39)
-(18,40)-(18,41)
+(2,42)-(2,64)
+(2,47)-(2,64)
+(2,48)-(2,53)
+(5,10)-(5,26)
+(5,11)-(5,22)
+(5,23)-(5,25)
+(5,29)-(5,45)
+(5,30)-(5,41)
+(5,42)-(5,44)
+(6,16)-(6,18)
+(6,16)-(6,32)
+(6,16)-(6,32)
+(6,21)-(6,32)
+(6,22)-(6,27)
+(6,38)-(6,40)
+(6,38)-(6,45)
+(6,38)-(6,45)
+(6,43)-(6,45)
 *)

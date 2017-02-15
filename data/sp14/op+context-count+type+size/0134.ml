@@ -1,74 +1,99 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if (List.hd l) = (List.hd k)
+    then listCompare (List.tl l) (List.tl k)
+    else false;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (v1,v2) -> ((v1 :: a), (v2 :: a)) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
+
+let palindrome w = listCompare (explode w) (listReverse (explode w));;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (v1,v2) ->
-          (match a with
-           | (h1::t1,h2::t2) -> ((v1 :: h1 :: t1), (v2 :: h2 :: t2))) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = (explode w) = (listReverse (explode w));;
 
 *)
 
 (* changed spans
-(14,42)-(14,64)
-(14,50)-(14,51)
-(14,55)-(14,57)
-(14,61)-(14,62)
-(15,4)-(17,51)
-(15,15)-(15,23)
-(16,4)-(17,51)
-(17,4)-(17,51)
-(18,14)-(18,17)
-(18,18)-(18,33)
-(18,19)-(18,26)
-(18,27)-(18,29)
-(18,30)-(18,32)
+(9,22)-(15,14)
+(10,2)-(15,14)
+(10,5)-(10,23)
+(10,5)-(10,45)
+(10,6)-(10,17)
+(10,7)-(10,14)
+(10,27)-(10,45)
+(10,28)-(10,39)
+(10,29)-(10,36)
+(10,37)-(10,38)
+(10,42)-(10,44)
+(11,7)-(11,11)
+(13,4)-(15,14)
+(13,7)-(13,32)
+(13,8)-(13,15)
+(13,16)-(13,17)
+(13,21)-(13,32)
+(14,9)-(14,44)
+(14,21)-(14,32)
+(15,9)-(15,14)
+(17,20)-(18,62)
+(20,15)-(20,68)
 *)
 
 (* type error slice
-(14,4)-(17,51)
-(14,10)-(14,64)
-(14,12)-(14,64)
-(14,16)-(14,64)
-(14,42)-(14,64)
-(14,54)-(14,63)
-(14,61)-(14,62)
-(17,18)-(17,32)
-(17,18)-(17,44)
-(17,33)-(17,34)
+(4,3)-(7,8)
+(4,12)-(7,6)
+(5,2)-(7,6)
+(6,43)-(6,50)
+(6,43)-(6,66)
+(6,43)-(6,66)
+(6,44)-(6,49)
+(6,54)-(6,66)
+(6,55)-(6,57)
+(7,2)-(7,4)
+(7,2)-(7,6)
+(10,27)-(10,45)
+(10,27)-(10,45)
+(10,28)-(10,39)
+(10,29)-(10,36)
+(10,37)-(10,38)
+(10,42)-(10,44)
+(13,7)-(13,18)
+(13,7)-(13,32)
+(13,7)-(13,32)
+(13,8)-(13,15)
+(13,16)-(13,17)
+(13,21)-(13,32)
+(13,22)-(13,29)
+(13,30)-(13,31)
+(14,9)-(14,20)
+(14,9)-(14,44)
+(14,21)-(14,32)
+(14,22)-(14,29)
+(14,30)-(14,31)
+(20,19)-(20,30)
+(20,19)-(20,68)
+(20,31)-(20,42)
+(20,32)-(20,39)
 *)

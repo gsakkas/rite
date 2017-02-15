@@ -1,77 +1,98 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Trip of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let isFPoint s = ((f s) - s) < 0 in
-  let iterate (t,y) = t y in
-  let rec go r = if isFPoint r then r else go (iterate (f, r)) in
-  wwhile (go, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
+  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
+  | Thresh (t,r,s,q) ->
+      if (eval (t, x, y)) < (eval (r, x, y))
+      then eval (s, x, y)
+      else eval (q, x, y)
+  | Trip (t,r,s) ->
+      ((sin (pi * (eval (r, x, y)))) + (tan (pi * (eval (s, x, y))))) *
+        (sin (pi * (eval (t, x, y))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Trip of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
-  wwhile (gs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
+  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
+  | Thresh (t,r,s,q) ->
+      if (eval (t, x, y)) < (eval (r, x, y))
+      then eval (s, x, y)
+      else eval (q, x, y)
+  | Trip (t,r,s) ->
+      ((sin (pi *. (eval (r, x, y)))) +. (tan (pi *. (eval (s, x, y))))) *.
+        (sin (pi *. (eval (t, x, y))));;
 
 *)
 
 (* changed spans
-(7,2)-(10,16)
-(7,15)-(7,34)
-(8,2)-(10,16)
-(8,15)-(8,25)
-(8,22)-(8,23)
-(8,24)-(8,25)
-(9,2)-(10,16)
-(9,13)-(9,62)
-(9,17)-(9,62)
-(9,20)-(9,30)
-(9,29)-(9,30)
-(9,36)-(9,37)
-(9,43)-(9,45)
-(9,43)-(9,62)
-(9,46)-(9,62)
+(27,6)-(27,69)
+(27,6)-(28,37)
+(27,7)-(27,36)
+(27,12)-(27,35)
+(27,44)-(27,67)
+(28,13)-(28,36)
 *)
 
 (* type error slice
-(3,2)-(4,68)
-(3,12)-(3,13)
-(3,12)-(3,15)
-(4,2)-(4,68)
-(4,8)-(4,11)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(7,19)-(7,30)
-(7,20)-(7,25)
-(7,21)-(7,22)
-(7,23)-(7,24)
-(7,28)-(7,29)
-(8,2)-(10,16)
-(8,15)-(8,25)
-(8,22)-(8,23)
-(8,22)-(8,25)
-(8,24)-(8,25)
-(9,17)-(9,62)
-(9,17)-(9,62)
-(9,36)-(9,37)
-(9,43)-(9,45)
-(9,43)-(9,62)
-(9,46)-(9,62)
-(9,47)-(9,54)
-(9,55)-(9,61)
-(9,56)-(9,57)
-(9,59)-(9,60)
-(10,2)-(10,8)
-(10,2)-(10,16)
-(10,9)-(10,16)
-(10,10)-(10,12)
+(12,3)-(12,28)
+(12,9)-(12,26)
+(18,18)-(18,42)
+(18,25)-(18,41)
+(18,26)-(18,30)
+(27,7)-(27,36)
+(27,8)-(27,11)
+(27,12)-(27,35)
+(27,12)-(27,35)
+(27,12)-(27,35)
+(27,13)-(27,15)
+(27,18)-(27,34)
+(27,19)-(27,23)
+(27,39)-(27,68)
+(27,40)-(27,43)
+(27,44)-(27,67)
+(27,44)-(27,67)
+(27,50)-(27,66)
+(27,51)-(27,55)
+(28,8)-(28,37)
+(28,9)-(28,12)
+(28,13)-(28,36)
+(28,13)-(28,36)
+(28,19)-(28,35)
+(28,20)-(28,24)
 *)

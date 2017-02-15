@@ -13,9 +13,11 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let t1 = List.tl l1 in
-      let t2 = List.tl l2 in
-      if (t1 + t2) > 9 then (1, [(t1 + t2) - 10]) else (0, [t1 + t2]) in
+      let lr1 = List.rev x in
+      let lr2 = List.rev l2 in
+      let h1::t1 = lr1 in
+      let h2::t2 = lr2 in
+      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -38,9 +40,11 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let t1 = List.nth l1 (List.length l1) in
-      let t2 = List.nth l2 (List.length l2) in
-      if (t1 + t2) > 9 then (1, [(t1 + t2) - 10]) else (0, [t1 + t2]) in
+      let lr1 = List.rev l1 in
+      let lr2 = List.rev l2 in
+      let h1::t1 = lr1 in
+      let h2::t2 = lr2 in
+      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -49,34 +53,23 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,15)-(16,22)
-(16,15)-(16,25)
-(17,15)-(17,22)
-(17,15)-(17,25)
-(22,14)-(22,17)
-(22,18)-(22,33)
-(22,19)-(22,26)
-(22,27)-(22,29)
-(22,30)-(22,32)
+(16,25)-(16,26)
 *)
 
 (* type error slice
-(16,6)-(18,69)
-(16,15)-(16,22)
-(16,15)-(16,25)
-(17,6)-(18,69)
-(17,15)-(17,22)
-(17,15)-(17,25)
-(18,9)-(18,18)
-(18,9)-(18,18)
-(18,10)-(18,12)
-(18,15)-(18,17)
-(18,33)-(18,42)
-(18,33)-(18,42)
-(18,34)-(18,36)
-(18,39)-(18,41)
-(18,60)-(18,62)
-(18,60)-(18,67)
-(18,60)-(18,67)
-(18,65)-(18,67)
+(15,4)-(23,51)
+(15,10)-(20,69)
+(15,12)-(20,69)
+(16,16)-(16,24)
+(16,16)-(16,26)
+(16,25)-(16,26)
+(22,4)-(23,51)
+(22,15)-(22,23)
+(22,15)-(22,44)
+(22,24)-(22,44)
+(22,25)-(22,37)
+(23,18)-(23,32)
+(23,18)-(23,44)
+(23,33)-(23,34)
+(23,40)-(23,44)
 *)

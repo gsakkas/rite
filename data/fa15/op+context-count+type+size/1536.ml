@@ -4,17 +4,29 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
+  | Root of expr
   | Average of expr* expr
   | Times of expr* expr
+  | Pivot of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | Sine e1 -> sin (exprToString e1)
-  | Cosine e1 -> cos (exprToString e1)
-  | Average (e1,e2) ->
-      ((exprToString e1) +. (exprToString e2)) /. (exprToString 2)
-  | Times (e1,e2) -> (exprToString e1) *. (exprToString e2);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Root x3 -> sqrt (eval (x3, x, y))
+  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
+  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
+  | Thresh (x8,x9,x10,x11) ->
+      if (eval (x8, x, y)) < (eval (x9, x, y))
+      then eval (x10, x, y)
+      else eval (x11, x, y)
+  | Pivot (x12,x13,x14) ->
+      if (eval (x12, x, y)) < 0 then eval (x13, x, y) else eval (x14, x, y);;
 
 
 (* fix
@@ -24,61 +36,43 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
+  | Root of expr
   | Average of expr* expr
   | Times of expr* expr
+  | Pivot of expr* expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin (pi * " ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos (pi * " ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (") + " ^ ((exprToString e2) ^ "/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ (" * " ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 (" ? " ^
-                    ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")")))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Root x3 -> sqrt (eval (x3, x, y))
+  | Average (x4,x5) -> ((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.
+  | Times (x6,x7) -> (eval (x6, x, y)) *. (eval (x7, x, y))
+  | Thresh (x8,x9,x10,x11) ->
+      if (eval (x8, x, y)) < (eval (x9, x, y))
+      then eval (x10, x, y)
+      else eval (x11, x, y)
+  | Pivot (x12,x13,x14) ->
+      if (eval (x12, x, y)) < 0. then eval (x13, x, y) else eval (x14, x, y);;
 
 *)
 
 (* changed spans
-(12,2)-(17,59)
-(13,15)-(13,18)
-(13,15)-(13,36)
-(13,19)-(13,36)
-(13,20)-(13,32)
-(13,33)-(13,35)
-(14,17)-(14,20)
-(14,17)-(14,38)
-(14,21)-(14,38)
-(16,6)-(16,46)
-(16,6)-(16,66)
-(16,7)-(16,24)
-(16,28)-(16,45)
-(16,29)-(16,41)
-(16,42)-(16,44)
-(16,50)-(16,66)
-(16,51)-(16,63)
-(16,64)-(16,65)
-(17,21)-(17,38)
-(17,21)-(17,59)
-(17,42)-(17,59)
-(17,43)-(17,55)
-(17,56)-(17,58)
+(29,30)-(29,31)
 *)
 
 (* type error slice
-(12,2)-(17,59)
-(13,19)-(13,36)
-(13,20)-(13,32)
-(13,33)-(13,35)
-(16,50)-(16,66)
-(16,51)-(16,63)
-(16,64)-(16,65)
+(19,19)-(19,44)
+(19,26)-(19,43)
+(19,27)-(19,31)
+(29,9)-(29,27)
+(29,9)-(29,31)
+(29,9)-(29,31)
+(29,10)-(29,14)
+(29,30)-(29,31)
 *)

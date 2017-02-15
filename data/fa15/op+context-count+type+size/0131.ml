@@ -8,15 +8,43 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, 11) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
+  | d ->
+      if r <= 2
+      then buildSine (build (rand, (d - 1)))
+      else
+        if r <= 9
+        then
+          (match r with
+           | 3 ->
+               buildAverage
+                 ((build (rand, (d - 1))), (build (rand, (d - 1))))
+           | 4 ->
+               buildTimes ((build (rand, (d - 1))), (build (rand, (d - 1))))
+           | 5 ->
+               buildThresh
+                 ((build (rand, (d - 1))), (build (rand, (d - 1))),
+                   (build (rand, (d - 1))), (build (rand, (d - 1))))
+           | 6 -> 0.
+           | 7 -> 0.)
+        else buildCosine (build (rand, (d - 1)));;
 
 
 (* fix
@@ -30,23 +58,59 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0, 11) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
+  | d ->
+      if r <= 2
+      then buildSine (build (rand, (d - 1)))
+      else
+        if r <= 9
+        then
+          (match r with
+           | 3 ->
+               buildAverage
+                 ((build (rand, (d - 1))), (build (rand, (d - 1))))
+           | 4 ->
+               buildTimes ((build (rand, (d - 1))), (build (rand, (d - 1))))
+           | 5 ->
+               buildThresh
+                 ((build (rand, (d - 1))), (build (rand, (d - 1))),
+                   (build (rand, (d - 1))), (build (rand, (d - 1)))))
+        else buildCosine (build (rand, (d - 1)));;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
+(35,10)-(46,21)
+(45,18)-(45,20)
+(46,18)-(46,20)
 *)
 
 (* type error slice
-(19,21)-(19,64)
-(19,63)-(19,64)
+(11,3)-(11,45)
+(11,18)-(11,43)
+(11,27)-(11,43)
+(35,10)-(46,21)
+(35,10)-(46,21)
+(35,10)-(46,21)
+(37,15)-(37,27)
+(37,15)-(38,67)
+(45,18)-(45,20)
+(46,18)-(46,20)
 *)

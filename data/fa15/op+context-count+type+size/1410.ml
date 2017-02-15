@@ -1,37 +1,38 @@
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (clone 0 (len1 - l2)) @ l2
-  else (clone 0 (len2 - len1)) @ l1;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) <= 0
+  then n mod 10
+  else additivePersistence (sumList digitsOfInt n);;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) <= 0
+  then n mod 10
+  else additivePersistence (sumList (digitsOfInt n));;
 
 *)
 
 (* changed spans
-(8,7)-(8,33)
-(8,24)-(8,26)
-(9,7)-(9,35)
+(10,27)-(10,50)
+(10,36)-(10,47)
 *)
 
 (* type error slice
-(6,13)-(6,24)
-(6,13)-(6,27)
-(6,25)-(6,27)
-(8,16)-(8,27)
-(8,24)-(8,26)
+(5,55)-(5,70)
+(5,59)-(5,70)
+(5,60)-(5,67)
+(10,27)-(10,50)
+(10,28)-(10,35)
 *)

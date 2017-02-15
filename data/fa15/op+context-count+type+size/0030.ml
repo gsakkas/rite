@@ -1,78 +1,58 @@
 
-let rec clone x n = if n > 0 then List.append [x] (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1),
-    (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | _ -> let h::t = l in (match h with | 0 -> removeZero t | _ -> l);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let lr1 = List.rev a in
-      let lr2 = List.rev x in
-      let h1::t1 = a in
-      let h2::t2 = x in
-      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  let f a xs =
+    let (a1,a2) = a in
+    let h::t = xs in
+    let val1 = (h * i) + a1 in
+    if val1 > 9
+    then ((val1 / 10), ((val1 mod 10) :: a2))
+    else (0, (val1 :: a2)) in
+  let base = (0, []) in
+  let args = 0 :: (List.rev l) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then List.append [x] (clone x (n - 1)) else [];;
+let rec mulByDigit i l =
+  let f a x =
+    let (a1,a2) = a in
+    let val1 = (x * i) + a1 in
+    if val1 > 9
+    then ((val1 / 10), ((val1 mod 10) :: a2))
+    else (0, (val1 :: a2)) in
+  let base = (0, []) in
+  let args = 0 :: (List.rev l) in
+  let (_,res) = List.fold_left f base args in res;;
 
-let padZero l1 l2 =
-  ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1),
-    (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | _ -> let h::t = l in (match h with | 0 -> removeZero t | _ -> l);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let lr1 = List.rev l1 in
-      let lr2 = List.rev l2 in
-      let h1::t1 = lr1 in
-      let h2::t2 = lr2 in
-      if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = mulByDigit 9 [9; 9; 9; 9];;
 
 *)
 
 (* changed spans
-(16,25)-(16,26)
-(17,25)-(17,26)
-(18,19)-(18,20)
-(19,19)-(19,20)
+(3,10)-(9,26)
+(5,4)-(9,26)
+(5,15)-(5,17)
+(6,4)-(9,26)
+(6,16)-(6,17)
+(10,2)-(12,49)
+(11,2)-(12,49)
+(12,2)-(12,49)
 *)
 
 (* type error slice
-(15,4)-(23,51)
-(15,10)-(20,69)
-(15,12)-(20,69)
-(16,6)-(20,69)
-(17,6)-(20,69)
-(18,6)-(20,69)
-(18,6)-(20,69)
-(18,6)-(20,69)
-(18,19)-(18,20)
-(19,6)-(20,69)
-(20,6)-(20,69)
-(20,28)-(20,49)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
+(3,2)-(12,49)
+(3,8)-(9,26)
+(3,10)-(9,26)
+(5,4)-(9,26)
+(5,4)-(9,26)
+(5,15)-(5,17)
+(11,2)-(12,49)
+(11,13)-(11,14)
+(11,13)-(11,30)
+(11,13)-(11,30)
+(12,16)-(12,30)
+(12,16)-(12,42)
+(12,31)-(12,32)
+(12,38)-(12,42)
 *)

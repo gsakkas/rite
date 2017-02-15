@@ -1,46 +1,30 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = h in
-        let rest' = if List.mem seen' seen then t else seen' @ seen in
-        helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | h::t -> let (a,b) = h in if a = k then b else assoc t;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | h::t -> let (a,b) = h in if a = k then b else assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(7,20)-(7,21)
-(8,8)-(9,29)
-(8,32)-(8,37)
-(8,48)-(8,49)
-(8,55)-(8,60)
-(8,55)-(8,67)
-(8,61)-(8,62)
-(9,8)-(9,29)
+(5,56)-(5,57)
 *)
 
 (* type error slice
-(8,23)-(8,31)
-(8,23)-(8,42)
-(8,32)-(8,37)
-(8,38)-(8,42)
-(8,55)-(8,60)
-(8,55)-(8,67)
-(8,61)-(8,62)
-(8,63)-(8,67)
+(2,3)-(5,59)
+(2,15)-(5,57)
+(3,2)-(5,57)
+(3,2)-(5,57)
+(3,8)-(3,9)
+(5,50)-(5,55)
+(5,50)-(5,57)
+(5,56)-(5,57)
 *)

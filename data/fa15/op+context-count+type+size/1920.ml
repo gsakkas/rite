@@ -6,24 +6,28 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Squares of expr
+  | Substract of expr* expr;;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand with
-    | (0,2) -> buildX ()
-    | (3,5) -> buildY ()
-    | (6,10) -> buildSine (build (rand, (depth - 1)))
-    | (11,18) -> buildCosine (build (rand, (depth - 1)));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
+  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+  | Substract (j,k) ->
+      "(" ^ ((exprToString j) ^ ("-" ^ (exprToString k ")")));;
 
 
 (* fix
@@ -35,46 +39,44 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Squares of expr
+  | Substract of expr* expr;;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (0, 4) with
-    | 0 -> buildSine (build (rand, (depth - 1)))
-    | 1 -> buildCosine (build (rand, (depth - 1)))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
+  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+  | Substract (j,k) -> (exprToString e) ^ ("-" ^ (exprToString e));;
 
 *)
 
 (* changed spans
-(20,2)-(26,56)
-(22,4)-(26,56)
-(22,10)-(22,14)
-(23,15)-(23,21)
-(23,15)-(23,24)
-(23,22)-(23,24)
-(24,15)-(24,21)
-(24,22)-(24,24)
-(25,16)-(25,53)
+(30,6)-(30,9)
+(30,12)-(30,61)
+(30,27)-(30,28)
+(30,30)-(30,31)
+(30,39)-(30,59)
+(30,40)-(30,52)
 *)
 
 (* type error slice
-(15,3)-(15,22)
-(15,11)-(15,20)
-(15,16)-(15,20)
-(20,2)-(26,56)
-(20,2)-(26,56)
-(20,2)-(26,56)
-(22,4)-(26,56)
-(23,15)-(23,21)
-(23,15)-(23,24)
+(17,26)-(17,50)
+(17,27)-(17,43)
+(17,28)-(17,40)
+(17,44)-(17,45)
+(30,39)-(30,59)
+(30,40)-(30,52)
 *)

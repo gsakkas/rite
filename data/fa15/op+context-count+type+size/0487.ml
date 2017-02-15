@@ -1,34 +1,34 @@
 
-let pipe fs =
-  let f a x combine c = x (a c) in let base x = x in List.fold_left f base fs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (h, l) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x c = x (a c) in let base x = x in List.fold_left f base fs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h l) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(3,12)-(3,31)
-(3,35)-(3,77)
+(7,23)-(7,31)
+(7,32)-(7,38)
 *)
 
 (* type error slice
-(3,2)-(3,77)
-(3,8)-(3,31)
-(3,10)-(3,31)
-(3,12)-(3,31)
-(3,20)-(3,31)
-(3,26)-(3,31)
-(3,27)-(3,28)
-(3,29)-(3,30)
-(3,35)-(3,77)
-(3,44)-(3,49)
-(3,48)-(3,49)
-(3,53)-(3,67)
-(3,53)-(3,77)
-(3,68)-(3,69)
-(3,70)-(3,74)
+(7,20)-(7,63)
+(7,23)-(7,31)
+(7,23)-(7,38)
 *)

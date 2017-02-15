@@ -14,8 +14,9 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
       if (eval (e1, x, y)) < (eval (e2, x, y))
@@ -40,7 +41,8 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
   | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->
@@ -51,16 +53,10 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(18,23)-(18,67)
-(18,66)-(18,67)
+(19,67)-(19,68)
 *)
 
 (* type error slice
-(14,2)-(23,26)
-(14,2)-(23,26)
-(17,15)-(17,18)
-(17,15)-(17,44)
-(18,23)-(18,63)
-(18,23)-(18,67)
-(18,23)-(18,67)
+(19,23)-(19,68)
+(19,67)-(19,68)
 *)

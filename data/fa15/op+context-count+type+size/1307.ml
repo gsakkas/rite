@@ -1,114 +1,107 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (l1, ((clone 0 (len1 - len2)) @ l2))
+  else (((clone 0 (len2 - len1)) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine sine -> sin (pi * sine)
-  | Cosine cos -> "cos(pi*" ^ ((eval (cos, x, y)) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((eval (e1, x, y)) ^ ("+" ^ ((eval (e2, x, y)) ^ ")/2)")))
-  | Times (t1,t2) -> (eval (t1, x, y)) ^ ("*" ^ (eval (t2, x, y)))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((eval (th1, x, y)) ^
-           ("<*" ^
-              ((eval (th2, x, y)) ^
-                 ("?" ^
-                    ((eval (th3, x, y)) ^ (":" ^ ((eval (th4, x, y)) ^ ")")))))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (car,cur) ->
+               (match cur with
+                | [] ->
+                    if ((car + x1) + x2) > 10
+                    then
+                      ((car + 1), ([car + 1] @ [((car + x1) + x2) mod 10]))
+                    else (0, ([car] @ [(car + x1) + x2]))
+                | h::t ->
+                    if ((x1 + x2) + h) < 10
+                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
+                    else
+                      ((car + 1),
+                        ([((h + x1) + x2) / 10] @
+                           ([((h + x1) + x2) mod 10] @ t))))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [] | _ -> bigAdd ((mulByDigit (i - 1) l) l);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (l1, ((clone 0 (len1 - len2)) @ l2))
+  else (((clone 0 (len2 - len1)) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine sine -> sin (pi *. (eval (sine, x, y)))
-  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
-  | Thresh (th1,th2,th3,th4) ->
-      if (eval (th1, x, y)) < (eval (th2, x, y))
-      then eval (th3, x, y)
-      else eval (th4, x, y);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (car,cur) ->
+               (match cur with
+                | [] ->
+                    if ((car + x1) + x2) > 10
+                    then
+                      ((car + 1), ([car + 1] @ [((car + x1) + x2) mod 10]))
+                    else (0, ([car] @ [(car + x1) + x2]))
+                | h::t ->
+                    if ((x1 + x2) + h) < 10
+                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
+                    else
+                      ((car + 1),
+                        ([((h + x1) + x2) / 10] @
+                           ([((h + x1) + x2) mod 10] @ t))))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [] | _ -> bigAdd (mulByDigit (i - 1) l) l;;
 
 *)
 
 (* changed spans
-(14,2)-(28,81)
-(17,21)-(17,32)
-(17,27)-(17,31)
-(18,18)-(18,27)
-(18,18)-(18,56)
-(18,28)-(18,29)
-(18,30)-(18,56)
-(18,38)-(18,41)
-(18,43)-(18,44)
-(18,50)-(18,51)
-(18,52)-(18,55)
-(20,6)-(20,10)
-(20,6)-(20,71)
-(20,11)-(20,12)
-(20,13)-(20,71)
-(20,14)-(20,31)
-(20,32)-(20,33)
-(20,34)-(20,70)
-(20,35)-(20,38)
-(20,39)-(20,40)
-(20,41)-(20,69)
-(20,60)-(20,61)
-(20,62)-(20,68)
-(21,21)-(21,38)
-(21,21)-(21,66)
-(21,39)-(21,40)
-(21,41)-(21,66)
-(21,42)-(21,45)
-(21,46)-(21,47)
-(23,6)-(23,9)
-(23,6)-(28,81)
-(23,10)-(23,11)
-(24,8)-(28,81)
-(24,9)-(24,27)
-(24,28)-(24,29)
-(25,11)-(28,80)
-(25,12)-(25,16)
-(25,17)-(25,18)
-(26,14)-(28,79)
-(26,34)-(26,35)
-(27,17)-(28,78)
+(40,32)-(40,65)
+(40,39)-(40,65)
 *)
 
 (* type error slice
-(11,3)-(11,28)
-(11,9)-(11,26)
-(14,2)-(28,81)
-(17,17)-(17,20)
-(17,17)-(17,32)
-(17,21)-(17,32)
-(17,21)-(17,32)
-(17,21)-(17,32)
-(17,22)-(17,24)
-(17,27)-(17,31)
+(14,3)-(37,36)
+(14,11)-(37,34)
+(14,14)-(37,34)
+(39,3)-(40,67)
+(39,19)-(40,65)
+(39,21)-(40,65)
+(40,2)-(40,65)
+(40,2)-(40,65)
+(40,22)-(40,24)
+(40,32)-(40,38)
+(40,32)-(40,65)
+(40,39)-(40,65)
+(40,40)-(40,62)
+(40,41)-(40,51)
 *)

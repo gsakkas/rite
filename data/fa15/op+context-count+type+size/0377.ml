@@ -1,27 +1,51 @@
 
-let pipe fs = let f a x = x a in let base = f = 0 in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone "0" ((List.length l2) - (List.length l1))) :: l1
+  else ((clone "0" List.length l1) - (List.length l2)) :: l2;;
 
 
 (* fix
 
-let pipe fs = let f a x = a in let base f = 0 in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (((clone 0 ((List.length l1) - (List.length l2))) @ l2), l1);;
 
 *)
 
 (* changed spans
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,33)-(2,77)
-(2,44)-(2,45)
-(2,44)-(2,49)
-(2,48)-(2,49)
+(6,7)-(6,62)
+(6,8)-(6,13)
+(6,14)-(6,17)
+(7,7)-(7,54)
+(7,7)-(7,60)
+(7,8)-(7,34)
+(7,9)-(7,14)
+(7,15)-(7,18)
+(7,19)-(7,30)
+(7,38)-(7,49)
+(7,58)-(7,60)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,29)
-(2,44)-(2,45)
-(2,44)-(2,49)
-(2,44)-(2,49)
-(2,48)-(2,49)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(2,57)-(2,64)
+(5,2)-(7,60)
+(5,2)-(7,60)
+(6,7)-(6,56)
+(6,7)-(6,62)
+(6,7)-(6,62)
+(6,8)-(6,13)
+(7,7)-(7,54)
+(7,7)-(7,60)
+(7,7)-(7,60)
+(7,8)-(7,34)
+(7,9)-(7,14)
+(7,19)-(7,30)
 *)

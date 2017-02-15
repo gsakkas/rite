@@ -6,39 +6,43 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Maximum of expr* expr* expr
-  | Absolute of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr0 -> sin (pi *. (eval (expr0, x, y)))
-  | Cosine expr0 -> cos (pi *. (eval (expr0, x, y)))
-  | Average (expr0,expr1) ->
-      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2.
-  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  -> eval (expr2, x, y)
-       | false  -> eval (expr3, x, y))
-  | Maximum (expr0,expr1,expr2) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  ->
-           (match (eval (expr1, x, y)) < (eval (expr2, x, y)) with
-            | true  -> eval (expr2, x, y)
-            | false  -> eval (expr1, x, y))
-       | false  ->
-           (match (eval (expr0, x, y)) < (eval (expr2, x, y)) with
-            | true  -> eval (expr2, x, y)
-            | false  -> eval (expr0, x, y)))
-  | Absolute expr0 ->
-      (match (eval (expr0, x, y)) < 0 with
-       | true  -> 0.0 -. (eval (expr0, x, y))
-       | false  -> eval (expr0, x, y));;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildX ()
+  | 2 -> buildY ()
+  | 3 ->
+      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
+  | 4 ->
+      buildCosine
+        (if depth = 0 then buildY () else build (rand, (depth - 1)))
+  | 5 ->
+      buildAverage
+        (if depth = 0
+         then buildX ()
+         else
+           ((build (rand, (depth - 1))),
+             (if depth = 0 then buildY () else build (rand, (depth - 1)))))
+  | 6 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
+  | 7 ->
+      buildThresh
+        ((build (rand, depth)), (build (rand, depth)), (build (rand, depth)),
+          (build (rand, depth)));;
 
 
 (* fix
@@ -50,53 +54,67 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Maximum of expr* expr* expr
-  | Absolute of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr0 -> sin (pi *. (eval (expr0, x, y)))
-  | Cosine expr0 -> cos (pi *. (eval (expr0, x, y)))
-  | Average (expr0,expr1) ->
-      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2.
-  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  -> eval (expr2, x, y)
-       | false  -> eval (expr3, x, y))
-  | Maximum (expr0,expr1,expr2) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  ->
-           (match (eval (expr1, x, y)) < (eval (expr2, x, y)) with
-            | true  -> eval (expr2, x, y)
-            | false  -> eval (expr1, x, y))
-       | false  ->
-           (match (eval (expr0, x, y)) < (eval (expr2, x, y)) with
-            | true  -> eval (expr2, x, y)
-            | false  -> eval (expr0, x, y)))
-  | Absolute expr0 ->
-      (match (eval (expr0, x, y)) < 0.0 with
-       | true  -> 0.0 -. (eval (expr0, x, y))
-       | false  -> eval (expr0, x, y));;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildX ()
+  | 2 -> buildY ()
+  | 3 ->
+      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
+  | 4 ->
+      buildCosine
+        (if depth = 0 then buildY () else build (rand, (depth - 1)))
+  | 5 ->
+      buildAverage
+        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
+          (if depth = 0 then buildY () else build (rand, (depth - 1))))
+  | 6 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
+  | 7 ->
+      buildThresh
+        ((build (rand, depth)), (build (rand, depth)), (build (rand, depth)),
+          (build (rand, depth)));;
 
 *)
 
 (* changed spans
-(39,36)-(39,37)
+(36,8)-(40,75)
+(39,11)-(40,74)
 *)
 
 (* type error slice
-(19,22)-(19,50)
-(19,29)-(19,49)
-(19,30)-(19,34)
-(39,13)-(39,33)
-(39,13)-(39,37)
-(39,13)-(39,37)
-(39,14)-(39,18)
-(39,36)-(39,37)
+(11,3)-(11,45)
+(11,18)-(11,43)
+(21,3)-(21,22)
+(21,11)-(21,20)
+(21,16)-(21,20)
+(30,16)-(30,76)
+(30,16)-(30,76)
+(30,35)-(30,41)
+(30,35)-(30,44)
+(30,50)-(30,55)
+(30,50)-(30,75)
+(35,6)-(35,18)
+(35,6)-(40,75)
+(36,8)-(40,75)
+(36,8)-(40,75)
+(37,14)-(37,20)
+(37,14)-(37,23)
+(39,11)-(40,74)
+(39,12)-(39,39)
+(39,13)-(39,18)
 *)

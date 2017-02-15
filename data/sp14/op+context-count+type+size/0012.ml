@@ -1,30 +1,59 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine m -> sin (pi *. (eval (m, x, y)))
+  | Cosine m -> cos (pi *. (eval (m, x, y)))
+  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) / 2.;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine m -> sin (pi *. (eval (m, x, y)))
+  | Cosine m -> cos (pi *. (eval (m, x, y)))
+  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.;;
 
 *)
 
 (* changed spans
-(3,25)-(3,47)
-(3,51)-(3,61)
-(3,52)-(3,53)
-(3,58)-(3,60)
+(19,21)-(19,64)
 *)
 
 (* type error slice
-(2,3)-(3,63)
-(2,20)-(3,61)
-(3,2)-(3,61)
-(3,25)-(3,47)
-(3,25)-(3,61)
-(3,25)-(3,61)
-(3,25)-(3,61)
-(3,26)-(3,37)
-(3,51)-(3,61)
+(14,2)-(19,64)
+(14,2)-(19,64)
+(17,14)-(17,17)
+(17,14)-(17,42)
+(19,21)-(19,59)
+(19,21)-(19,64)
+(19,21)-(19,64)
+(19,21)-(19,64)
+(19,62)-(19,64)
 *)

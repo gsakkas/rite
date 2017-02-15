@@ -1,35 +1,76 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Neg of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | AveThree of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((fun f'  -> fun x  -> (f, ((f x) = x))), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Neg e -> (-1.0) *. (eval (e, x, y))
+  | AveThree (e1,e2,e3) ->
+      ((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Neg of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | AveThree of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((let f' x = ((f x), ((f x) = x)) in f'), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Neg e -> (-1.0) *. (eval (e, x, y))
+  | AveThree (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(4,29)-(4,68)
-(4,52)-(4,53)
-(4,55)-(4,66)
-(4,70)-(4,71)
+(23,6)-(23,45)
+(23,6)-(23,65)
+(23,7)-(23,24)
 *)
 
 (* type error slice
-(2,23)-(2,77)
-(2,37)-(2,38)
-(2,37)-(2,40)
-(2,55)-(2,61)
-(2,55)-(2,69)
-(2,62)-(2,69)
-(2,63)-(2,64)
-(4,21)-(4,27)
-(4,21)-(4,72)
-(4,28)-(4,72)
-(4,29)-(4,68)
-(4,41)-(4,67)
+(19,18)-(19,42)
+(19,25)-(19,41)
+(19,26)-(19,30)
+(21,13)-(21,19)
+(21,13)-(21,19)
+(21,13)-(21,39)
+(21,15)-(21,18)
+(23,6)-(23,45)
+(23,6)-(23,45)
+(23,6)-(23,65)
+(23,7)-(23,24)
+(23,8)-(23,12)
+(23,27)-(23,44)
+(23,28)-(23,32)
+(23,48)-(23,65)
+(23,49)-(23,53)
 *)

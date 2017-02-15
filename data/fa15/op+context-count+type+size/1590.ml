@@ -1,112 +1,141 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (1, 5) with
-    | _ -> buildSine buildX
-    | 1 -> buildSine (build (rand, (depth - 1)))
-    | 2 -> buildCosine (build (rand, (depth - 1)))
-    | 3 ->
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 4 ->
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 5 ->
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
   else
-    (match rand (1, 2) with
-     | _ -> buildY ()
-     | 1 -> buildX ()
-     | 2 -> buildY ());;
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (i,j) = x in
+      match a with
+      | (c,d) ->
+          if ((i + j) + c) > 9
+          then (1, ((((i + j) + c) mod 10) :: d))
+          else (0, ((((i + j) + c) mod 10) :: d)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
+let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
+
+let rec mulByDigit i l =
+  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [];;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with
+    | (r,v) ->
+        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
+        if (sum + r) > 9
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
+            (((sum + r) mod 10) :: v))
+        else (0, (((sum + r) mod 10) :: v)) in
+  let base = (0, []) in
+  let args = l2 in
+  let (x,res) = List.fold_left f base args in
+  [List.map (fun i  -> i mod 10) x] @ res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (1, 5) with
-    | _ -> buildSine (buildX ())
-    | 1 -> buildSine (build (rand, (depth - 1)))
-    | 2 -> buildCosine (build (rand, (depth - 1)))
-    | 3 ->
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 4 ->
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 5 ->
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
   else
-    (match rand (1, 2) with
-     | _ -> buildY ()
-     | 1 -> buildX ()
-     | 2 -> buildY ());;
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (i,j) = x in
+      match a with
+      | (c,d) ->
+          if ((i + j) + c) > 9
+          then (1, ((((i + j) + c) mod 10) :: d))
+          else (0, ((((i + j) + c) mod 10) :: d)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let carryFunc p = let z = List.rev p in match z with | h::t -> List.rev t;;
+
+let intListToInt l = int_of_string (sepConcat "" (List.map string_of_int l));;
+
+let rec mulByDigit i l =
+  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [];;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with
+    | (r,v) ->
+        let sum = intListToInt (mulByDigit (intListToInt l1) [x]) in
+        if (sum + r) > 9
+        then
+          ((intListToInt (carryFunc (mulByDigit (intListToInt l1) [x]))),
+            (((sum + r) mod 10) :: v))
+        else (0, (((sum + r) mod 10) :: v)) in
+  let base = (0, []) in
+  let args = l2 in
+  let (x,res) = List.fold_left f base args in [x mod 10] @ res;;
 
 *)
 
 (* changed spans
-(29,21)-(29,27)
-(30,11)-(30,48)
+(56,3)-(56,11)
+(56,3)-(56,34)
+(56,12)-(56,32)
+(56,23)-(56,24)
+(56,29)-(56,31)
+(56,38)-(56,41)
 *)
 
 (* type error slice
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(29,11)-(29,20)
-(29,11)-(29,27)
-(29,21)-(29,27)
+(44,2)-(56,41)
+(44,8)-(52,43)
+(45,4)-(52,43)
+(45,10)-(45,11)
+(48,11)-(48,20)
+(48,18)-(48,19)
+(55,2)-(56,41)
+(55,16)-(55,30)
+(55,16)-(55,42)
+(55,31)-(55,32)
+(56,3)-(56,11)
+(56,3)-(56,34)
+(56,33)-(56,34)
 *)

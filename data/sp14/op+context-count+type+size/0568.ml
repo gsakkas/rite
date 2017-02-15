@@ -1,89 +1,59 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then l1 :: ((clone 0 ((List.length l1) - (List.length l2))) @ [l2])
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
   else
-    if (List.length l1) < (List.length l2)
-    then ((clone 0 ((List.length l2) - (List.length l1))) @ [l1]) :: l2;;
+    if (List.length l1) > (List.length l2)
+    then (let y = clone l1 ((List.length l1) - (List.length l2)) in (y, l2))
+    else (let z = clone l2 ((List.length l2) - (List.length l1)) in (z, l1));;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then
+      (let y = clone (List.hd l1) ((List.length l1) - (List.length l2)) in
+       (y, l2))
+    else
+      (let z = clone (List.hd l2) ((List.length l2) - (List.length l1)) in
+       (z, l1));;
 
 *)
 
 (* changed spans
-(10,2)-(14,71)
-(11,7)-(11,69)
-(11,64)-(11,68)
-(13,4)-(14,71)
-(13,7)-(13,23)
-(13,7)-(13,42)
-(13,8)-(13,19)
-(13,20)-(13,22)
-(13,26)-(13,42)
-(13,27)-(13,38)
-(13,39)-(13,41)
-(14,9)-(14,71)
-(14,60)-(14,64)
-(14,69)-(14,71)
+(9,9)-(9,76)
+(9,24)-(9,26)
+(10,9)-(10,76)
+(10,24)-(10,26)
+(10,69)-(10,70)
+(10,72)-(10,74)
 *)
 
 (* type error slice
-(2,3)-(7,25)
-(2,14)-(7,23)
-(2,16)-(7,23)
-(3,2)-(7,23)
-(6,16)-(6,18)
-(6,16)-(6,47)
-(6,16)-(6,47)
-(6,22)-(6,47)
-(6,23)-(6,34)
-(6,35)-(6,37)
-(7,2)-(7,13)
-(7,2)-(7,23)
-(7,14)-(7,15)
-(11,13)-(11,69)
-(11,14)-(11,61)
-(11,15)-(11,20)
-(11,21)-(11,22)
-(11,43)-(11,59)
-(11,44)-(11,55)
-(11,56)-(11,58)
-(11,62)-(11,63)
-(11,64)-(11,68)
-(11,64)-(11,68)
-(11,65)-(11,67)
-(13,4)-(14,71)
-(13,4)-(14,71)
-(13,4)-(14,71)
-(14,9)-(14,65)
-(14,9)-(14,71)
-(14,10)-(14,57)
-(14,11)-(14,16)
-(14,39)-(14,55)
-(14,40)-(14,51)
-(14,52)-(14,54)
-(14,58)-(14,59)
-(14,60)-(14,64)
-(14,60)-(14,64)
-(14,61)-(14,63)
+(2,43)-(2,44)
+(2,43)-(2,65)
+(2,43)-(2,65)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(2,55)-(2,56)
+(5,2)-(10,76)
+(5,2)-(10,76)
+(6,7)-(6,15)
+(6,8)-(6,10)
+(8,4)-(10,76)
+(9,9)-(9,76)
+(9,9)-(9,76)
+(9,18)-(9,23)
+(9,18)-(9,64)
+(9,24)-(9,26)
+(9,68)-(9,75)
+(9,69)-(9,70)
 *)

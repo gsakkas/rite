@@ -1,34 +1,44 @@
 
-let pipe fs =
-  let f a x f' d = x (a d) in let base c = c in List.fold_left f base fs;;
+let helper (f,b) =
+  let x = f b in match x with | b -> (x, false) | _ -> (x, true);;
+
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((helper f b), b);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x d = x (a d) in let base c = c in List.fold_left f base fs;;
+let helper (f,b) = let f b = let x = f b in (x, (x != b)) in f;;
+
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
 
 *)
 
 (* changed spans
-(3,12)-(3,26)
-(3,30)-(3,72)
+(3,2)-(3,64)
+(3,10)-(3,13)
+(3,17)-(3,64)
+(3,23)-(3,24)
+(3,41)-(3,46)
+(3,55)-(3,64)
+(3,59)-(3,63)
+(5,16)-(6,72)
+(6,2)-(6,72)
+(8,29)-(8,41)
+(8,37)-(8,38)
 *)
 
 (* type error slice
-(3,2)-(3,72)
-(3,8)-(3,26)
-(3,10)-(3,26)
-(3,12)-(3,26)
-(3,15)-(3,26)
-(3,21)-(3,26)
-(3,22)-(3,23)
-(3,24)-(3,25)
-(3,30)-(3,72)
-(3,39)-(3,44)
-(3,43)-(3,44)
-(3,48)-(3,62)
-(3,48)-(3,72)
-(3,63)-(3,64)
-(3,65)-(3,69)
+(2,3)-(3,66)
+(2,12)-(3,64)
+(3,2)-(3,64)
+(3,17)-(3,64)
+(3,37)-(3,47)
+(8,29)-(8,41)
+(8,30)-(8,36)
 *)

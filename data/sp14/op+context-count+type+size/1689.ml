@@ -1,75 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> VarX
-  | 2 -> 22
-  | 3 -> 33
-  | 4 -> 44
-  | 5 -> 55
-  | 6 -> 66
-  | 7 -> 77;;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2 then x1 @ (clone 0 (x2 - x1)) else x2 @ (clone 0 (x1 - x2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 -> buildX ()
-  | 4 -> buildY ()
-  | 5 -> buildX ()
-  | 6 -> buildY ()
-  | 7 -> buildX ();;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then ((l1 @ (clone 0 (x2 - x1))), l2)
+  else (l1, (l2 @ (clone 0 (x1 - x2))));;
 
 *)
 
 (* changed spans
-(11,15)-(19,11)
-(13,9)-(13,13)
-(14,9)-(14,11)
-(15,9)-(15,11)
-(16,9)-(16,11)
-(17,9)-(17,11)
-(18,9)-(18,11)
-(19,9)-(19,11)
+(7,18)-(7,20)
+(7,18)-(7,42)
+(7,48)-(7,50)
+(7,48)-(7,72)
+(7,63)-(7,65)
+(7,68)-(7,70)
 *)
 
 (* type error slice
-(12,2)-(19,11)
-(12,2)-(19,11)
-(12,2)-(19,11)
-(12,2)-(19,11)
-(12,2)-(19,11)
-(12,2)-(19,11)
-(12,2)-(19,11)
-(13,9)-(13,13)
-(14,9)-(14,11)
-(15,9)-(15,11)
-(16,9)-(16,11)
-(17,9)-(17,11)
-(18,9)-(18,11)
-(19,9)-(19,11)
+(5,2)-(7,72)
+(5,11)-(5,22)
+(5,11)-(5,25)
+(6,2)-(7,72)
+(6,11)-(6,22)
+(6,11)-(6,25)
+(7,18)-(7,20)
+(7,18)-(7,42)
+(7,21)-(7,22)
+(7,48)-(7,50)
+(7,48)-(7,72)
+(7,51)-(7,52)
 *)

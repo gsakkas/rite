@@ -1,99 +1,54 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = 0 in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "pi* " + (exprToString s);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (addend_a,addend_b) ->
-          let new_carry = ((carry + addend_a) + addend_b) / 10 in
-          let digit = ((carry + addend_a) + addend_b) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "pi* " ^ (exprToString s);;
 
 *)
 
 (* changed spans
-(23,16)-(23,17)
-(23,16)-(23,21)
-(24,4)-(25,68)
-(24,15)-(24,16)
-(25,4)-(25,68)
-(25,15)-(25,17)
-(25,21)-(25,68)
-(25,35)-(25,49)
-(25,35)-(25,61)
-(25,50)-(25,51)
-(25,52)-(25,56)
-(25,57)-(25,61)
-(25,65)-(25,68)
-(26,2)-(26,12)
-(26,2)-(26,34)
-(26,13)-(26,34)
-(26,14)-(26,17)
-(26,18)-(26,33)
-(26,19)-(26,26)
-(26,27)-(26,29)
-(26,30)-(26,32)
+(15,14)-(15,20)
+(15,14)-(15,39)
 *)
 
 (* type error slice
-(23,4)-(25,68)
-(23,10)-(23,21)
-(23,16)-(23,17)
-(23,16)-(23,21)
-(25,21)-(25,68)
-(25,35)-(25,49)
-(25,35)-(25,61)
-(25,50)-(25,51)
+(11,3)-(15,41)
+(11,21)-(15,39)
+(12,2)-(15,39)
+(12,2)-(15,39)
+(13,13)-(13,16)
+(15,14)-(15,20)
+(15,14)-(15,39)
+(15,14)-(15,39)
+(15,14)-(15,39)
+(15,23)-(15,39)
+(15,24)-(15,36)
 *)

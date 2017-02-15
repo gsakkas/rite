@@ -1,77 +1,35 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (a,h::t) ->
-          if (((fst x) + (snd x)) + a) > 9
-          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
-          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t :: t))
-      | _ ->
-          if ((fst x) + (snd x)) > 9
-          then (1, [((fst x) + (snd x)) mod 10])
-          else (0, [((fst x) + (snd x)) mod 10]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile (((f b) = b), b);;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (a,h::t) ->
-          if (((fst x) + (snd x)) + a) > 9
-          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
-          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10) :: t))
-      | _ ->
-          if ((fst x) + (snd x)) > 9
-          then (1, [((fst x) + (snd x)) mod 10])
-          else (0, [((fst x) + (snd x)) mod 10]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = wwhile ((let f' b = ((f b), (b = (f b))) in f'), b);;
 
 *)
 
 (* changed spans
-(22,63)-(22,69)
-(22,68)-(22,69)
+(5,29)-(5,40)
+(5,30)-(5,35)
+(5,38)-(5,39)
+(5,42)-(5,43)
 *)
 
 (* type error slice
-(22,63)-(22,64)
-(22,63)-(22,69)
-(22,63)-(22,69)
-(22,68)-(22,69)
+(3,15)-(3,16)
+(3,15)-(3,18)
+(3,44)-(3,50)
+(3,44)-(3,58)
+(3,51)-(3,58)
+(3,52)-(3,53)
+(5,21)-(5,27)
+(5,21)-(5,44)
+(5,28)-(5,44)
+(5,29)-(5,40)
 *)

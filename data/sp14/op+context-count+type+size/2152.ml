@@ -1,105 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let res = rand (0, 4) in
-  match depth with
-  | 0 -> if (res mod 2) = 0 then buildX () else buildY ()
-  | _ ->
-      let nd = depth - 1 in
-      (match res with
-       | 0 -> buildAverage ((build (rand, nd)), (build (rand, nd)))
-       | 1 ->
-           buildThresh
-             ((build (rand, nd)), (build (rand, nd)), (build (rand, nd)),
-               (build (rand, nd)))
-       | 2 -> buildTimes ((build (rand, nd)), (build (rand, nd)))
-       | 3 -> buildSine (build (rand, nd))
-       | 4 -> buildCosine ((build rand), nd));;
+let fixpoint (f,b) = let g b = b in wwhile ((g, true), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let res = rand (0, 4) in
-  match depth with
-  | 0 -> if (res mod 2) = 0 then buildX () else buildY ()
-  | _ ->
-      let nd = depth - 1 in
-      (match res with
-       | 0 -> buildAverage ((build (rand, nd)), (build (rand, nd)))
-       | 1 ->
-           buildThresh
-             ((build (rand, nd)), (build (rand, nd)), (build (rand, nd)),
-               (build (rand, nd)))
-       | 2 -> buildTimes ((build (rand, nd)), (build (rand, nd)))
-       | 3 -> buildSine (build (rand, nd))
-       | 4 -> buildCosine (build (rand, nd)));;
+let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
 
 *)
 
 (* changed spans
-(39,26)-(39,44)
-(39,34)-(39,38)
+(7,31)-(7,32)
+(7,36)-(7,42)
+(7,44)-(7,53)
+(7,48)-(7,52)
 *)
 
 (* type error slice
-(13,3)-(13,30)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(13,27)-(13,28)
-(32,28)-(32,46)
-(32,29)-(32,34)
-(32,35)-(32,45)
-(32,36)-(32,40)
-(39,14)-(39,25)
-(39,14)-(39,44)
-(39,26)-(39,44)
-(39,27)-(39,39)
-(39,28)-(39,33)
-(39,34)-(39,38)
+(2,3)-(5,27)
+(2,12)-(5,25)
+(4,28)-(4,34)
+(4,28)-(4,47)
+(4,35)-(4,41)
+(4,36)-(4,37)
+(4,42)-(4,47)
+(4,43)-(4,44)
+(5,2)-(5,8)
+(5,2)-(5,25)
+(5,9)-(5,15)
+(5,10)-(5,11)
+(7,36)-(7,42)
+(7,36)-(7,57)
+(7,43)-(7,57)
+(7,44)-(7,53)
 *)

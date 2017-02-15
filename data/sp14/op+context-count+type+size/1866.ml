@@ -1,44 +1,92 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr
+  | Timmy2 of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((wwhile (f, b)), b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e,f) ->
+      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
+  | Times (e,f) ->
+      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
+  | Thresh (e,f,g,h) ->
+      "(" ^
+        ((exprToString e) ^
+           ("<" ^
+              ((exprToString f) ^
+                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))))
+  | Timmy1 (e1,e2) ->
+      "sin^2(pi*" ^
+        ((exprToString e1) ^ (")*" ^ ("cos(pi*" ^ ((exprToString e2) ^ ")"))))
+  | Timmy2 (e1,e2,e3) ->
+      "sin^2(pi*" ^
+        ((exprToString e1) ^
+           (")*" ^
+              ("(cos^2(pi*" ^
+                 ((exprToString e2) ^
+                    (")*" ^ (("cos(" exprToString e3) ^ "))"))))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr
+  | Timmy2 of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let f x = let xx = f b in (xx, (xx <> b)) in wwhile (f, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e,f) ->
+      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
+  | Times (e,f) ->
+      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
+  | Thresh (e,f,g,h) ->
+      "(" ^
+        ((exprToString e) ^
+           ("<" ^
+              ((exprToString f) ^
+                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))))
+  | Timmy1 (e1,e2) ->
+      "sin^2(pi*" ^
+        ((exprToString e1) ^ (")*" ^ ("cos(pi*" ^ ((exprToString e2) ^ ")"))))
+  | Timmy2 (e1,e2,e3) ->
+      "sin^.5(pi*" ^
+        ((exprToString e1) ^
+           (")*" ^
+              ("(cos^2(pi*" ^
+                 ((exprToString e2) ^
+                    (")*" ^ ("cos(" ^ ((exprToString e3) ^ "))")))))));;
 
 *)
 
 (* changed spans
-(5,21)-(5,27)
-(5,21)-(5,48)
-(5,28)-(5,48)
-(5,29)-(5,44)
-(5,30)-(5,36)
-(5,37)-(5,43)
-(5,46)-(5,47)
+(33,6)-(33,17)
+(38,29)-(38,53)
+(38,37)-(38,49)
 *)
 
 (* type error slice
-(3,2)-(3,64)
-(3,16)-(3,17)
-(3,16)-(3,19)
-(3,23)-(3,64)
-(3,23)-(3,64)
-(3,42)-(3,44)
-(3,50)-(3,56)
-(3,50)-(3,64)
-(3,57)-(3,64)
-(3,58)-(3,59)
-(5,21)-(5,27)
-(5,21)-(5,48)
-(5,28)-(5,48)
-(5,29)-(5,44)
-(5,30)-(5,36)
+(38,29)-(38,53)
+(38,30)-(38,36)
 *)

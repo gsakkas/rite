@@ -8,10 +8,8 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | Sine m -> sin (pi *. (eval m));;
+let rec exprToString e =
+  match e with | VarX  -> "x" | VarY  -> "y" | Sine m -> "sin" ^ exprToString;;
 
 
 (* fix
@@ -25,23 +23,22 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | Sine m -> sin (pi *. (eval (m, x, y))) | _ -> x;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine m -> "sin" ^ (exprToString m);;
 
 *)
 
 (* changed spans
-(14,2)-(14,60)
-(14,57)-(14,58)
+(12,65)-(12,77)
 *)
 
 (* type error slice
-(13,3)-(14,62)
-(13,14)-(14,60)
-(14,2)-(14,60)
-(14,51)-(14,59)
-(14,52)-(14,56)
-(14,57)-(14,58)
+(11,3)-(12,79)
+(11,21)-(12,77)
+(12,57)-(12,77)
+(12,63)-(12,64)
+(12,65)-(12,77)
 *)

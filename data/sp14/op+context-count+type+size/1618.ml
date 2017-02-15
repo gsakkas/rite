@@ -1,125 +1,97 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
+      let carry = (fst x) + (snd x) in
       match a with
-      | (h1::t1,rh::rt) ->
-          (match x with | h2::t2 -> (t1, (((h1 + rh) mod 10) :: rt))) in
-    let base = (l1, [0]) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
+      | h::t -> ((h + carry) / 10) :: ((h + carry) mod 10) :: t
+      | _ -> [carry / 10; carry mod 10] in
+    let base = 0 in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match a with
-      | (h1::t1,rh::rt) -> (t1, ((((h1 + x) + rh) mod 10) :: rt)) in
-    let base = (l1, [0]) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
+      let carry = match a with | (x,y) -> x in
+      match x with
+      | (addend_a,addend_b) ->
+          let new_carry = ((carry + addend_a) + addend_b) / 10 in
+          let digit = ((carry + addend_a) + addend_b) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(26,10)-(26,69)
-(26,17)-(26,18)
-(26,44)-(26,46)
-(26,49)-(26,51)
-(27,4)-(28,68)
-(28,4)-(28,68)
-(28,21)-(28,68)
+(15,18)-(15,25)
+(15,18)-(15,35)
+(15,19)-(15,22)
+(15,23)-(15,24)
+(15,28)-(15,35)
+(15,29)-(15,32)
+(16,6)-(18,39)
+(16,12)-(16,13)
+(17,16)-(17,63)
+(17,18)-(17,19)
+(17,22)-(17,27)
+(17,31)-(17,33)
+(17,38)-(17,58)
+(17,38)-(17,63)
+(17,40)-(17,41)
+(17,55)-(17,57)
+(17,62)-(17,63)
+(18,13)-(18,39)
+(18,14)-(18,19)
+(18,14)-(18,24)
+(18,22)-(18,24)
+(18,26)-(18,31)
+(18,26)-(18,38)
+(18,36)-(18,38)
+(19,4)-(21,51)
+(19,15)-(19,16)
+(20,4)-(21,51)
+(20,15)-(20,44)
+(21,4)-(21,51)
 *)
 
 (* type error slice
-(5,3)-(14,63)
-(5,12)-(14,61)
-(5,15)-(14,61)
-(6,2)-(14,61)
-(7,2)-(14,61)
-(8,2)-(14,61)
-(10,6)-(11,61)
-(11,6)-(11,61)
-(11,6)-(11,61)
-(11,19)-(11,24)
-(11,19)-(11,28)
-(11,32)-(11,61)
-(11,33)-(11,35)
-(11,37)-(11,60)
-(11,38)-(11,49)
-(11,50)-(11,56)
-(14,6)-(14,61)
-(14,19)-(14,24)
-(14,19)-(14,28)
-(14,33)-(14,56)
-(14,34)-(14,45)
-(14,46)-(14,52)
-(14,53)-(14,55)
-(22,2)-(29,34)
-(22,11)-(28,68)
-(23,4)-(28,68)
-(23,10)-(26,69)
-(23,12)-(26,69)
-(24,6)-(26,69)
-(24,6)-(26,69)
-(24,12)-(24,13)
-(26,10)-(26,69)
-(26,10)-(26,69)
-(26,17)-(26,18)
-(26,43)-(26,52)
-(26,44)-(26,46)
-(27,4)-(28,68)
-(27,15)-(27,24)
-(27,16)-(27,18)
-(28,4)-(28,68)
-(28,15)-(28,17)
-(28,35)-(28,49)
-(28,35)-(28,61)
-(28,50)-(28,51)
-(28,52)-(28,56)
-(28,57)-(28,61)
-(29,13)-(29,34)
-(29,14)-(29,17)
-(29,18)-(29,33)
-(29,19)-(29,26)
+(14,4)-(21,51)
+(14,10)-(18,39)
+(16,6)-(18,39)
+(16,6)-(18,39)
+(16,12)-(16,13)
+(19,4)-(21,51)
+(19,15)-(19,16)
+(21,18)-(21,32)
+(21,18)-(21,44)
+(21,33)-(21,34)
+(21,35)-(21,39)
 *)

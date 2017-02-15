@@ -1,71 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b x y))
-      then eval (a_less x y)
-      else eval (b_less x y);;
+let fixpoint (f,b) = wwhile ((((f b) = b), b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y);;
+let fixpoint (f,b) = let fx b' = ((f b'), ((f b') = b')) in wwhile (fx, b);;
 
 *)
 
 (* changed spans
-(22,34)-(22,41)
-(23,16)-(23,28)
-(24,16)-(24,28)
+(4,21)-(4,27)
+(4,21)-(4,49)
+(4,28)-(4,49)
+(4,29)-(4,45)
+(4,30)-(4,41)
+(4,34)-(4,35)
+(4,39)-(4,40)
+(4,43)-(4,44)
+(4,47)-(4,48)
 *)
 
 (* type error slice
-(14,2)-(24,28)
-(14,2)-(24,28)
-(14,2)-(24,28)
-(22,34)-(22,41)
-(22,35)-(22,36)
-(23,16)-(23,28)
-(23,17)-(23,23)
-(24,16)-(24,28)
-(24,17)-(24,23)
+(2,37)-(2,38)
+(2,37)-(2,40)
+(2,55)-(2,61)
+(2,55)-(2,69)
+(2,62)-(2,69)
+(2,63)-(2,64)
+(4,21)-(4,27)
+(4,21)-(4,49)
+(4,28)-(4,49)
+(4,29)-(4,45)
 *)

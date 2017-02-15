@@ -1,64 +1,59 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  match digits n with | [] -> 0 | h::t -> digitalRoot (digits (sumList n));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (clone 0 ((List.length l1) - (List.length l2))) @ l1
+  else
+    if (List.length l1) < (List.length l2)
+    then (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @ [l2])
+    else [];;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec digitalRoot n = match digits n with | x::[] -> x;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, l2);;
 
 *)
 
 (* changed spans
-(7,16)-(7,70)
-(7,21)-(7,70)
-(7,27)-(7,29)
-(7,43)-(7,44)
-(7,55)-(7,56)
-(7,55)-(7,70)
-(7,59)-(7,70)
+(6,7)-(6,59)
+(6,57)-(6,59)
+(9,9)-(9,70)
+(9,59)-(9,70)
+(9,63)-(9,64)
+(9,65)-(9,69)
+(10,9)-(10,11)
 *)
 
 (* type error slice
-(3,25)-(3,47)
-(3,25)-(3,60)
-(3,26)-(3,37)
-(3,48)-(3,49)
-(5,3)-(5,36)
-(5,11)-(5,34)
-(5,15)-(5,26)
-(5,15)-(5,34)
-(5,27)-(5,34)
-(5,28)-(5,31)
-(5,32)-(5,33)
-(7,21)-(7,70)
-(7,21)-(7,70)
-(7,55)-(7,70)
-(7,59)-(7,70)
-(7,60)-(7,67)
-(7,68)-(7,69)
-(9,3)-(10,76)
-(9,20)-(10,74)
-(10,8)-(10,14)
-(10,8)-(10,16)
-(10,15)-(10,16)
-(10,42)-(10,53)
-(10,42)-(10,74)
-(10,54)-(10,74)
-(10,55)-(10,61)
-(10,62)-(10,73)
-(10,63)-(10,70)
-(10,71)-(10,72)
+(2,43)-(2,44)
+(2,43)-(2,65)
+(2,43)-(2,65)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(2,55)-(2,56)
+(6,7)-(6,54)
+(6,7)-(6,59)
+(6,8)-(6,13)
+(6,14)-(6,15)
+(6,55)-(6,56)
+(6,57)-(6,59)
+(9,19)-(9,35)
+(9,20)-(9,31)
+(9,32)-(9,34)
+(9,59)-(9,70)
+(9,60)-(9,62)
+(9,63)-(9,64)
+(9,65)-(9,69)
+(9,65)-(9,69)
+(9,66)-(9,68)
 *)

@@ -1,92 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | _ -> "" ^ (ex ^ "");;
+let pipe fs =
+  let f a x = function | g -> g (x a) in
+  let base = function | x -> x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | _ -> "";;
+let pipe fs =
+  let f a x = function | g -> g in
+  let base = function | x -> x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(27,9)-(27,23)
-(27,12)-(27,13)
-(27,14)-(27,23)
+(3,30)-(3,37)
+(3,32)-(3,37)
+(3,33)-(3,34)
+(3,35)-(3,36)
 *)
 
 (* type error slice
-(11,3)-(27,25)
-(11,21)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,2)-(27,23)
-(12,8)-(12,10)
-(15,27)-(15,43)
-(15,28)-(15,40)
-(15,41)-(15,42)
-(27,14)-(27,23)
-(27,15)-(27,17)
-(27,18)-(27,19)
+(3,2)-(4,58)
+(3,8)-(3,37)
+(3,10)-(3,37)
+(3,14)-(3,37)
+(3,14)-(3,37)
+(3,14)-(3,37)
+(3,14)-(3,37)
+(3,30)-(3,31)
+(3,30)-(3,37)
+(4,2)-(4,58)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,13)-(4,30)
+(4,29)-(4,30)
+(4,34)-(4,48)
+(4,34)-(4,58)
+(4,49)-(4,50)
+(4,51)-(4,55)
 *)

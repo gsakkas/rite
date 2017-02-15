@@ -1,32 +1,77 @@
 
-let pipe fs =
-  let f a x result = a x in let base = 1 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi *" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi *" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ (exprToString e2 ")/2)")))
+  | Times (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("*" ^ (exprToString e2 ")")))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi *" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi *" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) ->
+      "(" ^ ((exprToString e1) ^ ("*" ^ ((exprToString e2) ^ ")")))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(3,12)-(3,24)
-(3,21)-(3,22)
-(3,28)-(3,68)
-(3,39)-(3,40)
-(3,44)-(3,68)
+(18,42)-(18,54)
+(20,41)-(20,53)
+(27,50)-(27,62)
+(27,63)-(27,65)
 *)
 
 (* type error slice
-(3,2)-(3,68)
-(3,8)-(3,24)
-(3,21)-(3,22)
-(3,21)-(3,24)
-(3,28)-(3,68)
-(3,39)-(3,40)
-(3,44)-(3,58)
-(3,44)-(3,68)
-(3,59)-(3,60)
-(3,61)-(3,65)
+(15,28)-(15,53)
+(15,29)-(15,46)
+(15,30)-(15,42)
+(15,47)-(15,48)
+(18,41)-(18,65)
+(18,42)-(18,54)
+(20,40)-(20,61)
+(20,41)-(20,53)
 *)

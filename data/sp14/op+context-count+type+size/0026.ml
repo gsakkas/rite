@@ -6,31 +6,31 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (0, 2) in match num with | 0 -> VarX | _ -> VarY
-  else
-    (let num = rand (0, 5) in
-     match num with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 ->
-         buildAverage
-           ((build (rand, (depth - 1))),
-             (buildAverage (build (rand, (depth - 1)))))
-     | 2 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ -> buildCosine (build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      (eval
+         ((eval (a, (sin (pi *. x)), (sin (pi *. y)))),
+           (eval (b, (sin (pi *. x)), (sin (pi *. y)))),
+           (eval (c, (sin (pi *. x)), (sin (pi *. y))))))
+        /. 3.0;;
 
 
 (* fix
@@ -42,51 +42,52 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (0, 2) in match num with | 0 -> VarX | _ -> VarY
-  else
-    (let num = rand (0, 5) in
-     match num with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 2 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ -> buildCosine (build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +.
+          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
+         +. (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
+        /. 3.0;;
 
 *)
 
 (* changed spans
-(29,14)-(29,26)
-(29,27)-(29,54)
+(29,6)-(32,57)
+(29,7)-(29,11)
+(30,9)-(32,56)
+(30,10)-(30,54)
 *)
 
 (* type error slice
-(11,3)-(11,45)
-(11,18)-(11,43)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(25,12)-(25,21)
-(25,12)-(25,49)
-(25,22)-(25,49)
-(25,23)-(25,28)
-(29,13)-(29,55)
-(29,14)-(29,26)
-(29,27)-(29,54)
-(29,28)-(29,33)
+(16,2)-(33,14)
+(19,14)-(19,18)
+(19,14)-(19,56)
+(19,19)-(19,56)
+(19,20)-(19,21)
+(21,21)-(21,59)
+(21,22)-(21,38)
+(21,23)-(21,27)
+(29,6)-(32,57)
+(29,7)-(29,11)
+(30,9)-(32,56)
+(30,10)-(30,54)
+(30,11)-(30,15)
 *)

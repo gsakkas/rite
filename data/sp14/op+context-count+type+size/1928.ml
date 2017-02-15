@@ -1,63 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval x1) +. (eval x2)) /. 2.;;
+let fixpoint (f,b) = wwhile (let g z = (z, false) in ((g b), b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let h x = ((x * x), (x < 100));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.;;
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(19,30)-(19,32)
-(19,37)-(19,46)
-(19,43)-(19,45)
+(2,16)-(3,62)
+(5,28)-(5,64)
+(5,35)-(5,49)
+(5,40)-(5,41)
+(5,43)-(5,48)
+(5,53)-(5,63)
+(5,54)-(5,59)
+(5,55)-(5,56)
+(5,57)-(5,58)
 *)
 
 (* type error slice
-(14,2)-(19,53)
-(14,2)-(19,53)
-(17,26)-(17,43)
-(17,27)-(17,31)
-(17,32)-(17,42)
-(19,24)-(19,33)
-(19,25)-(19,29)
-(19,30)-(19,32)
-(19,37)-(19,46)
-(19,38)-(19,42)
-(19,43)-(19,45)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(5,21)-(5,27)
+(5,21)-(5,64)
+(5,28)-(5,64)
+(5,28)-(5,64)
+(5,35)-(5,49)
+(5,39)-(5,49)
+(5,53)-(5,63)
+(5,54)-(5,59)
+(5,55)-(5,56)
 *)

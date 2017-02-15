@@ -1,62 +1,68 @@
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec loop n acc =
-       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> loop n []);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) / 2
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 
 (* fix
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec loop n acc =
-       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> loop n []);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  if (sumList (digits n)) > 9
-  then digitalRoot (sumList (digits n))
-  else sumList (digits n);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 *)
 
 (* changed spans
-(15,2)-(15,74)
-(15,10)-(15,28)
-(15,32)-(15,74)
-(15,35)-(15,36)
-(15,35)-(15,40)
-(15,58)-(15,59)
-(15,73)-(15,74)
+(19,23)-(19,67)
+(19,66)-(19,67)
 *)
 
 (* type error slice
-(12,21)-(12,70)
-(12,21)-(12,70)
-(12,55)-(12,70)
-(12,59)-(12,70)
-(12,60)-(12,67)
-(12,68)-(12,69)
-(15,2)-(15,74)
-(15,10)-(15,17)
-(15,10)-(15,28)
-(15,65)-(15,72)
-(15,65)-(15,74)
-(15,73)-(15,74)
+(14,2)-(24,26)
+(14,2)-(24,26)
+(17,15)-(17,18)
+(17,15)-(17,44)
+(19,23)-(19,63)
+(19,23)-(19,67)
+(19,23)-(19,67)
 *)

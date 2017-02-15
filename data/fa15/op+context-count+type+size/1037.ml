@@ -1,25 +1,23 @@
 
-let rec sumList xs = function | [] -> 0 | x::xs -> x + (sumList xs);;
+let stringOfList f l = "[" ^ ((List.map f l) ^ "]");;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
+let stringOfList f l = "[" ^ ("List.map f l" ^ "]");;
 
 *)
 
 (* changed spans
-(2,21)-(2,67)
-(2,38)-(2,39)
-(2,51)-(2,52)
-(2,64)-(2,66)
+(2,30)-(2,44)
+(2,31)-(2,39)
+(2,40)-(2,41)
+(2,42)-(2,43)
 *)
 
 (* type error slice
-(2,3)-(2,69)
-(2,16)-(2,67)
-(2,21)-(2,67)
-(2,51)-(2,67)
-(2,55)-(2,67)
-(2,56)-(2,63)
+(2,29)-(2,51)
+(2,30)-(2,44)
+(2,31)-(2,39)
+(2,45)-(2,46)
 *)

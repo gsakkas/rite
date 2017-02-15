@@ -1,84 +1,33 @@
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ((List.hd l1) + (List.hd l2)) mod 10 in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x y = x (a y) in let base fs = fs in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(16,16)-(16,45)
-(16,16)-(16,52)
-(16,17)-(16,29)
-(16,18)-(16,25)
-(16,26)-(16,28)
-(16,32)-(16,44)
-(16,33)-(16,40)
-(16,41)-(16,43)
-(16,50)-(16,52)
-(17,4)-(19,51)
-(17,15)-(17,17)
-(18,4)-(19,51)
-(19,4)-(19,51)
-(20,2)-(20,12)
-(20,13)-(20,34)
-(20,14)-(20,17)
-(20,18)-(20,33)
-(20,19)-(20,26)
-(20,27)-(20,29)
-(20,30)-(20,32)
+(2,14)-(2,74)
+(2,26)-(2,29)
+(2,28)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
 *)
 
 (* type error slice
-(16,4)-(19,51)
-(16,10)-(16,52)
-(16,12)-(16,52)
-(16,16)-(16,52)
-(17,4)-(19,51)
-(17,15)-(17,17)
-(19,18)-(19,32)
-(19,18)-(19,44)
-(19,33)-(19,34)
-(19,35)-(19,39)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
+(2,67)-(2,71)
+(2,72)-(2,74)
 *)

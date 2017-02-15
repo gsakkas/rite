@@ -6,32 +6,23 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | AddThree of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
-  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
-  | Thresh (e7,e8,e9,e10) ->
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> ((exprToString x) + "*") ^ (exprToString y)
+  | Thresh (a,b,c,d) ->
       "(" ^
-        ((exprToString e7) ^
+        ((exprToString a) ^
            ("<" ^
-              ((exprToString e8) ^
-                 ("?" ^
-                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
-  | Power (e1,e2) ->
-      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
-  | AddThree (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("+" ^ ((exprToString e2) ^ (("+" exprToString e3) ^ ")"))));;
+              ((exprToString b) ^
+                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
 
 
 (* fix
@@ -43,41 +34,48 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | AddThree of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
-  | Average (e3,e4) ->
-      "((" ^ ((exprToString e3) ^ ("+" ^ ((exprToString e4) ^ ")/2)")))
-  | Times (e5,e6) -> (exprToString e5) ^ ("*" ^ (exprToString e6))
-  | Thresh (e7,e8,e9,e10) ->
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
       "(" ^
-        ((exprToString e7) ^
+        ((exprToString a) ^
            ("<" ^
-              ((exprToString e8) ^
-                 ("?" ^
-                    ((exprToString e9) ^ (":" ^ ((exprToString e10) ^ ")")))))))
-  | Power (e1,e2) ->
-      "(" ^ ((exprToString e1) ^ ("**" ^ ((exprToString e2) ^ ")")))
-  | AddThree (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("+" ^ ((exprToString e2) ^ ("+" ^ ((exprToString e3) ^ ")")))));;
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
 
 *)
 
 (* changed spans
-(34,40)-(34,61)
-(34,45)-(34,57)
+(19,19)-(19,43)
+(19,39)-(19,42)
+(25,18)-(25,38)
+(25,23)-(25,35)
+(25,49)-(25,61)
+(25,62)-(25,63)
 *)
 
 (* type error slice
-(34,40)-(34,61)
-(34,41)-(34,44)
+(15,26)-(15,50)
+(15,27)-(15,43)
+(15,28)-(15,40)
+(15,44)-(15,45)
+(19,19)-(19,43)
+(19,19)-(19,43)
+(19,19)-(19,43)
+(19,19)-(19,62)
+(19,20)-(19,36)
+(19,21)-(19,33)
+(19,39)-(19,42)
+(19,44)-(19,45)
+(25,18)-(25,38)
+(25,19)-(25,22)
 *)

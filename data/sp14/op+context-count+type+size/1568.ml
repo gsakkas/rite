@@ -1,35 +1,66 @@
 
-let pipe fs =
-  let f a x y z = z y in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + a], [x + a]) in
+    let base = ([], []) in
+    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y z = y z in let base b = b in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + 1], [x + 1]) in
+    let base = ([], []) in
+    let args = l1 in let (bar,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,18)-(3,19)
-(3,20)-(3,21)
-(3,25)-(3,67)
+(19,22)-(19,23)
+(19,31)-(19,32)
 *)
 
 (* type error slice
-(3,2)-(3,67)
-(3,8)-(3,21)
-(3,10)-(3,21)
-(3,12)-(3,21)
-(3,14)-(3,21)
-(3,18)-(3,19)
-(3,18)-(3,21)
-(3,20)-(3,21)
-(3,25)-(3,67)
-(3,34)-(3,39)
-(3,38)-(3,39)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
-(3,60)-(3,64)
+(19,4)-(21,70)
+(19,10)-(19,34)
+(19,12)-(19,34)
+(19,16)-(19,34)
+(19,18)-(19,23)
+(19,22)-(19,23)
+(21,37)-(21,51)
+(21,37)-(21,63)
+(21,52)-(21,53)
 *)

@@ -1,27 +1,39 @@
 
-let pipe fs = let f a x = a x in let base = [] in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+
+let fixpoint (f,b) = wwhile (let xx = f b in ((xx, (xx = b)), b));;
 
 
 (* fix
 
-let pipe fs = let f a x a = a in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+
+let fixpoint (f,b) =
+  wwhile ((let d x = let xx = f b in (xx, (xx = b)) in d), b);;
 
 *)
 
 (* changed spans
-(2,26)-(2,29)
-(2,28)-(2,29)
-(2,44)-(2,46)
-(2,50)-(2,74)
+(6,28)-(6,65)
+(6,38)-(6,41)
+(6,46)-(6,60)
+(6,62)-(6,63)
 *)
 
 (* type error slice
-(2,14)-(2,74)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,50)-(2,64)
-(2,50)-(2,74)
-(2,65)-(2,66)
+(3,13)-(3,14)
+(3,13)-(3,16)
+(4,40)-(4,46)
+(4,40)-(4,57)
+(4,47)-(4,57)
+(4,48)-(4,49)
+(6,21)-(6,27)
+(6,21)-(6,65)
+(6,28)-(6,65)
+(6,45)-(6,64)
+(6,46)-(6,60)
 *)

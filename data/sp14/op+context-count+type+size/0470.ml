@@ -1,124 +1,50 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      let max' a b = if a < b then b else a in
-      max' (0.0 -. 1.0)
-        (min 1.0
-           ((2.71 **
-               (((sin (pi *. (eval (a, x, y)))) +.
-                   (cos (pi *. (eval (b, x, y)))))
-                  -. 1.0))
-              -. 1.0))
-  | SinLog (a',b',c) ->
-      let a = abs_float (eval (a', x, y)) in
-      let max' a b = if a < b then b else a in
-      let b = abs_float (eval (b', x, y)) in
-      let my_log l' = let l = max' 0.1 l' in (log l) / (log 10.0) in
-      if (eval (c, x, y)) < 0.0
-      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
-      else
-        (-1.0) *.
-          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
+let fixpoint (f,b) = wwhile (let xx = (b * b) * b in ((xx, (xx < 100)), b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      let max' a b = if a < b then b else a in
-      max' (0.0 -. 1.0)
-        (min 1.0
-           ((2.71 **
-               (((sin (pi *. (eval (a, x, y)))) +.
-                   (cos (pi *. (eval (b, x, y)))))
-                  -. 1.0))
-              -. 1.0))
-  | SinLog (a',b',c) ->
-      let a = abs_float (eval (a', x, y)) in
-      let max' a b = if a < b then b else a in
-      let b = abs_float (eval (b', x, y)) in
-      let my_log l' = let l = max' 0.1 l' in (log l) /. (log 10.0) in
-      if (eval (c, x, y)) < 0.0
-      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
-      else
-        (-1.0) *.
-          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
+let fixpoint (f,b) =
+  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
 
 *)
 
 (* changed spans
-(40,45)-(40,65)
+(7,28)-(7,75)
+(7,38)-(7,45)
+(7,38)-(7,49)
+(7,39)-(7,40)
+(7,43)-(7,44)
+(7,48)-(7,49)
+(7,54)-(7,70)
+(7,59)-(7,69)
+(7,65)-(7,68)
 *)
 
 (* type error slice
-(40,6)-(45,72)
-(40,17)-(40,65)
-(40,22)-(40,65)
-(40,45)-(40,52)
-(40,45)-(40,65)
-(40,45)-(40,65)
-(40,45)-(40,65)
-(40,46)-(40,49)
-(40,55)-(40,65)
-(40,56)-(40,59)
-(42,11)-(42,64)
-(42,12)-(42,33)
-(42,13)-(42,19)
-(42,34)-(42,36)
-(44,8)-(44,14)
-(44,8)-(44,14)
-(44,8)-(45,72)
-(44,10)-(44,13)
-(45,11)-(45,64)
-(45,12)-(45,33)
-(45,13)-(45,19)
-(45,34)-(45,36)
+(2,3)-(5,16)
+(2,16)-(5,14)
+(4,18)-(4,19)
+(4,18)-(4,21)
+(4,52)-(4,60)
+(4,52)-(4,65)
+(4,61)-(4,62)
+(5,2)-(5,10)
+(5,2)-(5,14)
+(5,11)-(5,12)
+(7,21)-(7,27)
+(7,21)-(7,75)
+(7,28)-(7,75)
+(7,53)-(7,74)
+(7,54)-(7,70)
 *)

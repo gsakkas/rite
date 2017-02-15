@@ -1,85 +1,29 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec help n = if n > 0 then (n mod 10) + (help (n / 10)) else 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Inverse a -> "1/" ^ (exprToString a)
-  | Max (a,b) ->
-      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
-  | Range (a,b,c) ->
-      "range(" ^
-        ((exprToString a) ^
-           (("," exprToString b) ^ ("," ^ ((exprToString c) ^ ")"))));;
+let rec additivePersistence n =
+  if n > 0 then 1 + (additivePersistence help n) else 0;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Inverse of expr
-  | Max of expr* expr
-  | Range of expr* expr* expr;;
+let rec help n = if n > 0 then (n mod 10) + (help (n / 10)) else 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Inverse a -> "1/" ^ (exprToString a)
-  | Max (a,b) ->
-      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
-  | Range (a,b,c) ->
-      "range(" ^
-        ((exprToString a) ^
-           ("," ^ ((exprToString b) ^ ("," ^ ((exprToString c) ^ ")")))));;
+let rec additivePersistence n =
+  if n > 0 then 1 + (additivePersistence (help n)) else 0;;
 
 *)
 
 (* changed spans
-(35,12)-(35,32)
-(35,17)-(35,29)
+(5,20)-(5,48)
+(5,41)-(5,45)
 *)
 
 (* type error slice
-(35,12)-(35,32)
-(35,13)-(35,16)
+(4,3)-(5,57)
+(4,28)-(5,55)
+(5,2)-(5,55)
+(5,16)-(5,48)
+(5,20)-(5,48)
+(5,21)-(5,40)
 *)

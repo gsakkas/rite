@@ -1,26 +1,39 @@
 
-let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let ll1 = List.length l1
+  and ll2 = List.length l2 in
+  if ll1 > ll2
+  then (l1, ((clone 0 (ll1 - ll2)) @ l2))
+  else (((clone (0 (ll2 - ll1))) @ l1), l2);;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let ll1 = List.length l1
+  and ll2 = List.length l2 in
+  if ll1 > ll2
+  then (l1, ((clone 0 (ll1 - ll2)) @ l2))
+  else (((clone 0 (ll2 - ll1)) @ l1), l2);;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
+(9,9)-(9,32)
+(9,16)-(9,31)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(8,13)-(8,34)
+(8,14)-(8,19)
+(9,8)-(9,38)
+(9,9)-(9,32)
+(9,10)-(9,15)
+(9,16)-(9,31)
+(9,17)-(9,18)
+(9,33)-(9,34)
 *)

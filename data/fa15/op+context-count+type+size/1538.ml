@@ -1,38 +1,24 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else seen @ h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n = if n > 1 then x :: (clone x (n - 1));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else seen @ [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n = x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(7,61)-(7,62)
+(2,20)-(2,56)
+(2,23)-(2,24)
+(2,23)-(2,28)
+(2,27)-(2,28)
+(2,53)-(2,54)
 *)
 
 (* type error slice
-(7,23)-(7,31)
-(7,23)-(7,38)
-(7,32)-(7,33)
-(7,34)-(7,38)
-(7,54)-(7,58)
-(7,54)-(7,62)
-(7,59)-(7,60)
-(7,61)-(7,62)
+(2,20)-(2,56)
+(2,20)-(2,56)
+(2,20)-(2,56)
+(2,34)-(2,56)
 *)

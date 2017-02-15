@@ -11,9 +11,21 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = x in
-    let base = List.rev l1 in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+    let f a x =
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
+    let base = ([], []) in
+    let args = List.append (List.rev (List.combine l1 l2)) (0, 0) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
@@ -32,42 +44,30 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match a with
-      | (list1,list2) ->
-          (match list1 with
-           | [] -> (match x with | (h1,h2) -> (((h1 + h2) :: list1), list2))) in
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
     let base = ([], []) in
-    let args = List.combine l1 l2 in
+    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(14,16)-(14,17)
-(15,4)-(16,77)
-(15,15)-(15,23)
-(15,15)-(15,26)
-(15,24)-(15,26)
-(16,4)-(16,77)
-(16,15)-(16,23)
-(16,15)-(16,26)
-(16,30)-(16,77)
-(17,2)-(17,12)
-(17,13)-(17,34)
-(17,14)-(17,17)
-(17,18)-(17,33)
-(17,19)-(17,26)
-(17,27)-(17,29)
-(17,30)-(17,32)
+(27,59)-(27,65)
 *)
 
 (* type error slice
-(15,4)-(16,77)
-(15,15)-(15,23)
-(15,15)-(15,26)
-(16,30)-(16,77)
-(16,44)-(16,58)
-(16,44)-(16,70)
-(16,61)-(16,65)
+(27,15)-(27,26)
+(27,15)-(27,65)
+(27,59)-(27,65)
 *)

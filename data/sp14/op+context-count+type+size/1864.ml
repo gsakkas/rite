@@ -1,49 +1,83 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
 
-let fixpoint (f,b) = let b' = f b in if b = b' then b else wwhile (f, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))))) *.
+        (sin (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      ((sin (pi *. (eval (e, x, y)))) -. (cos (pi *. (eval (e, x, y))))) / 3;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr;;
 
-let fixpoint (f,b) =
-  let f x = let xx = f b in (xx, (xx <> b)) in wwhile (f, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e, x, y)))) /. (cos (pi *. (eval (e, x, y))))) *.
+        (sin (pi *. (eval (e, x, y))))
+  | Timmy2 (e1,e2) ->
+      ((sin (pi *. (eval (e, x, y)))) -. (cos (pi *. (eval (e, x, y))))) /.
+        3.0;;
 
 *)
 
 (* changed spans
-(5,21)-(5,72)
-(5,30)-(5,33)
-(5,37)-(5,72)
-(5,40)-(5,41)
-(5,40)-(5,46)
-(5,44)-(5,46)
-(5,52)-(5,53)
+(31,6)-(31,76)
+(31,75)-(31,76)
 *)
 
 (* type error slice
-(3,2)-(3,64)
-(3,16)-(3,17)
-(3,16)-(3,19)
-(3,50)-(3,56)
-(3,50)-(3,64)
-(3,57)-(3,64)
-(3,58)-(3,59)
-(3,61)-(3,63)
-(5,21)-(5,72)
-(5,30)-(5,31)
-(5,30)-(5,33)
-(5,40)-(5,41)
-(5,40)-(5,46)
-(5,40)-(5,46)
-(5,44)-(5,46)
-(5,59)-(5,65)
-(5,59)-(5,72)
-(5,66)-(5,72)
-(5,67)-(5,68)
-(5,70)-(5,71)
+(16,2)-(31,76)
+(16,2)-(31,76)
+(19,14)-(19,17)
+(19,14)-(19,42)
+(31,6)-(31,72)
+(31,6)-(31,76)
+(31,6)-(31,76)
 *)

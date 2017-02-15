@@ -1,43 +1,42 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f x in (xx, (xx = b)) in d b), b);;
+let stringOfList f l = sepConcat ";" (List.map (fun f  -> f l));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f x in (xx, (xx = b)) in d), b);;
+let stringOfList f l = sepConcat ";" (List.map f l);;
 
 *)
 
 (* changed spans
-(7,55)-(7,58)
-(7,61)-(7,62)
+(9,37)-(9,63)
+(9,47)-(9,62)
+(9,58)-(9,61)
 *)
 
 (* type error slice
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,40)-(4,46)
-(4,40)-(4,57)
-(4,47)-(4,57)
-(4,48)-(4,49)
-(7,2)-(7,8)
-(7,2)-(7,63)
-(7,9)-(7,63)
-(7,10)-(7,59)
-(7,10)-(7,59)
-(7,17)-(7,51)
-(7,21)-(7,51)
-(7,37)-(7,51)
-(7,55)-(7,56)
-(7,55)-(7,58)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(6,21)-(6,37)
+(6,22)-(6,33)
+(6,34)-(6,36)
+(9,23)-(9,32)
+(9,23)-(9,63)
+(9,37)-(9,63)
+(9,38)-(9,46)
 *)

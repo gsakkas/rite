@@ -1,43 +1,63 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x (a ^ sep) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) -> ((eval (var3, x, y)) +. (eval (var4, x, y))) /. 2
+  | Times (var5,var6) -> (eval (var5, x, y)) *. (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ sep in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) ->
+      ((eval (var3, x, y)) +. (eval (var4, x, y))) /. 2.0
+  | Times (var5,var6) -> (eval (var5, x, y)) *. (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y);;
 
 *)
 
 (* changed spans
-(6,18)-(6,19)
-(6,18)-(6,29)
+(19,75)-(19,76)
 *)
 
 (* type error slice
-(3,2)-(7,58)
-(3,2)-(7,58)
-(6,6)-(7,58)
-(6,12)-(6,29)
-(6,14)-(6,29)
-(6,18)-(6,19)
-(6,18)-(6,29)
-(7,6)-(7,58)
-(7,17)-(7,18)
-(7,22)-(7,58)
-(7,30)-(7,31)
-(7,35)-(7,49)
-(7,35)-(7,58)
-(7,50)-(7,51)
-(7,52)-(7,56)
-(7,57)-(7,58)
+(19,27)-(19,76)
+(19,75)-(19,76)
 *)

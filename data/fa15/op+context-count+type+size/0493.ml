@@ -1,54 +1,86 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Mirana of expr
+  | Darius of expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ [l1]), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ [l2]));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Mirana e -> abs_float (eval (e, x, y))
+  | Darius (e1,e2,e3) ->
+      ((eval (e1, x, y)) + (eval (e2, x, y))) log eval (e3, x, y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Mirana of expr
+  | Darius of expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Mirana e -> abs_float (eval (e, x, y))
+  | Darius (e1,e2,e3) ->
+      let comb = (eval (e1, x, y)) +. (eval (e2, x, y)) in
+      mod_float comb (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(6,59)-(6,63)
-(7,63)-(7,67)
+(29,6)-(29,45)
+(29,6)-(29,65)
+(29,7)-(29,24)
+(29,46)-(29,49)
+(29,50)-(29,54)
 *)
 
 (* type error slice
-(2,43)-(2,44)
-(2,43)-(2,65)
-(2,43)-(2,65)
-(2,48)-(2,65)
-(2,49)-(2,54)
-(2,55)-(2,56)
-(6,8)-(6,64)
-(6,9)-(6,56)
-(6,10)-(6,15)
-(6,16)-(6,17)
-(6,38)-(6,54)
-(6,39)-(6,50)
-(6,51)-(6,53)
-(6,57)-(6,58)
-(6,59)-(6,63)
-(6,59)-(6,63)
-(6,60)-(6,62)
-(7,12)-(7,68)
-(7,13)-(7,60)
-(7,14)-(7,19)
-(7,42)-(7,58)
-(7,43)-(7,54)
-(7,55)-(7,57)
-(7,61)-(7,62)
-(7,63)-(7,67)
-(7,63)-(7,67)
-(7,64)-(7,66)
+(19,18)-(19,42)
+(19,25)-(19,41)
+(19,26)-(19,30)
+(29,6)-(29,45)
+(29,6)-(29,45)
+(29,6)-(29,45)
+(29,6)-(29,65)
+(29,7)-(29,24)
+(29,8)-(29,12)
+(29,27)-(29,44)
+(29,28)-(29,32)
 *)

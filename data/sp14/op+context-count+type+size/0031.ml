@@ -8,28 +8,26 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
   | Tan of expr
-  | Sine_Avg of expr* expr* expr;;
+  | Arc of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
-  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
-  | Sine_Avg (a,b,c) ->
-      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +
-          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
-         + (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
-        /. 3.0;;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
+  | Arc (a,b,c) -> "sin(pi*" ^ ((exprToString (a (b, c))) ^ ")");;
 
 
 (* fix
@@ -43,50 +41,44 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
   | Tan of expr
-  | Sine_Avg of expr* expr* expr;;
+  | Sin_Avg of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
-  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
-  | Sine_Avg (a,b,c) ->
-      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +.
-          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
-         +. (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
-        /. 3.0;;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
+  | Sin_Avg (a,b,c) ->
+      "sin(pi*(" ^
+        ((exprToString a) ^
+           ("+" ^ ((exprToString b) ^ ((exprToString c) ^ ")/3)"))));;
 
 *)
 
 (* changed spans
-(29,6)-(31,56)
-(29,7)-(30,55)
-(29,8)-(29,52)
+(14,2)-(30,64)
+(30,19)-(30,28)
+(30,46)-(30,56)
+(30,49)-(30,55)
+(30,50)-(30,51)
+(30,53)-(30,54)
+(30,60)-(30,63)
 *)
 
 (* type error slice
-(21,21)-(21,59)
-(21,22)-(21,38)
-(21,23)-(21,27)
-(29,6)-(31,56)
-(29,6)-(31,56)
-(29,6)-(32,14)
-(29,7)-(30,55)
-(29,7)-(30,55)
-(29,8)-(29,52)
-(29,9)-(29,13)
-(30,10)-(30,54)
-(30,11)-(30,15)
-(31,11)-(31,55)
-(31,12)-(31,16)
+(14,2)-(30,64)
+(30,46)-(30,56)
+(30,47)-(30,48)
 *)

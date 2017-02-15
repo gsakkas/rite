@@ -1,45 +1,84 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then List.append (clone 0 (b - a)) l1
-  else if b < a then List.append (clone 0 (a - b)) l2 else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1. /. (1. - (exp ((-1) *. a)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1. /. (1. -. (exp ((-1.) *. (eval (a, x, y)))))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(11,7)-(11,39)
-(12,7)-(12,67)
-(12,21)-(12,53)
-(12,60)-(12,62)
-(12,64)-(12,66)
+(20,23)-(20,47)
+(20,35)-(20,39)
+(20,43)-(20,44)
+(21,21)-(21,65)
+(26,11)-(26,15)
+(26,16)-(26,25)
+(26,17)-(26,18)
+(26,20)-(26,21)
+(26,23)-(26,24)
 *)
 
 (* type error slice
-(12,7)-(12,67)
-(12,7)-(12,67)
-(12,21)-(12,32)
-(12,21)-(12,53)
-(12,59)-(12,67)
+(15,2)-(26,25)
+(20,17)-(20,47)
+(20,23)-(20,47)
+(20,23)-(20,47)
+(20,23)-(20,47)
+(20,24)-(20,26)
+(20,29)-(20,46)
+(20,30)-(20,33)
+(20,34)-(20,45)
+(20,34)-(20,45)
+(20,35)-(20,39)
+(20,43)-(20,44)
 *)

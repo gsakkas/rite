@@ -1,94 +1,73 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let carry x y = (x * y) / 10;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> e
-  | VarY  -> e
-  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
-  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<*" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))));;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+
+let rec mulByDigit i l =
+  if i <= 0
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t -> [(mulByDigit i t) + (carry h i)] @ [remainder i t]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
-  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<*" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))));;
+let rec mulByDigit i l =
+  if i <= 0
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t ->
+         (match t with
+          | [] -> [remainder i h]
+          | h'::t' -> [h' * i] @ (mulByDigit i t')));;
 
 *)
 
 (* changed spans
-(13,13)-(13,14)
-(14,13)-(14,14)
-(15,16)-(15,54)
+(2,16)-(2,23)
+(2,16)-(2,28)
+(2,17)-(2,18)
+(2,21)-(2,22)
+(2,26)-(2,28)
+(4,14)-(4,62)
+(4,16)-(4,62)
+(12,15)-(12,65)
+(12,16)-(12,32)
+(12,16)-(12,46)
+(12,17)-(12,27)
+(12,28)-(12,29)
+(12,30)-(12,31)
+(12,36)-(12,41)
+(12,42)-(12,43)
+(12,48)-(12,49)
+(12,50)-(12,65)
 *)
 
 (* type error slice
-(11,3)-(26,83)
-(11,21)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,2)-(26,81)
-(12,8)-(12,9)
-(13,13)-(13,14)
-(15,16)-(15,54)
-(15,26)-(15,27)
-(15,28)-(15,54)
-(15,29)-(15,47)
-(15,30)-(15,42)
-(15,43)-(15,46)
-(15,48)-(15,49)
-(16,18)-(16,56)
-(16,28)-(16,29)
-(18,6)-(18,71)
-(18,11)-(18,12)
-(19,21)-(19,66)
-(19,39)-(19,40)
-(21,6)-(26,81)
-(21,10)-(21,11)
+(4,3)-(4,64)
+(4,14)-(4,62)
+(4,16)-(4,62)
+(4,23)-(4,30)
+(4,28)-(4,29)
+(6,3)-(12,68)
+(6,19)-(12,66)
+(6,21)-(12,66)
+(7,2)-(12,66)
+(10,4)-(12,66)
+(10,4)-(12,66)
+(10,4)-(12,66)
+(12,15)-(12,65)
+(12,16)-(12,32)
+(12,16)-(12,46)
+(12,17)-(12,27)
+(12,48)-(12,49)
+(12,51)-(12,60)
+(12,51)-(12,64)
+(12,63)-(12,64)
 *)

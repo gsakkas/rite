@@ -1,53 +1,34 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
-
-let palindrome w =
-  let wList = explode w in
-  let wReverse = listReverse (explode w) in if true then wList;;
+let fixpoint (f,b) = wwhile ((f, b), b);;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
-
-let palindrome w =
-  let wList = explode w in
-  let wReverse = listReverse (explode w) in
-  if wList = wReverse then true else false;;
+let fixpoint (f,b) =
+  wwhile ((let f x = let xx = (x * x) * x in (xx, (xx < 100)) in f), b);;
 
 *)
 
 (* changed spans
-(12,44)-(12,62)
-(12,47)-(12,51)
+(5,29)-(5,35)
+(5,37)-(5,38)
 *)
 
 (* type error slice
-(2,3)-(5,8)
-(2,12)-(5,6)
-(3,2)-(5,6)
-(4,43)-(4,66)
-(4,54)-(4,66)
-(4,55)-(4,57)
-(5,2)-(5,4)
-(5,2)-(5,6)
-(11,2)-(12,62)
-(11,14)-(11,21)
-(11,14)-(11,23)
-(12,44)-(12,62)
-(12,44)-(12,62)
-(12,44)-(12,62)
-(12,57)-(12,62)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(5,21)-(5,27)
+(5,21)-(5,39)
+(5,28)-(5,39)
+(5,29)-(5,35)
 *)

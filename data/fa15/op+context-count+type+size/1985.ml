@@ -1,40 +1,75 @@
 
-let rec digitsOfInt n =
-  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SqDist of expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  if (n / 10) != 0
-  then 1 + (additivePersistence sumList digitsOfInt n)
-  else 0;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | SqDist (a,b) -> ((eval (a, x, y)) ** 2.0) + ((eval (b, x, y)) ** 2.0);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SqDist of expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  if (n / 10) != 0
-  then 1 + (additivePersistence (sumList (digitsOfInt n)))
-  else 0;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | SqDist (a,b) -> ((eval (a, x, y)) ** 2.0) +. ((eval (b, x, y)) ** 2.0);;
 
 *)
 
 (* changed spans
-(9,11)-(9,54)
-(9,32)-(9,39)
-(9,40)-(9,51)
+(26,20)-(26,73)
 *)
 
 (* type error slice
-(7,3)-(10,10)
-(7,28)-(10,8)
-(8,2)-(10,8)
-(9,7)-(9,54)
-(9,11)-(9,54)
-(9,12)-(9,31)
+(15,2)-(26,73)
+(15,2)-(26,73)
+(18,14)-(18,17)
+(18,14)-(18,42)
+(26,20)-(26,45)
+(26,20)-(26,73)
+(26,20)-(26,73)
+(26,20)-(26,73)
+(26,38)-(26,40)
+(26,48)-(26,73)
+(26,66)-(26,68)
 *)

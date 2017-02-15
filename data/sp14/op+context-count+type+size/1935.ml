@@ -1,90 +1,64 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr;;
+let g x f = ((f x), ((f x) = x));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x1,x2) ->
-      "((" ^ ((exprToString x1) ^ ("+" ^ ((exprToString x2) ^ ")/2)")))
-  | Times (x1,x2) -> (exprToString x1) ^ ("*" ^ (exprToString x2))
-  | Thresh (x1,x2,x3,x4) ->
-      "(" ^
-        ((exprToString x1) ^
-           ("<" ^
-              ((exprToString x2) ^
-                 ("?" ^
-                    ((exprToString x3) ^ (":" ^ ((exprToString x4) ^ ")")))))))
-  | CosE (x1,x2,x3) ->
-      "cos(pi*" ^ (x1 ^ ("*" ^ (x2 ^ (")e^(-pi*" ^ (x3 ^ "^2)")))));;
+let h q x y = q x y;;
+
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((h g f b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr;;
+let h x = ((x * x), (x < 100));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x1,x2) ->
-      "((" ^ ((exprToString x1) ^ ("+" ^ ((exprToString x2) ^ ")/2)")))
-  | Times (x1,x2) -> (exprToString x1) ^ ("*" ^ (exprToString x2))
-  | Thresh (x1,x2,x3,x4) ->
-      "(" ^
-        ((exprToString x1) ^
-           ("<" ^
-              ((exprToString x2) ^
-                 ("?" ^
-                    ((exprToString x3) ^ (":" ^ ((exprToString x4) ^ ")")))))))
-  | CosE (x1,x2,x3) ->
-      "cos(pi*" ^
-        ((exprToString x1) ^
-           ("*" ^
-              ((exprToString x1) ^ (")e^(-pi*" ^ ((exprToString x1) ^ "^2)")))));;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(29,19)-(29,21)
-(29,32)-(29,34)
-(29,37)-(29,64)
-(29,52)-(29,54)
-(29,55)-(29,56)
-(29,57)-(29,62)
+(2,8)-(2,32)
+(2,13)-(2,18)
+(2,14)-(2,15)
+(2,16)-(2,17)
+(2,20)-(2,31)
+(2,21)-(2,26)
+(2,22)-(2,23)
+(4,6)-(4,19)
+(4,8)-(4,19)
+(4,10)-(4,19)
+(4,14)-(4,15)
+(4,14)-(4,19)
+(4,18)-(4,19)
+(7,57)-(7,58)
+(7,60)-(7,61)
 *)
 
 (* type error slice
-(13,2)-(29,67)
-(13,2)-(29,67)
-(13,2)-(29,67)
-(29,18)-(29,67)
-(29,19)-(29,21)
-(29,22)-(29,23)
-(29,31)-(29,65)
-(29,32)-(29,34)
-(29,35)-(29,36)
-(29,51)-(29,63)
-(29,52)-(29,54)
-(29,55)-(29,56)
+(2,3)-(2,34)
+(2,6)-(2,32)
+(2,8)-(2,32)
+(2,12)-(2,32)
+(4,3)-(4,21)
+(4,6)-(4,19)
+(4,8)-(4,19)
+(4,10)-(4,19)
+(4,14)-(4,15)
+(4,14)-(4,19)
+(7,8)-(7,9)
+(7,8)-(7,11)
+(7,49)-(7,55)
+(7,49)-(7,62)
+(7,56)-(7,62)
+(7,57)-(7,58)
+(9,21)-(9,27)
+(9,21)-(9,42)
+(9,28)-(9,42)
+(9,29)-(9,38)
+(9,30)-(9,31)
+(9,32)-(9,33)
 *)

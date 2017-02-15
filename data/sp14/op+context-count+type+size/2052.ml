@@ -1,85 +1,59 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | Sine e -> sin (pi *. e)
-  | Cosine e -> cos (pi *. e)
-  | Average (x,y) -> (x +. y) /. 2.0
-  | Times (x,y) -> x *. y
-  | Thresh (e,f,g,h) -> failwith "sad";;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = ([], []) in
+    let args = List.rev (List.combine (l1, l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(14,2)-(19,38)
-(15,14)-(15,27)
-(15,25)-(15,26)
-(16,16)-(16,29)
-(16,27)-(16,28)
-(17,21)-(17,29)
-(17,21)-(17,36)
-(17,33)-(17,36)
-(18,19)-(18,20)
-(18,24)-(18,25)
-(19,24)-(19,32)
-(19,24)-(19,38)
-(19,33)-(19,38)
+(14,16)-(14,24)
+(14,16)-(14,44)
+(14,25)-(14,44)
+(15,16)-(15,18)
+(16,15)-(16,23)
+(16,15)-(16,47)
+(16,24)-(16,47)
+(16,38)-(16,46)
+(18,19)-(18,26)
 *)
 
 (* type error slice
-(14,2)-(19,38)
-(14,2)-(19,38)
-(14,2)-(19,38)
-(14,2)-(19,38)
-(14,2)-(19,38)
-(14,2)-(19,38)
-(15,18)-(15,27)
-(15,25)-(15,26)
-(16,20)-(16,29)
-(16,27)-(16,28)
-(17,21)-(17,29)
-(17,21)-(17,29)
-(17,22)-(17,23)
-(17,27)-(17,28)
-(18,19)-(18,20)
-(18,19)-(18,25)
-(18,19)-(18,25)
-(18,24)-(18,25)
+(16,24)-(16,47)
+(16,25)-(16,37)
+(16,38)-(16,46)
 *)

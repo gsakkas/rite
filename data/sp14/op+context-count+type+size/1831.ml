@@ -1,43 +1,45 @@
 
-let pipe fs =
-  match fs with
-  | [] -> 0
-  | f::fs' -> let f a x = x a in let base = fs' in List.fold_left f base fs;;
+let rec reverseInt x y =
+  if x != 0 then reverseInt (x / 10) ((y * 10) + (10 mod 10)) else y;;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = (reverseInt n) / 10
+     and y = (reverseInt n) mod 10 in
+     if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x p = x (a p) in let base b = b in List.fold_left f base fs;;
+let rec reverseInt x y =
+  if x != 0 then reverseInt (x / 10) ((y * 10) + (10 mod 10)) else y;;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = (reverseInt n 0) / 10
+     and y = (reverseInt n 0) mod 10 in
+     if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;
 
 *)
 
 (* changed spans
-(3,2)-(5,75)
-(3,8)-(3,10)
-(4,10)-(4,11)
-(5,14)-(5,75)
-(5,26)-(5,29)
-(5,28)-(5,29)
-(5,33)-(5,75)
-(5,44)-(5,47)
-(5,51)-(5,75)
+(9,13)-(9,27)
+(9,30)-(9,32)
+(10,13)-(10,27)
+(10,32)-(10,34)
 *)
 
 (* type error slice
-(3,2)-(5,75)
-(3,2)-(5,75)
-(3,8)-(3,10)
-(5,14)-(5,75)
-(5,20)-(5,29)
-(5,22)-(5,29)
-(5,26)-(5,27)
-(5,26)-(5,29)
-(5,33)-(5,75)
-(5,44)-(5,47)
-(5,51)-(5,65)
-(5,51)-(5,75)
-(5,66)-(5,67)
-(5,68)-(5,72)
-(5,73)-(5,75)
+(3,17)-(3,27)
+(3,17)-(3,61)
+(9,13)-(9,27)
+(9,13)-(9,32)
+(9,14)-(9,24)
+(10,13)-(10,27)
+(10,13)-(10,34)
+(10,14)-(10,24)
 *)

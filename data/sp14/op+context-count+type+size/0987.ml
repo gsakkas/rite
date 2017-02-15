@@ -1,43 +1,60 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let f' = if (f b) = b then (b, true) else (b, false) in wwhile (f', b);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let num = rand (1, 10) in
+    (if (rand mod 2) = 0 then buildX () else buildY ())
+  else
+    (let num = rand (1, 10) in
+     match num with | _ -> build (rand, (depth - 1)));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let f' b' = if (f b') = b' then (b', true) else (b', false) in
-  wwhile (f', b);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let num = rand (1, 10) in
+    (if (num mod 2) = 0 then buildX () else buildY ())
+  else
+    (let num = rand (1, 10) in
+     match num with | _ -> build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(6,11)-(6,54)
-(6,17)-(6,18)
-(6,22)-(6,23)
-(6,29)-(6,38)
-(6,30)-(6,31)
-(6,45)-(6,46)
+(19,9)-(19,13)
 *)
 
 (* type error slice
-(3,16)-(3,17)
-(3,16)-(3,19)
-(3,41)-(3,47)
-(3,41)-(3,55)
-(3,48)-(3,55)
-(3,49)-(3,50)
-(6,2)-(6,72)
-(6,11)-(6,54)
-(6,29)-(6,38)
-(6,58)-(6,64)
-(6,58)-(6,72)
-(6,65)-(6,72)
-(6,66)-(6,68)
+(18,14)-(18,18)
+(18,14)-(18,26)
+(19,8)-(19,20)
+(19,9)-(19,13)
 *)

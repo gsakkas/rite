@@ -14,8 +14,6 @@ let buildCosine e = Cosine e;;
 
 let buildSine e = Sine e;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
 let buildTimes (e1,e2) = Times (e1, e2);;
 
 let buildX () = VarX;;
@@ -23,31 +21,22 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX else buildY)
+  if depth <= 0
+  then
+    let bin_rand = rand (1, 2) in
+    (if bin_rand = 1 then buildX () else buildY ())
   else
-    (let x = rand (0, 5) in
-     if x = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if x = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if x = 2
-         then
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-         else
-           if x = 3
-           then
-             buildTimes
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-           else
-             if x = 4
-             then
-               buildThresh
-                 ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                   (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+    (let exp_rand = rand (1, 5) in
+     let first_forced = build (rand, (depth - 1)) in
+     match exp_rand with
+     | 1 -> buildSine first_forced
+     | 2 -> buildCosine first_forced
+     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
+     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
+     | 5 ->
+         buildAverage
+           (first_forced, (build (rand, (depth - 1))),
+             (build (rand, (depth - 1)))));;
 
 
 (* fix
@@ -76,78 +65,43 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
+  if depth <= 0
+  then
+    let bin_rand = rand (1, 2) in
+    (if bin_rand = 1 then buildX () else buildY ())
   else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
+    (let exp_rand = rand (1, 5) in
+     let first_forced = build (rand, (depth - 1)) in
+     match exp_rand with
+     | 1 -> buildSine first_forced
+     | 2 -> buildCosine first_forced
+     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
+     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
+     | 5 ->
          buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+           (first_forced, (build (rand, (depth - 1))),
              (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(27,34)-(27,40)
-(27,46)-(27,52)
-(29,4)-(50,77)
-(30,5)-(50,76)
-(30,8)-(30,13)
-(30,12)-(30,13)
-(33,7)-(50,76)
-(33,10)-(33,11)
-(33,10)-(33,15)
-(33,14)-(33,15)
-(36,9)-(50,76)
-(36,12)-(36,13)
-(36,12)-(36,17)
-(36,16)-(36,17)
-(41,11)-(50,76)
-(41,14)-(41,15)
-(41,14)-(41,19)
-(41,18)-(41,19)
-(46,13)-(50,76)
-(46,16)-(46,17)
-(46,16)-(46,21)
-(46,20)-(46,21)
-(50,48)-(50,75)
+(17,16)-(17,39)
+(26,4)-(27,51)
+(29,4)-(39,42)
+(30,5)-(39,41)
+(37,9)-(37,21)
+(38,11)-(39,41)
+(38,12)-(38,24)
+(39,21)-(39,25)
+(39,27)-(39,38)
+(39,28)-(39,33)
+(39,36)-(39,37)
 *)
 
 (* type error slice
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(17,3)-(17,69)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(25,3)-(50,79)
-(25,15)-(50,77)
-(26,2)-(50,77)
-(26,2)-(50,77)
-(27,7)-(27,53)
-(27,34)-(27,40)
-(29,4)-(50,77)
-(30,5)-(50,76)
-(31,10)-(31,19)
-(31,10)-(31,47)
-(31,20)-(31,47)
-(31,21)-(31,26)
-(46,13)-(50,76)
-(46,13)-(50,76)
-(46,13)-(50,76)
-(48,15)-(48,26)
-(48,15)-(50,76)
+(11,3)-(11,45)
+(11,18)-(11,43)
+(37,9)-(37,21)
+(37,9)-(39,41)
+(38,11)-(39,41)
 *)

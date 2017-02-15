@@ -1,132 +1,151 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let sizDif = (List.length l1) - (List.length l2) in
+  if sizDif > 0
+  then let pad = clone 0 sizDif in (l1, (pad @ l2))
+  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      if ((x1 + x2) + a1) >= 10
+      then (1, ((((x1 + x2) + a1) - 10) :: a2))
+      else (0, (((x1 + x2) + a1) :: a2)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (carry,res) = List.fold_left f base args in carry :: res in
+  removeZero (add (padZero l1 l2));;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let rec mulByDigit i l =
+  match i with | 0 -> [] | 1 -> l | n -> bigAdd l (mulByDigit (i - 1) l);;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX
-  | 2 -> buildY
-  | 3 -> buildSine (build (rand, (depth - 1)))
-  | 4 -> buildCosine (build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let bigMul l1 l2 =
+  let f a x = let (a1,a2) = a in bigAdd a2 ((mulByDigit (x l1) 10) ** a1) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let sizDif = (List.length l1) - (List.length l2) in
+  if sizDif > 0
+  then let pad = clone 0 sizDif in (l1, (pad @ l2))
+  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
+let rec appZero x l = if x > 0 then l @ [] else appZero (x - 1) l;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      if ((x1 + x2) + a1) >= 10
+      then (1, ((((x1 + x2) + a1) - 10) :: a2))
+      else (0, (((x1 + x2) + a1) :: a2)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (carry,res) = List.fold_left f base args in carry :: res in
+  removeZero (add (padZero l1 l2));;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
+let rec mulByDigit i l =
+  match i with | 0 -> [] | 1 -> l | n -> bigAdd l (mulByDigit (i - 1) l);;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 -> buildSine (build (rand, (depth - 1)))
-  | 4 -> buildCosine (build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let bigMul l1 l2 =
+  let f a x =
+    let (a1,a2) = a in ((a1 + 1), (bigAdd a2 (appZero a1 (mulByDigit x l2)))) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(27,9)-(27,15)
-(28,9)-(28,15)
-(29,9)-(29,46)
-(38,54)-(38,59)
-(38,62)-(38,63)
+(13,11)-(24,34)
+(14,2)-(24,34)
+(15,4)-(23,64)
+(16,6)-(20,40)
+(17,6)-(20,40)
+(21,4)-(23,64)
+(22,4)-(23,64)
+(23,4)-(23,64)
+(30,2)-(32,75)
+(30,14)-(30,73)
+(30,33)-(30,73)
+(30,44)-(30,66)
+(30,56)-(30,62)
+(30,59)-(30,61)
+(30,63)-(30,65)
+(30,67)-(30,69)
+(30,70)-(30,72)
+(31,2)-(32,75)
+(31,13)-(31,20)
+(31,14)-(31,15)
+(31,17)-(31,19)
+(32,2)-(32,75)
+(32,13)-(32,21)
+(32,13)-(32,24)
+(32,22)-(32,24)
+(32,28)-(32,75)
+(32,42)-(32,56)
+(32,42)-(32,68)
+(32,57)-(32,58)
+(32,59)-(32,63)
+(32,64)-(32,68)
+(32,72)-(32,75)
 *)
 
 (* type error slice
-(11,3)-(11,45)
-(11,18)-(11,43)
-(11,27)-(11,43)
-(13,3)-(13,30)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(17,3)-(17,69)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(19,3)-(19,41)
-(19,16)-(19,39)
-(19,25)-(19,39)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(25,3)-(38,69)
-(25,15)-(38,67)
-(26,2)-(38,67)
-(26,2)-(38,67)
-(26,2)-(38,67)
-(26,2)-(38,67)
-(26,2)-(38,67)
-(26,2)-(38,67)
-(27,9)-(27,15)
-(29,9)-(29,18)
-(29,9)-(29,46)
-(29,19)-(29,46)
-(29,20)-(29,25)
-(30,9)-(30,20)
-(30,9)-(30,48)
-(32,6)-(32,18)
-(32,6)-(32,77)
-(34,6)-(34,16)
-(34,6)-(34,75)
-(36,6)-(36,17)
-(36,6)-(38,67)
+(4,3)-(8,59)
+(4,12)-(8,57)
+(4,15)-(8,57)
+(7,40)-(7,50)
+(7,45)-(7,46)
+(7,47)-(7,49)
+(8,41)-(8,51)
+(8,46)-(8,47)
+(8,48)-(8,50)
+(13,3)-(24,36)
+(13,11)-(24,34)
+(13,14)-(24,34)
+(24,18)-(24,33)
+(24,19)-(24,26)
+(24,27)-(24,29)
+(24,30)-(24,32)
+(27,41)-(27,47)
+(27,41)-(27,72)
+(27,48)-(27,49)
+(27,50)-(27,72)
+(27,51)-(27,61)
+(27,70)-(27,71)
+(30,2)-(32,75)
+(30,8)-(30,73)
+(30,14)-(30,73)
+(30,28)-(30,29)
+(30,33)-(30,39)
+(30,33)-(30,73)
+(30,43)-(30,73)
+(30,44)-(30,66)
+(30,45)-(30,55)
+(30,63)-(30,65)
+(30,67)-(30,69)
+(30,70)-(30,72)
+(31,2)-(32,75)
+(31,13)-(31,20)
+(31,14)-(31,15)
+(32,42)-(32,56)
+(32,42)-(32,68)
+(32,57)-(32,58)
+(32,59)-(32,63)
 *)

@@ -1,38 +1,86 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Mirana of expr
+  | Darius of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " List.map f l) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Mirana e -> abs_float (eval (e, x, y))
+  | Darius (e1,e2,e3) ->
+      ((eval (e1, x, y)) + (eval (e2, x, y))) mod (eval (e3, x, y));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Mirana of expr
+  | Darius of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Mirana e -> abs_float (eval (e, x, y))
+  | Darius (e1,e2,e3) ->
+      let comb = (eval (e1, x, y)) +. (eval (e2, x, y)) in
+      mod_float comb (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(9,30)-(9,59)
-(9,46)-(9,54)
+(29,6)-(29,45)
+(29,6)-(29,67)
+(29,7)-(29,24)
+(29,50)-(29,67)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,30)-(9,59)
-(9,31)-(9,40)
+(19,18)-(19,42)
+(19,25)-(19,41)
+(19,26)-(19,30)
+(29,6)-(29,45)
+(29,6)-(29,45)
+(29,6)-(29,67)
+(29,7)-(29,24)
+(29,8)-(29,12)
+(29,27)-(29,44)
+(29,28)-(29,32)
+(29,50)-(29,67)
+(29,51)-(29,55)
 *)

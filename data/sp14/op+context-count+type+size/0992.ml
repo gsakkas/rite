@@ -1,26 +1,30 @@
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: ((clone n) - 1);;
+let sqsum xs =
+  let f a x a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
+let sqsum xs =
+  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(2,55)-(2,70)
-(2,56)-(2,65)
-(2,63)-(2,64)
+(3,12)-(3,29)
+(3,14)-(3,29)
+(3,33)-(3,73)
 *)
 
 (* type error slice
-(2,3)-(2,72)
-(2,14)-(2,70)
-(2,16)-(2,70)
-(2,50)-(2,70)
-(2,55)-(2,70)
-(2,55)-(2,70)
-(2,56)-(2,65)
-(2,57)-(2,62)
+(3,2)-(3,73)
+(3,8)-(3,29)
+(3,10)-(3,29)
+(3,12)-(3,29)
+(3,33)-(3,73)
+(3,44)-(3,45)
+(3,49)-(3,63)
+(3,49)-(3,73)
+(3,64)-(3,65)
+(3,66)-(3,70)
 *)

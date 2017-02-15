@@ -1,97 +1,31 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (b,c) ->
-          (match a with
-           | (carry,sum) ->
-               (match sum with
-                | [] ->
-                    if ((carry + b) + c) < 10
-                    then (0, [carry; (carry + b) + c])
-                    else ((carry + 1), [carry + 1; ((carry + b) + c) mod 10])
-                | h::t ->
-                    if ((b + c) + h) < 10
-                    then (0, ([0] @ ([(b + c) + h] @ t)))
-                    else
-                      ((carry + 1),
-                        ([[((h + b) + c) / 10]; ((h + b) + c) mod 10] @ t)))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  let digit = n mod 10
+  and r = n / 10 in
+  match n with
+  | _ when n <= 0 -> []
+  | _ when n > 0 -> (digitsOfInt r) @ digit;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if not (h = 0) then l else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (b,c) ->
-          (match a with
-           | (carry,sum) ->
-               (match sum with
-                | [] ->
-                    if ((carry + b) + c) < 10
-                    then (0, [carry; (carry + b) + c])
-                    else ((carry + 1), [carry + 1; ((carry + b) + c) mod 10])
-                | h::t ->
-                    if ((b + c) + h) < 10
-                    then (0, ([0] @ ([(b + c) + h] @ t)))
-                    else
-                      ((carry + 1),
-                        ([((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  let digit = n mod 10
+  and r = n / 10 in
+  match n with
+  | _ when n <= 0 -> []
+  | _ when n > 0 -> (digitsOfInt r) @ [digit];;
 
 *)
 
 (* changed spans
-(32,25)-(32,69)
-(32,48)-(32,68)
+(7,38)-(7,43)
 *)
 
 (* type error slice
-(22,15)-(32,76)
-(22,15)-(32,76)
-(28,23)-(28,36)
-(28,34)-(28,35)
-(32,24)-(32,74)
-(32,25)-(32,69)
-(32,25)-(32,69)
-(32,25)-(32,69)
-(32,26)-(32,46)
-(32,48)-(32,68)
-(32,70)-(32,71)
-(32,72)-(32,73)
+(3,2)-(7,43)
+(3,14)-(3,22)
+(7,20)-(7,43)
+(7,36)-(7,37)
+(7,38)-(7,43)
 *)

@@ -1,70 +1,73 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      ((if addit > 10 then 1 else 0), ((addit mod 10) :: num)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_right f args base in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in if y = 2 then y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f x a =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      ((if addit > 10 then 1 else 0), ((addit mod 10) :: num)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_right f args base in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(13,10)-(17,62)
-(14,6)-(17,62)
+(18,31)-(18,46)
+(18,34)-(18,35)
+(18,34)-(18,39)
+(18,38)-(18,39)
+(18,45)-(18,46)
 *)
 
 (* type error slice
-(13,4)-(20,52)
-(13,10)-(17,62)
-(13,12)-(17,62)
-(14,6)-(17,62)
-(15,6)-(17,62)
-(15,6)-(17,62)
-(15,22)-(15,23)
-(16,6)-(17,62)
-(16,18)-(16,29)
-(16,25)-(16,28)
-(17,6)-(17,62)
-(17,38)-(17,61)
-(20,18)-(20,33)
-(20,18)-(20,45)
-(20,34)-(20,35)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(18,47)
+(16,2)-(18,47)
+(17,7)-(17,59)
+(17,11)-(17,24)
+(17,11)-(17,28)
+(17,11)-(17,28)
+(17,12)-(17,16)
+(17,27)-(17,28)
+(17,34)-(17,40)
+(17,34)-(17,43)
+(18,7)-(18,47)
+(18,7)-(18,47)
+(18,16)-(18,20)
+(18,16)-(18,27)
+(18,31)-(18,46)
+(18,31)-(18,46)
+(18,31)-(18,46)
+(18,45)-(18,46)
 *)

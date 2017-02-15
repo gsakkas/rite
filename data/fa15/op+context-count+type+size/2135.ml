@@ -1,63 +1,65 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2)")))
-  | Times (x,y) -> exprToString e "*" exprToString e;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  match explode w with | [] -> true | h::t -> listReverse (explode w);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec matchHeads w =
+  match w with
+  | [] -> true
+  | h::t -> if h = (List.hd (listReverse w)) then true else false;;
+
+let palindrome w =
+  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
 
 *)
 
 (* changed spans
-(18,28)-(18,29)
-(18,55)-(18,56)
-(19,19)-(19,31)
-(19,19)-(19,52)
-(19,32)-(19,33)
-(19,34)-(19,37)
-(19,38)-(19,50)
-(19,51)-(19,52)
+(2,12)-(5,6)
+(3,2)-(5,6)
+(7,20)-(8,57)
+(8,2)-(8,57)
+(8,8)-(8,9)
+(8,23)-(8,25)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,49)-(8,50)
+(8,52)-(8,53)
+(8,54)-(8,57)
+(8,55)-(8,56)
+(11,8)-(11,15)
+(11,8)-(11,17)
+(11,46)-(11,57)
+(11,46)-(11,69)
+(11,59)-(11,66)
 *)
 
 (* type error slice
-(15,26)-(15,50)
-(15,27)-(15,43)
-(15,28)-(15,40)
-(15,44)-(15,45)
-(19,19)-(19,31)
-(19,19)-(19,52)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,52)-(8,53)
+(11,2)-(11,69)
+(11,2)-(11,69)
+(11,31)-(11,35)
+(11,46)-(11,57)
+(11,46)-(11,69)
 *)

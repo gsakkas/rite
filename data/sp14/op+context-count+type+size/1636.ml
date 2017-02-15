@@ -1,33 +1,36 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else 0;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: [prod / 10] :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (n mod 10) :: (digitsOfInt (n / 10)) else [];;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(3,16)-(3,38)
-(3,42)-(3,52)
-(3,43)-(3,44)
-(3,49)-(3,51)
-(3,58)-(3,59)
+(8,28)-(8,39)
 *)
 
 (* type error slice
-(2,3)-(3,61)
-(2,20)-(3,59)
-(3,2)-(3,59)
-(3,2)-(3,59)
-(3,16)-(3,38)
-(3,16)-(3,52)
-(3,16)-(3,52)
-(3,16)-(3,52)
-(3,17)-(3,28)
-(3,42)-(3,52)
-(3,58)-(3,59)
+(8,11)-(8,24)
+(8,11)-(8,59)
+(8,11)-(8,59)
+(8,28)-(8,39)
+(8,28)-(8,59)
+(8,28)-(8,59)
 *)

@@ -1,34 +1,52 @@
 
-let sqsum xs =
-  let f a x = (a ^ 2) :: x in let base = 0 in List.fold_left f base xs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = [h] in let rest' = List.mem h l in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(3,14)-(3,21)
-(3,14)-(3,26)
-(3,15)-(3,16)
-(3,17)-(3,18)
-(3,19)-(3,20)
-(3,30)-(3,70)
+(7,20)-(7,23)
+(7,21)-(7,22)
+(7,27)-(7,76)
+(7,50)-(7,51)
+(7,55)-(7,76)
+(8,20)-(8,22)
+(8,24)-(8,25)
 *)
 
 (* type error slice
-(3,2)-(3,70)
-(3,8)-(3,26)
-(3,10)-(3,26)
-(3,14)-(3,21)
-(3,14)-(3,26)
-(3,15)-(3,16)
-(3,17)-(3,18)
-(3,19)-(3,20)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,61)-(3,62)
+(3,2)-(8,27)
+(3,18)-(7,76)
+(4,4)-(7,76)
+(4,4)-(7,76)
+(4,10)-(4,14)
+(7,27)-(7,76)
+(7,39)-(7,47)
+(7,39)-(7,51)
+(7,50)-(7,51)
+(7,55)-(7,61)
+(7,55)-(7,76)
+(7,62)-(7,76)
+(7,70)-(7,75)
+(8,11)-(8,27)
+(8,12)-(8,18)
+(8,19)-(8,26)
+(8,24)-(8,25)
 *)

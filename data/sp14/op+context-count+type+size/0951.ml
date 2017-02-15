@@ -1,35 +1,51 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (s,i)::t -> if s = k then true else assoc (d k t);;
+let rec clone x n =
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
+
+let padZero l1 l2 =
+  let x = (List.length l1) - (List.length l2) in
+  if x
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
+let rec clone x n =
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
+
+let padZero l1 l2 =
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,2)-(3,76)
-(3,42)-(3,43)
-(3,46)-(3,47)
-(3,53)-(3,57)
-(3,63)-(3,68)
-(3,69)-(3,76)
-(3,70)-(3,71)
-(3,72)-(3,73)
-(3,74)-(3,75)
+(12,5)-(12,6)
+(14,4)-(16,41)
 *)
 
 (* type error slice
-(3,2)-(3,76)
-(3,2)-(3,76)
-(3,23)-(3,24)
-(3,39)-(3,76)
-(3,53)-(3,57)
-(3,69)-(3,76)
-(3,70)-(3,71)
+(11,2)-(17,15)
+(11,10)-(11,45)
+(12,2)-(17,15)
+(12,5)-(12,6)
 *)

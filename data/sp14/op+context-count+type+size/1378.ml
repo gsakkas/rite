@@ -1,31 +1,60 @@
 
-let pipe fs = let f a x l x = a in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr0 -> sin (eval (expr0, x, y))
+  | Cosine expr0 -> cos (eval (expr0, x, y))
+  | Average (expr0,expr1) ->
+      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2
+  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
+       | true  -> eval (expr2, x, y)
+       | false  -> eval (expr3, x, y));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x l = x (a l) in let base p = p in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr0 -> sin (eval (expr0, x, y))
+  | Cosine expr0 -> cos (eval (expr0, x, y))
+  | Average (expr0,expr1) ->
+      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
+       | true  -> eval (expr2, x, y)
+       | false  -> eval (expr3, x, y));;
 
 *)
 
 (* changed spans
-(2,14)-(2,77)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
-(2,53)-(2,77)
+(18,56)-(18,57)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(18,6)-(18,57)
+(18,56)-(18,57)
 *)

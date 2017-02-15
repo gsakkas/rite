@@ -1,65 +1,31 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let rec exprToString e =
-  match e with
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ (("+" exprToString b) ^ ")/20"))
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | VarY  -> "x"
-  | VarX  -> "y";;
+let fixpoint (f,b) = wwhile (f, ((f b) = b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let rec exprToString e =
-  match e with
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/20")))
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | VarY  -> "x"
-  | VarX  -> "y";;
+let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
 
 *)
 
 (* changed spans
-(21,34)-(21,54)
-(21,39)-(21,51)
+(6,28)-(6,47)
+(6,29)-(6,30)
+(6,32)-(6,43)
 *)
 
 (* type error slice
-(21,34)-(21,54)
-(21,35)-(21,38)
+(2,3)-(4,16)
+(2,16)-(4,14)
+(6,21)-(6,27)
+(6,21)-(6,47)
+(6,28)-(6,47)
 *)

@@ -1,108 +1,43 @@
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec wwhile (f,b) =
+  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
 
-let carry y = y / 10;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
-
-let remain x = x mod 10;;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (car,cur) ->
-               (match cur with
-                | [] ->
-                    if ((car + x1) + x2) > 10
-                    then
-                      ((car + 1), ([car + 1] @ [((remain car) + x1) + x2]))
-                    else (0, ([car] @ [(car + x1) + x2]))
-                | h::t ->
-                    if ((x1 + x2) + h) < 10
-                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
-                    else
-                      ((car + 1),
-                        ([((carry h) + x1) + x2] @
-                           ([((remain h) + x1) + x2] @ t))))) in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    ((let f' b = if (f b) = b then (b, false) else ((f b), true) in f' b), b);;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec wwhile (f,b) =
+  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
 
-let carry y = y / 10;;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
-
-let remain x = x mod 10;;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (car,cur) ->
-               (match cur with
-                | [] ->
-                    if ((car + x1) + x2) > 10
-                    then
-                      ((car + 1), ([car + 1] @ [((remain car) + x1) + x2]))
-                    else (0, ([car] @ [(car + x1) + x2]))
-                | h::t ->
-                    if ((x1 + x2) + h) < 10
-                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
-                    else
-                      ((car + 1),
-                        ([((carry h) + x1) + x2] @
-                           ([((remain h) + x1) + x2] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    ((let f' b = if (f b) = b then (b, false) else ((f b), true) in f'), b);;
 
 *)
 
 (* changed spans
-(38,15)-(38,17)
-(39,48)-(39,74)
-(40,2)-(40,34)
-(40,19)-(40,26)
-(40,27)-(40,29)
-(40,30)-(40,32)
+(7,68)-(7,72)
+(7,75)-(7,76)
 *)
 
 (* type error slice
-(20,4)-(39,74)
-(20,10)-(37,61)
-(23,10)-(37,61)
-(23,17)-(23,18)
-(38,4)-(39,74)
-(38,15)-(38,17)
-(39,48)-(39,62)
-(39,48)-(39,74)
-(39,63)-(39,64)
-(39,65)-(39,69)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,41)-(3,47)
+(3,41)-(3,55)
+(3,48)-(3,55)
+(3,49)-(3,50)
+(6,2)-(6,8)
+(6,2)-(7,77)
+(7,4)-(7,77)
+(7,5)-(7,73)
+(7,5)-(7,73)
+(7,13)-(7,64)
+(7,17)-(7,64)
+(7,35)-(7,45)
+(7,68)-(7,70)
+(7,68)-(7,72)
 *)

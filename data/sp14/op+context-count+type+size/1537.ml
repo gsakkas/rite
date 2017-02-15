@@ -1,39 +1,31 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((not f), b);;
+let sqsum xs =
+  let f a x a x = x *. x in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
-
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
+let sqsum xs = let f a x = x * x in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(3,30)-(3,63)
-(5,28)-(5,40)
-(5,29)-(5,36)
-(5,30)-(5,33)
-(5,34)-(5,35)
-(5,38)-(5,39)
+(3,2)-(3,68)
+(3,8)-(3,24)
+(3,10)-(3,24)
+(3,18)-(3,24)
+(3,28)-(3,68)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,41)-(3,47)
-(3,41)-(3,55)
-(3,48)-(3,55)
-(3,49)-(3,50)
-(5,21)-(5,27)
-(5,21)-(5,40)
-(5,28)-(5,40)
-(5,29)-(5,36)
-(5,30)-(5,33)
+(3,2)-(3,68)
+(3,8)-(3,24)
+(3,10)-(3,24)
+(3,12)-(3,24)
+(3,28)-(3,68)
+(3,39)-(3,40)
+(3,44)-(3,58)
+(3,44)-(3,68)
+(3,59)-(3,60)
+(3,61)-(3,65)
 *)

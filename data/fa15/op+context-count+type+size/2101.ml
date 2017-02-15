@@ -1,37 +1,39 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | x::x' -> [[(x * i) / 10]; ((x * i) mod 10) + [mulByDigit i x']];;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n = 0
+    then 0
+    else (let x = n mod 10
+          and r = n / 10 in (digitsOfInt r) @ [x]);;
 
 
 (* fix
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | x::x'::x'' ->
-      [(x * i) / 10] @
-        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n = 0
+    then []
+    else (let x = n mod 10
+          and r = n / 10 in (digitsOfInt r) @ [x]);;
 
 *)
 
 (* changed spans
-(3,2)-(5,67)
-(5,13)-(5,67)
-(5,14)-(5,28)
-(5,30)-(5,66)
-(5,49)-(5,66)
-(5,50)-(5,60)
-(5,50)-(5,65)
-(5,61)-(5,62)
+(7,9)-(7,10)
 *)
 
 (* type error slice
-(5,13)-(5,67)
-(5,13)-(5,67)
-(5,14)-(5,28)
-(5,30)-(5,66)
-(5,30)-(5,66)
-(5,49)-(5,66)
+(3,2)-(9,50)
+(3,2)-(9,50)
+(4,7)-(4,9)
+(6,4)-(9,50)
+(6,4)-(9,50)
+(7,9)-(7,10)
+(8,9)-(9,50)
+(9,28)-(9,49)
+(9,44)-(9,45)
 *)

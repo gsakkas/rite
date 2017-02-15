@@ -1,48 +1,33 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (eval (e1, x, y))
-  | Cosine e1 -> cos (eval (e1, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2;;
+let sqsum xs =
+  let f a x = match x with | [] -> a | x::t -> x * x in
+  let base = [] in List.fold_left f base xs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (eval (e1, x, y))
-  | Cosine e1 -> cos (eval (e1, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
+let sqsum xs =
+  let f a x = match x with | 0 -> a | x -> x * x in
+  let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(17,67)-(17,68)
+(3,14)-(3,52)
+(4,13)-(4,15)
 *)
 
 (* type error slice
-(17,23)-(17,68)
-(17,67)-(17,68)
+(3,2)-(4,43)
+(3,8)-(3,52)
+(3,14)-(3,52)
+(3,14)-(3,52)
+(3,35)-(3,36)
+(3,47)-(3,52)
+(4,2)-(4,43)
+(4,13)-(4,15)
+(4,19)-(4,33)
+(4,19)-(4,43)
+(4,34)-(4,35)
+(4,36)-(4,40)
 *)

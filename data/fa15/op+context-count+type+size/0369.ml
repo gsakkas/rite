@@ -1,80 +1,28 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference1 = (List.length l1) - (List.length l2) in
-  let difference2 = (List.length l2) - (List.length l1) in
-  if difference2 > 0
-  then (((clone 0 difference2) @ l1), l2)
-  else
-    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,temp) = a in
-      let s = (x1 + x2) + a in
-      let carry' = s / 10 in
-      let rem = s mod 10 in
-      let acc = rem :: temp in
-      if (List.length acc) = (List.length l1)
-      then (0, (carry' :: acc))
-      else (carry', acc) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec clone x n = if n <= 0 then [] else [x] :: ((clone x n) - 1);;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference1 = (List.length l1) - (List.length l2) in
-  let difference2 = (List.length l2) - (List.length l1) in
-  if difference2 > 0
-  then (((clone 0 difference2) @ l1), l2)
-  else
-    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,temp) = a in
-      let s = (x1 + x2) + carry in
-      let carry' = s / 10 in
-      let rem = s mod 10 in
-      let acc = rem :: temp in
-      if (List.length acc) = (List.length l1)
-      then (0, (carry' :: acc))
-      else (carry', acc) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(22,26)-(22,27)
+(2,43)-(2,46)
+(2,50)-(2,67)
+(2,60)-(2,61)
 *)
 
 (* type error slice
-(21,6)-(28,24)
-(21,25)-(21,26)
-(22,14)-(22,27)
-(22,26)-(22,27)
+(2,3)-(2,69)
+(2,14)-(2,67)
+(2,16)-(2,67)
+(2,20)-(2,67)
+(2,43)-(2,67)
+(2,43)-(2,67)
+(2,50)-(2,67)
+(2,50)-(2,67)
+(2,51)-(2,62)
+(2,52)-(2,57)
 *)

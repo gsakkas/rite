@@ -1,120 +1,83 @@
 
-let rec rmzhelp l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
-
-let rec foldr f b x n = if n > 0 then f x (foldr f b x (n - 1)) else b;;
-
-let rec clone x n = foldr (fun y  -> fun m  -> y :: m) [] x n;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (clone 0 ((List.length l1) - (List.length l2))) @ l2
-  else (clone 0 ((List.length l2) - (List.length l1))) @ l1;;
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = a + x in
+    let f a x = let (x1,x2) = x in (0, (x1 + x2)) :: a in
     let base = [] in
-    let args = failwith "to be implemented" in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec rmzhelp l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
-
-let rec foldr f b x n = if n > 0 then f x (foldr f b x (n - 1)) else b;;
-
-let rec clone x n = foldr (fun y  -> fun m  -> y :: m) [] x n;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (c,d) ->
-          (match a with
-           | (n,listSum) ->
-               (match listSum with
-                | [] ->
-                    if ((n + c) + d) < 10
-                    then (0, ([n] @ [(n + c) + d]))
-                    else ((n + 1), ([n + 1] @ [((n + c) + d) mod 10]))
-                | h::t ->
-                    if ((n + c) + d) < 10
-                    then (0, ([0] @ ([(c + d) + h] @ t)))
-                    else
-                      ((n + 1),
-                        ([((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
+    let base = (0, [0]) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(11,7)-(11,59)
-(12,7)-(12,59)
-(14,19)-(15,77)
-(19,16)-(19,17)
-(19,16)-(19,21)
-(20,4)-(22,51)
-(20,15)-(20,17)
-(21,4)-(22,51)
-(21,15)-(21,23)
-(21,15)-(21,43)
-(21,24)-(21,43)
-(22,4)-(22,51)
-(22,18)-(22,32)
-(22,18)-(22,44)
-(22,33)-(22,34)
-(22,35)-(22,39)
-(22,40)-(22,44)
-(22,48)-(22,51)
-(23,2)-(23,12)
-(23,2)-(23,34)
-(23,13)-(23,34)
-(23,14)-(23,17)
-(23,18)-(23,33)
-(23,19)-(23,26)
-(23,27)-(23,29)
-(23,30)-(23,32)
+(14,16)-(14,54)
+(14,35)-(14,49)
+(14,35)-(14,54)
+(14,36)-(14,37)
+(14,39)-(14,48)
+(14,40)-(14,42)
+(14,53)-(14,54)
+(15,4)-(17,51)
+(15,15)-(15,17)
+(16,4)-(17,51)
+(16,15)-(16,33)
+(17,4)-(17,51)
+(17,18)-(17,32)
+(17,18)-(17,44)
+(17,33)-(17,34)
+(17,35)-(17,39)
+(17,40)-(17,44)
+(17,48)-(17,51)
+(18,2)-(18,12)
+(18,2)-(18,34)
+(18,14)-(18,17)
+(18,18)-(18,33)
+(18,19)-(18,26)
+(18,27)-(18,29)
+(18,30)-(18,32)
 *)
 
 (* type error slice
-(9,3)-(12,61)
-(9,12)-(12,59)
-(9,15)-(12,59)
-(10,2)-(12,59)
-(11,7)-(11,59)
-(11,55)-(11,56)
-(18,2)-(23,34)
-(18,11)-(22,51)
-(19,4)-(22,51)
-(19,10)-(19,21)
-(19,16)-(19,17)
-(19,16)-(19,21)
-(20,4)-(22,51)
-(20,15)-(20,17)
-(22,18)-(22,32)
-(22,18)-(22,44)
-(22,33)-(22,34)
-(22,35)-(22,39)
-(23,13)-(23,34)
-(23,14)-(23,17)
-(23,18)-(23,33)
-(23,19)-(23,26)
+(14,4)-(17,51)
+(14,10)-(14,54)
+(14,35)-(14,54)
+(14,53)-(14,54)
+(17,4)-(17,51)
+(17,18)-(17,32)
+(17,18)-(17,44)
+(17,33)-(17,34)
 *)

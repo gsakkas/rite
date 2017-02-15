@@ -1,77 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewA of expr* expr
-  | NewB of expr* expr* expr;;
+let g (f,x) = let xx = f x in (xx, (xx = (f xx)));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | NewA (a,b) ->
-      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
-  | NewB (a,b,c) ->
-      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) exp 0;;
+let fixpoint (f,b) = wwhile ((g f), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewA of expr* expr
-  | NewB of expr* expr* expr;;
+let g h x = let xx = h x in (xx, (xx = (h x)));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | NewA (a,b) ->
-      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
-  | NewB (a,b,c) ->
-      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) -.
-        (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y)));;
+let fixpoint (f,b) = wwhile ((g f), b);;
 
 *)
 
 (* changed spans
-(30,6)-(30,72)
-(30,67)-(30,70)
-(30,71)-(30,72)
+(2,7)-(2,49)
+(2,14)-(2,49)
+(2,23)-(2,24)
+(2,23)-(2,26)
+(2,42)-(2,43)
+(2,44)-(2,46)
+(4,16)-(4,77)
 *)
 
 (* type error slice
-(30,6)-(30,66)
-(30,6)-(30,72)
+(2,3)-(2,51)
+(2,7)-(2,49)
+(2,14)-(2,49)
+(2,30)-(2,49)
+(4,37)-(4,38)
+(4,37)-(4,40)
+(4,55)-(4,61)
+(4,55)-(4,69)
+(4,62)-(4,69)
+(4,63)-(4,64)
+(6,21)-(6,27)
+(6,21)-(6,38)
+(6,28)-(6,38)
+(6,29)-(6,34)
+(6,30)-(6,31)
 *)

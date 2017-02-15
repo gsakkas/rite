@@ -7,28 +7,25 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+  | CosE of expr* expr* expr;;
 
-let buildX () = VarX;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let newRand = rand (0, 4) in
-  match depth with
-  | 0 ->
-      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
-  | 1 ->
-      let halff = rand (0, 2) in
-      if halff = 0
-      then Cosine (build (newRand, (depth - 1)))
-      else Sine (build (newRand, (depth - 1)))
-  | 2 ->
-      Average
-        ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))))
-  | 3 ->
-      Times ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) *. (eval (x2, x, y)))) *.
+        (e ** ((- pi) *. ((eval (x3, x, y)) ** 2.)));;
 
 
 (* fix
@@ -41,51 +38,68 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+  | CosE of expr* expr* expr;;
 
-let buildX () = VarX;;
+let e_num = 2.718281828;;
 
-let buildY () = VarY;;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
-  | 1 ->
-      let halff = rand (0, 2) in
-      if halff = 0
-      then Cosine (build (rand, (depth - 1)))
-      else Sine (build (rand, (depth - 1)))
-  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
+  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
+  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
+  | Thresh (x1,x2,x3,x4) ->
+      if (eval (x1, x, y)) < (eval (x2, x, y))
+      then eval (x3, x, y)
+      else eval (x4, x, y)
+  | CosE (x1,x2,x3) ->
+      (cos ((pi *. (eval (x1, x, y))) *. (eval (x2, x, y)))) *.
+        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)));;
 
 *)
 
 (* changed spans
-(18,2)-(31,76)
-(18,16)-(18,20)
-(18,16)-(18,27)
-(18,21)-(18,27)
-(18,22)-(18,23)
-(18,25)-(18,26)
-(21,6)-(21,75)
-(23,6)-(26,46)
-(25,26)-(25,33)
-(26,24)-(26,31)
-(29,17)-(29,24)
-(29,49)-(29,56)
-(31,21)-(31,28)
+(12,9)-(12,26)
+(28,9)-(28,10)
+(28,15)-(28,21)
 *)
 
 (* type error slice
-(17,3)-(31,78)
-(17,15)-(31,76)
-(18,2)-(31,76)
-(18,16)-(18,20)
-(18,16)-(18,27)
-(25,18)-(25,48)
-(25,19)-(25,24)
-(25,25)-(25,47)
-(25,26)-(25,33)
+(12,3)-(12,28)
+(12,9)-(12,26)
+(14,3)-(28,54)
+(14,14)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,2)-(28,52)
+(15,8)-(15,9)
+(18,26)-(18,43)
+(18,27)-(18,31)
+(18,32)-(18,42)
+(18,33)-(18,35)
+(28,8)-(28,52)
+(28,9)-(28,10)
+(28,11)-(28,13)
+(28,14)-(28,51)
+(28,15)-(28,21)
+(28,15)-(28,21)
+(28,18)-(28,20)
 *)

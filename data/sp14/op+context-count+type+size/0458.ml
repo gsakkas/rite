@@ -6,33 +6,18 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      (2.71 **
-         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
-            -. 1.0))
-        -. 1.0
-  | SinLog (a,b,c) ->
-      if c < 0.0
-      then ((log (x *. 100)) ** (sin (x *. 100))) -. 1.0
-      else (-1.0) *. (((log (x *. 100)) ** (sin (x *. 100))) -. 1.0);;
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1))
+    | Cosine p1 -> evalhelper p1 in
+  evalhelper e x y;;
 
 
 (* fix
@@ -44,83 +29,37 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      (2.71 **
-         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
-            -. 1.0))
-        -. 1.0
-  | SinLog (a,b,c) ->
-      if (eval (c, x, y)) < 0.0
-      then
-        ((log ((eval (a, x, y)) *. 100.0)) **
-           (sin ((eval (b, x, y)) *. 100.0)))
-          -. 1.0
-      else
-        (-1.0) *.
-          (((log ((eval (b, x, y)) *. 100.0)) **
-              (sin ((eval (a, x, y)) *. 100.0)))
-             -. 1.0);;
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
+    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
+  evalhelper e x y;;
 
 *)
 
 (* changed spans
-(33,9)-(33,10)
-(33,13)-(33,16)
-(34,18)-(34,19)
-(34,23)-(34,26)
-(34,32)-(34,48)
-(34,38)-(34,39)
-(34,43)-(34,46)
-(34,53)-(34,56)
-(35,22)-(35,60)
-(35,23)-(35,39)
-(35,24)-(35,27)
-(35,28)-(35,38)
-(35,29)-(35,30)
-(35,34)-(35,37)
-(35,40)-(35,42)
-(35,43)-(35,59)
-(35,44)-(35,47)
-(35,48)-(35,58)
-(35,49)-(35,50)
-(35,54)-(35,57)
-(35,64)-(35,67)
+(18,28)-(18,43)
+(19,19)-(19,29)
+(19,19)-(19,32)
+(19,30)-(19,32)
+(20,2)-(20,18)
+(20,13)-(20,14)
 *)
 
 (* type error slice
-(16,2)-(35,68)
-(33,9)-(33,10)
-(33,9)-(33,16)
-(33,9)-(33,16)
-(33,13)-(33,16)
-(34,17)-(34,27)
-(34,23)-(34,26)
-(34,37)-(34,47)
-(34,43)-(34,46)
-(35,11)-(35,17)
-(35,11)-(35,17)
-(35,11)-(35,68)
-(35,13)-(35,16)
-(35,28)-(35,38)
-(35,34)-(35,37)
-(35,48)-(35,58)
-(35,54)-(35,57)
+(14,2)-(20,18)
+(14,21)-(19,32)
+(14,23)-(19,32)
+(18,21)-(18,44)
+(18,28)-(18,43)
+(18,29)-(18,39)
+(20,2)-(20,12)
+(20,2)-(20,18)
 *)

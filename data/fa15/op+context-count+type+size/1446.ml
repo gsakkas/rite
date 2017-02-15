@@ -1,53 +1,40 @@
 
-let carry x y = (x * y) / 10;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let remainder x y = (x * y) mod 10;;
-
-let rec mulByDigit i l =
-  if (i = 0) || (i > 9)
-  then []
-  else
-    (match List.rev l with
-     | [] -> []
-     | h::t ->
-         (match t with
-          | [] ->
-              if (i * h) > 10 then [carry i h] @ [remainder i h] else i * h
-          | h'::t' ->
-              (mulByDigit i t') @
-                ([(remainder h' i) + (carry h i)] @ [remainder h i])));;
+let stringOfList f l = ((sepConcat "; "), (List.map (f, l)));;
 
 
 (* fix
 
-let carry x y = (x * y) / 10;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let remainder x y = (x * y) mod 10;;
-
-let rec mulByDigit i l =
-  if (i = 0) || (i > 9)
-  then []
-  else
-    (match List.rev l with
-     | [] -> []
-     | h::t ->
-         (match t with
-          | [] ->
-              if (i * h) > 10 then [carry i h] @ [remainder i h] else [i * h]
-          | h'::t' ->
-              (mulByDigit i t') @
-                ([(remainder h' i) + (carry h i)] @ [remainder h i])));;
+let stringOfList f l =
+  let newList = List.map f l in "[" ^ ((sepConcat "; " newList) ^ "]");;
 
 *)
 
 (* changed spans
-(15,70)-(15,75)
+(9,23)-(9,60)
+(9,24)-(9,40)
+(9,25)-(9,34)
+(9,35)-(9,39)
+(9,42)-(9,59)
+(9,43)-(9,51)
+(9,52)-(9,58)
 *)
 
 (* type error slice
-(15,14)-(15,75)
-(15,14)-(15,75)
-(15,35)-(15,64)
-(15,47)-(15,48)
-(15,70)-(15,75)
+(9,42)-(9,59)
+(9,43)-(9,51)
+(9,52)-(9,58)
 *)

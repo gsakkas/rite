@@ -1,68 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let lt10 q = q < 10;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec additivePersistence n = if lt10 n then n else 55 :: 66;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let incre i = i + 1;;
 
-let pi = 4.0 *. (atan 1.0);;
+let lt10 q = q < 10;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec additivePersistence n =
+  if lt10 n then n else (match n with | n -> incre n);;
 
 *)
 
 (* changed spans
-(19,21)-(19,63)
-(19,62)-(19,63)
+(2,9)-(2,19)
+(4,54)-(4,56)
+(4,54)-(4,62)
+(4,60)-(4,62)
 *)
 
 (* type error slice
-(14,2)-(24,25)
-(14,2)-(24,25)
-(17,14)-(17,17)
-(17,14)-(17,42)
-(19,21)-(19,59)
-(19,21)-(19,63)
-(19,21)-(19,63)
+(2,3)-(2,21)
+(2,9)-(2,19)
+(2,13)-(2,14)
+(2,13)-(2,19)
+(2,13)-(2,19)
+(2,17)-(2,19)
+(4,32)-(4,62)
+(4,32)-(4,62)
+(4,35)-(4,39)
+(4,35)-(4,41)
+(4,40)-(4,41)
+(4,47)-(4,48)
+(4,54)-(4,62)
+(4,54)-(4,62)
+(4,60)-(4,62)
 *)

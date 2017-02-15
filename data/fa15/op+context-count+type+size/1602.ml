@@ -1,110 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand (0, 1)) = 1 then buildX () else buildY ()
-  | depth ->
-      (match rand with
-       | 0 -> buildSine (build (rand, (depth - 1)))
-       | 1 -> buildCosine (build (rand, (depth - 1)))
-       | 2 ->
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 3 ->
-           buildTimes
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 4 ->
-           buildThresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not List.mem (h, seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand (0, 1)) = 1 then buildX () else buildY ()
-  | depth ->
-      (match rand (0, 4) with
-       | 0 -> buildSine (build (rand, (depth - 1)))
-       | 1 -> buildCosine (build (rand, (depth - 1)))
-       | 2 ->
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 3 ->
-           buildTimes
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 4 ->
-           buildThresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(29,13)-(29,17)
-(30,14)-(30,51)
-(41,59)-(41,64)
-(41,67)-(41,68)
+(7,23)-(7,45)
+(7,27)-(7,35)
+(7,36)-(7,45)
 *)
 
 (* type error slice
-(27,12)-(27,25)
-(27,13)-(27,17)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,6)-(41,73)
-(29,13)-(29,17)
+(7,23)-(7,26)
+(7,23)-(7,45)
 *)

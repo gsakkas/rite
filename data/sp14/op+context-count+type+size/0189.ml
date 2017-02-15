@@ -1,85 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Op1 e ->
-      (tan (pi *. (eval (e, x, y)))) -.
-        ((tan (pi *. (eval (e, x, y)))) / 2.0)
-  | Op2 (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (eval (e1, x, y)) -. (eval (e2, x, y));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else
+    (let next_tail = digitsOfInt (n / 10) in
+     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Op1 e ->
-      (tan (pi *. (eval (e, x, y)))) -.
-        ((tan (pi *. (eval (e, x, y)))) /. 2.0)
-  | Op2 (e1,e2,e3) ->
-      if (eval (e1, x, y)) > (eval (e2, x, y))
-      then eval (e3, x, y)
-      else (eval (e1, x, y)) -. (eval (e2, x, y));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
 *)
 
 (* changed spans
-(29,8)-(29,46)
+(6,4)-(7,60)
+(6,21)-(6,41)
+(7,5)-(7,59)
+(7,11)-(7,20)
+(7,37)-(7,39)
+(7,37)-(7,59)
+(7,40)-(7,41)
+(7,43)-(7,58)
 *)
 
 (* type error slice
-(28,6)-(29,46)
-(29,8)-(29,46)
-(29,8)-(29,46)
-(29,8)-(29,46)
-(29,9)-(29,39)
-(29,10)-(29,13)
-(29,42)-(29,45)
+(7,5)-(7,59)
+(7,5)-(7,59)
+(7,37)-(7,39)
+(7,37)-(7,59)
+(7,40)-(7,41)
+(7,42)-(7,59)
+(7,42)-(7,59)
+(7,43)-(7,44)
+(7,43)-(7,58)
+(7,43)-(7,58)
+(7,43)-(7,58)
+(7,48)-(7,58)
 *)

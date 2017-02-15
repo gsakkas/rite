@@ -1,34 +1,27 @@
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let quotient = n / 10 in
-      if quotient = 0 then n mod 10 else quotient :: (digitsOfInt quotient);;
+let pipe fs = let f a x = x + a in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let quotient = n / 10 in
-      if quotient = 0 then [n mod 10] else quotient :: (digitsOfInt quotient);;
+let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(7,27)-(7,35)
+(2,26)-(2,27)
+(2,26)-(2,31)
 *)
 
 (* type error slice
-(3,2)-(7,75)
-(3,2)-(7,75)
-(4,13)-(4,15)
-(6,6)-(7,75)
-(7,6)-(7,75)
-(7,6)-(7,75)
-(7,27)-(7,35)
-(7,41)-(7,75)
+(2,14)-(2,77)
+(2,20)-(2,31)
+(2,26)-(2,31)
+(2,30)-(2,31)
+(2,35)-(2,77)
+(2,44)-(2,49)
+(2,53)-(2,67)
+(2,53)-(2,77)
+(2,68)-(2,69)
+(2,70)-(2,74)
 *)

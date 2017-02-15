@@ -1,28 +1,43 @@
 
-let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t)) :: t
+      else prod :: t;;
 
 
 (* fix
 
-let pipe fs = let f a x x = x in let base x = x in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
+(8,28)-(8,60)
+(8,64)-(8,65)
+(9,11)-(9,15)
+(9,19)-(9,20)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(2,3)-(9,22)
+(2,19)-(9,20)
+(2,21)-(9,20)
+(3,2)-(9,20)
+(6,6)-(9,20)
+(7,6)-(9,20)
+(8,11)-(8,65)
+(8,28)-(8,60)
+(8,43)-(8,59)
+(8,44)-(8,54)
 *)

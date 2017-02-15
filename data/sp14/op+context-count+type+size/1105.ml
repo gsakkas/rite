@@ -1,214 +1,32 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let num = rand (1, 10) in
-      if (num > 7) || (num = 2) then buildX () else buildY ()
-  | 1 ->
-      let num = rand (1, 10) in
-      if (num mod 2) = 0
-      then
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))), (buildCosine (rand, (depth - 1)))))
-      else
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))), (buildSine (rand, (depth - 1)))))
-  | 2 ->
-      let num = rand (1, 30) in
-      if (num mod 2) == 0
-      then
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-      else
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-  | 3 ->
-      let num = rand (1, 50) in
-      if (num mod 2) = 0
-      then
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildCosine (build (rand, (depth - 1)))))
-      else
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildSine (build (rand, (depth - 1)))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      let num = rand (1, 10) in
-      if num = 1
-      then buildSine (buildSine (buildSine (build (rand, (depth - 1)))))
-      else
-        if num = 2
-        then
-          buildCosine (buildCosine (buildCosine (build (rand, (depth - 1)))))
-        else
-          if num = 3
-          then buildSine (buildCosine (build (rand, (depth - 1))))
-          else buildCosine (buildSine (build (rand, (depth - 1))))
-  | 6 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 ->
-      buildTimes
-        ((buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-          (buildSine (build (rand, (depth - 1)))))
-  | _ -> build (rand, (depth - 1));;
+let pipe fs =
+  let f a x x' = x' (a x) in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let num = rand (1, 10) in
-      if (num > 7) || (num = 2) then buildX () else buildY ()
-  | 1 ->
-      let num = rand (1, 10) in
-      if (num mod 2) = 0
-      then
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))),
-               (buildCosine (build (rand, (depth - 1))))))
-      else
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))),
-               (buildSine (build (rand, (depth - 1))))))
-  | 2 ->
-      let num = rand (1, 30) in
-      if (num mod 2) == 0
-      then
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-      else
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-  | 3 ->
-      let num = rand (1, 50) in
-      if (num mod 2) = 0
-      then
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildCosine (build (rand, (depth - 1)))))
-      else
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildSine (build (rand, (depth - 1)))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      let num = rand (1, 10) in
-      if num = 1
-      then buildSine (buildSine (buildSine (build (rand, (depth - 1)))))
-      else
-        if num = 2
-        then
-          buildCosine (buildCosine (buildCosine (build (rand, (depth - 1)))))
-        else
-          if num = 3
-          then buildSine (buildCosine (build (rand, (depth - 1))))
-          else buildCosine (buildSine (build (rand, (depth - 1))))
-  | 6 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 ->
-      buildTimes
-        ((buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-          (buildSine (build (rand, (depth - 1)))))
-  | _ -> build (rand, (depth - 1));;
+let pipe fs =
+  let f a x x' = x (a x') in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(34,56)-(34,75)
-(38,54)-(38,73)
-(40,6)-(53,59)
-(55,6)-(66,52)
-(70,6)-(80,66)
-(90,23)-(90,28)
-(90,31)-(90,32)
+(3,17)-(3,19)
+(3,23)-(3,24)
 *)
 
 (* type error slice
-(13,3)-(13,30)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(13,27)-(13,28)
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(34,43)-(34,76)
-(34,44)-(34,55)
-(34,56)-(34,75)
-(38,43)-(38,74)
-(38,44)-(38,53)
-(38,54)-(38,73)
+(3,2)-(3,71)
+(3,8)-(3,25)
+(3,10)-(3,25)
+(3,12)-(3,25)
+(3,17)-(3,19)
+(3,17)-(3,25)
+(3,29)-(3,71)
+(3,38)-(3,43)
+(3,42)-(3,43)
+(3,47)-(3,61)
+(3,47)-(3,71)
+(3,62)-(3,63)
+(3,64)-(3,68)
 *)

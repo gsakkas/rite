@@ -1,42 +1,38 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> 0 | h::t -> h * h in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n > 0 then (clone 0 n) @ l2 else ((clone 0) - (1 * n)) @ l1;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + (x * x) in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n > 0 then (l1, ((clone 0 n) @ l2)) else (((clone 0 (0 - n)) @ l1), l2);;
 
 *)
 
 (* changed spans
-(3,14)-(3,52)
-(3,20)-(3,21)
-(3,35)-(3,36)
-(3,47)-(3,48)
-(3,51)-(3,52)
-(4,2)-(4,51)
+(6,16)-(6,32)
+(6,38)-(6,59)
+(6,38)-(6,64)
+(6,39)-(6,48)
+(6,51)-(6,58)
+(6,52)-(6,53)
+(6,56)-(6,57)
 *)
 
 (* type error slice
-(3,2)-(4,51)
-(3,8)-(3,52)
-(3,10)-(3,52)
-(3,14)-(3,52)
-(3,14)-(3,52)
-(3,14)-(3,52)
-(3,20)-(3,21)
-(3,35)-(3,36)
-(4,2)-(4,51)
-(4,13)-(4,20)
-(4,13)-(4,23)
-(4,21)-(4,23)
-(4,27)-(4,41)
-(4,27)-(4,51)
-(4,42)-(4,43)
-(4,44)-(4,48)
-(4,49)-(4,51)
+(6,16)-(6,27)
+(6,17)-(6,22)
+(6,38)-(6,59)
+(6,38)-(6,59)
+(6,38)-(6,64)
+(6,39)-(6,48)
+(6,40)-(6,45)
+(6,60)-(6,61)
 *)

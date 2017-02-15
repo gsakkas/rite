@@ -10,22 +10,28 @@ type expr =
   | Cube of expr
   | Addition of expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
-  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Cube a -> ((eval (a, x, y)) *. (eval (a, x, y))) *. (eval (a, x, y))
-  | Addition (a,b) -> (eval (a, x, y)) +. eval;;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Cube a ->
+      "(" ^
+        ((exprToString a) ^
+           ("*" ^ ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))))
+  | Addition (a,b) ->
+      "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ")")));;
 
 
 (* fix
@@ -41,32 +47,42 @@ type expr =
   | Cube of expr
   | Addition of expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
-  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
   | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Cube a -> ((eval (a, x, y)) *. (eval (a, x, y))) *. (eval (a, x, y))
-  | Addition (a,b) -> (eval (a, x, y)) +. (eval (b, x, y));;
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Cube a ->
+      "(" ^
+        ((exprToString a) ^
+           ("*" ^ ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))))
+  | Addition (a,b) ->
+      "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")")));;
 
 *)
 
 (* changed spans
-(28,42)-(28,46)
+(34,39)-(34,61)
+(34,40)-(34,56)
 *)
 
 (* type error slice
-(21,42)-(21,58)
-(21,43)-(21,47)
-(28,22)-(28,46)
-(28,42)-(28,46)
+(17,26)-(17,50)
+(17,27)-(17,43)
+(17,28)-(17,40)
+(17,44)-(17,45)
+(34,39)-(34,61)
+(34,40)-(34,56)
+(34,41)-(34,53)
 *)

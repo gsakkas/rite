@@ -1,91 +1,75 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Golden of expr
-  | MeanPi of expr* expr* expr;;
+let rec clone x n =
+  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  match (List.length l1) <= (List.length l2) with
+  | true  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  | false  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Golden e' ->
-      cos ((((eval (e', x, y)) ** 2.0) -. (eval (e', x, y))) -. 1.0)
-  | MeanPi (e1,e2,e3) ->
-      sin
-        (((eval (e1, x, y)) + (eval (e2, x, y))) + ((eval (e3, x, y)) /. pi));;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = (fst x) + (snd x) in
+      match a with
+      | [] -> (sum / 10) :: (sum mod 10) :: a
+      | h::t -> (sum / 10) :: (h + (sum mod 10)) :: t in
+    let base = [] in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Golden of expr
-  | MeanPi of expr* expr* expr;;
+let rec clone x n =
+  match n with | y when y <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  match (List.length l1) <= (List.length l2) with
+  | true  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  | false  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Golden e' ->
-      cos ((((eval (e', x, y)) ** 2.0) -. (eval (e', x, y))) -. 1.0)
-  | MeanPi (e1,e2,e3) ->
-      sin
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +.
-           ((eval (e3, x, y)) /. pi));;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> l);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = (fst x) + (snd x) in
+      match a with
+      | [] -> (sum / 10) :: (sum mod 10) :: a
+      | h::t -> (sum / 10) :: (h + (sum mod 10)) :: t in
+    let base = [] in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(31,8)-(31,77)
-(31,9)-(31,48)
-(31,10)-(31,27)
+(26,4)-(26,51)
+(26,48)-(26,51)
 *)
 
 (* type error slice
-(19,19)-(19,44)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(30,6)-(30,9)
-(30,6)-(31,77)
-(31,8)-(31,77)
-(31,8)-(31,77)
-(31,9)-(31,48)
-(31,9)-(31,48)
-(31,10)-(31,27)
-(31,11)-(31,15)
-(31,30)-(31,47)
-(31,31)-(31,35)
-(31,51)-(31,76)
+(19,4)-(26,51)
+(19,10)-(23,53)
+(22,28)-(22,45)
+(22,44)-(22,45)
+(26,4)-(26,51)
+(26,18)-(26,32)
+(26,18)-(26,44)
+(26,33)-(26,34)
 *)

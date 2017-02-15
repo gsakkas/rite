@@ -1,68 +1,37 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff > 0
-  then (l1, ((clone 0 diff) @ l2))
-  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (n1,n2) = x in
-      let sum = n1 + n2 in
-      match a with
-      | [] -> [sum]
-      | c::x' -> if c > 9 then (sum + 1) :: (c - 10) :: x' else sum :: a in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | n' -> [digitsOfInt (n / 10); n' mod 10]);;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let modulus ss = ss mod 10;;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff > 0
-  then (l1, ((clone 0 diff) @ l2))
-  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (n1,n2) = x in
-      let sum = n1 + n2 in
-      match a with
-      | [] -> [sum]
-      | c::x' -> if c > 9 then (sum + 1) :: (c - 10) :: x' else sum :: a in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let res = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | n' -> (digitsOfInt (n / 10)) @ [modulus n']);;
 
 *)
 
 (* changed spans
-(23,4)-(23,51)
+(2,20)-(5,63)
+(5,29)-(5,62)
+(5,30)-(5,50)
+(5,52)-(5,54)
+(5,52)-(5,61)
+(5,59)-(5,61)
 *)
 
 (* type error slice
-(15,4)-(23,51)
-(15,10)-(20,72)
-(20,64)-(20,72)
-(20,71)-(20,72)
-(23,4)-(23,51)
-(23,18)-(23,32)
-(23,18)-(23,44)
-(23,33)-(23,34)
+(2,3)-(5,65)
+(2,20)-(5,63)
+(3,2)-(5,63)
+(5,7)-(5,63)
+(5,29)-(5,62)
+(5,29)-(5,62)
+(5,30)-(5,41)
+(5,30)-(5,50)
 *)

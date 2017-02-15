@@ -1,29 +1,61 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base x = x in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) / 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y));;
 
 *)
 
 (* changed spans
-(3,38)-(3,43)
-(3,42)-(3,43)
+(19,23)-(19,69)
 *)
 
 (* type error slice
-(3,2)-(3,71)
-(3,8)-(3,25)
-(3,14)-(3,15)
-(3,14)-(3,25)
-(3,29)-(3,71)
-(3,38)-(3,43)
-(3,47)-(3,61)
-(3,47)-(3,71)
-(3,62)-(3,63)
-(3,64)-(3,68)
+(14,2)-(20,59)
+(14,2)-(20,59)
+(17,14)-(17,17)
+(17,14)-(17,42)
+(19,23)-(19,63)
+(19,23)-(19,69)
+(19,23)-(19,69)
+(19,23)-(19,69)
+(19,66)-(19,69)
 *)

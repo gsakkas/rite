@@ -1,36 +1,32 @@
 
-let stringOfList f l =
-  let fx a b = match b with | [] -> [] | h::t -> List.append a (f b) in
-  let base = "" in List.fold_left fx base l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n -> if n < 0 then (((clone 0 n) @ l1), l2);;
 
 
 (* fix
 
-let stringOfList f l =
-  let fx a b = a ^ b in let base = "" in List.fold_left fx base l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n -> if n < 0 then (((clone 0 n) @ l1), l2) else (((clone 0 n) @ l2), l1);;
 
 *)
 
 (* changed spans
-(3,15)-(3,68)
-(3,21)-(3,22)
-(3,36)-(3,38)
-(3,49)-(3,60)
-(3,63)-(3,68)
-(3,64)-(3,65)
-(4,2)-(4,43)
+(8,9)-(8,47)
 *)
 
 (* type error slice
-(3,2)-(4,43)
-(3,9)-(3,68)
-(3,49)-(3,60)
-(3,49)-(3,68)
-(3,61)-(3,62)
-(4,2)-(4,43)
-(4,13)-(4,15)
-(4,19)-(4,33)
-(4,19)-(4,43)
-(4,34)-(4,36)
-(4,37)-(4,41)
+(8,9)-(8,47)
+(8,9)-(8,47)
+(8,9)-(8,47)
+(8,23)-(8,47)
 *)

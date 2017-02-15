@@ -1,50 +1,71 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let funt b1 = if (f b1) = b then (b1, b) else (b1, b) in
-  wwhile ((funt b), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | varX -> x
+  | varY -> y
+  | Sine t -> sin (pi *. t)
+  | Cosine t -> cos (pi *. t)
+  | Average (t,s) -> (t +. s) /. 2;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = let funt x = (2, ((f b) = b)) in wwhile (funt, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | varX -> x
+  | varY -> y
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0;;
 
 *)
 
 (* changed spans
-(7,2)-(8,22)
-(7,11)-(7,55)
-(7,16)-(7,55)
-(7,19)-(7,29)
-(7,22)-(7,24)
-(7,35)-(7,42)
-(7,36)-(7,38)
-(7,48)-(7,55)
-(7,49)-(7,51)
-(8,2)-(8,22)
+(17,25)-(17,26)
+(18,16)-(18,29)
+(18,27)-(18,28)
+(19,21)-(19,29)
+(19,21)-(19,34)
+(19,22)-(19,23)
+(19,27)-(19,28)
+(19,33)-(19,34)
 *)
 
 (* type error slice
-(3,12)-(3,13)
-(3,12)-(3,15)
-(4,42)-(4,48)
-(4,42)-(4,55)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(7,2)-(8,22)
-(7,11)-(7,55)
-(7,16)-(7,55)
-(7,35)-(7,42)
-(8,2)-(8,8)
-(8,2)-(8,22)
-(8,9)-(8,22)
-(8,10)-(8,18)
-(8,11)-(8,15)
+(14,2)-(19,34)
+(14,2)-(19,34)
+(14,2)-(19,34)
+(14,2)-(19,34)
+(17,18)-(17,27)
+(17,25)-(17,26)
+(18,20)-(18,29)
+(18,27)-(18,28)
+(19,21)-(19,29)
+(19,21)-(19,29)
+(19,21)-(19,34)
+(19,22)-(19,23)
+(19,27)-(19,28)
+(19,33)-(19,34)
 *)

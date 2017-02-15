@@ -1,60 +1,63 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let buildX () = VarX;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let buildY () = VarY;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
 
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let r = rand (0, 1) in if r = 0 then buildX else if r = 1 then buildY;;
+let bigAdd l1 l2 =
+  let add (l1,l2) = let (_,res) = 0; [0; 0; 0; 0] in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let buildX () = VarX;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let buildY () = VarY;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
 
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> let r = rand (0, 2) in if r = 0 then buildX () else buildY ();;
+let bigAdd l1 l2 =
+  let add (l1,l2) = let (_,res) = (0, [0; 0; 0; 0]) in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(18,6)-(18,75)
-(18,23)-(18,24)
-(18,43)-(18,49)
-(18,55)-(18,75)
-(18,58)-(18,59)
-(18,58)-(18,63)
-(18,62)-(18,63)
-(18,69)-(18,75)
+(22,34)-(22,49)
 *)
 
 (* type error slice
-(13,3)-(13,22)
-(13,11)-(13,20)
-(18,55)-(18,75)
-(18,55)-(18,75)
-(18,55)-(18,75)
-(18,69)-(18,75)
+(22,20)-(22,56)
+(22,34)-(22,35)
+(22,34)-(22,49)
+(22,34)-(22,49)
+(22,37)-(22,49)
 *)

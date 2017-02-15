@@ -8,20 +8,22 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> 1.0 *. x
-  | VarY  -> 1.0 *. y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) + ")")))))));;
 
 
 (* fix
@@ -35,33 +37,41 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> 1.0 *. x
-  | VarY  -> 1.0 *. y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin(pi*" ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos(pi*" ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(19,23)-(19,67)
-(19,66)-(19,67)
+(26,48)-(26,73)
+(26,49)-(26,66)
 *)
 
 (* type error slice
-(14,2)-(24,25)
-(14,2)-(24,25)
-(15,13)-(15,21)
-(19,23)-(19,63)
-(19,23)-(19,67)
-(19,23)-(19,67)
+(15,27)-(15,52)
+(15,28)-(15,45)
+(15,29)-(15,41)
+(15,46)-(15,47)
+(26,41)-(26,74)
+(26,46)-(26,47)
+(26,48)-(26,73)
+(26,48)-(26,73)
+(26,48)-(26,73)
+(26,49)-(26,66)
+(26,50)-(26,62)
+(26,69)-(26,72)
 *)

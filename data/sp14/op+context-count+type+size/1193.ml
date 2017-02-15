@@ -1,33 +1,25 @@
 
-let rec digitsOfInt n =
-  let ns = [] in
-  match n with | 0 -> 0 :: ns | n -> (digitsOfInt (n / 10)) :: (n mod 10);;
+let rec wwhile (f,b) =
+  let func = f b in let (value,boo) = func in if boo then wwhile f else value;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let ns = [] in
-  match n with | 0 -> 0 :: ns | n -> (n mod 10) :: (digitsOfInt (n / 10));;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
 
 *)
 
 (* changed spans
-(4,37)-(4,59)
-(4,63)-(4,73)
-(4,64)-(4,65)
-(4,70)-(4,72)
+(3,20)-(3,77)
+(3,65)-(3,66)
 *)
 
 (* type error slice
-(2,3)-(4,75)
-(2,20)-(4,73)
-(3,2)-(4,73)
-(4,2)-(4,73)
-(4,37)-(4,59)
-(4,37)-(4,73)
-(4,37)-(4,73)
-(4,37)-(4,73)
-(4,38)-(4,49)
-(4,63)-(4,73)
+(2,3)-(3,79)
+(2,16)-(3,77)
+(3,58)-(3,64)
+(3,58)-(3,66)
+(3,65)-(3,66)
 *)

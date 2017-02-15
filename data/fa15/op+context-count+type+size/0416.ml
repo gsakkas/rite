@@ -1,41 +1,27 @@
 
-let sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = List.map (sepConcat ";" l);;
+let rec digitsOfInt n =
+  if n > 0 then [digitsOfInt ((n - (n mod 10)) / 10); n mod 10] else [];;
 
 
 (* fix
 
-let sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-(9,23)-(9,49)
-(9,47)-(9,48)
+(3,16)-(3,63)
+(3,17)-(3,52)
+(3,54)-(3,62)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,14)-(7,58)
-(2,18)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,23)-(9,31)
-(9,23)-(9,49)
-(9,32)-(9,49)
-(9,33)-(9,42)
+(2,3)-(3,73)
+(2,20)-(3,71)
+(3,2)-(3,71)
+(3,16)-(3,63)
+(3,16)-(3,63)
+(3,17)-(3,28)
+(3,17)-(3,52)
 *)

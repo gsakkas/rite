@@ -1,44 +1,69 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Neg of expr
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Smallest of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  if n < 10 then 1 else additivePersistence (sumList ((digitsOfInt n) + 1));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Neg e1 -> (eval (e1, x, y)) *. (-1)
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Neg of expr
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Smallest of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  if n < 10 then 1 else (additivePersistence (sumList (digitsOfInt n))) + 1;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Neg e1 -> (eval (e1, x, y)) *. (-1.0)
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(8,24)-(8,75)
-(8,53)-(8,74)
+(19,35)-(19,39)
+(20,15)-(20,44)
 *)
 
 (* type error slice
-(3,25)-(3,47)
-(3,25)-(3,60)
-(3,26)-(3,37)
-(3,48)-(3,49)
-(5,21)-(5,70)
-(5,21)-(5,70)
-(5,59)-(5,70)
-(5,60)-(5,67)
-(5,68)-(5,69)
-(8,44)-(8,75)
-(8,45)-(8,52)
-(8,53)-(8,74)
-(8,53)-(8,74)
-(8,54)-(8,69)
-(8,55)-(8,66)
+(19,14)-(19,39)
+(19,35)-(19,39)
 *)

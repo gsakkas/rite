@@ -1,62 +1,45 @@
 
-let rec digitsOfIntHelper n =
-  if n <= 0 then [] else (n mod 10) :: (digitsOfIntHelper (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverseHelper l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
-
-let rec digitsOfInt n = listReverseHelper (digitsOfIntHelper n);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
-
-let rec additivePersistence n =
-  let rec count acc n =
-    if (sumList (digits n)) mod (10 not 0) then acc else acc + 1 in
-  count 1 n;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1 x y);;
 
 
 (* fix
 
-let rec digitsOfIntHelper n =
-  if n <= 0 then [] else (n mod 10) :: (digitsOfIntHelper (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverseHelper l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
-
-let rec digitsOfInt n = listReverseHelper (digitsOfIntHelper n);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
-
-let rec additivePersistence n =
-  let rec count acc n =
-    if ((sumList (digits n)) mod 10) <> 0 then acc else acc + 1 in
-  count 1 n;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin x;;
 
 *)
 
 (* changed spans
-(21,7)-(21,42)
-(21,32)-(21,42)
-(21,36)-(21,39)
+(12,58)-(12,71)
+(12,59)-(12,63)
+(12,64)-(12,66)
+(12,69)-(12,70)
 *)
 
 (* type error slice
-(21,4)-(21,64)
-(21,7)-(21,42)
-(21,32)-(21,42)
-(21,33)-(21,35)
+(11,3)-(12,73)
+(11,14)-(12,71)
+(12,2)-(12,71)
+(12,58)-(12,71)
+(12,59)-(12,63)
+(12,64)-(12,66)
 *)

@@ -1,40 +1,56 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = ((sepConcat "; "), (List.map (f, l)));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr1,expr2) ->
+      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2
+  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l =
-  let newList = List.map f l in "[" ^ ((sepConcat "; " newList) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr1,expr2) ->
+      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
+  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y));;
 
 *)
 
 (* changed spans
-(9,23)-(9,60)
-(9,24)-(9,40)
-(9,25)-(9,34)
-(9,35)-(9,39)
-(9,42)-(9,59)
-(9,43)-(9,51)
-(9,52)-(9,58)
+(20,56)-(20,57)
 *)
 
 (* type error slice
-(9,42)-(9,59)
-(9,43)-(9,51)
-(9,52)-(9,58)
+(20,6)-(20,57)
+(20,56)-(20,57)
 *)

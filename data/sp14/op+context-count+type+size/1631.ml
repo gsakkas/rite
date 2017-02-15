@@ -1,83 +1,41 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff >= 0
-  then (l1, ((clone 0 diff) @ l2))
-  else (((clone 0 (abs diff)) @ l1), l2);;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (arg1,arg2) = x in
-      match a with
-      | [] ->
-          if (arg1 + arg2) > 9
-          then [1] @ ([(arg1 + arg2) mod 10] @ a)
-          else (arg1 + arg2) :: a
-      | h::t ->
-          if ((arg1 + arg2) + h) > 9
-          then [1] @ ([((arg1 + arg2) + h) mod 10] @ a)
-          else ((arg1 + arg2) + h) :: a in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> 0
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t))
+      else prod :: t;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff >= 0
-  then (l1, ((clone 0 diff) @ l2))
-  else (((clone 0 (abs diff)) @ l1), l2);;
-
-let rec removeZero l =
-  match l with
+let rec mulByDigit i l =
+  match List.rev l with
   | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (arg1,arg2) = x in
-      match a with
-      | [] ->
-          if (arg1 + arg2) > 9
-          then [1] @ ([(arg1 + arg2) mod 10] @ a)
-          else (arg1 + arg2) :: a
-      | h::t ->
-          if ((arg1 + arg2) + h) > 9
-          then [1] @ ([((arg1 + arg2) + h) mod 10] @ a)
-          else ((arg1 + arg2) + h) :: a in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let res = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: (prod / 10) :: (mulByDigit i t)
+      else (prod mod 10) :: t;;
 
 *)
 
 (* changed spans
-(30,4)-(30,51)
+(4,10)-(4,11)
+(8,28)-(8,60)
+(9,11)-(9,15)
+(9,19)-(9,20)
 *)
 
 (* type error slice
-(17,4)-(30,51)
-(17,10)-(27,39)
-(22,21)-(22,49)
-(22,45)-(22,46)
-(22,47)-(22,48)
-(30,4)-(30,51)
-(30,18)-(30,32)
-(30,18)-(30,44)
-(30,33)-(30,34)
+(3,2)-(9,20)
+(3,2)-(9,20)
+(4,10)-(4,11)
+(6,6)-(9,20)
+(7,6)-(9,20)
+(8,11)-(8,60)
+(8,11)-(8,60)
+(8,28)-(8,60)
 *)

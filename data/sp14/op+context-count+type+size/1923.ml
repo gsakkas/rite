@@ -1,30 +1,82 @@
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with | false  -> n :: (digitsOfInt (n / 10)) | true  -> 1);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Squa expr ->
+      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
+  | Nom (expr,expr1,expr2) ->
+      let (r1,r2,r3) =
+        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
+      ((r1 +. r2) +. r3) /.
+        ((((abs_float r1) +. (abs_float r2)) +. (abs_float r3)) +. 1)
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> [1]);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Squa expr ->
+      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
+  | Nom (expr,expr1,expr2) ->
+      let (r1,r2,r3) =
+        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
+      ((r1 +. r2) +. r3) /.
+        ((((abs_float r1) +. (abs_float r2)) +. (abs_float r3)) +. 1.)
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(6,75)-(6,76)
+(30,67)-(30,68)
 *)
 
 (* type error slice
-(6,6)-(6,77)
-(6,6)-(6,77)
-(6,36)-(6,63)
-(6,75)-(6,76)
+(30,8)-(30,69)
+(30,67)-(30,68)
 *)

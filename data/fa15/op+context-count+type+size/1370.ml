@@ -1,104 +1,49 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (o,l) ->
-        let prod = o * x in ((10 * o), (bigAdd ((mulByDigit prod), (l1 l)))) in
-  let base = (1, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = List.mem h seen in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (o,l) ->
-        let prod = o * x in ((10 * o), (bigAdd (mulByDigit prod l1) l)) in
-  let base = (1, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(37,39)-(37,75)
-(37,47)-(37,74)
-(37,48)-(37,65)
-(37,67)-(37,73)
+(7,20)-(7,35)
+(7,39)-(7,77)
+(7,51)-(7,52)
+(8,12)-(8,18)
+(8,19)-(8,26)
+(8,20)-(8,22)
+(8,24)-(8,25)
 *)
 
 (* type error slice
-(31,46)-(31,52)
-(31,46)-(31,77)
-(31,53)-(31,54)
-(31,55)-(31,77)
-(31,56)-(31,66)
-(31,75)-(31,76)
-(37,39)-(37,75)
-(37,40)-(37,46)
-(37,47)-(37,74)
-(37,48)-(37,65)
-(37,49)-(37,59)
+(3,2)-(8,27)
+(3,18)-(7,77)
+(7,8)-(7,77)
+(7,20)-(7,28)
+(7,20)-(7,35)
+(7,31)-(7,35)
+(7,56)-(7,62)
+(7,56)-(7,77)
+(7,63)-(7,77)
+(7,64)-(7,69)
+(8,11)-(8,27)
+(8,12)-(8,18)
+(8,19)-(8,26)
+(8,20)-(8,22)
 *)

@@ -1,48 +1,35 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let lenl1 = List.length l1 in
-  let lenl2 = List.length l2 in
-  if lenl1 > lenl2
-  then (l1, (((clone 0 lenl1) - lenl2) @ l2))
-  else ((((clone 0 lenl2) - lenl1) @ l1), l2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if a = "a" then a ^ (x ^ sep) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let lenl1 = List.length l1 in
-  let lenl2 = List.length l2 in
-  if lenl1 > lenl2
-  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
-  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (x ^ sep) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(8,13)-(8,38)
-(8,23)-(8,28)
-(9,9)-(9,34)
-(9,19)-(9,24)
+(6,18)-(6,47)
+(6,21)-(6,22)
+(6,21)-(6,28)
+(6,25)-(6,28)
+(7,37)-(7,51)
 *)
 
 (* type error slice
-(2,43)-(2,65)
-(2,48)-(2,65)
-(2,49)-(2,54)
-(8,12)-(8,44)
-(8,13)-(8,38)
-(8,13)-(8,38)
-(8,14)-(8,29)
-(8,15)-(8,20)
-(8,39)-(8,40)
-(9,8)-(9,40)
-(9,9)-(9,34)
-(9,9)-(9,34)
-(9,10)-(9,25)
-(9,11)-(9,16)
-(9,35)-(9,36)
+(6,18)-(6,47)
+(6,18)-(6,47)
+(6,18)-(6,47)
+(6,34)-(6,47)
+(6,36)-(6,37)
 *)

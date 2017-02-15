@@ -1,26 +1,35 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((fun x  -> ((f x), ((not f b) = b))), b);;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> ((digitsOfInt n) / 10) :: (n mod 10);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((fun x  -> ((f x), (not ((f b) = b)))), b);;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(5,48)-(5,63)
-(5,49)-(5,58)
-(5,54)-(5,55)
+(5,14)-(5,36)
+(5,15)-(5,30)
+(5,16)-(5,27)
+(5,40)-(5,50)
+(5,41)-(5,42)
 *)
 
 (* type error slice
-(5,49)-(5,58)
-(5,50)-(5,53)
+(2,3)-(5,52)
+(2,20)-(5,50)
+(3,2)-(5,50)
+(5,14)-(5,36)
+(5,14)-(5,50)
+(5,14)-(5,50)
+(5,15)-(5,30)
+(5,16)-(5,27)
+(5,40)-(5,50)
 *)

@@ -1,30 +1,34 @@
 
-let pipe fs = let f a x = a x in let base g p = p in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  if i <= 0
+  then []
+  else (match l with | [] -> [] | h::t -> [h * i] @ (mulByDigit t));;
 
 
 (* fix
 
-let pipe fs = let f a x q = x q in let base z = z in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  if i <= 0
+  then []
+  else (match l with | [] -> [] | h::t -> [h * i] @ (mulByDigit i t));;
 
 *)
 
 (* changed spans
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,33)-(2,77)
-(2,42)-(2,49)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,77)
+(5,52)-(5,66)
+(5,64)-(5,65)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,29)
-(2,22)-(2,29)
-(2,26)-(2,27)
-(2,26)-(2,29)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(2,3)-(5,69)
+(2,19)-(5,67)
+(3,5)-(3,6)
+(3,5)-(3,11)
+(3,5)-(3,11)
+(3,10)-(3,11)
+(5,7)-(5,67)
+(5,7)-(5,67)
+(5,52)-(5,66)
+(5,53)-(5,63)
+(5,64)-(5,65)
 *)

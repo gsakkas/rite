@@ -1,45 +1,40 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
-
-let rec additivePersistence n =
-  let x = digitsOfInt n in
-  match x with
-  | head -> 0
-  | head::tail -> 1 + (additivePersistence sumList n);;
+let stringOfList f l = sepConcat (List.map f l);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
-
-let rec additivePersistence n =
-  let x = digitsOfInt n in
-  match x with
-  | head -> 0
-  | head::tail -> 1 + (additivePersistence (sumList x));;
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(12,22)-(12,53)
-(12,43)-(12,50)
-(12,51)-(12,52)
+(9,23)-(9,47)
+(9,33)-(9,47)
 *)
 
 (* type error slice
-(8,3)-(12,55)
-(8,28)-(12,53)
-(9,2)-(12,53)
-(10,2)-(12,53)
-(11,12)-(11,13)
-(12,22)-(12,53)
-(12,23)-(12,42)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(6,22)-(6,31)
+(6,23)-(6,26)
+(6,27)-(6,28)
+(9,23)-(9,32)
+(9,23)-(9,47)
+(9,33)-(9,47)
+(9,34)-(9,42)
 *)

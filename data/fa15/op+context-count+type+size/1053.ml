@@ -1,38 +1,57 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let f a x = (string_of_int a) ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then cloneHelper 0 (((-1) * diff) - 1) l1
+  else if diff > 0 then (cloneHelper 0 diff) @ l2;;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+
+let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((l1 @ (clone 0 diff)), l2)
+  else if diff > 0 then (l1, (l2 @ (clone 0 diff))) else (l1, l2);;
 
 *)
 
 (* changed spans
-(6,18)-(6,35)
-(6,19)-(6,32)
+(5,12)-(9,49)
+(6,2)-(9,49)
+(8,7)-(8,18)
+(8,7)-(8,43)
+(8,19)-(8,20)
+(8,21)-(8,40)
+(8,22)-(8,35)
+(8,23)-(8,27)
+(8,30)-(8,34)
+(8,38)-(8,39)
+(8,41)-(8,43)
+(9,7)-(9,49)
+(9,10)-(9,14)
+(9,10)-(9,18)
+(9,17)-(9,18)
+(9,24)-(9,44)
+(9,25)-(9,36)
 *)
 
 (* type error slice
-(6,6)-(7,58)
-(6,12)-(6,39)
-(6,14)-(6,39)
-(6,18)-(6,35)
-(6,18)-(6,39)
-(6,19)-(6,32)
-(6,33)-(6,34)
-(6,36)-(6,37)
-(7,35)-(7,49)
-(7,35)-(7,58)
-(7,50)-(7,51)
+(8,7)-(8,18)
+(8,7)-(8,43)
+(9,7)-(9,49)
+(9,7)-(9,49)
+(9,7)-(9,49)
+(9,24)-(9,44)
+(9,24)-(9,49)
+(9,25)-(9,36)
+(9,45)-(9,46)
 *)

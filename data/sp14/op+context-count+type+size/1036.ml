@@ -1,26 +1,87 @@
 
-let rec digitsOfInt n = if n < 0 then [] else (digitsOfInt n) mod 10;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let e = build (rand, (depth - 1)) in
+  if depth > 1
+  then
+    match rand (0 4) with
+    | 0 -> buildSine e
+    | 1 -> buildCosine e
+    | 2 -> buildAverage (e, e)
+    | 3 -> buildTimes (e, e)
+    | 4 -> buildThresh (e, e, e, e)
+  else (match rand (0 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let e = build (rand, (depth - 1)) in
+  if depth > 1
+  then
+    match rand (0, 4) with
+    | 0 -> buildSine e
+    | 1 -> buildCosine e
+    | 2 -> buildAverage (e, e)
+    | 3 -> buildTimes (e, e)
+    | 4 -> buildThresh (e, e, e, e)
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 *)
 
 (* changed spans
-(2,46)-(2,68)
-(2,59)-(2,60)
+(29,15)-(29,20)
+(35,19)-(35,24)
 *)
 
 (* type error slice
-(2,3)-(2,70)
-(2,20)-(2,68)
-(2,24)-(2,68)
-(2,24)-(2,68)
-(2,38)-(2,40)
-(2,46)-(2,61)
-(2,46)-(2,68)
-(2,46)-(2,68)
-(2,47)-(2,58)
+(29,15)-(29,20)
+(29,16)-(29,17)
+(35,19)-(35,24)
+(35,20)-(35,21)
 *)

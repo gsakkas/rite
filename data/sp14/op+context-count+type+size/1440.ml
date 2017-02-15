@@ -1,55 +1,82 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. a)
-  | Cosine a -> cos (pi *. a);;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (0, (a + x)) in
+    let base = (0, 0) in
+    let args = [l1; l2] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. x)
-  | Cosine a -> cos (pi *. y);;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,25)-(17,26)
-(18,27)-(18,28)
+(23,4)-(25,74)
+(23,10)-(23,28)
+(23,12)-(23,28)
+(23,16)-(23,28)
+(23,20)-(23,27)
+(23,21)-(23,22)
+(23,25)-(23,26)
+(24,4)-(25,74)
+(24,15)-(24,21)
+(25,4)-(25,74)
+(25,15)-(25,23)
+(25,16)-(25,18)
+(25,27)-(25,74)
+(26,2)-(26,34)
 *)
 
 (* type error slice
-(14,2)-(18,29)
-(14,2)-(18,29)
-(17,18)-(17,27)
-(17,25)-(17,26)
-(18,20)-(18,29)
-(18,27)-(18,28)
+(23,4)-(25,74)
+(23,10)-(23,28)
+(23,12)-(23,28)
+(23,16)-(23,28)
+(23,20)-(23,27)
+(23,21)-(23,22)
+(25,41)-(25,55)
+(25,41)-(25,67)
+(25,56)-(25,57)
 *)

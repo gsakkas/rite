@@ -1,29 +1,78 @@
 
-let pipe fs = let f a x x x = a in let base f = f in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let numZeros = (List.length l1) - (List.length l2) in
+  let absNumZeros = abs numZeros in
+  if numZeros = 0
+  then (l1, l2)
+  else
+    (let listZeros = clone 0 absNumZeros in
+     if numZeros > 0 then (l1, (listZeros @ l2)) else ((listZeros @ l1), l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | h::t -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,currentSum) = a in
+      let (toSum1,toSum2) = x in
+      let intermediateValue = (toSum1 + toSum2) + carry in
+      let valueToAddToArray = intermediateValue mod 10 in
+      let carry = intermediateValue / 10 in
+      (carry, (valueToAddToArray @ currentSum)) in
+    let base = (0, []) in
+    let args = List.rev List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base f = f in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let numZeros = (List.length l1) - (List.length l2) in
+  let absNumZeros = abs numZeros in
+  if numZeros = 0
+  then (l1, l2)
+  else
+    (let listZeros = clone 0 absNumZeros in
+     if numZeros > 0 then (l1, (listZeros @ l2)) else ((listZeros @ l1), l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | h::t -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,currentSum) = a in
+      let (toSum1,toSum2) = x in
+      let intermediateValue = (toSum1 + toSum2) + carry in
+      let valueToAddToArray = intermediateValue mod 10 in
+      let carry = intermediateValue / 10 in
+      (carry, (valueToAddToArray :: currentSum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
+(24,14)-(24,46)
+(24,33)-(24,34)
+(26,15)-(26,42)
+(26,24)-(26,36)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(22,6)-(24,47)
+(22,30)-(22,54)
+(24,14)-(24,46)
+(24,15)-(24,32)
+(24,33)-(24,34)
+(26,15)-(26,23)
+(26,15)-(26,42)
 *)

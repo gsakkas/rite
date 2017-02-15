@@ -1,31 +1,83 @@
 
-let pipe fs = let f a x _ = x a in let base = [] in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) * (eval (a, x, y))) +
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 
 (* fix
 
-let pipe fs = let f a x x = x in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (a, x, y))) +.
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,76)
-(2,46)-(2,48)
-(2,52)-(2,76)
+(28,6)-(28,43)
+(28,6)-(29,46)
+(28,7)-(28,23)
 *)
 
 (* type error slice
-(2,14)-(2,76)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,35)-(2,76)
-(2,46)-(2,48)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,67)-(2,68)
-(2,69)-(2,73)
+(19,18)-(19,42)
+(19,25)-(19,41)
+(19,26)-(19,30)
+(28,6)-(28,43)
+(28,6)-(28,43)
+(28,6)-(29,46)
+(28,7)-(28,23)
+(28,8)-(28,12)
+(28,26)-(28,42)
+(28,27)-(28,31)
+(29,8)-(29,46)
 *)

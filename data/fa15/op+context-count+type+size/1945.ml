@@ -1,36 +1,29 @@
 
-let rec wwhile (f,b) =
-  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile (let f' b = ((f b), (b = (f b))) in ((f' (f, b)), b));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((let f' b = ((f b), (b = (f b))) in f'), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(6,9)-(6,62)
-(6,17)-(6,41)
-(6,45)-(6,61)
-(6,46)-(6,57)
-(6,50)-(6,56)
+(5,2)-(6,67)
 *)
 
 (* type error slice
-(6,9)-(6,62)
-(6,17)-(6,41)
-(6,34)-(6,39)
-(6,35)-(6,36)
-(6,37)-(6,38)
-(6,46)-(6,57)
-(6,47)-(6,49)
-(6,50)-(6,56)
-(6,51)-(6,52)
+(5,2)-(6,67)
+(5,2)-(6,67)
+(5,2)-(6,67)
+(6,7)-(6,67)
 *)

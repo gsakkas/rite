@@ -1,51 +1,45 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec listReverse l = List.rev l;;
-
-let palindrome w = if (explode w) = (listReverse w) then true else false;;
+let stringOfList f l = sepConcat (List.map (f l)) l;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec listReverse l = List.rev l;;
-
-let palindrome w =
-  let explosion = explode w in
-  if explosion = (listReverse explosion) then true else false;;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(9,19)-(9,72)
-(9,22)-(9,51)
-(9,36)-(9,51)
-(9,49)-(9,50)
+(9,23)-(9,32)
+(9,33)-(9,49)
+(9,34)-(9,42)
+(9,43)-(9,48)
+(9,44)-(9,45)
+(9,46)-(9,47)
+(9,50)-(9,51)
 *)
 
 (* type error slice
-(2,3)-(5,8)
-(2,12)-(5,6)
-(4,12)-(4,29)
-(4,13)-(4,26)
-(4,27)-(4,28)
-(7,3)-(7,36)
-(7,20)-(7,34)
-(7,24)-(7,32)
-(7,24)-(7,34)
-(7,33)-(7,34)
-(9,22)-(9,33)
-(9,23)-(9,30)
-(9,31)-(9,32)
-(9,36)-(9,51)
-(9,37)-(9,48)
-(9,49)-(9,50)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(6,22)-(6,31)
+(6,23)-(6,26)
+(6,27)-(6,28)
+(9,23)-(9,32)
+(9,23)-(9,51)
+(9,33)-(9,49)
+(9,34)-(9,42)
 *)

@@ -1,30 +1,26 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h1::[] -> [h1] | h::t -> t :: (listReverse t);;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else if (List.length l1) < (List.length l2) then (l1, l2);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h1::[] -> [h1] | h::t -> h :: (listReverse t);;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else if (List.length l1) < (List.length l2) then (l1, l2) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,53)-(3,54)
+(5,7)-(5,59)
 *)
 
 (* type error slice
-(3,2)-(3,73)
-(3,2)-(3,73)
-(3,2)-(3,73)
-(3,2)-(3,73)
-(3,2)-(3,73)
-(3,2)-(3,73)
-(3,38)-(3,42)
-(3,38)-(3,42)
-(3,39)-(3,41)
-(3,53)-(3,54)
-(3,53)-(3,73)
-(3,53)-(3,73)
+(5,7)-(5,59)
+(5,7)-(5,59)
+(5,7)-(5,59)
+(5,51)-(5,59)
 *)

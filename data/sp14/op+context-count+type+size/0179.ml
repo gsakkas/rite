@@ -1,45 +1,77 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h "to be implemented" in
-      let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | NewA (a,b) ->
+      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
+  | NewB (a,b,c) ->
+      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) exp 0;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | NewA of expr* expr
+  | NewB of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | NewA (a,b) ->
+      (sin (pi *. (eval (a, x, y)))) *. (cos (pi *. (eval (b, x, y))))
+  | NewB (a,b,c) ->
+      (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y))) -.
+        (((eval (a, x, y)) +. (eval (b, x, y))) +. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(7,17)-(7,38)
-(7,19)-(7,38)
-(8,6)-(8,42)
+(30,6)-(30,72)
+(30,67)-(30,70)
+(30,71)-(30,72)
 *)
 
 (* type error slice
-(3,2)-(8,42)
-(3,2)-(8,42)
-(6,6)-(8,42)
-(6,12)-(6,31)
-(6,14)-(6,31)
-(6,22)-(6,31)
-(6,27)-(6,28)
-(6,29)-(6,30)
-(7,17)-(7,18)
-(7,17)-(7,38)
-(8,6)-(8,42)
-(8,14)-(8,15)
-(8,19)-(8,33)
-(8,19)-(8,42)
-(8,34)-(8,35)
-(8,41)-(8,42)
+(30,6)-(30,66)
+(30,6)-(30,72)
 *)

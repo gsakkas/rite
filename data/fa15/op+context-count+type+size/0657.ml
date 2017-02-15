@@ -1,90 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewOp1 of expr* expr* expr
-  | NewOp2 of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^
-        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ (")" ^ "/2)"))))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | NewOp1 (e1,e2,e3) ->
-      ("(" "1/sin(pi*") ^
-        ((exprToString e1) ^
-           (")" ^
-              ("cos(pi*" ^
-                 ((exprToString e1) ^
-                    (")" ^ ("sin(pi*" ^ ((exprToString e1) ^ (")" ^ ")"))))))))
-  | NewOp2 e1 -> "1/sin(pi*" ^ ((exprToString e1) ^ ")");;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ t) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewOp1 of expr* expr* expr
-  | NewOp2 of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^
-        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ (")" ^ "/2)"))))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | NewOp1 (e1,e2,e3) ->
-      "(" ^
-        ("1/sin(pi*" ^
-           ((exprToString e1) ^
-              (")" ^
-                 ("cos(pi*" ^
-                    ((exprToString e1) ^
-                       (")" ^ ("sin(pi*" ^ ((exprToString e1) ^ (")" ^ ")")))))))))
-  | NewOp2 e1 -> "1/sin(pi*" ^ ((exprToString e1) ^ ")");;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(31,6)-(31,23)
-(31,11)-(31,22)
+(6,29)-(6,30)
+(7,17)-(7,18)
+(7,22)-(7,59)
+(7,30)-(7,32)
 *)
 
 (* type error slice
-(31,6)-(31,23)
-(31,7)-(31,10)
+(3,2)-(7,59)
+(3,2)-(7,59)
+(6,22)-(6,31)
+(6,27)-(6,28)
+(6,29)-(6,30)
 *)

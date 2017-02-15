@@ -1,11 +1,12 @@
 
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
 let rec removeZero l =
   match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
@@ -13,36 +14,33 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (_,h2::t2) ->
-               let sum = (x1 + x2) + h2 in
-               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
-           | (_,_) -> (0, [0])) in
-    let base = (0, [0]) in
+      let (rem,acc) = a in
+      if
+        (List.length acc) =
+          ((List.length (List.combine (padZero l1 l2))) - 1)
+      then (if rem = 1 then (0, ([1; 0] @ acc)) else (0, acc))
+      else
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
+    let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x = let (pos,total) = a in ((pos + 1), (mulByDigit (10 ** pos) l2)) in
-  let base = (0, [0]) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec padZero l1 l2 =
-  let diffsize = (List.length l1) - (List.length l2) in
-  if diffsize > 0
-  then (l1, (List.append (clone 0 diffsize) l2))
-  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
 let rec removeZero l =
   match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
@@ -50,42 +48,56 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (_,h2::t2) ->
-               let sum = (x1 + x2) + h2 in
-               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
-           | (_,_) -> (0, [0])) in
-    let base = (0, [0]) in
+      let (rem,acc) = a in
+      let larger = if (List.length l1) > (List.length l2) then l1 else l2 in
+      if (List.length acc) = (List.length larger)
+      then (if rem = 1 then (0, ([1; 0] @ acc)) else (0, acc))
+      else
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
+    let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (pos,total) = a in
-    ((pos + 1), (mulByDigit (int_of_float (10.0 ** (float_of_int pos))) l2)) in
-  let base = (0, [0]) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
-
 *)
 
 (* changed spans
-(32,14)-(32,77)
-(32,61)-(32,72)
-(32,62)-(32,64)
-(32,68)-(32,71)
-(33,2)-(34,75)
-(34,2)-(34,75)
-(34,28)-(34,75)
+(18,6)-(27,38)
+(19,8)-(20,60)
+(19,21)-(19,24)
+(20,10)-(20,60)
+(20,24)-(20,54)
+(20,25)-(20,37)
+(20,38)-(20,53)
+(20,39)-(20,46)
+(20,58)-(20,59)
+(21,15)-(21,18)
+(23,8)-(27,38)
+(24,9)-(27,37)
+(25,9)-(27,37)
+(26,9)-(27,37)
+(28,4)-(30,51)
+(29,4)-(30,51)
+(30,4)-(30,51)
+(31,19)-(31,26)
+(31,27)-(31,29)
+(31,30)-(31,32)
 *)
 
 (* type error slice
-(32,61)-(32,72)
-(32,62)-(32,64)
-(32,65)-(32,67)
+(4,3)-(9,47)
+(4,12)-(9,45)
+(4,15)-(9,45)
+(5,2)-(9,45)
+(6,2)-(9,45)
+(7,2)-(9,45)
+(8,7)-(8,45)
+(20,24)-(20,54)
+(20,25)-(20,37)
+(20,38)-(20,53)
+(20,39)-(20,46)
 *)

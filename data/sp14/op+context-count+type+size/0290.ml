@@ -1,54 +1,80 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then []
-  else
-    (let myList = digits n in
-     let num = sumList myList in num + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) + (eval (ex2, x, y))) / 2
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let sum = num + (additivePersistence num) in
-     1 + (additivePersistence num));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;
 
 *)
 
 (* changed spans
-(11,7)-(11,9)
-(14,33)-(14,64)
+(19,25)-(19,66)
+(19,25)-(19,70)
+(19,26)-(19,44)
+(19,69)-(19,70)
+(20,23)-(20,41)
+(20,23)-(20,62)
 *)
 
 (* type error slice
-(9,3)-(14,67)
-(9,28)-(14,65)
-(10,2)-(14,65)
-(10,2)-(14,65)
-(11,7)-(11,9)
-(13,4)-(14,65)
-(14,5)-(14,64)
-(14,33)-(14,64)
-(14,33)-(14,64)
-(14,39)-(14,64)
-(14,40)-(14,59)
+(17,19)-(17,44)
+(17,26)-(17,43)
+(17,27)-(17,31)
+(19,25)-(19,66)
+(19,25)-(19,66)
+(19,26)-(19,44)
+(19,27)-(19,31)
+(19,47)-(19,65)
+(19,48)-(19,52)
+(20,23)-(20,41)
+(20,23)-(20,62)
+(20,23)-(20,62)
+(20,24)-(20,28)
+(20,44)-(20,62)
+(20,45)-(20,49)
 *)

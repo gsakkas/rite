@@ -1,31 +1,19 @@
 
-let rec listReverse l =
-  match l with | h::[] -> h | h::t -> [listReverse t; h];;
+let rec digitsOfInt n = if n <= 0 then [] else [n mod (10 n)];;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> h :: (listReverse t);;
+let rec digitsOfInt n = if n <= 0 then [] else [n];;
 
 *)
 
 (* changed spans
-(3,2)-(3,56)
-(3,26)-(3,27)
-(3,38)-(3,56)
-(3,54)-(3,55)
+(2,48)-(2,60)
+(2,54)-(2,60)
 *)
 
 (* type error slice
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,2)-(3,56)
-(3,26)-(3,27)
-(3,38)-(3,56)
-(3,38)-(3,56)
-(3,54)-(3,55)
+(2,54)-(2,60)
+(2,55)-(2,57)
 *)

@@ -1,55 +1,58 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let buildX () = VarX;;
+let listReverse l =
+  let rec reverseHelper acc =
+    function | [] -> acc | h::t -> reverseHelper (h :: acc) t in
+  reverseHelper [] l;;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
+let palindrome w = if (explode w) = (listReverse w) then true else false;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let buildX () = VarX;;
+let listReverse l =
+  let rec reverseHelper acc =
+    function | [] -> acc | h::t -> reverseHelper (h :: acc) t in
+  reverseHelper [] l;;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let palindrome w =
+  if (explode w) = (listReverse (explode w)) then true else false;;
 
 *)
 
 (* changed spans
-(16,2)-(16,72)
+(12,49)-(12,50)
 *)
 
 (* type error slice
-(11,3)-(11,22)
-(11,11)-(11,20)
-(11,16)-(11,20)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,20)-(16,72)
-(16,47)-(16,53)
-(16,47)-(16,56)
+(2,3)-(5,8)
+(2,12)-(5,6)
+(4,12)-(4,29)
+(4,13)-(4,26)
+(4,27)-(4,28)
+(7,3)-(10,22)
+(7,16)-(10,20)
+(9,4)-(9,61)
+(9,4)-(9,61)
+(9,35)-(9,48)
+(9,35)-(9,61)
+(9,60)-(9,61)
+(10,2)-(10,15)
+(10,2)-(10,20)
+(10,19)-(10,20)
+(12,22)-(12,33)
+(12,23)-(12,30)
+(12,31)-(12,32)
+(12,36)-(12,51)
+(12,37)-(12,48)
+(12,49)-(12,50)
 *)

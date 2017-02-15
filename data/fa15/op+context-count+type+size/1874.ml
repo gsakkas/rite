@@ -1,40 +1,91 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let rec clone x n =
+  if n < 1 then [] else (match n with | _ -> x :: (clone x (n - 1)));;
 
-let fixpoint (f,b) = wwhile (((wwhile (f, b)), b), b);;
+let c y = y;;
+
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 = s2
+  then (l1, l2)
+  else
+    if s1 > s2
+    then (l1, ((clone 0 (s1 - s2)) @ l2))
+    else (((clone 0 (s2 - s1)) @ l1), l2);;
+
+let rec removeZero l =
+  if l = []
+  then []
+  else (let h::t = l in match h with | 0 -> removeZero t | _ -> l);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let c::c' = a2 in
+      ([((x1 + x2) + c) / 10], (a2 @ [((x1 + x2) + c) mod 10])) in
+    let base = (0, [0]) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let rec clone x n =
+  if n < 1 then [] else (match n with | _ -> x :: (clone x (n - 1)));;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let g b = let t = f b in if b = t then (b, false) else (t, true) in g),
-      b);;
+let c y = y;;
+
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 = s2
+  then (l1, l2)
+  else
+    if s1 > s2
+    then (l1, ((clone 0 (s1 - s2)) @ l2))
+    else (((clone 0 (s2 - s1)) @ l1), l2);;
+
+let rec removeZero l =
+  if l = []
+  then []
+  else (let h::t = l in match h with | 0 -> removeZero t | _ -> l);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let c::c' = a2 in
+      ((((x1 + x2) + c) / 10), (a2 @ [((x1 + x2) + c) mod 10])) in
+    let base = (0, [0]) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(5,29)-(5,49)
-(5,30)-(5,45)
-(5,31)-(5,37)
-(5,38)-(5,44)
-(5,47)-(5,48)
-(5,51)-(5,52)
+(28,7)-(28,29)
 *)
 
 (* type error slice
-(3,8)-(3,9)
-(3,8)-(3,11)
-(3,45)-(3,51)
-(3,45)-(3,58)
-(3,52)-(3,58)
-(3,53)-(3,54)
-(5,21)-(5,27)
-(5,21)-(5,53)
-(5,28)-(5,53)
-(5,29)-(5,49)
+(24,4)-(31,51)
+(24,10)-(28,63)
+(24,12)-(28,63)
+(25,6)-(28,63)
+(26,6)-(28,63)
+(27,6)-(28,63)
+(28,6)-(28,63)
+(28,7)-(28,29)
+(29,4)-(31,51)
+(29,15)-(29,23)
+(29,16)-(29,17)
+(31,18)-(31,32)
+(31,18)-(31,44)
+(31,33)-(31,34)
+(31,35)-(31,39)
 *)

@@ -1,55 +1,31 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
-
-let fixpoint (f,b) =
-  wwhile
-    (let f x = let xx = (x * x) * x in (xx, (xx < 100)) in
-     ((wwhile (f, 2)), b));;
+let sqsum xs =
+  let f a x sum x = sum + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
-
-let fixpoint (f,b) =
-  wwhile (let y x = let xx = f x in (xx, (xx != x)) in (y, b));;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(8,4)-(9,26)
-(8,15)-(8,55)
-(8,24)-(8,31)
-(8,24)-(8,35)
-(8,25)-(8,26)
-(8,29)-(8,30)
-(8,34)-(8,35)
-(8,44)-(8,54)
-(8,50)-(8,53)
-(9,6)-(9,21)
+(3,12)-(3,33)
+(3,16)-(3,33)
+(3,20)-(3,23)
+(3,37)-(3,77)
 *)
 
 (* type error slice
-(4,2)-(4,48)
-(4,2)-(4,48)
-(4,18)-(4,24)
-(4,18)-(4,36)
-(4,25)-(4,36)
-(4,29)-(4,35)
-(4,42)-(4,48)
-(7,2)-(7,8)
-(7,2)-(9,26)
-(8,4)-(9,26)
-(8,4)-(9,26)
-(8,11)-(8,55)
-(9,5)-(9,25)
-(9,6)-(9,21)
-(9,7)-(9,13)
-(9,14)-(9,20)
-(9,15)-(9,16)
-(9,18)-(9,19)
+(3,2)-(3,77)
+(3,8)-(3,33)
+(3,10)-(3,33)
+(3,12)-(3,33)
+(3,37)-(3,77)
+(3,48)-(3,49)
+(3,53)-(3,67)
+(3,53)-(3,77)
+(3,68)-(3,69)
+(3,70)-(3,74)
 *)

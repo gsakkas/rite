@@ -1,25 +1,52 @@
 
-let pipe fs = let f a x = fs x in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (h,true ) -> wwhile (f, h) | (h,false ) -> h;;
+
+let fixpoint (f,b) =
+  wwhile
+    (let func a = match f b with | b -> (b, false) | x -> (x, true) in
+     ((func f), b));;
 
 
 (* fix
 
-let pipe fs = let f a x = a in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (h,true ) -> wwhile (f, h) | (h,false ) -> h;;
+
+let fixpoint (f,b) =
+  wwhile
+    (let g x = match f x with | x -> (x, false) | y -> (y, true) in (g, b));;
 
 *)
 
 (* changed spans
-(2,26)-(2,28)
-(2,26)-(2,30)
-(2,29)-(2,30)
-(2,34)-(2,76)
-(2,43)-(2,48)
+(7,4)-(8,19)
+(7,14)-(7,67)
+(7,18)-(7,67)
+(7,24)-(7,27)
+(7,26)-(7,27)
+(7,41)-(7,42)
+(7,59)-(7,60)
+(8,6)-(8,14)
+(8,7)-(8,11)
+(8,12)-(8,13)
 *)
 
 (* type error slice
-(2,26)-(2,28)
-(2,26)-(2,30)
-(2,52)-(2,66)
-(2,52)-(2,76)
-(2,74)-(2,76)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,32)-(3,38)
+(3,32)-(3,45)
+(3,39)-(3,45)
+(3,40)-(3,41)
+(6,2)-(6,8)
+(6,2)-(8,19)
+(7,4)-(8,19)
+(7,4)-(8,19)
+(7,14)-(7,67)
+(7,18)-(7,67)
+(7,40)-(7,50)
+(8,5)-(8,18)
+(8,6)-(8,14)
+(8,7)-(8,11)
 *)

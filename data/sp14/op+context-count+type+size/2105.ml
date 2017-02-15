@@ -1,27 +1,66 @@
 
-let rec sumList xs =
-  if (List.length xs) > 0 then (List.hd xs) + (sumList List.tl xs) else 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           (("<" exprToString e2) ^
+              (" ? " ^
+                 ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")"))))));;
 
 
 (* fix
 
-let rec sumList xs =
-  if (List.length xs) > 0 then (List.hd xs) + (sumList (List.tl xs)) else 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 (" ? " ^
+                    ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(3,46)-(3,66)
-(3,55)-(3,62)
+(23,12)-(23,33)
+(23,17)-(23,29)
 *)
 
 (* type error slice
-(2,3)-(3,75)
-(2,16)-(3,73)
-(3,31)-(3,43)
-(3,32)-(3,39)
-(3,40)-(3,42)
-(3,46)-(3,66)
-(3,47)-(3,54)
-(3,55)-(3,62)
+(23,12)-(23,33)
+(23,13)-(23,16)
 *)

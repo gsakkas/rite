@@ -1,28 +1,44 @@
 
-let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+
+let fixpoint (f,b) = wwhile (let xx = (b * b) * b in ((xx, (xx < 100)), b));;
 
 
 (* fix
 
-let pipe fs = let f a x x = a x in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+
+let fixpoint (f,b) =
+  wwhile ((let d x = let xx = f b in (xx, (xx = b)) in d), b);;
 
 *)
 
 (* changed spans
-(2,28)-(2,29)
-(2,30)-(2,31)
-(2,35)-(2,77)
+(6,28)-(6,75)
+(6,38)-(6,45)
+(6,38)-(6,49)
+(6,39)-(6,40)
+(6,43)-(6,44)
+(6,48)-(6,49)
+(6,54)-(6,70)
+(6,59)-(6,69)
+(6,65)-(6,68)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(3,13)-(3,14)
+(3,13)-(3,16)
+(4,40)-(4,46)
+(4,40)-(4,57)
+(4,47)-(4,57)
+(4,48)-(4,49)
+(6,21)-(6,27)
+(6,21)-(6,75)
+(6,28)-(6,75)
+(6,53)-(6,74)
+(6,54)-(6,70)
 *)

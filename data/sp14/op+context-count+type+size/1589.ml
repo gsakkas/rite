@@ -1,122 +1,109 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (carry,h1::t1) ->
-          (match x with
-           | h2::t2 ->
-               ((((h1 + h2) + carry) / 10), (((h1 + h2) mod 10) :: t1))) in
-    let base = (0, []) in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  let rdm = rand in
+  match rdm with
+  | 0 ->
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (rand, (depth - 1)))
+      else Sine (build (rand, (depth - 1)))
+  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 4 ->
+      Thresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) = [0; 0; 0; 0; 0] in removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  let rdm = rand (0, 7) in
+  match rdm with
+  | 0 -> buildY ()
+  | 1 -> buildX ()
+  | 2 -> Cosine (build (rand, (depth - 1)))
+  | 3 -> Sine (build (rand, (depth - 1)))
+  | 4 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 5 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 6 ->
+      Thresh
+        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
 
 *)
 
 (* changed spans
-(23,4)-(30,68)
-(23,10)-(28,72)
-(23,12)-(28,72)
-(24,6)-(28,72)
-(24,12)-(24,13)
-(26,10)-(28,72)
-(26,17)-(26,18)
-(28,15)-(28,71)
-(28,16)-(28,42)
-(28,17)-(28,36)
-(28,18)-(28,27)
-(28,19)-(28,21)
-(28,24)-(28,26)
-(28,30)-(28,35)
-(28,39)-(28,41)
-(28,44)-(28,70)
-(29,4)-(30,68)
-(31,2)-(31,34)
+(18,12)-(18,16)
+(19,2)-(32,67)
+(19,8)-(19,11)
+(21,6)-(21,75)
+(21,27)-(21,28)
+(21,33)-(21,75)
+(21,36)-(21,41)
+(21,36)-(21,45)
+(21,44)-(21,45)
+(21,51)-(21,60)
+(23,6)-(26,43)
+(23,18)-(23,22)
+(23,18)-(23,29)
+(23,23)-(23,29)
+(23,24)-(23,25)
+(23,27)-(23,28)
+(24,6)-(26,43)
+(24,9)-(24,14)
+(24,9)-(24,18)
+(24,17)-(24,18)
+(32,11)-(32,16)
+(32,17)-(32,36)
 *)
 
 (* type error slice
-(3,30)-(3,31)
-(3,30)-(3,52)
-(3,30)-(3,52)
-(3,35)-(3,52)
-(3,36)-(3,41)
-(3,42)-(3,43)
-(5,3)-(14,63)
-(5,12)-(14,61)
-(5,15)-(14,61)
-(6,2)-(14,61)
-(7,2)-(14,61)
-(8,2)-(14,61)
-(10,6)-(11,61)
-(11,6)-(11,61)
-(11,6)-(11,61)
-(11,19)-(11,24)
-(11,19)-(11,28)
-(11,25)-(11,26)
-(11,32)-(11,61)
-(11,37)-(11,60)
-(11,38)-(11,49)
-(11,50)-(11,56)
-(22,2)-(31,34)
-(22,11)-(30,68)
-(23,4)-(30,68)
-(23,10)-(28,72)
-(23,12)-(28,72)
-(26,10)-(28,72)
-(26,10)-(28,72)
-(26,17)-(26,18)
-(30,4)-(30,68)
-(30,15)-(30,17)
-(30,35)-(30,49)
-(30,35)-(30,61)
-(30,50)-(30,51)
-(30,57)-(30,61)
-(31,13)-(31,34)
-(31,14)-(31,17)
-(31,18)-(31,33)
-(31,19)-(31,26)
+(18,2)-(32,67)
+(18,12)-(18,16)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,2)-(32,67)
+(19,8)-(19,11)
+(21,18)-(21,22)
+(21,18)-(21,29)
 *)

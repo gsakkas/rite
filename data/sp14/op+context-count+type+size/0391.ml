@@ -2,25 +2,25 @@
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
+      let z = (fst x) + (snd x) in
       match a with
-      | (carry,rest) ->
-          (match x with
-           | (_,_) -> carry :: rest
-           | (add1,add2) ->
-               ((((add1 + add2) + carry) / 10),
-                 ((((add1 + add2) + carry) mod 10) :: rest))) in
-    let base = (0, []) in
+      | h::t -> ((h + z) / 10) :: ((h + z) mod 10) :: t
+      | _ -> [z / 10; z mod 10] in
+    let base = [] in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -31,23 +31,22 @@ let bigAdd l1 l2 =
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      match a with
-      | (carry,rest) ->
-          (match x with
-           | (add1,add2) ->
-               ((((add1 + add2) + carry) / 10),
-                 ((((add1 + add2) + carry) mod 10) :: rest))) in
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -56,26 +55,32 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,10)-(22,61)
-(19,22)-(19,27)
-(19,22)-(19,35)
-(19,31)-(19,35)
+(20,6)-(22,31)
+(21,16)-(21,55)
+(21,18)-(21,19)
+(21,36)-(21,37)
+(21,40)-(21,41)
+(21,47)-(21,49)
+(21,54)-(21,55)
+(22,13)-(22,31)
+(22,14)-(22,15)
+(22,14)-(22,20)
+(22,18)-(22,20)
+(22,22)-(22,30)
 (23,4)-(25,51)
+(23,15)-(23,17)
 (24,4)-(25,51)
 (25,4)-(25,51)
+(26,19)-(26,26)
 *)
 
 (* type error slice
-(15,4)-(25,51)
-(15,10)-(22,61)
-(15,12)-(22,61)
-(16,6)-(22,61)
-(16,6)-(22,61)
-(16,12)-(16,13)
-(18,10)-(22,61)
-(18,10)-(22,61)
-(19,22)-(19,35)
-(21,15)-(22,60)
+(18,4)-(25,51)
+(18,10)-(22,31)
+(20,6)-(22,31)
+(20,6)-(22,31)
+(20,12)-(20,13)
+(25,4)-(25,51)
 (25,18)-(25,32)
 (25,18)-(25,44)
 (25,33)-(25,34)

@@ -1,82 +1,124 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,y)::t -> ((((w + z) + y) / 10), ((((w + y) + z) mod 10) :: t))
-      | [] -> (0, 0) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 -. 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let max' a b = if a < b then b else a in
+      let b = abs_float (eval (b', x, y)) in
+      let my_log l' = let l = max' 0.1 l' in (log l) / (log 10.0) in
+      if (eval (c, x, y)) < 0.0
+      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
+      else
+        (-1.0) *.
+          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      let max' a b = if a < b then b else a in
+      max' (0.0 -. 1.0)
+        (min 1.0
+           ((2.71 **
+               (((sin (pi *. (eval (a, x, y)))) +.
+                   (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0))
+              -. 1.0))
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let max' a b = if a < b then b else a in
+      let b = abs_float (eval (b', x, y)) in
+      let my_log l' = let l = max' 0.1 l' in (log l) /. (log 10.0) in
+      if (eval (c, x, y)) < 0.0
+      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
+      else
+        (-1.0) *.
+          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;
 
 *)
 
 (* changed spans
-(20,6)-(22,20)
-(21,23)-(21,30)
-(21,33)-(21,34)
-(21,46)-(21,53)
-(21,51)-(21,52)
-(21,70)-(21,71)
-(22,14)-(22,20)
-(22,15)-(22,16)
-(22,18)-(22,19)
-(23,4)-(25,51)
-(23,15)-(23,21)
-(23,19)-(23,20)
-(24,4)-(25,51)
-(24,15)-(24,44)
-(25,4)-(25,51)
+(40,45)-(40,65)
 *)
 
 (* type error slice
-(20,6)-(22,20)
-(20,6)-(22,20)
-(21,43)-(21,72)
-(21,43)-(21,72)
-(21,44)-(21,66)
-(21,70)-(21,71)
+(40,6)-(45,72)
+(40,17)-(40,65)
+(40,22)-(40,65)
+(40,45)-(40,52)
+(40,45)-(40,65)
+(40,45)-(40,65)
+(40,45)-(40,65)
+(40,46)-(40,49)
+(40,55)-(40,65)
+(40,56)-(40,59)
+(42,11)-(42,64)
+(42,12)-(42,33)
+(42,13)-(42,19)
+(42,34)-(42,36)
+(44,8)-(44,14)
+(44,8)-(44,14)
+(44,8)-(45,72)
+(44,10)-(44,13)
+(45,11)-(45,64)
+(45,12)-(45,33)
+(45,13)-(45,19)
+(45,34)-(45,36)
 *)

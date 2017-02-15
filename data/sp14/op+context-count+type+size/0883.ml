@@ -1,33 +1,103 @@
 
-let pipe fs =
-  let f a x = (a x) + x in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      let (el1,el2) = x in
+      let new_sum = (rem + el1) + el2 in
+      let new_rem = if new_sum > 9 then 1 else 0 in
+      let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+      let larger = if (List.length l1) > (List.length l2) then l1 else l2 in
+      if (List.length acc) = ((List.length larger) - 1)
+      then
+        (if rem = 1
+         then (0, ([1; norm_sum] @ acc))
+         else (0, (norm_sum :: acc)))
+      else (new_rem, (norm_sum :: acc)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 1 -> l | _ -> bigAdd ((mulByDigit i) - 1) l;;
 
 
 (* fix
 
-let pipe fs = let f a x y = y in let base x = x in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      let (el1,el2) = x in
+      let new_sum = (rem + el1) + el2 in
+      let new_rem = if new_sum > 9 then 1 else 0 in
+      let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+      let larger = if (List.length l1) > (List.length l2) then l1 else l2 in
+      if (List.length acc) = ((List.length larger) - 1)
+      then
+        (if rem = 1
+         then (0, ([1; norm_sum] @ acc))
+         else (0, (norm_sum :: acc)))
+      else (new_rem, (norm_sum :: acc)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 1 -> l | _ -> bigAdd (mulByDigit (i - 1) l) l;;
 
 *)
 
 (* changed spans
-(3,2)-(3,69)
-(3,14)-(3,19)
-(3,14)-(3,23)
-(3,15)-(3,16)
-(3,17)-(3,18)
-(3,22)-(3,23)
-(3,27)-(3,69)
-(3,36)-(3,41)
+(35,38)-(35,58)
+(35,39)-(35,53)
+(35,51)-(35,52)
 *)
 
 (* type error slice
-(3,2)-(3,69)
-(3,8)-(3,23)
-(3,10)-(3,23)
-(3,14)-(3,19)
-(3,14)-(3,23)
-(3,15)-(3,16)
-(3,45)-(3,59)
-(3,45)-(3,69)
-(3,60)-(3,61)
+(4,3)-(9,47)
+(4,12)-(9,45)
+(9,8)-(9,40)
+(9,35)-(9,36)
+(9,37)-(9,39)
+(14,3)-(32,36)
+(14,11)-(32,34)
+(32,18)-(32,33)
+(32,19)-(32,26)
+(32,27)-(32,29)
+(34,3)-(35,62)
+(34,19)-(35,60)
+(34,21)-(35,60)
+(35,31)-(35,37)
+(35,31)-(35,60)
+(35,38)-(35,58)
+(35,38)-(35,58)
+(35,39)-(35,53)
+(35,40)-(35,50)
 *)

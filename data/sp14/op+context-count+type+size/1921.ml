@@ -1,41 +1,64 @@
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> [n]
-       | true  -> (digitsOfInt (n / 10)) :: (n mod 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> [n]
-       | true  -> (n / 10) :: (digitsOfInt (n / 10)));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(8,18)-(8,40)
-(8,19)-(8,30)
-(8,44)-(8,54)
-(8,45)-(8,46)
+(20,55)-(20,56)
 *)
 
 (* type error slice
-(2,3)-(8,57)
-(2,20)-(8,55)
-(3,2)-(8,55)
-(6,6)-(8,55)
-(8,18)-(8,40)
-(8,18)-(8,54)
-(8,18)-(8,54)
-(8,18)-(8,54)
-(8,19)-(8,30)
-(8,44)-(8,54)
+(20,6)-(20,56)
+(20,55)-(20,56)
 *)

@@ -1,23 +1,26 @@
 
-let rec clone x n = if x <= 0 then [] else List.fold_left n;;
+let rec digitsOfInt n =
+  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n & 10];;
 
 
 (* fix
 
-let rec cloneHelper x n = if x <= 0 then [] else cloneHelper x (n - 1);;
+let rec digitsOfInt n =
+  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
 *)
 
 (* changed spans
-(2,43)-(2,57)
-(2,43)-(2,59)
-(2,58)-(2,59)
+(3,50)-(3,56)
+(3,52)-(3,53)
 *)
 
 (* type error slice
-(2,20)-(2,59)
-(2,20)-(2,59)
-(2,35)-(2,37)
-(2,43)-(2,57)
-(2,43)-(2,59)
+(3,5)-(3,6)
+(3,5)-(3,10)
+(3,5)-(3,10)
+(3,9)-(3,10)
+(3,50)-(3,51)
+(3,50)-(3,56)
+(3,52)-(3,53)
 *)

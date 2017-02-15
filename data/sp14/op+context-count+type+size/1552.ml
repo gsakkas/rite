@@ -1,41 +1,77 @@
 
-let pipe fs =
-  let f a x a x n = x a in let base = 0 in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (x *. x) +. a in
+    let base = [] in
+    let args = l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x g b y n = match n with | [] -> n | _ -> y b in
-  let base = f 0 [] in List.fold_left f base fs;;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
+
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([x + 1], [x + 1]) in
+    let base = ([], []) in
+    let args = l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,12)-(3,23)
-(3,14)-(3,23)
-(3,16)-(3,23)
-(3,20)-(3,21)
-(3,20)-(3,23)
-(3,22)-(3,23)
-(3,27)-(3,67)
-(3,38)-(3,39)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
-(3,60)-(3,64)
-(3,65)-(3,67)
+(19,16)-(19,24)
+(19,16)-(19,29)
+(19,17)-(19,18)
+(19,22)-(19,23)
+(19,28)-(19,29)
+(20,15)-(20,17)
+(21,4)-(21,68)
+(22,14)-(22,17)
+(22,18)-(22,33)
+(22,19)-(22,26)
+(22,27)-(22,29)
+(22,30)-(22,32)
 *)
 
 (* type error slice
-(3,2)-(3,67)
-(3,8)-(3,23)
-(3,10)-(3,23)
-(3,12)-(3,23)
-(3,27)-(3,67)
-(3,38)-(3,39)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
-(3,60)-(3,64)
+(19,4)-(21,68)
+(19,10)-(19,29)
+(19,16)-(19,29)
+(19,28)-(19,29)
+(20,4)-(21,68)
+(20,15)-(20,17)
+(21,35)-(21,49)
+(21,35)-(21,61)
+(21,50)-(21,51)
+(21,52)-(21,56)
 *)

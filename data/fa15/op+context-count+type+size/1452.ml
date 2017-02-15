@@ -1,115 +1,57 @@
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (car,cur) ->
-               (match cur with
-                | [] ->
-                    if ((car + x1) + x2) > 10
-                    then
-                      ((car + 1), ([car + 1] @ [((car + x1) + x2) mod 10]))
-                    else (0, ([car] @ [(car + x1) + x2]))
-                | h::t ->
-                    if ((x1 + x2) + h) < 10
-                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
-                    else
-                      ((car + 1),
-                        ([((h + x1) + x2) / 10] @
-                           ([((h + x1) + x2) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd (((mulByDigit i) - (1 l)) l);;
+  let numZeros = (List.length l1) - (List.length l2) in
+  if numZeros = 0
+  then (l1, l2)
+  else
+    if numZeros > 0
+    then (l1, ((clone (0, numZeros)) @ l2))
+    else (((clone (0, (abs numZeros))) @ l1), l2);;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (l1, ((clone 0 (len1 - len2)) @ l2))
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (car,cur) ->
-               (match cur with
-                | [] ->
-                    if ((car + x1) + x2) > 10
-                    then
-                      ((car + 1), ([car + 1] @ [((car + x1) + x2) mod 10]))
-                    else (0, ([car] @ [(car + x1) + x2]))
-                | h::t ->
-                    if ((x1 + x2) + h) < 10
-                    then (0, ([0] @ ([(x1 + x2) + h] @ t)))
-                    else
-                      ((car + 1),
-                        ([((h + x1) + x2) / 10] @
-                           ([((h + x1) + x2) mod 10] @ t))))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | _ -> bigAdd (mulByDigit (i - 1) l) l;;
+  let numZeros = (List.length l1) - (List.length l2) in
+  let absNumZeros = abs numZeros in
+  if numZeros = 0
+  then (l1, l2)
+  else
+    (let listZeros = clone 0 absNumZeros in
+     if numZeros > 0 then (l1, (listZeros @ l2)) else ((listZeros @ l1), l2));;
 
 *)
 
 (* changed spans
-(40,32)-(40,67)
-(40,39)-(40,67)
-(40,40)-(40,64)
-(40,41)-(40,55)
-(40,53)-(40,54)
-(40,58)-(40,63)
+(6,2)-(11,49)
+(9,4)-(11,49)
+(10,15)-(10,36)
+(10,16)-(10,21)
+(10,22)-(10,35)
+(10,23)-(10,24)
+(10,26)-(10,34)
+(11,11)-(11,38)
+(11,12)-(11,17)
+(11,18)-(11,37)
+(11,19)-(11,20)
+(11,22)-(11,36)
+(11,23)-(11,26)
+(11,27)-(11,35)
 *)
 
 (* type error slice
-(14,3)-(37,36)
-(14,11)-(37,34)
-(14,14)-(37,34)
-(39,3)-(40,69)
-(39,19)-(40,67)
-(39,21)-(40,67)
-(40,2)-(40,67)
-(40,2)-(40,67)
-(40,22)-(40,24)
-(40,32)-(40,38)
-(40,32)-(40,67)
-(40,39)-(40,67)
-(40,40)-(40,64)
-(40,40)-(40,64)
-(40,41)-(40,55)
-(40,42)-(40,52)
-(40,58)-(40,63)
-(40,59)-(40,60)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(10,14)-(10,42)
+(10,15)-(10,36)
+(10,16)-(10,21)
+(10,37)-(10,38)
+(11,10)-(11,44)
+(11,11)-(11,38)
+(11,12)-(11,17)
+(11,39)-(11,40)
 *)

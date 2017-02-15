@@ -1,24 +1,22 @@
 
-let rec wwhile (f,b) = let (a,b) = f b in if b then wwhile f a else a;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) @ (digitsOfInt (n / 10));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (a,b) = f b in 5;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(2,42)-(2,69)
-(2,45)-(2,46)
-(2,52)-(2,62)
-(2,68)-(2,69)
+(3,25)-(3,60)
+(3,36)-(3,37)
 *)
 
 (* type error slice
-(2,3)-(2,71)
-(2,16)-(2,69)
-(2,52)-(2,58)
-(2,52)-(2,62)
-(2,59)-(2,60)
+(3,25)-(3,35)
+(3,25)-(3,60)
+(3,36)-(3,37)
 *)

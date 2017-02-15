@@ -1,28 +1,45 @@
 
-let rec additivePersistence n = n = (additivePersistence (n / 10));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  let x = digitsOfInt n in
+  match x with
+  | head -> 0
+  | head::tail -> 1 + (additivePersistence sumList n);;
 
 
 (* fix
 
-let rec additivePersistence n = (additivePersistence (n mod 10)) + n;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  let x = digitsOfInt n in
+  match x with
+  | head -> 0
+  | head::tail -> 1 + (additivePersistence (sumList x));;
 
 *)
 
 (* changed spans
-(2,32)-(2,33)
-(2,32)-(2,66)
-(2,57)-(2,65)
+(12,22)-(12,53)
+(12,43)-(12,50)
+(12,51)-(12,52)
 *)
 
 (* type error slice
-(2,3)-(2,68)
-(2,28)-(2,66)
-(2,32)-(2,33)
-(2,32)-(2,66)
-(2,32)-(2,66)
-(2,32)-(2,66)
-(2,36)-(2,66)
-(2,37)-(2,56)
-(2,57)-(2,65)
-(2,58)-(2,59)
+(8,3)-(12,55)
+(8,28)-(12,53)
+(9,2)-(12,53)
+(10,2)-(12,53)
+(11,12)-(11,13)
+(12,22)-(12,53)
+(12,23)-(12,42)
 *)

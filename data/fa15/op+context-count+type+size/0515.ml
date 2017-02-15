@@ -1,28 +1,24 @@
 
-let sqsum xs =
-  let f a x = (x * x) + a in let base = [] in List.fold_left f base xs;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f b') else b';;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) = let (b',c') = f b in b';;
 
 *)
 
 (* changed spans
-(3,40)-(3,42)
+(2,44)-(2,76)
+(2,47)-(2,49)
+(2,55)-(2,68)
 *)
 
 (* type error slice
-(3,2)-(3,70)
-(3,8)-(3,25)
-(3,14)-(3,25)
-(3,24)-(3,25)
-(3,29)-(3,70)
-(3,40)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
+(2,3)-(2,78)
+(2,16)-(2,76)
+(2,55)-(2,61)
+(2,55)-(2,68)
+(2,62)-(2,68)
+(2,63)-(2,64)
 *)

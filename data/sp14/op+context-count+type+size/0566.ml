@@ -1,53 +1,96 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (clone 0 ((List.length l1) - (List.length l2))) @ l2
-  else
-    if (List.length l1) < (List.length l2)
-    then (clone 0 ((List.length l2) - (List.length l1))) @ l1;;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    let depth = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, depth))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
+    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
+    | 4 ->
+        buildThresh
+          ((build (rand, depth)), (build (rand, depth)),
+            (build (rand, depth)))
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    let depth = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, depth))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage ((build (rand, depth)), (build (rand, depth)))
+    | 3 -> buildTimes ((build (rand, depth)), (build (rand, depth)))
+    | 4 ->
+        buildThresh
+          ((build (rand, depth)), (build (rand, depth)),
+            (build (rand, depth)), (build (rand, depth)))
+  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
 
 *)
 
 (* changed spans
-(10,2)-(14,61)
-(11,7)-(11,59)
-(13,4)-(14,61)
-(13,7)-(13,23)
-(13,7)-(13,42)
-(13,8)-(13,19)
-(13,20)-(13,22)
-(13,26)-(13,42)
-(13,27)-(13,38)
-(13,39)-(13,41)
-(14,59)-(14,61)
+(36,10)-(37,34)
+(38,7)-(38,65)
+(38,55)-(38,61)
+(38,62)-(38,64)
 *)
 
 (* type error slice
-(13,4)-(14,61)
-(13,4)-(14,61)
-(13,4)-(14,61)
-(14,9)-(14,61)
-(14,57)-(14,58)
+(17,3)-(17,69)
+(17,17)-(17,67)
+(35,8)-(35,19)
+(35,8)-(37,34)
+(36,10)-(37,34)
 *)

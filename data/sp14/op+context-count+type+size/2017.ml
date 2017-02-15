@@ -1,42 +1,30 @@
 
-let x = [1; 2; 3];;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail::third::fourth -> [fourth; third; tail; head];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;
 
 
 (* fix
 
-let x = [1; 2; 3];;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail::third::fourth::fifth -> [fourth; third; tail; head];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(5,2)-(8,60)
+(3,25)-(3,47)
+(3,51)-(3,61)
+(3,52)-(3,53)
+(3,58)-(3,60)
 *)
 
 (* type error slice
-(5,2)-(8,60)
-(5,2)-(8,60)
-(5,2)-(8,60)
-(5,2)-(8,60)
-(5,2)-(8,60)
-(5,2)-(8,60)
-(8,33)-(8,60)
-(8,33)-(8,60)
-(8,33)-(8,60)
-(8,33)-(8,60)
-(8,34)-(8,40)
-(8,42)-(8,47)
-(8,49)-(8,53)
-(8,55)-(8,59)
+(2,3)-(3,63)
+(2,20)-(3,61)
+(3,2)-(3,61)
+(3,25)-(3,47)
+(3,25)-(3,61)
+(3,25)-(3,61)
+(3,25)-(3,61)
+(3,26)-(3,37)
+(3,51)-(3,61)
 *)

@@ -1,39 +1,68 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let stringOfList f l = sepConcat List.map f l;;
+let rec mulByDigit i l =
+  let rec helper acc cin l' =
+    match l' with
+    | [] -> cin :: acc
+    | h::t ->
+        let sum = (i * h) + cin in helper ((sum mod 10) :: acc) (sum / 10) t in
+  removeZero (helper [] 0 l);;
+
+let bigMul l1 l2 =
+  let f a x = mulByDigit x l1 in
+  let base = [] in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let stringOfList f l = sepConcat "; " (List.map f l);;
+let rec mulByDigit i l =
+  let rec helper acc cin l' =
+    match l' with
+    | [] -> cin :: acc
+    | h::t ->
+        let sum = (i * h) + cin in helper ((sum mod 10) :: acc) (sum / 10) t in
+  removeZero (helper [] 0 l);;
+
+let bigMul l1 l2 =
+  let f a x = (0, (mulByDigit x l1)) in
+  let base = (0, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(9,23)-(9,45)
-(9,33)-(9,41)
+(14,14)-(14,29)
+(15,13)-(15,15)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(6,22)-(6,31)
-(6,23)-(6,26)
-(6,27)-(6,28)
-(9,23)-(9,32)
-(9,23)-(9,45)
-(9,33)-(9,41)
+(3,2)-(3,69)
+(3,2)-(3,69)
+(3,8)-(3,9)
+(3,36)-(3,69)
+(3,36)-(3,69)
+(3,50)-(3,60)
+(3,50)-(3,62)
+(3,68)-(3,69)
+(5,3)-(11,30)
+(5,19)-(11,28)
+(5,21)-(11,28)
+(6,2)-(11,28)
+(11,2)-(11,12)
+(11,2)-(11,28)
+(14,2)-(16,66)
+(14,8)-(14,29)
+(14,10)-(14,29)
+(14,14)-(14,24)
+(14,14)-(14,29)
+(16,19)-(16,66)
+(16,33)-(16,47)
+(16,33)-(16,59)
+(16,48)-(16,49)
 *)

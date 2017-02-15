@@ -1,40 +1,28 @@
 
-let padZero l1 l2 =
-  let difference1 = (List.length l1) - (List.length l2) in
-  let difference2 = (List.length l2) - (List.length l1) in
-  let retTuple = l1 * l2 in if difference1 > 0 then retTuple;;
+let pipe fs = let f a x = a x in let base = () in List.fold_left f base fs;;
 
 
 (* fix
 
-let padZero l1 l2 =
-  let difference1 = (List.length l1) - (List.length l2) in
-  let difference2 = (List.length l2) - (List.length l1) in
-  let retTuple = (l1, l2) in retTuple;;
+let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(5,17)-(5,24)
-(5,28)-(5,60)
-(5,31)-(5,46)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,33)-(2,74)
+(2,44)-(2,46)
+(2,50)-(2,74)
 *)
 
 (* type error slice
-(4,20)-(4,36)
-(4,21)-(4,32)
-(4,33)-(4,35)
-(4,39)-(4,55)
-(4,40)-(4,51)
-(4,52)-(4,54)
-(5,2)-(5,60)
-(5,17)-(5,19)
-(5,17)-(5,24)
-(5,17)-(5,24)
-(5,17)-(5,24)
-(5,22)-(5,24)
-(5,28)-(5,60)
-(5,28)-(5,60)
-(5,28)-(5,60)
-(5,52)-(5,60)
+(2,14)-(2,74)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,50)-(2,64)
+(2,50)-(2,74)
+(2,65)-(2,66)
 *)

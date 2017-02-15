@@ -1,31 +1,72 @@
 
-let rec listReverse l =
-  if (List.length l) > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi *. x
+  | Cosine e -> pi *. y
+  | Average (e1,e2) -> buildAverage (e1, e2);;
 
 
 (* fix
 
-let rec listReverse l = if (List.length l) > 0 then [List.hd l] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi *. x
+  | Cosine e -> pi *. y
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(3,30)-(3,53)
-(3,30)-(3,67)
-(3,31)-(3,42)
-(3,43)-(3,50)
-(3,51)-(3,52)
-(3,54)-(3,55)
-(3,73)-(3,75)
+(11,18)-(11,43)
+(11,27)-(11,43)
+(11,36)-(11,38)
+(11,40)-(11,42)
+(16,2)-(21,44)
+(21,23)-(21,35)
+(21,23)-(21,44)
+(21,36)-(21,44)
+(21,37)-(21,39)
+(21,41)-(21,43)
 *)
 
 (* type error slice
-(2,3)-(3,77)
-(2,20)-(3,75)
-(3,30)-(3,53)
-(3,31)-(3,42)
-(3,43)-(3,50)
-(3,57)-(3,64)
-(3,57)-(3,66)
-(3,65)-(3,66)
+(11,3)-(11,45)
+(11,18)-(11,43)
+(11,27)-(11,43)
+(16,2)-(21,44)
+(16,2)-(21,44)
+(17,13)-(17,14)
+(19,14)-(19,21)
+(19,20)-(19,21)
+(21,23)-(21,35)
+(21,23)-(21,44)
 *)

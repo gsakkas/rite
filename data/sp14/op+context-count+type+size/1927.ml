@@ -1,74 +1,49 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let rec digitsOfInt n =
-  let digOfInt n =
-    match n > 0 with
-    | false  -> []
-    | true  ->
-        (match n > 9 with
-         | false  -> n :: (digitsOfInt (n / 10))
-         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
-  listReverse n;;
+let fixpoint (f,b) = wwhile (let g x = (x, false) in ((g (f b)), b));;
 
 
 (* fix
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+let h x = ((x * x), (x < 100));;
 
-let rec digitsOfInt n =
-  listReverse
-    (match n > 0 with
-     | false  -> []
-     | true  ->
-         (match n > 9 with
-          | false  -> n :: (digitsOfInt (n / 10))
-          | true  -> (n mod 10) :: (digitsOfInt (n / 10))));;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let rec digOfInt n =
-  match n > 0 with
-  | false  -> []
-  | true  ->
-      (match n > 9 with
-       | false  -> n :: (digitsOfInt (n / 10))
-       | true  -> (n mod 10) :: (digitsOfInt (n / 10)));;
-
-let rec digitsOfInt n = digOfInt n;;
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(8,2)-(15,15)
-(8,15)-(14,57)
-(9,4)-(14,57)
-(15,2)-(15,13)
-(15,2)-(15,15)
-(15,14)-(15,15)
+(2,16)-(3,62)
+(5,28)-(5,68)
+(5,35)-(5,49)
+(5,40)-(5,41)
+(5,43)-(5,48)
+(5,53)-(5,67)
+(5,54)-(5,63)
+(5,55)-(5,56)
+(5,57)-(5,62)
+(5,58)-(5,59)
+(5,60)-(5,61)
 *)
 
 (* type error slice
-(2,3)-(5,22)
-(2,16)-(5,20)
-(4,4)-(4,63)
-(4,4)-(4,63)
-(4,38)-(4,51)
-(4,38)-(4,63)
-(4,52)-(4,53)
-(5,2)-(5,15)
-(5,2)-(5,20)
-(5,16)-(5,17)
-(7,3)-(15,17)
-(7,20)-(15,15)
-(13,26)-(13,48)
-(13,27)-(13,38)
-(13,39)-(13,47)
-(15,2)-(15,13)
-(15,2)-(15,15)
-(15,14)-(15,15)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,49)-(3,55)
+(3,49)-(3,62)
+(3,56)-(3,62)
+(3,57)-(3,58)
+(5,21)-(5,27)
+(5,21)-(5,68)
+(5,28)-(5,68)
+(5,28)-(5,68)
+(5,35)-(5,49)
+(5,39)-(5,49)
+(5,53)-(5,67)
+(5,54)-(5,63)
+(5,55)-(5,56)
 *)

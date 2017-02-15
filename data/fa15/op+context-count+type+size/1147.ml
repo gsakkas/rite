@@ -1,61 +1,67 @@
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then cloneHelper 0 (((-1) * diff) - 1) (0 @ l1)
-  else if diff > 0 then (cloneHelper 0 diff) @ l2;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi * (eval (e', x, y)))
+  | Cosine e' -> cos (pi * (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2;;
 
 
 (* fix
 
-let rec cloneHelper x n l =
-  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec clone x n = if n < 1 then [] else cloneHelper x n [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then ((l1 @ (clone 0 diff)), l2)
-  else if diff > 0 then (l1, (l2 @ (clone 0 diff))) else (l1, l2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
 
 *)
 
 (* changed spans
-(5,12)-(9,49)
-(6,2)-(9,49)
-(8,7)-(8,18)
-(8,7)-(8,49)
-(8,19)-(8,20)
-(8,21)-(8,40)
-(8,22)-(8,35)
-(8,23)-(8,27)
-(8,30)-(8,34)
-(8,38)-(8,39)
-(8,42)-(8,43)
-(9,7)-(9,49)
-(9,10)-(9,14)
-(9,10)-(9,18)
-(9,17)-(9,18)
-(9,24)-(9,44)
-(9,25)-(9,36)
-(9,45)-(9,46)
+(17,19)-(17,43)
+(18,21)-(18,45)
+(19,23)-(19,62)
+(19,23)-(19,66)
+(19,24)-(19,41)
+(19,65)-(19,66)
 *)
 
 (* type error slice
-(8,7)-(8,18)
-(8,7)-(8,49)
-(8,41)-(8,49)
-(8,42)-(8,43)
-(8,44)-(8,45)
-(9,7)-(9,49)
-(9,7)-(9,49)
-(9,7)-(9,49)
-(9,24)-(9,44)
-(9,24)-(9,49)
-(9,25)-(9,36)
-(9,45)-(9,46)
+(11,3)-(11,28)
+(11,9)-(11,26)
+(17,15)-(17,18)
+(17,15)-(17,43)
+(17,19)-(17,43)
+(17,19)-(17,43)
+(17,20)-(17,22)
+(18,17)-(18,20)
+(18,17)-(18,45)
+(18,21)-(18,45)
+(18,21)-(18,45)
+(18,22)-(18,24)
 *)

@@ -1,207 +1,187 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
 
-let buildSine e = Sine e;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-    | 1 ->
-        if (rand (0, 1)) = 0
-        then buildSine (buildhelper 0 (depth - 1))
-        else buildCosine (buildhelper 0 (depth - 1))
-    | 2 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-    | 3 -> buildhelper (num - 1) depth expr
-    | 4 ->
-        buildThresh
-          ((buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr)) in
-  buildhelper rand (1, 4) depth "";;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (templ1,l2digit) ->
+        let multres = mulByDigit l2digit templ1 in bigAdd [a; 0] multres in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
 
-let buildSine e = Sine e;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-    | 1 ->
-        if (rand (0, 1)) = 0
-        then buildSine (buildhelper 0 0 expr)
-        else buildCosine (buildhelper 0 0 expr)
-    | 2 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-    | 3 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (depth - 1) (depth - 1) expr),
-              (buildhelper (depth - 1) (depth - 1) expr))
-    | 4 ->
-        buildThresh
-          ((buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr))
-    | _ ->
-        buildThresh
-          ((buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr),
-            (buildhelper (depth - 1) (depth - 1) expr)) in
-  buildhelper (rand (1, 4)) depth "";;
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let (l2digit2,templ12) = a in
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (templ12 @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(27,4)-(49,53)
-(31,23)-(31,50)
-(31,38)-(31,49)
-(31,39)-(31,44)
-(31,47)-(31,48)
-(32,13)-(32,52)
-(32,25)-(32,52)
-(32,40)-(32,51)
-(32,41)-(32,46)
-(32,49)-(32,50)
-(34,8)-(42,55)
-(37,27)-(37,30)
-(38,28)-(38,31)
-(41,27)-(41,30)
-(42,28)-(42,31)
-(43,11)-(43,43)
-(43,24)-(43,27)
-(43,33)-(43,38)
-(43,39)-(43,43)
-(45,8)-(45,19)
-(45,8)-(49,53)
-(46,10)-(49,53)
-(46,25)-(46,28)
-(46,31)-(46,32)
-(46,34)-(46,45)
-(47,12)-(47,52)
-(47,26)-(47,29)
-(47,32)-(47,33)
-(47,35)-(47,46)
-(48,26)-(48,29)
-(48,32)-(48,33)
-(48,35)-(48,46)
-(49,12)-(49,52)
-(49,26)-(49,29)
-(49,32)-(49,33)
-(49,35)-(49,46)
-(49,47)-(49,51)
-(50,2)-(50,13)
-(50,2)-(50,34)
-(50,14)-(50,18)
-(50,19)-(50,25)
-(50,20)-(50,21)
-(50,23)-(50,24)
-(50,26)-(50,31)
-(50,32)-(50,34)
+(52,4)-(54,72)
+(54,8)-(54,72)
+(54,22)-(54,47)
+(54,51)-(54,72)
+(54,58)-(54,64)
+(54,59)-(54,60)
+(54,62)-(54,63)
+(55,2)-(62,49)
+(56,2)-(62,49)
+(57,4)-(61,18)
+(57,21)-(60,75)
+(60,36)-(60,37)
+(60,49)-(60,75)
+(60,50)-(60,51)
+(60,60)-(60,75)
+(62,2)-(62,49)
+(62,16)-(62,30)
+(62,31)-(62,32)
+(62,33)-(62,37)
+(62,38)-(62,42)
 *)
 
 (* type error slice
-(15,3)-(15,26)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(26,2)-(50,34)
-(26,22)-(49,53)
-(26,26)-(49,53)
-(26,32)-(49,53)
-(28,14)-(28,27)
-(28,15)-(28,19)
-(31,13)-(31,22)
-(31,13)-(31,50)
-(31,23)-(31,50)
-(31,24)-(31,35)
-(31,36)-(31,37)
-(37,13)-(37,53)
-(37,14)-(37,25)
-(38,14)-(38,54)
-(38,15)-(38,26)
-(41,13)-(41,53)
-(41,14)-(41,25)
-(42,14)-(42,54)
-(42,15)-(42,26)
-(43,11)-(43,22)
-(43,11)-(43,43)
-(46,11)-(46,51)
-(46,12)-(46,23)
-(47,12)-(47,52)
-(47,13)-(47,24)
-(48,12)-(48,52)
-(48,13)-(48,24)
-(49,12)-(49,52)
-(49,13)-(49,24)
-(50,2)-(50,13)
-(50,2)-(50,34)
-(50,14)-(50,18)
+(16,3)-(21,14)
+(16,19)-(21,12)
+(17,2)-(21,12)
+(20,16)-(20,56)
+(20,16)-(20,56)
+(20,31)-(20,39)
+(20,31)-(20,42)
+(20,48)-(20,56)
+(21,2)-(21,10)
+(21,2)-(21,12)
+(23,3)-(37,36)
+(23,11)-(37,34)
+(23,14)-(37,34)
+(24,2)-(37,34)
+(37,2)-(37,12)
+(37,2)-(37,34)
+(51,2)-(62,49)
+(51,8)-(54,72)
+(51,10)-(54,72)
+(52,4)-(54,72)
+(54,8)-(54,72)
+(54,51)-(54,57)
+(54,51)-(54,72)
+(54,58)-(54,64)
+(54,58)-(54,64)
+(54,59)-(54,60)
+(54,62)-(54,63)
+(62,16)-(62,30)
+(62,16)-(62,42)
+(62,31)-(62,32)
 *)

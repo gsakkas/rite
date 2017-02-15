@@ -1,26 +1,29 @@
 
-let pipe fs = let f a x x = x a in let base c = c in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | [] -> [] | h::t -> h @ [digitsOfInt t]);;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base c = c in List.fold_left f base fs;;
+let rec digitsOfInt n = if n < 0 then [] else (match n with | 0 -> []);;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
+(5,7)-(5,62)
+(5,42)-(5,61)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,28)-(2,29)
-(2,28)-(2,31)
-(2,30)-(2,31)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
+(3,5)-(3,6)
+(3,5)-(3,10)
+(3,5)-(3,10)
+(3,9)-(3,10)
+(5,7)-(5,62)
+(5,7)-(5,62)
+(5,7)-(5,62)
+(5,7)-(5,62)
+(5,14)-(5,15)
 *)

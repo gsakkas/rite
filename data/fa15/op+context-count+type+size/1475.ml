@@ -1,30 +1,88 @@
 
-let pipe fs = let f a x x a = x in let base f = f in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SinCos of expr
+  | Three of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | SinCos ex ->
+      "sin(pi*" ^
+        ((exprToString ex) ^ (")*cos(pi*" ^ ((exprToString ex) ^ ")")))
+  | Three (ex1,ex2,ex3) ->
+      (exprToString ex1) ^
+        ("*cos(pi*" ^
+           ((exprToString ex2) ^ (")*sin(pi*" ^ (exprToString ex3 ")"))));;
 
 
 (* fix
 
-let pipe fs = let f a x a x = x in let base f = f in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | SinCos of expr
+  | Three of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))))
+  | SinCos ex ->
+      "sin(pi*" ^
+        ((exprToString ex) ^ (")*cos(pi*" ^ ((exprToString ex) ^ ")")))
+  | Three (ex1,ex2,ex3) ->
+      (exprToString ex1) ^
+        ("*cos(pi*" ^
+           ((exprToString ex2) ^ (")*sin(pi*" ^ ((exprToString ex3) ^ ")"))));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-(2,30)-(2,31)
+(35,49)-(35,61)
 *)
 
 (* type error slice
-(2,14)-(2,77)
-(2,20)-(2,31)
-(2,22)-(2,31)
-(2,24)-(2,31)
-(2,26)-(2,31)
-(2,30)-(2,31)
-(2,35)-(2,77)
-(2,44)-(2,49)
-(2,48)-(2,49)
-(2,53)-(2,67)
-(2,53)-(2,77)
-(2,68)-(2,69)
-(2,70)-(2,74)
+(17,27)-(17,52)
+(17,28)-(17,45)
+(17,29)-(17,41)
+(17,46)-(17,47)
+(35,48)-(35,70)
+(35,49)-(35,61)
 *)

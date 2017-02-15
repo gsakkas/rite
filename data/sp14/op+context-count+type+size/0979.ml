@@ -8,8 +8,17 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1);;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> buildX ()
+  | 1 -> if rand > 1 then buildSine (build (rand, (depth - 1)))
+  | _ -> buildCosine (build (rand, (depth - 1)));;
 
 
 (* fix
@@ -23,20 +32,35 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> buildX ()
+  | 1 -> buildSine (build (rand, (depth - 1)))
+  | _ -> buildCosine (build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(12,64)-(12,66)
+(20,9)-(20,63)
+(20,12)-(20,16)
+(20,12)-(20,20)
+(20,19)-(20,20)
+(21,29)-(21,33)
 *)
 
 (* type error slice
-(11,3)-(12,69)
-(11,14)-(12,67)
-(12,2)-(12,67)
-(12,58)-(12,67)
-(12,59)-(12,63)
-(12,64)-(12,66)
+(13,3)-(13,26)
+(13,14)-(13,24)
+(13,18)-(13,24)
+(20,9)-(20,63)
+(20,9)-(20,63)
+(20,9)-(20,63)
+(20,26)-(20,35)
+(20,26)-(20,63)
 *)

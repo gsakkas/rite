@@ -1,41 +1,41 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
 
-let fixpoint (f,b) = wwhile (if b = (f b) then true else (false, b));;
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then ((clone 0 ((l_diff * (-1)) @ l1)), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
 
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
 
 *)
 
 (* changed spans
-(3,30)-(3,63)
-(5,28)-(5,68)
-(5,32)-(5,33)
-(5,32)-(5,41)
-(5,36)-(5,41)
-(5,37)-(5,38)
-(5,39)-(5,40)
-(5,47)-(5,51)
-(5,58)-(5,63)
-(5,65)-(5,66)
+(11,9)-(11,14)
+(11,17)-(11,39)
+(11,34)-(11,35)
 *)
 
 (* type error slice
-(3,41)-(3,47)
-(3,41)-(3,55)
-(3,48)-(3,55)
-(5,21)-(5,27)
-(5,21)-(5,68)
-(5,28)-(5,68)
-(5,28)-(5,68)
-(5,47)-(5,51)
-(5,57)-(5,67)
+(11,17)-(11,39)
+(11,18)-(11,33)
+(11,34)-(11,35)
 *)

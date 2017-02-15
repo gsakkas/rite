@@ -1,42 +1,44 @@
 
-let rec digitalRoot n =
-  if n = 0
-  then 0
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> r_digitalRoot | _ -> r_digitalRoot n (n mod 10));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0 then (((clone (-1)) * (l l2)), l2) else (l1, (clone l l2));;
 
 
 (* fix
 
-let rec digitalRoot n =
-  if n = 0
-  then 0
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 0 | _ -> r_digitalRoot n 0);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let l = (List.length l1) - (List.length l2) in
+  if l < 0
+  then (((clone 0 ((-1) * l)) @ l2), l2)
+  else (l1, ((clone 0 l) @ l2));;
 
 *)
 
 (* changed spans
-(8,25)-(8,38)
-(8,62)-(8,72)
-(8,63)-(8,64)
-(8,69)-(8,71)
+(6,17)-(6,40)
+(6,18)-(6,30)
+(6,19)-(6,24)
+(6,25)-(6,29)
+(6,33)-(6,39)
+(6,57)-(6,62)
+(6,63)-(6,64)
+(6,65)-(6,67)
 *)
 
 (* type error slice
-(3,2)-(8,73)
-(3,2)-(8,73)
-(4,7)-(4,8)
-(6,4)-(8,73)
-(7,29)-(7,42)
-(7,29)-(7,68)
-(8,5)-(8,72)
-(8,5)-(8,72)
-(8,25)-(8,38)
-(8,46)-(8,59)
-(8,46)-(8,72)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(5,2)-(6,69)
+(5,10)-(5,45)
+(6,17)-(6,40)
+(6,18)-(6,30)
+(6,19)-(6,24)
+(6,33)-(6,39)
+(6,34)-(6,35)
+(6,56)-(6,68)
+(6,57)-(6,62)
 *)
