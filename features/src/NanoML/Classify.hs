@@ -1342,14 +1342,47 @@ cost = \case
   Cpy e d -> S $ cost d
   End     -> Z
 
-diffSpans :: Diff -> Set SrcSpan
-diffSpans = Set.fromList . catMaybes . go
+diffSpans :: Diff -> [Expr] -> Set SrcSpan
+diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   where
-  go = \case
-    Ins e d -> getSrcSpanMaybe e : go d
-    Del e d -> getSrcSpanMaybe e : go d
-    Cpy e d -> go d -- getSrcSpanMaybe e : go d
-    End     -> []
+  go _ [] = []
+  go d (x:xs) = case d of
+    Ins e d -> getSrcSpanMaybe x : go d (x:xs)
+    Del e (Ins _ d) -> getSrcSpanMaybe e : go d xs
+    Del e d -> getSrcSpanMaybe e : go d xs
+    Cpy e d -> go d xs
+    End -> [] -- WEIRD
+
+  -- to d xs = case d of
+  --   Ins e d -> to d xs
+  --   Del e (Ins _ d) -> getSrcSpanMaybe e : to d xs
+  --   -- Del e d -> getSrcSpanMaybe e : go d xs
+  --   Cpy e d -> to d xs
+  --   End -> []
+
+  -- go = \case
+  --   Ins e d -> getSrcSpanMaybe e : go d
+  --   Del e d -> getSrcSpanMaybe e : go d
+  --   Cpy e d -> go d -- getSrcSpanMaybe e : go d
+  --   End     -> []
+
+allSubExprs e = e : case e of
+  Var {} -> []
+  Lam _ _ x _ -> allSubExprs x
+  App _ x xs -> allSubExprs x ++ concatMap allSubExprs xs
+  Bop _ _ x y -> allSubExprs x ++ allSubExprs y
+  Uop _ _ x -> allSubExprs x
+  Lit {} -> []
+  Let _ _ pes x -> concatMap (allSubExprs.snd) pes ++ allSubExprs x
+  Ite _ x y z -> allSubExprs x ++ allSubExprs y ++ allSubExprs z
+  Seq _ x y -> allSubExprs x ++ allSubExprs y
+  Case _ x alts -> allSubExprs x ++ concatMap (allSubExprs.thd3) alts
+  Tuple _ xs -> concatMap allSubExprs xs
+  ConApp _ _ me _ -> case me of
+    Nothing -> []
+    Just (Tuple _ xs) -> concatMap allSubExprs xs
+    Just x -> allSubExprs x
+  List _ xs _ -> concatMap allSubExprs xs
 
 progExprs :: Prog -> [Expr]
 progExprs [] = []
@@ -1402,9 +1435,9 @@ diffExprsT (x:xss) []
     in CN x (del x (getDiff d)) d
 diffExprsT [] (y:yss)
   = let d = diffExprsT [] yss
-    in NC (onSrcSpanExpr (const Nothing) y) (ins (onSrcSpanExpr (const Nothing) y) (getDiff d)) d
+    in NC y (ins y (getDiff d)) d
 diffExprsT (x:xss) (y:yss)
-  = CC x (onSrcSpanExpr (const (getSrcSpanMaybe x)) y) (bestT x y i d c) i d c
+  = CC x y (bestT x y i d c) i d c
   where
   xs = subExprs x
   ys = subExprs y
@@ -1431,8 +1464,8 @@ extracti dt k = case dt of
 
 extendd :: Expr -> DiffT -> DiffT
 extendd y dt = case dt of
-  NN d     -> NC y (ins (onSrcSpanExpr (const Nothing) y) d) dt
-  NC _ d _ -> NC y (ins (onSrcSpanExpr (const Nothing) y) d) dt
+  NN d     -> NC y (ins y d) dt
+  NC _ d _ -> NC y (ins y d) dt
   _        -> extractd dt $ \x dt' ->
     let i = dt
         d = extendd y dt'
@@ -1465,24 +1498,24 @@ collapseDiff = \case
 
 bestT :: Expr -> Expr -> DiffT -> DiffT -> DiffT -> Diff
 bestT x y i d c
-  | exprKind x == exprKind y
-  , [x1, x2] <- subExprs x
-  , [y1, y2] <- subExprs y
-  -- can we override the behavior for swapping subtrees?
-  , killSpans x1 == killSpans y2 && killSpans x2 == killSpans y1
-  -- it's not a swap if both sides were the same
-  , not (killSpans x1 == killSpans x2)
-  = cpy x (del x1
-            (ins (onSrcSpanExpr (const (getSrcSpanMaybe x1)) y1) -- y1
-              (del x2
-                (ins (onSrcSpanExpr (const (getSrcSpanMaybe x2)) y2) -- y2
-                  (filterDiff (\z -> z `notElem` [x1,x2,y1,y2])
-                    (getDiff c))))))
+  -- | exprKind x == exprKind y
+  -- , [x1, x2] <- subExprs x
+  -- , [y1, y2] <- subExprs y
+  -- -- can we override the behavior for swapping subtrees?
+  -- , killSpans x1 == killSpans y2 && killSpans x2 == killSpans y1
+  -- -- it's not a swap if both sides were the same
+  -- , not (killSpans x1 == killSpans x2)
+  -- = cpy x (del x1
+  --           (ins y1
+  --             (del x2
+  --               (ins y2
+  --                 (filterDiff (\z -> z `notElem` [x1,x2,y1,y2])
+  --                   (getDiff c))))))
   | exprKind x == exprKind y
   , length (subExprs x) == length (subExprs y)
   = cpy x (getDiff c) -- del x (getDiff d) `meet` ins y (getDiff i)
   | otherwise
-  = del x (getDiff d) `meet` ins (onSrcSpanExpr (const (getSrcSpanMaybe x)) y) (getDiff i)
+  = del x (getDiff d) `meet` ins y (getDiff i)
     -- `meet`
 
 data ExprKind

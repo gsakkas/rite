@@ -146,9 +146,13 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
+    , let ss = mkDiff'' bad fix
+    , not (null ss)
     -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
-    -> [(mkDiff'' bad fix, bad, bad', fix')]
-  v -> error (show v)
+    -> [(ss, bad, bad', fix')]
+
+  _ -> mempty
+  -- v -> error (show v)
 
 mkFixes :: String -> [Prog]
 mkFixes json = case eitherDecode (LBSC.pack json) of
@@ -188,11 +192,15 @@ mkDiff'' :: Prog -> Prog -> [SrcSpan]
 mkDiff'' bad fix
   --- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
-  -- | otherwise
+  --- | otherwise
   -- = x
+  | fromIntegral (length x) / fromIntegral (length (concatMap allSubExprs bs)) > 0.4
+  = []
+  | otherwise
   = assert (not (null x)) x
   where
-  x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
+  -- x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
+  x = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
   bs = progExprs bad
   fs = progExprs fix
 
@@ -202,7 +210,7 @@ runTFeaturesDiff
 runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
   where
   header = Vector.fromList
-         $ ["L-NoChange", "L-DidChange", "F-InSlice"]
+         $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
   samples
@@ -247,7 +255,8 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
   mkTypeOut te = ctfold f [] te
     where
     f p e acc = (:acc) . namedRecord $
-                didChange (infoSpan (texprInfo e))
+                ["SourceSpan" .= show (infoSpan (texprInfo e))]
+             ++ didChange (infoSpan (texprInfo e))
              ++ inSlice (infoSpan (texprInfo e))
              ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
