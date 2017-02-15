@@ -268,7 +268,7 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (mergeLocated $1 $4)) }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
-| SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
+-- | SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
 -- NOTE: imperative features disabled
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
 -- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
@@ -295,11 +295,11 @@ SimpleExpr :: { Expr }
 | Value                 { (getVal $1) }
 | SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "String.get") [$1, $4] }
 | SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "Array.get")  [$1, $4] }
-| SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
+-- | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
 | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { relocExp (mergeLocated $1 $3) $2 }
 | "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) Nothing }
-| '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
+-- | '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
 | "begin" SeqExpr "end" { relocExp (mergeLocated $1 $3) $2 }
 | "begin" "end"         { VU (mergeLocated $1 $2) }
 | '[' ExprSemiList MaybeSemi ']'  { List (mergeLocated $1 $4) (reverse $2) Nothing }
