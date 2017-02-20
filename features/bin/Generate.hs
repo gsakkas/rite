@@ -64,16 +64,18 @@ main = do
 mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
 mkBadFeatures yr nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
-  let feats = [ ((h, f'), (ss, bad, fix, c))
+  let feats = [ ((h, f'), (ss, bad, fix, c, all))
               | (ss, p, bad, fix) <- uniqs
               , let (h, f, c) = runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
               , length f' > 1
+              , let all = map (fromJust.getSrcSpanExprMaybe)
+                           (concatMap allSubExprs $ progExprs p)
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
-  forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs))) -> do
+  forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
     when (length cs == 1) $ do
       putStrLn "SINGLE CONSTRAINT CORE"
       putStrLn bad
@@ -92,6 +94,7 @@ mkBadFeatures yr nm fs jsons = do
       writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                  , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
                               ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+                              ++ [ "", "(* all spans" ] ++ map show allspans ++ [ "*)" ]
 
     -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
     -- let path = "data/" ++ nm ++ ".csv"
