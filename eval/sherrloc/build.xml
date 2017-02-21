@@ -1,0 +1,160 @@
+<project name="sherrloc" default="sherrloc" basedir=".">
+  <description>
+    Build file for the SHErrLoc tool
+   </description>
+
+  <!-- set global properties for this build -->
+  <property name="src" location="${basedir}/src"/>
+  <property name="parse" location="${src}/sherrloc/constraint/parse" />
+  <property name="build" location="${basedir}/build"/>
+  <property name="lib" location="${basedir}/lib"/>
+  <!-- distribution directory -->
+  <property name="dist" location="${basedir}/dist"/>
+
+  <available file="${lib}/JFlex.jar" type="file" property="jflex.jar.available" />
+  <available file="${lib}/java-cup-11a.jar" type="file" property="javacup.jar.available" />
+
+  <path id="libraries">
+        <pathelement location="bin"/>
+        <pathelement location="lib/java-cup-11a.jar"/>
+        <pathelement location="lib/commons-cli-1.2.jar"/>
+        <pathelement location="lib/JFlex.jar"/>
+        <pathelement location="lib/junit-4.5.jar"/>
+  </path>
+
+  <target name="lexer" if="jflex.jar.available" description="creat jflex files">
+    <taskdef name="jflex" classname="JFlex.anttask.JFlexTask" classpathref="libraries" />
+    <jflex
+        file="${parse}/constraint.flex"
+    />
+  </target>
+
+  <target name="javacup" if="javacup.jar.available" depends="lexer" description="creat java cup files">
+    <java jar="${lib}/java-cup-11a.jar" fork="true">
+      <arg value="-destdir"/>
+      <arg value="${parse}"/>
+      <arg value="${parse}/constraint.cup"/>
+    </java>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${build}" />
+  </target>
+
+  <target name="clean" description="clean up">
+    <delete file="${parse}/GrmLexer.java"/>
+    <delete file="${parse}/parser.java"/>
+    <delete file="${parse}/sym.java"/>
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <target name="sherrloc" depends="init, javacup" description="build the diagnostic tool">
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath refid="libraries"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="sherrloc">
+  <jar destfile="${lib}/SHErrLoc.jar" basedir="${build}" includes="sherrloc/**">
+    <zipgroupfileset dir="${lib}" includes="*.jar" excludes="SHErrLoc.jar"/>
+
+    <manifest>
+        <attribute name="Main-Class" value="sherrloc.diagnostic.ErrorDiagnosis"/>
+    </manifest>
+  </jar>
+  </target>
+
+  <target name="javadoc">
+      <javadoc sourcepath="${src}" destdir="${basedir}/doc" defaultexcludes="yes" classpathref="libraries">
+      <packageset dir="${src}" defaultexcludes="yes">
+        <include name="**" />
+      </packageset>
+    </javadoc>
+  </target>
+
+  <!-- generate the SHErrLoc distribution -->
+  <target name="dist" description="generate the distribution">
+
+    <!-- Clean everything so we're in a clean state -->
+    <antcall target="clean" />
+
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}" />
+
+    <copy todir="${dist}" includeEmptyDirs="no">
+        <fileset dir="${basedir}" defaultexcludes="yes">
+		
+        <!-- Copy src files over. -->
+	<include name="src/**" />
+
+	<!-- Copy examples -->
+	<include name="examples/prog1.ml" />
+	<include name="examples/prog1.con" />
+	<include name="examples/prog2.jif" />
+	<include name="examples/prog2.con" />
+	<include name="examples/prog3.jif" />
+	<include name="examples/prog3.con" />
+	<include name="examples/README" />
+
+	<!-- constraint files used in evaluation -->
+	
+        <!-- 1. FriendMap application -->
+	<include name="tests/friendmap/*/FriendMap3108*" />
+	<include name="tests/friendmap/*/FriendMap3110*" />
+	<include name="tests/friendmap/*/FriendMap3112*" />
+	<include name="tests/friendmap/*/FriendMap3113*" />
+	<include name="tests/friendmap/*/FriendMap3114*" />
+	<include name="tests/friendmap/*/FriendMap3115*" />
+	<include name="tests/friendmap/*/FriendMap3116*" />
+	<include name="tests/friendmap/*/FriendMap3120*" />
+	<include name="tests/friendmap/*/FriendMap3122*" />
+	<include name="tests/friendmap/*/FriendMap3144*" />
+	<include name="tests/friendmap/*/FriendMap3167*" />
+	<include name="tests/friendmap/*/FriendMap3192*" />
+	<include name="tests/friendmap/*/FriendMap3193*" />
+
+         <!-- 2. Jif applications where required hypotheses are removed -->
+	<include name="tests/hypothesis/constraints/*.con" />
+	<include name="tests/hypothesis/source/**" />
+
+	<!-- Other test cases -->
+        <include name="tests/jiftestcases/**" />
+
+	<!-- files for HTML reports -->
+	<include name="HTML/colorize.js" />
+	<include name="HTML/style.css" />
+	<include name="HTML/errors.js" />
+
+	<!-- other useful files -->
+        <include name="README" />
+	<include name="LICENSE" />
+        <include name="LICENSE.Eclipse" />
+        <include name="LICENSE.LGPL" />
+        <include name="sherrloc" />
+        <include name="build.xml" />
+      </fileset>
+    </copy>
+
+    <chmod file="${dist}/sherrloc" perm="a+x"/>
+
+    <!-- Create SHErrLoc.jar and copy all the jars over -->
+    <antcall target="jar" />
+    <copy todir="${dist}" includeEmptyDirs="no">
+      <fileset dir="${basedir}" defaultexcludes="yes">
+        <include name="lib/*.jar" />
+      </fileset>
+   </copy>
+
+    <!-- Create the Javadoc, and copy the documentation -->
+    <antcall target="javadoc" />
+    <copy todir="${dist}" includeEmptyDirs="no">
+      <fileset dir="${basedir}" defaultexcludes="yes">
+         <include name="doc/**" />
+      </fileset>
+    </copy>
+
+  </target>
+
+
+</project>

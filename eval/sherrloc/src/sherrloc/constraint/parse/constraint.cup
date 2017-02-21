@@ -1,0 +1,306 @@
+/** 
+ * CUP specification for a constraint language as described in paper 
+ * "Toward General Diagnosis of Static Errors" 
+ * by Danfeng Zhang and Andrew C. Myers
+ */
+
+package sherrloc.constraint.parse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import sherrloc.constraint.ast.Bottom;
+import sherrloc.constraint.ast.Constraint;
+import sherrloc.constraint.ast.Inequality;
+import sherrloc.constraint.ast.Constructor;
+import sherrloc.constraint.ast.ConstructorApplication;
+import sherrloc.constraint.ast.Element;
+import sherrloc.constraint.ast.Hypothesis;
+import sherrloc.constraint.ast.JoinElement;
+import sherrloc.constraint.ast.MeetElement;
+import sherrloc.constraint.ast.Relation;
+import sherrloc.constraint.ast.Top;
+import sherrloc.constraint.ast.Variable;
+import sherrloc.constraint.ast.Position;
+import sherrloc.diagnostic.DiagnosisInput;
+
+action code {: 
+				public Map<String, Constructor> constructors = new HashMap<String, Constructor>( );
+				Map<String, Variable> variables = new HashMap<String, Variable>(); 
+				Hypothesis env = new Hypothesis();
+			:};
+						
+/* Terminals (tokens returned by the scanner). */
+terminal 			SEPERATION;
+terminal            CONSTRUCTOR;
+terminal            EQ, LEQ, GEQ, SEMICOLON, ARROW, LARROW, LPAREN, RPAREN, LBRACK, RBRACK, COMMA, JOIN, MEET, DASH, COLON, AT, LBRACE, RBRACE;
+terminal Integer    INTEGER_LITERAL;
+terminal String     IDENTIFIER, STRING_LITERAL;
+
+/* Non terminals */
+non terminal DiagnosisInput     cons_spec;
+non terminal Constraint         equation;
+non terminal Set<Constraint>	equations;
+non terminal Inequality         inequality;
+non terminal Set<Inequality>    inequalities;
+non terminal Hypothesis 		env;
+non terminal 					constructors, constructor;
+non terminal				    assumptions;
+non terminal Element			term, element, ele_pos;
+non terminal String           	id;
+non terminal Integer			arity;
+non terminal List<Element>		ele_pos_list, join_list, meet_list;
+non terminal Position           range, position;
+
+/* Precedences */
+precedence right ARROW, LARROW, MEET, JOIN;
+precedence left  COMMA;
+
+/* The grammar */
+cons_spec 	::= constructors 	
+			{: 
+					constructors.put("arrow", new Constructor("arrow", 2, false, Position.EmptyPosition()));
+					constructors.put("larrow", new Constructor("larrow", 2, true, Position.EmptyPosition()));
+					constructors.put("pair",  new Constructor("pair", 2, false, Position.EmptyPosition()));
+					constructors.put("_",  new Bottom(Position.EmptyPosition())); 
+					constructors.put("*",  new Top(Position.EmptyPosition())); 
+			:} 
+				SEPERATION assumptions SEPERATION equations:l
+			{: RESULT = new DiagnosisInput (env, l); :}			
+			| 	constructors 
+			{: 
+					constructors.put("arrow", new Constructor("arrow", 2, false, Position.EmptyPosition()));
+					constructors.put("larrow", new Constructor("larrow", 2, true, Position.EmptyPosition()));
+					constructors.put("pair",  new Constructor("pair", 2, false, Position.EmptyPosition())); 
+					constructors.put("_",  new Bottom(Position.EmptyPosition())); 
+					constructors.put("*",  new Top(Position.EmptyPosition())); 
+			:} 
+				equations:l
+			{: RESULT = new DiagnosisInput (env, l); :}
+			;
+
+constructors ::= constructors constructor
+			| constructor;
+			
+constructor  ::= CONSTRUCTOR id:s arity:a
+			{: constructors.put( s, new Constructor(s, a, false, Position.EmptyPosition())); :}
+			;
+
+id        	::= IDENTIFIER:s
+			{: RESULT = s; :} 
+			;
+			
+arity		::= INTEGER_LITERAL:a
+			{: RESULT = a; :};
+			
+assumptions ::= assumptions inequality:ie SEMICOLON
+            {: env.addInequality(ie); :}
+            | 
+            inequality:ie SEMICOLON
+            {: env.addInequality(ie); :}
+            ;
+
+inequalities ::= inequalities:s inequality:ie SEMICOLON
+            {: s.add(ie); RESULT = s; :}
+            | 
+            inequality:ie SEMICOLON
+            {: Set<Inequality> set = new HashSet<Inequality>(); set.add(ie); RESULT = set; :}
+            ;
+                      
+inequality  ::= ele_pos:e1 EQ ele_pos:e2
+            {: RESULT = new Inequality (e1, e2, Relation.EQ); :}  
+            | ele_pos:e1 LEQ ele_pos:e2
+            {: RESULT = new Inequality (e1, e2, Relation.LEQ); :}
+            | ele_pos:e1 GEQ  ele_pos:e2
+            {: RESULT = new Inequality (e2, e1, Relation.LEQ); :}
+            ;
+            
+equations   ::= equations:s equation:e 
+            {: s.add(e); RESULT = s; :}
+            | 
+            equation:e
+            {: Set<Constraint> set = new HashSet<Constraint>(); set.add(e); RESULT = set; :}
+            ;
+            
+equation 	::= inequality:ie env:e SEMICOLON position:p
+			{: RESULT = new Constraint (ie, e, p); :}  
+            ;
+            
+env         ::= LBRACE inequalities:l RBRACE
+			{: Hypothesis e = new Hypothesis(); 
+			   for (Inequality ie : l)
+			       e.addInequality(ie);
+			   RESULT = e; 
+			:}
+			| LBRACE RBRACE
+			{:
+			   RESULT = null;
+			:}
+			|
+			{:
+			   RESULT = null;
+			:}
+			;
+						
+position	::= LBRACK STRING_LITERAL:snippet COLON range:p AT IDENTIFIER:s RBRACK
+			{: 
+			   p.setFile(s);
+			   p.setSnippet(snippet); 
+			   RESULT = p; 
+			:}
+			| LBRACK STRING_LITERAL:snippet COLON range:p RBRACK
+			{: 
+			   p.setSnippet(snippet); 
+			   RESULT = p; 
+			:}
+			| LBRACK range:p AT IDENTIFIER:s RBRACK
+			{: 
+			   p.setFile(s);
+			   RESULT = p; 
+			:}
+			| LBRACK range:p RBRACK
+			{: 
+			   RESULT = p; 
+			:}
+			|
+			{:
+			   RESULT = Position.EmptyPosition();
+			:}
+			;
+			
+range		::= INTEGER_LITERAL:d1 COMMA INTEGER_LITERAL:d2 DASH INTEGER_LITERAL:d3
+			{:
+			    RESULT = new Position ("", "", d1, d2, d1, d3);
+			:}
+			|   INTEGER_LITERAL:d1 COMMA INTEGER_LITERAL:d2 DASH INTEGER_LITERAL:d3 COMMA INTEGER_LITERAL:d4
+			{:
+			    RESULT = new Position ("", "", d1, d2, d3, d4);
+			:}
+			|   LPAREN INTEGER_LITERAL:d1 COMMA INTEGER_LITERAL:d2
+                        RPAREN
+                        DASH LPAREN INTEGER_LITERAL:d3 COMMA INTEGER_LITERAL:d4 RPAREN
+			{:
+			    RESULT = new Position ("", "", d1, d2, d3, d4);
+			:}
+			|   IDENTIFIER:s /* identifiers are currently ignored */
+			{:  RESULT = Position.EmptyPosition(); :}
+			| /* no position */
+			{:  RESULT = Position.EmptyPosition(); :}
+			;
+            
+term     	::=  ele_pos:t1 ARROW ele_pos:t2
+			{: 	List<Element> l = new ArrayList<Element>();
+				l.add(t1);
+				l.add(t2);  
+				RESULT = new ConstructorApplication (constructors.get("arrow"), l);
+			:}
+			|
+				ele_pos:t1 LARROW ele_pos:t2
+			{: 	List<Element> l = new ArrayList<Element>();
+				l.add(t1);
+				l.add(t2);  
+				RESULT = new ConstructorApplication (constructors.get("larrow"), l);
+			:}
+			| ele_pos:t1 COMMA ele_pos:t2
+			{: 	
+				List<Element> l = new ArrayList<Element>();
+				l.add(t1);
+				l.add(t2);  
+				RESULT = new ConstructorApplication (constructors.get("pair"), l); 
+			:}
+			| ele_pos:t1 JOIN join_list:l
+			{: 	
+				l.add(0,t1);
+				JoinElement e = new JoinElement (l);
+				RESULT =  e;
+			:}
+			| ele_pos:t1 MEET meet_list:l
+			{: 	
+				l.add(0,t1);
+				MeetElement e = new MeetElement (l);
+				RESULT = e; 
+			:}
+			| ele_pos_list:l
+			{: 	
+			    Element e = l.remove(0);
+			    if (l.size()==0) {
+			        RESULT = e;
+			    }
+			    else {
+			        if (!(e instanceof Constructor))
+			            throw new Error("\""+e+"\"" + " is not a constructor");
+			        Constructor c = (Constructor) e;
+				    if (c.getArity() != l.size()) throw new Error("Constructor "+c+" takes wrong number of parameters: "+
+			   						"expecting "+c.getArity()+" getting "+l.size());
+			        RESULT = new ConstructorApplication (c, l);
+			    } 
+			:}
+			;
+		
+join_list    ::= join_list:l JOIN ele_pos:e
+			{:
+			    l.add(e);
+			    RESULT = l;
+			:}
+			| ele_pos:e
+			{: 
+			    List<Element> l = new ArrayList<Element>(); 
+			    l.add(e); 
+			    RESULT = l; 
+			:}
+			;
+			
+meet_list   ::= meet_list:l MEET ele_pos:e
+			{:
+			    l.add(e);
+			    RESULT = l;
+			:}
+			| ele_pos:e
+			{: 
+			    List<Element> l = new ArrayList<Element>(); 
+			    l.add(e); 
+			    RESULT = l; 
+			:}
+			;
+
+ele_pos_list ::= ele_pos_list:l ele_pos:e
+			{: 
+			    l.add(e); 
+			    RESULT = l; 
+			:}
+			| ele_pos:e
+			{: 
+			    List<Element> l = new ArrayList<Element>(); 
+			    l.add(e); 
+			    RESULT = l; 
+			:}
+			;
+			
+ele_pos ::= element:e1 position:p 
+			{:
+				e1.setPosition(p);
+				RESULT = e1;
+			:}
+			;
+
+/* a single element is either a variable or a constructor with 0 arity */
+element		::= IDENTIFIER:s
+			{: 	
+			    Element e;
+				if (constructors.containsKey(s)) {
+					e = constructors.get(s).clone();
+				} 
+			   	else {
+			   		if (!(variables.containsKey(s)))
+			   			variables.put (s, new Variable(s));
+			   		e = variables.get(s);
+			   	}		
+			   	RESULT = e;
+			 :}
+			 | LPAREN term:t RPAREN 
+			 {:  RESULT = t; :}
+			 ;
