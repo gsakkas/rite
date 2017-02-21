@@ -23,9 +23,11 @@ executable evaluate
   build-depends: base >= 4.7 && < 5
                , async-pool
                , containers
+               , deepseq
                , directory
                , filepath
                , Glob
+               , mtl
                , nanoml
                , optparse-generic
                , process
