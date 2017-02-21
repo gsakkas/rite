@@ -3,6 +3,7 @@
 module Main where
 
 import Control.Concurrent.Async.Pool
+import Control.Exception
 import Control.Monad
 import Data.Char
 import Data.List
@@ -43,10 +44,24 @@ instance ParseRecord Tool
 run :: Mode -> IO ()
 run (Gather tool dir) = do
   mls <- glob (dir </> "*.ml")
-  withTaskGroup 8 $ \g -> do
-    mapTasks_ g $ flip map mls $ \ml -> do
-      spans <- fromMaybe mempty <$> timeout 60 (runTool tool ml)
-      writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+  -- print dir
+  -- print mls
+  -- withTaskGroup 8 $ \g -> do
+  --   -- mapTasks_ g $ flip map mls $ \ml -> do
+  --   _ <- flip (mapConcurrently g) mls $ \ml -> do
+  --     putStrLn $ "Processing " ++ ml ++ "..."
+  --     spans <- fromMaybe mempty <$> timeout 60 (runTool tool ml)
+  --     writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+  --   return ()
+  forM_ mls $ \ml -> do
+    putStrLn $ "Processing " ++ ml ++ "..."
+    spans <- fromMaybe mempty . join . e2m <$> try (timeout 60 (runTool tool ml))
+    writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+
+e2m :: Either SomeException b -> Maybe b
+e2m e = case e of
+  Left _ -> Nothing
+  Right x -> Just x
 
 runTool :: Tool -> FilePath -> IO [SrcSpan]
 runTool t = case t of
