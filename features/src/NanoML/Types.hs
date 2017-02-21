@@ -20,6 +20,7 @@ module NanoML.Types where
 
 import           Control.Applicative
 import           Control.Arrow
+import           Control.DeepSeq
 import           Control.Exception            hiding (TypeError)
 import           Control.Monad
 import           Control.Monad.Except
@@ -828,6 +829,7 @@ data SrcSpan = SrcSpan
   } deriving (Data, Generic, Eq, Ord)
 
 instance Hashable SrcSpan
+instance NFData SrcSpan
 
 instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"

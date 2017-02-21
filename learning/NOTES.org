@@ -178,3 +178,11 @@ much better, but 75% of the programs don't change any of the exprs in the slice,
 (Note about the 1 and 2-feature cases, they don't cross-validate very
 well, there are folds where the accuracy tanks, i.e. worse than the
 baseline)
+
+| tool                     | accuracy |
+| ocaml                    |    49.8% |
+| mycroft (maxsat)         |    46.6% |
+| sherrloc                 |    64.5% |
+| neural net (500 neurons) |    80.2% |
+| decision tree            |    75.9% |
+|                          |          |

@@ -1,10 +1,15 @@
+{-# language FlexibleContexts #-}
 {-# language DeriveGeneric #-}
+{-# language MultiWayIf #-}
 {-# language OverloadedStrings #-}
 module Main where
 
 import Control.Concurrent.Async.Pool
+import Control.DeepSeq
 import Control.Exception
 import Control.Monad
+import Control.Monad.IO.Class
+import Control.Monad.State
 import Data.Char
 import Data.List
 import Data.Maybe
@@ -18,6 +23,7 @@ import System.IO
 import System.IO.Temp
 import System.Process
 import qualified System.Timeout as Timeout
+import Text.Printf
 import Text.Regex.TDFA
 
 import NanoML.Types
@@ -57,6 +63,9 @@ run (Gather tool dir) = do
     putStrLn $ "Processing " ++ ml ++ "..."
     spans <- fromMaybe mempty . join . e2m <$> try (timeout 60 (runTool tool ml))
     writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+run (Evaluate tool dir) = do
+  doEval tool dir
+
 
 e2m :: Either SomeException b -> Maybe b
 e2m e = case e of
@@ -74,20 +83,67 @@ toolName t = map toLower (show t)
 
 data Spans = Spans
   { sourceFile :: FilePath
-  , allSpans :: [SrcSpan]
-  , diffSpans :: [SrcSpan]
-  , errSpans :: [SrcSpan]
-  } deriving (Show)
+  , allSpans :: !(Set SrcSpan)
+  , diffSpans :: !(Set SrcSpan)
+  , errSpans :: !(Set SrcSpan)
+  } deriving (Generic, Show)
+instance NFData Spans
 
 loadSpans :: FilePath -> IO Spans
 loadSpans ml = do
-  ls <- lines <$> readFile ml
-  let all  = extractSrcSpans $! slice "(* all spans"        "*)" ls
-  let diff = extractSrcSpans $! slice "(* changed spans"    "*)" ls
-  let err  = extractSrcSpans $! slice "(* type error slice" "*)" ls
+  ls <- lines.force <$> readFile ml
+  let all  = Set.fromList $! extractSrcSpans $ slice "(* all spans"        "*)" ls
+  let diff = Set.fromList $! extractSrcSpans $ slice "(* changed spans"    "*)" ls
+  let err  = Set.fromList $! extractSrcSpans $ slice "(* type error slice" "*)" ls
   return $! Spans ml all diff err
 
-slice :: String -> String -> [String] -> [String]
+loadToolSpans :: FilePath -> IO [SrcSpan]
+loadToolSpans f = do
+  ls <- lines.force <$> readFile f
+  return $! map read ls
+
+data ProcessState = ProcessState
+  { goodProgs :: !Int
+  , allProgs  :: !Int
+  } deriving (Show)
+
+doEval
+  :: Tool -> FilePath -> IO ()
+doEval t dir = do
+  mls <- glob (dir </> "*.ml")
+  let init = ProcessState {goodProgs = 0, allProgs = 0}
+  final <- execStateT (mapM_ (processOne t) mls) init
+  printf "good / total = %d / %d = %.3f\n" (goodProgs final) (allProgs final)
+    (fromIntegral (goodProgs final) / fromIntegral (allProgs final) :: Double)
+
+processOne :: (MonadState ProcessState m, MonadIO m)
+           => Tool -> FilePath -> m ()
+processOne t ml = do
+  oracle <- liftIO $ loadSpans ml
+  sps <- liftIO $ loadToolSpans (ml <.> toolName t)
+  if
+    | null sps -> do
+        liftIO . putStrLn . unlines $
+          [ "WARN: no blamed spans in"
+          , "  " ++ (ml <.> toolName t)
+          ]
+    | not (Set.fromList sps `Set.isSubsetOf` allSpans oracle) -> do
+        liftIO . putStrLn . unlines $
+          [ "WARN: blamed spans not subset of all spans in"
+          , "  " ++ (ml <.> toolName t)
+          ]
+    | otherwise -> do
+        when (any (`Set.member` diffSpans oracle) sps) $ do
+          bumpGood (+1)
+        bumpAll (+1)
+
+bumpAll, bumpGood
+  :: MonadState ProcessState m
+  => (Int -> Int) -> m ()
+bumpAll f = modify' $ \s -> s {allProgs = f (allProgs s)}
+bumpGood f = modify' $ \s -> s {goodProgs = f (goodProgs s)}
+
+slice :: Eq a => a -> a -> [a] -> [a]
 slice start stop = takeWhile (/=stop) . dropWhile (/=start)
 
 computeSpans :: FilePath -> String -> (FilePath -> IO ([SrcSpan])) -> IO ()

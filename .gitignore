@@ -1,3 +1,8 @@
+*.cm[io]
+*.ocaml
+*.mycroft
+*.sherrloc
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
