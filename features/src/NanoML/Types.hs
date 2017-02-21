@@ -53,6 +53,8 @@ import           GHC.Generics
 import           System.IO.Unsafe
 import           Text.PrettyPrint.Annotated.Leijen (Doc)
 import           Text.Printf
+import qualified Text.Read                    as Read
+import qualified Text.ParserCombinators.ReadP as Read
 
 -- import Test.QuickCheck.GenT
 
@@ -831,6 +833,13 @@ instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
                              srcSpanStartLine srcSpanStartCol
                              srcSpanEndLine   srcSpanEndCol
+
+instance Read SrcSpan where
+  readPrec = do
+    (l1, c1) <- Read.readPrec :: Read.ReadPrec (Int,Int)
+    Read.lift (Read.char '-')
+    (l2, c2) <- Read.readPrec :: Read.ReadPrec (Int,Int)
+    return $! SrcSpan l1 c1 l2 c2
 
 instance ToJSON SrcSpan where
   toJSON = toJSON . show
