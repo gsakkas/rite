@@ -1,0 +1,19 @@
+#!/bin/bash
+
+OCAML_PATH=ocaml-3.10.2/install/bin
+
+if [ $# -eq 0 ] ; then
+  ledit -h $HOME/.ocaml_history_ezy -x ./_build/ecaml -easy
+elif [ $1 = "x" ] ; then
+  ocamlbuild ecaml && ledit -h $HOME/.ocaml_history -x ocaml -init test/anfang.ml 
+elif [ $1 = 'opt' ] ; then
+  file=`mktemp`.ml
+  echo "$@" | sed 's/^opt//' > $file
+  make ocamlc.opt && CAMLRUNPARAM=b ./ocamlc.opt -easy  $file
+  rm -f $file
+else
+  file=`mktemp`.ml
+  echo "$@" > $file
+  CAMLRUNPARAM=b ./_build/driver/main.byte -easy $file
+  rm -f $file
+fi

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -x
+ocamlbuild parsing/linenum.ml
+ocamlbuild parsing/lexer.ml
+ocamlbuild parsing/parser.ml
+camlp4rf easyocaml/ezyCamlgrammar.ml > _build/easyocaml/ezyCamlgrammar.ml
+cd _build
+ocamldoc -dot -I _build/camlp4 -I _build/camlp4/Camlp4Parsers -I utils -I parsing -I typing -I easyocaml easyocaml/ezy*.ml
+cd ..
+dot -Tps _build/ocamldoc.out > dot_deps.ps

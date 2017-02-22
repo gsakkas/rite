@@ -1,0 +1,32 @@
+
+  . misspelling: http://caml.inria.fr/pub/ml-archives/caml-list/2007/10/0863b163a48d349aa1062fa3409200b5.en.html
+
+  . Anzahl generierter Constraints ist doppelt so hoch wie bei Haack&Wells.  Optimieren durch spezialfaelle!
+
+  . i18n
+
+  . Env
+
+    let lsg = Env.read_signature "List" "stdlib/list.cmi" ;;
+	... : Types.signature 
+    let li, env'' = Env.enter_module "List" (Types.Tmty_signature lsg) env' ;;
+	... : Ident.t * Env.t
+	Env.open_signature (Path.Pident li) lsg env'' ;;
+	... : Env.t
+
+  . tolles pattern
+    angenommen eine funktion f soll voruebergehend debug output liefern:
+	let f x = between $ f x $ fun y -> print y
+
+  . begin ... end vs ( ... ):
+    klammern koennen im syntaxhightlighting gematch werden uns sind weniger verbos
+
+  . mit camlp4o ist `type t 'a 'b' OK...
+
+  . easyocaml, helium & tips: verbesserungsvorschlaege und tips benoetigen heuristiken. EzyCaml besitzt keine heuristiken,
+    es sollte aber alle dafuer noetigen informationen zu verfuegung stellen
+
+  . die typ fehlermeldungen von ocaml bereiten ein missverstaendnis: dass der fehler an *einer* stelle liegt - abgesehen vom konzeptionellen
+    fehler ist ein fehler immer ein widerspruch zwischen mehreren stellen.
+
+  . ein nest voller schwierig zu typender ausdrueck: http://caml.inria.fr/pub/ml-archives/caml-list/2002/06/a03da53be62c12671a891708c51e85f9.en.html

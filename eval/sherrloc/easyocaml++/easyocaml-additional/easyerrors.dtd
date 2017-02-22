@@ -1,0 +1,26 @@
+<!ELEMENT compile_result (fatal_error | errors) >
+
+<!ELEMENT error_description (#PCDATA)>
+
+<!ELEMENT position EMPTY>
+<!-- These attributes conform with the record fields of Lexing.position -->
+<!ATTLIST position fname CDATA "">
+<!ATTLIST position lnum CDATA "">
+<!ATTLIST position bol CDATA "">
+<!ATTLIST position cnum CDATA "">
+
+<!ELEMENT code_location (position, position)>
+<!ATTLIST code_location endpoint (yes|no) "no">
+
+
+<!ELEMENT fatal_error (error_description, code_location) >
+<!ELEMENT error (error_description, code_location) >
+
+<!ELEMENT interface_location EMPTY>
+<!ATTLIST interface_location element CDATA ""> <!-- Some long identifier -->
+
+<!ELEMENT locations ((code_location | interface_location)+)>
+
+<!ELEMENT type_error (error_description, locations) >
+
+<!ELEMENT errors ((error | type_error)+) >

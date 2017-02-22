@@ -1,0 +1,57 @@
+body {
+  font-size: small;
+  margin-right: auto;
+  font-family: sans-serif;
+}
+#errorlistparagraph {
+  border-bottom: 1px black solid;
+}
+ul#errorlist, a#reset {
+  font-size: small;
+}
+/*code . span {
+  margin: 1px;
+}*/
+div.code {
+  font-family: monospace;
+  color: #ccc;
+  font-size: medium;
+}
+span.othererror {
+  color: black;
+  cursor: pointer;
+}
+span.currenterror {
+  color: #50bbff;
+}
+span.standard {
+  color: gray; /*#ccc*/
+  background-color: white;
+  font-weight: normal;
+}
+span.error {
+  color: black;
+  font-weight: bold;
+}
+.currenterror span.endpoint1 {
+  color: black;
+  background-color: #08c;
+  font-weight: bold;
+}
+.currenterror span.endpoint2 {
+  color: black;
+  background-color: #d4d;
+  font-weight: bold;
+}
+.currenterror span.unboundvar {
+  color: red;
+  font-weight: bold;
+  font-weight: bold;
+}
+span.alert {
+  color: red;
+}
+span.indention {
+  background-color: white;
+}
+

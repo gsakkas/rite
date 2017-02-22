@@ -1,0 +1,10 @@
+
+  - type t = Nil | Cons of int * t 
+    let f = function Cons x -> x
+    => Should not type: "The constructor Cons expects 2 argument(s), but is here applied to 1 argument(s)"
+  - type t = B of t  let f = function B x -> ()
+    `x' should have type Ty.Tuple [t], i.e. a mono-tuple
+  => Fix EzyGenerate.for_pat (Ppat_construct _) and EzyGenerate.for_expr (Pexp_construct _)
+
+  - forbid recursive types
+application location for arrow vs some type clash

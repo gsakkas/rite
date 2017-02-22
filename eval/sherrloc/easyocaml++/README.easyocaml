@@ -1,0 +1,65 @@
+
+
+** Prerequisites for EasyOCaml
+
+   ... are the same like for OCaml (see INSTALL)
+
+
+** Steps for building, installing, and running EasyOCaml:
+
+  1. Configure the system:
+     $ ./configure [-prefix <path/to/install/dir>]
+
+  2. Build the system:
+     $ ./build/smallworld.sh
+
+  3. Install the system:
+     $ ./build/install.sh
+
+  4. Run the system:
+     $ /path/to/install/dir/bin/ecaml         # starts EasyOCaml's toplevel 
+     $ /path/to/install/dir/bin/ecamlc FILES  # runs EasyOCaml's compiler
+
+  a. Build custom error reporters (optional):
+
+     $ ./boot/ocamlrun boot/myocamlbuild \
+           easyocaml-additional/htmlErrorReport.cmo \
+           easyocaml-additional/structuredErrorReport.cmo
+
+     This allows you to use HTML output suitable for
+     easyocaml-additional/htmlreport/easyocaml.(js|css) or structured output
+     for some future OCaml IDE. Note, that will not be installed by step 3 by
+     now.
+
+     To use custom error reporters (optional), you need to supply
+     the option
+       -easyerrorprinter /path/to/build/dir/_build/easyocaml-additional/htmlErrorReport.cmo
+     on the commandline. (Replace htmlErrorReport.cmo with 
+     structuredErrorReport.cmo for structured output.)
+
+  b. Build language levels (optional)
+
+     $ ./easyocaml-additional/easyocaml-sample-lib/lang-levels/compile-lang-levels _build
+     
+     Now you can use the language levels "lang-minimal", "lang-advanced" and
+     "lang-foo" by putting the directory "lang-levels" to ~/.easyocaml or
+     setting the environment variable EASYOCAML_USER_DIR to the
+     easyocaml-sample-lib directory.
+
+
+** Guide to the environment variables in EasyOCaml
+
+  EASYOCAML_LOGLEVEL :: Controls debugging details.  possible values are "error",
+    "warn", "info", "debug" and "trace".
+
+  EASYOCAML_GLOBAL_DIR, EASYOCAML_USER_DIR :: Places to search for language
+    levels and teach packs.
+
+  LANG, LANGUAGE :: Controls internationalization of error messages. Possible
+    values: "en", "fr", "de"
+
+  EASYOCAML_ENUM_TIMEOUT :: Timeout for error enumeration.
+
+  EASYOCAML_ONLY_TYPECHECK :: Exit compiler after type checking. Don't generate
+    any code (possible value: "yes")
+

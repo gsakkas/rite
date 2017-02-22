@@ -1,0 +1,10 @@
+# This is used to what to expunge in toplevels and keep error plugin functionality
+Camlp4
+EzyUtils
+EzyAst
+EzyErrors
+EzyOcamlmodules
+EzyTypingCoreTypes
+EzyLangLevel
+Dynlink
+Str # Ok, this should be loaded by the error reporter itself, but i dont know how
