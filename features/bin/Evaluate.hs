@@ -168,7 +168,7 @@ runMycroft ml = do
 runSherrloc :: FilePath -> IO ([SrcSpan])
 runSherrloc ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do
   let tmp = tmpDir </> "error.con"
-  out <- readCreateProcess (proc "eval/mycroft/build/bin/cgen-sherrloc" [ml]) ""
+  out <- readCreateProcess (proc "eval/bin/ecamlc" [ml]) ""
   writeFile tmp out
   out <- readCreateProcess (proc "eval/bin/sherrloc" ["-e", "-n2", tmp]) ""
   return $! extractSrcSpans (lines out)
