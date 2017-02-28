@@ -117,10 +117,10 @@ let rec import_core_type creative lookup_ctor tyvarmap ct =
 and import_core_types creative lookup_ctor tyvarmap ctys =
   List.foldmap (import_core_type creative lookup_ctor) tyvarmap ctys
   
-let rec import_pattern pf pat =
+let rec import_pattern loc pf pat =
   let longident lid = { lid_name = lid; lid_data = () } in
-  let pattern desc : imported_pattern = 
-    { ppat_desc = desc; ppat_loc = pat.Parsetree.ppat_loc; ppat_data = () } in
+  let pattern desc : imported_pattern =
+    { ppat_desc = desc; ppat_loc = loc; ppat_data = () } in
   let pat_import_error reason =
     import_error pat.Parsetree.ppat_loc ~reason (EzyErrors.Not_supported_pattern pat.Parsetree.ppat_desc) in
   let module F = EzyFeatures in
@@ -131,7 +131,7 @@ let rec import_pattern pf pat =
   match pat.Parsetree.ppat_desc with
     | Parsetree.Ppat_var var ->
         if pf.F.p_var then
-          pattern (Ppat_var { nm_name = var; nm_loc = pat.Parsetree.ppat_loc; nm_data = () })
+          pattern (Ppat_var { nm_name = var; nm_loc = loc; nm_data = () })
         else
           pat_import_error "p_var"
     | Parsetree.Ppat_any ->
@@ -141,39 +141,39 @@ let rec import_pattern pf pat =
           pat_import_error "p_wildcard"
     | Parsetree.Ppat_constant c ->
         if pf.F.p_constant then
-          pattern (Ppat_constant (import_constant pat.Parsetree.ppat_loc c))
+          pattern (Ppat_constant (import_constant loc c))
         else
           pat_import_error "p_constant"
     | Parsetree.Ppat_tuple ps ->
         if pf.F.p_tuple then
-          pattern (Ppat_tuple (List.map (import_pattern sub_pf) ps))
+          pattern (Ppat_tuple (List.map (import_pattern loc sub_pf) ps))
         else
           pat_import_error "p_tuple"
     | Parsetree.Ppat_construct (k, opt_pat, explicit_arity) ->
         if pf.F.p_constructor then
-          let opt_pat' = match opt_pat with None -> None | Some pat -> Some (import_pattern sub_pf pat) in
+          let opt_pat' = match opt_pat with None -> None | Some pat -> Some (import_pattern loc sub_pf pat) in
           pattern (Ppat_construct (longident k, opt_pat', explicit_arity))
         else
           pat_import_error "p_constructor"
     | Parsetree.Ppat_record fs ->
         if pf.F.p_record then
-          let fs' = List.map (fun (f, p) -> longident f, import_pattern sub_pf p) fs in
+          let fs' = List.map (fun (f, p) -> longident f, import_pattern loc sub_pf p) fs in
           pattern (Ppat_record fs')
         else
           pat_import_error "p_record"
     | Parsetree.Ppat_or (p1, p2) ->
         if pf.F.p_or then
-          pattern (Ppat_or (import_pattern sub_pf p1, import_pattern sub_pf p2))
+          pattern (Ppat_or (import_pattern loc sub_pf p1, import_pattern loc sub_pf p2))
         else
           pat_import_error "p_or"
     | Parsetree.Ppat_alias (p, nm) ->
         if pf.F.p_alias then
-          pattern (Ppat_alias (import_pattern sub_pf p, { nm_name = nm; nm_data = (); nm_loc = Location.none } ))
+          pattern (Ppat_alias (import_pattern loc sub_pf p, { nm_name = nm; nm_data = (); nm_loc = Location.none } ))
         else
           pat_import_error "p_alias"
     | Parsetree.Ppat_constraint (p, ct) ->
         if pf.F.p_type_annotation then
-          pattern (Ppat_constraint (import_pattern sub_pf p, ct))
+          pattern (Ppat_constraint (import_pattern loc sub_pf p, ct))
         else
           pat_import_error "p_type_annotation"
     | desc -> raise (import_error pat.Parsetree.ppat_loc (EzyErrors.Not_supported_pattern desc))
@@ -185,8 +185,8 @@ let rec import_var_binding ef loc (pat, expr) =
     | _ -> 
         EzyErrors.raise_fatal ~loc (EzyErrors.Import_error (EzyErrors.Not_supported_pattern pat.Parsetree.ppat_desc, None))
 
-and import_rule pf ef (pat, exp) = import_pattern pf pat, import_expression exp.Parsetree.pexp_loc ef exp
-and import_rules pf ef rules = List.map (import_rule pf ef) rules
+and import_rule loc pf ef (pat, exp) = import_pattern loc pf pat, import_expression exp.Parsetree.pexp_loc ef exp
+and import_rules loc pf ef rules = List.map (import_rule loc pf ef) rules
 
 and import_expression loc ef x =
   let loc = if x.Parsetree.pexp_loc.Location.loc_ghost then loc else x.Parsetree.pexp_loc in
@@ -227,7 +227,7 @@ and import_expression loc ef x =
         begin match ef.F.e_let_in with
           | Some ({ F.l_pattern = pf } as lf) ->
               if lf.F.l_and || (match bindings with [_] -> true | _ -> false) then
-                build_expr (Pexp_let (import_rules pf ef bindings, import_expression loc ef body))
+                build_expr (Pexp_let (import_rules loc pf ef bindings, import_expression loc ef body))
               else
                 expr_import_error "l_and"
           | None ->
@@ -248,7 +248,7 @@ and import_expression loc ef x =
     | Parsetree.Pexp_function ("", None, rules) ->
         begin match ef.F.e_function with
           | Some { F.f_pattern = pf } ->
-              build_expr (Pexp_function (import_rules pf ef rules))
+              build_expr (Pexp_function (import_rules loc pf ef rules))
           | None ->
               expr_import_error "e_function"
         end
@@ -288,7 +288,7 @@ and import_expression loc ef x =
      | Parsetree.Pexp_match (exp, rules) ->
          begin match ef.F.e_match with
            | Some pf ->
-               build_expr (Pexp_match (import_expression loc ef exp, import_rules pf ef rules))
+               build_expr (Pexp_match (import_expression loc ef exp, import_rules loc pf ef rules))
            | None ->
                expr_import_error "e_match"
          end
@@ -296,7 +296,7 @@ and import_expression loc ef x =
      | Parsetree.Pexp_try (exp, rules) ->
          begin match ef.F.e_try with
            | Some pf ->
-               build_expr (Pexp_try (import_expression loc ef exp, import_rules pf ef rules))
+               build_expr (Pexp_try (import_expression loc ef exp, import_rules loc pf ef rules))
            | None ->
                expr_import_error "e_try"
          end
@@ -423,7 +423,7 @@ let rec import_strit prf strit =
           | Some lf ->
               if prf.F.pr_struct_feats.F.s_annot_optional || List.for_all explicitly_typed bindings then
                 if lf.F.l_and || (match bindings with [_] -> true | _ -> false) then
-                  build_strit (Pstr_value (import_rules lf.F.l_pattern prf.F.pr_expr_feats bindings))
+                  build_strit (Pstr_value (import_rules loc lf.F.l_pattern prf.F.pr_expr_feats bindings))
                 else
                   strit_import_error "s_let.l_and"
               else

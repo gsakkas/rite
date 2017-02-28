@@ -45,7 +45,8 @@ let reloc_pat x = { x with ppat_loc = symbol_rloc () };;
 let reloc_exp x = { x with pexp_loc = symbol_rloc () };;
 
 let mkoperator name pos =
-  { pexp_desc = Pexp_ident(Lident name); pexp_loc = rhs_loc pos }
+  (* { pexp_desc = Pexp_ident(Lident name); pexp_loc = rhs_loc pos } *)
+  { pexp_desc = Pexp_ident(Lident name); pexp_loc = symbol_rloc () }
 
 (*
   Ghost expressions and patterns:

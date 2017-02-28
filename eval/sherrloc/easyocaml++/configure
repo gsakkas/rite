@@ -653,30 +653,30 @@ asppprofflags='-DPROFILING'
 case "$arch,$model,$system" in
   alpha,*,digital)  aspp='as'; asflags='-O2'; asppflags='-O2 -DSYS_$(SYSTEM)';
                     asppprofflags='-pg -DPROFILING';;
-  alpha,*,linux)    aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  alpha,*,gnu)      aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  alpha,*,freebsd)  aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  alpha,*,netbsd)   aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  alpha,*,openbsd)  aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+  alpha,*,linux)    aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  alpha,*,gnu)      aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  alpha,*,freebsd)  aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  alpha,*,netbsd)   aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  alpha,*,openbsd)  aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
   mips,*,irix)      aspp='as'; asflags='-n32 -O2'; asppflags="$asflags";;
-  sparc,*,bsd)      aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  sparc,*,linux)    aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  sparc,*,gnu)      aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+  sparc,*,bsd)      aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  sparc,*,linux)    aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  sparc,*,gnu)      aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
   sparc,*,*)        case "$cc" in
-                      gcc*) aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+                      gcc*) aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
                          *) aspp='as'; asppflags='-P -DSYS_$(SYSTEM)';;
                     esac;;
   i386,*,solaris)   aspp='/usr/ccs/bin/as'; asppflags='-P -DSYS_$(SYSTEM)';;
-  i386,*,*)         aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+  i386,*,*)         aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
   hppa,*,*)         aspp="$cc"; asppflags='-traditional -c -DSYS_$(SYSTEM)';;
   power,*,elf)      aspp='gcc'; asppflags='-c';;
-  power,*,bsd)      aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+  power,*,bsd)      aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
   power,*,rhapsody) aspp="$bytecc"; asppflags='-c';;
-  arm,*,linux)      aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
-  arm,*,gnu)        aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+  arm,*,linux)      aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
+  arm,*,gnu)        aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
   ia64,*,*)         asflags=-xexplicit
-                    aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM) -Wa,-xexplicit';;
-  amd64,*,*)        aspp='gcc'; asppflags='-m32 -c -DSYS_$(SYSTEM)';;
+                    aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM) -Wa,-xexplicit';;
+  amd64,*,*)        aspp='gcc'; asppflags='-c -DSYS_$(SYSTEM)';;
 esac
 
 cc_profile='-pg'

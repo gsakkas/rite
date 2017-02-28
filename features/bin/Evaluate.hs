@@ -100,7 +100,7 @@ loadSpans ml = do
 loadToolSpans :: FilePath -> IO [SrcSpan]
 loadToolSpans f = do
   ls <- lines.force <$> readFile f
-  return $! map read ls
+  return $! map read $ take 3 $ nub ls
 
 data ProcessState = ProcessState
   { goodProgs :: !Int
