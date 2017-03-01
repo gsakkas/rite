@@ -206,12 +206,12 @@ def build_model(features, labels, hidden,
             #     {x: d[features], y_: d[labels], keep_prob: 1.0})
             # True positives.
             tp = np.sum(np.logical_and(truth, observed))
-            # # False positives.
-            # fp = np.sum(np.logical_and(np.logical_not(truth), observed))
+            # False positives.
+            fp = np.sum(np.logical_and(np.logical_not(truth), observed))
             # False negatives.
             fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
-            # # True negatives.
-            # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
+            # True negatives.
+            tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
             # precision = np.float32(tp) / np.float32(tp + fp)
             # modified recall where top-3 predictions are the only "true" predictions
             recall = np.float32(correct) / np.float32(tp + fn)
