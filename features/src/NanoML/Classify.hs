@@ -135,6 +135,7 @@ preds_tis_ctx =
     , tis_ite_ctx
     , tis_seq_ctx
     , tis_var_ctx
+    , tis_let_ctx
     ]
 
 base_types :: [Type]
@@ -568,6 +569,11 @@ tis_ite e = case e of
   T_Ite {} -> bool2double True
   _ -> 0
 
+tis_let :: TExpr -> Double
+tis_let e = case e of
+  T_Let {} -> bool2double True
+  _ -> 0
+
 tis_seq :: TExpr -> Double
 tis_seq e = case e of
   T_Seq {} -> bool2double True
@@ -628,6 +634,9 @@ tis_lit_string_ctx = ( mkContextLabels "Is-Lit-String", mkContextFeatures tis_li
 
 tis_ite_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_ite_ctx = ( mkContextLabels "Is-Ite", mkContextFeatures tis_ite )
+
+tis_let_ctx :: Feature -- TExpr -> TExpr -> [Double]
+tis_let_ctx = ( mkContextLabels "Is-Let", mkContextFeatures tis_let )
 
 tis_seq_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_seq_ctx = ( mkContextLabels "Is-Seq", mkContextFeatures tis_seq )
