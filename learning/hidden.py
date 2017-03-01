@@ -190,11 +190,11 @@ def build_model(features, labels, hidden,
                 inc2 = 1
                 inc3 = 1
                 correct += 1
-            if n > 1 and d['L-DidChange'][top_indices[1][1]] == 1:
+            if n_top > 1 and d['L-DidChange'][top_indices[1][1]] == 1:
                 inc2 = 1
                 inc3 = 1
                 correct += 1
-            if n > 2 and d['L-DidChange'][top_indices[1][2]] == 1:
+            if n_top > 2 and d['L-DidChange'][top_indices[1][2]] == 1:
                 inc3 = 1
                 correct += 1
             acc1 += inc1
