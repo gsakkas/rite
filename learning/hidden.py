@@ -174,7 +174,9 @@ def build_model(features, labels, hidden,
         ts = []
 
         for d in data:
-            ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
+            (top_values, top_indices), truth, observed = sess.run(
+                [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
+                feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
             # print ys
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices
@@ -182,33 +184,34 @@ def build_model(features, labels, hidden,
             inc2 = 0
             inc3 = 0
             correct = 0
+            n_top = len(top_indices[1])
             if d['L-DidChange'][top_indices[1][0]] == 1:
                 inc1 = 1
                 inc2 = 1
                 inc3 = 1
                 correct += 1
-            if len(top_indices[1]) > 1 and d['L-DidChange'][top_indices[1][1]] == 1:
+            if n > 1 and d['L-DidChange'][top_indices[1][1]] == 1:
                 inc2 = 1
                 inc3 = 1
                 correct += 1
-            if len(top_indices[1]) > 2 and d['L-DidChange'][top_indices[1][2]] == 1:
+            if n > 2 and d['L-DidChange'][top_indices[1][2]] == 1:
                 inc3 = 1
                 correct += 1
             acc1 += inc1
             acc2 += inc2
             acc3 += inc3
 
-            truth, observed = sess.run(
-                [tf.argmax(y_,1), tf.argmax(y,1)],
-                {x: d[features], y_: d[labels], keep_prob: 1.0})
+            # truth, observed = sess.run(
+            #     [tf.argmax(y_,1), tf.argmax(y,1)],
+            #     {x: d[features], y_: d[labels], keep_prob: 1.0})
             # True positives.
             tp = np.sum(np.logical_and(truth, observed))
-            # False positives.
-            fp = np.sum(np.logical_and(np.logical_not(truth), observed))
+            # # False positives.
+            # fp = np.sum(np.logical_and(np.logical_not(truth), observed))
             # False negatives.
             fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
-            # True negatives.
-            tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
+            # # True negatives.
+            # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
             # precision = np.float32(tp) / np.float32(tp + fp)
             # modified recall where top-3 predictions are the only "true" predictions
             recall = np.float32(correct) / np.float32(tp + fn)
