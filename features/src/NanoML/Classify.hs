@@ -114,11 +114,13 @@ preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_ctx =
     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
     map tis_op_ctx [Eq ..]
- ++ [ tis_con_ctx "::", tis_con_ctx "[]"
+ ++ [ tis_anycon_ctx
+    , tis_con_ctx "::", tis_con_ctx "[]"
     , tis_con_ctx "(,)"
     , tis_con_ctx "VarX", tis_con_ctx "VarY"
     , tis_con_ctx "Sine", tis_con_ctx "Cosine"
     , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+    , tis_anycon_case_ctx
     , tis_con_case_ctx "::", tis_con_case_ctx "[]"
     , tis_con_case_ctx "(,)"
     , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
@@ -508,9 +510,21 @@ tis_con c e = case e of
   T_List _ _ -> bool2double $ c == "::" || c == "[]"
   _ -> 0
 
+tis_con_any :: TExpr -> Double
+tis_con_any e = case e of
+  T_ConApp _ _ _ -> 1
+  T_Tuple _ _ -> 1
+  T_List _ _ -> 1
+  _ -> 0
+
 tis_con_case :: DCon -> TExpr -> Double
 tis_con_case c e = case e of
   T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
+  _ -> 0
+
+tis_con_case_any :: TExpr -> Double
+tis_con_case_any e = case e of
+  T_Case _ _ _ -> 1
   _ -> 0
 
 tis_var :: TExpr -> Double
@@ -577,10 +591,20 @@ tis_con_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con c) )
   where
   lbl = "Is-" ++ c
 
+tis_anycon_ctx :: Feature -- ([String], TExpr -> TExpr -> [Double])
+tis_anycon_ctx = ( mkContextLabels lbl, mkContextFeatures tis_con_any )
+  where
+  lbl = "Is-Con"
+
 tis_con_case_ctx :: DCon -> Feature
 tis_con_case_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con_case c) )
   where
   lbl = "Is-" ++ c ++ "-Case"
+
+tis_anycon_case_ctx :: Feature
+tis_anycon_case_ctx = ( mkContextLabels lbl, mkContextFeatures tis_con_case_any )
+  where
+  lbl = "Is-Case"
 
 tis_var_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_var_ctx = ( mkContextLabels "Is-Var", mkContextFeatures tis_var )

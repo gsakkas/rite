@@ -179,10 +179,13 @@ much better, but 75% of the programs don't change any of the exprs in the slice,
 well, there are folds where the accuracy tanks, i.e. worse than the
 baseline)
 
-| tool                     | accuracy |
-| ocaml                    |    49.8% |
-| mycroft (maxsat)         |    46.6% |
-| sherrloc                 |    64.5% |
-| neural net (500 neurons) |    80.2% |
-| decision tree            |    75.9% |
-|                          |          |
+| tool                     | accuracy (top-1) |
+| ocaml                    |            49.8% |
+| mycroft (maxsat)         |            46.6% |
+| sherrloc                 |            64.5% |
+| neural net (500 neurons) |            80.2% |
+| decision tree            |            75.9% |
+|                          |                  |
+
+| tool     | acc-1 | acc-2 | acc-3 |
+| sherrloc | 59.0% | 78.3% | 86.4% |
