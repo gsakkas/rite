@@ -214,3 +214,41 @@ what it can't mean is:
   e.g. =f x= becomes =f y=
 
 (these would both involve changing a child of the =App= node, not the =App=)
+
+* How to report predictions to the user?
+ATM we predict *locations* that change, but we eventually want to
+provide a helpful message as well. Each location can be associated with
+multiple constraints, e.g. in
+
+#+BEGIN_EXAMPLE
+1 + true
+#+END_EXAMPLE
+
+the =+= node gives rise to three constraints
+
+1. the output is an =int=
+2. the left child must be an =int=
+3. the right child must be an =int=
+
+Assuming we choose to blame the =+=, which *constraint* do we blame?
+
+1. We already have a minimal type error slice, if we're lucky only one
+   constraint in the slice will come from the =+=.
+2. If we're not lucky? Perhaps we can try to be clever based on the kind
+   of expression we're looking at. For example, changing an =App= node
+   =f x= is more likely (according to the above) to mean changing the
+   type of the =App= node than its children. So let's provide the
+   message that complains about the output type of =f=.
+
+Still, (2) feels flimsy, it would be nice to have a better strategy.
+
+Perhaps we should also investigate predicting *constraints* that should
+change rather than *locations*? That seems like future work though, as
+it might entail a substantial reworking of the feature set, e.g. we might
+want features based on neighbors in the constraint graph.
+
+A simple addition to the current feature set could be enumerating the
+different constraint sources (e.g. plus-return, plus-left-child,
+plus-right-child), and adding vectors for each constraint. So we would
+get three vectors for a =+= expression, which would be identical except
+for the constraint-source feature.
