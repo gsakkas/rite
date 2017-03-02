@@ -1,75 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval ex x y));;
+let rec digitsOfInt n = if n < 0 then [] else [(digitsOfInt (n / 10)) mod 10];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)));;
+let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
 
 *)
 
 (* changed spans
-(17,26)-(17,39)
-(17,32)-(17,34)
+(2,46)-(2,77)
+(2,47)-(2,76)
+(2,74)-(2,76)
 *)
 
 (* type error slice
-(13,3)-(17,42)
-(13,14)-(17,40)
-(14,2)-(17,40)
-(17,26)-(17,39)
-(17,27)-(17,31)
-(17,32)-(17,34)
+(2,3)-(2,79)
+(2,20)-(2,77)
+(2,24)-(2,77)
+(2,46)-(2,77)
+(2,47)-(2,69)
+(2,47)-(2,76)
+(2,48)-(2,59)
 *)
 
 (* all spans
-(11,9)-(11,26)
-(11,9)-(11,12)
-(11,16)-(11,26)
-(11,17)-(11,21)
-(11,22)-(11,25)
-(13,14)-(17,40)
-(14,2)-(17,40)
-(14,8)-(14,9)
-(15,13)-(15,14)
-(16,13)-(16,14)
-(17,15)-(17,40)
-(17,15)-(17,18)
-(17,19)-(17,40)
-(17,20)-(17,22)
-(17,26)-(17,39)
-(17,27)-(17,31)
-(17,32)-(17,34)
-(17,35)-(17,36)
-(17,37)-(17,38)
+(2,20)-(2,77)
+(2,24)-(2,77)
+(2,27)-(2,32)
+(2,27)-(2,28)
+(2,31)-(2,32)
+(2,38)-(2,40)
+(2,46)-(2,77)
+(2,47)-(2,76)
+(2,47)-(2,69)
+(2,48)-(2,59)
+(2,60)-(2,68)
+(2,61)-(2,62)
+(2,65)-(2,67)
+(2,74)-(2,76)
 *)

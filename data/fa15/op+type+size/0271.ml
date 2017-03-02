@@ -1,59 +1,70 @@
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let quotient = n / 10 in
-      if quotient = 0 then n mod 10 else quotient :: (digitsOfInt quotient);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let quotient = n / 10 in
-      if quotient = 0 then [n mod 10] else quotient :: (digitsOfInt quotient);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(7,27)-(7,35)
+(7,20)-(7,54)
 *)
 
 (* type error slice
-(3,2)-(7,75)
-(3,2)-(7,75)
-(4,13)-(4,15)
-(6,6)-(7,75)
-(7,6)-(7,75)
-(7,6)-(7,75)
-(7,27)-(7,35)
-(7,41)-(7,75)
+(7,20)-(7,54)
+(7,20)-(7,54)
+(7,20)-(7,54)
+(7,44)-(7,54)
+(7,49)-(7,50)
 *)
 
 (* all spans
-(2,20)-(7,75)
-(3,2)-(7,75)
-(3,8)-(3,13)
-(3,8)-(3,9)
-(3,12)-(3,13)
-(4,13)-(4,15)
-(6,6)-(7,75)
-(6,21)-(6,27)
-(6,21)-(6,22)
-(6,25)-(6,27)
-(7,6)-(7,75)
-(7,9)-(7,21)
-(7,9)-(7,17)
-(7,20)-(7,21)
-(7,27)-(7,35)
-(7,27)-(7,28)
-(7,33)-(7,35)
-(7,41)-(7,75)
-(7,41)-(7,49)
-(7,53)-(7,75)
-(7,54)-(7,65)
-(7,66)-(7,74)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,54)
+(7,23)-(7,38)
+(7,23)-(7,31)
+(7,32)-(7,33)
+(7,34)-(7,38)
+(7,44)-(7,54)
+(7,49)-(7,50)
+(7,44)-(7,48)
+(7,51)-(7,54)
+(7,52)-(7,53)
+(7,20)-(7,54)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)

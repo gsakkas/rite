@@ -14,7 +14,7 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       let lr1 = List.rev a in
-      let lr2 = List.rev x in
+      let lr2 = List.rev l2 in
       let h1::t1 = lr1 in
       let h2::t2 = lr2 in
       if (h1 + h2) > 9 then (1, [(h1 + h2) - 10]) else (0, [h1 + h2]) in
@@ -54,7 +54,6 @@ let bigAdd l1 l2 =
 
 (* changed spans
 (16,25)-(16,26)
-(17,25)-(17,26)
 *)
 
 (* type error slice
@@ -146,9 +145,9 @@ let bigAdd l1 l2 =
 (16,16)-(16,24)
 (16,25)-(16,26)
 (17,6)-(20,69)
-(17,16)-(17,26)
+(17,16)-(17,27)
 (17,16)-(17,24)
-(17,25)-(17,26)
+(17,25)-(17,27)
 (18,6)-(20,69)
 (18,19)-(18,22)
 (19,6)-(20,69)

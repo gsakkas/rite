@@ -20,7 +20,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = match x with | (d1,d2)::ds -> ((d1 + d2), ds) in
+    let f a x = match x with | (d1,d2)::ds -> ((d1 + d2), []) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -68,11 +68,6 @@ let bigAdd l1 l2 =
 (24,15)-(24,22)
 (25,4)-(26,51)
 (26,4)-(26,51)
-(27,14)-(27,17)
-(27,18)-(27,33)
-(27,19)-(27,26)
-(27,27)-(27,29)
-(27,30)-(27,32)
 *)
 
 (* type error slice

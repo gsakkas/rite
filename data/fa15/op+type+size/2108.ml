@@ -4,42 +4,60 @@ let explode s =
     if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
   go 0;;
 
-let palindrome w = match explode w with | [] -> true | h::t -> explode w;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  match explode w with | [] -> true | h::t -> listReverse (explode w);;
 
 
 (* fix
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 let explode s =
   let rec go i =
     if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
   go 0;;
 
-let rec matchHeads x = match explode x with | h::t -> false;;
+let rec matchHeads w =
+  match w with
+  | [] -> true
+  | h::t -> if h = (List.hd (listReverse w)) then true else false;;
 
-let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
+let palindrome w =
+  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
 
 *)
 
 (* changed spans
-(7,15)-(7,72)
-(7,63)-(7,70)
-(7,71)-(7,72)
+(2,12)-(5,6)
+(3,2)-(5,6)
+(7,20)-(8,57)
+(8,8)-(8,9)
+(8,23)-(8,25)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,49)-(8,50)
+(8,52)-(8,53)
+(8,54)-(8,57)
+(8,55)-(8,56)
+(10,15)-(11,69)
+(11,46)-(11,57)
 *)
 
 (* type error slice
-(2,3)-(5,8)
-(2,12)-(5,6)
-(3,2)-(5,6)
-(4,43)-(4,66)
-(4,54)-(4,66)
-(4,55)-(4,57)
-(5,2)-(5,4)
-(5,2)-(5,6)
-(7,19)-(7,72)
-(7,19)-(7,72)
-(7,48)-(7,52)
-(7,63)-(7,70)
-(7,63)-(7,72)
+(8,36)-(8,51)
+(8,36)-(8,57)
+(8,37)-(8,48)
+(8,52)-(8,53)
+(11,2)-(11,69)
+(11,2)-(11,69)
+(11,31)-(11,35)
+(11,46)-(11,57)
+(11,46)-(11,69)
 *)
 
 (* all spans
@@ -66,13 +84,26 @@ let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
 (5,2)-(5,6)
 (5,2)-(5,4)
 (5,5)-(5,6)
-(7,15)-(7,72)
-(7,19)-(7,72)
-(7,25)-(7,34)
-(7,25)-(7,32)
-(7,33)-(7,34)
-(7,48)-(7,52)
-(7,63)-(7,72)
-(7,63)-(7,70)
-(7,71)-(7,72)
+(7,20)-(8,57)
+(8,2)-(8,57)
+(8,8)-(8,9)
+(8,23)-(8,25)
+(8,36)-(8,57)
+(8,52)-(8,53)
+(8,36)-(8,51)
+(8,37)-(8,48)
+(8,49)-(8,50)
+(8,54)-(8,57)
+(8,55)-(8,56)
+(10,15)-(11,69)
+(11,2)-(11,69)
+(11,8)-(11,17)
+(11,8)-(11,15)
+(11,16)-(11,17)
+(11,31)-(11,35)
+(11,46)-(11,69)
+(11,46)-(11,57)
+(11,58)-(11,69)
+(11,59)-(11,66)
+(11,67)-(11,68)
 *)

@@ -79,7 +79,7 @@ let rec mulByDigit i l =
         if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
       let rec adder x = match x with | [] -> [] | h::t -> bigAdd h (adder t) in
       (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-        ((helper [] (h * i)) @ []);;
+        (helper [] (h * i));;
 
 *)
 
@@ -87,7 +87,6 @@ let rec mulByDigit i l =
 (38,6)-(38,11)
 (38,6)-(40,31)
 (40,11)-(40,30)
-(40,12)-(40,18)
 *)
 
 (* type error slice

@@ -1,70 +1,92 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (seen, h) then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if rand mod 2 then buildX () else buildY ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> buildX ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(7,23)-(7,41)
-(7,32)-(7,41)
-(7,33)-(7,37)
-(7,57)-(7,66)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(19,9)-(19,52)
+(19,12)-(19,16)
+(19,12)-(19,22)
+(19,21)-(19,22)
+(19,43)-(19,49)
+(19,50)-(19,52)
+(20,9)-(20,46)
 *)
 
 (* type error slice
-(7,20)-(7,66)
-(7,23)-(7,31)
-(7,23)-(7,41)
+(19,9)-(19,52)
+(19,12)-(19,22)
 *)
 
 (* all spans
-(2,21)-(9,27)
-(3,2)-(9,27)
-(3,18)-(8,46)
-(4,4)-(8,46)
-(4,10)-(4,14)
-(5,12)-(5,16)
-(7,8)-(8,46)
-(7,20)-(7,66)
-(7,23)-(7,41)
-(7,23)-(7,31)
-(7,32)-(7,41)
-(7,33)-(7,37)
-(7,39)-(7,40)
-(7,47)-(7,51)
-(7,57)-(7,66)
-(7,57)-(7,58)
-(7,62)-(7,66)
-(8,8)-(8,46)
-(8,20)-(8,21)
-(8,25)-(8,46)
-(8,25)-(8,31)
-(8,32)-(8,46)
-(8,33)-(8,38)
-(8,40)-(8,45)
-(9,2)-(9,27)
-(9,2)-(9,10)
-(9,11)-(9,27)
-(9,12)-(9,18)
-(9,19)-(9,26)
-(9,20)-(9,22)
-(9,24)-(9,25)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(17,15)-(20,46)
+(18,2)-(20,46)
+(18,8)-(18,13)
+(19,9)-(19,52)
+(19,12)-(19,22)
+(19,12)-(19,16)
+(19,21)-(19,22)
+(19,28)-(19,37)
+(19,28)-(19,34)
+(19,35)-(19,37)
+(19,43)-(19,52)
+(19,43)-(19,49)
+(19,50)-(19,52)
+(20,9)-(20,46)
+(20,9)-(20,18)
+(20,19)-(20,46)
+(20,20)-(20,25)
+(20,26)-(20,45)
+(20,27)-(20,31)
+(20,33)-(20,44)
+(20,34)-(20,39)
+(20,42)-(20,43)
 *)

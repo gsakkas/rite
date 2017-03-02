@@ -6,17 +6,17 @@ let sqsum xs =
 (* fix
 
 let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
+(3,14)-(3,15)
 (3,14)-(3,26)
 (3,16)-(3,17)
 (3,18)-(3,26)
 (3,19)-(3,20)
 (3,30)-(3,70)
-(3,41)-(3,42)
 *)
 
 (* type error slice

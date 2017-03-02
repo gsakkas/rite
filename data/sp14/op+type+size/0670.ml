@@ -16,7 +16,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = let (h::t,b) = a in a = (l1, []) in
+    let f a x = let (h::t,b) = a in a = ([], []) in
     let base = ((List.rev l1), []) in
     let args = l2 in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -41,7 +41,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = let (h::t,b) = a in (t, ((x + h) :: b)) in
+    let f a x = let (h::t,_) = a in ([], []) in
     let base = ((List.rev l1), []) in
     let args = l2 in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -49,11 +49,9 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,36)-(19,37)
+(19,16)-(19,48)
+(19,31)-(19,32)
 (19,36)-(19,48)
-(19,41)-(19,43)
-(19,45)-(19,47)
-(20,4)-(21,68)
 *)
 
 (* type error slice

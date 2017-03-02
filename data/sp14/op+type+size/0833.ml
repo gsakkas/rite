@@ -1,46 +1,82 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: ((digitsOfInt n) / 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(3,39)-(3,61)
-(3,53)-(3,54)
+(16,2)-(16,72)
 *)
 
 (* type error slice
-(2,3)-(3,63)
-(2,20)-(3,61)
-(3,2)-(3,61)
-(3,25)-(3,61)
-(3,25)-(3,61)
-(3,39)-(3,61)
-(3,39)-(3,61)
-(3,40)-(3,55)
-(3,41)-(3,52)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,20)-(16,72)
+(16,47)-(16,53)
+(16,47)-(16,56)
 *)
 
 (* all spans
-(2,20)-(3,61)
-(3,2)-(3,61)
-(3,5)-(3,11)
-(3,5)-(3,6)
-(3,10)-(3,11)
-(3,17)-(3,19)
-(3,25)-(3,61)
-(3,25)-(3,35)
-(3,26)-(3,27)
-(3,32)-(3,34)
-(3,39)-(3,61)
-(3,40)-(3,55)
-(3,41)-(3,52)
-(3,53)-(3,54)
-(3,58)-(3,60)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,15)-(16,72)
+(16,2)-(16,72)
+(16,5)-(16,14)
+(16,5)-(16,10)
+(16,13)-(16,14)
+(16,20)-(16,72)
+(16,24)-(16,41)
+(16,24)-(16,37)
+(16,25)-(16,29)
+(16,30)-(16,36)
+(16,31)-(16,32)
+(16,34)-(16,35)
+(16,40)-(16,41)
+(16,47)-(16,56)
+(16,47)-(16,53)
+(16,54)-(16,56)
+(16,62)-(16,71)
+(16,62)-(16,68)
+(16,69)-(16,71)
+(16,2)-(16,72)
 *)

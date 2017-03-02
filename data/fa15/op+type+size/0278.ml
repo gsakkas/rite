@@ -1,67 +1,60 @@
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let remainder = n mod 10 in
-      if n = 0 then [remainder] else ((digitsOfInt n) / 10) @ [remainder];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1 x y);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      let remainder = n mod 10 in
-      if n = 0 then [remainder] else (digitsOfInt (n / 10)) @ [remainder];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin x;;
 
 *)
 
 (* changed spans
-(7,37)-(7,59)
-(7,51)-(7,52)
+(12,58)-(12,71)
+(12,59)-(12,63)
+(12,64)-(12,66)
+(12,69)-(12,70)
 *)
 
 (* type error slice
-(2,3)-(7,75)
-(2,20)-(7,73)
-(3,2)-(7,73)
-(6,6)-(7,73)
-(7,6)-(7,73)
-(7,20)-(7,31)
-(7,37)-(7,59)
-(7,37)-(7,59)
-(7,37)-(7,73)
-(7,38)-(7,53)
-(7,39)-(7,50)
-(7,60)-(7,61)
+(11,3)-(12,73)
+(11,14)-(12,71)
+(12,2)-(12,71)
+(12,58)-(12,71)
+(12,59)-(12,63)
+(12,64)-(12,66)
 *)
 
 (* all spans
-(2,20)-(7,73)
-(3,2)-(7,73)
-(3,8)-(3,13)
-(3,8)-(3,9)
-(3,12)-(3,13)
-(4,13)-(4,15)
-(6,6)-(7,73)
-(6,22)-(6,30)
-(6,22)-(6,23)
-(6,28)-(6,30)
-(7,6)-(7,73)
-(7,9)-(7,14)
-(7,9)-(7,10)
-(7,13)-(7,14)
-(7,20)-(7,31)
-(7,21)-(7,30)
-(7,37)-(7,73)
-(7,60)-(7,61)
-(7,37)-(7,59)
-(7,38)-(7,53)
-(7,39)-(7,50)
-(7,51)-(7,52)
-(7,56)-(7,58)
-(7,62)-(7,73)
-(7,63)-(7,72)
+(11,14)-(12,71)
+(12,2)-(12,71)
+(12,8)-(12,9)
+(12,26)-(12,27)
+(12,39)-(12,40)
+(12,54)-(12,71)
+(12,54)-(12,57)
+(12,58)-(12,71)
+(12,59)-(12,63)
+(12,64)-(12,66)
+(12,67)-(12,68)
+(12,69)-(12,70)
 *)

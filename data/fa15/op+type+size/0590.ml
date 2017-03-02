@@ -1,77 +1,52 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let g = (f, (b = (f b))) in (g, b));;
+let rec eval (e,x,y) = match (e, x, y) with | VarX  -> x | VarY  -> y;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 
 *)
 
 (* changed spans
-(6,28)-(6,64)
-(6,37)-(6,53)
-(6,38)-(6,39)
-(6,41)-(6,52)
-(6,42)-(6,43)
-(6,46)-(6,51)
-(6,58)-(6,59)
-(6,61)-(6,62)
+(11,29)-(11,38)
+(11,55)-(11,56)
+(11,68)-(11,69)
 *)
 
 (* type error slice
-(3,13)-(3,14)
-(3,13)-(3,16)
-(4,51)-(4,57)
-(4,51)-(4,64)
-(4,58)-(4,64)
-(4,59)-(4,60)
-(6,21)-(6,27)
-(6,21)-(6,64)
-(6,28)-(6,64)
-(6,28)-(6,64)
-(6,37)-(6,53)
-(6,57)-(6,63)
-(6,58)-(6,59)
+(11,23)-(11,69)
+(11,23)-(11,69)
+(11,23)-(11,69)
+(11,23)-(11,69)
+(11,29)-(11,38)
 *)
 
 (* all spans
-(2,16)-(4,71)
-(3,2)-(4,71)
-(3,13)-(3,16)
-(3,13)-(3,14)
-(3,15)-(3,16)
-(4,2)-(4,71)
-(4,8)-(4,12)
-(4,35)-(4,71)
-(4,38)-(4,45)
-(4,51)-(4,64)
-(4,51)-(4,57)
-(4,58)-(4,64)
-(4,59)-(4,60)
-(4,62)-(4,63)
-(4,70)-(4,71)
-(6,14)-(6,64)
-(6,21)-(6,64)
-(6,21)-(6,27)
-(6,28)-(6,64)
-(6,37)-(6,53)
-(6,38)-(6,39)
-(6,41)-(6,52)
-(6,42)-(6,43)
-(6,46)-(6,51)
-(6,47)-(6,48)
-(6,49)-(6,50)
-(6,57)-(6,63)
-(6,58)-(6,59)
-(6,61)-(6,62)
+(11,14)-(11,69)
+(11,23)-(11,69)
+(11,29)-(11,38)
+(11,30)-(11,31)
+(11,33)-(11,34)
+(11,36)-(11,37)
+(11,55)-(11,56)
+(11,68)-(11,69)
 *)

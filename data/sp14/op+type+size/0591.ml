@@ -7,7 +7,7 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | AlternateSign of expr;;
+  | Log of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -23,7 +23,7 @@ let rec eval (e,x,y) =
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | AlternateSign e1 -> (eval (e1, x, y)) *. (-1);;
+  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0;;
 
 
 (* fix
@@ -36,7 +36,7 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Negate of expr;;
+  | Log of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -52,18 +52,20 @@ let rec eval (e,x,y) =
       if (eval (e1, x, y)) < (eval (e2, x, y))
       then eval (e3, x, y)
       else eval (e4, x, y)
-  | Negate e1 -> (eval (e1, x, y)) *. (-1.0);;
+  | Log e1 -> let b = eval (e1, x, y) in if b > 1.0 then log b else 0.0;;
 
 *)
 
 (* changed spans
-(15,2)-(26,49)
-(26,45)-(26,49)
+(26,68)-(26,69)
 *)
 
 (* type error slice
-(26,24)-(26,49)
-(26,45)-(26,49)
+(26,41)-(26,69)
+(26,41)-(26,69)
+(26,57)-(26,60)
+(26,57)-(26,62)
+(26,68)-(26,69)
 *)
 
 (* all spans
@@ -72,8 +74,8 @@ let rec eval (e,x,y) =
 (12,16)-(12,26)
 (12,17)-(12,21)
 (12,22)-(12,25)
-(14,14)-(26,49)
-(15,2)-(26,49)
+(14,14)-(26,69)
+(15,2)-(26,69)
 (15,8)-(15,9)
 (16,13)-(16,14)
 (17,13)-(17,14)
@@ -151,12 +153,19 @@ let rec eval (e,x,y) =
 (25,17)-(25,19)
 (25,21)-(25,22)
 (25,24)-(25,25)
-(26,24)-(26,49)
-(26,24)-(26,41)
-(26,25)-(26,29)
-(26,30)-(26,40)
-(26,31)-(26,33)
+(26,14)-(26,69)
+(26,22)-(26,37)
+(26,22)-(26,26)
+(26,27)-(26,37)
+(26,28)-(26,30)
+(26,32)-(26,33)
 (26,35)-(26,36)
-(26,38)-(26,39)
-(26,45)-(26,49)
+(26,41)-(26,69)
+(26,44)-(26,51)
+(26,44)-(26,45)
+(26,48)-(26,51)
+(26,57)-(26,62)
+(26,57)-(26,60)
+(26,61)-(26,62)
+(26,68)-(26,69)
 *)

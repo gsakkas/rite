@@ -1,50 +1,82 @@
 
-let pipe fs =
-  let f a x = a (x a) in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
 
 
 (* fix
 
-let pipe fs =
-  let f a x z = x (a z) in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(3,14)-(3,15)
-(3,14)-(3,21)
-(3,19)-(3,20)
-(3,25)-(3,67)
-(3,34)-(3,39)
+(16,2)-(16,72)
 *)
 
 (* type error slice
-(3,2)-(3,67)
-(3,8)-(3,21)
-(3,10)-(3,21)
-(3,14)-(3,15)
-(3,14)-(3,21)
-(3,43)-(3,57)
-(3,43)-(3,67)
-(3,58)-(3,59)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,20)-(16,72)
+(16,47)-(16,53)
+(16,47)-(16,56)
 *)
 
 (* all spans
-(2,9)-(3,67)
-(3,2)-(3,67)
-(3,8)-(3,21)
-(3,10)-(3,21)
-(3,14)-(3,21)
-(3,14)-(3,15)
-(3,16)-(3,21)
-(3,17)-(3,18)
-(3,19)-(3,20)
-(3,25)-(3,67)
-(3,34)-(3,39)
-(3,38)-(3,39)
-(3,43)-(3,67)
-(3,43)-(3,57)
-(3,58)-(3,59)
-(3,60)-(3,64)
-(3,65)-(3,67)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,15)-(16,72)
+(16,2)-(16,72)
+(16,5)-(16,14)
+(16,5)-(16,10)
+(16,13)-(16,14)
+(16,20)-(16,72)
+(16,24)-(16,41)
+(16,24)-(16,37)
+(16,25)-(16,29)
+(16,30)-(16,36)
+(16,31)-(16,32)
+(16,34)-(16,35)
+(16,40)-(16,41)
+(16,47)-(16,56)
+(16,47)-(16,53)
+(16,54)-(16,56)
+(16,62)-(16,71)
+(16,62)-(16,68)
+(16,69)-(16,71)
+(16,2)-(16,72)
 *)

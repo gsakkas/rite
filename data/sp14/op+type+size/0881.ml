@@ -1,43 +1,55 @@
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone ((x n) - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1);;
 
 
 (* fix
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
 
 *)
 
 (* changed spans
-(2,55)-(2,74)
-(2,62)-(2,73)
-(2,63)-(2,68)
-(2,66)-(2,67)
+(12,64)-(12,66)
 *)
 
 (* type error slice
-(2,3)-(2,76)
-(2,14)-(2,74)
-(2,55)-(2,74)
-(2,56)-(2,61)
-(2,62)-(2,73)
-(2,63)-(2,68)
-(2,64)-(2,65)
+(11,3)-(12,69)
+(11,14)-(12,67)
+(12,2)-(12,67)
+(12,58)-(12,67)
+(12,59)-(12,63)
+(12,64)-(12,66)
 *)
 
 (* all spans
-(2,14)-(2,74)
-(2,16)-(2,74)
-(2,20)-(2,74)
-(2,26)-(2,27)
-(2,40)-(2,42)
-(2,50)-(2,74)
-(2,50)-(2,51)
-(2,55)-(2,74)
-(2,56)-(2,61)
-(2,62)-(2,73)
-(2,63)-(2,68)
-(2,64)-(2,65)
-(2,66)-(2,67)
-(2,71)-(2,72)
+(11,14)-(12,67)
+(12,2)-(12,67)
+(12,8)-(12,9)
+(12,26)-(12,27)
+(12,39)-(12,40)
+(12,54)-(12,67)
+(12,54)-(12,57)
+(12,58)-(12,67)
+(12,59)-(12,63)
+(12,64)-(12,66)
 *)

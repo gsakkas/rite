@@ -1,62 +1,70 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "sin(pi*" ^ (s ^ ")");;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "sin(pi*" ^ ((Format.sprintf "%expr" 1.0) ^ ")");;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(15,27)-(15,28)
-(15,31)-(15,34)
+(7,23)-(7,24)
+(7,23)-(7,41)
 *)
 
 (* type error slice
-(12,2)-(15,35)
-(15,26)-(15,35)
-(15,27)-(15,28)
-(15,29)-(15,30)
+(7,23)-(7,24)
+(7,23)-(7,41)
+(7,24)-(7,41)
+(7,25)-(7,33)
 *)
 
 (* all spans
-(11,21)-(15,35)
-(12,2)-(15,35)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,14)-(15,35)
-(15,24)-(15,25)
-(15,14)-(15,23)
-(15,26)-(15,35)
-(15,29)-(15,30)
-(15,27)-(15,28)
-(15,31)-(15,34)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,66)
+(7,23)-(7,41)
+(7,23)-(7,24)
+(7,24)-(7,41)
+(7,25)-(7,33)
+(7,34)-(7,35)
+(7,36)-(7,40)
+(7,47)-(7,56)
+(7,47)-(7,48)
+(7,52)-(7,56)
+(7,62)-(7,66)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)

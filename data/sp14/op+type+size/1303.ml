@@ -1,76 +1,74 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. VarX)
-  | Cosine a -> cos (pi *. VarY);;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else ((listReverse n) mod 10) :: (listReverse (digitsOfInt (n / 10)));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. x)
-  | Cosine a -> cos (pi *. y);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (listReverse (digitsOfInt (n / 10)));;
 
 *)
 
 (* changed spans
-(17,25)-(17,29)
-(18,27)-(18,31)
+(8,8)-(8,23)
+(8,9)-(8,20)
 *)
 
 (* type error slice
-(17,18)-(17,30)
-(17,25)-(17,29)
-(18,20)-(18,32)
-(18,27)-(18,31)
+(3,2)-(3,57)
+(3,2)-(3,57)
+(3,2)-(3,57)
+(3,2)-(3,57)
+(3,36)-(3,51)
+(3,37)-(3,48)
+(3,49)-(3,50)
+(6,5)-(6,6)
+(6,5)-(6,11)
+(6,5)-(6,11)
+(6,10)-(6,11)
+(8,8)-(8,23)
+(8,9)-(8,20)
+(8,21)-(8,22)
 *)
 
 (* all spans
-(11,9)-(11,26)
-(11,9)-(11,12)
-(11,16)-(11,26)
-(11,17)-(11,21)
-(11,22)-(11,25)
-(13,14)-(18,32)
-(14,2)-(18,32)
-(14,8)-(14,9)
-(15,13)-(15,14)
-(16,13)-(16,14)
-(17,14)-(17,30)
-(17,14)-(17,17)
-(17,18)-(17,30)
-(17,19)-(17,21)
-(17,25)-(17,29)
-(18,16)-(18,32)
-(18,16)-(18,19)
-(18,20)-(18,32)
-(18,21)-(18,23)
-(18,27)-(18,31)
+(2,20)-(3,57)
+(3,2)-(3,57)
+(3,8)-(3,9)
+(3,23)-(3,25)
+(3,36)-(3,57)
+(3,52)-(3,53)
+(3,36)-(3,51)
+(3,37)-(3,48)
+(3,49)-(3,50)
+(3,54)-(3,57)
+(3,55)-(3,56)
+(5,20)-(8,71)
+(6,2)-(8,71)
+(6,5)-(6,11)
+(6,5)-(6,6)
+(6,10)-(6,11)
+(7,7)-(7,9)
+(8,7)-(8,71)
+(8,7)-(8,31)
+(8,8)-(8,23)
+(8,9)-(8,20)
+(8,21)-(8,22)
+(8,28)-(8,30)
+(8,35)-(8,71)
+(8,36)-(8,47)
+(8,48)-(8,70)
+(8,49)-(8,60)
+(8,61)-(8,69)
+(8,62)-(8,63)
+(8,66)-(8,68)
 *)

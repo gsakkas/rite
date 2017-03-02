@@ -1,83 +1,48 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(" ^ (n1 ^ (n2 ^ "/ 2 )"))
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine sin -> "sin"
-  | Cosine cos -> "cos"
-  | Average (n1,n2) -> "(n1 + n2 / 2 )"
-  | Times (t1,t2) -> "(t1 * t2)"
-  | Thresh (th1,th2,th3,th4) -> "thresh";;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let digits = digitsOfInt (n / 10) in digits @ [n mod 10]);;
 
 *)
 
 (* changed spans
-(17,23)-(17,26)
-(17,23)-(17,50)
-(17,27)-(17,28)
-(17,29)-(17,50)
+(3,25)-(3,61)
+(3,51)-(3,61)
 *)
 
 (* type error slice
-(12,2)-(19,40)
-(12,2)-(19,40)
-(17,29)-(17,50)
-(17,30)-(17,32)
-(17,33)-(17,34)
-(17,35)-(17,49)
-(17,36)-(17,38)
-(17,39)-(17,40)
+(2,3)-(3,63)
+(2,20)-(3,61)
+(3,2)-(3,61)
+(3,25)-(3,47)
+(3,25)-(3,61)
+(3,25)-(3,61)
+(3,25)-(3,61)
+(3,26)-(3,37)
+(3,51)-(3,61)
 *)
 
 (* all spans
-(11,21)-(19,40)
-(12,2)-(19,40)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,16)-(15,21)
-(16,18)-(16,23)
-(17,23)-(17,50)
-(17,27)-(17,28)
-(17,23)-(17,26)
-(17,29)-(17,50)
-(17,33)-(17,34)
-(17,30)-(17,32)
-(17,35)-(17,49)
-(17,39)-(17,40)
-(17,36)-(17,38)
-(17,41)-(17,48)
-(18,21)-(18,32)
-(19,32)-(19,40)
+(2,20)-(3,61)
+(3,2)-(3,61)
+(3,5)-(3,11)
+(3,5)-(3,6)
+(3,10)-(3,11)
+(3,17)-(3,19)
+(3,25)-(3,61)
+(3,25)-(3,47)
+(3,26)-(3,37)
+(3,38)-(3,46)
+(3,39)-(3,40)
+(3,43)-(3,45)
+(3,51)-(3,61)
+(3,52)-(3,53)
+(3,58)-(3,60)
 *)

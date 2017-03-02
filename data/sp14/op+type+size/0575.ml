@@ -27,7 +27,7 @@ let bigAdd l1 l2 =
                then (1, ((((d1 + d2) + carry) - 10) :: result))
                else (0, (((d1 + d2) + carry) :: result))) in
     let base = (0, []) in
-    let args = [0] @ [List.combine (List.rev l1) (List.rev l2)] in
+    let args = [0] @ (List.combine (List.rev l1) (List.rev l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
@@ -80,9 +80,7 @@ let bigAdd l1 l2 =
 (30,16)-(30,17)
 (30,19)-(30,20)
 (30,21)-(30,63)
-(30,21)-(30,63)
 (30,22)-(30,34)
-(30,22)-(30,62)
 *)
 
 (* all spans
@@ -217,7 +215,6 @@ let bigAdd l1 l2 =
 (30,15)-(30,18)
 (30,16)-(30,17)
 (30,21)-(30,63)
-(30,22)-(30,62)
 (30,22)-(30,34)
 (30,35)-(30,48)
 (30,36)-(30,44)

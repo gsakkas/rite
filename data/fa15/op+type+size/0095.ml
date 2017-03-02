@@ -1,59 +1,65 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
-
-let fixpoint (f,b) = let rec funt x = (funt, ((f b) = b)) in wwhile (funt, b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.rev h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
-
-let fixpoint (f,b) = let rec funt x = (b, ((f b) = b)) in wwhile (funt, b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(6,39)-(6,43)
+(7,23)-(7,31)
 *)
 
 (* type error slice
-(6,21)-(6,77)
-(6,34)-(6,57)
-(6,38)-(6,57)
-(6,39)-(6,43)
+(7,23)-(7,31)
+(7,23)-(7,38)
 *)
 
 (* all spans
-(2,16)-(4,68)
-(3,2)-(4,68)
-(3,12)-(3,15)
-(3,12)-(3,13)
-(3,14)-(3,15)
-(4,2)-(4,68)
-(4,8)-(4,11)
-(4,42)-(4,55)
-(4,42)-(4,48)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(4,53)-(4,54)
-(4,67)-(4,68)
-(6,14)-(6,77)
-(6,21)-(6,77)
-(6,34)-(6,57)
-(6,38)-(6,57)
-(6,39)-(6,43)
-(6,45)-(6,56)
-(6,46)-(6,51)
-(6,47)-(6,48)
-(6,49)-(6,50)
-(6,54)-(6,55)
-(6,61)-(6,77)
-(6,61)-(6,67)
-(6,68)-(6,77)
-(6,69)-(6,73)
-(6,75)-(6,76)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,63)
+(7,23)-(7,38)
+(7,23)-(7,31)
+(7,32)-(7,33)
+(7,34)-(7,38)
+(7,44)-(7,48)
+(7,54)-(7,63)
+(7,54)-(7,55)
+(7,59)-(7,63)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)

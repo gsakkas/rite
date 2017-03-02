@@ -14,6 +14,9 @@ let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
 (3,42)-(3,51)
 (3,42)-(3,70)
 (3,55)-(3,70)
+(3,56)-(3,65)
+(3,57)-(3,62)
+(3,68)-(3,69)
 *)
 
 (* type error slice

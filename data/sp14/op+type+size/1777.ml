@@ -1,182 +1,129 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let digits n = digitsOfInt (abs n);;
 
-let buildCosine e = Cosine e;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec exprToString e =
-  match e with
-  | Thresh (a,b,c,d) -> let e' = buildThresh (a, b, c, d) in exprToString e'
-  | Times (a,b) -> let e' = buildTimes (a, b) in exprToString e'
-  | Average (a,b) -> let e' = buildAverage (a, b) in exprToString e'
-  | Cosine a -> let e' = buildCosine a in exprToString e'
-  | Sine a -> let e' = buildSine a in exprToString e'
-  | VarY  -> exprToString buildY
-  | VarX  -> exprToString buildX;;
+let rec digitalRoot n =
+  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let digits n = digitsOfInt (abs n);;
 
-let buildCosine e = Cosine e;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec exprToString e =
-  match e with
-  | Thresh (a,b,c,d) -> let e' = buildThresh (a, b, c, d) in exprToString e'
-  | Times (a,b) -> let e' = buildTimes (a, b) in exprToString e'
-  | Average (a,b) -> let e' = buildAverage (a, b) in exprToString e'
-  | Cosine a -> let e' = buildCosine a in exprToString e'
-  | Sine a -> let e' = buildSine a in exprToString e'
-  | VarY  -> exprToString VarX
-  | VarX  -> exprToString VarY;;
+let rec digitalRoot n =
+  if (sumList (digits n)) > 9
+  then digitalRoot (sumList (digits n))
+  else sumList (digits n);;
 
 *)
 
 (* changed spans
-(21,11)-(21,20)
-(21,16)-(21,20)
-(23,11)-(23,20)
-(23,16)-(23,20)
-(27,24)-(27,76)
-(28,19)-(28,64)
-(29,21)-(29,68)
-(30,16)-(30,57)
-(31,14)-(31,53)
-(32,26)-(32,32)
-(33,13)-(33,25)
+(15,2)-(15,74)
+(15,10)-(15,28)
+(15,32)-(15,74)
+(15,35)-(15,36)
+(15,35)-(15,40)
+(15,58)-(15,59)
+(15,73)-(15,74)
 *)
 
 (* type error slice
-(17,3)-(17,69)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(21,3)-(21,22)
-(21,11)-(21,20)
-(23,3)-(23,22)
-(23,11)-(23,20)
-(27,24)-(27,76)
-(27,33)-(27,44)
-(27,33)-(27,57)
-(27,61)-(27,73)
-(27,61)-(27,76)
-(27,74)-(27,76)
-(32,13)-(32,25)
-(32,13)-(32,32)
-(32,26)-(32,32)
-(33,13)-(33,25)
-(33,13)-(33,32)
-(33,26)-(33,32)
+(12,21)-(12,70)
+(12,21)-(12,70)
+(12,55)-(12,70)
+(12,59)-(12,70)
+(12,60)-(12,67)
+(12,68)-(12,69)
+(15,2)-(15,74)
+(15,10)-(15,17)
+(15,10)-(15,28)
+(15,65)-(15,72)
+(15,65)-(15,74)
+(15,73)-(15,74)
 *)
 
 (* all spans
-(11,18)-(11,43)
-(11,27)-(11,43)
-(11,36)-(11,38)
-(11,40)-(11,42)
-(13,16)-(13,28)
-(13,20)-(13,28)
-(13,27)-(13,28)
-(15,14)-(15,24)
-(15,18)-(15,24)
-(15,23)-(15,24)
-(17,17)-(17,67)
-(17,38)-(17,67)
-(17,46)-(17,47)
-(17,49)-(17,50)
-(17,52)-(17,58)
-(17,60)-(17,66)
-(19,16)-(19,39)
-(19,25)-(19,39)
-(19,32)-(19,34)
-(19,36)-(19,38)
-(21,11)-(21,20)
-(21,16)-(21,20)
-(23,11)-(23,20)
-(23,16)-(23,20)
-(25,21)-(33,32)
-(26,2)-(33,32)
-(26,8)-(26,9)
-(27,24)-(27,76)
-(27,33)-(27,57)
-(27,33)-(27,44)
-(27,45)-(27,57)
-(27,46)-(27,47)
-(27,49)-(27,50)
-(27,52)-(27,53)
-(27,55)-(27,56)
-(27,61)-(27,76)
-(27,61)-(27,73)
-(27,74)-(27,76)
-(28,19)-(28,64)
-(28,28)-(28,45)
-(28,28)-(28,38)
-(28,39)-(28,45)
-(28,40)-(28,41)
-(28,43)-(28,44)
-(28,49)-(28,64)
-(28,49)-(28,61)
-(28,62)-(28,64)
-(29,21)-(29,68)
-(29,30)-(29,49)
-(29,30)-(29,42)
-(29,43)-(29,49)
-(29,44)-(29,45)
-(29,47)-(29,48)
-(29,53)-(29,68)
-(29,53)-(29,65)
-(29,66)-(29,68)
-(30,16)-(30,57)
-(30,25)-(30,38)
-(30,25)-(30,36)
-(30,37)-(30,38)
-(30,42)-(30,57)
-(30,42)-(30,54)
-(30,55)-(30,57)
-(31,14)-(31,53)
-(31,23)-(31,34)
-(31,23)-(31,32)
-(31,33)-(31,34)
-(31,38)-(31,53)
-(31,38)-(31,50)
-(31,51)-(31,53)
-(32,13)-(32,32)
-(32,13)-(32,25)
-(32,26)-(32,32)
-(33,13)-(33,32)
-(33,13)-(33,25)
-(33,26)-(33,32)
+(2,16)-(8,46)
+(3,2)-(8,46)
+(3,5)-(3,10)
+(3,5)-(3,6)
+(3,9)-(3,10)
+(4,7)-(4,9)
+(6,4)-(8,46)
+(6,18)-(7,63)
+(6,20)-(7,63)
+(7,7)-(7,63)
+(7,10)-(7,15)
+(7,10)-(7,11)
+(7,14)-(7,15)
+(7,21)-(7,24)
+(7,30)-(7,63)
+(7,30)-(7,34)
+(7,35)-(7,43)
+(7,36)-(7,37)
+(7,40)-(7,42)
+(7,44)-(7,63)
+(7,45)-(7,55)
+(7,46)-(7,47)
+(7,52)-(7,54)
+(7,59)-(7,62)
+(8,5)-(8,45)
+(8,11)-(8,12)
+(8,25)-(8,28)
+(8,26)-(8,27)
+(8,36)-(8,45)
+(8,36)-(8,40)
+(8,41)-(8,42)
+(8,43)-(8,45)
+(10,11)-(10,34)
+(10,15)-(10,34)
+(10,15)-(10,26)
+(10,27)-(10,34)
+(10,28)-(10,31)
+(10,32)-(10,33)
+(12,16)-(12,70)
+(12,21)-(12,70)
+(12,27)-(12,29)
+(12,43)-(12,44)
+(12,55)-(12,70)
+(12,55)-(12,56)
+(12,59)-(12,70)
+(12,60)-(12,67)
+(12,68)-(12,69)
+(14,20)-(15,74)
+(15,2)-(15,74)
+(15,10)-(15,28)
+(15,10)-(15,17)
+(15,18)-(15,28)
+(15,19)-(15,25)
+(15,26)-(15,27)
+(15,32)-(15,74)
+(15,35)-(15,40)
+(15,35)-(15,36)
+(15,39)-(15,40)
+(15,46)-(15,59)
+(15,46)-(15,57)
+(15,58)-(15,59)
+(15,65)-(15,74)
+(15,65)-(15,72)
+(15,73)-(15,74)
 *)

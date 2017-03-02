@@ -1,65 +1,72 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let rec funt x = ((funt b), ((f b) = b)) in wwhile (funt, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(" @ ((exprToString x) @ ")");;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = let rec funt x = (b, ((f b) = b)) in wwhile (funt, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(" ^ ((exprToString x) ^ ")");;
 
 *)
 
 (* changed spans
-(7,2)-(7,62)
-(7,20)-(7,28)
-(7,21)-(7,25)
+(15,21)-(15,22)
+(15,41)-(15,42)
 *)
 
 (* type error slice
-(7,2)-(7,62)
-(7,15)-(7,42)
-(7,19)-(7,42)
-(7,20)-(7,28)
-(7,21)-(7,25)
+(11,3)-(15,49)
+(11,21)-(15,47)
+(12,2)-(15,47)
+(13,13)-(13,16)
+(15,14)-(15,20)
+(15,14)-(15,47)
+(15,21)-(15,22)
+(15,23)-(15,47)
+(15,24)-(15,40)
+(15,25)-(15,37)
+(15,41)-(15,42)
+(15,43)-(15,46)
 *)
 
 (* all spans
-(2,16)-(4,68)
-(3,2)-(4,68)
-(3,12)-(3,15)
-(3,12)-(3,13)
-(3,14)-(3,15)
-(4,2)-(4,68)
-(4,8)-(4,11)
-(4,42)-(4,55)
-(4,42)-(4,48)
-(4,49)-(4,55)
-(4,50)-(4,51)
-(4,53)-(4,54)
-(4,67)-(4,68)
-(6,14)-(7,62)
-(7,2)-(7,62)
-(7,15)-(7,42)
-(7,19)-(7,42)
-(7,20)-(7,28)
-(7,21)-(7,25)
-(7,26)-(7,27)
-(7,30)-(7,41)
-(7,31)-(7,36)
-(7,32)-(7,33)
-(7,34)-(7,35)
-(7,39)-(7,40)
-(7,46)-(7,62)
-(7,46)-(7,52)
-(7,53)-(7,62)
-(7,54)-(7,58)
-(7,60)-(7,61)
+(11,21)-(15,47)
+(12,2)-(15,47)
+(12,8)-(12,9)
+(13,13)-(13,16)
+(14,13)-(14,16)
+(15,14)-(15,47)
+(15,21)-(15,22)
+(15,14)-(15,20)
+(15,23)-(15,47)
+(15,41)-(15,42)
+(15,24)-(15,40)
+(15,25)-(15,37)
+(15,38)-(15,39)
+(15,43)-(15,46)
 *)

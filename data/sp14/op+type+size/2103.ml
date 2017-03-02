@@ -1,100 +1,73 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> buildAverage (e1, e2);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then [h] @ seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(11,18)-(11,43)
-(11,27)-(11,43)
-(11,36)-(11,38)
-(11,40)-(11,42)
-(16,2)-(21,44)
-(21,23)-(21,35)
-(21,23)-(21,44)
-(21,36)-(21,44)
-(21,37)-(21,39)
-(21,41)-(21,43)
+(7,20)-(7,64)
+(7,54)-(7,57)
 *)
 
 (* type error slice
-(11,3)-(11,45)
-(11,18)-(11,43)
-(11,27)-(11,43)
-(16,2)-(21,44)
-(16,2)-(21,44)
-(17,13)-(17,14)
-(19,14)-(19,21)
-(19,20)-(19,21)
-(21,23)-(21,35)
-(21,23)-(21,44)
+(7,20)-(7,64)
+(7,20)-(7,64)
+(7,20)-(7,64)
+(7,54)-(7,64)
+(7,58)-(7,59)
 *)
 
 (* all spans
-(11,18)-(11,43)
-(11,27)-(11,43)
-(11,36)-(11,38)
-(11,40)-(11,42)
-(13,9)-(13,26)
-(13,9)-(13,12)
-(13,16)-(13,26)
-(13,17)-(13,21)
-(13,22)-(13,25)
-(15,14)-(21,44)
-(16,2)-(21,44)
-(16,8)-(16,9)
-(17,13)-(17,14)
-(18,13)-(18,14)
-(19,14)-(19,21)
-(19,14)-(19,16)
-(19,20)-(19,21)
-(20,16)-(20,23)
-(20,16)-(20,18)
-(20,22)-(20,23)
-(21,23)-(21,44)
-(21,23)-(21,35)
-(21,36)-(21,44)
-(21,37)-(21,39)
-(21,41)-(21,43)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,64)
+(7,23)-(7,48)
+(7,23)-(7,40)
+(7,24)-(7,32)
+(7,33)-(7,34)
+(7,35)-(7,39)
+(7,43)-(7,48)
+(7,54)-(7,64)
+(7,58)-(7,59)
+(7,54)-(7,57)
+(7,55)-(7,56)
+(7,60)-(7,64)
+(7,20)-(7,64)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)

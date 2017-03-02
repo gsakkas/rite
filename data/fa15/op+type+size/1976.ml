@@ -1,68 +1,136 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h, seen) then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match ((rand (243, 98723)), depth) with
+  | (x,0) when (x mod 2) = 0 -> buildY ()
+  | (x,0) when (x mod 2) = 1 -> buildX ()
+  | (x,n) when (n mod 5) = 0 -> buildSine (build (x, (n - 1)))
+  | (x,n) when (n mod 5) = 4 -> buildCosine (build (x, (n - 1)));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match ((rand (243, 98723)), depth) with
+  | (x,0) when (x mod 2) = 0 -> buildY ()
+  | (x,0) when (x mod 2) = 1 -> buildX ()
+  | (x,n) when (n > 0) && ((x mod 5) = 0) ->
+      buildSine (build (rand, (n - 1)))
+  | (x,n) when (n > 0) && ((x mod 5) = 1) ->
+      buildCosine (build (rand, (n - 1)))
+  | (x,n) when (n > 0) && ((x mod 5) = 2) ->
+      buildAverage ((build (rand, (n - 1))), (build (rand, (n - 1))))
+  | (x,n) when (n > 0) && ((x mod 5) = 3) ->
+      buildTimes ((build (rand, (n - 1))), (build (rand, (n - 1))))
+  | (x,n) when (n > 0) && ((x mod 5) = 4) ->
+      buildThresh
+        ((build (rand, (n - 1))), (build (rand, (n - 1))),
+          (build (rand, (n - 1))), (build (rand, (n - 1))));;
 
 *)
 
 (* changed spans
-(7,23)-(7,41)
-(7,32)-(7,41)
+(11,16)-(11,28)
+(15,11)-(15,20)
+(20,2)-(24,64)
+(23,50)-(23,51)
+(24,52)-(24,53)
 *)
 
 (* type error slice
-(7,20)-(7,66)
-(7,23)-(7,31)
-(7,23)-(7,41)
+(19,3)-(24,66)
+(19,15)-(24,64)
+(20,2)-(24,64)
+(20,8)-(20,36)
+(20,9)-(20,28)
+(20,10)-(20,14)
+(23,42)-(23,62)
+(23,43)-(23,48)
+(23,49)-(23,61)
+(23,50)-(23,51)
 *)
 
 (* all spans
-(2,21)-(9,27)
-(3,2)-(9,27)
-(3,18)-(8,46)
-(4,4)-(8,46)
-(4,10)-(4,14)
-(5,12)-(5,16)
-(7,8)-(8,46)
-(7,20)-(7,66)
-(7,23)-(7,41)
-(7,23)-(7,31)
-(7,32)-(7,41)
-(7,33)-(7,34)
-(7,36)-(7,40)
-(7,47)-(7,51)
-(7,57)-(7,66)
-(7,57)-(7,58)
-(7,62)-(7,66)
-(8,8)-(8,46)
-(8,20)-(8,21)
-(8,25)-(8,46)
-(8,25)-(8,31)
-(8,32)-(8,46)
-(8,33)-(8,38)
-(8,40)-(8,45)
-(9,2)-(9,27)
-(9,2)-(9,10)
-(9,11)-(9,27)
-(9,12)-(9,18)
-(9,19)-(9,26)
-(9,20)-(9,22)
-(9,24)-(9,25)
+(11,16)-(11,28)
+(11,20)-(11,28)
+(11,27)-(11,28)
+(13,14)-(13,24)
+(13,18)-(13,24)
+(13,23)-(13,24)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(17,11)-(17,20)
+(17,16)-(17,20)
+(19,15)-(24,64)
+(20,2)-(24,64)
+(20,8)-(20,36)
+(20,9)-(20,28)
+(20,10)-(20,14)
+(20,15)-(20,27)
+(20,16)-(20,19)
+(20,21)-(20,26)
+(20,30)-(20,35)
+(21,32)-(21,41)
+(21,32)-(21,38)
+(21,39)-(21,41)
+(22,32)-(22,41)
+(22,32)-(22,38)
+(22,39)-(22,41)
+(23,32)-(23,62)
+(23,32)-(23,41)
+(23,42)-(23,62)
+(23,43)-(23,48)
+(23,49)-(23,61)
+(23,50)-(23,51)
+(23,53)-(23,60)
+(23,54)-(23,55)
+(23,58)-(23,59)
+(24,32)-(24,64)
+(24,32)-(24,43)
+(24,44)-(24,64)
+(24,45)-(24,50)
+(24,51)-(24,63)
+(24,52)-(24,53)
+(24,55)-(24,62)
+(24,56)-(24,57)
+(24,60)-(24,61)
 *)

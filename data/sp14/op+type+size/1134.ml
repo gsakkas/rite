@@ -28,8 +28,8 @@ let rec mulByDigit i l =
 
 let bigMul l1 l2 =
   let f a x =
-    let (l1',a') = a in
-    match x with | [] -> (l1', a') | h::t -> bigAdd (mulByDigit (h l1') a') in
+    let (l1',a') = x in
+    match a with | [] -> (l1', a') | h::t -> bigAdd (mulByDigit (h l1') a') in
   let base = (l1, [0]) in
   let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
@@ -73,8 +73,8 @@ let bigMul l1 l2 =
 
 (* changed spans
 (31,4)-(32,75)
+(31,19)-(31,20)
 (32,4)-(32,75)
-(32,10)-(32,11)
 (32,31)-(32,33)
 (32,45)-(32,75)
 (32,64)-(32,71)
@@ -90,11 +90,21 @@ let bigMul l1 l2 =
 (* type error slice
 (27,16)-(27,22)
 (27,16)-(27,47)
+(30,2)-(34,75)
+(30,8)-(32,75)
+(30,10)-(32,75)
+(31,4)-(32,75)
 (32,4)-(32,75)
 (32,4)-(32,75)
+(32,4)-(32,75)
+(32,4)-(32,75)
+(32,10)-(32,11)
 (32,25)-(32,34)
 (32,45)-(32,51)
 (32,45)-(32,75)
+(34,42)-(34,56)
+(34,42)-(34,68)
+(34,57)-(34,58)
 *)
 
 (* all spans
