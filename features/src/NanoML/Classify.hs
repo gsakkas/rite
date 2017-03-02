@@ -1379,7 +1379,7 @@ diffSpans :: Diff -> [Expr] -> Set SrcSpan
 diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   where
   go _ [] = []
-  go d (x:xs) = case d of
+  go d' (x:xs) = case d' of
     Ins e d -> getSrcSpanMaybe x : go d (x:xs)
     Del e (Ins _ d) -> getSrcSpanMaybe e : go d xs
     Del e d -> getSrcSpanMaybe e : go d xs
@@ -1424,28 +1424,28 @@ progExprs (d:ds) = case d of
   DEvl _ e -> e : progExprs ds
   _ -> progExprs ds
 
-diffExprs :: [Expr] -> [Expr] -> Diff
-diffExprs [] []
-  = end
-diffExprs [] (y:yss)
-  = ins y (diffExprs [] yss)
-diffExprs (x:xss) []
-  = del x (diffExprs xss [])
-diffExprs (x:xss) (y:yss)
-  | exprKind x == exprKind y
-  , length xs == length ys   -- necessary for variadic ctors like case
-  = best_3
-  | otherwise
-  = best_2
-  where
-  xs = subExprs x
-  ys = subExprs y
+-- diffExprs :: [Expr] -> [Expr] -> Diff
+-- diffExprs [] []
+--   = end
+-- diffExprs [] (y:yss)
+--   = ins y (diffExprs [] yss)
+-- diffExprs (x:xss) []
+--   = del x (diffExprs xss [])
+-- diffExprs (x:xss) (y:yss)
+--   | exprKind x == exprKind y
+--   , length xs == length ys   -- necessary for variadic ctors like case
+--   = best_3
+--   | otherwise
+--   = best_2
+--   where
+--   xs = subExprs x
+--   ys = subExprs y
 
-  best_2 = del x (diffExprs (xs ++ xss) (y : yss))
-           `meet`
-           ins y (diffExprs (x : xss) (ys ++ yss))
-  best_3 = cpy x (diffExprs (xs ++ xss) (ys ++ yss))
-           `meet` best_2
+--   best_2 = del x (diffExprs (xs ++ xss) (y : yss))
+--            `meet`
+--            ins y (diffExprs (x : xss) (ys ++ yss))
+--   best_3 = cpy x (diffExprs (xs ++ xss) (ys ++ yss))
+--            `meet` best_2
 
 data DiffT
   = CC Expr Expr Diff DiffT DiffT DiffT
@@ -1464,10 +1464,10 @@ diffExprsT :: [Expr] -> [Expr] -> DiffT
 diffExprsT [] []
   = NN end
 diffExprsT (x:xss) []
-  = let d = diffExprsT xss []
+  = let d = diffExprsT (subExprs x ++ xss) []
     in CN x (del x (getDiff d)) d
 diffExprsT [] (y:yss)
-  = let d = diffExprsT [] yss
+  = let d = diffExprsT [] (subExprs y ++ yss)
     in NC y (ins y (getDiff d)) d
 diffExprsT (x:xss) (y:yss)
   = CC x y (bestT x y i d c) i d c
@@ -1514,24 +1514,24 @@ extractd dt k = case dt of
 killSpans :: Expr -> Expr
 killSpans = mapExpr $ onSrcSpanExpr (const Nothing)
 
-filterDiff :: (Expr -> Bool) -> Diff -> Diff
-filterDiff p = \case
-  End -> End
-  Ins y d -> (if p y then Ins y else id) (filterDiff p d)
-  Del x d -> (if p x then Del x else id) (filterDiff p d)
-  Cpy x d -> (if p x then Cpy x else id) (filterDiff p d)
+-- filterDiff :: (Expr -> Bool) -> Diff -> Diff
+-- filterDiff p = \case
+--   End -> End
+--   Ins y d -> (if p y then Ins y else id) (filterDiff p d)
+--   Del x d -> (if p x then Del x else id) (filterDiff p d)
+--   Cpy x d -> (if p x then Cpy x else id) (filterDiff p d)
 
-collapseDiff :: Diff -> Diff
-collapseDiff = \case
-  End -> End
-  Del x (Ins _ d) -> Del x (collapseDiff d)
-  Del x d -> Del x (collapseDiff d)
-  Ins x d -> Ins x (collapseDiff d)
-  Cpy x d -> Cpy x (collapseDiff d)
+-- collapseDiff :: Diff -> Diff
+-- collapseDiff = \case
+--   End -> End
+--   Del x (Ins _ d) -> Del x (collapseDiff d)
+--   Del x d -> Del x (collapseDiff d)
+--   Ins x d -> Ins x (collapseDiff d)
+--   Cpy x d -> Cpy x (collapseDiff d)
 
 bestT :: Expr -> Expr -> DiffT -> DiffT -> DiffT -> Diff
 bestT x y i d c
-  -- | exprKind x == exprKind y
+  --- | exprKind x == exprKind y
   -- , [x1, x2] <- subExprs x
   -- , [y1, y2] <- subExprs y
   -- -- can we override the behavior for swapping subtrees?
