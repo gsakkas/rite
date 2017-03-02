@@ -34,7 +34,7 @@ main = do
 
 data Mode
   = Gather Tool FilePath
-  | Evaluate Tool FilePath
+  | Evaluate String FilePath
   deriving (Generic, Show)
 instance ParseRecord Mode
 
@@ -108,7 +108,7 @@ data ProcessState = ProcessState
   } deriving (Show)
 
 doEval
-  :: Tool -> FilePath -> IO ()
+  :: String -> FilePath -> IO ()
 doEval t dir = do
   mls <- glob (dir </> "*.ml")
   let init = ProcessState {goodProgs = 0, allProgs = 0}
@@ -117,20 +117,20 @@ doEval t dir = do
     (fromIntegral (goodProgs final) / fromIntegral (allProgs final) :: Double)
 
 processOne :: (MonadState ProcessState m, MonadIO m)
-           => Tool -> FilePath -> m ()
+           => String -> FilePath -> m ()
 processOne t ml = do
   oracle <- liftIO $ loadSpans ml
-  sps <- liftIO $ loadToolSpans (ml <.> toolName t)
+  sps <- liftIO $ loadToolSpans (ml <.> t)
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
           [ "WARN: no blamed spans in"
-          , "  " ++ (ml <.> toolName t)
+          , "  " ++ (ml <.> t)
           ]
     | not (Set.fromList sps `Set.isSubsetOf` allSpans oracle) -> do
         liftIO . putStrLn . unlines $
           [ "WARN: blamed spans not subset of all spans in"
-          , "  " ++ (ml <.> toolName t)
+          , "  " ++ (ml <.> t)
           ]
     | otherwise -> do
         when (any (`Set.member` diffSpans oracle) sps) $ do
