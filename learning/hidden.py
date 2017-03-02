@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os.path
 import pandas as pd
 import tensorflow as tf
 
@@ -163,7 +164,7 @@ def build_model(features, labels, hidden,
             #     print('accuracy at step {}: {}'.format(i, acc))
 
 
-    def test(data):
+    def test(data, store_predictions=False):
         acc1 = 0
         acc2 = 0
         acc3 = 0
@@ -173,13 +174,22 @@ def build_model(features, labels, hidden,
         cs = []
         ts = []
 
-        for d in data:
+        for f, d in data:
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
             # print ys
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices
+            if store_predictions:
+                f, _ = os.path.splitext(f)
+                f = f + '.ml.hidden'
+                with open(f, 'w') as f:
+                    for idx in top_indices[1]:
+                        span = d.iloc[idx]['SourceSpan']
+                        f.write(span)
+                        f.write('\n')
+
             inc1 = 0
             inc2 = 0
             inc3 = 0

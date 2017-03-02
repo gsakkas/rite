@@ -31,21 +31,24 @@ flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
+flags.DEFINE_bool("store_predictions", False,
+                  "Whether to store predictions for offline analysis.")
+
 
 def load_data(path):
     csvs = [f for f in os.listdir(path) if f.endswith('.csv')]
     random.shuffle(csvs)
     dfs = []
     for i, csv in enumerate(csvs):
-        df, fs, ls = input.load_csv(os.path.join(path, csv),
-                                    only_slice=FLAGS.only_slice)
+        f = os.path.join(path, csv)
+        df, fs, ls = input.load_csv(f, only_slice=FLAGS.only_slice)
         if df is None:
             print i
             continue
         if df.shape[0] == 0:
             print i
             continue
-        dfs.append(df)
+        dfs.append((f, df))
     return (dfs, fs, ls)
 
 def main(_):
@@ -147,7 +150,7 @@ def train_model(train, dfs, label_names, validation=None):
     #     train(df, i, validation, verbose=FLAGS.verbose)
     #     i += 1
     # print len(dfs)
-    df = pd.concat(dfs)
+    df = pd.concat([df for _, df in dfs])
     print df.shape
     feature_names = [c for c in df.columns if c[0] == 'F']
     print df.drop_duplicates().shape
@@ -165,7 +168,7 @@ def train_model(train, dfs, label_names, validation=None):
         i += 1
 
 def test_model(test, dfs):
-    return test(dfs)
+    return test(dfs, store_predictions=FLAGS.store_predictions)
 
 if __name__ == '__main__':
     tf.app.run()
