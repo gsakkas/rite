@@ -189,3 +189,28 @@ baseline)
 
 | tool     | acc-1 | acc-2 | acc-3 |
 | sherrloc | 59.0% | 78.3% | 86.4% |
+
+* Distribution of features in true positive samples
+https://plot.ly/~HSib/24/
+Note the spike of =F-Is-App=, this is interesting!
+
+changing an =App= node can mean a few things:
+
+- changing application to something else,
+  e.g. =f x y= becomes =x + y=
+
+- adding/removing arguments,
+  e.g. =f x= becomes =f x y=
+
+- wrapping the application,
+  e.g. =f x= becomes =g (f x)=
+
+what it can't mean is:
+
+- changing the function,
+  e.g. =f x= becomes =g x=
+
+- changing an argument,
+  e.g. =f x= becomes =f y=
+
+(these would both involve changing a child of the =App= node, not the =App=)
