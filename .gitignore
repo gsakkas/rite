@@ -159,3 +159,6 @@ cabal.project.local
 *.synctex.gz(busy)
 *.pdfsync
 
+/paper/oopsla17-submission/comment.cut
+/paper/*/auto/
+.DS_Store
