@@ -50,6 +50,5 @@ predictions:
            --hidden_layers=$(LAYERS) \
            --batch_size=$(BATCH_SIZE) \
            --n_batches=$(BATCHES) \
-           --only_slice \
            --test_data data/$(TEST)/$(DATA) \
            --store_predictions

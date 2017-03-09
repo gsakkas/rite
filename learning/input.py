@@ -29,16 +29,16 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
 
     if only_slice:
         if len(df[df['L-DidChange'] == 1]) == 0:
-            print path
+            print 'no changes', path
             df = None
             return (df, feature_names, label_names)
         df = df[df['F-InSlice'] == 1].reset_index(drop=True)
-        if len(df) == 0 or len(df) == 1:
-            print path
+        if len(df) == 1:
+            print '1 sliced', path
             df = None
             return (df, feature_names, label_names)
         if len(df[df['L-DidChange'] == 1]) == 0:
-            print path
+            print 'no overlap', path
             df = None
 
     # if balance_labels:

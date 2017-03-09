@@ -98,7 +98,9 @@ loadToolSpans f = do
   return $! map read $ take 3 $ nub ls
 
 data ProcessState = ProcessState
-  { goodProgs :: !Int
+  { good1Progs :: !Int
+  , good2Progs :: !Int
+  , good3Progs :: !Int
   , allProgs  :: !Int
   } deriving (Show)
 
@@ -106,10 +108,13 @@ doEval
   :: String -> FilePath -> IO ()
 doEval t dir = do
   mls <- glob (dir </> "*.ml")
-  let init = ProcessState {goodProgs = 0, allProgs = 0}
+  let init = ProcessState {good1Progs = 0, good2Progs = 0, good3Progs = 0, allProgs = 0}
   final <- execStateT (mapM_ (processOne t) mls) init
-  printf "good / total = %d / %d = %.3f\n" (goodProgs final) (allProgs final)
-    (fromIntegral (goodProgs final) / fromIntegral (allProgs final) :: Double)
+  printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
+    (fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double)
+    (fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double)
+    (fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double)
+    (allProgs final)
 
 processOne :: (MonadState ProcessState m, MonadIO m)
            => String -> FilePath -> m ()
@@ -130,15 +135,21 @@ processOne t f = do
           , "  " ++ out
           ]
     | otherwise -> do
-        when (any (`Set.member` diffSpans oracle) sps) $ do
-          bumpGood (+1)
+        when (any (`Set.member` diffSpans oracle) $ take 1 sps) $ do
+          bumpGood1 (+1)
+        when (any (`Set.member` diffSpans oracle) $ take 2 sps) $ do
+          bumpGood2 (+1)
+        when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
+          bumpGood3 (+1)
         bumpAll (+1)
 
-bumpAll, bumpGood
+bumpAll, bumpGood1, bumpGood2, bumpGood3
   :: MonadState ProcessState m
   => (Int -> Int) -> m ()
 bumpAll f = modify' $ \s -> s {allProgs = f (allProgs s)}
-bumpGood f = modify' $ \s -> s {goodProgs = f (goodProgs s)}
+bumpGood1 f = modify' $ \s -> s {good1Progs = f (good1Progs s)}
+bumpGood2 f = modify' $ \s -> s {good2Progs = f (good2Progs s)}
+bumpGood3 f = modify' $ \s -> s {good3Progs = f (good3Progs s)}
 
 data BaselineState = BaselineState
   { top1s :: ![Double]

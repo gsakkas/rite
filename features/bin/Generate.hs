@@ -44,24 +44,28 @@ main = do
   [src, cls] <- getArgs
   jsons <- lines <$> (readFile $ "data" </> src </> "raw.json")
   case cls of
-    "ops"
-      -> mkBadFeatures src cls preds_thas jsons
-    "ops+context"
-      -> mkBadFeatures src cls preds_thas_ctx jsons
-    "op+context"
-      -> mkBadFeatures src cls preds_tis_ctx jsons
-    "op+context-count"
-      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
-    "op+context-count+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    -- "ops"
+    --   -> mkBadFeatures src cls preds_thas jsons
+    -- "ops+context"
+    --   -> mkBadFeatures src cls preds_thas_ctx jsons
+    -- "op+context"
+    --   -> mkBadFeatures src cls preds_tis_ctx jsons
+    -- "op+context-count"
+    --   -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    -- "op+context-count+size"
+    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    "op+context+type+size"
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
+    "op+context-has+type+size"
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
     "op+context-count+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
     "op+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
-    "type-inference"
-      -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
-    "type-inference+vars"
-      -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
+    -- "type-inference"
+    --   -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
+    -- "type-inference+vars"
+    --   -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
 
 
 mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
@@ -83,7 +87,7 @@ mkBadFeatures yr nm fs jsons = do
       | null cs -> do
         putStrLn "NO CORE"
         putStrLn bad
-      | length cs == 1 -> do
+      | length (nub cs) == 1 -> do
         putStrLn "SINGLE CONSTRAINT CORE"
         putStrLn bad
         print (head cs)
