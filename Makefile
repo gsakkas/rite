@@ -8,7 +8,8 @@ LEARN_RATE ?= 0.0001
 BATCH_SIZE ?= 100
 BATCHES    ?= 10000
 
-DATAS  = op+context-count+type+size op+type+size
+DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size \
+	 op+type+size
 HIDDEN = 10 25 50 100 250 500
 
 define linear_template
