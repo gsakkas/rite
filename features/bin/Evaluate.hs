@@ -50,19 +50,12 @@ instance ParseRecord Tool
 run :: Mode -> IO ()
 run (Gather tool dir) = do
   mls <- glob (dir </> "*.ml")
-  -- print dir
-  -- print mls
-  -- withTaskGroup 8 $ \g -> do
-  --   -- mapTasks_ g $ flip map mls $ \ml -> do
-  --   _ <- flip (mapConcurrently g) mls $ \ml -> do
-  --     putStrLn $ "Processing " ++ ml ++ "..."
-  --     spans <- fromMaybe mempty <$> timeout 60 (runTool tool ml)
-  --     writeFile (ml <.> toolName tool) (unlines . map show $ spans)
-  --   return ()
   forM_ mls $ \ml -> do
     putStrLn $ "Processing " ++ ml ++ "..."
     spans <- fromMaybe mempty . join . e2m <$> try (timeout 60 (runTool tool ml))
-    writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+    let n = takeFileName ml
+    writeFile (dir </> toolName tool </> n <.> "out")
+              (unlines . map show $ spans)
 run (Evaluate "baseline" dir) = do
   doBaseline dir
 run (Evaluate tool dir) = do
@@ -185,12 +178,13 @@ doBaseline dir = do
 slice :: Eq a => a -> a -> [a] -> [a]
 slice start stop = takeWhile (/=stop) . dropWhile (/=start)
 
-computeSpans :: FilePath -> String -> (FilePath -> IO ([SrcSpan])) -> IO ()
-computeSpans dir toolname runTool = do
-  mls <- glob (dir </> "*.ml")
-  forM_ mls $ \ml -> do
-    spans <- runTool ml
-    writeFile (ml<.>toolname) (unlines . map show $ spans)
+-- computeSpans :: FilePath -> String -> (FilePath -> IO ([SrcSpan])) -> IO ()
+-- computeSpans dir toolname runTool = do
+--   mls <- glob (dir </> "*.ml")
+--   forM_ mls $ \ml -> do
+--     spans <- runTool ml
+--     let n = takeFileName ml
+--     writeFile (dir </> toolname </> n <.> "out") (unlines . map show $ spans)
 
 runOcaml :: FilePath -> IO ([SrcSpan])
 runOcaml ml = do
