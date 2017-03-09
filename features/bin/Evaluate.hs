@@ -120,19 +120,21 @@ doEval t dir = do
 
 processOne :: (MonadState ProcessState m, MonadIO m)
            => String -> FilePath -> m ()
-processOne t ml = do
-  oracle <- liftIO $ loadSpans ml
-  sps <- liftIO $ loadToolSpans (ml <.> t)
+processOne t f = do
+  let (dir, ml) = splitFileName f
+  oracle <- liftIO $ loadSpans f
+  let out = dir </> t </> ml <.> "out"
+  sps <- liftIO $ loadToolSpans out
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
           [ "WARN: no blamed spans in"
-          , "  " ++ (ml <.> t)
+          , "  " ++ out
           ]
     | not (Set.fromList sps `Set.isSubsetOf` allSpans oracle) -> do
         liftIO . putStrLn . unlines $
           [ "WARN: blamed spans not subset of all spans in"
-          , "  " ++ (ml <.> t)
+          , "  " ++ out
           ]
     | otherwise -> do
         when (any (`Set.member` diffSpans oracle) sps) $ do

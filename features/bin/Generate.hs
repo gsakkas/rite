@@ -102,7 +102,7 @@ mkBadFeatures yr nm fs jsons = do
         let path = "data" </> yr </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
         LBSC.writeFile path $ encodeByName header features
-        let path = "data" </> yr </> nm </> fn <.> "ml"
+        let path = "data" </> yr </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                    , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
                                 ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
