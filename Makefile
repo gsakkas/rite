@@ -15,14 +15,14 @@ define linear_template
 $(1)-linear:
 	make DATA=$(1) MODEL=linear TRAIN=sp14 TEST=fa15 predictions
 	make DATA=$(1) MODEL=linear TRAIN=fa15 TEST=sp14 predictions
-ALL_TARGETS += $(1)-linear
+ALL_LINEAR += $(1)-linear
 endef
 
 define hidden_template
 $(1)-hidden-$(2):
 	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=sp14 TEST=fa15 predictions
 	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=fa15 TEST=sp14 predictions
-ALL_TARGETS += $(1)-hidden-$(2)
+ALL_HIDDEN += $(1)-hidden-$(2)
 endef
 
 $(foreach data,$(DATAS),\
@@ -33,7 +33,13 @@ $(foreach data,$(DATAS),\
   $(eval $(call hidden_template,$(data),$(hidden)))))
 
 .PHONY: all
-all: $(ALL_TARGETS)
+all: linear hidden
+
+.PHONY: linear
+linear: $(ALL_LINEAR)
+
+.PHONY: hidden
+hidden: $(ALL_HIDDEN)
 
 .PHONY: predictions
 predictions:
