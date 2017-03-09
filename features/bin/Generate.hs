@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 module Main where
@@ -67,36 +68,45 @@ mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
 mkBadFeatures yr nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
   let feats = [ ((h, f'), (ss, bad, fix, c, all))
-              | (ss, p, bad, fix) <- uniqs
-              , let (h, f, c) = runTFeaturesDiff fs (ss,p)
+              | (Just ss, p, bad, fix) <- uniqs
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
-              , length f' > 1
+              -- , length f' > 1
               , let all = map (fromJust.getSrcSpanExprMaybe)
                            (concatMap allSubExprs $ progExprs p)
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
   forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
-    when (length cs == 1) $ do
-      putStrLn "SINGLE CONSTRAINT CORE"
-      putStrLn bad
-      print (head cs)
-    if (null (intersect ss cs)) then do
-      putStrLn "NO OVERLAP CORE/DIFF"
-      putStrLn bad
-      print cs
-      putStrLn fix
-    else do
-      let fn = printf "%04d" (i :: Int)
-      let path = "data" </> yr </> nm </> fn <.> "csv"
-      createDirectoryIfMissing True (takeDirectory path)
-      LBSC.writeFile path $ encodeByName header features
-      let path = "data" </> yr </> nm </> fn <.> "ml"
-      writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
-                                 , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
-                              ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
-                              ++ [ "", "(* all spans" ] ++ map show allspans ++ [ "*)" ]
+    if
+      | null cs -> do
+        putStrLn "NO CORE"
+        putStrLn bad
+      | length cs == 1 -> do
+        putStrLn "SINGLE CONSTRAINT CORE"
+        putStrLn bad
+        print (head cs)
+      | null ss -> do
+        putStrLn "NO DIFF"
+        putStrLn bad
+        putStrLn "---------------------------"
+        putStrLn fix
+      | null (intersect ss cs) -> do
+        putStrLn "NO OVERLAP CORE/DIFF"
+        putStrLn bad
+        print cs
+        putStrLn fix
+      | otherwise -> do
+        let fn = printf "%04d" (i :: Int)
+        let path = "data" </> yr </> nm </> fn <.> "csv"
+        createDirectoryIfMissing True (takeDirectory path)
+        LBSC.writeFile path $ encodeByName header features
+        let path = "data" </> yr </> nm </> fn <.> "ml"
+        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                   , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
+                                ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+                                ++ [ "", "(* all spans" ] ++ map show allspans ++ [ "*)" ]
 
     -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
     -- let path = "data/" ++ nm ++ ".csv"
@@ -125,10 +135,10 @@ traceStats outss = do
   hPrintf stderr "Std: %f\n" std
   return ()
 
-uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog, String, String)
+uniqDiffs :: [String] -> HashSet (Maybe [SrcSpan], Prog, String, String)
 uniqDiffs = foldl' (\seen json -> seen `mappend` HashSet.fromList (mkDiffs json)) mempty
 
-mkDiffs :: String -> [([SrcSpan], Prog, String, String)]
+mkDiffs :: String -> [(Maybe [SrcSpan], Prog, String, String)]
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
@@ -152,7 +162,7 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
     , let ss = mkDiff'' bad fix
-    , not (null ss)
+    -- , not (null ss)
     -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
     -> [(ss, bad, bad', fix')]
 
@@ -193,16 +203,16 @@ mkDiff' bad fix
  -- FIXME: this is too strict
  eqToken (LToken s1 t1) (LToken s2 t2) = t1 == t2 && s1 == s2
 
-mkDiff'' :: Prog -> Prog -> [SrcSpan]
+mkDiff'' :: Prog -> Prog -> Maybe [SrcSpan]
 mkDiff'' bad fix
   --- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
   --- | otherwise
   -- = x
   | fromIntegral (length x) / fromIntegral (length (concatMap allSubExprs bs)) > 0.4
-  = []
+  = Nothing
   | otherwise
-  = assert (not (null x)) x
+  = assert (not (null x)) $ Just x
   where
   -- x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
   x = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
@@ -211,8 +221,12 @@ mkDiff'' bad fix
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)
-  -> (Header, [NamedRecord], [SrcSpan])
-runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
+  -> Maybe (Header, [NamedRecord], [SrcSpan])
+runTFeaturesDiff fs (ls, bad)
+  | null samples
+  = Nothing
+  | otherwise
+  = Just (header, samples, cores)
   where
   header = Vector.fromList
          $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
@@ -222,8 +236,8 @@ runTFeaturesDiff fs (ls, bad) = (header, samples, cores)
     | null cores
     -- something went wrong other than typechecking success
     , Just e <- me = []
-    | null cores || length cores == 1
-    = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- undefined -- FIXME: shouldn't happen!!
+    --- | null cores || length cores == 1
+    -- = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- undefined -- FIXME: shouldn't happen!!
     --- | otherwise
     -- = assert (not (null (intersect cores ls))) $
     --   concatMap mkfsD tbad
