@@ -8,7 +8,34 @@ LEARN_RATE ?= 0.0001
 BATCH_SIZE ?= 100
 BATCHES    ?= 10000
 
+DATAS  = op+context-count+type+size op+type+size
+HIDDEN = 10 25 50 100 250 500
 
+define linear_template
+$(1)-linear:
+	make DATA=$(1) MODEL=linear TRAIN=sp14 TEST=fa15 predictions
+	make DATA=$(1) MODEL=linear TRAIN=fa15 TEST=sp14 predictions
+ALL_TARGETS += $(1)-linear
+endef
+
+define hidden_template
+$(1)-hidden-$(2):
+	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=sp14 TEST=fa15 predictions
+	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=fa15 TEST=sp14 predictions
+ALL_TARGETS += $(1)-hidden-$(2)
+endef
+
+$(foreach data,$(DATAS),\
+ $(eval $(call linear_template,$(data))))
+
+$(foreach data,$(DATAS),\
+ $(foreach hidden,$(HIDDEN),\
+  $(eval $(call hidden_template,$(data),$(hidden)))))
+
+.PHONY: all
+all: $(ALL_TARGETS)
+
+.PHONY: predictions
 predictions:
 	python learning/learn.py \
            --data data/$(TRAIN)/$(DATA) \
