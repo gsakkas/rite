@@ -181,8 +181,11 @@ def build_model(features, labels, hidden,
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices
             if store_predictions:
+                dir, f = os.path.split(f)
                 f, _ = os.path.splitext(f)
-                f = f + '.ml.hidden'
+                f = os.path.join(dir, 'hidden-' + '-'.join(hidden), f + '.ml.out')
+                if not os.path.exists(os.path.dirname(f)):
+                    os.makedirs(os.path.dirname(f))
                 with open(f, 'w') as f:
                     for idx in top_indices[1]:
                         span = d.iloc[idx]['SourceSpan']

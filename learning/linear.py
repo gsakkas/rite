@@ -115,8 +115,11 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
             if store_predictions:
+                dir, f = os.path.split(f)
                 f, _ = os.path.splitext(f)
-                f = f + '.ml.linear'
+                f = os.path.join(dir, 'linear', f + '.ml.out')
+                if not os.path.exists(os.path.dirname(f)):
+                    os.makedirs(os.path.dirname(f))
                 with open(f, 'w') as f:
                     for idx in top_indices[1]:
                         span = d.iloc[idx]['SourceSpan']
