@@ -63,6 +63,8 @@ run (Gather tool dir) = do
     putStrLn $ "Processing " ++ ml ++ "..."
     spans <- fromMaybe mempty . join . e2m <$> try (timeout 60 (runTool tool ml))
     writeFile (ml <.> toolName tool) (unlines . map show $ spans)
+run (Evaluate "baseline" dir) = do
+  doBaseline dir
 run (Evaluate tool dir) = do
   doEval tool dir
 
@@ -142,6 +144,41 @@ bumpAll, bumpGood
   => (Int -> Int) -> m ()
 bumpAll f = modify' $ \s -> s {allProgs = f (allProgs s)}
 bumpGood f = modify' $ \s -> s {goodProgs = f (goodProgs s)}
+
+data BaselineState = BaselineState
+  { top1s :: ![Double]
+  , top2s  :: ![Double]
+  , top3s  :: ![Double]
+  } deriving (Show)
+
+doBaseline
+  :: FilePath -> IO ()
+doBaseline dir = do
+  mls <- glob (dir </> "*.ml")
+  let init = BaselineState {top1s = [], top2s = [], top3s = []}
+  final <- flip execStateT init $ forM_ mls $ \ml -> do
+    oracle <- liftIO $ loadSpans ml
+    let n_dif = fromIntegral $ Set.size (diffSpans oracle `Set.intersection` errSpans oracle)
+    let n_err = fromIntegral $ Set.size (errSpans oracle)
+    let topk k = 1 - ((1-(n_dif/n_err))^k)
+    let top1 = topk 1
+    let top2 = topk 2
+    let top3 = topk 3
+    -- liftIO $ printf "n_dif / n_err / n_tot: %.0f / %.0f / %d\n" n_dif n_err (Set.size (allSpans oracle))
+    -- liftIO $ printf "top 1/2/3: %.3f / %.3f / %.3f\n" top1 top2 top3
+    -- liftIO $ printf "----------------------------------\n"
+    modify' $ \s -> s { top1s = top1 : top1s s
+                      , top2s = top2 : top2s s
+                      , top3s = top3 : top3s s
+                      }
+  let avg xs = sum xs / genericLength xs
+  let top1 = avg (top1s final)
+  let top2 = avg (top2s final)
+  let top3 = avg (top3s final)
+  printf "top 1/2/3: %.3f / %.3f / %.3f\n" top1 top2 top3
+  -- printf "good / total = %d / %d = %.3f\n" (goodProgs final) (allProgs final)
+  --   (fromIntegral (goodProgs final) / fromIntegral (allProgs final) :: Double)
+
 
 slice :: Eq a => a -> a -> [a] -> [a]
 slice start stop = takeWhile (/=stop) . dropWhile (/=start)
