@@ -108,7 +108,6 @@ def build_model(features, labels, hidden,
 
     # saver.restore(sess, 'hidden_model')
 
-
     def train(data, i, validation=None, verbose=False):
         summary_str, _ = sess.run([merged, train_step],
                                   feed_dict={x: data[features], y_: data[labels],
