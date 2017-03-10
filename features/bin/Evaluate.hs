@@ -110,11 +110,16 @@ doEval t dir = do
   mls <- glob (dir </> "*.ml")
   let init = ProcessState {good1Progs = 0, good2Progs = 0, good3Progs = 0, allProgs = 0}
   final <- execStateT (mapM_ (processOne t) mls) init
+  let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
+      top2 = fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double
+      top3 = fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double
+      total = allProgs final
   printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
-    (fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double)
-    (fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double)
-    (fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double)
-    (allProgs final)
+    top1 top2 top3 total
+  writeFile (dir </> t </> "results.csv") $ unlines
+    [ "tool,top-1,top-2,top-3,total"
+    , printf "%s,%.3f,%.3f,%.3f,%d" t top1 top2 top3 total
+    ]
 
 processOne :: (MonadState ProcessState m, MonadIO m)
            => String -> FilePath -> m ()
@@ -182,6 +187,10 @@ doBaseline dir = do
   let top2 = avg (top2s final)
   let top3 = avg (top3s final)
   printf "top 1/2/3: %.3f / %.3f / %.3f\n" top1 top2 top3
+  writeFile (dir </> "baseline.csv") $ unlines
+    [ "tool,top-1,top-2,top-3,total"
+    , printf "baseline,%.3f,%.3f,%.3f,%d" top1 top2 top3 (length (top1s final))
+    ]
   -- printf "good / total = %d / %d = %.3f\n" (goodProgs final) (allProgs final)
   --   (fromIntegral (goodProgs final) / fromIntegral (allProgs final) :: Double)
 
