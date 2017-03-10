@@ -12,17 +12,31 @@ DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+siz
 	 op+type+size
 HIDDEN = 10 25 50 100 250 500
 
+define PREDICTIONS
+python learning/learn.py \
+  --data data/$(4)/$(1) \
+  --learn_rate=$(LEARN_RATE) \
+  --model=$(2) \
+  --hidden_layers=$(3) \
+  --batch_size=$(BATCH_SIZE) \
+  --n_batches=$(BATCHES) \
+  --test_data data/$(5)/$(1) \
+  --store_predictions
+endef
+
 define linear_template
+.PHONY: $(1)-linear
 $(1)-linear:
-	make DATA=$(1) MODEL=linear TRAIN=sp14 TEST=fa15 predictions
-	make DATA=$(1) MODEL=linear TRAIN=fa15 TEST=sp14 predictions
+	+$(call PREDICTIONS,$(1),linear,0,sp14,fa15)
+	+$(call PREDICTIONS,$(1),linear,0,fa15,sp14)
 ALL_LINEAR += $(1)-linear
 endef
 
 define hidden_template
+.PHONY: $(1)-hidden-$(2)
 $(1)-hidden-$(2):
-	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=sp14 TEST=fa15 predictions
-	make DATA=$(1) MODEL=hidden LAYERS=$(2) TRAIN=fa15 TEST=sp14 predictions
+	+$(call PREDICTIONS,$(1),hidden,$(2),sp14,fa15)
+	+$(call PREDICTIONS,$(1),hidden,$(2),fa15,sp14)
 ALL_HIDDEN += $(1)-hidden-$(2)
 endef
 
@@ -42,14 +56,3 @@ linear: $(ALL_LINEAR)
 .PHONY: hidden
 hidden: $(ALL_HIDDEN)
 
-.PHONY: predictions
-predictions:
-	python learning/learn.py \
-           --data data/$(TRAIN)/$(DATA) \
-           --learn_rate=$(LEARN_RATE) \
-           --model=$(MODEL) \
-           --hidden_layers=$(LAYERS) \
-           --batch_size=$(BATCH_SIZE) \
-           --n_batches=$(BATCHES) \
-           --test_data data/$(TEST)/$(DATA) \
-           --store_predictions
