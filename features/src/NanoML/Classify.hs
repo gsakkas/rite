@@ -18,6 +18,7 @@ import Data.Data
 import Data.Generics.Aliases (mkM, mkT)
 import Data.Generics.Schemes
 import Data.Hashable
+import Data.List
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe
@@ -35,13 +36,6 @@ import NanoML.Types
 
 import Debug.Trace
 
-preds_has :: [Expr -> Double]
-preds_has = [has_op o | o <- [Eq .. Mod]]
-     ++ [has_con "::", has_con "[]", has_con "(,)", has_fun]
-
-preds_count :: [Expr -> Double]
-preds_count = [count_op o | o <- [Eq .. Mod]]
-     ++ [count_con "::", count_con "[]", count_con "(,)", count_fun]
 
 type Feature = ([String], (TExpr -> TExpr -> [Double]))
 
@@ -59,52 +53,98 @@ preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
             preds_tis_ctx
 
+preds_tis_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tis_cons = map (first (take 1) . second (fmap (fmap (take 1))))
+            preds_tis_ctx_cons
+
 preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_novar = init preds_tis
 
 preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
-preds_tis_ctx =
+preds_tis_ctx
     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
-    map tis_op_ctx [Eq ..]
- ++ [ tis_anycon_ctx
-    , tis_con_ctx "::", tis_con_ctx "[]"
-    , tis_con_ctx "(,)"
-    , tis_con_ctx "VarX", tis_con_ctx "VarY"
-    , tis_con_ctx "Sine", tis_con_ctx "Cosine"
-    , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
-    , tis_anycon_case_ctx
-    , tis_con_case_ctx "::", tis_con_case_ctx "[]"
-    , tis_con_case_ctx "(,)"
-    , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
-    , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
-    , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
-    , tis_fun_ctx, tis_app_ctx
-    , tis_lit_int_ctx
-    , tis_lit_float_ctx
-    , tis_lit_bool_ctx
-    , tis_lit_char_ctx
-    , tis_lit_string_ctx
-    , tis_ite_ctx
-    , tis_seq_ctx
-    , tis_var_ctx
-    , tis_let_ctx
-    ]
+ =
+  map tis_op_ctx [Eq ..] ++
+  [ tis_anycon_ctx
+  , tis_con_ctx "::", tis_con_ctx "[]"
+  , tis_con_ctx "(,)"
+  , tis_con_ctx "VarX", tis_con_ctx "VarY"
+  , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+  , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+  , tis_anycon_case_ctx
+  , tis_con_case_ctx "::", tis_con_case_ctx "[]"
+  , tis_con_case_ctx "(,)"
+  , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
+  , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
+  , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
+  , tis_fun_ctx
+  , tis_app_ctx
+  , tis_lit_int_ctx
+  , tis_lit_float_ctx
+  , tis_lit_bool_ctx
+  , tis_lit_char_ctx
+  , tis_lit_string_ctx
+  , tis_ite_ctx
+  , tis_seq_ctx
+  , tis_var_ctx
+  , tis_let_ctx
+  ]
+
+preds_tis_ctx_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
+preds_tis_ctx_cons
+    -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
+ =
+  map tis_op_ctx [Eq ..] ++
+  [ tis_anycon_ctx
+    -- , tis_con_ctx "::", tis_con_ctx "[]"
+  , tis_cons_ctx ["::", "[]"]
+  , tis_con_ctx "(,)"
+    -- , tis_con_ctx "VarX", tis_con_ctx "VarY"
+    -- , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+    -- , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+  , tis_cons_ctx
+      ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
+  , tis_anycon_case_ctx
+    -- , tis_con_case_ctx "::", tis_con_case_ctx "[]"
+  , tis_cons_case_ctx ["::", "[]"]
+  , tis_con_case_ctx "(,)"
+    -- , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
+    -- , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
+    -- , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
+  , tis_cons_case_ctx
+      ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
+  , tis_fun_ctx
+  , tis_app_ctx
+  , tis_lit_int_ctx
+  , tis_lit_float_ctx
+  , tis_lit_bool_ctx
+  , tis_lit_char_ctx
+  , tis_lit_string_ctx
+  , tis_ite_ctx
+  , tis_seq_ctx
+  , tis_var_ctx
+  , tis_let_ctx
+  ]
 
 preds_thas_ctx :: [Feature] --  [TExpr -> TExpr -> [Double]]
 preds_thas_ctx =
     map thas_op_ctx [Eq ..]
  ++ [ thas_anycon_ctx
     , thas_con_ctx "::", thas_con_ctx "[]"
+    -- , thas_cons_ctx ["::", "[]"]
     , thas_con_ctx "(,)"
     , thas_con_ctx "VarX", thas_con_ctx "VarY"
     , thas_con_ctx "Sine", thas_con_ctx "Cosine"
     , thas_con_ctx "Average", thas_con_ctx "Times", thas_con_ctx "Thresh"
+    -- , thas_cons_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , thas_anycon_case_ctx
     , thas_con_case_ctx "::", thas_con_case_ctx "[]"
     , thas_con_case_ctx "(,)"
+    , thas_cons_case_ctx ["::", "[]"]
     , thas_con_case_ctx "VarX", thas_con_case_ctx "VarY"
     , thas_con_case_ctx "Sine", thas_con_case_ctx "Cosine"
     , thas_con_case_ctx "Average", thas_con_case_ctx "Times", thas_con_case_ctx "Thresh"
+    -- , thas_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , thas_fun_ctx, thas_app_ctx
     , thas_lit_int_ctx
     , thas_lit_float_ctx
@@ -122,16 +162,20 @@ preds_tcount_ctx =
     map tcount_op_ctx [Eq ..]
  ++ [ tcount_anycon_ctx
     , tcount_con_ctx "::", tcount_con_ctx "[]"
+    -- , tcount_cons_ctx ["::", "[]"]
     , tcount_con_ctx "(,)"
     , tcount_con_ctx "VarX", tcount_con_ctx "VarY"
     , tcount_con_ctx "Sine", tcount_con_ctx "Cosine"
     , tcount_con_ctx "Average", tcount_con_ctx "Times", tcount_con_ctx "Thresh"
+    -- , tcount_cons_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , tcount_anycon_case_ctx
     , tcount_con_case_ctx "::", tcount_con_case_ctx "[]"
+    -- , tcount_cons_case_ctx ["::", "[]"]
     , tcount_con_case_ctx "(,)"
     , tcount_con_case_ctx "VarX", tcount_con_case_ctx "VarY"
     , tcount_con_case_ctx "Sine", tcount_con_case_ctx "Cosine"
     , tcount_con_case_ctx "Average", tcount_con_case_ctx "Times", tcount_con_case_ctx "Thresh"
+    -- , tcount_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , tcount_fun_ctx, tcount_app_ctx
     , tcount_lit_int_ctx
     , tcount_lit_float_ctx
@@ -335,12 +379,27 @@ thas_con c = bool2double . getAny . tfold f mempty
                      T_Tuple _ _ -> Any $ c == "(,)"
                      T_List _ _ -> Any $ c == "::" || c == "[]"
                      _ -> mempty
+thas_cons :: [DCon] -> TExpr -> Double
+thas_cons cs = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_ConApp _ c' _ -> Any $ c' `elem` cs
+                     T_Tuple _ _ -> Any $ "(,)" `elem` cs
+                     T_List _ _ -> Any $ "::" `elem` cs || "[]" `elem` cs
+                     _ -> mempty
 
 thas_con_case :: DCon -> TExpr -> Double
 thas_con_case c = bool2double . getAny . tfold f mempty
   where
   f e acc = acc <> case e of
                      T_Case _ _ as -> Any $ any (pat_has_con c) (map fst3 as)
+                     _ -> mempty
+thas_cons_case :: [DCon] -> TExpr -> Double
+thas_cons_case cs = bool2double . getAny . tfold f mempty
+  where
+  f e acc = acc <> case e of
+                     T_Case _ _ as -> Any $ or
+                       [ pat_has_con c a | c <- cs, a <- map fst3 as ]
                      _ -> mempty
 
 thas_var :: TExpr -> Double
@@ -375,8 +434,16 @@ thas_op_ctx b = ( mkContextLabels ("Has-" ++ show b), mkContextFeatures (thas_op
 thas_con_ctx :: DCon -> Feature
 thas_con_ctx c = ( mkContextLabels ("Has-" ++ c), mkContextFeatures (thas_con c) )
 
+thas_cons_ctx :: [DCon] -> Feature
+thas_cons_ctx cs = ( mkContextLabels ("Has-" ++ join(intersperse "," cs))
+                   , mkContextFeatures (thas_cons cs) )
+
 thas_con_case_ctx :: DCon -> Feature
 thas_con_case_ctx c = ( mkContextLabels ("Has-" ++ c ++ "-Case"), mkContextFeatures (thas_con_case c) )
+
+thas_cons_case_ctx :: [DCon] -> Feature
+thas_cons_case_ctx cs = ( mkContextLabels ("Has-" ++ join(intersperse "," cs) ++ "-Case")
+                        , mkContextFeatures (thas_cons_case cs) )
 
 thas_var_ctx :: Feature
 thas_var_ctx = ( mkContextLabels "Has-Var", mkContextFeatures thas_var )
@@ -464,19 +531,28 @@ tcount_op_ctx c = ( mkContextLabels ("Count-"++show c), mkContextFeatures (tcoun
 
 tcount_con :: DCon -> TExpr -> Double
 tcount_con = mkTCount . tis_con
+tcount_cons :: [DCon] -> TExpr -> Double
+tcount_cons = mkTCount . tis_cons
 tcount_con_any :: TExpr -> Double
 tcount_con_any = mkTCount tis_con_any
 tcount_con_ctx :: DCon -> Feature
 tcount_con_ctx c = ( mkContextLabels ("Count-"++c), mkContextFeatures (tcount_con c) )
+tcount_cons_ctx :: [DCon] -> Feature
+tcount_cons_ctx cs = ( mkContextLabels ("Count-"++join(intersperse "," cs)), mkContextFeatures (tcount_cons cs) )
 tcount_anycon_ctx :: Feature
 tcount_anycon_ctx = ( mkContextLabels ("Count-Con"), mkContextFeatures tcount_con_any )
 
 tcount_con_case :: DCon -> TExpr -> Double
 tcount_con_case = mkTCount . tis_con_case
+tcount_cons_case :: [DCon] -> TExpr -> Double
+tcount_cons_case = mkTCount . tis_cons_case
 tcount_con_case_any :: TExpr -> Double
 tcount_con_case_any = mkTCount tis_con_case_any
 tcount_con_case_ctx :: DCon -> Feature
 tcount_con_case_ctx c = ( mkContextLabels ("Count-"++c++"-Case"), mkContextFeatures (tcount_con_case c) )
+tcount_cons_case_ctx :: [DCon] -> Feature
+tcount_cons_case_ctx cs = ( mkContextLabels ("Count-"++join(intersperse "," cs)++"-Case")
+                          , mkContextFeatures (tcount_cons_case cs) )
 tcount_anycon_case_ctx :: Feature
 tcount_anycon_case_ctx = ( mkContextLabels ("Count-Case"), mkContextFeatures tcount_con_case_any )
 
@@ -543,6 +619,12 @@ tis_con c e = case e of
   T_Tuple _ _ -> bool2double $ c == "(,)"
   T_List _ _ -> bool2double $ c == "::" || c == "[]"
   _ -> 0
+tis_cons :: [DCon] -> TExpr -> Double
+tis_cons cs e = case e of
+  T_ConApp _ c' _ -> bool2double $ c' `elem` cs
+  T_Tuple _ _ -> bool2double $ "(,)" `elem` cs
+  T_List _ _ -> bool2double $ "::" `elem` cs || "[]" `elem` cs
+  _ -> 0
 
 tis_con_any :: TExpr -> Double
 tis_con_any e = case e of
@@ -554,6 +636,11 @@ tis_con_any e = case e of
 tis_con_case :: DCon -> TExpr -> Double
 tis_con_case c e = case e of
   T_Case _ _ as -> bool2double $ any (pat_has_con c) (map fst3 as)
+  _ -> 0
+
+tis_cons_case :: [DCon] -> TExpr -> Double
+tis_cons_case cs e = case e of
+  T_Case _ _ as -> bool2double $ or [pat_has_con c a | c <- cs, a <- map fst3 as]
   _ -> 0
 
 tis_con_case_any :: TExpr -> Double
@@ -629,6 +716,10 @@ tis_con_ctx :: DCon -> Feature -- ([String], TExpr -> TExpr -> [Double])
 tis_con_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con c) )
   where
   lbl = "Is-" ++ c
+tis_cons_ctx :: [DCon] -> Feature -- ([String], TExpr -> TExpr -> [Double])
+tis_cons_ctx cs = ( mkContextLabels lbl, mkContextFeatures (tis_cons cs) )
+  where
+  lbl = "Is-" ++ join(intersperse "," cs)
 
 tis_anycon_ctx :: Feature -- ([String], TExpr -> TExpr -> [Double])
 tis_anycon_ctx = ( mkContextLabels lbl, mkContextFeatures tis_con_any )
@@ -639,6 +730,11 @@ tis_con_case_ctx :: DCon -> Feature
 tis_con_case_ctx c = ( mkContextLabels lbl, mkContextFeatures (tis_con_case c) )
   where
   lbl = "Is-" ++ c ++ "-Case"
+tis_cons_case_ctx :: [DCon] -> Feature
+tis_cons_case_ctx cs = ( mkContextLabels lbl, mkContextFeatures (tis_cons_case cs) )
+  where
+  lbl = "Is-" ++ join(intersperse "," cs) ++ "-Case"
+
 
 tis_anycon_case_ctx :: Feature
 tis_anycon_case_ctx = ( mkContextLabels lbl, mkContextFeatures tis_con_case_any )

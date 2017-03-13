@@ -9,7 +9,7 @@ BATCH_SIZE ?= 100
 BATCHES    ?= 10000
 
 DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size \
-	 op+type+size
+	 op+type+size op-cons+context+type+size op-cons+type+size
 HIDDEN = 10 25 50 100 250 500
 
 define PREDICTIONS
