@@ -108,6 +108,8 @@ doEval
   :: String -> FilePath -> IO ()
 doEval t dir = do
   let year = takeFileName dir
+  let features = takeDirectory t
+  let model = takeFileName t
   mls <- glob (dir </> "*.ml")
   let init = ProcessState {good1Progs = 0, good2Progs = 0, good3Progs = 0, allProgs = 0}
   final <- execStateT (mapM_ (processOne t) mls) init
@@ -118,8 +120,8 @@ doEval t dir = do
   printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
     top1 top2 top3 total
   writeFile (dir </> t </> "results.csv") $ unlines
-    [ "tool,year,top-1,top-2,top-3,total"
-    , printf "%s,%s,%.3f,%.3f,%.3f,%d" t year top1 top2 top3 total
+    [ "tool,year,features,model,top-1,top-2,top-3,total"
+    , printf "%s,%s,%s,%s,%.3f,%.3f,%.3f,%d" t year features model top1 top2 top3 total
     ]
 
 processOne :: (MonadState ProcessState m, MonadIO m)

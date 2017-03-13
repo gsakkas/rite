@@ -1,2 +1,2 @@
-tool,year,top-1,top-2,top-3,total
-op+type+size/hidden-250,fa15,0.690,0.840,0.896,2214
+tool,year,features,model,top-1,top-2,top-3,total
+op+type+size/hidden-250,fa15,op+type+size,hidden-250,0.690,0.840,0.896,2214

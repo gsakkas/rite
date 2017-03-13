@@ -1,2 +1,2 @@
-tool,year,top-1,top-2,top-3,total
-op+type+size/linear,sp14,0.365,0.552,0.688,2278
+tool,year,features,model,top-1,top-2,top-3,total
+op+type+size/linear,sp14,op+type+size,linear,0.365,0.552,0.688,2278

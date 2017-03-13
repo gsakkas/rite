@@ -1,2 +1,2 @@
-tool,year,top-1,top-2,top-3,total
-mycroft,fa15,0.429,0.456,0.460,2002
+tool,year,features,model,top-1,top-2,top-3,total
+mycroft,fa15,.,mycroft,0.429,0.456,0.460,2002

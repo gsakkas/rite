@@ -1,2 +1,2 @@
-tool,year,top-1,top-2,top-3,total
-op+context+type+size/hidden-25,fa15,0.668,0.846,0.899,2214
+tool,year,features,model,top-1,top-2,top-3,total
+op+context+type+size/hidden-25,fa15,op+context+type+size,hidden-25,0.668,0.846,0.899,2214
