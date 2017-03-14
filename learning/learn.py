@@ -3,6 +3,7 @@ import os.path
 import random
 random.seed()
 
+from hyperopt import fmin, tpe, hp
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
@@ -34,6 +35,7 @@ flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
 flags.DEFINE_bool("store_predictions", False,
                   "Whether to store predictions for offline analysis.")
+flags.DEFINE_bool("hyperopt", False, "Whether to use hyperopt to tune parameters.")
 
 
 def load_data(path):
@@ -52,9 +54,40 @@ def load_data(path):
         dfs.append((f, df))
     return (dfs, fs, ls)
 
+def cross_validate(dfs, fs, ls):
+    kf = KFold(n_splits=FLAGS.n_folds)
+    # print(len(dfs))
+    rs = []
+    for i, (train, test) in enumerate(kf.split(dfs)):
+        # print(len(train), len(test))
+        rs.append(train_and_eval(dfs, fs, ls, i=i, train_idxs=train, test_idxs=test))
+    return {'top-1': np.mean([r['top-1'] for r in rs]),
+            'top-2': np.mean([r['top-2'] for r in rs]),
+            'top-3': np.mean([r['top-3'] for r in rs])}
+
+def objective(dfs, fs, ls, a, b):
+    print 'learn_rate', a, 'reg_rate', b
+    FLAGS.learn_rate = a
+    FLAGS.reg_rate = b
+    loss = 1 - cross_validate(dfs, fs, ls)['top-1']
+    print loss
+    return loss
+
+def hyperopt(dfs, fs, ls):
+    space = (hp.lognormal('alpha', 0, 1),
+             hp.lognormal('beta', 0, 1))
+    best = fmin(fn=lambda (a, b): objective(dfs, fs, ls, a, b),
+                space=space,
+                algo=tpe.suggest,
+                max_evals=100)
+    print best
+
 def main(_):
     dfs, fs, ls = load_data(FLAGS.data)
     # train_and_eval(dfs, fs, ls)
+
+    if FLAGS.hyperopt:
+        return hyperopt(dfs, fs, ls)
 
     # # shuffle the data
     # df = df.sample(frac=1).reset_index(drop=True)
@@ -152,10 +185,10 @@ def train_model(train, dfs, label_names, validation=None):
     #     i += 1
     # print len(dfs)
     df = pd.concat([df for _, df in dfs])
-    print df.shape
+    # print df.shape
     feature_names = [c for c in df.columns if c[0] == 'F']
-    print df.drop_duplicates().shape
-    print df.drop_duplicates(feature_names).shape
+    #print df.drop_duplicates().shape
+    #print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
@@ -163,13 +196,14 @@ def train_model(train, dfs, label_names, validation=None):
         df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True).reset_index(drop=True)
     else:
         df = df.sample(frac=1).reset_index(drop=True)
-    print df.shape
+    #print df.shape
     for _, batch in df.groupby(df.index // FLAGS.batch_size):
         train(batch, i, validation, verbose=FLAGS.verbose)
         i += 1
 
 def test_model(test, dfs):
-    return test(dfs, store_predictions=FLAGS.store_predictions)
+    return test(dfs, store_predictions=FLAGS.store_predictions,
+                loud=not FLAGS.hyperopt)
 
 if __name__ == '__main__':
     tf.app.run()

@@ -163,7 +163,7 @@ def build_model(features, labels, hidden,
             #     print('accuracy at step {}: {}'.format(i, acc))
 
 
-    def test(data, store_predictions=False):
+    def test(data, store_predictions=False, loud=True):
         acc1 = 0
         acc2 = 0
         acc3 = 0
@@ -243,14 +243,15 @@ def build_model(features, labels, hidden,
         acc1 = float(acc1) / len(data)
         acc2 = float(acc2) / len(data)
         acc3 = float(acc3) / len(data)
-        print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc3))
-        print('avg/std recall: %.3f / %.3f' % (np.mean(rs), np.std(rs)))
-        # print('avg p/r/f1: %.3f / %.3f / %.3f' % (np.mean(ps), np.mean(rs), np.mean(fs)))
-        # print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
-        print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
-        print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
+        if loud:
+            print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc3))
+            print('avg/std recall: %.3f / %.3f' % (np.mean(rs), np.std(rs)))
+            # print('avg p/r/f1: %.3f / %.3f / %.3f' % (np.mean(ps), np.mean(rs), np.mean(fs)))
+            # print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
+            print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
+            print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
-        saver.save(sess, 'hidden_model')
+            saver.save(sess, 'hidden_model')
 
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 

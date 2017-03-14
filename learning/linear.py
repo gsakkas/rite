@@ -49,8 +49,8 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         #     tf.train.GradientDescentOptimizer(learning_rate)
         #     .minimize(cross_entropy, global_step=global_step)
         # )
-        # train_step = tf.train.AdamOptimizer(learn_rate).minimize(cross_entropy)
-        train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
+        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
+        #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
@@ -100,7 +100,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
                 print('accuracy at step %4d: %.3f / %.3f' % (i, acc1, acc))
 
 
-    def test(data, store_predictions=False):
+    def test(data, store_predictions=False, loud=True):
         acc1 = 0
         acc2 = 0
         acc3 = 0
@@ -178,10 +178,11 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         acc1 = float(acc1) / len(data)
         acc2 = float(acc2) / len(data)
         acc3 = float(acc3) / len(data)
-        print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc3))
-        print('avg/std recall: %.3f / %.3f' % (np.mean(rs), np.std(rs)))
-        print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
-        print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
+        if loud:
+            print('final accuracy: %.3f / %.3f / %.3f' % (acc1, acc2, acc3))
+            print('avg/std recall: %.3f / %.3f' % (np.mean(rs), np.std(rs)))
+            print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
+            print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 
