@@ -9,7 +9,7 @@ import math
 import util
 
 def build_model(features, labels, hidden,
-                learn_rate=0.1, beta=5e-4, model_dir=None):
+                learn_rate=0.1, beta=0.01, model_dir=None):
     '''Build a linear classifier with fully-connected hidden layers.
 
     @param features: A list of feature names.
@@ -66,10 +66,10 @@ def build_model(features, labels, hidden,
     saver = tf.train.Saver(Ws + bs + [W] + [b])
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_), name='xentropy_mean')
-        tf.summary.scalar('cross_entropy', cross_entropy)
+        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
         regularizers = sum(tf.nn.l2_loss(W) for W in Ws) + sum(tf.nn.l2_loss(b) for b in bs)
         cross_entropy += beta * regularizers
+        loss = tf.reduce_mean(cross_entropy)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -79,7 +79,7 @@ def build_model(features, labels, hidden,
         #     tf.train.GradientDescentOptimizer(learning_rate)
         #     .minimize(cross_entropy, global_step=global_step)
         # )
-        train_step = tf.train.AdamOptimizer(learn_rate).minimize(cross_entropy)
+        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
         # train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
 
     sess = tf.InteractiveSession()

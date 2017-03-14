@@ -7,7 +7,7 @@ import math
 
 import util
 
-def build_model(features, labels, learn_rate=0.1, model_dir=None):
+def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     '''Build a linear classifier.
 
     @param features: A list of feature names.
@@ -36,10 +36,10 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.reduce_mean(
-            tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
-            name='xentropy_mean')
-        tf.summary.scalar('cross_entropy', cross_entropy)
+        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
+        regularizers = tf.nn.l2_loss(W) + tf.nn.l2_loss(b)
+        cross_entropy += beta * regularizers
+        loss = tf.reduce_mean(cross_entropy)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -50,7 +50,7 @@ def build_model(features, labels, learn_rate=0.1, model_dir=None):
         #     .minimize(cross_entropy, global_step=global_step)
         # )
         # train_step = tf.train.AdamOptimizer(learn_rate).minimize(cross_entropy)
-        train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
+        train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
