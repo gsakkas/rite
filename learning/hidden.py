@@ -39,8 +39,10 @@ def build_model(features, labels, hidden,
                 tf.truncated_normal([n, n_hidden],
                                     stddev=1.0 / math.sqrt(float(n))),
                 name='W_' + str(i))
-            b = tf.Variable(tf.truncated_normal([n_hidden],
-                                                stddev=1.0 / math.sqrt(float(n_hidden))),
+            # b = tf.Variable(tf.truncated_normal([n_hidden],
+            #                                     stddev=1.0 / math.sqrt(float(n_hidden))),
+            #                 name='b_' + str(i))
+            b = tf.Variable(tf.constant(0.01, shape=[n_hidden]),
                             name='b_' + str(i))
             util.variable_summaries(W,'W_' + str(i))
             util.variable_summaries(b,'b_' + str(i))
@@ -49,27 +51,33 @@ def build_model(features, labels, hidden,
             h = tf.nn.dropout(tf.nn.relu(tf.matmul(h, W) + b), keep_prob)
         n = n_hidden
 
-    with tf.name_scope('linear'):
+    with tf.name_scope('output'):
         W = tf.Variable(
             tf.truncated_normal([n, n_out],
                                 stddev=1.0 / math.sqrt(float(n))),
             name='W')
-        b = tf.Variable(tf.truncated_normal([n_out],
-                                            stddev=1.0 / math.sqrt(float(n_out))),
-                        name='b_' + str(i))
+        # b = tf.Variable(tf.truncated_normal([n_out],
+        #                                     stddev=1.0 / math.sqrt(float(n_out))),
+        #                 name='b')
+        b = tf.Variable(tf.zeros([n_out]),
+                        name='b')
         util.variable_summaries(W,'W')
         util.variable_summaries(b,'b')
+        Ws.append(W)
+        bs.append(b)
         y = tf.matmul(h, W) + b
 
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
 
-    saver = tf.train.Saver(Ws + bs + [W] + [b])
+    saver = tf.train.Saver(Ws + bs)
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
         regularizers = sum(tf.nn.l2_loss(W) for W in Ws) # + sum(tf.nn.l2_loss(b) for b in bs)
+        tf.summary.scalar('l2_loss', regularizers)
         cross_entropy += beta * regularizers
         loss = tf.reduce_mean(cross_entropy)
+        tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -80,7 +88,7 @@ def build_model(features, labels, hidden,
         #     .minimize(cross_entropy, global_step=global_step)
         # )
         train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
-        # train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(cross_entropy)
+        #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
