@@ -5,17 +5,20 @@ MODEL  ?= hidden
 LAYERS ?= 500
 
 LEARN_RATE ?= 0.0001
+REG_RATE   ?= 0.01
 BATCH_SIZE ?= 100
 BATCHES    ?= 10000
 
 DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size \
 	 op+type+size op-cons+context+type+size op-cons+type+size
+#DATAS  = op-cons+context+type+size op-cons+type+size
 HIDDEN = 10 25 50 100 250 500
 
 define PREDICTIONS
 python learning/learn.py \
   --data data/$(4)/$(1) \
   --learn_rate=$(LEARN_RATE) \
+  --reg_rate=$(REG_RATE) \
   --model=$(2) \
   --hidden_layers=$(3) \
   --batch_size=$(BATCH_SIZE) \

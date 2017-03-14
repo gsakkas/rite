@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,total
-op+context+type+size/linear,fa15,op+context+type+size,linear,0.507,0.709,0.827,2214
+op+context+type+size/linear,fa15,op+context+type+size,linear,0.495,0.697,0.818,2214

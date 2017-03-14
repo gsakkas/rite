@@ -37,7 +37,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
-        regularizers = tf.nn.l2_loss(W) + tf.nn.l2_loss(b)
+        regularizers = tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
         cross_entropy += beta * regularizers
         loss = tf.reduce_mean(cross_entropy)
     with tf.name_scope('train'):
