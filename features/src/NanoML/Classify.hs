@@ -96,14 +96,14 @@ preds_tis_ctx_cons
  =
   map tis_op_ctx [Eq ..] ++
   [ tis_anycon_ctx
-    -- , tis_con_ctx "::", tis_con_ctx "[]"
-  , tis_cons_ctx ["::", "[]"]
+  , tis_con_ctx "::", tis_con_ctx "[]"
+  -- , tis_cons_ctx ["::", "[]"]
   , tis_con_ctx "(,)"
-    -- , tis_con_ctx "VarX", tis_con_ctx "VarY"
-    -- , tis_con_ctx "Sine", tis_con_ctx "Cosine"
-    -- , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
-  , tis_cons_ctx
-      ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
+  , tis_con_ctx "VarX", tis_con_ctx "VarY"
+  , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+  , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+  -- , tis_cons_ctx
+  --     ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
   , tis_anycon_case_ctx
     -- , tis_con_case_ctx "::", tis_con_case_ctx "[]"
   , tis_cons_case_ctx ["::", "[]"]

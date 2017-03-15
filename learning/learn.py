@@ -6,7 +6,7 @@ random.seed()
 from hyperopt import fmin, tpe, hp
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, ShuffleSplit
 import tensorflow as tf
 
 # local modules
@@ -28,6 +28,7 @@ flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
 flags.DEFINE_string("hidden_layers", "", "")
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
 flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
+flags.DEFINE_integer("n_epochs", None, "Number of training rounds.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_float("reg_rate", 0.01, "Regularization rate.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
@@ -56,6 +57,7 @@ def load_data(path):
 
 def cross_validate(dfs, fs, ls):
     kf = KFold(n_splits=FLAGS.n_folds)
+    #kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=0)
     # print(len(dfs))
     rs = []
     for i, (train, test) in enumerate(kf.split(dfs)):
@@ -65,21 +67,23 @@ def cross_validate(dfs, fs, ls):
             'top-2': np.mean([r['top-2'] for r in rs]),
             'top-3': np.mean([r['top-3'] for r in rs])}
 
-def objective(dfs, fs, ls, a, b):
-    print 'learn_rate', a, 'reg_rate', b
-    FLAGS.learn_rate = a
-    FLAGS.reg_rate = b
+def objective(dfs, fs, ls, a, b, m):
+    print 'learn_rate', a, 'reg_rate', b, 'mini_batch', m
+    FLAGS.learn_rate = 10 ** a
+    FLAGS.reg_rate = 10 ** b
+    FLAGS.batch_size = int(m)
     loss = 1 - cross_validate(dfs, fs, ls)['top-1']
     print loss
     return loss
 
 def hyperopt(dfs, fs, ls):
-    space = (hp.lognormal('alpha', 0, 1),
-             hp.lognormal('beta', 0, 1))
-    best = fmin(fn=lambda (a, b): objective(dfs, fs, ls, a, b),
+    space = (hp.uniform('alpha', -4, -1),
+             hp.uniform('beta',  -3, 0),
+             hp.quniform('mini', 100, 500, 10))
+    best = fmin(fn=lambda (a, b, m): objective(dfs, fs, ls, a, b, m),
                 space=space,
                 algo=tpe.suggest,
-                max_evals=100)
+                max_evals=500)
     print best
 
 def main(_):
@@ -195,7 +199,7 @@ def train_model(train, dfs, label_names, validation=None):
     if FLAGS.n_batches is not None:
         df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True).reset_index(drop=True)
     else:
-        df = df.sample(frac=1).reset_index(drop=True)
+        df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1).reset_index(drop=True)
     #print df.shape
     for _, batch in df.groupby(df.index // FLAGS.batch_size):
         train(batch, i, validation, verbose=FLAGS.verbose)

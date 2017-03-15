@@ -4,14 +4,14 @@ DATA   ?= op+type+size
 MODEL  ?= hidden
 LAYERS ?= 500
 
-LEARN_RATE ?= 0.0001
-REG_RATE   ?= 0.01
-BATCH_SIZE ?= 100
+LEARN_RATE ?= 0.0003674
+REG_RATE   ?= 0.9988
+BATCH_SIZE ?= 170
 BATCHES    ?= 10000
+EPOCHS     ?= 20
 
-DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size \
-	 op+type+size op-cons+context+type+size op-cons+type+size
-#DATAS  = op-cons+context+type+size op-cons+type+size
+DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size
+DATAS += op-cons+context+type+size op-cons+type+size
 HIDDEN = 10 25 50 100 250 500
 
 define PREDICTIONS
@@ -22,7 +22,7 @@ python learning/learn.py \
   --model=$(2) \
   --hidden_layers=$(3) \
   --batch_size=$(BATCH_SIZE) \
-  --n_batches=$(BATCHES) \
+  --n_epochs=$(EPOCHS) \
   --test_data data/$(5)/$(1) \
   --store_predictions
 endef
