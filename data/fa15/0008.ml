@@ -14,7 +14,6 @@ let rec digitsOfInt n =
 
 (* changed spans
 (5,7)-(5,66)
-(5,18)-(5,65)
 *)
 
 (* type error slice

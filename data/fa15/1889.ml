@@ -1,84 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with | 0 -> buildX | n -> buildSine (build (rand, (depth - 1)));;
+let stringOfList f l = List.map sepConcat f l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | n -> buildSine (build (rand, (depth - 1)));;
+let stringOfList f l = sepConcat " " l;;
 
 *)
 
 (* changed spans
-(16,26)-(16,32)
-(16,40)-(16,77)
+(9,23)-(9,31)
+(9,23)-(9,45)
+(9,42)-(9,43)
 *)
 
 (* type error slice
-(11,3)-(11,26)
-(11,14)-(11,24)
-(11,18)-(11,24)
-(11,18)-(11,24)
-(11,23)-(11,24)
-(13,3)-(13,22)
-(13,11)-(13,20)
-(15,3)-(16,79)
-(15,15)-(16,77)
-(16,2)-(16,77)
-(16,2)-(16,77)
-(16,26)-(16,32)
-(16,40)-(16,49)
-(16,40)-(16,77)
-(16,50)-(16,77)
-(16,51)-(16,56)
+(9,23)-(9,31)
+(9,23)-(9,45)
 *)
 
 (* all spans
-(11,14)-(11,24)
-(11,18)-(11,24)
-(11,23)-(11,24)
-(13,11)-(13,20)
-(13,16)-(13,20)
-(15,15)-(16,77)
-(16,2)-(16,77)
-(16,8)-(16,13)
-(16,26)-(16,32)
-(16,40)-(16,77)
-(16,40)-(16,49)
-(16,50)-(16,77)
-(16,51)-(16,56)
-(16,57)-(16,76)
-(16,58)-(16,62)
-(16,64)-(16,75)
-(16,65)-(16,70)
-(16,73)-(16,74)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(3,8)-(3,10)
+(4,10)-(4,12)
+(6,6)-(7,58)
+(6,12)-(6,31)
+(6,14)-(6,31)
+(6,18)-(6,31)
+(6,20)-(6,21)
+(6,18)-(6,19)
+(6,22)-(6,31)
+(6,27)-(6,28)
+(6,23)-(6,26)
+(6,29)-(6,30)
+(7,6)-(7,58)
+(7,17)-(7,18)
+(7,22)-(7,58)
+(7,30)-(7,31)
+(7,35)-(7,58)
+(7,35)-(7,49)
+(7,50)-(7,51)
+(7,52)-(7,56)
+(7,57)-(7,58)
+(9,17)-(9,45)
+(9,19)-(9,45)
+(9,23)-(9,45)
+(9,23)-(9,31)
+(9,32)-(9,41)
+(9,42)-(9,43)
+(9,44)-(9,45)
 *)

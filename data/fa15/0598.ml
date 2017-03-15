@@ -1,55 +1,113 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let checkSame (x,y) = x == y;;
 
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine i -> "sin" ^ i;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), (explode w))
+  then true
+  else explode w;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let checkSame (x,y) = x == y;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine i -> "sin" ^ (exprToString i);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), (explode w)) then true else false;;
 
 *)
 
 (* changed spans
-(12,65)-(12,66)
+(15,7)-(15,14)
+(15,7)-(15,16)
+(15,15)-(15,16)
 *)
 
 (* type error slice
-(12,2)-(12,66)
-(12,57)-(12,66)
-(12,63)-(12,64)
-(12,65)-(12,66)
+(4,3)-(7,8)
+(4,12)-(7,6)
+(5,2)-(7,6)
+(6,43)-(6,66)
+(6,54)-(6,66)
+(6,55)-(6,57)
+(7,2)-(7,4)
+(7,2)-(7,6)
+(13,2)-(15,16)
+(13,2)-(15,16)
+(14,7)-(14,11)
+(15,7)-(15,14)
+(15,7)-(15,16)
 *)
 
 (* all spans
-(11,21)-(12,66)
-(12,2)-(12,66)
-(12,8)-(12,9)
-(12,26)-(12,29)
-(12,41)-(12,44)
-(12,57)-(12,66)
-(12,63)-(12,64)
-(12,57)-(12,62)
-(12,65)-(12,66)
+(2,15)-(2,28)
+(2,22)-(2,28)
+(2,22)-(2,23)
+(2,27)-(2,28)
+(4,12)-(7,6)
+(5,2)-(7,6)
+(5,13)-(6,66)
+(6,4)-(6,66)
+(6,7)-(6,29)
+(6,7)-(6,8)
+(6,12)-(6,29)
+(6,13)-(6,26)
+(6,27)-(6,28)
+(6,35)-(6,37)
+(6,43)-(6,66)
+(6,43)-(6,50)
+(6,44)-(6,49)
+(6,44)-(6,45)
+(6,47)-(6,48)
+(6,54)-(6,66)
+(6,55)-(6,57)
+(6,58)-(6,65)
+(6,59)-(6,60)
+(6,63)-(6,64)
+(7,2)-(7,6)
+(7,2)-(7,4)
+(7,5)-(7,6)
+(9,20)-(10,57)
+(10,2)-(10,57)
+(10,8)-(10,9)
+(10,23)-(10,25)
+(10,36)-(10,57)
+(10,52)-(10,53)
+(10,36)-(10,51)
+(10,37)-(10,48)
+(10,49)-(10,50)
+(10,54)-(10,57)
+(10,55)-(10,56)
+(12,15)-(15,16)
+(13,2)-(15,16)
+(13,5)-(13,55)
+(13,5)-(13,14)
+(13,15)-(13,55)
+(13,16)-(13,41)
+(13,17)-(13,28)
+(13,29)-(13,40)
+(13,30)-(13,37)
+(13,38)-(13,39)
+(13,43)-(13,54)
+(13,44)-(13,51)
+(13,52)-(13,53)
+(14,7)-(14,11)
+(15,7)-(15,16)
+(15,7)-(15,14)
+(15,15)-(15,16)
 *)

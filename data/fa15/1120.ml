@@ -3,7 +3,7 @@ let rec wwhile (f,b) =
   let res = f b in
   match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let fixpoint (f,b) = let rec funt x = (f b) = b in wwhile (funt, b);;
+let fixpoint (f,b) = let fx a = true in wwhile (fx, b);;
 
 
 (* fix
@@ -12,12 +12,17 @@ let rec wwhile (f,b) =
   let res = f b in
   match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let fixpoint (f,b) = let rec funt x = (b, ((f b) = b)) in wwhile (funt, b);;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(6,38)-(6,47)
+(6,21)-(6,54)
+(6,28)-(6,36)
+(6,32)-(6,36)
+(6,40)-(6,54)
+(6,48)-(6,50)
 *)
 
 (* type error slice
@@ -30,13 +35,13 @@ let fixpoint (f,b) = let rec funt x = (b, ((f b) = b)) in wwhile (funt, b);;
 (4,42)-(4,55)
 (4,49)-(4,55)
 (4,50)-(4,51)
-(6,21)-(6,67)
-(6,34)-(6,47)
-(6,38)-(6,47)
-(6,51)-(6,57)
-(6,51)-(6,67)
-(6,58)-(6,67)
-(6,59)-(6,63)
+(6,21)-(6,54)
+(6,28)-(6,36)
+(6,32)-(6,36)
+(6,40)-(6,46)
+(6,40)-(6,54)
+(6,47)-(6,54)
+(6,48)-(6,50)
 *)
 
 (* all spans
@@ -53,17 +58,13 @@ let fixpoint (f,b) = let rec funt x = (b, ((f b) = b)) in wwhile (funt, b);;
 (4,50)-(4,51)
 (4,53)-(4,54)
 (4,67)-(4,68)
-(6,14)-(6,67)
-(6,21)-(6,67)
-(6,34)-(6,47)
-(6,38)-(6,47)
-(6,38)-(6,43)
-(6,39)-(6,40)
-(6,41)-(6,42)
-(6,46)-(6,47)
-(6,51)-(6,67)
-(6,51)-(6,57)
-(6,58)-(6,67)
-(6,59)-(6,63)
-(6,65)-(6,66)
+(6,14)-(6,54)
+(6,21)-(6,54)
+(6,28)-(6,36)
+(6,32)-(6,36)
+(6,40)-(6,54)
+(6,40)-(6,46)
+(6,47)-(6,54)
+(6,48)-(6,50)
+(6,52)-(6,53)
 *)

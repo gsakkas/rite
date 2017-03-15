@@ -12,7 +12,6 @@ let pipe fs = let f a x n = x n in let base n = n in List.fold_left f base fs;;
 (2,26)-(2,27)
 (2,26)-(2,29)
 (2,33)-(2,75)
-(2,42)-(2,47)
 *)
 
 (* type error slice

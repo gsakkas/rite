@@ -10,10 +10,7 @@ let pipe fs b = let f a x = x a in let base = b in List.fold_left f base fs;;
 
 (* changed spans
 (2,14)-(2,74)
-(2,20)-(2,29)
-(2,33)-(2,74)
 (2,44)-(2,46)
-(2,50)-(2,74)
 *)
 
 (* type error slice

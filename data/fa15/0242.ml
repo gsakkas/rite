@@ -79,9 +79,6 @@ let bigMul l1 l2 =
 
 (* changed spans
 (34,38)-(34,64)
-(35,2)-(36,66)
-(36,2)-(36,66)
-(36,19)-(36,66)
 *)
 
 (* type error slice

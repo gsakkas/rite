@@ -1,78 +1,58 @@
 
-let rec build (rand,depth) = match depth with | 0 -> rand (0, 1) | _ -> rand;;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let helper (f,b) = let f b = let x = f b in (x, (x != b)) in f;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let x = rand (0, 1) in (match x with | 0 -> buildX () | 1 -> buildY ())
-  | _ ->
-      let x = rand (0, 6) in
-      (match x with
-       | 0 -> buildX ()
-       | 1 -> buildY ()
-       | 2 -> buildSine (build (rand, (depth - 1)))
-       | 3 -> buildCosine (build (rand, (depth - 1)))
-       | 4 ->
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 5 ->
-           buildTimes
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 6 ->
-           buildThresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
 
 *)
 
 (* changed spans
-(2,15)-(2,76)
-(2,53)-(2,64)
-(2,72)-(2,76)
+(3,2)-(3,72)
+(5,29)-(5,31)
+(5,33)-(5,34)
 *)
 
 (* type error slice
-(2,29)-(2,76)
-(2,29)-(2,76)
-(2,53)-(2,57)
-(2,53)-(2,64)
-(2,72)-(2,76)
+(3,14)-(3,15)
+(3,14)-(3,17)
+(3,59)-(3,65)
+(3,59)-(3,72)
+(3,66)-(3,72)
+(3,67)-(3,68)
+(5,21)-(5,27)
+(5,21)-(5,35)
+(5,28)-(5,35)
+(5,29)-(5,31)
 *)
 
 (* all spans
-(2,15)-(2,76)
-(2,29)-(2,76)
-(2,35)-(2,40)
-(2,53)-(2,64)
-(2,53)-(2,57)
-(2,58)-(2,64)
-(2,59)-(2,60)
-(2,62)-(2,63)
-(2,72)-(2,76)
+(2,16)-(3,72)
+(3,2)-(3,72)
+(3,14)-(3,17)
+(3,14)-(3,15)
+(3,16)-(3,17)
+(3,21)-(3,72)
+(3,27)-(3,28)
+(3,46)-(3,47)
+(3,59)-(3,72)
+(3,59)-(3,65)
+(3,66)-(3,72)
+(3,67)-(3,68)
+(3,70)-(3,71)
+(5,14)-(5,35)
+(5,21)-(5,35)
+(5,21)-(5,27)
+(5,28)-(5,35)
+(5,29)-(5,31)
+(5,33)-(5,34)
 *)

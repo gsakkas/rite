@@ -6,13 +6,23 @@ let padZero l1 l2 =
   then (clone 0 ((List.length l2) - (List.length l1))) @ l1
   else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
 
-let bigMul l1 l2 =
-  let f a x = failwith "to be implemented" in
-  let base = failwith "to be implemented" in
-  let args =
-    ((padZero l1 l2),
-      (if (List.length l1) >= (List.length l2) then l1 else l2)) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec removeZero l =
+  let f a x =
+    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a @ [x] in
+  let base = [] in List.fold_left f base l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (l1e,l2e) ->
+          (match a with
+           | (carry,list) ->
+               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add ((padZero l1 l2) l2));;
 
 
 (* fix
@@ -20,9 +30,9 @@ let bigMul l1 l2 =
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) <= (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (((clone 0 ((List.length l1) - (List.length l2))) @ l2), l1);;
+  if (List.length l1) < (List.length l2)
+  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
+  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
 
 let rec removeZero l =
   let f a x =
@@ -36,74 +46,28 @@ let bigAdd l1 l2 =
       | (l1e,l2e) ->
           (match a with
            | (carry,list) ->
-               let num = (l1e + l2e) + carry in
-               if num < 10
-               then (0, ([num] @ list))
-               else
-                 if num = 10
-                 then (1, ([0] @ list))
-                 else ((num / 10), ([num mod 10] @ list))) in
+               let num = (l1e + l2e) + carry in ((num mod 9), ([7] @ list))) in
     let base = (0, []) in
-    let args = List.combine (List.rev ([0] @ l1)) (List.rev ([0] @ l2)) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let makeTuple l1 l2 =
-  let (x,y) = padZero l1 l2 in ((List.rev x), (clone y (List.length y)));;
-
-let rec mulByDigit i l =
-  if i < 1 then [] else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (aNum,wholeNum) ->
-        (match a with
-         | (zeros,total) ->
-             ((zeros @ [0]),
-               (bigAdd total ((mulByDigit aNum wholeNum) @ zeros)))) in
-  let base = ([], []) in
-  let args = let (x,y) = makeTuple l1 l2 in List.combine x y in
-  let (_,res) = List.fold_left f base args in res;;
+  removeZero (add ((padZero l1 l2), l2));;
 
 *)
 
 (* changed spans
-(5,5)-(5,40)
-(6,7)-(6,59)
-(7,7)-(7,59)
-(9,11)-(15,49)
-(10,2)-(15,49)
-(10,8)-(10,42)
-(10,14)-(10,22)
-(10,14)-(10,42)
-(10,23)-(10,42)
-(11,2)-(15,49)
-(11,13)-(11,21)
-(11,13)-(11,41)
-(11,22)-(11,41)
-(12,2)-(15,49)
-(13,4)-(14,64)
-(13,6)-(13,13)
-(14,6)-(14,63)
-(14,10)-(14,26)
-(14,10)-(14,46)
-(14,11)-(14,22)
-(14,23)-(14,25)
-(14,30)-(14,46)
-(14,31)-(14,42)
-(14,43)-(14,45)
-(14,52)-(14,54)
-(15,2)-(15,49)
-(15,16)-(15,42)
+(25,18)-(25,38)
 *)
 
 (* type error slice
-(12,2)-(15,49)
-(13,4)-(14,64)
-(15,16)-(15,30)
-(15,16)-(15,42)
-(15,38)-(15,42)
+(4,3)-(7,61)
+(4,12)-(7,59)
+(4,15)-(7,59)
+(5,2)-(7,59)
+(6,7)-(6,59)
+(6,55)-(6,56)
+(25,18)-(25,38)
+(25,19)-(25,34)
+(25,20)-(25,27)
 *)
 
 (* all spans
@@ -158,39 +122,85 @@ let bigMul l1 l2 =
 (7,37)-(7,48)
 (7,49)-(7,51)
 (7,57)-(7,59)
-(9,11)-(15,49)
-(9,14)-(15,49)
-(10,2)-(15,49)
-(10,8)-(10,42)
-(10,10)-(10,42)
-(10,14)-(10,42)
-(10,14)-(10,22)
-(10,23)-(10,42)
-(11,2)-(15,49)
-(11,13)-(11,41)
-(11,13)-(11,21)
-(11,22)-(11,41)
-(12,2)-(15,49)
-(13,4)-(14,64)
-(13,5)-(13,20)
-(13,6)-(13,13)
-(13,14)-(13,16)
-(13,17)-(13,19)
-(14,6)-(14,63)
-(14,10)-(14,46)
-(14,10)-(14,26)
-(14,11)-(14,22)
-(14,23)-(14,25)
-(14,30)-(14,46)
-(14,31)-(14,42)
-(14,43)-(14,45)
-(14,52)-(14,54)
-(14,60)-(14,62)
-(15,2)-(15,49)
-(15,16)-(15,42)
-(15,16)-(15,30)
-(15,31)-(15,32)
-(15,33)-(15,37)
-(15,38)-(15,42)
-(15,46)-(15,49)
+(9,19)-(12,42)
+(10,2)-(12,42)
+(10,8)-(11,72)
+(10,10)-(11,72)
+(11,4)-(11,72)
+(11,7)-(11,26)
+(11,7)-(11,22)
+(11,8)-(11,19)
+(11,20)-(11,21)
+(11,25)-(11,26)
+(11,32)-(11,59)
+(11,36)-(11,41)
+(11,36)-(11,37)
+(11,40)-(11,41)
+(11,47)-(11,49)
+(11,55)-(11,58)
+(11,56)-(11,57)
+(11,65)-(11,72)
+(11,67)-(11,68)
+(11,65)-(11,66)
+(11,69)-(11,72)
+(11,70)-(11,71)
+(12,2)-(12,42)
+(12,13)-(12,15)
+(12,19)-(12,42)
+(12,19)-(12,33)
+(12,34)-(12,35)
+(12,36)-(12,40)
+(12,41)-(12,42)
+(14,11)-(25,39)
+(14,14)-(25,39)
+(15,2)-(25,39)
+(15,11)-(24,51)
+(16,4)-(24,51)
+(16,10)-(21,76)
+(16,12)-(21,76)
+(17,6)-(21,76)
+(17,12)-(17,13)
+(19,10)-(21,76)
+(19,17)-(19,18)
+(21,15)-(21,75)
+(21,25)-(21,44)
+(21,25)-(21,36)
+(21,26)-(21,29)
+(21,32)-(21,35)
+(21,39)-(21,44)
+(21,48)-(21,75)
+(21,49)-(21,60)
+(21,50)-(21,53)
+(21,58)-(21,59)
+(21,62)-(21,74)
+(21,67)-(21,68)
+(21,63)-(21,66)
+(21,64)-(21,65)
+(21,69)-(21,73)
+(22,4)-(24,51)
+(22,15)-(22,22)
+(22,16)-(22,17)
+(22,19)-(22,21)
+(23,4)-(24,51)
+(23,15)-(23,33)
+(23,15)-(23,27)
+(23,28)-(23,30)
+(23,31)-(23,33)
+(24,4)-(24,51)
+(24,18)-(24,44)
+(24,18)-(24,32)
+(24,33)-(24,34)
+(24,35)-(24,39)
+(24,40)-(24,44)
+(24,48)-(24,51)
+(25,2)-(25,39)
+(25,2)-(25,12)
+(25,13)-(25,39)
+(25,14)-(25,17)
+(25,18)-(25,38)
+(25,19)-(25,34)
+(25,20)-(25,27)
+(25,28)-(25,30)
+(25,31)-(25,33)
+(25,35)-(25,37)
 *)

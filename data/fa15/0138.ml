@@ -19,8 +19,6 @@ let rec sepConcat sep sl =
 
 (* changed spans
 (6,22)-(6,23)
-(6,27)-(6,77)
-(6,43)-(6,77)
 (6,56)-(6,77)
 *)
 

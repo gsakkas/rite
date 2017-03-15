@@ -1,136 +1,72 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match ((rand (243, 98723)), depth) with
-  | (x,0) when (x mod 2) = 0 -> buildY ()
-  | (x,0) when (x mod 2) = 1 -> buildX ()
-  | (x,n) when (n mod 5) = 0 -> buildSine (build (x, (n - 1)))
-  | (x,n) when (n mod 5) = 4 -> buildCosine (build (x, (n - 1)));;
+let stringOfList f l = sepConcat " " List.map l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match ((rand (243, 98723)), depth) with
-  | (x,0) when (x mod 2) = 0 -> buildY ()
-  | (x,0) when (x mod 2) = 1 -> buildX ()
-  | (x,n) when (n > 0) && ((x mod 5) = 0) ->
-      buildSine (build (rand, (n - 1)))
-  | (x,n) when (n > 0) && ((x mod 5) = 1) ->
-      buildCosine (build (rand, (n - 1)))
-  | (x,n) when (n > 0) && ((x mod 5) = 2) ->
-      buildAverage ((build (rand, (n - 1))), (build (rand, (n - 1))))
-  | (x,n) when (n > 0) && ((x mod 5) = 3) ->
-      buildTimes ((build (rand, (n - 1))), (build (rand, (n - 1))))
-  | (x,n) when (n > 0) && ((x mod 5) = 4) ->
-      buildThresh
-        ((build (rand, (n - 1))), (build (rand, (n - 1))),
-          (build (rand, (n - 1))), (build (rand, (n - 1))));;
+let stringOfList f l = sepConcat " " l;;
 
 *)
 
 (* changed spans
-(11,16)-(11,28)
-(15,11)-(15,20)
-(20,2)-(24,64)
-(23,50)-(23,51)
-(24,52)-(24,53)
+(9,23)-(9,47)
+(9,37)-(9,45)
 *)
 
 (* type error slice
-(19,3)-(24,66)
-(19,15)-(24,64)
-(20,2)-(24,64)
-(20,8)-(20,36)
-(20,9)-(20,28)
-(20,10)-(20,14)
-(23,42)-(23,62)
-(23,43)-(23,48)
-(23,49)-(23,61)
-(23,50)-(23,51)
+(2,3)-(7,60)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(4,10)-(4,12)
+(9,23)-(9,32)
+(9,23)-(9,47)
 *)
 
 (* all spans
-(11,16)-(11,28)
-(11,20)-(11,28)
-(11,27)-(11,28)
-(13,14)-(13,24)
-(13,18)-(13,24)
-(13,23)-(13,24)
-(15,11)-(15,20)
-(15,16)-(15,20)
-(17,11)-(17,20)
-(17,16)-(17,20)
-(19,15)-(24,64)
-(20,2)-(24,64)
-(20,8)-(20,36)
-(20,9)-(20,28)
-(20,10)-(20,14)
-(20,15)-(20,27)
-(20,16)-(20,19)
-(20,21)-(20,26)
-(20,30)-(20,35)
-(21,32)-(21,41)
-(21,32)-(21,38)
-(21,39)-(21,41)
-(22,32)-(22,41)
-(22,32)-(22,38)
-(22,39)-(22,41)
-(23,32)-(23,62)
-(23,32)-(23,41)
-(23,42)-(23,62)
-(23,43)-(23,48)
-(23,49)-(23,61)
-(23,50)-(23,51)
-(23,53)-(23,60)
-(23,54)-(23,55)
-(23,58)-(23,59)
-(24,32)-(24,64)
-(24,32)-(24,43)
-(24,44)-(24,64)
-(24,45)-(24,50)
-(24,51)-(24,63)
-(24,52)-(24,53)
-(24,55)-(24,62)
-(24,56)-(24,57)
-(24,60)-(24,61)
+(2,18)-(7,58)
+(2,22)-(7,58)
+(3,2)-(7,58)
+(3,8)-(3,10)
+(4,10)-(4,12)
+(6,6)-(7,58)
+(6,12)-(6,31)
+(6,14)-(6,31)
+(6,18)-(6,31)
+(6,20)-(6,21)
+(6,18)-(6,19)
+(6,22)-(6,31)
+(6,27)-(6,28)
+(6,23)-(6,26)
+(6,29)-(6,30)
+(7,6)-(7,58)
+(7,17)-(7,18)
+(7,22)-(7,58)
+(7,30)-(7,31)
+(7,35)-(7,58)
+(7,35)-(7,49)
+(7,50)-(7,51)
+(7,52)-(7,56)
+(7,57)-(7,58)
+(9,17)-(9,47)
+(9,19)-(9,47)
+(9,23)-(9,47)
+(9,23)-(9,32)
+(9,33)-(9,36)
+(9,37)-(9,45)
+(9,46)-(9,47)
 *)

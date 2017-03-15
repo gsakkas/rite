@@ -1,72 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(" @ ((exprToString x) @ ")");;
+let fixpoint (f,b) = wwhile ((f, (f b)), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(" ^ ((exprToString x) ^ ")");;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(15,21)-(15,22)
-(15,41)-(15,42)
+(6,21)-(6,27)
+(6,21)-(6,43)
+(6,28)-(6,43)
+(6,29)-(6,39)
+(6,30)-(6,31)
+(6,33)-(6,38)
+(6,34)-(6,35)
+(6,41)-(6,42)
 *)
 
 (* type error slice
-(11,3)-(15,49)
-(11,21)-(15,47)
-(12,2)-(15,47)
-(13,13)-(13,16)
-(15,14)-(15,20)
-(15,14)-(15,47)
-(15,21)-(15,22)
-(15,23)-(15,47)
-(15,24)-(15,40)
-(15,25)-(15,37)
-(15,41)-(15,42)
-(15,43)-(15,46)
+(3,12)-(3,13)
+(3,12)-(3,15)
+(4,42)-(4,48)
+(4,42)-(4,55)
+(4,49)-(4,55)
+(4,50)-(4,51)
+(6,21)-(6,27)
+(6,21)-(6,43)
+(6,28)-(6,43)
+(6,29)-(6,39)
 *)
 
 (* all spans
-(11,21)-(15,47)
-(12,2)-(15,47)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,14)-(15,47)
-(15,21)-(15,22)
-(15,14)-(15,20)
-(15,23)-(15,47)
-(15,41)-(15,42)
-(15,24)-(15,40)
-(15,25)-(15,37)
-(15,38)-(15,39)
-(15,43)-(15,46)
+(2,16)-(4,68)
+(3,2)-(4,68)
+(3,12)-(3,15)
+(3,12)-(3,13)
+(3,14)-(3,15)
+(4,2)-(4,68)
+(4,8)-(4,11)
+(4,42)-(4,55)
+(4,42)-(4,48)
+(4,49)-(4,55)
+(4,50)-(4,51)
+(4,53)-(4,54)
+(4,67)-(4,68)
+(6,14)-(6,43)
+(6,21)-(6,43)
+(6,21)-(6,27)
+(6,28)-(6,43)
+(6,29)-(6,39)
+(6,30)-(6,31)
+(6,33)-(6,38)
+(6,34)-(6,35)
+(6,36)-(6,37)
+(6,41)-(6,42)
 *)

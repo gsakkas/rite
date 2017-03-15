@@ -1,69 +1,42 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem seen) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_right f base xs;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem h seen) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(7,27)-(7,42)
-(7,37)-(7,41)
+(3,45)-(3,60)
 *)
 
 (* type error slice
-(7,23)-(7,26)
-(7,23)-(7,42)
-(7,27)-(7,42)
-(7,28)-(7,36)
+(3,29)-(3,70)
+(3,40)-(3,41)
+(3,45)-(3,60)
+(3,45)-(3,70)
+(3,63)-(3,67)
 *)
 
 (* all spans
-(2,21)-(9,27)
-(3,2)-(9,27)
-(3,18)-(8,46)
-(4,4)-(8,46)
-(4,10)-(4,14)
-(5,12)-(5,16)
-(7,8)-(8,46)
-(7,20)-(7,67)
-(7,23)-(7,42)
-(7,23)-(7,26)
-(7,27)-(7,42)
-(7,28)-(7,36)
-(7,37)-(7,41)
-(7,48)-(7,57)
-(7,48)-(7,49)
-(7,53)-(7,57)
-(7,63)-(7,67)
-(8,8)-(8,46)
-(8,20)-(8,21)
-(8,25)-(8,46)
-(8,25)-(8,31)
-(8,32)-(8,46)
-(8,33)-(8,38)
-(8,40)-(8,45)
-(9,2)-(9,27)
-(9,2)-(9,10)
-(9,11)-(9,27)
-(9,12)-(9,18)
-(9,19)-(9,26)
-(9,20)-(9,22)
-(9,24)-(9,25)
+(2,10)-(3,70)
+(3,2)-(3,70)
+(3,8)-(3,25)
+(3,10)-(3,25)
+(3,14)-(3,25)
+(3,14)-(3,15)
+(3,18)-(3,25)
+(3,19)-(3,20)
+(3,23)-(3,24)
+(3,29)-(3,70)
+(3,40)-(3,41)
+(3,45)-(3,70)
+(3,45)-(3,60)
+(3,61)-(3,62)
+(3,63)-(3,67)
+(3,68)-(3,70)
 *)

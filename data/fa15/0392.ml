@@ -6,12 +6,11 @@ let rec digitsOfInt n =
 (* fix
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
 *)
 
 (* changed spans
-(3,5)-(3,10)
 (3,24)-(3,46)
 *)
 

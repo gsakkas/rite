@@ -1,57 +1,70 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval x y);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin x;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(12,58)-(12,68)
-(12,59)-(12,63)
-(12,66)-(12,67)
+(7,20)-(7,54)
 *)
 
 (* type error slice
-(11,3)-(12,70)
-(11,14)-(12,68)
-(12,58)-(12,68)
-(12,59)-(12,63)
-(12,64)-(12,65)
+(7,20)-(7,54)
+(7,20)-(7,54)
+(7,20)-(7,54)
+(7,44)-(7,54)
+(7,49)-(7,50)
 *)
 
 (* all spans
-(11,14)-(12,68)
-(12,2)-(12,68)
-(12,8)-(12,9)
-(12,26)-(12,27)
-(12,39)-(12,40)
-(12,54)-(12,68)
-(12,54)-(12,57)
-(12,58)-(12,68)
-(12,59)-(12,63)
-(12,64)-(12,65)
-(12,66)-(12,67)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,54)
+(7,23)-(7,38)
+(7,23)-(7,31)
+(7,32)-(7,33)
+(7,34)-(7,38)
+(7,44)-(7,54)
+(7,49)-(7,50)
+(7,44)-(7,48)
+(7,51)-(7,54)
+(7,52)-(7,53)
+(7,20)-(7,54)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)
