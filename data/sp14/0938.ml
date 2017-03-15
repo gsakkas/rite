@@ -1,47 +1,62 @@
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = [] in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> sin (exprToString ex);;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin" ^ (exprToString ex);;
 
 *)
 
 (* changed spans
-(3,40)-(3,42)
+(15,15)-(15,18)
+(15,15)-(15,36)
+(15,19)-(15,36)
 *)
 
 (* type error slice
-(3,2)-(3,70)
-(3,8)-(3,25)
-(3,14)-(3,21)
-(3,15)-(3,16)
-(3,29)-(3,70)
-(3,40)-(3,42)
-(3,46)-(3,60)
-(3,46)-(3,70)
-(3,61)-(3,62)
-(3,63)-(3,67)
+(12,2)-(15,36)
+(12,2)-(15,36)
+(13,13)-(13,16)
+(15,15)-(15,18)
+(15,15)-(15,36)
 *)
 
 (* all spans
-(2,10)-(3,70)
-(3,2)-(3,70)
-(3,8)-(3,25)
-(3,10)-(3,25)
-(3,14)-(3,25)
-(3,14)-(3,21)
-(3,15)-(3,16)
-(3,19)-(3,20)
-(3,24)-(3,25)
-(3,29)-(3,70)
-(3,40)-(3,42)
-(3,46)-(3,70)
-(3,46)-(3,60)
-(3,61)-(3,62)
-(3,63)-(3,67)
-(3,68)-(3,70)
+(11,21)-(15,36)
+(12,2)-(15,36)
+(12,8)-(12,9)
+(13,13)-(13,16)
+(14,13)-(14,16)
+(15,15)-(15,36)
+(15,15)-(15,18)
+(15,19)-(15,36)
+(15,20)-(15,32)
+(15,33)-(15,35)
 *)

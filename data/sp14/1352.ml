@@ -1,88 +1,76 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map (f l));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. VarX)
+  | Cosine a -> cos (pi *. VarY);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. y);;
 
 *)
 
 (* changed spans
-(9,37)-(9,53)
-(9,47)-(9,52)
+(17,25)-(17,29)
+(18,27)-(18,31)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(6,21)-(6,37)
-(6,22)-(6,33)
-(6,34)-(6,36)
-(9,23)-(9,32)
-(9,23)-(9,53)
-(9,37)-(9,53)
-(9,38)-(9,46)
+(17,18)-(17,30)
+(17,25)-(17,29)
+(18,20)-(18,32)
+(18,27)-(18,31)
 *)
 
 (* all spans
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(3,8)-(3,10)
-(4,10)-(4,12)
-(6,6)-(7,58)
-(6,12)-(6,71)
-(6,14)-(6,71)
-(6,18)-(6,71)
-(6,21)-(6,41)
-(6,21)-(6,37)
-(6,22)-(6,33)
-(6,34)-(6,36)
-(6,40)-(6,41)
-(6,47)-(6,60)
-(6,49)-(6,50)
-(6,47)-(6,48)
-(6,51)-(6,60)
-(6,56)-(6,57)
-(6,52)-(6,55)
-(6,58)-(6,59)
-(6,66)-(6,71)
-(6,68)-(6,69)
-(6,66)-(6,67)
-(6,70)-(6,71)
-(7,6)-(7,58)
-(7,17)-(7,18)
-(7,22)-(7,58)
-(7,30)-(7,31)
-(7,35)-(7,58)
-(7,35)-(7,49)
-(7,50)-(7,51)
-(7,52)-(7,56)
-(7,57)-(7,58)
-(9,17)-(9,53)
-(9,19)-(9,53)
-(9,23)-(9,53)
-(9,23)-(9,32)
-(9,33)-(9,36)
-(9,37)-(9,53)
-(9,38)-(9,46)
-(9,47)-(9,52)
-(9,48)-(9,49)
-(9,50)-(9,51)
+(11,9)-(11,26)
+(11,9)-(11,12)
+(11,16)-(11,26)
+(11,17)-(11,21)
+(11,22)-(11,25)
+(13,14)-(18,32)
+(14,2)-(18,32)
+(14,8)-(14,9)
+(15,13)-(15,14)
+(16,13)-(16,14)
+(17,14)-(17,30)
+(17,14)-(17,17)
+(17,18)-(17,30)
+(17,19)-(17,21)
+(17,25)-(17,29)
+(18,16)-(18,32)
+(18,16)-(18,19)
+(18,20)-(18,32)
+(18,21)-(18,23)
+(18,27)-(18,31)
 *)

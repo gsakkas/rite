@@ -1,46 +1,82 @@
 
-let rec clone x n = if n < 0 then [] else clone (x, (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
 
 
 (* fix
 
-let rec clone x n =
-  let rec cloneHelper (x,n,acc) =
-    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
-  cloneHelper (x, n, []);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(2,20)-(2,60)
-(2,34)-(2,36)
-(2,42)-(2,47)
-(2,48)-(2,60)
-(2,49)-(2,50)
+(16,2)-(16,72)
 *)
 
 (* type error slice
-(2,3)-(2,62)
-(2,14)-(2,60)
-(2,42)-(2,47)
-(2,42)-(2,60)
-(2,48)-(2,60)
-(2,49)-(2,50)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,2)-(16,72)
+(16,20)-(16,72)
+(16,47)-(16,53)
+(16,47)-(16,56)
 *)
 
 (* all spans
-(2,14)-(2,60)
-(2,16)-(2,60)
-(2,20)-(2,60)
-(2,23)-(2,28)
-(2,23)-(2,24)
-(2,27)-(2,28)
-(2,34)-(2,36)
-(2,42)-(2,60)
-(2,42)-(2,47)
-(2,48)-(2,60)
-(2,49)-(2,50)
-(2,52)-(2,59)
-(2,53)-(2,54)
-(2,57)-(2,58)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,15)-(16,72)
+(16,2)-(16,72)
+(16,5)-(16,14)
+(16,5)-(16,10)
+(16,13)-(16,14)
+(16,20)-(16,72)
+(16,24)-(16,41)
+(16,24)-(16,37)
+(16,25)-(16,29)
+(16,30)-(16,36)
+(16,31)-(16,32)
+(16,34)-(16,35)
+(16,40)-(16,41)
+(16,47)-(16,56)
+(16,47)-(16,53)
+(16,54)-(16,56)
+(16,62)-(16,71)
+(16,62)-(16,68)
+(16,69)-(16,71)
+(16,2)-(16,72)
 *)

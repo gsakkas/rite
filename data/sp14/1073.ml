@@ -1,46 +1,67 @@
 
-let rec sumList xs =
-  match xs with | [] -> [] | _ -> (List.hd xs) + (sumList List.tl);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin (pi*" + (exprToString e);;
 
 
 (* fix
 
-let rec sumList xs =
-  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin (pi*" ^ (exprToString e);;
 
 *)
 
 (* changed spans
-(3,2)-(3,66)
-(3,24)-(3,26)
-(3,58)-(3,65)
+(15,14)-(15,24)
+(15,14)-(15,43)
 *)
 
 (* type error slice
-(2,3)-(3,68)
-(2,16)-(3,66)
-(3,2)-(3,66)
-(3,2)-(3,66)
-(3,24)-(3,26)
-(3,34)-(3,46)
-(3,34)-(3,66)
-(3,35)-(3,42)
-(3,43)-(3,45)
-(3,49)-(3,66)
-(3,50)-(3,57)
-(3,58)-(3,65)
+(11,3)-(15,45)
+(11,21)-(15,43)
+(12,2)-(15,43)
+(12,2)-(15,43)
+(13,13)-(13,16)
+(15,14)-(15,24)
+(15,14)-(15,43)
+(15,14)-(15,43)
+(15,14)-(15,43)
+(15,27)-(15,43)
+(15,28)-(15,40)
 *)
 
 (* all spans
-(2,16)-(3,66)
-(3,2)-(3,66)
-(3,8)-(3,10)
-(3,24)-(3,26)
-(3,34)-(3,66)
-(3,34)-(3,46)
-(3,35)-(3,42)
-(3,43)-(3,45)
-(3,49)-(3,66)
-(3,50)-(3,57)
-(3,58)-(3,65)
+(11,21)-(15,43)
+(12,2)-(15,43)
+(12,8)-(12,9)
+(13,13)-(13,16)
+(14,13)-(14,16)
+(15,14)-(15,43)
+(15,14)-(15,24)
+(15,27)-(15,43)
+(15,28)-(15,40)
+(15,41)-(15,42)
 *)

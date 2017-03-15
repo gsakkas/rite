@@ -1,62 +1,45 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "sin(pi*" ^ (s ^ ")");;
+let rec clone x n = if n <= 0 then [] else x :: ((clone x n) - 1);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "sin(pi*" ^ ((Format.sprintf "%expr" 1.0) ^ ")");;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(15,27)-(15,28)
-(15,31)-(15,34)
+(2,48)-(2,65)
+(2,58)-(2,59)
 *)
 
 (* type error slice
-(12,2)-(15,35)
-(15,26)-(15,35)
-(15,27)-(15,28)
-(15,29)-(15,30)
+(2,3)-(2,67)
+(2,14)-(2,65)
+(2,16)-(2,65)
+(2,20)-(2,65)
+(2,43)-(2,65)
+(2,43)-(2,65)
+(2,48)-(2,65)
+(2,48)-(2,65)
+(2,49)-(2,60)
+(2,50)-(2,55)
 *)
 
 (* all spans
-(11,21)-(15,35)
-(12,2)-(15,35)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,14)-(15,35)
-(15,24)-(15,25)
-(15,14)-(15,23)
-(15,26)-(15,35)
-(15,29)-(15,30)
-(15,27)-(15,28)
-(15,31)-(15,34)
+(2,14)-(2,65)
+(2,16)-(2,65)
+(2,20)-(2,65)
+(2,23)-(2,29)
+(2,23)-(2,24)
+(2,28)-(2,29)
+(2,35)-(2,37)
+(2,43)-(2,65)
+(2,43)-(2,44)
+(2,48)-(2,65)
+(2,49)-(2,60)
+(2,50)-(2,55)
+(2,56)-(2,57)
+(2,58)-(2,59)
+(2,63)-(2,64)
 *)

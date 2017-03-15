@@ -26,7 +26,6 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(10,19)-(10,63)
 (10,42)-(10,47)
 (10,51)-(10,63)
 *)

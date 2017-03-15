@@ -1,67 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" + (exprToString e);;
+let pipe fs = let f a x = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ (exprToString e);;
+let pipe fs = let f a x a x = x in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(15,14)-(15,24)
-(15,14)-(15,43)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,28)-(2,29)
 *)
 
 (* type error slice
-(11,3)-(15,45)
-(11,21)-(15,43)
-(12,2)-(15,43)
-(12,2)-(15,43)
-(13,13)-(13,16)
-(15,14)-(15,24)
-(15,14)-(15,43)
-(15,14)-(15,43)
-(15,14)-(15,43)
-(15,27)-(15,43)
-(15,28)-(15,40)
+(2,14)-(2,75)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,27)
+(2,26)-(2,29)
+(2,51)-(2,65)
+(2,51)-(2,75)
+(2,66)-(2,67)
 *)
 
 (* all spans
-(11,21)-(15,43)
-(12,2)-(15,43)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,14)-(15,43)
-(15,14)-(15,24)
-(15,27)-(15,43)
-(15,28)-(15,40)
-(15,41)-(15,42)
+(2,9)-(2,75)
+(2,14)-(2,75)
+(2,20)-(2,29)
+(2,22)-(2,29)
+(2,26)-(2,29)
+(2,26)-(2,27)
+(2,28)-(2,29)
+(2,33)-(2,75)
+(2,42)-(2,47)
+(2,46)-(2,47)
+(2,51)-(2,75)
+(2,51)-(2,65)
+(2,66)-(2,67)
+(2,68)-(2,72)
+(2,73)-(2,75)
 *)

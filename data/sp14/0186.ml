@@ -1,83 +1,117 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem l seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot (abs n) in l;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
 
 *)
 
 (* changed spans
-(7,32)-(7,33)
+(16,44)-(16,71)
+(16,75)-(16,76)
 *)
 
 (* type error slice
-(4,4)-(8,46)
-(4,4)-(8,46)
-(7,23)-(7,31)
-(7,23)-(7,38)
-(7,32)-(7,33)
-(7,34)-(7,38)
-(7,54)-(7,55)
-(7,54)-(7,63)
-(7,54)-(7,63)
-(7,59)-(7,63)
-(8,8)-(8,46)
-(8,20)-(8,21)
-(8,25)-(8,31)
-(8,25)-(8,46)
-(8,32)-(8,46)
-(8,40)-(8,45)
-(9,11)-(9,27)
-(9,12)-(9,18)
-(9,19)-(9,26)
-(9,24)-(9,25)
+(14,32)-(14,51)
+(14,32)-(14,74)
+(16,32)-(16,76)
+(16,44)-(16,63)
+(16,44)-(16,71)
 *)
 
 (* all spans
-(2,21)-(9,27)
-(3,2)-(9,27)
-(3,18)-(8,46)
-(4,4)-(8,46)
-(4,10)-(4,14)
-(5,12)-(5,16)
-(7,8)-(8,46)
-(7,20)-(7,63)
-(7,23)-(7,38)
-(7,23)-(7,31)
-(7,32)-(7,33)
-(7,34)-(7,38)
-(7,44)-(7,48)
-(7,54)-(7,63)
-(7,54)-(7,55)
-(7,59)-(7,63)
-(8,8)-(8,46)
-(8,20)-(8,21)
-(8,25)-(8,46)
-(8,25)-(8,31)
-(8,32)-(8,46)
-(8,33)-(8,38)
-(8,40)-(8,45)
-(9,2)-(9,27)
-(9,2)-(9,10)
-(9,11)-(9,27)
-(9,12)-(9,18)
-(9,19)-(9,26)
-(9,20)-(9,22)
-(9,24)-(9,25)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,5)-(3,11)
+(3,5)-(3,6)
+(3,10)-(3,11)
+(3,17)-(3,19)
+(3,25)-(3,60)
+(3,48)-(3,49)
+(3,25)-(3,47)
+(3,26)-(3,37)
+(3,38)-(3,46)
+(3,39)-(3,40)
+(3,43)-(3,45)
+(3,50)-(3,60)
+(3,51)-(3,59)
+(3,51)-(3,52)
+(3,57)-(3,59)
+(5,11)-(5,34)
+(5,15)-(5,34)
+(5,15)-(5,26)
+(5,27)-(5,34)
+(5,28)-(5,31)
+(5,32)-(5,33)
+(7,16)-(7,70)
+(7,21)-(7,70)
+(7,27)-(7,29)
+(7,43)-(7,44)
+(7,55)-(7,70)
+(7,55)-(7,56)
+(7,59)-(7,70)
+(7,60)-(7,67)
+(7,68)-(7,69)
+(9,28)-(14,75)
+(9,35)-(14,75)
+(10,2)-(14,75)
+(10,5)-(10,16)
+(10,5)-(10,11)
+(10,14)-(10,16)
+(11,7)-(11,26)
+(11,8)-(11,17)
+(11,19)-(11,25)
+(13,4)-(14,75)
+(13,14)-(13,27)
+(13,14)-(13,20)
+(13,21)-(13,27)
+(14,5)-(14,74)
+(14,18)-(14,28)
+(14,18)-(14,25)
+(14,26)-(14,28)
+(14,32)-(14,74)
+(14,32)-(14,51)
+(14,52)-(14,58)
+(14,59)-(14,74)
+(14,60)-(14,69)
+(14,72)-(14,73)
+(16,28)-(16,76)
+(16,32)-(16,76)
+(16,44)-(16,71)
+(16,44)-(16,63)
+(16,64)-(16,71)
+(16,65)-(16,68)
+(16,69)-(16,70)
+(16,75)-(16,76)
 *)
