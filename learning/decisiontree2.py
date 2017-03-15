@@ -146,7 +146,7 @@ for labelind in list(set(test_labels.index)):
 	topn = temp[np.argsort(temp[:,0])]
 
 	filenm = str(labelind).split('.')
-	f = open('results/' + filenm[0] +'.out', "w+")
+	f = open('decisiontree_results/' + filenm[0] +'.out', "w+")
 	for preds in topn:
 		if preds[1] == 1:
 			f.write(str(preds[3]) + '\n')
