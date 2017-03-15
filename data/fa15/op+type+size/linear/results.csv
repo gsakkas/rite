@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,total
-op+type+size/linear,fa15,op+type+size,linear,0.432,0.681,0.775,2214
+op+type+size/linear,fa15,op+type+size,linear,0.602,0.776,0.855,2214
