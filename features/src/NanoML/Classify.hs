@@ -1504,6 +1504,13 @@ cost = \case
   Cpy e d -> S $ cost d
   End     -> Z
 
+showDiff :: Diff -> String
+showDiff = \case
+  Ins e d -> "Ins (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+  Del e d -> "Del (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+  Cpy e d -> "Cpy (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+  End     -> "End"
+
 diffSpans :: Diff -> [Expr] -> Set SrcSpan
 diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   where
@@ -1704,7 +1711,7 @@ exprKind = \case
   Bop _ b _ _ -> BopK b
   Uop _ u _ -> UopK u
   Lit _ l -> LitK l
-  Let _ r pes _ -> LetK r (map fst pes)
+  Let _ r pes _ -> LetK r (map (killSpanPat . fst) pes)
   Ite {} -> IteK
   Seq {} -> SeqK
   Case _ _ as -> CaseK (map (killSpanPat . fst3) as)

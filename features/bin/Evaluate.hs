@@ -34,7 +34,7 @@ main = do
 
 data Mode
   = Gather Tool FilePath
-  | Evaluate String FilePath
+  | Evaluate String FilePath (Maybe Prune)
   deriving (Generic, Show)
 instance ParseRecord Mode
 
@@ -47,6 +47,14 @@ instance ParseField Tool
 instance ParseFields Tool
 instance ParseRecord Tool
 
+data Prune
+  = DoPrune
+  | NoPrune
+  deriving (Generic, Show, Read, Eq)
+instance ParseField Prune
+instance ParseFields Prune
+instance ParseRecord Prune
+
 run :: Mode -> IO ()
 run (Gather tool dir) = do
   mls <- glob (dir </> "*.ml")
@@ -56,10 +64,10 @@ run (Gather tool dir) = do
     let n = takeFileName ml
     writeFile (dir </> toolName tool </> n <.> "out")
               (unlines . map show $ spans)
-run (Evaluate "baseline" dir) = do
+run (Evaluate "baseline" dir _) = do
   doBaseline dir
-run (Evaluate tool dir) = do
-  doEval tool dir
+run (Evaluate tool dir prune) = do
+  doEval tool dir (fromMaybe NoPrune prune)
 
 
 e2m :: Either SomeException b -> Maybe b
@@ -105,12 +113,23 @@ data ProcessState = ProcessState
   } deriving (Show)
 
 doEval
-  :: String -> FilePath -> IO ()
-doEval t dir = do
+  :: String -> FilePath -> Prune -> IO ()
+doEval t dir prune = do
   let year = takeFileName dir
   let features = takeDirectory t
   let model = takeFileName t
   mls <- glob (dir </> "*.ml")
+  mls <- case prune of
+    NoPrune -> return mls
+    DoPrune -> flip filterM mls $ \ml -> do
+      let (dir, f) = splitFileName ml
+      oracle <- loadSpans ml
+      mys <- loadToolSpans (dir </> "mycroft" </> f <.> "out")
+      shs <- loadToolSpans (dir </> "sherrloc" </> f <.> "out")
+      return $! not (null mys || null shs) &&
+                Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
+                Set.fromList shs `Set.isSubsetOf` allSpans oracle
+  
   let init = ProcessState {good1Progs = 0, good2Progs = 0, good3Progs = 0, allProgs = 0}
   final <- execStateT (mapM_ (processOne t) mls) init
   let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
@@ -119,7 +138,10 @@ doEval t dir = do
       total = allProgs final
   printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
     top1 top2 top3 total
-  writeFile (dir </> t </> "results.csv") $ unlines
+  let csv = case prune of
+        NoPrune -> dir </> t </> "results.csv"
+        DoPrune -> dir </> t </> "results.pruned.csv"
+  writeFile csv $ unlines
     [ "tool,year,features,model,top-1,top-2,top-3,total"
     , printf "%s,%s,%s,%s,%.3f,%.3f,%.3f,%d" t year features model top1 top2 top3 total
     ]
@@ -131,6 +153,9 @@ processOne t f = do
   oracle <- liftIO $ loadSpans f
   let out = dir </> t </> ml <.> "out"
   sps <- liftIO $ loadToolSpans out
+  ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
+  mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
+  shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
@@ -145,6 +170,10 @@ processOne t f = do
     | otherwise -> do
         when (any (`Set.member` diffSpans oracle) $ take 1 sps) $ do
           bumpGood1 (+1)
+          unless (or [any (`Set.member` diffSpans oracle) $ take 3 ocs
+                     ,any (`Set.member` diffSpans oracle) $ take 3 mys
+                     ,any (`Set.member` diffSpans oracle) $ take 3 shs]) $ do
+            liftIO $ printf "WIN: %s\n" f
         when (any (`Set.member` diffSpans oracle) $ take 2 sps) $ do
           bumpGood2 (+1)
         when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
