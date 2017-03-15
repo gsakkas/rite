@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,total
-op+context-has+type+size/hidden-50,sp14,op+context-has+type+size,hidden-50,0.695,0.856,0.913,2278
+op+context-has+type+size/hidden-50,sp14,op+context-has+type+size,hidden-50,0.684,0.841,0.905,2278

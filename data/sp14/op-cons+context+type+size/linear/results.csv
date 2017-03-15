@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,total
-op-cons+context+type+size/linear,sp14,op-cons+context+type+size,linear,0.444,0.653,0.771,2278
+op-cons+context+type+size/linear,sp14,op-cons+context+type+size,linear,0.639,0.814,0.881,2278
