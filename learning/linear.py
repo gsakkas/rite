@@ -37,11 +37,11 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
-        regularizers = tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
-        tf.summary.scalar('l2_loss', regularizers)
-        cross_entropy += beta * regularizers
         loss = tf.reduce_mean(cross_entropy)
         tf.summary.scalar('loss', loss)
+        regularizers = tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
+        tf.summary.scalar('l2_loss', regularizers)
+        loss += beta * regularizers
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -56,7 +56,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
-    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+    #summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -80,8 +80,8 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     def train(data, i, validation=None, verbose=False):
         summary_str, _ = sess.run([merged, train_step],
                                   feed_dict={x: data[features], y_: data[labels]})
-        if i % 100 == 0:
-            summary_writer.add_summary(summary_str, i)
+        #if i % 100 == 0:
+        #    summary_writer.add_summary(summary_str, i)
         if validation is not None:
             # acc = sess.run(accuracy,
             #                feed_dict={x: validation[features], y_: validation[labels]})

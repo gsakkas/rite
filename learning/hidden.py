@@ -9,7 +9,7 @@ import math
 import util
 
 def build_model(features, labels, hidden,
-                learn_rate=0.1, beta=0.01, model_dir=None):
+                learn_rate=0.1, beta=0.01, beta_out=0.01, model_dir=None):
     '''Build a linear classifier with fully-connected hidden layers.
 
     @param features: A list of feature names.
@@ -22,7 +22,7 @@ def build_model(features, labels, hidden,
     @return: A 4-tuple of training, testing, plotting, and closing functions.
     '''
 
-    print 'building MLP with alpha=%f, beta=%f' % (learn_rate, beta)
+    #print 'building MLP with alpha=%f, beta=%f' % (learn_rate, beta)
 
     n_in = len(features)
     n_out = len(labels)
@@ -66,8 +66,8 @@ def build_model(features, labels, hidden,
                         name='b')
         util.variable_summaries(W,'W')
         util.variable_summaries(b,'b')
-        Ws.append(W)
-        bs.append(b)
+        # Ws.append(W)
+        # bs.append(b)
         y = tf.matmul(h, W) + b
 
     y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
@@ -76,11 +76,12 @@ def build_model(features, labels, hidden,
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
-        regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws) # + sum(tf.nn.l2_loss(b) for b in bs)
-        tf.summary.scalar('l2_loss', regularizers)
-        cross_entropy += regularizers
         loss = tf.reduce_mean(cross_entropy)
         tf.summary.scalar('loss', loss)
+        regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws)
+        regularizers += beta_out * tf.nn.l2_loss(W)
+        tf.summary.scalar('l2_loss', regularizers)
+        loss += regularizers
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -95,7 +96,7 @@ def build_model(features, labels, hidden,
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
-    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+    #summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -124,8 +125,8 @@ def build_model(features, labels, hidden,
                                   feed_dict={x: data[features], y_: data[labels],
                                              # keep_prob: 0.5})
                                              keep_prob: 1.0})  # TODO: should we use dropout??
-        if i % 100 == 0:
-            summary_writer.add_summary(summary_str, i)
+        #if i % 100 == 0:
+        #    summary_writer.add_summary(summary_str, i)
         if validation is not None and i % 100 == 0:
             acc = 0
             acc1 = 0
@@ -262,7 +263,7 @@ def build_model(features, labels, hidden,
             print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
             print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
-            saver.save(sess, 'hidden_model')
+            #saver.save(sess, 'hidden_model')
 
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 

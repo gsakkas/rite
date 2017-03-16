@@ -1,6 +1,9 @@
+from __future__ import print_function
+
 import math
 import os.path
 import random
+import sys
 
 from hyperopt import fmin, tpe, hp
 import numpy as np
@@ -30,6 +33,7 @@ flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
 flags.DEFINE_integer("n_epochs", None, "Number of training rounds.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_float("reg_rate", 0.01, "Regularization rate.")
+flags.DEFINE_float("reg_out_rate", 0.01, "Regularization rate for output.")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
@@ -47,44 +51,48 @@ def load_data(path):
         f = os.path.join(path, csv)
         df, fs, ls = input.load_csv(f, only_slice=FLAGS.only_slice)
         if df is None:
-            print i
+            print(i)
             continue
         if df.shape[0] == 0:
-            print i
+            print(i)
             continue
         dfs.append((f, df))
     return (dfs, fs, ls)
 
 def cross_validate(dfs, fs, ls):
-    kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
-    #kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=0)
+    #kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
+    kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=FLAGS.seed)
     # print(len(dfs))
     rs = []
     for i, (train, test) in enumerate(kf.split(dfs)):
+        print('.', end='')
+        sys.stdout.flush()
         # print(len(train), len(test))
         rs.append(train_and_eval(dfs, fs, ls, i=i, train_idxs=train, test_idxs=test))
     return {'top-1': np.mean([r['top-1'] for r in rs]),
             'top-2': np.mean([r['top-2'] for r in rs]),
             'top-3': np.mean([r['top-3'] for r in rs])}
 
-def objective(dfs, fs, ls, a, b, m):
-    print 'learn_rate', a, 'reg_rate', b, 'mini_batch', m
+def objective(dfs, fs, ls, a, b, bo):
+    #print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo, 'mini_batch', m)
+    print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo)
     FLAGS.learn_rate = 10 ** a
     FLAGS.reg_rate = 10 ** b
-    FLAGS.batch_size = int(m)
+    FLAGS.reg_out_rate = 10 ** bo
+    #FLAGS.batch_size = int(m)
     loss = 1 - cross_validate(dfs, fs, ls)['top-1']
-    print loss
+    print(loss)
     return loss
 
 def hyperopt(dfs, fs, ls):
     space = (hp.uniform('alpha', -4, -1),
-             hp.uniform('beta',  -3, 0),
-             hp.quniform('mini', 100, 500, 10))
-    best = fmin(fn=lambda (a, b, m): objective(dfs, fs, ls, a, b, m),
+             hp.uniform('beta',  -2, 0),
+             hp.uniform('beta_out',  -3, 0))
+    best = fmin(fn=lambda (a, b, bo): objective(dfs, fs, ls, a, b, bo),
                 space=space,
                 algo=tpe.suggest,
-                max_evals=500)
-    print best
+                max_evals=100)
+    print(best)
 
 def main(_):
     random.seed(FLAGS.seed)
@@ -174,6 +182,7 @@ def build_model(fs, ls, model_dir):
         return hidden.build_model(fs, ls, hidden_layers,
                                   learn_rate=FLAGS.learn_rate,
                                   beta=FLAGS.reg_rate,
+                                  beta_out=FLAGS.reg_out_rate,
                                   model_dir=model_dir)
     else:
         raise ("unknown model type: " + FLAGS.model)
