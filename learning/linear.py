@@ -42,7 +42,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         tf.summary.scalar('cross_loss', loss)
         regularizers = beta * tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
         tf.summary.scalar('l2_loss', regularizers)
-        loss = regularizers
+        loss = cross_loss + regularizers/tf.cast(tf.shape(x)[0], tf.float64)
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
