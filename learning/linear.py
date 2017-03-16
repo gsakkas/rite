@@ -21,27 +21,29 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     n_in = len(features)
     n_out = len(labels)
 
-    x = tf.placeholder(tf.float32, [None, n_in], name='x')
+    x = tf.placeholder(tf.float64, [None, n_in], name='x')
 
     with tf.name_scope('linear'):
         W = tf.Variable(
             tf.truncated_normal([n_in, n_out],
-                                stddev=1.0 / math.sqrt(float(n_in))),
+                                stddev=1.0 / math.sqrt(float(n_in)),
+                                dtype=tf.float64),
             name='W')
-        b = tf.Variable(tf.zeros([n_out]), name='b')
+        b = tf.Variable(tf.zeros([n_out], dtype=tf.float64), name='b')
         util.variable_summaries(W,'W')
         util.variable_summaries(b,'b')
         y = tf.matmul(x, W) + b
 
-    y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
+    y_ = tf.placeholder(tf.float64, [None, n_out], name='y_')
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
-        loss = tf.reduce_mean(cross_entropy)
-        tf.summary.scalar('loss', loss)
-        regularizers = tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
+        cross_loss = tf.reduce_mean(cross_entropy)
+        tf.summary.scalar('cross_loss', loss)
+        regularizers = beta * tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
         tf.summary.scalar('l2_loss', regularizers)
-        loss += beta * regularizers
+        loss = regularizers
+        tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -62,7 +64,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
     else:
         correct_prediction = tf.equal(tf.sign(y), y_)
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
 
     # yb = tf.one_hot(tf.argmax(y,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
     # y_b = tf.one_hot(tf.argmax(y_,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
@@ -161,10 +163,10 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
             fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
             # True negatives.
             tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-            # precision = np.float32(tp) / np.float32(tp + fp)
+            # precision = np.float64(tp) / np.float64(tp + fp)
             # modified recall where top-3 predictions are the only "true" predictions
-            recall = np.float32(correct) / np.float32(tp + fn)
-            # fscore = np.float32(2.0) * precision * recall / (precision + recall)
+            recall = np.float64(correct) / np.float64(tp + fn)
+            # fscore = np.float64(2.0) * precision * recall / (precision + recall)
             # if not np.isnan(precision):
             #     ps.append(precision)
             if not np.isnan(recall):

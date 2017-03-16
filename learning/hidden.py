@@ -27,8 +27,8 @@ def build_model(features, labels, hidden,
     n_in = len(features)
     n_out = len(labels)
 
-    x = tf.placeholder(tf.float32, [None, n_in], name='x')
-    keep_prob = tf.placeholder(tf.float32)
+    x = tf.placeholder(tf.float64, [None, n_in], name='x')
+    keep_prob = tf.placeholder(tf.float64)
 
     h = x
     n = n_in
@@ -39,12 +39,14 @@ def build_model(features, labels, hidden,
         with tf.name_scope('hidden-' + str(i)):
             W = tf.Variable(
                 tf.truncated_normal([n, n_hidden],
-                                    stddev=math.sqrt(2.0/float(n))),
+                                    stddev=math.sqrt(2.0/float(n)),
+                                    dtype=tf.float64),
                 name='W_' + str(i))
             # b = tf.Variable(tf.truncated_normal([n_hidden],
-            #                                     stddev=1.0 / math.sqrt(float(n_hidden))),
+            #                                     stddev=1.0 / math.sqrt(float(n_hidden)),
+            #                                     dtype=tf.float64),
             #                 name='b_' + str(i))
-            b = tf.Variable(tf.constant(0.01, shape=[n_hidden]),
+            b = tf.Variable(tf.constant(0.01, shape=[n_hidden], dtype=tf.float64),
                             name='b_' + str(i))
             util.variable_summaries(W,'W_' + str(i))
             util.variable_summaries(b,'b_' + str(i))
@@ -57,12 +59,13 @@ def build_model(features, labels, hidden,
     with tf.name_scope('output'):
         W = tf.Variable(
             tf.truncated_normal([n, n_out],
-                                stddev=1.0 / math.sqrt(float(n))),
+                                stddev=1.0 / math.sqrt(float(n)),
+                                dtype=tf.float64),
             name='W')
         # b = tf.Variable(tf.truncated_normal([n_out],
         #                                     stddev=1.0 / math.sqrt(float(n_out))),
         #                 name='b')
-        b = tf.Variable(tf.zeros([n_out]),
+        b = tf.Variable(tf.zeros([n_out], dtype=tf.float64),
                         name='b')
         util.variable_summaries(W,'W')
         util.variable_summaries(b,'b')
@@ -70,18 +73,19 @@ def build_model(features, labels, hidden,
         # bs.append(b)
         y = tf.matmul(h, W) + b
 
-    y_ = tf.placeholder(tf.float32, [None, n_out], name='y_')
+    y_ = tf.placeholder(tf.float64, [None, n_out], name='y_')
 
     saver = tf.train.Saver(Ws + bs)
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
-        loss = tf.reduce_mean(cross_entropy)
-        tf.summary.scalar('loss', loss)
+        cross_loss = tf.reduce_mean(cross_entropy)
+        tf.summary.scalar('cross_loss', cross_loss)
         regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws)
         regularizers += beta_out * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
-        loss += regularizers
+        loss = cross_loss + regularizers/tf.cast(tf.shape(x)[0], tf.float64)
+        tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
         # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
@@ -94,15 +98,12 @@ def build_model(features, labels, hidden,
         train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
         #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
-    sess = tf.InteractiveSession()
-    merged = tf.summary.merge_all()
-    #summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
-
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
     else:
         correct_prediction = tf.equal(tf.sign(y), y_)
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
+    tf.summary.scalar('accuracy', accuracy)
 
 
     # yb = tf.one_hot(tf.argmax(y,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
@@ -115,6 +116,10 @@ def build_model(features, labels, hidden,
     k = tf.placeholder(tf.int32, [], name='k')
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
 
+    sess = tf.InteractiveSession()
+    merged = tf.summary.merge_all()
+    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+
     ## NOTE: must be last!!
     tf.global_variables_initializer().run()
 
@@ -125,8 +130,8 @@ def build_model(features, labels, hidden,
                                   feed_dict={x: data[features], y_: data[labels],
                                              # keep_prob: 0.5})
                                              keep_prob: 1.0})  # TODO: should we use dropout??
-        #if i % 100 == 0:
-        #    summary_writer.add_summary(summary_str, i)
+        if i % 100 == 0:
+           summary_writer.add_summary(summary_str, i)
         if validation is not None and i % 100 == 0:
             acc = 0
             acc1 = 0
@@ -160,8 +165,8 @@ def build_model(features, labels, hidden,
             # fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
             # # True negatives.
             # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-            # precision = np.float32(tp) / (tp + fp)
-            # recall = np.float32(tp) / (tp + fn)
+            # precision = np.float64(tp) / (tp + fp)
+            # recall = np.float64(tp) / (tp + fn)
             # fscore = 2.0 * precision * recall / (precision + recall)
             # print('accuracy: %f' % acc)
             # print('precision: %f' % precision)
@@ -236,10 +241,10 @@ def build_model(features, labels, hidden,
             fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
             # True negatives.
             tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-            # precision = np.float32(tp) / np.float32(tp + fp)
+            # precision = np.float64(tp) / np.float64(tp + fp)
             # modified recall where top-3 predictions are the only "true" predictions
-            recall = np.float32(correct) / np.float32(tp + fn)
-            # fscore = np.float32(2.0) * precision * recall / (precision + recall)
+            recall = np.float64(correct) / np.float64(tp + fn)
+            # fscore = np.float64(2.0) * precision * recall / (precision + recall)
             # if not np.isnan(precision):
             #     ps.append(precision)
             if not np.isnan(recall):
