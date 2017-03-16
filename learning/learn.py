@@ -86,12 +86,12 @@ def objective(dfs, fs, ls, a, b, bo):
 
 def hyperopt(dfs, fs, ls):
     space = (hp.uniform('alpha', -4, -1),
-             hp.uniform('beta',  -2, 0),
+             hp.uniform('beta',  -3, 0),
              hp.uniform('beta_out',  -3, 0))
     best = fmin(fn=lambda (a, b, bo): objective(dfs, fs, ls, a, b, bo),
                 space=space,
                 algo=tpe.suggest,
-                max_evals=100)
+                max_evals=500)
     print(best)
 
 def main(_):
