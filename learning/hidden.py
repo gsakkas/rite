@@ -22,6 +22,8 @@ def build_model(features, labels, hidden,
     @return: A 4-tuple of training, testing, plotting, and closing functions.
     '''
 
+    print 'building MLP with alpha=%f, beta=%f' % (learn_rate, beta)
+
     n_in = len(features)
     n_out = len(labels)
 
@@ -37,7 +39,7 @@ def build_model(features, labels, hidden,
         with tf.name_scope('hidden-' + str(i)):
             W = tf.Variable(
                 tf.truncated_normal([n, n_hidden],
-                                    stddev=1.0 / math.sqrt(float(n))),
+                                    stddev=math.sqrt(2.0/float(n))),
                 name='W_' + str(i))
             # b = tf.Variable(tf.truncated_normal([n_hidden],
             #                                     stddev=1.0 / math.sqrt(float(n_hidden))),
@@ -48,7 +50,8 @@ def build_model(features, labels, hidden,
             util.variable_summaries(b,'b_' + str(i))
             Ws.append(W)
             bs.append(b)
-            h = tf.nn.dropout(tf.nn.relu(tf.matmul(h, W) + b), keep_prob)
+            # h = tf.nn.dropout(tf.nn.relu(tf.matmul(h, W) + b), keep_prob)
+            h = tf.nn.relu(tf.matmul(h, W) + b)
         n = n_hidden
 
     with tf.name_scope('output'):
@@ -73,9 +76,9 @@ def build_model(features, labels, hidden,
 
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
-        regularizers = sum(tf.nn.l2_loss(W) for W in Ws) # + sum(tf.nn.l2_loss(b) for b in bs)
+        regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws) # + sum(tf.nn.l2_loss(b) for b in bs)
         tf.summary.scalar('l2_loss', regularizers)
-        cross_entropy += beta * regularizers
+        cross_entropy += regularizers
         loss = tf.reduce_mean(cross_entropy)
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
