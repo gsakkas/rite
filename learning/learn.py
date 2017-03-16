@@ -162,15 +162,19 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
 
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
-        return linear.build_model(fs, ls, learn_rate=FLAGS.learn_rate,
+        return linear.build_model(fs, ls,
+                                  learn_rate=FLAGS.learn_rate,
+                                  beta=FLAGS.reg_rate,
                                   model_dir=model_dir)
     elif FLAGS.model == 'svm':
         return svm.build_model(fs, ls, learn_rate=FLAGS.learn_rate,
                                model_dir=model_dir)
     elif FLAGS.model == 'hidden':
         hidden_layers = FLAGS.hidden_layers.split('-')
-        return hidden.build_model(fs, ls, hidden_layers, learn_rate=FLAGS.learn_rate,
-                               model_dir=model_dir)
+        return hidden.build_model(fs, ls, hidden_layers,
+                                  learn_rate=FLAGS.learn_rate,
+                                  beta=FLAGS.reg_rate,
+                                  model_dir=model_dir)
     else:
         raise ("unknown model type: " + FLAGS.model)
 

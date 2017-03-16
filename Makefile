@@ -30,6 +30,10 @@ python learning/learn.py \
   --store_predictions
 endef
 
+define TREE_PREDICTIONS
+python learning/trees.py $(1) data/$(3)/$(2) data/$(4)/$(2)
+endef
+
 define linear_template
 .PHONY: $(1)-linear
 $(1)-linear:
@@ -42,6 +46,20 @@ $(1)-linear-results:
 	+stack exec evaluate -- evaluate $(1)/linear data/fa15
 ALL_LINEAR_RESULTS += $(1)-linear-results
 endef
+
+define tree_template
+.PHONY: $(1)-$(2)
+$(1)-$(2):
+	+$(call TREE_PREDICTIONS,$(2),$(1),sp14,fa15)
+	+$(call TREE_PREDICTIONS,$(2),$(1),fa15,sp14)
+ALL_TREE += $(1)-$(2)
+
+$(1)-$(2)-results:
+	+stack exec evaluate -- evaluate $(1)/$(2) data/sp14
+	+stack exec evaluate -- evaluate $(1)/$(2) data/fa15
+ALL_TREE_RESULTS += $(1)-$(2)-results
+endef
+
 
 define hidden_template
 .PHONY: $(1)-hidden-$(2)
@@ -60,20 +78,32 @@ $(foreach data,$(DATAS),\
  $(eval $(call linear_template,$(data))))
 
 $(foreach data,$(DATAS),\
+ $(eval $(call tree_template,$(data),decision-tree)))
+
+$(foreach data,$(DATAS),\
+ $(eval $(call tree_template,$(data),random-forest)))
+
+$(foreach data,$(DATAS),\
  $(foreach hidden,$(HIDDEN),\
   $(eval $(call hidden_template,$(data),$(hidden)))))
 
 .PHONY: all
-all: linear hidden
+all: linear tree hidden
 
 .PHONY: results
-results: linear-results hidden-results
+results: linear-results tree-results hidden-results
 
 .PHONY: linear
 linear: $(ALL_LINEAR)
 
 .PHONY: linear-results
 linear-results: $(ALL_LINEAR_RESULTS)
+
+.PHONY: tree
+tree: $(ALL_TREE)
+
+.PHONY: tree-results
+tree-results: $(ALL_TREE_RESULTS)
 
 .PHONY: hidden
 hidden: $(ALL_HIDDEN)
