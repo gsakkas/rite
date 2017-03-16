@@ -9,6 +9,7 @@ REG_RATE   ?= 0.9988
 BATCH_SIZE ?= 170
 BATCHES    ?= 10000
 EPOCHS     ?= 20
+SEED       ?= 12345
 
 #DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size
 #DATAS += op+type+size op-cons+context+type+size op-cons+type+size
@@ -25,6 +26,7 @@ python learning/learn.py \
   --batch_size=$(BATCH_SIZE) \
   --n_epochs=$(EPOCHS) \
   --test_data data/$(5)/$(1) \
+  --seed $(SEED) \
   --store_predictions
 endef
 

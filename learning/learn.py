@@ -1,7 +1,6 @@
 import math
 import os.path
 import random
-random.seed()
 
 from hyperopt import fmin, tpe, hp
 import numpy as np
@@ -37,6 +36,7 @@ flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
 flags.DEFINE_bool("store_predictions", False,
                   "Whether to store predictions for offline analysis.")
 flags.DEFINE_bool("hyperopt", False, "Whether to use hyperopt to tune parameters.")
+flags.DEFINE_integer("seed", None, '')
 
 
 def load_data(path):
@@ -56,7 +56,7 @@ def load_data(path):
     return (dfs, fs, ls)
 
 def cross_validate(dfs, fs, ls):
-    kf = KFold(n_splits=FLAGS.n_folds)
+    kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
     #kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=0)
     # print(len(dfs))
     rs = []
@@ -87,6 +87,7 @@ def hyperopt(dfs, fs, ls):
     print best
 
 def main(_):
+    random.seed(FLAGS.seed)
     dfs, fs, ls = load_data(FLAGS.data)
     # train_and_eval(dfs, fs, ls)
 
@@ -97,7 +98,7 @@ def main(_):
     # df = df.sample(frac=1).reset_index(drop=True)
     # #print df.shape
     if FLAGS.n_folds > 1:
-        kf = KFold(n_splits=FLAGS.n_folds)
+        kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
         # print(len(dfs))
         rs = []
         for i, (train, test) in enumerate(kf.split(dfs)):
@@ -127,6 +128,7 @@ def main(_):
 
 
 def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=None):
+    tf.set_random_seed(FLAGS.seed)
     train, test, plot, close = build_model(
         fs, ls, os.path.join(FLAGS.model_dir, 'run{}'.format(i)))
 
@@ -195,11 +197,11 @@ def train_model(train, dfs, label_names, validation=None):
     #print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
-    df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+    df = pd.concat(c.sample(max_samples, replace=True, random_state=FLAGS.seed) for _, c in classes)
     if FLAGS.n_batches is not None:
-        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True).reset_index(drop=True)
+        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
     else:
-        df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1).reset_index(drop=True)
+        df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
     #print df.shape
     for _, batch in df.groupby(df.index // FLAGS.batch_size):
         train(batch, i, validation, verbose=FLAGS.verbose)
