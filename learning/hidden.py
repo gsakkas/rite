@@ -40,13 +40,18 @@ def build_model(features, labels, hidden,
             W = tf.Variable(
                 tf.truncated_normal([n, n_hidden],
                                     stddev=math.sqrt(2.0/float(n)),
+                                    # stddev=math.sqrt(6.0/float(n + n_hidden)),
                                     dtype=tf.float64),
+                # tf.random_uniform([n, n_hidden],
+                #                     -math.sqrt(6.0/float(n+n_hidden)),
+                #                     math.sqrt(6.0/float(n+n_hidden)),
+                #                     dtype=tf.float64),
                 name='W_' + str(i))
             # b = tf.Variable(tf.truncated_normal([n_hidden],
             #                                     stddev=1.0 / math.sqrt(float(n_hidden)),
             #                                     dtype=tf.float64),
             #                 name='b_' + str(i))
-            b = tf.Variable(tf.constant(0.01, shape=[n_hidden], dtype=tf.float64),
+            b = tf.Variable(tf.constant(0.0, shape=[n_hidden], dtype=tf.float64),
                             name='b_' + str(i))
             util.variable_summaries(W,'W_' + str(i))
             util.variable_summaries(b,'b_' + str(i))
@@ -59,11 +64,17 @@ def build_model(features, labels, hidden,
     with tf.name_scope('output'):
         W = tf.Variable(
             tf.truncated_normal([n, n_out],
-                                stddev=1.0 / math.sqrt(float(n)),
+                                stddev=math.sqrt(1.0/float(n)),
+                                # stddev=math.sqrt(2.0 / float(n + n_out)),
                                 dtype=tf.float64),
+            # tf.random_uniform([n, n_out],
+            #                   -math.sqrt(2.0 / float(n + n_out)),
+            #                   math.sqrt(2.0 / float(n + n_out)),
+            #                   dtype=tf.float64),
             name='W')
         # b = tf.Variable(tf.truncated_normal([n_out],
-        #                                     stddev=1.0 / math.sqrt(float(n_out))),
+        #                                     stddev=1.0 / math.sqrt(float(n_out)),
+        #                                     dtype=tf.float64),
         #                 name='b')
         b = tf.Variable(tf.zeros([n_out], dtype=tf.float64),
                         name='b')
@@ -84,7 +95,7 @@ def build_model(features, labels, hidden,
         regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws)
         regularizers += beta_out * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
-        loss = cross_loss + regularizers/(2*tf.cast(tf.shape(x)[0], tf.float64))
+        loss = cross_loss + regularizers # / tf.cast(tf.shape(x)[0], tf.float64)
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
@@ -125,14 +136,20 @@ def build_model(features, labels, hidden,
 
     # saver.restore(sess, 'hidden_model')
 
-    def train(data, i, validation=None, verbose=False):
-        summary_str, _ = sess.run([merged, train_step],
-                                  feed_dict={x: data[features], y_: data[labels],
-                                             # keep_prob: 0.5})
-                                             keep_prob: 1.0})  # TODO: should we use dropout??
-        if i % 100 == 0:
-           summary_writer.add_summary(summary_str, i)
-        if validation is not None and i % 100 == 0:
+    global j
+    j = 0
+    def train(data, i, validation=None, verbose=False, batch_size=200):
+        for _, batch in data.groupby(data.index // batch_size):
+            # print(batch.shape)
+            summary_str, _ = sess.run([merged, train_step],
+                                      feed_dict={x: data[features], y_: data[labels],
+                                                 n_samp: data.shape[0],
+                                                 # keep_prob: 0.5})
+                                                 keep_prob: 1.0})  # TODO: should we use dropout??
+            global j
+            summary_writer.add_summary(summary_str, j)
+            j+=1
+        if validation is not None:
             acc = 0
             acc1 = 0
             for val in validation:
@@ -193,7 +210,8 @@ def build_model(features, labels, hidden,
         for f, d in data:
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
-                feed_dict={x: d[features], y_:d[labels], k:min(3, len(d)), keep_prob:1.0})
+                feed_dict={x: d[features], y_:d[labels],
+                           k:min(3, len(d)), keep_prob:1.0})
             # print ys
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices

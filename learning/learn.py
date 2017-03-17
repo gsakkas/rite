@@ -33,7 +33,7 @@ flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
 flags.DEFINE_integer("n_epochs", None, "Number of training rounds.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_float("reg_rate", 0.01, "Regularization rate.")
-flags.DEFINE_float("reg_out_rate", 0.01, "Regularization rate for output.")
+flags.DEFINE_float("reg_out_rate", None, "Regularization rate for output (defaults to reg_rate).")
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
@@ -95,7 +95,15 @@ def hyperopt(dfs, fs, ls):
     print(best)
 
 def main(_):
-    random.seed(FLAGS.seed)
+    if FLAGS.reg_out_rate is None:
+        FLAGS.reg_out_rate = FLAGS.reg_rate
+
+    if FLAGS.seed is not None:
+        random.seed(FLAGS.seed)
+    else:
+        random.seed
+        FLAGS.seed = random.randint(0, 1000000)
+        print('using seed:', FLAGS.seed)
     dfs, fs, ls = load_data(FLAGS.data)
     # train_and_eval(dfs, fs, ls)
 
@@ -188,7 +196,6 @@ def build_model(fs, ls, model_dir):
         raise ("unknown model type: " + FLAGS.model)
 
 def train_model(train, dfs, label_names, validation=None):
-    i = 0
     # for df in dfs:
     #     # balance labels for training
     #     # print df.shape
@@ -204,21 +211,25 @@ def train_model(train, dfs, label_names, validation=None):
     #     i += 1
     # print len(dfs)
     df = pd.concat([df for _, df in dfs])
-    # print df.shape
+    print(df.shape)
     feature_names = [c for c in df.columns if c[0] == 'F']
     #print df.drop_duplicates().shape
     #print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True, random_state=FLAGS.seed) for _, c in classes)
-    if FLAGS.n_batches is not None:
-        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
-    else:
-        df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
-    #print df.shape
-    for _, batch in df.groupby(df.index // FLAGS.batch_size):
-        train(batch, i, validation, verbose=FLAGS.verbose)
-        i += 1
+    print(df.shape)
+    # if FLAGS.n_batches is not None:
+    #     df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
+    # else:
+    #     df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
+    # print(df.shape)
+    for i in xrange(FLAGS.n_epochs):
+    # for _, batch in df.groupby(df.index // FLAGS.batch_size):
+        print('epoch {}'.format(i))
+        df = df.sample(frac=1).reset_index(drop=True)
+        # print(df.shape)
+        train(df, i, validation, verbose=FLAGS.verbose, batch_size=FLAGS.batch_size)
 
 def test_model(test, dfs):
     return test(dfs, store_predictions=FLAGS.store_predictions,
