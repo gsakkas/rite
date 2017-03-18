@@ -155,7 +155,7 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
     if test_data is not None:
         train_model(train, dfs, ls)
         test_model(test, test_data)
-
+        close()
 
     elif train_idxs is not None and test_idxs is not None:
         train_model(train, [dfs[idx] for idx in train_idxs], ls)

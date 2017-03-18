@@ -23,6 +23,8 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
     x = tf.placeholder(tf.float64, [None, n_in], name='x')
 
+    global_step = tf.Variable(0, name='global_step', trainable=False)
+
     with tf.name_scope('linear'):
         W = tf.Variable(
             tf.truncated_normal([n_in, n_out],
@@ -39,10 +41,10 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     with tf.name_scope('cross_entropy'):
         cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
         cross_loss = tf.reduce_mean(cross_entropy)
-        tf.summary.scalar('cross_loss', loss)
-        regularizers = beta * tf.nn.l2_loss(W) # + tf.nn.l2_loss(b)
+        tf.summary.scalar('cross_loss', cross_loss)
+        regularizers = beta * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
-        loss = cross_loss + regularizers # / tf.cast(tf.shape(x)[0], tf.float64)
+        loss = cross_loss + regularizers
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         # global_step = tf.Variable(0, trainable=False)
@@ -53,12 +55,12 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         #     tf.train.GradientDescentOptimizer(learning_rate)
         #     .minimize(cross_entropy, global_step=global_step)
         # )
-        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
+        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss, global_step=global_step)
         #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
-    #summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -79,29 +81,13 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     ## NOTE: must be last!!
     tf.global_variables_initializer().run()
 
-    def train(data, i, validation=None, verbose=False):
-        summary_str, _ = sess.run([merged, train_step],
-                                  feed_dict={x: data[features], y_: data[labels]})
-        #if i % 100 == 0:
-        #    summary_writer.add_summary(summary_str, i)
-        if validation is not None:
-            # acc = sess.run(accuracy,
-            #                feed_dict={x: validation[features], y_: validation[labels]})
-            if verbose and i % 100 == 0:
-                acc = 0
-                acc1 = 0
-                for val in validation:
-                    ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: val[features], y_:val[labels], k:min(3, len(val))})
-                    # print ys
-                    #top_k = np.argpartition(ys, 3, 0)
-                    # print top_indices
-                    if any(val['L-DidChange'][idx] == 1 for idx in top_indices[1]):
-                        acc += 1
-                    if val['L-DidChange'][top_indices[1][0]] == 1:
-                        acc1 += 1
-                acc = float(acc) / len(validation)
-                acc1 = float(acc1) / len(validation)
-                print('accuracy at step %4d: %.3f / %.3f' % (i, acc1, acc))
+    def train(data, i, validation=None, verbose=False, batch_size=200):
+        for _, batch in data.groupby(data.index // batch_size):
+            summary, _, step = sess.run(
+                [merged, train_step, global_step],
+                feed_dict={x: data[features], y_: data[labels]}
+            )
+            summary_writer.add_summary(summary, step)
 
 
     def test(data, store_predictions=False, loud=True):

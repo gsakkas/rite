@@ -28,7 +28,9 @@ def build_model(features, labels, hidden,
     n_out = len(labels)
 
     x = tf.placeholder(tf.float64, [None, n_in], name='x')
-    keep_prob = tf.placeholder(tf.float64)
+    keep_prob = tf.placeholder(tf.float64, name='keep_prob')
+
+    global_step = tf.Variable(0, name='global_step', trainable=False)
 
     h = x
     n = n_in
@@ -95,18 +97,10 @@ def build_model(features, labels, hidden,
         regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws)
         regularizers += beta_out * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
-        loss = cross_loss + regularizers # / tf.cast(tf.shape(x)[0], tf.float64)
+        loss = cross_loss + regularizers
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
-        # global_step = tf.Variable(0, trainable=False)
-        # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
-        #                                            100, 0.96, staircase=True)
-        # # Passing global_step to minimize() will increment it at each step.
-        # train_step = (
-        #     tf.train.GradientDescentOptimizer(learning_rate)
-        #     .minimize(cross_entropy, global_step=global_step)
-        # )
-        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss)
+        train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss, global_step=global_step)
         #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     if n_out >= 2:
@@ -126,7 +120,6 @@ def build_model(features, labels, hidden,
 
     k = tf.placeholder(tf.int32, [], name='k')
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
-
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
     summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
@@ -136,65 +129,16 @@ def build_model(features, labels, hidden,
 
     # saver.restore(sess, 'hidden_model')
 
-    global j
-    j = 0
     def train(data, i, validation=None, verbose=False, batch_size=200):
         for _, batch in data.groupby(data.index // batch_size):
             # print(batch.shape)
-            summary_str, _ = sess.run([merged, train_step],
-                                      feed_dict={x: data[features], y_: data[labels],
-                                                 n_samp: data.shape[0],
-                                                 # keep_prob: 0.5})
-                                                 keep_prob: 1.0})  # TODO: should we use dropout??
-            global j
-            summary_writer.add_summary(summary_str, j)
-            j+=1
-        if validation is not None:
-            acc = 0
-            acc1 = 0
-            for val in validation:
-                ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k],
-                                                         feed_dict={x: val[features], y_:val[labels],
-                                                                    k:min(3, len(val)), keep_prob:1.0})
-                if any(val['L-DidChange'][idx] == 1 for idx in top_indices[1]):
-                    acc += 1
-                if val['L-DidChange'][top_indices[1][0]] == 1:
-                    acc1 += 1
-            acc = float(acc)  / len(validation)
-            acc1 = float(acc1) / len(validation)
-            vals = pd.concat(validation)
-            # classes = vals.groupby(labels)
-            # max_samples = max(len(c) for _, c in classes)
-            # vals = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
-            acci = sess.run(accuracy, feed_dict={x:vals[features], y_:vals[labels], keep_prob:1.0})
-            print('accuracy at step %4d: %.3f / %.3f (%.3f)' % (i, acc1, acc, acci))
-
-            #validation = validation.drop_duplicates()
-            # print(validation[validation['L-NoChange'] == 1].shape, validation[validation['L-DidChange'] == 1].shape)
-            # acc, truth, observed = sess.run(
-            #     [accuracy, tf.argmin(y_,1), tf.argmin(y,1)],
-            #     {x: validation[features], y_: validation[labels], keep_prob: 1.0})
-            # # True positives.
-            # tp = np.sum(np.logical_and(truth, observed))
-            # # False positives.
-            # fp = np.sum(np.logical_and(np.logical_not(truth), observed))
-            # # False negatives.
-            # fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
-            # # True negatives.
-            # tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
-            # precision = np.float64(tp) / (tp + fp)
-            # recall = np.float64(tp) / (tp + fn)
-            # fscore = 2.0 * precision * recall / (precision + recall)
-            # print('accuracy: %f' % acc)
-            # print('precision: %f' % precision)
-            # print('recall: %f' % recall)
-            # print('f1 score: %f' % fscore)
-            # print('')
-            # print('')
-            # acc = sess.run(accuracy,
-            #                feed_dict={x: validation[features], y_: validation[labels], keep_prob: 1.0})
-            # if verbose and i % 100 == 0:
-            #     print('accuracy at step {}: {}'.format(i, acc))
+            summary, _, step = sess.run(
+                [merged, train_step, global_step],
+                feed_dict={x: data[features], y_: data[labels],
+                           # keep_prob: 0.5})
+                           keep_prob: 1.0}  # TODO: should we use dropout??
+            )
+            summary_writer.add_summary(summary, step)
 
 
     def test(data, store_predictions=False, loud=True):
