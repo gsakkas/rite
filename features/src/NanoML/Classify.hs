@@ -53,45 +53,45 @@ preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
             preds_tis_ctx
 
-preds_tis_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
-preds_tis_cons = map (first (take 1) . second (fmap (fmap (take 1))))
-            preds_tis_ctx_cons
+-- preds_tis_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
+-- preds_tis_cons = map (first (take 1) . second (fmap (fmap (take 1))))
+--             preds_tis_ctx_cons
 
 preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_novar = init preds_tis
 
+-- preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
+-- preds_tis_ctx
+--     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
+--  =
+--   map tis_op_ctx [Eq ..] ++
+--   [ tis_anycon_ctx
+--   , tis_con_ctx "::", tis_con_ctx "[]"
+--   , tis_con_ctx "(,)"
+--   , tis_con_ctx "VarX", tis_con_ctx "VarY"
+--   , tis_con_ctx "Sine", tis_con_ctx "Cosine"
+--   , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
+--   , tis_anycon_case_ctx
+--   , tis_con_case_ctx "::", tis_con_case_ctx "[]"
+--   , tis_con_case_ctx "(,)"
+--   , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
+--   , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
+--   , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
+--   , tis_fun_ctx
+--   , tis_app_ctx
+--   , tis_lit_int_ctx
+--   , tis_lit_float_ctx
+--   , tis_lit_bool_ctx
+--   , tis_lit_char_ctx
+--   , tis_lit_string_ctx
+--   , tis_ite_ctx
+--   , tis_seq_ctx
+--   , tis_var_ctx
+--   , tis_let_ctx
+--   ]
+
 preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_ctx
-    -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
- =
-  map tis_op_ctx [Eq ..] ++
-  [ tis_anycon_ctx
-  , tis_con_ctx "::", tis_con_ctx "[]"
-  , tis_con_ctx "(,)"
-  , tis_con_ctx "VarX", tis_con_ctx "VarY"
-  , tis_con_ctx "Sine", tis_con_ctx "Cosine"
-  , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
-  , tis_anycon_case_ctx
-  , tis_con_case_ctx "::", tis_con_case_ctx "[]"
-  , tis_con_case_ctx "(,)"
-  , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
-  , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
-  , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
-  , tis_fun_ctx
-  , tis_app_ctx
-  , tis_lit_int_ctx
-  , tis_lit_float_ctx
-  , tis_lit_bool_ctx
-  , tis_lit_char_ctx
-  , tis_lit_string_ctx
-  , tis_ite_ctx
-  , tis_seq_ctx
-  , tis_var_ctx
-  , tis_let_ctx
-  ]
-
-preds_tis_ctx_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
-preds_tis_ctx_cons
     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
  =
   map tis_op_ctx [Eq ..] ++
@@ -138,13 +138,13 @@ preds_thas_ctx =
     , thas_con_ctx "Average", thas_con_ctx "Times", thas_con_ctx "Thresh"
     -- , thas_cons_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , thas_anycon_case_ctx
-    , thas_con_case_ctx "::", thas_con_case_ctx "[]"
+    -- , thas_con_case_ctx "::", thas_con_case_ctx "[]"
     , thas_con_case_ctx "(,)"
     , thas_cons_case_ctx ["::", "[]"]
-    , thas_con_case_ctx "VarX", thas_con_case_ctx "VarY"
-    , thas_con_case_ctx "Sine", thas_con_case_ctx "Cosine"
-    , thas_con_case_ctx "Average", thas_con_case_ctx "Times", thas_con_case_ctx "Thresh"
-    -- , thas_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
+    -- , thas_con_case_ctx "VarX", thas_con_case_ctx "VarY"
+    -- , thas_con_case_ctx "Sine", thas_con_case_ctx "Cosine"
+    -- , thas_con_case_ctx "Average", thas_con_case_ctx "Times", thas_con_case_ctx "Thresh"
+    , thas_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , thas_fun_ctx, thas_app_ctx
     , thas_lit_int_ctx
     , thas_lit_float_ctx
@@ -169,13 +169,13 @@ preds_tcount_ctx =
     , tcount_con_ctx "Average", tcount_con_ctx "Times", tcount_con_ctx "Thresh"
     -- , tcount_cons_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , tcount_anycon_case_ctx
-    , tcount_con_case_ctx "::", tcount_con_case_ctx "[]"
-    -- , tcount_cons_case_ctx ["::", "[]"]
+    -- , tcount_con_case_ctx "::", tcount_con_case_ctx "[]"
+    , tcount_cons_case_ctx ["::", "[]"]
     , tcount_con_case_ctx "(,)"
-    , tcount_con_case_ctx "VarX", tcount_con_case_ctx "VarY"
-    , tcount_con_case_ctx "Sine", tcount_con_case_ctx "Cosine"
-    , tcount_con_case_ctx "Average", tcount_con_case_ctx "Times", tcount_con_case_ctx "Thresh"
-    -- , tcount_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
+    -- , tcount_con_case_ctx "VarX", tcount_con_case_ctx "VarY"
+    -- , tcount_con_case_ctx "Sine", tcount_con_case_ctx "Cosine"
+    -- , tcount_con_case_ctx "Average", tcount_con_case_ctx "Times", tcount_con_case_ctx "Thresh"
+    , tcount_cons_case_ctx ["VarX", "VarY", "Sine", "Cosine", "Average", "Times", "Thresh"]
     , tcount_fun_ctx, tcount_app_ctx
     , tcount_lit_int_ctx
     , tcount_lit_float_ctx

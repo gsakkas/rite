@@ -56,16 +56,16 @@ main = do
     --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op+context+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
-    "op-cons+context+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ map only_ctx preds_tis_ctx_cons ++ preds_tcon_ctx) jsons
+    -- "op-cons+context+type+size"
+    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ map only_ctx preds_tis_ctx_cons ++ preds_tcon_ctx) jsons
     "op+context-has+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
     "op+context-count+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
     "op+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
-    "op-cons+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ preds_tcon_ctx) jsons
+    -- "op-cons+type+size"
+    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ preds_tcon_ctx) jsons
     -- "type-inference"
     --   -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     -- "type-inference+vars"
