@@ -28,7 +28,7 @@ def build_model(features, labels, hidden,
     n_out = len(labels)
 
     x = tf.placeholder(tf.float64, [None, n_in], name='x')
-    keep_prob = tf.placeholder(tf.float64)
+    keep_prob = tf.placeholder(tf.float64, name='keep_prob')
 
     global_step = tf.Variable(0, name='global_step', trainable=False)
 
@@ -97,17 +97,9 @@ def build_model(features, labels, hidden,
         regularizers = beta * sum(tf.nn.l2_loss(W) for W in Ws)
         regularizers += beta_out * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
-        loss = cross_loss + regularizers # / tf.cast(tf.shape(x)[0], tf.float64)
+        loss = cross_loss + regularizers
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
-        # global_step = tf.Variable(0, trainable=False)
-        # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
-        #                                            100, 0.96, staircase=True)
-        # # Passing global_step to minimize() will increment it at each step.
-        # train_step = (
-        #     tf.train.GradientDescentOptimizer(learning_rate)
-        #     .minimize(cross_entropy, global_step=global_step)
-        # )
         train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss, global_step=global_step)
         #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
@@ -140,12 +132,13 @@ def build_model(features, labels, hidden,
     def train(data, i, validation=None, verbose=False, batch_size=200):
         for _, batch in data.groupby(data.index // batch_size):
             # print(batch.shape)
-            summary_str, _, step = sess.run(
+            summary, _, step = sess.run(
                 [merged, train_step, global_step],
                 feed_dict={x: data[features], y_: data[labels],
                            # keep_prob: 0.5})
-                           keep_prob: 1.0})  # TODO: should we use dropout??
-            summary_writer.add_summary(summary_str, step)
+                           keep_prob: 1.0}  # TODO: should we use dropout??
+            )
+            summary_writer.add_summary(summary, step)
 
 
     def test(data, store_predictions=False, loud=True):
