@@ -60,8 +60,8 @@ def load_data(path):
     return (dfs, fs, ls)
 
 def cross_validate(dfs, fs, ls):
-    #kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
-    kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=FLAGS.seed)
+    kf = KFold(n_splits=FLAGS.n_folds, random_state=FLAGS.seed)
+    #kf = ShuffleSplit(n_splits=1, test_size=0.25, random_state=FLAGS.seed)
     # print(len(dfs))
     rs = []
     for i, (train, test) in enumerate(kf.split(dfs)):
@@ -73,25 +73,29 @@ def cross_validate(dfs, fs, ls):
             'top-2': np.mean([r['top-2'] for r in rs]),
             'top-3': np.mean([r['top-3'] for r in rs])}
 
-def objective(dfs, fs, ls, a, b, bo):
+def objective(dfs, fs, ls, a, b):
     #print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo, 'mini_batch', m)
-    print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo)
+    #print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo)
+    #print('learn_rate', 10**a, 'reg_rate', 10**b, 'mini_batch', m)
+    print('learn_rate', 10**a, 'reg_rate', 10**b)
     FLAGS.learn_rate = 10 ** a
     FLAGS.reg_rate = 10 ** b
-    FLAGS.reg_out_rate = 10 ** bo
+    FLAGS.reg_out_rate = 10 ** b
     #FLAGS.batch_size = int(m)
     loss = 1 - cross_validate(dfs, fs, ls)['top-1']
     print(loss)
     return loss
 
 def hyperopt(dfs, fs, ls):
-    space = (hp.uniform('alpha', -4, -1),
-             hp.uniform('beta',  -3, 0),
-             hp.uniform('beta_out',  -3, 0))
-    best = fmin(fn=lambda (a, b, bo): objective(dfs, fs, ls, a, b, bo),
+    space = (hp.uniform('alpha', -3, -1),
+             hp.uniform('beta',  -3, -1),
+             #hp.uniform('beta_out',  -3, 0)),
+             #hp.quniform('minibatch', 10, 500, 10),
+             )
+    best = fmin(fn=lambda (a, b): objective(dfs, fs, ls, a, b),
                 space=space,
                 algo=tpe.suggest,
-                max_evals=500)
+                max_evals=200)
     print(best)
 
 def main(_):
@@ -211,14 +215,14 @@ def train_model(train, dfs, label_names, validation=None):
     #     i += 1
     # print len(dfs)
     df = pd.concat([df for _, df in dfs])
-    print(df.shape)
+    #print(df.shape)
     feature_names = [c for c in df.columns if c[0] == 'F']
     #print df.drop_duplicates().shape
     #print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names))
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True, random_state=FLAGS.seed) for _, c in classes)
-    print(df.shape)
+    #print(df.shape)
     # if FLAGS.n_batches is not None:
     #     df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
     # else:
