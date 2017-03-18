@@ -4,16 +4,16 @@ DATA   ?= op+type+size
 MODEL  ?= hidden
 LAYERS ?= 500
 
-LEARN_RATE ?= 0.0003674
-REG_RATE   ?= 0.9988
-BATCH_SIZE ?= 170
-BATCHES    ?= 10000
+LEARN_RATE ?= 0.001
+REG_RATE   ?= 0.001
+#REG_LIN_RATE ?= 0.01
+BATCH_SIZE ?= 200
 EPOCHS     ?= 20
 SEED       ?= 12345
 
-#DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size
-#DATAS += op+type+size op-cons+context+type+size op-cons+type+size
-DATAS = op+type+size
+DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size
+DATAS += op+type+size op-cons+context+type+size op-cons+type+size
+# DATAS = op+type+size
 HIDDEN = 10 25 50 100 250 500
 
 define PREDICTIONS
