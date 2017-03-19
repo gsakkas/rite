@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op-cons+type+size/hidden-100,fa15,op-cons+type+size,hidden-100,0.617,0.806,0.879,2214
