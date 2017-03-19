@@ -4,6 +4,7 @@ import os.path
 import pandas as pd
 import tensorflow as tf
 
+import json
 import math
 
 import util
@@ -230,7 +231,14 @@ def build_model(features, labels, hidden,
             print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
             print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
-            #saver.save(sess, 'hidden_model')
+        saver.save(sess, 'hidden-' + '-'.join(hidden))
+
+        ws1, bs1, w1, b1 = sess.run([Ws, bs, W, b])
+        with open('hidden-' + '-'.join(hidden) + '.json', 'w') as f:
+            d = {'hidden': [{'weights': ws2.tolist(), 'biases': bs2.tolist()}
+                            for ws2, bs2 in zip(ws1, bs1)],
+                 'output': {'weights': w1.tolist(),  'biases': b1.tolist()}}
+            json.dump(d, f, indent=2)
 
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 
