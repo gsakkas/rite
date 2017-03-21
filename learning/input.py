@@ -33,6 +33,8 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
             df = None
             return (df, feature_names, label_names)
         df = df[df['F-InSlice'] == 1].reset_index(drop=True)
+        del df['F-InSlice']
+        feature_names = [f for f in feature_names if f != 'F-InSlice']
         if len(df) == 1:
             print '1 sliced', path
             df = None

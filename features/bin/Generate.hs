@@ -54,16 +54,32 @@ main = do
     --   -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     -- "op+context-count+size"
     --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    "op"
+      -> mkBadFeatures src cls (preds_tis) jsons
+    "op+slice"
+      -> mkBadFeaturesWithSlice All src cls (preds_tis) jsons
+    "op+context"
+      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tis_ctx) jsons
+    "op+context+size"
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+    "op+context+type"
+      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     "op+context+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     -- "op-cons+context+type+size"
     --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ map only_ctx preds_tis_ctx_cons ++ preds_tcon_ctx) jsons
-    "op+context-has+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
-    "op+context-count+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
+    -- "op+context-has+type+size"
+    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
+    -- "op+context-count+type+size"
+    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
+    "op+size"
+      -> mkBadFeatures src cls (preds_tsize ++ preds_tis) jsons
+    "op+type"
+      -> mkBadFeatures src cls (preds_tis ++ preds_tcon_ctx) jsons
     "op+type+size"
       -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
+    -- "op+type+size+slice-full"
+    --   -> mkBadFeaturesWithSlice All src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
     -- "op-cons+type+size"
     --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ preds_tcon_ctx) jsons
     -- "type-inference"
@@ -71,14 +87,18 @@ main = do
     -- "type-inference+vars"
     --   -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
 
+data WithSlice = JustSlice | All deriving Eq
 
 mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
-mkBadFeatures yr nm fs jsons = do
+mkBadFeatures = mkBadFeaturesWithSlice JustSlice
+
+mkBadFeaturesWithSlice :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
+mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
   let feats = [ ((h, f'), (ss, bad, fix, c, all))
               | (Just ss, p, bad, fix) <- uniqs
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
-              , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f
+              , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
               -- , length f' > 1
               , let all = map (fromJust.getSrcSpanExprMaybe)

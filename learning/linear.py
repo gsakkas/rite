@@ -4,6 +4,7 @@ import os
 import tensorflow as tf
 
 import math
+from time import time, clock
 
 import util
 
@@ -99,12 +100,15 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         fs = []
         cs = []
         ts = []
+        times = []
 
         for f, d in data:
+            start = clock()
             # ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
+            times.append(clock() - start)
             if store_predictions:
                 dir, f = os.path.split(f)
                 f, _ = os.path.splitext(f)
@@ -174,6 +178,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
             print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
             print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
 
+            print('avg prediction time: %f' % np.mean(times))
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 
     def plot():

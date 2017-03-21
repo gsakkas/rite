@@ -252,3 +252,41 @@ different constraint sources (e.g. plus-return, plus-left-child,
 plus-right-child), and adding vectors for each constraint. So we would
 get three vectors for a =+= expression, which would be identical except
 for the constraint-source feature.
+* Impact of feature sets
+** Impact of (minimized) type error slice
+
+- baseline = local syntax, context type, expr size
+- expanded all datasets to have 280800 samples (exprs)
+- trained on a single epoch of fa15, tested on sp14
+- MLP w/ 10 hidden neurons
+- learn-rate = l2-rate = 0.001
+- mini-batch size = 200
+
+| features             | top-1 | top-2 | top-3 | recall | avg/med samples | avg/med changes |
+|----------------------+-------+-------+-------+--------+-----------------+-----------------|
+| baseline             | 70.6% | 83.5% | 89.9% |  68.1% | 11 /  9         | 3 / 2           |
+| + non-slice exprs    | 62.5% | 79.6% | 86.2% |  40.1% | 70 / 45         | 6 / 4           |
+| + un-minimized slice | 59.8% | 74.5% | 82.1% |  36.6% | 70 / 45         | 6 / 4           |
+
+** Impact of context vs type vs size
+
+baseline = local syntax
+
+- trained on 10 epochs of fa15, tested on sp14
+- MLP w/ 10 hidden neurons
+- learn-rate = l2-rate = 0.001
+- mini-batch size = 200
+
+| features           | top-1 | top-2 | top-3 | recall |
+|--------------------+-------+-------+-------+--------|
+| baseline           | 60.3% | 74.7% | 84.0% |  58.5% |
+|--------------------+-------+-------+-------+--------|
+| +size              | 64.8% | 76.9% | 84.3% |  58.7% |
+| +context           | 68.3% | 82.6% | 88.8% |  67.8% |
+| +type              | 69.8% | 83.3% | 89.2% |  67.3% |
+|--------------------+-------+-------+-------+--------|
+| +context+size      | 69.0% | 82.6% | 88.8% |  67.3% |
+| +type+size         | 71.6% | 84.3% | 89.5% |  67.8% |
+| +context+type      | 71.9% | 84.7% | 91.3% |  70.5% |
+|--------------------+-------+-------+-------+--------|
+| +context+type+size | 73.5% | 85.8% | 91.5% |  70.8% |

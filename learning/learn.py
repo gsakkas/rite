@@ -30,7 +30,7 @@ flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
 flags.DEFINE_string("hidden_layers", "", "")
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
 flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
-flags.DEFINE_integer("n_epochs", None, "Number of training rounds.")
+flags.DEFINE_integer("n_epochs", 1, "Number of training rounds.")
 flags.DEFINE_float("learn_rate", 0.1, "Learning rate.")
 flags.DEFINE_float("reg_rate", 0.01, "Regularization rate.")
 flags.DEFINE_float("reg_out_rate", None, "Regularization rate for output (defaults to reg_rate).")
@@ -108,7 +108,11 @@ def main(_):
         random.seed
         FLAGS.seed = random.randint(0, 1000000)
         print('using seed:', FLAGS.seed)
-    dfs, fs, ls = load_data(FLAGS.data)
+    dirs = FLAGS.data.split(':')
+    dfs = []
+    for dir in dirs:
+        df, fs, ls = load_data(dir)
+        dfs += df
     # train_and_eval(dfs, fs, ls)
 
     if FLAGS.hyperopt:
@@ -155,6 +159,8 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
     if test_data is not None:
         train_model(train, dfs, ls)
         test_model(test, test_data)
+        if FLAGS.plot:
+            plot()
         close()
 
     elif train_idxs is not None and test_idxs is not None:
@@ -223,11 +229,12 @@ def train_model(train, dfs, label_names, validation=None):
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True, random_state=FLAGS.seed) for _, c in classes)
     #print(df.shape)
-    # if FLAGS.n_batches is not None:
-    #     df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
+    if FLAGS.n_batches is not None:
+        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
+        FLAGS.n_epochs = 1
     # else:
     #     df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
-    # print(df.shape)
+    print(df.shape)
     for i in xrange(FLAGS.n_epochs):
     # for _, batch in df.groupby(df.index // FLAGS.batch_size):
         print('epoch {}'.format(i))
