@@ -4,7 +4,7 @@ import os
 import tensorflow as tf
 
 import math
-from time import time, clock
+from time import time
 
 import util
 
@@ -103,12 +103,12 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
         times = []
 
         for f, d in data:
-            start = clock()
+            start = time()
             # ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
-            times.append(clock() - start)
+            times.append(time() - start)
             if store_predictions:
                 dir, f = os.path.split(f)
                 f, _ = os.path.splitext(f)

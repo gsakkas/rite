@@ -38,7 +38,7 @@ python learning/learn.py \
   --reg_rate=$(REG_RATE) \
   --model=linear \
   --batch_size=$(BATCH_SIZE) \
-  --n_epochs=5 \
+  --n_epochs=$(EPOCHS) \
   --test_data data/$(3)/$(1) \
   --seed $(SEED) \
   --store_predictions

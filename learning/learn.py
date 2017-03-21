@@ -4,6 +4,7 @@ import math
 import os.path
 import random
 import sys
+import time
 
 from hyperopt import fmin, tpe, hp
 import numpy as np
@@ -235,16 +236,21 @@ def train_model(train, dfs, label_names, validation=None):
     # else:
     #     df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
     print(df.shape)
+    start = time.time()
     for i in xrange(FLAGS.n_epochs):
     # for _, batch in df.groupby(df.index // FLAGS.batch_size):
         print('epoch {}'.format(i))
         df = df.sample(frac=1).reset_index(drop=True)
         # print(df.shape)
         train(df, i, validation, verbose=FLAGS.verbose, batch_size=FLAGS.batch_size)
+    print('training complete in %.2f seconds' % (time.time() - start))
 
 def test_model(test, dfs):
-    return test(dfs, store_predictions=FLAGS.store_predictions,
-                loud=not FLAGS.hyperopt)
+    start = time.time()
+    r = test(dfs, store_predictions=FLAGS.store_predictions,
+             loud=not FLAGS.hyperopt)
+    print('testing complete in %.2f seconds' % (time.time() - start))
+    return r
 
 if __name__ == '__main__':
     tf.app.run()
