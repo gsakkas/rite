@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False):
+def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False, no_slice=False):
     '''Load feature vectors from a csv file.
 
     Expects a header row with feature columns prefixed with 'F-' and
@@ -27,14 +27,13 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
         df = df[reduce(lambda x, acc: x | acc, criteria)]
         # print df.shape
 
+
     if only_slice:
         if len(df[df['L-DidChange'] == 1]) == 0:
             print 'no changes', path
             df = None
             return (df, feature_names, label_names)
         df = df[df['F-InSlice'] == 1].reset_index(drop=True)
-        del df['F-InSlice']
-        feature_names = [f for f in feature_names if f != 'F-InSlice']
         if len(df) == 1:
             print '1 sliced', path
             df = None
@@ -42,6 +41,11 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
         if len(df[df['L-DidChange'] == 1]) == 0:
             print 'no overlap', path
             df = None
+
+    if no_slice or only_slice:
+        del df['F-InSlice']
+        feature_names = [f for f in feature_names if f != 'F-InSlice']
+
 
     # if balance_labels:
     #     print df.shape

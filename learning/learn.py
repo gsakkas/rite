@@ -38,6 +38,7 @@ flags.DEFINE_float("reg_out_rate", None, "Regularization rate for output (defaul
 flags.DEFINE_integer("n_folds", 1, "Number of folds for cross-validation.")
 flags.DEFINE_bool("plot", False, "Plot the learned model.")
 flags.DEFINE_bool("only_slice", False, "Only look at exprs in the error slice.")
+flags.DEFINE_bool("no_slice", False, "Ignore the error slice feature.")
 flags.DEFINE_bool("store_predictions", False,
                   "Whether to store predictions for offline analysis.")
 flags.DEFINE_bool("hyperopt", False, "Whether to use hyperopt to tune parameters.")
@@ -50,7 +51,7 @@ def load_data(path):
     dfs = []
     for i, csv in enumerate(csvs):
         f = os.path.join(path, csv)
-        df, fs, ls = input.load_csv(f, only_slice=FLAGS.only_slice)
+        df, fs, ls = input.load_csv(f, only_slice=FLAGS.only_slice, no_slice=FLAGS.no_slice)
         if df is None:
             print(i)
             continue
@@ -170,22 +171,22 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
         close()
         return r
 
-    else:
-        n = len(dfs) / 10
-        df_test = dfs[-n:]
-        df_validate = dfs[-2*n:-n]
-        df_train = dfs[:-2*n]
-        # # split off 1/10 of the data for a test group
-        # (_, rest), (_, df_test) = df.groupby(df.index < n)
-        # # and another 1/10 for a validation group
-        # (_, df_train), (_, df_validate) = rest.groupby(rest.index < 2*n)
-        train_model(train, df_train, ls, validation=df_validate)
-        test_model(test, df_test)
+    # else:
+    #     n = len(dfs) / 10
+    #     df_test = dfs[-n:]
+    #     df_validate = dfs[-2*n:-n]
+    #     df_train = dfs[:-2*n]
+    #     # # split off 1/10 of the data for a test group
+    #     # (_, rest), (_, df_test) = df.groupby(df.index < n)
+    #     # # and another 1/10 for a validation group
+    #     # (_, df_train), (_, df_validate) = rest.groupby(rest.index < 2*n)
+    #     train_model(train, df_train, ls, validation=df_validate)
+    #     test_model(test, df_test)
 
-        if FLAGS.plot:
-            plot()
+    #     if FLAGS.plot:
+    #         plot()
 
-        close()
+    #     close()
 
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
@@ -226,12 +227,12 @@ def train_model(train, dfs, label_names, validation=None):
     feature_names = [c for c in df.columns if c[0] == 'F']
     #print df.drop_duplicates().shape
     #print df.drop_duplicates(feature_names).shape
-    classes = list(df.groupby(label_names))
+    classes = list(df.groupby(label_names, sort=False))
     max_samples = max(len(c) for _, c in classes)
     df = pd.concat(c.sample(max_samples, replace=True, random_state=FLAGS.seed) for _, c in classes)
     #print(df.shape)
     if FLAGS.n_batches is not None:
-        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed).reset_index(drop=True)
+        df = df.sample(FLAGS.n_batches * FLAGS.batch_size, replace=True, random_state=FLAGS.seed) # .reset_index(drop=True)
         FLAGS.n_epochs = 1
     # else:
     #     df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
@@ -240,7 +241,7 @@ def train_model(train, dfs, label_names, validation=None):
     for i in xrange(FLAGS.n_epochs):
     # for _, batch in df.groupby(df.index // FLAGS.batch_size):
         print('epoch {}'.format(i))
-        df = df.sample(frac=1).reset_index(drop=True)
+        df = df.sample(frac=1) # .reset_index(drop=True)
         # print(df.shape)
         train(df, i, validation, verbose=FLAGS.verbose, batch_size=FLAGS.batch_size)
     print('training complete in %.2f seconds' % (time.time() - start))

@@ -83,10 +83,10 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     tf.global_variables_initializer().run()
 
     def train(data, i, validation=None, verbose=False, batch_size=200):
-        for _, batch in data.groupby(data.index // batch_size):
+        for _, batch in data.groupby(np.arange(len(data)) // batch_size, sort=False):
             summary, _, step = sess.run(
                 [merged, train_step, global_step],
-                feed_dict={x: data[features], y_: data[labels]}
+                feed_dict={x: batch[features], y_: batch[labels]}
             )
             summary_writer.add_summary(summary, step)
 

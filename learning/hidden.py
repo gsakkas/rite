@@ -6,6 +6,7 @@ import tensorflow as tf
 
 import json
 import math
+from time import time
 
 import util
 
@@ -131,11 +132,11 @@ def build_model(features, labels, hidden,
     # saver.restore(sess, 'hidden_model')
 
     def train(data, i, validation=None, verbose=False, batch_size=200):
-        for _, batch in data.groupby(data.index // batch_size):
+        for _, batch in data.groupby(np.arange(len(data)) // batch_size, sort=False):
             # print(batch.shape)
             summary, _, step = sess.run(
                 [merged, train_step, global_step],
-                feed_dict={x: data[features], y_: data[labels],
+                feed_dict={x: batch[features], y_: batch[labels],
                            # keep_prob: 0.5})
                            keep_prob: 1.0}  # TODO: should we use dropout??
             )
@@ -151,12 +152,15 @@ def build_model(features, labels, hidden,
         fs = []
         cs = []
         ts = []
+        times = []
 
         for f, d in data:
+            start = time()
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels],
                            k:min(3, len(d)), keep_prob:1.0})
+            times.append(time() - start)
             # print ys
             #top_k = np.argpartition(ys, 3, 0)
             # print top_indices
@@ -230,6 +234,7 @@ def build_model(features, labels, hidden,
             # print('std p/r/f1: %.3f / %.3f / %.3f' % (np.std(ps), np.std(rs), np.std(fs)))
             print('avg / std / med samples: %.2f / %.2f / %.2f' % (np.mean(ts), np.std(ts), np.median(ts)) )
             print('avg / std / med changes: %.2f / %.2f / %.2f' % (np.mean(cs), np.std(cs), np.median(cs)) )
+            print('avg prediction time: %f' % np.mean(times))
 
         saver.save(sess, 'hidden-' + '-'.join(hidden))
 
