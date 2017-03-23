@@ -1,2 +1,2 @@
-tool,year,features,model,top-1,top-2,top-3,total
-mycroft,fa15,.,mycroft,0.408,0.433,0.435,2046
+tool,year,features,model,top-1,top-2,top-3,recall,total
+mycroft,,.,mycroft,0.408,0.599,0.688,NaN,1969
