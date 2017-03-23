@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+context-has+type+size/decision-tree,fa15,op+context-has+type+size,decision-tree,0.639,0.774,0.851,2273

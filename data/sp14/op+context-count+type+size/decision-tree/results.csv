@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+context-count+type+size/decision-tree,sp14,op+context-count+type+size,decision-tree,0.670,0.816,0.880,2333
