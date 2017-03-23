@@ -110,6 +110,7 @@ data ProcessState = ProcessState
   , good2Progs :: !Int
   , good3Progs :: !Int
   , allProgs  :: !Int
+  , recalls   :: [Double]
   } deriving (Show)
 
 doEval
@@ -130,20 +131,25 @@ doEval t dir prune = do
                 Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
                 Set.fromList shs `Set.isSubsetOf` allSpans oracle
   
-  let init = ProcessState {good1Progs = 0, good2Progs = 0, good3Progs = 0, allProgs = 0}
+  let init = ProcessState { good1Progs = 0, good2Progs = 0, good3Progs = 0
+                          , allProgs = 0, recalls = []
+                          }
   final <- execStateT (mapM_ (processOne t) mls) init
   let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
       top2 = fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double
       top3 = fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double
+      recall = avg (recalls final)
       total = allProgs final
   printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
     top1 top2 top3 total
+  printf "recall: %.3f\n" recall
   let csv = case prune of
         NoPrune -> dir </> t </> "results.csv"
         DoPrune -> dir </> t </> "results.pruned.csv"
   writeFile csv $ unlines
-    [ "tool,year,features,model,top-1,top-2,top-3,total"
-    , printf "%s,%s,%s,%s,%.3f,%.3f,%.3f,%d" t year features model top1 top2 top3 total
+    [ "tool,year,features,model,top-1,top-2,top-3,recall,total"
+    , printf "%s,%s,%s,%s,%.3f,%.3f,%.3f,%.3f,%d"
+             t year features model top1 top2 top3 recall total
     ]
 
 processOne :: (MonadState ProcessState m, MonadIO m)
@@ -215,7 +221,6 @@ doBaseline dir = do
                       , top2s = top2 : top2s s
                       , top3s = top3 : top3s s
                       }
-  let avg xs = sum xs / genericLength xs
   let top1 = avg (top1s final)
   let top2 = avg (top2s final)
   let top3 = avg (top3s final)
@@ -271,3 +276,6 @@ srcSpanRE = "\\([0-9]+,[0-9]+\\)-\\([0-9]+,[0-9]+\\)"
 -- | Like 'Timeout.timeout', but in seconds.
 timeout :: Int -> IO a -> IO (Maybe a)
 timeout sec = Timeout.timeout (sec * 10^6)
+
+avg :: Fractional a => [a] -> a
+avg xs = sum xs / genericLength xs
