@@ -1,0 +1,2 @@
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+type/linear,fa15,op+type,linear,0.574,0.756,0.831,NaN,2273

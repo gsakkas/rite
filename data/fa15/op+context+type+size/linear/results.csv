@@ -1,2 +1,2 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+context+type+size/linear,fa15,op+context+type+size,linear,0.600,0.780,0.845,2273
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+context+type+size/linear,fa15,op+context+type+size,linear,0.601,0.784,0.855,NaN,2273

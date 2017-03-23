@@ -1,2 +1,2 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+type+size/linear,sp14,op+type+size,linear,0.631,0.787,0.855,2333
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+type+size/linear,sp14,op+type+size,linear,0.643,0.793,0.852,NaN,2333

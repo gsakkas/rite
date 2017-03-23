@@ -1,2 +1,2 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+type+size/hidden-500,fa15,op+type+size,hidden-500,0.671,0.835,0.890,2273
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+type+size/hidden-500,fa15,op+type+size,hidden-500,0.669,0.827,0.890,NaN,2273
