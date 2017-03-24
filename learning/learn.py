@@ -107,15 +107,15 @@ def main(_):
     if FLAGS.seed is not None:
         random.seed(FLAGS.seed)
     else:
-        random.seed
+        random.seed()
         FLAGS.seed = random.randint(0, 1000000)
+        random.seed(FLAGS.seed)
         print('using seed:', FLAGS.seed)
     dirs = FLAGS.data.split(':')
     dfs = []
     for dir in dirs:
         df, fs, ls = load_data(dir)
         dfs += df
-    # train_and_eval(dfs, fs, ls)
 
     if FLAGS.hyperopt:
         return hyperopt(dfs, fs, ls)
@@ -137,17 +137,11 @@ def main(_):
                                                 np.mean([r['top-2'] for r in rs]),
                                                 np.mean([r['top-3'] for r in rs])))
         print('recall: %.3f' % (np.mean([r['recall'] for r in rs])))
-        # FIXME: wrong cross-validation, want to slice data into
-        # n_folds segments and train on n_folds-1
-        # for i, fold in df.groupby(df.index % FLAGS.n_folds):
-        #     print('fold {}'.format(i))
-        #     #print fold.shape
-        #     train_and_eval(fold.reset_index(drop=True), fs, ls, i)
-        #     print('')
     else:
         if FLAGS.test_data == '':
             train_and_eval(dfs, fs, ls)
         else:
+            # we have a separate test dataset
             tdfs, _, _ = load_data(FLAGS.test_data)
             train_and_eval(dfs, fs, ls, test_data=tdfs)
 
@@ -171,23 +165,6 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
         close()
         return r
 
-    # else:
-    #     n = len(dfs) / 10
-    #     df_test = dfs[-n:]
-    #     df_validate = dfs[-2*n:-n]
-    #     df_train = dfs[:-2*n]
-    #     # # split off 1/10 of the data for a test group
-    #     # (_, rest), (_, df_test) = df.groupby(df.index < n)
-    #     # # and another 1/10 for a validation group
-    #     # (_, df_train), (_, df_validate) = rest.groupby(rest.index < 2*n)
-    #     train_model(train, df_train, ls, validation=df_validate)
-    #     test_model(test, df_test)
-
-    #     if FLAGS.plot:
-    #         plot()
-
-    #     close()
-
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
         return linear.build_model(fs, ls,
@@ -208,23 +185,10 @@ def build_model(fs, ls, model_dir):
         raise ("unknown model type: " + FLAGS.model)
 
 def train_model(train, dfs, label_names, validation=None):
-    # for df in dfs:
-    #     # balance labels for training
-    #     # print df.shape
-    #     classes = list(df.groupby(label_names))
-    #     if any(len(c) == 0 for _, c in classes):
-    #         continue
-    #     max_samples = max(len(c) for _, c in classes)
-    #     # print max_samples
-    #     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
-    #     # print df.shape
-
-    #     train(df, i, validation, verbose=FLAGS.verbose)
-    #     i += 1
     # print len(dfs)
     df = pd.concat([df for _, df in dfs])
     #print(df.shape)
-    feature_names = [c for c in df.columns if c[0] == 'F']
+    #feature_names = [c for c in df.columns if c[0] == 'F']
     #print df.drop_duplicates().shape
     #print df.drop_duplicates(feature_names).shape
     classes = list(df.groupby(label_names, sort=False))
@@ -236,11 +200,10 @@ def train_model(train, dfs, label_names, validation=None):
         FLAGS.n_epochs = 1
     # else:
     #     df = df.sample(frac=FLAGS.n_epochs, replace=FLAGS.n_epochs>1, random_state=FLAGS.seed).reset_index(drop=True)
-    print(df.shape)
+    # print(df.shape)
     start = time.time()
     for i in xrange(FLAGS.n_epochs):
-    # for _, batch in df.groupby(df.index // FLAGS.batch_size):
-        print('epoch {}'.format(i))
+        # print('epoch {}'.format(i))
         df = df.sample(frac=1) # .reset_index(drop=True)
         # print(df.shape)
         train(df, i, validation, verbose=FLAGS.verbose, batch_size=FLAGS.batch_size)

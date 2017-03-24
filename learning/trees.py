@@ -4,7 +4,7 @@ import random
 import sys
 random.seed()
 
-from sklearn import tree
+from sklearn import tree, neural_network
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import pandas as pd
@@ -12,7 +12,7 @@ import pandas as pd
 import input_old
 
 model = sys.argv[1]
-if model not in ['decision-tree', 'random-forest']:
+if model not in ['mlp', 'decision-tree', 'random-forest']:
         print 'python trees.py [decision-tree|random-forest] <train> <test>'
         sys.exit(1)
 train_dir = sys.argv[2]
@@ -62,6 +62,7 @@ classes = list(train.groupby(ls2))
 #print(ls)
 max_samples = max(len(c) for _, c in classes)
 train = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
+print train.shape
 #print (len(train))  
 #print df.shape
 #print type(df)
@@ -75,6 +76,7 @@ train = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
 
 
 train_samps = train.loc[:,'F-InSlice':]
+print train_samps.shape
 train_labels = train.loc[:,'L-DidChange']
 
 test_samps = test.loc[:,'F-InSlice':]
@@ -96,7 +98,19 @@ test_file = test.loc[:,'SOURCE_FILE']
 # Y = dflist[0]
 # X = dflist[2:]
 
-if model == 'random-forest':
+if model == 'mlp':
+        clf = neural_network.MLPClassifier(
+                hidden_layer_sizes=(10,),
+                learning_rate='adaptive',
+                learning_rate_init=0.001,
+                alpha=0.001,
+                max_iter=500,
+                verbose=True,
+                # solver='sgd',
+                # early_stopping=True,
+                # tol=0.0,
+        )
+elif model == 'random-forest':
         clf = RandomForestClassifier(n_estimators=30)
 else:
         clf = tree.DecisionTreeClassifier()
@@ -120,10 +134,10 @@ anses = clf.predict(test_samps.values)
 #------------------
 
 #testanses =test_labels.values
-resacc = anses + 2*test_labels.values
-acc = 1-((sum(abs(anses - test_labels.values)))/3600)
+# resacc = anses + 2*test_labels.values
+# acc = 1-((sum(abs(anses - test_labels.values)))/3600)
 
-lol = test_labels.add((-1)*anses)
+# lol = test_labels.add((-1)*anses)
 
 #print lol
 

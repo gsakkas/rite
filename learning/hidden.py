@@ -18,7 +18,8 @@ def build_model(features, labels, hidden,
     @param labels: A list of label names.
     @param hidden: A list of ints indicating how many neurons to put in each hidden layer.
     @param learn_rate: The training rate, defaults to 0.1.
-    @param beta: The regularization rate, defaults to 5e-4.
+    @param beta: The regularization rate, defaults to 0.01.
+    @param beta_out: The regularization rate for the output layer, defaults to 0.01.
     @param model_dir: A directory to store the model summaries in.
 
     @return: A 4-tuple of training, testing, plotting, and closing functions.
@@ -43,18 +44,11 @@ def build_model(features, labels, hidden,
         with tf.name_scope('hidden-' + str(i)):
             W = tf.Variable(
                 tf.truncated_normal([n, n_hidden],
+                                    # we're using a ReLU, so initialize weights with
+                                    # a variance of 2/n (according to He et al 2015)
                                     stddev=math.sqrt(2.0/float(n)),
-                                    # stddev=math.sqrt(6.0/float(n + n_hidden)),
                                     dtype=tf.float64),
-                # tf.random_uniform([n, n_hidden],
-                #                     -math.sqrt(6.0/float(n+n_hidden)),
-                #                     math.sqrt(6.0/float(n+n_hidden)),
-                #                     dtype=tf.float64),
                 name='W_' + str(i))
-            # b = tf.Variable(tf.truncated_normal([n_hidden],
-            #                                     stddev=1.0 / math.sqrt(float(n_hidden)),
-            #                                     dtype=tf.float64),
-            #                 name='b_' + str(i))
             b = tf.Variable(tf.constant(0.0, shape=[n_hidden], dtype=tf.float64),
                             name='b_' + str(i))
             util.variable_summaries(W,'W_' + str(i))
@@ -69,23 +63,12 @@ def build_model(features, labels, hidden,
         W = tf.Variable(
             tf.truncated_normal([n, n_out],
                                 stddev=math.sqrt(1.0/float(n)),
-                                # stddev=math.sqrt(2.0 / float(n + n_out)),
                                 dtype=tf.float64),
-            # tf.random_uniform([n, n_out],
-            #                   -math.sqrt(2.0 / float(n + n_out)),
-            #                   math.sqrt(2.0 / float(n + n_out)),
-            #                   dtype=tf.float64),
             name='W')
-        # b = tf.Variable(tf.truncated_normal([n_out],
-        #                                     stddev=1.0 / math.sqrt(float(n_out)),
-        #                                     dtype=tf.float64),
-        #                 name='b')
         b = tf.Variable(tf.zeros([n_out], dtype=tf.float64),
                         name='b')
         util.variable_summaries(W,'W')
         util.variable_summaries(b,'b')
-        # Ws.append(W)
-        # bs.append(b)
         y = tf.matmul(h, W) + b
 
     y_ = tf.placeholder(tf.float64, [None, n_out], name='y_')
@@ -93,17 +76,14 @@ def build_model(features, labels, hidden,
     saver = tf.train.Saver(Ws + bs)
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_)
-        cross_loss = tf.reduce_mean(cross_entropy)
+        cross_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_))
         tf.summary.scalar('cross_loss', cross_loss)
-        regularizers = beta * sum(tf.nn.l2_loss(w) for w in Ws)
-        regularizers += beta_out * tf.nn.l2_loss(W)
+        regularizers = beta * sum(tf.nn.l2_loss(w) for w in Ws) + beta_out * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
         loss = cross_loss + regularizers
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
         train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss, global_step=global_step)
-        #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -112,13 +92,6 @@ def build_model(features, labels, hidden,
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
     tf.summary.scalar('accuracy', accuracy)
 
-
-    # yb = tf.one_hot(tf.argmax(y,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
-    # y_b = tf.one_hot(tf.argmax(y_,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
-    # yb = tf.argmax(y,1)
-    # y_b = tf.argmax(y_,1)
-    # precision, precision_op = tf.contrib.metrics.streaming_precision(yb, y_b)
-    # recall, recall_op = tf.contrib.metrics.streaming_recall(yb, y_b)
 
     k = tf.placeholder(tf.int32, [], name='k')
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
@@ -161,9 +134,6 @@ def build_model(features, labels, hidden,
                 feed_dict={x: d[features], y_:d[labels],
                            k:min(3, len(d)), keep_prob:1.0})
             times.append(time() - start)
-            # print ys
-            #top_k = np.argpartition(ys, 3, 0)
-            # print top_indices
             if store_predictions:
                 dir, f = os.path.split(f)
                 f, _ = os.path.splitext(f)
@@ -197,9 +167,6 @@ def build_model(features, labels, hidden,
             acc2 += inc2
             acc3 += inc3
 
-            # truth, observed = sess.run(
-            #     [tf.argmax(y_,1), tf.argmax(y,1)],
-            #     {x: d[features], y_: d[labels], keep_prob: 1.0})
             # True positives.
             tp = np.sum(np.logical_and(truth, observed))
             # False positives.

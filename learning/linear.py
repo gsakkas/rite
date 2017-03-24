@@ -14,6 +14,7 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     @param features: A list of feature names.
     @param labels: A list of label names.
     @param learn_rate: The training rate, defaults to 0.1.
+    @param beta: The regularization rate, defaults to 0.01.
     @param model_dir: A directory to store the model summaries in.
 
     @return: A 4-tuple of training, testing, plotting, and closing functions.
@@ -40,24 +41,14 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     y_ = tf.placeholder(tf.float64, [None, n_out], name='y_')
 
     with tf.name_scope('cross_entropy'):
-        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_),
-        cross_loss = tf.reduce_mean(cross_entropy)
+        cross_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y, labels=y_))
         tf.summary.scalar('cross_loss', cross_loss)
         regularizers = beta * tf.nn.l2_loss(W)
         tf.summary.scalar('l2_loss', regularizers)
         loss = cross_loss + regularizers
         tf.summary.scalar('loss', loss)
     with tf.name_scope('train'):
-        # global_step = tf.Variable(0, trainable=False)
-        # learning_rate = tf.train.exponential_decay(learn_rate, global_step,
-        #                                            100, 0.96, staircase=True)
-        # # Passing global_step to minimize() will increment it at each step.
-        # train_step = (
-        #     tf.train.GradientDescentOptimizer(learning_rate)
-        #     .minimize(cross_entropy, global_step=global_step)
-        # )
         train_step = tf.train.AdamOptimizer(learn_rate).minimize(loss, global_step=global_step)
-        #train_step = tf.train.GradientDescentOptimizer(learn_rate).minimize(loss)
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
@@ -68,13 +59,6 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
     else:
         correct_prediction = tf.equal(tf.sign(y), y_)
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float64))
-
-    # yb = tf.one_hot(tf.argmax(y,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
-    # y_b = tf.one_hot(tf.argmax(y_,1), n_out, on_value=True, off_value=False, dtype=tf.bool)
-    # yb = tf.argmax(y,1)
-    # y_b = tf.argmax(y_,1)
-    # precision, precision_op = tf.contrib.metrics.streaming_precision(yb, y_b)
-    # recall, recall_op = tf.contrib.metrics.streaming_recall(yb, y_b)
 
     k = tf.placeholder(tf.int32, [], name='k')
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
@@ -104,7 +88,6 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
         for f, d in data:
             start = time()
-            # ys, (top_values, top_indices) = sess.run([tf.nn.softmax(y), top_k], feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
             (top_values, top_indices), truth, observed = sess.run(
                 [top_k, tf.argmax(y_,1), tf.argmax(y,1)],
                 feed_dict={x: d[features], y_:d[labels], k:min(3, len(d))})
@@ -142,9 +125,6 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
             acc2 += inc2
             acc3 += inc3
 
-            # truth, observed = sess.run(
-            #     [tf.argmax(y_,1), tf.argmax(y,1)],
-            #     {x: d[features], y_: d[labels], keep_prob: 1.0})
             # True positives.
             tp = np.sum(np.logical_and(truth, observed))
             # False positives.
