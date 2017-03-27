@@ -238,26 +238,9 @@ minimizeCore cs = do
   st <- get
   minimal <- go [] (Set.toList cs)
   put st
-  -- cands <- flip filterM (subsets (Set.toList cs)) $ \cs' -> do
-  --   st <- get
-  --   put st{ stSubst = mempty, stConstraints = mempty
-  --         , stConstraintDeps = mempty, stConstraintStack = mempty
-  --         }
-  --   b <- (do mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2 -- >> checkCyclic t1 t2
-  --                  ) cs'
-  --            return False)
-  --        `catchError` \e -> return True
-  --   put st
-  --   return b
-  -- traceShowM ("minimizeCore.cands", length cands)
-  -- let minimal = head $ sortBy (compare `on` length) (Set.toList cs : cands)
-  -- when (length minimal /= Set.size cs) $ do
-  --   traceShowM ("minimizeCore.minimal", length minimal)
-    -- mapM_ traceShowM minimal
   when (length minimal == 1) $ do
     traceShowM ("minimizeCore", Set.size cs, length minimal)
     mapM_ (traceShowM) minimal
-    -- undefined
   return (Set.fromList minimal)
 
   where
@@ -267,10 +250,15 @@ minimizeCore cs = do
     put st{ stSubst = mempty, stConstraints = mempty
           , stConstraintDeps = mempty, stConstraintStack = mempty
           }
-    (do mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2 -- >> checkCyclic t1 t2
-              ) (used ++ cts)
-        go (used ++ [ct]) cts)
-      `catchError` \e -> go used cts
+    err <- (do -- traceShowM ct
+               mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2
+                   ) (used ++ cts)
+               -- traceShowM "SAFE"
+               return False
+           ) `catchError` \e -> return True
+    if err
+      then go used cts
+      else go (used ++ [ct]) cts
 
 subsets :: [a] -> [[a]]
 subsets []     = [[]]
@@ -288,31 +276,11 @@ solveCt :: MonadEval m => Bool -> Constraint -> m ()
 solveCt produceCore ct@(MkConstraint _ t1 t2) = do
   pushConstraints (Set.singleton ct)
   unify t1 t2 `catchError` \ e -> do
-  -- (unify t1 t2 >> checkCyclic t1 t2) `catchError` \ e -> do
     if produceCore
       then addUnsatCore =<< minimizeCore
            =<< getUnsatCore
       else throwError e
   popConstraints
-
--- checkCyclic :: MonadEval m => Type -> Type -> m ()
--- checkCyclic t1 t2 = do
---   -- return ()
---   -- traceShowM ("checkCyclic.ts", t1, t2)
---   let tvs1 = freeTyVars t1
---   pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs1)
---   let tvs2 = freeTyVars t2
---   pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs2)
-
---   t1' <- substM t1
---   t2' <- substM t2
---   let tvs1 = freeTyVars t1'
---       tvs2 = freeTyVars t2'
---   -- traceShowM ("checkCyclic.ts'", t1', t2')
---   unless (t1' == t2' || null (tvs1 `intersect` tvs2)) $
---     typeError t1' t2'
-
---   popConstraints >> popConstraints
 
 pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
 pushCallStack loc args = do

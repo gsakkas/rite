@@ -184,6 +184,8 @@ processOne t f = do
           bumpGood2 (+1)
         when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
           bumpGood3 (+1)
+        unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
+          liftIO $ printf "FAIL: %s\n" f
         bumpAll (+1)
 
 bumpAll, bumpGood1, bumpGood2, bumpGood3
