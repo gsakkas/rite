@@ -1517,6 +1517,8 @@ diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   go _ [] = []
   go d' (x:xs) = case d' of
     Ins e d -> getSrcSpanMaybe x : go d (x:xs)
+    -- TODO: should we collapse `del e (ins* es)`, e.g.
+    -- if a leaf is replaced by an entire tree?
     Del e (Ins _ d) -> getSrcSpanMaybe e : go d xs
     Del e d -> getSrcSpanMaybe e : go d xs
     Cpy e d -> go d xs
