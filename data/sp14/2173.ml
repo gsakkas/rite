@@ -1,46 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) = match e with | VarX  -> x * 1.0;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ ((digitsOfInt n) / 10);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) = match e with | VarX  -> x;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(11,47)-(11,54)
-(11,51)-(11,54)
+(3,38)-(3,60)
+(3,52)-(3,53)
 *)
 
 (* type error slice
-(11,47)-(11,54)
-(11,51)-(11,54)
+(2,3)-(3,62)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,17)-(3,19)
+(3,25)-(3,60)
+(3,36)-(3,37)
+(3,38)-(3,60)
+(3,38)-(3,60)
+(3,39)-(3,54)
+(3,40)-(3,51)
 *)
 
 (* all spans
-(11,14)-(11,54)
-(11,23)-(11,54)
-(11,29)-(11,30)
-(11,47)-(11,54)
-(11,47)-(11,48)
-(11,51)-(11,54)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,5)-(3,11)
+(3,5)-(3,6)
+(3,10)-(3,11)
+(3,17)-(3,19)
+(3,25)-(3,60)
+(3,36)-(3,37)
+(3,25)-(3,35)
+(3,26)-(3,34)
+(3,26)-(3,27)
+(3,32)-(3,34)
+(3,38)-(3,60)
+(3,39)-(3,54)
+(3,40)-(3,51)
+(3,52)-(3,53)
+(3,57)-(3,59)
 *)

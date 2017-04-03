@@ -1,99 +1,154 @@
 
-let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
-
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2 then (((clone 0 (len1 - len2)) @ len2), len1);;
+let bigMul l1 l2 =
+  let f a x = a :: x in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
 let rec clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
 let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 > len2
-  then (((clone 0 (len1 - len2)) @ l2), l1)
-  else (((clone 0 (len2 - len1)) @ l1), l2);;
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
+
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let (l2digit2,templ12) = a in
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (templ12 @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(10,2)-(10,62)
-(10,50)-(10,54)
+(2,11)-(10,49)
+(3,2)-(10,49)
+(3,14)-(3,15)
+(3,14)-(3,20)
+(3,19)-(3,20)
+(4,2)-(10,49)
+(7,6)-(8,75)
+(8,18)-(8,75)
+(8,36)-(8,37)
+(8,49)-(8,75)
+(8,50)-(8,51)
+(8,60)-(8,75)
 *)
 
 (* type error slice
-(9,2)-(10,62)
-(9,13)-(9,24)
-(9,13)-(9,27)
-(10,2)-(10,62)
-(10,2)-(10,62)
-(10,2)-(10,62)
-(10,22)-(10,62)
-(10,23)-(10,55)
-(10,48)-(10,49)
-(10,50)-(10,54)
+(3,2)-(10,49)
+(3,8)-(3,20)
+(3,10)-(3,20)
+(3,14)-(3,15)
+(3,14)-(3,20)
+(3,14)-(3,20)
+(10,16)-(10,30)
+(10,16)-(10,42)
+(10,31)-(10,32)
 *)
 
 (* all spans
-(2,14)-(5,15)
-(2,16)-(5,15)
-(3,2)-(5,15)
-(3,17)-(4,55)
-(3,19)-(4,55)
-(3,21)-(4,55)
-(4,4)-(4,55)
-(4,7)-(4,13)
-(4,7)-(4,8)
-(4,12)-(4,13)
-(4,19)-(4,22)
-(4,28)-(4,55)
-(4,28)-(4,34)
-(4,35)-(4,36)
-(4,37)-(4,44)
-(4,38)-(4,39)
-(4,42)-(4,43)
-(4,45)-(4,55)
-(4,46)-(4,47)
-(4,51)-(4,54)
-(5,2)-(5,15)
-(5,2)-(5,8)
-(5,9)-(5,10)
-(5,11)-(5,12)
-(5,13)-(5,15)
-(7,12)-(10,62)
-(7,15)-(10,62)
-(8,2)-(10,62)
-(8,13)-(8,27)
-(8,13)-(8,24)
-(8,25)-(8,27)
-(9,2)-(10,62)
-(9,13)-(9,27)
-(9,13)-(9,24)
-(9,25)-(9,27)
-(10,2)-(10,62)
-(10,5)-(10,16)
-(10,5)-(10,9)
-(10,12)-(10,16)
-(10,22)-(10,62)
-(10,23)-(10,55)
-(10,48)-(10,49)
-(10,24)-(10,47)
-(10,25)-(10,30)
+(2,11)-(10,49)
+(2,14)-(10,49)
+(3,2)-(10,49)
+(3,8)-(3,20)
+(3,10)-(3,20)
+(3,14)-(3,20)
+(3,14)-(3,15)
+(3,19)-(3,20)
+(4,2)-(10,49)
+(4,13)-(4,20)
+(4,14)-(4,15)
+(4,17)-(4,19)
+(5,2)-(10,49)
+(6,4)-(9,18)
+(6,21)-(8,75)
+(6,23)-(8,75)
+(7,6)-(8,75)
+(7,12)-(7,13)
+(8,18)-(8,75)
+(8,21)-(8,28)
+(8,21)-(8,23)
+(8,26)-(8,28)
+(8,34)-(8,43)
+(8,35)-(8,42)
+(8,36)-(8,37)
+(8,39)-(8,41)
+(8,49)-(8,75)
+(8,49)-(8,56)
+(8,50)-(8,51)
+(8,53)-(8,55)
+(8,60)-(8,75)
+(8,61)-(8,69)
+(8,70)-(8,71)
+(8,72)-(8,74)
+(9,4)-(9,18)
+(9,4)-(9,12)
+(9,13)-(9,15)
+(9,16)-(9,18)
+(10,2)-(10,49)
+(10,16)-(10,42)
+(10,16)-(10,30)
 (10,31)-(10,32)
-(10,33)-(10,46)
-(10,34)-(10,38)
-(10,41)-(10,45)
-(10,50)-(10,54)
-(10,57)-(10,61)
-(10,2)-(10,62)
+(10,33)-(10,37)
+(10,38)-(10,42)
+(10,46)-(10,49)
 *)

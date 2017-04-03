@@ -1,74 +1,75 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat (" " List.map (f l));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval ex x y));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = sepConcat " " l;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)));;
 
 *)
 
 (* changed spans
-(9,23)-(9,32)
-(9,23)-(9,53)
-(9,34)-(9,37)
-(9,38)-(9,46)
-(9,47)-(9,52)
-(9,48)-(9,49)
+(17,26)-(17,39)
+(17,32)-(17,34)
 *)
 
 (* type error slice
-(9,33)-(9,53)
-(9,34)-(9,37)
+(13,3)-(17,42)
+(13,14)-(17,40)
+(14,2)-(17,40)
+(17,26)-(17,39)
+(17,27)-(17,31)
+(17,32)-(17,34)
 *)
 
 (* all spans
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(3,8)-(3,10)
-(4,10)-(4,12)
-(6,6)-(7,58)
-(6,12)-(6,31)
-(6,14)-(6,31)
-(6,18)-(6,31)
-(6,20)-(6,21)
-(6,18)-(6,19)
-(6,22)-(6,31)
-(6,27)-(6,28)
-(6,23)-(6,26)
-(6,29)-(6,30)
-(7,6)-(7,58)
-(7,17)-(7,18)
-(7,22)-(7,58)
-(7,30)-(7,31)
-(7,35)-(7,58)
-(7,35)-(7,49)
-(7,50)-(7,51)
-(7,52)-(7,56)
-(7,57)-(7,58)
-(9,17)-(9,53)
-(9,19)-(9,53)
-(9,23)-(9,53)
-(9,23)-(9,32)
-(9,33)-(9,53)
-(9,34)-(9,37)
-(9,38)-(9,46)
-(9,47)-(9,52)
-(9,48)-(9,49)
-(9,50)-(9,51)
+(11,9)-(11,26)
+(11,9)-(11,12)
+(11,16)-(11,26)
+(11,17)-(11,21)
+(11,22)-(11,25)
+(13,14)-(17,40)
+(14,2)-(17,40)
+(14,8)-(14,9)
+(15,13)-(15,14)
+(16,13)-(16,14)
+(17,15)-(17,40)
+(17,15)-(17,18)
+(17,19)-(17,40)
+(17,20)-(17,22)
+(17,26)-(17,39)
+(17,27)-(17,31)
+(17,32)-(17,34)
+(17,35)-(17,36)
+(17,37)-(17,38)
 *)

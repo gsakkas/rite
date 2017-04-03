@@ -1,99 +1,58 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then VarX else VarY)
-  else (let y = rand (2, 6) in if y = 2 then y);;
+let padZero l1 l2 =
+  let a = List.length l1 in let b = List.length l2 in if a < b then a;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(11,15)-(14,47)
-(13,34)-(13,38)
-(13,44)-(13,48)
-(14,7)-(14,47)
-(14,31)-(14,46)
-(14,34)-(14,35)
-(14,34)-(14,39)
-(14,38)-(14,39)
-(14,45)-(14,46)
+(2,12)-(3,69)
+(3,2)-(3,69)
+(3,10)-(3,24)
+(3,28)-(3,69)
+(3,54)-(3,69)
+(3,68)-(3,69)
 *)
 
 (* type error slice
-(12,2)-(14,47)
-(12,2)-(14,47)
-(13,7)-(13,49)
-(13,11)-(13,24)
-(13,11)-(13,28)
-(13,11)-(13,28)
-(13,12)-(13,16)
-(13,27)-(13,28)
-(13,34)-(13,38)
-(14,7)-(14,47)
-(14,7)-(14,47)
-(14,16)-(14,20)
-(14,16)-(14,27)
-(14,31)-(14,46)
-(14,31)-(14,46)
-(14,31)-(14,46)
-(14,45)-(14,46)
+(3,2)-(3,69)
+(3,10)-(3,21)
+(3,10)-(3,24)
+(3,54)-(3,69)
+(3,54)-(3,69)
+(3,54)-(3,69)
+(3,68)-(3,69)
 *)
 
 (* all spans
-(11,15)-(14,47)
-(12,2)-(14,47)
-(12,5)-(12,14)
-(12,5)-(12,10)
-(12,13)-(12,14)
-(13,7)-(13,49)
-(13,11)-(13,28)
-(13,11)-(13,24)
-(13,12)-(13,16)
-(13,17)-(13,23)
-(13,18)-(13,19)
-(13,21)-(13,22)
-(13,27)-(13,28)
-(13,34)-(13,38)
-(13,44)-(13,48)
-(14,7)-(14,47)
-(14,16)-(14,27)
-(14,16)-(14,20)
-(14,21)-(14,27)
-(14,22)-(14,23)
-(14,25)-(14,26)
-(14,31)-(14,46)
-(14,34)-(14,39)
-(14,34)-(14,35)
-(14,38)-(14,39)
-(14,45)-(14,46)
-(14,31)-(14,46)
+(2,12)-(3,69)
+(2,15)-(3,69)
+(3,2)-(3,69)
+(3,10)-(3,24)
+(3,10)-(3,21)
+(3,22)-(3,24)
+(3,28)-(3,69)
+(3,36)-(3,50)
+(3,36)-(3,47)
+(3,48)-(3,50)
+(3,54)-(3,69)
+(3,57)-(3,62)
+(3,57)-(3,58)
+(3,61)-(3,62)
+(3,68)-(3,69)
+(3,54)-(3,69)
 *)

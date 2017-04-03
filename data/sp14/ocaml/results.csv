@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,total
-ocaml,sp14,.,ocaml,0.448,0.448,0.448,2333

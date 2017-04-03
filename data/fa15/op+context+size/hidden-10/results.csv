@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+size/hidden-10,fa15,op+context+size,hidden-10,0.644,0.810,0.884,NaN,2273

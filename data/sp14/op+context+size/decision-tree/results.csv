@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+size/decision-tree,sp14,op+context+size,decision-tree,0.658,0.806,0.863,NaN,2333

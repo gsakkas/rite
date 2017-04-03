@@ -1,187 +1,154 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs (eval e))
-  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
+let bigMul l1 l2 =
+  let f a x = l1 in
+  let base = ([], 1) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> (x, [])
+      | hd::tl -> List.append (x, [hd]) (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
-  | Gauss (e1,e2,e3) ->
-      2.0 *.
-        (exp
-           (-.
-              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
-                 (eval (e3, x, y)))));;
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
+
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let (l2digit2,templ12) = a in
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (templ12 @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(16,2)-(28,76)
-(27,20)-(27,23)
-(27,30)-(27,31)
-(28,9)-(28,17)
-(28,9)-(28,76)
-(28,18)-(28,76)
+(2,11)-(11,49)
+(3,2)-(11,49)
+(3,14)-(3,16)
+(4,2)-(11,49)
+(4,14)-(4,16)
+(4,18)-(4,19)
+(8,14)-(8,21)
+(8,15)-(8,16)
+(9,18)-(9,29)
+(9,18)-(9,55)
+(9,30)-(9,39)
+(9,31)-(9,32)
+(9,34)-(9,38)
+(9,35)-(9,37)
+(9,40)-(9,55)
 *)
 
 (* type error slice
-(16,2)-(28,76)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(19,32)-(19,42)
-(27,14)-(27,18)
-(27,14)-(27,33)
-(27,19)-(27,33)
-(27,20)-(27,23)
-(27,24)-(27,32)
-(27,25)-(27,29)
-(27,30)-(27,31)
+(6,4)-(10,18)
+(6,21)-(9,55)
+(6,23)-(9,55)
+(7,6)-(9,55)
+(8,14)-(8,21)
+(9,18)-(9,29)
+(9,18)-(9,55)
+(9,30)-(9,39)
+(9,40)-(9,55)
+(9,41)-(9,49)
 *)
 
 (* all spans
-(13,9)-(13,26)
-(13,9)-(13,12)
-(13,16)-(13,26)
-(13,17)-(13,21)
-(13,22)-(13,25)
-(15,14)-(28,76)
-(16,2)-(28,76)
-(16,8)-(16,9)
-(17,13)-(17,14)
-(18,13)-(18,14)
-(19,15)-(19,44)
-(19,15)-(19,18)
-(19,19)-(19,44)
-(19,20)-(19,22)
-(19,26)-(19,43)
-(19,27)-(19,31)
-(19,32)-(19,42)
-(19,33)-(19,35)
-(19,37)-(19,38)
-(19,40)-(19,41)
-(20,17)-(20,46)
-(20,17)-(20,20)
-(20,21)-(20,46)
-(20,22)-(20,24)
-(20,28)-(20,45)
-(20,29)-(20,33)
-(20,34)-(20,44)
-(20,35)-(20,37)
-(20,39)-(20,40)
-(20,42)-(20,43)
-(21,23)-(21,70)
-(21,23)-(21,63)
-(21,24)-(21,41)
-(21,25)-(21,29)
-(21,30)-(21,40)
-(21,31)-(21,33)
-(21,35)-(21,36)
-(21,38)-(21,39)
-(21,45)-(21,62)
-(21,46)-(21,50)
-(21,51)-(21,61)
-(21,52)-(21,54)
-(21,56)-(21,57)
-(21,59)-(21,60)
-(21,67)-(21,70)
-(22,21)-(22,59)
-(22,21)-(22,38)
-(22,22)-(22,26)
-(22,27)-(22,37)
-(22,28)-(22,30)
-(22,32)-(22,33)
-(22,35)-(22,36)
-(22,42)-(22,59)
-(22,43)-(22,47)
-(22,48)-(22,58)
-(22,49)-(22,51)
-(22,53)-(22,54)
-(22,56)-(22,57)
-(24,6)-(26,26)
-(24,9)-(24,46)
-(24,9)-(24,26)
-(24,10)-(24,14)
-(24,15)-(24,25)
-(24,16)-(24,18)
-(24,20)-(24,21)
-(24,23)-(24,24)
-(24,29)-(24,46)
-(24,30)-(24,34)
-(24,35)-(24,45)
-(24,36)-(24,38)
-(24,40)-(24,41)
-(24,43)-(24,44)
-(25,11)-(25,26)
-(25,11)-(25,15)
-(25,16)-(25,26)
-(25,17)-(25,19)
-(25,21)-(25,22)
-(25,24)-(25,25)
-(26,11)-(26,26)
-(26,11)-(26,15)
-(26,16)-(26,26)
-(26,17)-(26,19)
-(26,21)-(26,22)
-(26,24)-(26,25)
-(27,14)-(27,33)
-(27,14)-(27,18)
-(27,19)-(27,33)
-(27,20)-(27,23)
-(27,24)-(27,32)
-(27,25)-(27,29)
-(27,30)-(27,31)
-(28,9)-(28,76)
-(28,9)-(28,17)
-(28,18)-(28,76)
+(2,11)-(11,49)
+(2,14)-(11,49)
+(3,2)-(11,49)
+(3,8)-(3,16)
+(3,10)-(3,16)
+(3,14)-(3,16)
+(4,2)-(11,49)
+(4,13)-(4,20)
+(4,14)-(4,16)
+(4,18)-(4,19)
+(5,2)-(11,49)
+(6,4)-(10,18)
+(6,21)-(9,55)
+(6,23)-(9,55)
+(7,6)-(9,55)
+(7,12)-(7,13)
+(8,14)-(8,21)
+(8,15)-(8,16)
+(8,18)-(8,20)
+(9,18)-(9,55)
+(9,18)-(9,29)
+(9,30)-(9,39)
+(9,31)-(9,32)
+(9,34)-(9,38)
+(9,35)-(9,37)
+(9,40)-(9,55)
+(9,41)-(9,49)
+(9,50)-(9,51)
+(9,52)-(9,54)
+(10,4)-(10,18)
+(10,4)-(10,12)
+(10,13)-(10,15)
+(10,16)-(10,18)
+(11,2)-(11,49)
+(11,16)-(11,42)
+(11,16)-(11,30)
+(11,31)-(11,32)
+(11,33)-(11,37)
+(11,38)-(11,42)
+(11,46)-(11,49)
 *)

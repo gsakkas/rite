@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op/decision-tree,fa15,op,decision-tree,0.551,0.722,0.805,NaN,2273

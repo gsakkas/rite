@@ -1,82 +1,60 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = f in List.fold_left f base l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(16,2)-(16,72)
+(7,44)-(7,45)
 *)
 
 (* type error slice
-(11,3)-(11,22)
-(11,11)-(11,20)
-(11,16)-(11,20)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,20)-(16,72)
-(16,47)-(16,53)
-(16,47)-(16,56)
+(6,6)-(7,72)
+(6,12)-(6,23)
+(7,36)-(7,72)
+(7,44)-(7,45)
+(7,49)-(7,63)
+(7,49)-(7,72)
+(7,71)-(7,72)
 *)
 
 (* all spans
-(11,11)-(11,20)
-(11,16)-(11,20)
-(13,11)-(13,20)
-(13,16)-(13,20)
-(15,15)-(16,72)
-(16,2)-(16,72)
-(16,5)-(16,14)
-(16,5)-(16,10)
-(16,13)-(16,14)
-(16,20)-(16,72)
-(16,24)-(16,41)
-(16,24)-(16,37)
-(16,25)-(16,29)
-(16,30)-(16,36)
-(16,31)-(16,32)
-(16,34)-(16,35)
-(16,40)-(16,41)
-(16,47)-(16,56)
-(16,47)-(16,53)
-(16,54)-(16,56)
-(16,62)-(16,71)
-(16,62)-(16,68)
-(16,69)-(16,71)
-(16,2)-(16,72)
+(2,18)-(7,72)
+(2,22)-(7,72)
+(3,2)-(7,72)
+(3,8)-(3,10)
+(4,10)-(4,12)
+(6,6)-(7,72)
+(6,12)-(6,23)
+(6,14)-(6,23)
+(6,18)-(6,23)
+(6,20)-(6,21)
+(6,18)-(6,19)
+(6,22)-(6,23)
+(7,6)-(7,72)
+(7,17)-(7,32)
+(7,17)-(7,26)
+(7,27)-(7,30)
+(7,31)-(7,32)
+(7,36)-(7,72)
+(7,44)-(7,45)
+(7,49)-(7,72)
+(7,49)-(7,63)
+(7,64)-(7,65)
+(7,66)-(7,70)
+(7,71)-(7,72)
 *)

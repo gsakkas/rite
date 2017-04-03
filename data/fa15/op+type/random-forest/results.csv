@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+type/random-forest,fa15,op+type,random-forest,0.654,0.795,0.860,NaN,2273

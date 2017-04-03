@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,total
-op+type+size/hidden-100,sp14,op+type+size,hidden-100,0.727,0.856,0.913,2333

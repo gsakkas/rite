@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+size/hidden-500,fa15,op+size,hidden-500,0.556,0.725,0.820,NaN,2273

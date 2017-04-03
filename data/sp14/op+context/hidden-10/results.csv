@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context/hidden-10,sp14,op+context,hidden-10,0.676,0.822,0.890,NaN,2333

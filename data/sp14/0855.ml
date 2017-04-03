@@ -1,82 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then a;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(16,2)-(16,72)
+(2,12)-(3,69)
+(3,54)-(3,69)
+(3,68)-(3,69)
 *)
 
 (* type error slice
-(11,3)-(11,22)
-(11,11)-(11,20)
-(11,16)-(11,20)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,2)-(16,72)
-(16,20)-(16,72)
-(16,47)-(16,53)
-(16,47)-(16,56)
+(3,2)-(3,69)
+(3,14)-(3,50)
+(3,15)-(3,31)
+(3,16)-(3,27)
+(3,54)-(3,69)
+(3,54)-(3,69)
+(3,54)-(3,69)
+(3,68)-(3,69)
 *)
 
 (* all spans
-(11,11)-(11,20)
-(11,16)-(11,20)
-(13,11)-(13,20)
-(13,16)-(13,20)
-(15,15)-(16,72)
-(16,2)-(16,72)
-(16,5)-(16,14)
-(16,5)-(16,10)
-(16,13)-(16,14)
-(16,20)-(16,72)
-(16,24)-(16,41)
-(16,24)-(16,37)
-(16,25)-(16,29)
-(16,30)-(16,36)
-(16,31)-(16,32)
-(16,34)-(16,35)
-(16,40)-(16,41)
-(16,47)-(16,56)
-(16,47)-(16,53)
-(16,54)-(16,56)
-(16,62)-(16,71)
-(16,62)-(16,68)
-(16,69)-(16,71)
-(16,2)-(16,72)
+(2,12)-(3,69)
+(2,15)-(3,69)
+(3,2)-(3,69)
+(3,14)-(3,50)
+(3,15)-(3,31)
+(3,16)-(3,27)
+(3,28)-(3,30)
+(3,33)-(3,49)
+(3,34)-(3,45)
+(3,46)-(3,48)
+(3,54)-(3,69)
+(3,57)-(3,62)
+(3,57)-(3,58)
+(3,61)-(3,62)
+(3,68)-(3,69)
+(3,54)-(3,69)
 *)

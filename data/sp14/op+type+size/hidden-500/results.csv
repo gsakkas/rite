@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+type+size/hidden-500,sp14,op+type+size,hidden-500,0.727,0.847,0.909,NaN,2333
