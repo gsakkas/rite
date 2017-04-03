@@ -97,6 +97,7 @@ preds_tis_ctx
   map tis_op_ctx [Eq ..] ++
   [ tis_anycon_ctx
   , tis_con_ctx "::", tis_con_ctx "[]"
+  , tis_list_ctx
   -- , tis_cons_ctx ["::", "[]"]
   , tis_con_ctx "(,)"
   , tis_con_ctx "VarX", tis_con_ctx "VarY"
@@ -617,20 +618,25 @@ tis_con :: DCon -> TExpr -> Double
 tis_con c e = case e of
   T_ConApp _ c' _ -> bool2double $ c == c'
   T_Tuple _ _ -> bool2double $ c == "(,)"
-  T_List _ _ -> bool2double $ c == "::" || c == "[]"
+  -- T_List _ _ -> bool2double $ c == "::" || c == "[]"
   _ -> 0
 tis_cons :: [DCon] -> TExpr -> Double
 tis_cons cs e = case e of
   T_ConApp _ c' _ -> bool2double $ c' `elem` cs
   T_Tuple _ _ -> bool2double $ "(,)" `elem` cs
-  T_List _ _ -> bool2double $ "::" `elem` cs || "[]" `elem` cs
+  -- T_List _ _ -> bool2double $ "::" `elem` cs || "[]" `elem` cs
+  _ -> 0
+
+tis_list :: TExpr -> Double
+tis_list e = case e of
+  T_List {} -> 1
   _ -> 0
 
 tis_con_any :: TExpr -> Double
 tis_con_any e = case e of
   T_ConApp _ _ _ -> 1
   T_Tuple _ _ -> 1
-  T_List _ _ -> 1
+  -- T_List _ _ -> 1
   _ -> 0
 
 tis_con_case :: DCon -> TExpr -> Double
@@ -720,6 +726,10 @@ tis_cons_ctx :: [DCon] -> Feature -- ([String], TExpr -> TExpr -> [Double])
 tis_cons_ctx cs = ( mkContextLabels lbl, mkContextFeatures (tis_cons cs) )
   where
   lbl = "Is-" ++ join(intersperse "," cs)
+tis_list_ctx :: Feature -- ([String], TExpr -> TExpr -> [Double])
+tis_list_ctx = ( mkContextLabels lbl, mkContextFeatures (tis_list) )
+  where
+  lbl = "Is-List"
 
 tis_anycon_ctx :: Feature -- ([String], TExpr -> TExpr -> [Double])
 tis_anycon_ctx = ( mkContextLabels lbl, mkContextFeatures tis_con_any )

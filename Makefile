@@ -11,11 +11,11 @@ BATCH_SIZE ?= 200
 EPOCHS     ?= 20
 SEED       ?= 0
 
-DATAS  = op+context+type+size op+context-has+type+size op+context-count+type+size op+type+size
 #DATAS  = op+context+type+size op+context-count+type+size
 #DATAS += op+type+size op-cons+context+type+size op-cons+type+size
-# DATAS = op+type+size
-HIDDEN = 10 25 50 100 250 500
+DATAS = op+context+type+size
+#HIDDEN = 10 25 50 100 250 500
+HIDDEN = 10 500
 
 define HIDDEN_PREDICTIONS
 python learning/learn.py \
