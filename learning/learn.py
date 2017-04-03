@@ -75,26 +75,26 @@ def cross_validate(dfs, fs, ls):
             'top-2': np.mean([r['top-2'] for r in rs]),
             'top-3': np.mean([r['top-3'] for r in rs])}
 
-def objective(dfs, fs, ls, a, b):
+def objective(dfs, fs, ls, a, b, m):
     #print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo, 'mini_batch', m)
     #print('learn_rate', 10**a, 'reg_rate', 10**b, 'reg_out', 10**bo)
-    #print('learn_rate', 10**a, 'reg_rate', 10**b, 'mini_batch', m)
-    print('learn_rate', 10**a, 'reg_rate', 10**b)
+    print('learn_rate', 10**a, 'reg_rate', 10**b, 'mini_batch', m)
+    #print('learn_rate', 10**a, 'reg_rate', 10**b)
     FLAGS.learn_rate = 10 ** a
     FLAGS.reg_rate = 10 ** b
     FLAGS.reg_out_rate = 10 ** b
-    #FLAGS.batch_size = int(m)
+    FLAGS.batch_size = int(m)
     loss = 1 - cross_validate(dfs, fs, ls)['top-1']
     print(loss)
     return loss
 
 def hyperopt(dfs, fs, ls):
-    space = (hp.uniform('alpha', -3, -1),
-             hp.uniform('beta',  -3, -1),
+    space = (hp.uniform('alpha', -4, 0),
+             hp.uniform('beta',  -3, 0),
              #hp.uniform('beta_out',  -3, 0)),
-             #hp.quniform('minibatch', 10, 500, 10),
+             hp.quniform('minibatch', 10, 500, 10),
              )
-    best = fmin(fn=lambda (a, b): objective(dfs, fs, ls, a, b),
+    best = fmin(fn=lambda (a, b, m): objective(dfs, fs, ls, a, b, m),
                 space=space,
                 algo=tpe.suggest,
                 max_evals=200)

@@ -254,9 +254,10 @@ runOcaml ml = do
 runMycroft :: FilePath -> IO ([SrcSpan])
 runMycroft ml = do
   out <- readCreateProcess (proc "eval/mycroft/build/bin/cgen-unif" [ml]){ std_err = CreatePipe } ""
-  out <- readCreateProcess (proc "eval/mycroft/build/bin/unif" []) out
-  return $! extractSrcSpans (dropWhile (/="Generated report:")
-                              (lines out))
+  out <- readCreateProcess (proc "eval/mycroft/build/bin/unif" ["-e"]) out
+  -- return $! extractSrcSpans (dropWhile (/="Generated report:")
+  --                             (lines out))
+  return $! extractSrcSpans (lines out)
 
 runSherrloc :: FilePath -> IO ([SrcSpan])
 runSherrloc ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do

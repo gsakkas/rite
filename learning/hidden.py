@@ -168,25 +168,28 @@ def build_model(features, labels, hidden,
             acc3 += inc3
 
             # True positives.
-            tp = np.sum(np.logical_and(truth, observed))
+            #tp = np.sum(np.logical_and(truth, observed))
             # False positives.
-            fp = np.sum(np.logical_and(np.logical_not(truth), observed))
+            #fp = np.sum(np.logical_and(np.logical_not(truth), observed))
             # False negatives.
-            fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
+            #fn = np.sum(np.logical_and(truth, np.logical_not(observed)))
             # True negatives.
-            tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
+            #tn = np.sum(np.logical_and(np.logical_not(truth), np.logical_not(observed)))
             # precision = np.float64(tp) / np.float64(tp + fp)
             # modified recall where top-3 predictions are the only "true" predictions
-            recall = np.float64(correct) / np.float64(tp + fn)
+            c = len(d[(d['L-DidChange'] == 1) & (d['F-InSlice'] == 1)])
+            recall = np.float64(correct) / np.float64(c)
             # fscore = np.float64(2.0) * precision * recall / (precision + recall)
             # if not np.isnan(precision):
             #     ps.append(precision)
             if not np.isnan(recall):
                 rs.append(recall)
+            cs.append(c)
+            ts.append(len(d))
             # if not np.isnan(fscore):
             #     fs.append(fscore)
-            cs.append(tp+fn)
-            ts.append(tp+fp+fn+tn)
+            #cs.append(tp+fn)
+            #ts.append(tp+fp+fn+tn)
             #print('true changes: %d' % (tp+fn))
             #print('p/r/f1: %.3f / %.3f / %.3f' % (precision, recall, fscore))
             #print('')

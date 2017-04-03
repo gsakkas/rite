@@ -43,7 +43,7 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
             df = None
 
     if no_slice or only_slice:
-        del df['F-InSlice']
+        #del df['F-InSlice']
         feature_names = [f for f in feature_names if f != 'F-InSlice']
 
 
