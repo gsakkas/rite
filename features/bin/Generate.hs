@@ -95,8 +95,8 @@ mkBadFeatures = mkBadFeaturesWithSlice JustSlice
 mkBadFeaturesWithSlice :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
 mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
-  let feats = [ ((h, f'), (ss, bad, fix, c, all))
-              | (Just ss, p, bad, fix) <- uniqs
+  let feats = [ ((h, f'), (ss, bad, fix, c, all, idx))
+              | (ss, p, bad, fix, idx) <- uniqs
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
@@ -106,8 +106,17 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
-  forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
+  -- forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
+  let mkMean f xs = sum (map f xs) / genericLength xs
+  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
+  let mean = mkMean mkFrac feats :: Double
+        -- sum [genericLength ss / genericLength all | (_, (ss, _, _, _, all, _)) <- feats]
+        --      / genericLength feats :: Double
+  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats
+  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
     if
+      | mkFrac f > mean+std -> do
+          printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
       | null cs -> do
         putStrLn "NO CORE"
         putStrLn bad
@@ -163,53 +172,73 @@ traceStats outss = do
   hPrintf stderr "Std: %f\n" std
   return ()
 
-uniqDiffs :: [String] -> HashSet (Maybe [SrcSpan], Prog, String, String)
-uniqDiffs = foldl' (\seen json -> seen `mappend` HashSet.fromList (mkDiffs json)) mempty
+-- uniqDiffs :: [String] -> HashSet ([SrcSpan], Prog, String, String, Int)
+-- uniqDiffs = foldl' (\seen json -> seen `mappend` HashSet.fromList (mkDiffs json)) mempty
 
-mkDiffs :: String -> [(Maybe [SrcSpan], Prog, String, String)]
+mkDiffs :: String -> [([SrcSpan], Prog, String, String, Int)]
 mkDiffs json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm fix'
     -> {-trace e-} mempty
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm bad'
     -> {-trace e-} mempty
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
     , concatMap getDecld bad /= nub (concatMap getDecld bad)
     -> -- traceShow (concatMap getDecld bad)
        mempty
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' idx)
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
     , let ss = mkDiff'' bad fix
     -- , not (null ss)
     -- -> maybeToList . fmap (,bad, bad', fix') $ mkDiff' bad' fix'
-    -> [(ss, bad, bad', fix')]
+    -> [(ss, bad, bad', fix', idx)]
 
-  _ -> mempty
-  -- v -> error (show v)
+  -- _ -> mempty
+  v -> error (show v)
+
+mkProgs :: String -> Either String (Prog, Prog)
+mkProgs json = case eitherDecode (LBSC.pack json) of
+  Left e -> {-trace e-} Left "bad json"
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm fix'
+    -> {-trace e-} Left "fix no parse"
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm bad'
+    -> {-trace e-} Left "bad no parse"
+  Right (MkInSample bad' fix' _)
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    , concatMap getDecld bad /= nub (concatMap getDecld bad)
+    -> -- traceShow (concatMap getDecld bad)
+       Left "repeat decl"
+  Right (MkInSample bad' fix' _)
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    -> Right (bad, fix) -- [(ss, bad, bad', fix')]
 
 mkFixes :: String -> [Prog]
 mkFixes json = case eitherDecode (LBSC.pack json) of
   Left e -> {-trace e-} mempty
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Right fix <- parseTopForm fix'
     -> [fix]
     -- -> HashSet.fromList . maybeToList $ mkDiff fix bad
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm fix'
     -> {-trace e-} mempty
-  Right (MkInSample bad' fix')
+  Right (MkInSample bad' fix' _)
   --Right (MkInSample bads' (fix':_))
     | Left e <- parseTopForm bad'
     -> {-trace e-} mempty
@@ -231,16 +260,16 @@ mkDiff' bad fix
  -- FIXME: this is too strict
  eqToken (LToken s1 t1) (LToken s2 t2) = t1 == t2 && s1 == s2
 
-mkDiff'' :: Prog -> Prog -> Maybe [SrcSpan]
+mkDiff'' :: Prog -> Prog -> [SrcSpan]
 mkDiff'' bad fix
   --- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
   --- | otherwise
   -- = x
-  | fromIntegral (length x) / fromIntegral (length (concatMap allSubExprs bs)) > 0.4
-  = Nothing
+  --- | fromIntegral (length x) / fromIntegral (length (concatMap allSubExprs bs)) > 0.4
+  -- = Nothing
   | otherwise
-  = assert (not (null x)) $ Just x
+  = assert (not (null x)) $ x
   where
   -- x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
   x = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
@@ -263,7 +292,7 @@ runTFeaturesDiff fs (ls, bad)
   samples
     | null cores
     -- something went wrong other than typechecking success
-    , Just e <- me = []
+    , Just e <- me = trace ("WARNING: "++show e) []
     --- | null cores || length cores == 1
     -- = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- undefined -- FIXME: shouldn't happen!!
     --- | otherwise
@@ -341,6 +370,6 @@ mkFeature :: String -> BSC.ByteString
 mkFeature s = BSC.pack ("F-" ++ s)
 
 
-data InSample = MkInSample { bad :: String, fix :: String }
+data InSample = MkInSample { bad :: String, fix :: String, index :: Int }
   deriving (Show, Generic)
 instance FromJSON InSample
