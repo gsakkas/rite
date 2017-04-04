@@ -159,9 +159,9 @@ processOne t f = do
   oracle <- liftIO $ loadSpans f
   let out = dir </> t </> ml <.> "out"
   sps <- liftIO $ loadToolSpans out
-  ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
-  mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
-  shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
+  --ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
+  --mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
+  --shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
