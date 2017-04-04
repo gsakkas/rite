@@ -137,6 +137,24 @@ def main(_):
                                                 np.mean([r['top-2'] for r in rs]),
                                                 np.mean([r['top-3'] for r in rs])))
         print('recall: %.3f' % (np.mean([r['recall'] for r in rs])))
+        _, features = os.path.split(FLAGS.data)
+        if features == 'op+slice' and FLAGS.no_slice:
+            features += '-no-slice'
+        elif features == 'op+slice' and FLAGS.only_slice:
+            features += '-only-slice'
+        with open('models/'+features+'.cross.csv', 'w') as f:
+            model = FLAGS.model
+            if model == 'hidden':
+                model += '-' + FLAGS.hidden_layers
+            f.write('model,features,top-1,top-2,top-3,recall\n')
+            f.write('%s,%s,%.3f,%.3f,%.3f,%.3f\n' % (
+                model, features,
+                np.mean([r['top-1'] for r in rs]),
+                np.mean([r['top-2'] for r in rs]),
+                np.mean([r['top-3'] for r in rs]),
+                np.mean([r['recall'] for r in rs])))
+
+
     else:
         if FLAGS.test_data == '':
             train_and_eval(dfs, fs, ls)
