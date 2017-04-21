@@ -164,10 +164,12 @@ main = do
   rs <- fmap catMaybes . forConcurrently ps $ \(f,e,p) -> do
     putStrLn ("\n" ++ f)
     r <- (evaluate =<< checkLoop initOpts f e p) `catch` \(e::SomeException) -> do
-      print e
+      print ("UNCAUGHT EXCEPTION", e)
       return Nothing
     case r of
-       Nothing -> return Nothing
+       Nothing -> do
+           putStrLn "WTF IS THIS?"
+           return Nothing
        Just (r,t,ms)
          | Nothing <- mkOutcome f r -> return Nothing
          | Just x <- mkOutcome f r -> do
@@ -183,7 +185,9 @@ main = do
                      , jumps = if x `elem` [Safe,Diverge,Timeout] then 0 else 1 + length (filter (`elem` ss) path)
                      }
            return $!! (Just o)
-    `catch` \(_ :: SomeException) -> return Nothing
+    `catch` \(e :: SomeException) -> do
+            print ("UNCAUGHT EXN2", e)
+            return Nothing
   LBS.writeFile csv {- "out.csv" -} (encodeDefaultOrderedByName rs)
   --   case r of
   --     Nothing -> return st
