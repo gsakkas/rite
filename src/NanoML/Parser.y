@@ -269,7 +269,6 @@ Expr :: { Expr }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
 | SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
--- NOTE: imperative features disabled
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
 -- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
 | Expr ":=" Expr                            { mkInfix (mergeLocated $1 $3) $1 (Var (getSrcSpanMaybe $2) ":=") $3 }
@@ -296,7 +295,7 @@ SimpleExpr :: { Expr }
 | SimpleExpr '.' '[' SeqExpr ']'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "String.get") [$1, $4] }
 | SimpleExpr '.' '(' SeqExpr ')'     { mkApps (mergeLocated $1 $5) (Var (mergeLocated $1 $5) "Array.get")  [$1, $4] }
 | SimpleExpr '.' LongIdent        { Field (mergeLocated $1 $3) $1 (getVal $3) }
--- | '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
+| '!' SimpleExpr        { mkApps (mergeLocated $1 $2) (Var (getSrcSpanMaybe $1) "!") [$2] }
 | '(' SeqExpr ')'       { $2 }
 | "[|" ExprSemiList MaybeSemi "|]" { Array (mergeLocated $1 $4) (reverse $2) Nothing }
 | '{' RecordExpr '}'    { Record (mergeLocated $1 $3) $2 Nothing }
@@ -427,7 +426,7 @@ Operator :: { Loc Var }
 | infix2             { L (getSrcSpanMaybe $1) (getInfix2 $1) }
 | infix3             { L (getSrcSpanMaybe $1) (getInfix3 $1) }
 | infix4             { L (getSrcSpanMaybe $1) (getInfix4 $1) }
--- | '!'                { L (getSrcSpanMaybe $1) "!" }
+| '!'                { L (getSrcSpanMaybe $1) "!" }
 | ":="               { L (getSrcSpanMaybe $1) ":=" }
 | '+'                { L (getSrcSpanMaybe $1) "+" }
 | "+."               { L (getSrcSpanMaybe $1) "+." }
