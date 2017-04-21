@@ -19,7 +19,7 @@ import System.IO
 import qualified System.Timeout as T
 import Text.Printf
 
-import NanoML hiding (force)
+import NanoML hiding (force, Expr(Hole))
 import NanoML.Misc
 import NanoML.Parser
 import NanoML.Pretty
@@ -34,7 +34,7 @@ data ST = ST { total :: !Int, safe :: !Int, timeout :: !Int
              , diverge :: !Int
              }
 
-data O = Safe | Unsafe | Unbound | Output | Diverge | Timeout
+data O = Safe | Unsafe | Unbound | Output | Diverge | Timeout | Hole
        deriving (Show, Read, Eq, Generic)
 
 instance NFData O
@@ -47,6 +47,7 @@ instance FromField O where
     | s == "O" = pure Output
     | s == "D" = pure Diverge
     | s == "T" = pure Timeout
+    | s == "H" = pure Hole
     | otherwise = mzero
 instance ToField O where
   toField Safe = "S"
@@ -55,6 +56,7 @@ instance ToField O where
   toField Output = "O"
   toField Diverge = "D"
   toField Timeout = "T"
+  toField Hole = "H"
 
 data R = R { file :: !String
            , stepLimit :: !Int, time :: !Double, tests :: !Int
@@ -89,18 +91,28 @@ timed x = do start <- getTime
              end   <- getTime
              return (end-start, v)
 
-checkLoop opts e p = do
+checkLoop opts f e p = do
   (t, r) <- timed $ T.timeout (60 * (10^6)) $ checkWith opts e p
   case r of
     -- timed out after x minutes..
-    Nothing -> return (Just (Failure 1 1 1 (pretty $ VU Nothing) (TimeoutError (maxSteps opts)) initState, t, maxSteps opts))
-    Just Nothing -> return Nothing
+    Nothing -> do
+      putStrLn $ "TIMED OUT: " ++ f
+      return (Just (Failure 1 1 1 (pretty $ VU Nothing) (TimeoutError (maxSteps opts)) initState, t, maxSteps opts))
+    Just Nothing -> do
+      putStrLn "WHAT IS THIS?"
+      return Nothing
     Just (Just r)
       | not (isSuccess r) && becauseOf "timeout" r
         -> if maxSteps opts == upperBound
            then return (Just (r,t, maxSteps opts))
-           else checkLoop (extendOpts opts) e p
-      | otherwise -> return (Just (r,t, maxSteps opts))
+           else checkLoop (extendOpts opts) f e p
+      | otherwise -> do
+          putStrLn "SUCCESS!"
+          when (isSuccess r ||
+                becauseOf "cannot compare two holes" r ||
+                becauseOf "timeout" r) $
+            putStrLn $ "NO WITNESS: " ++ f
+          return (Just (r,t, maxSteps opts))
 
 becauseOf r = (r `isInfixOf`) . show . pretty . errorMsg
 
@@ -112,6 +124,7 @@ mkOutcome f r
   | becauseOf "OutputType" r = Just Output
   | becauseOf "Type error" r = Just Unsafe
   | becauseOf "infinite recursion" r = Just Diverge
+  | becauseOf "cannot compare two holes" r = Just Hole
   | otherwise = trace ("mkOutcome: " ++ f ++ " (" ++ show (pretty (errorMsg r)) ++ ")") Nothing
 
 makePath :: Result -> [StepKind]
@@ -144,13 +157,15 @@ forward gr n = case find (isStepsTo . snd) $ Graph.lsuc gr n of
 forConcurrently xs f = parallel (map f xs) -- mapConcurrently f xs
 
 main = do
-  hSetBuffering stdout NoBuffering
+  hSetBuffering stdout LineBuffering
   [dir, csv] <- getArgs
   ps <- parseAllIn dir
   -- rs <- reduceM ps [] $ \rs (f,e,p) -> do
   rs <- fmap catMaybes . forConcurrently ps $ \(f,e,p) -> do
     putStrLn ("\n" ++ f)
-    r <- (evaluate =<< checkLoop initOpts e p) `catch` \(e::SomeException) -> return Nothing
+    r <- (evaluate =<< checkLoop initOpts f e p) `catch` \(e::SomeException) -> do
+      print e
+      return Nothing
     case r of
        Nothing -> return Nothing
        Just (r,t,ms)
