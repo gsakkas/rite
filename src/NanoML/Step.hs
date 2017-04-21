@@ -6,6 +6,7 @@
 {-# LANGUAGE BangPatterns     #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE LambdaCase       #-}
+{-# LANGUAGE MultiWayIf     #-}
 {-# LANGUAGE ViewPatterns     #-}
 module NanoML.Step where
 
@@ -881,6 +882,24 @@ stepApp ms f' es = do
      [e1,e2,e3] -> forces [(e1,t1'),(e2,t2'),(e3,t3')] $ \[v1,v2,v3] -> f v1 v2 v3
      e1:e2:e3:es -> do x <- forces [(e1,t1'),(e2,t2'),(e3,t3')] $ \[v1,v2,v3] -> f v1 v2 v3
                        return (App ms x es)
+  PrimN ms' (PN x f ts) -> do
+    modify' (\s -> s { stStepKind = PrimStep })
+    su <- fmap Map.fromList $ forM (nub $ concatMap freeTyVars ts) $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    let ts' = map (subst su) ts
+    if | length ts' < length es -> do
+           env <- gets stVarEnv
+           let n = length es - length ts'
+           let vs = map (\v -> "$" ++ [v]) $ take n ['a'..'z']
+           return (foldr (\v e -> (Lam ms (VarPat ms v) e (Just env)))
+                    (App ms f' (es ++ (map (Var ms) vs)))
+                    vs)
+       | length es < length ts' -> do
+           let (xs, ys) = splitAt (length ts' - length es) es
+           x <- forces (zip xs ts') $ \vs -> f vs
+           return (App ms x ys)
+       | otherwise -> do
+           forces (zip es ts') $ \vs -> f vs
   Lam _ _ _ (Just _) -> do
         let (ps, e, env) = gatherLams f'
             (eps, es', ps') = zipWithLeftover es ps
