@@ -235,7 +235,6 @@ SimplePatternNotIdent :: { Pat }
 : '_'                               { WildPat (getSrcSpanMaybe $1) }
 | SignedLiteral                     { LitPat (getSrcSpanMaybe $1) (getVal $1) }
 | SignedLiteral ".." SignedLiteral  { IntervalPat (mergeLocated $1 $3) (getVal $1) (getVal $3) }
-| SignedLiteral '.' '.' SignedLiteral  { IntervalPat (mergeLocated $1 $4) (getVal $1) (getVal $4) }
 | '[' PatternSemiList ']'           { ListPat (mergeLocated $1 $3) (reverse $2) }
 | '(' Pattern ')'                   { $2 }
 | '(' Pattern ':' Type ')'          { ConstraintPat (mergeLocated $1 $5) $2 $4 }
