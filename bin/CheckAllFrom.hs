@@ -125,7 +125,7 @@ mkOutcome f r
   | becauseOf "Type error" r = Just Unsafe
   | becauseOf "infinite recursion" r = Just Diverge
   | becauseOf "cannot compare two holes" r = Just Hole
-  | otherwise = trace ("mkOutcome: " ++ f ++ " (" ++ show (pretty (errorMsg r)) ++ ")") Nothing
+  | otherwise = trace ("mkOutcome: " ++ f ++ " (" ++ show (pretty (errorMsg r)) ++ ")") (Just Unsafe)
 
 makePath :: Result -> [StepKind]
 makePath r =
