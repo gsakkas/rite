@@ -128,12 +128,16 @@ annotateRedexes d = annotateRedex . annotateLastRedex $ d
 isFun (Lam {}) = True
 isFun (Prim1 {}) = True
 isFun (Prim2 {}) = True
+isFun (Prim3 {}) = True
+isFun (PrimN {}) = True
 isFun _        = False
 
 isValueOrFunVar (Var _ v) = maybe False isFun (lookupEnv v ?env)
 isValueOrFunVar (Lam {})  = True
 isValueOrFunVar (Prim1 {})  = True
 isValueOrFunVar (Prim2 {})  = True
+isValueOrFunVar (Prim3 {})  = True
+isValueOrFunVar (PrimN {})  = True
 isValueOrFunVar e = isValue e
 
 inAppF, inBopL, inBopR, inUop, inIte, inSeq, inCase,

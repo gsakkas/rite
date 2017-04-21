@@ -434,6 +434,7 @@ isFun (Lam {}) = True
 isFun (Prim1 {}) = True
 isFun (Prim2 {}) = True
 isFun (Prim3 {}) = True
+isFun (PrimN {}) = True
 isFun _        = False
 
 matchNonRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
@@ -507,6 +508,7 @@ substVars su = go
   go (Prim1 ms p) = Prim1 ms p
   go (Prim2 ms p) = Prim2 ms p
   go (Prim3 ms p) = Prim3 ms p
+  go (PrimN ms p) = PrimN ms p
   go (With ms x e) = With ms x (go e)
   go (Replace ms x e) = Replace ms x (go e)
   go (Hole ms r mt) = Hole ms r mt
