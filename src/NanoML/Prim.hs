@@ -321,6 +321,10 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
            , ("compare", mkPrim2Fun $ P2 "compare" pcompare a a)
            , ("raise", mkPrim1Fun $ P1 "raise" praise tE)
            , ("Printexc.to_string", mkPrim1Fun $ P1 "Printexc.to_string" pprintexc_to_string tE)
+           , ("Printf.printf", mkPrim1Fun $ P1 "Printf.printf" pprintf_printf tS)
+           , ("Format.printf", mkPrim1Fun $ P1 "Format.printf" pprintf_printf tS)
+           , ("Printf.sprintf", mkPrim1Fun $ P1 "Printf.sprintf" pprintf_sprintf tS)
+           , ("Format.sprintf", mkPrim1Fun $ P1 "Format.sprintf" pprintf_sprintf tS)
            ]
 
 primVarTypes :: [(Var, Type)]
@@ -665,6 +669,39 @@ praise x@(VA {}) = maybeThrow (MLException x)
 pprintexc_to_string :: MonadEval m => Value -> m Value
 pprintexc_to_string x@(VA {}) = withCurrentProv $ \prv -> VS prv $ show x
 
+pprintf_printf :: MonadEval m => Value -> m Value
+pprintf_printf (VS _ fmt) = do
+  ts <- fmt_types fmt
+  if null ts
+    then withCurrentProv $ \prv -> VU prv
+    else do let do_print _vs = withCurrentProv $ \prv -> VU prv
+            return (mkPrimNFun $ PN ("printf " ++ show fmt) do_print ts)
+
+pprintf_sprintf :: MonadEval m => Value -> m Value
+pprintf_sprintf (VS _ fmt) = do
+  ts <- fmt_types fmt
+  if null ts
+    then withCurrentProv $ \prv -> VS prv fmt
+    else do let do_print _vs = withCurrentProv $ \prv -> VS prv "i printed something"
+            return (mkPrimNFun $ PN ("sprintf " ++ show fmt) do_print ts)
+
+fmt_types :: MonadEval m => String -> m [Type]
+fmt_types cs' = case cs' of
+  "" -> return []
+  "%" -> otherError "format string ended early!"
+  '%':'%':cs -> fmt_types cs
+  '%':c:cs -> (:) <$> fmt_type c <*> fmt_types cs
+  _:cs -> fmt_types cs
+
+fmt_type :: MonadEval m => Char -> m Type
+fmt_type c = case c of
+  'd' -> return tI
+  'i' -> return tI
+  'f' -> return tF
+  'e' -> return tF
+  's' -> return tS
+  _   -> otherError $ "unknown format char '" ++ c : "'"
+
 getField :: MonadEval m => Value -> String -> m Value
 getField x@(VR _ fs _) f = case lookup f fs of
   Just (Ref i)  -> snd <$> readStore i
@@ -712,6 +749,9 @@ mkPrim2Fun f = Prim2 Nothing f
 
 mkPrim3Fun :: Prim3 -> Value
 mkPrim3Fun f = Prim3 Nothing f
+
+mkPrimNFun :: PrimN -> Value
+mkPrimNFun f = PrimN Nothing f
 
 tI = tCon tINT
 tF = tCon tFLOAT

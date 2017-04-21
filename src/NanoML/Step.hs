@@ -34,6 +34,7 @@ import qualified Data.Sequence as Seq
 import qualified Data.Vector as Vector
 import System.Mem.StableName
 import Text.Printf
+import Text.Read (readMaybe)
 import GHC.Stack hiding (pushCallStack, popCallStack)
 
 import NanoML.Eval
@@ -521,7 +522,7 @@ shadows v' vs' =
   where
   eqvs = filter ((==v) . dropSuffix) vs'
   n = if null eqvs then 0 :: Int
-      else 1 + maximum (map (read . onlySuffix) eqvs)
+      else 1 + maximum (map (fromMaybe 0 . readMaybe . onlySuffix) eqvs)
   v = dropSuffix v'
   vs = map dropSuffix vs'
 {-# INLINE shadows #-}

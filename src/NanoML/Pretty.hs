@@ -333,6 +333,8 @@ instance Pretty Expr where
       where zt = 5
     Prim1 _ p -> text (show p)
     Prim2 _ p -> text (show p)
+    Prim3 _ p -> text (show p)
+    PrimN _ p -> text (show p)
     -- Val _ v -> prettyPrec z v
     Bop _ bop x y ->
       annotateRedexes $
