@@ -270,7 +270,7 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (mergeLocated $1 $4)) }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
-| Expr ':' Type                             { mkApps (mergeLocated $1 $1) (mkPrim1Fun (P1 "cast" (\v -> return v) $3)) [$1] }
+| '(' Expr TypeConstraint ')'               { mkApps (mergeLocated $1 $4) (mkPrim1Fun (P1 "cast" (\v -> return v) $3)) [$2] }
 | SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
 -- NOTE: imperative features disabled
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
