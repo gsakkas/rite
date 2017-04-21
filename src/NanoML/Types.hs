@@ -1480,7 +1480,11 @@ cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
     EQ -> case (v1, v2) of
       (Nothing, Nothing) -> return (VI prv 0)
       (Just v1, Just v2) -> cmpVal v1 v2
-cmpVal (Hole {}) (Hole {}) = withCurrentProv $ \prv -> (VI prv 0) -- FIXME: otherError "cannot compare two holes"
+cmpVal (Hole _ v1 _) (Hole _ v2 _)
+  | trace "WARNING: comparing holes" False = undefined
+  | v1 == v2 = withCurrentProv $ \prv -> VI prv 0
+  | otherwise = otherError "cannot compare two holes"
+--cmpVal (Hole {}) (Hole {}) = withCurrentProv $ \prv -> (VI prv 0) -- FIXME: otherError "cannot compare two holes"
 cmpVal x y
   -- = return False
   = do xt <- typeOfM x
