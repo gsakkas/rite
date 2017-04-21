@@ -9,6 +9,7 @@ import System.Directory
 import System.FilePath
 
 import NanoML.Lexer
+import NanoML.Prim
 import NanoML.Types
 }
 
@@ -234,6 +235,7 @@ SimplePatternNotIdent :: { Pat }
 : '_'                               { WildPat (getSrcSpanMaybe $1) }
 | SignedLiteral                     { LitPat (getSrcSpanMaybe $1) (getVal $1) }
 | SignedLiteral ".." SignedLiteral  { IntervalPat (mergeLocated $1 $3) (getVal $1) (getVal $3) }
+| SignedLiteral '.' '.' SignedLiteral  { IntervalPat (mergeLocated $1 $3) (getVal $1) (getVal $3) }
 | '[' PatternSemiList ']'           { ListPat (mergeLocated $1 $3) (reverse $2) }
 | '(' Pattern ')'                   { $2 }
 | '(' Pattern ':' Type ')'          { ConstraintPat (mergeLocated $1 $5) $2 $4 }
@@ -268,6 +270,7 @@ Expr :: { Expr }
 | "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (mergeLocated $1 $4)) }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
+| Expr ':' Type                             { mkApps (mergeLocated $1 $1) (mkPrim1Fun (P1 "cast" (\v -> return v) $3)) [$1] }
 | SimpleExpr '.' LongIdent "<-" Expr        { SetField (mergeLocated $1 $5) $1 (getVal $3) $5 }
 -- | SimpleExpr '.' '(' SeqExpr ')' "<-" Expr  { mkApps (Var "Array.set") [$1, $4, $7] }
 -- | SimpleExpr '.' '[' SeqExpr ']' "<-" Expr  { mkApps (Var "String.set") [$1, $4, $7] }
