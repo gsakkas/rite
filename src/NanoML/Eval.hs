@@ -208,6 +208,7 @@ force x t k = do
   force' x t' k
 
 force' x@(Hole _ _ Nothing) (TVar {}) k = k x -- delay instantiation until we have a concrete type
+force' x@(Hole _ _ (Just (TVar {}))) (TVar {}) k = k x -- delay instantiation until we have a concrete type
 force' h@(Hole _ r mt) t k = do
   -- x <- lookupStore r
   -- traceShowM (h, t, x)
