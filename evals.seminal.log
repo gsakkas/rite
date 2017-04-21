@@ -1,50 +1,14 @@
 "20060302-21:24:02-246ce61683ae0484e1606c781c19f80f.seminal.ml"
 Left "unexpected token TokBackArrow at line 13, column 22"
 
-20060302-08:37:20-b8c86c351fe390ea1b61a078bd334bcb.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because string is incompatible with int
-Stuck at:
-  line 1, column 17
-due to values from:
-  line 1, column 9
-  line 1, column 21
-let a = "hi" in a + 5
-
 20060302-11:44:52-24ef771985d7d045ba7b08750298e016.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Unbound variable: src
-titlecase _
 
-20060302-17:13:10-a8f4767ee6e6a7cde277182e105bfabc.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because char is incompatible with string
-Stuck at:
-  line 5, column 1
-due to values from:
-  line 2, column 3
-print_string (reverse "test")
 
-20060302-17:24:50-0043a91b08c0d77c155551e167ad8e89.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because unit is incompatible with string
-Stuck at:
-  line 5, column 3
-due to values from:
-  line 5, column 3
-  line 5, column 15
-reverse _
-
-20060302-17:25:04-7cc4ff612923f8094e8eb5f72b0e1f2c.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because string is incompatible with char
-Stuck at:
-  line 8, column 9
-due to values from:
-  line 5, column 10
-print_char (reverse "fast")
-
+20060302-19:07:08-0c9a74768b1ce28cda245bf0300484f0.seminal.ml
 20060302-17:41:14-78b119ef8daf7487521aecd4d482c13c.seminal.ml
+("3","4")
+("116","35")
+("9","20")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because unit is incompatible with string
 Stuck at:
@@ -53,26 +17,11 @@ due to values from:
   line 7, column 3
 print_string (reverse "fast")
 
-20060302-17:56:00-27ff2306cdb017964c28aea1d4f4f156.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because bool is incompatible with string
-Stuck at:
-  line 13, column 9
-due to values from:
-  line 7, column 3
-print_string (reverseHelper "fast")
-
-20060302-17:59:30-23a435cfd9bc233c44ea620d0de3c444.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because char is incompatible with int
-Stuck at:
-  line 2, column 3
-due to values from:
-  line 2, column 3
-  line 2, column 13
-reverseHelp _ _ "ac"
+20060302-19:21:02-d5696c8c12ef82896f4e7eced60e32c8.seminal.ml
+("5","13")
 
 20060302-18:51:58-07c030b8599493d2dad778213c2451af.seminal.ml
+("2","13")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because (int * char) is incompatible with int
 Stuck at:
@@ -83,47 +32,56 @@ due to values from:
   <unknown>
 reverseHelp _ _ _ _
 
-20060302-19:07:08-0c9a74768b1ce28cda245bf0300484f0.seminal.ml
+20060302-21:11:18-9acb449819ae09c9d5f0d8926e89c41d.seminal.ml
+("13","2")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because int is incompatible with 'a -> 'b
+*** Failed after 1 tests: Unbound variable: src
+titlecase _
+SUCCESS!
+*** Failed after 1 tests: Error: unbound data constructor: Null
+reverse _
+
+20060302-19:14:56-24471d7711961e7e9bd5c4e991485f01.seminal.ml
+("5","4")
+
+20060303-20:51:08-b1062ae1e521cf11892c663425a3dda8.seminal.ml
+("8","24")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because int is incompatible with 'a -> 'b
 Stuck at:
   line 3, column 23
 due to values from:
   line 3, column 23
   line 3, column 26
-reverseHelp 1 ""
+reverseHelp 1 "cc"
 
-20060302-19:14:56-24471d7711961e7e9bd5c4e991485f01.seminal.ml
+20060302-21:10:04-38dc8291e8c39612a75396c81f0ca005.seminal.ml
+("12","9")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because unit is incompatible with string
+*** Failed after 3 tests: Type error: stuck because unit is incompatible with string
 Stuck at:
-  line 5, column 5
+  line 8, column 25
 due to values from:
-  line 2, column 16
-  line 3, column 3
-reverseHelp 1 "a"
-
-20060302-19:21:02-d5696c8c12ef82896f4e7eced60e32c8.seminal.ml
+  line 8, column 25
+  line 7, column 17
+prnt (Cons ("ac" , Null))
 SUCCESS!
-*** Failed after 5 tests: Type error: stuck because 'a -> 'b is incompatible with string
+*** Failed after 4 tests: Type error: stuck because 'a -> 'b is incompatible with string
 Stuck at:
   line 5, column 5
 due to values from:
   line 2, column 16
   line 1, column 31
-reverseHelp 3 "bb" _
-
-20060302-21:10:04-38dc8291e8c39612a75396c81f0ca005.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Error: unbound data constructor: Null
-reverse _
-
-20060302-21:11:18-9acb449819ae09c9d5f0d8926e89c41d.seminal.ml
+reverseHelp 2 "bbb" _
 SUCCESS!
 *** Failed after 1 tests: Error: unbound data constructor: Null
 reverse _
 
 20060303-20:46:42-1b35868bafe72205ea7e97084a3529eb.seminal.ml
+("5","21")
+
+20060303-21:49:20-2bc1510b76bf11ac93785858fe7225ee.seminal.ml
+("19","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int lst is incompatible with string
 Stuck at:
@@ -132,17 +90,16 @@ due to values from:
   line 4, column 9
 print_string x
 
-20060303-20:51:08-b1062ae1e521cf11892c663425a3dda8.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because unit is incompatible with string
-Stuck at:
-  line 8, column 25
-due to values from:
-  line 8, column 25
-  line 7, column 17
-prnt (Cons ("" , Null))
-
 20060303-20:53:58-e021a562c275370c34ca3ba963367424.seminal.ml
+("11","16")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because unit is incompatible with string
+Stuck at:
+  line 5, column 5
+due to values from:
+  line 2, column 16
+  line 3, column 3
+reverseHelp 1 "ab"
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string list is incompatible with 'a lst
 Stuck at:
@@ -151,25 +108,62 @@ due to values from:
   line 11, column 16
 append ["a"] ["b"]
 
-20060303-20:55:22-064afe0d9316ae21541c6f1171f85982.seminal.ml
+20060305-20:46:34-89ba339c95f447a2829dad7d635f79f0.seminal.ml
+("23","25")
+
+20060302-17:59:30-23a435cfd9bc233c44ea620d0de3c444.seminal.ml
+("2","2")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because int list is incompatible with 'a lst
+*** Failed after 1 tests: Type error: stuck because string is incompatible with int
 Stuck at:
-  line 7, column 5
+  line 2, column 3
 due to values from:
-  line 4, column 9
-append x y
+  <unknown>
+  line 2, column 13
+reverseHelp _ _ ""
 
 20060303-20:59:18-cec313538dab60fdbdbd549d4dfc8c22.seminal.ml
+("11","22")
 SUCCESS!
 *** Failed after 2 tests: Unbound variable: lst2
 append (Cons (_ , Null))
 
-20060303-21:49:20-2bc1510b76bf11ac93785858fe7225ee.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
+20060305-21:54:22-225f629e0d1a262f23af4cbcfa099317.seminal.ml
+("27","25")
 
 20060303-22:00:40-01a5cb3bf91aa2112c2a6c4201763826.seminal.ml
+("23","20")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because int is incompatible with string
+Stuck at:
+  line 18, column 3
+due to values from:
+  line 27, column 33
+map _ "b"
+
+20060302-17:24:50-0043a91b08c0d77c155551e167ad8e89.seminal.ml
+("5","7")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because unit is incompatible with string
+Stuck at:
+  line 5, column 3
+due to values from:
+  line 5, column 3
+  line 5, column 15
+reverse _
+
+20060305-22:14:52-12016d8b3cdc445959e85885bbc00c77.seminal.ml
+("42","20")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with string
+Stuck at:
+  line 23, column 9
+due to values from:
+  line 17, column 15
+print_string (map "test")
+
+20060305-22:25:00-bfad48a8bb7388bdd92708919b46cbb2.seminal.ml
+("37","15")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with string
 Stuck at:
@@ -179,47 +173,38 @@ due to values from:
 print_string (map reverse
                   "test")
 
-20060305-20:46:34-89ba339c95f447a2829dad7d635f79f0.seminal.ml
+20060302-17:25:04-7cc4ff612923f8094e8eb5f72b0e1f2c.seminal.ml
+("8","18")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with string
+*** Failed after 1 tests: Type error: stuck because string is incompatible with char
 Stuck at:
-  line 23, column 9
+  line 8, column 9
 due to values from:
-  line 17, column 15
-print_string (map "test")
+  line 5, column 10
+print_char (reverse "fast")
 
 20060305-21:49:26-9fc379ff0ebf471cca400f4c3b144205.seminal.ml
+("21","6")
 SUCCESS!
 *** Failed after 3 tests: Type error: stuck because string is incompatible with 'a list
 Stuck at:
   line 19, column 3
 due to values from:
   <unknown>
-mapHelp _ "ac" _
-
-20060305-21:54:22-225f629e0d1a262f23af4cbcfa099317.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because int is incompatible with string
-Stuck at:
-  line 18, column 3
-due to values from:
-  line 27, column 33
-map _ "a"
+mapHelp _ "ca" _
 
 20060305-21:56:00-9af22179cf4408715cbf337f5c3a534f.seminal.ml
+("22","15")
 SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060305-22:14:52-12016d8b3cdc445959e85885bbc00c77.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because char list is incompatible with string
+*** Failed after 4 tests: Type error: stuck because unit is incompatible with string list
 Stuck at:
-  line 42, column 9
+  line 0, column 0
 due to values from:
-  line 21, column 6
-print_string (uppercase "time")
+  
+output-type mismatch!
 
 20060305-22:23:52-2cddd39a2e0ba2ddb9831a32c8c470f4.seminal.ml
+("35","64")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because char is incompatible with string
 Stuck at:
@@ -228,11 +213,46 @@ due to values from:
   line 35, column 73
 upperMatch 'a'
 
-20060305-22:25:00-bfad48a8bb7388bdd92708919b46cbb2.seminal.ml
+20060302-17:13:10-a8f4767ee6e6a7cde277182e105bfabc.seminal.ml
+("5","12")
 SUCCESS!
-+++ OK, passed 1000 tests.
+*** Failed after 1 tests: Type error: stuck because char is incompatible with string
+Stuck at:
+  line 5, column 1
+due to values from:
+  line 2, column 3
+print_string (reverse "test")
+
+20060302-08:37:20-b8c86c351fe390ea1b61a078bd334bcb.seminal.ml
+("1","16")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because string is incompatible with int
+Stuck at:
+  line 1, column 17
+due to values from:
+  line 1, column 9
+  line 1, column 21
+let a = "hi" in a + 5
+
+20060303-20:55:22-064afe0d9316ae21541c6f1171f85982.seminal.ml
+("13","15")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because int list is incompatible with 'a lst
+Stuck at:
+  line 7, column 5
+due to values from:
+  line 4, column 9
+append x y
 
 20060306-08:28:18-863fd9c993226acc0132a40c3f5d3b7e.seminal.ml
+("41","21")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because char list is incompatible with string
+Stuck at:
+  line 42, column 9
+due to values from:
+  line 21, column 6
+print_string (uppercase "time")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because char list is incompatible with string
 Stuck at:
@@ -241,27 +261,11 @@ due to values from:
   line 22, column 6
 print_string test
 
-20060306-08:32:58-cadc6088100ec722ce0c8ab60e81a45a.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because 'a list is incompatible with string
-Stuck at:
-  line 40, column 20
-due to values from:
-  line 39, column 28
-  line 38, column 3
-listToString [_] _
-
-20060306-08:33:16-ec35aa1715ccf5f5b7fff55effcc06f0.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because char is incompatible with string
-Stuck at:
-  line 40, column 20
-due to values from:
-  line 39, column 28
-  line 34, column 28
-uppercase "ca"
-
 20060306-08:37:02-47b330576eb70ab4b956307ff1978ccc.seminal.ml
+("50","20")
+
+20060306-09:54:52-94bacf5a48d35fd1aa367bc565cc4abd.seminal.ml
+("63","4")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because unit is incompatible with string
 Stuck at:
@@ -270,48 +274,18 @@ due to values from:
   line 45, column 5
 print_string test
 
-20060306-08:46:54-c09bb5fa4ade9b9834ebc0e95c303f20.seminal.ml
+20060302-17:56:00-27ff2306cdb017964c28aea1d4f4f156.seminal.ml
+("13","20")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because 'a list is incompatible with char
+*** Failed after 1 tests: Type error: stuck because bool is incompatible with string
 Stuck at:
-  line 40, column 35
+  line 13, column 9
 due to values from:
-  <unknown>
-listToString [_] _
-
-20060306-09:32:26-9dfb57b0785b1229719704e079d51228.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because 'a list is incompatible with 'b -> 'c
-Stuck at:
-  line 0, column 0
-due to values from:
-  
-output-type mismatch!
-
-20060306-09:54:52-94bacf5a48d35fd1aa367bc565cc4abd.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 500 steps>
-()
-
-20060308-15:14:15-b4673217f9f876ace714063f276c1cb7.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because string -> 'a is incompatible with int
-Stuck at:
-  line 23, column 22
-due to values from:
-  line 23, column 36
-map _ _
-
-20060308-15:14:55-8b55587ab02b2e74f5be9a1620ad164b.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because string is incompatible with 'a list
-Stuck at:
-  line 49, column 16
-due to values from:
-  line 49, column 16
-printRec [0]
+  line 7, column 3
+print_string (reverseHelper "fast")
 
 20060308-16:27:14-d2561594acb510c00ce747e7e54b07de.seminal.ml
+("73","35")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with char
 Stuck at:
@@ -336,8 +310,66 @@ let foldRightString =
   fold_right test_fold_right
              "abcdefgh" "null" in
 print_endline foldRightString
+SUCCESS!
+NO WITNESS: 20060303-21:49:20-2bc1510b76bf11ac93785858fe7225ee.seminal.ml
++++ OK, passed 1000 tests.
+
+20060308-17:58:24-ba6b10619bc62fead2d1d1fc3e4bcfc0.seminal.ml
+("77","37")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because caseTester is incompatible with string
+Stuck at:
+  line 25, column 35
+due to values from:
+  line 77, column 39
+  line 25, column 41
+titlecase "c"
+
+20060306-08:32:58-cadc6088100ec722ce0c8ab60e81a45a.seminal.ml
+("40","36")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because 'a list is incompatible with string
+Stuck at:
+  line 40, column 20
+due to values from:
+  line 39, column 28
+  line 38, column 3
+listToString [_ ; _] _
+
+20060306-08:33:16-ec35aa1715ccf5f5b7fff55effcc06f0.seminal.ml
+("44","17")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because char is incompatible with string
+Stuck at:
+  line 40, column 20
+due to values from:
+  line 39, column 28
+  line 34, column 28
+uppercase "cad"
+
+20060306-09:32:26-9dfb57b0785b1229719704e079d51228.seminal.ml
+("63","42")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because 'a list is incompatible with 'b -> 'c
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
+
+20060306-08:46:54-c09bb5fa4ade9b9834ebc0e95c303f20.seminal.ml
+("40","33")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because 'a list is incompatible with char
+Stuck at:
+  line 40, column 35
+due to values from:
+  <unknown>
+listToString [_] _
 
 20060308-16:43:26-9fc4f621ad5235ecb0a0bfe70ddbac27.seminal.ml
+("75","24")
+("75","24")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because char list is incompatible with string
 Stuck at:
@@ -365,8 +397,35 @@ let _ =
 let _ =
   print_endline (uppercase arg1) in
 print_endline (lowercase arg1)
+SUCCESS!
+NO WITNESS: 20060305-22:25:00-bfad48a8bb7388bdd92708919b46cbb2.seminal.ml
++++ OK, passed 1000 tests.
+
+20060308-15:14:15-b4673217f9f876ace714063f276c1cb7.seminal.ml
+("23","21")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because string -> 'a is incompatible with int
+Stuck at:
+  line 23, column 22
+due to values from:
+  line 23, column 36
+map _ _
+
+20060308-18:17:57-53a3b527552c251aa1421ce37caa859c.seminal.ml
+("102","16")
+
+20060308-15:14:55-8b55587ab02b2e74f5be9a1620ad164b.seminal.ml
+("49","14")
+SUCCESS!
+*** Failed after 6 tests: Type error: stuck because string is incompatible with 'a list
+Stuck at:
+  line 49, column 16
+due to values from:
+  line 49, column 16
+printRec [2 ; 3]
 
 20060308-17:49:12-350bb6231959f879ee62f44461de9e70.seminal.ml
+("72","46")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because char is incompatible with string
 Stuck at:
@@ -376,23 +435,70 @@ due to values from:
 test_title 'a'
            (Tester (false , ""))
 
-20060308-17:58:24-ba6b10619bc62fead2d1d1fc3e4bcfc0.seminal.ml
+20060308-19:36:26-98875b907492a273c971c6c3494ccbbc.seminal.ml
+("123","4")
+("102","16")
+("123","4")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because caseTester is incompatible with string
+*** Failed after 1 tests: Type error: stuck because caseTester is incompatible with string
 Stuck at:
-  line 25, column 35
+  line 102, column 3
 due to values from:
-  line 77, column 39
-  line 25, column 41
-titlecase "b"
+  line 74, column 7
+let arg1 =
+  Array.get Sys.argv 1 in
+let ret = reverse arg1 in
+let _ = print_endline ret in
+let lst =
+  map charConvert arg1 in
+let _ =
+  print_endline (printRec lst) in
+let foldLeftString =
+  fold_left test_fold_left "null"
+            arg1 in
+let _ =
+  print_endline foldLeftString in
+let foldRightString =
+  fold_right test_fold_right arg1
+             "null" in
+let _ =
+  print_endline foldRightString in
+let _ =
+  print_endline (uppercase arg1) in
+let _ =
+  print_endline (lowercase arg1) in
+print_endline (titlecase arg1)
+("123","4")
 
-20060308-18:17:57-53a3b527552c251aa1421ce37caa859c.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+20060308-19:19:12-06937106ff3926fe3963a0e5d3b99347.seminal.ml
+("94","12")
+("63","4")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because char is incompatible with string
+Stuck at:
+  line 17, column 14
+due to values from:
+  line 31, column 34
+histogram "a"
+
+20060311-23:47:13-bb5548edde7545872f33b6b15649642f.seminal.ml
+("20","44")
+SUCCESS!
+*** Failed after 103 tests: Type error: stuck because 'a list is incompatible with int
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
+
+20060308-19:58:35-73bc04d94b0b091a44df19c1baaf55f3.seminal.ml
+("132","24")
+("132","24")
+("123","4")
+("132","24")
 
 20060308-19:14:09-035509263a843a367f5130529c008817.seminal.ml
+("86","4")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with bool
 Stuck at:
@@ -402,55 +508,18 @@ due to values from:
 histogram_fold (Counter (0 , 'a'))
                'a'
 
-20060308-19:19:12-06937106ff3926fe3963a0e5d3b99347.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because char is incompatible with string
-Stuck at:
-  line 17, column 14
-due to values from:
-  line 31, column 34
-histogram "cdd"
-
-20060308-19:36:26-98875b907492a273c971c6c3494ccbbc.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
-
-20060308-19:58:35-73bc04d94b0b091a44df19c1baaf55f3.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
-
 20060311-23:38:59-d8f33461447ecf33f137a33374ccfae1.seminal.ml
+("21","39")
 SUCCESS!
-*** Failed after 28 tests: Type error: stuck because int is incompatible with heapElement list
+*** Failed after 9 tests: Type error: stuck because int is incompatible with heapElement list
 Stuck at:
   line 0, column 0
 due to values from:
   
 output-type mismatch!
-
-20060311-23:47:13-bb5548edde7545872f33b6b15649642f.seminal.ml
-SUCCESS!
-*** Failed after 16 tests: Type error: stuck because 'a list is incompatible with int
-Stuck at:
-  line 0, column 0
-due to values from:
-  
-output-type mismatch!
-
-20060312-00:01:00-e429466fc820ac64a608a8302289bcb7.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because int is incompatible with ('a * 'b)
-Stuck at:
-  line 19, column 7
-due to values from:
-  <unknown>
-lookup [IntEntry 0] _
 
 20060312-00:02:53-b5e4fbb55ad62a0991139e6650717758.seminal.ml
+("23","39")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because ('a * 'b) is incompatible with int
 Stuck at:
@@ -460,57 +529,77 @@ due to values from:
 update _ _ _
 
 20060312-00:03:36-75e554ed461a798f3b14545e2dfb6e02.seminal.ml
+("27","23")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because heapElement is incompatible with int
+*** Failed after 4 tests: Type error: stuck because heapElement is incompatible with int
 Stuck at:
-  line 28, column 18
+  line 29, column 18
 due to values from:
   <unknown>
   <unknown>
-interp_e [("a" , IntEntry 1) ; ("" , HeapEntry [])]
-         (Plus (Plus (Int 0 , Var "") , Times (Var "" , Var "")))
-
-20060313-20:23:36-95bbcfafa3a38ccac06f556bd50a04cc.seminal.ml
-SUCCESS!
-*** Failed after 5 tests: Type error: stuck because heapElement is incompatible with int
-Stuck at:
-  line 30, column 18
-due to values from:
-  line 18, column 11
-  line 27, column 17
-interp_e [("c" , IntEntry 0) ; ("be" , HeapEntry [("b" , HeapEntry [])])]
-         (Times (Int 2 , Times (Var "" , Int 1)))
-
-20060313-22:34:26-a82a6e4c5612542497388ac707e1afcf.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because (string * int) is incompatible with (string * intorheap)
-Stuck at:
-  line 21, column 24
-due to values from:
-  line 21, column 24
-interp_prog (Assign ("" , Heap []))
+interp_e [("cc" , IntEntry 1) ; ("d" , IntEntry 0) ; ("" , HeapEntry [])]
+         (Times (Int 0 , Var ""))
 
 20060313-22:39:42-644d210e9d66cf006f61c64435b0efb3.seminal.ml
+("35","22")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because intorheap is incompatible with exp
+*** Failed after 2 tests: Type error: stuck because intorheap is incompatible with exp
 Stuck at:
   line 18, column 46
 due to values from:
   <unknown>
-interp_e [("" , Heap [("cc" , Heap []) ; ("" , Int 0)])]
-         (Times (Int 0 , Var ""))
+interp_e [("" , Heap [])]
+         (Var "")
 
-20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
+20060316-17:28:56-cb82b8e194910fe2ced3aab54f0a7577.seminal.ml
+("53","33")
 SUCCESS!
-*** Failed after 30 tests: Type error: stuck because intorheap is incompatible with exp
+*** Failed after 1 tests: Type error: stuck because (string * int) is incompatible with (string * heapContain)
 Stuck at:
-  line 27, column 46
+  line 34, column 23
+due to values from:
+  line 34, column 23
+interp_s []
+         (Assign ("" , Int 0))
+
+20060313-22:34:26-a82a6e4c5612542497388ac707e1afcf.seminal.ml
+("30","22")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because (string * (string * intorheap) list) is incompatible with (string * intorheap)
+Stuck at:
+  line 21, column 24
+due to values from:
+  line 21, column 24
+interp_prog (SaveHeap "")
+
+20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
+("57","6")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because string is incompatible with heapContain
+Stuck at:
+  line 56, column 24
 due to values from:
   <unknown>
-interp_e [("" , Int 5) ; ("cfehe" , Int 4) ; ("ihcaia" , Heap [("bda" , Int 0) ; ("" , Int 0)]) ; ("eag" , Heap [("" , Int 0)]) ; ("adcfiijc" , Int 6) ; ("" , Int 6) ; ("ghhjff" , Int 7) ; ("bhicfacc" , Heap [("" , Int 0) ; ("" , Int 0)]) ; ("ahcibhhb" , Heap [])]
-         (Plus (Var "ebagh" , Plus (Plus (Int 0 , Heap []) , Times (Var "" , Heap []))))
+interp_s [] (Restoreheap "")
+
+20060316-23:16:56-c5c2fe4b8bf744437e4adaf36529464b.seminal.ml
+("34","61")
+SUCCESS!
+*** Failed after 7 tests: Unbound variable: pi
+interpLarge [Turn 0.90135009121983 ; Home ; For (0 , []) ; Forward 0.10920741481798535 ; Turn 0.84330471764851 ; Forward 3.577481779076879]
+
+20060312-00:01:00-e429466fc820ac64a608a8302289bcb7.seminal.ml
+("20","17")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because int is incompatible with ('a * 'b)
+Stuck at:
+  line 19, column 7
+due to values from:
+  <unknown>
+lookup [IntEntry 0] _
 
 20060316-15:04:22-646d45fc661ea972e495854dafda19d7.seminal.ml
+("19","48")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -520,59 +609,8 @@ due to values from:
   line 19, column 56
 makePoly _ 0.0
 
-20060316-17:28:56-cb82b8e194910fe2ced3aab54f0a7577.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because (string * int) is incompatible with (string * heapContain)
-Stuck at:
-  line 34, column 23
-due to values from:
-  line 34, column 23
-interp_s [("bbd" , HeapInt 0) ; ("dad" , Heap [])]
-         (If (Int 0 , If (Var "" , Skip , Skip) , Assign ("" , Var "")))
-
-20060316-17:48:30-214ae1ff72fdc57fe9fcb9d441c5126a.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because heapContain is incompatible with int
-Stuck at:
-  line 43, column 18
-due to values from:
-  line 20, column 17
-  line 40, column 17
-interp_e [("ac" , HeapInt 0) ; ("bb" , Heap [])]
-         (Times (Var "" , Int 0))
-
-20060316-18:23:48-78d82e8a55cd9a83edca023c74a4cc32.seminal.ml
-SUCCESS!
-*** Failed after 6 tests: Type error: stuck because string is incompatible with heapContain
-Stuck at:
-  line 56, column 24
-due to values from:
-  <unknown>
-interp_s [("" , HeapInt 0)]
-         (Seq (Assign ("b" , Plus (Var "" , Var "")) , Restoreheap ""))
-
-20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because heapContain is incompatible with int
-Stuck at:
-  line 42, column 18
-due to values from:
-  <unknown>
-  line 19, column 11
-interp_e [("bb" , HeapCon [("" , HeapInt 0)]) ; ("d" , HeapInt 1) ; ("cd" , HeapInt 0)]
-         (Plus (Int 0 , Var ""))
-
-20060316-18:53:54-be762b624eb6b35410f5e00547f2a579.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because (string * exp) is incompatible with (string * heapEntry)
-Stuck at:
-  line 30, column 23
-due to values from:
-  line 30, column 23
-interp_s [("c" , Heap []) ; ("" , HInt 0)]
-         (If (Var "" , Assign ("" , Var "") , Assign ("" , Var "")))
-
 20060316-19:34:40-21991f746ce1d63c2b7ecd57ca2fccea.seminal.ml
+("106","19")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because stmt is incompatible with 'a list
 Stuck at:
@@ -581,7 +619,62 @@ due to values from:
   line 90, column 20
 print_heap (stmtsToSeq stmts) _
 
+20060316-18:34:06-d422060219a7891f487cd20b421acb81.seminal.ml
+("41","16")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because heapContain is incompatible with int
+Stuck at:
+  line 43, column 18
+due to values from:
+  <unknown>
+  line 19, column 11
+interp_e []
+         (Times (Int 0 , Var ""))
+
+20060313-20:23:36-95bbcfafa3a38ccac06f556bd50a04cc.seminal.ml
+("29","16")
+("132","24")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because heapElement is incompatible with int
+Stuck at:
+  line 29, column 18
+due to values from:
+  line 27, column 17
+  line 27, column 17
+interp_e []
+         (Plus (Int 0 , Int 0))
+
+20060316-17:48:30-214ae1ff72fdc57fe9fcb9d441c5126a.seminal.ml
+("42","16")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because heapContain is incompatible with int
+Stuck at:
+  line 42, column 18
+due to values from:
+  line 40, column 17
+  line 19, column 11
+interp_e []
+         (Plus (Int 0 , Var ""))
+
+20060316-23:15:56-8740564a90852da99c1d1bd7bef8897e.seminal.ml
+("29","40")
+SUCCESS!
+*** Failed after 4 tests: Unbound variable: pi
+interpLarge [Turn 0.0]
+
+20060313-23:03:58-c9d9c96a5c92d44ea888b2bf8287ed92.seminal.ml
+("35","22")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because intorheap is incompatible with exp
+Stuck at:
+  line 27, column 46
+due to values from:
+  <unknown>
+interp_e [("bb" , Int 0) ; ("" , Heap [])]
+         (Plus (Var "" , Heap []))
+
 20060316-23:07:58-2378bc775661a7c89604be96966c4259.seminal.ml
+("15","48")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move list is incompatible with 'a -> 'b
 Stuck at:
@@ -591,45 +684,52 @@ due to values from:
   line 17, column 7
 makePoly 0.0 0.0
 
-20060316-23:15:56-8740564a90852da99c1d1bd7bef8897e.seminal.ml
+20060316-18:53:54-be762b624eb6b35410f5e00547f2a579.seminal.ml
+("53","35")
 SUCCESS!
-*** Failed after 4 tests: Unbound variable: pi
-interpLarge [Turn 0.0 ; Turn 0.0 ; For (2 , [Forward 0.295820650774528 ; Turn 0.8737280870540344])]
-
-20060316-23:16:56-c5c2fe4b8bf744437e4adaf36529464b.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Unbound variable: pi
-interpLarge [Turn 0.27572762472510526 ; Forward 0.0]
-
-20060317-20:59:10-62548773f8854de2f4ec54a035814283.seminal.ml
-SUCCESS!
-*** Failed after 5 tests: Type error: stuck because 'a -> 'b is incompatible with ('c * 'd * 'e)
+*** Failed after 1 tests: Type error: stuck because (string * exp) is incompatible with (string * heapEntry)
 Stuck at:
-  line 43, column 9
+  line 30, column 23
 due to values from:
-  line 38, column 35
-interpLarge [Forward 0.0 ; For (2 , [Forward 0.0 ; Forward 0.0]) ; For (1 , [Turn 0.0]) ; For (0 , [Forward 0.20311865304986054])]
+  line 30, column 23
+interp_s []
+         (Assign ("" , Int 0))
 
 20060317-20:59:44-36ef05a00938aacce23d0d13a4c3a945.seminal.ml
+("41","49")
 SUCCESS!
 *** Failed after 6 tests: Type error: stuck because 'a -> 'b is incompatible with ('c * 'd * 'e)
 Stuck at:
   line 43, column 9
 due to values from:
   line 38, column 35
-interpLarge [For (1 , []) ; Home]
+interpLarge [Turn 0.47435005133283514 ; Turn 1.3283349521958265 ; Turn 0.0 ; For (2 , [For (0 , []) ; For (0 , []) ; Turn 0.48718189852726357 ; Forward 0.0])]
+("123","4")
+
+20060317-20:59:10-62548773f8854de2f4ec54a035814283.seminal.ml
+("35","43")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because int is incompatible with float
+Stuck at:
+  line 35, column 44
+due to values from:
+  line 35, column 44
+  line 11, column 10
+interpLarge [Turn 0.0 ; Turn 0.7063418417108963]
 
 20060317-21:37:11-096a01551f7cdd335b3d20437b761729.seminal.ml
+("21","52")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because int is incompatible with float
+*** Failed after 2 tests: Type error: stuck because int is incompatible with float
 Stuck at:
   line 17, column 8
 due to values from:
   line 22, column 33
   <unknown>
-makePoly 0.0 _
+makePoly 0.6152423794991447 _
 
 20060317-22:27:21-c75f0b5055a771be100553afb174be0d.seminal.ml
+("49","14")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because unit is incompatible with 'a list
 Stuck at:
@@ -638,16 +738,8 @@ due to values from:
   line 33, column 17
 interpLarge []
 
-20060317-22:27:40-749212b202dba76c8efe1df72c2fa36c.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because unit is incompatible with 'a list
-Stuck at:
-  line 75, column 3
-due to values from:
-  line 64, column 36
-interpSmall [Turn 0.0]
-
 20060319-13:25:22-d82ce217b923933f541e5e4c291912ff.seminal.ml
+("50","48")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with heap
 Stuck at:
@@ -656,53 +748,107 @@ due to values from:
   line 50, column 50
 Seq (testProgram1 , Saveheap "myheap1")
 
-20060319-13:26:52-dfb16e91c8f77833a400015941114cd0.seminal.ml
+20060319-14:52:14-bd3d537e5d622471db44fef57470b962.seminal.ml
+("37","33")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because (string * int) list is incompatible with stmt
+*** Failed after 1 tests: Type error: stuck because (string * int) is incompatible with (string * heapVar)
 Stuck at:
-  line 0, column 0
+  line 18, column 23
 due to values from:
-  
-output-type mismatch!
+  line 18, column 23
+interp_s []
+         (Assign ("" , Var ""))
+
+20060319-18:49:00-0ea44925eea84a1e4d0c6ce516154075.seminal.ml
+("55","23")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because move is incompatible with move list
+Stuck at:
+  line 55, column 12
+due to values from:
+  line 11, column 26
+interpLarge example_logo_prog
+
+20060319-19:49:56-1687e8b7d88c855ff1225445c6cbd4e3.seminal.ml
+("41","16")
+("132","24")
+SUCCESS!
+NO WITNESS: 20060319-19:49:56-1687e8b7d88c855ff1225445c6cbd4e3.seminal.ml
++++ OK, passed 1000 tests.
+
+20060319-20:22:42-d63e90715d3fa73c6f01d82b97c2c2b9.seminal.ml
+("51","21")
+SUCCESS!
+*** Failed after 5 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 59, column 12
+due to values from:
+  line 62, column 27
+  line 51, column 22
+interpSmall [Home ; Forward 0.11140640659417089 ; Home]
+
+20060317-22:27:40-749212b202dba76c8efe1df72c2fa36c.seminal.ml
+("71","46")
+("71","46")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because unit is incompatible with 'a list
+Stuck at:
+  line 75, column 3
+due to values from:
+  line 64, column 36
+interpSmall []
 
 20060319-13:43:18-06b44c2851b0cf81bcb54bfa7f1abe36.seminal.ml
+("40","33")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because (string * heapVar) is incompatible with (string * int)
+*** Failed after 1 tests: Type error: stuck because int is incompatible with heapVar
 Stuck at:
-  line 18, column 23
+  line 42, column 25
 due to values from:
-  line 18, column 23
-interp_s [] (SaveHeap "")
+  line 15, column 11
+interp_s [] (RestoreHeap "")
 
-20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml
+20060319-13:26:52-dfb16e91c8f77833a400015941114cd0.seminal.ml
+("39","18")
 SUCCESS!
-*** Failed after 9 tests: Type error: stuck because int is incompatible with heapVar
+*** Failed after 6 tests: Type error: stuck because (string * int) list is incompatible with stmt
 Stuck at:
   line 0, column 0
 due to values from:
   
 output-type mismatch!
-
-20060319-14:52:14-bd3d537e5d622471db44fef57470b962.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because (string * int) is incompatible with (string * heapVar)
-Stuck at:
-  line 18, column 23
-due to values from:
-  line 18, column 23
-interp_s [("b" , Heap []) ; ("cbd" , Heap []) ; ("cb" , HeapInt 2)]
-         (If (Plus (Var "" , Int 0) , If (Int 0 , While (Var "" , RestoreHeap "") , SaveHeap "") , Assign ("" , Times (Var "" , Var ""))))
 
 20060319-15:07:50-8f39f32b5a36e11a9464ad6fec165b06.seminal.ml
+("43","23")
 SUCCESS!
-*** Failed after 5 tests: Type error: stuck because (string * heapVar) list is incompatible with heapVar
+*** Failed after 2 tests: Type error: stuck because heapVar is incompatible with heap
 Stuck at:
-  line 0, column 0
+  line 33, column 18
 due to values from:
-  
-output-type mismatch!
+  line 15, column 11
+  <unknown>
+interp_s [("a" , HeapInt 0)]
+         (Seq (RestoreHeap "" , SaveHeap ""))
+
+20060319-19:23:28-3cc736accbce3e21a783db2d0f187c96.seminal.ml
+("18","18")
+("123","4")
+SUCCESS!
+*** Failed after 94 tests: Type error: stuck because (float * float) list is incompatible with (float * float)
+Stuck at:
+  line 18, column 19
+due to values from:
+  line 18, column 19
+interpLarge [Home ; Home]
+
+20060319-20:05:30-6fc146372dae315728baa58e4bee26df.seminal.ml
+("39","16")
+SUCCESS!
+NO WITNESS: 20060319-20:05:30-6fc146372dae315728baa58e4bee26df.seminal.ml
++++ OK, passed 1000 tests.
 
 20060319-18:31:02-58a2a6ce864ad7931326ad63f6ecd7dc.seminal.ml
+("6","14")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -712,50 +858,15 @@ due to values from:
   line 5, column 10
 2 * pi
 
-20060319-18:48:20-a64278e668714e05e9749ccd7ca65773.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with move list
-Stuck at:
-  line 55, column 12
-due to values from:
-  
-interpLarge example_logo_prog
-
-20060319-18:49:00-0ea44925eea84a1e4d0c6ce516154075.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because move is incompatible with move list
-Stuck at:
-  line 55, column 12
-due to values from:
-  line 11, column 26
-interpLarge example_logo_prog
-
-20060319-19:23:28-3cc736accbce3e21a783db2d0f187c96.seminal.ml
-SUCCESS!
-*** Failed after 37 tests: Type error: stuck because (float * float) list is incompatible with (float * float)
-Stuck at:
-  line 18, column 19
-due to values from:
-  line 18, column 19
-interpLarge [Home ; Home ; Home ; Home]
-
 20060319-19:25:12-f00bf018aea70324f68ac0ba0f808cae.seminal.ml
+("18","18")
+("132","24")
 SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060319-19:42:18-5f0bde7ab1d576545f4d89f88dab34e9.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060319-19:49:56-1687e8b7d88c855ff1225445c6cbd4e3.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060319-20:05:30-6fc146372dae315728baa58e4bee26df.seminal.ml
-SUCCESS!
+NO WITNESS: 20060319-19:25:12-f00bf018aea70324f68ac0ba0f808cae.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060319-20:09:28-2e71af609448d8c60fd4e0273e9ff9bd.seminal.ml
+("58","4")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with 'c list
 Stuck at:
@@ -764,83 +875,137 @@ due to values from:
   line 56, column 16
 interpSmall []
 
-20060319-20:12:50-9e05cf3ce7d3e32b370b305e43ceb96e.seminal.ml
+20060319-14:09:00-2446404578b9f18bfa9723208c094098.seminal.ml
+("23","23")
 SUCCESS!
-*** Failed after 10 tests: Type error: stuck because (move list * float * float * float) is incompatible with 'a list
+*** Failed after 5 tests: Type error: stuck because int is incompatible with heapVar
 Stuck at:
-  line 59, column 3
+  line 0, column 0
 due to values from:
-  line 51, column 18
-interpSmall [Home ; Turn 1.5726945794723277 ; Forward 2.2798798977796597 ; Turn 1.8619068874175801 ; Home ; Forward 0.23359472582550278]
-
-20060319-20:22:42-d63e90715d3fa73c6f01d82b97c2c2b9.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 59, column 12
-due to values from:
-  line 62, column 27
-  line 51, column 22
-interpSmall [Home ; Forward 0.7270088939083019 ; Home]
+  
+output-type mismatch!
 
 20060319-20:25:40-ab4845a572308a5afc057b8957487498.seminal.ml
+("61","8")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because ('a -> 'b * float * float * 'c * (float * float) list) is incompatible with 'd list
+*** Failed after 3 tests: Type error: stuck because ('a -> 'b * float * float * 'c * (float * float) list) is incompatible with 'd list
 Stuck at:
   line 63, column 3
 due to values from:
   line 61, column 9
-interpSmall []
+interpSmall [For (1 , []) ; Turn 0.0]
+
+20060319-18:48:20-a64278e668714e05e9749ccd7ca65773.seminal.ml
+("54","32")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with move list
+Stuck at:
+  line 55, column 12
+due to values from:
+  
+interpLarge example_logo_prog
+
+20060319-19:42:18-5f0bde7ab1d576545f4d89f88dab34e9.seminal.ml
+("49","11")
+SUCCESS!
+*** Failed after 9 tests: Type error: stuck because 'b list is incompatible with 'b list list
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
+
+20060319-20:12:50-9e05cf3ce7d3e32b370b305e43ceb96e.seminal.ml
+("59","11")
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
+let arg1 =
+  Array.get Sys.argv 1 in
+let ret = reverse arg1 in
+let _ = print_endline ret in
+let lst =
+  map charConvert arg1 in
+let _ =
+  print_endline (printRec lst) in
+let foldLeftString =
+  fold_left test_fold_left "null"
+            arg1 in
+let _ =
+  print_endline foldLeftString in
+let foldRightString =
+  fold_right test_fold_right arg1
+             "null" in
+let _ =
+  print_endline foldRightString in
+let _ =
+  print_endline (uppercase arg1) in
+let _ =
+  print_endline (lowercase arg1) in
+let test = titlecase arg1 in
+let _ =
+  match test with
+  | Tester (b , s) -> print_endline s in
+let histData = histogram arg1 in
+match histData with
+| Counter (i , c) -> print_endline (string_of_int i)
 
 20060319-20:31:44-c7d3dae870ff326c6e2fd8bf9e61eaac.seminal.ml
+("87","24")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because (move * move) list is incompatible with move list
+*** Failed after 6 tests: Type error: stuck because (move list * float * float * float) is incompatible with 'a list
 Stuck at:
-  line 87, column 12
+  line 59, column 3
 due to values from:
-  line 87, column 24
-interpSmall [(Home , Home)]
+  line 51, column 18
+interpSmall [Home ; Turn 0.0 ; Turn 0.8046802309819705]
 
 20060319-20:33:22-bcfa231f83876c0dc43b07ef583566dd.seminal.ml
+("63","16")
 SUCCESS!
 *** Failed after 5 tests: Type error: stuck because (float * float) list is incompatible with (float * float)
 Stuck at:
   line 63, column 17
 due to values from:
   line 63, column 17
-interpSmall [Turn 6.313663811892578e-3 ; Turn 2.5607052956901688e-2 ; Turn 0.37610253885320344]
-
-20060319-20:50:52-35197c77367f54669cee073b06fe3d9f.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because unit is incompatible with 'a list
-Stuck at:
-  line 70, column 3
-due to values from:
-  line 60, column 7
-interpSmall [For (1 , []) ; Turn 0.0 ; Forward 0.0]
+interpSmall []
 
 20060319-20:54:18-c6f1941f5de39e516e26f06cc990b9ca.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because int is incompatible with float
-Stuck at:
-  line 84, column 25
-due to values from:
-  line 84, column 33
-interpSmall [Forward 1]
-
-20060319-21:34:00-e26e787a429e0f90295aee0f257622a1.seminal.ml
-SUCCESS!
-*** Failed after 13 tests: Type error: stuck because ((float * float) * 'a) list is incompatible with ('b * 'c)
-Stuck at:
-  line 100, column 8
-due to values from:
-  line 109, column 24
-interpTrans [Forward 1.3509184385288069 ; Home ; Turn 4.18343865307756 ; _ ; _ ; _ ; _ ; _ ; _ ; _]
-            11.846921865713822
-            3.8676773425601674
-            5.516786563363754
+("84","31")
+("87","24")
+("84","31")
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
+let arg1 =
+  Array.get Sys.argv 1 in
+let ret = reverse arg1 in
+let _ = print_endline ret in
+let lst =
+  map charConvert arg1 in
+let _ =
+  print_endline (printRec lst) in
+let foldLeftString =
+  fold_left test_fold_left "null"
+            arg1 in
+let _ =
+  print_endline foldLeftString in
+let foldRightString =
+  fold_right test_fold_right arg1
+             "null" in
+let _ =
+  print_endline foldRightString in
+let _ =
+  print_endline (uppercase arg1) in
+let _ =
+  print_endline (lowercase arg1) in
+let test = titlecase arg1 in
+let _ =
+  match test with
+  | Tester (b , s) -> print_endline s in
+let histData = histogram arg1 in
+let output =
+  printRec histData in
+print_endline output
 
 20060319-22:34:04-69a3d06e7473a44a841727a7bc995e4d.seminal.ml
+("1","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with int
 Stuck at:
@@ -850,7 +1015,28 @@ due to values from:
   line 1, column 21
 let a = "hi" in a + 5
 
+20060320-22:38:06-708bc29e217c4928054fc822a3c96238.seminal.ml
+("33","9")
+SUCCESS!
+*** Failed after 7 tests: Type error: stuck because (float * float) list is incompatible with move
+Stuck at:
+  line 33, column 32
+due to values from:
+  line 33, column 32
+interpLarge [For (1 , []) ; For (2 , []) ; Home ; Home ; Turn 0.0 ; For (0 , [Home ; Turn 1.9710316935376517])]
+
+20060319-20:50:52-35197c77367f54669cee073b06fe3d9f.seminal.ml
+("70","39")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because unit is incompatible with 'a list
+Stuck at:
+  line 70, column 3
+due to values from:
+  line 60, column 7
+interpSmall [Home]
+
 20060320-21:58:04-f7044a0bdc8cde607fca13b12e891e22.seminal.ml
+("86","37")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -859,16 +1045,32 @@ due to values from:
   line 86, column 81
 [Forward 3.0 ; Home ; Turn 1.5 ; For (2 , [Forward 2.5 ; Home ; Turn 1])]
 
-20060320-22:38:06-708bc29e217c4928054fc822a3c96238.seminal.ml
+20060319-21:34:00-e26e787a429e0f90295aee0f257622a1.seminal.ml
+("109","22")
 SUCCESS!
-*** Failed after 9 tests: Type error: stuck because (float * float) list is incompatible with move
+*** Failed after 10 tests: Type error: stuck because ((float * float) * 'a) list is incompatible with ('b * 'c)
 Stuck at:
-  line 33, column 32
+  line 100, column 8
 due to values from:
-  line 33, column 32
-interpLarge [For (1 , [For (2 , [For (1 , [])])]) ; For (0 , [Turn 0.5883713943340001 ; Home]) ; Forward 0.5958919382260573 ; Forward 1.509079846834779 ; Forward 4.788450129247676]
+  line 109, column 24
+interpTrans [Forward 1.9914382157673787 ; Forward 0.1039930283517948 ; For (2 , []) ; _ ; _ ; _ ; _ ; _ ; _]
+            4.582330649142729
+            8.24138493037998
+            4.333182209734884
+
+20060321-15:25:48-2255f168a336d2981038c536d51364a3.seminal.ml
+("22","23")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because heap_elt is incompatible with ('a * 'b)
+Stuck at:
+  line 13, column 3
+due to values from:
+  <unknown>
+interp_e [Complex ("" , [])]
+         (Var "")
 
 20060321-14:46:28-05145270d2aab43fd3bd842cc07baf1c.seminal.ml
+("48","20")
 SUCCESS!
 *** Failed after 3 tests: Type error: stuck because string is incompatible with unit
 Stuck at:
@@ -877,36 +1079,8 @@ due to values from:
   
 output-type mismatch!
 
-20060321-14:59:04-b1275c5a9b0b11add3e4dd1a9b0bf13c.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because string is incompatible with 'a list
-Stuck at:
-  <unknown>
-due to values from:
-  line 49, column 6
-print_heap ("" , 0)
-
-20060321-15:25:48-2255f168a336d2981038c536d51364a3.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because heap_elt is incompatible with ('a * 'b)
-Stuck at:
-  line 13, column 3
-due to values from:
-  <unknown>
-interp_e [Complex ("" , [])]
-         (Plus (Var "" , Int 0))
-
-20060321-15:34:36-8c2ed57505ebdb3c66f90b66ae3e8b87.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because (string * int) is incompatible with heap_elt
-Stuck at:
-  line 20, column 23
-due to values from:
-  line 20, column 23
-interp_s []
-         (Assign ("" , Int 0))
-
 20060321-16:03:46-b0d9a3963e06527effc0d63025a8d667.seminal.ml
+("72","19")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because (string * int) is incompatible with heap_elt
 Stuck at:
@@ -915,7 +1089,62 @@ due to values from:
   line 63, column 20
 print_heap test_heap
 
+20060321-17:27:50-28fab13e4dbcd9ee742bdff83acf1462.seminal.ml
+("86","4")
+SUCCESS!
+NO WITNESS: 20060321-17:27:50-28fab13e4dbcd9ee742bdff83acf1462.seminal.ml
++++ OK, passed 1000 tests.
+
+20060321-14:59:04-b1275c5a9b0b11add3e4dd1a9b0bf13c.seminal.ml
+("50","23")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because string is incompatible with 'a list
+Stuck at:
+  <unknown>
+due to values from:
+  line 49, column 6
+print_heap ("" , 0)
+
+20060321-17:40:30-9d28fd9356cc4ade9bdd5c09496600fa.seminal.ml
+("94","36")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because (move * move) list is incompatible with move list
+Stuck at:
+  line 87, column 12
+due to values from:
+  line 87, column 24
+interpSmall [(Home , Home)]
+
+20060321-15:34:36-8c2ed57505ebdb3c66f90b66ae3e8b87.seminal.ml
+("37","27")
+SUCCESS!
+*** Failed after 10 tests: Type error: stuck because heap_elt is incompatible with 'a list
+Stuck at:
+  line 84, column 12
+due to values from:
+  line 90, column 3
+print_heap [I ("" , 0) ; H ("" , []) ; H ("" , []) ; I ("gafge" , 0) ; H ("dbhbfh" , [H ("befee" , [I ("ab" , 2) ; H ("" , []) ; H ("" , []) ; H ("bcc" , [H ("ba" , [H ("" , [])]) ; H ("a" , [I ("" , 0)])])])]) ; _ ; _ ; _ ; _]
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because (string * int) is incompatible with heap_elt
+Stuck at:
+  line 20, column 23
+due to values from:
+  line 20, column 23
+interp_s []
+         (Assign ("c" , Times (Var "" , Var "")))
+
+20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
+("85","24")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because int is incompatible with float
+Stuck at:
+  line 84, column 25
+due to values from:
+  line 84, column 33
+interpSmall [Forward 1]
+
 20060321-16:05:32-9fac1c5709dc4756677dea761359bb07.seminal.ml
+("63","53")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because (string * (string * int) list) is incompatible with (string * heap)
 Stuck at:
@@ -924,27 +1153,11 @@ due to values from:
   line 63, column 49
 [Simple_elt ("a" , 0) ; Complex_elt ("b" , [("b1" , 0) ; ("b2" , 1)]) ; Simple_elt ("c" , 2)]
 
-20060321-17:27:50-28fab13e4dbcd9ee742bdff83acf1462.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
-
-20060321-17:40:30-9d28fd9356cc4ade9bdd5c09496600fa.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
-
 20060321-17:41:14-5ad417e97b8ab19fbfb89db95c99c846.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("94","25")
 
 20060321-17:57:34-7409001b9d9b81b4015c0221ea72118a.seminal.ml
+("114","19")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because stmt is incompatible with 'a list
 Stuck at:
@@ -953,7 +1166,15 @@ due to values from:
   line 114, column 20
 print_heap (Assign ("ans" , Int 4))
 
+20060321-19:13:54-3266bbae2ef5c3a941538a6481a5e5d5.seminal.ml
+("112","31")
+SUCCESS!
+*** Failed after 6 tests: Error: infinite recursion
+interpTrans [Home ; Turn 0.0 ; Home ; For (1 , [For (0 , []) ; Turn 0.5128377097687488]) ; Forward 0.7226187231922327]
+            _ _ _
+
 20060321-18:07:56-3c4adbec38600fff622eabc0dbcae305.seminal.ml
+("112","34")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with exp
 Stuck at:
@@ -962,13 +1183,29 @@ due to values from:
   line 112, column 35
 Assign ("ans" , Plus ("c" , Int 5))
 
-20060321-19:13:54-3266bbae2ef5c3a941538a6481a5e5d5.seminal.ml
+20060321-21:07:58-0ebbcafc7586fac16a56ba7b103f69f7.seminal.ml
+("91","11")
 SUCCESS!
-*** Failed after 8 tests: Error: infinite recursion
-interpTrans [For (0 , [For (0 , [])]) ; Turn 0.5844748285294322 ; Turn 2.3214084265504926]
-            _ _ _
+*** Failed after 1 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 15, column 15
+due to values from:
+  line 15, column 16
+acos (- 1.0)
+
+20060322-00:21:12-0ccd603b43d0ef97d3e539c3f0925073.seminal.ml
+("30","43")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 30, column 40
+due to values from:
+  line 53, column 38
+  <unknown>
+interpLarge [Turn 0.0 ; Home ; For (0 , [])]
 
 20060321-20:20:44-5df57b343df5a403116c396481a3d568.seminal.ml
+("19","30")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -977,55 +1214,29 @@ due to values from:
   line 11, column 16
 acos (- 1.0)
 
-20060321-21:07:58-0ebbcafc7586fac16a56ba7b103f69f7.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 15, column 15
-due to values from:
-  line 15, column 16
-acos (- 1.0)
-
-20060321-21:29:28-0b780c5b4ffcfe2968cb8e73cefa3897.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 15, column 15
-due to values from:
-  line 15, column 16
-acos (- 1.0)
-
 20060321-21:38:22-dde7db6405ce5ba9ae626405e061c4a3.seminal.ml
+("33","10")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because float is incompatible with int
+*** Failed after 5 tests: Type error: stuck because float is incompatible with int
 Stuck at:
   line 33, column 13
 due to values from:
   line 54, column 38
   line 33, column 18
-interpLarge [Forward 0.0]
+interpLarge [Forward 0.5465575369381737 ; Home]
 
-20060321-22:08:35-80305c5562a7971b78c8db75d01d0fd0.seminal.ml
+20060321-21:29:28-0b780c5b4ffcfe2968cb8e73cefa3897.seminal.ml
+("7","65")
 SUCCESS!
-*** Failed after 14 tests: Type error: stuck because int is incompatible with float
+*** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
-  line 34, column 16
+  line 15, column 15
 due to values from:
-  line 34, column 16
-  line 31, column 21
-interpLarge [For (0 , [For (3 , []) ; Home ; Home ; Home ; Home ; Turn 0.0 ; Turn 1.3403189901963497]) ; Turn 8.296169643268748 ; Forward 8.13602506433755 ; For (4 , [Home ; Forward 1.6679954473230176 ; For (0 , [Home ; Forward 0.0])]) ; Home]
-
-20060322-00:21:12-0ccd603b43d0ef97d3e539c3f0925073.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 30, column 40
-due to values from:
-  line 53, column 38
-  <unknown>
-interpLarge [For (1 , []) ; Turn 0.0]
+  line 15, column 16
+acos (- 1.0)
 
 20060322-00:47:36-635d92e5e80fdb07be8405858041dcbd.seminal.ml
+("27","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1035,26 +1246,26 @@ due to values from:
   line 4, column 10
 interpLarge []
 
-20060322-01:15:12-8f2c701fedc5409bb06ec8282652a352.seminal.ml
+20060321-22:08:35-80305c5562a7971b78c8db75d01d0fd0.seminal.ml
+("34","8")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because float is incompatible with int
+*** Failed after 6 tests: Type error: stuck because int is incompatible with float
 Stuck at:
-  line 15, column 15
+  line 34, column 16
 due to values from:
-  line 4, column 10
-  line 15, column 20
-makePoly 1 _
+  line 34, column 16
+  line 31, column 21
+interpLarge [Turn 1.6555963502234583 ; Forward 3.9972858834803913]
 
 20060322-02:34:06-a881a82dd5534a442bf71f2fcd057d33.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because 'a list is incompatible with move
-Stuck at:
-  line 41, column 15
-due to values from:
-  line 41, column 15
-interpLarge [For (1 , [For (0 , [])]) ; Turn 0.23196795654839275 ; Forward 0.0]
+("39","33")
+("39","33")
+TIMED OUT: 20060306-09:54:52-94bacf5a48d35fd1aa367bc565cc4abd.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 1000 steps>
+()
 
 20060322-08:30:28-3f81c07149bfccbd0e3179bdf8a9aadd.seminal.ml
+("1","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with int
 Stuck at:
@@ -1064,7 +1275,64 @@ due to values from:
   line 1, column 21
 let a = "hi" in a + 5
 
+20060322-13:40:08-aefea9de8bb3118803308ceeadaec76e.seminal.ml
+("19","24")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because unit is incompatible with move list
+Stuck at:
+  line 24, column 3
+due to values from:
+  line 24, column 7
+makePoly 0 _
+
+20060322-15:33:54-702b0150ab82b8d3fe04d50824f66378.seminal.ml
+("10","21")
+SUCCESS!
+*** Failed after 1 tests: Unbound variable: lst
+loopFor 0 0 _
+
+20060322-14:52:42-79d266181ace652898dfea63f34d1e95.seminal.ml
+("41","37")
+SUCCESS!
+*** Failed after 12 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 41, column 34
+due to values from:
+  line 43, column 38
+  <unknown>
+interpLarge [Turn 0.23031693991496938 ; Forward 0.22205663646664808 ; Forward 1.9789709866849188 ; For (2 , []) ; Forward 7.378251903849658]
+
+20060322-15:37:15-a3b57f848696e7fb4e0c7b52ec319871.seminal.ml
+("58","2")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because move list is incompatible with 'a -> 'b
+Stuck at:
+  line 58, column 10
+due to values from:
+  line 69, column 27
+  line 69, column 31
+  line 69, column 35
+interpSmall [For (1 , [For (0 , [])]) ; Home]
+
+20060322-01:15:12-8f2c701fedc5409bb06ec8282652a352.seminal.ml
+("15","14")
+SUCCESS!
+*** Failed after 1 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 15, column 15
+due to values from:
+  line 4, column 10
+  <unknown>
+makePoly 0 _
+
+20060322-15:37:30-cccd2d578960e5ca742dca45d4bd04e4.seminal.ml
+("52","30")
+SUCCESS!
+NO WITNESS: 20060321-17:38:52-5224914e10b7b5eacd09bb21ab53a674.seminal.ml
++++ OK, passed 1000 tests.
+
 20060322-13:34:44-8717549412aa814d6b0771c1f94c17fb.seminal.ml
+("12","22")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1074,86 +1342,73 @@ due to values from:
   line 12, column 23
 makePoly _ _
 
-20060322-13:40:08-aefea9de8bb3118803308ceeadaec76e.seminal.ml
+20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml
+("71","11")
 SUCCESS!
-*** Failed after 1 tests: Type error: stuck because unit is incompatible with move list
-Stuck at:
-  line 24, column 3
-due to values from:
-  line 24, column 7
-makePoly 0 _
-
-20060322-14:52:42-79d266181ace652898dfea63f34d1e95.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 41, column 34
-due to values from:
-  line 43, column 38
-  <unknown>
-interpLarge [Turn 5.171896815246857e-2 ; Home]
-
-20060322-15:04:54-ac4a1848657627cfd6df53804ad2c8f5.seminal.ml
-SUCCESS!
-*** Failed after 5 tests: Type error: stuck because (float * float) is incompatible with 'a list
-Stuck at:
-  line 43, column 11
-due to values from:
-  line 43, column 11
-interpLarge [Forward 1.3331311528855991 ; Forward 0.0]
-
-20060322-15:33:54-702b0150ab82b8d3fe04d50824f66378.seminal.ml
-SUCCESS!
-*** Failed after 1 tests: Unbound variable: lst
-loopFor 0 0 _
-
-20060322-15:37:15-a3b57f848696e7fb4e0c7b52ec319871.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 62, column 14
-due to values from:
-  line 69, column 27
-  line 60, column 21
-interpSmall [Forward 0.8660203061208387]
-
-20060322-15:37:30-cccd2d578960e5ca742dca45d4bd04e4.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because move is incompatible with 'a list
+*** Failed after 9 tests: Type error: stuck because move is incompatible with 'a list
 Stuck at:
   line 37, column 5
 due to values from:
   line 51, column 26
-interpLarge [For (1 , []) ; Forward 1.1038245011465657 ; Home]
+interpLarge [Forward 1.8626623058577751 ; Forward 3.7126773754817153 ; Forward 1.5763714873634471 ; For (3 , [])]
+
+20060322-16:59:16-2aaeed2af3e729eac5c7ce6df6aa8bab.seminal.ml
+("73","30")
+("94","25")
+("39","33")
+SUCCESS!
+*** Failed after 6 tests: Type error: stuck because 'a -> 'b list is incompatible with move
+Stuck at:
+  line 41, column 15
+due to values from:
+  line 41, column 15
+interpLarge [Turn 1.378319566750411 ; For (2 , [Home])]
 
 20060322-15:37:56-7674fa2cf2a648a9e414034e5ffccee5.seminal.ml
+("62","13")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because float is incompatible with int
+*** Failed after 5 tests: Type error: stuck because float is incompatible with int
 Stuck at:
   line 62, column 14
 due to values from:
-  line 69, column 27
+  <unknown>
   line 60, column 21
-interpSmall [Forward 0.0]
-
-20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml
-SUCCESS!
-*** Failed after 12 tests: Type error: stuck because 'b list is incompatible with 'b list list
-Stuck at:
-  line 0, column 0
-due to values from:
-  
-output-type mismatch!
+interpSmall [For (1 , [Turn 0.0]) ; Turn 0.0 ; Home]
 
 20060322-16:38:10-626e570c3d6f0bf644688095ee05e7aa.seminal.ml
+("63","25")
 SUCCESS!
+NO WITNESS: 20060322-16:59:16-2aaeed2af3e729eac5c7ce6df6aa8bab.seminal.ml
 +++ OK, passed 1000 tests.
 
-20060322-16:59:16-2aaeed2af3e729eac5c7ce6df6aa8bab.seminal.ml
+20060322-20:07:20-8a106f89f15ecfb4570c9918256c0e5a.seminal.ml
+("22","18")
 SUCCESS!
+*** Failed after 2 tests: Type error: stuck because (float * float) is incompatible with 'a list
+Stuck at:
+  line 26, column 12
+due to values from:
+  line 26, column 12
+interpLarge [Forward 0.0]
+
+20060322-20:42:10-898d93a908e3393e99cf3e0027384a19.seminal.ml
+("30","19")
+SUCCESS!
+*** Failed after 8 tests: Type error: stuck because move list is incompatible with move
+Stuck at:
+  line 30, column 19
+due to values from:
+  line 30, column 19
+interpLarge [For (2 , [Forward 0.3780338471481498 ; Turn 0.24102614476724438 ; For (0 , [Home ; Forward 0.4459477518728022])]) ; For (2 , [Home ; Home]) ; Turn 1.415121349628624 ; For (0 , [Turn 0.38321136985387005 ; For (0 , [])]) ; Turn 0.0]
+
+20060323-08:35:44-95aa68925746f2cfecd00300845fb947.seminal.ml
+("90","10")
+SUCCESS!
+NO WITNESS: 20060322-16:31:04-5b9363ed9af2fc88ae57b56a5baca160.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060322-19:48:26-8031f6467e8fc7179ce5fd1072500ce0.seminal.ml
+("12","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1163,78 +1418,18 @@ due to values from:
   line 12, column 22
 makePoly _ 0.0
 
-20060322-20:07:20-8a106f89f15ecfb4570c9918256c0e5a.seminal.ml
-SUCCESS!
-*** Failed after 4 tests: Type error: stuck because (float * float) is incompatible with 'a list
-Stuck at:
-  line 22, column 19
-due to values from:
-  line 22, column 19
-interpLarge [Forward 1.2247296390226345 ; Home ; Home]
-
-20060322-20:08:36-a8f43066cc9b2fd09808dd2eb10c07f9.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Type error: stuck because (float * float) is incompatible with (float * float) list
-Stuck at:
-  line 22, column 39
-due to values from:
-  line 29, column 42
-  line 22, column 45
-interpLarge [Home ; Turn 0.0]
-
-20060322-20:42:10-898d93a908e3393e99cf3e0027384a19.seminal.ml
-SUCCESS!
-*** Failed after 8 tests: Type error: stuck because move list is incompatible with move
-Stuck at:
-  line 30, column 19
-due to values from:
-  line 30, column 19
-interpLarge [Forward 0.0 ; For (4 , [Turn 0.4158390186942733 ; For (0 , [Turn 0.581776733002601]) ; Turn 0.3561241487631609]) ; Forward 2.158449459825925 ; Turn 8.880769216236395e-2]
-
-20060322-20:53:12-8240b6c0f1e8fb463aae7ab123a6ad8d.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Type error: stuck because 'a -> 'b is incompatible with 'c list
-Stuck at:
-  line 58, column 3
-due to values from:
-  line 53, column 27
-interpSmall [Home]
-
-20060323-08:35:44-95aa68925746f2cfecd00300845fb947.seminal.ml
-SUCCESS!
-*** Failed after 661 tests: Type error: stuck because ('a list * 'c) is incompatible with 'c
-Stuck at:
-  line 0, column 0
-due to values from:
-  
-output-type mismatch!
-
-20060323-08:43:40-4ea7768a439a9c9693ab1dd8a5a3e1ae.seminal.ml
-SUCCESS!
-*** Failed after 6 tests: Type error: stuck because ('a list * 'b) is incompatible with ('c -> 'd * 'e * 'f * float)
-Stuck at:
-  line 0, column 0
-due to values from:
-  
-output-type mismatch!
-
 20060323-09:29:18-4d4687569f144490d021a1f614083ab6.seminal.ml
+("117","23")
 SUCCESS!
-*** Failed after 5 tests: Error: infinite recursion
-interpTrans [For (0 , []) ; For (0 , [Forward 0.7629550899572066 ; Turn 1.4869453812533726 ; Home]) ; For (1 , []) ; Home]
-            _ _ _
-
-20060323-10:36:10-23f563f30054417a24188e71c358a86b.seminal.ml
-SUCCESS!
-*** Failed after 13 tests: Type error: stuck because (float * float) is incompatible with 'a list
+*** Failed after 4 tests: Type error: stuck because 'a -> 'b is incompatible with ('c * 'd)
 Stuck at:
-  line 107, column 34
+  line 81, column 5
 due to values from:
-  line 107, column 34
-interpTrans [Home ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _]
-            _ _ _
+  
+interpTrans [For (1 , [])] _ _ _
 
 20060323-13:43:52-9b3c922faea5332ae7dcbdd3542cf6bb.seminal.ml
+("136","40")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1243,21 +1438,67 @@ due to values from:
   line 136, column 41
 [For (10 , [Turn 10])]
 
-20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 1000 steps>
-()
-
 20060323-15:47:38-bdbf194565202f6e6e0fcc814a9c01e7.seminal.ml
+("110","33")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because ('a * 'b) is incompatible with 'c list
+*** Failed after 12 tests: Type error: stuck because ('a * 'b) is incompatible with 'c list
 Stuck at:
   line 110, column 24
 due to values from:
   line 110, column 24
-interpTrans [Home] _ _ _
+interpTrans [Home ; _ ; _ ; _ ; _ ; _ ; _ ; _]
+            _ _ _
+
+20060322-20:08:36-a8f43066cc9b2fd09808dd2eb10c07f9.seminal.ml
+("22","39")
+SUCCESS!
+*** Failed after 5 tests: Type error: stuck because (float * float) is incompatible with (float * float) list
+Stuck at:
+  line 22, column 39
+due to values from:
+  line 29, column 42
+  line 22, column 45
+interpLarge [Home ; Forward 0.0]
+SUCCESS!
+NO WITNESS: 20060322-16:38:10-626e570c3d6f0bf644688095ee05e7aa.seminal.ml
++++ OK, passed 1000 tests.
+
+20060322-20:53:12-8240b6c0f1e8fb463aae7ab123a6ad8d.seminal.ml
+("56","16")
+
+20060323-10:36:10-23f563f30054417a24188e71c358a86b.seminal.ml
+("107","39")
+SUCCESS!
+*** Failed after 2 tests: Type error: stuck because 'a -> 'b is incompatible with 'c list
+Stuck at:
+  line 58, column 3
+due to values from:
+  line 53, column 27
+interpSmall [Home]
+
+20060323-08:43:40-4ea7768a439a9c9693ab1dd8a5a3e1ae.seminal.ml
+("103","18")
+SUCCESS!
+*** Failed after 8 tests: Type error: stuck because (float * float) is incompatible with 'a list
+Stuck at:
+  line 107, column 34
+due to values from:
+  line 107, column 34
+interpTrans [Home ; _ ; _ ; _] _
+            _ _
+
+20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
+("57","20")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because ('a list * 'b) is incompatible with ('c -> 'd * 'e * 'f * float)
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
 
 20060323-16:46:00-99a4dfd320923a6e786e35326d72280c.seminal.ml
+("125","12")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1267,6 +1508,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060323-16:46:40-3a2db0aab4cec751ce06a6163c6a0997.seminal.ml
+("128","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1276,6 +1518,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060323-16:53:28-5eb5ae97e73aab35aca11490ff920390.seminal.ml
+("132","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1285,6 +1528,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060323-17:18:26-1bf4fc01326e093960cc57ae9a5f103b.seminal.ml
+("161","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move is incompatible with move list
 Stuck at:
@@ -1294,6 +1538,7 @@ due to values from:
 interpLarge example_logo_prog
 
 20060323-17:29:24-d7203127fc75715cee8a22185e150384.seminal.ml
+("155","37")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move is incompatible with 'a list
 Stuck at:
@@ -1303,6 +1548,7 @@ due to values from:
 (Forward 5.0) :: (Turn 1.0)
 
 20060323-17:33:44-58be7bcdf9f4bd84f0e8595e2e98e45e.seminal.ml
+("156","13")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1312,6 +1558,7 @@ due to values from:
 makePoly 5 2
 
 20060323-17:33:52-51c48edc0bc2623b785d08afb1344a7d.seminal.ml
+("163","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move is incompatible with move list
 Stuck at:
@@ -1321,15 +1568,17 @@ due to values from:
 interpLarge example_logo_prog
 
 20060323-17:42:56-fde71158703a08ba423540e01ef09474.seminal.ml
+("16","11")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because move is incompatible with 'a list
+*** Failed after 5 tests: Type error: stuck because move is incompatible with 'a list
 Stuck at:
   line 24, column 19
 due to values from:
   line 24, column 19
-makePoly 3 1.8595418650283437
+makePoly 4 3.4774736005185405
 
 20060323-17:43:30-1b93c486fae4bb533744e65e09c11cdc.seminal.ml
+("31","4")
 SUCCESS!
 *** Failed after 6 tests: Type error: stuck because move list is incompatible with move
 Stuck at:
@@ -1339,24 +1588,25 @@ due to values from:
 output-type mismatch!
 
 20060323-17:53:24-a64241aa861dc6d7d3671fc0eed904ec.seminal.ml
+("18","22")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because move is incompatible with 'a list
+*** Failed after 7 tests: Type error: stuck because move is incompatible with 'a list
 Stuck at:
   line 18, column 9
 due to values from:
   line 18, column 9
-makePoly 5 4.9506269142966195
+makePoly 6 1.9860619471040681
 
 20060323-18:18:26-dcbd6b61400ff0cc8088df3b9bf9ec58.seminal.ml
+("98","14")
 SUCCESS!
-*** Failed after 7 tests: Type error: stuck because float is incompatible with int
-Stuck at:
-  line 98, column 5
-due to values from:
-  line 105, column 27
-interpSmall [Forward 3.2232353131202984e-2 ; For (4 , [Forward 0.46528793034088467]) ; Turn 1.104881315245695 ; Home ; Home]
+*** Failed after 389 tests: Error: infinite recursion
+interpTrans [Home ; Home ; Home ; Home ; Forward 0.0 ; _ ; _]
+            5.629018353479407
+            2.0017428933421533 _
 
 20060323-18:20:56-215cf04f284998f18aa9a297f6c69cae.seminal.ml
+("12","20")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1367,61 +1617,74 @@ due to values from:
 makePoly _ _
 
 20060323-18:23:06-e8617e33234ad0d0b1db0cca97888631.seminal.ml
+("78","20")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because float -> float -> 'a is incompatible with float
+*** Failed after 6 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 98, column 5
+due to values from:
+  line 105, column 27
+interpSmall [Home ; Forward 1.716580706707566 ; For (2 , []) ; Turn 0.0]
+
+20060323-18:45:02-8c83180cdb55405fceb028edc3b8e52f.seminal.ml
+("93","37")
+SUCCESS!
+*** Failed after 7 tests: Type error: stuck because float -> float -> 'a is incompatible with float
 Stuck at:
   line 72, column 35
 due to values from:
   
-interpSmall [For (1 , [Turn 0.0 ; Forward 0.5503771657141405]) ; For (1 , []) ; Forward 0.7201209221113968]
+interpSmall [Turn 1.0356868084430604 ; Home ; Turn 3.7609840340744904 ; Forward 1.570482075561975 ; Home ; For (1 , [For (1 , []) ; Turn 0.8693369340020403 ; For (4 , [])])]
 
-20060323-18:45:02-8c83180cdb55405fceb028edc3b8e52f.seminal.ml
+20060323-20:07:14-1ff99f5b5d1579e4b5f2712f7687bb64.seminal.ml
+("116","5")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because unit is incompatible with ('a * 'b * 'c * 'd)
+*** Failed after 6 tests: Type error: stuck because unit is incompatible with ('a * 'b * 'c * 'd)
 Stuck at:
   line 106, column 11
 due to values from:
   line 93, column 38
-interpSmall [For (1 , [Home])]
-
-20060323-20:07:14-1ff99f5b5d1579e4b5f2712f7687bb64.seminal.ml
+interpSmall [For (0 , []) ; Forward 0.4533243035734458 ; Home ; Home ; For (0 , [For (1 , []) ; For (0 , []) ; Home ; Forward 0.9055426917772557])]
 SUCCESS!
-*** Failed after 10 tests: Error: infinite recursion
-interpTrans [For (5 , [Home ; Turn 0.8496886654778976 ; For (1 , []) ; Forward 0.6443787011540272]) ; _ ; _ ; _ ; _ ; _ ; _]
-            _ _ _
-
-20060323-20:16:12-f769124d67c2d8b1ba60882729d52b66.seminal.ml
-SUCCESS!
-*** Failed after 5 tests: Type error: stuck because float is incompatible with int
+*** Failed after 4 tests: Type error: stuck because float is incompatible with int
 Stuck at:
-  line 102, column 65
+  line 116, column 11
 due to values from:
   <unknown>
-  line 96, column 3
-interpTrans [Turn 0.32609024374446394 ; Forward 0.9617565615329999]
-            0.6951652776689023
-            2.284721634587861
-            7.828986897630408e-2
+  line 114, column 21
+interpTrans [Forward 0.0 ; Turn 0.5457153637698051 ; Forward 0.6779741580157778]
+            2.0993415814621055
+            3.389951186785789e-2
+            1.9229535830304088
+
+20060323-20:16:12-f769124d67c2d8b1ba60882729d52b66.seminal.ml
+("102","64")
+SUCCESS!
+*** Failed after 4 tests: Error: infinite recursion
+interpTrans [Home ; Home ; Turn 0.0]
+            0.5094005972356458
+            2.262872905353059
+            0.8339417206239
 
 20060323-21:30:30-8708affd60c03e76b1b80f206b86f42a.seminal.ml
+("99","1")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because ((float * float) list * float) is incompatible with float
+*** Failed after 4 tests: Type error: stuck because ((float * float) list * float) is incompatible with float
 Stuck at:
-  line 99, column 31
+  line 102, column 35
 due to values from:
-  line 96, column 12
-  line 99, column 48
-interpTrans [Home]
-            0.13216808958216109
-            0.9731296656131404
-            0.9734950140983984
+  line 98, column 8
+  line 102, column 52
+interpTrans [Turn 1.886020823018808e-3 ; Home]
+            1.298862244045992
+            1.785411014910434
+            1.2174612222033607
 
 20060323-21:50:16-0a01d9e97b5fb61deca9c42f7b87e874.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2000 steps>
-()
+("110","2")
 
 20060323-22:04:56-2161ca6d347b52d7dbd370350b463115.seminal.ml
+("182","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move is incompatible with move list
 Stuck at:
@@ -1431,11 +1694,27 @@ due to values from:
 interpLarge example_logo_prog
 
 20060323-22:20:22-4e5f88ae07be062df109ed5701cbef33.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2000 steps>
+("111","12")
+("111","12")
+("110","2")
+("111","12")
+("110","2")
+TIMED OUT: 20060321-17:41:14-5ad417e97b8ab19fbfb89db95c99c846.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 1000 steps>
 ()
 
+20060322-15:04:54-ac4a1848657627cfd6df53804ad2c8f5.seminal.ml
+("43","32")
+SUCCESS!
+*** Failed after 5 tests: Type error: stuck because (float * float) is incompatible with 'a list
+Stuck at:
+  line 43, column 11
+due to values from:
+  line 43, column 11
+interpLarge [Forward 0.45762784751973185 ; Forward 0.0]
+
 20060323-22:43:36-a87f4de68f6bf8428673d8b8bab3f579.seminal.ml
+("189","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with 'a -> 'b
 Stuck at:
@@ -1449,8 +1728,9 @@ let forMove = For (5 mlPlus) in
 [forMove]
 
 20060323-22:59:04-39ece06ece66c8dc880ee10675819a09.seminal.ml
+("17","34")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because int is incompatible with heapElement
+*** Failed after 4 tests: Type error: stuck because int is incompatible with heapElement
 Stuck at:
   line 0, column 0
 due to values from:
@@ -1458,6 +1738,7 @@ due to values from:
 output-type mismatch!
 
 20060323-22:59:38-e7c2c654f54054eb7c19d03cfec68e3b.seminal.ml
+("22","4")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because heapElement is incompatible with int
 Stuck at:
@@ -1467,16 +1748,17 @@ due to values from:
 lookup_var [] _
 
 20060323-23:05:28-8208a05059a4335cea94c878a710ddd0.seminal.ml
+("53","26")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because heapElement is incompatible with int
+*** Failed after 1 tests: Type error: stuck because heapElement is incompatible with int
 Stuck at:
   line 52, column 25
 due to values from:
   line 16, column 11
-interp_s [VarElement ("d" , 1) ; Heap ("a" , [])]
-         (RestoreHeap "")
+interp_s [] (RestoreHeap "")
 
 20060323-23:11:28-c24ddccacfbcdc668613ca92ad083c49.seminal.ml
+("67","50")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with exp
 Stuck at:
@@ -1486,33 +1768,39 @@ due to values from:
 Seq (Seq (SaveHeap "foo" , Assign ("ans" , 1)) , RestoreHeap "foo")
 
 20060323-23:12:42-0cdc8336167ed8e67ba5a2f8e22bed49.seminal.ml
+("65","54")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with unit
 Stuck at:
   line 65, column 41
 due to values from:
   line 65, column 55
-test (RestoreHeap "")
+test Skip
 
 20060323-23:27:42-7911ad31a60a0c09a7cb35ea3b402363.seminal.ml
+("9","51")
 SUCCESS!
 *** Failed after 1 tests: Error: unbound data constructor: Pi
 makePoly _ 0.0
 
 20060323-23:34:54-e5657a429599e48a5306fa79011f83cd.seminal.ml
+("11","70")
 SUCCESS!
+NO WITNESS: 20060323-23:34:54-e5657a429599e48a5306fa79011f83cd.seminal.ml
 +++ OK, passed 1000 tests.
 
 20060323-23:58:10-8a98128ae553a921e83e0e588be1843b.seminal.ml
+("34","30")
 SUCCESS!
-*** Failed after 9 tests: Type error: stuck because move list is incompatible with move
+*** Failed after 6 tests: Type error: stuck because move list is incompatible with move
 Stuck at:
   line 34, column 31
 due to values from:
   line 34, column 31
-interpLarge [Forward 0.5632084524205377 ; Forward 0.5235316363226299 ; For (1 , [For (1 , [Home]) ; Home ; For (2 , [Home])]) ; Turn 0.0]
+interpLarge [For (2 , [Forward 1.232503729422752 ; Home ; Forward 0.0]) ; Turn 1.6428049965711882 ; For (3 , []) ; For (1 , []) ; Forward 0.0]
 
 20060324-10:21:08-1099c20635149bf4c21dae977b473fa7.seminal.ml
+("104","37")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1522,6 +1810,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-11:54:50-493d658d01a1323b9f1da1c0ae811325.seminal.ml
+("100","34")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1531,6 +1820,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-11:55:50-f2f7f0e7c9ad0f9553a24b4cb7d4a247.seminal.ml
+("100","34")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1540,6 +1830,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-11:58:26-d434312dfde528e7d5f0dc87a9807aeb.seminal.ml
+("104","11")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1549,6 +1840,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-11:59:18-bf001761f7012c241e4087c39d2e9776.seminal.ml
+("100","29")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1558,6 +1850,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-12:01:30-c9e982702b75e6ace803eee5f5d31401.seminal.ml
+("136","20")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1567,6 +1860,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-19:51:52-4c4952762d71314d3fdcccdf6da3c0f2.seminal.ml
+("111","11")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1578,6 +1872,7 @@ due to values from:
                                                   2.5 ; Home ; Turn (3 *. (pi /. 4)) ; Forward 5.0]
 
 20060324-19:59:26-89f2326d390889b438f85e767726a3c5.seminal.ml
+("164","47")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1587,6 +1882,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060324-20:36:24-68e526075e57827da7dad3c70b4b8d6a.seminal.ml
+("151","10")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1596,6 +1892,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060324-20:42:22-82e990cb0822742ed266ee2df00e23e6.seminal.ml
+("144","15")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1605,6 +1902,7 @@ due to values from:
 interpTrans [] _ _ _
 
 20060324-20:45:28-232a876d350ebc97006824843fc62110.seminal.ml
+("104","11")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because float is incompatible with int
 Stuck at:
@@ -1614,6 +1912,7 @@ due to values from:
 acos (- 1.0)
 
 20060324-22:00:17-ecdfe52e272243e86b6b7a8128d95dd3.seminal.ml
+("38","33")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because (string * (string * storage) list) is incompatible with (string * storage)
 Stuck at:
@@ -1623,58 +1922,63 @@ due to values from:
 interp_s [] (SaveHeap "")
 
 20060324-22:00:33-db93e113469e7bb804bada46ace29e7a.seminal.ml
+("25","29")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because int is incompatible with storage
+*** Failed after 1 tests: Type error: stuck because int is incompatible with storage
 Stuck at:
   line 25, column 17
 due to values from:
   line 15, column 11
-interp_e []
-         (Plus (Var "" , Int 0))
+interp_e [] (Var "")
 
 20060324-22:01:55-60f7617e7e801a26ea584bcc86751861.seminal.ml
+("25","29")
 SUCCESS!
 *** Failed after 3 tests: Type error: stuck because exp is incompatible with storage
 Stuck at:
   line 25, column 17
 due to values from:
   line 15, column 11
-interp_e [("b" , StoredInt 0) ; ("b" , StoredHeap [("" , StoredHeap [])])]
-         (Var "")
+interp_e []
+         (Plus (Var "" , Var ""))
 
 20060324-22:04:48-ca1773b81b82f426df3e9e7e4632b399.seminal.ml
+("37","33")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because (string * int) is incompatible with (string * storage)
+*** Failed after 1 tests: Type error: stuck because (string * (string * storage) list) is incompatible with (string * storage)
 Stuck at:
   line 18, column 23
 due to values from:
   line 18, column 23
-interp_s []
-         (If (Var "" , RestoreHeap "" , Assign ("" , Var "")))
+interp_s [] (SaveHeap "")
 
 20060324-22:07:48-d2b75cb83836da475118ae658501a5ca.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("104","45")
+SUCCESS!
+*** Failed after 8 tests: Error: infinite recursion
+interpTrans [Home ; Forward 1.552316082068976 ; For (1 , []) ; For (0 , [])]
+            _ _ _
 
 20060324-22:08:00-d2df9ba9c697ee7e1b27b4b952dcdd4a.seminal.ml
+("42","33")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because (string * (string * storage) list) is incompatible with (string * storage)
+*** Failed after 5 tests: Type error: stuck because (string * (string * storage) list) is incompatible with (string * storage)
 Stuck at:
   line 18, column 23
 due to values from:
   line 18, column 23
-interp_s [("daa" , StoredHeap [("ab" , StoredInt 1) ; ("a" , StoredHeap [])]) ; ("dc" , StoredHeap [])]
-         (Seq (SaveHeap "" , While (Var "" , RestoreHeap "")))
+interp_s [("ebee" , StoredHeap [("b" , StoredHeap [("b" , StoredInt 0)])]) ; ("" , StoredInt 0) ; ("" , StoredHeap []) ; ("ba" , StoredInt 1)]
+         (SaveHeap "c")
 
 20060324-22:24:46-8ab05dd4986d17d763e509d04ea02fde.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("145","5")
+("145","5")
+TIMED OUT: 20060323-14:46:06-12e2638acf73c54ba75337e4a67e0897.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 500 steps>
+()
 
 20060324-22:33:45-794856d6d57de6aec959bc9221c45eb6.seminal.ml
+("14","34")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with float
 Stuck at:
@@ -1685,51 +1989,62 @@ due to values from:
 makePoly _ 0.0
 
 20060324-22:37:56-14013c68b574056a18cf98eb43cf3811.seminal.ml
-SUCCESS!
-*** Failed after 3 tests: Error: infinite recursion
-interpTrans [For (1 , []) ; For (0 , [Turn 0.0])]
-            _ _ _
-
-20060324-22:39:30-c619291e201e563ad9550d8cd7acb5f0.seminal.ml
-SUCCESS!
-*** Failed after 10 tests: Type error: stuck because (float * float) list is incompatible with ('a * 'b)
-Stuck at:
-  line 86, column 11
-due to values from:
-  line 86, column 26
-interpTrans [For (7 , [Home]) ; For (2 , []) ; Turn 0.14876795813387234 ; Forward 1.8663636124811704 ; For (1 , []) ; Home ; Home]
-            8.129674634966392
-            2.214227443389794 _
-
-20060324-22:39:43-eebf94185c695dc23122f1f8a3b05347.seminal.ml
-SUCCESS!
-*** Failed after 28 tests: Type error: stuck because (float * float) is incompatible with 'a list
-Stuck at:
-  line 21, column 44
-due to values from:
-  line 21, column 44
-interpLarge [Home ; Home ; Home ; Loop (2 , [Forward 0.0]) ; Home ; Home ; Loop (1 , [])]
-
-20060324-22:45:51-9b07192b0a6d5857aee50032d33ab030.seminal.ml
-SUCCESS!
-
-20060324-22:46:18-435497b4fd7d69acd543ff31eea2fb72.seminal.ml
+("85","13")
 SUCCESS!
 *** Failed after 8 tests: Error: infinite recursion
-interpTrans [Forward 3.2005233457516082 ; Turn 4.754985262321041 ; Forward 0.0 ; For (1 , [Forward 0.0]) ; For (0 , [Forward 5.909520412153446e-2 ; Forward 0.8940076240255271])]
-            2.808452756454701
-            4.461763078334655
-            4.8319839262027475
+interpTrans [Turn 0.5368112051497707 ; For (4 , []) ; Forward 0.45781211747935113]
+            _ _ 1.9986265301325616
+
+20060324-22:39:30-c619291e201e563ad9550d8cd7acb5f0.seminal.ml
+("86","24")
+("145","5")
+SUCCESS!
+*** Failed after 6 tests: Error: infinite recursion
+interpTrans [Home ; Home ; For (3 , [Home]) ; Forward 1.9796077367346405]
+            4.358617011848747
+            3.3035503016362044e-2 _
+
+20060324-22:39:43-eebf94185c695dc23122f1f8a3b05347.seminal.ml
+("21","59")
+SUCCESS!
+*** Failed after 96 tests: Type error: stuck because (float * float) is incompatible with 'a list
+Stuck at:
+  line 21, column 44
+due to values from:
+  line 21, column 44
+interpLarge [Home ; Home]
+
+20060324-22:45:51-9b07192b0a6d5857aee50032d33ab030.seminal.ml
+("26","36")
+SUCCESS!
+*** Failed after 4 tests: Type error: stuck because float is incompatible with int
+Stuck at:
+  line 26, column 37
+due to values from:
+  line 29, column 38
+  <unknown>
+interpLarge [Turn 0.0 ; Forward 1.2331155185626599]
+
+20060324-22:46:18-435497b4fd7d69acd543ff31eea2fb72.seminal.ml
+("88","12")
+SUCCESS!
+*** Failed after 8 tests: Error: infinite recursion
+interpTrans [Turn 5.065974881179449 ; Forward 0.3377717045723281 ; Turn 0.0 ; Turn 4.7609818943941615 ; Home ; Forward 0.4393183579306248]
+            6.176514614842038
+            6.140461836311008
+            0.8739103683311314
 
 20060324-22:53:08-18b6d1fa1b4022dcf41a6276b9ca9fc9.seminal.ml
+("92","22")
 SUCCESS!
-*** Failed after 7 tests: Error: infinite recursion
-interpTrans [Forward 1.7141627034222775 ; Turn 1.9285089279380274 ; Home ; For (4 , [For (0 , [Turn 0.0])]) ; Forward 0.23126204741014134 ; For (1 , [For (0 , []) ; For (0 , [Turn 0.0])])]
-            3.5688547540644873
-            3.7379456239905204
-            1.0095966061277635
+*** Failed after 10 tests: Error: infinite recursion
+interpTrans [For (0 , []) ; Forward 3.464213660355545 ; Forward 0.8448246827490715 ; Forward 0.0 ; Forward 0.6487222797865645 ; Forward 2.95976613777977 ; Turn 0.8137629750026686 ; Home]
+            7.201217903750439
+            6.354227820617353
+            5.102743638578606
 
 20060324-22:57:22-f4d3fc8cbafcab94ceae8ce7d40c51a5.seminal.ml
+("145","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because move is incompatible with move list
 Stuck at:
@@ -1739,16 +2054,18 @@ due to values from:
 interpLarge example_logo_prog
 
 20060324-23:04:56-f1d095019a8df3560f887b998e607db5.seminal.ml
+("27","60")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because int is incompatible with float
+*** Failed after 6 tests: Type error: stuck because int is incompatible with float
 Stuck at:
   line 27, column 61
 due to values from:
   line 27, column 61
   line 5, column 10
-interpLarge [Turn 0.0]
+interpLarge [Turn 0.0 ; Home ; Home ; Turn 3.5748524700881683]
 
 20060325-09:30:54-e182e9092714cced8953b2f5b29145da.seminal.ml
+("54","19")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because stmt list is incompatible with heap
 Stuck at:
@@ -1759,6 +2076,7 @@ due to values from:
 interp_prog _
 
 20060325-09:41:54-7dbacbbb2d533f44a1db48037fe31cbd.seminal.ml
+("70","18")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with 'a list
 Stuck at:
@@ -1768,19 +2086,19 @@ due to values from:
 printheap h 0
 
 20060328-14:00:48-8da9cf0dfa8df41870d6ee216a089637.seminal.ml
+("75","4")
 SUCCESS!
-*** Failed after 147 tests: Type error: stuck because unit is incompatible with exp
+*** Failed after 39 tests: Type error: stuck because (string * unit) is incompatible with (string * exp)
 Stuck at:
-  line 68, column 9
+  line 46, column 37
 due to values from:
-  line 75, column 5
-interp (fun _ ->
-          fun _ ->
-            [("" , Closure ("b" , Int 0 , [])) ; ("" , Pair (Lam ("a" , Apply (Var "" , Var "") , None) , Int 0)) ; ("cc" , Second (Plus (Int 0 , Int 0))) ; ("bfcdb" , Pair (First (Int 0) , Plus (If (Var "" , Int 0 , Var "") , Int 0))) ; ("af" , Pair (Second (Var "") , Int 0)) ; ("cadee" , Closure ("be" , First (Apply (Var "" , Int 0)) , [("b" , Second (If (Var "" , Int 0 , Var ""))) ; ("" , Plus (Int 0 , First (Var "")))]))])
-       _
-       (Pair (If (Pair (Int 0 , Lam ("" , Int 0 , None)) , Second (Var "") , Var "") , If (Closure ("b" , Plus (Var "" , Var "") , []) , First (Var "") , Int 0)))
+  line 46, column 37
+interp (fun _ -> fun _ -> [])
+       [("" , _) ; _]
+       (Apply (Closure ("dda" , First (Int 0) , [("" , Lam ("" , Int 0 , None))]) , Pair (Var "" , Lam ("" , Var "" , None))))
 
 20060329-19:32:13-413085166cad1985799707383569fe55.seminal.ml
+("175","25")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with string
 Stuck at:
@@ -1792,147 +2110,211 @@ match ans1 with
 | _ -> raise Unimplemented
 
 20060401-08:09:20-9b97df096c7b5d2aa43c35e50188230c.seminal.ml
+("47","13")
 SUCCESS!
-*** Failed after 151 tests: Type error: stuck because (string * int) is incompatible with (string * exp)
+*** Failed after 16 tests: Type error: stuck because int is incompatible with exp
 Stuck at:
-  line 45, column 40
+  line 44, column 7
 due to values from:
-  line 45, column 40
+  line 37, column 3
 interp _ _
-       (Apply (Closure ("a" , Var "" , []) , Int 0))
+       (Apply (Int 3 , Int 0))
 
 20060403-20:09:44-6a44548eed87d4b6e6201e799844d20c.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2500 steps>
-()
+("203","27")
+("111","12")
+("203","27")
+("145","5")
+("203","27")
+("110","2")
+("145","5")
+("203","27")
+("145","5")
+("203","27")
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
+(0.0 , 0.0) :: (fst (interpTrans example_logo_prog 0.0
+                                                   0.0 0.0))
 
 20060403-20:43:16-b07f4d13cabbbd98858efb4e21fb2f2e.seminal.ml
+("77","7")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because 'a list option is incompatible with exp
+*** Failed after 4 tests: Type error: stuck because (exp * string list) is incompatible with ('a list option * 'a list)
 Stuck at:
-  line 81, column 8
+  line 0, column 0
 due to values from:
-  line 81, column 14
-computeFreeVars (Second (Apply (First (Int 0) , Lam ("" , Int 0 , None))))
+  
+output-type mismatch!
 
 20060403-21:25:44-455f9320f05e875d718926bbafb03dd9.seminal.ml
+("78","63")
 SUCCESS!
-*** Failed after 11 tests: Type error: stuck because string list option is incompatible with 'a list
+*** Failed after 8 tests: Type error: stuck because string list option is incompatible with 'a list
 Stuck at:
   line 78, column 52
 due to values from:
   line 76, column 5
-computeFreeVars (Lam ("b" , Var "c" , None))
+computeFreeVars (Lam ("a" , Lam ("d" , Lam ("" , Lam ("" , Pair (Int 0 , First (Var "")) , Some []) , None) , None) , None))
 
 20060403-21:35:06-110b4ff4ab239ddf2024c924f7b24c81.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 3000 steps>
+("124","16")
+("124","16")
+("124","16")
+TIMED OUT: 20060323-22:20:22-4e5f88ae07be062df109ed5701cbef33.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2000 steps>
 ()
 
 20060403-23:29:52-92f0c4405907a1f677168b5773c9c0a9.seminal.ml
+("55","15")
+TIMED OUT: 20060323-21:50:16-0a01d9e97b5fb61deca9c42f7b87e874.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2000 steps>
+()
+
+20060403-23:30:42-935cb5f8947224ca15c05bc1b31c5394.seminal.ml
+("55","15")
 SUCCESS!
-*** Failed after 225 tests: Type error: stuck because int is incompatible with exp
+*** Failed after 18 tests: Type error: stuck because exp is incompatible with int
+Stuck at:
+  line 55, column 30
+due to values from:
+  line 38, column 3
+  line 38, column 3
+interp _ _
+       (Plus (Plus (Int 0 , Int 0) , Pair (Int 0 , Plus (Var "" , Int 0))))
+
+20060403-23:31:40-acb953a7a447b99f3a44d62c523c0ade.seminal.ml
+("55","15")
+("124","16")
+SUCCESS!
+*** Failed after 356 tests: Type error: stuck because int is incompatible with exp
+Stuck at:
+  line 45, column 6
+due to values from:
+  line 55, column 30
+interp _
+       [("ecnnmloenaa" , _) ; ("kmaih" , _) ; ("keolmkkgg" , _) ; ("ndlnkajbjejhn" , _)]
+       (Apply (Plus (Int 0 , Int 0) , Var ""))
+
+20060404-22:13:52-137af8b879346e055957a720071ea44e.seminal.ml
+("139","23")
+("139","23")
+("139","23")
+("55","15")
+("203","27")
+("139","23")
+SUCCESS!
+*** Failed after 409 tests: Type error: stuck because int is incompatible with exp
 Stuck at:
   line 52, column 6
 due to values from:
   line 55, column 30
 interp _ _
-       (Plus (Plus (Int 0 , Int 0) , Closure ("" , Plus (Var "" , Var "") , [("" , First (Int 0))])))
-
-20060403-23:30:42-935cb5f8947224ca15c05bc1b31c5394.seminal.ml
-SUCCESS!
-*** Failed after 225 tests: Type error: stuck because exp is incompatible with int
-Stuck at:
-  line 55, column 30
-due to values from:
-  line 38, column 3
-  line 38, column 3
-interp _ _
-       (Apply (Closure ("" , Plus (Int 0 , Int 0) , []) , Int 0))
-
-20060403-23:31:40-acb953a7a447b99f3a44d62c523c0ade.seminal.ml
-SUCCESS!
-*** Failed after 133 tests: Type error: stuck because (string * int) is incompatible with (string * exp)
-Stuck at:
-  line 46, column 37
-due to values from:
-  line 46, column 37
-interp _ _
-       (Apply (Closure ("bcdab" , Int 0 , [("cbe" , Int 2) ; ("fad" , Var "a") ; ("bdcee" , Second (First (Var ""))) ; ("b" , Pair (Int 0 , Second (Int 0)))]) , Plus (Int 0 , Int 0)))
-
-20060404-22:13:52-137af8b879346e055957a720071ea44e.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 3000 steps>
-()
+       (Plus (Plus (Int 0 , Int 0) , Second (Apply (Var "" , Int 0))))
 
 20060404-22:15:04-5f68f13050763ebfd26af1dc16f0ea9f.seminal.ml
-TIMED OUT
+("140","10")
+("140","10")
+("124","16")
+("140","10")
+("140","10")
+("139","23")
+("140","10")
+("124","16")
+TIMED OUT: 20060403-20:09:44-6a44548eed87d4b6e6201e799844d20c.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060404-22:23:08-8982c9c35730867ec38c6a14fbd2ebba.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 3000 steps>
+("173","15")
+("173","15")
+("173","15")
+("140","10")
+TIMED OUT: 20060404-22:13:52-137af8b879346e055957a720071ea44e.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
 ()
 
 20060405-11:30:40-3b59839ff274888dc397e3bb11f47e38.seminal.ml
-TIMED OUT
+("231","41")
+("173","15")
+("231","41")
+("231","41")
+TIMED OUT: 20060403-21:35:06-110b4ff4ab239ddf2024c924f7b24c81.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060405-20:30:56-fbd72970e1c774661ada3799804de280.seminal.ml
+("99","20")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because exp list option is incompatible with string list option
+*** Failed after 7 tests: Type error: stuck because string list is incompatible with exp list
 Stuck at:
-  line 99, column 7
+  line 11, column 22
 due to values from:
-  line 99, column 11
-computeFreeVars (Lam ("b" , Var "" , None))
+  line 96, column 26
+  line 105, column 23
+computeFreeVars (First (Plus (Second (Var "") , Lam ("" , Lam ("" , Int 0 , None) , Some []))))
+("231","41")
 
 20060405-20:41:02-03a9838eef87a5baf5d05bd769e72274.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2500 steps>
-()
-
-20060406-11:05:36-7beaaeb582c5ffce2f318b0abe8d1ff6.seminal.ml
-SUCCESS!
-*** Failed after 6 tests: Type error: stuck because unit is incompatible with exp
-Stuck at:
-  line 45, column 6
-due to values from:
-  line 48, column 9
-interp _ _
-       (Apply (Int 0 , Int 0))
-
-20060406-11:17:50-f3fec0a8ebf80f9b609a4bd6698f4c33.seminal.ml
-SUCCESS!
-*** Failed after 8 tests: Type error: stuck because (string * unit) is incompatible with (string * exp)
-Stuck at:
-  line 49, column 37
-due to values from:
-  line 49, column 37
-interp _
-       [("dfgb" , _) ; ("hgaeaca" , _) ; ("hdhg" , _) ; ("ce" , _)]
-       (Apply (Var "" , Plus (Int 0 , Int 0)))
-
-20060406-14:42:20-dde7bed9a1366515f6889378b8159823.seminal.ml
-TIMED OUT
+("143","17")
+("143","17")
+("143","17")
+("173","15")
+("143","17")
+TIMED OUT: 20060404-22:15:04-5f68f13050763ebfd26af1dc16f0ea9f.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
-20060406-15:15:00-89b2ea1f6daa44f016f1115e5e7a0e5c.seminal.ml
+20060406-11:05:36-7beaaeb582c5ffce2f318b0abe8d1ff6.seminal.ml
+("48","8")
 SUCCESS!
-*** Failed after 14 tests: Type error: stuck because exp is incompatible with int
+*** Failed after 16 tests: Type error: stuck because unit is incompatible with exp
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
+
+20060406-11:17:50-f3fec0a8ebf80f9b609a4bd6698f4c33.seminal.ml
+("52","4")
+SUCCESS!
+*** Failed after 19 tests: Type error: stuck because (string * unit) is incompatible with (string * exp)
+Stuck at:
+  line 49, column 37
+due to values from:
+  line 49, column 37
+interp (fun _ ->
+          fun _ ->
+            [("jo" , If (Var "" , Apply (Int 0 , First (Var "")) , Pair (Var "" , Var ""))) ; ("mdai" , Var "bldggdlg") ; ("mbljbefqdqfb" , Int 0) ; ("ofmr" , Int 1) ; ("berlkkfg" , Int 8) ; ("cslgjinjeioo" , Pair (Apply (Pair (Int 0 , Plus (If (Apply (Var "" , Apply (Int 0 , Int 0)) , If (Var "" , Var "" , Var "") , Lam ("cdc" , Lam ("b" , Closure ("" , Int 0 , []) , Some []) , Some [])) , First (Var ""))) , Int 0) , Pair (Pair (Closure ("" , Int 0 , []) , First (Var "")) , If (Plus (Int 0 , Var "") , Lam ("" , Int 0 , Some []) , Var "")))) ; ("fjp" , Apply (Apply (Pair (Var "fged" , Var "") , Plus (First (Var "") , Var "")) , Int 1)) ; ("seqjph" , Plus (Pair (Int 0 , Pair (Second (Int 0) , Pair (Pair (Var "" , Var "") , First (Int 0)))) , Second (Closure ("" , Int 0 , [("" , First (Int 0)) ; ("" , Closure ("" , Int 0 , [("b" , First (Int 0))]))]))))])
+       _
+       (Apply (Lam ("b" , Closure ("" , Int 0 , []) , None) , Plus (Int 0 , First (Var ""))))
+
+20060406-14:42:20-dde7bed9a1366515f6889378b8159823.seminal.ml
+("265","27")
+("265","27")
+("231","41")
+("265","27")
+("143","17")
+("265","27")
+("173","15")
+("265","27")
+("143","17")
+TIMED OUT: 20060405-11:30:40-3b59839ff274888dc397e3bb11f47e38.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
+()
+
+20060406-15:15:00-89b2ea1f6daa44f016f1115e5e7a0e5c.seminal.ml
+("60","25")
+SUCCESS!
+*** Failed after 23 tests: Type error: stuck because exp is incompatible with int
 Stuck at:
   line 60, column 21
 due to values from:
-  <unknown>
+  line 38, column 3
   line 60, column 26
-interp _
-       [("hjflng" , _) ; ("lidhiblebnhbm" , _) ; ("imkehhkckbmg" , _) ; ("fddcfcki" , _) ; ("nahjdnhklbh" , _) ; ("h" , _) ; ("bl" , _) ; ("ignmigbb" , _)]
-       (Second (If (Var "" , Int 0 , Var "")))
+interp _ _
+       (If (Int 0 , Int 0 , Var ""))
 
 20060406-16:17:14-8a3de947b667000de8e1ae8f13f19ad5.seminal.ml
+("170","19")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because string is incompatible with char
 Stuck at:
@@ -1940,29 +2322,32 @@ Stuck at:
 due to values from:
   line 222, column 16
   line 170, column 20
-print_prog (Var "")
+print_prog (Int 0)
 
 20060406-16:21:14-364e8a472f1d55e872c7f223d5767649.seminal.ml
+("179","39")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because 'a -> 'b is incompatible with string
+*** Failed after 10 tests: Type error: stuck because 'a -> 'b is incompatible with string
 Stuck at:
   line 171, column 27
 due to values from:
   line 171, column 31
-print_prog (Lam ("" , Int 0 , None))
+print_prog (If (Lam ("" , Var "" , Some []) , If (Lam ("c" , Closure ("a" , Var "" , []) , None) , Int 0 , If (If (Int 0 , Var "" , Var "") , Var "" , Apply (Var "" , Var ""))) , Int 0))
 
 20060406-16:21:36-7bbc8e17d3da25fefc500f10db76996f.seminal.ml
+("179","48")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because string list option is incompatible with 'a list
+*** Failed after 4 tests: Type error: stuck because string list option is incompatible with 'a list
 Stuck at:
   <unknown>
 due to values from:
   line 173, column 5
-print_prog (Lam ("" , Var "" , Some []))
+print_prog (Lam ("" , Lam ("" , Var "" , Some []) , None))
 
 20060406-16:33:28-3e359e9c9b8723f54053d2ca78c3f996.seminal.ml
+("103","7")
 SUCCESS!
-*** Failed after 14 tests: Type error: stuck because string list is incompatible with string list option
+*** Failed after 2 tests: Type error: stuck because string list is incompatible with string list option
 Stuck at:
   line 103, column 9
 due to values from:
@@ -1970,25 +2355,37 @@ due to values from:
 computeFreeVars (Lam ("" , Int 0 , None))
 
 20060406-16:51:34-f6a4b5a7a5903facda19e0431adb571e.seminal.ml
-TIMED OUT
+("289","13")
+("289","13")
+("289","13")
+("265","27")
+("289","13")
+TIMED OUT: 20060404-22:23:08-8982c9c35730867ec38c6a14fbd2ebba.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060406-16:55:42-d74890b981d3589d3da26b20eb3d9287.seminal.ml
-TIMED OUT
+("290","60")
+("290","60")
+("290","60")
+("289","13")
+("290","60")
+TIMED OUT: 20060405-20:41:02-03a9838eef87a5baf5d05bd769e72274.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060407-12:05:48-b0c22b01ad12500b1c4bf679d6fb1d2a.seminal.ml
+("95","30")
 SUCCESS!
-*** Failed after 5 tests: Type error: stuck because (exp * 'a list) is incompatible with (exp * (exp * 'b list))
+*** Failed after 2 tests: Type error: stuck because (exp * 'a list) is incompatible with 'b list
 Stuck at:
-  line 0, column 0
+  line 15, column 4
 due to values from:
-  
-output-type mismatch!
+  line 92, column 15
+computeFreeVars (Pair (Var "" , Var ""))
 
 20060407-12:38:30-642a84ce028494fa2e6f268cb01f2d6e.seminal.ml
+("117","34")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because unit list is incompatible with string
 Stuck at:
@@ -1999,50 +2396,94 @@ due to values from:
 print_endline ("Test: " ^ printlist test_lst)
 
 20060407-13:09:40-68fa1d749857b7c158fe3ea20c682917.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("103","26")
+SUCCESS!
+*** Failed after 3 tests: Type error: stuck because string list option is incompatible with string list
+Stuck at:
+  line 12, column 22
+due to values from:
+  line 97, column 3
+  line 97, column 3
+computeFreeVars (Lam ("" , Pair (Var "" , Var "") , None))
 
 20060407-14:04:36-4f6bd8de53c236abdacd46fda85bf207.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("108","13")
+SUCCESS!
+*** Failed after 9 tests: Type error: stuck because string is incompatible with string
+Stuck at:
+  line 12, column 22
+due to values from:
+  line 101, column 3
+  <unknown>
+computeFreeVars (Lam ("ba" , Apply (Int 0 , Closure ("" , Int 0 , [])) , None))
 
 20060407-14:09:40-7804fcbc75f8b1ecc35cb5f0b73b61e1.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("117","21")
+SUCCESS!
+*** Failed after 11 tests: Type error: stuck because 'a list option is incompatible with string list
+Stuck at:
+  line 12, column 22
+due to values from:
+  line 101, column 3
+  line 117, column 27
+computeFreeVars (If (Closure ("ab" , Lam ("" , Var "" , None) , []) , Lam ("" , Apply (Int 0 , Var "") , Some []) , Var ""))
 
 20060407-14:13:28-a922dd99a12b24c5e1535113889190b5.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("108","43")
+WARNING: comparing holes
+SUCCESS!
+NO WITNESS: 20060407-14:13:28-a922dd99a12b24c5e1535113889190b5.seminal.ml
+*** Failed after 14 tests: Error: cannot compare two holes
+computeFreeVars (Pair (Second (Int 0) , Var "efabbg"))
 
 20060407-19:01:03-abd1f315759bb561fda04484cb139c03.seminal.ml
-TIMED OUT
+("228","20")
+("228","20")
+("228","20")
+("290","60")
+("228","20")
+TIMED OUT: 20060406-14:42:20-dde7bed9a1366515f6889378b8159823.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060407-19:05:44-5fc103089dd1d89d86c9c1b5d7749cf2.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2500 steps>
+("225","29")
+("225","29")
+("225","29")
+("289","13")
+("225","29")
+("228","20")
+("290","60")
+("225","29")
+("228","20")
+TIMED OUT: 20060406-16:51:34-f6a4b5a7a5903facda19e0431adb571e.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060407-19:41:33-7f6991e60ba2fb91dfbf4ee0f2fbee98.seminal.ml
-TIMED OUT
+("235","104")
+("235","104")
+("235","104")
+("225","29")
+("235","104")
+TIMED OUT: 20060406-16:55:42-d74890b981d3589d3da26b20eb3d9287.seminal.ml
 *** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060407-20:43:07-5c966853d652348eb775115fde313289.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2500 steps>
+("247","11")
+("247","11")
+("247","11")
+("235","104")
+("247","11")
+TIMED OUT: 20060407-19:01:03-abd1f315759bb561fda04484cb139c03.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
 ()
 
 20060407-22:11:48-f973eeb63f5f9db2f9feec0812c1b4e1.seminal.ml
+("247","90")
+("247","90")
+("247","90")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because unit is incompatible with string
 Stuck at:
@@ -2053,8 +2494,15 @@ print_endline "array : ";
 print_array (snd (computeFreeVars ex1));
 printExp (fst (computeFreeVars ex1));
 print_endline ()
+("247","11")
+TIMED OUT: 20060407-19:05:44-5fc103089dd1d89d86c9c1b5d7749cf2.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 3000 steps>
+()
 
 20060407-22:23:32-b4b678d78faa53925ca15fc1f5bb7159.seminal.ml
+("127","12")
+("127","12")
+("127","12")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with string
 Stuck at:
@@ -2065,6 +2513,15 @@ due to values from:
 interp _ _ (Var "")
 
 20060407-22:43:20-5c0b48e6862129272a152635d2fffb9f.seminal.ml
+("122","48")
+("122","48")
+("122","48")
+TIMED OUT: 20060407-19:41:33-7f6991e60ba2fb91dfbf4ee0f2fbee98.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
+()
+
+20060407-22:43:39-0e0a265418f2ab15923390cbe2319fe1.seminal.ml
+("121","6")
 SUCCESS!
 *** Failed after 2 tests: Type error: stuck because (string * 'a) list is incompatible with exp
 Stuck at:
@@ -2073,7 +2530,23 @@ due to values from:
   <unknown>
 printEnv [("" , _)]
 
-20060407-22:43:39-0e0a265418f2ab15923390cbe2319fe1.seminal.ml
+20060407-22:58:54-33fb0f89929a29aeedba76680ae970bc.seminal.ml
+("88","12")
+SUCCESS!
+*** Failed after 7 tests: Type error: stuck because string list is incompatible with string list option
+Stuck at:
+  line 88, column 18
+due to values from:
+  line 88, column 22
+computeFreeVars (Lam ("b" , If (Plus (Int 0 , Apply (Int 0 , Int 0)) , Int 2 , Plus (Int 0 , Var "")) , Some []))
+("121","6")
+
+20060408-22:49:00-d7677aecaf225da83dfe298659b3af98.seminal.ml
+("161","17")
+("161","17")
+
+20060408-22:49:39-62b3d2f60005e371eb26262ca86f49d7.seminal.ml
+("161","17")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because exp is incompatible with 'a list
 Stuck at:
@@ -2082,93 +2555,85 @@ due to values from:
   <unknown>
 printEnv (Int 0)
 
-20060407-22:58:54-33fb0f89929a29aeedba76680ae970bc.seminal.ml
-SUCCESS!
-*** Failed after 9 tests: Type error: stuck because 'a list is incompatible with string list option
-Stuck at:
-  line 88, column 18
-due to values from:
-  line 88, column 22
-computeFreeVars (Lam ("gfdabgh" , Plus (Int 0 , Int 0) , Some ["aa"]))
-
-20060408-22:49:00-d7677aecaf225da83dfe298659b3af98.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 3000 steps>
-()
-
-20060408-22:49:39-62b3d2f60005e371eb26262ca86f49d7.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 3000 steps>
-()
-
 20060408-23:13:58-31888a7830c581fa2341c3dd0c854717.seminal.ml
+("84","29")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because (exp * string list) is incompatible with 'a list
+*** Failed after 3 tests: Type error: stuck because ('c * 'd list) is incompatible with ('c * (exp * 'd list))
 Stuck at:
-  line 15, column 4
+  line 0, column 0
 due to values from:
-  line 85, column 14
-computeFreeVars (If (Var "" , Int 0 , Int 0))
+  
+output-type mismatch!
 
 20060408-23:22:14-3b63f43df03b8b00547e6d4bc27d4e97.seminal.ml
+("80","20")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because exp is incompatible with ('a * 'b)
+*** Failed after 6 tests: Type error: stuck because exp is incompatible with ('a * 'b)
 Stuck at:
-  line 89, column 15
+  line 92, column 22
 due to values from:
   line 80, column 21
-computeFreeVars (If (Plus (Var "" , Int 0) , Lam ("" , Var "" , Some []) , Plus (Var "" , Int 0)))
+computeFreeVars (Plus (Second (Lam ("" , Int 0 , None)) , Lam ("a" , Second (Var "") , Some [])))
 
 20060408-23:25:43-af8743fb96b206fe5d43a8f1ffba9d59.seminal.ml
+("41","16")
+("161","17")
 SUCCESS!
-*** Failed after 26 tests: Type error: stuck because (unit * exp) is incompatible with exp
+*** Failed after 49 tests: Type error: stuck because (unit * exp) is incompatible with exp
 Stuck at:
-  line 64, column 6
+  line 57, column 6
 due to values from:
   line 40, column 22
 interp (fun _ ->
-          fun _ -> [("dddc" , Var "ed")])
+          fun _ ->
+            [("dbdef" , Int 5) ; ("fbhaaea" , Var "c") ; ("cghh" , Lam ("ff" , Var "" , None))])
        _
-       (First (First (If (Int 0 , Pair (Var "" , Int 0) , Lam ("" , Var "" , None)))))
+       (Apply (If (Lam ("" , Second (Int 0) , None) , Int 0 , First (Var "")) , Pair (Int 0 , Var "")))
 
 20060408-23:28:03-17cf64e920a8226ad7e5c78cd6217862.seminal.ml
+("80","21")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because unit is incompatible with int
+*** Failed after 6 tests: Type error: stuck because unit is incompatible with int
 Stuck at:
   line 80, column 22
 due to values from:
   line 80, column 22
   line 78, column 3
-computeFreeVars (Lam ("" , Int 0 , Some []))
+computeFreeVars (Plus (Plus (Lam ("" , Var "" , Some []) , Int 0) , Apply (If (Var "" , Var "" , Int 0) , Var "")))
 
 20060409-00:07:29-26092bf6b0d197a7cad0d4c6a3b795e6.seminal.ml
+("164","10")
 SUCCESS!
+mkOutcome: 20060409-00:07:29-26092bf6b0d197a7cad0d4c6a3b795e6.seminal.ml (Error: Lam expects 3 arguments, but was given 2)
+*** Failed after 1 tests: Error: Lam expects 3 arguments, but was given 2
+Lam ("x" , Var "x")
 
 20060409-15:05:26-8ff60256917627e3357b0b8561216a84.seminal.ml
+("60","22")
+("161","17")
+("161","17")
+("161","17")
 SUCCESS!
-*** Failed after 9 tests: Type error: stuck because string is incompatible with ('a * 'b)
+*** Failed after 75 tests: Type error: stuck because string is incompatible with ('a * 'b)
 Stuck at:
   <unknown>
 due to values from:
   <unknown>
 interp (fun _ ->
           fun _ ->
-            [("b" , Lam ("ab" , Plus (Int 0 , Var "") , Some [])) ; ("edaa" , Int 1) ; ("cb" , Lam ("d" , Apply (Var "" , Int 0) , None)) ; ("fggib" , Int 0) ; ("geiai" , Closure ("ccb" , Var "" , [("bbe" , Plus (If (Second (Var "") , Var "" , Var "") , Var ""))])) ; ("acae" , Plus (Apply (First (Int 0) , Plus (Int 0 , Int 0)) , First (Int 0)))])
-       ["id" ; "" ; ""]
-       (First (Pair (Second (Lam ("" , Lam ("" , Int 0 , Some []) , Some [])) , Var "")))
+            [("h" , If (If (Pair (Closure ("d" , Var "" , []) , Lam ("" , Var "" , Some [])) , Plus (If (If (Int 0 , Int 0 , Int 0) , If (Var "" , Int 0 , Int 0) , Int 0) , First (Var "")) , Lam ("" , Int 0 , None)) , Int 0 , Closure ("ddf" , Apply (If (Pair (Int 0 , Var "") , If (Var "" , Int 0 , Var "") , If (Var "" , Int 0 , Var "")) , Lam ("" , Var "" , Some [])) , [("c" , Pair (Second (Pair (Var "" , Int 0)) , Second (Var ""))) ; ("bd" , Pair (Var "" , Var "")) ; ("b" , Apply (Second (Int 0) , Second (Int 0)))]))) ; ("kglj" , Var "bc") ; ("l" , Pair (Lam ("" , Var "" , Some []) , Var "b")) ; ("ahke" , Apply (Lam ("" , Var "" , None) , Var "dbd")) ; ("ml" , Second (Int 3)) ; ("ji" , Int 1) ; ("c" , Closure ("ihk" , Var "eg" , []))])
+       ["ibemikmbkmajlo" ; "hhldm" ; "mckkadcio" ; "dclalc" ; "bnlbdafoaoa" ; "agnfoink" ; "aifd" ; "l" ; "gib" ; "hboaggn"]
+       (Pair (Lam ("c" , Var "" , None) , Var ""))
+("161","17")
+TIMED OUT: 20060407-20:43:07-5c966853d652348eb775115fde313289.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
+()
 
 20060414-10:15:40-92278a7bf8def4c58490ade009db5dcc.seminal.ml
-SUCCESS!
-*** Failed after 11 tests: Type error: stuck because exn is incompatible with string
-Stuck at:
-  line 211, column 14
-due to values from:
-  line 211, column 14
-  line 211, column 69
-typecheck _
-          (Cast (Int 0 , ArrowT (IntT , IntT)))
+("211","13")
 
 20060414-11:06:26-2e8f9d56c3e7c006332210cfc11dfc40.seminal.ml
+("230","23")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because exp is incompatible with typ
 Stuck at:
@@ -2178,6 +2643,7 @@ due to values from:
 Cast (Int 0 , RecordE [("name" , Int 0)])
 
 20060414-12:08:08-1367481ed6b8e079d84ec7b99d06d824.seminal.ml
+("252","27")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because 'a -> 'b is incompatible with exp
 Stuck at:
@@ -2187,89 +2653,117 @@ due to values from:
 Letrec (RecordT [("cur" , IntT , Read) ; ("acc" , IntT , Read)] , "loop" , "x" , IntT , If (Get (vx , "cur") , app (Var "loop" , RecordE [("acc" , Plus (Get (vx , "cur") , Get (vx , "acc"))) ; ("cur" , Plus (Get (vx , "cur") , Int (-1)))]) , Get (vx , "acc")))
 
 20060414-18:56:18-975364d5af6fc324097b99df4af18792.seminal.ml
+("27","36")
 SUCCESS!
+mkOutcome: 20060414-18:56:18-975364d5af6fc324097b99df4af18792.seminal.ml (Error: record Record Nothing [("ctr2",Ref 10),("incr2",Ref 11),("allowDecr2",Ref 12),("print2",Ref 13)] (Just (TApp "t2" [TVar "a"])) does not have a field 'ctr1')
+*** Failed after 1 tests: Error: record Record Nothing [("ctr2",Ref 10),("incr2",Ref 11),("allowDecr2",Ref 12),("print2",Ref 13)] (Just (TApp "t2" [TVar "a"])) does not have a field 'ctr1'
+client2 {ctr2 = <ref-10> ; incr2 = <ref-11> ; allowDecr2 = <ref-12> ; print2 = <ref-13>}
 
 20060415-22:25:48-14e1c11a58d9c3801bb7bab54912b31c.seminal.ml
+("134","17")
 SUCCESS!
-*** Failed after 6 tests: Type error: stuck because exp is incompatible with 'a -> 'b
+*** Failed after 4 tests: Type error: stuck because exp is incompatible with 'a -> 'b
 Stuck at:
   line 134, column 18
 due to values from:
   line 135, column 15
-typecheck _
-          (Plus (RecordV [] , Var ""))
+typecheck [_ ; _ ; _]
+          (Plus (Lam ("" , ArrowT (IntT , IntT) , RecordV []) , Var ""))
 
 20060416-13:23:38-0530e1eaf713b518ff0e7e7a832ea50c.seminal.ml
+("108","45")
 SUCCESS!
-*** Failed after 9 tests: Type error: stuck because (string * typ * access) is incompatible with typ
+*** Failed after 6 tests: Type error: stuck because (string * typ * access) is incompatible with typ
 Stuck at:
   line 111, column 37
 due to values from:
   line 103, column 3
   line 111, column 41
-subtype (RecordT [("g" , RecordT [("c" , RecordT [] , Both) ; ("aa" , ArrowT (ArrowT (IntT , IntT) , IntT) , Read) ; ("da" , IntT , Read)] , Write) ; ("acgc" , RecordT [] , Write)])
+subtype (RecordT [("" , ArrowT (ArrowT (IntT , IntT) , IntT) , Both) ; ("b" , ArrowT (IntT , IntT) , Write)])
         IntT
 
 20060416-13:29:12-8de255153d5663cbcb8fad71f8dc4724.seminal.ml
+("109","60")
 SUCCESS!
-*** Failed after 14 tests: Type error: stuck because (string * typ * access) is incompatible with typ
+*** Failed after 6 tests: Type error: stuck because (string * typ * access) is incompatible with typ
 Stuck at:
   line 114, column 37
 due to values from:
   line 103, column 3
   line 114, column 41
-subtype (RecordT [("bdgba" , RecordT [] , Both)])
-        (ArrowT (RecordT [] , IntT))
+subtype (RecordT [("b" , IntT , Read) ; ("d" , IntT , Both) ; ("ecda" , ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , IntT)) , Read) ; ("c" , ArrowT (ArrowT (IntT , RecordT []) , IntT) , Write)])
+        (ArrowT (ArrowT (IntT , IntT) , IntT))
 
 20060416-23:25:44-e7cce69a55cf521059786e569bdc1318.seminal.ml
+("137","18")
 SUCCESS!
-*** Failed after 24 tests: Type error: stuck because exp is incompatible with typ
+*** Failed after 7 tests: Type error: stuck because exp is incompatible with typ
 Stuck at:
   line 107, column 3
 due to values from:
   line 107, column 9
 typecheck _
-          (Plus (If (Letrec (IntT , "" , "" , IntT , Var "") , Int 0 , Cast (Var "" , IntT)) , Closure ("" , Var "" , {contents = <ref-17>})))
+          (If (Int 0 , RecordE [] , Int 0))
 
 20060417-09:09:48-c1254f26855289d18929c3dffb68cc3d.seminal.ml
+("106","31")
 SUCCESS!
-*** Failed after 2 tests: Unbound variable: accc
+*** Failed after 4 tests: Type error: stuck because string is incompatible with 'a list
+Stuck at:
+  <unknown>
+due to values from:
+  line 106, column 49
 type_to_string (RecordT [])
 
 20060417-22:20:54-16c6772d6fdb93e703aea2128369c509.seminal.ml
+("110","31")
 SUCCESS!
-*** Failed after 3 tests: Type error: stuck because (string * typ * access) is incompatible with typ
+*** Failed after 3 tests: Type error: stuck because string is incompatible with 'a list
 Stuck at:
-  line 102, column 3
+  <unknown>
 due to values from:
-  line 102, column 3
-type_to_string (RecordT [("a" , IntT , Read)])
+  line 110, column 49
+type_to_string (ArrowT (IntT , RecordT []))
 
 20060417-22:41:48-01a73c5b831c09060fa52a6d35b70d63.seminal.ml
+("125","44")
+("211","13")
+("125","44")
+("125","44")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because string is incompatible with 'a list
+*** Failed after 16 tests: Type error: stuck because (typ * access) is incompatible with typ
 Stuck at:
-  <unknown>
+  line 113, column 3
 due to values from:
-  line 109, column 41
-subtype (RecordT [])
-        (ArrowT (IntT , IntT))
+  line 113, column 9
+subtype (RecordT [("fbija" , RecordT [] , Write) ; ("bcg" , ArrowT (ArrowT (IntT , ArrowT (IntT , RecordT [])) , IntT) , Both) ; ("fhdaajg" , IntT , Both) ; ("bcdigfb" , ArrowT (IntT , IntT) , Write) ; ("bedd" , ArrowT (RecordT [("" , ArrowT (IntT , IntT) , Both) ; ("bdb" , RecordT [] , Read) ; ("bb" , ArrowT (RecordT [("" , RecordT [] , Both)] , IntT) , Read)] , RecordT []) , Both) ; ("" , ArrowT (IntT , ArrowT (IntT , RecordT [])) , Read) ; ("fagbc" , RecordT [] , Write) ; ("fjaihjci" , RecordT [("a" , ArrowT (IntT , RecordT []) , Write) ; ("" , IntT , Read)] , Both)])
+        (RecordT [("gi" , RecordT [] , Read) ; ("jgde" , RecordT [("" , ArrowT (IntT , IntT) , Write)] , Both) ; ("" , ArrowT (ArrowT (IntT , IntT) , RecordT []) , Both) ; ("h" , ArrowT (ArrowT (ArrowT (IntT , IntT) , ArrowT (ArrowT (IntT , IntT) , IntT)) , ArrowT (ArrowT (RecordT [] , ArrowT (IntT , RecordT [("" , ArrowT (IntT , IntT) , Read)])) , ArrowT (IntT , IntT))) , Read)])
+("211","13")
+("161","17")
+SUCCESS!
+*** Failed after 20 tests: Type error: stuck because exn is incompatible with string
+Stuck at:
+  line 211, column 14
+due to values from:
+  line 211, column 14
+  line 211, column 69
+typecheck [("r" , _) ; ("oltndkgtislboqsg" , _) ; ("nkkacgfmtmihgdpmpr" , _) ; ("slffbrgaqepjllde" , _) ; ("gelqqikaojc" , _) ; ("rdbcnsr" , _) ; ("dronergejipi" , _) ; ("" , ArrowT (IntT , RecordT [("ab" , IntT , Read) ; ("c" , ArrowT (IntT , IntT) , Both)])) ; _ ; _ ; _ ; _ ; _ ; _]
+          (Plus (Cast (Var "" , IntT) , Plus (Var "" , Apply (Set (Var "" , "" , Int 0) , Lam ("" , IntT , Int 0)))))
+("161","17")
 
 20060418-22:05:32-39fdd837557bc77c42f640f2b57c4bb7.seminal.ml
-SUCCESS!
-+++ OK, passed 1000 tests.
+("141","18")
 
 20060419-09:13:18-d2a4e8e4cefed9ee58f028d6ea15e910.seminal.ml
-SUCCESS!
-*** Failed after 9 tests: Type error: stuck because string is incompatible with 'a list
-Stuck at:
-  <unknown>
-due to values from:
-  line 109, column 41
-typecheck [_ ; _ ; _ ; _ ; _ ; _]
-          (Set (Lam ("" , IntT , Cast (Var "" , IntT)) , "c" , Lam ("eea" , RecordT [] , Get (Int 0 , ""))))
+("186","14")
+("186","14")
+("141","18")
+TIMED OUT: 20060408-22:49:00-d7677aecaf225da83dfe298659b3af98.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
+()
 
 20060419-09:24:44-b0e52bafc8fad4bc05a7ec92466c8a96.seminal.ml
+("113","16")
 SUCCESS!
 *** Failed after 1 tests: Type error: stuck because int is incompatible with string
 Stuck at:
@@ -2279,39 +2773,46 @@ due to values from:
 compareRecWidth [] _
 
 20060419-09:34:18-a751dc69b7fc8ed0ed2f3150f8f781e9.seminal.ml
+("241","25")
 SUCCESS!
-*** Failed after 12 tests: Type error: stuck because typ is incompatible with (string * typ)
-Stuck at:
-  line 241, column 27
-due to values from:
-  line 241, column 27
-typecheck [_ ; _ ; _ ; _ ; _ ; _]
-          (Get (Lam ("ba" , IntT , Lam ("" , IntT , Letrec (IntT , "a" , "b" , IntT , Closure ("" , Int 0 , {contents = <ref-23>})))) , ""))
-
-20060419-09:39:12-1b59d618af2b6777b32b06872235a1a5.seminal.ml
-SUCCESS!
-*** Failed after 30 tests: Type error: stuck because string is incompatible with 'a list
+*** Failed after 5 tests: Type error: stuck because typ is incompatible with ('a * 'b)
 Stuck at:
   <unknown>
 due to values from:
-  line 109, column 41
-typecheck [_ ; _ ; _ ; _ ; _ ; _ ; _]
-          (Letrec (IntT , "cga" , "dc" , RecordT [] , Letrec (RecordT [] , "bc" , "" , RecordT [("" , ArrowT (IntT , IntT) , Both)] , Get (RecordE [] , ""))))
+  line 241, column 27
+typecheck [_ ; _]
+          (Plus (Letrec (IntT , "" , "" , IntT , Var "") , Letrec (IntT , "" , "" , IntT , Int 0)))
+
+20060419-09:39:12-1b59d618af2b6777b32b06872235a1a5.seminal.ml
+("244","123")
+SUCCESS!
+*** Failed after 7 tests: Type error: stuck because exp is incompatible with typ
+Stuck at:
+  line 102, column 3
+due to values from:
+  line 244, column 124
+typecheck [_]
+          (Letrec (IntT , "a" , "dbd" , ArrowT (ArrowT (IntT , IntT) , RecordT []) , Lam ("" , IntT , Lam ("a" , IntT , Plus (Int 0 , Var "")))))
+TIMED OUT: 20060408-22:49:39-62b3d2f60005e371eb26262ca86f49d7.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 2500 steps>
+()
 
 20060420-11:57:34-64faf25cf828b203532860f001bbe336.seminal.ml
+("114","9")
 SUCCESS!
-*** Failed after 35 tests: Type error: stuck because unit is incompatible with bool
+*** Failed after 13 tests: Type error: stuck because unit is incompatible with bool
 Stuck at:
   line 114, column 10
 due to values from:
   line 104, column 10
   line 104, column 10
-typecheck _
-          (Plus (Cast (RecordV [] , RecordT []) , Int 0))
+typecheck [_ ; _ ; _ ; _ ; _ ; _]
+          (Plus (If (Set (Var "" , "" , Cast (Int 0 , IntT)) , Var "" , Int 1) , Lam ("" , ArrowT (IntT , IntT) , Var "")))
 
 20060420-12:58:02-dac428f4bb4abd4e1e1c736857e38c88.seminal.ml
+("109","13")
 SUCCESS!
-*** Failed after 2 tests: Type error: stuck because (string * typ * access) list is incompatible with ('a * 'b * 'c)
+*** Failed after 3 tests: Type error: stuck because (string * typ * access) list is incompatible with ('a * 'b * 'c)
 Stuck at:
   line 103, column 3
 due to values from:
@@ -2320,192 +2821,246 @@ subtype (RecordT [])
         (RecordT [])
 
 20060420-13:26:40-295f6dadefdff9931a5b54c5f40a9631.seminal.ml
+("112","35")
 SUCCESS!
-*** Failed after 20 tests: Type error: stuck because 'a option is incompatible with ('b * 'c)
+*** Failed after 12 tests: Type error: stuck because string is incompatible with access
 Stuck at:
-  line 112, column 13
+  line 99, column 23
 due to values from:
-  line 98, column 11
-subtype (ArrowT (ArrowT (ArrowT (RecordT [] , IntT) , RecordT []) , RecordT [("" , IntT , Read) ; ("" , IntT , Read)]))
-        (ArrowT (RecordT [("dbhghe" , RecordT [] , Write) ; ("ebehecb" , ArrowT (RecordT [] , ArrowT (RecordT [] , ArrowT (IntT , IntT))) , Both) ; ("bha" , ArrowT (ArrowT (IntT , IntT) , IntT) , Write) ; ("" , RecordT [] , Read) ; ("decgfda" , IntT , Write)] , RecordT []))
+  line 103, column 3
+  line 103, column 3
+subtype (RecordT [("cbeefe" , ArrowT (IntT , IntT) , Write) ; ("bbffef" , ArrowT (IntT , RecordT []) , Read)])
+        (RecordT [("b" , RecordT [] , Both)])
 
 20060420-13:38:24-ef3f2b6607c05aa2a3d64cc30f7e5587.seminal.ml
-Prelude.read: no parseCallstack:
-CallStack (from HasCallStack):
-  error, called at src/NanoML/Misc.hs:747:22 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Misc
-  read, called at src/NanoML/Step.hs:522:30 in nanoml-0.1.0.0-7lhFf0iYSh74eObH7kC2UF:NanoML.Step
+("153","27")
 
 20060420-13:46:42-6b7b9df433faea187437ee73710fed1e.seminal.ml
+("162","22")
 SUCCESS!
-*** Failed after 14 tests: Type error: stuck because (string * exp) is incompatible with ('a * 'b * 'c)
+*** Failed after 14 tests: Type error: stuck because unit is incompatible with bool
 Stuck at:
-  line 82, column 5
+  line 162, column 9
 due to values from:
-  line 124, column 3
-typecheck _
-          (RecordE [("dba" , Letrec (ArrowT (IntT , IntT) , "" , "" , ArrowT (IntT , IntT) , Closure ("" , Int 0 , {contents = <ref-17>}))) ; ("cdb" , Closure ("" , Letrec (IntT , "" , "" , IntT , Int 0) , {contents = <ref-19>}))])
+  line 83, column 13
+typecheck _ (RecordE [])
 
 20060420-13:48:52-2d8bd63819a740a8529923125a96d7de.seminal.ml
+("162","44")
 SUCCESS!
-*** Failed after 27 tests: Type error: stuck because unit is incompatible with bool
+*** Failed after 12 tests: Type error: stuck because unit is incompatible with bool
 Stuck at:
   line 164, column 9
 due to values from:
   line 83, column 13
-typecheck [_ ; _ ; _ ; _ ; _]
-          (Lam ("a" , RecordT [] , Apply (RecordE [] , Int 0)))
+typecheck _ (RecordE [])
 
 20060420-14:37:50-f4603d9b9411817f0e5686e3dc20bc8c.seminal.ml
+("105","49")
 SUCCESS!
-*** Failed after 5 tests: Type error: stuck because 'a -> 'b is incompatible with bool
+*** Failed after 7 tests: Type error: stuck because 'a -> 'b is incompatible with bool
 Stuck at:
   line 105, column 40
 due to values from:
   line 102, column 20
-subtype (ArrowT (IntT , ArrowT (IntT , IntT)))
-        (ArrowT (IntT , IntT))
+subtype (ArrowT (RecordT [("cbb" , IntT , Both)] , IntT))
+        (ArrowT (IntT , RecordT []))
 
 20060420-14:42:50-174cee33963e34fe367d8a7099d076f7.seminal.ml
+("116","30")
 SUCCESS!
+mkOutcome: 20060420-14:42:50-174cee33963e34fe367d8a7099d076f7.seminal.ml (Error: RecordT expects 1 arguments, but was given 0)
+*** Failed after 15 tests: Error: RecordT expects 1 arguments, but was given 0
+subtype (RecordT [("hdedh" , IntT , Read)])
+        (RecordT [("agdm" , ArrowT (IntT , ArrowT (ArrowT (IntT , IntT) , IntT)) , Write) ; ("fcf" , RecordT [] , Both) ; ("kgeaiciakk" , RecordT [("bac" , IntT , Both) ; ("" , ArrowT (IntT , IntT) , Both) ; ("ceab" , RecordT [] , Both)] , Both) ; ("fddej" , IntT , Write) ; ("klgiecdlgbah" , RecordT [("d" , IntT , Read) ; ("" , ArrowT (IntT , ArrowT (ArrowT (IntT , IntT) , RecordT [])) , Both) ; ("dac" , IntT , Read) ; ("cf" , IntT , Write) ; ("db" , IntT , Read)] , Both) ; ("i" , ArrowT (IntT , ArrowT (RecordT [] , IntT)) , Read) ; ("bfijl" , RecordT [("hgkje" , RecordT [("ecdd" , ArrowT (RecordT [] , IntT) , Write) ; ("cb" , ArrowT (RecordT [("c" , RecordT [("" , IntT , Read)] , Both) ; ("ac" , RecordT [] , Read)] , ArrowT (RecordT [] , ArrowT (IntT , IntT))) , Read) ; ("babba" , ArrowT (ArrowT (IntT , ArrowT (RecordT [] , IntT)) , ArrowT (ArrowT (IntT , IntT) , ArrowT (IntT , IntT))) , Write) ; ("fcgda" , RecordT [] , Write) ; ("dcbb" , RecordT [("" , RecordT [] , Write) ; ("aefe" , IntT , Read) ; ("dede" , IntT , Read)] , Both)] , Both) ; ("ebijfj" , RecordT [("eaed" , IntT , Read)] , Both)] , Write)])
 
 20060420-14:53:50-33f59721c84171a9a81162de2a236e18.seminal.ml
+("199","4")
 SUCCESS!
-*** Failed after 19 tests: Type error: stuck because unit is incompatible with typ
+*** Failed after 4 tests: Type error: stuck because typ is incompatible with unit
 Stuck at:
-  line 130, column 22
+  line 0, column 0
 due to values from:
-  line 130, column 29
-typecheck [_ ; _]
-          (Apply (Int 0 , Lam ("d" , IntT , Letrec (IntT , "" , "c" , IntT , Lam ("a" , IntT , Plus (Int 0 , Var ""))))))
+  
+output-type mismatch!
 
 20060420-15:02:38-395fc7642049c949d9b40cf19e356a18.seminal.ml
+("153","4")
 SUCCESS!
+mkOutcome: 20060420-15:02:38-395fc7642049c949d9b40cf19e356a18.seminal.ml (Error: tried to match _ against RecordV)
+*** Failed after 3 tests: Error: tried to match _ against RecordV
+typecheck _
+          (Cast (Closure ("" , Var "" , {contents = <ref-17>}) , IntT))
 
 20060420-15:03:22-2f62bf710968390e0ca81dcbaf9ac350.seminal.ml
+("151","21")
 SUCCESS!
-*** Failed after 7 tests: Type error: stuck because typ is incompatible with 'a list
+*** Failed after 4 tests: Type error: stuck because (string * exp * access) list is incompatible with (string * typ * access) list
+Stuck at:
+  line 151, column 15
+due to values from:
+  <unknown>
+typecheck _
+          (RecordE [("bb" , Plus (Int 0 , Int 0))])
+
+20060420-15:04:44-224ca4c8f96b2c6dcf0e1f035d8fdb0b.seminal.ml
+("155","25")
+("141","18")
+SUCCESS!
+*** Failed after 138 tests: Type error: stuck because exp is incompatible with typ
+Stuck at:
+  line 103, column 3
+due to values from:
+  line 103, column 9
+typecheck [_ ; _ ; _ ; _ ; _ ; _]
+          (Apply (Cast (Lam ("" , IntT , Var "") , IntT) , Plus (Lam ("e" , ArrowT (RecordT [] , RecordT []) , RecordE []) , If (Closure ("b" , Lam ("" , IntT , Int 0) , {contents = <ref-17>}) , RecordV [("" , {contents = <ref-19>})] , Closure ("" , Int 0 , {contents = <ref-21>})))))
+SUCCESS!
+*** Failed after 22 tests: Type error: stuck because typ is incompatible with 'a list
 Stuck at:
   line 97, column 3
 due to values from:
   line 128, column 14
 typecheck _ (Get (Int 0 , ""))
 
-20060420-15:04:44-224ca4c8f96b2c6dcf0e1f035d8fdb0b.seminal.ml
-SUCCESS!
-*** Failed after 9 tests: Type error: stuck because typ is incompatible with 'a list
-Stuck at:
-  line 97, column 3
-due to values from:
-  line 128, column 14
-typecheck [_ ; _ ; _ ; _ ; _ ; _ ; _ ; _]
-          (Get (Lam ("" , IntT , Get (Int 0 , "")) , "da"))
-
 20060420-15:15:34-f3de90b032b1ab0acc55ba351230021b.seminal.ml
+("173","32")
 SUCCESS!
-*** Failed after 4 tests: Unbound variable: checktype
-typecheck []
-          (Letrec (IntT , "" , "a" , IntT , Cast (Int 0 , IntT)))
+*** Failed after 5 tests: Error: infinite recursion
+typecheck [("ea" , _) ; ("" , ArrowT (ArrowT (IntT , ArrowT (IntT , IntT)) , RecordT [])) ; _]
+          (If (Get (Set (Int 0 , "b" , Var "") , "b") , RecordE [("cc" , If (Plus (Var "" , Var "") , Lam ("" , IntT , Int 0) , Int 0)) ; ("aa" , RecordE [])] , Int 0))
 
 20060421-12:48:26-f3359f667b5a1876fd310f0292d7b57c.seminal.ml
+("163","38")
 SUCCESS!
-*** Failed after 3 tests: Unbound variable: la
-typecheck _
-          (Apply (RecordE [] , Get (Var "" , "")))
+*** Failed after 13 tests: Unbound variable: la
+typecheck [_ ; _ ; _ ; _ ; _]
+          (Lam ("b" , RecordT [("a" , ArrowT (IntT , IntT) , Read)] , If (Get (Var "" , "") , Apply (Closure ("" , Lam ("" , IntT , Int 0) , {contents = <ref-17>}) , Var "") , RecordV [])))
 
 20060421-12:55:30-220009617aefd214b090b47a5f324eff.seminal.ml
-SUCCESS!
-*** Failed after 2 tests: Unbound variable: la
-typecheck _ (Get (Var "" , ""))
+("169","1")
 
 20060421-17:21:10-79fe2fbff99827a5b1379ba48f931116.seminal.ml
+("27","15")
 SUCCESS!
+mkOutcome: 20060421-17:21:10-79fe2fbff99827a5b1379ba48f931116.seminal.ml (Error: record Record Nothing [("ctr2",Ref 10),("incr2",Ref 11),("allowDecr2",Ref 12),("print2",Ref 13)] (Just (TApp "t2" [TVar "a"])) does not have a field 'print1')
+*** Failed after 1 tests: Error: record Record Nothing [("ctr2",Ref 10),("incr2",Ref 11),("allowDecr2",Ref 12),("print2",Ref 13)] (Just (TApp "t2" [TVar "a"])) does not have a field 'print1'
+client2 {ctr2 = <ref-10> ; incr2 = <ref-11> ; allowDecr2 = <ref-12> ; print2 = <ref-13>}
 
 20060421-17:38:10-9fedad806a399da07f601d1c08599c98.seminal.ml
+("165","26")
 SUCCESS!
-*** Failed after 10 tests: Type error: stuck because exp is incompatible with 'a list
+*** Failed after 4 tests: Type error: stuck because exp is incompatible with 'a list
 Stuck at:
   <unknown>
 due to values from:
   line 122, column 3
 typecheck _
-          (Plus (Get (Var "" , "") , Cast (Int 0 , IntT)))
+          (If (Get (Cast (Int 0 , IntT) , "a") , RecordV [] , If (Var "" , Int 0 , Var "")))
+SUCCESS!
+*** Failed after 9 tests: Unbound variable: la
+typecheck _
+          (Letrec (IntT , "bbbb" , "e" , RecordT [] , Apply (RecordV [("b" , {contents = <ref-17>})] , Get (Cast (Int 0 , IntT) , ""))))
 
 20060421-17:41:02-0838d2deac55fab6e99ca6a22f996fb7.seminal.ml
-SUCCESS!
-*** Failed after 9 tests: Type error: stuck because exp is incompatible with 'a list
-Stuck at:
-  <unknown>
-due to values from:
-  line 122, column 3
-typecheck [_ ; _ ; _ ; _ ; _]
-          (Lam ("c" , RecordT [] , Apply (Get (Var "" , "") , RecordE [])))
+("165","29")
 
 20060421-18:24:24-ea21fd9a34b5cd724b1843a65c7ba4b1.seminal.ml
+("163","23")
 SUCCESS!
-*** Failed after 8 tests: Type error: stuck because exp is incompatible with 'a list
+*** Failed after 5 tests: Type error: stuck because exp is incompatible with 'a list
 Stuck at:
   line 97, column 3
 due to values from:
   line 122, column 3
 typecheck _
-          (Get (Set (Var "" , "" , Int 0) , "g"))
+          (Get (RecordE [] , "baa"))
 
 20060421-18:54:48-531e81fe22a5c558cbd10d537c0e7a3f.seminal.ml
+("165","24")
 SUCCESS!
-*** Failed after 175 tests: Type error: stuck because 'a option is incompatible with typ
+*** Failed after 25 tests: Type error: stuck because exp is incompatible with 'a list
 Stuck at:
-  line 124, column 32
+  <unknown>
 due to values from:
-  line 124, column 39
-typecheck [_ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _ ; _]
-          (Lam ("" , ArrowT (RecordT [("a" , RecordT [] , Both)] , IntT) , Get (Cast (Int 0 , IntT) , "c")))
+  line 122, column 3
+typecheck _
+          (Apply (Var "" , Get (Var "" , "")))
 
 20060421-18:59:42-4693f912b79c1f8595120782f5618bfc.seminal.ml
+("171","16")
 SUCCESS!
-*** Failed after 24 tests: Type error: stuck because 'a option is incompatible with ('b * 'c)
+*** Failed after 32 tests: Type error: stuck because typ is incompatible with 'a option
+Stuck at:
+  line 0, column 0
+due to values from:
+  
+output-type mismatch!
+
+20060421-19:09:48-c6e8c52f60ef4537806fbfce51ccfd37.seminal.ml
+("174","4")
+("186","14")
+("171","16")
+SUCCESS!
+*** Failed after 29 tests: Type error: stuck because (typ * access) option is incompatible with ('a * 'b)
 Stuck at:
   line 170, column 11
 due to values from:
-  line 98, column 11
-typecheck [] (Get (Var "" , ""))
-
-20060421-19:09:48-c6e8c52f60ef4537806fbfce51ccfd37.seminal.ml
-TIMED OUT
-*** Failed after 1 tests: Error: <timeout after 2000 steps>
-()
+  line 99, column 34
+typecheck _
+          (Get (RecordV [] , ""))
 
 20060422-14:27:16-f2f2d7b30c2ee14f630e6f99b177e544.seminal.ml
+("155","58")
 SUCCESS!
-*** Failed after 7 tests: Unbound variable: checktype
+*** Failed after 11 tests: Unbound variable: checktype
 typecheck _
-          (Plus (RecordE [] , Cast (If (Int 0 , Int 0 , Int 0) , IntT)))
+          (Set (RecordE [] , "a" , Closure ("" , RecordV [] , {contents = <ref-17>})))
 
 20060422-14:32:10-515422d7b51cfe948920ecc7a6ce6025.seminal.ml
+("156","20")
 SUCCESS!
-*** Failed after 18 tests: Type error: stuck because 'a list is incompatible with typ
+*** Failed after 8 tests: Type error: stuck because 'a list is incompatible with typ
 Stuck at:
   line 91, column 3
 due to values from:
   <unknown>
 typecheck _
-          (If (If (RecordE [] , Var "" , Closure ("ab" , Closure ("" , Apply (Var "" , Int 0) , {contents = <ref-17>}) , {contents = <ref-19>})) , Closure ("" , Int 0 , {contents = <ref-21>}) , Int 2))
+          (Apply (If (Var "" , Letrec (IntT , "" , "" , IntT , Get (Int 0 , "")) , Int 0) , RecordE [("a" , RecordE [])]))
 
 20060422-14:34:46-6f7ee1ff7b2f1840f25b0b2ac4a619a1.seminal.ml
+("155","25")
+("174","4")
 SUCCESS!
-*** Failed after 28 tests: Type error: stuck because ((string * 'a) * access) list is incompatible with (string * typ * access) list
+*** Failed after 32 tests: Type error: stuck because ((string * 'a) * access) list is incompatible with (string * typ * access) list
 Stuck at:
   line 155, column 18
 due to values from:
   <unknown>
-typecheck _
-          (RecordE [("" , Letrec (IntT , "" , "" , IntT , Int 0))])
+typecheck [("jf" , _) ; ("h" , _) ; ("glcfhe" , _) ; ("lfhejia" , _) ; ("" , RecordT [("" , ArrowT (IntT , IntT) , Both)]) ; ("bdeah" , _) ; ("ilkbfgj" , _) ; ("ieg" , _) ; ("biali" , _) ; ("ehide" , _) ; ("" , _)]
+          (RecordE [("d" , Var "a") ; ("b" , Apply (Get (Var "" , "") , Var ""))])
+("174","4")
 
 20060422-14:36:42-0f5feccefb217a4914f337274357c84a.seminal.ml
+("155","49")
 SUCCESS!
-*** Failed after 4 tests: Type error: stuck because 'a -> 'b is incompatible with (string * typ * access) list
+*** Failed after 3 tests: Type error: stuck because 'a -> 'b is incompatible with (string * typ * access) list
 Stuck at:
   line 155, column 18
 due to values from:
   <unknown>
 typecheck _
-          (Get (RecordE [] , ""))
+          (RecordE [("b" , Closure ("" , Int 0 , {contents = <ref-17>}))])
+SUCCESS!
+NO WITNESS: 20060418-22:05:32-39fdd837557bc77c42f640f2b57c4bb7.seminal.ml
++++ OK, passed 1000 tests.
+SUCCESS!
+*** Failed after 307 tests: Type error: stuck because typ is incompatible with string
+Stuck at:
+  line 186, column 1
+due to values from:
+  <unknown>
+typecheck [_ ; _ ; _ ; _ ; _ ; _]
+          (Apply (Apply (Int 0 , Lam ("" , ArrowT (IntT , IntT) , Var "")) , RecordE []))
+TIMED OUT: 20060421-19:09:48-c6e8c52f60ef4537806fbfce51ccfd37.seminal.ml
+*** Failed after 1 tests: Error: <timeout after 1500 steps>
+()
