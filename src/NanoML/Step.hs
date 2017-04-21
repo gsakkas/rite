@@ -431,6 +431,7 @@ matchRecBinds binds = do
 isFun (Lam {}) = True
 isFun (Prim1 {}) = True
 isFun (Prim2 {}) = True
+isFun (Prim3 {}) = True
 isFun _        = False
 
 matchNonRecBinds :: MonadEval m => [(Pat,Value)] -> m Env
@@ -503,6 +504,7 @@ substVars su = go
   go (Try ms e alts) = Try ms (go e) (map goAlt alts)
   go (Prim1 ms p) = Prim1 ms p
   go (Prim2 ms p) = Prim2 ms p
+  go (Prim3 ms p) = Prim3 ms p
   go (With ms x e) = With ms x (go e)
   go (Replace ms x e) = Replace ms x (go e)
   go (Hole ms r mt) = Hole ms r mt
@@ -859,6 +861,25 @@ stepApp ms f' es = do
                     return (App ms x es)
      -- _ -> do traceShowM (pretty $ App Nothing (Prim2 ms' (P2 x f t1 t2)) es)
      --         undefined
+  Prim3 ms' (P3 x f t1 t2 t3) -> do
+    modify' (\s -> s { stStepKind = PrimStep })
+    su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2 ++ freeTyVars t3) $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    let t1' = subst su t1
+        t2' = subst su t2
+        t3' = subst su t3
+    case es of
+     [e1] -> do env <- gets stVarEnv
+                return (Lam ms (VarPat ms "$x")
+                         (Lam ms (VarPat ms "$y")
+                           (App ms f' (es ++ [Var ms "$x", Var ms "$y"]))
+                           (Just env))
+                         (Just env))
+     [e1,e2] -> do env <- gets stVarEnv
+                   return (Lam ms (VarPat ms "$x") (App ms f' (es ++ [Var ms "$x"])) (Just env))
+     [e1,e2,e3] -> forces [(e1,t1'),(e2,t2'),(e3,t3')] $ \[v1,v2,v3] -> f v1 v2 v3
+     e1:e2:e3:es -> do x <- forces [(e1,t1'),(e2,t2'),(e3,t3')] $ \[v1,v2,v3] -> f v1 v2 v3
+                       return (App ms x es)
   Lam _ _ _ (Just _) -> do
         let (ps, e, env) = gatherLams f'
             (eps, es', ps') = zipWithLeftover es ps
