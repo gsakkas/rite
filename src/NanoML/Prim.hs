@@ -13,6 +13,7 @@ import Control.Monad.Except
 import Control.Monad.Random
 import Control.Monad.Reader
 import Data.Char
+import Data.List
 import qualified Data.Map as Map
 import qualified Data.Vector as Vector
 import Text.Printf
@@ -24,6 +25,7 @@ import NanoML.Types
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td))
   [ tInt, tFloat, tBool, tChar, tString, tArray
   , tUnit, tList, tOption, tExn, tRef
+  , tRand
   ]
 
 baseDataEnv = Map.fromList $ concatMap (\TypeDecl {..} -> case tyRhs of
@@ -53,8 +55,10 @@ tList   = mkTypeDecl "list"   ["a"] (mkAlgRhs [dNil, dCons])
 tOption = mkTypeDecl "option" ["a"] (mkAlgRhs [dNone, dSome])
 tExn    = mkTypeDecl "exn"    []    (mkAlgRhs [dFailure, dNot_found, dMatch_failure, dInvalid_argument, dDivision_by_zero])
 tRef    = mkTypeDecl "ref"    ["a"] (\td -> TRec [("contents", Mut, TVar "a")])
+tRand   = mkTypeDecl "Random.State.t" [] (mkAlgRhs [dRand])
 
 dUnit = DataDecl "()" []
+dRand = DataDecl "Random.State.t" []
 dNil = DataDecl "[]" []
 dCons = DataDecl "::" [ TVar "a", TApp "list" [TVar "a"] ]
 dNone = DataDecl "None" []
@@ -260,6 +264,7 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
            , ("snd", mkPrim1Fun $ P1 "snd" psnd (tT a b))
            , ("failwith", mkPrim1Fun $ P1 "failwith" pfailwith tS)
            , ("Array.get", mkPrim2Fun $ P2 "Array.get" parray_get (tA a) tI)
+           , ("Array.of_list", mkPrim1Fun $ P1 "Array.of_list" parray_of_list (tL a))
            , ("Char.code", mkPrim1Fun $ P1 "Char.code" pchar_code tC)
            , ("Char.compare", mkPrim2Fun $ P2 "Char.compare" pchar_compare tC tC)
            , ("Char.escaped", mkPrim1Fun $ P1 "Char.escaped" pchar_escaped tC)
@@ -278,6 +283,9 @@ primVars = [ ("min_float", VD nullProv 0.0) -- FIXME: this is bogus, how do i ge
            , ("String.get", mkPrim2Fun $ P2 "String.get" pstring_get tS tI)
            , ("String.length", mkPrim1Fun $ P1 "String.length" pstring_length tS)
            , ("String.make", mkPrim2Fun $ P2 "String.make" pstring_make tI tC)
+           , ("String.concat", mkPrim2Fun $ P2 "String.concat" pstring_concat tS (tL tS))
+           , ("Random.State.make", mkPrim1Fun $ P1 "Random.State.make" prandom_state_make (tA tI))
+           , ("Random.State.int", mkPrim3Fun $ P3 "Random.State.int" prandom_state_int (tCon "Random.State.t") tI tI)
            , ("print_char", mkPrim1Fun $ P1 "print_char" pprint_char tC)
            , ("print_int", mkPrim1Fun $ P1 "print_int" pprint_int tI)
            , ("print_float", mkPrim1Fun $ P1 "print_float" pprint_float tF)
@@ -344,6 +352,7 @@ primVarTypes =
   , ("fst", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "a"))
   , ("snd", TAll ["a", "b"] (TTup [TVar "a", TVar "b"] :-> TVar "b"))
   , ("failwith", TAll ["a"] (tCon tSTRING :-> TVar "a"))
+  , ("Array.of_list", TAll ["a"] (TApp "list" [TVar "a"] :-> TApp "array" [TVar "a"]))
   , ("Array.get", TAll ["a"] (TApp "array" [TVar "a"] :-> tCon tINT :-> TVar "a"))
   , ("Char.code", tCon tCHAR :-> tCon tINT)
   -- FIXME: support module types
@@ -505,9 +514,16 @@ pstring_of_float (VD _ i) = withCurrentProv $ \prv -> (VS prv (show i))
 pstring_of_bool :: MonadEval m => Value -> m Value
 pstring_of_bool (VB _ b) = withCurrentProv $ \prv -> (VS prv (if b then "true" else "false"))
 
--- TODO:
--- pstring_concat :: MonadEval m => Value -> Value -> m Value
--- pstring_concat (VS s) (VL xs) = return (VL ())
+pstring_concat :: MonadEval m => Value -> Value -> m Value
+pstring_concat (VS _ s) (VL _ xs _) = withCurrentProv $ \prv -> (VS prv (intercalate s [x | VS _ x <- xs ]))
+
+prandom_state_make :: MonadEval m => Value -> m Value
+prandom_state_make _ = withCurrentProv $ \prv -> (VA prv "Random.State.t" Nothing (Just (tCon "Random.State.t")))
+
+prandom_state_int :: MonadEval m => Value -> Value -> Value -> m Value
+prandom_state_int _ (VI _ l) (VI _ u) = withCurrentProvM $ \prv -> do
+  x <- getRandomR (l,u)
+  return (VI prv x)
 
 pstring_get :: MonadEval m => Value -> Value -> m Value
 pstring_get (VS _ s) (VI _ i)
@@ -531,6 +547,9 @@ parray_get (VV _ a _) (VI _ i)
   = return (a !! i)
   | otherwise
   = withCurrentProvM $ \prv -> maybeThrow $ MLException $ mkExn "Invalid_argument" [VS prv "index out of bounds"] prv
+
+parray_of_list :: MonadEval m => Value -> m Value
+parray_of_list (VL _ xs mt) = withCurrentProv $ \prv -> VV prv xs mt
 
 pprint_string :: MonadEval m => Value -> m Value
 pprint_string (VS _ s) = do
@@ -690,6 +709,9 @@ mkPrim1Fun f = Prim1 Nothing f
 
 mkPrim2Fun :: Prim2 -> Value
 mkPrim2Fun f = Prim2 Nothing f
+
+mkPrim3Fun :: Prim3 -> Value
+mkPrim3Fun f = Prim3 Nothing f
 
 tI = tCon tINT
 tF = tCon tFLOAT

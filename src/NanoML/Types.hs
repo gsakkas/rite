@@ -156,6 +156,7 @@ typeError t1 t2 = do
     Try _ e as -> e : mapMaybe snd3 as
     Prim1 {} -> []
     Prim2 {} -> []
+    Prim3 {} -> []
     With _ _ e -> values e
     Replace _ _ e -> values e
     Hole {} -> []
@@ -303,6 +304,7 @@ refreshExpr expr = addSubTerms =<< case expr of
   Try ms e alts -> Try ms <$> refreshExpr e <*> mapM refreshAlt alts
   Prim1 ms p -> return $ Prim1 ms p -- <$> refreshExpr x
   Prim2 ms p -> return $ Prim2 ms p -- <$> refreshExpr x <*> refreshExpr y
+  Prim3 ms p -> return $ Prim3 ms p -- <$> refreshExpr x <*> refreshExpr y
   With ms e x -> With ms e <$> (refreshExpr x `withEnv` e)
   Replace ms e x -> Replace ms e <$> (refreshExpr x `withEnv` e)
   Hole ms r mt -> return $ mkHole ms r mt
@@ -562,6 +564,7 @@ isValue expr = case expr of
   Ref {} -> True
   Prim1 {} -> True
   Prim2 {} -> True
+  Prim3 {} -> True
   _ -> False
 
 -- | Like 'isValue' but doesn't care if we've resolved the types yet.
@@ -578,6 +581,7 @@ isValue' expr = case expr of
   Ref {} -> True
   Prim1 {} -> True
   Prim2 {} -> True
+  Prim3 {} -> True
   _ -> False
 
 isVar (Var {}) = True
@@ -743,6 +747,7 @@ data Expr
   | Try !MSrcSpan !Expr [Alt]
   | Prim1 !MSrcSpan !Prim1
   | Prim2 !MSrcSpan !Prim2
+  | Prim3 !MSrcSpan !Prim3
   -- Val !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
   | With !MSrcSpan Env !Expr
   | Replace !MSrcSpan Env !Expr
@@ -884,6 +889,7 @@ getSrcSpanExprMaybe expr = case expr of
   Try ms _ _ -> ms
   Prim1 ms _ -> ms
   Prim2 ms _ -> ms
+  Prim3 ms _ -> ms
   -- Val ms _ -> ms
   With ms _ _ -> ms
   Replace ms _ _ -> ms
@@ -912,6 +918,7 @@ onSrcSpanExpr f expr = case expr of
   Try ms x y -> Try (f ms) x y
   Prim1 ms x -> Prim1 (f ms) x
   Prim2 ms x -> Prim2 (f ms) x
+  Prim3 ms x -> Prim3 (f ms) x
   -- Val ms x -> Val (f ms) x
   With ms x y -> With (f ms) x y
   Replace ms x y -> Replace (f ms) x y
@@ -1004,6 +1011,16 @@ instance Ord Prim2 where
   compare (P2 v1 _ _ _) (P2 v2 _ _ _) = compare v1 v2
 instance Hashable Prim2 where
   hashWithSalt salt (P2 v _ _ _) = hashWithSalt salt v
+
+data Prim3 = P3 !Var !(forall m. MonadEval m => Value -> Value -> Value -> m Value) !Type !Type !Type
+instance Show Prim3 where
+  show (P3 v _ _ _ _) = v
+instance Eq Prim3 where
+  P3 v1 _ _ _ _ == P3 v2 _ _ _ _ = v1 == v2
+instance Ord Prim3 where
+  compare (P3 v1 _ _ _ _) (P3 v2 _ _ _ _) = compare v1 v2
+instance Hashable Prim3 where
+  hashWithSalt salt (P3 v _ _ _ _) = hashWithSalt salt v
 
 data Uop
   = Neg | FNeg
@@ -1313,6 +1330,12 @@ typeOfM v = substM =<< case v of
     su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2) $ \tv ->
       (tv,) . TVar <$> freshTVar
     return (subst su t1 :-> subst su t2 :-> TVar r)
+    -- TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
+  Prim3 _ (P3 x f t1 t2 t3) -> do
+    r <- freshTVar
+    su <- fmap Map.fromList $ forM (nub $ freeTyVars t1 ++ freeTyVars t2 ++ freeTyVars t3) $ \tv ->
+      (tv,) . TVar <$> freshTVar
+    return (subst su t1 :-> subst su t2 :-> subst su t3 :-> TVar r)
     -- TVar "a" :-> TVar "b" :-> TVar "c" -- TODO
   Lit _ l -> return $ typeOfLit l
   Tuple _ vs -> TTup <$> (mapM typeOfM vs)
@@ -1677,6 +1700,9 @@ instance CollectEnvIds Prim1 where
 instance CollectEnvIds Prim2 where
   collectEnvIds _ = []
 
+instance CollectEnvIds Prim3 where
+  collectEnvIds _ = []
+
 instance CollectEnvIds Literal where
   collectEnvIds _ = []
 
@@ -1751,6 +1777,9 @@ exprDiff env e1 e2 = case (e1, e2) of
     | lx == ly && vx == vy
       -> Nothing
   (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
+    | lx == ly && vx == vy
+      -> Nothing
+  (Prim3 lx (P3 vx _ _ _ _), Prim3 ly (P3 vy _ _ _ _))
     | lx == ly && vx == vy
       -> Nothing
   -- (Val _ x, Val _ y)
