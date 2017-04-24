@@ -28,6 +28,7 @@ import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import qualified Data.Aeson                   as Aeson
 import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
+import           Data.Generics
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -223,6 +224,9 @@ withCurrentExpr e x = do
   a <- x
   modify' $ \s -> s { stCurrentExpr = e' }
   return a
+
+maybeReLoc :: MSrcSpan -> Expr -> Expr
+maybeReLoc ms = everywhere $ mkT (onSrcSpanExpr (\ms' -> ms' <|> ms))
 
 addEdge :: MonadEval m => EdgeKind -> (Expr,Env) -> (Expr,Env) -> m ()
 addEdge !k !e1 !e2 = do -- unless (x == y) $

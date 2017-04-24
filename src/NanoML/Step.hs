@@ -694,17 +694,19 @@ step expr = withCurrentExpr expr $ build expr $ case expr of
   --   Val ms . VF prv . Func expr <$> gets stVarEnv
   -- NOTE: special-case `App (Var f) xs` to evaluate `xs` before looking up `f`.
   --       this makes the trace a bit more readable.
+  -- NOTE: we use maybeReLoc to assign the function body the SrcSpan of the
+  --       application if it doesn't already have one, e.g. for baked-in things
   App ms f'@(Var _ v) args -> stepOne args
                   (\args -> do f <- lookupVar v
                                -- env <- gets stVarEnv
                                -- addEdge (StepsTo BoringStep) (f',env) (f,env)
                                -- _ <- build f' $ return f
                                -- traceShowM f
-                               stepApp ms f args)
+                               maybeReLoc ms <$> stepApp ms f args)
                   (\args -> return $ App ms f' args)
   App ms f args -> stepOne (f:args)
                   (\(f:vs) -> -- addEvent expr >>
-                                stepApp ms f vs)
+                                maybeReLoc ms <$> stepApp ms f vs)
                   (\(f:es) -> return $ App ms f es)
   Bop ms b e1 e2 -> stepOne [e1,e2]
                    (\[v1,v2] -> -- addEvent expr >>
