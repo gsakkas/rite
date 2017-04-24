@@ -496,8 +496,13 @@ instance Pretty MSrcSpan where
   pretty Nothing = text "<unknown>"
 
 instance Pretty SrcSpan where
-  pretty SrcSpan{..} = text "line" <+> pretty srcSpanStartLine
-                    <> char ',' <+> text "column" <+> pretty srcSpanStartCol
+  pretty SrcSpan{..} = char '('   <> pretty srcSpanStartLine <>
+                       char ','   <> pretty srcSpanStartCol  <>
+                       text ")-(" <> pretty srcSpanEndLine <>
+                       char ','   <> pretty srcSpanEndCol <>
+                       char ')'
+  -- pretty SrcSpan{..} = text "line" <+> pretty srcSpanStartLine
+  --                   <> char ',' <+> text "column" <+> pretty srcSpanStartCol
 
 instance Pretty Type where
   prettyPrec z t = case t of
@@ -535,7 +540,8 @@ instance Pretty NanoError where
         indent 2 (vcat (map pretty vss))
     ParseError s -> text "Parse error:" <+> text s
     OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
-    OtherError s -> text "Error:" <+> text s
+    OtherError s ss -> text "Error:" <+> text s <$>
+                       text "Stuck at:" <$> indent 2 (pretty ss)
     TimeoutError n -> text "Error: <timeout after" <+> pretty n <+> text "steps>"
 
 ticks d = char '`' <> d <> char '\''

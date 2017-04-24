@@ -247,7 +247,8 @@ nested_comment _ _ = do
         err input = do alexSetInput input; lexError "error in nested comment"
 
 getPos :: AlexPosn -> (Int, Int)
-getPos (AlexPn _ line column) = (line, column)
+-- NOTE: ocaml starts at column 0, but alex starts at column 1
+getPos (AlexPn _ line column) = (line, column - 1)
 
 getPosition :: Alex (Int, Int)
 getPosition = Alex $ \s -> Right (s, getPos . alex_pos $ s)

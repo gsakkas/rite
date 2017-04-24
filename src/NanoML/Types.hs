@@ -115,7 +115,7 @@ data NanoError
   | MissingFields Type Expr
   | InvalidFields Type Expr
   | OutputTypeMismatch Value Type
-  | OtherError String
+  | OtherError String MSrcSpan
   | TimeoutError Int
   deriving (Show, Generic, Typeable)
 
@@ -167,7 +167,7 @@ outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
 outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
 
 otherError :: MonadEval m => String -> m a
-otherError = throwError . OtherError
+otherError str = withCurrentProvM $ \prv -> throwError $ OtherError str prv
 
 data EvalState = EvalState
   { stVarEnv   :: !Env
