@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type+size/hidden-10,sp14,op+context+type+size,hidden-10,0.726,0.864,0.915,NaN,1881
+op+context+type+size/hidden-10,sp14,op+context+type+size,hidden-10,0.726,0.864,0.915,0.714,1881

@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-mycroft,sp14,.,mycroft,0.365,0.581,0.658,NaN,1881
+mycroft,sp14,.,mycroft,0.365,0.581,0.658,0.399,1881

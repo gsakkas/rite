@@ -42,6 +42,7 @@ data Tool
   = Ocaml
   | Mycroft
   | Sherrloc
+  | Nanomaly
   deriving (Generic, Show, Read, Eq)
 instance ParseField Tool
 instance ParseFields Tool
@@ -64,8 +65,8 @@ run (Gather tool dir) = do
     let n = takeFileName ml
     writeFile (dir </> toolName tool </> n <.> "out")
               (unlines . map show $ spans)
-run (Evaluate "baseline" dir _) = do
-  doBaseline dir
+run (Evaluate "baseline" dir prune) = do
+  doBaseline dir (fromMaybe NoPrune prune)
 run (Evaluate tool dir prune) = do
   doEval tool dir (fromMaybe NoPrune prune)
 
@@ -80,6 +81,7 @@ runTool t = case t of
   Ocaml -> runOcaml
   Mycroft -> runMycroft
   Sherrloc -> runSherrloc
+  Nanomaly -> runNanomaly
 
 toolName :: Tool -> String
 toolName t = map toLower (show t)
@@ -132,11 +134,12 @@ doEval t dir prune = do
                 Set.fromList ocs `Set.isSubsetOf` allSpans oracle &&
                 Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
                 Set.fromList shs `Set.isSubsetOf` allSpans oracle
-  
+
   let init = ProcessState { good1Progs = 0, good2Progs = 0, good3Progs = 0
                           , allProgs = 0, recalls = []
                           }
   final <- execStateT (mapM_ (processOne t) mls) init
+  -- print final
   let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
       top2 = fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double
       top3 = fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double
@@ -161,9 +164,9 @@ processOne t f = do
   oracle <- liftIO $ loadSpans f
   let out = dir </> t </> ml <.> "out"
   sps <- liftIO $ loadToolSpans out
-  --ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
-  --mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
-  --shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
+  -- ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
+  -- mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
+  -- shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
@@ -176,6 +179,11 @@ processOne t f = do
           , "  " ++ out
           ]
     | otherwise -> do
+        let r = fromIntegral (Set.size (Set.intersection
+                                        (Set.fromList sps)
+                                         (Set.intersection (errSpans oracle) (diffSpans oracle))))
+                / fromIntegral (Set.size (Set.intersection (errSpans oracle) (diffSpans oracle)))
+        modify' $ \s -> s { recalls = r : recalls s}
         when (any (`Set.member` diffSpans oracle) $ take 1 sps) $ do
           bumpGood1 (+1)
           --unless (or [any (`Set.member` diffSpans oracle) $ take 3 ocs
@@ -186,8 +194,8 @@ processOne t f = do
           bumpGood2 (+1)
         when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
           bumpGood3 (+1)
-        --unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
-        --  liftIO $ printf "FAIL: %s\n" f
+        -- unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
+        --   liftIO $ printf "FAIL: %s\n" f
         bumpAll (+1)
 
 bumpAll, bumpGood1, bumpGood2, bumpGood3
@@ -205,10 +213,22 @@ data BaselineState = BaselineState
   } deriving (Show)
 
 doBaseline
-  :: FilePath -> IO ()
-doBaseline dir = do
+  :: FilePath -> Prune -> IO ()
+doBaseline dir prune = do
   let year = takeFileName dir
   mls <- glob (dir </> "*.ml")
+  mls <- case prune of
+    NoPrune -> return mls
+    DoPrune -> flip filterM mls $ \ml -> do
+      let (dir, f) = splitFileName ml
+      oracle <- loadSpans ml
+      -- mys <- loadToolSpans (dir </> "mycroft" </> f <.> "out")
+      shs <- loadToolSpans (dir </> "sherrloc" </> f <.> "out")
+      -- return $! not (null mys || null shs) &&
+      --           Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
+      --           Set.fromList shs `Set.isSubsetOf` allSpans oracle
+      return $! not (null shs) &&
+                Set.fromList shs `Set.isSubsetOf` allSpans oracle
   let init = BaselineState {top1s = [], top2s = [], top3s = []}
   final <- flip execStateT init $ forM_ mls $ \ml -> do
     oracle <- liftIO $ loadSpans ml
@@ -229,7 +249,10 @@ doBaseline dir = do
   let top2 = avg (top2s final)
   let top3 = avg (top3s final)
   printf "top 1/2/3: %.3f / %.3f / %.3f\n" top1 top2 top3
-  writeFile (dir </> "baseline.csv") $ unlines
+  let csv = case prune of
+        NoPrune -> dir </> "baseline.csv"
+        DoPrune -> dir </> "baseline.pruned.csv"
+  writeFile csv $ unlines
     [ "tool,year,top-1,top-2,top-3,total"
     , printf "baseline,%s,%.3f,%.3f,%.3f,%d" year top1 top2 top3 (length (top1s final))
     ]
@@ -267,6 +290,11 @@ runSherrloc ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do
   out <- readCreateProcess (proc "eval/bin/ecamlc" [ml]) ""
   writeFile tmp out
   out <- readCreateProcess (proc "eval/bin/sherrloc" ["-e", "-n2", tmp]) ""
+  return $! extractSrcSpans (lines out)
+
+runNanomaly :: FilePath -> IO ([SrcSpan])
+runNanomaly ml = do
+  out <- readCreateProcess (proc "stack" ["exec", "--", "nano-check", ml]){cwd = Just "../nanoml"} ""
   return $! extractSrcSpans (lines out)
 
 extractSrcSpans :: [String] -> [SrcSpan]
