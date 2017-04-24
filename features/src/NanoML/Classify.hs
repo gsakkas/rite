@@ -966,7 +966,9 @@ typeDecl = \case
   DTyp s tds -> do
     mapM_ addType tds
     return (TDTyp s tds)
-  DExn s d -> error "typeDecl: impossible"
+  DExn s d -> do
+    extendType "exn" d
+    return (TDExn s d)
 
 
 data Info = MkInfo
