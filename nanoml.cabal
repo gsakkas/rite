@@ -76,6 +76,7 @@ library
                      , parsers >=0.12
                      , random >= 1.1
                      , regex-tdfa >= 1.2
+                     , syb
                      , text >= 1.2
                      , transformers >= 0.4
                      -- , trifecta >=1.5
