@@ -125,9 +125,11 @@ doEval t dir prune = do
     DoPrune -> flip filterM mls $ \ml -> do
       let (dir, f) = splitFileName ml
       oracle <- loadSpans ml
+      ocs <- loadToolSpans (dir </> "ocaml" </> f <.> "out")
       mys <- loadToolSpans (dir </> "mycroft" </> f <.> "out")
       shs <- loadToolSpans (dir </> "sherrloc" </> f <.> "out")
-      return $! not (null mys || null shs) &&
+      return $! not (null ocs || null mys || null shs) &&
+                Set.fromList ocs `Set.isSubsetOf` allSpans oracle &&
                 Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
                 Set.fromList shs `Set.isSubsetOf` allSpans oracle
   
@@ -176,16 +178,16 @@ processOne t f = do
     | otherwise -> do
         when (any (`Set.member` diffSpans oracle) $ take 1 sps) $ do
           bumpGood1 (+1)
-          unless (or [any (`Set.member` diffSpans oracle) $ take 3 ocs
-                     ,any (`Set.member` diffSpans oracle) $ take 3 mys
-                     ,any (`Set.member` diffSpans oracle) $ take 3 shs]) $ do
-            liftIO $ printf "WIN: %s\n" f
+          --unless (or [any (`Set.member` diffSpans oracle) $ take 3 ocs
+          --           ,any (`Set.member` diffSpans oracle) $ take 3 mys
+          --           ,any (`Set.member` diffSpans oracle) $ take 3 shs]) $ do
+          --  liftIO $ printf "WIN: %s\n" f
         when (any (`Set.member` diffSpans oracle) $ take 2 sps) $ do
           bumpGood2 (+1)
         when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
           bumpGood3 (+1)
-        unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
-          liftIO $ printf "FAIL: %s\n" f
+        --unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
+        --  liftIO $ printf "FAIL: %s\n" f
         bumpAll (+1)
 
 bumpAll, bumpGood1, bumpGood2, bumpGood3
