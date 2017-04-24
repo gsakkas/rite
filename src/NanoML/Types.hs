@@ -28,7 +28,6 @@ import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import qualified Data.Aeson                   as Aeson
 import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
-import           Data.Generics
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -220,13 +219,14 @@ withCurrentExpr e x = do
   -- unless ((e,env) `elem` xes) $
   --   modify' $ \s -> s { stExprEnvs = (e,env) : xes }
   e' <- gets stCurrentExpr
-  modify' $ \s -> s { stCurrentExpr = (e,env) }
+  let ms' = getSrcSpanExprMaybe (fst e')
+  modify' $ \s -> s { stCurrentExpr = (onSrcSpanExpr (\ms -> ms <|> ms') e, env) }
   a <- x
   modify' $ \s -> s { stCurrentExpr = e' }
   return a
 
 maybeReLoc :: MSrcSpan -> Expr -> Expr
-maybeReLoc ms = everywhere $ mkT (onSrcSpanExpr (\ms' -> ms' <|> ms))
+maybeReLoc ms = mapExpr (onSrcSpanExpr (\ms' -> ms' <|> ms))
 
 addEdge :: MonadEval m => EdgeKind -> (Expr,Env) -> (Expr,Env) -> m ()
 addEdge !k !e1 !e2 = do -- unless (x == y) $
@@ -936,33 +936,33 @@ onSrcSpanExpr f expr = case expr of
   Hole ms x y -> Hole (f ms) x y
   Ref r -> Ref r
 
--- onType :: (Type -> Type) -> Expr -> Expr
--- onType f expr = case expr of
---   Var ms x -> Var ms x
---   Lam ms x y e -> Lam ms x y e
---   App ms x y -> App ms x y
---   Bop ms x y z -> Bop ms x y z
---   Uop ms x y -> Uop ms x y
---   Lit ms x -> Lit ms x
---   Let ms x y z -> Let ms x y z
---   Ite ms x y z -> Ite ms x y z
---   Seq ms x y -> Seq ms x y
---   Case ms x y -> Case ms x y
---   Tuple ms x -> Tuple ms x
---   ConApp ms x y mt -> ConApp ms x y (fmap f mt)
---   Record ms x mt -> Record ms x (fmap f mt)
---   Field ms x y -> Field ms x y
---   SetField ms x y z -> SetField ms x y z
---   Array ms x mt -> Array ms x (fmap f mt)
---   List ms x mt -> List ms x (fmap f mt)
---   Try ms x y -> Try ms x y
---   Prim1 ms x -> Prim1 ms x
---   Prim2 ms x -> Prim2 ms x
---   -- Val ms x -> Val ms x
---   With ms x y -> With ms x y
---   Replace ms x y -> Replace ms x y
---   Hole ms x y -> Hole ms x y
---   Ref r -> Ref r
+mapExpr :: (Expr -> Expr) -> Expr -> Expr
+mapExpr f expr = case expr of
+  Var ms x -> Var ms x
+  Lam ms x y e -> Lam ms x (mapExpr f y) e
+  App ms x y -> App ms (mapExpr f x) (map (mapExpr f) y)
+  Bop ms x y z -> Bop ms x (mapExpr f y) (mapExpr f z)
+  Uop ms x y -> Uop ms x (mapExpr f y)
+  Lit ms x -> Lit ms x
+  Let ms x y z -> Let ms x (map (second (mapExpr f)) y) (mapExpr f z)
+  Ite ms x y z -> Ite ms (mapExpr f x) (mapExpr f y) (mapExpr f z)
+  Seq ms x y -> Seq ms (mapExpr f x) (mapExpr f y)
+  Case ms x y -> Case ms (mapExpr f x) (map (\(p,g,e) -> (p, fmap (mapExpr f) g, mapExpr f e)) y)
+  Tuple ms x -> Tuple ms (map (mapExpr f) x)
+  ConApp ms x y mt -> ConApp ms x (fmap (mapExpr f) y) mt
+  Record ms x mt -> Record ms (map (second (mapExpr f)) x) mt
+  Field ms x y -> Field ms (mapExpr f x) y
+  SetField ms x y z -> SetField ms (mapExpr f x) y (mapExpr f z)
+  Array ms x mt -> Array ms (map (mapExpr f) x) mt
+  List ms x mt -> List ms (map (mapExpr f) x) mt
+  Try ms x y -> Try ms (mapExpr f x) (map (\(p,g,e) -> (p, fmap (mapExpr f) g, mapExpr f e)) y)
+  Prim1 ms x -> Prim1 ms x
+  Prim2 ms x -> Prim2 ms x
+  -- Val ms x -> Val ms x
+  With ms x y -> With ms x (mapExpr f y)
+  Replace ms x y -> Replace ms x (mapExpr f y)
+  Hole ms x y -> Hole ms x y
+  Ref r -> Ref r
 
 freeVars :: Expr -> Env -> [(Var,Value)]
 freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
