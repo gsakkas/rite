@@ -311,8 +311,15 @@ stepAll expr = do
      then return expr'
      else stepAll expr'
 
-stepAllProg [d]   = transStepDecl d
-stepAllProg (d:p) = transStepDecl d >> stepAllProg p
+stepAllProg [d]   = withCurrentDecl d (transStepDecl d)
+stepAllProg (d:p) = withCurrentDecl d (transStepDecl d) >> stepAllProg p
+
+withCurrentDecl d x = do
+  (e, env) <- gets stCurrentExpr
+  modify' $ \s -> s { stCurrentExpr = (VU (Just (getSrcSpan d)), env) }
+  r <- x
+  modify' $ \s -> s { stCurrentExpr = (e, env) }
+  return r
 
 setEntry e = modify' $ \s -> s { stRoot = e }
 
