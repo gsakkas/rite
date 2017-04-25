@@ -114,7 +114,7 @@ data NanoError
   | ParseError String
   | MissingFields Type Expr
   | InvalidFields Type Expr
-  | OutputTypeMismatch Value Type
+  | OutputTypeMismatch Value Value
   | OtherError String MSrcSpan
   | TimeoutError Int
   deriving (Show, Generic, Typeable)
@@ -163,8 +163,8 @@ typeError t1 t2 = do
     Hole {} -> []
     Ref {} -> []
 
-outputTypeMismatchError :: MonadEval m => Value -> Type -> m a
-outputTypeMismatchError v t = throwError (OutputTypeMismatch v (varToInt t))
+outputTypeMismatchError :: MonadEval m => Value -> Value -> m a
+outputTypeMismatchError v x = throwError (OutputTypeMismatch v x)
 
 otherError :: MonadEval m => String -> m a
 otherError str = withCurrentProvM $ \prv -> throwError $ OtherError str prv

@@ -519,7 +519,7 @@ instance Pretty NanoError where
     MLException v -> text "*** Exception:" <+> pretty v
     UnboundVariable v ss ->
       text "Unbound variable" <>
-       -- "at" <+> pretty ss <+>
+       text "at" <+> pretty ss <+>
        text ":" <+> pretty v
     TypeError t1 t2 ss vss ->
       let tvs = freeTyVars t1 ++ freeTyVars t2
@@ -539,7 +539,13 @@ instance Pretty NanoError where
       text "due to values from:" <$>
         indent 2 (vcat (map pretty vss))
     ParseError s -> text "Parse error:" <+> text s
-    OutputTypeMismatch v t -> text "Type error: output value" <+> pretty v <+> text "does not have type" <+> pretty t
+    OutputTypeMismatch v x ->
+      text "Type error: output values have incompatible types" <$>
+      text "Value 1:" <+> pretty v <$>
+      text "  from :" <+> pretty (getSrcSpanExprMaybe v) <$>
+      text "Value 2:" <+> pretty x <$>
+      text "  from :" <+> pretty (getSrcSpanExprMaybe x)
+--             pretty v <+> text "does not have type" <+> pretty t
     OtherError s ss -> text "Error:" <+> text s <$>
                        text "Stuck at:" <$> indent 2 (pretty ss)
     TimeoutError n -> text "Error: <timeout after" <+> pretty n <+> text "steps>"
