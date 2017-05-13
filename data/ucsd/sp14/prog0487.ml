@@ -1,12 +1,19 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec appendLists (l1,l2) =
+  match l1 with | [] -> l2 | h::t -> h :: (appendLists (t, l2));;
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> appendLists ((digitsOfInt (n / 10)), [n mod 10]);;
 
-let palindrome w =
-  let wList = explode w in
-  let wReverse = listReverse (explode w) in if true then wList;;
+let rec arrayLen l = match l with | [] -> 0 | h::t -> 1 + (arrayLen t);;
+
+let rec digitSum dl = match dl with | [] -> 0 | h::t -> h + (digitSum t);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec additivePersistence n =
+  match (arrayLen (digits n)) = 1 with
+  | true  -> 0
+  | false  -> 1 + (additivePersistence digitSum (digits n));;

@@ -1,3 +1,3 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then h = 0 else false;;
+let rec wwhile (f,b) =
+  let c' = f b in let b' = b in if c' = b then c' else wwhile (c', b');;

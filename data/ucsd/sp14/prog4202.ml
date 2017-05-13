@@ -1,9 +1,32 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let a = 20;;
 
-let stringOfList f l = List.map sepConcat f l;;
+let f x = let y = 1 in let g z = y + z in a + (g x);;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let pipe fs = let f a x = f a x in let base = 3 in List.fold_left f base fs;;

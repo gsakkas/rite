@@ -1,4 +1,14 @@
 
-let pipe fs = let f a x = x a in let base = 1 in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let l1G = (List.length l1) - (List.length l2) in
+    List.append (l1, (clone (l1, l2)))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let l2G = (List.length l2) - (List.length l2) in
+       List.append ((clone (l1 l2G)), l2))
+    else (l1, l2);;

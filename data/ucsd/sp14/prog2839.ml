@@ -1,2 +1,3 @@
 
-let _ = string_of_int [[1; 2; 3]; [4; 5]; [6]; []];;
+let padZero l1 l2 =
+  let a = List.length l1 in let b = List.length l2 in if a < b then a;;

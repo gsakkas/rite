@@ -1,30 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
+let rand = makeRand (10, 39);;
+
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
+
+let x = rand (1, 4);;
+
+let fixpoint (f,b) = wwhile ((let g x = f x in (x, (x != x))), b);;

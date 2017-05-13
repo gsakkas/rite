@@ -1,4 +1,5 @@
 
-let rec sum (x,y) = match x with | [] -> y | h::t -> sum (t, (y + h));;
+let rec listReverse n =
+  match n with | [] -> [] | hd::tl -> (listReverse tl) @ hd;;
 
-let rec revexp (x,y) = match x with | [] -> y | h::t -> sum (t, (h ^ y));;
+let _ = listReverse ["a"; "b"; "c"; "d"];;

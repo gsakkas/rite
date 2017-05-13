@@ -1,4 +1,3 @@
 
-let rev list =
-  let rec aux acc = function | [] -> acc | h::t -> aux (h :: acc) in
-  aux [] list;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [(digitsOfInt n) / 10; n mod 10];;

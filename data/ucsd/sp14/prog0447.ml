@@ -1,3 +1,2 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> h :: (listReverse (listReverse h));;
+let rec digitsOfInt n = match n with | n -> 5 | 0 -> [];;

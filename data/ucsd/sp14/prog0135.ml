@@ -1,3 +1,2 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (match n mod 10 with | _ -> [digitsOfInt (n / 10)]);;
+let rec sumList xs = match sumList with | [] -> 0 | h::t -> h + (sumList t);;

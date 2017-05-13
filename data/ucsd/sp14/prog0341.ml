@@ -1,3 +1,3 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList List.tl xs);;
+let rec listReverse l =
+  if l <> [] then match l with | [] -> l | h::t -> (listReverse t) :: h;;

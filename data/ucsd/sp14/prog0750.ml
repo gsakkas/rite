@@ -1,5 +1,9 @@
 
-let rec sumList xs =
-  if (List.length xs) > 0 then (List.hd xs) + (sumList (List.tl xs)) else 0;;
+let isP x = x > 0;;
 
-let _ = (sumList [1; 3; 5; 7; 9; 11] 5) mod 4;;
+let rec digitsOfInt n =
+  match n with
+  | [] -> []
+  | h::t -> let rest = digitsOfInt t in if isP h then h :: rest else rest;;
+
+let _ = digitsOfInt 352663;;

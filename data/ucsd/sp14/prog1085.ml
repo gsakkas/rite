@@ -7,25 +7,25 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Poly (a,b,c) ->
-      (((eval (a, x, y)) *. (eval (a, x, y))) +.
-         ((eval (b, x, y)) *. (eval (c, x, y))))
-        /. 2
-  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let newRand = rand (0, 4) in
+  match depth with
+  | 0 ->
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand (0, 2) in
+      if halff = 0
+      then Cosine (build (newRand, (depth - 1)))
+      else Sine (build (newRand, (depth - 1)))
+  | 2 ->
+      Average
+        ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))))
+  | 3 ->
+      Times ((build (newRand, (depth - 1))), (build (newRand, (depth - 1))));;

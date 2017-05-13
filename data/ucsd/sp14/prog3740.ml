@@ -15,9 +15,9 @@ let bigAdd l1 l2 =
     let f a x =
       let (x',x'') = x in
       let (c,s) = a in
-      if (List.length x) = (List.length s)
-      then c :: s
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+      match (c, s) with
+      | (c,[]) -> (c + 0) :: s
+      | _ -> ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in

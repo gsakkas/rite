@@ -1,11 +1,4 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let r = makeRand (0, 7);;
-
 type expr =
   | VarX
   | VarY
@@ -13,29 +6,18 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let rdm = rand (0, 7) in
-  match rdm with
-  | 0 -> buildY ()
-  | 1 -> buildX ()
-  | 2 -> Cosine (build (rand, (depth - 1)))
-  | 3 -> Sine (build (rand, (depth - 1)))
-  | 4 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      Thresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | _ -> build (rand, (depth - 1));;
-
-let rnd = r (0, 8);;
-
-let b = build (rnd, 5);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e' (e', x, y))))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;

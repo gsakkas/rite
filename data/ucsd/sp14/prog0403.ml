@@ -1,4 +1,4 @@
 
-let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [(0, 1)];;
+let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
 
-let _ = digitsOfInt - 3;;
+let _ = concat [("1", "2")];;

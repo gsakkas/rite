@@ -6,19 +6,27 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sin_Avg of expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> Printf.sprintf "%d" e
-  | VarY  -> e
-  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
-  | Cosine e2 -> Printf.sprintf "%s" (exprToString e2)
-  | Average (e3,e4) ->
-      Printf.sprintf "%s %s" (exprToString e3) (exprToString e4)
-  | Times (e5,e6) ->
-      Printf.sprintf "%s %s" (exprToString e5) (exprToString e6)
-  | Thresh (e7,e8,e9,e0) ->
-      Printf.sprintf "%s %s %s %s" (exprToString e7) (exprToString e8)
-        (exprToString e9) (exprToString e0)
-  | _ -> "";;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sin_Avg (a,b,c) ->
+      eval
+        ((eval (a, (sin (pi * x)), (sin (pi * y)))),
+          (eval (b, (sin (pi * x)), (sin (pi * y)))),
+          (eval (c, (sin (pi * x)), (sin (pi * y)))));;

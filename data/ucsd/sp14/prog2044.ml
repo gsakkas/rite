@@ -1,3 +1,12 @@
 
-let rec wwhile (f,b) =
-  match b with | (e,boo) -> if boo = true then e else wwhile f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e);;

@@ -1,11 +1,11 @@
 
-let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0
-  then ((List.append ((clone 0 (abs diff)), l1)), l2)
-  else if diff > 0 then (l1, (List.append ((clone 0 diff), l2)));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      let lastDigit = prod / 10 in
+      let firstDigit = prod mod 10 in
+      if prod > 10
+      then [lastDigit; firstDigit + (mulByDigit (i t))]
+      else firstDigit :: t;;

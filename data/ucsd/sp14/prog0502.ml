@@ -1,2 +1,4 @@
 
-let rec listReverse l = match l with | [] -> [] | a::b::[] -> 0;;
+let rec digitalRoot n =
+  let rec helper x = if x < 10 then x else helper sumList digits x in
+  helper n;;

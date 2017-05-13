@@ -27,6 +27,8 @@ let rec mulByDigit i l =
   if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
 
 let bigMul l1 l2 =
-  let f a x = match x with | [] -> a | h::t -> bigAdd ((mulByDigit (h a)) a) in
-  let base = l1 in
+  let f a x =
+    let (l1',a') = a in
+    match x with | [] -> (l1', a') | h::t -> bigAdd (mulByDigit (h l1') a') in
+  let base = (l1, [0]) in
   let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;

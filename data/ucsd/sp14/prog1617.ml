@@ -8,38 +8,44 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (exprToString ex))
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 ->
+      let temp = (rand (0, 1)) = 0 in if temp then buildX () else buildY ()
+  | _ ->
+      let y = rand (2, 6) in
+      if y = 2
+      then buildSine (build (rand, (depth - 1)))
+      else
+        if y = 3
+        then buildCosine (build (rand, (depth - 1)))
+        else
+          if y = 4
+          then
+            buildAverage
+              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+          else
+            if y = 5
+            then
+              buildTimes
+                ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+            else
+              if y = 6
+              then
+                buildThresh
+                  ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                    (build (rand, (depth - 1))), (build (rand, (depth - 1))));;

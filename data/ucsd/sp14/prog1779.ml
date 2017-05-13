@@ -1,6 +1,18 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = failwith "to be written" in
+        let rest' = failwith "to be written" in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let fixpoint (f,b) = wwhile (let xx = (b * b) * b in ((xx, (xx < 100)), b));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = failwith "to be written" in
+        let rest' = failwith "to be written" in helper (seen', rest') in
+  List.rev (helper ([], l)) removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;

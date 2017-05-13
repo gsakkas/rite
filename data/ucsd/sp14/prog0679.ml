@@ -1,15 +1,18 @@
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec loop n acc =
-       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> loop n []);;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x = 0 then y :: l else digithelper x (y :: l);;
+
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
 
 let digits n = digitsOfInt (abs n);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let rec digitalRoot n =
-  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;
+let rec addPHelper n c =
+  let n_pos = digits n in
+  let sum = sumList n_pos in if sum < 10 then c else addPHelper sum (c + 1);;
+
+let additivePersistence n = addPHelper n 1;;
+
+let _ = additivePersistence - 12;;

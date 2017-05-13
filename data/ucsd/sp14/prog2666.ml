@@ -1,42 +1,32 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (v1,v2) ->
-          (match a with
-           | (list1,list2) ->
-               (match list1 with
-                | [] ->
-                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
-                      list2))
-                | h::t ->
-                    (((((v1 + v2) + h) / 10) :: list1),
-                      ((((v1 + v2) + h) mod 10) :: list2)))) in
-    let base = ([], []) in
-    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      let rec adder x = match x with | [] -> [] | h::t -> bigAdd h (adder t) in
-      (match [adder
-                ((mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-                   [helper [] (h * i)])]
-       with
-       | h::t -> h);;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  let r = rand (if depth = 0 then (6, 7) else (1, 5)) in
+  match r with
+  | 1 -> buildSine (build (rand, (depth - 1)))
+  | 2 -> buildCosine (build (rand, (depth - 1)))
+  | 3 -> buildAverage (build (rand, (depth - 1))) (build (rand, (depth - 1)))
+  | 4 -> buildTimes (build (rand, (depth - 1))) (build (rand, (depth - 1)))
+  | 5 ->
+      buildThresh (build (rand, (depth - 1))) (build (rand, (depth - 1)))
+        (build (rand, (depth - 1))) (build (rand, (depth - 1)))
+  | 6 -> VarX
+  | 7 -> VarY;;

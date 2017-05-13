@@ -1,5 +1,5 @@
 
+let (x,y) = ("5", 5);;
+
 let rec wwhile (f,b) =
-  match (f, b) with
-  | (func,param) -> if param = true then f param else 0
-  | _ -> b;;
+  let f b = (x, y) in if y = true then wwhile (f, x) else x;;

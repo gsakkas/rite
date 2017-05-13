@@ -1,5 +1,12 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let _ = removeZero [0; 0; 0; 0] List.combine [9; 9] [0; 0];;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    (l1, (List.append (clone 0 ((List.length l1) - (List.length l2)))), l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      ((List.append (clone 0 ((List.length l2) - (List.length l1)) l1)), l2)
+    else (l1, l2);;

@@ -1,3 +1,5 @@
 
-let rec digitsOfInt n =
-  match n with | 0 -> [] | _ -> [digitsOfInt (n / 10); n mod 10];;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse ((cat l h) :: t);;

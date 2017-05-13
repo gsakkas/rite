@@ -18,17 +18,13 @@ let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
 
 let buildTimes (e1,e2) = Times (e1, e2);;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
 let rec build (rand,depth) =
-  match depth with
-  | 0 -> (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ())
-  | _ ->
-      (match rand (0, 4) with
-       | 0 -> buildSine (build (rand, (depth - 1)))
-       | 1 -> buildCosine (build (rand, (depth - 1)))
-       | 2 -> buildAverage (build (rand, (depth - 1)))
-       | 3 -> buildTimes (build (rand, (depth - 1)))
-       | 4 -> buildThresh (build (rand, (depth - 1))));;
+  if depth > 0
+  then
+    let depth = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, depth))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage (build (rand, depth))
+    | 3 -> buildTimes (build (rand, depth))
+    | 4 -> buildThresh (build (rand, depth));;

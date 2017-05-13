@@ -1,2 +1,2 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + t;;
+let rec sumList xs = if (xs :: 1) = 1 then 0;;

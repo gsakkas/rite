@@ -2,19 +2,8 @@
 let rec digitsOfInt n =
   if n <= 0
   then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+  else (let digit = digitsOfInt (n / 10) in digit @ [n mod 10]);;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+let digits n = digitsOfInt (abs n);;
 
-let x = [];;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9
-  then
-    ((print_string "going into then") / (print_newline ());
-     1
-     ::
-     x;
-     additivePersistence (sumList (digitsOfInt n)))
-  else (1 :: x; sumList x);;
+let _ = digits - 23422;;

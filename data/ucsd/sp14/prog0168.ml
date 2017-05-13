@@ -1,5 +1,5 @@
 
-let append x l =
-  let rec helper x acc =
-    match x with | [] -> acc | h::t -> helper t (acc :: h) in
-  helper x l;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let _ = digitsOfInt - 3;;

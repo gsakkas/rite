@@ -1,5 +1,3 @@
 
 let rec digitsOfInt n =
-  let rec integers a b =
-    if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-  integers n 0;;
+  if n <= 0 then [] else ((digitsOfInt n) / 10) @ [n mod 10];;

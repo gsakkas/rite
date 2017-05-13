@@ -1,5 +1,11 @@
 
-let rec digitsOfInt n =
-  match n with | [] -> [] | h::t -> [h] :: (digitsOfInt t);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let _ = digitsOfInt 3124;;
+let rec listReverse l =
+  match l with | [] -> [] | head::tail -> (listReverse tail) @ [head];;
+
+let palindrome w =
+  if (explode w) = (explode (listReverse w)) then true else false;;

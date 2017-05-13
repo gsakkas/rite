@@ -1,2 +1,4 @@
 
-let rec sumList xs = let x::t = xs in if x != [] then x + (sumList t);;
+let rec additivePersAndRoot n = if n <= 0 then (0, 0) else (1, 1);;
+
+let _ = additivePersAndRoot [(1, 1)] (0, 0);;

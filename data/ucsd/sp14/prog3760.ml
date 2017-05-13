@@ -28,9 +28,7 @@ let rec mulByDigit i l =
 
 let bigMul l1 l2 =
   let f a x =
-    let (i,l) = x in
-    let (i',l') = a in
-    match i with | [] -> l' | h::t -> bigAdd ((mulByDigit h l') l') in
-  let base = (1, l1) in
-  let args = ((List.rev l2), l1) in
-  let (_,res) = List.fold_left f base args in res;;
+    let (l1',a') = a in
+    match x with | [] -> (l1, a') | h::t -> bigAdd (mulByDigit (h l1')) a' in
+  let base = (l1, [0]) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;

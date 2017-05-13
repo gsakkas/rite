@@ -1,2 +1,2 @@
 
-let rec a = a = (a + 1);;
+let rec digitsOfInt n = if n <= 0 then [] else 1;;

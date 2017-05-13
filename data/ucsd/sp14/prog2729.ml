@@ -1,4 +1,7 @@
 
-let pipe fs = let f a x = x a in let base = 0 in List.fold_left f base fs;;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
 
-let _ = pipe [] 3;;
+let list = ["hi"; "iris"; "elephant"];;
+
+let sumListL = fold_l (fun temp  -> fun h  -> (h * h) + temp) "" list;;

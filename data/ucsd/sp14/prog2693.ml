@@ -1,8 +1,7 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
   | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      helper h;;
+      let f a x = a ^ (sep ^ x) in
+      let base = (^) h in let l = t in List.fold_left f base l;;

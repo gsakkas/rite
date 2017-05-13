@@ -1,10 +1,44 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Special1 of expr* expr;;
 
-let fixpoint (f,b) = wwhile (let g x = f x in ((g b), b));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine var1 -> "sin(pi*" ^ ((exprToString var1) ^ ")")
+  | Cosine var2 -> "cos(pi*" ^ ((exprToString var2) ^ ")")
+  | Average (var3,var4) ->
+      "((" ^ ((exprToString var3) ^ ("+" ^ ((exprToString var4) ^ ")/2)")))
+  | Times (var5,var6) -> (exprToString var5) ^ ("*" ^ (exprToString var6))
+  | Thresh (var7,var8,var9,var0) ->
+      "(" ^
+        ((exprToString var7) ^
+           ("<" ^
+              ((exprToString var8) ^
+                 ("?" ^
+                    ((exprToString var9) ^
+                       (":" ^ ((exprToString var0) ^ ")")))))));;
+
+let sampleExpr1 =
+  Thresh
+    (VarX, VarY, VarX,
+      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
+
+let _ = exprToString sampleExpr1;;

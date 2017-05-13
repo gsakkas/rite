@@ -1,5 +1,3 @@
 
-let bigMul l1 l2 =
-  let f a x = match a with | (i,acc) -> ([], acc) | _ -> failwith "wtf" in
-  let base = (0, []) in
-  let args = l1 in let (_,res) = List.fold_left f base args in res;;
+let rec clone x n =
+  let accum = [] in if n < 1 then [] else clone (x :: accum) (n - 1);;

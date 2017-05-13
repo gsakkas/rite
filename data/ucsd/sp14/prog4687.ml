@@ -1,27 +1,25 @@
 
-let l1 = [0; 0; 9; 9];;
-
-let l2 = [1; 0; 0; 2];;
-
-let x = (3, 3) :: (List.rev (List.combine l1 l2));;
-
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
 let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (c,d::t) -> (c + d) :: a in
-    let base = (0, []) in
-    let args = match l1 with | h::t -> [(h, l2)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then helper 0 (num :: xs') xs
+               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
+                 (xs' xs))
+        else
+          (let num = x * i in
+           if num < 10
+           then (helper 0 num) :: (accum xs)
+           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
+  helper 0 [] lre;;

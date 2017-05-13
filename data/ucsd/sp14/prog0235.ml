@@ -1,14 +1,14 @@
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+let z = 0;;
 
 let rec digitsOfInt n =
   if n < 0
   then []
   else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec additivePersistence n =
-  let x = 0 in if n < 10 then x else additivePersistence (digits n);;
+    if z = true
+    then (let n2 = reverse (string_of_int n)
+          and z = false in digitsOfInt n2)
+    else
+      (let x = n / 10
+       and y = n mod 10 in
+       if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;

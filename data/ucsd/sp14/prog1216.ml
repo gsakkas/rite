@@ -8,15 +8,14 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
+let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> evalhelper buildSine p1 x y
-    | Cosine p1 -> evalhelper buildCosine p1 x y in
-  evalhelper e x y;;
+  match e with
+  | Thresh (a,b,c,d) -> eval (a, x, y)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
+  | Cosine a -> cos (pi * (eval (a, x, y)))
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | VarY  -> x
+  | VarX  -> y;;

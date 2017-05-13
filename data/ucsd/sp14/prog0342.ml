@@ -1,2 +1,4 @@
 
-let rec digitsOfInt n = if n < 0 then [] else (match n with | f::b -> f);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n = digitalRoot (sumList n);;

@@ -6,8 +6,11 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let sampleExpr2 = Times ((Squa (VarX, VarY)), (Sine Varx));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> buildX * 1.0 | VarY  -> buildY * 1.0;;

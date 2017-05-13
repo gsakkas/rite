@@ -8,4 +8,9 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let sample = VarX ^ "y";;
+let rec exprToString e =
+  let acc curr result =
+    match curr with
+    | VarX  -> Printf.sprintf "x"
+    | VarY  -> Printf.sprintf "y" in
+  acc e "" exprToString VarX;;

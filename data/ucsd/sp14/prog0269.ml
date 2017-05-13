@@ -1,5 +1,8 @@
 
+let rec last l =
+  match l with | x::[] -> x | hd::tl -> last tl | [] -> failwith "NO ELEMENT";;
+
 let rec listReverse l =
-  let rec helper xs result =
-    match xs with | [] -> result | hd::tl -> tl (hd :: result) in
-  helper xs [];;
+  match l with
+  | [] -> []
+  | hd::tl -> let x = last l in if x > 0 then x :: x else x :: x;;

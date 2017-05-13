@@ -1,6 +1,5 @@
 
-let rec append xs x =
-  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+let x = [1; 2; 3];;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append digitsOfInt (n / 10) (n - ((n / 10) * 10));;
+let rec listReverse l =
+  match l with | [] -> [] | x::[] -> [x] | head::tail::third -> head :: tail;;

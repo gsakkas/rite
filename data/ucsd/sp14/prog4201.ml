@@ -1,5 +1,7 @@
 
-let pipe fs =
-  match fs with
-  | [] -> 0
-  | f::fs' -> let f a x = x a in let base = fs' in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a @ sep in
+      let base = t in let l = h in List.fold_left f base l;;

@@ -1,6 +1,17 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (let x = n / 10
-        and y = n mod 10 in (digitsOfInt x) @ y);;
+let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [(0, 1)];;
+
+let digitsOfInt n = if n < 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;

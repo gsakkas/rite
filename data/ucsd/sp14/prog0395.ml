@@ -1,2 +1,5 @@
 
-let rec sumList xs = match 1 with | [] -> 0 | h::t -> h + (sumList t);;
+let rec listReverse l =
+  match l with | [] -> l | h::t -> [List.hd (listReverse t); h];;
+
+let _ = listReverse [1; 0; 1] List.hd [];;

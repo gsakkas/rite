@@ -6,34 +6,17 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | New of expr* expr
-  | Fresh of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
   | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | New (e1,e2) -> (exprToString e1) ^ ("/3*" ^ ((exprToString e2) ^ "*8"))
-  | Fresh (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("> 3" ^
-              ("?" ^
-                 ((exprToString e2) ^
-                    (("*" (exprToString e3)) ^
-                       (":" ^
-                          ((exprToString e1) ^
-                             (("*" (exprToString e3)) ^ ")"))))))));;
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2.0
+  | Cosine e1 -> cos (3.142 *. (eval (e1, x, y)))
+  | Sine e1 -> sin (3.142 *. (eval (e1, x, y)))
+  | VarY  -> y
+  | VarX  -> x;;

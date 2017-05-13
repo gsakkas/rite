@@ -7,24 +7,33 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Factorial of expr
-  | Sum3 of expr* expr* expr;;
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let rec factorial x acc = if x = 0 then acc else factorial (x - 1) (x * acc);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | Factorial e' -> factorial (eval e')
-  | Sum3 (e1,e2,e3) -> ((eval e1) + (eval e2)) + (eval e3);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;

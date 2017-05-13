@@ -1,8 +1,12 @@
 
-let rec digitalRoot n =
-  if n = 0
-  then 0
+let digitsOfInt n =
+  if n < 0
+  then []
   else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> r_digitalRoot | _ -> r_digitalRoot n (n mod 10));;
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
+
+let digits n = digitsOfInt (abs n);;
+
+let additivePersistence n = (digits n) = n;;

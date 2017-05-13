@@ -1,10 +1,4 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> false
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h1::t1 -> let rec helper acc v = [v] = [0] in helper [] h1);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile ((f, ((f b) != b)), b);;

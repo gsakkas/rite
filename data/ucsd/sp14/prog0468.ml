@@ -1,10 +1,10 @@
 
-let rec appendLists (l1,l2) =
-  match l1 with | [] -> l2 | h::t -> h :: (appendLists (t, l2));;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
 
-let rec digitsOfInt n =
-  match n <= 0 with
-  | true  -> []
-  | false  -> appendLists ((digitsOfInt (n / 10)), [n mod 10]);;
-
-let _ = digitsOfInt - 2401;;
+let digitsOfInt n =
+  let rec xxx =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (xxx (n / 10)) in
+  listReverse (xxx n);;

@@ -1,27 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Acossin of expr* expr;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Acossin (e1,e2) ->
-      (((acos (eval e1)) *. (asin (eval e2))) *. 2.0) /. (pi *. pi);;
+let rec build (rand,depth) =
+  let rec buildhelper num depth expr =
+    let temprand = makeRand (0, 1) in
+    match num with
+    | 0 -> if temprand = 0 then expr ^ "VarX" else expr ^ "VarY"
+    | 1 ->
+        if (makeRand (0, 1)) = 0
+        then expr ^ ("Sine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
+        else expr ^ ("Cosine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
+    | 2 ->
+        if (makeRand (0, 1)) = 0
+        then
+          expr ^
+            ("((" ^
+               ((buildhelper (rand - 1) (depth - 1) expr) ^
+                  ("+" ^ ((buildhelper (rand - 1) (depth - 1) expr) ^ ")/2)"))))
+        else
+          expr ^
+            ((buildhelper (rand - 1) (depth - 1) expr) ^
+               ("*" ^ (buildhelper (rand - 1) (depth - 1) expr)))
+    | 4 ->
+        expr ^
+          ("(" ^
+             ((buildhelper (rand - 2) (depth - 1) expr) ^
+                ("<" ^
+                   ((buildhelper (rand - 2) (depth - 1) expr) ^
+                      ("?" ^
+                         ((buildhelper (rand - 2) (depth - 1) expr) ^
+                            (":" ^
+                               ((buildhelper (rand - 2) (depth - 1) expr) ^
+                                  ")")))))))) in
+  buildhelper rand depth "";;

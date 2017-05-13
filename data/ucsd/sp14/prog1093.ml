@@ -1,8 +1,33 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let buildX () = VarX;;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match rand with
+  | (a,b) ->
+      let rdm = rand (a, b) in
+      (match rdm with
+       | 0 -> buildY ()
+       | 1 -> buildX ()
+       | 2 -> Cosine (build (rand, (depth - 1)))
+       | 3 -> Sine (build (rand, (depth - 1)))
+       | 4 ->
+           Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 5 ->
+           Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 6 ->
+           Thresh
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;

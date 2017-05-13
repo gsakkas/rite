@@ -1,10 +1,10 @@
 
-let listReverse l =
-  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec digits n digitList =
+       if n = 0 then digitList else digits (n / 10) ((n mod 10) :: digitList) in
+     match n with | 0 -> [0] | _ -> digits n []);;
 
-let digitsOfInt n =
-  let rec xxx =
-    match n with
-    | 0 -> []
-    | n -> if n < 0 then [] else (n mod 10) :: (xxx (n / 10)) in
-  listReverse (xxx n);;
+let _ = digitsOfInt - 1;;

@@ -1,2 +1,7 @@
 
-let _ = [9; 9] [1; 0; 0; 2];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x (a ^ sep) in
+      let base = h in let l = t in List.fold_left f base l;;

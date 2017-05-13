@@ -1,2 +1,3 @@
 
-let pipe fs = let f a x = a + x in let base = fs in List.fold_left f base fs;;
+let rec clone x n =
+  let acc = [0] in if n > 0 then clone (x :: acc) (n - 1) else [];;

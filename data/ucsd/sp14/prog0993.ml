@@ -1,12 +1,39 @@
 
-let _ =
-  let removeDuplicates l =
-    let rec helper (seen,rest) =
-      match rest with
-      | [] -> seen
-      | h::t ->
-          if (List.mem (h, seen)) = true
-          then seen' = seen
-          else seen' = (List.rev (h :: (List.rev seen))) in
-    let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | New of expr* expr
+  | Fresh of expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | New (e1,e2) -> (exprToString e1) ^ ("/" ^ (exprToString e2))
+  | Fresh (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("> 3" ^
+              ("?" ^
+                 ((exprToString e2) ^
+                    (("*" (exprToString e3)) ^
+                       (":" ^
+                          ((exprToString e1) ^
+                             (("*" (exprToString e3)) ^ ")"))))))));;

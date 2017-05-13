@@ -1,8 +1,19 @@
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.sprintf "%s"
+  | VarY  -> Printf.sprintf "%s"
+  | Sine e1 -> Printf.sprintf "e1"
+  | Cosine e2 -> Printf.sprintf "%s" e2
+  | Average (e3,e4) -> Printf.sprintf "%s %s" e3 e4
+  | Times (e5,e6) -> Printf.sprintf "%s %s" e5 e6
+  | Thresh (e7,e8,e9,e0) -> Printf.sprintf "%s %s %s %s" e7 e8 e9 e0;;

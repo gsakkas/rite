@@ -1,5 +1,3 @@
 
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else ((helper x n) - (1 x)) :: acc in
-  helper x n [];;
+let pipe fs =
+  let f a x = a = (x a) in let base x = x in List.fold_left f base fs;;

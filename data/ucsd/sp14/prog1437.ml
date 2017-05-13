@@ -6,9 +6,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | PowerUp of expr* expr
-  | Square2 of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Root of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -18,15 +18,11 @@ let rec eval (e,x,y) =
   | VarY  -> y
   | Sine e -> sin (pi *. (eval (e, x, y)))
   | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | PowerUp (e1,e2) -> (abs (eval (e1, x, y))) ** (abs (eval (e2, x, y)))
-  | Square2 (e1,e2,e3) ->
-      (sqrt
-         ((((eval (e1, x, y)) ** 2.) +. ((eval (e2, x, y)) ** 2.)) +.
-            ((eval (e3, x, y)) ** 2.)))
-        /. 2.
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y);;
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Squared e -> (eval (e, x, y)) ** 2.
+  | Root e -> (eval (e, x, y)) ** 0.5;;

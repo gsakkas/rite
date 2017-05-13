@@ -1,5 +1,8 @@
 
-let rec digitsOfInt n =
-  match n <= 0 with
-  | true  -> []
-  | false  -> (n mod 10) :: ((digitsOfInt n) - 10);;
+let rec listReverse l =
+  let l' = [] in
+  match l with | [] -> l' | h::t -> (List.hd l) :: (listReverse (List.tl l));;
+
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in
+  lr [] listReverse;;

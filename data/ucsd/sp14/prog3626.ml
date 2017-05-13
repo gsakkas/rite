@@ -1,28 +1,20 @@
 
-let rec mulByDigit i l =
-  let rec helper acc carry i l =
-    match l with
-    | [] -> (match acc with | [] -> [] | h::t -> if h = 0 then t else acc)
-    | h::t ->
-        let x = (h * i) + carry in
-        let n = if x > 9 then x mod 10 else x in
-        let carry' = if x > 9 then x / 10 else 0 in
-        let acc' = n :: acc in helper acc' carry' i t in
-  helper [] 0 i (List.rev (0 :: l));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let bigMul l1 l2 =
-  let f a x = a in
-  let base = failwith "to be implemented" in
-  let args =
-    let rec digitProducts acc place l1 l2 =
-      match l1 with
-      | [] -> acc
-      | h::t ->
-          let placeHolders =
-            let rec buildZeros a places =
-              if places = 0 then a else buildZeros (0 :: a) (places - 1) in
-            buildZeros [] place in
-          let a = List.append (mulByDigit h l2) placeHolders in
-          (digitProducts a) :: (acc (place + 1) t l2) in
-    digitsProducts [] 0 l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 < s2
+  then (((clone 0 (s2 - s1)) @ l1), l2)
+  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (c,h::t) -> [] in
+    let base = (0, []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

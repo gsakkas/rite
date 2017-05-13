@@ -1,4 +1,3 @@
 
-let rec wwhile (f,b) = match b with | false  -> b | true  -> wwhile (f, b);;
-
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let rec wwhile (f,b) =
+  let y = f b in match y with | (b',c') -> if c' then b' else f b';;

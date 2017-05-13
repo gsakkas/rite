@@ -1,2 +1,7 @@
 
-let rec digitsOfInt n = if n <= 0 then [] else n mod 10;;
+let rec palindromeHelper w r =
+  match w with
+  | [] -> (match r with | [] -> true | _ -> false)
+  | x::s ->
+      (match r with | y::t -> if x = y then palindromeHelper s t | _ -> false)
+  | _ -> false;;

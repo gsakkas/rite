@@ -1,4 +1,7 @@
 
-let foo l x = match l with | a::b::_ -> (List.map a [x]) @ (List.map b [x]);;
-
-let f1::f2::[] = foo [(=); (<)] 2 f1 1;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = List.append (List.append a sep) h in
+      let base = "" in let l = sl in List.fold_left f base l;;

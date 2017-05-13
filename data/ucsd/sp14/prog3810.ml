@@ -1,2 +1,7 @@
 
-let pipe fs = let f a x d x = a in let base p = p in List.fold_left f base fs;;
+let pipe fs =
+  let rec iter acc curr =
+    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
+  iter (fun y  -> y) fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)];;

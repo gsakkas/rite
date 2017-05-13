@@ -1,5 +1,2 @@
 
-let pipe fs =
-  let f a x d c = x c in let base b = b in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let pipe fs = let f a x = fs a in let base = 0 in List.fold_left f base fs;;

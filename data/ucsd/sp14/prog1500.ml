@@ -1,3 +1,9 @@
 
-let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then b' else f b';;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev helper ([], l);;

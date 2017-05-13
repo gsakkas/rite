@@ -1,7 +1,5 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+let rec listReverse l =
+  match l with | [] -> [] | a::b::[] -> (listReverse [b]) @ a;;
 
-let _ = makeRand 1 2;;
+let _ = listReverse ["a"; "b"; "c"; "d"];;

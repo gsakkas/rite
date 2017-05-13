@@ -1,8 +1,2 @@
 
-let a = [];;
-
-let b = 3;;
-
-let f x l = [l; x];;
-
-let _ = f b a;;
+let rec digitsOfInt n = match n with | [] -> [] | n -> if n > 0 then 0;;

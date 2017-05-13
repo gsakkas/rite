@@ -1,9 +1,9 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
   | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((List.map sepConcat ";" l) ^ "]");;
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t)) :: t
+      else prod :: t;;

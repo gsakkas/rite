@@ -1,5 +1,4 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+let extract n (p1,p2) = if n = 1 then p1 else p2;;
 
-let fixpoint (f,b) = wwhile ((let (x,y) = f b in (x, (x != b))), b);;
+let _ = extract 1 ("bobby" 2);;

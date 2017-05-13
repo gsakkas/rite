@@ -1,4 +1,6 @@
 
-let pipe fs = let f a x _ = x a in let base y = y in List.fold_left f base fs;;
+let sqsum xs =
+  let f a x = match x with | [] -> a | h::t -> h * h in
+  let base = 0 in List.fold_left f base xs;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = sqsum [(-1); (-2); (-3); (-4)];;

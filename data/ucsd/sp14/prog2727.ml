@@ -1,6 +1,5 @@
 
-let pipe fs =
-  let f a x = match x with | [] -> a | h::t -> h in
-  let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let rec fold_l f base xs =
+  match xs with
+  | [] -> base
+  | h::t -> let temp = fold_l f base t in temp (f h);;

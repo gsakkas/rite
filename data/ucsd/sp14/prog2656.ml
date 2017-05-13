@@ -1,11 +1,5 @@
 
-let rec helper acc v =
-  if v = 0 then 0 :: acc else helper ((v mod 10) :: acc) (v / 10);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let helper acc v =
-        if v = 0 then acc else (helper (v mod 10)) :: (acc (v / 10)) in
-      helper [] h;;
+let fixpoint (f,b) =
+  wwhile ((if (f b) = b then ((f b), false) else failwith "asd"), b);;

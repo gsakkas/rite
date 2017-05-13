@@ -1,9 +1,6 @@
 
 let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let fixpoint (f,b) =
-  wwhile
-    (fun y  ->
-       fun x  -> let z = f x in if z = b then (x, true) else ((y z), b));;
+let fixpoint (f,b) = wwhile (if (f b) = b then (f, b));;

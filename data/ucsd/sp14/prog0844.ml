@@ -1,17 +1,12 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if (n / 10) == 0 then [n mod 10] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine m -> "sin" ^ (exprToString m);;
+let rec sumList xs = match xs with | [] -> 0 | a::b -> a + (sumList b);;
 
-let b = exprToString Sine VarX;;
+let rec additivePersistence n =
+  let sum = sumList digitsOfInt n in
+  if sum < 10 then 1 else 1 + (additivePersistance sum);;

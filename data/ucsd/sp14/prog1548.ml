@@ -1,5 +1,5 @@
 
-let (x,y) = ("5", 5);;
+let rec assoc (d,k,l) =
+  match l with | [] -> d | h::t -> if h = k then h else assoc (d, k, t);;
 
-let rec wwhile (f,b) =
-  let f b = (x, y) in if y = true then wwhile (f, x) else x;;
+let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

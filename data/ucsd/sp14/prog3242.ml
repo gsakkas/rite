@@ -1,4 +1,7 @@
 
-let app f l = List.fold_left (fun _  -> fun x  -> f x) () l;;
-
-let _ = app (fun x  -> x) [1; 2; 4];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep :: (sepConcat (sep t))) in
+      let base = "" in let l = t in List.fold_left f base l;;

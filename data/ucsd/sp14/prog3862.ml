@@ -1,2 +1,2 @@
 
-let rec clone x n = if n > 0 then x @ ((clone x n) - 1) else [];;
+let _ = List.fold_left (fun a  -> fun x  -> x / a) 1.0 [1.0; 4.0];;

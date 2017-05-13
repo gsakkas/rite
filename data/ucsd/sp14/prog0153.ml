@@ -1,8 +1,2 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10]);;
+let num_of_digits xs = (log10 (int_of_float xs)) + 1;;

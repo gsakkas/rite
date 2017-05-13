@@ -1,5 +1,7 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> 0
-  | h::t -> (((mulByDigit i (List.rev t)) * 10) h) * i;;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | (s,i)::t -> (match k = i with | true  -> l | false  -> assoc (d, k, t));;
+
+let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

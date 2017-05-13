@@ -1,2 +1,2 @@
 
-let num_of_digits xs = (log10 (float_of_int xs)) + 1;;
+let rec sumList xs = match 1 with | [] -> 0 | h::t -> h + (sumList t);;

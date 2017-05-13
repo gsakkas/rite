@@ -1,5 +1,4 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [0] | h::t -> [] @ (h @ (digitsOfInt t)));;
+let listReverse l =
+  let rec helper xs = function | [] -> xs | hd::tl -> helper (hd :: xs) in
+  helper [] l;;

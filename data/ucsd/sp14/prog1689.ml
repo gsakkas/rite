@@ -1,25 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 ->
-      if rand > 1
-      then
-        (Printf.sprintf "HIIIIIIIII!!!!!!!";
-         buildSine (build (rand, (depth - 1))))
-  | _ -> buildCosine (build (rand, (depth - 1)));;
+let fixpoint (f,b) = wwhile (b, b);;

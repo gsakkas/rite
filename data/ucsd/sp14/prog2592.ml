@@ -1,4 +1,5 @@
 
-let rec mulByDigit i l = match l with | [] -> [] | h::m::t -> m;;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let _ = mulByDigit 9 [9; 9; 9; 9];;
+let fixpoint (f,b) = wwhile (((f b) = b), b);;

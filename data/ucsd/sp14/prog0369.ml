@@ -1,3 +1,2 @@
 
-let rec sumList xs =
-  match xs with | [] -> [] | xs -> (List.hd xs) + (sumList List.tl xs);;
+let rec helpFac a b = if (10 * a) > b then a else 10 * (a b);;

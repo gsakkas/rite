@@ -1,2 +1,3 @@
 
-let _ = List.map string_of_int [[1; 0]; [2]; [3]];;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then 1;;

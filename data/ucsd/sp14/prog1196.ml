@@ -6,32 +6,37 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
-  | Thresh (i1,i2,i3,i4) ->
-      if (eval (i1, x, y)) < (eval (i2, x, y))
-      then eval (i3, x, y)
-      else eval (i4, x, y)
-  | ECosSin (a,b) ->
-      (2.71 **
-         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
-            -. 1.0))
-        -. 1.0
-  | SinLog (a',b',c) ->
-      let a = abs (eval (a', x, y)) in
-      let b = abs (eval (b', x, y)) in
-      if (eval (c, x, y)) < 0.0
-      then ((log (a *. 100.0)) ** (sin (b *. 100.0))) -. 1.0
-      else (-1.0) *. (((log (b *. 100.0)) ** (sin (a *. 100.0))) -. 1.0);;
+  | Thresh (a,b,c,d) -> exprToString buildThresh (a, b, c, d)
+  | Times (a,b) -> exprToString buildTimes (a, b)
+  | Average (a,b) -> exprToString buildAverage (a, b)
+  | Cosine a -> exprToString buildCosine a
+  | Sine a -> exprToString buildSine a
+  | VarY  -> exprToString buildY
+  | VarX  -> exprToString buildX;;

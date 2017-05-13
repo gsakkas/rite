@@ -1,22 +1,23 @@
 
-let rec assoc (d,k,l) =
-  let rec assoc_tl (d,k,l) t_res =
-    match l with
-    | [] -> d
-    | (ki,vi)::tl ->
-        if t_res
-        then vi
-        else
-          if ki = k
-          then assoc_tl (d, k, l) true
-          else assoc_tl (d, k, tl) false in
-  assoc_tl (d, k, l) false;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let long_list =
-  let rec assemble n =
-    if n < 100000000
-    then (n, (string_of_int n)) :: (assemble (n + 1))
-    else [] in
-  assemble 1;;
+let a = (1, 2);;
 
-let _ = assoc ((-1), "99999", long_list);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) *. pi)
+  | Cosine a -> cos ((eval (a, x, y)) *. pi)
+  | Average (a,b) -> (eval (a, x, y)) +. ((eval (b, x, y)) /. 2)
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;

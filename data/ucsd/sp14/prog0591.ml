@@ -1,4 +1,6 @@
 
-let rec digitsOfInt n = failwith "TBD:digitsOfInt";;
-
-let _ = digitsOfInt - 3124;;
+let rec digitsOfInt n =
+  match n with
+  | [] -> []
+  | 0 -> [0]
+  | _ -> (digitsOfInt (n / 10)) @ (n mod 10);;

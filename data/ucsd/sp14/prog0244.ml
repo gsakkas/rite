@@ -1,2 +1,2 @@
 
-let rec digitsOfInt n = (n mod 10) :: ((digitsOfInt n) / 10);;
+let rec sumList xs = match xs with | [] -> [] | x::xs' -> x + (sumList xs');;

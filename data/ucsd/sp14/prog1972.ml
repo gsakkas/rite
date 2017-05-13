@@ -1,11 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e = match e with | Sine s -> Format.sprintf "%expr" s;;
+let long_list =
+  let rec assemble n l =
+    if n < 1000000 then (assemble (n + 1) (n, (string_of_int n))) :: l else l in
+  assemble 1 [];;

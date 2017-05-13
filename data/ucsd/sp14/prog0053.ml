@@ -1,2 +1,4 @@
 
-let rec digitsOfInt n = if n < 0 then [] else [digitsOfInt (n / 10)];;
+let append x y = x + y;;
+
+let _ = append 0 [2; 2; 21; 1];;

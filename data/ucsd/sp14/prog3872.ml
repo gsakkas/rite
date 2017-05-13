@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x x = x a in let base x1 = x1 in List.fold_left f base fs;;
+let rec intlist x =
+  if x < 10 then [x] else (intlist (x / 10)) @ ([x mod 10] intlist 10);;

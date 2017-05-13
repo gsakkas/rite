@@ -1,5 +1,2 @@
 
-let listReverse l =
-  let rec helper xs =
-    match xs with | [] -> [] | hd::tl -> helper (hd :: xs) tl in
-  helper [] l;;
+let _ = (51 mod (10 51)) / 10;;

@@ -1,3 +1,2 @@
 
-let pipe fs =
-  let f a x a x = x a in let base x = x in List.fold_left f base fs;;
+let phi = (1. +. (sqrt 5)) /. 2.;;

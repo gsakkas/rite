@@ -1,9 +1,6 @@
 
-let y f g x = f (g x);;
+let decr x = x - 1;;
 
-let rec mulByDigit i l =
-  let f a x =
-    match a with
-    | [] -> (i * x) :: a
-    | h::t -> [(x * y) + (h / 10); h mod 10] @ t in
-  let base = [] in let args = List.rev (0 :: l) in List.fold_left f base args;;
+let incr x = x + 1;;
+
+let foo = (List.map incr 9) :: (List.map decr [10]);;

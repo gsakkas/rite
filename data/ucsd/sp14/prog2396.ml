@@ -1,6 +1,4 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let fixpoint (f,b) =
-  wwhile ((let (x,y) = f b in (x, ((x <> b) && ((x, y) <> (f (b - 1)))))), b);;
+let fixpoint (f,b) = wwhile (let f' b' = f b in ((f, ((f b) = b)), b));;

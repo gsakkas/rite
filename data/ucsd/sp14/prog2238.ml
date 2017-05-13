@@ -1,7 +1,5 @@
 
-let g x f = ((f x), ((f x) = x));;
-
 let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
 
-let fixpoint (f,b) = wwhile ((g b f), b);;
+let fixpoint (f,b) = wwhile ((let (x,y) = f b in (x, (x <> b))), b);;

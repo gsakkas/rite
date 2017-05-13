@@ -1,5 +1,4 @@
 
-let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> append (listReverse t; [h]);;
+let rec digitsOfInt n =
+  let ns = [] in
+  match n with | 0 -> 0 | n -> (n mod 10) :: (digitsOfInt (n / 10));;

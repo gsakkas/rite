@@ -1,15 +1,20 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let rec palindrome w =
-  match w with
-  | [] -> (match listReverse w with | [] -> true | _ -> false)
-  | h::t ->
-      (match listReverse w with
-       | [] -> true
-       | h2::t2 -> if h2 = h then palindrome t else false);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let _ = palindrome "myxomatosis";;
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if (List.hd l) = (List.hd k)
+    then listCompare (List.tl l) (List.tl k)
+    else false;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
+
+let palindrome w = listCompare (explode w) (listReverse (explode w));;

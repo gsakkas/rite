@@ -1,8 +1,14 @@
 
-let rec digitalRoot n =
-  if n <= 9
-  then n
+let digitsOfInt n =
+  if n < 0
+  then []
   else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> (r_digitalRoot n) - 1);;
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let additivePersistence n = if (sumList (digits n)) > 9 then 0;;

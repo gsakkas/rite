@@ -1,2 +1,3 @@
 
-let _ = (List.length [0; 0; 0; 9] [[0; 0; 9; 9]]) @ [[1; 0; 0; 2]];;
+let pipe fs =
+  let f a x = a = (x a) in let base = 0 in List.fold_left f base fs;;

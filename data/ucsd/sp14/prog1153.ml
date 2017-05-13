@@ -6,16 +6,30 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | AbsThresh of expr* expr* expr
+  | ModThresh of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
-  | Thresh (w,t,u,z) -> if (eval w) < (eval t) then eval u else eval z
-  | Times (t,u) -> (eval t) * (eval u)
-  | Average (t,u) -> ((eval t) * (eval u)) / 2
-  | Cosine t -> cos (pi * (eval t))
-  | Sine t -> sin (pi * (eval t))
   | VarX  -> x
-  | VarY  -> y;;
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | AbsThresh (e1,e2,e3) ->
+      let s = eval (e3, x, y) in
+      if (abs_float (eval (e1, x, y))) < (abs_float (eval (e2, x, y)))
+      then s
+      else abs_float s
+  | ModThresh (e1,e2,e3) ->
+      if ((truncate (100 *. (eval (e1, x, y)))) mod 5) = 0
+      then eval (e2, x, y)
+      else eval (e3, x, y);;

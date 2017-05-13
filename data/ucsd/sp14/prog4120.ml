@@ -1,47 +1,29 @@
 
-let rec clone x n =
-  let rec cloneHelper x n ans =
-    if n > 0 then cloneHelper x (n - 1) (x :: ans) else ans in
-  cloneHelper x n [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let dif = (List.length l1) - (List.length l2) in
-  if dif = 0
-  then (l1, l2)
-  else
-    if dif < 0
-    then (((clone 0 (0 - dif)) @ l1), l2)
-    else (l1, ((clone 0 dif) @ l2));;
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (carry,rest) = a in
-      let (d1,d2) = x in
-      let sum = (d1 + d2) + carry in
-      if sum > 9 then (1, ((sum - 10) :: rest)) else (0, (sum :: rest)) in
+      let (rem,acc) = a in
+      if x = []
+      then (if rem = 1 then (0, (1 :: acc)) else (0, acc))
+      else
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
     let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let args = List.rev ([] @ (List.combine l1 l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec mulHelper l' =
-    match l' with
-    | [] -> (0, [])
-    | h::t ->
-        let (carry,rest) = mulHelper t in
-        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
-  let (_,ans) = mulHelper (0 :: l) in removeZero ans;;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (append,acc) = a in
-    ((0 :: append), (bigAdd acc ((mulByDigit x l1) @ append))) in
-  let base = ([], []) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
-
-let _ = bigMul [(0, 99)] [];;

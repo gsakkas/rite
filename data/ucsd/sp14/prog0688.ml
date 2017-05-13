@@ -1,2 +1,5 @@
 
-let num_of_digits xs = (log10 float_of_int xs) + 1;;
+let rec reverse_list_tail theList result =
+  match theList with
+  | [] -> result
+  | head::tail -> reverse_list_tail (head :: result);;

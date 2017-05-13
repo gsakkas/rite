@@ -1,9 +1,5 @@
 
-let rec listReverse l =
-  let rec rev element =
-    function | [] -> element | h::t -> rev (h :: element) t in
-  rev [] l;;
-
-let palindrome w = w = (listReverse w);;
-
-let _ = palindrome "malayalam";;
+let append x l =
+  let rec helper x l acc =
+    match x with | [] -> l | h::t -> helper t l (acc :: h) in
+  helper x l [];;

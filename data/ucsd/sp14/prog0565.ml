@@ -1,3 +1,5 @@
 
-let rec myListReverse origList newList =
-  match origList with | [] -> [] | h::t -> (myListReverse t h) :: newList;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let digits = digitsOfInt (n / 10) in digits @ (n mod 10));;

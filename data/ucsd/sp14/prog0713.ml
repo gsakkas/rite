@@ -1,5 +1,2 @@
 
-let x = [1; 2; 3];;
-
-let rec listReverse l =
-  match l with | [] -> [] | x::[] -> [x] | head::tail::third -> head :: tail;;
+let _ = let n = 0 in if n > (-300) then 1;;

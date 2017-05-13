@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  if n > 0 then ((digitsOfInt n) / 10) :: (n mod 10) else [];;
+let x = 123;;
+
+let _ = x.[1];;

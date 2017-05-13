@@ -1,13 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
+let rec assoc (d,k,l) =
+  match l with | [] -> false | hd::tl -> (hd = k) || (assoc (d, k, tl));;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> 3 * 1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((fun x  -> let xi = f x in (xi, (((f xi) != xi) || (f (f xi))))), b);;
-
-let _ = fixpoint (collatz, 9001);;
+let _ =
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

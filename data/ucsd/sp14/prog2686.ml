@@ -1,2 +1,3 @@
 
-let _ = (List.map (fun x  -> x * 10) [1; 2; 3] 8100) mod 10;;
+let sqsum xs =
+  let f a x = (a ** 2) + x in let base = 0 in List.fold_left f base xs;;

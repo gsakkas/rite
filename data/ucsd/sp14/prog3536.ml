@@ -1,25 +1,13 @@
 
-let rec removeZero l =
-  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec mulByDigit i l =
-  let lre = List.rev l in
-  let rec helper carry accum lrev =
-    match lrev with
-    | [] -> removeZero accum
-    | x::xs ->
-        if carry = 1
-        then
-          (match accum with
-           | x1'::xs' ->
-               let num = (x * i) + x1' in
-               if num < 10
-               then (helper 0 num) :: (xs' xs)
-               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
-                 (xs' xs))
-        else
-          (let num = x * i in
-           if num < 10
-           then (helper 0 num) :: (accum xs)
-           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
-  helper 0 [] lre;;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let shorter = if len1 < len2 then l1 else l2 in
+  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
+  if shorter = l1
+  then ((List.append (clone 0 zeros) shorter), l2)
+  else (l1, (List.append (clone 0 zeros) shorter));;
+
+let _ = (List.combine [1] [2]) (padZero [] []);;

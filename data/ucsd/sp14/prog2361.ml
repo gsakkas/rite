@@ -1,2 +1,3 @@
 
-let _ = 0.232 mod 0.12;;
+let rec factorial x acc =
+  if x = 0 then acc else factorial (x -. 1.0) (x *. acc);;

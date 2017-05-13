@@ -1,9 +1,6 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
   | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((sepConcat "; " f l) ^ "]");;
+      (mulByDigit i (List.rev (List.map (fun x  -> [x * 10]) t))) @ [h * i];;

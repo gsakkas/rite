@@ -1,9 +1,17 @@
 
+let x = 123;;
+
 let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
-let rec digitalRoot n =
-  let sum = 0 in
-  if n < 10 then n + sum else sum = (digitalRoot (sumList (digitsOfInt n)));;
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l =
+  match l with | x::[] -> x | head::tail -> [listReverse tail; head];;

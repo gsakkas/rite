@@ -1,4 +1,8 @@
 
 let rec wwhile (f,b) =
-  match f with
-  | (x,y) -> let (x,y) = f b in if y = true then wwhile (f, x) else x;;
+  let rec acc result =
+    let res = f result in
+    match res with | (b',c') -> if c' then acc b' else b' in
+  acc b;;
+
+let fixpoint (f,b) = ((wwhile (fun xx  -> (xx, ((f xx) = xx)))), b);;

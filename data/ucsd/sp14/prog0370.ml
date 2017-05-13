@@ -1,5 +1,2 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
-
-let _ = sumList [1; 3; 5; 7; 9; 11] List.hd 55;;
+let rec helpFac a b = if (10 * a) > b then a else (helpFac 10) * (a b);;

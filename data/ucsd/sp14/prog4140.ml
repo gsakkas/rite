@@ -1,3 +1,4 @@
 
-let rec clone x n =
-  let acc = [] in if n > 0 then clone (x :: x) (n - 1) else [];;
+let pipe fs =
+  let f a x = function | g -> a (g x) in
+  let base = function | x -> x in List.fold_left f base fs;;

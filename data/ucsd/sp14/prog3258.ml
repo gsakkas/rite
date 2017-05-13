@@ -1,2 +1,2 @@
 
-let _ = List.fold_left (+) [1; 2; 3] 0;;
+let rec clone x n = if n <= 0 then [] else x :: (clone ((x n) - 1));;

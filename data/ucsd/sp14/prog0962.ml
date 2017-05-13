@@ -1,13 +1,30 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Percent of expr
+  | Negate of expr
+  | SumPercent of expr* expr* expr;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> 3 * 1;;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) =
-  wwhile
-    ((fun x  -> let xi = f x in (xi, (((f xi) != xi) || (f (f xi))))), b);;
-
-let _ = fixpoint (collatz, 1);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | SumPercent (e1,e2,e3) ->
+      (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y))) *. 0.01
+  | Negate e1 -> (eval (e1, x, y)) *. (-1.0);;

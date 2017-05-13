@@ -1,5 +1,17 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((b, (b <> (f b))), b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> cos (eval (a, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2;;

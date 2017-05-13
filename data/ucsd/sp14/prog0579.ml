@@ -1,8 +1,4 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs -> x + (sumList xs);;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let n2 = [n mod 10] @ ((digitsOfInt n) / 10) in listReverse n2);;
+let _ = (sumList [1; 3; 5; 7; 9; 11] 1) / 10;;

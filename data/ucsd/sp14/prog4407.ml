@@ -1,5 +1,11 @@
 
-let rec removeZero l =
-  match l with
-  | h -> if h != 0 then []
-  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+
+let _ = stringOfList float_of_int [1; 2; 3; 4; 5; 6];;

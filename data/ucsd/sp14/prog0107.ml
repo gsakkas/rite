@@ -1,7 +1,5 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let next_tail = digitsOfInt (n / 10) in
-     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;
+let rec listReverse l =
+  let rec reverseHelper revd =
+    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
+  reverseHelper [];;

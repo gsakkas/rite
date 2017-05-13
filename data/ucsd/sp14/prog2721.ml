@@ -1,5 +1,3 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
-
-let _ = sqsum [(-1); (-2) e];;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> fold_l f base t f h;;

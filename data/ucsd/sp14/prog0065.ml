@@ -1,8 +1,2 @@
 
-let rec listCompare l k =
-  if ((List.hd l) = []) && ((List.hd k) = [])
-  then true
-  else
-    if (List.hd l) != (List.hd k)
-    then false
-    else listCompare List.tl l List.tl k;;
+let rec sumList (hd::tl) = match hd with | [] -> 0 | hd -> hd + (sumList tl);;

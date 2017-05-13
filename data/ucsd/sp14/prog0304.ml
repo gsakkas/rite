@@ -1,6 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n =
-  let rec digHelper n = if n < 10 then n else digHelper (sumList n) in
-  digHelper n;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (let f elem = Printf.printf "Element is %d\n" elem in List.iter f n);;

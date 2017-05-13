@@ -1,7 +1,9 @@
 
-let rec clone x n =
-  let rec aux acc n =
-    if n <= 0 then acc else aux (List.append [x] acc) (n - 1) in
-  aux [] n;;
+let t x = x + 1;;
 
-let _ = List.append ((clone 0 3) [1; 2; 3]);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if x = "a" then a ^ x in
+      let base = sep in let l = t in List.fold_left f base l;;

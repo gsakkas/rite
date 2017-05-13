@@ -1,13 +1,80 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Percent of expr
+  | Negate of expr
+  | SumPercent of expr* expr* expr;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> 3 * 1;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let fixpoint (f,b) =
-  wwhile
-    ((fun x  -> let xi = f x in (xi, (((f xi) != xi) || (f (f xi))))), b);;
+let buildCosine e = Cosine e;;
 
-let _ = fixpoint (collatz, 3);;
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Percent of expr
+  | Negate of expr
+  | SumSquared of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Percent e1 -> (eval (e1, x, y)) *. 0.01
+  | Negate e1 -> (eval (e1, x, y)) *. (-1.0)
+  | SumSquared (e1,e2,e3) ->
+      (((eval (e1, x, y)) *. (eval (e1, x, y))) +.
+         ((eval (e2, x, y)) *. (eval (e2, x, y))))
+        +. ((eval (e3, x, y)) *. (eval (e3, x, y)));;
+
+let sampleExpr =
+  buildCosine
+    (buildSine
+       (buildTimes
+          ((buildCosine
+              (buildAverage
+                 ((buildCosine (buildX ())),
+                   (buildTimes
+                      ((buildCosine
+                          (buildCosine
+                             (buildAverage
+                                ((buildTimes ((buildY ()), (buildY ()))),
+                                  (buildCosine (buildX ())))))),
+                        (buildCosine
+                           (buildTimes
+                              ((buildSine (buildCosine (buildY ()))),
+                                (buildAverage
+                                   ((buildSine (buildX ())),
+                                     (buildTimes ((buildX ()), (buildX ()))))))))))))),
+            (buildY ()))));;
+
+let _ = eval (sampleExpr, 0.5, 0.2);;

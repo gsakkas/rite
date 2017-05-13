@@ -1,11 +1,5 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      let lastDigit = prod / 10 in
-      let firstDigit = prod mod 10 in
-      if prod > 10
-      then [lastDigit; firstDigit + (mulByDigit (i t))]
-      else firstDigit :: t;;
+let pipe fs =
+  let f a x p a x = a x in let base d = d in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

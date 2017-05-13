@@ -1,5 +1,18 @@
 
-let rec append list1 list2 =
-  match list1 with | [] -> list2 | x::xs -> x :: (append xs list2);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let _ = [(2, 3, 4)] append [1];;
+let counter = 0;;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let sum = num + (additivePersistence num) in
+     counter = ((additivePersistence num) + 1));;

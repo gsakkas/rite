@@ -1,40 +1,47 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+  if (List.length l1) > (List.length l2)
+  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h != 0 then l else removeZero t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (h::t,b) = a in
-      if (x + h) > 9
-      then
-        (if t = []
-         then ([], (1 :: ((x + h) - 10) :: b))
-         else (let h2::t2 = t in (((h2 + 1) :: t2), (((x + h) - 10) :: b))))
-      else (t, ((x + h) :: b)) in
-    let base = ((List.rev l1), []) in
-    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+      match a with
+      | (list2,res) ->
+          (match list2 with
+           | [] -> ([], res)
+           | h::t ->
+               (match res with
+                | [] -> (t, ((h + x) :: res))
+                | h2::t2 ->
+                    if h2 >= 10
+                    then
+                      (t,
+                        ((if t != []
+                          then ((h + x) + 1) :: (h2 mod 10) :: t2
+                          else
+                            if ((h + x) + 1) >= 10
+                            then 1 :: (((h + x) + 1) mod 10) :: (h2 mod 10)
+                              :: t2
+                            else ((h + x) + 1) :: (h2 mod 10) :: t2)))
+                    else
+                      (t,
+                        (if t != []
+                         then (h + x) :: res
+                         else
+                           if (h + x) >= 10
+                           then 1 :: ((h + x) mod 10) :: res
+                           else (h + x) :: res)))) in
+    let base = ((List.rev l2), []) in
+    let args = List.rev l1 in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
-let rec mulByDigit i l =
-  let accum = [] in
-  let rec helper x l accum =
-    if x != 0 then helper (x - 1) l (bigAdd l accum) else accum in
-  helper i l accum;;
+let x = [9; 9; 9; 9];;
 
-let bigMul l1 l2 =
-  let f a x = let (q,w) = a in ((q + 1), (mulByDigit x q)) in
-  let base = (0, []) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let 2 = bigAdd 1 x;;

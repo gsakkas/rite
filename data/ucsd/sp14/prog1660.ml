@@ -1,4 +1,6 @@
 
+let pi = 4.0 *. (atan 1.0);;
+
 type expr =
   | VarX
   | VarY
@@ -8,14 +10,17 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> VarX
-  | VarY  -> VarY
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
+  | VarX  -> float x
+  | VarY  -> float y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
+
+let _ = eval ((Sine (Average (VarX, VarY))), 0.3, 0.3);;

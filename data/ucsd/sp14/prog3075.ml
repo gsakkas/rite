@@ -1,10 +1,4 @@
 
-let bigMul l1 l2 =
-  let f a x = l1 in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | hd::tl -> if tl = [] then (x, hd) else (x, hd) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let pipe fs = let f a x = x a in let base = () in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

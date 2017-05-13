@@ -1,6 +1,2 @@
 
-let rec digitsOfInt n =
-  match n with
-  | [] -> []
-  | 0 -> [0]
-  | _ -> (digitsOfInt (n / 10)) @ (n mod 10);;
+let num_of_digits xs = (log 10 xs) + 1;;

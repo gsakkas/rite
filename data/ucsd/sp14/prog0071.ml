@@ -1,2 +1,5 @@
 
-let rec sum (x,y) = match x with | [] -> 0 | h::t -> y = (y + (h sum (t, y)));;
+let rec listReverse n =
+  match n with
+  | [] -> []
+  | hd::tl -> if tl = [] then n else (listReverse tl) :: hd;;

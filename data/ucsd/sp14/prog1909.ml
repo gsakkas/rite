@@ -10,14 +10,11 @@ type expr =
 
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr0 -> sin (eval (expr0, x, y))
-  | Cosine expr0 -> cos (eval (expr0, x, y))
-  | Average (expr0,expr1) ->
-      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2
-  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
-  | Thresh (expr0,expr1,expr2,expr3) ->
-      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
-       | true  -> eval (expr2, x, y)
-       | false  -> eval (expr3, x, y));;
+  | Sine v -> sin (eval (v, x, y))
+  | Cosine v -> cos (eval (v, x, y))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;

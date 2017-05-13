@@ -1,3 +1,14 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (match n with | 0 -> [0] | _ -> digitsOfInt n []);;
+let append y = match y with | [] -> [] | h::t -> h :: t;;
+
+let append y = match y with | [] -> [] | h::t -> h :: (append t);;
+
+let append y = match y with | [] -> [] | h::t -> h :: (append t);;
+
+let append y = match y with | [] -> [] | h::t -> h :: (append t);;
+
+let append y = match y with | [] -> [] | h::t -> h :: (append t);;
+
+let append y = match y with | [] -> [] | h::t -> h :: (append t);;
+
+let append x y = match y with | [] -> [] | h::t -> h :: (append x t);;

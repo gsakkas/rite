@@ -1,4 +1,7 @@
 
-let pipe fs = let f a x = x a in let base = 0 in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let change x =
+  let rec changehelper acc x =
+    match x with
+    | [] -> []
+    | hd::tl -> changehelper (acc ^ (int_of_string hd)) tl in
+  changehelper "" x;;

@@ -1,6 +1,5 @@
 
-let pipe fs =
-  let f a x = function | g -> x a in
-  let base = function | b -> b in List.fold_left f base fs;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = removeZero [0; 0; 0; 0] List.combine [9; 9] [0; 0];;

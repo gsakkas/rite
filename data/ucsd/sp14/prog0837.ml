@@ -1,4 +1,12 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let listReverse l =
+  let rec rev x = function | [] -> x | h::t -> rev (h :: x) t in rev [] l;;
 
-let fixpoint (f,b) = let f' = ((f b), ((f b) = b)) in wwhile (f', b);;
+let listReverse l =
+  let x = [] in match l with | h::t -> h :: x | _ -> listReverse x;;
+
+let listReverse l =
+  let x = [] in match l with | h::t -> listReverse t | h::[] -> h :: x;;
+
+let listReverse l =
+  let x = [] in match l with | h::t -> listReverse t | h -> h :: x;;

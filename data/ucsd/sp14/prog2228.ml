@@ -1,5 +1,5 @@
 
 let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+  match f with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let fixpoint (f,b) = wwhile (let g x = (x, false) in ((g f b), b));;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

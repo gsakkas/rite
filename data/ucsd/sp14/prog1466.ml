@@ -6,31 +6,62 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Factorial of expr
-  | Sum3 of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  let pi = 4.0 *. (atan 1.0) in
   match e with
-  | VarX  -> Format.sprintf "x"
-  | VarY  -> Format.sprintf "y"
-  | Sine e' -> (Format.sprintf "sin(pi*") ^ ((exprToString e') ^ ")")
-  | Cosine e' -> (Format.sprintf "cos(pi*") ^ ((exprToString e') ^ ")")
-  | Average (e1,e2) ->
-      (Format.sprintf "((") ^
-        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) ->
-      (Format.sprintf "") ^ ((exprToString e1) ^ ("*" ^ (exprToString e2)))
-  | Thresh (a,b,a_less,b_less) ->
-      (Format.sprintf "(") ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^
-                    ((exprToString a_less) ^
-                       (":" ^ ((exprToString b_less) ^ ")")))))))
-  | Factorial e' -> (Format.sprintf "((") ^ ((exprToString e') ^ ")!)")
-  | Sum3 (e1,e2,e3) ->
-      (Format.sprintf "(") ^
-        ((exprToString e1) ^
-           ("+" ^ (((exprToString e2) "+") ^ ((exprToString e3) ^ ")"))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (a1,a2) -> ((eval (a1, x, y)) +. (eval (a2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (th1,th2,th3,th4) ->
+      if (eval (th1, x, y)) < (eval (th2, x, y))
+      then eval (th3, x, y)
+      else eval (th4, x, y);;
+
+let sampleExpr =
+  buildCosine
+    (buildSine
+       (buildTimes
+          ((buildCosine
+              (buildAverage
+                 ((buildCosine (buildX ())),
+                   (buildTimes
+                      ((buildCosine
+                          (buildCosine
+                             (buildAverage
+                                ((buildTimes ((buildY ()), (buildY ()))),
+                                  (buildCosine (buildX ())))))),
+                        (buildCosine
+                           (buildTimes
+                              ((buildSine (buildCosine (buildY ()))),
+                                (buildAverage
+                                   ((buildSine (buildX ())),
+                                     (buildTimes ((buildX ()), (buildX ()))))))))))))),
+            (buildY ()))));;
+
+let _ = eval (sampleExpr, 0.5, 0.2);;

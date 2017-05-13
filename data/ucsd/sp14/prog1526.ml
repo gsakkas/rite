@@ -1,3 +1,5 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (s,i)::t -> if s = k then i else assoc (d k t);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((let h a = ((f a), false) in h b), b);;

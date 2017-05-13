@@ -1,4 +1,4 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let y = ((clone List.hd l1 ((List.length l1) - (List.length l2)) y), l2);;
+let pipe fs =
+  let f a x = match x with | [] -> (fun b  -> b) in
+  let base = 0 in List.fold_left f base fs;;

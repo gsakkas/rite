@@ -1,11 +1,9 @@
 
-let rec addList xs = match xs with | [] -> 0 | h::t -> h + (addList t);;
+let rec listReverse l =
+  let rec rev element =
+    function | [] -> element | h::t -> rev (h :: element) t in
+  rev [] l;;
 
-let rec digitsOfInt n =
-  if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let palindrome w = w = (listReverse w);;
 
-let rec additivePersistence n =
-  let count = 0 in
-  if (List.length (digitsOfInt n)) = 1
-  then count
-  else count = (count + (1 additivePersistence (addList (digitsOfInt n))));;
+let _ = palindrome "malayalam";;

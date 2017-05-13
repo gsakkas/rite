@@ -1,9 +1,6 @@
 
 let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let fixpoint (f,b) =
-  wwhile
-    (let f x = let xx = (x * x) * x in (xx, (xx < 100)) in
-     ((wwhile (f, 2)), b));;
+let fixpoint (f,b) = wwhile (if (f b) = b then ((f b), b));;

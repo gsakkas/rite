@@ -1,3 +1,2 @@
 
-let rec sumList xs =
-  if (List.length xs) != 0 then (List.nth xs 0) + (sumList (List.hd xs));;
+let _ = 12 div 10;;

@@ -1,3 +1,6 @@
 
 let rec wwhile (f,b) =
-  let (x,y) = b f in if y = true then wwhile (f, x) else x;;
+  let rec acc result =
+    let res = f result in
+    match res with | (b',c') -> if c' then acc b' else b' | b' -> b' in
+  acc b;;

@@ -1,4 +1,2 @@
 
-let incr x = x + 1;;
-
-let foo = List.map incr 9;;
+let sqsum xs = let f a x = (+.) in let base = 0. in List.fold_left f base xs;;

@@ -1,8 +1,10 @@
 
-let rec addList (f,xs) =
-  match xs with | [] -> 0 | h::t -> h + (addList (f, t));;
+let rec listReverse l =
+  let rec rev element =
+    function | [] -> element | h::t -> rev (h :: element) t in
+  rev [] l;;
 
-let rec digitsOfInt n =
-  if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let palindrome w =
+  let reverse = listReverse w in if reverse = w then true else false;;
 
-let _ = addList digitsOfInt 5;;
+let _ = palindrome "malayalam";;

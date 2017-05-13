@@ -1,2 +1,2 @@
 
-let num_of_digits xs = (log10 (int_of_float xs)) + 1;;
+let rec digitsOfInt n = match n with | [] -> [] | h::t -> if n < 0 then [];;

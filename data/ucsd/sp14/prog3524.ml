@@ -1,2 +1,6 @@
 
-let pipe fs = let f a x a = a x in let base a = a in List.fold_left f base fs;;
+let fun1 x = x + x;;
+
+let fun2 x = x + 3;;
+
+let pipe x = fun2 x (fun1 x);;

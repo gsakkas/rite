@@ -1,4 +1,5 @@
 
-let rec clone x n = if n <= 0 then x else clone (List.append x x) (n - 1);;
+let pipe fs =
+  let f a x x' = a x in let base x = x in List.fold_left f base fs;;
 
-let _ = clone clone (-3);;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

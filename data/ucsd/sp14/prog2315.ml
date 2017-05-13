@@ -6,15 +6,25 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Arc of expr* expr* expr;;
 
 let rec exprToString e =
   match e with
-  | VarX  -> Printf.sprintf "%s" e
-  | VarY  -> e
-  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
-  | Cosine e2 -> Printf.sprintf "%s" e2
-  | Average (e3,e4) -> Printf.sprintf "%s %s" e3 e4
-  | Times (e5,e6) -> Printf.sprintf "%s %s" e5 e6
-  | Thresh (e7,e8,e9,e0) -> Printf.sprintf "%s %s %s %s" e7 e8 e9 e0
-  | _ -> "";;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
+  | Arc (a,b,c) -> "sin(pi*" ^ ((exprToString a (b, c)) ^ ")");;

@@ -1,6 +1,3 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let rec fixpoint (f,b) = wwhile (f, ((f b) = b), b);;
+let rec build (rand,depth) =
+  match rand depth with | (r,0) -> build (r, 0) | (r,d) -> (r, (d - 1));;

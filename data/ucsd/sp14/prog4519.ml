@@ -1,14 +1,20 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
 let rec mulByDigit i l =
-  let f a x =
-    match i with
-    | 0 -> []
-    | _ ->
-        let (i,j) = x in
-        let (s,t) = a in
-        ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
+               [h * i]
+       with
+       | [] -> []
+       | h::t ->
+           let f a x = a + x in
+           let base = 0 in
+           (match [List.fold_left f base (h :: t)] with
+            | [] -> []
+            | a::b ->
+                let rec helper acc v =
+                  if v = 0
+                  then acc
+                  else ((v / 10) mod 10) :: ((v mod 10) :: acc) :: acc in
+                helper [] a));;

@@ -1,9 +1,5 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let m a b = "[" ^ (a ^ (";" ^ (b ^ "]"))) in
-      let base = f h in List.fold_left m base h;;
-
-let _ = stringOfList (fun x  -> x) ["foo"];;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> ((mulByDigit i (List.rev t)) :: 0) @ [h * i];;

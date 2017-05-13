@@ -1,16 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  let acc curr result =
-    match curr with
-    | VarX  -> Printf.sprintf "x"
-    | VarY  -> Printf.sprintf "y" in
-  acc e "" exprToString VarX;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        if not List.mem seen h
+        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

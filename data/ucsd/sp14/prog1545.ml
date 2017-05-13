@@ -7,8 +7,19 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+  | Nom of expr* expr* expr
+  | Squa of expr;;
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -16,16 +27,26 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      float_of_int -
-        (((1 *. (eval (e1, x, y))) *. (eval (e2, x, y))) *. (eval (e3, x, y)));;
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) ->
+      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Squa expr ->
+      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
+  | Nom (expr,expr1,expr2) ->
+      let (r1,r2,r3) =
+        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
+      ((r1 +. r2) +. r3) /.
+        (((abs_float r1) +. (abs_float r2)) +. (abs_float r3))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
+
+let sampleExpr1 =
+  Thresh
+    (VarX, VarY, VarX,
+      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
+
+let _ = eval (sampleExpr1, 0.5, 0.2);;

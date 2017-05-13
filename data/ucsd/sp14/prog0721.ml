@@ -1,4 +1,4 @@
 
-let x = "13";;
+let rec listReverse l = match l with | [] -> [] | h::t -> [h; 2; 2];;
 
-let _ = string_of_int x;;
+let _ = listReverse ["a"; "b"; "c"; "d"];;

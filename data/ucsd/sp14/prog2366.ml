@@ -1,12 +1,32 @@
 
-let rec append_new xs1 xs2 =
-  match xs1 with | [] -> xs2 | head::tail -> head :: (append_new tail xs2);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else append_new h seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial eval (e', x, y) 1
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;

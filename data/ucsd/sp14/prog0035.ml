@@ -1,8 +1,2 @@
 
-let a = [];;
-
-let b = 3;;
-
-let f x l = l :: x;;
-
-let _ = f b a;;
+let rec sumList xs = match xs with | [] -> [] | h::t -> h + (sumList t);;

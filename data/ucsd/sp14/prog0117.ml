@@ -1,14 +1,15 @@
 
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then 0
-  else
-    (let myList = digits n in
-     let num = sumList n in num + (additivePersistence num));;
+  let digOfInt n =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: (digitsOfInt (n / 10))
+         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
+  listReverse n;;

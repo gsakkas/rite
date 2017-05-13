@@ -1,16 +1,24 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rand = makeRand (10, 39);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
-
-let x = rand (1, 4);;
-
-let fixpoint (f,b) = wwhile (let k x = (f x) = x in ((x, (x != x)), b));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine var1 -> sin (pi *. (eval (var1, x, y)))
+  | Cosine var2 -> cos (pi *. (eval (var2, x, y)))
+  | Average (var3,var4) -> ((eval (var3, x, y)) + (eval (var4, x, y))) / 2
+  | Times (var5,var6) -> (eval (var5, x, y)) * (eval (var6, x, y))
+  | Thresh (var7,var8,var9,var0) ->
+      if (eval (var7, x, y)) < (eval (var8, x, y))
+      then eval (var9, x, y)
+      else eval (var0, x, y);;

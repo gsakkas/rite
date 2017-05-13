@@ -1,2 +1,2 @@
 
-let rec digitsOfInt n = if n > 0 then [digitsOfInt (n / 10); n mod 10] else 0;;
+let rec digitsOfInt n = if n > 10 then [n; n mod 10] else n;;

@@ -1,6 +1,3 @@
 
-let rec palinHelper normal reverse =
-  match normal with
-  | [] -> true
-  | x::xs ->
-      if x = (List.hd reverse) then palinHelper xs List.tl reverse else false;;
+let rec digitsOfInt n =
+  if n > 0 then ((digitsOfInt n) mod 10) :: (n / 10) else [];;

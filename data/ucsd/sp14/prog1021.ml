@@ -1,4 +1,9 @@
 
-let f x = let xx = (x * x) * x in (xx, (xx < 100));;
-
-let g b = (b, (b = (f b)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | hd::tl ->
+        let seen' = if (List.mem tl 2) = true then seen else hd :: seen in
+        let rest' = tl in helper (seen', rest') in
+  List.rev (helper ([], l));;

@@ -1,12 +1,12 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let digits n = digitsOfInt (abs n);;
+let rec listReverse l =
+  let rec listReverseHelper dec acc =
+    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
+  listReverseHelper l [];;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot xs pers =
-  if (sumList xs) < 10
-  then (pers, (sumList xs))
-  else additivePersAndRoot ((digits sumList xs) (pers + 1));;
+let palindrome w = (explode w) = (explode (listReverse w));;

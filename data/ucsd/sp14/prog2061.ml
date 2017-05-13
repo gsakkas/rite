@@ -6,21 +6,26 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" exprToString expr2)
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^ (":" ^ (exprToString expr4 ")")))))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Magic e1 -> sin * (pi (cos (pi *. (eval (e1, x, y)))))
+  | Weird (e1,e2,e3) ->
+      cos
+        ((pi *. (eval (e1, x, y))) *.
+           ((eval (e2, x, y)) *. (eval (e3, x, y))));;

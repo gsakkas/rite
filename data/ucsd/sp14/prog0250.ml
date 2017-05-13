@@ -1,4 +1,2 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> (listReverse t) @ h;;
-
-let _ = listReverse ["a"; "b"; "c"; "d"];;
+let rec additivePersistence n = additivePersistence (n, 0);;

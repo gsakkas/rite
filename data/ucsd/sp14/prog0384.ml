@@ -1,4 +1,3 @@
 
-let rec listReverse l =
-  let l' = [] in
-  match l with | [] -> l' | l -> (listReverse (List.tl l)) :: (List.hd l);;
+let rec sumList xs =
+  if (List.hd xs) = [] then 0 else (let h::t = xs in h + (sumList t));;

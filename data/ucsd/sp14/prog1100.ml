@@ -1,10 +1,7 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+let rec assoc (d,k,l) =
+  match k with
+  | [] -> d
+  | (lk,lv)::ls -> if lk = lk then lv else assoc (d, k, ls);;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile (failwith, b);;
-
-let _ = fixpoint (collatz, 3);;
+let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

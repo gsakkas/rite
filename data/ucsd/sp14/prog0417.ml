@@ -1,5 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [0] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let _ = digitsOfInt - 3124;;
+let rec listReverse l = match l with | [] -> [] | h::t -> (cat t l) :: h;;

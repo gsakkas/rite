@@ -1,3 +1,3 @@
 
-let rec sumList xs =
-  if (List.length xs) != 0 then (xs.(0)) + (sumList (List.hd xs));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt div (n, 10)) @ [n];;

@@ -1,36 +1,14 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Square of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | MyExpr of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if (n / 10) = 0 then [n mod 10] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine m -> "sin(pi*" ^ ((exprToString m) ^ ")")
-  | Cosine m -> "cos(pi*" ^ ((exprToString m) ^ ")")
-  | Square m -> "(" ^ ((exprToString m) ^ "^2)")
-  | Average (m,n) ->
-      "((" ^ ((exprToString m) ^ ("+" ^ ((exprToString n) ^ ")/2)")))
-  | Times (m,n) -> (exprToString m) ^ ("*" ^ (exprToString n))
-  | MyExpr (m,n,o) ->
-      "(" ^
-        ((exprToString m) ^
-           ("<" ^
-              (exprToString ^
-                 ("?sqrt(|" ^
-                    ((exprToString o) ^
-                       ("|)" ^ (":" ^ ("(" ^ ((exprToString o) ^ "/2)")))))))))
-  | Thresh (m,n,o,p) ->
-      "(" ^
-        ((exprToString m) ^
-           ("<" ^
-              ((exprToString n) ^
-                 ("?" ^ ((exprToString o) ^ (":" ^ ((exprToString p) ^ ")")))))));;
+let rec sumList xs = match xs with | [] -> 0 | a::b -> a + (sumList b);;
+
+let rec digitalRoot n =
+  let sum = sumList (digitsOfInt n) in
+  if sum < 10 then sum else digitalRoot sum;;
+
+let _ = [digitalRoot 0 1; 2];;

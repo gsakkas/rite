@@ -1,8 +1,9 @@
 
-let rec digithelper n l =
-  let x = n / 10 in
-  let y = n mod 10 in if x <= 0 then y :: l else digithelper x (y :: l);;
+let rec last l = match l with | x::[] -> x | hd::tl -> last tl | [] -> [];;
 
-let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+let rec removeLast l =
+  match l with | x::[] -> [] | hd::tl -> hd :: (removeLast tl) | [] -> [];;
 
-let _ = digitsOfInt - 1.5;;
+let rec listReverse l = (last l) :: (listReverse (removeLast l));;
+
+let _ = listReverse [1; 2; 3; 4];;

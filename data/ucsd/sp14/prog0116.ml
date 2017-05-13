@@ -1,2 +1,5 @@
 
-let rec digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+let listReverse l =
+  let rec reverseHelper l rl =
+    function | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;

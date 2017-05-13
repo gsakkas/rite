@@ -1,3 +1,2 @@
 
-let rec reverseHelper l m =
-  match l with | x::s -> (reverseHelper s x) :: m | [] -> m;;
+let rec listReverse l = match l with | [] -> [] | h::h::t -> [];;

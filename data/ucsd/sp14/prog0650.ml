@@ -1,5 +1,3 @@
 
-let rec listReverse l =
-  let rec reverseHelper revd =
-    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
-  reverseHelper [] l;;
+let rec digitsOfInt n =
+  if n < 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;

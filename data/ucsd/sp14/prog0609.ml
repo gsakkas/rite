@@ -1,14 +1,8 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let append x l =
+  let rec helper x acc =
+    match x with | [] -> acc | h::t -> helper t (h :: acc) in
+  helper x l;;
 
 let rec listReverse l =
-  let rec rev element =
-    function | [] -> element | h::t -> rev (h :: element) t in
-  rev [] l;;
-
-let palindrome w =
-  let reverse = explode (listReverse w) in
-  if reverse = w then true else false;;
+  match l with | [] -> [] | h::t -> append listReverse t [h];;

@@ -1,3 +1,2 @@
 
-let pipe fs =
-  let f a x c y z = z (a c) in let base b = b in List.fold_left f base fs;;
+let stringOfList f l = let g x = (f x) ^ "; " in "[" ^ ((List.map g l) "]");;

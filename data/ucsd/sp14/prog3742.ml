@@ -15,8 +15,8 @@ let bigAdd l1 l2 =
     let f a x =
       let (x',x'') = x in
       let (c,s) = a in
-      if x = [((), ())]
-      then c :: s
+      if (List.length s) = (List.length a)
+      then (c, (c :: s))
       else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in

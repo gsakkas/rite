@@ -1,10 +1,7 @@
 
-let bigMul l1 l2 =
-  let f a x = a :: x in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = sep ^ h in
+      let base = h in let l = sepConcat t in List.fold_left f base l;;

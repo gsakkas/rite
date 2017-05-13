@@ -1,10 +1,4 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a [0] in
-    let base = ([], []) in
-    let args = [] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = pipe [(fun x  -> fun y  -> y + x); (fun x  -> fun y  -> x + y)] 3;;

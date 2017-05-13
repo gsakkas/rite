@@ -1,35 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Tan of expr
-  | Sin_Avg of expr* expr* expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n >= 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | _ -> "_"
-  | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
-  | Sin_Avg (a,b,c) ->
-      "sin(pi*(" ^
-        ((exprToString a) ^
-           ("+" ^ ((exprToString b) ^ ((exprToString c) ^ ")/3)"))));;
+let digits n = digitsOfInt (abs n);;
 
-let _ = exprToString (Sin_Avg (1, 2, 3));;
+let rec sumList xs = match xs with | [] -> 0 | x::xs -> x + (sumList xs);;
+
+let rec additivePersistence (a,n) =
+  let intFun (a,n) =
+    if n < 10
+    then (a, n)
+    else additivePersistence ((a + 1), (sumList (digits n))) in
+  4;;

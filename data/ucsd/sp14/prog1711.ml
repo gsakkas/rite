@@ -6,17 +6,39 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr* expr
+  | Timmy2 of expr* expr* expr* expr;;
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> float_of_int x
-  | VarY  -> float_of_int y
-  | Sine e1 -> sin (pi * (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi * (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e1, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) * (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y)) then eval (e3, x, y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e,f) ->
+      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
+  | Times (e,f) ->
+      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
+  | Thresh (e,f,g,h) ->
+      "(" ^
+        ((exprToString e) ^
+           ("<" ^
+              ((exprToString f) ^
+                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))));;
+
+let sampleExpr1 =
+  Thresh
+    (VarX, VarY, VarX,
+      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
+
+let _ = exprToString sampleExpr1;;

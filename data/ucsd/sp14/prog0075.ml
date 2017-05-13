@@ -1,4 +1,4 @@
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let _ = sumList 1;;
+let rec listReverse n =
+  let rec concat x y = x :: y in
+  match n with | [] -> [] | hd::tl -> concat (listReverse tl) [hd];;

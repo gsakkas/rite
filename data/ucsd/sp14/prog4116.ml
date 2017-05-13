@@ -2,30 +2,25 @@
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff >= 0
-  then (l1, ((clone 0 diff) @ l2))
-  else (((clone 0 (abs diff)) @ l1), l2);;
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (arg1,arg2) = x in
-      match a with
-      | (0,_) ->
-          if (arg1 + arg2) > 9
-          then (1, [(arg1 + arg2) mod 10])
-          else (0, [arg1 + arg2])
-      | (_,_) ->
-          if ((arg1 + arg2) + 1) > 9
-          then (1, ([((arg1 + arg2) + 1) mod 10] @ a))
-          else (0, (((arg1 + arg2) + 1) :: a)) in
+      let rem = match a with | (x,y) -> x in
+      match x with
+      | (add_a,add_b) ->
+          let new_carry = ((rem + add_a) + add_b) / 10 in
+          let digit = ((rem + add_a) + add_b) mod 10 in
+          (match a with | (x,y) -> (new_carry, (digit :: y))) in
     let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let args = List.rev (List.combine (l1, l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

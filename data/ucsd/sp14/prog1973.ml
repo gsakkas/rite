@@ -1,14 +1,20 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec assoc (d,k,l) =
+  let rec assoc_tl (d,k,l) t_res =
+    match l with
+    | [] -> d
+    | (ki,vi)::tl ->
+        if t_res
+        then vi
+        else
+          if ki = k
+          then assoc_tl (d, k, l) true
+          else assoc_tl (d, k, tl) false in
+  assoc_tl (d, k, l) false;;
 
-let pi = 3.142;;
+let long_list =
+  let rec assemble n l =
+    if n < 1000000 then assemble (n + 1) ((n, (string_of_int n)) :: l) else l in
+  assemble 1 [];;
 
-let rec exprToString e =
-  match e with | Sine s -> Format.sprintf "%d" (sin (pi * e));;
+let _ = assoc ((-1), "99999", long_list);;

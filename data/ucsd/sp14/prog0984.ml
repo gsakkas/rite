@@ -6,27 +6,26 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth = (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    (if (randNum = 1) && (randNum2 = 3)
-     then buildX ()
-     else
-       if (randNum = 1) && (randNum2 = 4)
-       then
-         buildSine
-           (buildOp2
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                (build (rand, (depth - 1))))));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      ("(" ^
+         ((exprToString e1) ^
+            ("<" ^
+               ((exprToString e2) ^
+                  ("?" ^
+                     ((exprToString e3) ^
+                        (":" ^ ((exprToString e4) ^ (")" llet sampleExpr1)))))))))
+        =
+        (Thresh
+           (VarX, VarY, VarX,
+             (Times ((Sine VarX), (Cosine (Average (VarX, VarY)))))));;

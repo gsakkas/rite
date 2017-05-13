@@ -1,2 +1,5 @@
 
-let padZero l1 l2 = if (List.length l1) = (List.length l2) then l1 @ l2;;
+let rec clone x n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone (x (n - 1))) @ [x]);;

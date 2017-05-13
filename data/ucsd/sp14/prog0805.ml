@@ -1,9 +1,9 @@
 
-let isP x = x > 0;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec digitsOfInt n =
-  match n with
-  | [] -> []
-  | h::t -> let rest = digitsOfInt t in if isP h then h :: rest else rest;;
+let rec listReverse l = List.rev l;;
 
-let _ = digitsOfInt 3124;;
+let palindrome w = if (explode w) = (listReverse w) then true else false;;

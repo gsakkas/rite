@@ -1,13 +1,11 @@
 
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (x1,x2) ->
-        (match a with
-         | (h1,h2::t2) ->
-             let mul = ((x1 * x2) * h1) + h2 in ((h1 + 1), (mul / 10)) ::
-               (mul mod 10) :: t2
-         | (_,_) -> (0, [0])) in
-  let base = (1, [0]) in
-  let args = List.rev (List.combine l1 l2) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = List.map (sepConcat (f l)) l;;
+
+let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;

@@ -8,18 +8,23 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
 let rec exprToString e =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> ((exprToString x) + "*") ^ (exprToString y)
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 (("?" exprToString c) ^ (":" ^ (exprToString d))))));;
+  | VarX  -> buildX
+  | VarY  -> buildY
+  | Sine s -> Printf.printf buildSine s;;

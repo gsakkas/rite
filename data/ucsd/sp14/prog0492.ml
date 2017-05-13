@@ -1,5 +1,7 @@
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else if n < 10 then [n] else [digitsOfInt (n / 10); n mod 10];;
+  let rec append xs1 xs2 =
+    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
+  let rec helper x =
+    match x with | 0 -> [] | n -> append (helper (n / 10)) (n mod 10) in
+  helper n;;

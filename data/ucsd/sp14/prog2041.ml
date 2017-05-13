@@ -1,3 +1,5 @@
 
+let (x,y) = ("5", 5);;
+
 let rec wwhile (f,b) =
-  match b with | (e,boo) -> if boo = true then e else wwhile f e;;
+  let f b = (x, y) in if x = true then wwhile (f, x) else x;;

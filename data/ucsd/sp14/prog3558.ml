@@ -1,7 +1,3 @@
 
-let rec fold_l f base xs =
-  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
-
-let list2 = [(-1); (-2); (-3); (-4)];;
-
-let concatL = fold_l (fun temp  -> fun h  -> (h * h) ^ temp) 0 list2;;
+let sqsum xs =
+  let f a x = (a * a) :: x in let base = 0 in List.fold_left f base xs;;

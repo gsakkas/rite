@@ -1,12 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine m -> "sin" ^ exprToString;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n == 0
+    then [0]
+    else
+      if (n / 10) == 0 then n mod 10 else (digitsOfInt (n / 10)) @ [n mod 10];;

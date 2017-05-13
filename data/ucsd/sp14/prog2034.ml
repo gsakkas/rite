@@ -1,10 +1,8 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let helper b = if b = (f b) then ((f b), false) else ((f b), true) in
-      helper), b);;
-
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in fixpoint (f, 1);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = [h] in let rest' = List.mem h l in helper (seen', rest') in
+  List.rev (helper ([], l));;

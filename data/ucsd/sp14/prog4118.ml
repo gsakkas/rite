@@ -1,9 +1,6 @@
 
-let rec mulByDigit i l =
-  let rec mulHelper l' =
-    match l' with
-    | [] -> (0, [])
-    | h::t ->
-        let (carry,rest) = mulHelper t in
-        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
-  let (_,ans) = mulHelper List.rev (0 :: l) in ans;;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t ->
+      if h = 0 then removeZero t else h :: (t List.combine ([1; 2] [3; 4]));;

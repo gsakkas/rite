@@ -1,2 +1,4 @@
 
-let padZero l1 l2 = if (List.length l1) = (List.length l2) then (l1, l2);;
+let pipe fs = let f a x x a = a in let base p = p in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

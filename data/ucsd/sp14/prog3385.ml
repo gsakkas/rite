@@ -6,4 +6,4 @@ let rec sepConcat sep sl =
       let f a x = a ^ (sep ^ x) in
       let base = h in let l = t in List.fold_left f base l;;
 
-let _ = sepConcat "X" ["hello"] string_of_int [1];;
+let stringOfList f l = sepConcat (List.map (f l)) l;;

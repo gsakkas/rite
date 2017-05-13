@@ -1,8 +1,4 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let x = "13";;
 
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) hd;;
-
-let _ = listReverse ["a"; "b"; "c"; "d"];;
+let _ = string_of_int x;;

@@ -1,8 +1,24 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | (s,i)::t -> (match k = i with | true  -> i | false  -> assoc (d, k, t));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine v -> sin (pi * (eval (v, x, y)))
+  | Cosine v -> cos (pi * (eval (v, x, y)))
+  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
+  | Times (v,w) -> (eval (v, x, y)) *. (eval (v, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | VarX  -> x
+  | VarY  -> y;;

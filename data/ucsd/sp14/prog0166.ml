@@ -1,5 +1,5 @@
 
-let append x l =
-  let rec helper x acc =
-    match x with | [] -> acc | h::t -> helper t l (h :: acc) in
-  helper x l;;
+let listReverse l =
+  let rec recurse x xs =
+    match x with | [] -> [] | hd::tl -> (recurse tl hd) :: xs in
+  recurse l [];;

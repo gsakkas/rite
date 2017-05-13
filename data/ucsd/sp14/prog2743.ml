@@ -1,4 +1,8 @@
 
-let rec clone x n = if n <= 0 then x else clone (List.append x x) (n - 1);;
+let firstF x = x + x;;
 
-let _ = clone "foo" 2;;
+let g firstF secondF = secondF firstF;;
+
+let secondF x' = x' + 4;;
+
+let _ = g secondF firstF;;

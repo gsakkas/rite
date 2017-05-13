@@ -1,2 +1,3 @@
 
-let pipe fs = let f a x = a x in let base q = q in List.fold_left f base fs;;
+let pipe fs =
+  let f a x = x a in let base a = fs a in List.fold_left f base fs;;

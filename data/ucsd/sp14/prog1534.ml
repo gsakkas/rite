@@ -1,5 +1,14 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let fixpoint (f,b) =
-  wwhile (if (f b) = b then ((f b), true) else (((f b), false), b));;
+let sampleExpr2 =
+  Times ((Squa (VarX, (Nom (VarX, VarY, VarX)))), (Sine Varx));;

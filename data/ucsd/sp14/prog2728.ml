@@ -1,4 +1,7 @@
 
-let pipe fs =
-  let f a x = match x with | a -> (fun x  -> x) | h::t -> h in
-  let base = [] in List.fold_left f base fs;;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
+
+let list2 = [(-1); (-2); (-3); (-4)];;
+
+let concatL = fold_l (fun temp  -> fun h  -> (h * h) ^ temp) 0 list2;;

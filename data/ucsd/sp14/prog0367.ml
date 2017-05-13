@@ -1,4 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> [] | x::xs -> x;;
+let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
 
-let _ = sumList [1; 2; 3; 4];;
+let rec digitsOfInt n =
+  if n >= 10 then app (digitsOfInt (n / 10) [n mod 10]) else n;;

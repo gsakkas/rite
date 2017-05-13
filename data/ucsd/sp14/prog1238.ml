@@ -1,37 +1,23 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (makeRand (0, 1)) = 0 then expr ^ "VarX" else expr ^ "VarY"
-    | 1 ->
-        if (makeRand (0, 1)) = 0
-        then expr ^ ("Sine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
-        else expr ^ ("Cosine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
-    | 2 ->
-        if (makeRand (0, 1)) = 0
-        then
-          expr ^
-            ("((" ^
-               ((buildhelper (rand - 1) (depth - 1) expr) ^
-                  ("+" ^ ((buildhelper (rand - 1) (depth - 1) expr) ^ ")/2)"))))
-        else
-          expr ^
-            ((buildhelper (rand - 1) (depth - 1) expr) ^
-               ("*" ^ (buildhelper (rand - 1) (depth - 1) expr)))
-    | 4 ->
-        expr ^
-          ("(" ^
-             ((buildhelper (rand - 1) (depth - 1) expr) ^
-                ("<" ^
-                   ((buildhelper (rand - 1) (depth - 1) expr) ^
-                      ("?" ^
-                         ((buildhelper (rand - 1) (depth - 1) expr) ^
-                            (":" ^
-                               ((buildhelper (rand - 1) (depth - 1) expr) ^
-                                  ")")))))))) in
-  buildhelper rand depth "";;
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | (Average a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | (Times a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | (Thresh a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))));;

@@ -1,2 +1,2 @@
 
-let rec digitsOfInt n = if n < 0 then [] else n mod 10;;
+let rec sumList xs = let x::t = xs in if t != [] then x + (sumList t);;

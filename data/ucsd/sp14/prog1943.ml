@@ -1,12 +1,10 @@
 
-let extract1 (p1,p2) = match (p1, p2) with | _ -> p1;;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
 
-let extract2 (p1,p2) = match (p1, p2) with | _ -> p2;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (extract1 h) = k then extract2 else assoc (d, k, t);;
+let fixpoint (f,b) = wwhile (f, b);;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = fixpoint (collatz, 3);;

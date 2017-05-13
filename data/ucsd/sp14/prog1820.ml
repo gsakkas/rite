@@ -8,15 +8,11 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> buildX ()
-  | VarY  -> buildY ()
-  | Sine a -> sin (pi *. VarX)
-  | Cosine a -> cos (pi *. y);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> Printf.sprintf "Sine(%s)" (exprToString x)
+  | _ -> failwith "are we writing a lisp compiler now";;
+
+let _ = exprToString Sine VarX;;

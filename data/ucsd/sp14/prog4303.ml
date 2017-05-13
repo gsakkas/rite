@@ -1,10 +1,9 @@
 
-let f a x =
-  let rec intlist l = if l < 10 then [l] else (intlist (l / 10)) @ [l mod 10] in
-  match x with
-  | (z,y) ->
-      (match a with
-       | [] -> let sum = z + y in intlist sum
-       | h::t -> let sum = (h + z) + y in (intlist sum) @ t);;
+let stringOfList f l =
+  match l with
+  | [] -> ""
+  | h::t ->
+      let m b = "[" ^ (b ^ "]") in
+      let n a x = a ^ (" ;" ^ x) in let base = f h in List.fold_left n base t;;
 
-let _ = f [] (9; 2);;
+let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;

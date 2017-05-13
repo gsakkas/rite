@@ -1,3 +1,3 @@
 
-let rec sumList (1 : int list) =
-  (match 1 with | [] -> 0 | hd::tl -> hd + (sumList tl) : int);;
+let rec append list1 list2 =
+  match list1 with | [] -> [] | h::t -> h :: (append list2);;

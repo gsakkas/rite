@@ -1,9 +1,13 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 let rec digitsOfInt n =
-  if n = 0
-  then [0]
-  else
-    (fun help  ->
-       fun n  -> match n with | 0 -> [] | _ -> cat (help (n / 10)) (n mod 10));;
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n > 9 then (additivePersistence sumList (digitsOfInt n)) + 1 else 0;;

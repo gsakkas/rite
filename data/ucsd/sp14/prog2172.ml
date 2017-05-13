@@ -1,6 +1,11 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | h::t -> if k = h then 10 else assoc (d, k, t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let rec exprToString e = match e with | VarX  -> "%s" e;;

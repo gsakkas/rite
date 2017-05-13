@@ -1,7 +1,12 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let rec append_new xs1 xs2 =
+  match xs1 with | [] -> xs2 | head::tail -> head :: (append_new tail xs2);;
 
-let fixpoint (f,b) = wwhile ((let k x = (f x) = x in f), b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else append_new h seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

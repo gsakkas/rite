@@ -1,3 +1,4 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | x::xs -> (List.fold_left x) + xs;;
+let rec length = function | [] -> 0 | _::l -> 1 + (length l);;
+
+let rec sumList xs = if (length xs) = 0 then xs = 0;;

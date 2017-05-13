@@ -1,4 +1,2 @@
 
-let pipe fs = let f a x = x a in let base a = a in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec clone x n = match n with | 0 -> [] | _ -> [clone x (n - 1); x];;

@@ -6,36 +6,19 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let buildCosine e = Cosine e;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth > (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    match (randNum, randNum2) with
-    | (1,3) -> buildCosine (buildOp1 (buildX ()))
-    | (1,4) ->
-        buildSine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (2,3) -> buildCosine (buildOp1 (buildX ()))
-    | (2,4) ->
-        buildCosine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (x,y) -> failwith "didnt work";;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;

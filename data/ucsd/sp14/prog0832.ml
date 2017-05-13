@@ -1,2 +1,4 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then f b' else b';;
+let rec sum (x,y) = match x with | [] -> y | h::t -> sum (t, (y + h));;
+
+let rec revexp (x,y) = match x with | [] -> y | h::t -> sum (t, (h ^ y));;

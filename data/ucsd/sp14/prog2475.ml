@@ -1,12 +1,3 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ = fixpoint (collatz, 48);;
+let rec assoc (d,k,l) =
+  match l with | [] -> d | (s,i)::t -> if s = k then i else assoc (d k t);;

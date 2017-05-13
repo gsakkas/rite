@@ -1,12 +1,9 @@
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
-     helper [] x n);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let args =
-  List.combine (clone List.length l1 List.length l1)
-    (List.combine (List.rev l1) (List.rev l2));;
+let stringOfList f l = sepConcat "; " (List.map f);;

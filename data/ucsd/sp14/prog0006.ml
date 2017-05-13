@@ -1,4 +1,4 @@
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let _ = sumList ["a"; "b"];;
+let listReverse l =
+  let rec r e a = match a with | [] -> [] | x::l' -> (r e l') :: x :: e in
+  r [] l;;

@@ -1,22 +1,25 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList (List.tl xs));;
+let rec listReverse2 l dest =
+  match l with | [] -> dest | h::t -> listReverse2 t (h :: dest);;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n < 10
-    then [n]
-    else (let x = [n mod 10] in (digitsOfInt (n / 10)) @ x);;
+let rec digitsToList n =
+  match n / 10 with
+  | 0 -> [n mod 10]
+  | _ -> (n mod 10) :: (digitsToList (n / 10));;
+
+let listReverse l = listReverse2 l [];;
+
+let digitsOfInt n = listReverse (digitsToList n);;
 
 let digits n = digitsOfInt (abs n);;
 
-let rec persistenceHelper q =
-  let x = sumList q in
-  if x < 10 then 1 else 1 + (persistenceHelper (digits x));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let additivePersistence n =
-  let x = digits n in if (abs n) < 10 then 0 else persistenceHelper x;;
+let rec additivePersistence n c =
+  let l = digits n in
+  let s = sumList l in
+  if (s / 10) <> 0 then (additivePersistence s c) + 1 else c;;
 
-let _ = additivePersistence - 9876;;
+let additivePersistence n = additivePersistence n 0;;
+
+let additivePersistence n = additivePersistence n 0;;

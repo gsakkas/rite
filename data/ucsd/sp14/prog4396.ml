@@ -1,5 +1,4 @@
 
-let pipe fs =
-  let f a x b = (x b) a in let base x = x in List.fold_left f base fs;;
+let rec myFunc f a b = match b with | [] -> a | h::t -> a + (myFunc f h t);;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let _ = myFunc (fun x  -> fun y  -> x y) (fun x  -> x) [1; 2; 3; 4];;

@@ -1,4 +1,9 @@
 
-let rec clone x n =
-  let rec clone_RT acc n = if n <= 0 then acc else clone (x :: acc) (n - 1) in
-  clone_RT [] n;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = failwith List.map (sepConcat " ") l;;

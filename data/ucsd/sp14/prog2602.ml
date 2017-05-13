@@ -1,2 +1,7 @@
 
-let _ = List.split [0; 0; 9; 9] [1; 0; 0; 2];;
+let notequals x y = x <> y;;
+
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile ((notequals b), b);;

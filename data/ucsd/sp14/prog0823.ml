@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [] @ [digitsOfInt (n mod 10)]);;
+let x = 555646;;
+
+let _ = x.[3];;

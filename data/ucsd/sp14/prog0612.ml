@@ -1,3 +1,4 @@
 
-let rec sumList xs =
-  if (List.length xs) != 0 then (xs.(0)) + (sumList (hd xs));;
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let _ = sumList [1.1];;

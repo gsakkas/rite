@@ -1,7 +1,7 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec listReverse l = failwith "TBD";;
 
-let palindrome w = let ex = explode w in (ex [0]) && (ex [_end]);;
+let listReverse l =
+  let rec reverseHelper revd =
+    match revd with | [] -> [] | h::t -> listReverse t (h :: revd) in
+  reverseHelper [] l;;

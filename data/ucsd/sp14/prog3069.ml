@@ -1,15 +1,9 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
-
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1,
-        (List.append ((clone 0 ((List.length l1) - (List.length l2))) l2)))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let rec mulByDigit i l =
+  let rec mulHelper l' =
+    match l' with
+    | [] -> (0, [])
+    | h::t ->
+        let (carry,rest) = mulHelper t in
+        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
+  let (_,ans) = (mulHelper 0) :: (List.rev l) in ans;;

@@ -1,5 +1,2 @@
 
-let pipe fs =
-  let f a x = x a in
-  let base = List.fold_left f (fun b  -> List.fold_left f b fs) fs in
-  List.fold_left f base fs;;
+let stringOfList f l = List.map f l List.map string_of_int [1; 2; 3; 4; 5];;

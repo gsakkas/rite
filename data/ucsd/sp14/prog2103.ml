@@ -6,28 +6,39 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | Timestwo of expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | Timestwo of expr;;
 
 let rec exprToString e =
   match e with
-  | Thresh (a,b,c,d) -> exprToString buildThresh (a, b, c, d)
-  | Times (a,b) -> exprToString buildTimes (a, b)
-  | Average (a,b) -> exprToString buildAverage (a, b)
-  | Cosine a -> exprToString buildCosine a
-  | Sine a -> exprToString buildSine a
-  | VarY  -> exprToString buildY
-  | VarX  -> exprToString buildX;;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((exprToString w) ^
+           ("<" ^
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ ((exprToString z) ^ ")")))))))
+  | Half x -> ".5*" ^ (exprToString x)
+  | Timestwo x -> "2.0*" ^ (exprToString x);;
+
+let sample = Timestwo VarX;;
+
+let _ = exprToString sample;;

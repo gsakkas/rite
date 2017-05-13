@@ -1,9 +1,2 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let g a x = a ^ (";" ^ x) in
-      let base = f h in let x = t in List.fold_left g base l;;
-
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let _ = (List.rev (List.combine [9; 9; 9; 9] [0; 9; 9; 9])) @ (0, 0);;

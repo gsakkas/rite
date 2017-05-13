@@ -1,32 +1,11 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Quad of expr* expr* expr;;
+let f b = b;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e' -> Printf.sprintf "sin(pi*%s)" (exprToString e')
-  | Cosine e' -> Printf.sprintf "cos(pi*%s)" (exprToString e')
-  | Average (e1,e2) ->
-      Printf.sprintf "((%s+%s)/2)" (exprToString e1) (exprToString e2)
-  | Times (e1,e2) ->
-      Printf.sprintf "%s*%s" (exprToString e1) (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      Printf.sprintf "(%s<%s?%s:%s)" (exprToString e1) (exprToString e2)
-        (exprToString e3) (exprToString e4)
-  | Sqrt e -> Printf.sprintf "(%s)^0.5" (exprToString (Abs e))
-  | Abs e -> Printf.sprintf "|%s|" (exprToString e)
-  | Quad (e1,e2,e2) ->
-      Printf.springf "(%s + %s)^2 + %s" (exprToString e1) (exprToString e2)
-        (exprToString e3)
-  | _ -> failwith "are we writing a lisp compiler now";;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
+
+let _ =
+  3 = 3;
+  (let fixpoint (f,b) = let f x = (b, (f b)) in b = (f b) in wwhile (f, b));;

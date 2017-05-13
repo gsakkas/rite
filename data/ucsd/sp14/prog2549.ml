@@ -1,4 +1,12 @@
 
-let rec myFunc f a b = match b with | [] -> a | h::t -> a + (myFunc f h t);;
-
-let _ = myFunc (fun x  -> fun y  -> x) [1; 2; 3; 4];;
+let _ =
+  let removeDuplicates l =
+    let rec helper (seen,rest) =
+      match rest with
+      | [] -> seen
+      | h::t ->
+          if List.mem (h, seen)
+          then seen' = seen
+          else seen' = (List.rev (h :: (List.rev seen))) in
+    let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

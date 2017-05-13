@@ -1,4 +1,5 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> (listReverse t) @ h;;
-
-let _ = listReverse [1; 2; 3; 4];;
+let listReverse l =
+  let rec helper xs =
+    match xs with | [] -> [] | hd::tl -> helper (hd :: xs) tl in
+  helper [] l;;

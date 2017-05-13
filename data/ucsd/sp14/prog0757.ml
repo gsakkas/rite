@@ -1,3 +1,7 @@
 
-let rec listReverse l =
-  if List.length > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+let explodeInt n =
+  let rec go i =
+    if i >= (String.length (string_of_int n))
+    then []
+    else (n / (1 Ei)) :: (go / (1 E (i - 1))) in
+  go 0;;

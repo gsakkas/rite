@@ -1,4 +1,2 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile func else value;;
+let rec bssoc (d,k,l) = match d with | h::t -> if h = k then h | _ -> d;;

@@ -1,5 +1,8 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let x = [1; 2; 3];;
 
-let _ = append [1; 2; 3] 4;;
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail::third::fourth -> [fourth; third; tail; head];;

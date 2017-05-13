@@ -1,16 +1,8 @@
 
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
 let rec digitsOfInt n =
   if n <= 0
   then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
-
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let rec additivePersistence n =
-  let x = 1 in
-  if (sumList (digitsOfInt n)) > 9
-  then
-    (print_string "going into then | ";
-     additivePersistence (sumList (digitsOfInt n)))
-  else (print_string "going into else | "; sumList x);;
+  else (let l = (digitsOfInt (n / 10)) :: (n mod 10) in listReverse l);;

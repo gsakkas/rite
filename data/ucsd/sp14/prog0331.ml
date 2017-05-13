@@ -1,8 +1,10 @@
 
+let rec digitsOfInt n =
+  let digInt = [] in
+  if (n / 10) <> 0 then digInt :: (digitsOfInt (n / 10)) else [];;
+
 let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec digit n acc =
-       if n < 10 then n :: acc else digit (n / 10) ((n mod 10) :: acc) in
-     n [] digit);;
+  let l = [] in
+  match n / 10 with
+  | 0 -> []
+  | _ -> l :: (n mod 10) :: (digitsOfInt (n / 10));;

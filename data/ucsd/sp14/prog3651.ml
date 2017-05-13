@@ -1,5 +1,9 @@
 
-let rec mulByDigit i l =
-  let rec helper i acc l =
-    if i > 0 then (helper i) - (1 (bigAdd acc l) l) else acc in
-  helper i [] l;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l) "]");;

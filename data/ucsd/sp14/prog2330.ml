@@ -6,7 +6,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -14,11 +16,17 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      (((eval (a, (sin (pi *. x)), (sin (pi *. y)))) +
+          (eval (b, (sin (pi *. x)), (sin (pi *. y)))))
+         + (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
+        /. 3.0;;

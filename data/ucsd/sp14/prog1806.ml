@@ -1,5 +1,12 @@
 
 let rec wwhile (f,b) =
-  let (x,y) = (f, b) in if y = true then wwhile (f, x) else x;;
+  let rec acc result =
+    let res = f result in
+    match res with | (b',c') -> if c' then acc b' else b' in
+  acc b;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let fixpoint (f,b) = wwhile ((fun xx  -> (xx, ((f xx) = xx))), b);;
+
+let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+
+let _ = fixpoint (g, 0) should return 739085;;

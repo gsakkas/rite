@@ -1,9 +1,5 @@
 
-let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+let rec wwhile (f,b) =
+  match f b with | (k,tf) -> if tf = false then k else wwhile (f, k);;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let f b = let g' = g b in (b, (b = g'));;
-
-let _ = f collatz;;
+let fixpoint (f,b) = wwhile (fun a  -> ((f a), ((f a) != a), b));;

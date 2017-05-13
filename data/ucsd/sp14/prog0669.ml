@@ -1,4 +1,8 @@
 
-let rec length = function | [] -> 0 | _::l -> 1 + (length l);;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x <= 0 then y :: l else digithelper x (y :: l);;
 
-let rec sumList xs = if (length xs) = 0 then xs = 0;;
+let digitsOfInt n = if n = 0 then [] else digithelper n [];;
+
+let _ = digitsOfInt - 1;;

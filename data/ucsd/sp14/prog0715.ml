@@ -1,8 +1,3 @@
 
-let x = [1; 2; 3];;
-
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | x::[] -> [x]
-  | head::tail -> head :: (listReverse tail) :: tail;;
+let rec digitsOfInt n =
+  match n with | 0 -> [] | _ -> ([n mod 10], (digitsOfInt (n / 10)));;

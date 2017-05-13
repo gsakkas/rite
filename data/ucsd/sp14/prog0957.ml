@@ -8,21 +8,15 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let buildX () = VarX;;
 
-let rec eval (e,x,y) = float_of_string (exprToString eval);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let num = rand (1, 10) in
+    (if (rand mod 2) = 0 then buildX () else buildY ())
+  else
+    (let num = rand (1, 10) in
+     match num with | _ -> build (rand, (depth - 1)));;

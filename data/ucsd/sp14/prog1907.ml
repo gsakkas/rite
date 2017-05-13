@@ -8,15 +8,13 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr) ->
-      "(" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr) ^ ")/2)")))
-  | Times (expr,expr) ->
-      "(" ^ ((exprToString expr) ^ ("*" ^ ((exprToString expr) ^ ")")))
-  | Thresh (expr,expr,expr,expr) ->
-      "(" ^ (expr ^ ("<" ^ (expr ^ ("?" ^ (expr ^ (":" ^ (expr ^ ")")))))));;
+  | Sine v -> sin (eval (v, x, y))
+  | Cosine v -> cos (eval (v, x, y))
+  | Average (v,w) -> ((eval (v, x, y)) + (eval (w, x, y))) / 2.0
+  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;

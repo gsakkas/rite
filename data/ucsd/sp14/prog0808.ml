@@ -1,7 +1,3 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let a = explode 1001;;
+let rec myListReverse origList newList =
+  match origList with | [] -> [] | h::t -> (myListReverse t h) :: newList;;

@@ -1,3 +1,10 @@
 
-let pipe fs =
-  let f a x g = g (x a) in let base g = g in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) - 9) != 0
+        then ((hd * i) / 10) :: (((hd * i) mod 10) + (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;

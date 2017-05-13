@@ -1,8 +1,11 @@
 
 let rec wwhile (f,b) =
-  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> 3 * 1;;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let fixpoint (f,b) = wwhile (f b b);;
+
+let _ = fixpoint (collatz, 1);;

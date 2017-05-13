@@ -1,10 +1,2 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w = (listReverse explode w) == w;;
+let rec sumList xs = match xs with | [] -> [] | x::xs' -> 1 sumList xs';;

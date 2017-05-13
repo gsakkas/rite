@@ -1,23 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let buildCosine e = Cosine e;;
+let fixpoint (f,b) =
+  let rec helper (f,b) =
+    let b' = f b in if b' = b then b' else helper (f, b') in
+  helper (f, b);;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then buildX ()
-  else
-    (match rand with
-     | 0 -> buildSine (build ((rand (0, 6)), (depth - 1)))
-     | 1 -> buildCosine (build ((rand (0, 6)), (depth - 1))));;
+let _ = fixpoint (collatz, (93 rew001));;

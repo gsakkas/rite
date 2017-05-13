@@ -1,5 +1,5 @@
 
-let rec clone x n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (clone (x (n - 1))) @ [x]);;
+let pipe fs =
+  let f a x g = a (x g) in
+  let base = match fs with | h::t -> f h t | [] -> (fun x  -> x) in
+  List.fold_left f base fs;;

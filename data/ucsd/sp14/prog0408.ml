@@ -1,4 +1,2 @@
 
-let rec digitsOfInt n =
-  let myList = [] in
-  if n <= 0 then [] else [digitsOfInt (n mod 10); digitsOfInt (n / 10)];;
+let rec concat w = match w with | [] -> "".[0] | h::t -> h ^ (concat t);;

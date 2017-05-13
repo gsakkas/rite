@@ -1,7 +1,2 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let fixpoint (f,b) = wwhile (f, (f b));;
+let rec wwhile (f,b) = if snd f b then wwhile f fst f b else fst f b;;

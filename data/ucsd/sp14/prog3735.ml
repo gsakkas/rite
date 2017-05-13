@@ -14,9 +14,11 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       let (x',x'') = x in
-      let (c,s) = a in ((((c + x') + x'') / 10), (((c + x') + x'') mod 10))
-        :: a in
-    let base = (0, [0]) in
+      let (c,s) = a in
+      if s
+      then c :: s
+      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

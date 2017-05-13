@@ -1,6 +1,13 @@
 
-let pipe fs =
-  let f a x = function | g -> x a g in
-  let base = function | b -> b in List.fold_left f base fs;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match snd a with
+      | [] -> ([], (snd a))
+      | h::t -> (t, ((((fst h) + (snd h)) mod 10) :: (snd a))) in
+    let base = ((List.combine ((rev l1), (rev l2))), []) in
+    let args = [] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

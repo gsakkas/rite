@@ -1,2 +1,2 @@
 
-let _ = string_of_int [1; 2; 3];;
+let _ = let hi x = x + x in let temp x = x + 3 in hi temp 3;;

@@ -1,26 +1,13 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let rec mulByDigit i l =
+  let rec helper acc carry i l =
+    match l with
+    | [] -> acc
+    | h::t ->
+        let x = (h * i) + carry in
+        let n = if x > 9 then x mod 10 else x in
+        let carry' = if x > 9 then x / 10 else 0 in
+        let acc' = n :: acc in helper acc' carry' i t in
+  helper [] 0 i (List.rev (0 :: l));;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([], []) in
-    let base = ([], []) in
-    let args = f l1 l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = mulByDigit - (5 [0; 0; 0]);;

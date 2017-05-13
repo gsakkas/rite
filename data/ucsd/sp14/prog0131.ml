@@ -1,2 +1,4 @@
 
-let _ = let rec sumList xs = match xs with | [] -> 0 | h::t -> h + t in xs;;
+let rec length = function | [] -> 0 | _::l -> 1 + (length l);;
+
+let rec sumList xs = if (length xs) = 0 then 0;;

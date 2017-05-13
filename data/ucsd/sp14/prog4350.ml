@@ -1,21 +1,13 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | a -> if a < 0 then [] else (clone x (n - 1)) @ [x];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let l1 = [9; 9; 9];;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | ([],[]) -> []
-      | ((h1::t1)::[],(h2::t2)::[]) -> if (h1 + h2) > 9 then x a in
-    let base = [] in
-    let args = l1 l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec mulByDigit i l =
+  let f a x =
+    let (i,j) = x in
+    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args =
+    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
+  let (_,res) = List.fold_left f base args in res;;

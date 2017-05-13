@@ -1,6 +1,6 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec assoc (d,k,l) =
+  match l with | [] -> k | (s,i)::xs -> if k = s then i else assoc (d, k, xs);;
 
-let fixpoint (f,b) =
-  wwhile
-    ((if (f b) = b then ((failwith "asd"), true) else failwith "asd"), b);;
+let _ =
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

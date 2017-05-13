@@ -1,9 +1,5 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let sqsum xs =
+  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
 
-let stringOfList f l = "[" ^ ((List.map f (sepConcat l)) ^ "]");;
+let _ = sqsum [1.0; 4.0];;

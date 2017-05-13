@@ -1,3 +1,8 @@
 
 let rec digitsOfInt n =
-  match n <= 0 with | true  -> [] | false  -> [(digitsOfInt n) / 10; n % 10];;
+  let ns = [] in
+  match n with
+  | 0 -> ns
+  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+
+let rec digitalRoot n = if n < 10 then n else digitsOfInt n;;

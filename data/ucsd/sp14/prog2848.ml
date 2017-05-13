@@ -1,4 +1,5 @@
 
-let pipe fs = let f a x a = x in let base y = y in List.fold_left f base fs;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = (removeZero [0; 0; 0; 0] (a, b)) = [1; 2; 3; 4];;

@@ -1,39 +1,18 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | New of expr* expr
-  | Fresh of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | New (e1,e2) -> (exprToString e1) ^ ("/" ^ (exprToString e2))
-  | Fresh (e1,e2,e3) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("> 3" ^
-              ("?" ^
-                 ((exprToString e2) ^
-                    (("*" (exprToString e3)) ^
-                       (":" ^
-                          ((exprToString e1) ^
-                             (("*" (exprToString e3)) ^ ")"))))))));;
+let fixpoint (f,b) = wwhile (f, b);;
+
+let fixpoint (f,b) =
+  let y = f b in
+  match y with | (aPrime,_) -> if b = aPrime then b else fixpoint (f, aPrime);;
+
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) =
+  let y = f b in
+  match y with | (aPrime,_) -> if b = aPrime then b else fixpoint (f, aPrime);;
+
+let _ = fixpoint (collatz, 107);;

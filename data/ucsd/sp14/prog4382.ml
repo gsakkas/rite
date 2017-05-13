@@ -1,4 +1,6 @@
 
-let key = "" let prefix130 = "130";;
+let sqsum xs =
+  let f a x = match x with | [] -> 0 | h::t -> a + h in
+  let base = 0 in List.fold_left f base xs;;
 
-let print130 s = print_string (prefix130 ^ (">>" ^ s)) except;;
+let _ = sqsum [(-1); (-2); (-3); (-4)];;

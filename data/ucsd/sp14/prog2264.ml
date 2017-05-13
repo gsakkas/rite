@@ -6,29 +6,27 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
 
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr,expr1) ->
-      ((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.
-  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
-  | Squa expr ->
-      let res = eval (expr, x, y) in res /. ((abs_float res) +. 1.0)
-  | Nom (expr,expr1,expr2) ->
-      let (r1,r2,r3) =
-        ((eval (expr, x, y)), (eval (expr1, x, y)), (eval (expr2, x, y))) in
-      ((r1 +. r2) +. r3) /.
-        ((((abs_float r1) +. (abs_float r2)) +. (abs_float r3)) +. 1)
-  | Thresh (expr,expr1,expr2,expr3) ->
-      if (eval (expr, x, y)) < (eval (expr1, x, y))
-      then eval (expr2, x, y)
-      else eval (expr3, x, y);;
+  | VarX  -> VarX
+  | VarY  -> VarY
+  | Sine e -> buildSine e
+  | Cosine e -> buildCosine e
+  | Average (e1,e2) -> buildAverage (e1, e2)
+  | Times (e1,e2) -> buildTimes (e1, e2)
+  | Thresh (e1,e2,e3,e4) -> buildThresh (e1, e2, e3, e4);;
+
+let eval_fn e (x,y) =
+  let rv = eval (e, x, y) in assert (((-1.0) <= rv) && (rv <= 1.0)); rv;;

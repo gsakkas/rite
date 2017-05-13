@@ -8,11 +8,13 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi * a)
-  | Cosine a -> cos (pi *. a);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> Printf.sprintf "sin(pi*%s)" (exprToString e')
+  | Cosine e' -> Printf.sprintf "cos(pi*%s)" (exprToString e')
+  | Average (e1,e2) ->
+      Printf.sprintf "((%s+%s)/2)" (exprToString e1) (exprToString e2)
+  | Times (e1,e2) -> Printf.sprintf "%s*%s" exprToString e1 exprToString e2
+  | _ -> failwith "are we writing a lisp compiler now";;

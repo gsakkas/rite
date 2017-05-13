@@ -1,3 +1,2 @@
 
-let rec lengthOfList xs count =
-  match xs with | [] -> 0 | hd::tl -> lengthOfList (tl, (count + 1));;
+let rec sum (x,y) = match x with | [] -> 0 | h::t -> y = (y + (h sum (t, y)));;

@@ -1,5 +1,11 @@
 
-let rec app l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (app t l2);;
-
 let rec digitsOfInt n =
-  if n >= 10 then app (digitsOfInt (n / 10) [n mod 10]) else [n];;
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let rec additivePersistence n =
+  match digitsOfInt n with | [] -> 0 | _ -> sumList digitsOfInt n;;

@@ -1,3 +1,2 @@
 
-let rec fold_l f base xs =
-  match xs with | [] -> base | h::t -> fold_l f base t f h;;
+let getTail l = match l with | [] -> [] | t::[] -> t | h::t -> t;;

@@ -1,7 +1,5 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let reverse_Esplode = explode reverseList w;;
+let _ =
+  let rec helper xs list =
+    match list with | [] -> [] | hd::tl -> helper (hd :: xs) in
+  helper [] l;;

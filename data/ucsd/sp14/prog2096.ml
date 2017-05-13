@@ -1,4 +1,2 @@
 
-let g1 = (7, 12, 355335);;
-
-let c2 = (11, 3131, 73) doRandomColor (g1 ());;
+let c1 () = failwith (10, 15, 25);;

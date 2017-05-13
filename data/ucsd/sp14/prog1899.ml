@@ -1,6 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
-
-let fixpoint (f,b) = wwhile ((f, ((f b) <> b)), b);;
+let _ = ((fun x  -> truncate (1e6 *. (cos (1e-6 *. (float x))))), 0) 739085;;

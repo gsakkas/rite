@@ -1,8 +1,5 @@
 
-let rec digitsOfInt n =
-  let ns = [] in
-  match n with
-  | 0 -> ns
-  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
-
-let _ = digitsOfInt - 2;;
+let digitsOfInt n =
+  let rec driver n ls =
+    if n >= 10 then driver (n / 10) ((n mod 10) :: ls) else ls in
+  (driver n) * (10 []);;

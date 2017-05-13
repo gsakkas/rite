@@ -1,2 +1,3 @@
 
-let rec reverse l = match l with | h::t -> [reverse t; h];;
+let rec backCons xs x =
+  match xs with | [] -> x | y::ys -> (backCons ys) :: y :: x;;

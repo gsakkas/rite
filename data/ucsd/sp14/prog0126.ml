@@ -1,3 +1,3 @@
 
-let rec append list1 list2 =
-  match list1 with | [] -> [] | h::t -> h :: (append list2);;
+let rec digitsHelper n l =
+  if (n mod 10) = n then [] else (digitsHelper n) / (10 ((n mod 10) :: l));;

@@ -1,2 +1,3 @@
 
-let rec helpFac a b = if (10 * a) > b then a else (helpFac 10) * (a b);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (List.rev digitsOfInt (n / 10));;

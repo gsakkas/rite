@@ -1,4 +1,3 @@
 
-let foo xs = match xs with | [] -> [] | h::t -> h;;
-
-let _ = foo [(fun x  -> x + 1); (fun y  -> y - 1)];;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> (f h) fold_l f base t;;

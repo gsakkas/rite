@@ -1,9 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let digit = digitsOfInt (n / 10) in digit @ [n mod 10]);;
+let rec sumList xs = match xs with | [] -> 0 | x::xs -> x + (sumList xs);;
 
-let digits n = digitsOfInt (abs n);;
-
-let _ = digits - 23422;;
+let _ = sumList [1; 3; 5; 7; 9; 11] ((1 mod 10) :: x);;

@@ -1,7 +1,16 @@
 
-let rec digitsOfInt n =
-  let rec loop n acc =
-    if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
-  match n with | 0 -> [0] | _ -> loop n [];;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x = 0 then y :: l else digithelper x (y :: l);;
 
-let _ = digitsOfInt - 2;;
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec addPHelper n =
+  let lst = digitsOfInt n in
+  let sum = sumList lst in if sum < 10 then sum else addPHelper sum;;
+
+let digits n = digitsOfInt (abs n);;
+
+let additivePersistence n = let n_pos = digits n in addPHelper n_pos;;

@@ -1,5 +1,2 @@
 
-let (x,y) = ("5", 5);;
-
-let rec wwhile (f,b) =
-  let f b = (x, y) in if x = true then wwhile (f, x) else x;;
+let rec wwhile (f,b) = if (f, b) > 100 then (f, b) else f (f, b);;

@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else [digitsOfInt (n / 10); n mod 10];;
+let append x y = x + y;;
+
+let append x y = match y with | [] -> [] | h::t -> h :: (append x t);;

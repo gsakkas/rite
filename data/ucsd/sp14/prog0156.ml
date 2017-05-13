@@ -1,18 +1,11 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ ->
-         if (n / 10) != 0
-         then (digitsOfInt (n / 10)) @ [n mod 10]
-         else [n mod 10]);;
+let num_of_digits xs =
+  let y = log10 (float_of_int xs) in (int_of_float y) + 1;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) < 9
-  then 0
-  else 1 + (additivePersistence (sumList n));;
+let digitsOfInt n =
+  let rec digits x l =
+    let numdig = num_of_digits x in
+    if numdig > 1
+    then ((x / ((10 ** numdig) - 1)) mod 10) :: l
+    else numdig :: 1 in
+  digits n [];;

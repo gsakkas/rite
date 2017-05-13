@@ -4,11 +4,14 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Halve of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Wow of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
+
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -16,16 +19,13 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine u -> sin (pi *. (eval (u, x, y)))
-  | Cosine u -> cos (pi *. (eval (u, x, y)))
-  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
-  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
-  | Thresh (s,t,u,v) ->
-      if (eval (s, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (v, x, y)
-  | Halve u -> (eval (u, x, y)) /. 2
-  | Wow (u,v,w) ->
-      sqrt
-        (((abs (eval (u, x, y))) *. (abs (eval (v, x, y)))) *.
-           (abs (eval (w, x, y))));;
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial (eval e')
+  | Sum3 (e1,e2,e3) -> ((eval e1) +. (eval e2)) +. (eval e3);;

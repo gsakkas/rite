@@ -1,8 +1,5 @@
 
-let a = [];;
-
-let b = 3;;
-
-let f x l = x :: l;;
-
-let _ = f a b;;
+let listReverse l =
+  let rec reverseHelper acc =
+    match acc with | [] -> acc | h::t -> reverseHelper (h :: acc) t in
+  reverseHelper [] l;;

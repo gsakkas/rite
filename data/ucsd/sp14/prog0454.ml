@@ -1,5 +1,4 @@
 
 let rec digitsOfInt n =
-  match n <= 0 with
-  | true  -> []
-  | false  -> ((digitsOfInt n) / 10) @ [n % 10];;
+  let ns = [] in
+  match n with | 0 -> 0 :: ns | n -> (digitsOfInt (n / 10)) :: (n mod 10);;

@@ -1,2 +1,2 @@
 
-let sqsum xs = let f a x = a ** x in let base = 0 in List.fold_left f base xs;;
+let rec concat xs = match xs with | [] -> "" | h::t -> (concat t) @ h;;

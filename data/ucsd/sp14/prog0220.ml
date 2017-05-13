@@ -1,5 +1,11 @@
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let rec reverseInt x y =
+  if x != 0 then reverseInt (x / 10) ((y * 10) + (10 mod 10)) else y;;
 
-let rec additivePersistence n =
-  if n < 10 then 0 else 1 + (additivePersistence (sumList n));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = (reverseInt n) / 10
+     and y = (reverseInt n) mod 10 in
+     if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;

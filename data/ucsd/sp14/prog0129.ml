@@ -1,6 +1,6 @@
 
-let append list1 list2 =
-  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (append t [h]);;
+let rec palinHelper normal reverse =
+  match normal with
+  | [] -> true
+  | x::xs ->
+      if x = (List.hd reverse) then palinHelper xs List.tl reverse else false;;

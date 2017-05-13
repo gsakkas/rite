@@ -1,9 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let pipe fs = let f a x = x a in let base z = z in List.fold_left f base fs;;
 
-let stringOfList f l = sepConcat "; " (List.map f);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

@@ -1,16 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let h x y = ((y x), (x < 100));;
 
-let buildX () = VarX;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
+let fixpoint (f,b) = wwhile ((h b f), b);;

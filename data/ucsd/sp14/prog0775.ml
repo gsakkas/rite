@@ -1,4 +1,8 @@
 
-let rec helpFac a b = if (10 * a) > b then a else helpFac (10 * a) b;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let _ = helpFac (3124 1);;
+let rec additivePersistence n =
+  match digitsOfInt n with | [] -> 0 | h::t -> h + t;;

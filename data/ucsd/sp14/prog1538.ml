@@ -6,35 +6,36 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
 let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
       "(" ^
-        ((exprToString e1) ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ (")+" 1 ")")))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
            ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (exprToString e1))
-  | Cosine e1 -> cos (pi *. (exprToString e1))
-  | Average (e1,e2) -> ((exprToString e1) +. (exprToString e2)) /. 2
-  | Times (e1,e2) -> (exprToString e1) *. (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      ((exprToString e1) < (exprToString e2 ?exprToString e3) : exprToString
-                                                                  e4);;
+              ((exprToString expr1) ^
+                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;

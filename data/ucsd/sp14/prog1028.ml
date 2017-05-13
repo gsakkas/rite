@@ -1,6 +1,20 @@
 
-let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile ((g (f, b)), b);;
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi * (evalhelper p1))
+    | Cosine p1 -> evalhelper p1 in
+  evalhelper e x y;;

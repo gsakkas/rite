@@ -1,5 +1,5 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::m::t -> ((h * i) mod 10) :: (((h * i) / 10) + (m * i));;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (fun x  -> ((((f x) = b), b), b));;

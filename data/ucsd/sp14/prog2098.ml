@@ -6,8 +6,16 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
+
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
 let rec exprToString e =
   match e with
@@ -15,15 +23,16 @@ let rec exprToString e =
   | VarY  -> "y"
   | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
   | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x1,x2) ->
-      "((" ^ ((exprToString x1) ^ ("+" ^ ((exprToString x2) ^ ")/2)")))
-  | Times (x1,x2) -> (exprToString x1) ^ ("*" ^ (exprToString x2))
-  | Thresh (x1,x2,x3,x4) ->
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
       "(" ^
-        ((exprToString x1) ^
+        ((exprToString w) ^
            ("<" ^
-              ((exprToString x2) ^
-                 ("?" ^
-                    ((exprToString x3) ^ (":" ^ ((exprToString x4) ^ ")")))))))
-  | CosE (x1,x2,x3) ->
-      "cos(pi*" ^ (x1 ^ ("*" ^ (x2 ^ (")e^(-pi*" ^ (x3 ^ "^2)")))));;
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ ((exprToString z) ^ ")")))))));;
+
+let sample = Cosine (Sine VarX);;
+
+let _ = exprToString sample;;

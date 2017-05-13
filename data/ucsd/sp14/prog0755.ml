@@ -1,7 +1,8 @@
 
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
 let rec digitsOfInt n =
-  if n > 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
-
-let digits n = digitsOfInt (abs n);;
-
-let _ = digits (-23422) is [(2, 3, 4, 2, 2)];;
+  if n <= 0 then [] else int_of_char explode (string_of_int n);;

@@ -1,9 +1,4 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec wwhile (f,b) = let c' = f b in if c' = b then c' else wwhile (f, c');;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone 0 ((List.length l2) - (List.length l1))) :: l1
-  else (clone 0 ((List.length l1) - (List.length l2))) :: l2;;
-
-let _ = padZero [1; 0; 0; 2] [9; 9];;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

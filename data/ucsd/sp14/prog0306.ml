@@ -1,13 +1,18 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | _ -> loop n []);;
 
-let rec listReverse l =
-  let rec listHelper l l2 =
-    match l with | [] -> l2 | h::t -> listHelper t (h :: l2) in
-  listHelper l [];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
-let palindrome w =
-  if (listReverse explode w) = (explode w) then true else false;;
+let rec additivePersistence n =
+  let rec addP = 0 in
+  let rec recursive_loop retVal =
+    if retVal < 10
+    then addP
+    else addP = (addP + (1 recursive_loop (sumList (digitsOfInt retVal)))) in
+  match n with | 0 -> 0 | _ -> recursive_loop n;;

@@ -1,5 +1,4 @@
 
-let listReverse l =
-  let rec reverseHelper revd =
-    match revd with | [] -> [] | h::t -> (reverseHelper t h) :: revd in
-  reverseHelper [] l;;
+let rec backCons xs x = match xs with | [] -> x | y::ys -> y :: x;;
+
+let _ = backCons ([1; 2] 3);;

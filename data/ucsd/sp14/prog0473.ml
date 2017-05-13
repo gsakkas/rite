@@ -1,3 +1,3 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | x::[] -> x | (x::y)::[] -> x + (sumList y);;
+let rec digitsOfInt n =
+  match n <= 0 with | true  -> [] | false  -> [(digitsOfInt n) / 10; n % 10];;

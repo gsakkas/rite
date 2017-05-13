@@ -1,10 +1,7 @@
 
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
+
 let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ = fixpoint (collatz, 48);;
+let _ = wwhile (f, 2) should return 512;;

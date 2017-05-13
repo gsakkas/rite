@@ -1,9 +1,35 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
-  List.fold_left f base xs;;
+let change x =
+  let rec changehelper acc x =
+    match x with | [] -> [] | hd::tl -> changehelper (acc ^ hd) tl in
+  changehelper "" x;;
 
 let _ =
-  sqsum [1; 2; 3] List.fold_left (fun sum  -> fun a  -> sum + (a * a)) 0
-    [2; 5; 3; 1];;
+  change
+    [1;
+    9;
+    4;
+    5;
+    2;
+    3;
+    7;
+    4;
+    8;
+    1;
+    2;
+    9;
+    5;
+    8;
+    1;
+    0;
+    0;
+    5;
+    4;
+    6;
+    7;
+    9;
+    1;
+    2;
+    0;
+    3;
+    9];;

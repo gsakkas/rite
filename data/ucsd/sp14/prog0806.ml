@@ -1,9 +1,16 @@
 
-let isP x = x > 0;;
+let rec listReverse l = List.rev l;;
+
+let additivePersistence n a = n + a;;
 
 let rec digitsOfInt n =
-  match n with
-  | [] -> []
-  | h::t -> let rest = digitsOfInt t in if isP h then h :: rest else rest;;
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
 
-let _ = digitsOfInt 352663;;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let additivePersistence n a =
+  if (sumList (digitsOfInt n)) > 9
+  then additivePersistence (sumList (digitsOfInt n)) (a + 1);;

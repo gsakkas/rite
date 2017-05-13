@@ -1,5 +1,6 @@
 
-let rec append list1 list2 = match list1 with | [] -> [] | h::t -> h :: list2;;
+let rec digitsHelper n l =
+  if (n mod 10) = n then [] else digitsHelper (n / 10) ((n mod 10) :: l);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::[] -> l | h::t -> listReverse (append (t [h]));;
+let digitsOfInt n =
+  let l = [] in if n < 0 then l else (digitsHelper n l 30) mod 10;;

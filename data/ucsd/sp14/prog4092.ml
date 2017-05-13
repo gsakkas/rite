@@ -1,5 +1,13 @@
 
-let pipe fs =
-  let f a x c d = x c in let base b = b in List.fold_left f base fs;;
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::xs ->
+      let g a x = a ^ ("; " ^ (f x)) in
+      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+
+let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+
+let _ = List.map (stringOfList string_of_int);;

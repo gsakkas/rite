@@ -1,6 +1,6 @@
 
 let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
+  let helper = (f, b) in
+  match helper with | (x',n) -> if n = false then x' else wwhile (f, x');;
 
-let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func f b), b));;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

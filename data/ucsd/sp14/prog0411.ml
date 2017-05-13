@@ -1,2 +1,2 @@
 
-let _ = 1 :: 2;;
+let rec digitsOfInt n = match n with | 0 -> [] | n -> [digitsOfInt n];;

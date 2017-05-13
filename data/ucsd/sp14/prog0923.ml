@@ -1,6 +1,4 @@
 
-let pi = 4.0 *. (atan 1.0);;
-
 type expr =
   | VarX
   | VarY
@@ -10,11 +8,10 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let pi = 4.0 *. (atan 1.0);;
+
 let rec eval (e,x,y) =
   match e with
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (x',y') -> (x +. y) /. 2.0
-  | Times (x',y') -> x *. y;;
-
-let _ = eval ((Cosine (Average (VarX, VarY))), 0, 0);;
+  | VarX  -> x *. 1.0
+  | VarY  -> y *. 1.0
+  | Sine e1 -> sin (pi * (eval (e1, x, y)));;

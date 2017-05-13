@@ -1,15 +1,20 @@
 
-let digitsOfInt n =
-  let rec digOfIntHelper n l =
-    match n > 0 with
-    | false  -> []
-    | true  ->
-        (match n > 9 with
-         | false  -> n :: l
-         | true  -> digOfIntHelper (n / 10) ((n mod 10) :: l)) in
-  digOfIntHelper n [];;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
 
-let additivePersistence n =
-  let rec addPerHelper n l =
-    match l with | [] -> 0 | a::[] -> n | h::t -> addPerHelper (n + 1) t in
-  addPerHelper 0 digitsOfInt n;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if (List.hd l) != (List.hd k)
+    then false
+    else listCompare (List.tl l) (List.tl k);;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
+
+let palindrome w = listCompare (explode w) (listReverse (explode w));;

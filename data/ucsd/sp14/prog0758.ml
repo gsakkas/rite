@@ -1,3 +1,4 @@
 
-let rec listReverse l =
-  if (List.length l) > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let rec additivePersistence n = sumList digitOfInt n;;

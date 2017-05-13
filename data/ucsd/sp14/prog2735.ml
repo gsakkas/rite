@@ -1,2 +1,4 @@
 
-let temp = List.fold_left (fun x  -> fun y  -> x + y) 1 [(fun y  -> y + 1)];;
+let pipe fs = let f a x = x in let base = 0 in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

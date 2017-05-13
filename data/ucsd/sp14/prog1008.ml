@@ -6,34 +6,18 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewA of expr* expr
-  | NewB of expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  let s = "" in
+let a = (1, 2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> s ^ "x"
-  | VarY  -> s ^ "y"
-  | Sine a -> s ^ ("sin(pi*" ^ ((exprToString a) ^ ")"))
-  | Cosine a -> s ^ ("cos(pi*" ^ ((exprToString a) ^ ")"))
-  | Average (a,b) ->
-      s ^ ("((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ "/2)"))))
-  | Times (a,b) -> s ^ ((exprToString a) ^ ("*" ^ (exprToString b)))
-  | Thresh (a,b,c,d) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("<" ^
-                 ((exprToString b) ^
-                    ("?" ^
-                       ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")"))))))))
-  | NewA (a,b) ->
-      s ^
-        ("sin(pi*" ^
-           ((exprToString a) ^ (")*cos(pi*" ^ ((exprToString b) ^ ")"))))
-  | NewB (a,b,c) ->
-      s ^
-        ("(" ^
-           ((exprToString a) ^
-              ("+" ^ ((exprToString b) ^ (("+" + (exprToString c)) ^ ")^0")))));;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin ((eval (a, x, y)) * pi)
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;

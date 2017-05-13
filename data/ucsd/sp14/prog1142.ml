@@ -1,10 +1,13 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Tan of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | TimesModOne of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ = fixpoint (collatz, 107);;
+let buildTan e = mod_float (Tan e) 1.0;;

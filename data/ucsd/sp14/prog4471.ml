@@ -1,12 +1,13 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) :: l1), l2)
-  else
-    if (List.length l2) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) :: l2))
-    else (l1, l2);;
-
-let _ = padZero [9; 9] [1; 0; 0; 2];;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
+               [h * i]
+       with
+       | [] -> []
+       | h::t ->
+           let rec helper lst =
+             match lst with | [] -> [] | h1::t1 -> [helper t1; h1 mod 10] in
+           helper [h]);;

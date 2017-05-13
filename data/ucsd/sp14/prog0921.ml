@@ -1,6 +1,4 @@
 
-let pi = 4.0 *. (atan 1.0);;
-
 type expr =
   | VarX
   | VarY
@@ -10,17 +8,14 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (x',y') -> (x +. y) /. 2.0
-  | Times (x',y') -> x *. y;;
-
-let _ = eval ((buildSine ((buildX ()) + (buildY ()))), 0.5, 0.5);;
+  | VarX  -> VarX
+  | VarY  -> VarY
+  | Sine e1 -> exprToString e1
+  | Cosine e1 -> exprToString e1
+  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
+  | Thresh (e1,e2,e3,e4) ->
+      (exprToString e1) ^
+        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;

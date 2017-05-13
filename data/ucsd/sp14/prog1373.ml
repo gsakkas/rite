@@ -1,8 +1,36 @@
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' in
-  acc b;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Square of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | MyExpr of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (fun xx  -> ((xx, ((f xx) = xx)), b));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine m -> "sin(pi*" ^ ((exprToString m) ^ ")")
+  | Cosine m -> "cos(pi*" ^ ((exprToString m) ^ ")")
+  | Square m -> "(" ^ ((exprToString m) ^ "^2)")
+  | Average (m,n) ->
+      "((" ^ ((exprToString m) ^ ("+" ^ ((exprToString n) ^ ")/2)")))
+  | Times (m,n) -> (exprToString m) ^ ("*" ^ (exprToString n))
+  | MyExpr (m,n,o) ->
+      "(" ^
+        ((exprToString m) ^
+           ("<" ^
+              (exprToString ^
+                 ("?sqrt(|" ^
+                    ((exprToString o) ^
+                       ("|)" ^ (":" ^ ("(" ^ ((exprToString o) ^ "/2)")))))))))
+  | Thresh (m,n,o,p) ->
+      "(" ^
+        ((exprToString m) ^
+           ("<" ^
+              ((exprToString n) ^
+                 ("?" ^ ((exprToString o) ^ (":" ^ ((exprToString p) ^ ")")))))));;

@@ -1,8 +1,4 @@
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> (helper (f :: acc) f x) - 1 in
-     helper [] x n);;
+let rec pipe fs =
+  let fsrev = List.rev fs in
+  match fsrev with | x::[] -> x | h::t -> h (pipe t);;
