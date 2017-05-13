@@ -150,9 +150,10 @@ main = do
 
 run p var = do
     -- liftIO $ print (prettyProg p)
+    let myOpts = stdOpts { size = 5, maxTests = 100 }
     res <- liftIO $ if null var
-                    then fromJust <$> check Nothing p
-                    else checkDecl var p
+                    then fromJust <$> checkWith myOpts Nothing p
+                    else checkDeclWith myOpts var p
     let mkSpan s =
           object [ "startLine" .= srcSpanStartLine s
                  , "startCol" .= srcSpanStartCol s

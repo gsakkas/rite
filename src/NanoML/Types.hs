@@ -958,6 +958,8 @@ mapExpr f expr = case expr of
   Try ms x y -> Try ms (mapExpr f x) (map (\(p,g,e) -> (p, fmap (mapExpr f) g, mapExpr f e)) y)
   Prim1 ms x -> Prim1 ms x
   Prim2 ms x -> Prim2 ms x
+  Prim3 ms x -> Prim3 ms x
+  PrimN ms x -> PrimN ms x
   -- Val ms x -> Val ms x
   With ms x y -> With ms x (mapExpr f y)
   Replace ms x y -> Replace ms x (mapExpr f y)

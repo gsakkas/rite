@@ -26,7 +26,7 @@ genValue :: MonadEval m => Type -> TypeEnv -> m Value
 genValue ty env = withCurrentProvM $ \prv -> case ty of
   TVar _ -> do
     r <- fresh
-    return (Hole Nothing r (Just ty))
+    return (Hole prv r (Just ty))
   TApp t []
     | t == tINT
       -> VI prv <$> sized (\s -> getRandomR (0, s))
@@ -46,7 +46,7 @@ genValue ty env = withCurrentProvM $ \prv -> case ty of
   TApp "array" [t] -> sized (fmap (\ x -> VV prv x (Just t)) . flip vectorOf (genValue t env))
   TApp c ts -> sized (genADT c ts env)
   TTup ts -> (\xs -> VT prv xs) <$> mapM (flip genValue env) ts
-  _ :-> to -> Lam Nothing (WildPat Nothing) <$> (flip genValue env) to <*> pure (Just emptyEnv)
+  _ :-> to -> Lam prv (WildPat prv) <$> (flip genValue env) to <*> pure (Just emptyEnv)
 
 genList :: MonadEval m => Type -> TypeEnv -> m Value
 genList t env = withCurrentProvM $ \prv -> (\x -> VL prv x (Just t)) <$> listOf (genValue t env)
