@@ -113,6 +113,7 @@ data ProcessState = ProcessState
   , good3Progs :: !Int
   , allProgs  :: !Int
   , recalls   :: [Double]
+  , spans     :: [Int]
   } deriving (Show)
 
 doEval
@@ -128,26 +129,33 @@ doEval t dir prune = do
       let (dir, f) = splitFileName ml
       oracle <- loadSpans ml
       ocs <- loadToolSpans (dir </> "ocaml" </> f <.> "out")
+      --mys <- return (Set.toList $ diffSpans oracle) -- loadToolSpans (dir </> "mycroft" </> f <.> "out")
       mys <- loadToolSpans (dir </> "mycroft" </> f <.> "out")
       shs <- loadToolSpans (dir </> "sherrloc" </> f <.> "out")
-      return $! not (null ocs || null mys || null shs) &&
-                Set.fromList ocs `Set.isSubsetOf` allSpans oracle &&
-                Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
-                Set.fromList shs `Set.isSubsetOf` allSpans oracle
+      --nms <- loadToolSpans (dir </> "nanomaly" </> f <.> "out")
+      return $! not (null ocs || null mys || null shs {- || null nms -})
+             && Set.fromList ocs `Set.isSubsetOf` allSpans oracle
+             && Set.fromList mys `Set.isSubsetOf` allSpans oracle
+             && Set.fromList shs `Set.isSubsetOf` allSpans oracle
+             -- && Set.fromList nms `Set.isSubsetOf` allSpans oracle
 
   let init = ProcessState { good1Progs = 0, good2Progs = 0, good3Progs = 0
-                          , allProgs = 0, recalls = []
+                          , allProgs = 0, recalls = [], spans = []
                           }
   final <- execStateT (mapM_ (processOne t) mls) init
   -- print final
   let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
       top2 = fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double
       top3 = fromIntegral (good3Progs final) / fromIntegral (allProgs final) :: Double
-      recall = avg (recalls final)
+      recall = avg (recalls final) :: Double
       total = allProgs final
   printf "top 1/2/3 (total): %.3f / %.3f / %.3f (%d)\n"
     top1 top2 top3 total
   printf "recall: %.3f\n" recall
+  printf "avg/med/max spans: %.3f / %d / %d\n"
+    (avg (spans final) :: Double)
+    (sort (spans final) !! (length (spans final) `div` 2))
+    (maximum (spans final))
   let csv = case prune of
         NoPrune -> dir </> t </> "results.csv"
         DoPrune -> dir </> t </> "results.pruned.csv"
@@ -164,9 +172,9 @@ processOne t f = do
   oracle <- liftIO $ loadSpans f
   let out = dir </> t </> ml <.> "out"
   sps <- liftIO $ loadToolSpans out
-  -- ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
-  -- mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
-  -- shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
+  ocs <- liftIO $ loadToolSpans (dir </> "ocaml" </> ml <.> "out")
+  mys <- liftIO $ loadToolSpans (dir </> "mycroft" </> ml <.> "out")
+  shs <- liftIO $ loadToolSpans (dir </> "sherrloc" </> ml <.> "out")
   if
     | null sps -> do
         liftIO . putStrLn . unlines $
@@ -183,13 +191,13 @@ processOne t f = do
                                         (Set.fromList sps)
                                          (Set.intersection (errSpans oracle) (diffSpans oracle))))
                 / fromIntegral (Set.size (Set.intersection (errSpans oracle) (diffSpans oracle)))
-        modify' $ \s -> s { recalls = r : recalls s}
+        modify' $ \s -> s { recalls = r : recalls s, spans = length sps : spans s }
         when (any (`Set.member` diffSpans oracle) $ take 1 sps) $ do
           bumpGood1 (+1)
-          --unless (or [any (`Set.member` diffSpans oracle) $ take 3 ocs
-          --           ,any (`Set.member` diffSpans oracle) $ take 3 mys
-          --           ,any (`Set.member` diffSpans oracle) $ take 3 shs]) $ do
-          --  liftIO $ printf "WIN: %s\n" f
+          unless (or [any (`Set.member` diffSpans oracle) $ take 1 ocs
+                     ,any (`Set.member` diffSpans oracle) $ take 1 mys
+                     ,any (`Set.member` diffSpans oracle) $ take 1 shs]) $ do
+            liftIO $ printf "WIN: %s\n" f
         when (any (`Set.member` diffSpans oracle) $ take 2 sps) $ do
           bumpGood2 (+1)
         when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
@@ -245,9 +253,9 @@ doBaseline dir prune = do
                       , top2s = top2 : top2s s
                       , top3s = top3 : top3s s
                       }
-  let top1 = avg (top1s final)
-  let top2 = avg (top2s final)
-  let top3 = avg (top3s final)
+  let top1 = avg (top1s final) :: Double
+  let top2 = avg (top2s final) :: Double
+  let top3 = avg (top3s final) :: Double
   printf "top 1/2/3: %.3f / %.3f / %.3f\n" top1 top2 top3
   let csv = case prune of
         NoPrune -> dir </> "baseline.csv"
@@ -294,7 +302,7 @@ runSherrloc ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do
 
 runNanomaly :: FilePath -> IO ([SrcSpan])
 runNanomaly ml = do
-  out <- readCreateProcess (proc "stack" ["exec", "--", "nano-check", ml]){cwd = Just "../nanoml"} ""
+  out <- readCreateProcess (proc "eval/bin/nano-check" [ml]) ""
   return $! extractSrcSpans (lines out)
 
 extractSrcSpans :: [String] -> [SrcSpan]
@@ -310,5 +318,5 @@ srcSpanRE = "\\([0-9]+,[0-9]+\\)-\\([0-9]+,[0-9]+\\)"
 timeout :: Int -> IO a -> IO (Maybe a)
 timeout sec = Timeout.timeout (sec * 10^6)
 
-avg :: Fractional a => [a] -> a
-avg xs = sum xs / genericLength xs
+avg :: (Real a, Fractional b) => [a] -> b
+avg xs = realToFrac (sum xs) / genericLength xs

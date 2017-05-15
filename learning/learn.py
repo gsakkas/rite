@@ -142,10 +142,10 @@ def main(_):
             features += '-no-slice'
         elif features == 'op+slice' and FLAGS.only_slice:
             features += '-only-slice'
-        with open('models/'+features+'.cross.csv', 'w') as f:
-            model = FLAGS.model
-            if model == 'hidden':
-                model += '-' + FLAGS.hidden_layers
+        model = FLAGS.model
+        if model == 'hidden':
+            model += '-' + FLAGS.hidden_layers
+        with open('models/'+model+'-'+features+'.cross.csv', 'w') as f:
             f.write('model,features,top-1,top-2,top-3,recall\n')
             f.write('%s,%s,%.3f,%.3f,%.3f,%.3f\n' % (
                 model, features,
