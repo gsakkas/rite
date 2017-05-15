@@ -384,6 +384,7 @@ primVarTypes =
   , ("String.get", tS :-> tI :-> tC)
   , ("String.length", tS :-> tI)
   , ("String.make", tI :-> tC :-> tS)
+  , ("String.concat", tS :-> tL tS :-> tS)
   , ("print_char", tC :-> tU)
   , ("print_int", tI :-> tU)
   , ("print_float", tF :-> tU)

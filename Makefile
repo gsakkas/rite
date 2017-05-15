@@ -13,9 +13,9 @@ SEED       ?= 0
 
 PRUNE      ?= NoPrune
 
-DATAS = op+context+type+size
-DATAS_BENCH = op+context+type+size
-DATAS_CROSS  = op op+context op+size op+type
+DATAS = op+context+type op+context+type+size
+DATAS_BENCH = op+context+type
+DATAS_CROSS  = op op+slice op+context op+size op+type
 DATAS_CROSS += op+context+size op+context+type op+type+size
 DATAS_CROSS += op+context+type+size
 #HIDDEN = 10 25 50 100 250 500
