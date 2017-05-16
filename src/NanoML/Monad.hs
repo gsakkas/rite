@@ -32,11 +32,6 @@ newtype Eval a = EvalM (RandT StdGen (ExceptT NanoError (State NanoState)) a)
   deriving (Functor, Applicative, Monad, MonadFix
            ,MonadError NanoError, MonadRandom)
 
-instance MonadError e m => MonadError e (RandT g m) where
-  throwError = lift . throwError
-  catchError m f = liftRandT (\g -> runRandT m g `catchError` \e ->
-                                    runRandT (f e) g)
-
 instance MonadReader NanoOpts Eval where
   ask = EvalM $ gets nanoReader
   local f x = do

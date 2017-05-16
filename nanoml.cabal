@@ -58,7 +58,7 @@ library
                      , NanoML.Types
   -- other-modules:
   -- other-extensions:
-  build-depends:       MonadRandom >= 0.4
+  build-depends:       MonadRandom >= 0.5
                      , aeson >= 0.8
                      , annotated-wl-pprint >= 0.6
                      , array
