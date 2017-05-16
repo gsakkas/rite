@@ -1,5 +1,4 @@
 
-let rec wwhile (f,x) = let (x',b') = f x in if b' then wwhile (f, x') else x';;
-
-let rec fixpoint (f,x) =
-  let x' = f x in let g x = (f, (x' = x)) in wwhile (g, x);;
+let sqsum xs =
+  let f a x = match x with | hd::tl -> hd * hd in
+  let base = f 4 xs in List.fold_left f base xs;;

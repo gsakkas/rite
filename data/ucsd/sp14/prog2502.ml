@@ -1,31 +1,15 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+let rec digitsOfInt n =
+  match n with
+  | 0 -> []
+  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
-let pi = 4.0 *. (atan 1.0);;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (abs_float eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
-        (eval (e3, x, y));;
+let digitsOfInt n =
+  let xxx =
+    match n with
+    | 0 -> []
+    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
+  listReverse (xxx n);;

@@ -1,15 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let sqsum xs =
+  let f a x = (a ** 2.) +. x in let base = 0. in List.fold_left f base xs;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Average (a1,a2) -> (eval (VarX, a1, a2)) + (eval (VarY, a1, a2));;
+let _ = sqsum [(-1); (-2); (-3); (-4)];;

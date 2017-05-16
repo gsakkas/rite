@@ -1,8 +1,18 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> (match h with | (s,l) -> if d = s then l else assoc (d, k, t));;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = failwith "to be implemented" in
+    let args = l1 l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

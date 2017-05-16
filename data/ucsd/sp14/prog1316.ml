@@ -1,9 +1,5 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec additivePersistence n =
+  if n < 10 then 0 else 1 + (additivePersistence (sumList n));;

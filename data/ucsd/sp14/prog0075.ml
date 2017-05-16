@@ -1,4 +1,2 @@
 
-let rec listReverse n =
-  let rec concat x y = x :: y in
-  match n with | [] -> [] | hd::tl -> concat (listReverse tl) [hd];;
+let _ = 1.0 / max_float;;

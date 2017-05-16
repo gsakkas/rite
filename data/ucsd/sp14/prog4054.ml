@@ -1,2 +1,6 @@
 
-let pipe fs = let f a x z = z a in let base y = y in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
+
+let fixpoint (f,b) = wwhile (fun y  -> (blah, b));;

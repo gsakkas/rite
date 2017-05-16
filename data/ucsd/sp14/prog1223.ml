@@ -1,29 +1,26 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Abs of expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | VarY  -> y
-  | VarX  -> x
-  | Abs a ->
-      if (eval (a, x, y)) < 0
-      then (eval (a, x, y)) *. (-1.0)
-      else eval (a, x, y);;
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = () in
+    let base = ([], []) in
+    let args = f l1 l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

@@ -1,15 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x <= 0 then y :: l else digithelper x (y :: l);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "sin(pi*" ^ (exprToString s ")");;
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+
+let _ = digitsOfInt - 1234;;

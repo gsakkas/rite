@@ -1,17 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec digits n digitList =
+       if n = 0 then digitList else digits (n / 10) ((n mod 10) :: digitList) in
+     match n with | 0 -> [0] | _ -> digits n []);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (eval (a, x, y))
-  | Cosine a -> cos (eval (a, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) / 2;;
+let _ = digitsOfInt - 1;;

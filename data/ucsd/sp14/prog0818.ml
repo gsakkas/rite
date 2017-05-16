@@ -1,3 +1,3 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList List.tl xs);;
+let pipe fs =
+  let f a x f x f a = f a x in let base y z = z in List.fold_left f base fs;;

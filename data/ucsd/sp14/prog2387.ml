@@ -1,4 +1,7 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let f y z x = y z;;
 
-let fixpoint (f,b) = wwhile (let f' b' = f b in ((f, (b' = b)), b));;
+let rec chain fs =
+  match fs with | [] -> (fun x  -> x) | f::fs' -> (fun x  -> f (chain fs' x));;
+
+let ans = chain [(fun x  -> x * x; (fun x  -> 16 * x; (fun x  -> x + 1)))] 1;;

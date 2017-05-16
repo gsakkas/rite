@@ -1,13 +1,13 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let rec helper acc v =
-             if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-           helper h);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildHalve (e1,e2) = Halve (e1, e2);;

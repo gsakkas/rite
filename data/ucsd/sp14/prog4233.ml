@@ -1,6 +1,9 @@
 
-let f x = 1;;
-
-let f x = if x < 2 then 1 else x * (f (x - 1));;
-
-let _ = let base d = d in List.fold_left f base fs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev helper ([], l);;

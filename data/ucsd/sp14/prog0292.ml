@@ -1,7 +1,11 @@
 
-let digitsOfInt n =
-  let rec addDigit n acc =
-    if n <= 0 then acc else addDigit (n / 10) ((n mod 10) :: acc) in
-  match n with | 0 -> [0] | _ -> addDigit n [];;
+let rec wwhile (f,b) =
+  let helper = f b in
+  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
 
-let _ = digitsOfInt - 3124;;
+let fixpoint (f,b) =
+  wwhile
+    (let g b =
+       let helper = f b in
+       match helper with | (x,y) -> if x = b then (f, false) else (f, true) in
+     (g, b));;

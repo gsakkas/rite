@@ -1,7 +1,9 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f x in (xx, (xx = b)) in d b), b);;
+let stringOfList f l = sepConcat "; " (List.map f);;

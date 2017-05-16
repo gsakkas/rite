@@ -1,14 +1,8 @@
 
-let rec reverse s =
-  let n = String.length s in
-  for i = 0 to (n - 1) / 2 do
-    (let c = s.[i] in s.[i] <- s.[(n - i) - 1]; s.[(n - i) - 1] <- c)
-  done;
-  int_of_string s;;
-
-let z = 0;;
-
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else if z = 0 then (let n2 = reverse (string_of_int n) in z + 1);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> 0
+  | h::t ->
+      let rec helper acc v =
+        if v = 0 then 0 :: acc else helper ((v mod 10) :: acc) (v / 10) in
+      (helper ((mulByDigit i (List.rev t)) * 10)) + (h * i);;

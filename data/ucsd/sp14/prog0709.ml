@@ -1,3 +1,9 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else [n mod 10; [digitsOfInt (n / 10)]];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then seen cons [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

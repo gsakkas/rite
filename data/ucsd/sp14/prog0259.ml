@@ -1,5 +1,5 @@
 
-let rec listReverse l =
-  match l with
+let rec mulByDigit i l =
+  match List.rev l with
   | [] -> []
-  | hd::tl -> if hd != [] then (listReverse tl) :: hd else hd;;
+  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;

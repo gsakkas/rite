@@ -1,21 +1,45 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x c =
-      let (s,t) = x in
-      let sum = (c + s) + t in ((sum / 10), (x :: (sum mod 10) :: a)) in
-    let base = (0, [0]) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
+
+let rec build (rand,depth) =
+  let f = makeRand rand in
+  if depth = 0
+  then buildX ()
+  else
+    (match f with
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;

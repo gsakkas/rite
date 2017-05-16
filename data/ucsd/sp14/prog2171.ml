@@ -1,6 +1,3 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = ((wwhile (fun b  -> ((f b), (b != (f b))))), b);;
+let sqsum xs =
+  let f a x = (a * a) + x in let base = [] in List.fold_left f base xs;;

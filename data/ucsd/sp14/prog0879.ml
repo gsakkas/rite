@@ -1,16 +1,11 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else if n >= 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | x::xs -> x + (sumList xs);;
-
-let rec additivePersistence (a,n) =
-  let intFun (a,n) =
-    if n < 10
-    then (a, n)
-    else additivePersistence ((a + 1), (sumList (digits n))) in
-  4;;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (carry,rest) ->
+        let new_carry = ((i * x) + carry) / 10 in
+        let result = (((i * x) + carry) mod 10) :: rest in
+        if ((List.length result) = (List.length l)) && (new_carry > 0)
+        then (0, (new_carry :: result))
+        else (new_carry, result) in
+  let base = (0, []) in let (_,res) = List.fold_right f base l in res;;

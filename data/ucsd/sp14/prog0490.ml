@@ -1,7 +1,2 @@
 
-let rec digitsOfInt n =
-  let rec helper x =
-    match x with | 0 -> [] | n -> (n mod 10) :: (helper (n / 10)) in
-  let rec reverse xs =
-    match xs with | [] -> xs | hd::tl -> (reverse tl) :: hd in
-  reverse (helper n);;
+let rec sum (x,y) = match x with | [] -> y | h::t -> y = (y + (h sum (t, y)));;

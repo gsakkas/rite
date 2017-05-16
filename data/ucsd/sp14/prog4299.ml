@@ -1,8 +1,6 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let g a x = a ^ (";" ^ x) in let base = f h in List.fold_left g base l;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let rec fixpoint (f,b) = wwhile ((fixpoint (f, (f b))), b);;

@@ -1,72 +1,37 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Thresh2 of expr* expr
-  | Thresh3 of expr* expr;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y in
-  evalhelper e x y;;
-
-let sampleExpr =
-  buildCosine
-    (buildSine
-       (buildTimes
-          ((buildCosine
-              (buildAverage
-                 ((buildCosine (buildX ())),
-                   (buildTimes
-                      ((buildCosine
-                          (buildCosine
-                             (buildAverage
-                                ((buildTimes ((buildY ()), (buildY ()))),
-                                  (buildCosine (buildX ())))))),
-                        (buildCosine
-                           (buildTimes
-                              ((buildSine (buildCosine (buildY ()))),
-                                (buildAverage
-                                   ((buildSine (buildX ())),
-                                     (buildTimes ((buildX ()), (buildX ()))))))))))))),
-            (buildY ()))));;
-
-let _ = eval (sampleExpr, 0.5, 0.2);;
+let rec build (rand,depth) =
+  let rec buildhelper num depth expr =
+    match num with
+    | 0 -> if (makeRand (0, 1)) = 0 then expr ^ "VarX" else expr ^ "VarY"
+    | 1 ->
+        if (makeRand (0, 1)) = 0
+        then expr ^ ("Sine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
+        else expr ^ ("Cosine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
+    | 2 ->
+        if (makeRand (0, 1)) = 0
+        then
+          expr ^
+            ("((" ^
+               ((buildhelper (rand - 1) (depth - 1) expr) ^
+                  ("+" ^ ((buildhelper (rand - 1) (depth - 1) expr) ^ ")/2)"))))
+        else
+          expr ^
+            ((buildhelper (rand - 1) (depth - 1) expr) ^
+               ("*" ^ (buildhelper (rand - 1) (depth - 1) expr)))
+    | 4 ->
+        expr ^
+          ("(" ^
+             ((buildhelper (rand - 1) (depth - 1) expr) ^
+                ("<" ^
+                   ((buildhelper (rand - 1) (depth - 1) expr) ^
+                      ("?" ^
+                         ((buildhelper (rand - 1) (depth - 1) expr) ^
+                            (":" ^
+                               ((buildhelper (rand - 1) (depth - 1) expr) ^
+                                  ")")))))))) in
+  buildhelper rand depth "";;

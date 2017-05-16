@@ -1,4 +1,2 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = let f' f b = ((f b), (b = (f b))) in wwhile (f', b);;
+let rec digitsOfInt n = match n with | [] -> [] | n -> if n > 0 then 0;;

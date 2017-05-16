@@ -1,26 +1,19 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  match n with | 0 -> [] | _ -> if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let ll1 = List.length l1 in
+  let ll2 = List.length l2 in
+  (((clone 0 (ll2 - ll1)) @ l1), ((clone 0 (ll1 - ll2)) @ l2));;
 
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
-    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
-    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
-    | Times (p1,p2) -> p1 *. p2
-    | Thresh (p1,p2,p3,p4) ->
-        if (evalhelper p1 x y) < (evalhelper p2 x y)
-        then evalhelper p3 x y
-        else evalhelper p4 x y in
-  evalhelper e x y;;
+let rec removeZero l =
+  match l with | h::t -> if h == 0 then removeZero t else h :: t | [] -> [];;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f (c,ds) (x1,x2) = ((((c + x1) + x2) / 10), (((c + x1) + x2) mod 10)) in
+    let base = (0, 1) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

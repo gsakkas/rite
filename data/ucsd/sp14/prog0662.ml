@@ -1,8 +1,3 @@
 
-let rec listCompare l k =
-  if ((List.hd l) = []) && ((List.hd k) = [])
-  then true
-  else
-    if ((List.hd l) - (List.hd k)) != 0
-    then false
-    else listCompare (List.tl l) (List.tl k);;
+let stringOfList f l =
+  let g a x = a ^ ("; " ^ (f x)) in "[" ^ ((List.map g l) "]");;

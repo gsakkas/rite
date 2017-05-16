@@ -1,2 +1,2 @@
 
-let _ = Printf.printf "%*s" (string_of_int 1);;
+let rec sumList xs = match sumList with | h::t -> h + (sumList t);;

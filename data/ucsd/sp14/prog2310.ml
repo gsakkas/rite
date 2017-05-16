@@ -7,8 +7,9 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Cube of expr
-  | Addition of expr* expr;;
+  | Percent of expr
+  | Negate of expr
+  | SumSquared of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -16,12 +17,17 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
-  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
       if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Cube a -> ((eval a) * (eval a)) * (eval a);;
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Percent e1 -> (eval (e1, x, y)) *. 0.01
+  | Negate e1 -> (eval (e1, x, y)) * (-1)
+  | SumSquared (e1,e2,e3) ->
+      (((eval (e1, x, y)) * (eval (e1, x, y))) +
+         ((eval (e2, x, y)) * (eval (e2, x, y))))
+        + ((eval (e3, x, y)) * (eval (e3, x, y)));;

@@ -1,6 +1,4 @@
 
-let rec palindromeHelper w r =
-  match w with
-  | [] -> (match r with | [] -> true | _ -> false)
-  | x::s ->
-      (match r with | y::t -> if x = y then palindromeHelper s t | _ -> false);;
+let rec additivePersAndRoot n = if n <= 0 then (0, 0) else (1, 1);;
+
+let _ = additivePersAndRoot [(1, 1)] 0;;

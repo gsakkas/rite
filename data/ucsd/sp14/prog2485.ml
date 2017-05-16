@@ -1,2 +1,4 @@
 
-let fixpoint (f,b) = let fx b = ((f b), ((not f b) = b)) in wwhile (fx, b);;
+let rec digitsOfInt n =
+  let ns = [] in
+  match n with | 0 -> 0 | n -> ((n mod 10) :: (digitsOfInt (n / 10))) :: ns;;

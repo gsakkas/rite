@@ -1,12 +1,23 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let a = (1, 2);;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let pi = 4.0 *. (atan 1.0);;
 
-let _ = fixpoint (collatz, 3);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;

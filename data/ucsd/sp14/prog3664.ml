@@ -1,3 +1,9 @@
 
-let pipe fs =
-  let f a x = let a = x in a a in let base x = x in List.fold_left f base fs;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then ((prod mod 10) :: ((prod / 10) + (mulByDigit i t))) :: t
+      else (prod mod 10) :: t;;

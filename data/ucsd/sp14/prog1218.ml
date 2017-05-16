@@ -1,21 +1,26 @@
 
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let x = rand (1, 10) in
-    match x with | 1..5 -> buildY () | 6..10 -> buildX ()
-  else
-    (let x = rand (1, 10) in
-     match x with
-     | 6|1 -> buildSine (build (rand, (depth - 1)))
-     | 7|2 -> buildCosine (build (rand, (depth - 1)))
-     | 9|3 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 10|4 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 8|5 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
+
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = 9 in
+    let args = l1 l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

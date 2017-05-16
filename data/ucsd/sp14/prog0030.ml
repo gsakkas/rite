@@ -1,3 +1,3 @@
 
 let rec listReverse l =
-  match l with | [] -> [] | _::tl -> (listReverse tl) + tl;;
+  match l with | [] -> [] | hd::tl -> listReverse (hd :: l) tl;;

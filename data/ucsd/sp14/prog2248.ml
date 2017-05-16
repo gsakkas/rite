@@ -1,25 +1,12 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           (("<" exprToString e2) ^
-              (" ? " ^
-                 ((exprToString e3) ^ (" : " ^ ((exprToString e4) ^ ")"))))));;
+let _ =
+  List.combine
+    ((clone 7 7) (List.combine [0; 0; 0; 1; 0; 0; 2] [0; 0; 0; 1; 0; 0; 2]));;

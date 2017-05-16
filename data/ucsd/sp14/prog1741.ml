@@ -1,9 +1,2 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t ->
-      (match h with | (di,ki) -> if ki = k then di else assoc (d, k, t));;
-
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = List.fold_left (fun a  -> fun x  -> x / a) 1 [1.0; 4.0];;

@@ -1,4 +1,2 @@
 
-let seal = [1; 2; 3];;
-
-let _ = if List.mem 1 seal then 3;;
+let rec wwhile (f,b) = let (a,b) = f b in if b then wwhile (f a) else a;;

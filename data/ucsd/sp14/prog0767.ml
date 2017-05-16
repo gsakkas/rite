@@ -1,3 +1,2 @@
 
-let rec digitsOfInt n =
-  let myList = [] in if n <= 0 then [] else (n mod 10) @ myList;;
+let append x l = match x with | [] -> l | h::t -> h :: t :: l;;

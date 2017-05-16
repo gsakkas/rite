@@ -1,3 +1,3 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else [n mod 10; (digitsOfInt n) / 10];;
+let rec backCons xs x =
+  match xs with | [] -> [x] | y::ys -> x :: y :: (backCons ys);;

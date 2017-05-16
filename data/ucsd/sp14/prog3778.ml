@@ -1,11 +1,10 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let f a x =
+  let rec intlist l = if l < 10 then [l] else (intlist (l / 10)) @ [l mod 10] in
+  match x with
+  | (z,y) ->
+      (match a with
+       | [] -> let sum = z + y in intlist sum
+       | h::t -> let sum = (h + z) + y in (intlist sum) @ t);;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
-
-let _ = stringOfList (fun x  -> 5 * x) [1; 2; 3; 4; 5; 6];;
+let _ = f [0] (9; 2);;

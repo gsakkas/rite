@@ -1,21 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rand = makeRand (10, 39);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (w,t,u,z) -> if (eval w) < (eval t) then eval u else eval z
-  | Times (t,u) -> (eval t) * (eval u)
-  | Average (t,u) -> ((eval t) * (eval u)) / 2
-  | Cosine t -> cos (pi * (eval t))
-  | Sine t -> sin (pi * (eval t))
-  | VarX  -> x
-  | VarY  -> y;;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
+
+let x = rand (1, 4);;
+
+let fixpoint (f,b) = wwhile ((let g x = f x in (x, (x != x))), b);;

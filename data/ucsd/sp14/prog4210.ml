@@ -1,20 +1,5 @@
 
-let pipe fs = let f a x a = x in let base a = a in List.fold_left f base fs;;
+let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
 
-let pipe fs =
-  let f a x a x = x in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x a x = x in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x a x = x in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = pipe [] in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = pipe [] in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x x = a in let base = pipe [] in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n >= 10 then app ((digitsOfInt (n / 10)) [n mod 10]) else [n];;

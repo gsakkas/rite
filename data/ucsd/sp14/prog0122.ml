@@ -1,15 +1,4 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
+let rec myFunc f a b = match b with | [] -> a | h::t -> myFunc f (f a h) t;;
 
-let rec palindrome w =
-  match w with
-  | [] -> (match listReverse w with | [] -> true | _ -> false)
-  | h::t ->
-      (match listReverse w with
-       | [] -> true
-       | h2::t2 -> if h2 = h then palindrome t else false);;
-
-let _ = palindrome "myxomatosis";;
+let _ = myFunc (fun x  -> fun y  -> x y) (fun x  -> x) [1; 2; 3];;

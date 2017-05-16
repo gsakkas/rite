@@ -1,26 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sigmoid of expr;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Sigmoid a -> 1. /. (1. -. (exp ((-1) *. a)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let _ = makeRand ((1, 2), 2);;

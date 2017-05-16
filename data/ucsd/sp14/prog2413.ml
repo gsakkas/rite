@@ -1,5 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+let listReverse l =
+  let rec r e a = match a with | [] -> [] | x::l' -> x :: e :: (r e l') in
+  r [] l;;
 
-let fixpoint (f,b) = wwhile (if (f b) = b then (b, b));;
+let _ = listReverse [1; 2; 3; 4];;

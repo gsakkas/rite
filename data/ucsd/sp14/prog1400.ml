@@ -1,8 +1,23 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let f x = let xx = f x in (xx, (xx != b)) in f wwhile (f, b);;
+let a = (1, 2);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
+
+let _ = (eval (a, x, y)) * 2.;;

@@ -1,7 +1,14 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (fun y  -> fun b  -> if (f b) = b then (b, true) else ((y b), b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e -> sin (pi * (eval e));;

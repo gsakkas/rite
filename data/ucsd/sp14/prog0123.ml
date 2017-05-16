@@ -1,9 +1,4 @@
 
-let rec at a b = match a with | [] -> [b] | head::tail -> head :: (at tail b);;
+let rec myFunc f a b = match b with | [] -> a | h::t -> myFunc f (f a h) t;;
 
-let rec listReverse l =
-  match l with | [] -> [] | head::tail -> at (listReverse tail) head;;
-
-let palindrome w = w = (listReverse w);;
-
-let _ = palindrome "malayalam";;
+let _ = myFunc (fun x  -> fun y  -> x y) (fun g  -> g) [1; 2; 3];;

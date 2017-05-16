@@ -1,11 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
 
-let rec exprToString e = match e with | VarX  -> Format.printf "%s" VarX;;
+let fixpoint (f,b) =
+  let helper x = if b = (f b) then (b, false) else (b, true) in
+  wwhile ((helper b), b);;

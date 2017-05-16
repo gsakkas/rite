@@ -1,9 +1,3 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n =
+  match n > 0 with | true  -> x :: ((clone x n) - 1) | false  -> x;;

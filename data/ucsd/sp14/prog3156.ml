@@ -1,29 +1,23 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | a -> if a < 0 then [] else (clone x (n - 1)) @ [x];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (f,[]) -> f | (f',g'::h) -> g' in
-      let newc =
-        match x with | (f,g) -> if ((f + g) + carry) > 9 then 1 else 0 in
-      let digit = match x with | (f,g) -> ((f + g) + carry) mod 10 in
-      match a with
-      | (o,p::q) -> (0, (newc :: digit :: q))
-      | (o,p) -> (0, (newc :: digit :: p)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i <= 0 then 0 else if i = 1 then l else bigAdd (mulByDigit (i - 1) l) l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr0 -> sin (eval (expr0, x, y))
+  | Cosine expr0 -> cos (eval (expr0, x, y))
+  | Average (expr0,expr1) ->
+      ((eval (expr0, x, y)) +. (eval (expr1, x, y))) /. 2
+  | Times (expr0,expr1) -> (eval (expr0, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr0,expr1,expr2,expr3) ->
+      (match (eval (expr0, x, y)) < (eval (expr1, x, y)) with
+       | true  -> eval (expr2, x, y)
+       | false  -> eval (expr3, x, y));;

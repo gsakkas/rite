@@ -1,10 +1,3 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> false
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h1::t1 -> let rec helper acc v = [v] = [0] in helper [] h1);;
+let sqsum xs =
+  let f a x sum x = sum + (x * x) in let base = 0 in List.fold_left f base xs;;

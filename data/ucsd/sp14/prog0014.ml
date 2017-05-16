@@ -1,11 +1,16 @@
 
-let rec addPHelper (num,sum,count) =
-  if (num < 10) && (sum < 10)
-  then count
-  else
-    if num = 0
-    then
-      (addPHelper (sum, 0, (count + 1));
-       Printf.printf "num is %d and sum is %d and count is %d\n" num sum
-         count)
-    else addPHelper ((num / 10), ((num mod 10) + sum), count);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let rec sum (n,i) =
+  if n < 10
+  then ((sumList (digitsOfInt n)), i)
+  else ((sumList (digitsOfInt n)), (1 + 1));;
+
+let rec additivePersistence_helper (n,i) =
+  let temp = sum (n, i) in
+  if (List.hd temp) >= 10
+  then additivePersistence_helper (temp, (i + 1))
+  else i;;

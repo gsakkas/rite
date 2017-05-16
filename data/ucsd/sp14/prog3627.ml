@@ -1,8 +1,9 @@
 
-let rec mulByDigit i l =
-  let lr = List.rev l in
-  match lr with
-  | (_,[]) -> ((((fst x) * (snd x)) / 10), [((fst x) * (snd x)) mod 10])
-  | (c,h::t) ->
-      let sum = c + ((fst x) * (snd x)) in
-      ((sum / 10), ((sum mod 10) :: (snd a)));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = List.map (sepConcat ("" l)) l;;

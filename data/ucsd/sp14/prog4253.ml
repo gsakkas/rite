@@ -1,2 +1,5 @@
 
-let pipe fs = let f a x d = a in let base d = d in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (let h x y = ((y x), (x = x)) in ((h b f), b));;

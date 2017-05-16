@@ -1,3 +1,4 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x @ ((clone x n) - 1) | false  -> x @ [];;
+let pipe fs =
+  let f a x = a x in
+  let base = match fs with | 0 -> 0 | _ -> fs in List.fold_left f base fs;;

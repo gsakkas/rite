@@ -1,5 +1,5 @@
 
-let rec clone x n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (clone (x (n - 1))) @ [x]);;
+let listReverse l =
+  let rec helper xs =
+    match xs with | [] -> [] | hd::tl -> helper (hd :: xs) tl in
+  helper [] l;;

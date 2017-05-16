@@ -1,39 +1,33 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let mySampleExpr3 =
+  Average
+    ((Sine VarX),
+      (Times
+         ((Times ((Average ((Sine VarX), VarY)), VarX)),
+           (Thresh (VarX, VarY, VarX, (Sine VarX))))));;
 
-let rec mulByDigit i l =
-  let rec adder n l' a =
-    match n with
-    | 0 -> [0]
-    | 1 -> bigAdd l' a
-    | _ -> adder (n - 1) l' (bigAdd a l') in
-  adder i l [0];;
-
-let bigMul l1 l2 =
-  let f a x =
-    match a with
-    | (w,y) -> (w, (bigAdd y (mulByDigit (x * (10 ** (List.length y))) l1))) in
-  let base = (0, []) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let _ = eval (mySampleExpr3, 1203, 12);;

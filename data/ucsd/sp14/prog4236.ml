@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x a x = x a in let base d = d in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile f a;;

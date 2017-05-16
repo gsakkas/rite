@@ -1,8 +1,6 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let sqsum xs =
+  let f a x = match x with | [] -> a | h::t -> h * h in
+  let base = 0 in List.fold_left f base xs;;
 
-let fixpoint (f,b) =
-  if b != (f b) then let f b = (b, true) in wwhile (f, (f b)) else b;;
+let _ = sqsum [1; 2; 3; 4];;

@@ -1,3 +1,2 @@
 
-let rec fold_l f base xs =
-  match xs with | [] -> base | h::t -> (fold_l f base t) :: (f h);;
+let sqsum xs = let f a x = (+.) in let base = 0. in List.fold_left f base xs;;

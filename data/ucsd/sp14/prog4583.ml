@@ -1,9 +1,5 @@
 
-let bigMul l1 l2 =
-  let f a x =
-    let (l1',l2') = x in
-    let (pos,total) = a in
-    match l2' with | [] -> [] | h::t -> ((pos + 1), total) in
-  let base = (0, [0]) in
-  let args = ((List.rev l1), (List.rev l2)) in
-  let (_,res) = List.fold_left f base args in res;;
+let rec wwhile (f,b) =
+  match f with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

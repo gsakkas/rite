@@ -1,10 +1,6 @@
 
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+let pipe fs =
+  let f a x = let an = a in x an in
+  let base b = b in List.fold_left f base fs;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((List.append clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

@@ -1,9 +1,14 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let t x = x + 1;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
+let stringOfList f l = List.map (f sepConcat) l;;
 
-let _ = fixpoint (collatz, 1);;
+let _ =
+  stringOfList (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;

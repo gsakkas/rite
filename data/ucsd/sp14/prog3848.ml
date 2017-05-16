@@ -1,22 +1,18 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+  (((clone 0 ((List.length l2) - (List.length l1))) @ l1),
+    ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      Printf.printf Printf.sprintf "%8d%8d%8d\n" l1' l2' carry;
-      ((if addit >= 10 then 1 else 0), (num @ [addit mod 10])) in
+    let f (a1,a2) (x1,x2) =
+      ((((x1 + x2) + a1) / 10), ((((x1 + x2) + a1) mod 10) :: a2)) in
     let base = (0, []) in
-    let args = List.combine ([0] @ l1) ([0] @ l2) in
-    let (car,res) = List.fold_left f base args in res in
+    let args = List.combine ((List.rev 0) :: l1) ((List.rev 0) :: l2) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

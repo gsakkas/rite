@@ -1,13 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec helperDigits (num,newList) =
+  if num < 10
+  then num :: newList
+  else helperDigits ((num / 10), ((num mod 10) :: newList));;
 
-let buildX () = VarX;;
+let rec digitsOfInt n = if n < 0 then [] else helperDigits (n, []);;
 
-let rec eval (e,x,y) = match e with | VarX  -> buildX * 1.0;;
+let _ = digitsOfInt - 1;;

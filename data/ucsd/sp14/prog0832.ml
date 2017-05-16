@@ -1,4 +1,2 @@
 
-let rec sum (x,y) = match x with | [] -> y | h::t -> sum (t, (y + h));;
-
-let rec revexp (x,y) = match x with | [] -> y | h::t -> sum (t, (h ^ y));;
+let _ = string_of_int [1; 2; 3; 4; 5; 6];;

@@ -1,10 +1,28 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  let to_append = clone 0 l_diff in if l_diff < 0 then ((to_append @ l1), l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e) ^ ")/2")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+
+let aa = exprToString Average (VarY, VarX);;

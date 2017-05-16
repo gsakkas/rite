@@ -1,16 +1,20 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let rec mulByDigit i l =
-  let mul (i1,l1) =
-    let f a x =
-      let (i,j) = x in
-      let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-    let base = (0, []) in
-    let args =
-      List.combine (List.rev (0 :: l1)) (List.rev (clone (List.length l) i)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (mul l);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (eval e0)
+  | Cosine e1 -> cos (eval e1)
+  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
+  | Times (e4,e5) -> (eval e4) * (eval e5)
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval e6) < (eval e7) then eval e8 else eval e9;;

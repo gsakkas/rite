@@ -1,2 +1,2 @@
 
-let getTail l = match l with | [] -> [] | t::[] -> t | h::t -> t;;
+let rec digitsOfInt n = (n mod 10) @ [(digitsOfInt n) / 10];;

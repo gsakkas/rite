@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  let myList = [] in if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+let rec wwhile (f,b) =
+  let check = f b in
+  match (f, b) with | (x,y) -> if y = false then x else wwhile (f, x);;

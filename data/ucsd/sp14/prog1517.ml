@@ -1,7 +1,4 @@
 
-let g x f = ((f x), ((f x) = x));;
+let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((g b f), b);;
+let _ = concat ['H'; 'e'; 'l'; 'l'; 'o'];;

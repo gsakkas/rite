@@ -1,2 +1,7 @@
 
-let pipe fs = let f a x = x fs in let base = fs in List.fold_left f base fs;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = l1 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

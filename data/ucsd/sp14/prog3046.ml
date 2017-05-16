@@ -1,15 +1,22 @@
 
 let rec clone x n =
-  let rec helper a x n =
-    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
-  helper [] x n;;
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 > length2
-  then (l1, (List.append (clone 0 (length1 - length2)) l2))
-  else
-    if length2 length1
-    then ((List.append (clone 0 (length1 - length2)) l1), l2)
-    else (l1, l2);;
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (a + x) / 10 in
+    let base = 0 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

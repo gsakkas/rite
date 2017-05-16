@@ -1,16 +1,11 @@
 
-let rec digithelper n l =
-  let x = n / 10 in
-  let y = n mod 10 in if x = 0 then y :: l else digithelper x (y :: l);;
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::xs ->
+      let g a x = a ^ ("; " ^ (f x)) in
+      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
 
-let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec addPHelper n =
-  let lst = digitsOfInt n in
-  let sum = sumList lst in if sum < 10 then sum else addPHelper sum;;
-
-let digits n = digitsOfInt (abs n);;
-
-let additivePersistence n = let pos = digits n in addPHelper pos;;
+let _ = List.map (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;

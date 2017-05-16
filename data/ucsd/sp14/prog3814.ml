@@ -1,16 +1,15 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ((x / 10), 1) in
-    let base = (0, 0) in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  let digOfInt n r =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: (digitsOfInt (n / 10))
+         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
+  listReverse n;;

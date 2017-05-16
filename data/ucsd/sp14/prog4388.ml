@@ -1,4 +1,2 @@
 
-let pipe fs = let f a x = x a in let base = [] in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let padZero l1 l2 = if l1 < l2 then 0;;

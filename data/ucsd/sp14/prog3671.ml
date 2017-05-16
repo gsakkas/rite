@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x (a,x) = x a in let base x = x in List.fold_left f base fs;;
+let rec sumList xs =
+  if (List.length xs) != 0 then (List.nth xs 0) + (sumList (List.hd xs));;

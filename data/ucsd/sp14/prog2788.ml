@@ -1,6 +1,5 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> a | h::t -> h * h in
-  let base = 0 in List.fold_left f base xs;;
+let a = 20;;
 
-let _ = sqsum [(-1); (-2); (-3); (-4)];;
+let pipe fs =
+  let f a x = x in let base p = a p in List.fold_left f base (List.rev fs);;

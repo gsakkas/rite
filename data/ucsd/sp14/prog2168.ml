@@ -1,6 +1,9 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let listReverse l =
+  let rec reverseHelper acc =
+    function | [] -> acc | h::t -> reverseHelper (h :: acc) t in
+  reverseHelper [] l;;
 
-let fixpoint (f,b) = wwhile (((f b), b), b);;
+let palindrome w = if w = (listReverse w) then true else false;;
+
+let _ = palindrome "malayalam";;

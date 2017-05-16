@@ -1,5 +1,5 @@
 
-let stringOfList f l =
-  ("[" (fun x  -> fun acc  -> x ^ ("; " ^ acc)) List.fold_left (^) ""
-     (List.map f l))
-    ^ "]";;
+let listReverse l =
+  let rec reverseHelper l rl =
+    function | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;

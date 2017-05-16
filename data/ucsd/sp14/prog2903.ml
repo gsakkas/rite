@@ -1,5 +1,11 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> 0 | hd::tl -> f - (1 hd) in
-  List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let sample = VarX + VarY;;

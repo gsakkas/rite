@@ -1,4 +1,4 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec digitsOfInt n = match n with | n::ns -> n :: ns;;
 
-let fixpoint (f,b) = wwhile ((((f b) = b), (f b)), b);;
+let _ = digitsOfInt 3124;;

@@ -1,4 +1,4 @@
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let _ = sumList [1; 3; 5; 7; 9; 11]; int_of_string 32;;
+let _ = [(1, 0)] @ (clone 0 1);;

@@ -1,20 +1,12 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
-
-let x = [];;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9
-  then
-    (print_string "going into then" print_newline ();
-     1
-     ::
-     x;
-     additivePersistence (sumList (digitsOfInt n)))
-  else (1 :: x; sumList x);;
+let _ =
+  removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9] [1; 6; 2; 4; 12; 13; 9];;

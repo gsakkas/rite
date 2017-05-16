@@ -1,4 +1,16 @@
 
-let pipe fs = let f a x = x a in let base n = n in List.fold_left f base fs;;
+let rec getFirst n = if n < 10 then n else getFirst (n / 10);;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let x = 9800;;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n < 10
+    then [n]
+    else
+      (let head = getFirst n
+       and s = String.length (string_of_int n)
+       and rest = n - (1 * (int_of_float (10 ** (float_of_int s)))) in
+       if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;

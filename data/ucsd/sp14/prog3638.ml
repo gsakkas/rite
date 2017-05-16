@@ -1,2 +1,2 @@
 
-let pipe fs = let f a x x = x a in let base b = b in List.fold_left f base fs;;
+let padZero l1 l2 = if (List.length l1) = (List.length l2) then l1 l2;;

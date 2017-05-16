@@ -1,45 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ECosSin of expr* expr
-  | SinLog of expr* expr* expr;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildECosSin (a,b) = ECosSin (a, b);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x',x'') = x in
+      let (c,s) = a in
+      if (List.length s) = ((List.length l1) - 1)
+      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
+      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildSinLog (a,b,c) = SinLog (a, b, c);;
+let rec mulByDigit i l =
+  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
 
-let buildSine e = Sine e;;
+let bigMul l1 l2 =
+  let f a x =
+    let (l1',a') = a in
+    match x with
+    | [] -> (l1', a')
+    | h::t -> (l1', (bigAdd (mulByDigit h l1') a')) in
+  let base = (l1, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  let r = rand (if depth = 0 then (8, 10) else (1, 8)) in
-  match r with
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | 2 -> buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildECosSin ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildSinLog ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 -> VarX
-  | 9 -> VarY;;
+let _ = bigMul [9; 9; 9; 9] [9; 9; 9; 9];;

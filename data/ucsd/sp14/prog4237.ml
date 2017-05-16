@@ -1,5 +1,7 @@
 
-let pipe fs =
-  let f a x a x = a x in let base d = d in List.fold_left f base fs;;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
 
-let _ = pipe [] 3;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let _ = wwhile (f, 2) should return 512;;

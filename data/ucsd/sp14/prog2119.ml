@@ -1,6 +1,6 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let fun1 x = x + x;;
 
-let fixpoint (f,b) = wwhile (let xx = f b in ((xx, (xx = b)), b));;
+let fun2 x = x + 3;;
+
+let pipe x = fun2 x (fun1 x);;

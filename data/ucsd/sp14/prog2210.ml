@@ -14,28 +14,29 @@ let buildCosine e = Cosine e;;
 
 let buildSine e = Sine e;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let buildTimes (e1,e2) = Times (e1, e2);;
 
 let buildX () = VarX;;
 
 let buildY () = VarY;;
 
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand mod 2) = 0 then buildX () else buildY ())
-  else
-    if (rand mod 5) = 0
-    then buildSine (build (rand, (depth - 1)))
-    else
-      if (rand mod 5) = 1
-      then buildCosine (build (rand, (depth - 1)))
-      else
-        if (rand mod 5) = 2
-        then
-          buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-        else
-          if (rand mod 5) = 3
-          then buildAverage (build (rand, (depth - 1)))
-          else
-            if (rand mod 5) = 4 then buildThresh (build (rand, (depth - 1)));;
+let sampleExpr =
+  buildCosine
+    (buildSine
+       ((buildTimes
+           (buildCosine
+              (buildAverage
+                 ((buildCosine (buildX ())),
+                   (buildTimes
+                      ((buildCosine
+                          (buildCosine
+                             (buildAverage
+                                ((buildTimes ((buildY ()), (buildY ()))),
+                                  (buildCosine (buildX ())))))),
+                        (buildCosine
+                           (buildTimes
+                              ((buildSine (buildCosine (buildY ()))),
+                                (buildAverage
+                                   ((buildSine (buildX ())), buildTimes,
+                                     (buildX ()), (buildX ())))))))))))),
+         (buildY ())));;

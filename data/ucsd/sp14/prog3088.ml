@@ -1,2 +1,3 @@
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: ((clone x n) - 1);;
+let rec listReverse l =
+  match l with | [] -> [] | a::[] -> [a] | a::b::[] -> b :: (listReverse a);;

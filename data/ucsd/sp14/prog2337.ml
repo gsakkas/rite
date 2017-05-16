@@ -1,2 +1,7 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile f b' else b';;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
+
+let list = ["hi"; "iris"; "elephant"];;
+
+let sumListL = fold_l (fun temp  -> fun h  -> (h * h) + temp) "" list;;

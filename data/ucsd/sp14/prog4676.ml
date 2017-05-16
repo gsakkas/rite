@@ -1,9 +1,7 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f "" l)) ^ "]");;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = List.map (fun x  -> x + a) x in
+    let base = List.hd l1 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

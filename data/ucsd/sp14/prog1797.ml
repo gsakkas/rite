@@ -1,6 +1,4 @@
 
-let rec wwhile (f,b) =
-  match f b with | (bb,false ) -> bb | (bb,true ) -> wwhile (f, bb);;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) =
-  wwhile (fun ff  -> fun b  -> (((f b), ((f b) != (f (b - 1)))), b));;
+let pi = 4.0 *. (atan 1.0 sin pi);;

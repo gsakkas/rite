@@ -1,7 +1,7 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a @ sep in
-      let base = h in let l = sl in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if n > 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
+
+let digits n = digitsOfInt (abs n);;
+
+let _ = digits (-23422) is [(2, 3, 4, 2, 2)];;

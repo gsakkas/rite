@@ -1,16 +1,5 @@
 
-let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let fixpoint (f,b) =
-  let y = f b in
-  match y with | (aPrime,_) -> if b = aPrime then b else fixpoint (f, aPrime);;
-
-let fixpoint (f,b) =
-  let y = f b in
-  match y with | (aPrime,_) -> if b = aPrime then b else fixpoint (f, aPrime);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec append l1 l2 =
+  let rec helper xs1 xs2 result =
+    match xs1 with | [] -> result | hd::tl -> helper tl xs2 (hd :: result) in
+  helper l1 l2 [] append [1] [2];;

@@ -1,7 +1,18 @@
 
-let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let f b = let g' = g b in (b, (b = g'));;
+let buildSine e = Sine e;;
 
-let _ =
-  let whilesFun f' b' = let fOfB = f' b' in (b', (b' = fOfB)) in whilesFun f;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec exprToString e =
+  match e with | VarX  -> buildX | VarY  -> buildY | Sine s -> buildSine s;;

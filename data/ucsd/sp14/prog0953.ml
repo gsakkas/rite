@@ -1,90 +1,26 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let num = rand (1, 10) in
-      if (num > 7) || (num = 2) then buildX () else buildY ()
-  | 1 ->
-      let num = rand (1, 10) in
-      if (num mod 2) = 0
-      then
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))), (buildCosine (rand, (depth - 1)))))
-      else
-        buildSine
-          (buildTimes
-             ((build (rand, (depth - 1))), (buildSine (rand, (depth - 1)))))
-  | 2 ->
-      let num = rand (1, 30) in
-      if (num mod 2) == 0
-      then
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-      else
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (buildTimes
-               ((build (rand, (depth - 1))),
-                 (buildSine (build (rand, (depth - 1)))))))
-  | 3 ->
-      let num = rand (1, 50) in
-      if (num mod 2) = 0
-      then
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildCosine (build (rand, (depth - 1)))))
-      else
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildSine (build (rand, (depth - 1)))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      let num = rand (1, 10) in
-      if num = 1
-      then buildSine (buildSine (buildSine (build (rand, (depth - 1)))))
-      else
-        if num = 2
-        then
-          buildCosine (buildCosine (buildCosine (build (rand, (depth - 1)))))
-        else
-          if num = 3
-          then buildSine (buildCosine (build (rand, (depth - 1))))
-          else buildCosine (buildSine (build (rand, (depth - 1))))
-  | 6 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 ->
-      buildTimes
-        ((buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-          (buildSine (build (rand, (depth - 1)))))
-  | _ -> build (rand, (depth - 1));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let z = (fst x) + (snd x) in
+      match x with
+      | (w,y)::t -> ((((w + z) + y) / 10), ((((w + y) + z) mod 10) :: t))
+      | [] -> [] in
+    let base = (c, 0) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

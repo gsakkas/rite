@@ -1,4 +1,10 @@
 
-let pipe fs n = let f a x = x a in let base n = 0 in List.fold_left f base fs;;
+let digitsOfInt n =
+  let rec lastDigit n acc =
+    if n <= 0 then acc else lastDigit (n / 10) ((n mod 10) :: acc) in
+  match n with | _ -> lastDigit n [];;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec additivePersistence n count =
+  match n with | [] -> count | _ -> sumList (digitsOfInt n) (count + 1);;

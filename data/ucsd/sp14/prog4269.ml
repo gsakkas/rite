@@ -1,4 +1,14 @@
 
-let pipe fs = let f a x = x a in let base a' = a' in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 4)] 3;;
+let sampleExpr2 =
+  Times ((Squa (VarX, (Nom (VarX, VarY, VarX)))), (Sine Varx));;

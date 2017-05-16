@@ -1,16 +1,25 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> buildX | VarY  -> buildY | Sine e -> 0.34 * e;;
+let rec mulByDigit i l =
+  let lre = List.rev l in
+  let rec helper carry accum lrev =
+    match lrev with
+    | [] -> removeZero accum
+    | x::xs ->
+        if carry = 1
+        then
+          (match accum with
+           | x1'::xs' ->
+               let num = (x * i) + x1' in
+               if num < 10
+               then helper 0 (num :: xs') xs
+               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
+                 (xs' xs))
+        else
+          (let num = x * i in
+           if num < 10
+           then (helper 0 num) :: (accum xs)
+           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
+  helper 0 [] lre;;

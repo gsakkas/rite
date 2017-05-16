@@ -1,3 +1,5 @@
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone ((x n) - 1));;
+let rec digOfIntHelper h = match h > 0 with | true  -> 1 | false  -> 0;;
+
+let rec digitsOfInt n =
+  match n > 0 with | true  -> [digOfIntHelper; n mod 10] | false  -> [];;

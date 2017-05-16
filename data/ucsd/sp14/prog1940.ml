@@ -1,9 +1,14 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (failwith, b);;
-
-let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
-
-let _ = fixpoint (g, 0);;
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then VarX else VarY)
+  else (let y = rand (2, 6) in if y = 2 then y);;

@@ -1,15 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec append list1 list2 =
+  match list1 with | [] -> list2 | x::xs -> x :: (append xs list2);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" + (exprToString e);;
+let _ = append [(2, 3, 4)] [1];;

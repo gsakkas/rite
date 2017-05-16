@@ -1,9 +1,11 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      if prod > 10
-      then (prod mod 10) :: [prod / 10] :: (mulByDigit i t)
-      else (prod mod 10) :: t;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e = match e with | VarX  -> Format.printf "%s" VarX;;

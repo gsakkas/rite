@@ -1,2 +1,4 @@
 
-let rec ffor (low,high,f) = if low > high then () else (let _ = f low in f);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (((failwith "asd"), (failwith "asd")), b);;

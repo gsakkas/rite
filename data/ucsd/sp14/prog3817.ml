@@ -1,26 +1,15 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let rec palindrome w =
+  match w with
+  | [] -> (match listReverse w with | [] -> true | _ -> false)
+  | h::t ->
+      (match listReverse w with
+       | [] -> true
+       | h2::t2 -> if h2 = h then palindrome t else false);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | ([],[]) ->
-          let (carry,num) = x in
-          (0, (if carry > 0 then carry :: num else num))
-      | (l1,l2) ->
-          (match x with
-           | (carry,num) ->
-               let addit = ((List.hd l1) + (List.hd l2)) + carry in
-               if addit > 10 then addit mod 10 else (0, ((addit / 10) :: x))) in
-    let base = (0, 0) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = palindrome "myxomatosis";;

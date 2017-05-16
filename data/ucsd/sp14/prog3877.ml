@@ -1,3 +1,2 @@
 
-let sqsum xs =
-  let f a x sum x = sum + (x * x) in let base = 0 in List.fold_left f base xs;;
+let num_of_digits xs = let y = log10 (float_of_int xs) in y + 1;;

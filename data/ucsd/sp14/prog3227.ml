@@ -1,4 +1,4 @@
 
-let pipe fs = let f a x f = x a in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let pipe fs =
+  let f a x g b y z = match y with | [] -> z | _ -> b a in
+  let base = f 0 [] in List.fold_left f base fs;;

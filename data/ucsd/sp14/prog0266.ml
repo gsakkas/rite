@@ -1,5 +1,2 @@
 
-let rec last l =
-  match l with | x::[] -> x | hd::tl -> last tl | [] -> failwith "NO ELEMENT";;
-
-let rec listReverse l = match l with | [] -> [] | hd::tl -> (last tl) :: hd;;
+let _ = (List.map (fun x  -> x * 10) [1; 2; 3] 8100) mod 10;;

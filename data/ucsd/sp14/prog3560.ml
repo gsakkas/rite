@@ -1,9 +1,8 @@
 
-let pipe2 fs =
-  function
-  | n ->
-      let rec helper res =
-        function | [] -> res | x::xs' -> helper (x res) xs' in
-      helper n fs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let _ = pipe2 [(fun x  -> x + 3); (fun x  -> x + x)] 3 asdf;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let n2 = [n mod 10] @ ((digitsOfInt n) / 10) in listReverse n2);;

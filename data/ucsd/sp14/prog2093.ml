@@ -1,18 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let buildX () = VarX;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let buildY () = VarY;;
+let fixpoint (f,b) = wwhile (f, b);;
 
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let r = rand (0, 1) in if r = 0 then buildX else if r = 1 then buildY;;
+let _ = fixpoint (collatz, 48);;

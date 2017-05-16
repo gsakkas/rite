@@ -1,11 +1,8 @@
 
-let rec mulByDigit i l =
-  let f a x =
-    match a with
-    | (carry,rest) ->
-        let new_carry = ((i * x) + carry) / 10 in
-        let result = (((i * x) + carry) mod 10) :: rest in
-        if ((List.length result) = (List.length l)) && (new_carry > 0)
-        then (0, (new_carry :: result))
-        else (new_carry, result) in
-  let base = (0, []) in let (_,res) = List.fold_right f base l in res;;
+let rec digitsOfInt n =
+  let s = string_of_int n in
+  let s2 = String.length s in
+  for i = 0 to (s2 - 1) / 2 do
+    (let c = s2.[i] in s2.[i] <- s2.[(n - i) - 1]; s2.[(n - i) - 1] <- c)
+  done;
+  int_of_string s2;;

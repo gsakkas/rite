@@ -1,17 +1,18 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = failwith "to be written" in
+        let rest' = failwith "to be written" in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex x y)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = failwith "to be written" in
+        let rest' = failwith "to be written" in helper (seen', rest') in
+  List.rev (helper ([], l)) removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;

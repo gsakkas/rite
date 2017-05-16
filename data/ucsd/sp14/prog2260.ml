@@ -1,13 +1,11 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let rec eval (e,x,y) = match e with | VarX  -> (buildX ()) * 1.0;;
+let rec addPHelper (num,sum,count) =
+  if (num < 10) && (sum < 10)
+  then count
+  else
+    if num = 0
+    then
+      (addPHelper (sum, 0, (count + 1));
+       Printf.printf "num is %d and sum is %d and count is %d\n" num sum
+         count)
+    else addPHelper ((num / 10), ((num mod 10) + sum), count);;

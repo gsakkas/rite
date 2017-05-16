@@ -1,23 +1,33 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let add (m,n) = m + n in [add x] :: a in
-    let base = [] in
-    let args =
-      match List.rev (List.combine l1 l2) with | [] -> (0, 0) | h::t -> h in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match rand with
+  | (a,b) ->
+      let rdm = rand (a, b) in
+      (match rdm with
+       | 0 -> buildY ()
+       | 1 -> buildX ()
+       | 2 -> Cosine (build (rand, (depth - 1)))
+       | 3 -> Sine (build (rand, (depth - 1)))
+       | 4 ->
+           Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 5 ->
+           Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 6 ->
+           Thresh
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;

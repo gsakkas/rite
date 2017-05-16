@@ -1,6 +1,4 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
-
-let fixpoint (f,b) = wwhile (let xx = (b * b) * b in ((xx, (xx < 100)), b));;
+let rec pipe fs =
+  let fsrev = List.rev fs in
+  match fsrev with | x::[] -> x | h::t -> h (pipe t);;

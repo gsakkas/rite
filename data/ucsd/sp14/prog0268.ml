@@ -1,8 +1,13 @@
 
-let rec last l =
-  match l with | x::[] -> x | hd::tl -> last tl | [] -> failwith "NO ELEMENT";;
-
-let rec listReverse l =
-  match l with
+let rec mulByDigit i l =
+  match List.rev l with
   | [] -> []
-  | hd::tl -> let x = last l in if x > 0 then x else x;;
+  | h::t ->
+      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
+               [h * i]
+       with
+       | [] -> []
+       | h::t ->
+           let rec helper acc v =
+             if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
+           helper []);;

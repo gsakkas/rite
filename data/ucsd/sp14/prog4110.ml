@@ -1,4 +1,4 @@
 
-let pipe fs = let f a x = x a in let base g x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) = match b with | true  -> f | false  -> wwhile (f, b);;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

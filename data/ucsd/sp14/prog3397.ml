@@ -1,5 +1,4 @@
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else if (List.length l1) < (List.length l2) then ((0 :: l1), l2);;
+let extract n (p1,p2) = match n with | 1 -> p1 | 2 -> p2;;
+
+let _ = extract ("bobby", 2);;

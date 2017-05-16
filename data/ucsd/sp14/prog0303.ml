@@ -1,7 +1,3 @@
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let innerFunc elem = Printf.printf "Element is %d\n" elem in
-     List.iter innerFunc n);;
+  if n < 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;

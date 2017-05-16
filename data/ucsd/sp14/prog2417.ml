@@ -1,5 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((f (if (f b) = b then 1 else 0)), b);;
+let rec digitsOfInt n = if n > 0 then [digitsOfInt (n / 10); n mod 10] else 0;;

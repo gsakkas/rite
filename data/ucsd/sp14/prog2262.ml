@@ -1,14 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec helperDigits (num,newList) =
+  if num < 10
+  then num :: newList
+  else helperDigits ((num / 10), ((num mod 10) :: newList));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec digitsOfInt n = if n < 0 then [] else helperDigits (n, []);;
 
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e -> pi * e;;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec additivePersistence2 n =
+  let newList = digitsOfInt n in
+  let sum = sumList newList in
+  if sum < 10
+  then (Printf.printf "hi"; 0)
+  else (Printf.printf "bye" 1) + (additivePersistence2 sum);;

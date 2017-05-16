@@ -1,2 +1,5 @@
 
-let rec digitsOfInt n = if n < 0 then [] else [(digitsOfInt (n / 10)) mod 10];;
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | hd::tl -> if hd != [] then (listReverse tl) :: hd else hd;;

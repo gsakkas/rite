@@ -1,5 +1,3 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d k t);;
+let rec sumList xs =
+  match xs with | [] -> [] | xs -> (List.hd xs) + (sumList List.tl xs);;

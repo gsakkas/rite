@@ -1,3 +1,3 @@
 
-let rec wwhile (f,b) =
-  let c' = f b in let b' = b in if c' = b then c' else wwhile (c', b');;
+let pipe fs =
+  let f a x (a,x) = x a in let base x = x in List.fold_left f base fs;;

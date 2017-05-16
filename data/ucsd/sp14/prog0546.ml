@@ -1,4 +1,3 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let _ = sumList 1;;
+let rec backCons xs x =
+  match xs with | [] -> x | y::ys -> (backCons ys) :: y :: x;;

@@ -1,12 +1,15 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [(0, 1)];;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then List.append (clone 0 (b - a)) l1
-  else if b < a then List.append (clone 0 (a - b)) l2 else (l1, l2);;
+let digitsOfInt n = if n < 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+
+let digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;

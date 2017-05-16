@@ -1,6 +1,7 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | (k',v')::tl -> if k' = k then v' else assoc d k tl
-  | [] -> d
-  | _ -> failwith "This ain't your mom's hashmap";;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) =
+  wwhile
+    (let f x = let xx = (x * x) * x in (xx, (xx < 512)) in
+     ((wwhile (f, 2)), b));;

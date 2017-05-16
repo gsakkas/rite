@@ -14,20 +14,11 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
-
-let mySampleExpr3 =
-  Average
-    ((Sine VarX),
-      (Times
-         ((Times ((Average ((Sine VarX), VarY)), VarX)),
-           (Thresh (VarX, VarY, VarX, (Sine VarX))))));;
-
-let _ = eval (mySampleExpr3, 1, 2);;
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a x y)) < (eval (b x y))
+      then eval (a_less x y)
+      else eval (b_less x y);;

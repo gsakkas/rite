@@ -1,5 +1,3 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((f, b), b);;
+let rec sumList xs =
+  match xs with | [] -> [] | _ -> (List.hd xs) + (List.tl sumList);;

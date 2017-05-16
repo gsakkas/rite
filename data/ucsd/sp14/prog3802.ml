@@ -1,3 +1,5 @@
 
-let sqsum xs =
-  let f a x = a +. (x ** 2) in let base = 0 in List.fold_left f base xs;;
+let rec listReverse l =
+  let rec reverseHelper revd =
+    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
+  reverseHelper [];;

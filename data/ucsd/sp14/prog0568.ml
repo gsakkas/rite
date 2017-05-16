@@ -1,8 +1,6 @@
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else helperAppend (digitsOfInt (n / 10)) [n mod 10];;
+let g (f,x) = let xx = f x in (xx, (xx = (f xx)));;
 
-let _ = digitsOfInt - 352663;;
+let h = g f 1;;

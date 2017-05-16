@@ -1,6 +1,5 @@
 
-let rec listReverse l =
-  match l with
-  | _ -> []
-  | x -> [x]
-  | head::tail -> (listReverse tail) :: head;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> [mulByDigit i (List.rev l); h * i];;

@@ -1,7 +1,7 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList (List.tl xs));;
-
-let li = sumList [1; 2; 3; 4];;
-
-let _ = match li with | f::b -> b;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = t in let l = sl in List.fold_left f base l;;

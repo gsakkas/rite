@@ -1,18 +1,39 @@
 
-let count x = x + 1;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let counter = 0;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let rec sum n = if n <= 0 then 0 else (n mod 10) + (sum (n / 10));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let rec additivePersistence n =
-  let temp = sum n in
-  let counters = count counter in
-  let counter = counters in
-  if temp >= 10 then additivePersistence temp else counter;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (v1,v2) ->
+          (match a with
+           | (list1,list2) ->
+               (match list1 with
+                | [] ->
+                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
+                      list2))
+                | h::t ->
+                    (((((v1 + v2) + h) / 10) :: list1),
+                      ((((v1 + v2) + h) mod 10) :: list2)))) in
+    let base = ([], []) in
+    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec sum n = if n <= 0 then 0 else (n mod 10) + (sum (n / 10));;
-
-let rec additivePersistence_helper (n,i) =
-  let temp = sum n in
-  if temp >= 10 then additivePersistence (temp, (i + 1)) else i;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      let rec helper acc v =
+        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
+      let rec adder x = match x with | [] -> [] | h::t -> bigAdd h (adder t) in
+      (adder (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)))) @
+        (helper [] (h * i));;

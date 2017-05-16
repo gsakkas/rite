@@ -1,37 +1,28 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let palindrome w = failwith "TBD";;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
-
-let palindrome w =
-  match explode w with
-  | [] -> true
-  | head::[] -> true
-  | head::tail ->
-      if head = (List.hd (listReverse tail))
-      then palindrome (List.tl (listReverse tail))
-      else false;;
-
-let palindrome w =
-  let rec palHelper xs =
-    match xs with
-    | [] -> true
-    | hd::tl ->
-        (match listReverse tl with
-         | [] -> true
-         | hdr::tlr -> if hdr = hd then palindrome tlr else false) in
-  palHelper (explode w);;
+let rec eval (e,x,y) = string_of_float (exprToString eval);;

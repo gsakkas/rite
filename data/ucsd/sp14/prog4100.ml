@@ -1,9 +1,6 @@
 
+let rec assoc (d,k,l) =
+  match l with | [] -> d | h::t -> if k = h then 10 else assoc (d, k, t);;
+
 let _ =
-  let rec mulByDigit i l =
-    let (i',l') = (0, (List.rev l)) in
-    match l' with
-    | [] -> []
-    | h::t -> (((h * i) + i') mod 10) ::
-        (mulByDigit ((((h * i) + i') / 10), t)) in
-  List.rev (mulByDigit i l);;
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

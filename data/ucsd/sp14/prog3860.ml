@@ -1,5 +1,12 @@
 
-let sqsum xs =
-  let f a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
 
-let _ = sqsum [1.0; 4.0];;
+let digits n = digitsOfInt (abs n);;
+
+let _ = digits - 31243;;

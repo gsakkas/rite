@@ -1,20 +1,18 @@
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits n
-  else additivePersistence sumList n;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine m -> "sin(" ^ ((exprToString m) ^ ")")
+  | Cosine m -> "cos(" ^ ((exprToString m) ^ ")")
+  | (Average m,n) ->
+      "((" ^ ((exprToStirng m) ^ ("+" ^ ((exprToString n) ^ ")/2)")));;

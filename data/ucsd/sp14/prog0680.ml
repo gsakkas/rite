@@ -1,2 +1,2 @@
 
-let _ = (51 mod (10 51)) / 10;;
+let rec digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;

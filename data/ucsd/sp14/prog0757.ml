@@ -1,7 +1,8 @@
 
-let explodeInt n =
-  let rec go i =
-    if i >= (String.length (string_of_int n))
-    then []
-    else (n / (1 Ei)) :: (go / (1 E (i - 1))) in
-  go 0;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (match n with
+     | 0 -> [0]
+     | _ -> if (n / 10) != 0 then (digitsOfInt (n / 10)) @ [n mod 10]);;

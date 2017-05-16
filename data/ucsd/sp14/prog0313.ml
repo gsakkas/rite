@@ -1,9 +1,8 @@
 
-let rec listReverse l =
-  let rec rev element =
-    function | [] -> element | h::t -> rev (h :: element) t in
-  rev [] l;;
-
-let palindrome w = w = (listReverse w);;
-
-let _ = palindrome "malayalam";;
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if (List.hd l) != (List.hd k)
+    then false
+    else listCompare List.tl l List.tl k;;

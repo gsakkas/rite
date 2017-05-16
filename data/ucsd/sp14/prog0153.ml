@@ -1,2 +1,3 @@
 
-let num_of_digits xs = (log10 (int_of_float xs)) + 1;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then h = 0 else false;;

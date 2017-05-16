@@ -1,3 +1,4 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> t :: (listReverse h);;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
+
+let g b = (b, (b = (f b)));;

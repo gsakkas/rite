@@ -1,3 +1,5 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) @ [digitsOfInt (n / 10)];;
+let long_list =
+  let rec assemble n l =
+    if n < 1000000 then (assemble (n + 1) (n, (string_of_int n))) :: l else l in
+  assemble 1 [];;

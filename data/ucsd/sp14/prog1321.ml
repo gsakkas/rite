@@ -1,11 +1,30 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+let palindrome w = failwith "TBD";;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let _ = fixpoint (collatz, 9001);;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> append (listReverse tl) [hd];;
+
+let palindrome w =
+  match explode w with
+  | [] -> true
+  | head::[] -> true
+  | head::tail ->
+      if head = (List.hd (listReverse tail))
+      then palindrome (List.tl (listReverse tail))
+      else false;;
+
+let palindrome w =
+  match explode w with
+  | [] -> true
+  | hd::[] -> true
+  | hd::tl ->
+      (match listReverse tl with
+       | hdr::tlr -> if hdr = hd then palindrome tlr else false);;

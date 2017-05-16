@@ -1,3 +1,9 @@
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2) then List.combine l1 l2;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l = List.rev l;;
+
+let palindrome w = if (explode w) = (listReverse w) then true else false;;

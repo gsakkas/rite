@@ -1,4 +1,5 @@
 
-let pipe fs y = let f a x = x a in let base x = x in List.fold_left f base fs;;
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head (sumList tail);;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = sumList [1; 2; 3; 4];;

@@ -1,7 +1,6 @@
 
-let explodeInt s =
-  let rec go i =
-    if i >= (String.length s)
-    then []
-    else (int_of_string (s.[i])) :: (int_of_string go (i + 1)) in
-  go 0;;
+let rec digitsOfInt n =
+  match n with
+  | [] -> []
+  | 0 -> [0]
+  | _ -> (digitsOfInt (n / 10)) @ (n mod 10);;

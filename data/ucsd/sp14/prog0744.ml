@@ -1,5 +1,8 @@
 
-let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> append listReverse t [h];;
+let rec digitalRoot n =
+  if n = 0
+  then 0
+  else
+    (let rec r_digitalRoot n m =
+       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
+     match n with | 0 -> r_digitalRoot | _ -> r_digitalRoot n (n mod 10));;

@@ -1,54 +1,45 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec clone x n =
+  let rec helper xs sub depth =
+    match depth > 0 with
+    | false  -> xs
+    | true  -> helper (sub :: xs) sub (depth - 1) in
+  helper [] x n;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let x = (List.length l1) - (List.length l2) in
-    let list_p = clone 0 x in (l1, (list_p @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then
-      (let x = (List.length l2) - (List.length l1) in
-       let list_p = clone 0 x in ((list_p @ l1), l2))
-    else (l1, l2);;
+let rec padZero l1 l2 =
+  let sizeDif = (List.length l1) - (List.length l2) in
+  let appendS = clone 0 (abs sizeDif) in
+  if sizeDif < 0 then ((appendS @ l1), l2) else (l1, (appendS @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (carry,listy) = a in
-      let (num1,num2) = x in
-      let initsum = (num1 + num2) + carry in
-      if initsum > 9
-      then (1, (listy @ [initsum mod 10]))
-      else (0, (listy @ [initsum])) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+      match x with
+      | (op1,op2) ->
+          let res = op1 + op2 in
+          let (p1,p2) = a in
+          (match p2 with
+           | [] -> (p1, [res / 10; res mod 10])
+           | a::b ->
+               let re = a + res in (p1, ((re / 10) :: (re mod 10) :: b))) in
+    let base = ([], []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
     let (_,res) = List.fold_left f base args in res in
-  removeZero (List.rev (add (padZero l1 l2)));;
+  removeZero (add (padZero l1 l2));;
 
-let mulByDigit i l =
-  let rec helpy p q carry accList =
-    let numsList = List.rev q in
-    match numsList with
-    | [] -> [carry] @ accList
-    | h::t ->
-        let initMul = (h * p) + carry in
-        let intKeep = initMul mod 10 in
-        let carrying = (initMul - intKeep) / 10 in
-        let v = List.rev t in (helpy p v carrying [intKeep]) @ accList in
-  removeZero (helpy i l 0 []);;
+let rec mulByDigit i l =
+  let rec helper i l acc =
+    match i with | 0 -> acc | _ -> helper (i - 1) l (bigAdd l acc) in
+  helper i l [0];;
 
 let bigMul l1 l2 =
   let f a x =
-    let (bottom_mult,total) = a in
-    match bottom_mult with
-    | [] -> total
-    | h::t ->
-        let newTotal = mulByDigit h x in
-        let updateTotal = bigAdd newTotal total in (t, updateTotal) in
-  let base = (l1, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+    let (b,c) = a in
+    match b with
+    | d::t -> (((d * 10) :: t), (bigAdd (((mulByDigit d) * (x t)) c)))
+    | _ -> a in
+  let base = ((1 :: l2), [0]) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;

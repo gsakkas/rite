@@ -1,3 +1,7 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (n mod 10) :: ((digitsOfInt n) * 10);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = h in let l = "" in List.fold_left f base l;;

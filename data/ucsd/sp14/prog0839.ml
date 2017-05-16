@@ -1,2 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> 0 | (x::y)::[] -> x + (sumList y);;
+let rec clone x n =
+  if n <= 0
+  then []
+  else (match x with | [] -> x | h::t -> (clone t (n - 1)) :: h);;

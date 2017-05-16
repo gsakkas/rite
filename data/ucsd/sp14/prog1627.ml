@@ -8,11 +8,10 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.sprintf "x"
+  | VarY  -> Printf.sprintf "y"
+  | Sine x -> Printf.sprintf "Sine(%s)" (exprToString x);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in y = 2);;
+let _ = exprToString Sine VarX;;

@@ -1,5 +1,5 @@
 
 let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> x), b);;
+let fixpoint (f,b) = wwhile (if b = (f b) then b else ((f b), b));;

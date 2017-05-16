@@ -7,22 +7,27 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Sigmoid of expr
-  | Tanh of expr* expr* expr;;
+  | Sqrt of expr
+  | Abs of expr
+  | Logistic of expr* expr* expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> Printf.printf "sin(pi*%s)" (exprToString x)
-  | Cosine x -> Printf.printf "cos(pi*%s)" (exprToString x)
-  | Average (x,y) ->
-      Printf.printf "((%s+%s)/2)" (exprToString x) (exprToString y)
-  | Times (x,y) -> Printf.printf "%s*%s" (exprToString x) (exprToString y)
-  | Sigmoid x -> Printf.printf "sigmoid(%s)" (exprToString x)
-  | Tanh (x,y,z) ->
-      Printf.printf "tanh((%s+%s)/(1.01+%s))" (exprToString x)
-        (exprToString y) (exprToString z)
-  | Thresh (x,y,z,w) ->
-      Printf.printf "(%s<%s?%s:%s)" (exprToString x) (exprToString y)
-        (exprToString z) (exprToString w);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Logistic (e1,e2,e3) ->
+      (2.0 /.
+         ((1 - (exp (-. ((eval (e1, x, y)) *. (eval (e2, x, y)))))) -. 1.0))
+        ^ (eval (e3, x, y))
+  | _ -> failwith "error";;

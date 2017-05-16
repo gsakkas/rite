@@ -1,10 +1,6 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let rec assoc (d,k,l) =
+  match l with | [] -> d | h::t -> if h = k then h else assoc (d, k, t);;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n - ((n / 10) * 10)];;
-
-let digits n = digitsOfInt (abs n);;
-
-let _ = digits - 1000;;
+let _ =
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

@@ -8,15 +8,38 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
-  | Times (e4,e5) -> (eval e4) * (eval e5)
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval e6) < (eval e7) then eval e8 else eval e9;;
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) ->
+      ((exprToString (ex1, x, y)) +. (exprToString (ex2, x, y))) /. 2
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;

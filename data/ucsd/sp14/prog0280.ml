@@ -1,10 +1,11 @@
 
-let rec last l = match l with | x::[] -> x | hd::tl -> last tl | [] -> [];;
-
-let rec removeLast l =
-  match l with | x::[] -> [] | hd::tl -> hd :: (removeLast tl) | [] -> [];;
-
-let rec listReverse l =
-  let x = last l in let y = removeLast l in x :: (listReverse y);;
-
-let _ = listReverse [1; 2; 3; 4];;
+let bigMul l1 l2 =
+  let f a x = match x with | (k,v) -> (k, v) in
+  let base = ([], [0]) in
+  let args =
+    let rec helper acc l1 l2 =
+      match l1 with
+      | [] -> acc
+      | h::t -> helper ((h, l2) :: acc) (List.map (fun x  -> x * 10) t) l2 in
+    helper [] (List.rev l1) l2 in
+  let (_,res) = List.fold_left f base args in res;;

@@ -1,12 +1,11 @@
 
-let rec mulByDigit i l =
-  let f a x =
-    match a with
-    | (carry,rest) ->
-        let new_carry = ((i * x) + carry) / 10 in
-        let result = (((i * x) + carry) mod 10) :: rest in
-        if ((List.length result) = (List.length l)) && (new_carry > 0)
-        then (0, (new_carry :: result))
-        else (new_carry, result) in
-  let base = (0, []) in
-  let (_,res) = List.fold_right f base (List.rev l) in res;;
+let rec reverse s =
+  let s2 = String.length s in
+  for i = 0 to (s2 - 1) / 2 do
+    (let c = s.[i] in s.[i] <- s.[(s2 - i) - 1]; s.[(s2 - i) - 1] <- c)
+  done;
+  int_of_string s;;
+
+let x = 13;;
+
+let x = "1234" reverse x;;

@@ -1,9 +1,9 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let m b = "[" ^ (b ^ "]") in
-      let n a x = a ^ (" ;" ^ x) in let base = f h in List.fold_left n base t;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let rec fixpoint (f,b) = wwhile (f, b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

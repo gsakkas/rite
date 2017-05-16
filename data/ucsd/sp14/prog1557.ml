@@ -1,28 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe2 fs =
+  function
+  | n ->
+      let rec helper res =
+        function | [] -> res | x::xs' -> helper (x res) xs' in
+      helper n fs;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
-
-let rec eval (e,x,y) = float_of_string (((exprToString e) * x) * y);;
+let _ = pipe2 [(fun x  -> x + 3); (fun x  -> x + x)] 3 asdf;;

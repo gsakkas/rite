@@ -6,26 +6,34 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | ModF of expr
-  | SumOfSquares of expr* expr* expr;;
+  | Tangent of expr* expr
+  | Square2 of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | ModF e1 -> (match modf ((eval (e1, x, y)) *. 10) with | (f,i) -> f)
-  | SumOfSquares (e1,e2,e3) ->
-      ((((eval (e1, x, y)) ** 2.0) +. ((eval (e2, x, y)) ** 2.0)) +.
-         ((eval (e3, x, y)) ** 2.0))
-        /. 3.0;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 1 then buildX () else buildY ()
+  | _ ->
+      let r = rand (3, 100) in
+      (match r with
+       | _ when r < 20 ->
+           buildAverage
+             ((buildCosine (build (rand, (depth - 1)))),
+               (buildSine (build (rand, (depth - 1)))))
+       | _ when (r < 30) && (r > 20) ->
+           buildThresh
+             ((build (rand, (depth - 1))),
+               (buildCosine (build (rand, (depth - 1)))))
+       | _ -> buildCosine (build (rand, (depth - 1))));;

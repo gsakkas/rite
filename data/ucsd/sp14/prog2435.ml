@@ -8,5 +8,26 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with | Sine s -> Format.sprintf "%d" (sin (3.0 * 2.0));;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let e = build (rand, (depth - 1)) in
+  if depth > 0
+  then
+    match rand 0 4 with
+    | 0 -> buildSine e
+    | 1 -> buildCosine e
+    | 2 -> buildAverage (e, e)
+    | 3 -> buildTimes (e, e)
+    | 4 -> buildTimes (e, e, e, e)
+  else (match rand 0 1 with | 0 -> buildX () | 1 -> buildY ());;

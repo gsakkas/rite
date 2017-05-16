@@ -4,64 +4,29 @@ type expr =
   | VarY
   | Sine of expr
   | Cosine of expr
-  | Tan of expr
   | Average of expr* expr
   | Times of expr* expr
-  | TimesMod of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Thresh2 of expr* expr
+  | Thresh3 of expr* expr;;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Tan of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | TimesModOne of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTan e = Tan e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildTimesMod (e1,e2,e3) = TimesMod (e1, e2, e3);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (0, 6) with
-    | 0 ->
-        buildTimesMod
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))))
-    | 1 -> buildTan (build (rand, (depth - 1)))
-    | 2 -> buildSine (build (rand, (depth - 1)))
-    | 3 -> buildCosine (build (rand, (depth - 1)))
-    | 4 ->
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 5 ->
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 6 ->
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | _ -> buildY ()
-  else
-    (match rand (0, 1) with
-     | 0 -> buildX ()
-     | 1 -> buildY ()
-     | _ -> buildX ());;
+let rec eval (e,x,y) =
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
+    | Cosine p1 -> cos (pi *. (evalhelper p1 x y))
+    | Average (p1,p2) -> ((evalhelper p1 x y) +. (evalhelper p2 x y)) /. 2.0
+    | Times (p1,p2) -> (evalhelper p1 x y) *. (evalhelper p2 x y)
+    | Thresh (p1,p2,p3,p4) ->
+        if (evalhelper p1 x y) < (evalhelper p2 x y)
+        then evalhelper p3 x y
+        else evalhelper p4 x y
+    | Thresh2 (p1,p2) ->
+        if (evalhelper p1 x y) < (evalhelper p2 x y) then 1 else 0
+    | Thresh3 (p1,p2) ->
+        if (evalhelper p1 x y) > (evalhelper p2 x y) then 0 else (-1) in
+  evalhelper e x y;;

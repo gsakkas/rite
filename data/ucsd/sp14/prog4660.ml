@@ -1,9 +1,7 @@
 
-let rec clone x n =
-  let rec cloneHelper x n acc =
-    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
-  cloneHelper x n [];;
-
-let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff < 0 then List.append (clone 0 (abs diff)) l1;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (List.rev x) ^ a in
+      let base = sep in let l = sl in List.fold_left f base l;;

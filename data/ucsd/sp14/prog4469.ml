@@ -1,6 +1,4 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (mulByDigit i (List.rev (List.map (fun x  -> [x * 10]) t))) @ [h * i];;
+let fptest x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+
+let _ = fptest fptest 0;;

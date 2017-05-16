@@ -1,10 +1,6 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let g f b = (b, (b = (f b)));;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let leading = (digitsOfInt (n / 10)) :: (n mod 10) in
-     listReverse leading);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (g, b);;

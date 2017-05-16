@@ -1,48 +1,24 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand 0 100 in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand 0 100 in
-     if (rand mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,num) = a in
+      match x with
+      | [] -> (0, (if carry > 0 then carry :: num else num))
+      | h::t ->
+          let (l1',l2') = h in
+          let addit = (l1' + l2') + carry in
+          ((if addit > 10 then addit mod 10 else 0), ((addit / 10) :: num)) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

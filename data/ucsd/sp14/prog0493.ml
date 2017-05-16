@@ -1,7 +1,9 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs1 with | [] -> xs2 | hd::tl -> append tl (hd :: xs2) in
-  let rec helper x =
-    match x with | 0 -> [] | n -> append [helper (n / 10)] [n mod 10] in
-  helper n;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec revexp (x,y) = match x with | [] -> y | h::t -> revexp (t, (h ^ y));;
+
+let palindrome w = if w = (revexp ((explode w), "")) then true else false;;

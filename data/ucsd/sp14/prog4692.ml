@@ -1,14 +1,12 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let digitsOfInt n =
+  let rec lastDigit n acc =
+    if n <= 0 then acc else lastDigit (n / 10) ((n mod 10) :: acc) in
+  match n with | _ -> lastDigit n [];;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes), l2);;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec additivePersistence n count =
+  match n with
+  | 0 -> count
+  | _ -> additivePersistence ((sumList (digitsOfInt n)) (count + 1));;

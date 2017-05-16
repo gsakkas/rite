@@ -1,6 +1,6 @@
 
-let z = (1, 2);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
 
-let listerine = [z; z];;
-
-let _ = ((10 / 2), ((8 mod 2) :: listerine));;
+let fixpoint (f,b) =
+  let f x = let xx = f b in (xx, (xx <> b)) in wwhile ((f b), b);;

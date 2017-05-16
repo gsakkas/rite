@@ -1,41 +1,11 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec digitsOfInt n =
+  let rec append xs1 xs2 =
+    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
+  let rec helper x =
+    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
+  helper n;;
 
-let buildCosine e = Cosine e;;
+let digits n = digitsOfInt (abs n);;
 
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth > (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    match (randNum, randNum2) with
-    | (1,3) -> failwith "bahh"
-    | (1,4) ->
-        buildSine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (2,3) -> buildCosine (buildOp1 (buildX ()))
-    | (2,4) ->
-        buildCosine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (x,y) -> failwith "didnt work";;
+let _ = digits (-23422) is [(2, 3, 4, 2, 2)];;

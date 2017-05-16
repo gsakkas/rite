@@ -1,26 +1,18 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let digitsOfInt n =
+  let rec lastDigit n accu =
+    if n <= 0 then accu else lastDigit (n / 10) ((n mod 10) :: accu) in
+  match n with | _ -> lastDigit n [];;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let rec lengthOfList xs count =
+  match xs with | [] -> 0 | hd::tl -> (lengthOfList tl count) + 1;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = (0, 0) in
-    let args = [l1; l2] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  match n with
+  | 0 -> 0
+  | _ ->
+      if not ((lengthOfList digitsOfInt n) = 1)
+      then additivePersistence (sumList (digitsOfInt n))
+      else 4;;

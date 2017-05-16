@@ -1,3 +1,4 @@
 
-let rec factorial x acc =
-  if x = 0 then acc else factorial (x -. 1.0) (x *. acc);;
+let t x = x + 1;;
+
+let _ = t "hi";;

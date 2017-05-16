@@ -1,11 +1,9 @@
 
-let rec digitsOfInt n =
-  let digInt = [] in
-  if (n / 10) <> 0 then digInt :: (digitsOfInt (n / 10)) else [];;
-
-let l = [];;
-
-let digitsOfInt n =
-  match n / 10 with
-  | 0 -> [n mod 10]
-  | _ -> l :: (n mod 10) :: (digitsOfInt (n / 10));;
+let _ =
+  let rec mulByDigit i l =
+    let (i',l') = (0, (List.rev l)) in
+    match l' with
+    | [] -> []
+    | h::t -> (((h * i) + i') mod 10) ::
+        (mulByDigit ((((h * i) + i') / 10), t)) in
+  List.rev (mulByDigit i l);;

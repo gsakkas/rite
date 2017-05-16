@@ -1,12 +1,13 @@
 
-let extract1 (p1,p2) = match (p1, p2) with | _ -> p1;;
+let rec mulByDigit i l =
+  let rec helper acc carry i l =
+    match l with
+    | [] -> acc
+    | h::t ->
+        let x = (h * i) + carry in
+        let n = if x > 9 then x mod 10 else x in
+        let carry' = if x > 9 then x / 10 else 0 in
+        let acc' = n :: acc in helper acc' carry' i t in
+  helper [] 0 i (List.rev (0 :: l));;
 
-let extract2 (p1,p2) = match (p1, p2) with | _ -> p2;;
-
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> if (extract1 h) = k then extract2 else assoc (d, k, t);;
-
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = mulByDigit - (5 [0; 0; 0]);;

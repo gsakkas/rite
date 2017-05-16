@@ -1,4 +1,6 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((f, ((f b) != b)), b);;
+let bigMul l1 l2 =
+  let f a x = failwith "to be implemented" in
+  let base = (1, []) in
+  let args = ((List.rev l2), l1) in
+  let (_,res) = List.fold_left f base args in res;;

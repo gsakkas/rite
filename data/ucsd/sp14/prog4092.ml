@@ -1,13 +1,4 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
-
-let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
-
-let _ = List.map (stringOfList string_of_int);;
+let rec listReverse l = match l with | [] -> [] | h::t -> (cat l h) :: t;;

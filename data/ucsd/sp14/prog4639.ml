@@ -1,42 +1,45 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let buildCosine e = Cosine e;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let buildSine e = Sine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (b1,b2) = a in
-      match x with
-      | (fir,sec) ->
-          if ((fir + sec) + b1) < 10
-          then
-            (if (List.length b2) >= ((List.length l1) - 1)
-             then (0, (b1 :: (((fir + sec) + b1) mod 10) :: b2))
-             else (0, (((fir + sec) + b1) :: b2)))
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let _ =
+  let rec build (rand,depth) =
+    let buildd (r,d) =
+      if r = 1
+      then buildX ()
+      else
+        if r = 2
+        then buildY ()
+        else
+          if r = 3
+          then buildSine (build (r, d))
           else
-            if (List.length b2) >= ((List.length l1) - 1)
-            then (0, (b1 :: (((fir + sec) + b1) mod 10) :: b2))
+            if r = 4
+            then buildCosine (build (r, d))
             else
-              ((((fir + sec) + b1) / 10), ((((fir + sec) + b1) mod 10) ::
-                b2)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (bar,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec helper a b acc =
-    if a > 0 then helper (a - 1) b (bigAdd b b) else acc in
-  helper i l 0;;
+              if r = 5
+              then buildTimes ((build (r1, d1)), (build (r2, d2)))
+              else
+                buildThresh
+                  ((build (r1, d1)), (build (r2, 2)), (build (r2, d2)),
+                    (build (r2, d2))) in
+    ((depth - 1), (depth > 0)) in
+  buildd (rand, depth);;

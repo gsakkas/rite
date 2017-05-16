@@ -1,37 +1,14 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewExprA of expr* expr
-  | NewExprB of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | NewExprA (e1,e2) ->
-      "(" ^
-        ((exprToString e1) ^
-           (">" ^
-              ((exprToString e2) ^
-                 (("?" exprToString e1) ^ (":" exprToString e2)))))
-  | NewExprB (e1,e2,e3) ->
-      ("(" exprToString e1) ^
-        ("+" ^ ((exprToString e2) ^ ("+" ^ ((exprToString ex) ^ ")"))));;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (([],_),acc) -> failwith "should never reach here"
+    | ((h::[],r),acc) ->
+        let sum = (h * i) + r in
+        (([], 0), ((sum / 10) :: (sum mod 10) :: acc))
+    | ((h::t,r),acc) ->
+        let sum = (h * i) + r in ((t, (sum / 10)), ((sum mod 10) :: acc)) in
+  let base = ((List.rev l), 0, []) in
+  let args = List.rev l in
+  let (_,res) = List.fold_left f base args in
+  match res with | 0::t -> t | _ -> res;;

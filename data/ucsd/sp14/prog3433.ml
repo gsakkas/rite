@@ -1,3 +1,12 @@
 
-let sqsum xs =
-  let f a x = a + (x ** 2) in let base = 0 in List.fold_left f base xs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with | Sine s -> Format.sprintf "%d" (sin (3 * 2.0));;

@@ -1,7 +1,19 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (b, b);;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.sprintf "x"
+  | VarY  -> Printf.sprintf "x"
+  | Sine x -> Printf.sprintf ""
+  | Cosine x -> Printf.sprintf ""
+  | Average (x,y) -> Printf.sprintf ""
+  | Times (x,y) -> Printf.sprintf ""
+  | Thresh (x,y,z,w) -> Printf.sprintf "%s<%s?%s:" x y z;;

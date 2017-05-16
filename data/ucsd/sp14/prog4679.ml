@@ -1,13 +1,4 @@
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
-     helper [] x n);;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let _ =
-  List.combine
-    ((clone 7 7),
-      (List.combine ([0; 0; 0; 1; 0; 0; 2], [0; 0; 0; 1; 0; 0; 2])));;
+let _ = sumList [1; 3; 5; 7; 9; 11]; int_of_string 32;;

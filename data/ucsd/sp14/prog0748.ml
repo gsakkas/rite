@@ -1,4 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n = if n > 9 then digitalRoot (sumList n) else n;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [0] | h::t -> [] @ (h @ (digitsOfInt t)));;

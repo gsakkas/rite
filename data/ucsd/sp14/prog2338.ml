@@ -1,10 +1,7 @@
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
 
-let fixpoint (f,b) =
-  let rec helper (f,b) =
-    let b' = f b in if b' = b then b' else helper (f, b') in
-  helper (f, b);;
+let list2 = [(-1); (-2); (-3); (-4)];;
 
-let _ = fixpoint (collatz, (93 rew001));;
+let concatL = fold_l (fun temp  -> fun h  -> h ^ temp) 0 list2;;

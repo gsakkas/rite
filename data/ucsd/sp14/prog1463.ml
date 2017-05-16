@@ -1,6 +1,10 @@
 
-let rec wwhile (f,b) =
-  match b with
-  | (express,boo) -> if boo = true then wwhile (express, b) else express;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if true then List.append (clone 0 1) l1;;

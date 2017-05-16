@@ -1,6 +1,4 @@
 
-let rec digitsHelper n l =
-  if (n mod 10) = n then [] else digitsHelper (n / 10) ((n mod 10) :: l);;
+let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
 
-let digitsOfInt n =
-  let l = [] in if n < 0 then l else (digitsHelper n l 30) mod 10;;
+let _ = pipe [(fun x  -> x + 1; (fun x  -> x * x))] 3;;

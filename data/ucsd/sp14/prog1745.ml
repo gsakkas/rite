@@ -1,15 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> "pi* " exprToString s;;
+let bigMul l1 l2 =
+  let f a x =
+    let (place,num) = a in
+    let placement = 10 ** place in ((addit / 10), ((addit mod 10) :: num)) in
+  let base = (0, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;

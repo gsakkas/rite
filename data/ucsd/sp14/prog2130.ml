@@ -1,27 +1,13 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | _ -> "" ^ (ex ^ "");;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let shorter = if len1 < len2 then l1 else l2 in
+  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
+  if shorter = l1
+  then ((List.append (clone 0 zeros) shorter), l2)
+  else (l1, (List.append (clone 0 zeros) shorter));;
+
+let _ = (List.combine [] []) (padZero [] []);;

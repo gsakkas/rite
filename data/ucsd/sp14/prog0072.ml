@@ -1,5 +1,2 @@
 
-let rec listReverse n =
-  match n with | [] -> [] | hd::tl -> (listReverse tl) @ hd;;
-
-let _ = listReverse [1; 2; 3; 4];;
+let _ = max_float (2.0, 2.0);;

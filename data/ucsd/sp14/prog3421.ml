@@ -1,11 +1,11 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      let lastDigit = prod / 10 in
-      let firstDigit = prod mod 10 in
-      if prod > 10
-      then [lastDigit; firstDigit + (mulByDigit (i t))]
-      else firstDigit :: t;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e = match e with | VarX  -> Format.printf "%VarX" VarX;;

@@ -9,4 +9,4 @@ type expr =
   | Thresh of expr* expr* expr* expr;;
 
 let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1);;
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e);;

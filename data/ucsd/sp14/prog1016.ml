@@ -6,36 +6,38 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | ECosSin of expr* expr
+  | SinLog of expr* expr* expr;;
 
-let a = (1, 2);;
+let max = ref 0;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth < 2
-  then let x = rand (0, 2) in match x with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 -> buildThresh (a, b, a_less, b_less));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine i -> sin (pi *. (eval (i, x, y)))
+  | Cosine i -> cos (pi *. (eval (i, x, y)))
+  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
+  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y))
+  | Thresh (i1,i2,i3,i4) ->
+      if (eval (i1, x, y)) < (eval (i2, x, y))
+      then eval (i3, x, y)
+      else eval (i4, x, y)
+  | ECosSin (a,b) ->
+      (2.71 **
+         (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+            -. 1.0))
+        -. 1.0
+  | SinLog (a',b',c) ->
+      let a = abs_float (eval (a', x, y)) in
+      let b = abs_float (eval (b', x, y)) in
+      let max' a b = if a > b then a else b in
+      let my_log l' = let l = max 0.1 l' in (log l) /. (log 10.0) in
+      if (eval (c, x, y)) < 0.0
+      then ((my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0))) -. 1.0
+      else
+        (-1.0) *.
+          (((my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0)))) -. 1.0);;

@@ -1,3 +1,4 @@
 
-let sqsum xs =
-  let f a x = (a ** 2) + x in let base = 0 in List.fold_left f base xs;;
+let wwhile (f,b) = let (func,boo) = f in func;;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

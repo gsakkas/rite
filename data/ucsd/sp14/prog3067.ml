@@ -1,9 +1,9 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let (_,_) = sepConcat ", " ["foo"; "bar"; "baz"];;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if n == 0
+    then [0]
+    else
+      if (n / 10) == 0 then n mod 10 else (digitsOfInt (n / 10)) @ [n mod 10];;

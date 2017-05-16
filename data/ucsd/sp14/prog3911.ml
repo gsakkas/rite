@@ -1,18 +1,26 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  let leng1 = List.length l1 in
-  let leng2 = List.length l2 in
-  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec eval (e,x,y) =
+  match e with
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
+  | Cosine a -> cos (pi ** (eval (a, x, y)))
+  | Sine a -> sin (pi ** (eval (a, x, y)))
+  | VarY  -> y
+  | VarX  -> x;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "to be implemented" in
-    let base = failwith "to be implemeneted" in
-    let args = ((List.combine l1), l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = eval (Sine 0);;

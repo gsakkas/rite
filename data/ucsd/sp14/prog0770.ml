@@ -1,4 +1,5 @@
 
-let rec digitsOfInt n =
-  let myList = [] in
-  if n <= 0 then [] else (n mod 10) :: ((myList n) mod 100) :: myList;;
+let append x l =
+  let rec helper x acc =
+    match x with | [] -> acc | h::t -> helper t l (h :: acc) in
+  helper x l;;

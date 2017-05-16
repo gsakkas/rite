@@ -1,11 +1,10 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ = fixpoint (collatz, 1);;
+let rec mulByDigit i l =
+  let revl = List.rev l in
+  match revl with
+  | [] -> 0
+  | h::t ->
+      let prod = h * i in
+      if prod > 9
+      then [(mulByDigit i t) + (prod / 10); prod mod 10]
+      else [mulByDigit i t; prod];;

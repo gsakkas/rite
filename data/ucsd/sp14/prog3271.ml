@@ -1,22 +1,9 @@
 
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+let pipe fs =
+  let f a x = let y = a in x y in let base b = b in List.fold_left f base fs;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let pipe fs =
+  let f a x = let y = pipe x a in y in
+  let base b = b in List.fold_left f base fs;;
 
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let x x = x;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = [x] in
-    let args = [(l1, l2)] in let (_,res) = List.fold_left f base args in res in
-  (removeZero (add (padZero l1 l2)) 0 0 9 9) + (1 0 0 2);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

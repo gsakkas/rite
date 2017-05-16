@@ -8,11 +8,9 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-  | _ -> let y = rand (2, 6) in if y = 2 then 5;;
+let rec exprToString e =
+  let acc curr result =
+    match curr with
+    | VarX  -> Printf.sprintf "x"
+    | VarY  -> Printf.sprintf "y" in
+  acc e "" exprToString VarX;;

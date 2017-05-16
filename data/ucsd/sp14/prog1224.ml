@@ -1,7 +1,10 @@
 
-let rec assoc (d,k,l) =
-  let rec helper (a,b,c) =
-    match c with
-    | [] -> a
-    | (n,v)::t -> if n = c then v else helper (a, b, t) in
-  helper (d, k, l);;
+let rec mulByDigit i l =
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if ((hd * i) / 10) != 0
+        then ((hd * i) mod 10) :: (((hd * i) / 10) + (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;

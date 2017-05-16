@@ -1,10 +1,18 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let helper b = if b = (f b) then ((f b), false) else ((f b), true) in
-      helper), b);;
+let buildX () = VarX;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in fixpoint (f, 1);;
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in if y = 2 then 5;;

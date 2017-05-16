@@ -1,2 +1,2 @@
 
-let rec clone x n = match n with | 0 -> [] | h::t -> x :: (clone x (n - 1));;
+let rec wwhile (f,b) = match b with | (e,boo) -> if boo = true then e b;;

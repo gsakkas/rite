@@ -1,10 +1,15 @@
 
-let rec wwhile (f,b) =
-  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec digitsOfInt n =
+  let rec append xs1 xs2 =
+    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
+  let rec helper x =
+    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
+  helper n;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let digits n = digitsOfInt (abs n);;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let _ = fixpoint (collatz, 3);;
+let rec digitalRoot n =
+  let rec helper x = if x < 10 then x else helper sumList digits x in
+  helper n;;

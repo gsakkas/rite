@@ -1,4 +1,8 @@
 
-let wwhile (f,b) = let (func,boo) = f in func;;
+let fun1 x = x + x;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let fun2 x = x + 3;;
+
+let pipe x y = y x;;
+
+let _ = pipe fun1 fun2 3;;

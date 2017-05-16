@@ -1,2 +1,2 @@
 
-let num_of_digits xs = (log 10 xs) + 1;;
+let rec clone x n = let i = 0 in if i < n then [(clone x n) - 1; x] else [];;

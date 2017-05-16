@@ -1,5 +1,9 @@
 
-let stringOfList f l =
-  let f' a x = a ^ x in let base = "]" in List.fold_right f' l base;;
+let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  List.append
+    ((clone 0 (lenl1 - lenl2) l1),
+      (List.append (clone 0 (lenl1 - lenl2)) l2));;

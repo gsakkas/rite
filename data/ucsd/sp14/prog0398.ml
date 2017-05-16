@@ -1,2 +1,4 @@
 
-let rec digitsOfInt n = (n mod 10) :: ((digitsOfInt n) / 10);;
+let pipe fs =
+  let f a x = match a with | _ -> x a | [] -> x in
+  let base = [] in List.fold_left f base fs;;

@@ -1,9 +1,10 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
 
-let stringOfList f l = List.map (sepConcat ("; " l));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then clone (l1, (0 :: l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then clone ((0 :: l1), l2)
+    else (l1, l2);;

@@ -1,5 +1,2 @@
 
-let rec listReverse l =
-  let rec reverseHelper revd =
-    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
-  reverseHelper l;;
+let sqsum xs = let f a x = a * a in let base = [] in List.fold_left f base xs;;

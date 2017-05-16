@@ -1,4 +1,6 @@
 
-let rec digitsOfInt n = match n with | _ when n < 0 -> [];;
+let append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> list1 :: list2;;
 
-let _ = digitsOfInt - 3;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> listReverse (append t [h]);;

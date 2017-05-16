@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: ((digitsOfInt n) / 10);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (((=) f), b);;

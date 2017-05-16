@@ -1,9 +1,3 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = h in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
-
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let pipe fs =
+  let f a x k = x (k a) in let base y = y in List.fold_left f base fs;;

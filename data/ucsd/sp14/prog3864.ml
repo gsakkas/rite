@@ -1,7 +1,15 @@
 
-let bigMul l1 l2 =
-  let f a x =
-    let (place,num) = a in
-    let placement = 10 ** place in ((addit / 10), ((addit mod 10) :: num)) in
-  let base = (0, []) in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec loop n acc =
+       if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+     match n with | 0 -> [0] | _ -> loop n []);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let x = sumList (digits n) in if x > 9 then digitalRoot x else sumList x;;

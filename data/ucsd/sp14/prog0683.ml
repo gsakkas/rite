@@ -1,11 +1,14 @@
 
-let rec addList xs = match xs with | [] -> 0 | h::t -> h + (addList t);;
-
 let rec digitsOfInt n =
-  if n < 1 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
 let rec additivePersistence n =
-  let count = 0 in
-  if (List.length (digitsOfInt n)) = 1
-  then count
-  else incr count additivePersistence (addList (digitsOfInt n));;
+  if n < 10
+  then []
+  else
+    (let myList = digits n in
+     let num = sumList myList in num + (additivePersistence num));;

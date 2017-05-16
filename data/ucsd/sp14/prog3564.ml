@@ -1,4 +1,10 @@
 
-let pipe fs = let f a x = x a in let base = 3 in List.fold_left f base fs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let _ = pipe [] 3;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else
+    (let leading = (digitsOfInt (n / 10)) :: (n mod 10) in
+     listReverse leading);;

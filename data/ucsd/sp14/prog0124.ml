@@ -1,9 +1,4 @@
 
-let rec at a b = match a with | [] -> [b] | head::tail -> head :: (at tail b);;
+let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
 
-let rec listReverse l =
-  match l with | [] -> [] | head::tail -> at (listReverse tail) head;;
-
-let palindrome w = w = (listReverse w);;
-
-let _ = palindrome "myxomatosis";;
+let _ = pipe [(fun x  -> x; (fun x  -> x * x))] 3;;

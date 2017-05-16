@@ -1,22 +1,44 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec removeZero l = match l with | 0::t -> removeZero t | _ -> l;;
+let buildCosine e = Cosine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match (a, x) with
-      | ((b,c),(d,e)) ->
-          ((((d + e) + b) / 10), ((((d + e) + b) mod 10) :: c)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildSine e = Sine e;;
 
-let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) bigAdd l l else 0;;
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (let randNum = rand 0 5 in
+     match randNum with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ -> buildY ());;
+
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
+
+let _ = let random = makeRand (5, 16) in build (random, 5);;

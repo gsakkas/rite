@@ -1,5 +1,5 @@
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
-
-let fixpoint (f,b) = wwhile ((), b);;
+let stringOfList f l =
+  ("[" (fun x  -> fun acc  -> x ^ ("; " ^ acc)) List.fold_left (^) ""
+     (List.map f l))
+    ^ "]";;

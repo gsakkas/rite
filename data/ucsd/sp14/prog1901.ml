@@ -1,31 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Halve of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Wow of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec padZero l1 l2 =
+  let diffsize = (List.length l1) - (List.length l2) in
+  if diffsize > 0
+  then (l1, (List.append (clone 0 diffsize) l2))
+  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine u -> sin (pi *. (eval (u, x, y)))
-  | Cosine u -> cos (pi *. (eval (u, x, y)))
-  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
-  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
-  | Thresh (s,t,u,v) ->
-      if (eval (s, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (v, x, y)
-  | Halve u -> (eval (u, x, y)) /. 2
-  | Wow (u,v,w) ->
-      sqrt
-        (((abs (eval (u, x, y))) *. (abs (eval (v, x, y)))) *.
-           (abs (eval (w, x, y))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (_,h2::t2) ->
+               let sum = (x1 + x2) + h2 in
+               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
+           | (_,_) -> (0, [0])) in
+    let base = (0, [0]) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x = let (pos,total) = a in ((pos + 1), (mulByDigit (10 ** pos) l2)) in
+  let base = (0, [0]) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;

@@ -1,5 +1,11 @@
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::xs ->
+      let g a x = a ^ ("; " ^ (f x)) in
+      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
 
-let rec addPHelper n pos =
-  let sum = sumList pos in if sum < 10 then sum else addPHelper sum;;
+let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+
+let _ = List.map (stringOfList string_of_int);;

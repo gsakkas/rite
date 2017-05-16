@@ -1,44 +1,17 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Timmy1 of expr* expr* expr
-  | Timmy2 of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let padZero l1 l2 =
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e,f) ->
-      "((" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")/2)")))
-  | Times (e,f) ->
-      "(" ^ ((exprToString e) ^ ("*" ^ ((exprToString f) ^ ")")))
-  | Thresh (e,f,g,h) ->
-      "(" ^
-        ((exprToString e) ^
-           ("<" ^
-              ((exprToString f) ^
-                 ("?" ^ ((exprToString g) ^ (":" ^ ((exprToString h) ^ ")")))))));;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
-let sampleExpr1 =
-  Thresh
-    (VarX, VarY, VarX,
-      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
-
-let _ = exprToString sampleExpr1;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (0, (x :: a)) in
+    let base = (0, []) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

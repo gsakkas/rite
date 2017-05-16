@@ -1,2 +1,3 @@
 
-let rec digitsOfInt n = if n < 0 then [] else (match n with | f::b -> f);;
+let pipe fs =
+  let f a x f x = f (x a) in let base z = z in List.fold_left f base fs;;

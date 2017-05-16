@@ -1,12 +1,18 @@
 
-let bigMul l1 l2 =
-  let f a x = l1 in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let _ = bigMul [9; 9; 9; 9; 9] [9; 9; 9; 9; 9];;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0
+  then (l1, (List.append (clone 0 a) l2))
+  else ((List.append (clone 0 (0 - a)) l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = l1 in
+    let base = [0] in
+    let args = l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

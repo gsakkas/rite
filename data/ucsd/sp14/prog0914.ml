@@ -1,8 +1,8 @@
 
 let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let fixpoint (f,b) =
+  wwhile
+    ((fun (f,b)  -> match f b with | b -> (b, false) | _ -> ((f b), true)),
+      b);;

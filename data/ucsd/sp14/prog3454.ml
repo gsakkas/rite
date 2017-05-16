@@ -1,23 +1,15 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
-
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | h::t -> a | [] -> a in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, a1, a2)) + (eval (VarY, a1, a2));;

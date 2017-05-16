@@ -1,12 +1,8 @@
 
-let assoc (d,k,l) =
-  match l with
-  | h::t ->
-      let rec helper di ki li = match li with | h::t -> h in helper d k h;;
+let fun1 x = x + x;;
 
-let _ =
-  let assoc (d,k,l) =
-    match l with
-    | h::t -> let (name,age) = h in if name = k then d else assoc (d, k, t)
-    | _ -> d in
-  helper d k h;;
+let fun2 x = x + 3;;
+
+let pipe x y = y x;;
+
+let _ = pipe fun1 fun2;;

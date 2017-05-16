@@ -1,11 +1,12 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let digitsOfInt n =
+  let rec lastDigit n acc =
+    if n <= 0 then acc else lastDigit (n / 10) ((n mod 10) :: acc) in
+  match n with | _ -> lastDigit n [];;
 
-let stringOfList f l = "[ " ^ ((sepConcat "; " l) ^ " ]");;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let rec additivePersistence n count =
+  match n with
+  | [] -> count
+  | _ -> additivePersistence (sumList (digitsOfInt n) (count + 1));;

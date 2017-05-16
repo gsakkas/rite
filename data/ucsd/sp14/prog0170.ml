@@ -1,18 +1,5 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let counter = 0;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10
-  then counter
-  else
-    (let myList = digits n in
-     let num = sumList myList in
-     let counter = 0 in
-     counter = ((counter + (1 num)) + (additivePersistence num)));;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> ((h * i) mod 10) :: (((h * i) / 10) + h);;

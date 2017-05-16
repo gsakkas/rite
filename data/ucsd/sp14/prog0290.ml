@@ -1,3 +1,3 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [digitsOfInt n]);;
+let rec wwhile (f,b) =
+  let c' = f b in let b' = b in if c' = b then c' else wwhile (c', b');;

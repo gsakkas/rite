@@ -1,6 +1,5 @@
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t ->
-      if h = 0 then removeZero t else h :: (t List.combine ([1; 2] [3; 4]));;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+
+let fixpoint (f,b) = wwhile ((fun x  -> let y = (f, x) in (y, (y != b))), b);;

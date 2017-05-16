@@ -1,7 +1,12 @@
 
-let rec countlist x = match x with | [] -> 0 | h::t -> 1 + (countlist t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  let x = sumList n in if x < 10 then countlist n else additivePersistence x;;
+let rec exprToString e =
+  match e with | VarX  -> "x" | VarY  -> "y" | Sine m -> "sin" ^ exprToString;;

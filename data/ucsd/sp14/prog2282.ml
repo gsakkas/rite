@@ -8,38 +8,19 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildCosine e = Cosine e;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let _ =
-  let rec build (rand,depth) =
-    let buildd (r,d) =
-      if r = 1
-      then buildX ()
-      else
-        if r = 2
-        then buildY ()
-        else
-          if r = 3
-          then buildSine (build (r, d))
-          else
-            if r = 4
-            then buildCosine (build (r, d))
-            else
-              if r = 5
-              then buildTimes ((build (r1, d1)), (build (r2, d2)))
-              else
-                buildThresh
-                  ((build (r1, d1)), (build (r2, 2)), (build (r2, d2)),
-                    (build (r2, d2))) in
-    ((d - 1), (d > 0)) in
-  buildd (rand, depth);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 ->
+      let ans = sin (pi *. (eval (e1, x, y))) in
+      Printf.sprintf "sine is %f " 2.0
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then (Printf.printf "hi"; eval (a_less, x, y))
+      else (Printf.printf "bye"; eval (b_less, x, y));;

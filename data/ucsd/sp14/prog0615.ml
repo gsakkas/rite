@@ -1,2 +1,2 @@
 
-let _ = 12.0 div 10;;
+let pipe fs = let f a x y = x a in let base = 0 in List.fold_left f base fs;;

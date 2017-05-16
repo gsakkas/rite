@@ -6,39 +6,19 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | Timestwo of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | Timestwo of expr;;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 ("?" ^ ((exprToString y) ^ (":" ^ ((exprToString z) ^ ")")))))))
-  | Half x -> ".5*" ^ (exprToString x)
-  | Timestwo x -> "2.0*" ^ (exprToString x);;
-
-let sample = Timestwo VarX;;
-
-let _ = exprToString sample;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;

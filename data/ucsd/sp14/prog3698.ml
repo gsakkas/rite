@@ -1,5 +1,5 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
 
-let _ = (removeZero [0; 0; 0; 0] 10) / 10;;
+let fixpoint (f,b) = wwhile (((f b) <> b), b);;

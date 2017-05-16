@@ -1,12 +1,11 @@
 
-let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w = (concat (listReverse (explode w))) == w;;
+let _ = stringOfList (fun x  -> (string_of_int x) + 1) [1; 2; 3; 4];;

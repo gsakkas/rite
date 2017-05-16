@@ -1,4 +1,7 @@
 
-let pipe fs =
-  let f a x = let g b y n = match n with | [] -> n | _ -> y b in g a x in
-  let base = f 0 [] in List.fold_left f base fs;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
+
+let fixpoint (f,b) = let y = ((f b), (b = (f b))) in wwhile (y, b);;

@@ -1,16 +1,15 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let digitsOfInt n =
+  let rec digOfIntHelper n l =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: l
+         | true  -> digOfIntHelper (n / 10) ((n mod 10) :: l)) in
+  digOfIntHelper n [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = failwith "" in
-    let base = (0, 0) in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let additivePersistence n =
+  let rec addPerHelper n l =
+    match l with | [] -> 0 | a::[] -> n | h::t -> addPerHelper (n + 1) t in
+  addPerHelper 0 digitsOfInt n;;

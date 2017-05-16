@@ -1,4 +1,9 @@
 
-let rec wwhile (f,b) =
-  match f with
-  | (x,y) -> let (x,y) = f b in if y = true then wwhile (f, x) else x;;
+let y x = x + 1;;
+
+let q x = y x;;
+
+let pipe fs =
+  let f a x el = x (a q) in let base g q = q in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

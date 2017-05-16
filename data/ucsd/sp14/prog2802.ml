@@ -1,8 +1,2 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = if t = sep then sep else h ^ sep in
-      let l = sl in List.fold_left f base l;;
+let rec clone x n = if n > 0 then x @ ((clone x n) - 1) else [];;

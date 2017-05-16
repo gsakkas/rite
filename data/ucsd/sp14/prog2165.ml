@@ -1,4 +1,3 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f, b);;
+let rec listReverse l =
+  match l with | 0 -> [] | _::tl -> (listReverse tl) + tl;;

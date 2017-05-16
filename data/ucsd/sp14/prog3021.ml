@@ -1,26 +1,8 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with | (bb,false ) -> bb | (bb,true ) -> wwhile (f, bb);;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
+let fixpoint (f,b) =
+  wwhile ((fun b  -> ((f b), (((f b) != b) || ((f b) != (f (f b)))))), b);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with
-      | (w,y)::t -> ((((w + z) + y) / 10), ((((w + y) + z) mod 10) :: t))
-      | [] -> (0, 0) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = fixpoint (exp, (-1));;

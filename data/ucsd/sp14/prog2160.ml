@@ -1,6 +1,8 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((f ((f b) = b)), b);;
+let digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec digit n acc =
+       if n < 10 then n :: acc else digit (n / 10) ((n mod 10) :: acc) in
+     n [] digit);;

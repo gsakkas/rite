@@ -1,19 +1,24 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigMul l1 l2 =
-  let f a x =
-    let (i,j) = a in
-    let multiplier m n =
-      ((m - 1), ((mulByDigit (x * (int_of_float (m ** 10.0))) l2) :: n)) in
-    multiplier (float_of_int ((List.length l1) - 1)) j in
-  let base = (0, []) in
-  let args = l1 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;

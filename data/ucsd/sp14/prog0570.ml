@@ -1,13 +1,6 @@
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
+let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
-
-let palindrome w = (listReverse (explode w)) = w;;
+let fixpoint (f,b) = wwhile ((g f b), b);;

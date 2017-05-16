@@ -1,5 +1,31 @@
 
-let rec sumDigits n1 =
-  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Cube of expr;;
 
-let rec digitalRoot n = if n > 10 then digitalRoot sumDigits n else n;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Cube a ->
+      "(" ^
+        ((exprToString a) ^
+           ("*" ^ ((exprToString a) ^ (("*" (exprToString a)) ^ ")"))));;

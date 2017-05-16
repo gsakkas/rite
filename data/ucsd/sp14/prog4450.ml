@@ -1,23 +1,17 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec reverseHelper l result =
+  match l with | x::s -> reverseHelper s (x :: result) | [] -> result;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let rec listReverse l = reverseHelper l [];;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec palindromeHelper w r =
+  match w with
+  | [] -> (match r with | [] -> true | _ -> false)
+  | x::s ->
+      (match r with
+       | y::t -> if x = y then palindromeHelper s t else false
+       | _ -> false);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | ([],[]) ->
-          (match x with
-           | ([],[]) -> a
-           | (h1,h2) -> ([(h1 + h2) / 10], [(h1 + h2) mod 10])) in
-    let base = ([], []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w = let r = listReverse w in palindromeHelper w r;;
+
+let _ = palindrome "malayalam";;

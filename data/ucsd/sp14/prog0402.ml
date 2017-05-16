@@ -1,4 +1,8 @@
 
-let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
-
-let _ = concat ['H'; 'e'; 'l'; 'l'; 'o'];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h "to be implemented" in
+      let l = t in List.fold_left f base l;;

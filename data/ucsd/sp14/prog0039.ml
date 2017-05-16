@@ -1,2 +1,3 @@
 
-let h::t = 1232;;
+let rec listReverse l =
+  match l with | x::[] -> x | hd::tl -> (listReverse tl) :: hd;;

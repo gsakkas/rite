@@ -1,8 +1,5 @@
 
-let digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec digit n acc =
-       if n < 10 then n :: acc else digit (n / 10) ((n mod 10) :: acc) in
-     n [] digit);;
+let rec last l =
+  match l with | x::[] -> x | hd::tl -> last tl | [] -> failwith "NO ELEMENT";;
+
+let rec listReverse l = match l with | [] -> [] | hd::tl -> (last tl) :: hd;;

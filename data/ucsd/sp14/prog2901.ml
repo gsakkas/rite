@@ -1,5 +1,7 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = match xs with | [] -> [] | hd::tl -> f 0 hd in
-  List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  let (f',b') = f b in if b' = true then wwhile (f, f') else f';;
+
+let rec wwwhile (f,b) =
+  match f with
+  | (x,y) -> if y = true then let (f',b') = f b in wwhile (f, x) else x;;

@@ -1,22 +1,16 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec reverse s =
+  let n = String.length s in
+  for i = 0 to (n - 1) / 2 do
+    (let c = s.[i] in s.[i] <- s.[(n - i) - 1]; s.[(n - i) - 1] <- c)
+  done;
+  s;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (add1,add2) ->
-          ((((add1 + add2) + a) / 10), (((add1 + add2) + a) / 10)) in
-    let base = 0 in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = int_of_string reverse (string_of_int n)
+     and y = x / 10
+     and z = x mod 10 in
+     if (y = 0) && (z = 0) then [] else z :: (digitsOfInt y));;

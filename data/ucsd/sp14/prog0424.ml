@@ -1,6 +1,4 @@
 
-let rec append xs x =
-  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+let foo xs = match xs with | [] -> (fun x  -> x) | h::t -> h;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else n - ((n / 10) * (10 append digitsOfInt (n / 10)));;
+let _ = foo [] [1; 2; 3; 4; 5] [1; 0; 1; 0];;

@@ -1,4 +1,12 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitalRoot n = digitalRoot (sumList n);;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Average (x',y') -> (x' + y') / 2;;

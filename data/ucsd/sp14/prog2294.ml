@@ -20,49 +20,21 @@ let buildX () = VarX;;
 
 let buildY () = VarY;;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> sin (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
-
-let sampleExpr =
-  buildCosine
-    (buildSine
-       (buildTimes
-          ((buildCosine
-              (buildAverage
-                 ((buildCosine (buildX ())),
-                   (buildTimes
-                      ((buildCosine
-                          (buildCosine
-                             (buildAverage
-                                ((buildTimes ((buildY ()), (buildY ()))),
-                                  (buildCosine (buildX ())))))),
-                        (buildCosine
-                           (buildTimes
-                              ((buildSine (buildCosine (buildY ()))),
-                                (buildAverage
-                                   ((buildSine (buildX ())),
-                                     (buildTimes ((buildX ()), (buildX ()))))))))))))),
-            (buildY ()))));;
-
-let _ = eval (sampleExpr, 0.5, 0.2);;
+let rec build (rand,depth) =
+  match (rand, depth) with
+  | (_,0) -> if (rand mod 2) == 0 then buildY () else buildX ()
+  | (_,1) ->
+      if (rand mod 3) == 0
+      then buildSine (build (rand, (depth - 1)))
+      else buildCosine (build (rand, (depth - 1)))
+  | (_,_) ->
+      if (depth > 10) && ((rand mod 7) == 0)
+      then
+        buildTimes
+          (buildAverage
+             ((build ((rand + 3), (depth - 1))),
+               (build ((rand - 1), (depth - 1)))))
+      else
+        if (rand mod 5) == 0
+        then build ((rand + 3), (depth - 1))
+        else build ((rand + 1), (depth - 1));;

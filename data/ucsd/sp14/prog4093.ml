@@ -1,2 +1,4 @@
 
-let _ = string_of_int [[1; 2; 3]; [4; 5]; [6]; []];;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+
+let rec listReverse l = match l with | [] -> [] | h::t -> (cat t h) :: l;;

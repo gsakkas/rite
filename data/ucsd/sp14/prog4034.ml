@@ -1,2 +1,9 @@
 
-let pipe fs = let f a x = a x in let base n = n in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
+
+let fixpoint (f,b) = wwhile ((f b), b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

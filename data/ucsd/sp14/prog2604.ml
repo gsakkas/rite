@@ -1,5 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let ee = [1; 2];;
 
-let fixpoint (f,b) = wwhile (fun x  -> (((f b) = b), b));;
+let zz = [3; 4];;
+
+let _ = List.combine (ee, zz);;

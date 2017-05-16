@@ -1,7 +1,5 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      if prod > 10 then (prod mod 10) :: (prod / 10) else prod :: t;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((f (if (f b) = b then b else b)), b);;

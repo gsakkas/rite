@@ -1,5 +1,12 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (x,y) -> if y = false then x else wwhile (f, x);;
+let bigMul l1 l2 =
+  let f a x = l1 in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let _ = bigMul [9; 9; 9; 9; 9] [9; 9; 9; 9; 9];;

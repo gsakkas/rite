@@ -1,19 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Printf.sprintf "%s"
-  | VarY  -> "%s" e
-  | Sine e1 -> "%s" e1
-  | Cosine e2 -> "%s" e2
-  | Average (e3,e4) -> "%s %s" e3 e4
-  | Times (e5,e6) -> "%s %s" e5 e6
-  | Thresh (e7,e8,e9,e0) -> "%s %s %s %s" e7 e8 e9 e0;;
+let padZero l1 l2 =
+  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
+  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
+  if length1 < length2
+  then clone (length2 - length1) 0
+  else if length2 < length1 then clone (length1 - length2) 0;;

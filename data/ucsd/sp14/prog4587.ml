@@ -1,2 +1,5 @@
 
-let mine xs = match xs with | [] -> 0 | h::t -> t;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+
+let fixpoint (f,b) = wwhile ((let (x,y) = f b in (x > b) or (x < b)), b);;

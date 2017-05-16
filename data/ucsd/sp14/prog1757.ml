@@ -1,19 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x < 0 then y :: l else digithelper x (y :: l);;
 
-let pi = 4.0 *. (atan 1.0);;
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y))) / 2;;
+let _ = digitsOfInt - 12;;

@@ -1,7 +1,5 @@
 
-let pipe fs =
-  let rec iter acc curr =
-    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
-  iter (fun y  -> y) fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec listReverse l =
+  let reverseHelper r =
+    match l with | [] -> l | h::t -> listReverse t (h :: r) in
+  listReverse [] [];;

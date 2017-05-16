@@ -1,8 +1,5 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',true ) -> wwhile (f, b') | (b',false ) -> b';;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> [] | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;

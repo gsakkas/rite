@@ -1,5 +1,8 @@
 
 let rec wwhile (f,b) =
-  let (a',b') = f b in if b' = true then wwhile (f, b') else a';;
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

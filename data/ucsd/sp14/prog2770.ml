@@ -1,7 +1,5 @@
 
-let f y z x = y z;;
+let pipe fs =
+  let f a x p a = x a in let base d = d in List.fold_left f base fs;;
 
-let rec chain fs =
-  match fs with | [] -> (fun x  -> x) | f::fs' -> (fun x  -> f (chain fs' x));;
-
-let ans = chain [(fun x  -> x * x; (fun x  -> 16 * x; (fun x  -> x + 1)))] 1;;
+let _ = pipe [] 3;;

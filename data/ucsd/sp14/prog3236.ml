@@ -1,4 +1,4 @@
 
-let o f g x = f (g x);;
-
-let foo = (fun x  -> x + 1) o (fun y  -> 2 * y);;
+let pipe fs =
+  let f a x = match x with | [] -> a | _ -> x a in
+  let base = 0 in List.fold_left f base fs;;

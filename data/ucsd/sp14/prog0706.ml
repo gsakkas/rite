@@ -1,4 +1,11 @@
 
-let rec digitsOfInt n =
-  let myList = [] in
-  if n <= 0 then [] else [digitsOfInt (n mod 10); digitsOfInt (n / 10)];;
+let rec assoc (d,k,l) =
+  match (d, k, l) with
+  | [] -> 0
+  | (d,k,l) ->
+      if l = []
+      then d
+      else
+        (match l with
+         | h::t ->
+             (match h with | (a,b) -> if a = k then b else assoc (d, k, t)));;

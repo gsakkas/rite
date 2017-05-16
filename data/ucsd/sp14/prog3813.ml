@@ -1,6 +1,15 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let listReverse l =
+  let rec reverseHelper l rl =
+    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), (((clone 0) - diff) @ l2));;
+let rec digitsOfInt n =
+  let digOfInt n r =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: (digitsOfInt (n / 10))
+         | true  -> (n mod 10) :: (digitsOfInt (n / 10))) in
+  listReverse n r;;

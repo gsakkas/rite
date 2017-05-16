@@ -1,4 +1,9 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let rec last l = match l with | x::[] -> x | hd::tl -> last tl | [] -> [];;
 
-let _ = (sumList [1; 3; 5; 7; 9; 11] 5) + 5;;
+let rec removeLast l =
+  match l with | x::[] -> [] | hd::tl -> hd :: (removeLast tl) | [] -> [];;
+
+let rec listReverse l = (last l) :: (listReverse (removeLast l));;
+
+let _ = listReverse [1; 2; 3; 4];;

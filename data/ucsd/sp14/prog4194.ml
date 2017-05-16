@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x = List.map x in let base = 3 in List.fold_left f base fs;;
+let rec sumList xs =
+  if (List.length xs) > 0 then (List.hd xs) + (sumList List.tl xs) else 0;;

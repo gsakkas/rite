@@ -1,3 +1,2 @@
 
-let rec wwhile (f,b) =
-  let (x,y) = b f in if y = true then wwhile (f, x) else x;;
+let rec clone x n = match n with | 0 -> [] | _ -> x :: ((clone n) - 1);;

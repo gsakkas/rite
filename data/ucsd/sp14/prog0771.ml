@@ -1,4 +1,8 @@
 
-let rec digitsOfInt n =
-  let myList = [] in
-  if n <= 0 then [] else n = (n - (n mod 10)); (n :: myList) :: digitsOfInt;;
+let append x l =
+  let rec helper x acc =
+    match x with | [] -> acc | h::t -> helper t (h :: acc) in
+  helper x l;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append listReverse t [h];;

@@ -1,42 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let buildCosine e = Cosine e;;
+let fixpoint (f,b) = wwhile (f, b);;
 
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> let r = rand (0, 2) in if r = 0 then buildX () else buildY ()
-  | _ ->
-      let r = rand (0, 5) in
-      if r = 0
-      then buildSine (build (rand, (depth - 1)))
-      else
-        if r = 1
-        then buildCosine (build (rand, (depth - 1)))
-        else
-          if r = 2
-          then
-            buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-          else
-            if r = 3
-            then
-              buildTimes
-                ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let _ = fixpoint (collatz, 9001);;

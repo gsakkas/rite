@@ -1,5 +1,2 @@
 
-let digitsOfInt n =
-  let rec driver n ls =
-    if n >= 10 then driver (n / 10) ((n mod 10) :: ls) else ls in
-  (driver n [] 3124) mod 10;;
+let _ = abs_float (-29);;

@@ -1,22 +1,27 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
-
-let rec removeZero l = match l with | 0::t -> removeZero t | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match (a, x) with
-      | ((b,c),(d,e)) ->
-          ((((d + e) + b) / 10), ((((d + e) + b) mod 10) :: c)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l = (mulByDigit i) - (1 bigAdd l l);;
+let rec exprToString ex =
+  match ex with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | _ -> "" ^ (ex ^ "");;

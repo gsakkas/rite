@@ -1,4 +1,5 @@
 
-let append x y = x + y;;
+type nat =
+  | Zero;;
 
-let _ = append 0 [2; 2; 21; 1];;
+let a = Zero + Zero;;

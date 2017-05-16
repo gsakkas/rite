@@ -1,4 +1,3 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((f b), ((f b) = b), b);;
+let rec digitsOfInt n =
+  let ns = [] in match n with | n -> (List.hd (n mod 10)) :: ns;;

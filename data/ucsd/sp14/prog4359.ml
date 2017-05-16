@@ -1,19 +1,39 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let bigMul l1 l2 =
-  let f a x =
-    let (i,j) = a in
-    let multiplier m n =
-      ((i - 1), (((mulByDigit x l2) * (int_of_float (10 ** m))) :: n)) in
-    multiplier (float_of_int ((List.length l1) - 1)) j in
-  let base = (0, []) in
-  let args = l1 in let (_,res) = List.fold_left f base args in res;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand mod 2) = 0 then buildX () else buildY ())
+  else
+    if (rand mod 5) = 0
+    then buildSine (build (rand, (depth - 1)))
+    else
+      if (rand mod 5) = 1
+      then buildCosine (build (rand, (depth - 1)))
+      else
+        if (rand mod 5) = 2
+        then buildAverage (build (rand, (depth - 1)))
+        else
+          if (rand mod 5) = 3
+          then buildAverage (build (rand, (depth - 1)))
+          else
+            if (rand mod 5) = 4 then buildThresh (build (rand, (depth - 1)));;

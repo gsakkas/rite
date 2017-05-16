@@ -1,5 +1,5 @@
 
-let rec digitsOfInt n =
-  if n < 0
+let rec clone x n =
+  if n <= 0
   then []
-  else if n == 0 then 0 else (digitsOfInt (n / 10)) :: (n % 10);;
+  else (match x with | [] -> x | h::t -> [clone t (n - 1); h]);;

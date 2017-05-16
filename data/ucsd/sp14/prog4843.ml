@@ -1,8 +1,12 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | _ -> if n > 0 then x :: (clone x (n - 1)) else [];;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
 let padZero l1 l2 =
-  let l1 = List.length l1 in
-  let l2 = List.length l2 in
-  (((clone 0 (l2 - l1)) @ l1), ((clone 0 (l1 - l2)) @ l2));;
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let _ = List.combine (padZero [9; 9] [1; 0; 0; 2]);;

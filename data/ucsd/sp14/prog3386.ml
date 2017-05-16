@@ -1,9 +1,20 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
 
-let stringOfList f l = "[" ^ ((sepConcat ";") ^ ((List.map (f l)) ^ "]"));;
+let rec sumList xs =
+  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+
+let x = [];;
+
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) > 9
+  then
+    (print_string "going into then" print_newline ();
+     1
+     ::
+     x;
+     additivePersistence (sumList (digitsOfInt n)))
+  else (1 :: x; sumList x);;

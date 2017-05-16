@@ -1,8 +1,6 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let rec wwhile (f,b) =
+  match f b with
+  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
 
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) hd;;
-
-let _ = listReverse ["a"; "b"; "c"; "d"];;
+let fixpoint (f,b) = wwhile ((), b);;

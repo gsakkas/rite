@@ -1,3 +1,7 @@
 
-let rec sum (x,y) =
-  match x with | [] -> y = (y + 0) | h::t -> y = (y + (h sum (t, y)));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ a) in
+      let base = [] in let l = sl in List.fold_left f base l;;

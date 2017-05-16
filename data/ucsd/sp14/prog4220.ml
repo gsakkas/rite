@@ -1,5 +1,4 @@
 
-let pipe fs =
-  let f a x x a = x a in let base p = p in List.fold_left f base fs;;
+let rec helpFac a b = if (10 * a) > b then a else helpFac (10 * a) b;;
 
-let _ = pipe [] 3;;
+let _ = helpFac (3124 1);;

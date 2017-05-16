@@ -1,5 +1,5 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
-
-let _ = sqsum [(-1); (-2); (-3); (-4)] [()];;
+let rec padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else if (List.length l1) < (List.length l2) then padZero ((0 :: l1) l2);;

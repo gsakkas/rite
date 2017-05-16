@@ -1,7 +1,2 @@
 
-let h x y = ((y x), (x < 100));;
-
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((h b f), b);;
+let rec concat w = match w with | [] -> "".[0] | h::t -> h ^ (concat t);;

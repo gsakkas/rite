@@ -1,7 +1,6 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ (sep ^ a) in
-      let base = "" in let l = sepConcat sep t in List.fold_left f base l;;
+let rec append_new xs1 xs2 =
+  match xs1 with | [] -> xs2 | head::tail -> head :: (append_new tail xs2);;
+
+let rec listReverse l =
+  match l with | [] -> [] | head::tail -> append_new listReverse tail [head];;

@@ -1,10 +1,5 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = if (List.length sl) > 1 then h else h in
-      let l = t in List.fold_left f base l;;
+let pipe fs =
+  let f a x b = x (a b) in let base x = x in List.fold_left f base fs;;
 
-let stringOfList f l = sepConcat ";" (List.map (fun c  -> c l));;
+let stringOfList f l = f (pipe List.map l);;

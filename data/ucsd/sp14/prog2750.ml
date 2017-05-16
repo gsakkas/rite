@@ -1,9 +1,9 @@
 
-let t x = x + 1;;
+let a = 20;;
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if x = "a" then x :: a else a in
-      let base = sep in let l = t in List.fold_left f base l;;
+let f x = let y = 1 in let g z = y + z in a + (g x);;
+
+let pipe fs =
+  let f a x x a d = d in let base p = p in List.fold_left f base fs;;
+
+let _ = let base = pipe [] in List.fold_left f base fs;;

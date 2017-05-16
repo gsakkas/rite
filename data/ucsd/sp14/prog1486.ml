@@ -1,69 +1,22 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) /. 2.0) +. ((eval (e2, x, y)) /. 2.0)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
-
-let sampleExpr =
-  buildCosine
-    (buildSine
-       (buildTimes
-          ((buildCosine
-              (buildAverage
-                 ((buildCosine (buildX ())),
-                   (buildTimes
-                      ((buildCosine
-                          (buildCosine
-                             (buildAverage
-                                ((buildTimes ((buildY ()), (buildY ()))),
-                                  (buildCosine (buildX ())))))),
-                        (buildCosine
-                           (buildTimes
-                              ((buildSine (buildCosine (buildY ()))),
-                                (buildAverage
-                                   ((buildSine (buildX ())),
-                                     (buildTimes ((buildX ()), (buildX ()))))))))))))),
-            (buildY ()))));;
-
-let _ = eval (sampleExpr, 0.5, 0.2);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in [[0]; [0]] :: a in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

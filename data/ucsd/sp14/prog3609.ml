@@ -1,19 +1,39 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let s1 = List.length l1 in
-  let s2 = List.length l2 in
-  if s1 < s2
-  then (((clone 0 (s2 - s1)) @ l1), l2)
-  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ((x / 10), (x mod 10)) :: a in
-    let base = [] in
-    let args = [] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) ^ "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;

@@ -1,5 +1,18 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (f',bool1) -> if bool1 then wwhile (f, f') else f';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
+  | _ -> let y = rand (2, 6) in if y = 2 then buildX ();;

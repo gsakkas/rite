@@ -1,2 +1,5 @@
 
-let _ = List.fold_right (+) 0 [(1, 2, 3)];;
+let rec listReverse l =
+  let rec reverseHelper revd =
+    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
+  reverseHelper l;;

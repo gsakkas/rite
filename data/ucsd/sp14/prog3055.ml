@@ -1,38 +1,26 @@
 
 let rec clone x n =
-  let rec helper a x n =
-    if n <= 0 then a else (let a' = x :: a in helper a' x (n - 1)) in
-  helper [] x n;;
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 > length2
-  then (l1, (List.append (clone 0 (length1 - length2)) l2))
-  else
-    if length2 > length1
-    then ((List.append (clone 0 (length2 - length1)) l1), l2)
-    else (l1, l2);;
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      match x with
-      | (x1,x2) ->
-          (match a with
-           | (o,z) ->
-               if ((o + x1) + x2) > 9
-               then (1, ((((o + x1) + x2) mod 10) :: z))
-               else (0, (((o + x1) + x2) :: z))) in
-    let base = (0, []) in
-    let args =
-      let rec pair acc list1 list2 =
-        match (list1, list2) with
-        | (h1::t1,h2::t2) -> pair (List.append acc (h1, h2)) t1 t2
-        | (_,_) -> List.append acc (0, 0) in
-      pair [] (List.rev l1) (List.rev l2) in
+    let f a (x,y) =
+      match a with
+      | [] -> (x + y) :: a
+      | h::t -> [(x + y) + (h / 10); h mod 10] @ t in
+    let base = [] in
+    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

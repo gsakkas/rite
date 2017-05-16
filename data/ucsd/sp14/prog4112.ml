@@ -1,2 +1,8 @@
 
-let stringOfList f l = List.map f l List.map string_of_int [1; 2; 3; 4; 5];;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

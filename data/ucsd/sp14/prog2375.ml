@@ -1,9 +1,20 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let t x = x + 1;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
-let _ = fixpoint (collatz, 3);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = failwith "to be implemented" in
+    let args = padZero l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

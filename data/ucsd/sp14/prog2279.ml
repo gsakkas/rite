@@ -8,11 +8,19 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildX () = VarX;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand depth with
-  | (1,d) -> (d = (d - 1)) && (buildX ())
-  | (2,d) -> (d = (d - 1)) && (buildY ());;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 ->
+      let ans = sin (pi *. (eval (e1, x, y))) in
+      Printf.sprintf "sine is %d " ans
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then (Printf.printf "hi"; eval (a_less, x, y))
+      else (Printf.printf "bye"; eval (b_less, x, y));;

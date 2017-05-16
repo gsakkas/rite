@@ -1,5 +1,5 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (x, y) | false  -> x in
-  (f, b) (b, true);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) =
+  wwhile (fun x  -> if x = b then (b, false) else (((f x), true), b));;

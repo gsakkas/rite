@@ -1,7 +1,3 @@
 
-let change x =
-  let rec changehelper acc x =
-    match x with
-    | [] -> []
-    | hd::tl -> changehelper (acc ^ (int_of_string hd)) tl in
-  changehelper "" x;;
+let rec digitsOfInt n =
+  match n <= 0 with | true  -> [] | false  -> [(digitsOfInt n) / 10; n % 10];;

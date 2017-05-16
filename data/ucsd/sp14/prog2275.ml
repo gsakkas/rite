@@ -8,12 +8,8 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> ((e1 * 1.00) + (e2 * 1.00)) /. 2.00;;
+  | VarX  -> 1.0
+  | VarY  -> 1.0
+  | Sine e1 -> sin (2 * (eval (e1, x, y)));;

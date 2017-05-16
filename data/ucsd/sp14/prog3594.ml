@@ -1,5 +1,9 @@
 
-let pipe fs =
-  let f a x b = (x b) a in let base x = x in List.fold_left f base fs;;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> []
+  | (num,name)::tail ->
+      if (num, name) = (d, k) then name else assoc (d, k, tail);;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ =
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

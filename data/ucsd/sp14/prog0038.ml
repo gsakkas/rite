@@ -1,4 +1,3 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let _ = ((sumList [1; 3; 5; 7; 9; 11] h) :: t) = [1; 0];;
+let rec listReverse l =
+  match l with | [] -> [] | x::[] -> x | hd::tl -> (listReverse tl) :: hd;;

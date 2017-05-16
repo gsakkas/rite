@@ -1,4 +1,4 @@
 
-let append x y = match y with | [] -> [] | h::t -> x :: h;;
+let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
 
-let _ = append [1; 2] [3; 4];;
+let _ = g 0.739085;;

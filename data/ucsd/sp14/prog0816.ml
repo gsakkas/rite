@@ -1,13 +1,4 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let pipe fs = let f a x f a = x in let base y = y in List.fold_left f base fs;;
 
-let rec listReverse l =
-  let rec listHelper l l2 =
-    match l with | [] -> l2 | h::t -> listHelper t (h :: l2) in
-  listHelper l [];;
-
-let palindrome w =
-  if (listReverse explode w) = (explode w) then true else false;;
+let _ = pipe [] 3;;

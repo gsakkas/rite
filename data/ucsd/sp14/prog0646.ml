@@ -1,21 +1,13 @@
 
-let rec backCons xs x =
-  match xs with | [] -> [x] | y::ys -> y :: (backCons ys x);;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else backCons (digitsOfInt (n / 10)) (n mod 10);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot absNum persCount =
-  if absNum < 10
-  then (persCount, absNum)
-  else
-    (let xs = digits absNum in
-     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
-
-let rec additivePersistence n = let (l,r) = additivePersAndRoot n 0 in l;;
-
-let _ = additivePersistence abs (-9876);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append ((clone 0 (- diff)), len1)), len2)
+  else ((List.append ((clone 0 diff), len2)), len1);;

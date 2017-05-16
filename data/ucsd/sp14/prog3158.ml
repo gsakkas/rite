@@ -1,9 +1,7 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | (s,i)::t -> (match k = i with | true  -> l | false  -> assoc (d, k, t));;
 
-let stringOfList f l = sepConcat (" " List.map (f l));;
+let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

@@ -1,14 +1,11 @@
 
-let rec last l =
-  match l with | x::[] -> x | hd::tl -> last tl | [] -> failwith "error";;
-
-let rec removeLast l =
-  match l with | x::[] -> [] | hd::tl -> hd :: (removeLast tl) | [] -> [];;
-
-let rec listReverse l =
-  let x = last l in
-  let y = removeLast l in if y = [] then x :: y else x :: (listReverse y);;
-
-let rec reversed n = if n <= 0 then [] else (n mod 10) :: (reversed (n / 10));;
-
-let rec digitsOfInt n = listReverse reversed n;;
+let bigMul l1 l2 =
+  let f a x = ([0], [x]) in
+  let base = ([], [0]) in
+  let args =
+    let rec helper acc l1 l2 =
+      match l1 with
+      | [] -> acc
+      | h::t -> helper ((h, l2) :: acc) (List.map (fun x  -> x * 10) t) l2 in
+    helper [] (List.rev l1) l2 in
+  let (_,res) = List.fold_left f base args in res;;

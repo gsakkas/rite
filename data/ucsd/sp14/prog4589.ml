@@ -1,3 +1,9 @@
 
-let sqsum xs =
-  let f a x a x = x *. x in let base = 0.0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let (x,y) = f b in
+      if (x <> b) && (y = true) then (x, true) else if x = b then (x, false)),
+      b);;

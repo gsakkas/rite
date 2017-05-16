@@ -1,5 +1,3 @@
 
-let listReverse l =
-  let rec recurse x xs =
-    match x with | [] -> [] | hd::tl -> (recurse tl hd) :: xs in
-  recurse l [];;
+let rec mulByDigit i l =
+  match List.rev l with | [] -> 0 | h::t -> ((h * i) / 10) + (List.rev i t);;

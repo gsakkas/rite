@@ -1,16 +1,10 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let rand = makeRand (10, 39);;
-
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
-
-let x = rand (1, 4);;
-
-let fixpoint (f,b) = wwhile ((let g x = (f x) != x in (y, (y != x))), b);;
+let rec build (rand,depth) =
+  let rec buildhelper num depth expr =
+    match num with
+    | 0 -> if (rand 0 1) = 0 then expr ^ "VarX" else expr ^ "Var"
+    | 1 ->
+        if (rand 0 1) = 0
+        then expr ^ ("Sine(" ^ (((buildhelper 0 depth) - (1 expr)) ^ ")"))
+        else expr ^ ("Cosine(" ^ (((buildhelper 0 depth) - (1 expr)) ^ ")")) in
+  buildhelper (rand 0 4) depth "";;

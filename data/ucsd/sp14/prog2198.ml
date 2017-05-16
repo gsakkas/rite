@@ -10,15 +10,36 @@ type expr =
 
 let rec exprToString e =
   match e with
-  | VarX  -> Printf.sprintf "%d" e
-  | VarY  -> e
-  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
-  | Cosine e2 -> Printf.sprintf "%s" (exprToString e2)
-  | Average (e3,e4) ->
-      Printf.sprintf "%s %s" (exprToString e3) (exprToString e4)
-  | Times (e5,e6) ->
-      Printf.sprintf "%s %s" (exprToString e5) (exprToString e6)
-  | Thresh (e7,e8,e9,e0) ->
-      Printf.sprintf "%s %s %s %s" (exprToString e7) (exprToString e8)
-        (exprToString e9) (exprToString e0)
-  | _ -> "";;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval ex))
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;

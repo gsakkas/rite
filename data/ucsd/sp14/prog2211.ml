@@ -23,27 +23,23 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
+  let case = 0 in
   if depth = 0
-  then (if (rand mod 2) = 0 then buildX () else buildY ())
+  then case = (rand (0, 1))
   else
-    if (rand mod 5) = 0
-    then buildSine (build (rand, (depth - 1)))
-    else
-      if (rand mod 5) = 1
-      then buildCosine (build (rand, (depth - 1)))
-      else
-        if (rand mod 5) = 2
-        then
-          buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-        else
-          if (rand mod 5) = 3
-          then
-            buildTimes
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-          else
-            if (rand mod 5) = 4
-            then
-              buildThresh
-                ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                  (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+    (let case = rand (0, 6) in
+     match case with
+     | 0 -> buildX
+     | 1 -> buildY
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;

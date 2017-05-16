@@ -1,23 +1,29 @@
 
-let rec clone x n =
-  let rec clone_RT acc n =
-    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
-  clone_RT [] n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let diff = len1 - len2 in
-  if diff < 0
-  then ((List.append (clone 0 (- diff)) l1), l2)
-  else (l1, (List.append (clone 0 diff) l2));;
+let buildCosine e = Cosine e;;
 
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
+let buildSine e = Sine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([0], [0]) in
-    let base = ([0], [0]) in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
+
+let sampleExpr2 =
+  buildThresh
+    ((buildX ()), (buildY ()), (buildSine (buildX ())),
+      (buildCosine (buildY ()))) makeRand (1, 2);;

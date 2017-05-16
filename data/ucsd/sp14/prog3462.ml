@@ -1,33 +1,23 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x1 = List.length l1 in
-  let x2 = List.length l2 in
-  if x1 < x2
-  then (((clone 0 (x2 - x1)) @ l1), l2)
-  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+let buildX () = VarX;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::[] -> if h <> 0 then l else []
-  | h::t -> if h <> 0 then l else removeZero t;;
+let buildY () = VarY;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | h::t ->
-          let (x1,x2) = x in
-          let (carry,res) = a in
-          let tens = (x1 + x2) + (a1 / 10) in
-          let ones = (x1 + x2) + (a1 mod 10) in
-          if t = []
-          then (0, (tens :: ones :: res))
-          else ((tens :: carry), (ones :: res))
-      | [] -> a in
-    let base = ([0], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match rand (1, 7) with
+  | 1 -> buildX (buildY ())
+  | 2 -> buildY ()
+  | 3 -> buildX ()
+  | 4 -> buildY ()
+  | 5 -> buildX ()
+  | 6 -> buildY ()
+  | 7 -> buildX ();;

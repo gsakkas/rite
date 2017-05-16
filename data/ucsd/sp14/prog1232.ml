@@ -1,49 +1,26 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr
-  | KellysOp of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr
-  | KellysOp of expr* expr* expr;;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | Power e -> (eval (e, x, y)) *. (eval (e, x, y))
-  | KellysOp (a,b,a_more) ->
-      if (eval (a, x, y)) > (eval (b, x, y))
-      then eval (a_more, x, y)
-      else 0.0;;
-
-let sampleExpr1 =
-  Thresh
-    (VarX, VarY, VarX,
-      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
-
-let _ = eval (sampleExpr1, 0.5, 0.2);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = () in
+    let base = ([], []) in
+    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

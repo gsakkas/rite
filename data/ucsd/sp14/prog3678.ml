@@ -1,3 +1,4 @@
 
-let pipe fs =
-  let f a x x' = x' (a x) in let base x = x in List.fold_left f base fs;;
+let r = [2; 3];;
+
+let _ = r :: (14 mod 10);;

@@ -1,4 +1,2 @@
 
-let rec additivePersAndRoot n = if n <= 0 then (0, 0) else (1, 1);;
-
-let _ = additivePersAndRoot [(1, 1)] (0, 0);;
+let pipe fs = let f a x _ = x a in let base = 0 in List.fold_left f base fs;;

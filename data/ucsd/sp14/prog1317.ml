@@ -1,11 +1,8 @@
 
-let rec wwhile (f,b) =
-  let (number,boolean) = f b in
-  if boolean then wwhile (f, number) else number;;
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> append (listReverse tl) hd;;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let _ = fixpoint (collatz, 1);;
+let _ = listReverse [1; 2; 3; 4];;

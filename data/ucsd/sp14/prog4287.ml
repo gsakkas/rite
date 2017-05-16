@@ -1,15 +1,9 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let mulByDigit i l =
-  let rec helpy p q carry accList =
-    let numsList = List.rev q in
-    match numsList with
-    | [] -> accList
-    | h::t ->
-        let initMul = (h * p) + carry in
-        let intKeep = initMul mod 10 in
-        let carrying = (initMul - intKeep) mod 100 in
-        (helpy p List.rev t carrying accList) @ initKeep in
-  removeZero (list.rev (helpy i l 0 [(0, 0)]));;
+let stringOfList f l = "[" ^ ((sepConcat "; " sepList.map f l) ^ "]");;

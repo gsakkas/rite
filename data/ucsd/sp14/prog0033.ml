@@ -1,5 +1,5 @@
 
-let listReverse l =
-  let rec reverseHelper acc =
-    match acc with | [] -> acc | h::t -> reverseHelper (h :: acc) t in
-  reverseHelper [] l;;
+let join x l = x :: l;;
+
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> join (listReverse tl) hd;;

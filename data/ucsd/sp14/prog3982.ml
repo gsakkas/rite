@@ -1,2 +1,4 @@
 
-let rec clone x n = if x <= 0 then [] else clone [x] (n - 1);;
+let x = 123;;
+
+let _ = x.[1];;

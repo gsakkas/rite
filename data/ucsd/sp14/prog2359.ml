@@ -1,47 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Factorial of expr
-  | Sum3 of expr* expr* expr;;
+let a x = x + x;;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let f y z x = y z;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Format.sprintf "x"
-  | VarY  -> Format.sprintf "y"
-  | Sine e' -> (Format.sprintf "sin(pi*") ^ ((exprToString e') ^ ")")
-  | Cosine e' -> (Format.sprintf "cos(pi*") ^ ((exprToString e') ^ ")")
-  | Average (e1,e2) ->
-      (Format.sprintf "((") ^
-        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) ->
-      (Format.sprintf "") ^ ((exprToString e1) ^ ("*" ^ (exprToString e2)))
-  | Thresh (a,b,a_less,b_less) ->
-      (Format.sprintf "(") ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^
-                    ((exprToString a_less) ^
-                       (":" ^ ((exprToString b_less) ^ ")")))))));;
+let x x' = x' + 3;;
 
-let sampleExpr1 =
-  Thresh
-    (VarX, VarY, VarX,
-      (Times ((Sine VarX), (Cosine (Average (VarX, VarY))))));;
-
-let _ = exprToString sampleExpr1;;
+let _ = f a x;;

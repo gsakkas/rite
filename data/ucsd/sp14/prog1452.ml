@@ -1,9 +1,8 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> []
-  | (num,name)::tail ->
-      if (num, name) = (d, k) then name else assoc (d, k, tail);;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = (clone 3) - 1;;

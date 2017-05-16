@@ -1,15 +1,4 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Printf.sprintf "x"
-  | VarY  -> Printf.sprintf "y"
-  | Sine x -> Printf.sprintf "Sine(%s)" exprToString x;;
+let fixpoint (f,b) = ((wwhile (f, ((f b) = b))), b);;

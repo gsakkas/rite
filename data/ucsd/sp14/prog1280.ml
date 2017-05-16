@@ -1,12 +1,6 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let helper = (f, b) in
+  match helper with | (x',n) -> if n = false then x' else wwhile (f, x');;
 
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Average (x',y') -> (x' + y') / 2;;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

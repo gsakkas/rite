@@ -1,3 +1,2 @@
 
-let rec intlist x =
-  if x < 10 then [x] else (intlist (x / 10)) @ ([x mod 10] intlist 10);;
+let num_of_digits xs = (log10 xs) + 1;;

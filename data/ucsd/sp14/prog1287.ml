@@ -8,11 +8,23 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Sine e' -> sin (pi *. (eval e'))
-  | Cosine e' -> cos (pi *. (eval e'))
-  | Average (x',y') -> (x +. y) /. 2.0
-  | Times (x',y') -> x *. y;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    let depth = depth - 1 in
+    match rand (0, 4) with
+    | 0 -> buildSine (build (rand, depth))
+    | 1 -> buildCosine (build (rand, depth))
+    | 2 -> buildAverage (build (rand, depth))
+    | 3 -> buildTimes (build (rand, depth))
+    | 4 -> buildThresh (build (rand, depth));;

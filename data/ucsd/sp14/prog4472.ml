@@ -1,11 +1,7 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h::t ->
-           let rec helper v = ((helper v) / 10) @ [h1 mod 10] in helper h);;
+let fptest x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+
+let _ = wwhile (fptest, 0);;

@@ -1,34 +1,35 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let rec padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x',x'') = x in
-      let (c,s) = a in
-      if (List.length s) = ((List.length l1) - 1)
-      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
-      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (l1',a') = a in
-    match x with | [] -> (l1, a') | h::t -> bigAdd (mulByDigit (h l1') a') in
-  let base = (l1, [0]) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | Inverse a -> "1/" ^ (exprToString a)
+  | Max (a,b) ->
+      "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+  | Range (a,b,c) ->
+      "range(" ^
+        ((exprToString a) ^
+           (("," exprToString b) ^ ("," ^ ((exprToString c) ^ ")"))));;

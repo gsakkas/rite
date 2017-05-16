@@ -1,4 +1,11 @@
 
-let pipe fs = let f a x = x a in let base x = x in List.fold_left f base fs;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let cat = pipe [(fun x  -> x + x)];;
+let rec listReverse l =
+  match l with | [] -> [] | head::tail -> (listReverse tail) @ [head];;
+
+let palindrome w =
+  if (explode w) = (explode (listReverse w)) then true else false;;

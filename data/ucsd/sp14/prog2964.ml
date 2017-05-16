@@ -1,10 +1,9 @@
 
-let rec mulByDigit i l =
-  let rec mBDhelper i x =
-    match x with
-    | [] -> 0
-    | hd::tl ->
-        if ((hd * i) / 10) != 0
-        then ((hd * i) mod 10) :: (((hd * i) / 10) + (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat ";" (List.map (fun f  -> f l));;

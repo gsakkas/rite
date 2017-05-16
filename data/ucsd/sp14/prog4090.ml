@@ -1,9 +1,9 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let _ = sepConcat "; " [[1; 0]; [2]; [3]];;
+let rec digitsOfInt n =
+  if n = 0
+  then [0]
+  else
+    (fun help  ->
+       fun n  -> match n with | 0 -> [] | _ -> cat (help (n / 10)) (n mod 10));;

@@ -1,17 +1,39 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let buildCosine e = Cosine e;;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let buildSine e = Sine e;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (0, (x :: a)) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> (match rand (1, 3) with | 1 -> buildX () | _ -> buildY ())
+  | _ ->
+      (match rand (1, 10) with
+       | 1 -> buildSine (pi *. (build (rand, (depth - 1))))
+       | 2 -> buildCosine (pi *. (build (rand, (depth - 1))))
+       | 3 -> buildSine (pi *. (build (rand, (depth - 1))))
+       | 4 -> buildCosine (pi *. (build (rand, (depth - 1))))
+       | 5 -> buildSine (pi *. (build (rand, (depth - 1))))
+       | 6 -> buildCosine (pi *. (build (rand, (depth - 1))))
+       | 7 ->
+           buildThresh
+             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+       | 8 -> buildX ()
+       | 9 -> buildY ());;

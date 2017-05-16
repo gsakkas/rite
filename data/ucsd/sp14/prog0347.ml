@@ -1,5 +1,14 @@
 
-let rec sumList xs =
-  if (List.length xs) > 0 then (List.hd xs) + (sumList (List.tl xs)) else 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = (sumList [1; 3; 5; 7; 9; 11] 5) mod 3;;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Average (x',y') -> (x + y) / 2;;
+
+let _ = eval ((Average (VarX, VarY)), 0.5, 0.5);;

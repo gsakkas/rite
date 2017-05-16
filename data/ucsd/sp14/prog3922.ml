@@ -1,5 +1,3 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let _ = removeZero [0; 0; 0; 0] List.combine [9; 9] [0; 0];;
+let sqsum xs =
+  let f a x = a ^^ (2 + x) in let base = 0 in List.fold_left f base xs;;

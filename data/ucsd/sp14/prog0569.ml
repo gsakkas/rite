@@ -1,11 +1,6 @@
 
-let rec helperAppend l n =
-  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
+let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else helperAppend (digitsOfInt (n / 10)) [n mod 10];;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n <= 0 then [] else sumList (digitsOfInt n);;
+let fixpoint (f,b) = wwhile (g, b);;

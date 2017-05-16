@@ -1,20 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs =
+  let f a x g = (x a) g in let base g = g in List.fold_left f base fs;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  let rec evalhelper e x y =
-    match e with
-    | VarX  -> x
-    | VarY  -> y
-    | Sine p1 -> sin (pi *. (evalhelper p1))
-    | Cosine p1 -> evalhelper p1 in
-  evalhelper e x y;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

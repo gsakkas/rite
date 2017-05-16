@@ -1,5 +1,8 @@
 
-let pipe fs =
-  let f a x c = x a c in let base b = b in List.fold_left f base fs;;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2) then (l1, l2) else (l1, l2);;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else if (List.length l1) < (List.length l2) then padZero (0 :: (l1 l2));;

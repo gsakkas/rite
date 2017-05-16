@@ -1,14 +1,4 @@
 
-let append y = match y with | [] -> [] | h::t -> h :: t;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append x y = match y with | [] -> [] | h::t -> h :: (append x t);;
+let fixpoint (f,b) = let f' = ((f b), ((f b) = b)) in wwhile (f', b);;

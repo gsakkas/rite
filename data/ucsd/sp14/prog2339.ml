@@ -1,9 +1,7 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | _ ->
-        let seen' = if List.mem 0 seen then seen else 0 :: seen in
-        let rest' = 0 in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> f (fold_l f base t) h;;
+
+let list = ["hi"; "iris"; "elephant"];;
+
+let sumListL = fold_l (fun temp  -> fun h  -> (h * h) + temp) 0 list;;

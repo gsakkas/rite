@@ -1,12 +1,7 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
-
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ [l1]), l2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length t) = 2 then a ^ x in
+      let base = "" in let l = sl in List.fold_left f base l;;

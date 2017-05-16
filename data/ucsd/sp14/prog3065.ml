@@ -1,6 +1,5 @@
 
-let pipe fs =
-  let f a x = x a in
-  let base = failwith "to be implemented" in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n == 0 then [] else (digitsOfInt (n / 10)) :: (n % 10);;

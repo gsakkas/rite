@@ -1,11 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec reverseHelper (original,sofar) =
+  match original with
+  | [] -> sofar
+  | hd::tl -> reverseHelper (tl, (hd :: sofar));;
 
-let rec eval (e,x,y) = match e with | VarX  -> x * 1.0;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l = reverseHelper (l, []);;
+
+let palindrome w =
+  let converted = explode w in
+  if converted = (listReverse w) then true else false;;

@@ -1,8 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let c = 3;;
 
-let fixpoint (f,b) = wwhile (((f b) b), b);;
+let z = (1, 2);;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let c = (3 z) + c;;

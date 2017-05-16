@@ -1,2 +1,2 @@
 
-let _ = Printf.printf string_of_int 1;;
+let rec sumList xs = match sumList with | head::tail -> head + (sumList tail);;

@@ -1,3 +1,7 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (let n10 = n / 10 in [digitsOfInt n10; n mod 10]);;
+let rec assoc (d,k,l) =
+  match l with
+  | (ki,vi)::tl -> if ki = k then vi else assoc (d, k, tl)
+  | _ -> d;;
+
+let _ = assoc ([], 123, [(123, "sad"); (321, "happy")]);;

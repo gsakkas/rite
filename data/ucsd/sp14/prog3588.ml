@@ -1,4 +1,6 @@
 
-let pipe fs = let f a x = a + x in let base = 0 in List.fold_left f base fs;;
+let decr x = x - 1;;
 
-let _ = pipe [] 3;;
+let incr x = x + 1;;
+
+let foo = List.map [incr; decr] 9;;

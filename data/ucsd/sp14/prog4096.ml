@@ -1,9 +1,5 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = "" in let l = h in List.fold_left f base l;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let _ = sepConcat "" ["a"; "b"; "c"; "d"; "e"];;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> cat h (listReverse t);;

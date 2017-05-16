@@ -1,3 +1,4 @@
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then 1;;
+let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [0];;
+
+let _ = digitsOfInt - 3;;

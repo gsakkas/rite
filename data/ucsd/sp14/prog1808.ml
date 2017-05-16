@@ -1,6 +1,3 @@
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' | b' -> b' in
-  acc b;;
+let rec factorial x acc =
+  if x = 0 then acc else factorial (x -. 1.0) (x *. acc);;

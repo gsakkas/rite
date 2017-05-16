@@ -1,6 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
+let z = (1, 2);;
 
-let fixpoint (f,b) = wwhile ((f, ((f b) = b)), b);;
+let listerine = [z; z];;
+
+let _ = [((10 / 2), (8 mod 2))] :: listerine;;

@@ -8,32 +8,37 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+  | Average (ex1,ex2) ->
+      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
+  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
 
-let buildCosine e = Cosine e;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand mod 2) = 0 then buildX () else buildY ())
-  else
-    if (rand mod 5) = 0
-    then buildSine (build (rand, (depth - 1)))
-    else
-      if (rand mod 5) = 1
-      then buildCosine (build (rand, (depth - 1)))
-      else
-        if (rand mod 5) = 2
-        then buildAverage (build (rand, (depth - 1)))
-        else
-          if (rand mod 5) = 3
-          then buildAverage (build (rand, (depth - 1)))
-          else
-            if (rand mod 5) = 4 then buildThresh (build (rand, (depth - 1)));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      "(" ^
+        ((exprToString ex1) ^
+           ("<" ^
+              ((exprToString ex2) ^
+                 ("?" ^
+                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;

@@ -1,18 +1,16 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let x = 123;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = n / 10
+     and y = n mod 10 in
+     if (x = 0) && (y = 0) then [] else (digitsOfInt x) @ [y]);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = 0 in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let x = sumList (digitsOfInt 30);;
+
+let rec listReverse l = match l with | [] -> 0 | x::xl -> [listReverse x];;

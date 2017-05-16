@@ -1,19 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | 1 -> VarX
-  | 2 -> 22
-  | 3 -> 33
-  | 4 -> 44
-  | 5 -> 55
-  | 6 -> 66
-  | 7 -> 77;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) :: l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) :: l1), l2);;
+
+let _ = padZero [9; 9] [1; 0; 0; 2];;

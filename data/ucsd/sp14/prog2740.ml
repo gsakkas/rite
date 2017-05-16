@@ -1,2 +1,2 @@
 
-let _ = fun x  -> (x + x) = (let g = 2 + 2 in g 2);;
+let pipe fs = let f a x x = x a in let base p = p in List.fold_left f base fs;;

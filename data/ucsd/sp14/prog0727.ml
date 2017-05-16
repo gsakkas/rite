@@ -1,4 +1,3 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> h @ (listReverse t);;
-
-let _ = listReverse [1; 2; 3; 4];;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else 1;;

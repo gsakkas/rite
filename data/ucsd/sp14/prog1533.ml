@@ -1,4 +1,6 @@
 
+let pi = 4.0 *. (atan 1.0);;
+
 type expr =
   | VarX
   | VarY
@@ -6,37 +8,19 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Nom of expr* expr* expr
-  | Squa of expr;;
+  | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr1) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
-  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
-  | Nom (expr1,expr2,expr3) ->
-      let (res1,res2,res3) =
-        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
-      "(" ^
-        (res1 ^
-           ("+" ^
-              (res2 ^
-                 ("+" ^
-                    (res3 ^
-                       ((")" / "(abs(") ^
-                          (res1 ^
-                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
-  | Squa expr ->
-      let res = exprToString expr in
-      "abs(" ^ (res ^ (")/(abs" ^ (res ^ ("+" ^ (res ^ "^2)")))))
-  | Thresh (expr,expr1,expr2,expr3) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr1) ^
-                 ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))));;
+  | VarX  -> float x
+  | VarY  -> float y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
+
+let _ = eval ((Sine (Average (VarX, VarY))), 0.3, 0.3);;

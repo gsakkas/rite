@@ -1,2 +1,2 @@
 
-let rec digitsOfInt n = (n mod 10) @ [(digitsOfInt n) / 10];;
+let rec backCons xs x = match xs with | [] -> x | y::ys -> [y; x];;

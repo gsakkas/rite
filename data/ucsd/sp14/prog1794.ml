@@ -8,12 +8,22 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2;;
+  | VarX  -> Format.sprintf "x"
+  | VarY  -> Format.sprintf "y"
+  | Sine e' -> Format.sprintf ("sin(pi*%s)" exprToString e')
+  | Cosine e' -> (Format.sprintf "cos(pi*") ^ ((exprToString e') ^ ")")
+  | Average (e1,e2) ->
+      (Format.sprintf "((") ^
+        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) ->
+      (Format.sprintf (exprToString e1)) ^ ("*" ^ (exprToString e2))
+  | Thresh (a,b,a_less,b_less) ->
+      (Format.sprintf "(") ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^
+                    ((exprToString a_less) ^
+                       (":" ^ ((exprToString b_less) ^ ")")))))));;

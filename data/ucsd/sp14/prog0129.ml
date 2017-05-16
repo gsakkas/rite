@@ -1,6 +1,4 @@
 
-let rec palinHelper normal reverse =
-  match normal with
-  | [] -> true
-  | x::xs ->
-      if x = (List.hd reverse) then palinHelper xs List.tl reverse else false;;
+let rec myFunc f a b = match b with | [] -> a | h::t -> a + (myFunc f h t);;
+
+let _ = myFunc (fun x  -> fun y  -> x) [1; 2; 3; 4];;

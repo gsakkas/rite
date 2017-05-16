@@ -1,4 +1,7 @@
 
-let rec backCons xs x = match xs with | [] -> x | y::ys -> y :: x;;
-
-let _ = backCons ([1; 2] 3);;
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::xs ->
+      let g a x = a ^ ("; " ^ (f x)) in
+      let base = f x in List.fold_left f base xs;;
