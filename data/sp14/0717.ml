@@ -1,145 +1,147 @@
 
-let bigMul l1 l2 =
-  let f a x = failwith "to be implemented" in
-  let base = failwith "to be implemented" in
-  let args =
-    let rec argmaker x y =
-      match y with | [] -> [] | hd::tl -> List.append (x, hd) (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
+
+let palindrome w =
+  let wEx = explode w in
+  let rec palHelper lst =
+    if (List.length lst) < 2
+    then []
+    else
+      if (List.tl lst) = (List.hd lst)
+      then
+        (let b::rest = lst in
+         let b2::rest2 = listReverse rest in palHelper rest2)
+      else [1] in
+  if (List.length (palHelper wEx)) = 0 then true else false;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let rec listReverse l =
+  if l = [] then [] else (let h::t = l in (listReverse t) @ [h]);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (l2digit,templ1) ->
-        let (l2digit2,templ12) = a in
-        let multres = mulByDigit l2digit templ1 in
-        (0, (bigAdd (templ12 @ [0]) multres)) in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let palindrome w =
+  let wEx = explode w in
+  let rec palHelper lst =
+    if (List.length lst) < 2
+    then []
+    else
+      if (List.tl lst) = lst
+      then
+        (let b::rest = lst in
+         let b2::rest2 = listReverse rest in palHelper rest2)
+      else [1] in
+  if (List.length (palHelper wEx)) = 0 then true else false;;
 
 *)
 
 (* changed spans
-(2,11)-(9,49)
-(3,2)-(9,49)
-(3,14)-(3,22)
-(3,14)-(3,42)
-(3,23)-(3,42)
-(4,2)-(9,49)
-(4,13)-(4,21)
-(4,13)-(4,41)
-(4,22)-(4,41)
-(5,2)-(9,49)
-(7,42)-(7,53)
-(7,42)-(7,77)
-(7,54)-(7,61)
-(7,55)-(7,56)
-(7,58)-(7,60)
-(7,62)-(7,77)
+(16,25)-(16,38)
+(16,26)-(16,33)
 *)
 
 (* type error slice
-(7,42)-(7,53)
-(7,42)-(7,77)
-(7,54)-(7,61)
+(16,9)-(16,22)
+(16,9)-(16,38)
+(16,9)-(16,38)
+(16,10)-(16,17)
+(16,18)-(16,21)
+(16,25)-(16,38)
+(16,26)-(16,33)
+(16,34)-(16,37)
 *)
 
 (* all spans
-(2,11)-(9,49)
-(2,14)-(9,49)
-(3,2)-(9,49)
-(3,8)-(3,42)
-(3,10)-(3,42)
-(3,14)-(3,42)
-(3,14)-(3,22)
-(3,23)-(3,42)
-(4,2)-(9,49)
-(4,13)-(4,41)
-(4,13)-(4,21)
-(4,22)-(4,41)
-(5,2)-(9,49)
-(6,4)-(8,18)
-(6,21)-(7,77)
-(6,23)-(7,77)
-(7,6)-(7,77)
-(7,12)-(7,13)
-(7,27)-(7,29)
-(7,42)-(7,77)
-(7,42)-(7,53)
-(7,54)-(7,61)
-(7,55)-(7,56)
-(7,58)-(7,60)
-(7,62)-(7,77)
-(7,63)-(7,71)
-(7,72)-(7,73)
-(7,74)-(7,76)
-(8,4)-(8,18)
-(8,4)-(8,12)
-(8,13)-(8,15)
-(8,16)-(8,18)
-(9,2)-(9,49)
-(9,16)-(9,42)
-(9,16)-(9,30)
-(9,31)-(9,32)
-(9,33)-(9,37)
-(9,38)-(9,42)
-(9,46)-(9,49)
+(2,12)-(5,6)
+(3,2)-(5,6)
+(3,13)-(4,66)
+(4,4)-(4,66)
+(4,7)-(4,29)
+(4,7)-(4,8)
+(4,12)-(4,29)
+(4,13)-(4,26)
+(4,27)-(4,28)
+(4,35)-(4,37)
+(4,43)-(4,66)
+(4,43)-(4,50)
+(4,44)-(4,49)
+(4,44)-(4,45)
+(4,47)-(4,48)
+(4,54)-(4,66)
+(4,55)-(4,57)
+(4,58)-(4,65)
+(4,59)-(4,60)
+(4,63)-(4,64)
+(5,2)-(5,6)
+(5,2)-(5,4)
+(5,5)-(5,6)
+(7,20)-(8,64)
+(8,2)-(8,64)
+(8,5)-(8,11)
+(8,5)-(8,6)
+(8,9)-(8,11)
+(8,17)-(8,19)
+(8,25)-(8,64)
+(8,37)-(8,38)
+(8,42)-(8,63)
+(8,58)-(8,59)
+(8,42)-(8,57)
+(8,43)-(8,54)
+(8,55)-(8,56)
+(8,60)-(8,63)
+(8,61)-(8,62)
+(10,15)-(21,59)
+(11,2)-(21,59)
+(11,12)-(11,21)
+(11,12)-(11,19)
+(11,20)-(11,21)
+(12,2)-(21,59)
+(12,20)-(20,14)
+(13,4)-(20,14)
+(13,7)-(13,28)
+(13,7)-(13,24)
+(13,8)-(13,19)
+(13,20)-(13,23)
+(13,27)-(13,28)
+(14,9)-(14,11)
+(16,6)-(20,14)
+(16,9)-(16,38)
+(16,9)-(16,22)
+(16,10)-(16,17)
+(16,18)-(16,21)
+(16,25)-(16,38)
+(16,26)-(16,33)
+(16,34)-(16,37)
+(18,8)-(19,61)
+(18,23)-(18,26)
+(19,9)-(19,60)
+(19,25)-(19,41)
+(19,25)-(19,36)
+(19,37)-(19,41)
+(19,45)-(19,60)
+(19,45)-(19,54)
+(19,55)-(19,60)
+(20,11)-(20,14)
+(20,12)-(20,13)
+(21,2)-(21,59)
+(21,5)-(21,38)
+(21,5)-(21,34)
+(21,6)-(21,17)
+(21,18)-(21,33)
+(21,19)-(21,28)
+(21,29)-(21,32)
+(21,37)-(21,38)
+(21,44)-(21,48)
+(21,54)-(21,59)
 *)

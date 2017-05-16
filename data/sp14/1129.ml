@@ -1,48 +1,47 @@
 
-let rec sumList xs =
-  if (List.hd xs) = [] then 0 else (let h::t = xs in h + (sumList t));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2;;
 
 
 (* fix
 
-let rec sumList xs =
-  if xs = [] then 0 else (let h::t = xs in h + (sumList t));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 
 *)
 
 (* changed spans
-(3,5)-(3,17)
-(3,6)-(3,13)
+(11,69)-(11,70)
 *)
 
 (* type error slice
-(3,5)-(3,17)
-(3,5)-(3,22)
-(3,5)-(3,22)
-(3,6)-(3,13)
-(3,14)-(3,16)
-(3,20)-(3,22)
-(3,35)-(3,69)
-(3,35)-(3,69)
-(3,47)-(3,49)
-(3,53)-(3,54)
-(3,53)-(3,68)
+(11,57)-(11,70)
+(11,69)-(11,70)
 *)
 
 (* all spans
-(2,16)-(3,69)
-(3,2)-(3,69)
-(3,5)-(3,22)
-(3,5)-(3,17)
-(3,6)-(3,13)
-(3,14)-(3,16)
-(3,20)-(3,22)
-(3,28)-(3,29)
-(3,35)-(3,69)
-(3,47)-(3,49)
-(3,53)-(3,68)
-(3,53)-(3,54)
-(3,57)-(3,68)
-(3,58)-(3,65)
-(3,66)-(3,67)
+(11,14)-(11,70)
+(11,23)-(11,70)
+(11,29)-(11,30)
+(11,57)-(11,70)
+(11,57)-(11,65)
+(11,58)-(11,59)
+(11,63)-(11,64)
+(11,69)-(11,70)
 *)

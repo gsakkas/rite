@@ -1,52 +1,81 @@
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then 1;;
+let rec digitsOfInt n =
+  let ns = [] in
+  match n with
+  | 0 -> ns
+  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+
+let rec digitalRoot n = if n < 10 then n else digitsOfInt n;;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
+let rec digitsOfInt n =
+  let ns = [] in
+  match n with
+  | 0 -> ns
+  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let rec sumList xs =
+  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
+
+let rec digitalRoot n = sumList (digitsOfInt n);;
 
 *)
 
 (* changed spans
-(2,12)-(3,69)
-(3,54)-(3,69)
-(3,68)-(3,69)
+(8,20)-(8,59)
+(8,24)-(8,59)
+(8,27)-(8,28)
+(8,27)-(8,33)
+(8,31)-(8,33)
+(8,39)-(8,40)
+(8,46)-(8,57)
 *)
 
 (* type error slice
-(3,54)-(3,69)
-(3,54)-(3,69)
-(3,54)-(3,69)
-(3,68)-(3,69)
+(6,31)-(6,67)
+(6,45)-(6,67)
+(6,46)-(6,57)
+(8,24)-(8,59)
+(8,24)-(8,59)
+(8,27)-(8,28)
+(8,27)-(8,33)
+(8,27)-(8,33)
+(8,31)-(8,33)
+(8,39)-(8,40)
+(8,46)-(8,57)
+(8,46)-(8,59)
 *)
 
 (* all spans
-(2,12)-(3,69)
-(2,15)-(3,69)
-(3,2)-(3,69)
-(3,14)-(3,50)
-(3,15)-(3,31)
-(3,16)-(3,27)
-(3,28)-(3,30)
-(3,33)-(3,49)
-(3,34)-(3,45)
-(3,46)-(3,48)
-(3,54)-(3,69)
-(3,57)-(3,62)
-(3,57)-(3,58)
-(3,61)-(3,62)
-(3,68)-(3,69)
-(3,54)-(3,69)
+(2,20)-(6,67)
+(3,2)-(6,67)
+(3,11)-(3,13)
+(4,2)-(6,67)
+(4,8)-(4,9)
+(5,9)-(5,11)
+(6,9)-(6,67)
+(6,12)-(6,17)
+(6,12)-(6,13)
+(6,16)-(6,17)
+(6,23)-(6,25)
+(6,31)-(6,67)
+(6,31)-(6,41)
+(6,32)-(6,33)
+(6,38)-(6,40)
+(6,45)-(6,67)
+(6,46)-(6,57)
+(6,58)-(6,66)
+(6,59)-(6,60)
+(6,63)-(6,65)
+(8,20)-(8,59)
+(8,24)-(8,59)
+(8,27)-(8,33)
+(8,27)-(8,28)
+(8,31)-(8,33)
+(8,39)-(8,40)
+(8,46)-(8,59)
+(8,46)-(8,57)
+(8,58)-(8,59)
 *)

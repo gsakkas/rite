@@ -1,77 +1,59 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin s1
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let rec assoc (d,k,l) =
+  let rec helper (a,b,c) =
+    match c with
+    | [] -> a
+    | (n,v)::t -> if n = c then v else helper (a, b, t) in
+  helper (d, k, l);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x +. 0.0
-  | VarY  -> y +. 0.0
-  | Sine s1 -> sin (eval (s1, x, y))
-  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
+let rec assoc (d,k,l) =
+  let rec helper (a,b,c) =
+    match c with
+    | [] -> a
+    | (n,v)::t -> if n = b then v else helper (a, b, t) in
+  helper (d, k, l);;
 
 *)
 
 (* changed spans
-(15,19)-(15,21)
-(16,23)-(16,65)
+(6,25)-(6,26)
 *)
 
 (* type error slice
-(12,2)-(16,65)
-(15,15)-(15,18)
-(15,15)-(15,21)
-(15,19)-(15,21)
+(4,4)-(6,55)
+(4,4)-(6,55)
+(4,10)-(4,11)
+(6,21)-(6,22)
+(6,21)-(6,26)
+(6,21)-(6,26)
+(6,25)-(6,26)
 *)
 
 (* all spans
-(11,14)-(16,65)
-(12,2)-(16,65)
-(12,8)-(12,9)
-(13,13)-(13,21)
-(13,13)-(13,14)
-(13,18)-(13,21)
-(14,13)-(14,21)
-(14,13)-(14,14)
-(14,18)-(14,21)
-(15,15)-(15,21)
-(15,15)-(15,18)
-(15,19)-(15,21)
-(16,23)-(16,65)
-(16,23)-(16,42)
-(16,24)-(16,28)
-(16,29)-(16,41)
-(16,30)-(16,34)
-(16,36)-(16,37)
-(16,39)-(16,40)
-(16,46)-(16,65)
-(16,47)-(16,51)
-(16,52)-(16,64)
-(16,53)-(16,57)
-(16,59)-(16,60)
-(16,62)-(16,63)
+(2,15)-(7,18)
+(3,2)-(7,18)
+(3,18)-(6,55)
+(4,4)-(6,55)
+(4,10)-(4,11)
+(5,12)-(5,13)
+(6,18)-(6,55)
+(6,21)-(6,26)
+(6,21)-(6,22)
+(6,25)-(6,26)
+(6,32)-(6,33)
+(6,39)-(6,55)
+(6,39)-(6,45)
+(6,46)-(6,55)
+(6,47)-(6,48)
+(6,50)-(6,51)
+(6,53)-(6,54)
+(7,2)-(7,18)
+(7,2)-(7,8)
+(7,9)-(7,18)
+(7,10)-(7,11)
+(7,13)-(7,14)
+(7,16)-(7,17)
 *)

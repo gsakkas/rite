@@ -1,147 +1,158 @@
 
-let bigMul l1 l2 =
-  let f a x = l1 in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) @ (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) -> ((eval (expr x y)) +. (eval (expr1 x y))) /. 2
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 
 (* fix
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  ->
-      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  | false  ->
-      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (addend_a,addend_b) ->
-          let prevcarry = match a with | (x,y) -> x in
-          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
-          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
-          (match a with
-           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
-           | _ -> (new_carry, [new_carry; digit])) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if (hd * i) > 9
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
-
-let bigMul l1 l2 =
-  let f a x =
-    match x with
-    | (l2digit,templ1) ->
-        let (l2digit2,templ12) = a in
-        let multres = mulByDigit l2digit templ1 in
-        (0, (bigAdd (templ12 @ [0]) multres)) in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | [] -> []
-      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) -> (eval (expr, x, y)) +. (eval (expr1, x, y))
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;
 
 *)
 
 (* changed spans
-(2,11)-(10,49)
-(3,2)-(10,49)
-(3,14)-(3,16)
-(4,2)-(10,49)
-(7,6)-(8,74)
-(8,18)-(8,74)
-(8,36)-(8,37)
-(8,49)-(8,56)
-(8,49)-(8,74)
-(8,53)-(8,55)
-(8,57)-(8,58)
-(8,59)-(8,74)
+(19,28)-(19,74)
+(19,35)-(19,45)
+(19,56)-(19,67)
+(19,73)-(19,74)
 *)
 
 (* type error slice
-(8,49)-(8,56)
-(8,49)-(8,74)
-(8,57)-(8,58)
+(14,2)-(24,29)
+(14,2)-(24,29)
+(19,28)-(19,74)
+(19,35)-(19,45)
+(19,36)-(19,40)
+(19,56)-(19,67)
+(19,57)-(19,62)
+(19,73)-(19,74)
 *)
 
 (* all spans
-(2,11)-(10,49)
-(2,14)-(10,49)
-(3,2)-(10,49)
-(3,8)-(3,16)
-(3,10)-(3,16)
-(3,14)-(3,16)
-(4,2)-(10,49)
-(4,13)-(4,20)
-(4,14)-(4,15)
-(4,17)-(4,19)
-(5,2)-(10,49)
-(6,4)-(9,18)
-(6,21)-(8,74)
-(6,23)-(8,74)
-(7,6)-(8,74)
-(7,12)-(7,13)
-(8,18)-(8,74)
-(8,21)-(8,28)
-(8,21)-(8,23)
-(8,26)-(8,28)
-(8,34)-(8,43)
-(8,35)-(8,42)
-(8,36)-(8,37)
-(8,39)-(8,41)
-(8,49)-(8,74)
-(8,57)-(8,58)
-(8,49)-(8,56)
-(8,50)-(8,51)
-(8,53)-(8,55)
-(8,59)-(8,74)
-(8,60)-(8,68)
-(8,69)-(8,70)
-(8,71)-(8,73)
-(9,4)-(9,18)
-(9,4)-(9,12)
-(9,13)-(9,15)
-(9,16)-(9,18)
-(10,2)-(10,49)
-(10,16)-(10,42)
-(10,16)-(10,30)
-(10,31)-(10,32)
-(10,33)-(10,37)
-(10,38)-(10,42)
-(10,46)-(10,49)
+(11,9)-(11,26)
+(11,9)-(11,12)
+(11,16)-(11,26)
+(11,17)-(11,21)
+(11,22)-(11,25)
+(13,14)-(24,29)
+(14,2)-(24,29)
+(14,8)-(14,9)
+(15,13)-(15,14)
+(16,13)-(16,14)
+(17,17)-(17,48)
+(17,17)-(17,20)
+(17,21)-(17,48)
+(17,22)-(17,24)
+(17,28)-(17,47)
+(17,29)-(17,33)
+(17,34)-(17,46)
+(17,35)-(17,39)
+(17,41)-(17,42)
+(17,44)-(17,45)
+(18,19)-(18,50)
+(18,19)-(18,22)
+(18,23)-(18,50)
+(18,24)-(18,26)
+(18,30)-(18,49)
+(18,31)-(18,35)
+(18,36)-(18,48)
+(18,37)-(18,41)
+(18,43)-(18,44)
+(18,46)-(18,47)
+(19,28)-(19,74)
+(19,28)-(19,69)
+(19,29)-(19,46)
+(19,30)-(19,34)
+(19,35)-(19,45)
+(19,36)-(19,40)
+(19,41)-(19,42)
+(19,43)-(19,44)
+(19,50)-(19,68)
+(19,51)-(19,55)
+(19,56)-(19,67)
+(19,57)-(19,62)
+(19,63)-(19,64)
+(19,65)-(19,66)
+(19,73)-(19,74)
+(20,26)-(20,69)
+(20,26)-(20,45)
+(20,27)-(20,31)
+(20,32)-(20,44)
+(20,33)-(20,37)
+(20,39)-(20,40)
+(20,42)-(20,43)
+(20,49)-(20,69)
+(20,50)-(20,54)
+(20,55)-(20,68)
+(20,56)-(20,61)
+(20,63)-(20,64)
+(20,66)-(20,67)
+(22,6)-(24,29)
+(22,9)-(22,51)
+(22,9)-(22,28)
+(22,10)-(22,14)
+(22,15)-(22,27)
+(22,16)-(22,20)
+(22,22)-(22,23)
+(22,25)-(22,26)
+(22,31)-(22,51)
+(22,32)-(22,36)
+(22,37)-(22,50)
+(22,38)-(22,43)
+(22,45)-(22,46)
+(22,48)-(22,49)
+(23,11)-(23,29)
+(23,11)-(23,15)
+(23,16)-(23,29)
+(23,17)-(23,22)
+(23,24)-(23,25)
+(23,27)-(23,28)
+(24,11)-(24,29)
+(24,11)-(24,15)
+(24,16)-(24,29)
+(24,17)-(24,22)
+(24,24)-(24,25)
+(24,27)-(24,28)
 *)

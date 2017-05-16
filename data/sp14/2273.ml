@@ -1,71 +1,115 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitalRoot n = digitalRoot (sumList n);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine e -> sin (pi *. e)
+  | Cosine e -> cos (pi *. e)
+  | Average (x,y) -> (x +. y) /. 2.0
+  | Times (x,y) -> x *. y
+  | Thresh (e,f,g,h) -> failwith "sad";;
 
 
 (* fix
 
-let rec listReverse2 l dest =
-  match l with | [] -> dest | h::t -> listReverse2 t (h :: dest);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  match n / 10 with
-  | 0 -> [n mod 10]
-  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec digitsToList n =
-  match n / 10 with
-  | 0 -> [n mod 10]
-  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
-
-let rec listReverse l = listReverse2 l [];;
-
-let digitsOfInt n = listReverse (digitsToList n);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n = digitalRoot (sumList (digits n));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(2,16)-(2,70)
-(4,45)-(4,46)
+(14,2)-(19,38)
+(15,14)-(15,27)
+(15,25)-(15,26)
+(16,16)-(16,29)
+(16,27)-(16,28)
+(17,21)-(17,36)
+(17,22)-(17,23)
+(17,33)-(17,36)
+(18,19)-(18,20)
+(19,24)-(19,32)
+(19,33)-(19,38)
 *)
 
 (* type error slice
-(2,21)-(2,70)
-(2,21)-(2,70)
-(2,55)-(2,70)
-(2,59)-(2,70)
-(2,60)-(2,67)
-(2,68)-(2,69)
-(4,3)-(4,49)
-(4,20)-(4,47)
-(4,24)-(4,35)
-(4,24)-(4,47)
-(4,36)-(4,47)
-(4,37)-(4,44)
-(4,45)-(4,46)
+(14,2)-(19,38)
+(14,2)-(19,38)
+(14,2)-(19,38)
+(14,2)-(19,38)
+(14,2)-(19,38)
+(14,2)-(19,38)
+(15,18)-(15,27)
+(15,25)-(15,26)
+(16,20)-(16,29)
+(16,27)-(16,28)
+(17,21)-(17,29)
+(17,21)-(17,29)
+(17,22)-(17,23)
+(17,27)-(17,28)
+(18,19)-(18,20)
+(18,19)-(18,25)
+(18,19)-(18,25)
+(18,24)-(18,25)
 *)
 
 (* all spans
-(2,16)-(2,70)
-(2,21)-(2,70)
-(2,27)-(2,29)
-(2,43)-(2,44)
-(2,55)-(2,70)
-(2,55)-(2,56)
-(2,59)-(2,70)
-(2,60)-(2,67)
-(2,68)-(2,69)
-(4,20)-(4,47)
-(4,24)-(4,47)
-(4,24)-(4,35)
-(4,36)-(4,47)
-(4,37)-(4,44)
-(4,45)-(4,46)
+(11,9)-(11,26)
+(11,9)-(11,12)
+(11,16)-(11,26)
+(11,17)-(11,21)
+(11,22)-(11,25)
+(13,14)-(19,38)
+(14,2)-(19,38)
+(14,8)-(14,9)
+(15,14)-(15,27)
+(15,14)-(15,17)
+(15,18)-(15,27)
+(15,19)-(15,21)
+(15,25)-(15,26)
+(16,16)-(16,29)
+(16,16)-(16,19)
+(16,20)-(16,29)
+(16,21)-(16,23)
+(16,27)-(16,28)
+(17,21)-(17,36)
+(17,21)-(17,29)
+(17,22)-(17,23)
+(17,27)-(17,28)
+(17,33)-(17,36)
+(18,19)-(18,25)
+(18,19)-(18,20)
+(18,24)-(18,25)
+(19,24)-(19,38)
+(19,24)-(19,32)
+(19,33)-(19,38)
 *)

@@ -1,105 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 -> if rand > 1 then buildSine (build (rand, (depth - 1)))
-  | _ -> buildCosine (build (rand, (depth - 1)));;
+let rec clone x n = if x <= 0 then [] else clone [x] (n - 1);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> buildX ()
-  | 1 -> buildSine (build (rand, (depth - 1)))
-  | _ -> buildCosine (build (rand, (depth - 1)));;
+let rec clone x n = if n <= 0 then [] else clone x (n - 1);;
 
 *)
 
 (* changed spans
-(20,9)-(20,63)
-(20,12)-(20,16)
-(20,12)-(20,20)
-(20,19)-(20,20)
+(2,23)-(2,24)
+(2,49)-(2,52)
 *)
 
 (* type error slice
-(13,3)-(13,26)
-(13,14)-(13,24)
-(13,18)-(13,24)
-(20,9)-(20,63)
-(20,9)-(20,63)
-(20,9)-(20,63)
-(20,26)-(20,35)
-(20,26)-(20,63)
+(2,3)-(2,62)
+(2,14)-(2,60)
+(2,43)-(2,48)
+(2,43)-(2,60)
+(2,49)-(2,52)
+(2,49)-(2,52)
+(2,50)-(2,51)
 *)
 
 (* all spans
-(11,16)-(11,28)
-(11,20)-(11,28)
-(11,27)-(11,28)
-(13,14)-(13,24)
-(13,18)-(13,24)
-(13,23)-(13,24)
-(15,11)-(15,20)
-(15,16)-(15,20)
-(17,15)-(21,48)
-(18,2)-(21,48)
-(18,8)-(18,13)
-(19,9)-(19,18)
-(19,9)-(19,15)
-(19,16)-(19,18)
-(20,9)-(20,63)
-(20,12)-(20,20)
-(20,12)-(20,16)
-(20,19)-(20,20)
-(20,26)-(20,63)
-(20,26)-(20,35)
-(20,36)-(20,63)
-(20,37)-(20,42)
-(20,43)-(20,62)
-(20,44)-(20,48)
-(20,50)-(20,61)
-(20,51)-(20,56)
-(20,59)-(20,60)
-(20,9)-(20,63)
-(21,9)-(21,48)
-(21,9)-(21,20)
-(21,21)-(21,48)
-(21,22)-(21,27)
-(21,28)-(21,47)
-(21,29)-(21,33)
-(21,35)-(21,46)
-(21,36)-(21,41)
-(21,44)-(21,45)
+(2,14)-(2,60)
+(2,16)-(2,60)
+(2,20)-(2,60)
+(2,23)-(2,29)
+(2,23)-(2,24)
+(2,28)-(2,29)
+(2,35)-(2,37)
+(2,43)-(2,60)
+(2,43)-(2,48)
+(2,49)-(2,52)
+(2,50)-(2,51)
+(2,53)-(2,60)
+(2,54)-(2,55)
+(2,58)-(2,59)
 *)

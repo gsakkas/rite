@@ -1,50 +1,57 @@
 
-let rec digOfIntHelper h = match h > 0 with | true  -> 1 | false  -> 0;;
-
-let rec digitsOfInt n =
-  match n > 0 with | true  -> [digOfIntHelper; n mod 10] | false  -> [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = "" in
+      let base = sepConcat sep t in let l = "" in List.fold_left f base l;;
 
 
 (* fix
 
-let rec digOfIntHelper h = match h > 0 with | true  -> 1 | false  -> 0;;
-
-let rec digitsOfInt n =
-  match n > 0 with | true  -> [digOfIntHelper n; n mod 10] | false  -> [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(5,31)-(5,45)
-(5,47)-(5,55)
+(6,18)-(6,20)
+(7,6)-(7,73)
+(7,44)-(7,46)
 *)
 
 (* type error slice
-(2,3)-(2,72)
-(2,23)-(2,70)
-(5,30)-(5,56)
-(5,30)-(5,56)
-(5,31)-(5,45)
-(5,47)-(5,55)
+(7,36)-(7,73)
+(7,44)-(7,46)
+(7,50)-(7,64)
+(7,50)-(7,73)
+(7,72)-(7,73)
 *)
 
 (* all spans
-(2,23)-(2,70)
-(2,27)-(2,70)
-(2,33)-(2,38)
-(2,33)-(2,34)
-(2,37)-(2,38)
-(2,55)-(2,56)
-(2,69)-(2,70)
-(4,20)-(5,71)
-(5,2)-(5,71)
-(5,8)-(5,13)
-(5,8)-(5,9)
-(5,12)-(5,13)
-(5,30)-(5,56)
-(5,31)-(5,45)
-(5,47)-(5,55)
-(5,47)-(5,48)
-(5,53)-(5,55)
-(5,69)-(5,71)
+(2,18)-(7,73)
+(2,22)-(7,73)
+(3,2)-(7,73)
+(3,8)-(3,10)
+(4,10)-(4,12)
+(6,6)-(7,73)
+(6,12)-(6,20)
+(6,14)-(6,20)
+(6,18)-(6,20)
+(7,6)-(7,73)
+(7,17)-(7,32)
+(7,17)-(7,26)
+(7,27)-(7,30)
+(7,31)-(7,32)
+(7,36)-(7,73)
+(7,44)-(7,46)
+(7,50)-(7,73)
+(7,50)-(7,64)
+(7,65)-(7,66)
+(7,67)-(7,71)
+(7,72)-(7,73)
 *)
