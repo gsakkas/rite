@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$(dirname $0)/../sherrloc/sherrloc" "$@"
+timeout --preserve-status -s9 1m "$(dirname $0)/../sherrloc/sherrloc" "$@"

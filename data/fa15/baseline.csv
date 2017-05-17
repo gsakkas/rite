@@ -1,2 +1,2 @@
-tool,year,top-1,top-2,top-3,total,recall
-baseline,fa15,0.304,0.474,0.588,2325,0
+tool,year,top-1,top-2,top-3,total
+baseline,fa15,0.299,0.468,0.583,2283
