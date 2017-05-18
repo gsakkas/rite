@@ -1,78 +1,117 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " f l) ^ "]");;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n = let (l,r) = additivePersAndRoot (abs n) in l;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
 
 *)
 
 (* changed spans
-(9,30)-(9,50)
-(9,46)-(9,47)
+(16,44)-(16,71)
+(16,75)-(16,76)
 *)
 
 (* type error slice
-(2,3)-(7,60)
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(4,10)-(4,12)
-(9,30)-(9,50)
-(9,31)-(9,40)
+(14,32)-(14,51)
+(14,32)-(14,74)
+(16,32)-(16,76)
+(16,44)-(16,63)
+(16,44)-(16,71)
 *)
 
 (* all spans
-(2,18)-(7,58)
-(2,22)-(7,58)
-(3,2)-(7,58)
-(3,8)-(3,10)
-(4,10)-(4,12)
-(6,6)-(7,58)
-(6,12)-(6,31)
-(6,14)-(6,31)
-(6,18)-(6,31)
-(6,20)-(6,21)
-(6,18)-(6,19)
-(6,22)-(6,31)
-(6,27)-(6,28)
-(6,23)-(6,26)
-(6,29)-(6,30)
-(7,6)-(7,58)
-(7,17)-(7,18)
-(7,22)-(7,58)
-(7,30)-(7,31)
-(7,35)-(7,58)
-(7,35)-(7,49)
-(7,50)-(7,51)
-(7,52)-(7,56)
-(7,57)-(7,58)
-(9,17)-(9,57)
-(9,19)-(9,57)
-(9,23)-(9,57)
-(9,27)-(9,28)
-(9,23)-(9,26)
-(9,29)-(9,57)
-(9,51)-(9,52)
-(9,30)-(9,50)
-(9,31)-(9,40)
-(9,41)-(9,45)
-(9,46)-(9,47)
-(9,48)-(9,49)
-(9,53)-(9,56)
+(2,20)-(3,60)
+(3,2)-(3,60)
+(3,5)-(3,11)
+(3,5)-(3,6)
+(3,10)-(3,11)
+(3,17)-(3,19)
+(3,25)-(3,60)
+(3,48)-(3,49)
+(3,25)-(3,47)
+(3,26)-(3,37)
+(3,38)-(3,46)
+(3,39)-(3,40)
+(3,43)-(3,45)
+(3,50)-(3,60)
+(3,51)-(3,59)
+(3,51)-(3,52)
+(3,57)-(3,59)
+(5,11)-(5,34)
+(5,15)-(5,34)
+(5,15)-(5,26)
+(5,27)-(5,34)
+(5,28)-(5,31)
+(5,32)-(5,33)
+(7,16)-(7,70)
+(7,21)-(7,70)
+(7,27)-(7,29)
+(7,43)-(7,44)
+(7,55)-(7,70)
+(7,55)-(7,56)
+(7,59)-(7,70)
+(7,60)-(7,67)
+(7,68)-(7,69)
+(9,28)-(14,75)
+(9,35)-(14,75)
+(10,2)-(14,75)
+(10,5)-(10,16)
+(10,5)-(10,11)
+(10,14)-(10,16)
+(11,7)-(11,26)
+(11,8)-(11,17)
+(11,19)-(11,25)
+(13,4)-(14,75)
+(13,14)-(13,27)
+(13,14)-(13,20)
+(13,21)-(13,27)
+(14,5)-(14,74)
+(14,18)-(14,28)
+(14,18)-(14,25)
+(14,26)-(14,28)
+(14,32)-(14,74)
+(14,32)-(14,51)
+(14,52)-(14,58)
+(14,59)-(14,74)
+(14,60)-(14,69)
+(14,72)-(14,73)
+(16,28)-(16,76)
+(16,32)-(16,76)
+(16,44)-(16,71)
+(16,44)-(16,63)
+(16,64)-(16,71)
+(16,65)-(16,68)
+(16,69)-(16,70)
+(16,75)-(16,76)
 *)

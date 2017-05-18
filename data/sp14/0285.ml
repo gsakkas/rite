@@ -5,12 +5,13 @@ let rec listReverse l =
 
 (* fix
 
-let rec listReverse l = match l with | [] -> [] | h::t -> listReverse t;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> h :: (listReverse t);;
 
 *)
 
 (* changed spans
-(3,36)-(3,56)
+(3,36)-(3,51)
 (3,55)-(3,56)
 *)
 

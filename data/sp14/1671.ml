@@ -1,40 +1,62 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList List.tl xs);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin ((eval e1), x, y);;
 
 
 (* fix
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList (List.tl xs));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
 
 *)
 
 (* changed spans
-(3,40)-(3,60)
-(3,49)-(3,56)
+(12,58)-(12,75)
+(12,65)-(12,67)
 *)
 
 (* type error slice
-(2,3)-(3,62)
-(2,16)-(3,60)
-(3,2)-(3,60)
-(3,2)-(3,60)
-(3,8)-(3,10)
-(3,40)-(3,60)
-(3,41)-(3,48)
-(3,49)-(3,56)
+(11,3)-(12,77)
+(11,14)-(12,75)
+(12,2)-(12,75)
+(12,54)-(12,57)
+(12,54)-(12,75)
+(12,58)-(12,75)
+(12,59)-(12,68)
+(12,60)-(12,64)
+(12,65)-(12,67)
 *)
 
 (* all spans
-(2,16)-(3,60)
-(3,2)-(3,60)
-(3,8)-(3,10)
-(3,24)-(3,25)
-(3,36)-(3,60)
-(3,36)-(3,37)
-(3,40)-(3,60)
-(3,41)-(3,48)
-(3,49)-(3,56)
-(3,57)-(3,59)
+(11,14)-(12,75)
+(12,2)-(12,75)
+(12,8)-(12,9)
+(12,26)-(12,27)
+(12,39)-(12,40)
+(12,54)-(12,75)
+(12,54)-(12,57)
+(12,58)-(12,75)
+(12,59)-(12,68)
+(12,60)-(12,64)
+(12,65)-(12,67)
+(12,70)-(12,71)
+(12,73)-(12,74)
 *)

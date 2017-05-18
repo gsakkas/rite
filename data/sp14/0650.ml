@@ -30,7 +30,7 @@ let bigMul l1 l2 =
   let f a x =
     let (l1',a') = a in
     match x with | [] -> a' | h::t -> bigAdd ((mulByDigit (h l1')) a') in
-  let base = (l1, []) in
+  let base = (l1, [0]) in
   let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 
@@ -81,6 +81,8 @@ let bigMul l1 l2 =
 (32,46)-(32,66)
 (32,58)-(32,65)
 (32,59)-(32,60)
+(33,18)-(33,21)
+(33,19)-(33,20)
 *)
 
 (* type error slice
@@ -299,9 +301,10 @@ let bigMul l1 l2 =
 (32,61)-(32,64)
 (32,67)-(32,69)
 (33,2)-(34,75)
-(33,13)-(33,21)
+(33,13)-(33,22)
 (33,14)-(33,16)
-(33,18)-(33,20)
+(33,18)-(33,21)
+(33,19)-(33,20)
 (34,2)-(34,75)
 (34,13)-(34,24)
 (34,13)-(34,21)

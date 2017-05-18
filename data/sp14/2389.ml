@@ -1,102 +1,50 @@
 
-let rec digitsOfIntHelper n =
-  if n > 0 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [];;
+let rec digOfIntHelper h = match h > 0 with | true  -> 1 | false  -> 0;;
 
-let rec digitsOfInt n = if n == 0 then [0] else digitsOfIntHelper n;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | x::s -> x + (sumList s);;
-
-let rec additivePersistence n =
-  if n = 0 then 0 else 1 + (additivePersistence sumList (digits n));;
+let rec digitsOfInt n =
+  match n > 0 with | true  -> [digOfIntHelper; n mod 10] | false  -> [];;
 
 
 (* fix
 
-let rec digitsOfIntHelper n =
-  if n > 0 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [];;
+let rec digOfIntHelper h = match h > 0 with | true  -> 1 | false  -> 0;;
 
-let rec digitsOfInt n = if n == 0 then [0] else digitsOfIntHelper n;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | x::s -> x + (sumList s);;
-
-let rec additivePersistence n =
-  if n = 0 then 0 else 1 + (additivePersistence (sumList (digits n)));;
+let rec digitsOfInt n =
+  match n > 0 with | true  -> [digOfIntHelper n; n mod 10] | false  -> [];;
 
 *)
 
 (* changed spans
-(12,27)-(12,67)
-(12,48)-(12,55)
+(5,31)-(5,45)
+(5,47)-(5,55)
 *)
 
 (* type error slice
-(11,3)-(12,69)
-(11,28)-(12,67)
-(12,2)-(12,67)
-(12,16)-(12,17)
-(12,27)-(12,67)
-(12,28)-(12,47)
+(2,3)-(2,72)
+(2,23)-(2,70)
+(5,30)-(5,56)
+(5,30)-(5,56)
+(5,31)-(5,45)
+(5,47)-(5,55)
 *)
 
 (* all spans
-(2,26)-(3,65)
-(3,2)-(3,65)
-(3,5)-(3,10)
-(3,5)-(3,6)
-(3,9)-(3,10)
-(3,16)-(3,57)
-(3,45)-(3,46)
-(3,16)-(3,44)
-(3,17)-(3,34)
-(3,35)-(3,43)
-(3,36)-(3,37)
-(3,40)-(3,42)
-(3,47)-(3,57)
-(3,48)-(3,56)
-(3,48)-(3,49)
-(3,54)-(3,56)
-(3,63)-(3,65)
-(5,20)-(5,67)
-(5,24)-(5,67)
-(5,27)-(5,33)
-(5,27)-(5,28)
-(5,32)-(5,33)
-(5,39)-(5,42)
-(5,40)-(5,41)
-(5,48)-(5,67)
-(5,48)-(5,65)
-(5,66)-(5,67)
-(7,11)-(7,34)
-(7,15)-(7,34)
-(7,15)-(7,26)
-(7,27)-(7,34)
-(7,28)-(7,31)
-(7,32)-(7,33)
-(9,16)-(9,70)
-(9,21)-(9,70)
-(9,27)-(9,29)
-(9,43)-(9,44)
-(9,55)-(9,70)
-(9,55)-(9,56)
-(9,59)-(9,70)
-(9,60)-(9,67)
-(9,68)-(9,69)
-(11,28)-(12,67)
-(12,2)-(12,67)
-(12,5)-(12,10)
-(12,5)-(12,6)
-(12,9)-(12,10)
-(12,16)-(12,17)
-(12,23)-(12,67)
-(12,23)-(12,24)
-(12,27)-(12,67)
-(12,28)-(12,47)
-(12,48)-(12,55)
-(12,56)-(12,66)
-(12,57)-(12,63)
-(12,64)-(12,65)
+(2,23)-(2,70)
+(2,27)-(2,70)
+(2,33)-(2,38)
+(2,33)-(2,34)
+(2,37)-(2,38)
+(2,55)-(2,56)
+(2,69)-(2,70)
+(4,20)-(5,71)
+(5,2)-(5,71)
+(5,8)-(5,13)
+(5,8)-(5,9)
+(5,12)-(5,13)
+(5,30)-(5,56)
+(5,31)-(5,45)
+(5,47)-(5,55)
+(5,47)-(5,48)
+(5,53)-(5,55)
+(5,69)-(5,71)
 *)

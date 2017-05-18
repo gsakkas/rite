@@ -9,7 +9,7 @@ let rec digitsOfInt n =
 
 let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec additivePersistence n = if (sumList (digitsOfInt n)) > 9 then 1;;
+let rec additivePersistence n = if (sumList (digitsOfInt n)) > 9 then 2;;
 
 
 (* fix

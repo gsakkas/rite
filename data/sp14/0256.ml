@@ -9,8 +9,9 @@ let rec digitsOfInt n =
 
 let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec additivePersistence n =
-  if n > 9 then (additivePersistence sumList (digitsOfInt n)) + 1 else 0;;
+let rec digitalRoot n =
+  if (sumList (digitsOfInt n)) > 9
+  then sumList (digitsOfInt (sumList (digitsOfInt n)));;
 
 
 (* fix
@@ -25,23 +26,26 @@ let rec digitsOfInt n =
 
 let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec additivePersistence n =
-  if n > 9 then (additivePersistence (sumList (digitsOfInt n))) + 1 else 0;;
+let rec digitalRoot n =
+  if (sumList (digitsOfInt n)) > 9
+  then sumList (digitsOfInt (sumList (digitsOfInt n)))
+  else 0;;
 
 *)
 
 (* changed spans
-(13,16)-(13,61)
-(13,37)-(13,44)
+(13,2)-(14,54)
 *)
 
 (* type error slice
-(12,3)-(13,74)
-(12,28)-(13,72)
-(13,2)-(13,72)
-(13,16)-(13,61)
-(13,16)-(13,65)
-(13,17)-(13,36)
+(10,55)-(10,70)
+(10,59)-(10,70)
+(10,60)-(10,67)
+(13,2)-(14,54)
+(13,2)-(14,54)
+(13,2)-(14,54)
+(14,7)-(14,14)
+(14,7)-(14,54)
 *)
 
 (* all spans
@@ -84,18 +88,23 @@ let rec additivePersistence n =
 (10,59)-(10,70)
 (10,60)-(10,67)
 (10,68)-(10,69)
-(12,28)-(13,72)
-(13,2)-(13,72)
-(13,5)-(13,10)
-(13,5)-(13,6)
-(13,9)-(13,10)
-(13,16)-(13,65)
-(13,16)-(13,61)
-(13,17)-(13,36)
-(13,37)-(13,44)
-(13,45)-(13,60)
-(13,46)-(13,57)
-(13,58)-(13,59)
-(13,64)-(13,65)
-(13,71)-(13,72)
+(12,20)-(14,54)
+(13,2)-(14,54)
+(13,5)-(13,34)
+(13,5)-(13,30)
+(13,6)-(13,13)
+(13,14)-(13,29)
+(13,15)-(13,26)
+(13,27)-(13,28)
+(13,33)-(13,34)
+(14,7)-(14,54)
+(14,7)-(14,14)
+(14,15)-(14,54)
+(14,16)-(14,27)
+(14,28)-(14,53)
+(14,29)-(14,36)
+(14,37)-(14,52)
+(14,38)-(14,49)
+(14,50)-(14,51)
+(13,2)-(14,54)
 *)

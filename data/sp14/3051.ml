@@ -1,75 +1,115 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = "" in
-      let l = [(fun x  -> x ^ sep)] in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth < 1
+  then let base = rand 0 2 in match base with | 0 -> buildX | 1 -> buildY;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = "" in let l = sl in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth < 1
+  then
+    let base = rand (0, 2) in
+    match base with
+    | 0 -> buildX ()
+    | 1 -> buildY ()
+    | _ -> (if base < 0 then buildX () else buildY ())
+  else
+    (let recurse = rand (0, 5) in
+     match recurse with
+     | 0 -> buildSine (build (rand, (depth - 1)))
+     | 1 -> buildCosine (build (rand, (depth - 1)))
+     | 2 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 3 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 4 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ ->
+         if recurse > 2
+         then build (rand, (depth - 1))
+         else build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(8,14)-(8,35)
-(8,15)-(8,34)
-(8,26)-(8,27)
-(8,26)-(8,33)
-(8,28)-(8,29)
-(8,30)-(8,33)
+(11,11)-(11,20)
+(17,18)-(17,26)
+(17,23)-(17,24)
+(17,30)-(17,73)
+(17,53)-(17,59)
+(17,67)-(17,73)
 *)
 
 (* type error slice
-(6,6)-(8,62)
-(6,12)-(6,23)
-(6,14)-(6,23)
-(6,18)-(6,19)
-(6,18)-(6,23)
-(6,20)-(6,21)
-(8,6)-(8,62)
-(8,14)-(8,35)
-(8,14)-(8,35)
-(8,15)-(8,34)
-(8,39)-(8,53)
-(8,39)-(8,62)
-(8,54)-(8,55)
-(8,61)-(8,62)
+(11,3)-(11,22)
+(11,11)-(11,20)
+(16,2)-(17,73)
+(16,2)-(17,73)
+(16,2)-(17,73)
+(17,7)-(17,73)
+(17,30)-(17,73)
+(17,53)-(17,59)
 *)
 
 (* all spans
-(2,18)-(8,62)
-(2,22)-(8,62)
-(3,2)-(8,62)
-(3,8)-(3,10)
-(4,10)-(4,12)
-(6,6)-(8,62)
-(6,12)-(6,23)
-(6,14)-(6,23)
-(6,18)-(6,23)
-(6,20)-(6,21)
-(6,18)-(6,19)
-(6,22)-(6,23)
-(7,6)-(8,62)
-(7,17)-(7,19)
-(8,6)-(8,62)
-(8,14)-(8,35)
-(8,15)-(8,34)
-(8,26)-(8,33)
-(8,28)-(8,29)
-(8,26)-(8,27)
-(8,30)-(8,33)
-(8,39)-(8,62)
-(8,39)-(8,53)
-(8,54)-(8,55)
-(8,56)-(8,60)
-(8,61)-(8,62)
+(11,11)-(11,20)
+(11,16)-(11,20)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,15)-(17,73)
+(16,2)-(17,73)
+(16,5)-(16,14)
+(16,5)-(16,10)
+(16,13)-(16,14)
+(17,7)-(17,73)
+(17,18)-(17,26)
+(17,18)-(17,22)
+(17,23)-(17,24)
+(17,25)-(17,26)
+(17,30)-(17,73)
+(17,36)-(17,40)
+(17,53)-(17,59)
+(17,67)-(17,73)
+(16,2)-(17,73)
 *)

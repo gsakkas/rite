@@ -1,56 +1,57 @@
 
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then a;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = "" in
+      let base = sepConcat sep t in let l = "" in List.fold_left f base l;;
 
 
 (* fix
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
-
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if a < b
-  then ((List.append (clone 0 (b - a)) l1), l2)
-  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = sepConcat sep t in let l = t in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(2,12)-(3,69)
-(3,54)-(3,69)
-(3,68)-(3,69)
+(6,18)-(6,20)
+(7,6)-(7,73)
+(7,44)-(7,46)
 *)
 
 (* type error slice
-(3,2)-(3,69)
-(3,14)-(3,50)
-(3,15)-(3,31)
-(3,16)-(3,27)
-(3,54)-(3,69)
-(3,54)-(3,69)
-(3,54)-(3,69)
-(3,68)-(3,69)
+(7,36)-(7,73)
+(7,44)-(7,46)
+(7,50)-(7,64)
+(7,50)-(7,73)
+(7,72)-(7,73)
 *)
 
 (* all spans
-(2,12)-(3,69)
-(2,15)-(3,69)
-(3,2)-(3,69)
-(3,14)-(3,50)
-(3,15)-(3,31)
-(3,16)-(3,27)
-(3,28)-(3,30)
-(3,33)-(3,49)
-(3,34)-(3,45)
-(3,46)-(3,48)
-(3,54)-(3,69)
-(3,57)-(3,62)
-(3,57)-(3,58)
-(3,61)-(3,62)
-(3,68)-(3,69)
-(3,54)-(3,69)
+(2,18)-(7,73)
+(2,22)-(7,73)
+(3,2)-(7,73)
+(3,8)-(3,10)
+(4,10)-(4,12)
+(6,6)-(7,73)
+(6,12)-(6,20)
+(6,14)-(6,20)
+(6,18)-(6,20)
+(7,6)-(7,73)
+(7,17)-(7,32)
+(7,17)-(7,26)
+(7,27)-(7,30)
+(7,31)-(7,32)
+(7,36)-(7,73)
+(7,44)-(7,46)
+(7,50)-(7,73)
+(7,50)-(7,64)
+(7,65)-(7,66)
+(7,67)-(7,71)
+(7,72)-(7,73)
 *)

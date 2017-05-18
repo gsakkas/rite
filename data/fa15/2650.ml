@@ -1,55 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine i -> "sin" ^ i;;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | h::t -> let (a,b) = h in if a = k then b else assoc t;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine i -> "sin" ^ (exprToString i);;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | h::t -> let (a,b) = h in if a = k then b else assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(12,65)-(12,66)
+(5,56)-(5,57)
 *)
 
 (* type error slice
-(12,2)-(12,66)
-(12,57)-(12,66)
-(12,63)-(12,64)
-(12,65)-(12,66)
+(2,3)-(5,59)
+(2,15)-(5,57)
+(3,2)-(5,57)
+(3,2)-(5,57)
+(3,8)-(3,9)
+(5,50)-(5,55)
+(5,50)-(5,57)
+(5,56)-(5,57)
 *)
 
 (* all spans
-(11,21)-(12,66)
-(12,2)-(12,66)
-(12,8)-(12,9)
-(12,26)-(12,29)
-(12,41)-(12,44)
-(12,57)-(12,66)
-(12,63)-(12,64)
-(12,57)-(12,62)
-(12,65)-(12,66)
+(2,15)-(5,57)
+(3,2)-(5,57)
+(3,8)-(3,9)
+(4,10)-(4,11)
+(5,12)-(5,57)
+(5,24)-(5,25)
+(5,29)-(5,57)
+(5,32)-(5,37)
+(5,32)-(5,33)
+(5,36)-(5,37)
+(5,43)-(5,44)
+(5,50)-(5,57)
+(5,50)-(5,55)
+(5,56)-(5,57)
 *)

@@ -4,7 +4,7 @@ let rec sepConcat sep sl =
   | [] -> ""
   | h::t ->
       let f a x = a @ sep in
-      let base = h in let l = t in List.fold_left f base l;;
+      let base = t in let l = h in List.fold_left f base l;;
 
 
 (* fix
@@ -20,6 +20,9 @@ let rec sepConcat sep sl =
 
 (* changed spans
 (6,20)-(6,21)
+(7,17)-(7,18)
+(7,22)-(7,58)
+(7,35)-(7,58)
 *)
 
 (* type error slice

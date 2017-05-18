@@ -1,29 +1,14 @@
 
-let rec clone x n =
-  let rec clonehelper tx tn =
-    match tn = 0 with
-    | true  -> []
-    | false  -> tx :: (clonehelper tx (tn - 1)) in
-  clonehelper x (abs n);;
-
-let padZero l1 l2 =
-  match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
-
-let rec removeZero l =
-  let rec removeZH templ =
-    match templ with
-    | [] -> []
-    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
-  removeZH l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = () in
-    let base = ([], []) in
-    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let bigMul l1 l2 =
+  let f a x = l1 in
+  let base = ([], 1) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> (x, 0)
+      | hd::tl -> List.append (x, hd) (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
@@ -37,8 +22,10 @@ let rec clone x n =
 
 let padZero l1 l2 =
   match (List.length l1) > (List.length l2) with
-  | true  -> (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  | false  -> (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
 
 let rec removeZero l =
   let rec removeZH templ =
@@ -50,153 +37,115 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let carry = match a with | (x,y) -> x in
       match x with
       | (addend_a,addend_b) ->
-          let new_carry = ((carry + addend_a) + addend_b) / 10 in
-          let digit = ((carry + addend_a) + addend_b) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
+
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let (l2digit2,templ12) = a in
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (templ12 @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
+
 *)
 
 (* changed spans
-(23,16)-(23,18)
-(24,4)-(25,74)
-(24,16)-(24,18)
-(25,15)-(25,23)
-(25,16)-(25,18)
+(2,11)-(11,49)
+(3,2)-(11,49)
+(3,14)-(3,16)
+(4,2)-(11,49)
+(4,14)-(4,16)
+(4,18)-(4,19)
+(8,14)-(8,20)
+(8,15)-(8,16)
+(8,18)-(8,19)
+(9,18)-(9,29)
+(9,18)-(9,53)
+(9,31)-(9,32)
+(9,38)-(9,53)
 *)
 
 (* type error slice
-(23,4)-(25,74)
-(23,10)-(23,18)
-(23,12)-(23,18)
-(23,16)-(23,18)
-(24,4)-(25,74)
-(24,15)-(24,23)
-(25,41)-(25,55)
-(25,41)-(25,67)
-(25,56)-(25,57)
-(25,58)-(25,62)
+(6,4)-(10,18)
+(6,21)-(9,53)
+(6,23)-(9,53)
+(7,6)-(9,53)
+(8,14)-(8,20)
+(9,18)-(9,29)
+(9,18)-(9,53)
+(9,30)-(9,37)
+(9,38)-(9,53)
+(9,39)-(9,47)
 *)
 
 (* all spans
-(2,14)-(7,23)
-(2,16)-(7,23)
-(3,2)-(7,23)
-(3,22)-(6,47)
-(3,25)-(6,47)
-(4,4)-(6,47)
-(4,10)-(4,16)
-(4,10)-(4,12)
-(4,15)-(4,16)
-(5,15)-(5,17)
-(6,16)-(6,47)
-(6,16)-(6,18)
-(6,22)-(6,47)
-(6,23)-(6,34)
-(6,35)-(6,37)
-(6,38)-(6,46)
-(6,39)-(6,41)
-(6,44)-(6,45)
-(7,2)-(7,23)
-(7,2)-(7,13)
-(7,14)-(7,15)
-(7,16)-(7,23)
-(7,17)-(7,20)
-(7,21)-(7,22)
-(9,12)-(12,74)
-(9,15)-(12,74)
-(10,2)-(12,74)
-(10,8)-(10,43)
-(10,8)-(10,24)
-(10,9)-(10,20)
-(10,21)-(10,23)
-(10,27)-(10,43)
-(10,28)-(10,39)
-(10,40)-(10,42)
-(11,13)-(11,73)
-(11,14)-(11,16)
-(11,18)-(11,72)
-(11,67)-(11,68)
-(11,19)-(11,66)
-(11,20)-(11,25)
-(11,26)-(11,27)
-(11,28)-(11,65)
-(11,29)-(11,45)
-(11,30)-(11,41)
-(11,42)-(11,44)
-(11,48)-(11,64)
-(11,49)-(11,60)
-(11,61)-(11,63)
-(11,69)-(11,71)
-(12,14)-(12,74)
-(12,15)-(12,69)
-(12,64)-(12,65)
-(12,16)-(12,63)
-(12,17)-(12,22)
-(12,23)-(12,24)
-(12,25)-(12,62)
-(12,26)-(12,42)
-(12,27)-(12,38)
-(12,39)-(12,41)
-(12,45)-(12,61)
-(12,46)-(12,57)
-(12,58)-(12,60)
-(12,66)-(12,68)
-(12,71)-(12,73)
-(14,19)-(19,12)
-(15,2)-(19,12)
-(15,19)-(18,56)
-(16,4)-(18,56)
-(16,10)-(16,15)
-(17,12)-(17,14)
-(18,16)-(18,56)
-(18,19)-(18,25)
-(18,19)-(18,21)
-(18,24)-(18,25)
-(18,31)-(18,42)
-(18,31)-(18,39)
-(18,40)-(18,42)
-(18,48)-(18,56)
-(18,48)-(18,50)
-(18,54)-(18,56)
-(19,2)-(19,12)
-(19,2)-(19,10)
-(19,11)-(19,12)
-(21,11)-(26,34)
-(21,14)-(26,34)
-(22,2)-(26,34)
-(22,11)-(25,74)
-(23,4)-(25,74)
-(23,10)-(23,18)
-(23,12)-(23,18)
-(23,16)-(23,18)
-(24,4)-(25,74)
-(24,15)-(24,23)
-(24,16)-(24,18)
-(24,20)-(24,22)
-(25,4)-(25,74)
-(25,15)-(25,23)
-(25,16)-(25,18)
-(25,20)-(25,22)
-(25,27)-(25,74)
-(25,41)-(25,67)
-(25,41)-(25,55)
-(25,56)-(25,57)
-(25,58)-(25,62)
-(25,63)-(25,67)
-(25,71)-(25,74)
-(26,2)-(26,34)
-(26,2)-(26,12)
-(26,13)-(26,34)
-(26,14)-(26,17)
-(26,18)-(26,33)
-(26,19)-(26,26)
-(26,27)-(26,29)
-(26,30)-(26,32)
+(2,11)-(11,49)
+(2,14)-(11,49)
+(3,2)-(11,49)
+(3,8)-(3,16)
+(3,10)-(3,16)
+(3,14)-(3,16)
+(4,2)-(11,49)
+(4,13)-(4,20)
+(4,14)-(4,16)
+(4,18)-(4,19)
+(5,2)-(11,49)
+(6,4)-(10,18)
+(6,21)-(9,53)
+(6,23)-(9,53)
+(7,6)-(9,53)
+(7,12)-(7,13)
+(8,14)-(8,20)
+(8,15)-(8,16)
+(8,18)-(8,19)
+(9,18)-(9,53)
+(9,18)-(9,29)
+(9,30)-(9,37)
+(9,31)-(9,32)
+(9,34)-(9,36)
+(9,38)-(9,53)
+(9,39)-(9,47)
+(9,48)-(9,49)
+(9,50)-(9,52)
+(10,4)-(10,18)
+(10,4)-(10,12)
+(10,13)-(10,15)
+(10,16)-(10,18)
+(11,2)-(11,49)
+(11,16)-(11,42)
+(11,16)-(11,30)
+(11,31)-(11,32)
+(11,33)-(11,37)
+(11,38)-(11,42)
+(11,46)-(11,49)
 *)

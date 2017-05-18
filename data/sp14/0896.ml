@@ -11,8 +11,8 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = x in
-    let base = [] in
+    let f a x = (a, x) in
+    let base = ([], []) in
     let args = [] in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
@@ -31,7 +31,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = x in
+    let f a x = a in
     let base = ([], []) in
     let args = [] in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -39,17 +39,19 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,15)-(15,17)
-(16,4)-(16,68)
+(14,16)-(14,22)
+(14,20)-(14,21)
 *)
 
 (* type error slice
-(15,4)-(16,68)
-(15,15)-(15,17)
-(16,21)-(16,68)
+(14,4)-(16,68)
+(14,10)-(14,22)
+(14,12)-(14,22)
+(14,16)-(14,22)
+(14,17)-(14,18)
 (16,35)-(16,49)
 (16,35)-(16,61)
-(16,52)-(16,56)
+(16,50)-(16,51)
 *)
 
 (* all spans
@@ -114,11 +116,15 @@ let bigAdd l1 l2 =
 (13,2)-(17,34)
 (13,11)-(16,68)
 (14,4)-(16,68)
-(14,10)-(14,17)
-(14,12)-(14,17)
-(14,16)-(14,17)
+(14,10)-(14,22)
+(14,12)-(14,22)
+(14,16)-(14,22)
+(14,17)-(14,18)
+(14,20)-(14,21)
 (15,4)-(16,68)
-(15,15)-(15,17)
+(15,15)-(15,23)
+(15,16)-(15,18)
+(15,20)-(15,22)
 (16,4)-(16,68)
 (16,15)-(16,17)
 (16,21)-(16,68)

@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/random-forest,sp14,op+context+type,random-forest,0.710,0.836,0.887,0.663,2709
+op+context+type/random-forest,sp14,op+context+type,random-forest,0.717,0.840,0.890,0.667,2709

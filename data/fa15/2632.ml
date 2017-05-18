@@ -1,40 +1,55 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ (n mod 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with | VarX  -> "x" | VarY  -> "y" | Sine i -> "sin" ^ i;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine i -> "sin" ^ (exprToString i);;
 
 *)
 
 (* changed spans
-(3,50)-(3,60)
+(12,65)-(12,66)
 *)
 
 (* type error slice
-(3,25)-(3,60)
-(3,48)-(3,49)
-(3,50)-(3,60)
+(12,2)-(12,66)
+(12,57)-(12,66)
+(12,63)-(12,64)
+(12,65)-(12,66)
 *)
 
 (* all spans
-(2,20)-(3,60)
-(3,2)-(3,60)
-(3,5)-(3,11)
-(3,5)-(3,6)
-(3,10)-(3,11)
-(3,17)-(3,19)
-(3,25)-(3,60)
-(3,48)-(3,49)
-(3,25)-(3,47)
-(3,26)-(3,37)
-(3,38)-(3,46)
-(3,39)-(3,40)
-(3,43)-(3,45)
-(3,50)-(3,60)
-(3,51)-(3,52)
-(3,57)-(3,59)
+(11,21)-(12,66)
+(12,2)-(12,66)
+(12,8)-(12,9)
+(12,26)-(12,29)
+(12,41)-(12,44)
+(12,57)-(12,66)
+(12,63)-(12,64)
+(12,57)-(12,62)
+(12,65)-(12,66)
 *)

@@ -1,58 +1,68 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = "" in let l = "" in List.fold_left f base l;;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec additivePersistence n =
+  if n < 10 then 0 else 1 + (additivePersistence (sumList n));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = "" in let l = [] in List.fold_left f base l;;
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+
+let rec digitsOfInt n =
+  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n - ((n / 10) * 10)];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec additivePersistence n =
+  if n < 10 then 0 else 1 + (additivePersistence (sumList (digits n)));;
 
 *)
 
 (* changed spans
-(7,31)-(7,33)
+(2,16)-(2,74)
+(5,58)-(5,59)
 *)
 
 (* type error slice
-(7,23)-(7,60)
-(7,31)-(7,33)
-(7,37)-(7,51)
-(7,37)-(7,60)
-(7,59)-(7,60)
+(2,21)-(2,74)
+(2,21)-(2,74)
+(2,62)-(2,74)
+(2,63)-(2,70)
+(2,71)-(2,73)
+(5,5)-(5,6)
+(5,5)-(5,11)
+(5,5)-(5,11)
+(5,9)-(5,11)
+(5,49)-(5,60)
+(5,50)-(5,57)
+(5,58)-(5,59)
 *)
 
 (* all spans
-(2,18)-(7,60)
-(2,22)-(7,60)
-(3,2)-(7,60)
-(3,8)-(3,10)
-(4,10)-(4,12)
-(6,6)-(7,60)
-(6,12)-(6,31)
-(6,14)-(6,31)
-(6,18)-(6,31)
-(6,20)-(6,21)
-(6,18)-(6,19)
-(6,22)-(6,31)
-(6,27)-(6,28)
-(6,23)-(6,26)
-(6,29)-(6,30)
-(7,6)-(7,60)
-(7,17)-(7,19)
-(7,23)-(7,60)
-(7,31)-(7,33)
-(7,37)-(7,60)
-(7,37)-(7,51)
-(7,52)-(7,53)
-(7,54)-(7,58)
-(7,59)-(7,60)
+(2,16)-(2,74)
+(2,21)-(2,74)
+(2,27)-(2,29)
+(2,43)-(2,44)
+(2,57)-(2,74)
+(2,57)-(2,59)
+(2,62)-(2,74)
+(2,63)-(2,70)
+(2,71)-(2,73)
+(4,28)-(5,61)
+(5,2)-(5,61)
+(5,5)-(5,11)
+(5,5)-(5,6)
+(5,9)-(5,11)
+(5,17)-(5,18)
+(5,24)-(5,61)
+(5,24)-(5,25)
+(5,28)-(5,61)
+(5,29)-(5,48)
+(5,49)-(5,60)
+(5,50)-(5,57)
+(5,58)-(5,59)
 *)

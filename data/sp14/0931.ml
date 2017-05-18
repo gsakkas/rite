@@ -11,7 +11,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = match x with | [] -> a | h::t -> a in
+    let f a x = match x with | [] -> a in
     let base = (0, []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
@@ -32,7 +32,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = a in
+    let f a x = match x with | (_,_) -> a in
     let base = (0, []) in
     let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
@@ -41,17 +41,15 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,16)-(14,50)
-(14,22)-(14,23)
-(14,49)-(14,50)
+(14,16)-(14,38)
 *)
 
 (* type error slice
 (14,4)-(17,51)
-(14,10)-(14,50)
-(14,12)-(14,50)
-(14,16)-(14,50)
-(14,16)-(14,50)
+(14,10)-(14,38)
+(14,12)-(14,38)
+(14,16)-(14,38)
+(14,16)-(14,38)
 (14,22)-(14,23)
 (16,4)-(17,51)
 (16,15)-(16,27)
@@ -124,12 +122,11 @@ let bigAdd l1 l2 =
 (13,2)-(18,34)
 (13,11)-(17,51)
 (14,4)-(17,51)
-(14,10)-(14,50)
-(14,12)-(14,50)
-(14,16)-(14,50)
+(14,10)-(14,38)
+(14,12)-(14,38)
+(14,16)-(14,38)
 (14,22)-(14,23)
 (14,37)-(14,38)
-(14,49)-(14,50)
 (15,4)-(17,51)
 (15,15)-(15,22)
 (15,16)-(15,17)

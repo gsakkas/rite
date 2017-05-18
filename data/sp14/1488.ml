@@ -50,14 +50,14 @@ let rec mulByDigit i l =
 let bigMul l1 l2 =
   let f a x =
     match x with
-    | (templ1,l2digit) ->
+    | (l2digit,templ1) ->
         let multres = mulByDigit l2digit templ1 in bigAdd (a @ [0]) multres in
   let base = (0, []) in
   let args =
     let rec argmaker x y =
       match y with
       | [] -> []
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) :: (argmaker x tl) in
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
     argmaker l1 l2 in
   let (_,res) = List.fold_left f base args in res;;
 
@@ -131,14 +131,9 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(52,4)-(54,75)
 (54,8)-(54,75)
 (54,51)-(54,75)
 (54,59)-(54,60)
-(60,36)-(60,37)
-(60,49)-(60,75)
-(60,50)-(60,51)
-(60,60)-(60,75)
 *)
 
 (* type error slice
@@ -404,12 +399,12 @@ let bigMul l1 l2 =
 (60,26)-(60,28)
 (60,34)-(60,43)
 (60,35)-(60,42)
-(60,36)-(60,37)
-(60,39)-(60,41)
+(60,36)-(60,38)
+(60,40)-(60,41)
 (60,49)-(60,75)
 (60,49)-(60,56)
-(60,50)-(60,51)
-(60,53)-(60,55)
+(60,50)-(60,52)
+(60,54)-(60,55)
 (60,60)-(60,75)
 (60,61)-(60,69)
 (60,70)-(60,71)

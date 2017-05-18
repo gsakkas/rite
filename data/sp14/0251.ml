@@ -9,7 +9,7 @@ let rec digitsOfInt n =
 
 let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec additivePersistence n = if (sumList (digitsOfInt n)) > 9 then 2;;
+let rec additivePersistence n = if (sumList (digitsOfInt n)) > 9 then 20;;
 
 
 (* fix
@@ -30,15 +30,15 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(12,32)-(12,71)
-(12,70)-(12,71)
+(12,32)-(12,72)
+(12,70)-(12,72)
 *)
 
 (* type error slice
-(12,32)-(12,71)
-(12,32)-(12,71)
-(12,32)-(12,71)
-(12,70)-(12,71)
+(12,32)-(12,72)
+(12,32)-(12,72)
+(12,32)-(12,72)
+(12,70)-(12,72)
 *)
 
 (* all spans
@@ -81,8 +81,8 @@ let rec additivePersistence n =
 (10,59)-(10,70)
 (10,60)-(10,67)
 (10,68)-(10,69)
-(12,28)-(12,71)
-(12,32)-(12,71)
+(12,28)-(12,72)
+(12,32)-(12,72)
 (12,35)-(12,64)
 (12,35)-(12,60)
 (12,36)-(12,43)
@@ -90,6 +90,6 @@ let rec additivePersistence n =
 (12,45)-(12,56)
 (12,57)-(12,58)
 (12,63)-(12,64)
-(12,70)-(12,71)
-(12,32)-(12,71)
+(12,70)-(12,72)
+(12,32)-(12,72)
 *)

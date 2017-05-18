@@ -1,95 +1,71 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth <= 0
-  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ());;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem (h, seen)) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth <= 0
-  then let x = rand (1, 2) in (if x = 1 then buildX () else buildY ())
-  else
-    (let subtreeSize1 = if depth = 1 then 0 else rand (1, (depth - 1)) in
-     let subtreeSize2 = if depth = 1 then 0 else rand (1, (depth - 1)) in
-     let subtreeSize3 = if depth = 1 then 0 else rand (1, (depth - 1)) in
-     let subtreeeSize4 = if depth = 1 then 0 else rand (1, (depth - 1)) in
-     let x = rand (1, 5) in
-     match x with | _ -> buildSine (build (rand, subtreeSize1)));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(11,11)-(11,20)
-(16,2)-(17,70)
+(7,27)-(7,47)
+(7,37)-(7,46)
 *)
 
 (* type error slice
-(11,3)-(11,22)
-(11,11)-(11,20)
-(11,16)-(11,20)
-(16,2)-(17,70)
-(16,2)-(17,70)
-(16,2)-(17,70)
-(17,7)-(17,70)
-(17,30)-(17,70)
-(17,45)-(17,51)
-(17,45)-(17,54)
+(7,23)-(7,26)
+(7,23)-(7,47)
+(7,27)-(7,47)
+(7,28)-(7,36)
 *)
 
 (* all spans
-(11,11)-(11,20)
-(11,16)-(11,20)
-(13,11)-(13,20)
-(13,16)-(13,20)
-(15,15)-(17,70)
-(16,2)-(17,70)
-(16,5)-(16,15)
-(16,5)-(16,10)
-(16,14)-(16,15)
-(17,7)-(17,70)
-(17,15)-(17,26)
-(17,15)-(17,19)
-(17,20)-(17,26)
-(17,21)-(17,22)
-(17,24)-(17,25)
-(17,30)-(17,70)
-(17,34)-(17,39)
-(17,34)-(17,35)
-(17,38)-(17,39)
-(17,45)-(17,54)
-(17,45)-(17,51)
-(17,52)-(17,54)
-(17,60)-(17,69)
-(17,60)-(17,66)
-(17,67)-(17,69)
-(16,2)-(17,70)
+(2,21)-(9,27)
+(3,2)-(9,27)
+(3,18)-(8,46)
+(4,4)-(8,46)
+(4,10)-(4,14)
+(5,12)-(5,16)
+(7,8)-(8,46)
+(7,20)-(7,72)
+(7,23)-(7,47)
+(7,23)-(7,26)
+(7,27)-(7,47)
+(7,28)-(7,36)
+(7,37)-(7,46)
+(7,38)-(7,39)
+(7,41)-(7,45)
+(7,53)-(7,62)
+(7,53)-(7,54)
+(7,58)-(7,62)
+(7,68)-(7,72)
+(8,8)-(8,46)
+(8,20)-(8,21)
+(8,25)-(8,46)
+(8,25)-(8,31)
+(8,32)-(8,46)
+(8,33)-(8,38)
+(8,40)-(8,45)
+(9,2)-(9,27)
+(9,2)-(9,10)
+(9,11)-(9,27)
+(9,12)-(9,18)
+(9,19)-(9,26)
+(9,20)-(9,22)
+(9,24)-(9,25)
 *)

@@ -11,7 +11,7 @@ let rec removeZero l =
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x = a + x in
+    let f a x = a + 1 in
     let base = ([], []) in
     let args = [] in let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

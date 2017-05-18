@@ -1,62 +1,76 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> sin (exprToString ex);;
+let fixpoint (f,b) =
+  wwhile (let g x = let bb = f b in (bb, (bb = b)) in (f, b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin" ^ (exprToString ex);;
+let fixpoint (f,b) =
+  wwhile (let g x = let bb = f b in (bb, (bb = b)) in (g, b));;
 
 *)
 
 (* changed spans
-(15,15)-(15,18)
-(15,15)-(15,36)
-(15,19)-(15,36)
+(6,55)-(6,56)
 *)
 
 (* type error slice
-(12,2)-(15,36)
-(12,2)-(15,36)
-(13,13)-(13,16)
-(15,15)-(15,18)
-(15,15)-(15,36)
+(3,2)-(3,63)
+(3,8)-(3,9)
+(3,8)-(3,11)
+(3,50)-(3,56)
+(3,50)-(3,63)
+(3,57)-(3,63)
+(3,58)-(3,59)
+(3,61)-(3,62)
+(6,2)-(6,8)
+(6,2)-(6,61)
+(6,9)-(6,61)
+(6,20)-(6,50)
+(6,29)-(6,30)
+(6,29)-(6,32)
+(6,41)-(6,49)
+(6,41)-(6,49)
+(6,42)-(6,44)
+(6,47)-(6,48)
+(6,54)-(6,60)
+(6,55)-(6,56)
+(6,58)-(6,59)
 *)
 
 (* all spans
-(11,21)-(15,36)
-(12,2)-(15,36)
-(12,8)-(12,9)
-(13,13)-(13,16)
-(14,13)-(14,16)
-(15,15)-(15,36)
-(15,15)-(15,18)
-(15,19)-(15,36)
-(15,20)-(15,32)
-(15,33)-(15,35)
+(2,16)-(3,63)
+(3,2)-(3,63)
+(3,8)-(3,11)
+(3,8)-(3,9)
+(3,10)-(3,11)
+(3,33)-(3,34)
+(3,50)-(3,63)
+(3,50)-(3,56)
+(3,57)-(3,63)
+(3,58)-(3,59)
+(3,61)-(3,62)
+(5,14)-(6,61)
+(6,2)-(6,61)
+(6,2)-(6,8)
+(6,9)-(6,61)
+(6,16)-(6,50)
+(6,20)-(6,50)
+(6,29)-(6,32)
+(6,29)-(6,30)
+(6,31)-(6,32)
+(6,36)-(6,50)
+(6,37)-(6,39)
+(6,41)-(6,49)
+(6,42)-(6,44)
+(6,47)-(6,48)
+(6,54)-(6,60)
+(6,55)-(6,56)
+(6,58)-(6,59)
 *)

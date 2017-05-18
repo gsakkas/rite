@@ -15,7 +15,7 @@ let bigAdd l1 l2 =
     let f a x =
       let (x',x'') = x in
       let (c,s) = a in
-      if (List.length s) = (List.length a)
+      if (List.length x) = (List.length x)
       then (c, (c :: s))
       else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
@@ -53,12 +53,16 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
+(18,22)-(18,23)
 (18,40)-(18,41)
 *)
 
 (* type error slice
-(17,6)-(20,70)
-(17,18)-(17,19)
+(16,6)-(20,70)
+(16,21)-(16,22)
+(18,9)-(18,24)
+(18,10)-(18,21)
+(18,22)-(18,23)
 (18,27)-(18,42)
 (18,28)-(18,39)
 (18,40)-(18,41)

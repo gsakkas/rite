@@ -1,5 +1,5 @@
 
-let h x y = ((y x), (x < 100));;
+let h x b = ((b x), (x < 100));;
 
 let rec wwhile (f,b) =
   match f b with | (a,c) -> if not c then a else wwhile (f, a);;

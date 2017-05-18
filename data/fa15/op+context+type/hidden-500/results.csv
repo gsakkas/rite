@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.731,0.862,0.914,0.710,2283
+op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.735,0.869,0.915,0.706,2283

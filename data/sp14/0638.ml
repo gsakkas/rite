@@ -15,7 +15,7 @@ let bigAdd l1 l2 =
     let f a x =
       let (x',x'') = x in
       let (c,s) = a in
-      if (List.length s) = (List.length x)
+      if (List.length s) = (List.length a)
       then (c, (c :: s))
       else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
@@ -42,7 +42,7 @@ let bigAdd l1 l2 =
     let f a x =
       let (x',x'') = x in
       let (c,s) = a in
-      if (List.length s) = (List.length s)
+      if (List.length s) = (List.length l1)
       then (c, (c :: s))
       else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
@@ -57,8 +57,8 @@ let bigAdd l1 l2 =
 *)
 
 (* type error slice
-(16,6)-(20,70)
-(16,21)-(16,22)
+(17,6)-(20,70)
+(17,18)-(17,19)
 (18,27)-(18,42)
 (18,28)-(18,39)
 (18,40)-(18,41)

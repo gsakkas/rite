@@ -1,6 +1,6 @@
 
 let rec digitsOfInt n =
-  let myList = [] in if n <= 0 then [] else [digitsOfInt (n mod 10)];;
+  let myList = [] in if n <= 0 then [] else [(digitsOfInt n) mod 10];;
 
 
 (* fix
@@ -15,8 +15,9 @@ let rec digitsOfInt n =
 
 (* changed spans
 (3,44)-(3,68)
+(3,45)-(3,60)
 (3,45)-(3,67)
-(3,57)-(3,67)
+(3,58)-(3,59)
 *)
 
 (* type error slice
@@ -25,9 +26,9 @@ let rec digitsOfInt n =
 (3,2)-(3,68)
 (3,21)-(3,68)
 (3,44)-(3,68)
-(3,44)-(3,68)
-(3,45)-(3,56)
+(3,45)-(3,60)
 (3,45)-(3,67)
+(3,46)-(3,57)
 *)
 
 (* all spans
@@ -41,8 +42,8 @@ let rec digitsOfInt n =
 (3,36)-(3,38)
 (3,44)-(3,68)
 (3,45)-(3,67)
-(3,45)-(3,56)
-(3,57)-(3,67)
+(3,45)-(3,60)
+(3,46)-(3,57)
 (3,58)-(3,59)
-(3,64)-(3,66)
+(3,65)-(3,67)
 *)
