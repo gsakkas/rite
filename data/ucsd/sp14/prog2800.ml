@@ -1,2 +1,3 @@
 
-let stringOfList f l = failwith List.map (fun x  -> x ^ x) l;;
+let pipe fs =
+  let f a x l = l (x a) in let base p = p in List.fold_left f base fs;;

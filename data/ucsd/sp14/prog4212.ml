@@ -1,7 +1,5 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = "" in let l = sep in List.fold_left f base l;;
+let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
+
+let rec digitsOfInt n =
+  if n >= 10 then app (digitsOfInt (n / 10) [n mod 10]) else [n];;

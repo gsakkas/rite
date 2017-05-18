@@ -1,19 +1,4 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs = let f a x = x a in let base y = y in List.fold_left f base fs;;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let randNum = rand (1, 2) in
-  if randNum = 1 then buildSine (buildY ()) else buildCosine buildY;;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

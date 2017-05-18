@@ -1,3 +1,2 @@
 
-let rec additiveDestructor n =
-  (if n < 10 then n else (n / 10) additiveDestructor (n / 10) : int);;
+let pipe fs = let f a x = a x in let base y = y in List.fold_left f base fs;;

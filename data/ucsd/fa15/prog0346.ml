@@ -1,16 +1,8 @@
 
-let modulus ss = ss mod 10;;
+let rec wwhile (f,b) =
+  let i = b in
+  match f i with | (v_n,false ) -> v_n | (v_n,true ) -> wwhile (f, v_n);;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
-
-let lt10 q = q < 10;;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if lt10 n
-  then n
-  else (match n with | n -> let x_ = digitsOfInt n in [sumList x_]);;
+let fixpoint (f,b) =
+  let f' fo b' = if (fo b') = b' then (b', true) else ((fo b'), false) in
+  wwhile (f', b);;

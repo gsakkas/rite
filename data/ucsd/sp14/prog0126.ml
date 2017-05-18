@@ -1,3 +1,5 @@
 
-let rec digitsHelper n l =
-  if (n mod 10) = n then [] else (digitsHelper n) / (10 ((n mod 10) :: l));;
+let pipe fs =
+  let f a x g b = g b in let base x = x in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

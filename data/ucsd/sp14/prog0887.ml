@@ -1,6 +1,5 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
+let rec append list1 list2 =
+  match list1 with | [] -> list2 | x::xs -> x :: (append xs list2);;
 
-let fixpoint (f,b) =
-  wwhile (if b = (f b) then (b, false) else (((f b), true), b));;
+let _ = append [(2, 3, 4)] [1];;

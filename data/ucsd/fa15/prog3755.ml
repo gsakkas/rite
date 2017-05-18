@@ -1,2 +1,6 @@
 
-let sqsum xs = let f a x = a * a in let base = f in List.fold_left f base xs;;
+let pipe fs =
+  let f a x = List.map x a in
+  let base = [(fun x  -> x)] in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

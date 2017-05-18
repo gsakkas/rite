@@ -1,12 +1,12 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let x = List.mem h seen in
-        if x
-        then helper (seen, t)
-        else
-          (let seen' = seen :: h in let rest' = t in helper (seen', rest')) in
-  List.rev (helper ([], l));;
+let bigMul l1 l2 =
+  let f a x =
+    let (val1,val2) = x in
+    let (lastCarry,lastTupleMult) = a in
+    let tupleMult = (val1 * val2) + lastCarry in
+    let newCarry = tupleMult / 10 in
+    let nextDigit = tupleMult mod 10 in
+    (newCarry, (nextDigit :: lastTupleMult)) in
+  let base = (1, []) in
+  let args = List.rev ((List.combine 0) :: (l1 0) :: l2) in
+  let (_,res) = List.fold_left f base args in res;;

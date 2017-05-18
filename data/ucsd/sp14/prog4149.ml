@@ -1,9 +1,4 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+let pipe fs = let f a x = a + x in let base = 0 in List.fold_left f base fs;;
 
-let stringOfList f l = "[" ^ ((stringOfList (List.map f l)) ^ "]");;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

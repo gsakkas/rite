@@ -1,0 +1,2 @@
+
+let _ = let rec sumList xs = match xs with | [] -> 0 | h::t -> h + t in xs;;

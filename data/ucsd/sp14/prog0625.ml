@@ -1,13 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let pipe fs = let f a x = x a in let base y = y in List.fold_left f base fs;;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot xs pers =
-  let theSum = sumList xs in
-  if (sumList xs) < 10
-  then (pers, theSum)
-  else additivePersAndRoot ((digits theSum) (pers + 1));;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

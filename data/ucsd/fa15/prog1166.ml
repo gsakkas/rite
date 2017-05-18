@@ -1,5 +1,10 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then f h else f t;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let rec padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (padZero (clone 0 1)) @ (l1 l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (padZero l1 (clone 0 1)) @ l2
+    else (l1, l2);;

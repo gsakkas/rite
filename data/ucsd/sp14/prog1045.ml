@@ -1,7 +1,7 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let digitsOfInt n =
+  let rec loop n acc =
+    if n = 0 then acc else loop (n / 10) ((n mod 10) :: acc) in
+  match n with | 0 -> [0] | _ -> loop n [];;
 
-let fixpoint (f,b) = wwhile ((fun k  -> fun x  -> (f x) = x), b);;
+let _ = digitsOfInt - 345;;

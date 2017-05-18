@@ -1,13 +1,4 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs -> x + (sumList xs);;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) > 9 then sumList [1; 2];;
+let _ = sumList [1; 3; 5; 7; 9; 11] ((1 mod 10) :: 4);;

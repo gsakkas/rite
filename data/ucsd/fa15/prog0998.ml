@@ -1,11 +1,31 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem = h) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | TimesTimes of expr* expr* expr
+  | Cube of expr
+  | MultDivBy6 of expr* expr;;
 
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | TimesTimes (e1,e2,e3) ->
+      ((eval (e1, x, y)) *. (eval (e2, x, y))) *. (eval (e3, x, y))
+  | Cube e1 -> ((eval (e1, x, y)) *. (eval (e1, x, y))) *. (eval (e1, x, y))
+  | MultDivBy6 (e1,e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y))) /. 6;;

@@ -1,3 +1,5 @@
 
-let listReverse l =
-  let rec rev x = match x with | [] -> x | h::t -> rev (h :: x) t in rev [] l;;
+let rec clone x n =
+  if n <= 0
+  then []
+  else (match x with | [] -> x | h::t -> [clone t (n - 1); h]);;

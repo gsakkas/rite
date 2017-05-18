@@ -1,11 +1,8 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w =
-  if (listReverse explode w) = (explode w) then true else false;;
+let rec digitalRoot n =
+  if n <= 9
+  then n
+  else
+    (let rec r_digitalRoot n m =
+       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
+     match n with | 0 -> 123 | _ -> (r_digitalRoot n) - 1);;

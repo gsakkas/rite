@@ -1,4 +1,2 @@
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let _ = sumList [1.1];;
+let pipe fs = let f a x = a x in let base n = n in List.fold_left f base fs;;

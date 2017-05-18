@@ -1,19 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  (if n < 0
+   then []
+   else if n < 10 then [n] else (digitsOfInt (n / 10)) @ [n mod 10] : 
+  int list);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin (pi * " ^^ ((exprToString e1) ^^ ")")
-  | Cosine e1 -> "cos (pi * " ^^ ((exprToString e1) ^^ ")")
-  | Average (e1,e2) ->
-      "((" ^^ ((exprToString e1) ^^ (" + " ^^ ((exprToString e2) ^^ "/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^^ (" * " ^^ (exprToString e2));;
+let _ = digitsOfInt - 3124;;

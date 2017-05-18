@@ -1,9 +1,6 @@
 
-let assoc (d,k,l) =
-  let rec helper di ki li =
-    match li with
-    | h::t ->
-        (match h with
-         | hh::tt -> if hh = ki then di else helper di ki tt
-         | _ -> 0) in
-  helper d k l;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
+
+let fixpoint (f,b) =
+  wwhile (let g x = let bb = f b in (bb, (bb = b)) in (f, b));;

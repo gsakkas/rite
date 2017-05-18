@@ -1,2 +1,2 @@
 
-let _ = let n = 30 in n mod (10 n);;
+let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;

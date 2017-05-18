@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  (if n < 10 then [n] else (digitsOfInt (n / 10)) @ (n mod 10) : int list);;
+let pipe fs =
+  let f a x = match fs with | x::y -> x in
+  let base = [fs] in List.fold_left f base fs;;

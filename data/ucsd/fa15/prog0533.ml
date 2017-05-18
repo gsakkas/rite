@@ -1,4 +1,9 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> h @ [];;
+let rec lastListElement n =
+  match n with
+  | [] -> []
+  | x::[] -> x :: (lastListElement [])
+  | x::y -> lastListElement y;;
 
-let _ = listReverse [1; 2; 3; 4];;
+let rec catLists x y =
+  match x with | [] -> [] | h::t -> (catLists t [lastListElement x]) :: y;;

@@ -1,2 +1,3 @@
 
-let _ = (List.hd [[]; [1; 2; 3]]) = (List.hd [[]; ["a"]]);;
+let rec sumList xs =
+  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList List.tl xs);;
