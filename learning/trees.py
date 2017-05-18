@@ -1,9 +1,8 @@
 import math
 import os.path
-import random
 import sys
-random.seed()
 
+import sklearn
 from sklearn import tree, neural_network
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
@@ -18,10 +17,13 @@ if model not in ['mlp', 'decision-tree', 'random-forest']:
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
 
+RANDOM_SEED = 0
+prng=np.random.RandomState(RANDOM_SEED)
+
 train_csvs = [f for f in os.listdir(train_dir) if f.endswith('.csv')]
 test_csvs = [f for f in os.listdir(test_dir) if f.endswith('.csv')]
 
-random.shuffle(train_csvs)
+sklearn.utils.shuffle(train_csvs, random_state=prng)
 dfs = []
 test = []
 train = []
@@ -109,11 +111,12 @@ if model == 'mlp':
                 # solver='sgd',
                 # early_stopping=True,
                 # tol=0.0,
+                random_state=prng,
         )
 elif model == 'random-forest':
-        clf = RandomForestClassifier(n_estimators=30)
+        clf = RandomForestClassifier(n_estimators=30,random_state=prng)
 else:
-        clf = tree.DecisionTreeClassifier()
+        clf = tree.DecisionTreeClassifier(random_state=prng)
 clf = clf.fit(train_samps.values, train_labels.values)
 # print test_samps
 # print test_samps.values
