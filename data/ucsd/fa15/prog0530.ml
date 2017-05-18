@@ -1,5 +1,8 @@
 
-let rec listReverse l =
-  match l with | x::[] -> x | x::y -> (listReverse y) @ x;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let x = n mod 10
+        and n = n / 10 in (digitsOfInt n) @ [x]);;
 
-let _ = listReverse [1; 2; 3; 4];;
+let rec additivePersistence n = if n >= 10 then digitsOfInt n;;

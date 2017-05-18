@@ -1,4 +1,4 @@
 
-let pick_one n = if n > 0 then fun x  -> x + 1 else (fun x  -> x - 1);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let _ = pick_one - (5 6);;
+let fixpoint (f,b) = wwhile (f, ((f b) = b), b);;

@@ -1,2 +1,11 @@
 
-let rec digitsOfInt n = if n < 0 then [] else (digitsOfInt n) / 1;;
+let rec lastListElement n =
+  match n with
+  | [] -> []
+  | x::[] -> x :: (lastListElement [])
+  | x::y -> lastListElement y;;
+
+let rec catLists x y =
+  match x with | [] -> [] | h::t -> catLists t ((lastListElement x) :: y);;
+
+let _ = catLists [1] [2; 3; 4];;

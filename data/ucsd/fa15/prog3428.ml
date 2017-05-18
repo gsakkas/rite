@@ -1,4 +1,7 @@
 
-let rec append l r = match l with | [] -> [r] | h::t -> h :: (append t r);;
-
-let rec digitsOfInt n = if n <= 0 then [n] else append digitsOfInt (n / 10);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = () in let l = sl in List.fold_left f base l;;

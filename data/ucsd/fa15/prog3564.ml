@@ -1,4 +1,10 @@
 
-let sqsum xs =
-  let f a x a x = a + (x * x) in
-  let base = "string" in List.fold_left f base xs;;
+let stringOfList f l =
+  match l with
+  | [] -> "]"
+  | h::t ->
+      let f a x = a ^ (";" ^ x) in
+      let base = h in let l = t in "[" ^ (List.fold_left f base l);;
+
+let _ =
+  stringOfList (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;

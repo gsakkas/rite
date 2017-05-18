@@ -1,2 +1,2 @@
 
-let append x l = match l with | [] -> [] | h::t -> h :: t :: l;;
+let a = int_of_string '3';;

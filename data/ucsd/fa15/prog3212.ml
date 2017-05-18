@@ -1,11 +1,2 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e = match e with | VarX  -> "%s" s;;
+let rec clone x n = if n = 0 then [] else x :: (clone (x (n - 1)));;

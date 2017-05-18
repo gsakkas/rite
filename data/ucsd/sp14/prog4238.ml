@@ -1,10 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile
-    (let g y x =
-       let sec s fi m = if s = fi then (s, (s = (m s))) else (s, false) in
-       sec (y x) x in
-     ((g f b), b));;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0 then l1 * (clone 0 a) else l1 * l2;;

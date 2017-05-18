@@ -1,7 +1,3 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::m::t ->
-      ((mulByDigit m) :: t) @
-        [((h * i) / 10) + ((m * i) mod 10); (h * i) mod 10];;
+let rec listReverse l =
+  match l with | [] -> [] | h::[] -> l | h::t -> (listReverse t) :: h;;

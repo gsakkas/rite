@@ -1,2 +1,2 @@
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else x y;;
+let rec clone x n = match n with | 1 -> [x] | n' -> [clone x (n - 1)];;

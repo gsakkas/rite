@@ -1,11 +1,7 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if not (List.mem = h) then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
-
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ t) in
+      let base = h in let l = t in List.fold_left f base l;;

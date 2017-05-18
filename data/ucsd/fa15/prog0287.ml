@@ -1,3 +1,3 @@
 
-let stringOfList f l =
-  match l with | [] -> "[]" | x::[] -> "[" ^ (x ^ "]") | l -> List.map (f, l);;
+let rec digitsOfInt n =
+  if n < 0 then [] else (digitsOfInt (n / 10)) :: (n % 10);;

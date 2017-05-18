@@ -1,7 +1,9 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let cout (x,y) = (x * y) mod 10;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone "0" ((List.length l2) - (List.length l1))) :: l1
-  else ((clone "0" List.length l1) - (List.length l2)) :: l2;;
+let rec mulByDigit i l =
+  let f a x =
+    let c = cout (i, x) in
+    match x with | [] -> [] | h::t -> (((h * i) + c) mod 10) :: t in
+  let base = [] in
+  let args = List.rev l in let res = List.fold_left f base args in res;;

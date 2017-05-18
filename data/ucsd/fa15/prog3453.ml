@@ -1,16 +1,3 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  match depth with | 0 -> buildX | n -> buildSine (build (rand, (depth - 1)));;
+let pipe fs =
+  let f a x y = y x a in let base y = y in List.fold_left f base fs;;

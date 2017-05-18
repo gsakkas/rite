@@ -1,4 +1,5 @@
 
-let rec clone x n = if n = 0 then x else x @ (clone x (n - 1));;
-
-let _ = clone "foo" 2;;
+let rec digitsOfInt n =
+  match n with
+  | 0 -> []
+  | n::ns -> let tailn = digitsOfInt ns in if x then x :: tailn else tailn;;

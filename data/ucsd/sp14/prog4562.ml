@@ -1,9 +1,5 @@
 
-let isP x = x > 0;;
+let rec helper acc v =
+  if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10);;
 
-let rec digitsOfInt n =
-  match n with
-  | [] -> []
-  | h::t -> let rest = digitsOfInt t in if isP h then h :: rest else rest;;
-
-let _ = digitsOfInt 3124;;
+let _ = helper (9 * 9999);;

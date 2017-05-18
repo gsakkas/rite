@@ -1,11 +1,10 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h t then [] :: seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      (match List.length t with
+       | 1 -> [i * h]
+       | _ -> [remainder h i] @ ([(i * h) / 10] + (mulByDigit i t)));;

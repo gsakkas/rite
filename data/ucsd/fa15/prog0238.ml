@@ -1,14 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+type 'a set =
+  | Set of 'a list;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Printf.sprintf "%s" VarX
-  | VarY  -> Printf.sprintf "%s" VarY;;
+let del x s = match s with | Set l -> Set (List.filter (fun z  -> z != x) l);;
+
+let testee = Set ["z"];;
+
+let _ = del 'z' testee;;

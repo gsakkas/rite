@@ -1,10 +1,6 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let x l = List.map string_of_int;;
 
-let rec matchHeads y = match y with | [] -> [] | h::t -> t;;
+let y = [("h", "d", "c")];;
 
-let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
+let y = [("h", "d", "c")] x y;;

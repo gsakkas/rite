@@ -1,2 +1,5 @@
 
-let rec sumList xs = if (xs :: 1) = 1 then 0;;
+let stringOfList f l =
+  ("[" (fun x  -> fun acc  -> x ^ ("; " ^ acc)) List.fold_left (^) ""
+     (List.map f l))
+    ^ "]";;

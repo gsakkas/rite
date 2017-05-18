@@ -1,30 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SumInts of expr
-  | Power of expr* expr* expr;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec mulByDigit i l =
+  let mult (i,l) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let prod = (x * i) + o in
+          if prod < 10 then (0, (prod :: l)) else (1, ((prod mod 10) :: l)) in
+    let base = (0, []) in
+    let args = l in let (_,res) = List.fold_left f base args in res in
+  removeZero (mult (i l));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine expr -> sin (pi *. (eval (expr, x, y)))
-  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
-  | Average (expr1,expr2) ->
-      ((eval (expr1, x, y)) +. (eval (expr2, x, y))) /. 2.0
-  | Times (expr1,expr2) -> (eval (expr1, x, y)) *. (eval (expr2, x, y))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      if (eval (expr1, x, y)) < (eval (expr2, x, y))
-      then eval (expr3, x, y)
-      else eval (expr4, x, y)
-  | SumInts expr -> ((eval (expr, x, y)) *. ((eval (expr, x, y)) +. 1.0)) / 2
-  | Power (expr1,expr2,expr3) ->
-      (eval expr1) ** (abs ((eval (expr1, x, y)) +. (eval (expr2, x, y))));;
+let _ = mulByDigit 9 [9; 9; 9; 9];;

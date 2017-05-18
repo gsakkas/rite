@@ -1,5 +1,4 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+let rec wwhile (f,b) = match f with | false  -> b | true  -> wwhile (f, b);;
 
-let fixpoint (f,b) = wwhile (fun b  -> (((f b), ((f b) = b)), b));;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

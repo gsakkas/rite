@@ -1,31 +1,15 @@
 
-let rec clone x n =
-  let rec aux acc n =
-    if n <= 0 then acc else aux (List.append [x] acc) (n - 1) in
-  aux [] n;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 < len2
-  then ((List.append (clone 0 (len2 - len1)) l1), l2)
-  else (l1, (List.append (clone 0 (len1 - len2)) l2));;
+let rec help n = match n with | 0 -> [] | _ -> cat (help (n / 10)) (n mod 10);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+let rec digitsOfInt n = if n = 0 then [0] else help n;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (n1,n2) = x in
-      let (cin,l) = a in
-      let result = (n1 + n2) + cin in
-      let cout = result / 10 in
-      let r = result mod 10 in
-      match a with
-      | [] -> (cout, (List.append [r] l))
-      | h::t -> (cout, (List.append [r] t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (n / 10) = 0 then 0 else 1 + (additivePersistence (sumList (digits n)));;
+
+let _ = additivePersistence - 9999;;

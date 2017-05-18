@@ -1,2 +1,3 @@
 
-let pipe fs = let f a x = a x in let base g x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let (x,y) = b f in if y = true then wwhile (f, x) else x;;

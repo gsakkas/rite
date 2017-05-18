@@ -1,10 +1,18 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let rec digits n digitList =
-       if n = 0 then digitList else digits (n / 10) ((n mod 10) :: digitList) in
-     match n with | 0 -> [0] | _ -> digits n []);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = digitsOfInt - 1;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 ->
+      let r = rand (0, 2) in if r = 0 then buildX else if r = 1 then buildY;;

@@ -1,4 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+let f a b a = a * b;;
 
-let rec additivePersistence n = sumList digitOfInt n;;
+let pipe fs =
+  let f a x = f (x a) in let base x = x in List.fold_left f base fs;;

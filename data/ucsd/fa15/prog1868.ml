@@ -1,5 +1,7 @@
 
-let is10gte n = n >= 10;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let rec additivePersistence n =
-  if is10gte then 1 + (additivePersistence (sumList (digitsOfInt n))) else 0;;
+let fixpoint (f,b) =
+  wwhile (let g x = let xx = f in (xx, (b = (f b))) in (g, b));;

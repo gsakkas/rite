@@ -1,13 +1,11 @@
 
 let rec clone x n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let padZero l1 l2 =
-  let num1 = (List.length l2) - (List.length l1) in
-  let num2 = (List.length l1) - (List.length l2) in
-  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 let rec removeZero l =
   match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
@@ -15,14 +13,12 @@ let rec removeZero l =
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let rec intlist x =
-        if x < 10 then [x] else (intlist (x / 10)) @ [x mod 10] in
-      match x with
-      | (z,y) ->
-          (match a with
-           | h -> let sum = (h + z) + y in intlist sum
-           | h::t -> let sum = (h + z) + y in (intlist sum) @ t) in
-    let base = [] in
-    let args = List.combine l1 l2 in
-    let res = List.fold_left f base args in res in
+      let (x',x'') = x in
+      let (c,s) = a in
+      if (List.length s) = 5
+      then c :: s
+      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;

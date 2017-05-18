@@ -1,7 +1,6 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = "" in List.fold_left f base l;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let rec digHelper n = if n < 10 then n else digHelper (sumList n) in
+  digHelper n;;

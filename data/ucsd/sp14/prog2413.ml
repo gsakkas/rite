@@ -1,6 +1,11 @@
 
-let listReverse l =
-  let rec r e a = match a with | [] -> [] | x::l' -> x :: e :: (r e l') in
-  r [] l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = listReverse [1; 2; 3; 4];;
+let rec exprToString e = match e with | Sine s -> Format.sprintf "%expr" s;;

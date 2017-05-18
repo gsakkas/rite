@@ -1,18 +1,9 @@
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | _ -> let h::t = l in (match h with | 0 -> removeZero t | _ -> l);;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let rec mulByDigit i l =
-  let mul (i,l) =
-    let f a x =
-      let (a1,a2) = a in
-      let val1 = (x * i) + a1 in
-      if val1 > 9
-      then ((val1 / 10), ((val1 mod 10) :: a2))
-      else (0, (val1 :: a2)) in
-    let base = (0, []) in
-    let args = List.rev (0 :: l) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (mul i l);;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) :: l1), l2) else (l1, ((clone 0 n) :: l2));;
+
+let _ = padZero [1; 0; 0; 2] [9; 9];;

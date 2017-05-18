@@ -1,7 +1,19 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = explode [123];;
+let rec exprToString e =
+  match e with
+  | VarX  -> "VarX"
+  | VarY  -> "VarY"
+  | Sine e -> "Sine"
+  | Cosine e -> "Cosine"
+  | Average (e,e) -> "Average"
+  | Times e -> "Times"
+  | Thresh e -> "Thresh";;

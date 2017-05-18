@@ -1,6 +1,9 @@
 
-let rec append xs x =
-  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append digitsOfInt (n / 10) (n - ((n / 10) * 10));;
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

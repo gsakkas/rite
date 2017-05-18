@@ -1,4 +1,3 @@
 
-let fptest = ((fun x  -> truncate (1e6 *. (cos (1e-6 *. (float x))))), 0);;
-
-let _ = fptest 0;;
+let pipe fs =
+  let f a x = List.map x a in let base x = x in List.fold_left f base fs;;

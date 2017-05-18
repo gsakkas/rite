@@ -1,16 +1,9 @@
 
-let rec digithelper n l =
-  let x = n / 10 in
-  let y = n mod 10 in if x = 0 then y :: l else digithelper x (y :: l);;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
 
-let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
-
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec addPHelper n =
-  let lst = digitsOfInt n in
-  let sum = sumList lst in if sum < 10 then sum else addPHelper sum;;
-
-let digits n = digitsOfInt (abs n);;
-
-let additivePersistence n = let pos = digits n in addPHelper pos;;
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (b', (fOfB = b')) in
+      ((whilesFun f), b)), b);;

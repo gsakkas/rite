@@ -1,4 +1,4 @@
 
-let rec wwhile (f,b) = match b with | false  -> b | true  -> wwhile (f, b);;
-
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let sqsum xs =
+  let f a x = match xs with | [] -> a | hd::tl -> a + (hd * hd) in
+  let base = [] in List.fold_left f base xs;;

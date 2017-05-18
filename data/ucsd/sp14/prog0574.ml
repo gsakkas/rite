@@ -1,22 +1,13 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec helperAppend l n =
+  match l with | [] -> n | h::t -> h :: (helperAppend t n);;
 
-let pi = 4.0 *. (atan 1.0);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval e'))
-  | Average (e1,e2) -> ((eval e1) +. (eval e2)) / 2
-  | Times (e1,e2) -> (eval e1) *. (eval e2)
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval e1) < (eval e2) then eval e3 else eval e4;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> helperAppend (listReverse t) [h];;
+
+let palindrome w = (listReverse (explode w)) = w;;

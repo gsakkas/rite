@@ -1,3 +1,2 @@
 
-let pipe fs =
-  let f a x = (+) (a x) in let base = 0 in List.fold_left f base fs;;
+let append x l = match x with | [] -> l | h::t -> h :: t :: l;;

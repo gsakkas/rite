@@ -1,10 +1,10 @@
 
-let digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let rec addDigit n acc =
-       if n <= 0 then acc else addDigit (n / 10) ((n mod 10) :: acc) in
-     match n with | 0 -> [0] | _ -> addDigit n []);;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
 
-let _ = digitsOfInt - 3124;;
+let one = [9; 9];;
+
+let two = clone 0 2;;
+
+let three = two :: one;;

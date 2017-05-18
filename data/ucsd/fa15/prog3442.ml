@@ -1,6 +1,16 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let fixpoint (f,b) =
-  wwhile ((f, (((f b) == (f (b - 1))) && ((f b) == b))), b);;
+let rec mulByDigit i l =
+  let rec helper acc cin l' =
+    match l' with
+    | [] -> cin :: acc
+    | h::t ->
+        let sum = (i * h) + cin in helper ((sum mod 10) :: acc) (sum / 10) t in
+  removeZero (helper [] 0 l);;
+
+let bigMul l1 l2 =
+  let f a x = mulByDigit x l1 in
+  let base = [] in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;

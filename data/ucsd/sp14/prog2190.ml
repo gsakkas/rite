@@ -1,22 +1,22 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | f::b -> f + (sumList (List.tl xs));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n < 10
-    then [n]
-    else (let x = [n mod 10] in (digitsOfInt (n / 10)) @ x);;
+let pi = 4.0 *. (atan 1.0);;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec persistenceHelper q =
-  let x = sumList q in
-  if x < 10 then 1 else 1 + (persistenceHelper (digits x));;
-
-let additivePersistence n =
-  let x = digits n in if (abs n) < 10 then 0 else persistenceHelper x;;
-
-let _ = additivePersistence - 9;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval e0))
+  | Cosine e1 -> cos (eval e1)
+  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
+  | Times (e4,e5) -> (eval e4) * (eval e5)
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval e6) < (eval e7) then eval e8 else eval e9;;

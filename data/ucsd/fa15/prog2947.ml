@@ -1,23 +1,13 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (x,y) -> ((eval (e, x, y)) +. (eval (e, x, y))) / 2.0
-  | Times (x,y) -> (eval (e, x, y)) *. (eval (e, x, y))
-  | Thresh (w,x,y,z) ->
-      (((eval (e, x, y)) *. (eval (e, x, y))) *. (eval (e, x, y))) *.
-        (eval (e, x, y) uncomment after implementing eval);;
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::[] -> "[" ^ (x ^ "]")
+  | l -> sepConcat (";", (List.map (f, l)));;

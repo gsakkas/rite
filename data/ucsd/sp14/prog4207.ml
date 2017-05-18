@@ -1,3 +1,6 @@
 
-let rec digitsOfInt n =
-  if n > 10 then [digitsOfInt (n / 10); n mod 10] else n;;
+let pipe fs =
+  let f a x = function | g -> x a in
+  let base = function | x -> x in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

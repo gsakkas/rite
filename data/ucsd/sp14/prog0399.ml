@@ -1,2 +1,4 @@
 
-let temp = List.fold_left (fun x  -> x + 1) 0 [];;
+let rec listReverse l = match l with | [] -> [] | h::t -> (listReverse t) @ h;;
+
+let _ = listReverse [1; 2; 3; 4];;

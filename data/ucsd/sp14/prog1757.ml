@@ -1,8 +1,9 @@
 
-let rec digithelper n l =
-  let x = n / 10 in
-  let y = n mod 10 in if x < 0 then y :: l else digithelper x (y :: l);;
+let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
 
-let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let _ = digitsOfInt - 12;;
+let f b = let g' = g b in (b, (b = g'));;
+
+let _ = f collatz;;

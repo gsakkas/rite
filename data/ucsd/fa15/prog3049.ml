@@ -1,8 +1,5 @@
 
-let retHead l = match l with | [] -> [] | h::t -> h;;
+let pipe fs n =
+  let f a x = a + (n x) in let base = 0 in List.fold_left f base fs;;
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | hd::tl ->
-      [((hd * i) mod 10) + (((retHead tl) * i) / 10)] @ (mulByDigit i tl);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

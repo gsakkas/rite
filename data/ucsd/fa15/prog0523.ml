@@ -1,4 +1,3 @@
 
-let pipe fs = let f a x a = x in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec sumList xs =
+  if xs = [] then 0 else (List.hd xs) + (sumList List.tl xs);;

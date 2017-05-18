@@ -1,5 +1,5 @@
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if result then wwhile (f, value) else value;;
+let rec clone x n =
+  if n = 0 then [] else (match x with | h::t -> [h] @ (clone t (n - 1)));;
 
-let fixpoint (f,b) = wwhile ((let helper f = not f in helper), b);;
+let _ = clone 3 5;;

@@ -1,21 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let helper (f,b) =
+  let x = f b in match b with | x -> (x, (x != b)) | _ -> (x, true);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
-let rec eval (e,x,y) =
-  match e with
-  | buildX -> x
-  | buildY -> y
-  | Sine q -> sin (pi *. (eval (q, x, y)))
-  | Cosine q -> cos (pi *. (eval (q, x, y)))
-  | Average (e1,e2) -> (e1 +. e2) /. 2
-  | buildTimes -> e1 *. e2
-  | buildThresh -> if a < b then a_less else b_less;;
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;

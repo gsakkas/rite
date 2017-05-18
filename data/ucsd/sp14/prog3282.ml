@@ -1,5 +1,2 @@
 
-let pipe fs =
-  let f a x c d = x d in let base b = b in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let rec clone x n = if n <= 0 then [] else (clone x n) - 1;;

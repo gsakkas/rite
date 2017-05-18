@@ -1,12 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec digitsOfInt n = if n < 0 then [7] else [8];;
 
-let stringOfList f l = f List.map (fun x  -> sepConcat "; ");;
-
-let _ =
-  stringOfList (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;
+let _ = digitsOfInt - 293;;

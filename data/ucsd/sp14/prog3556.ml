@@ -1,6 +1,2 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let rec digitsOfInt n =
-  if n <= 0 then [] else [n mod 10] @ (listReverse digitsOfInt (n / 10));;
+let rec pipe fs = match fs with | [] -> [] | h::t -> pipe;;

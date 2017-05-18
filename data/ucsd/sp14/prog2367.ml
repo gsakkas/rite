@@ -1,9 +1,4 @@
 
-let t x = x + 1;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if x = "a" then a ^ x in
-      let base = sep in let l = t in List.fold_left f base l;;
+let fixpoint (f,b) = wwhile (let b' = f b in ((f, (b' = b)), b));;

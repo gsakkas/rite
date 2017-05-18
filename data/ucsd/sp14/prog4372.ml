@@ -1,7 +1,10 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
+let stringOfList f l =
+  match l with
+  | [] -> "]"
   | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = h in List.fold_left f base l;;
+      let m a b = "[" ^ (a ^ (";" ^ (b ^ "]"))) in
+      let base = f h in List.fold_left m base t;;
+
+let _ =
+  stringOfList (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;

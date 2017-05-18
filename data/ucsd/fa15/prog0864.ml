@@ -1,5 +1,11 @@
 
-let rec stringOfList f l =
-  match l with | [] -> "" | h::t -> h ^ (stringOfList f t);;
-
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let r = List.rev t in
+        let seen' = seen in
+        (if 1 = 2 then seen' := (h :: seen');
+         (let rest' = t in helper (seen', rest'))) in
+  List.rev (helper ([], l));;

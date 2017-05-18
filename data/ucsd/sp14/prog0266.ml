@@ -1,2 +1,2 @@
 
-let _ = (List.map (fun x  -> x * 10) [1; 2; 3] 8100) mod 10;;
+let rec last l = match l with | [] -> [] | hd::tl -> (last tl) :: [] :: hd;;

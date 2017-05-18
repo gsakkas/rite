@@ -1,6 +1,3 @@
 
-let pipe fs =
-  let f a x = match fs with | h::t -> h in
-  let base = 0 in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let rec digitsOfInt n =
+  (if n > 10 then [n] else [digitsOfInt (n / 10)] @ [n mod 10] : int list);;

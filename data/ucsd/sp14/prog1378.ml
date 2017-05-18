@@ -1,20 +1,31 @@
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Square of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | MyExpr of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
+let pi = 4.0 *. (atan 1.0);;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits n
-  else additivePersistence sumList n;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine m -> sin (pi *. (eval (m, x, y)))
+  | Cosine m -> cos (pi *. (eval (m, x, y)))
+  | Square m -> (eval (m, x, y)) ** 2.0
+  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.
+  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
+  | MyExpr (m,n,o) ->
+      if (eval (m, x, y)) < (eval (n, x, y))
+      then sqrt (abs_float (eval (o, x, y)))
+      else (eval (o, x, y)) /. 2
+  | Thresh (m,n,o,p) ->
+      if (eval (m, x, y)) < (eval (n, x, y))
+      then eval (o, x, y)
+      else eval (p, x, y);;

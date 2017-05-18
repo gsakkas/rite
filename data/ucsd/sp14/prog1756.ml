@@ -1,8 +1,10 @@
 
-let rec digithelper n l =
-  let x = n / 10 in
-  let y = n mod 10 in if x <= 0 then y :: l else digithelper x (y :: l);;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
 
-let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+let fixpoint (f,b) = wwhile (f, b);;
 
-let _ = digitsOfInt - 12;;
+let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+
+let _ = fixpoint (g, 0);;

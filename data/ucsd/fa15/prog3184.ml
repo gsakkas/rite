@@ -1,4 +1,2 @@
 
-let kx = [(1, 2, 3)];;
-
-let xy = if List.mem kx 1 then kx else kx @ [1];;
+let pipe fs = let f a x = a + x in let base y = y in List.fold_left f base fs;;

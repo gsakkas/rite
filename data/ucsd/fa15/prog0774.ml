@@ -1,3 +1,3 @@
 
-let rec sumList n =
-  let len = Array.length n in if len == 1 then 1 else 1 + (sumList (n - 1));;
+let rec assoc (d,k,l) =
+  match l with | [] -> d | h::t -> if (k, x) then x else assoc (d, k, t);;

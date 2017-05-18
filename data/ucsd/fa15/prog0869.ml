@@ -1,6 +1,4 @@
 
-let rec clone x n =
-  match n with
-  | 0 -> []
-  | h::t ->
-      let f a x = a in let base = "[" in let l = a in List.fold_left f base l;;
+let rec wwhile (f,b) = let (i,t) = f b in if t then wwhile (f, i) else i;;
+
+let fixpoint (f,b) = wwhile (((f b) = b), b);;

@@ -1,10 +1,8 @@
 
-type 'a set =
-  | Set of 'a list;;
+let fixpointHelper f =
+  match f with | (num,expr) -> if expr then (num, true) else (num, false);;
 
-let del x s =
-  match s with | Set l -> Set (List.filter (fun z  -> z != "z") l);;
+let rec wwhile (f,b) =
+  match f b with | (num,expr) -> if expr then wwhile (f, num) else num;;
 
-let testee = Set [2131; 123123; 4];;
-
-let _ = del 4 testee;;
+let fixpoint (f,b) = wwhile ((fixpointHelper f), b);;

@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x f x = f a in let base y = y in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: ((digitsOfInt n) / (10 s));;

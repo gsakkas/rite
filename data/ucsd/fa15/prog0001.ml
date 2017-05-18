@@ -1,3 +1,5 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else (match n with | [] -> [] | h::t -> h @ [digitsOfInt t]);;

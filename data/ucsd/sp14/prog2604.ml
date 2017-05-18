@@ -1,6 +1,12 @@
 
-let ee = [1; 2];;
+let rec wwhile (f,b) =
+  match f b with
+  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
 
-let zz = [3; 4];;
-
-let _ = List.combine (ee, zz);;
+let fixpoint (f,b) =
+  wwhile
+    (let func x y =
+       match (x y) = y with
+       | true  -> ((x, true), b)
+       | false  -> ((x, false), b) in
+     func f b);;

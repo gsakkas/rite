@@ -1,8 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x ^ a in
-      let base = sl in
-      let l = failwith "to be implemented" in List.fold_left f base l;;
+let sqsum xs =
+  let f a x a x = a + (x * x) in
+  let base base = base in List.fold_left f base xs;;

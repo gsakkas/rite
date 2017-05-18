@@ -1,29 +1,32 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | a -> if a < 0 then [] else (clone x (n - 1)) @ [x];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
-  else ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+  let leng1 = List.length l1 in
+  let leng2 = List.length l2 in
+  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let carry = match a with | (f,[]) -> f | (f',g'::h) -> g' in
-      let newc =
-        match x with | (f,g) -> if ((f + g) + carry) > 9 then 1 else 0 in
-      let digit = match x with | (f,g) -> ((f + g) + carry) mod 10 in
-      match a with
-      | (o,p::q) -> (0, (newc :: digit :: q))
-      | (o,p) -> (0, (newc :: digit :: p)) in
+      let digitSum = ((fst x) + (snd x)) + (fst a) in
+      ((digitSum / 10), ((digitSum mod 10) :: (snd a))) in
     let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
+    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
 
 let rec mulByDigit i l =
-  if i <= 0 then 0 else if i = 1 then l else bigAdd (mulByDigit (i - 1) l) l;;
+  let f x a =
+    let digitRes = (x * i) + (fst a) in
+    ((digitRes / 10), ((digitRes mod 10) :: (snd a))) in
+  let base = (0, []) in
+  let (_,result) = List.fold_right f (0 :: l) base in removeZero result;;
+
+let bigMul l1 l2 =
+  let f a x = let value = mulByDigit l1 x in (0, (bigAdd value snd a)) in
+  let base = (0, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;

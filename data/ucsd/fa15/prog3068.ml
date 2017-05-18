@@ -1,9 +1,5 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in
-  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
+let pipe fs =
+  let f a x x a = fs in let base fs = fs in List.fold_left f base fs;;
 
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let _ = pipe [] 3;;

@@ -1,26 +1,22 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec intToReverseList n =
+  if n <= 0 then [] else (n mod 10) :: (intToReverseList (n / 10));;
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+let rec listReverseHelper l =
+  let rec go i =
+    function
+    | [] -> i
+    | headElement::tailList -> go (headElement :: i) tailList in
+  go [] l;;
 
-let rec build (rand,depth) =
-  if depth = 0
-  then let g = makeRand (0, 1) in match g with | 0 -> VarX | 1 -> VarY
-  else
-    (let g = makeRand (0, 4) in
-     match g with
-     | 0 -> Sine (build (rand, (depth - 1)))
-     | 1 -> Cosine (build (rand, (depth - 1)))
-     | 2 -> Average (build (rand, (depth - 1)))
-     | 3 -> Times (build (rand, (depth - 1)))
-     | 4 -> Thresh (build (rand, (depth - 1))));;
+let rec digitsOfInt n = listReverseHelper (intToReverseList n);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  let rec count acc n =
+    if n < 10 then acc else (acc + 1) (sumList (digits n)) in
+  count 0 n;;

@@ -1,16 +1,21 @@
 
-let rec reverseHelper (original,sofar) =
-  match original with
-  | [] -> sofar
-  | hd::tl -> reverseHelper (tl, (hd :: sofar));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec listReverse l = reverseHelper (l, []);;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w =
-  let converted = explode w in
-  if converted = (listReverse w) then true else false;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi * x
+  | Cosine e -> pi * y
+  | Average (e1,e2) -> buildAverage (e1, e2);;

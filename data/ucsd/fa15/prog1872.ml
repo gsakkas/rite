@@ -1,7 +1,6 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let palindrome w = if String.length = 0 then true else explode w;;
+let fixpoint (f,b) = wwhile (let n x = (f, (b < (f b))) in (n, b));;

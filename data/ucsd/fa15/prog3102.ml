@@ -1,18 +1,43 @@
 
+let rec rmzhelp l =
+  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
+
+let rec foldr f b x n = if n > 0 then f x (foldr f b x (n - 1)) else b;;
+
+let rec clone x n = foldr (fun y  -> fun m  -> y :: m) [] x n;;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+  match l with | [] -> [] | x::xs' -> if x = 0 then rmzhelp xs' else x :: xs';;
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (c,d) ->
+          (match a with
+           | (n,listSum) ->
+               (match listSum with
+                | [] ->
+                    if ((n + c) + d) < 10
+                    then (0, ([n] @ [(n + c) + d]))
+                    else ((n + 1), ([n + 1] @ [((n + c) + d) mod 10]))
+                | h::t ->
+                    if ((n + c) + d) < 10
+                    then (0, (0 :: ((c + d) + h) :: t))
+                    else
+                      ((n + 1),
+                        ([((h + c) + d) / 10; ((h + c) + d) mod 10] @ t)))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec mulByDigit i l =
-  let f a x =
-    let y = i * x in
-    match a with
-    | h::t -> ((h + y) / 10) :: ((h + y) mod 10) :: t
-    | _ -> [y / 10; y mod 10] in
-  let base = [] in removeZero (List.fold_left f base (List.rev l));;
-
-let bigMul l1 l2 =
-  let f a x = ((mulByDigit x l1) @ (clone 0 (List.length a))) :: a in
-  let base = [] in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let rec mulDigHelp i j l =
+  if i = 0
+  then [0]
+  else if i = j then l else (mulDigHelp i j) + (1 (bigAdd l l));;

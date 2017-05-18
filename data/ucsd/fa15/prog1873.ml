@@ -1,3 +1,6 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> (-1) | h::l' -> let (x,y) = h in Printf.printf (x, h);;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+
+let fixpoint (f,b) = wwhile (let n x = (f, (b = (f b))) in (n, b));;

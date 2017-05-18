@@ -1,10 +1,10 @@
 
-let rec digitsOfInt n =
-  let digit = n mod 10
-  and r = n / 10 in if n <= 0 then [] else (digitsOfInt r) @ [digit];;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | true  -> wwhile (f, b') | false  -> b';;
 
-let digits n = digitsOfInt (abs n);;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let rec sumOfDigits n = match n with | [] -> 0 | h::t -> h + (sumOfDigits t);;
+let fixpoint (f,b) = wwhile ((f b), b);;
 
-let _ = sumOfDigits digits 9876;;
+let _ = fixpoint (collatz, 3);;

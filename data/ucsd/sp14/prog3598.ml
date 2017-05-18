@@ -1,5 +1,4 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with
-  | (func,param) -> if param = true then f param else 0
-  | _ -> b;;
+let pipe fs = let f a x = x a in let base = 3 in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

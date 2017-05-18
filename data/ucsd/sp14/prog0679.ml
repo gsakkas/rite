@@ -1,7 +1,16 @@
 
-let rec clone x n =
-  let rec clone_TR acc n =
-    if n <= 0 then acc else clone_TR (x :: acc) (n - 1) in
-  clone_TR [] n;;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x = 0 then y :: l else digithelper x (y :: l);;
 
-let _ = clone [] [];;
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+
+let rec addPHelper n =
+  let lst = digitsOfInt n in
+  let sum = sumList lst in if sum < 10 then sum else addPHelper sum;;
+
+let digits n = digitsOfInt (abs n);;
+
+let additivePersistence n = let n_pos = digits n in addPHelper n_pos;;

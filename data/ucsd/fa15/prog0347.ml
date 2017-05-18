@@ -1,7 +1,6 @@
 
-let rec wwhile (f,b) =
-  let i = b in
-  match f i with | (v_n,false ) -> v_n | (v_n,true ) -> wwhile (f, v_n);;
+let count = 0;;
 
-let fixpoint (f,b) =
-  let f' fo b' = if (fo b') = b' then b' else fo b' in wwhile (f', b);;
+let lt10 q = q < 10;;
+
+let rec additivePersistence n = if lt10 n then count;;

@@ -1,4 +1,5 @@
 
-let append x l = match l with | [] -> [x] | h::t -> x :: h :: t;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let _ = append [0] [1; 2];;
+let _ = digitsOfInt - 352663;;

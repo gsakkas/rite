@@ -1,11 +1,8 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let helper f l = sepConcat "" (List.map f l);;
+let fixpoint (f,b) = wwhile ((f b), b);;
 
-let _ = helper int_of_string [9; 9; 9; 9];;
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

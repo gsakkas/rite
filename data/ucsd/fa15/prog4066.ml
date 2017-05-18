@@ -1,8 +1,10 @@
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if result then wwhile (f, value) else value;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let helper func = let (value,result) = f b in value * (not result) in
-      helper), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else [];;

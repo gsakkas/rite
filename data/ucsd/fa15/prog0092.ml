@@ -1,2 +1,4 @@
 
-let rec clone x n = if n = 0 then x else (let c = x :: x in clone x (n - 1));;
+let rec listReverse l = match l with | [] -> [] | h::t -> h @ (listReverse t);;
+
+let _ = listReverse [1; 2; 3; 5];;

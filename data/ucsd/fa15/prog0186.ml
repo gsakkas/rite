@@ -1,7 +1,3 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let palindrome w = if w = (listReverse w) then true else false;;
-
-let _ = palindrome "myxomatosis";;
+let rec digitsOfInt n =
+  if n < 0 then [] else [n mod 10] @ [digitsOfInt (n / 10)];;

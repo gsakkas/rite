@@ -1,34 +1,12 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Cube of expr
-  | Addition of expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
-  | Average (a,b) ->
-      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
-  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
-  | _ -> "_"
-  | Cube a ->
-      "(" ^
-        ((exprToString a) ^
-           ("*" ^ ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))))
-  | Addition (a,b) ->
-      "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ")")));;
+let rec listReverse l =
+  let rec listReverseHelper dec acc =
+    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
+  listReverseHelper l [];;
+
+let palindrome w = (explode w) = (explode (listReverse w));;

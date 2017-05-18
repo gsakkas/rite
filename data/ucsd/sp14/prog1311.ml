@@ -1,6 +1,11 @@
 
-let rec append xs x =
-  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+let rec wwhile (f,b) =
+  let (number,boolean) = f b in
+  if boolean then wwhile (f, number) else number;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else n - ((n / 10) * (10 append digitsOfInt (n / 10)));;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) = wwhile ((f b), b);;
+
+let _ = fixpoint (collatz, 9001);;

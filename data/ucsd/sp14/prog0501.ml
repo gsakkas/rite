@@ -1,21 +1,11 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  let rec append xs1 xs2 =
+    match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2) in
+  let rec helper x =
+    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
+  helper n;;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval a))
-  | Cosine a -> cos (pi *. (eval a))
-  | Average (a,b) -> ((eval a) +. (eval b)) / 2
-  | Times (a,b) -> (eval a) *. (eval b)
-  | Thresh (a,b,c,d) -> if (eval a) < (eval b) then eval c else eval d;;
+let _ = (digits (-23422)) = [(2, 3, 4, 2, 2)];;

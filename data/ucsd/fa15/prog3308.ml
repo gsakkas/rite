@@ -1,4 +1,2 @@
 
-let abs x = if x < 0 then x * (-1) else x;;
-
-let _ = abs - (10 abs 10);;
+let rec helper x res n = if n > 0 then (helper x res (n - 1)) :: res else [];;

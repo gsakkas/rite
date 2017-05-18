@@ -1,5 +1,6 @@
 
-let rec digitsOfInt n =
-  let digit = n mod 10
-  and r = n / 10 in
-  match n with | _ when n <= 0 -> [] | _ when n > 0 -> [digitsOfInt r; digit];;
+let rec wwhile (f,b) =
+  let (b',c') = b in
+  match c' with | true  -> wwhile (f, (b', c')) | false  -> b';;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

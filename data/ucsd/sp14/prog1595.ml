@@ -1,7 +1,10 @@
 
-let rec digitsOfInt n =
-  let rec append xs1 xs2 =
-    match xs2 with | [] -> xs1 | hd::tl -> append (xs1 :: hd) tl in
-  let rec helper x =
-    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
-  helper n;;
+let rec wwhile (f,b) =
+  let y = f b in match y with | (b',c') -> if c' then wwhile (f, b') else b';;
+
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ = fixpoint (collatz, 1);;

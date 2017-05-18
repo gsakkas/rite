@@ -1,3 +1,3 @@
 
-let rec digitsOfInt n =
-  if n < 0 then print_int 0 else print_int digitsOfInt (n / 10);;
+let rec assoc (d,k,l) =
+  match l with | [] -> (-1) | h::l' -> let (x,y) = h in print_int y;;

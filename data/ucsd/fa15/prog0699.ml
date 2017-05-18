@@ -1,3 +1,5 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else [(digitsOfInt n) / 10] @ [n mod 10];;
+let fixpoint (f,b) =
+  let gs x =
+    let xx = f x in match xx with | xx when (xx - x) > 0 -> (x, b) | _ -> f x in
+  wwhile (gs, b);;

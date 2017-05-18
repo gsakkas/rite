@@ -1,3 +1,3 @@
 
 let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: [] :: (digitsOfInt (n mod 10));;
+  let m = n in if n < 0 then [] else [[digitsOfInt (m / 10)]; n mod 10];;

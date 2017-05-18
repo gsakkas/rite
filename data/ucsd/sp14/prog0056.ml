@@ -1,12 +1,14 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
 
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine m -> "sin" ^ exprToString;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumdigits x =
+  let y = digits x in match y with | [] -> 0 | h::t -> 1 + sumdigits;;

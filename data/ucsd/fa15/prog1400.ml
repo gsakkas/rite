@@ -1,5 +1,5 @@
 
-let pipe fs =
-  let f a x a x = a x in let base y = y in List.fold_left f base fs;;
+let notEqual x y = (x = y) = false;;
 
-let _ = pipe [] 3;;
+let fixpoint (f,b) =
+  let newFunc b = ((f b), (notEqual b f b)) in wwhile (newFunc, b);;

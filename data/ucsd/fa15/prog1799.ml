@@ -1,14 +1,6 @@
 
-let rec filter l a =
-  match l with
-  | [] -> []
-  | h::t -> if h = a then filter t a else h :: (filter t a);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = seen @ h in
-        let rest' = filter (t, h) in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let fixpoint (f,b) =
+  let f1 f2 x = if (f2 x) = x then false else true in wwhile ((f1 f), b);;

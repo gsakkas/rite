@@ -1,6 +1,3 @@
 
-let fixpointHelper f b =
-  let c = f b in if c = b then (c, true) else (c, false);;
-
-let fixpointHelper f b =
-  let c = f b in if c = b then (c, true) else ((fixpointHelper (f c)), false);;
+let sqsum xs =
+  let f a x = (a + x) ^ 2 in let base = 0 in List.fold_left f base xs;;

@@ -1,8 +1,7 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  match (List.length l1) - (List.length l2) with
-  | 0 -> (l1, l2)
-  | n -> if n < 0 then (clone 0 n) @ l1 else (clone 0 n) @ l2;;
+let _ =
+  let rec digitsOfIntHelper (num,numList) =
+    if num < 10
+    then num :: numList
+    else digitsOfIntHelper (num / 10) ((num mod 10) :: numList) in
+  digitsOfIntHelper (num, []);;

@@ -1,8 +1,9 @@
 
-let a = 3;;
+let listReverse l =
+  let rec reverseHelper acc =
+    function | [] -> acc | h::t -> reverseHelper (h :: acc) t in
+  reverseHelper [] l;;
 
-let b = [];;
+let palindrome w = if w = (listReverse w) then true else false;;
 
-let f x l = l :: x;;
-
-let _ = f a b;;
+let _ = palindrome "malayalam";;

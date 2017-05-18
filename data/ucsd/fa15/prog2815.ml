@@ -1,2 +1,2 @@
 
-let pipe fs = let f a x x = x a in let base z = z in List.fold_left f base fs;;
+let rec removeZero l = match l with | [] -> [] | hd::t -> (removeZero l) :: h;;

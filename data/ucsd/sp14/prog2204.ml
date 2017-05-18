@@ -8,38 +8,16 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
-  | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
-  | Average (ex1,ex2) ->
-      "((" ^ ((exprToString ex1) ^ ("+" ^ ((exprToString ex2) ^ ")/2)")))
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let buildCosine e = Cosine e;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildSine e = Sine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) ->
-      ((exprToString (ex1, x, y)) +. (exprToString (ex2, x, y))) /. 2
-  | Times (ex1,ex2) -> (exprToString ex1) ^ ("*" ^ (exprToString ex2))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      "(" ^
-        ((exprToString ex1) ^
-           ("<" ^
-              ((exprToString ex2) ^
-                 ("?" ^
-                    ((exprToString ex3) ^ (":" ^ ((exprToString ex4) ^ ")")))))));;
+let buildX () = VarX;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then buildX ()
+  else
+    (match rand with
+     | 0 -> buildSine (build ((rand (0, 6)), (depth - 1)))
+     | 1 -> buildCosine (build ((rand (0, 6)), (depth - 1))));;

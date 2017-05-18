@@ -1,6 +1,9 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) =
-  wwhile (match f b with | false  -> wwhile (f, b) | b -> (b, b));;
+let rec clone x n = sepConcat ";" ((clone x n) - 1);;

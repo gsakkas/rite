@@ -1,17 +1,21 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let carry x y = (x * y) / 10;;
 
-let pi = 4.0 *. (atan 1.0);;
+let remainder x y = (x * y) mod 10;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> e
-  | VarY  -> e
-  | Sine e1 -> sin (pi * (exprToString e1));;
+let rec mulByDigit i l =
+  if (i = 0) || (i > 9)
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t ->
+         (match t with
+          | [] -> if (i * h) > 10 then [carry i h] @ [remainder i h] else []
+          | h'::t' ->
+              let multNext x = match x with | [] -> 0 | h1::t1 -> h1 in
+              if (i * h) > 10
+              then
+                (mulByDigit i t') @
+                  ([(carry i h') + (remainder h' i)] @ [remainder h i])
+              else i * h));;

@@ -1,6 +1,4 @@
 
-let pipe fs =
-  let f a x = let h::t = x in h a in
-  let base = [] in List.fold_left f base fs;;
+let rec mulByDigit i l = if i > 0 then l + (mulByDigit (i - 1) l) else l;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = mulByDigit 9 [9; 9; 9; 9];;

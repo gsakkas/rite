@@ -1,5 +1,6 @@
 
-let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
+let pipe fs =
+  let f a x = function | g -> x a g in
+  let base = function | b -> b in List.fold_left f base fs;;
 
-let rec digitsOfInt n =
-  if n >= 10 then app ((digitsOfInt (n / 10)) [n mod 10]) else [n];;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

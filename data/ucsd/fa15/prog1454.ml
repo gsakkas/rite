@@ -1,29 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine rest -> "sin(pi*" ^ ((exprToString rest) ^ ")")
-  | Cosine rest -> "cos(pi*" ^ ((exprToString rest) ^ ")")
-  | Average (expr1,expr2) ->
-      "(" ^ ((exprToString expr1) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr1,expr2) ->
-      (exprToString expr1) ^ ("*" ^ (exprToString expr2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let c3 () = (8, 123, 498) exprToString;;
+let fixpoint (f,b) = wwhile ((let inc f = f (f b) in f), b);;
+
+let _ = fixpoint (collatz, 1);;

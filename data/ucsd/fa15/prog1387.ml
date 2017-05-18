@@ -1,34 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Golden of expr
-  | MeanPi of expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
-  | Average (expr1,expr2) ->
-      "(" ^ ((exprToString expr1) ^ ("+" ^ ((exprToString expr2) ^ ")/2")))
-  | Times (expr1,expr2) ->
-      (exprToString expr1) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr1) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))))
-  | Golden expr -> ""
-  | MeanPi (expr1,expr2,expr3) -> "";;
-
-let _ = exprToString Golden VarX;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem seen h) = false then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

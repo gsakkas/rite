@@ -1,4 +1,7 @@
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let digitSum = sumList digitList additivePersistence digitSum;;
+let fixpoint (f,b) =
+  wwhile (let g x = let x = f in (x, (b = (f b))) in (g, b));;

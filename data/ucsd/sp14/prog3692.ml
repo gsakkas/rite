@@ -1,4 +1,2 @@
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec digitalRoot n = digitalRoot (sumList n);;
+let pipe fs = let f a x x = x x in let base x = x in List.fold_left f base fs;;

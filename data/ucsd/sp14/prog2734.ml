@@ -1,11 +1,4 @@
 
-let pipe fs = let f a x a = x in let base a = a in List.fold_left f base fs;;
+let pick_one n = if n > 0 then fun x  -> x + 1 else (fun x  -> x - 1);;
 
-let pipe fs =
-  let f a x a x = x in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = pipe [] in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x x = a in let base = pipe [] in List.fold_left f base fs;;
+let _ = (pick_one - 5) 6;;

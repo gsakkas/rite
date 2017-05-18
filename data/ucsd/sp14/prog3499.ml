@@ -1,10 +1,4 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+let pipe fs = let f a x j = x a in let base x = x in List.fold_left f base fs;;
 
-let one = [9; 9];;
-
-let two = clone 0 2;;
-
-let three = one :: two;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

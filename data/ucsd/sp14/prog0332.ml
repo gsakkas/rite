@@ -1,2 +1,2 @@
 
-let stringOfList f l = "[" ^ ((List.map (f "; ") l) ^ "]");;
+let rec append x y = match y with | [] -> [] | h::t -> (append h) :: (x t);;

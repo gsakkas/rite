@@ -1,5 +1,6 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (b',y) -> if y = false then b' else wwhile (f, b');;
+let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [(0, 1)];;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let digitsOfInt n = if n < 0 then [] else [digitsOfInt (n mod 10)];;
+
+let _ = digitsOfInt - 3;;

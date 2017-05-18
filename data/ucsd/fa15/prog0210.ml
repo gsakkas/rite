@@ -1,8 +1,5 @@
 
-let rec assoc (d,k,l) =
-  match k with
-  | [] -> d
-  | (k',d')::t -> if k = ((k', d') :: t) then d' else assoc (d, k, t);;
+let rec listReverse l =
+  match l with | [] -> [] | h::tl -> (listReverse l) @ h;;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = listReverse ["a"; "b"; "c"; "d"];;

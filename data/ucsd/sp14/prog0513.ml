@@ -1,4 +1,5 @@
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let _ = sumList [1.1];;
+let rec append xs1 xs2 =
+  match xs1 with
+  | [] -> xs2
+  | hd::tl -> hd :: ((append tl xs2) append [1] [2]);;

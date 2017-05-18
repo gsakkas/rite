@@ -1,7 +1,14 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec sumListHelper total xs =
+  match xs with | [] -> total | hd::tail -> sumListHelper (total + hd) tail;;
 
-let fixpoint (f,b) = wwhile ((let g b = ((f b), b) in g), b);;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else (digitsOfIntHelper ((n - (n mod 10)) / 10)) @ [n mod 10];;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec digitsOfInt n = digitsOfIntHelper n;;
+
+let rec sumList xs = sumListHelper 0 xs;;
+
+let rec additivePersistence n = if n >= 10 then sumList (digitsOfInt n);;

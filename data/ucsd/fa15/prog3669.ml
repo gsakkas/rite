@@ -1,9 +1,4 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h, t) then [] else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec removeZero l =
+  let f a x = if (List.length a) = 0 then (if x = 0 then [] else [x]) else x in
+  List.fold_left f base l;;

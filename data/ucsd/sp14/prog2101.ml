@@ -1,12 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let assoc (d,k,l) =
+  match l with
+  | h::t ->
+      let rec helper di ki li = match li with | h::t -> h in helper d k h;;
 
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine ex -> sin exprToString ex;;
+let _ =
+  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

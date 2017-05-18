@@ -1,6 +1,6 @@
 
-let sqsum xs =
-  let rec f a x = match x with | [] -> a | h::t -> f (a + (h * h)) t in
-  let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
 
-let _ = sqsum [(-1); (-2); (-3); (-4)];;
+let fixpoint (f,b) = wwhile (let xx = f b in ((xx, (xx = b)), b));;

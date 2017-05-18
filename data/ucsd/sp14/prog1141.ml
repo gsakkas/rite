@@ -1,2 +1,2 @@
 
-let sqsum xs = let f a x = a ** 2 in let base = a in List.fold_left f base xs;;
+let rec fixpoint (f,x) = let x' = f x in if x' = x then x else fixpoint f x';;

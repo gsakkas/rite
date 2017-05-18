@@ -1,4 +1,6 @@
 
+let pi = 4.0 *. (atan 1.0);;
+
 type expr =
   | VarX
   | VarY
@@ -6,30 +8,19 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
+  | Thresh of expr* expr* expr* expr;;
 
 let rec eval (e,x,y) =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) / 3.0;;
+  | varX -> x
+  | varY -> y
+  | Sine t -> sin (pi *. (eval (t, x, y)))
+  | Cosine t -> cos (pi *. (eval (t, x, y)))
+  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
+  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
+  | Thresh (t,r,s,q) ->
+      if (eval (t, x, y)) < (eval (r, x, y))
+      then eval (s, x, y)
+      else eval (q, x, y);;
+
+let _ = eval (VarX, 3, 2);;

@@ -1,16 +1,7 @@
 
-let rec getFirst n = if n < 10 then n else getFirst (n / 10);;
-
-let x = 9800;;
-
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n < 10
-    then [n]
-    else
-      (let head = getFirst n
-       and s = String.length (string_of_int n)
-       and rest = n - (1 * (int_of_float (10 ** (float_of_int s)))) in
-       if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = sep ^ x in
+      let base = "" in let l = sl in List.fold_left f base;;

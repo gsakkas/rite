@@ -1,7 +1,4 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = string_of_int h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) = if f b then wwhile (f, (f b)) else 1;;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 3);;

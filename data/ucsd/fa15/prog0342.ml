@@ -1,11 +1,11 @@
 
-let rec wwhile (f,b) =
-  let i = b in
-  match f i with | (v_n,false ) -> v_n | (v_n,true ) -> wwhile (f, v_n);;
+let modulus ss = ss mod 10;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let lt10 q = q < 10;;
 
-let _ = fixpoint (collatz, 3);;
+let rec additivePersistence n = if lt10 n then n else [55] @ (digitsOfInt n);;

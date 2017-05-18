@@ -1,4 +1,5 @@
 
-let pipe fs = let f a x = a + x in let base = 0 in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let listReverse l =
+  let rec reverseHelper l rl =
+    function | [] -> rl | h::t -> reverseHelper t (h :: rl) in
+  reverseHelper l [];;

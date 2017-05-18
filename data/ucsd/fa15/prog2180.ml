@@ -12,16 +12,12 @@ let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,s) ->
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (("+" exprToString e2) ^ ")/2)"))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
       "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))));;
-
-let _ = exprToString Trip (Varx, Varx, VarY);;
+        ((exprToString e1) ^
+           ("?" ^ ((exprToString e2) ^ (":" ^ ((exprToString e4) ^ ")")))));;

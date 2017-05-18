@@ -1,8 +1,10 @@
 
-let rec split l =
-  let base = (0, [], []) in
-  let fold_fn (i,l1,l2) elmt =
-    if i < (l / 2)
-    then ((i + 1), ([elmt] @ l1), l2)
-    else (i, l1, ([elmt] @ l2)) in
-  let (_,l1,l2) = List.fold_left fold_fn base l in (l1, l2);;
+let fixpointHelper (f,b) = f;;
+
+let rec wwhile (f,b) =
+  match f b with | (num,expr) -> if expr then wwhile (f, num) else num;;
+
+let fixpoint (f,b) = wwhile ((fixpointHelper (f, b)), b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

@@ -1,17 +1,12 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let x a = a;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth < 1
-  then let base = rand 0 2 in match base with | 0 -> buildX | 1 -> buildY;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      (match [((mulByDigit i (List.rev t)) * 10) + (h * i)] with
+       | x::y ->
+           let rec helper acc v =
+             if v = 0 then 0 :: acc else helper ((v mod 10) :: acc) (v / 10) in
+           helper [] x);;

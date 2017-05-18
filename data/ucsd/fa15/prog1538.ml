@@ -1,5 +1,5 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (y,true ) -> wwhile (f, y);;
 
-let _ = digitsOfInt - 3124;;
+let fixpoint (f,b) = wwhile (((f b), ((not f b) = b)), b);;

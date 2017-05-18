@@ -1,19 +1,22 @@
 
-let rec wwhile (f,b) = failwith "to be written";;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((failwith "to be written"), b);;
-
-let fixpoint (f,b) =
-  let x = wwhile (f b) in if x = b then fixpoint (f, x) else x;;
-
-let rec wwhile (f,b) =
-  let z = f b in
-  match z with | (x,y) -> if y = false then x else wwhile (f, x);;
-
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) =
-  let x = wwhile (f b) in if x = b then b else fixpoint (f, x);;
-
-let _ = fixpoint (collatz, 3);;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.printf "x"
+  | VarY  -> Printf.printf "y"
+  | Sine e -> Printf.printf "sin(pi*%s)" exprToString e
+  | Cosine e -> Printf.printf "cos(pi*%s)" exprToString e
+  | Average (e1,e2) ->
+      Printf.printf "((%s + %s)/2)" exprToString e1 exprToString e2
+  | Times (e1,e2) -> Printf.printf "%s * %s" exprToString e1 exprToString e2
+  | Thresh (e1,e2,e3,e4) ->
+      Printf.printf "(%s<%s ? %s : %s)" exprToString e1 exprToString e2
+        exprToString e3 exprToString e4;;

@@ -1,5 +1,9 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((f, (((f b) = (f (b - 1))) && ((f b) = b))), b);;
+let rec mulByDigit i l =
+  let (cout,res) =
+    match l with
+    | [] -> (0, [])
+    | h::t ->
+        let (cin,acc) = mulByDigit i t in
+        let sum = (i * h) + cin in ((sum / 10), ((sum mod 10) :: acc)) in
+  if cout > 0 then cout :: res else res;;

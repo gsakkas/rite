@@ -1,7 +1,6 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let x l = List.map l;;
 
-let palindrome w = match explode w with | [] -> true | h::t -> explode w;;
+let y = [("h", "d", "c")];;
+
+let y = [("h", "d", "c")] x y;;

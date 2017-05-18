@@ -1,2 +1,3 @@
 
-let pipe fs = let f a x = x a in let base = f 0 0 in List.fold_left f base fs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> let r = listReverse t in r :: h;;

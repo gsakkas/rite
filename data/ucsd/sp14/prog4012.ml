@@ -1,9 +1,6 @@
 
-let x = [1; 2; 3];;
+let decr x = x - 1;;
 
-let rec getLast l =
-  match l with | [] -> [] | x::[] -> x | head::tail -> getLast tail;;
+let incr x = x + 1;;
 
-let x = [1; 2; 3];;
-
-let _ = getLast x;;
+let foo = List.map [incr; decr] 9;;

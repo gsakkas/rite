@@ -1,26 +1,22 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfIntHelper n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfIntHelper (n / 10));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine n -> "sin(" ^ ((exprToString Times (pi, x)) ^ ")")
-  | Cosine n -> "cos(" ^ ((exprToString Times (pi, x)) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) ->
-      "(" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")")))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))));;
+let rec listReverseHelper l =
+  let rec go i =
+    function
+    | [] -> i
+    | headElement::tailList -> go (headElement :: i) tailList in
+  go [] l;;
+
+let rec digitsOfInt n = listReverseHelper (digitsOfIntHelper n);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+
+let rec additivePersistence n =
+  let rec count acc n =
+    if (sumList (digits n)) mod (10 not 0) then acc else acc + 1 in
+  count 1 n;;

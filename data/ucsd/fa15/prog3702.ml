@@ -1,26 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> e
-  | VarY  -> e
-  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
-  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<*" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))));;
+let padZero l1 l2 =
+  if (List.length l1) <= (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (((clone 0 ((List.length l1) - (List.length l2))) @ l2), l1);;
+
+let makeList l1 l2 =
+  let (x,y) = padZero l1 l2 in (x, (clone y list.length y));;

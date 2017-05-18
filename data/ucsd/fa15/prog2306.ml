@@ -1,15 +1,28 @@
 
-let rec digitsOfInt n =
-  let return = [n mod 10] in
-  if (n / 10) <> 0
-  then ((n mod 10) :: return; (digitsOfInt (n / 10)) @ return)
-  else return;;
+let rec clone x n =
+  if n < 1 then [] else (match n with | _ -> [x] @ (clone x (n - 1)));;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let c y = y;;
 
-let rec digitalRoot n =
-  let digits = digitsOfInt n in
-  let s = sumList digits in
-  if (n / 10) <> 0
-  then (print_int n; print_endline " "; digitalRoot)
-  else digits;;
+let padZero l1 l2 =
+  let s1 = List.length l1 in
+  let s2 = List.length l2 in
+  if s1 = s2
+  then (l1, l2)
+  else
+    if s1 > s2
+    then (l1, ((clone 0 (s1 - s2)) @ l2))
+    else (((clone 0 (s2 - s1)) @ l1), l2);;
+
+let rec removeZero l =
+  if l = []
+  then []
+  else (let h::t = l in match h with | 0 -> removeZero t | _ -> l);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (b::b',c::c') = x in ((b + c), (b + c)) @ a in
+    let base = ([], []) in
+    let args = padZero l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

@@ -1,5 +1,10 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let fixpoint (f,b) = wwhile ((f, b), b);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w = if w = (listReverse (explode w)) then true else false;;

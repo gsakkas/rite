@@ -1,11 +1,5 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let pipe fs =
+  let f a x p s a = x a in let base d = d in List.fold_left f base fs;;
 
-let rec exprToString e = match e with | VarX  -> "%s" e;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

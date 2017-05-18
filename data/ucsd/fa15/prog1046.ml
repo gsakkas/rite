@@ -7,33 +7,24 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Harmonic of expr* expr
-  | Log of expr* expr* expr;;
+  | Squares of expr
+  | Volume of expr* expr* expr;;
 
 let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (w,x,y,z) ->
       "(" ^
-        ((exprToString e1) ^
+        ((exprToString w) ^
            ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | Harmonic (e1,e2) ->
-      "((" ^
-        ((exprToString e1) ^
-           ("*" ^
-              ((exprToString e2) ^
-                 (")/(" ^ ((exprToString e1) ^ ("+" ^ (exprToString e2 ")")))))))
-  | Log (e1,e2,e3) ->
-      "(log(" ^
-        ((exprToString e1) ^
-           ("/" ^
-              ((exprToString e2 ")/") ^ ("log(" ^ ((exprToString e3) ^ "))")))));;
+              ((exprToString x) ^
+                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
+  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+  | Volume (j,k,l) ->
+      (exprToString e) ^ ("*" ^ (exprToString e "*" exprToString e));;

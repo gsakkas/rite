@@ -1,4 +1,5 @@
 
-let foo xs = match xs with | [] -> (fun x  -> x) | h::t -> h;;
+let rec append xs1 xs2 =
+  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
 
-let _ = foo [] [1; 2; 3; 4; 5] [1; 0; 1; 0];;
+let _ = append [1; 2; 3] 4;;

@@ -1,6 +1,21 @@
 
-let pipe fs =
-  let f a x result n = x (a n) in
-  let base result n = 0 in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e' -> "sin (pi * " ^ ((exprToString e') ^ ")")
+  | Cosine e' -> "cos (pi * " ^ ((exprToString e') ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ (" + " ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ (" * " ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^ (a ^ ("< " ^ (b ^ (" ? " ^ (c ^ (" : " ^ (d ^ ")")))))));;

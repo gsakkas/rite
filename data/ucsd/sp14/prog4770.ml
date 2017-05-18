@@ -1,28 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Root of expr;;
+let rec clone x n =
+  if n < 1
+  then []
+  else
+    (let rec helper acc f x =
+       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
+     helper [] x n);;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let x = (List.length l1) - (List.length l2) in
+  if x != 0
+  then
+    (if x < 0
+     then (((clone 0 (abs x)) @ l1), l2)
+     else (l1, ((clone 0 (abs x)) @ l2)))
+  else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Squared e -> (eval e) ** 2
-  | Root e -> (eval e) ** (1 / 2);;
+let rec removeZero l =
+  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (b,c) ->
+          let sum = b + c in
+          if sum < 10
+          then
+            (match a with
+             | (len,[]) -> (len, [sum])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then
+                   (if sum = 9
+                    then (len, ((-1) :: 0 :: xs'))
+                    else (len, ((sum + 1) :: xs')))
+                 else (len, (sum :: x' :: xs')))
+          else
+            (match a with
+             | (len,[]) -> (len, [(-1); sum mod 10])
+             | (len,x'::xs') ->
+                 if x' = (-1)
+                 then (-1) :: ((sum mod 10) + 1) :: a
+                 else (len, ((-1) :: (sum mod 10) :: x' :: xs'))) in
+    let base = ((List.length l1), []) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

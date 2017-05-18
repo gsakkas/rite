@@ -1,2 +1,5 @@
 
-let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
+let rec listReverse l =
+  let reverseHelper r =
+    match l with | [] -> [] | h::t -> listReverse t (h :: r) in
+  listReverse [] [];;

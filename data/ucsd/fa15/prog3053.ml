@@ -1,6 +1,4 @@
 
-let rec mulByDigit i l =
-  let f a x =
-    let c = i * x in match a with | [] -> [] | h::t -> (h * i) mod 10 in
-  let base = [] in
-  let args = List.rev l in let res = List.fold_left f base args in res;;
+let pipe fs = let f a x = fs in let base = fs in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

@@ -1,9 +1,3 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile ((let g b = ((f b), b) in g), b);;
-
-let _ = fixpoint (collatz, 9001);;
+let rec digitsOfIntHelper n =
+  if n < 1 then [] else (n mod 10) @ (digitsOfIntHelper ((n mod 10) / 10));;

@@ -32,7 +32,7 @@ let rec build (rand,depth) =
   if depth = 0
   then buildX ()
   else
-    (match rand (1, 8) with
+    (match rand (1, 10) with
      | 1 -> buildSine (build (rand, (depth - 1)))
      | 2 -> buildCosine (build (rand, (depth - 1)))
      | 3 ->

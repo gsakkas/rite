@@ -1,3 +1,2 @@
 
-let rec wwhile (f,b) =
-  let c' = f b in let b' = b in if c' = b then c' else wwhile (c', b');;
+let _ = 312.4 / 10;;

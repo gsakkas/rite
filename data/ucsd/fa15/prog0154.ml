@@ -1,4 +1,8 @@
 
-let rec wwhile (f,b) = let (x,y) = f b in if y then wwhile (f, x) else x;;
-
-let fixpoint (f,b) = wwhile ((fun y  -> b = (f b)), b);;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else
+    if n >= 10
+    then (digitsOfIntHelper (n - ((n mod 10) / 10))) :: (n mod 10)
+    else [n];;

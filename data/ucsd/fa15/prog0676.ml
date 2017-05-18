@@ -1,22 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
+let fixpoint (f,b) = let funt b = f b in wwhile (funt, b);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval e))
-  | Cosine e -> cos (pi *. (eval ee))
-  | Average (e1,e2) ->
-      (((eval e) +. (eval e)) /. 2) (((eval e) +. (eval e)) /. 2)
-  | Times (e1,e2) -> (eval e) *. (eval e)
-  | Thresh (e1,e2,e3,e4) -> ((eval e1) < (eval e2 ?eval e3) : eval e4);;
+let fs x = if x = 0 then 0 else if x > 1 then x - 1 else x + 1;;
+
+let _ = fixpoint (fs, 100);;

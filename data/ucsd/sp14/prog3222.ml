@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x a x n = x a in let base = 0 in List.fold_left f base fs;;
+let rec foo acc t1 t2 =
+  match t2 with | [] -> acc | h::t -> foo (List.append [(t1, h)] acc) t;;

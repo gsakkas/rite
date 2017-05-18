@@ -1,7 +1,3 @@
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (a * 10) + (x * 10) in
-    let base = List.hd l1 in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let sqsum xs =
+  let f a x a x = x *. x in let base = 0.0 in List.fold_left f base xs;;

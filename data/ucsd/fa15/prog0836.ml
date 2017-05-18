@@ -1,18 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (h,true ) -> wwhile (f, h) | (h,false ) -> h;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> sin e1
-  | Cosine e1 -> "cos" + (exprToString e1)
-  | Average (e1,e2) -> "avg"
-  | Times (e1,e2) -> (exprToSring e1) + "*";;
+let fixpoint (f,b) =
+  wwhile
+    (let func a = match f b with | b -> (b, false) | x -> (x, true) in
+     ((func f), b));;

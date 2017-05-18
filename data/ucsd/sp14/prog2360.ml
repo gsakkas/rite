@@ -1,8 +1,9 @@
 
-let a x = x + x;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let test f g x = f g;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let x x' = x' + 3;;
+let fixpoint (f,b) = wwhile ((f b), b);;
 
-let _ = test a x;;
+let _ = fixpoint (collatz, 107);;

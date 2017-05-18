@@ -1,25 +1,20 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then padZero (0 :: l1) l2
+  else
+    if (List.length l1) > (List.length l2)
+    then padZero l1 (0 :: l2)
+    else (l1, l2);;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> buildTimes (x, y)
-  | Thresh (e1,e2,e3,e4) -> buildThresh (x, y, x, y);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let sum = ((fst x) + (snd x)) + (fst a) in ((sum / 10), (sum mod 10)) in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

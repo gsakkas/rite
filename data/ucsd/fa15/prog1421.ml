@@ -1,11 +1,30 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Square of expr* expr
+  | Exponential of expr* expr;;
 
-let stringOfList f l = sepConcat ";" (List.map l f);;
-
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine i -> "sin(pi*" ^ ((exprToString i) ^ ")")
+  | Cosine i -> "cos(pi*" ^ ((exprToString i) ^ ")")
+  | Average (i1,i2) ->
+      "((" ^ ((exprToString i1) ^ (" + " ^ ((exprToString i2) ^ ")/2)")))
+  | Times (i1,i2) -> (exprToString i1) ^ ("*" ^ (exprToString i2))
+  | Thresh (i1,i2,i3,i4) ->
+      "(" ^
+        ((exprToString i1) ^
+           ("<" ^
+              ((exprToString i2) ^
+                 (" ? " ^
+                    ((exprToString i3) ^ (":" ^ ((exprToString i4) ^ ")")))))))
+  | Square (i1,i2) -> exprToString i1 "*" exprToString i2
+  | Exponential (i1,i2) -> exprToString i1 "^" exprToString i2;;

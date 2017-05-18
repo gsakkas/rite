@@ -1,8 +1,9 @@
 
-let rec listReverse l =
-  let newList = [] in
-  match l with
-  | [] -> newList
-  | head::tail -> (listReverse tail) @ (newList @ head);;
+let is10gte n = n >= 10;;
 
-let _ = listReverse [1; 2; 3; 4];;
+let rec digitalRoot n =
+  if is10gte
+  then
+    let digitList = digitsOfInt n in
+    let digitSum = sumList digitList in digitalRoot n
+  else n;;

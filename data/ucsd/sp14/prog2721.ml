@@ -1,7 +1,6 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a @ sep in
-      let base = h in let l = t in List.fold_left f base l;;
+let firstF x = x + x;;
+
+let g firstF secondF = secondF firstF;;
+
+let _ = g 3 firstF 3;;

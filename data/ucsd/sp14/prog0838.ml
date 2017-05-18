@@ -1,7 +1,4 @@
 
-let rec clone x n =
-  if n <= 0
-  then []
-  else (match x with | [] -> x | h::t -> h :: (clone t (n - 1)));;
+let rec sum (x,y) = match x with | [] -> y | h::t -> sum (t, (y + h));;
 
-let _ = clone 3 5;;
+let rec revexp (x,y) = match x with | [] -> y | h::t -> sum (t, (h ^ y));;

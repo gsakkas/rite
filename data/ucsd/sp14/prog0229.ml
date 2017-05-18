@@ -1,10 +1,11 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> false
-  | h::t ->
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [h * i]
-       with
-       | [] -> []
-       | h1::t1 -> let rec helper acc v = [v] = [0] in helper [] h1);;
+let rec reverse s =
+  let n = String.length s in
+  for i = 0 to (n - 1) / 2 do
+    (let c = s.[i] in s.[i] <- s.[(n - i) - 1]; s.[(n - i) - 1] <- c)
+  done;
+  s;;
+
+let z = [1; 2; 3; 4; 5; 6];;
+
+let _ = reverse z;;

@@ -1,3 +1,4 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else [digitsOfInt (n / 10)] @ [n mod 10];;
+let rec wwhile (f,b) =
+  let (x,y) = match f with | (a,b)|_ -> (a, b) in
+  if y = true then wwhile (f, y) else x;;

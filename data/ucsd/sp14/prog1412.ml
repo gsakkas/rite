@@ -1,6 +1,8 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> a | h::t -> h * h in
-  let base = 0 in List.fold_left f base xs;;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
 
-let _ = sqsum [1; 2; 3; 4];;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
+
+let (x,y) = f 8;;
+
+let f b = f = x;;

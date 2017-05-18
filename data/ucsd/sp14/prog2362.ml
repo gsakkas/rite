@@ -1,8 +1,4 @@
 
-let a x = x + x;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let test f g x = f (f g);;
-
-let x x' = x' + 3;;
-
-let _ = test a x;;
+let fixpoint (f,b) = wwhile (((f b) = b), b);;

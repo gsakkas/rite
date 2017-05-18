@@ -1,2 +1,2 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> [listReverse t; h];;
+let _ = [1; 2] + 1;;

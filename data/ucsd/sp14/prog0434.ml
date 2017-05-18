@@ -1,2 +1,3 @@
 
-let rec eval (e,x,y) = assert (((-1.0) <= eval) && (eval <= 1.0)); eval;;
+let rec sumList xs =
+  match xs with | [] -> [] | _ -> (List.hd xs) + (sumList List.tl);;

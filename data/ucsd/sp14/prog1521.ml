@@ -1,4 +1,5 @@
 
-let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let _ = concat [('a', 'a')];;
+let fixpoint (f,b) = wwhile (let h x y = ((y x), (x = x)) in ((h b f), b));;

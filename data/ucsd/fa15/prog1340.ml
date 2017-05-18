@@ -1,15 +1,22 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (l1x,l2x) = x in
-      let (a1,a2) = a in
-      let sum = (l1x + l2x) + a1 in
-      (((sum / 10) :: a1), ((sum mod 10) :: a2)) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> ("sine(" + (eval e)) + ")"
+  | Cosine e -> ("cos(" + (eval e)) + ")"
+  | Average (e1,e2) -> ((("(" eval e1) + "+") + (eval e2)) + ")/2"
+  | Times (e1,e2) -> ((eval e1) + "*") + (eval e2)
+  | Thresh (e1,e2,e3,e4) ->
+      ((((((("(" + (eval e1)) + "<") + (eval e2)) + "?") + (eval e3)) + ":")
+         + (eval e4))
+        + ")";;

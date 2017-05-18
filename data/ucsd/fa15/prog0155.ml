@@ -1,8 +1,8 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let x = (h * i) mod 10 in
-      let k = (h * i) / 10 in
-      if k = 0 then k + (mulByDigit t) else [x] @ (k + (mulByDigit t));;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else
+    if n >= 10
+    then (digitsOfIntHelper n) = ((n - ((n mod 10) / 10)) :: (n mod 10))
+    else [n];;

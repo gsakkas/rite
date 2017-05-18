@@ -1,6 +1,5 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n = 0 then [0] else if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append listReverse t [h];;

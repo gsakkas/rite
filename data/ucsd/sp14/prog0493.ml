@@ -1,9 +1,7 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec revexp (x,y) = match x with | [] -> y | h::t -> revexp (t, (h ^ y));;
-
-let palindrome w = if w = (revexp ((explode w), "")) then true else false;;
+let rec digitsOfInt n =
+  let rec helper x =
+    match x with | 0 -> [] | n -> (n mod 10) :: (helper (n / 10)) in
+  let rec reverse xs =
+    match xs with | [] -> [] | hd::tl -> (reverse tl) :: hd in
+  reverse (helper n);;

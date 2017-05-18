@@ -4,7 +4,6 @@ let removeDuplicates l =
     match rest with
     | [] -> seen
     | h::t ->
-        let seen' = h in
-        let rest' = if List.mem h seen then rest else h :: rest in
-        helper (seen', rest') in
+        if List.mem h seen
+        then let seen' = h :: seen in let rest' = t in helper (seen', rest') in
   List.rev (helper ([], l));;

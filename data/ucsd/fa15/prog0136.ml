@@ -1,9 +1,3 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else seen :: h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfIntHelper n =
+  if n < 1 then [] else [digitsOfIntHelper ((n - (n mod 10)) / 10); n mod 10];;

@@ -1,11 +1,5 @@
 
-let rec multHelper i l =
+let rec assoc (d,k,l) =
   match l with
-  | [] -> []
-  | h::t ->
-      let x = h * i in
-      (match x with
-       | x when x >= 10 ->
-           ((multHelper i t) :: ((x / 10), (x mod 10))) @
-             ((multiHelper i t) @ [])
-       | _ -> (0, x) @ (multiHelper i t));;
+  | [] -> d
+  | h::t -> let (a,b) = h in if a = k then b else assoc t;;

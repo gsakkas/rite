@@ -7,22 +7,27 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Trip of expr* expr* expr;;
+  | Volume of expr* expr* expr
+  | Tan of expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
-  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
-  | Thresh (t,r,s,q) ->
-      if (eval (t, x, y)) < (eval (r, x, y))
-      then eval (s, x, y)
-      else eval (q, x, y)
-  | Trip (t,r,s) ->
-      ((sin (pi *. (eval (r, x, y)))) * (tan (pi *. (eval (s, x, y))))) *.
-        (sin (pi *. (eval (t, x, y))));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Volume (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1 "*") ^
+           ((exprToString e2 "*") ^ ((exprToString e3) ^ ")")))
+  | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")");;

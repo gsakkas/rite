@@ -1,7 +1,4 @@
 
-let rec palindromeHelper w r =
-  match w with
-  | [] -> (match r with | [] -> true | _ -> false)
-  | x::s ->
-      (match r with | y::t -> if x = y then palindromeHelper s t | _ -> false)
-  | _ -> false;;
+let pipe fs =
+  let f a x = match a with | [] -> x | h::t -> h x in
+  let base = fs in List.fold_left f base fs;;

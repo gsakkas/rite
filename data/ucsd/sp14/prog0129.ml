@@ -1,4 +1,2 @@
 
-let rec myFunc f a b = match b with | [] -> a | h::t -> a + (myFunc f h t);;
-
-let _ = myFunc (fun x  -> fun y  -> x) [1; 2; 3; 4];;
+let rec sumList xs = if (xs :: 1) = 1 then 0;;

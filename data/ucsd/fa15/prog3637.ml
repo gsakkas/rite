@@ -1,2 +1,2 @@
 
-let rec mulByDigit i l = let x = List.map (l * i) l in big Add x [];;
+let pipe fs = let f a x x = x a in let base z = z in List.fold_left f base fs;;

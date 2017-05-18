@@ -1,6 +1,2 @@
 
-let decr x = x - 1;;
-
-let incr x = x + 1;;
-
-let foo = (List.map incr 9) :: (List.map decr [10]);;
+let pipe fs = let f a x = x a in let base = f fs in List.fold_left f base fs;;

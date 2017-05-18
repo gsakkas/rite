@@ -1,10 +1,2 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (n / 10) <= 0
-  then n mod 10
-  else additivePersistence sumList digitsOfInt n;;
+let rec assoc (d,k,l) = match l with | h::t -> assoc d k t;;

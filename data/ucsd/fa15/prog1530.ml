@@ -1,14 +1,34 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Golden of expr
+  | MeanPi of expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr1,expr2) ->
+      "(" ^ ((exprToString expr1) ^ ("+" ^ ((exprToString expr2) ^ ")/2")))
+  | Times (expr1,expr2) ->
+      (exprToString expr1) ^ ("*" ^ (exprToString expr2))
+  | Thresh (expr1,expr2,expr3,expr4) ->
+      "(" ^
+        ((exprToString expr1) ^
+           ("<" ^
+              ((exprToString expr2) ^
+                 ("?" ^
+                    ((exprToString expr3) ^
+                       (":" ^ ((exprToString expr4) ^ ")")))))))
+  | Golden expr -> ""
+  | MeanPi (expr1,expr2,expr3) -> "";;
 
-let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
-
-let rec additivePersistence n =
-  let rec counter c =
-    if n < 10
-    then c
-    else counter (c + 1) additivePersistence (sumList (digits n)) in
-  counter 0 n;;
+let _ = exprToString Golden VarX;;

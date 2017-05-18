@@ -1,9 +1,10 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (h t) then true else false in
-        let rest' = failwith "to be written" in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      (match List.length t with
+       | 1 -> [i * h]
+       | _ -> [remainder h i] @ (((i * h) / 10) + (mulByDigit i t)));;

@@ -1,11 +1,9 @@
 
-let rec reverse s =
-  let s2 = String.length s in
-  for i = 0 to (s2 - 1) / 2 do
-    (let c = s.[i] in s.[i] <- s.[(s2 - i) - 1]; s.[(s2 - i) - 1] <- c)
-  done;
-  int_of_string s;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = "" in let l = h in List.fold_left f base l;;
 
-let x = 13;;
-
-let x = "1234" reverse x;;
+let _ = sepConcat "X" ["hello"];;

@@ -1,7 +1,9 @@
 
-let bigMul l1 l2 =
-  let f a x = x in
-  let base = (0, []) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let _ = bigMul [9; 9; 9; 9; 9] [9; 9; 9; 9; 9];;
+let stringOfList f l = List.map f (sepConcat ";" l);;

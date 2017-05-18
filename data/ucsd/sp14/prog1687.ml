@@ -1,7 +1,5 @@
 
-let pipe fs =
-  let rec iter acc curr =
-    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
-  iter (fun y  -> y) fs;;
+let rec wwhile (f,b) =
+  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let fixpoint (f,b) = wwhile ((fun x  -> let y = (f, x) in (y, (y != b))), b);;

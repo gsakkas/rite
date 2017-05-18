@@ -1,5 +1,4 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | h::t -> if k = h then 10 else assoc (d, k, t);;
+let pipe fs = let f a x y = x a in let base y = y in List.fold_left f base fs;;
 
-let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

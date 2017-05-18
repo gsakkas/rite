@@ -1,4 +1,5 @@
 
-let lt10 q = q < 10;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec additivePersistence n = if lt10 n then n else 55 :: 66;;
+let fixpoint (f,b) = wwhile ((f, ((f b) != b)), b);;

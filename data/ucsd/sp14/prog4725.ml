@@ -1,12 +1,4 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
+let pipe fs = let f a x = x a in let base = 1 in List.fold_left f base fs;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ = fixpoint (collatz, 3);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

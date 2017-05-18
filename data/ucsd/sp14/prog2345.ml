@@ -1,6 +1,3 @@
 
-let plus x y = x + y;;
-
-let plus1 = plus 1;;
-
-let _ = plus1 plus1 2;;
+let rec factorial x acc =
+  if x = 0 then acc else factorial (x -. 1.0) (x *. acc);;

@@ -1,5 +1,5 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let pipe fs =
+  let f a x y = x a y in let base x = x in List.fold_left f base fs;;
 
-let fixpoint (f,b) = wwhile ((wwhile (f, b)), b);;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

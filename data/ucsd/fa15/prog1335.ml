@@ -1,15 +1,13 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (l1x,l2x) = x in
-      let (a1,a2) = a in
-      let sum = (l1x + l2x) + (a1 [(List.length a1) - 1]) in (sum / 10) ::
-        (a1.(sum % 10)) :: a2 in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) =
+  let foo f b =
+    let result = f b in
+    if result = b then (result, false) else (result, true) in
+  wwhile f b;;
+
+let _ = fixpoint (collatz, 3);;

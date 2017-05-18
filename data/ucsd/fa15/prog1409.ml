@@ -1,3 +1,4 @@
 
-let pipe fs =
-  let f a x a x = x a in let base y = y in List.fold_left f base fs;;
+let rec build (rand,depth) = failwith "to be implemented";;
+
+let g1 () = build (11, 0, 1);;

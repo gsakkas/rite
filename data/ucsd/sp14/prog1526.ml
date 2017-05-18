@@ -1,5 +1,5 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let fixpoint (f,b) =
-  wwhile ((let w b' = let fb = f b' in (fb, (fb = b')) in f b), b);;
+let fixpoint (f,b) = wwhile (let h = f in ((h, false), b));;

@@ -1,9 +1,8 @@
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
+let rec digithelper n l =
+  let x = n / 10 in
+  let y = n mod 10 in if x <= 0 then y :: l else digithelper x (y :: l);;
 
-let stringOfList f l = "[" ^ ((stringOfList (List.map f l)) ^ "]");;
+let digitsOfInt n = if n <= 0 then [] else digithelper n [];;
+
+let _ = digitsOfInt - 1.5;;

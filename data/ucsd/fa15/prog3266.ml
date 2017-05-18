@@ -1,12 +1,27 @@
 
-let rec wwhile (f,b) = if b = true then wwhile (f, b) else b;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let g b = let t = f b in if b = t then (b, false) else (t, true) in g),
-      b);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = fixpoint (collatz, 3);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | h::t ->
+          (match h with
+           | (fir,sec) ->
+               (match a with
+                | h::t -> ((fir + sec) + (h / 10)) ::
+                    (((fir + sec) + h) mod 10) :: t)) in
+    let base = [] in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;

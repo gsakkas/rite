@@ -1,7 +1,6 @@
 
-let isNotPos n = n <= 0;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let rec digitsOfInt n =
-  if isNotPos n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let _ = digitsOfInt - 3;;
+let fixpoint (f,b) = wwhile (let g x = (f, (b = (f b))) in (g, b));;

@@ -1,6 +1,9 @@
 
-let digitsOfInt n = match n < 0 with | true  -> [] | false  -> [(0, 1)];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let digitsOfInt n = if n < 0 then [] else [digitsOfInt (n mod 10)];;
-
-let _ = digitsOfInt - 3;;
+let stringOfList f l = "[" :: (sepConcat ";" (List.map f l));;

@@ -1,6 +1,13 @@
 
-let rec wwhile (f,b) =
-  let i = b in
-  match f i with | (v_n,false ) -> v_n | (v_n,true ) -> wwhile (f, v_n);;
+let checkSame (x,y) = x == y;;
 
-let fixpoint (f,b) = let f' x = (f, ((f b) = b)) in wwhile (f', b);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), w) then true else false c;;

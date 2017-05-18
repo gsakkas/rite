@@ -1,2 +1,3 @@
 
-let rec catLists x y = match x with | [] -> [] | h::t -> catLists t;;
+let rec listReverse l =
+  match l with | [] -> 0 | h::t -> (listReverse t) @ [h];;

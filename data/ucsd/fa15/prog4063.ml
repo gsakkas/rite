@@ -1,13 +1,10 @@
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if result then wwhile (f, value) else value;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let helper func = let (value,result) = f b in (value, (not result)) in
-      helper), b);;
-
-let _ = fixpoint (collatz, 48);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (clone 0 ((List.length l1) - (List.length l2))) @ l1
+  else
+    if (List.length l1) < (List.length l2)
+    then [(clone 0 ((List.length l2) - (List.length l1))) @ l1] @ [l2]
+    else [];;

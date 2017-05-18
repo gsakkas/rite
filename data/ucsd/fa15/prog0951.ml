@@ -1,8 +1,9 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | (s,i)::t -> (match k with | (s,i) -> i | _ -> assoc (d, k, t));;
-
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not List.mem h seen then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

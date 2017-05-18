@@ -1,12 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) = let (i,t) = f b in if t then wwhile (f, i) else i;;
 
-let stringOfList f l =
-  if f = string_of_int then sepConcat ";" l else sepConcat ";" l;;
-
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let fixpoint (f,b) = wwhile ((let (i,t) = f b in i = b), b);;

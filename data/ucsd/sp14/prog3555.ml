@@ -1,3 +1,6 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) @ [digitsOfInt (n / 10)];;
+let fun1 x = x + x;;
+
+let fun2 x = x + 3;;
+
+let pipe x = fun2 x (fun1 x);;

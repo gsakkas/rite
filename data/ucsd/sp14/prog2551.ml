@@ -1,9 +1,11 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec wwhile (f,b) =
+  let helper = f b in
+  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
 
-let stringOfList f l = List.map (sepConcat ("; " l)) l;;
+let fixpoint (f,b) =
+  wwhile
+    (let g =
+       let self = f b in
+       match self with | b -> (self, true) | _ -> (self, false) in
+     (g, b));;

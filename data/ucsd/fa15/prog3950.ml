@@ -1,11 +1,6 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let abs x = if x < 0 then x * (-1) else x;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let y = [1; 2; 3];;
 
-let palindrome w =
-  match explode w with | [] -> true | h::t -> listReverse (explode w);;
+let _ = abs y;;

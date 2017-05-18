@@ -1,22 +1,31 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. e0)
-  | Cosine e1 -> cos (pi *. e1)
-  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
-  | Times (e4,e5) -> (eval e4) * (eval e5)
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval e6) < (eval e7) then eval e8 else eval e9;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ [initsum])) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  List.rev removeZero (add (padZero l1 l2));;

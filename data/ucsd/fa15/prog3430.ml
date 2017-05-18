@@ -1,2 +1,2 @@
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (t append r);;
+let rec clone x n = if n <= 0 then [] else x :: (clone (n - 1));;

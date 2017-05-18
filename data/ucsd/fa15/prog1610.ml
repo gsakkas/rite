@@ -1,7 +1,20 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let f::e = h in if f = k then e else assoc (d, k, t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> Printf.printf "%s"
+  | VarY  -> Printf.printf "%s"
+  | Sine sin -> Printf.printf ("sin( %s )" sin)
+  | Cosine cos -> Printf.printf "cos(%s)" cos
+  | Average (e1,e2) -> Printf.printf "((%s+%s)/2)" e1 e2
+  | Times (t1,t2) -> Printf.printf "%s*%s" t1 t2
+  | Thresh (th1,th2,th3,th4) ->
+      Printf.printf "(%s<*%s?%s:%s)" th1 th2 th3 th4;;

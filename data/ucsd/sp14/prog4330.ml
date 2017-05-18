@@ -1,19 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let f x = 1;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Printf.sprintf "%s"
-  | VarY  -> Printf.sprintf "%s"
-  | Sine e1 -> Printf.sprintf "%s" e1
-  | Cosine e2 -> "%s" e2
-  | Average (e3,e4) -> "%s %s" e3 e4
-  | Times (e5,e6) -> "%s %s" e5 e6
-  | Thresh (e7,e8,e9,e0) -> "%s %s %s %s" e7 e8 e9 e0;;
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let _ =
+  let pipe fs = let f a x = x in fun x  -> x in
+  let base p = p in List.fold_left f base (List.rev fs);;

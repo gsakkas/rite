@@ -1,39 +1,19 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec reverse s =
+  let s2 = String.length s in
+  for i = 0 to (s2 - 1) / 2 do
+    (let c = s.[i] in s.[i] <- s.[(s2 - i) - 1]; s.[(s2 - i) - 1] <- c)
+  done;
+  int_of_string s;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (v1,v2) ->
-          (match a with
-           | (list1,list2) ->
-               (match list1 with
-                | [] ->
-                    ((((v1 + v2) / 10) :: list1), (((v1 + v2) mod 10) ::
-                      list2))
-                | h::t ->
-                    (((((v1 + v2) + h) / 10) :: list1),
-                      ((((v1 + v2) + h) mod 10) :: list2)))) in
-    let base = ([], []) in
-    let args = List.append (List.rev (List.combine l1 l2)) [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      let rec adder x = match x with | [] -> [] | h::t -> bigAdd h (adder t) in
-      (adder (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)))) @
-        [helper [] (h * i)];;
+let rec digitsOfInt n z =
+  if n < 0
+  then []
+  else
+    if z = 0
+    then (let n2 = reverse (string_of_int n)
+          and z = 1 in digitsOfInt n2 0)
+    else
+      (let x = n / 10
+       and y = n mod 10 in
+       if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;

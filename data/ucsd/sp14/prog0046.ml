@@ -1,2 +1,4 @@
 
-let rec wwhile (f,b) = let (bs,cs) = f b in if cs then f bs else bs;;
+let append x y = x :: y;;
+
+let _ = append 1 2;;

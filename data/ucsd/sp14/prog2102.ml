@@ -1,15 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine ex -> sin (exprToString ex);;
+let assoc (d,k,l) =
+  match l with
+  | h::t ->
+      let rec helper di ki li =
+        let (name,age) = li in
+        if name = ki
+        then di
+        else (match li with | h::t -> helper di ki t | _ -> di) in
+      helper d k h;;

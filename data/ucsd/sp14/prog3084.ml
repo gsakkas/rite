@@ -1,5 +1,4 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (let a = n / 10 in let b = n mod 10 in (digitsOfInt a) :: b);;
+let rec clone x n =
+  let rec helper = match n with | 0 -> [] | _ -> x :: ((helper n) - 1) in
+  helper n;;

@@ -7,55 +7,26 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumSquared of expr* expr* expr;;
+  | Tan of expr
+  | Sine_Avg of expr* expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildCosine e = Cosine e;;
-
-let buildNegate e = Negate e;;
-
-let buildPercent e = Percent e;;
-
-let buildSine e = Sine e;;
-
-let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with
-     | 1|2 -> buildSine (build (rand, (depth - 1)))
-     | 3|4 -> buildCosine (build (rand, (depth - 1)))
-     | 5|6 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7|8 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 9 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if (num mod 2) = 0
-         then buildPercent (rand, (depth - 1))
-         else
-           if (num mod 3) = 0
-           then buildNegate (rand, (depth - 1))
-           else
-             buildSumSquared
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1)))));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Tan a -> eval (a, (tan (pi *. x)), (tan (pi *. y)))
+  | Sine_Avg (a,b,c) ->
+      eval
+        ((eval (a, (sin (pi * x)), (sin (pi * y)))),
+          (eval (b, (sin (pi * x)), (sin (pi * y)))),
+          (eval (c, (sin (pi * x)), (sin (pi * y)))));;

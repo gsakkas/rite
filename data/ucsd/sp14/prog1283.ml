@@ -1,4 +1,6 @@
 
+let pi = 4.0 *. (atan 1.0);;
+
 type expr =
   | VarX
   | VarY
@@ -10,11 +12,15 @@ type expr =
 
 let rec eval (e,x,y) =
   match e with
-  | Sine v -> sin (eval (v, x, y))
-  | Cosine v -> cos (eval (v, x, y))
-  | Average (v,w) -> ((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0
-  | Times (v,w) -> (eval (v, x, y)) * (eval (v, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (x',y') -> (x +. y) /. 2.0
+  | Times (x',y') -> x *. y
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
+
+let _ = ((eval (Thresh (VarX, VarY, (Sine VarX), (Cosine VarX)))), 1.0, 0.5);;

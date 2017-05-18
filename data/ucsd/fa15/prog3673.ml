@@ -1,9 +1,9 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 ((List.length l2) - (List.length l1))) @ l1
+  else (clone 0 ((List.length l1) - (List.length l2))) @ l2;;
 
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ = fixpoint (collatz, 107);;
+let _ = not padZero [9; 9] [1; 0; 0; 2];;

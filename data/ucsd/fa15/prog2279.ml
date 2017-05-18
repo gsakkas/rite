@@ -1,3 +1,6 @@
 
-let rec digitsOfInt n =
-  let return = [] in if n < 0 then return else return :: 1;;
+let rec removeZero l =
+  let h::t = l in
+  if h = [] then [] else (match h with | 0::[] -> removeZero t | _ -> t);;
+
+let _ = removeZero [9; 9];;

@@ -1,31 +1,12 @@
 
-let rec clone x n =
-  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+let foldl f b xs =
+  let rec helper res = function | [] -> res | h::t -> helper (f res h) t in
+  helper b xs;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  match length1 >= length2 with
-  | true  ->
-      let n = length1 - length2 in
-      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
-  | false  ->
-      let n = length2 - length1 in
-      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+let rec map f xs = match xs with | [] -> [] | h::t -> (f h) :: (map f t);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+let (|>) x f = f x;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (carry,h1::t1) ->
-          (match x with
-           | h2::t2 ->
-               ((((h1 + h2) + carry) / 10), (((h1 + h2) mod 10) :: t1))) in
-    let base = [] in
-    let args = l2 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let sumofsquares xs = (xs |> (map (fun x  -> x * x))) |> (foldl (+) 0);;
+
+let _ = sumofsquares 5;;

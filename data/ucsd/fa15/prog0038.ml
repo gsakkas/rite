@@ -1,4 +1,3 @@
 
-let rec clone x n = if n = 0 then x else x @ (clone x (n - 1));;
-
-let _ = clone 3 5;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ [digitsOfInt (n / 10)];;

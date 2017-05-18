@@ -1,31 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | NewOp1 of expr* expr* expr
-  | NewOp2 of expr;;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | NewOp1 (e1,e2,e3) ->
-      ((1 /. (sin (pi *. (eval (e1, x, y))))) *.
-         (cos (pi *. (eval (e1, x, y)))))
-        *. (sin (pi *. (eval (e1, x, y))))
-  | NewOp2 e1 -> 1 /. (sin (pi *. (eval (e1, x, y))));;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then (cloneHelper 0 l1) - (1 * diff)
+  else if diff > 0 then (cloneHelper 0 diff) @ l2;;

@@ -1,2 +1,3 @@
 
-let rec clone x n = if x <= 0 then [] else clone [x] (n - 1);;
+let rec sum (x,y) =
+  match x with | [] -> [] | h::t -> y = (y + (h sum (t, y)));;

@@ -1,40 +1,31 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Uncreative of expr* expr* expr
+  | Creative of expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x = y
-  then (l1, l2)
-  else
-    if x < y
-    then (((clone 0 (y - x)) @ l1), l2)
-    else (l1, ((clone 0 (x - y)) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (l1x,l2x) = x in
-      let (a1,a2) = a in
-      let test = match a1 with | [] -> 0 | h::t -> h in
-      let sum = (l1x + l2x) + test in
-      if (List.length a2) = ((List.length l1) - 1)
-      then (((sum / 10) :: a1), ((sum / 10) :: (sum mod 10) :: a2))
-      else (((sum / 10) :: a1), ((sum mod 10) :: a2)) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i < 1 then [] else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let test = match a with | [] -> 1 | h::t -> 10 * h in
-    let multi = mulByDigit (test * x) l1 in ((test :: a), (bigAdd multi a)) in
-  let base = ([], []) in
-  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Uncreative (e1,e2,e3) ->
+      (((((eval (e1, x, y)) /. 2) *. (eval (e2, x, y))) /. 3) *.
+         (eval (e3, x, y)))
+        /. 4
+  | Creative e1 -> (-1) *. (eval e1);;

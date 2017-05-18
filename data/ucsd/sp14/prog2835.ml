@@ -1,4 +1,9 @@
 
-let rec digitsOfInt n = match n < 0 with | true  -> [];;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let _ = digitsOfInt - 3;;
+let padZero l1 l2 =
+  let a = List.length l1 in let b = List.length l2 in if 1 < 2 then clone 0 1;;

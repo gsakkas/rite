@@ -1,3 +1,7 @@
 
-let rec clone x n =
-  let rec helper n = match n with | 0 -> [] | _ -> (helper n) - 1 in helper n;;
+let pipe fs =
+  let rec iter acc curr =
+    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
+  iter (fun y  -> y) fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

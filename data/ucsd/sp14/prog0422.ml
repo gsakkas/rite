@@ -1,3 +1,6 @@
 
-let rec foo acc t1 t2 =
-  match t2 with | [] -> acc | h::t -> foo (List.append [(t1, h)] acc) t;;
+let rec append xs x =
+  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+
+let rec digitsOfInt n =
+  if n <= 0 then [] else n - ((n / 10) * (10 append digitsOfInt (n / 10)));;

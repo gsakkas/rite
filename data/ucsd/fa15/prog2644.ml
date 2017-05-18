@@ -1,5 +1,11 @@
 
-let rec wwhile (f,b) =
-  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) = wwhile (((f b), (b == (f b))), b);;
+let stringOfList f l = sepConcat "; " l;;
+
+let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;

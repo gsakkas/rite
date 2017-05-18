@@ -1,22 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ (exprToString e)
-  | Cosine e -> Printf.printf "cos(pi*%s)" (!exprToString) e
-  | Average (e1,e2) ->
-      Printf.printf "((%s + %s)/2)" exprToString e1 exprToString e2
-  | Times (e1,e2) -> Printf.printf "%s * %s" exprToString e1 exprToString e2
-  | Thresh (e1,e2,e3,e4) ->
-      Printf.printf "(%s<%s ? %s : %s)" exprToString e1 exprToString e2
-        exprToString e3 exprToString e4;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (h, seen) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

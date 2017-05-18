@@ -1,7 +1,3 @@
 
 let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
-
-let fixpoint (f,b) =
-  let rec funt x = ((funt b), ((f b) = b)) in wwhile (funt, b);;
+  match f b with | (f,(h1,h2)) -> if h2 then wwhile (f, (h1, h2)) else h1;;

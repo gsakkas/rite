@@ -1,3 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile f a;;
+let rec clone x n = if n < 1 then [] else x :: ((clone x n) - 1);;

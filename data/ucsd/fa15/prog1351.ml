@@ -1,5 +1,3 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then Printf.fprintf "%d\n" 0
-  else Print.fprintf "%d " digitsOfInt (n / 10);;
+let rec assoc (d,k,l) =
+  match l with | [] -> (-1) | h::l' -> let (x,y) = h in print_int h;;

@@ -1,4 +1,4 @@
 
-let rec clone x n =
-  let aux acc n = if n <= 0 then acc else clone (List.append [x] acc) (n - 1) in
-  aux [] n;;
+let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
+
+let rec listReverse l = match l with | [] -> [] | h::t -> (cat t l) :: h;;

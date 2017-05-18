@@ -1,5 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile (let h x = f x in ((x, (x = b)), b));;
+let padZero l1 l2 = if (List.length l1) = (List.length l2) then (l1, l2);;

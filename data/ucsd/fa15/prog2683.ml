@@ -1,12 +1,7 @@
 
-let pipe fs =
-  let rec f a x = let h::t = x in h a in
-  let base = [] in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pipe fs =
-  let f a x = let h::t = x in pipe t in
-  let base = [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = let h::t = x in (pipe t) (h a) in
-  let base = [] in List.fold_left f base fs;;
+let padZero l1 l2 =
+  let numZeros = (List.length l1) - (List.length l2) in
+  let listZeros = clone 0 abs numZeros in
+  if numZeros > 0 then [(l1, (listZeros @ l2))] else [((listZeros @ l1), l2)];;

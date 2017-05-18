@@ -1,5 +1,7 @@
 
-let pipe fs =
-  let f a x x' = a x in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec digitsOfInt n =
+  let digit = n mod 10
+  and r = n / 10 in
+  match n with
+  | _ when n <= 0 -> []
+  | _ when n > 0 -> (digitsOfInt r) :: digit;;

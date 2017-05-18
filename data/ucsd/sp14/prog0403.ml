@@ -1,2 +1,2 @@
 
-let _ = string_of_int [1; 2; 3];;
+let rec concat w = match w with | [] -> "".[0] | h::t -> h ^ (concat t);;

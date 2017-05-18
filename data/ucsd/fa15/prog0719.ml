@@ -1,9 +1,4 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = true then seen else h @ seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec wwhile (f,b) = let (x,y) = f in if y = true then wwhile (f, y) else x;;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

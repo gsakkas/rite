@@ -1,23 +1,9 @@
 
-let getHead h = match h with | [] -> [] | h::t -> h;;
+let rec clone x n = if n > 0 then [x] @ (clone x (n - 1)) else [];;
 
-let getTail t = match t with | [] -> [] | h::t -> t;;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let rec matchHeads x y =
-  match x with
-  | [] -> true
-  | h::t ->
-      if (getHead x) = (getHead y) then matchHeads t (getTail y) else false;;
-
-let palindrome w =
-  match explode w with
-  | [] -> true
-  | h::t -> matchHeads (listReverse (explode w)) (listReverse (explode w));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (clone 0 (len1 - l2)) @ l2
+  else (clone 0 (len2 - len1)) @ l1;;

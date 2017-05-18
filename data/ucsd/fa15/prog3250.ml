@@ -1,27 +1,23 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then padZero (0 :: l1) l2
+  else
+    if (List.length l1) > (List.length l2)
+    then padZero l1 (0 :: l2)
+    else (l1, l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand with
-    | (0,2) -> buildX (build (rand, (depth - 1)))
-    | (3,5) -> buildY ()
-    | (6,10) -> buildSine (build (rand, (depth - 1)))
-    | (11,18) -> buildCosine (build (rand, (depth - 1)))
-  else ();;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | h::t ->
+          let sum = ((fst x) + (snd x)) + (fst h) in (sum / 10) ::
+            (sum mod 10) :: t in
+    let base = [()] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

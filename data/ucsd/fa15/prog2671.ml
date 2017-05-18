@@ -1,4 +1,3 @@
 
 let pipe fs =
-  let f a x = List.fold_right a 0 x in
-  let base = 0 in List.fold_left f base fs;;
+  let f a x y c = a (x c) in let base y = y in List.fold_left f base fs;;

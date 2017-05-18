@@ -1,6 +1,6 @@
 
-let rec wwhile (f,b) =
-  let (x,y) = f b in if y = false then x else wwhile (f, x);;
+let stringOfList f l =
+  let fx a b = match b with | [] -> "" | h::t -> a ^ h in
+  let base = "" in List.fold_left fx base l;;
 
-let fixpoint (f,b) =
-  wwhile (if (f b) = b then (b, false) else (((f b), true), b));;
+let _ = stringOfList (fun x  -> x) ["foo"];;

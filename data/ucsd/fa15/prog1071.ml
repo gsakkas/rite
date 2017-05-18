@@ -1,19 +1,5 @@
 
-let modulus ss = ss mod 10;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
-
-let incre i = i + 1;;
-
-let lt10 q = q < 10;;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if lt10 n
-  then n
-  else
-    (match n with | n -> let x_ = digitsOfInt n in ((sumList x_), (incre i)));;
+let fixpoint (f,b) = wwhile (let func x = f in ((f, (f x not b)), b));;

@@ -1,11 +1,11 @@
 
-let rec helper acc v =
-  if v = 0 then 0 :: acc else helper ((v mod 10) :: acc) (v / 10);;
+let rec reverse s =
+  let s2 = String.length s in
+  for i = 0 to (s2 - 1) / 2 do
+    (let c = s.[i] in s.[i] <- s.[(s2 - i) - 1]; s.[(s2 - i) - 1] <- c)
+  done;
+  int_of_string s;;
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t ->
-      let helper acc v =
-        if v = 0 then acc else (helper (v mod 10)) :: (acc (v / 10)) in
-      helper [] h;;
+let x = 13;;
+
+let x = "1234" reverse x;;

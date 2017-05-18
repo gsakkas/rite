@@ -1,16 +1,21 @@
 
-let rec append (x,y) =
-  match y with | [] -> x | h::t -> let z = h :: x in append (z, t);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let x = List.mem h seen in
-        if x
-        then helper (seen, t)
-        else
-          (let seen' = append (seen, h) in
-           let rest' = t in helper (seen', rest')) in
-  helper ([], l);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sin -> "sin(pi*" ^ ((eval (sin, x, y)) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((eval (cos, x, y)) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((eval (e1, x, y)) ^ ("+" ^ ((eval (e2, x, y)) ^ ")/2)")))
+  | Times (t1,t2) -> Printf.printf "%s*%s" t1 t2
+  | Thresh (th1,th2,th3,th4) ->
+      Printf.printf "(%s<*%s?%s:%s)" th1 th2 th3 th4;;

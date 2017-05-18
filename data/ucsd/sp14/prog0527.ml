@@ -1,15 +1,17 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec reverseHelper l result =
+  match l with | x::s -> reverseHelper s (x :: result) | [] -> result;;
 
-let digits n = digitsOfInt (abs n);;
+let rec listReverse l = reverseHelper l [];;
 
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+let rec palindromeHelper w r =
+  match w with
+  | [] -> (match r with | [] -> true | _ -> false)
+  | x::s ->
+      (match r with
+       | y::t -> if x = y then palindromeHelper s t else false
+       | _ -> false);;
 
-let rec additivePersAndRoot xs pers =
-  let theSum = sumList xs in
-  if theSum < 10
-  then (pers, theSum)
-  else additivePersAndRoot (digits theSum) (pers + 1);;
+let palindrome w = let r = listReverse w in palindromeHelper w r;;
 
-let _ = additivePersAndRoot [(1, 1)] 0;;
+let _ = palindrome "malayalam";;

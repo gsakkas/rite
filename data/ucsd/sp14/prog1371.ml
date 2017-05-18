@@ -1,6 +1,2 @@
 
-let append y = match y with | [] -> [] | h::t -> h :: t;;
-
-let append y = match y with | [] -> [] | h::t -> h :: (append t);;
-
-let append (x,y) = match y with | [] -> [] | h::t -> h :: (append x t);;
+let _ = max_float (2.0, 2.0);;

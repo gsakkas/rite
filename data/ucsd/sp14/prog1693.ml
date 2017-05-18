@@ -1,6 +1,19 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), (((clone 0) - diff) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | Sine e -> sin (pi * e)
+  | Cosine e -> cos (pi * e)
+  | Average (x,y) -> (x +. y) /. 2.0
+  | Times (x,y) -> x *. y
+  | Thresh (e,f,g,h) -> failwith "sad";;

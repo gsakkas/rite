@@ -1,14 +1,14 @@
 
-let x a = a;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let rec helper acc v =
-        if v = 0 then acc else helper ((v mod 10) :: acc) (v / 10) in
-      (match (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @
-               [helper [] (h * i)]
-       with
-       | [] -> []
-       | x::y -> x);;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
+
+let rec sum (n,i) =
+  if n < 10
+  then ((sumList (digitsOfInt n)), i)
+  else ((sumList (digitsOfInt n)), (1 + 1));;
+
+let rec additivePersistence_helper (n,i) =
+  let temp = sum (n, i) in
+  if temp >= 10 then additivePersistence_helper (temp, (i + 1)) else i;;

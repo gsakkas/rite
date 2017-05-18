@@ -1,18 +1,9 @@
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  if (n >= 0) && (n < 10)
-  then [n]
-  else append (digitsOfInt (n / 10)) [n mod 10];;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (n >= 0) && (n < 10)
-  then 0
-  else 1 + (additivePersistence (sumList (digits n)));;
-
-let _ = additivePersistence 9.9;;
+let padZero l1 l2 =
+  let ll1 = List.length l1
+  and ll2 = List.length l2 in
+  if ll1 > ll2
+  then (l1, (((clone 0 ll1) - ll2) @ l2))
+  else (((clone ((0 ll2) - ll1)) @ l1), l2);;

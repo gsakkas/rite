@@ -13,8 +13,7 @@ let pi = 4.0 *. (atan 1.0);;
 let rec eval (e,x,y) =
   match e with
   | VarX  -> x
-  | VarY  -> x
-  | Sine e1 -> sin (pi *. ((eval e1), x, y))
-  | Cosine e1 -> cos (pi *. (eval e2))
-  | Average (e1,e2) -> ((eval e1) +. (eval e2)) /. 2
-  | Times (e1,e2) -> (eval e1) *. (eval e2);;
+  | VarY  -> y
+  | Sine e' -> sin (pi * (eval (e', x, y)))
+  | Cosine e' -> cos (pi * (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2;;

@@ -1,16 +1,26 @@
 
-let rec wwhile (f,b) = failwith "to be written";;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Mirana of expr
+  | Darius of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((failwith "to be written"), b);;
+let buildCosine e = Cosine e;;
 
-let rec wwhile (f,b) =
-  let z = f b in
-  match z with | (x,y) -> if y = false then x else wwhile (f, x);;
+let buildSine e = Sine e;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let buildThresh (e1,e2,e3) = Darius (e1, e2, e3);;
 
-let fixpoint (f,b) =
-  let x = wwhile (f b) in if x = b then fixpoint (f, x) else x;;
+let buildX () = VarX;;
 
-let _ = fixpoint (collatz, 3);;
+let buildY () = VarY;;
+
+let sampleExpr2 =
+  buildThresh
+    ((buildX ()), (buildY ()), (buildSine (buildX ())),
+      (buildCosine (buildY ())));;

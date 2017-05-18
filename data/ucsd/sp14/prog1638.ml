@@ -1,6 +1,15 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | (k',v')::tl -> if k' = k then v' else assoc d k tl
-  | [] -> d
-  | _ -> failwith "This ain't your mom's hashmap";;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine ex -> sin (exprToString ex);;

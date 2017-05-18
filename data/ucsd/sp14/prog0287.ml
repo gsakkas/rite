@@ -1,3 +1,3 @@
 
-let listReverse l =
-  let rec rev x l = function | [] -> x | h::t -> rev (h :: x) t in rev [] l;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (match n with | hd::tl -> hd :: (digitsOfInt tl));;

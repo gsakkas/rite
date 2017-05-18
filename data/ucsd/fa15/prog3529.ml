@@ -1,8 +1,5 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | (s::i)::tl -> if s = k then i else assoc (d, k, tl);;
+let sqsum xs =
+  let f a x = x * x in let base = [] in List.fold_right f base xs;;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let _ = sqsum [(-1); (-2); (-3); (-4)];;

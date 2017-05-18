@@ -1,8 +1,5 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = List.mem h seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> [digitsOfInt (n / 10)] :: (n mod 10);;

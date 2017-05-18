@@ -1,5 +1,7 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let compose f g x = f g;;
 
-let _ = digitsOfInt - 2134;;
+let pipe fs =
+  let f a x = compose a x in let base f x = x in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

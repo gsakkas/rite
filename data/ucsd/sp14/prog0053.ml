@@ -1,5 +1,4 @@
 
-type nat =
-  | Zero;;
+let append x y = x + y;;
 
-let a = Zero + Zero;;
+let append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;

@@ -1,5 +1,2 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;
+let rec last l = match l with | [] -> [] | hd::tl -> (last tl) :: hd;;

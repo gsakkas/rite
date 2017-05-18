@@ -1,4 +1,5 @@
 
-let p = List.combine [1; 0; 0; 1] [2; 1; 1; 2];;
+let pipe fs =
+  let f a x c = x c 0 in let base b = b in List.fold_left f base fs;;
 
-let _ = 1. p;;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

@@ -1,17 +1,10 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Printf.sprintf "x"
-  | VarY  -> Printf.sprintf "y"
-  | Sine x -> Printf.sprintf "Sine(%s)" (exprToString x);;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let _ = exprToString Sine VarX;;
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ = fixpoint (collatz, 1);;

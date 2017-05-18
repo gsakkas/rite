@@ -1,5 +1,6 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | x::xs' -> (listReverse xs') @ x;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let _ = listReverse [1; 2; 3; 4];;
+let fixpoint (f,b) = wwhile ((let g x = (f, (b = (f b))) in g), b);;

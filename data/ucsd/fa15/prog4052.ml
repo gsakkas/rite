@@ -1,2 +1,7 @@
 
-let rec sumList xs = match xs with | [] -> 0 | (h::t)::[] -> h + (sumList t);;
+let stringOfList f l =
+  match l with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = string_of_int h in let l = t in List.fold_left f base l;;

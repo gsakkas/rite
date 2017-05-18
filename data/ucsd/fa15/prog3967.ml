@@ -1,19 +1,19 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let carry x y = (x * y) / 10;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> 0
-  | VarY  -> 1
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> ((exprToString e1) + (exprToString e2)) / 2
-  | Times (e1,e2) -> (exprToString e1) * (exprToString e2)
-  | Thresh (e1,e2,e3,e4) -> (exprToString e1) < (exprToString e2);;
+let remainder x y = (x * y) mod 10;;
+
+let rec mulByDigit i l =
+  if i <= 0
+  then []
+  else
+    (match List.rev l with
+     | [] -> []
+     | h::t ->
+         (match t with
+          | [] -> [remainder i h]
+          | h'::t' ->
+              [(remainder h' i) + (carry h i)] @
+                ([remainder h i] @ (mulByDigit i t'))));;
+
+let _ = mulByDigit 4 [(3, 2, 1)];;

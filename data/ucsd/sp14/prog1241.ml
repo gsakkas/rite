@@ -1,10 +1,30 @@
 
-let bigMul l1 l2 =
-  let f a x = l1 in
-  let base = (0, []) in
-  let args =
-    let rec argmaker x y =
-      match y with
-      | hd::tl -> if tl = [] then [(x, hd)] else (x, hd) @ (argmaker x tl) in
-    argmaker l1 l2 in
-  let (_,res) = List.fold_left f base args in res;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let rec exprToString e =
+  let expr = exprToString in
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((expr a) ^
+           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
+  | Poly (a,b,c) ->
+      "(" ^
+        ((expr a) ^
+           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
+  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;

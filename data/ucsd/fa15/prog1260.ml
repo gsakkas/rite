@@ -1,9 +1,4 @@
 
-type 'a set =
-  | Set of 'a list;;
+let rec wwhile (f,b) = if f b then b else 0;;
 
-let del x s = match s with | Set l -> Set (List.filter (fun z  -> z != x) l);;
-
-let testee = Set ["z"];;
-
-let _ = del 'z' testee;;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

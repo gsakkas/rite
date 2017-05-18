@@ -3,9 +3,5 @@ let rec sepConcat sep sl =
   match sl with
   | [] -> ""
   | h::t ->
-      let f a x = x a in
-      let base = if (List.length t) <> 0 then "" else sep in
-      let l = if (List.length t) <> 0 then t else [] in
-      List.fold_left f base l;;
-
-let _ = sepConcat ", " ["foo"; "bar"; "baz"];;
+      let f a x = (x h) :: a in
+      let base = h in let l = t in List.fold_left f base l;;

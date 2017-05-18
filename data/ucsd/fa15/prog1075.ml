@@ -1,6 +1,5 @@
 
-let count = 0;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let lt10 q = q < 10;;
-
-let rec additivePersistence n = if lt10 n then count;;
+let fixpoint (f,b) = wwhile (let func x = f x in (f, (not ((f b) = b)), b));;

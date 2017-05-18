@@ -1,8 +1,8 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t ->
-      (match h with | (name,num) -> if name = d then num else assoc (d, k, t));;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let fixpoint (f,b) =
+  let fx x = if x = 0 then 0 else if x > 1 then x - 1 else x + 1 in
+  wwhile ((fx b), b);;

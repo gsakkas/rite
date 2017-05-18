@@ -1,3 +1,4 @@
 
-let pipe fs =
-  let f a x x' = a x x' in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n = if n <= 0 then [] else [1];;
+
+let _ = digitsOfInt - 3124;;

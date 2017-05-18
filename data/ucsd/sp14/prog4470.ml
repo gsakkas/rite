@@ -1,7 +1,11 @@
 
-let fptest x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+let stringOfList f l = sepConcat (f l);;
 
-let _ = wwhile fptest 0;;
+let _ = stringOfList (fun x  -> x) ["foo"];;

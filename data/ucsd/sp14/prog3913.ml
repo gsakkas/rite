@@ -1,26 +1,28 @@
 
-let pi = 4.0 *. (atan 1.0);;
+let rec clone x n =
+  if n < 0
+  then []
+  else (match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x]);;
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let padZero l1 l2 =
+  let num1 = (List.length l2) - (List.length l1) in
+  let num2 = (List.length l1) - (List.length l2) in
+  (((clone 0 num1) @ l1), ((clone 0 num2) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = eval ((Sine (VarX ** VarY)), 0.0, 0.0);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let rec intlist x =
+        if x < 10 then [x] else [intlist (x / 10); x mod 10] in
+      match x with
+      | (z,y) ->
+          (match a with
+           | h -> let sum = (h + z) + y in intlist sum
+           | h::t -> let sum = (h + z) + y in (intlist sum) :: t) in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

@@ -1,6 +1,12 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,false ) -> x | (y,true ) -> wwhile (f, y);;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let fixpoint (f,b) =
-  wwhile ((if (f b) = b then (b, false) else (b, true)), b);;
+let y = [1; 2; 3];;
+
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      if (List.length t) = 0
+      then [h * i] @ (mulByDigit i t)
+      else (remainder h y) @ (mulByDigit i t);;

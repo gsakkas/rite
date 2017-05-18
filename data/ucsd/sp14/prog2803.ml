@@ -1,2 +1,2 @@
 
-let rec clone x n = if n < 1 then [] else x :: ((clone x n) - 1);;
+let stringOfList f l = failwith List.map asd l;;

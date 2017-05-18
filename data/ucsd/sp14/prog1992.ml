@@ -8,33 +8,32 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildCosine e = Cosine e;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi * (exprToString e1))
-  | Cosine e1 -> cos (pi * (exprToString e1))
-  | Average (e1,e2) -> ((exprToString e1) + (exprToString e2)) / 2
-  | Times (e1,e2) -> (exprToString e1) * (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      ((exprToString e1) < (exprToString e2 ?exprToString e3) : exprToString
-                                                                  e4);;
+let buildSine e = Sine e;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then
+    let bin_rand = rand (1, 2) in
+    (if bin_rand = 1 then buildX () else buildY ())
+  else
+    (let exp_rand = rand (1, 5) in
+     let first_forced = build (rand, (depth - 1)) in
+     match exp_rand with
+     | 1 -> buildSine first_forced
+     | 2 -> buildCosine first_forced
+     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
+     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
+     | 5 ->
+         buildAverage
+           (first_forced, (build (rand, (depth - 1))),
+             (build (rand, (depth - 1)))));;

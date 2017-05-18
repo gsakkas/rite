@@ -1,8 +1,7 @@
 
-let fixpoint (f,b) =
-  let gs x =
-    let isFPoint x = ((f x) - x) < 0 in
-    let iterate (t,y) = t y in
-    let rec go r = if isFPoint r then r else go (iterate (x, r)) in
-    (x, (isFPoint x)) in
-  wwhile (gs, b);;
+let f' (f,b) = (f b) = b;;
+
+let rec wwhile (f,b) =
+  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
+
+let fixpoint (f,b) = wwhile ((f' (f, b)), b);;

@@ -8,27 +8,17 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec build (rand,depth) = failwith "to be implemented";;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))));;
-
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let _ = exprToString build (makeRand, 5);;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine expr -> sin (pi *. (eval (expr, x, y)))
+  | Cosine expr -> cos (pi *. (eval (expr, x, y)))
+  | Average (expr,expr1) -> ((eval (expr, x, y)) +. (eval (expr1, x, y))) / 2
+  | Times (expr,expr1) -> (eval (expr, x, y)) *. (eval (expr1, x, y))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      if (eval (expr, x, y)) < (eval (expr1, x, y))
+      then eval (expr2, x, y)
+      else eval (expr3, x, y);;

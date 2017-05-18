@@ -1,24 +1,5 @@
 
-let rec listReverse2 l dest =
-  match l with | [] -> dest | h::t -> listReverse2 t (h :: dest);;
+let pipe fs = let f a x = x a in let base = 3 in List.fold_left f base fs;;
 
-let rec digitsOfInt n =
-  match n / 10 with
-  | 0 -> [n mod 10]
-  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
-
-let rec digitsToList n =
-  match n / 10 with
-  | 0 -> [n mod 10]
-  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
-
-let rec listReverse l = listReverse2 l [];;
-
-let digitsOfInt n = listReverse (digitsToList n);;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let digitalRoot n =
-  let l = digits n in match l with | [] -> [] | h::t -> h + (sumList t);;
+let pipe fs =
+  let f a x = x a in let base = pipe fs y in List.fold_left f base fs;;

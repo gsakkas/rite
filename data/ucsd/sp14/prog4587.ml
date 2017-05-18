@@ -1,5 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
-
-let fixpoint (f,b) = wwhile ((let (x,y) = f b in (x > b) or (x < b)), b);;
+let _ = (List.map (fun x  -> x * 10) [1; 2; 3] 8100) mod 10;;

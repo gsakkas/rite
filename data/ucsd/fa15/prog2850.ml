@@ -1,5 +1,10 @@
 
-let rec removeZero l =
-  let f a x =
-    if (List.length a) = 0 then (if x = 0 then [] else [x]) else a :: x in
-  let base = [] in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((clone 0 ((List.length l2) - (List.length l1))) @ l1) l2
+  else
+    if (List.length l1) > (List.length l2)
+    then l1 ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
+    else l1 l2;;

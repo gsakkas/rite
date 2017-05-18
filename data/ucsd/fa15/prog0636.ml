@@ -1,30 +1,31 @@
 
-let rec clone x n =
-  if n <= 0 then [] else (let y = clone x (n - 1) in x :: y);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec mulByDigit i l =
-  if i <= 0
-  then []
-  else
-    (let f a x =
-       let (m,n) = a in
-       let x = (x * i) + m in
-       if x > 9
-       then
-         let y =
-           let rec helper num carry =
-             if num < 10 then carry else helper (num - 10) (carry + 1) in
-           helper x 0 in
-         (y, ((x - (y * 10)) :: n))
-       else (0, (x :: n)) in
-     let base = (0, []) in
-     let args = List.rev l in
-     let (z,res) = List.fold_left f base args in
-     match z with | 0 -> res | _ -> z :: res);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Square of expr
+  | Poly of expr* expr* expr* expr;;
 
-let helper l1 l2 =
-  let fn b y =
-    let (u,(v,w)) = b in
-    ((u + 1), (0, (((mulByDigit y l1) @ (clone 0 u)) :: w))) in
-  let base = (0, (0, [])) in
-  let (_,res) = List.fold_left fn (0, (0, [])) (List.rev 12) in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine d -> sin ((eval (d, x, y)) *. pi)
+  | Cosine d -> cos ((eval (d, x, y)) *. pi)
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if a < b then eval (a_less, x, y) else eval (b_less, x, y)
+  | Square d -> let z = eval (d, x, y) in z *. z
+  | Poly (a,b,c,d) ->
+      (((eval (a, x, y)) *. (eval ((Square d), x, y))) +.
+         ((eval (b, x, y)) *. (eval (d, x, y))))
+        +. (eval (c, x, y));;
+
+let _ = eval ((Poly (3, 5, 2, 6)), 1, 1);;

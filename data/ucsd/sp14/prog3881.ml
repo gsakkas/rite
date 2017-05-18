@@ -1,12 +1,22 @@
 
-let num_of_digits xs =
-  let y = log10 (float_of_int xs) in (int_of_float y) + 1;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let digitsOfInt n =
-  let rec digits x l =
-    let numdig = num_of_digits x in
-    if numdig > 1
-    then ((x / ((float_of_int 10) ** (float_of_int (numdig - 1)))) mod 10) ::
-      l
-    else numdig :: 1 in
-  digits n [];;
+let padZero l1 l2 =
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,num) = a in
+      let (l1',l2') = x in
+      let addit = (l1' + l2') + carry in
+      (Printf.printf ("hi %d" carry))
+        ((if addit >= 10 then 1 else 0), (num @ [addit mod 10])) in
+    let base = (0, []) in
+    let args = List.combine ([0] @ l1) ([0] @ l2) in
+    let (car,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

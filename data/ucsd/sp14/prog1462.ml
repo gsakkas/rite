@@ -1,10 +1,11 @@
 
-let rec clone x n =
-  let accum = [] in
-  let rec helper accum n =
-    if n < 1 then accum else helper (x :: accum) (n - 1) in
-  helper accum n;;
-
-let padZero l1 l2 =
-  let (a,b) = ((List.length l1), (List.length l2)) in
-  if 1 then List.append (clone 0 1) l1;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = h in
+        if List.mem h seen
+        then h :: seen'
+        else (let rest' = t in helper (seen', rest')) in
+  List.rev (helper ([], l));;

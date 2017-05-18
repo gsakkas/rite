@@ -1,5 +1,7 @@
 
-let bigMul l1 l2 =
-  let f a x = match a with | (i,acc) -> ([], acc) | _ -> failwith "wtf" in
-  let base = (0, []) in
-  let args = l1 in let (_,res) = List.fold_left f base args in res;;
+let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+
+let rec digitsOfInt n =
+  if n = 0
+  then [0]
+  else if n > 0 then myAppend digitsOfInt (n / 10) (n mod 10) else [];;

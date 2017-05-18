@@ -1,5 +1,6 @@
 
 let pipe fs =
-  match fs with
-  | [] -> 0
-  | f::fs' -> let f a x = x a in let base = f in List.fold_left f base fs;;
+  let f a x = x a in
+  let base = function | [] -> 0 in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

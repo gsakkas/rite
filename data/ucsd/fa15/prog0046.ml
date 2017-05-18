@@ -1,11 +1,12 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (clone 0 (padLength l1 l2)) :: l1
-  else (clone 0 (padLength l1 l2)) :: l2;;
-
-let _ = padZero [9; 9] [1; 0; 0; 2];;
+let rec additivePersistence n =
+  let rec recCounter n count =
+    if n < 10
+    then count
+    else recCounter ((sumList (digitsOfInt n)) (count + 1)) in
+  recCounter n 0;;

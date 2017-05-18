@@ -1,4 +1,8 @@
 
-let pipe fs = let f a x = x a in let base x = x in List.fold_left f base fs;;
+let rec assoc (d,k,l) =
+  let h::t = l in
+  if t = []
+  then d
+  else (let (x,y) = h in if x = k then y else assoc (d, k, t));;
 
-let _ = (pipe [(fun x  -> x + x); (fun x  -> x + 3)]) 3;;
+let _ = assoc ((-1), "doe", ("no", 2));;

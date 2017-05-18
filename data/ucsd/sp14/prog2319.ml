@@ -1,3 +1,2 @@
 
-let sqsum xs =
-  let f a x a x = (x * x) + a in let base = 0 in List.fold_left f base xs;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f b') else b';;

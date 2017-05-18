@@ -1,2 +1,9 @@
 
-let rec wwhile (f,b) = match f b with | (h,t) -> if t = false then f;;
+type 'a set =
+  | Set of 'a list;;
+
+let empty = Set [];;
+
+let s0 = empty;;
+
+let (_,_) = ((List.mem 1 s0), (List.mem 2 s0));;

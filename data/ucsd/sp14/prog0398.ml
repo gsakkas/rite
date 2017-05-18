@@ -1,4 +1,4 @@
 
-let pipe fs =
-  let f a x = match a with | _ -> x a | [] -> x in
-  let base = [] in List.fold_left f base fs;;
+let rec concat w = match w with | [] -> "" | h::t -> h ^ (concat t);;
+
+let _ = concat [("1", "2")];;

@@ -1,3 +1,3 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (match n with | n -> [digitsOfInt n]);;
+let rec clone x n =
+  let acc = [0] in if n > 0 then clone (x :: acc) (n - 1) else [];;

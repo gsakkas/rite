@@ -1,9 +1,8 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((List.map sepConcat l) ^ "]");;
+let rec listCompare l k =
+  if ((List.hd l) = []) && ((List.hd k) = [])
+  then true
+  else
+    if ((List.hd l) - (List.hd k)) != 0
+    then false
+    else listCompare (List.tl l) (List.tl k);;

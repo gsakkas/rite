@@ -8,14 +8,25 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
+let buildAverage (e1,e2) = Average (e1, e2);;
+
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
 
 let rec eval (e,x,y) =
   match e with
-  | buildX -> x
-  | buildY -> y
-  | Sine q -> sin (pi *. q)
-  | buildCosine -> cos (pi *. e)
-  | buildAverage -> (e1 +. e2) /. 2
-  | buildTimes -> e1 *. e2
-  | buildThresh -> if a < b then a_less else b_less;;
+  | VarX  -> buildX ()
+  | buildY -> buildY ()
+  | Sine e -> buildSine (eval (e, x, y))
+  | Cosine e -> buildCosine (eval (e, x, y))
+  | Average (e1,e2) -> buildAverage ((eval (e1, x, y)), (eval (e2, x, y)))
+  | Times (e1,e2) -> buildTimes ((eval (e1, x, y)), (eval (e2, x, y)))
+  | Thresh (a,b,a_less,b_less) ->
+      buildThresh (a, b, a_less, (eval (b_less, x, y)));;

@@ -1,30 +1,33 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (a,h::t) ->
-          if (((fst x) + (snd x)) + a) > 9
-          then (1, (a :: ((((fst x) + (snd x)) + a) mod 10)))
-          else (0, (a :: ((((fst x) + (snd x)) + a) mod 10)))
-      | _ ->
-          if ((fst x) + (snd x)) > 9
-          then (1, [((fst x) + (snd x)) mod 10])
-          else (0, [((fst x) + (snd x)) mod 10]) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec build (rand,depth) =
+  match rand (0.0, 6.0) with
+  | 0 -> if (rand (0.0, 2.0)) = 0.0 then Varx else Vary
+  | 1 ->
+      if depth = 0
+      then (if (rand (0.0, 2.0)) = 0.0 then Varx else Vary)
+      else Sine a
+  | 2 ->
+      if depth = 0
+      then (if (rand (0.0, 2.0)) = 0.0 then Varx else Vary)
+      else Cosine b
+  | 3 ->
+      if depth = 0
+      then (if (rand (0.0, 2.0)) = 0.0 then Varx else Vary)
+      else Average (c, d)
+  | 4 ->
+      if depth = 0
+      then (if (rand (0.0, 2.0)) = 0.0 then Varx else Vary)
+      else Times (e, f)
+  | 5 ->
+      if depth = 0
+      then (if (rand (0.0, 2.0)) = 0.0 then Varx else Vary)
+      else Thresh (g, h, i, j);;

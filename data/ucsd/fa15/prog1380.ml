@@ -1,7 +1,8 @@
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> 0
+  | h::t -> (match h with | hd::tl -> if hd = k then assoc (d, k, t) else d);;
 
-let g1 () = ((makeRand 0.1), (makeRand 0.1), (makeRand 10.18));;
+let _ =
+  assoc ((-1), "william", [("ranjit", [85]); ("william", 23); ("moose", 44)]);;

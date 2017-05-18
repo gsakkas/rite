@@ -1,3 +1,9 @@
 
-let sqsum xs =
-  let f a x x = (x * x) + a in let base = [] in List.fold_left f base xs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if not (List.mem h) then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

@@ -1,8 +1,14 @@
 
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse ((n mod 10) :: (listReverse (digitsOfInt (n / 10))));;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
 let rec digitalRoot n =
-  if n <= 9
-  then n
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 123 | _ -> (r_digitalRoot n) - 1);;
+  if (sumList (digitsOfInt n)) > 9
+  then sumList (digitsOfInt (sumList (digitsOfInt n)));;

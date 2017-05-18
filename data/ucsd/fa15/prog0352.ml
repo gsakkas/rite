@@ -1,25 +1,15 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let checkSame (x,y) = x == y;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin" ^ (exprToString e)
-  | Cosine e -> "cos" ^ (exprToString e)
-  | Average (e,e1) ->
-      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e1) ^ (")" ^ "/2"))))
-  | Times (e,e1) -> (exprToString e) ^ ("*" ^ (exprToString e1))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2 "?") ^
-                 ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")"))))));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+
+let palindrome w =
+  if checkSame ((listReverse (explode w)), (explode w))
+  then true
+  else explode w;;

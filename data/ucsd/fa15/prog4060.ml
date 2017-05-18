@@ -1,11 +1,20 @@
 
-let rec wwhile (f,b) =
-  let (value,result) = f b in if result then wwhile (f, value) else value;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let helper func = let (value,result) = f b in (value, (not result)) in
-      helper), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then clone 0 ((List.length l1) - (List.length l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then clone 0 ((List.length l2) - (List.length l1))
+    else [];;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let rec removeZero l = failwith "to be implemented";;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = failwith "to be implemented" in
+    let base = failwith "to be implemented" in
+    let args = failwith "to be implemented" in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

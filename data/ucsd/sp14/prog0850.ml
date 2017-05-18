@@ -1,18 +1,12 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    if (n / 10) == 0 then [n mod 10] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let rec sumList xs = match xs with | [] -> 0 | a::b -> a + (sumList b);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = (a + x) mod 10 in
-    let base = 0 in
-    let args = l1 in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  let sum = sumList digitsOfInt n in
+  if sum < 10 then 1 else 1 + (additivePersistance sum);;

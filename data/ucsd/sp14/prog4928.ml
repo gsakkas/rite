@@ -1,2 +1,3 @@
 
-let rec mulByDigit i l = let h::t = List.rev l in (mulByDigit h) * i;;
+let pipe fs =
+  let f a x g = (g a) x in let base g = g in List.fold_left f base fs;;

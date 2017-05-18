@@ -1,4 +1,5 @@
 
-let rec assoc (d,k,l) = if l = (k, d) then d else d;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let fixpoint (f,b) = wwhile ((let f2 x = f x in (f, false)), b);;

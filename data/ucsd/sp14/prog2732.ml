@@ -1,10 +1,8 @@
 
-let pipe fs = let f a x a = x in let base a = a in List.fold_left f base fs;;
+let a x = x + x;;
 
-let pipe fs =
-  let f a x a x = x in let base = pipe [] in List.fold_left f base fs;;
+let test f g x = f (f g);;
 
-let pipe fs =
-  let f a x = pipe [] in let base = pipe [] in List.fold_left f base fs;;
+let x x' = x' + 3;;
 
-let _ = pipe [] 3;;
+let _ = test a x;;

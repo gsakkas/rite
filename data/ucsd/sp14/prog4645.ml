@@ -1,9 +1,8 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem (seen h) then [h] @ seen' in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let rec padZero l1 l2 =
+  let diffsize = (List.length l1) - (List.length l2) in
+  if diffsize > 0
+  then (l1, (List.append (clone 0 diffsize) l2))
+  else ((List.append clone 0 ((-1) * diffsize) l1), l2);;

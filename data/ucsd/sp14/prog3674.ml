@@ -1,2 +1,5 @@
 
-let rec sumList xs = let x::t = xs in if x != [] then x + (sumList t);;
+let pipe fs =
+  let f a x c = x a c in let base b = b in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

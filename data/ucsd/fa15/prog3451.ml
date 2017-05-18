@@ -1,20 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildSine e = Sine e;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
-let buildX () = VarX;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildY () = VarY;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (i,j) ->
+          (match a with
+           | (m,n) ->
+               (match n with
+                | [] -> (0, [])
+                | h::t ->
+                    if ((i + j) + m) >= 10
+                    then (1, (1 :: (((i + j) + m) - 10) :: t))
+                    else (0, (0 :: ((i + j) + m) :: t)))) in
+    let base = (0, [0]) in
+    let args = List.combine (List.rev l1) (List.rev l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> if (rand mod 2) = 0 then buildX else buildY
-  | n when n > 0 -> buildSine (build (rand, (depth - 1)));;
+let _ = bigAdd [(1, 2)] [(3, 4)];;

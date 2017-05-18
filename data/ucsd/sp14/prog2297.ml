@@ -6,49 +6,45 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Cube of expr
+  | Addition of expr* expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+  | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+  | Average (a,b) ->
+      "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+  | Times (a,b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+  | _ -> "_"
+  | Cube a ->
+      "(" ^
+        ((exprToString a) ^
+           ("*" ^ ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))))
+  | Addition (a,b) ->
+      "(" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")")));;
 
-let buildCosine e = Cosine e;;
+let pi = 4.0 *. (atan 1.0);;
 
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match (rand, depth) with
-  | (_,0) -> if (rand mod 2) == 0 then buildY () else buildX ()
-  | (_,1) ->
-      if (rand mod 3) == 0
-      then buildSine (build (rand, (depth - 1)))
-      else buildCosine (build (rand, (depth - 1)))
-  | (_,2) ->
-      buildTimes
-        ((build (rand, (depth - 1))), (build ((rand + 1), (depth - 1))))
-  | (_,_) ->
-      if depth > 10
-      then
-        buildTimes
-          ((buildAverage
-              ((build ((rand + 3), (depth - 1))),
-                (build ((rand - 1), (depth - 1))))),
-            (build (rand, (depth - 1))))
-      else
-        if depth = 9
-        then buildSine (build ((rand + 1), (depth - 1)))
-        else
-          if depth = 8
-          then buildCosine (build ((rand + 2), (depth - 1)))
-          else build ((rand + 1), (depth - 1));;
-
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let _ = let rand = makeRand (1, 3) in let x = rand (1, 3) in build (rand, 1);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> eval (a, (sin (pi *. x)), (sin (pi *. y)))
+  | Cosine a -> eval (a, (cos (pi *. x)), (cos (pi *. y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Cube a -> ((exprToString a) * (exprToString a)) * (exprToString a);;

@@ -1,6 +1,4 @@
 
-let rec wwhile (f,b) =
-  let check = f b in
-  match check with | (x,y) -> if y = false then x else wwhile (f, x);;
+let digitsOfInt n = match n < 0 with | true  -> [];;
 
-let fixpoint (f,b) = wwhile (fun x  -> let b = f x in ((b, (b != x)), b));;
+let _ = digitsOfInt - 3;;

@@ -1,4 +1,3 @@
 
-let pipe fs =
-  let f a x = a x in
-  let base = failwith "to be implemented" in List.fold_left f base fs;;
+let rec clone x n =
+  match n = 0 with | true  -> [] | false  -> x :: ((clone x n) - 1);;

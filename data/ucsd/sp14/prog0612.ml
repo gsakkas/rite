@@ -1,3 +1,8 @@
 
-let pipe fs =
-  let f a x r s = a in let base r s = 0 in List.fold_left f base fs;;
+let append x l =
+  let rec helper x acc =
+    match x with | [] -> acc | h::t -> helper t (h :: acc) in
+  helper x l;;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append listReverse t [h];;

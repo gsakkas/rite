@@ -1,6 +1,6 @@
 
-let c = 3;;
+let rec wwhile (f,b) =
+  match f b with
+  | (b',c') -> (match c' with | true  -> wwhile (f, b') | false  -> b');;
 
-let z = (1, 2);;
-
-let c = (3 z) + c;;
+let fixpoint (f,b) = wwhile (fun f  -> fun b  -> ((f, ((f b) <> b)), b));;

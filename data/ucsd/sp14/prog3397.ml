@@ -1,4 +1,5 @@
 
-let extract n (p1,p2) = match n with | 1 -> p1 | 2 -> p2;;
-
-let _ = extract ("bobby", 2);;
+let pipe fs =
+  match fs with
+  | [] -> 0
+  | f::fs' -> let f a x = x a in let base = f in List.fold_left f base fs;;

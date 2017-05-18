@@ -1,4 +1,2 @@
 
-let rec clone x n = x List.map n;;
-
-let _ = clone 3 5;;
+let rec clone x n = if n <= 0 then [] else x :: ((x clone x n) - 1);;

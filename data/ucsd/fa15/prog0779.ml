@@ -1,5 +1,9 @@
 
-let rec sumList n xs =
-  match xs with | [] -> n | h::t -> (h n) + (sumList 0 t);;
-
-let _ = sumList [1; 2; 3; 4];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem (h, seen) then [] else seen @ h in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

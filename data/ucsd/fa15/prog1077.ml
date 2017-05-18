@@ -1,13 +1,10 @@
 
-let checkSame (x,y) = x == y;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let fixpoint (f,b) = wwhile (f, b);;
 
-let palindrome w =
-  if checkSame ((listReverse (explode w)), w) then true else false c;;
+let _ = fixpoint (collatz, 1);;

@@ -1,4 +1,9 @@
 
-let rec removeZero l =
-  let f a x = if (List.length a) = 0 then (if x = 0 then [] else [x]) else x in
-  List.fold_left f base l;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat List.map (f l);;

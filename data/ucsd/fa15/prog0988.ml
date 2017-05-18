@@ -8,13 +8,10 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> x
-  | Sine e1 -> sin (pi *. (eval e1))
-  | Cosine e1 -> cos (pi *. (eval e2))
-  | Average (e1,e2) -> ((eval e1) +. (eval e2)) /. 2
-  | Times (e1,e2) -> (eval e1) *. (eval e2);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(" ^ ((exprToString e) ^ ")");;
+
+let _ = exprToString Sine VarX;;

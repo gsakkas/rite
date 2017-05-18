@@ -1,20 +1,8 @@
 
-let rec mulByDigit i l =
-  match l with
-  | [] -> []
-  | h::l' ->
-      let res = mulByDigit i l' in
-      if (List.length res) = 0
-      then (if (h * i) > 9 then [(h * i) / 10; (h * i) mod 10] else [h * i])
-      else
-        if (List.length res) = l'
-        then
-          (if (h * i) > 9
-           then ((h * i) / 10) :: ((h * i) mod 10) :: res
-           else (h * i) :: res)
-        else
-          (match res with
-           | h'::res' ->
-               if ((h * i) + h') > 9
-               then (((h * i) + h') / 10) :: (((h * i) + h') mod 10) :: res'
-               else ((h * i) + h') :: res);;
+let helper (f,b) =
+  let (x,y) = f b in match x with | b -> (x, false) | _ -> (x, true);;
+
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;

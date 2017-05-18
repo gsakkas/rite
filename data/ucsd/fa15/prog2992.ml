@@ -1,4 +1,9 @@
 
-let rec clone x n = List.combine n x;;
+let sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let _ = clone 3 5;;
+let stringOfList f l = "[" ^ ((sepConcat (List.map f l)) ^ "]");;

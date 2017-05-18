@@ -1,13 +1,7 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' =
-          let x = List.mem (h, seen) in
-          if x = true
-          then seen' = seen
-          else seen' = (List.rev (h :: (List.rev seen))) in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  let rec append xs1 xs2 =
+    match xs2 with | [] -> xs1 | hd::tl -> append (xs1 :: hd) tl in
+  let rec helper x =
+    match x with | 0 -> [] | m -> append (helper (m / 10)) [m mod 10] in
+  helper n;;

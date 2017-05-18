@@ -1,3 +1,13 @@
 
-let rec digitsOfInt n =
-  if n > 0 then [[(digitsOfInt n) / 10]; n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildSine e = Sine e;;
+
+let _ = buildSine (Sine 0.5);;

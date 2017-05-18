@@ -1,4 +1,6 @@
 
-let x = "13";;
+let decr x = x - 1;;
 
-let _ = string_of_int x;;
+let incr x = x + 1;;
+
+let foo = (List.map incr 9) :: (List.map decr [10]);;

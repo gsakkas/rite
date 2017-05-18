@@ -1,4 +1,9 @@
 
-let pipe fs = let f a x = x a in let base = 3 in List.fold_left f base fs;;
+let rec cloneHelper x n l =
+  if n <= 0 then l else cloneHelper x (n - 1) (x :: l);;
 
-let _ = pipe [] 3;;
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then cloneHelper 0 (((-1) * diff) - 1) l1
+  else if diff > 0 then cloneHelper 0 diff l2;;

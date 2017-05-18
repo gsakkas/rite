@@ -1,8 +1,6 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in l1 :: pad :: l2
-  else (let pad = clone 0 (- sizDif) in (pad :: l1) :: l2);;
+let rec mulByDigit i l =
+  let f a x =
+    let (carry,acc) = a in
+    let res = (x * i) + carry in ((res / 10), ((res mod 10) :: acc)) in
+  let base = (0, []) in let args = List.rev in List.fold_left f base args;;

@@ -1,4 +1,4 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let append x y = x + y;;
 
-let fixpoint (f,b) = let f' f b = ((f b), (b = (f b))) in wwhile (f', b);;
+let _ = append 0 [2; 2; 21; 1];;

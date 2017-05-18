@@ -1,38 +1,49 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Arctan of expr
+  | Strange of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+let buildArctan e1 = Arctan e1;;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let buildCosine e = Cosine e;;
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let buildSine e = Sine e;;
 
-let rec mulByDigit i l =
-  match i with | 0 -> [0] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+let buildStrange (e1,e2,e3) = Strange (e1, e2, e3);;
 
-let bigMul l1 l2 =
-  let f a x =
-    let (b,c) = a in
-    ((b + 1), (bigAdd ((mulByDigit x l2) @ ((clone 0 b) c)))) in
-  let base = (0, []) in
-  let args = l1 in let (_,res) = List.fold_left f base args in res;;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then
+    let result = rand (0, 2) in
+    match result with | 0 -> buildX () | _ -> buildY ()
+  else
+    (let result = rand (0, 7) in
+     let build1 = build (rand, (depth - 1)) in
+     let build2 = build (rand, (depth - 1)) in
+     let build3 = build (rand, (depth - 1)) in
+     let build4 = build (rand, (depth - 1)) in
+     match result with
+     | 0 -> buildSine build1
+     | 1 -> buildCosine build1
+     | 2 -> buildAverage (build1, build2)
+     | 3 -> buildTimes (build1, build2)
+     | 4 -> buildThresh (build1, build2, build3, build4)
+     | 5 -> buildArctan (build1, build2)
+     | 6 -> buildStrange (build1, build2, build3));;

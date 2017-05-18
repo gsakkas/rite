@@ -1,7 +1,12 @@
 
-let pipe fs =
-  let rec iter acc curr =
-    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
-  iter (fun y  -> y) fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)];;
+let rec exprToString e =
+  match e with | Thresh (a,b,c,d) -> exprToString a b c d;;

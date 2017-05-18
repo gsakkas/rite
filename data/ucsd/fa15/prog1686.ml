@@ -1,4 +1,5 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> 0 | x::d -> x * x in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+
+let fixpoint (f,b) = wwhile ((let g x = f b in ((f b), ((f b) = b))), b);;

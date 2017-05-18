@@ -1,5 +1,6 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = (f, b) in if c' then wwhile (f, b') else b';;
+let f a x = a * a;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let sqsum xs =
+  let f a x = (a * a) + (f List.hd xs x) in
+  let base = 0 in List.fold_left f base xs;;

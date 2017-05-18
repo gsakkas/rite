@@ -1,4 +1,2 @@
 
-let fu x b = (x, (b < (x b)));;
-
-let fu x = (fu, (x < (fu x)));;
+let pipe fs = let f a x = a + fs in let base = 0 in List.fold_left f base fs;;

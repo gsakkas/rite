@@ -1,8 +1,4 @@
 
-let cin (x,y) = (x * y) / 10;;
+let pipe fs = let f a x = fs in let base = fs in List.fold_left f base fs;;
 
-let rec mulByDigit i l =
-  let f a x =
-    match x with | [] -> [] | h::t -> (cin (h, i)) @ (mulByDigit i t) in
-  let base = i * h in
-  let args = List.rev l in let res = List.fold_left base args in res;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

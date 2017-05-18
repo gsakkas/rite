@@ -1,4 +1,2 @@
 
-let append x y = x + y;;
-
-let _ = append 0 [2; 2; 21; 1];;
+let _ = max_float - min_float;;

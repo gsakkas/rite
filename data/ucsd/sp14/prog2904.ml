@@ -1,11 +1,3 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let sample = VarX ^ VarY;;
+let pipe fs =
+  let f a x y = y a x in let base x = x in List.fold_left f base fs;;

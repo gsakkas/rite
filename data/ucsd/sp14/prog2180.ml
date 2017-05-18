@@ -1,9 +1,20 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 < length2
-  then clone 0 (length2 - length1)
-  else if length2 < length1 then clone 0 (length1 - length2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> e
+  | VarY  -> e
+  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
+  | Cosine e2 -> Printf.sprintf "%s" e2
+  | Average (e3,e4) -> Printf.sprintf "%s %s" e3 e4
+  | Times (e5,e6) -> Printf.sprintf "%s %s" e5 e6
+  | Thresh (e7,e8,e9,e0) -> Printf.sprintf "%s %s %s %s" e7 e8 e9 e0
+  | _ -> "";;

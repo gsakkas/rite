@@ -1,2 +1,2 @@
 
-let sqsum xs = let f a x = (+.) in let base = 0 in List.fold_left f base xs;;
+let pipe fs = let f a x y x = a in let base x = x in List.fold_left f base fs;;

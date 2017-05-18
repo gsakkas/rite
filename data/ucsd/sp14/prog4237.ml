@@ -1,7 +1,6 @@
 
-let f x = let xx = (x * x) * x in (xx, (xx < 100));;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let _ = wwhile (f, 2) should return 512;;
+let padZero l1 l2 =
+  let a = (List.length l1) - (List.length l2) in
+  if a > 0 then l1 * (clone 0 a) else "bye";;

@@ -1,5 +1,5 @@
 
-let fixpoint (f,b) =
-  let isFPoint = ((f b) - b) < 0 in
-  let rec test x = if isFPoint x then (x, true) else ((test x), false) in
-  wwhile (isFPoint, b);;
+let rec wwhile (f,b) =
+  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
+
+let fixpoint (f,b) = wwhile ((f, (b, (if (f b) == b then b else f b))), b);;

@@ -1,32 +1,20 @@
 
-let l1 = [0; 0; 9; 9];;
-
-let l2 = [1; 0; 0; 2];;
-
-let x = (3, 3) :: (List.rev (List.combine l1 l2));;
-
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+let rec clone x n =
+  match n with | 0 -> [] | _ -> if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+  let ll1 = List.length l1 in
+  let ll2 = List.length l2 in
+  (((clone 0 (ll2 - ll1)) @ l1), ((clone 0 (ll1 - ll2)) @ l2));;
 
 let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+  match l with | h::t -> if h == 0 then removeZero t else h :: t | [] -> [];;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      let (o,p) = a in
-      let (d1,d2) = x in
-      ((((d1 + d2) + o) / 10), ((((d1 + d2) + o) mod 10) :: p)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let f (c,ds) (x1,x2) =
+      ((((c + x1) + x2) / 10), ((((c + x1) + x2) mod 10) :: ds)) in
+    let base = (0, 1) in
+    let args = List.combine l1 l2 in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l = (mulByDigit i) - (1 (bigAdd l l));;

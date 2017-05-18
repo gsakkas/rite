@@ -1,6 +1,9 @@
 
-let rec removeZero l =
-  let h::t = l in
-  if h = [] then [] else (match h with | 0::[] -> removeZero t | _ -> t);;
-
-let _ = removeZero [9; 9];;
+let stringOfList f l =
+  let l' = List.map f l in
+  match l' with
+  | [] -> []
+  | _ ->
+      let rec makeString res =
+        match res with | [] -> "" | h::t -> h ^ (makeString t) in
+      makeString l';;

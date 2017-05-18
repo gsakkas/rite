@@ -1,4 +1,6 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
 
-let fixpoint (f,b) = wwhile ((((f b) = b), (f b)), b);;
+let g (f,x) = let xx = f x in (xx, (xx = (f xx)));;
+
+let h = g f;;

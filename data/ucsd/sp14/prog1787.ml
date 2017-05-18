@@ -1,19 +1,8 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (bb,false ) -> bb | (bb,true ) -> wwhile (f, bb);;
 
-let buildX () = VarX;;
+let fixpoint (f,b) =
+  wwhile ((fun b  -> ((f b), (((f b) != b) || ((f b) != (f (f b)))))), b);;
 
-let buildY () = VarY;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> buildX
-  | VarY  -> buildY
-  | Sine s -> Sine (exprToString s);;
+let _ = fixpoint (exp, (-1));;

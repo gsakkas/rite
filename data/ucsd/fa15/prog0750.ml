@@ -8,13 +8,20 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) =
+let rec exprToString e =
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (eval e)
-  | Cosine e -> cos (eval e)
-  | Average (e,f) -> ((eval e) + (eval f)) / 2
-  | Times (e,f) -> (eval e) * (eval f)
-  | Thresh (e,f,g,h) ->
-      (match (eval e) < (eval f) with | true  -> eval g | false  -> eval h);;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (x,y,z,s) ->
+      "(" ^
+        ((exprToString x) ^
+           ("<" ^
+              ((exprToString y) ^
+                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))));;
+
+let _ = exprToString Trip (Varx, Varx, VarY);;

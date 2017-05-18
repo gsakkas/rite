@@ -1,3 +1,3 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n & 10];;
+let rec clone x n =
+  if n > 0 then match x with | h::t -> [h] @ (clone t (n - 1));;

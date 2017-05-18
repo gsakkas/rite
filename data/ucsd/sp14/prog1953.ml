@@ -1,38 +1,24 @@
 
-let rec clone x n =
-  let rec helper acc x n =
-    if n <= 0 then acc else helper (x :: acc) x (n - 1) in
-  helper [] x n;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  if len1 < len2
-  then ((List.append (clone 0 (len2 - len1)) l1), l2)
-  else (l1, (List.append (clone 0 (len1 - len2)) l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | x::xs' -> (match x with | 0 -> removeZero xs' | _ -> l);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (_,acc) ->
-          let (padded1,padded2) = padZero acc x in
-          let rec helper acc2 r lst1 lst2 =
-            match lst1 with
-            | [] -> (match r with | 0 -> acc2 | _ -> List.append acc2 [r])
-            | h1::t1 ->
-                (match lst2 with
-                 | [] -> failwith "Should never reach here!"
-                 | h2::t2 ->
-                     let sum = (h1 + h2) + r in
-                     helper ((sum mod 10) :: acc2) (sum / 10) t1 t2) in
-          (0, (helper [] 0 padded1 padded2)) in
-    let base = (0, []) in
-    let args = [[l1]; [l2]] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine ex -> sin (pi *. (eval (ex, x, y)))
+  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
+  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.
+  | Times (ex1,ex2) -> (eval (ex1, x, y)) * (eval (ex2, x, y))
+  | Thresh (ex1,ex2,ex3,ex4) ->
+      if (eval (ex1, x, y)) < (eval (ex2, x, y))
+      then eval (ex3, x, y)
+      else eval (ex4, x, y);;

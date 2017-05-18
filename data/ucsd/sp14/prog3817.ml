@@ -1,15 +1,11 @@
 
-let listReverse l =
-  let rec reverseHelper l rl =
-    match l with | [] -> rl | h::t -> reverseHelper t (h :: rl) in
-  reverseHelper l [];;
-
-let rec palindrome w =
-  match w with
-  | [] -> (match listReverse w with | [] -> true | _ -> false)
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
   | h::t ->
-      (match listReverse w with
-       | [] -> true
-       | h2::t2 -> if h2 = h then palindrome t else false);;
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let _ = palindrome "myxomatosis";;
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+
+let _ = stringOfList (fun x  -> 5 * x) [1; 2; 3; 4; 5; 6];;

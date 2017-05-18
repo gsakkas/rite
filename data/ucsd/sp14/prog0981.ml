@@ -1,5 +1,23 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | x::xs -> (listReverse xs) @ x;;
+let a = (1, 2);;
 
-let _ = listReverse [1; 2; 3; 4];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (eval (a, x, y))
+  | Cosine a -> x
+  | Average (a,b) -> x
+  | Times (a,b) -> x
+  | Thresh (a,b,c,d) -> x;;
+
+let _ = eval ((Sine VarX), 0, 0);;

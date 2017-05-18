@@ -1,5 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((f (if (f b) = b then 1 else 0)), b);;
+let rec clone x n = match n with | 0 -> [] | _ -> [clone x];;

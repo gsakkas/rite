@@ -1,6 +1,6 @@
 
 let rec wwhile (f,b) =
-  let (b',c') = b in
-  match c' with | true  -> wwhile (f, (b', c')) | false  -> b';;
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let fixpoint (f,b) = wwhile (let n x = (f, (x = (f x))) in (n, b));;

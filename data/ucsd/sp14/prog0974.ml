@@ -1,40 +1,19 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let dl = (List.length l1) - (List.length l2) in
-  match dl with
-  | 0 -> (l1, l2)
-  | _ ->
-      if dl > 0
-      then (l1, ((clone 0 dl) @ l2))
-      else (((clone 0 (dl / (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let z = (fst x) + (snd x) in
-      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
-    let base = (0, []) in
-    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  let rec adder n l' a =
-    match n with
-    | 0 -> [0]
-    | 1 -> bigAdd l' a
-    | _ -> adder (n - 1) l' (bigAdd a l') in
-  adder i l [0];;
-
-let rec tensMul n =
-  match n with | 0 -> 0 | 1 -> 10 | _ -> 10 * (tensMul (n - 1));;
-
-let rec bigCombiner l1 l2 acc n =
-  match l1 with
-  | [] -> acc
-  | h::t -> bigCombiner t l2 (acc @ (mulByDigit (h * (tensMul n)))) (n + 1);;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.sprintf "x"
+  | VarY  -> Printf.sprintf "x"
+  | Sine x -> Printf.sprintf ""
+  | Cosine x -> Printf.sprintf ""
+  | Average (x,y) -> Printf.sprintf ""
+  | Times (x,y) -> Printf.sprintf ""
+  | Thresh (x,y,z,w) -> ((Printf.sprintf "%s<%s?%s:" x), y, z);;

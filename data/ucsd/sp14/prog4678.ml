@@ -1,4 +1,7 @@
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let _ = sumList [1; 3; 5; 7; 9; 11] int_of_string 32;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (h ^ sep) ^ x in
+      let base = "" in let l = h in List.fold_left f base l;;

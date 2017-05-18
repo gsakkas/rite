@@ -1,8 +1,15 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile ((f b), b);;
-
-let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
-
-let _ = fixpoint (g, 0);;
+let rec exprToString e =
+  match e with
+  | VarX  -> Printf.sprintf "x"
+  | VarY  -> Printf.sprintf "y"
+  | Sine x -> Printf.sprintf "Sine(%s)" exprToString x;;

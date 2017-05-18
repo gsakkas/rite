@@ -1,6 +1,5 @@
 
-let rec add current next =
-  match current with | [] -> [next] | front::back -> front (add back next);;
+let rec wwhile (f,b) =
+  match f b with | (x,false ) -> x | (y,true ) -> wwhile (f, y);;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else add (digitsOfInt (n / 10)) (n mod 10);;
+let fixpoint (f,b) = wwhile (((f b), true), b);;

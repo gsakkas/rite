@@ -1,11 +1,4 @@
 
-let rec reverse s =
-  let n = String.length s in
-  for i = 0 to (n - 1) / 2 do
-    (let c = s.[i] in s.[i] <- s.[(n - i) - 1]; s.[(n - i) - 1] <- c)
-  done;
-  s;;
+let pipe fs = let f a x f a = x in let base y = y in List.fold_left f base fs;;
 
-let z = [1; 2; 3; 4; 5; 6];;
-
-let _ = reverse z;;
+let _ = pipe [] 3;;

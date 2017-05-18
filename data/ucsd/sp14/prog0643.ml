@@ -1,4 +1,7 @@
 
-let rec clone x n =
-  let rec clone_RT acc n = if n <= 0 then acc else clone (x :: acc) (n - 1) in
-  clone_RT [] n;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else
+    (let next_tail = digitsOfInt (n / 10) in
+     match next_tail with | x::xs -> xs @ [x :: (n mod 10)]);;

@@ -1,5 +1,4 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+let dupe f x = ((f x), (f x));;
 
-let fixpoint (f,b) = wwhile ((fun x  -> ((f x), ((not f b) = b))), b);;
+let dupe f x = ((f x), (f x)) dupe 2 3;;

@@ -1,2 +1,5 @@
 
-let rec wwhile (f,b) = match f with | (x,true ) -> f x | (x,false ) -> x;;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;

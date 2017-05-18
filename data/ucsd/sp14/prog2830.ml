@@ -1,2 +1,3 @@
 
-let rec sumList xs = match 1 with | [] -> 0 | h::t -> h + (sumList t);;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in if a < b then a;;

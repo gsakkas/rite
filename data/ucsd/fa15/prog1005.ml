@@ -1,4 +1,19 @@
 
-let pipe fs = let f a x z = x a in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" exprToString e ")"
+  | Cosine e -> "cos(pi*" exprToString e ")"
+  | Average (x,y) ->
+      ("((" exprToString e) ^ ("+" ^ ((exprToString e ")") / (2 ")")))
+  | Times (x,y) -> exprToString e "*" exprToString e;;

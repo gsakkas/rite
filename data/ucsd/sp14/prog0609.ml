@@ -1,5 +1,5 @@
 
-let pipe fs =
-  let f a x = (+) (x a) in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let append x l =
+  let rec helper x l acc =
+    match x with | [] -> l | h::t -> (helper t l h) :: acc in
+  helper x l [];;

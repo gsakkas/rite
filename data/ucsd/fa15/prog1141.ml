@@ -1,7 +1,5 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ t) in
-      let base = "" in let l = sl in List.fold_left f base l;;
+let rec assoc (d,k,l) =
+  match [(k, d)] with
+  | [] -> d
+  | h::t -> if [(k, d)] = h then d else assoc (d, k, t);;

@@ -1,5 +1,6 @@
 
-let padZero l1 l2 =
-  let difference1 = (List.length l1) - (List.length l2) in
-  let difference2 = (List.length l2) - (List.length l1) in
-  let retTuple = l1 * l2 in if difference1 > 0 then retTuple;;
+let pipe fs =
+  let f a x = match x with | [] -> a | h::t -> h a in
+  let base = 0 in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

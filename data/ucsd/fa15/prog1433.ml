@@ -1,16 +1,9 @@
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let rec mulByDigit i l =
-  let rec helper acc cin l' =
-    match l' with
-    | [] -> cin :: acc
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
     | h::t ->
-        let sum = (i * h) + cin in helper ((sum mod 10) :: acc) (sum / 10) t in
-  removeZero (helper [] 0 l);;
-
-let bigMul l1 l2 =
-  let f a x = mulByDigit x l1 in
-  let base = [] in
-  let args = l2 in let (_,res) = List.fold_left f base args in res;;
+        let seen' = if List.mem seen h then h :: seen else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

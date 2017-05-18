@@ -1,4 +1,3 @@
 
-let rec clone x n =
-  let rec helper = match n with | 0 -> [] | _ -> x :: ((helper n) - 1) in
-  helper n;;
+let pipe fs =
+  let f a x = fs (a x) in let base y = y in List.fold_left f base fs;;

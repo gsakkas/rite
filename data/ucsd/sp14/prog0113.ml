@@ -1,4 +1,5 @@
 
-let f xs = xs;;
-
-let _ = f [] 3;;
+let rec listReverse l =
+  let reverseHelper r =
+    match l with | [] -> l | h::t -> listReverse t (h :: r) in
+  listReverse [] [];;

@@ -1,4 +1,2 @@
 
-let rec removeZero l = match l with | [] -> [] | hd::t -> (removeZero l) @ hd;;
-
-let _ = removeZero [0; 0; 0; 1; 0; 0; 2];;
+let rec appZero x l = if x > 0 then l @ [] else (appZero x) - (1 l);;

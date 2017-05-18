@@ -1,7 +1,7 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let fphelper f b = if (f b) = b then (b, false) else ((f b), true);;
 
-let fixpoint (f,b) = wwhile ((let g x = (f x) != x in g b), b);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+
+let fixpoint (f,b) = wwhile (fphelper, b);;

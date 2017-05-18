@@ -1,3 +1,5 @@
 
-let pipe fs =
-  let f a x y c = a (x c) in let base y = y in List.fold_left f base fs;;
+let rec stringOfList f l =
+  match l with | [] -> "" | h::t -> h ^ (stringOfList f t);;
+
+let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;

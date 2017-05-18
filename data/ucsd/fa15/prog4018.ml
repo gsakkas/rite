@@ -1,5 +1,6 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (f,s) = h in if k = f then s h else assoc d k t;;
+let pipe fs =
+  let f a x = let g u = x a u in g in
+  let base f x = x in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + 3)] 3;;

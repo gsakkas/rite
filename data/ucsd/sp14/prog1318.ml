@@ -1,8 +1,20 @@
 
-let rec append xs1 xs2 =
-  match xs1 with | [] -> xs2 | hd::tl -> hd :: (append tl xs2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec listReverse l =
-  match l with | [] -> [] | hd::tl -> append (listReverse tl) hd;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ = listReverse ["a"; "b"; "c"; "d"];;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)));;
+
+let _ = eval ((Sine VarX), 1, 1);;

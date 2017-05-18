@@ -1,8 +1,10 @@
 
-let rec clone x n =
-  if n <= 0 then [] else (let y = clone x (n - 1) in x :: y);;
+let rec wwhile (f,b) =
+  let (x,y) = f b in if y = false then x else wwhile (f, x);;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x < y then ((clone 0 (y - x)), y) else (x, (clone 0 (x - y)));;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) = wwhile ((f b), b);;
+
+let _ = fixpoint (collatz, 107);;

@@ -1,27 +1,14 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Half of expr
-  | ThreeAve of expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
-  | 1 ->
-      let halff = rand in
-      if halff = 0
-      then Cosine (build (rand, (depth - 1)))
-      else Sine (build (rand, (depth - 1)))
-  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | (([],_),acc) -> failwith "should never reach here"
+    | ((h::[],r),acc) ->
+        let sum = (h * i) + r in
+        (([], 0), ((sum / 10) :: (sum mod 10) :: acc))
+    | ((h::t,r),acc) ->
+        let sum = (h * i) + r in ((t, (sum / 10)), ((sum mod 10) :: acc)) in
+  let base = ((List.rev l), 0, []) in
+  let args = List.rev l in
+  let (_,res) = List.fold_left f base args in
+  match res with | 0::t -> t | _ -> res;;

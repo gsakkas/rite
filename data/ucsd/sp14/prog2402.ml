@@ -1,13 +1,5 @@
 
-let rec mulByDigit i l =
-  let rec helper acc carry i l =
-    match l with
-    | [] -> acc
-    | h::t ->
-        let x = (h * i) + carry in
-        let n = if x > 9 then x mod 10 else x in
-        let carry' = if x > 9 then x / 10 else 0 in
-        let acc' = n :: acc in helper acc' carry' i t in
-  helper [] 0 i (List.rev (0 :: l));;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
 
-let _ = mulByDigit - (9 []);;
+let fixpoint (f,b) = wwhile ((fun x  -> x), b);;

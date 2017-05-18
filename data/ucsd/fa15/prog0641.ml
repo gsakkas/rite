@@ -1,5 +1,2 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let _ = digitsOfInt - 1;;
+let rec assoc (d,k,l) = match l with | h::t -> assoc d k t | _ -> d;;

@@ -1,7 +1,6 @@
 
-let rec digitsOfInt n =
-  let rec integers a b =
-    match a with | [] -> b | x::xs -> integers xs (x :: b) in
-  integers n [];;
+let pipe fs =
+  let f a x = match x with | x::xs' -> (fun z  -> x) in
+  let base y = y in List.fold_left f base fs;;
 
-let _ = digitsOfInt 3124;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

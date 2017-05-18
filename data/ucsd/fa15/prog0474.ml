@@ -1,3 +1,10 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (f,(h1,h2)) -> if h2 then f h1 else wwhile (h1, h2);;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else
+    (let modded = n mod 10 in
+     let quotient = n / 10 in
+     let head = digitsOfInt quotient in head @ [modded]);;
+
+let _ = digitsOfInt 1.5;;

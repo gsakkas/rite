@@ -1,2 +1,5 @@
 
-let rec clone x n = if n > 0 then x :: (clone (x (n - 1))) else [];;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> [(digitsOfInt n) / 10] @ [n % 10];;

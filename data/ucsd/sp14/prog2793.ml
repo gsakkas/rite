@@ -1,24 +1,9 @@
 
-let pipe fs =
-  let f a x p' = x a in let base a' = a' in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pipe fs =
-  let f a x p' = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x p' = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x p' = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x p' = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x p' = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = x a in let base = pipe [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = a x in let base = pipe [] in List.fold_left f base fs;;
+let stringOfList f l = failwith List.map sepConcat f l;;

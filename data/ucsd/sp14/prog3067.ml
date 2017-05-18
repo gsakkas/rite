@@ -1,9 +1,9 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    if n == 0
-    then [0]
-    else
-      if (n / 10) == 0 then n mod 10 else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec mulByDigit i l =
+  let rec mulHelper l' =
+    match l' with
+    | [] -> (0, [])
+    | h::t ->
+        let (carry,rest) = mulHelper t in
+        let prod = (i * h) + carry in ((prod / 10), ((prod mod 10) :: rest)) in
+  let (_,ans) = (mulHelper 0) :: (List.rev l) in ans;;

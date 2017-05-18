@@ -7,24 +7,22 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Square of expr* expr
-  | Exponential of expr* expr;;
+  | Square of expr
+  | Quarter of expr;;
 
-let rec exprToString e =
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine i -> "sin(pi*" ^ ((exprToString i) ^ ")")
-  | Cosine i -> "cos(pi*" ^ ((exprToString i) ^ ")")
-  | Average (i1,i2) ->
-      "((" ^ ((exprToString i1) ^ (" + " ^ ((exprToString i2) ^ ")/2)")))
-  | Times (i1,i2) -> (exprToString i1) ^ ("*" ^ (exprToString i2))
-  | Thresh (i1,i2,i3,i4) ->
-      "(" ^
-        ((exprToString i1) ^
-           ("<" ^
-              ((exprToString i2) ^
-                 (" ? " ^
-                    ((exprToString i3) ^ (":" ^ ((exprToString i4) ^ ")")))))))
-  | Square (i1,i2) -> exprToString i1 "*" exprToString i2
-  | Exponential (i1,i2) -> exprToString i1 "^" exprToString i2;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Square e -> e *. e
+  | Quarter e -> e /. 4.0;;

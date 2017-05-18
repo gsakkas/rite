@@ -1,29 +1,12 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (bb,false ) -> bb | (bb,true ) -> wwhile (f, bb);;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> Format.sprintf "x"
-  | VarY  -> Format.sprintf "y"
-  | Sine e' -> (Format.sprintf "sin(pi*") ^ ((exprToString e') ^ ")")
-  | Cosine e' -> (Format.sprintf "cos(pi*") ^ ((exprToString e') ^ ")")
-  | Average (e1,e2) ->
-      (Format.sprintf "((") ^
-        ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) ->
-      (Format.sprintf (exprToString e1)) ^ ("*" ^ (exprToString e2))
-  | Thresh (a,b,a_less,b_less) ->
-      (Format.sprintf "(") ^
-        ((exprToString a) ^
-           ("<" ^
-              ((exprToString b) ^
-                 ("?" ^
-                    ((exprToString a_less) ^
-                       (":" ^ ((exprToString b_less) ^ ")")))))));;
+let fixpoint (f,b) =
+  wwhile
+    ((fun b  -> ((f b), ((not ((f b) = b)) || (not ((f b) = (f (f b))))))),
+      b);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let _ = fixpoint (sin, (4. * pi));;

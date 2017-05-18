@@ -1,4 +1,7 @@
 
-let pipe fs = let f a x = x a in let base x = x in List.fold_left f base fs;;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let cat = pipe [(fun x  -> x + x)];;
+let _ = makeRand ((1, 2), 2);;

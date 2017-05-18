@@ -1,2 +1,2 @@
 
-let stringOfList f l = "[" ^ ((List.map f l) ^ "]");;
+let _ = [1; 5] :: 1;;

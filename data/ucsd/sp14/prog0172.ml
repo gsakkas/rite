@@ -1,4 +1,3 @@
 
-let rec mulByDigit i l = match l with | [] -> [] | h::m::t -> m;;
-
-let _ = mulByDigit 9 [9; 9; 9; 9];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [digitsOfInt (n / 10); n mod 10];;

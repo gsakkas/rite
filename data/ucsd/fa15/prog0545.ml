@@ -1,4 +1,5 @@
 
-let rec wwhile (f,b) = match f b with | false  -> b;;
-
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> [digitsOfInt (n / 10); n mod 10];;

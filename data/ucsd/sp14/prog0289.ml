@@ -1,4 +1,4 @@
 
-let rec wwhile (f,b) = let c' = f b in if c' = b then c' else wwhile (f, c');;
+let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let _ = sumList [1; 3; 5; 7; 9; 11]; int_of_string 32;;

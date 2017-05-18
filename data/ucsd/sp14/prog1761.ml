@@ -1,5 +1,13 @@
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
 
-let rec addPHelper n pos =
-  let sum = sumList pos in if sum < 10 then sum else addPHelper sum;;
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB b' = f' b' in (b', (fOfB = b')) in
+      whilesFun f), b);;
+
+let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+
+let _ = fixpoint (g, 0);;

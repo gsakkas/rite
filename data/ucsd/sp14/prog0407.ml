@@ -1,4 +1,3 @@
 
-let rec clone x n = if n <= 0 then x else clone (List.append x x) (n - 1);;
-
-let _ = clone 3 5;;
+let rec digitsOfInt n =
+  match n with | 0 -> [] | _ -> ((digitsOfInt n) / 10) @ [n % 10];;

@@ -1,5 +1,5 @@
 
-let rec digitsOfInt n =
-  let rec integers a b =
-    if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-  integers n 0;;
+let pipe fs =
+  let f a x b a = a x in let base y = y in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

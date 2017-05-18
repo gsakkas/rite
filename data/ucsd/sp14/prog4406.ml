@@ -18,9 +18,7 @@ let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
       let (i,j) = x in
-      if (i + j) > 9
-      then (1, ((i + j) - 10))
-      else if (i + j) <= 9 then (0, (i + j)) in
+      let (s,t) = a in ((((i + j) + s) / 10), (t @ (((i + j) + s) mod 10))) in
     let base = (0, []) in
     let args = List.combine (List.rev l1) (List.rev l2) in
     let (_,res) = List.fold_left f base args in res in

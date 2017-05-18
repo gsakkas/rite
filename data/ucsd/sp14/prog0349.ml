@@ -1,11 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n > 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) / 2;;
+let digits n = digitsOfInt (abs n);;
+
+let _ = digits (-23422) is [(2, 3, 4, 2, 2)];;

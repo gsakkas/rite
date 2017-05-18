@@ -1,10 +1,22 @@
 
-let digitsOfInt n =
-  let rec lastDigit n accu =
-    if n <= 0 then accu else lastDigit (n / 10) ((n mod 10) :: accu) in
-  match n with | _ -> lastDigit n [];;
+let rec clone x n =
+  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
+  helper x n [];;
 
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
+let padZero l1 l2 =
+  let l1_len = List.length l1 in
+  let l2_len = List.length l2 in
+  let l_diff = l1_len - l2_len in
+  if l_diff < 0
+  then (((clone 0 (l_diff * (-1))) @ l1), l2)
+  else (l1, ((clone 0 l_diff) @ l2));;
 
-let rec additivePersistence n =
-  match n with | 0 -> 0 | _ -> additivePersistence sumList (digitsOfInt n);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = (x * x) + a in
+    let base = [] in
+    let args = l1 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

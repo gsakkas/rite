@@ -1,4 +1,5 @@
 
-let pipe fs = let f a x = x a in let base p = p in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let rec assoc (d,k,l) =
+  match (d, k, l) with
+  | (ki,vi)::t -> if k = ki then vi else assoc (d, k, t)
+  | [] -> d;;

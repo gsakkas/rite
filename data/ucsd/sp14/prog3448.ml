@@ -1,15 +1,18 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
-
-let _ = buildAverage ((eval (VarX, 2.0, 4.0)), (eval (VarY, 2.0, 4.0)));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      let lastDigit = prod / 10 in
+      let firstDigit = prod mod 10 in
+      let ret = mulByDigit (i t) in
+      (match ret with
+       | [] -> 0
+       | h2::t2 ->
+           if h2 > 10
+           then
+             let temp = h2 in
+             (if prod > 10
+              then [lastDigit; firstDigit + temp]
+              else firstDigit :: t));;

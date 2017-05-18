@@ -1,9 +1,6 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let a = 20;;
 
-let fixpoint (f,b) = wwhile (f, b);;
+let f x = let y = 1 in let g z = y + z in a + (g x);;
 
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let _ = let base p = p in List.fold_left f base fs;;

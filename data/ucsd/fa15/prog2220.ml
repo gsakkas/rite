@@ -1,4 +1,2 @@
 
-let stringOfList f l =
-  let fx a b = match b with | [] -> "" | h::t -> List.append a (f b) in
-  let base = [""] in List.fold_left fx base l;;
+let helperAppend l n = (0 :: l) * (n helperAppend [] 5);;

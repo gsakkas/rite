@@ -1,4 +1,2 @@
 
-let rec clone x n = List.combine x n;;
-
-let _ = clone 3 5;;
+let pipe fs = let f a x = fs a x in let base = 0 in List.fold_left f base fs;;

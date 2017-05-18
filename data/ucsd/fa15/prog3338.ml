@@ -1,10 +1,4 @@
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+let pipe fs = let f a x = x a in let base = [] in List.fold_left f base fs;;
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      (match List.length t with
-       | 1 -> [i * h]
-       | _ -> [remainder h i] @ (((i * l) / 10) + (mulByDigit i t)));;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

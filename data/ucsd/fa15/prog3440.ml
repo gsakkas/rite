@@ -1,5 +1,7 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (f, (((f b) = (f (b - 1))) && ((f b) = b)));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> [0]
+  | h::t ->
+      let (cin,res) = mulByDigit i t in
+      let sum = (i * h) + cin in ((sum / 10), ((sum mod 10) :: res));;

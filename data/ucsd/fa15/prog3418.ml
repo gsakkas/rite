@@ -1,10 +1,4 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let _ = listReverse (explode w) true;;
+let pipe fs =
+  let f a x = x a "to be implemented" in
+  let base = 0 "to be implemented" in List.fold_left f base fs;;

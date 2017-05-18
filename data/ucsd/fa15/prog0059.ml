@@ -1,11 +1,4 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h t then seen else seen @ h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
-
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let rec digitsOfInt n =
+  let returnList = [] in
+  if n < 0 then returnList else returnList @ (1 digitsOfInt (n / 10));;

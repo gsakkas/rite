@@ -1,6 +1,3 @@
 
-let pipe fs =
-  let f a x = List.map x a in
-  let base = [(fun x  -> x)] in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let rec helper a x =
+  match x with | [] -> 0 | h::t -> (h * h) + (helper (a, x));;

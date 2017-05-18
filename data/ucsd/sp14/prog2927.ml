@@ -1,2 +1,3 @@
 
-let c3 () = failwith (15, 4, 17);;
+let rec clone x n =
+  match n > 0 with | true  -> x :: ((clone x n) - 1) | false  -> x;;

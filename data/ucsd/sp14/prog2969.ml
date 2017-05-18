@@ -1,9 +1,9 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = "[" ^ ((sepConcat "; " List.map f l) ^ "]");;
+let bigMul l1 l2 =
+  let f a x = failwith "to be implemented" in
+  let base = failwith "to be implemented" in
+  let args =
+    let rec argmaker x y =
+      match y with | [] -> [] | hd::tl -> List.append (x, hd) (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;

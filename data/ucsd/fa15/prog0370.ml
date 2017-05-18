@@ -1,4 +1,3 @@
 
-let c1 () = (9, 734, 12);;
-
-let c3 () = (11, 15, 43) doRandomGray c1;;
+let rec digitsOfInt n =
+  match n < 0 with | true  -> [] | false  -> [[(digitsOfInt n) / 10]];;

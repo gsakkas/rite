@@ -1,6 +1,4 @@
 
-let pi = 4.0 *. (atan 1.0);;
-
 type expr =
   | VarX
   | VarY
@@ -8,22 +6,20 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Expn of expr* expr;;
+  | Thresh of expr* expr* expr* expr;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine b -> sin (pi *. (eval (b, x, y)))
-  | Cosine b -> cos (pi *. (eval (b, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Expn (a,b) -> (eval (a, x, y)) ** (eval (b, x, y))
-  | _ -> 0.0;;
-
-let _ = eval (Expn (2.0, 2.0));;
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi * (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> buildTimes ((eval e1), (eval e2))
+  | Thresh (e1,e2,e3,e4) -> buildThresh (e1, e2, e3, e4);;

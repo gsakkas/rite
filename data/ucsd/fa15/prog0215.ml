@@ -1,2 +1,2 @@
 
-let rec wwhile (f,b) = match b with | b -> wwhile ((f b), b);;
+let rec equiv x y = match x with | h::tl -> if (List.hd y) = h then 1;;

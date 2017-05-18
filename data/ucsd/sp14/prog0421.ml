@@ -1,2 +1,3 @@
 
-let _ = List.split [9; 1; 1; 1];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n - ((n / 10) * 10)) :: ((digitsOfInt n) / 10);;

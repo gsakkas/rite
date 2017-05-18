@@ -1,5 +1,3 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [0] | h::t -> [] @ (h @ (digitsOfInt t)));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> h :: (listReverse (listReverse h));;

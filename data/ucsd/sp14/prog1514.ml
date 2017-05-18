@@ -1,10 +1,7 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let g x y = ((y (y x)), false);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let palindrome w = (listReverse explode w) == w;;
+let fixpoint (f,b) = wwhile ((g b f), b);;

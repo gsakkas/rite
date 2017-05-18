@@ -1,3 +1,3 @@
 
-let sqsum xs =
-  let f a x = (a ** 2) + (x ** 2) in let base = 0 in List.fold_left f base xs;;
+let rec digitsOfInt n =
+  (if n < 10 then [n] else (digitsOfInt (n / 10)) :: (n mod 10) : int list);;

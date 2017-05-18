@@ -1,2 +1,2 @@
 
-let pipe fs = let f a x = x a in let base = f fs in List.fold_left f base fs;;
+let rec eval (e,x,y) = assert (((-1.0) <= eval) && (eval <= 1.0)); eval;;

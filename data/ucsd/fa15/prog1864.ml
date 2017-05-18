@@ -1,2 +1,6 @@
 
-let rec sumList xs = match 1 with | [] -> 0 | x::xs' -> x + (sumList xs');;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+
+let fixpoint (f,b) = wwhile ((f, (b < (f b))), b);;

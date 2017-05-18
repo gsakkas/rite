@@ -1,19 +1,13 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | Sine e -> sin (pi *. e)
-  | Cosine e -> cos (pi *. e)
-  | Average (x,y) -> (x +. y) /. 2.0
-  | Times (x,y) -> x *. y
-  | Thresh (e,f,g,h) -> failwith "sad";;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) len1), len2)
+  else ((List.append (clone 0 diff) len2), len1);;

@@ -1,2 +1,4 @@
 
-let rec wwhile (f,b) = if snd f b then wwhile f fst f b else fst f b;;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
+
+let g b = (b, (b = (f b)));;

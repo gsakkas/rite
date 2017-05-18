@@ -1,3 +1,6 @@
 
-let rec digitsOfInt n =
-  if n > 0 then let k = digitsOfInt (n / 10) in k :: (n mod 10) else [];;
+let sqsum xs =
+  let f a x = match x with | [] -> 0 | h::t -> a + h in
+  let base = 0 in List.fold_left f base xs;;
+
+let _ = sqsum [(-1); (-2); (-3); (-4)];;

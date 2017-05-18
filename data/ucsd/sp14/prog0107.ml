@@ -1,2 +1,5 @@
 
-let rec sqsum xs = match xs with | [] -> [] | h::t -> (h * h) + (sqsum t);;
+let rec listReverse l =
+  let rec reverseHelper revd =
+    match l with | [] -> [] | h::t -> listReverse t (h :: revd) in
+  reverseHelper [];;

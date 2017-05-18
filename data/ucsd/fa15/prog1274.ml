@@ -8,15 +8,13 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec exprToString e =
+let rec eval (e,x,y) =
   match e with
-  | VarX  -> Printf.printf "x"
-  | VarY  -> Printf.printf "y"
-  | Sine e -> Printf.printf "sin(pi*" exprToString e
-  | Cosine e -> Printf.printf "cos(pi*%s)" (!exprToString) e
-  | Average (e1,e2) ->
-      Printf.printf "((%s + %s)/2)" exprToString e1 exprToString e2
-  | Times (e1,e2) -> Printf.printf "%s * %s" exprToString e1 exprToString e2
-  | Thresh (e1,e2,e3,e4) ->
-      Printf.printf "(%s<%s ? %s : %s)" exprToString e1 exprToString e2
-        exprToString e3 exprToString e4;;
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (eval e)
+  | Cosine e -> cos (eval e)
+  | Average (e1,e2) -> ((eval e1) + (eval e2)) / 2
+  | Times (e1,e2) -> (eval e1) * (eval e2)
+  | Thresh (e1,e2,e1less,e2less) ->
+      if (eval e1) < (eval e2) then eval e1less else eval e2less;;

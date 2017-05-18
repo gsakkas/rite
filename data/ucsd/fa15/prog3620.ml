@@ -1,54 +1,24 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  match diff with
+  | diff when diff > 0 -> (l1, (List.append (clone 0 diff) l2))
+  | diff when diff < 0 -> ((List.append (clone 0 (0 - diff)) l1), l2)
+  | 0 -> (l1, l2)
+  | _ -> ([], []);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (e1,e2,e3) = Op2 (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let r = rand (0, 2) in match r with | 0 -> buildX () | 1 -> buildY ()
-  else
-    (let r = rand (0, 11) in
-     let d = depth - 1 in
-     match r with
-     | 0 -> buildAverage ((build (rand, d)), (build (rand, d)))
-     | 1 -> buildCosine (build (rand, d))
-     | 2 -> buildSine (build (rand, d))
-     | 3 -> buildTimes ((build (rand, d)), (build (rand, d)))
-     | 4 ->
-         buildThresh
-           ((build (rand, d)), (build (rand, d)), (build (rand, d)),
-             (build (rand, d)))
-     | 5 ->
-         buildOp2
-           ((build (rand, d)), (build (rand, d)), (build (rand, d)),
-             (build (rand, d)))
-     | 6 -> buildSine (build (rand, d))
-     | 7 -> buildCosine (build (rand, d))
-     | 8 -> buildOp1 (build (rand, d))
-     | 9 -> buildSine (build (rand, d))
-     | 10 -> buildCosine (build (rand, d)));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      ([(x1 + x2) / 10], ((((a1 + x1) + x2) mod 10) :: a2)) in
+    let base = ([0], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

@@ -1,7 +1,4 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let pipe fs = let f a x = x a in let base = f in List.fold_left f base fs;;
 
-let palindrome w = Printf.sprintf explode w;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

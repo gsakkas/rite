@@ -7,8 +7,8 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Square of expr
-  | Mix of expr* expr* expr;;
+  | Golden of expr
+  | MeanPi of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -16,15 +16,16 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)))
-  | Cosine ex -> cos (pi *. (eval (ex, x, y)))
-  | Average (ex1,ex2) -> ((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.0
-  | Times (ex1,ex2) -> (eval (ex1, x, y)) *. (eval (ex2, x, y))
-  | Thresh (ex1,ex2,ex3,ex4) ->
-      if (eval (ex1, x, y)) < (eval (ex2, x, y))
-      then eval (ex3, x, y)
-      else eval (ex4, x, y)
-  | Square ex -> ((eval ex), x, y) *. (eval (ex, x, y))
-  | Mix (ex1,ex2,ex3) ->
-      ((eval ((Times (ex1, ex2)), x, y)) +. (eval ((Times (ex2, ex3)), x, y)))
-        /. 2.0;;
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Golden e' ->
+      cos ((((eval (e', x, y)) ** 2.0) -. (eval (e', x, y))) -. 1.0)
+  | MeanPi (e1,e2,e3) ->
+      sin
+        (((eval (e1, x, y)) + (eval (e2, x, y))) + ((eval (e3, x, y)) /. pi));;

@@ -1,3 +1,4 @@
 
-let rec fold_l f base xs =
-  match xs with | [] -> base | h::t -> let temp = fold_l f base t in temp f h;;
+let pi = 4.0 *. (atan 1.0);;
+
+let pi = 4.0 *. (atan 1.0 sin pi);;

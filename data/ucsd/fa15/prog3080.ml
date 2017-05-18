@@ -1,8 +1,9 @@
 
-let helper (f,a) = let x = f a in if x = a then (x, false) else (x, true);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (failwith a) ^ x in
+      let base = h in let l = sep in List.fold_left f base l;;
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in
-  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
-
-let fixpoint (f,b) = wwhile (helper, b);;
+let _ = sepConcat ", " ["foo"; "bar"; "baz"];;

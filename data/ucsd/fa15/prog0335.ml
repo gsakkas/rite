@@ -1,6 +1,2 @@
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | head::[] -> [head]
-  | head::tail -> [listReverse [tail]; head];;
+let rec helperR list rr = match rr with | h::t -> (helperR t) :: h;;

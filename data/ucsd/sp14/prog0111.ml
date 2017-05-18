@@ -1,2 +1,5 @@
 
-let rec fold f x y = match y with | h::t -> h | [] -> y;;
+let rec listReverse l =
+  let reverseHelper r =
+    match l with | [] -> [] | h::t -> listReverse t (h :: r) in
+  listReverse l [];;

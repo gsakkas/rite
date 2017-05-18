@@ -1,14 +1,17 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  let rec recurse original reverse =
-    match original with
-    | [] -> reverse
-    | front::back -> recurse back (front :: reverse) in
-  recurse l [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w = (explode w) = (listReverse explode w);;
+let rec exprToString e =
+  match e with
+  | VarX  -> e
+  | VarY  -> e
+  | Sine e1 -> sin (pi * (exprToString e1));;

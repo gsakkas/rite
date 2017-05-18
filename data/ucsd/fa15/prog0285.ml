@@ -1,4 +1,9 @@
 
-let stringOfList f l = match l with | [] -> "[]" | x::[] -> "[" ^ (x ^ "]");;
+let rec listReverse l =
+  let rec listReverseHelper l =
+    function | [] -> l | h::t -> listReverseHelper (h :: l) t in
+  listReverseHelper [] l;;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let palindrome w = if w = (listReverse w) then true else false;;
+
+let _ = palindrome "myxomatosis";;

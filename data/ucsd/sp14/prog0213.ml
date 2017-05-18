@@ -1,5 +1,4 @@
 
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t -> ((mulByDigit i (List.rev t)) :: 0) @ [h * i];;
+let x = [1; 2; 3];;
+
+let _ = [x 3; 1; 2; 3];;

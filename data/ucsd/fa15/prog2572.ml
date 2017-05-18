@@ -1,11 +1,9 @@
 
-let rec digitsOfInt n =
-  let rec loop x listX =
-    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
-  match n with | 0 -> [0] | x' -> loop x' [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  let rec loop x y = if x < 10 then y else (sumList (digitsOfInt loop x)) + y in
-  match n with | 0 -> 0 | x' -> loop x' 0;;
+let stringOfList f l = sepConcat ";" List.map l;;

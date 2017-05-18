@@ -1,2 +1,3 @@
 
-let rec clone x n = if n > 1 then x @ (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match b with | b -> if (f b) = ((f b), true) then wwhile (f, b);;

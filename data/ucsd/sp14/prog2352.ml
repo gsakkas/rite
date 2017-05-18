@@ -1,8 +1,6 @@
 
-let firstF x = x + x;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let g firstF secondF = secondF firstF;;
-
-let secondF x' = x' + 4;;
-
-let x = g secondF firstF;;
+let _ =
+  let fixpoint (f,b) = let b' = f b in if b' = b then b' else wwhile (f, b') in
+  wwhile (f, b);;

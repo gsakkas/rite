@@ -1,9 +1,4 @@
 
-let rec wwhile (f,b) =
-  match f b with
-  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
+let rec digitsOfInt n = match n with | n::ns -> n :: ns;;
 
-let fixpoint (f,b) = wwhile (f b b);;
-
-let _ =
-  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;
+let _ = digitsOfInt 3124;;

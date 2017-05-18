@@ -1,3 +1,2 @@
 
-let rec reverseHelper l m =
-  match l with | x::s -> (reverseHelper s x) :: m | [] -> m;;
+let rec fold f x y = match y with | h::t -> h | [] -> y;;

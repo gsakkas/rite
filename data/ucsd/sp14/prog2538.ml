@@ -8,6 +8,14 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
+let pi = 4.0 *. (atan 1.0);;
 
-let _ = eval ((VarX * VarY), 1, 2);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval a))
+  | Cosine a -> cos (pi *. (eval a))
+  | Average (a,b) -> ((eval a) +. (eval b)) / 2
+  | Times (a,b) -> (eval a) *. (eval b)
+  | Thresh (a,b,c,d) -> if (eval a) < (eval b) then eval c else eval d;;

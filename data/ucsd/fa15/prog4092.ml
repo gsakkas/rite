@@ -1,3 +1,7 @@
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ ((clone x n) - 1);;
+let rec helper x = if x = 0 then 1 else 10 * (helper (x - 1));;
+
+let rec tenEx x y =
+  match y with
+  | [] -> []
+  | h::t -> ((helper x) * h) @ (tenEx (helper (x + 1)) t);;

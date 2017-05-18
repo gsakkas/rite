@@ -1,4 +1,9 @@
 
-let rec backCons xs x = match xs with | [] -> x | y::ys -> y :: x;;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let _ = backCons ([1; 2] 3);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  let sum = 0 in
+  if n < 10 then n + sum else sum = (digitalRoot (sumList (digitsOfInt n)));;

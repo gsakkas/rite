@@ -1,4 +1,4 @@
 
-let rec clone x n = List.map x n;;
+let pipe fs = let f a x = a + x in let base = 0 in List.fold_left f base fs;;
 
-let _ = clone 3 5;;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

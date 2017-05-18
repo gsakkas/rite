@@ -1,17 +1,16 @@
 
-let rec clone x n =
-  if n < 1
-  then []
-  else
-    (let rec helper acc f x =
-       match x with | 0 -> acc | _ -> helper (f :: acc) f (x - 1) in
-     helper [] x n);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = (List.length l1) - (List.length l2) in
-  if x
-  then
-    (if x < 0
-     then (((clone 0 (abs x)) @ l1), l2)
-     else (l1, ((clone 0 (abs x)) @ l2)))
-  else (l1, l2);;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec eval (e,x,y) =
+  match e with | VarX  -> buildX * 1.0 | VarY  -> buildY * 1.0;;

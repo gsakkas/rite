@@ -1,12 +1,12 @@
 
-let rec clone x n = if n <= 0 then [] else [x] :: (clone x (n - 1));;
+let sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) :: l1), l2)
-    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) :: l2));;
+let stringOfList f l =
+  sepConcat ";" (List.map f (List.map (fun g  -> "[" ^ (g ^ "]")) l));;
 
-let _ = padZero [9; 9] [1; 0; 0; 2];;
+let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;

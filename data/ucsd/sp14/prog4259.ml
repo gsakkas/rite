@@ -1,5 +1,2 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
-
-let fixpoint (f,b) = wwhile ((let h a = ((f a), false) in h b), b);;
+let sqsum xs = let f a x = (+.) in let base = 0 in List.fold_left f base xs;;

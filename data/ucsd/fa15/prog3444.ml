@@ -1,5 +1,6 @@
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((f, (f < 100)), b);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then List.append (clone 0 ((List.length l1) - (List.length l2))) l2;;

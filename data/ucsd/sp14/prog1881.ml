@@ -1,6 +1,24 @@
 
-let a = [1; 2; 3];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let _ = List.append clone (0 5) a;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> ("sin(pi*" + (exprToString x)) + ")"
+  | Cosine x -> ("cos(pi*" + (exprToString x)) + ")"
+  | Average (x,y) ->
+      ((("((" + (exprToString x)) + "*") + (exprToString y)) + ")/2)"
+  | Times (x,y) -> ((exprToString x) + "*") + (exprToString y)
+  | Thresh (a,b,c,d) ->
+      ((((("(" + (exprToString a)) + "<") + (exprToString b)) +
+          ("?" exprToString c))
+         + ":")
+        + (exprToString d);;

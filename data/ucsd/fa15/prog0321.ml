@@ -1,3 +1,2 @@
 
-let rec digitsOfInt n =
-  if n < 0 then [] else ((digitsOfInt n) / 10) :: (n % 10);;
+let rec sumList xs = match 1 with | [] -> 0 | x::xs' -> x + (sumList xs');;

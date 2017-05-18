@@ -1,2 +1,4 @@
 
-let rec appZero x l = if x > 0 then l @ 0 else (appZero x) - (1 l);;
+let pipe fs = let f a x = x a in let base f = f in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

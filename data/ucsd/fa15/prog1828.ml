@@ -14,10 +14,8 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) /. (eval (b, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      let x1 = ((eval (a, x, y)), (x2 = (eval (b, x, y)))) in
-      if x1 < x2 then eval a_less else eval b_less;;
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval e2)
+  | Thresh (e1,e2,e3,e4) -> (e1 < (e2 ?e3) : e4);;

@@ -1,4 +1,8 @@
 
-let pipe fs = let f a x y = a x in let base y = y in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ (sepConcat sep t)) in
+      let base = t in
+      let l = failwith "to be implemented" in List.fold_left f base l;;

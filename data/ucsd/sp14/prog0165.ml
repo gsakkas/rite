@@ -1,2 +1,2 @@
 
-let _ = List.combine ([1], [2]);;
+let rec digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;

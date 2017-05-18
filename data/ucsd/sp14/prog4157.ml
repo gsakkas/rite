@@ -1,5 +1,7 @@
 
-let pipe fs =
-  let f a x b = x (a b) in let base x = x in List.fold_left f base fs;;
+let rec clone x n =
+  let rec clone_TR acc n =
+    if n <= 0 then acc else clone_TR (x :: acc) (n - 1) in
+  clone_TR [] n;;
 
-let stringOfList f l = f (pipe List.map l);;
+let _ = clone [] [];;

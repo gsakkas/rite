@@ -1,4 +1,4 @@
 
-let pipe fs = let f a x = x a in let base y = y in List.fold_left f base fs;;
+let pi = 4.0 *. (atan 1.0);;
 
-let _ = pipe [(fun x  -> x + 2)] 4;;
+let _ = sin (pi * 0.3);;

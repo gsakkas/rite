@@ -1,9 +1,7 @@
 
-let rec at a b = match a with | [] -> [b] | head::tail -> head :: (at tail b);;
+let pipe fs =
+  let rec iter acc curr =
+    match curr with | [] -> acc | h::tl -> iter (h acc) tl in
+  iter (fun y  -> y) fs;;
 
-let rec listReverse l =
-  match l with | [] -> [] | head::tail -> at (listReverse tail) head;;
-
-let palindrome w = w = (listReverse w);;
-
-let _ = palindrome "malayalam";;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)];;

@@ -1,4 +1,15 @@
 
-let pipe fs = let f a x = x a in let base = [] in List.fold_left f base fs;;
+let digitsOfInt n =
+  let rec digOfIntHelper n l =
+    match n > 0 with
+    | false  -> []
+    | true  ->
+        (match n > 9 with
+         | false  -> n :: l
+         | true  -> digOfIntHelper (n / 10) ((n mod 10) :: l)) in
+  digOfIntHelper n [];;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let additivePersistence n =
+  let rec addPerHelper n l =
+    match l with | [] -> 0 | a::[] -> n | h::t -> addPerHelper (n + 1) t in
+  addPerHelper 0 digitsOfInt n;;

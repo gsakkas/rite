@@ -1,4 +1,7 @@
 
-let pipe fs =
-  let f a x = a x in
-  let base = match fs with | 0 -> 0 | _ -> fs in List.fold_left f base fs;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x abs n;;

@@ -1,2 +1,2 @@
 
-let c3 () = failwith (7, 2, 2);;
+let rec clone x n = if n = 0 then [] else [x] :: ((clone x n) - 1);;

@@ -1,7 +1,7 @@
 
-let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+let rec assoc (d,k,l) =
+  match k with
+  | [] -> d
+  | (lk,lv)::ls -> if lk = lk then lv else assoc (d, k, ls);;
 
-let fixpoint (f,b) = wwhile ((let k x = (f x) = x in f), b);;
+let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;

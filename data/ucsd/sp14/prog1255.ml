@@ -1,35 +1,17 @@
 
-let change x =
-  let rec changehelper acc x =
-    match x with | [] -> [] | hd::tl -> changehelper (acc ^ hd) tl in
-  changehelper "" x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let _ =
-  change
-    [1;
-    9;
-    4;
-    5;
-    2;
-    3;
-    7;
-    4;
-    8;
-    1;
-    2;
-    9;
-    5;
-    8;
-    1;
-    0;
-    0;
-    5;
-    4;
-    6;
-    7;
-    9;
-    1;
-    2;
-    0;
-    3;
-    9];;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth < 1
+  then let base = rand 0 2 in match base with | 0 -> buildX | 1 -> buildY;;

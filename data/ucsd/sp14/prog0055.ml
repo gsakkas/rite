@@ -1,8 +1,7 @@
 
-type nat =
-  | Zero
-  | Succ of nat;;
+let rec countlist x = match x with | [] -> 0 | h::t -> 1 + (countlist t);;
 
-let rec to_int n = match n with | Zero  -> 0 | Succ m -> 1 + (to_int m);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let b = to_int Succ Zero;;
+let rec additivePersistence n =
+  let x = sumList n in if x < 10 then countlist n else additivePersistence x;;

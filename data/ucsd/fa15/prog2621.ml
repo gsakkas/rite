@@ -1,19 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let identity a = a;;
 
-let rec exprToString e =
-  let pi = 3.142 in
-  match e with
-  | VarX  -> e
-  | Sine e' -> sin (pi *. e')
-  | Cosine e' -> cos (3.142 * e')
-  | Average (a,b) -> (a + b) / 2
-  | Times (a,b) -> a * b
-  | Thresh (a,b,c,d) -> (a < (b ?c) : d);;
+let pipe fs =
+  let f a x b = x a in let base = identity in List.fold_left f base fs;;
+
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

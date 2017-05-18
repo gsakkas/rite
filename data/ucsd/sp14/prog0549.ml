@@ -1,2 +1,2 @@
 
-let rec backCons xs x = match xs with | [] -> x | y::ys -> [y; x];;
+let rec digitsOfInt n = if n <= 0 then [] else 1;;

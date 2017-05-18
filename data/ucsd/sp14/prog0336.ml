@@ -1,26 +1,24 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec listReverse2 l dest =
+  match l with | [] -> dest | h::t -> listReverse2 t (h :: dest);;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  ((List.append (clone 0 (len2 - len1)) l1),
-    (List.append (clone 0 (len1 - len2)) l2));;
+let rec digitsOfInt n =
+  match n / 10 with
+  | 0 -> [n mod 10]
+  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let rec digitsToList n =
+  match n / 10 with
+  | 0 -> [n mod 10]
+  | _ -> (n mod 10) :: (digitsOfInt (n / 10));;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (i,l) ->
-          (match x with
-           | (x1,x2) ->
-               ((((x1 + x2) + i) / 10), ((((x1 + x2) + i) mod 10) :: l))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec listReverse l = listReverse2 l [];;
 
-let rec mulByDigit i l = if i > 0 then bigAdd l (mulByDigit (i - 1) l);;
+let digitsOfInt n = listReverse (digitsToList n);;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let digitalRoot n =
+  let l = digits n in match l with | [] -> [] | h::t -> h + (sumList t);;

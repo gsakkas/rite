@@ -1,5 +1,4 @@
 
-let sqsum xs =
-  let f a x = x ** 2.0 in let base = 0.0 in List.fold_left f base xs;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let _ = sqsum [1; 2; 3; 4];;
+let fixpoint (f,b) = let f' f b = ((f b), (b = (f b))) in wwhile (f', b);;

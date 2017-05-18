@@ -1,16 +1,36 @@
 
-let rec digitsOfInt n =
-  if ((n mod 2) = 0) && (n > 0)
-  then
-    let rec loop input =
-      if input = 0 then [] else (loop (input / 10)) @ [input mod 10] in
-    loop n
-  else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs =
-  if xs = [] then 0 else (let h::t = xs in h + (sumList t));;
-
-let rec additivePersistence n =
-  if (n / 10) = 0 then n else additivePersistence (sumList digits n);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Halve x -> "(" ^ (exprToString ^ ")/2")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))))
+  | Wow (x,y,z) ->
+      "sqrt(" ^
+        ("abs(" ^
+           ((exprToString x) ^
+              (")*" ^
+                 ("abs(" ^
+                    ((exprToString y) ^
+                       (")*" ^ ("abs(" ^ ((exprToString z) ^ "))"))))))));;

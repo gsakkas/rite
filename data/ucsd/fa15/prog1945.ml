@@ -1,39 +1,7 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let helper x r = let m = x r in match m with | r -> (r, false);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = if depth > 0 then rand (2, 6) else rand (0, 1) in
-  match r with
-  | 0 -> buildX
-  | 1 -> buildY
-  | 2 -> buildSine (build (rand, (depth - 1)))
-  | 3 -> buildCosine (build (rand, (depth - 1)))
-  | 4 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;

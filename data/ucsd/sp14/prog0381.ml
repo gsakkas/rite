@@ -1,33 +1,16 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareCosine of expr
-  | SquareSinCos of expr* expr* expr;;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input = 0 then [] else (loop (input / 10)) @ [input mod 10] in
+    loop n
+  else [];;
 
-let pi = 4.0 *. (atan 1.0);;
+let digits n = digitsOfInt (abs n);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | SquareCosine e' -> sqrt (abs_float (cos (pi *. (eval (e', x, y)))))
-  | SquareSinCos (e1,e2,e3) ->
-      sqrt
-        (abs_float sin
-           (((cos (pi *. (eval (e1, x, y)))) *.
-               (cos (pi *. (eval (e2, x, y)))))
-              *. (cos (pi *. (eval (e3, x, y))))));;
+let rec sumList xs =
+  if xs = [] then 0 else (let h::t = xs in h + (sumList t));;
+
+let rec additivePersistence n =
+  if (n / 10) = 0 then n else additivePersistence (sumList digits n);;

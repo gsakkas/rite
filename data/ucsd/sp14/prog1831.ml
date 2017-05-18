@@ -1,4 +1,6 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = let b' = f b in wwhile (f, (b' = b), b);;
+let rec assoc (d,k,l) =
+  match l with
+  | (k',v')::tl -> if k' = k then v' else assoc d k tl
+  | [] -> d
+  | _ -> failwith "This ain't your mom's hashmap";;

@@ -1,3 +1,3 @@
 
-let rec mulByDigit i l =
-  match l with | [] -> [] | hd::tl -> (hd * i) @ [mulByDigit i tl];;
+let pipe fs n =
+  let f a x = a + (n x) in let base = n in List.fold_left f base fs;;

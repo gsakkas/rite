@@ -1,5 +1,3 @@
 
-let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> append listReverse t [h];;
+let sqsum xs =
+  let f a x = a * a in let base = f xs xs in List.fold_left f base xs;;

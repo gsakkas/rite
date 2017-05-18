@@ -1,24 +1,54 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) / 2
-  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval (e6, x, y)) < (eval (e7, x, y))
-      then eval (e8, x, y)
-      else eval (e9, x, y);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ [initsum])) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (List.rev (add (padZero l1 l2)));;
+
+let mulByDigit i l =
+  let rec helpy p q carry accList =
+    let numsList = List.rev q in
+    match numsList with
+    | [] -> [carry] @ accList
+    | h::t ->
+        let initMul = (h * p) + carry in
+        let intKeep = initMul mod 10 in
+        let carrying = (initMul - intKeep) / 10 in
+        let v = List.rev t in (helpy p v carrying [intKeep]) @ accList in
+  removeZero (helpy i l 0 []);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (bottom_mult,total) = a in
+    match bottom_mult with
+    | [] -> total
+    | h::t ->
+        let newTotal = mulByDigit h x in
+        let updateTotal = bigAdd newTotal total in (t, updateTotal) in
+  let base = (l1, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;

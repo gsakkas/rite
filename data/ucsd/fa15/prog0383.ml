@@ -1,3 +1,5 @@
 
-let pipe fs =
-  let f a x x' = x' a in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n < 0
+  then Printf.fprintf "%d\n" 0
+  else Print.fprintf "%d " digitsOfInt (n / 10);;

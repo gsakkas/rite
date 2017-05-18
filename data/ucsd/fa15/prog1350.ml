@@ -1,2 +1,3 @@
 
-let rec digitsOfInt n = if n < 0 then [] else n mod 10; (digitsOfInt n) / 10;;
+let rec assoc (d,k,l) =
+  match l with | [] -> (-1) | h::l' -> let (x,y) = h in Printf.sprintf h;;

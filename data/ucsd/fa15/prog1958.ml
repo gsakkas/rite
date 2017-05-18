@@ -1,11 +1,8 @@
 
-let stringOfList f l =
-  let l' = List.map f l in
-  match l' with
-  | [] -> ""
-  | _ ->
-      let rec makeString res =
-        match res with | [] -> "" | h::t -> (h "; ") ^ (makeString t) in
-      "[" ^ ((makeString l') ^ "]");;
+let rec helper (f,b) =
+  let x = f b in match x with | b -> (x, false) | _ -> helper (f, x);;
 
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let rec wwhile (f,b) =
+  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((helper (f, b)), b);;

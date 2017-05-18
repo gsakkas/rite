@@ -1,5 +1,3 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | x::xs -> (listReverse xs) @ x;;
-
-let _ = listReverse [1; 2; 3; 4];;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = false then wwhile (f b') else b';;

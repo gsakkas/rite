@@ -1,10 +1,8 @@
 
-let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand 0 1) = 0 then expr ^ "VarX" else expr ^ "Var"
-    | 1 ->
-        if (rand 0 1) = 0
-        then expr ^ ("Sine(" ^ ((buildhelper 0 (depth - 1) expr) ^ ")"))
-        else expr ^ ("Cosine(" ^ (((buildhelper 0 depth) - (1 expr)) ^ ")")) in
-  buildhelper (rand 0 4) depth "";;
+let rec wwhile (f,b) =
+  let rec wwhelper f b =
+    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
+  wwhelper f b;;
+
+let fixpoint (f,b) =
+  wwhile (let helper x = ((f x), ((f x) = (f b))) in ((helper b), b));;

@@ -1,6 +1,2 @@
 
-let rec wwhile (f,b) =
-  let i = b in
-  match f i with | (v_n,false ) -> v_n | (v_n,true ) -> wwhile (f, v_n);;
-
-let fixpoint (f,b) = let f' = (f, ((f b) = b)) in wwhile (f', b);;
+let rec digitsOfInt n = if n < 0 then [] else n mod 10; (digitsOfInt n) / 10;;

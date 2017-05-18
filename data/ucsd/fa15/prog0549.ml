@@ -1,3 +1,5 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile f b';;
+let rec digitsOfInt n =
+  match n <= 0 with
+  | true  -> []
+  | false  -> ((digitsOfInt n) / 10) :: (n mod 10);;

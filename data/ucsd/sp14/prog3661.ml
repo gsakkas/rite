@@ -1,9 +1,8 @@
 
 let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t ->
-      let prod = h * i in
-      if prod > 10
-      then [prod mod 10; (prod / 10) + (mulByDigit i t)]
-      else prod :: t;;
+  let lr = List.rev l in
+  match lr with
+  | (_,[]) -> ((((fst x) * (snd x)) / 10), [((fst x) * (snd x)) mod 10])
+  | (c,h::t) ->
+      let sum = c + ((fst x) * (snd x)) in
+      ((sum / 10), ((sum mod 10) :: (snd a)));;

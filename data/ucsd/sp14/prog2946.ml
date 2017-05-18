@@ -1,6 +1,2 @@
 
-let pipe fs =
-  let f a x = function | g -> x a g in
-  let base = function | b -> b in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let _ = (List.append [0; 0]) @ ([1; 1] [1]);;

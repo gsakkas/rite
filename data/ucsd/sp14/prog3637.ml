@@ -1,3 +1,2 @@
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2) then List.combine l1 l2;;
+let rec clone x n = match n with | 0 -> [] | h::t -> x :: (clone x (n - 1));;

@@ -1,39 +1,12 @@
 
-let rec filter l a =
-  match l with
-  | [] -> []
-  | h::t -> if a = h then filter t a else h :: (filter t a);;
+let helper f b = if (f b) = b then (true, b) else (false, (f b));;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = h in
-        let rest' = h :: (filter t h) in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let rec filter l a =
-  match l with
-  | [] -> []
-  | h::t -> if h = a then filter t a else h :: (filter t a);;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = h in
-        let rest' = h :: (filter t h) in helper (seen', rest') in
-  removeDuplicates (helper ([], l));;
+let fixpoint (f,b) = wwhile ((helper f), b);;
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> rest
-    | h::t ->
-        let seen' = h in
-        let rest' = h :: (filter t h) in helper (seen', rest') in
-  removeDuplicates (helper ([], l));;
-
-let _ = removeDuplicates [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let _ = fixpoint (collatz, 9001);;

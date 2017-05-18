@@ -1,21 +1,10 @@
 
-let getHead y = match y with | [] -> "u" | h::t -> h;;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let getTail i = match i with | [] -> [] | h::t -> t;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec matchHeads x =
-  match x with
-  | [] -> true
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
   | h::t ->
-      if h = (getHead t) then matchHeads (getTail (listReverse t)) else false;;
-
-let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
+      (match List.length t with
+       | 1 -> [i * h]
+       | _ -> [remainder h i] @ (((i * l) / 10) + (mulByDigit i t)));;

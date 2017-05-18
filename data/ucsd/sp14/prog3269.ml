@@ -1,4 +1,7 @@
 
-let pipe fs =
-  let f a x = let y z xn = xn a in y in
-  let base b = b in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = (sepConcat h) ^ (sep t) in
+      let base = "" in let l = t in List.fold_left f base l;;

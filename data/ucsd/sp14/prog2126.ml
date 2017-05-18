@@ -1,25 +1,34 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | MyExpr1 of expr* expr* expr
+  | MyExpr2 of expr;;
 
-let padZero l1 l2 =
-  let len1 = List.length l1 in
-  let len2 = List.length l2 in
-  let shorter = if len1 < len2 then l1 else l2 in
-  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
-  if shorter = l1
-  then ((List.append (clone 0 zeros) shorter), l2)
-  else (l1, (List.append (clone 0 zeros) shorter));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (a,b) ->
-          if (a + b) > 9 then 1 :: ((a + b) - 10) :: a else (a + b) :: a in
-    let base = [] in
-    let args = match List.rev (List.combine l1 l2) with | h::t -> h in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString ex =
+  match ex with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | MyExpr1 (e1,e2,e3) ->
+      "(sqrt(" ^
+        ((exprToString e1) ^
+           (")*sqrt(" ^
+              ((exprToString e2) ^ (")*" ^ ((exprToString e3) ^ ")")))))
+  | MyExpr2 e -> "halve(" ^ (exprToString ^ ")");;

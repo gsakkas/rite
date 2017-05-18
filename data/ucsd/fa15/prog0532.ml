@@ -1,11 +1,14 @@
 
-let rec lastListElement n =
-  match n with
-  | [] -> []
-  | x::[] -> x :: (lastListElement [])
-  | x::y -> lastListElement y;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (let x = n mod 10
+        and n = n / 10 in (digitsOfInt n) @ [x]);;
 
-let rec catLists x y =
-  match x with | [] -> [] | h::t -> catLists t ((lastListElement x) :: y);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let _ = catLists [1] [2; 3; 4];;
+let rec digitalRoot n =
+  if n >= 10
+  then let n = digitsOfInt n
+       and f = sumList n in digitalRoot n
+  else n;;

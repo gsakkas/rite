@@ -1,5 +1,9 @@
 
-let digitsOfInt n =
-  let rec driver n ls =
-    if n >= 10 then (driver n) / (10 ((n mod 10) :: ls)) else [n] in
-  driver n [];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat ";" List.map (fun f  -> f l);;

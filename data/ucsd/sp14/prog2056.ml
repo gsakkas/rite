@@ -17,7 +17,7 @@ let rec eval (e,x,y) =
   | VarX  -> x
   | VarY  -> y
   | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos * (pi (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
   | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0)
   | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
   | Thresh (e1,e2,e3,e4) ->

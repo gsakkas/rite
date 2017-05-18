@@ -1,4 +1,4 @@
 
-let stringOfList f l =
-  let fx a b = match b with | [] -> [] | h::t -> List.append a (f b) in
-  let base = "" in List.fold_left fx base l;;
+let rec clone x n = if n = 0 then x else x @ (clone x (n - 1));;
+
+let _ = clone clone (-3);;

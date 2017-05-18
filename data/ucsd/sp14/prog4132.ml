@@ -1,48 +1,24 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let rec clone_RT acc n =
+    if n <= 0 then acc else clone_RT (x :: acc) (n - 1) in
+  clone_RT [] n;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let diff = len1 - len2 in
+  if diff < 0
+  then ((List.append (clone 0 (- diff)) l1), l2)
+  else (l1, (List.append (clone 0 diff) l2));;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else l;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rnd = rand 0 100 in
-    (if (rnd mod 5) = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if (rnd mod 5) = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if (rnd mod 5) = 2
-         then buildAverage ((buildX ()), (buildY ()))
-         else
-           if (rnd mod 5) = 3
-           then buildTimes ((buildX ()), (buildY ()))
-           else
-             buildThresh
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  else
-    (let rnd = rand 0 100 in
-     if (rand mod 2) = 0
-     then buildAverage ((buildX ()), (buildY ()))
-     else buildTimes ((buildX ()), (buildY ())));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = ([0], [0]) in
+    let base = (0, 0) in
+    let args = (0, (clone 0 List.length l1)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

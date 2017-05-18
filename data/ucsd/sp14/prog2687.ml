@@ -1,4 +1,3 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (func, boo) else value;;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> fold_l f base t (f h);;

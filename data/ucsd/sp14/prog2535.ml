@@ -1,8 +1,13 @@
 
-let pi = 4.0 *. (atan 1.0);;
-
-let x = 0.1;;
-
-let y = 0.2;;
-
-let _ = x < ((y (?:: sin) (pi * x)) * (cos (pi * ((x + y) / 2))));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' =
+          let x = List.mem (h, seen) in
+          if x = true
+          then seen' = seen
+          else seen' = (List.rev (h :: (List.rev seen))) in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

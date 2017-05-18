@@ -1,13 +1,6 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Halve of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Wow of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildHalve (e1,e2) = Halve (e1, e2);;
+let padZero l1 l2 =
+  let length_diff = (List.length l1) - (List.length l2) in
+  if length_diff < 0
+  then length_diff = ((List.length l1) - (List.length l2))
+  else length_diff;;

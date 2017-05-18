@@ -1,13 +1,9 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let getHeads y = match listReverse y with | [] -> [] | h::t -> [h];;
-
-let rec matchHeads x =
-  match explode x with | h::t -> if [getHeads x] = [] then true else false;;
+let _ = sepConcat "X" ["hello"] List.map string_of_int [123; 456];;

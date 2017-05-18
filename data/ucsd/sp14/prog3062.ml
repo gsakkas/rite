@@ -1,3 +1,2 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | x::[] -> x | (x::y)::[] -> x + (sumList y);;
+let foo = (fun x  -> x + 1) o (fun y  -> 2 * y);;

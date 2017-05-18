@@ -1,3 +1,21 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (x,y)::ly -> if k = x then y else ly;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e, x, y)) +. (eval (e, x, y))) /. 2
+  | Times (e1,e2) -> (eval e) *. (eval e)
+  | Thresh (e1,e2,e3,e4) -> ((eval e1) < (eval e2 ?eval e3) : eval e4);;

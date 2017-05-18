@@ -1,2 +1,4 @@
 
-let rec digitsOfInt n = if n < 0 then [] else (digitsOfInt n) mod 10;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f, b);;

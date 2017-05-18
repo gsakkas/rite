@@ -1,3 +1,10 @@
 
-let rec digitsOfInt n =
-  (if n > 10 then [n] else [n % 10] :: ((digitsOfInt n) / 10) : int list);;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if not result then value else wwhile (f, value);;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let func input = ((f input), ((not (f input)) = input)) in func), b);;
+
+let _ =
+  let g x = truncate (1e6 *. (cos (1e-6 *. (float x)))) in fixpoint (g, 0);;

@@ -1,4 +1,2 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in
-  let base = 0 "to be implemented" in List.fold_left f base xs;;
+let pipe fs = let f a x = a + x in let base x = x in List.fold_left f base fs;;

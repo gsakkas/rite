@@ -12,4 +12,4 @@ let rec exprToString e =
   match e with
   | VarX  -> "x"
   | VarY  -> "y"
-  | Sine e -> "sin (pi*" + (exprToString e);;
+  | Sine s -> "sin(pi*" ^ ((Format.sprintf "%" s) ^ ")");;

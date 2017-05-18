@@ -1,4 +1,2 @@
 
-let append x y = x + y;;
-
-let append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+let _ = 1.0 / max_float;;

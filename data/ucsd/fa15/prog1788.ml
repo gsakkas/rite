@@ -1,7 +1,5 @@
 
-let rec assoc (d,k,l) =
+let rec filter (l,a) =
   match l with
-  | [] -> d
-  | (name,age)::l' -> if k = name then age else assoc (d, k, l');;
-
-let _ = assoc ([(1, 1)], "a", [(([(1, 2)], "cc"), ([(1, 1, 1)], "a"))]);;
+  | [] -> []
+  | hd::tl -> if hd = a then filter tl a else hd :: (filter tl a);;

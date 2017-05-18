@@ -1,4 +1,5 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((fun f'  -> fun x  -> (f, ((f x) = x))), b);;
+let rec wwhile (f,b) =
+  let x = wwhile (f, b) in
+  let h::t = x in
+  let r::l = t in match r with | false  -> h | true  -> wwhile (f, h);;

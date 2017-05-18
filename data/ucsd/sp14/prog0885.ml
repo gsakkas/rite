@@ -1,5 +1,5 @@
 
-let rec append list1 list2 =
-  match list1 with | [] -> list2 | x::xs -> x :: (append xs list2);;
+let rec listReverse l =
+  match l with | [] -> [] | x::xs -> (listReverse xs) @ x;;
 
-let _ = [(2, 3, 4)] append [1];;
+let _ = listReverse [1; 2; 3; 4];;

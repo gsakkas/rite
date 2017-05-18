@@ -1,6 +1,9 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
+let f x = 1;;
 
-let rec fixpoint (f,b) = wwhile ((fixpoint (f, b)), b);;
+let f x = if x < 2 then 1 else x * (f (x - 1));;
+
+let pipe fs =
+  let f a x x a d = d in let base p = p in List.fold_left f base fs;;
+
+let _ = let base = pipe [] in List.fold_left f base fs;;

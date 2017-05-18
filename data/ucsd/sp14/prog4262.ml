@@ -1,2 +1,3 @@
 
-let pi = (4.0 *. (atan 1.0 6.7)) *. 87;;
+let pipe fs =
+  let f a x = List.map x in let base = 3 in List.fold_left f base fs;;

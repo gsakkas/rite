@@ -1,3 +1,3 @@
 
-let pipe fs =
-  let f a x f' d = x (a d) in let base c = c in List.fold_left f base fs;;
+let rec tenEx x y =
+  match y with | [] -> [] | h::t -> ((10.0 ** x) *. h) @ (tenEx (x + 1) t);;

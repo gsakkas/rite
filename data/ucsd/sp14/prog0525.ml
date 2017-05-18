@@ -1,13 +1,6 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
-
-let rec additivePersAndRoot xs pers =
-  let theSum = sumList xs in
-  if (sumList xs) < 10
-  then (pers, theSum)
-  else additivePersAndRoot ((digits theSum) (pers + 1));;
+let rec palindromeHelper w r =
+  match w with
+  | [] -> (match r with | [] -> true | _ -> false)
+  | x::s ->
+      (match r with | y::t -> if x = y then palindromeHelper s t | _ -> false);;

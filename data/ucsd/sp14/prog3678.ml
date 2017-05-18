@@ -1,4 +1,4 @@
 
-let r = [2; 3];;
+let pipe fs = let f a x = x a in let base = 0 in List.fold_left f base fs;;
 
-let _ = r :: (14 mod 10);;
+let hi = pipe [] 3;;

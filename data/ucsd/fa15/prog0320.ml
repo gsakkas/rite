@@ -1,11 +1,14 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let padZero l1 l2 =
-  match (List.length l1) - (List.length l2) with
-  | 0 -> (l1, l2)
-  | n ->
-      if n < 0
-      then (((clone 0 (n * (-1))) @ l1), l2)
-      else List.rev (((clone 0 n) @ l2), l1);;
+let rec listReverse l =
+  let rec recurse original reverse =
+    match original with
+    | [] -> reverse
+    | front::back -> recurse back (front :: reverse) in
+  recurse l [];;
+
+let palindrome w = (explode w) = (listReverse explode w);;

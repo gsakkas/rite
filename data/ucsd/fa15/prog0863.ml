@@ -1,8 +1,11 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = h ^ (sep ^ (sepConcat sep t)) in
-      let base = t in
-      let l = failwith "to be implemented" in List.fold_left f base l;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let r = List.rev t in
+        let seen' = seen in
+        (if 1 = 2 then seen' := (h :: seen);
+         (let rest' = t in helper (seen', rest'))) in
+  List.rev (helper ([], l));;

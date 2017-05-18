@@ -1,4 +1,2 @@
 
-let stringOfList f l = List.map (f l);;
-
-let _ = stringOfList (fun x  -> x) ["foo"];;
+let rec sumHelper xs = match xs with | [] -> 0 | h::t -> (h *. h) :: t;;

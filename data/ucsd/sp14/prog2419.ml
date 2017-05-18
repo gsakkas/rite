@@ -1,5 +1,12 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (if b = (f b) then b else ((f b), b));;
+let rec exprToString e =
+  match e with | Sine s -> Format.sprintf "%d" (sin (3 * 2.0));;

@@ -1,4 +1,7 @@
 
-let rec digitsOfInt n =
-  let return = [] in
-  if n < 0 then return else (digitsOfInt (-1) (n mod 10)) :: return;;
+let rec mulByDigit i l =
+  if l = []
+  then []
+  else
+    (let h::t = l in
+     if h = [] then [] else (match t with | [] -> h | _ -> [(h * i) / 10]));;

@@ -1,8 +1,26 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let fs bs = if bs = 0 then 0 else if bs > 1 then bs - 1 else bs + 1 in
-  wwhile ((fs b true), b);;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth > 0
+  then
+    match rand with
+    | (0,2) -> buildX ()
+    | (3,5) -> buildY ()
+    | (6,10) -> buildSine (build (rand, (depth - 1)))
+    | (11,18) -> buildCosine (build (rand, (depth - 1)));;

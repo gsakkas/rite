@@ -1,4 +1,4 @@
 
-let rec sumList xs = match xs with | [] -> [] | x::xs -> x;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let _ = sumList [1; 2; 3; 4];;
+let fixpoint (f,b) = let fx b = ((f b), ((not f b) = b)) in wwhile (fx, b);;

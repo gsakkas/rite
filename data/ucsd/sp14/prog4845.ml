@@ -1,7 +1,6 @@
 
-let x x = x;;
+let pipe fs =
+  let f a x = match x with | [] -> 0 | _ -> 1 in
+  let base = 0 in List.fold_left f base fs;;
 
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let _ = removeZero [0; 0; 0; 0] int_of_list [9; 9];;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + x)] 3;;

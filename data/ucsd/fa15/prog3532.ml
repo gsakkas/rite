@@ -1,7 +1,2 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | (s::i)::tl -> if s == k then i else assoc (d, k, tl);;
-
-let _ = assoc ((-1), "bob", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let pipe fs = let f a x = a x in let base = 1 in List.fold_left f base fs;;

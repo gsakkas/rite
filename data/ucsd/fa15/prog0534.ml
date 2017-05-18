@@ -1,8 +1,4 @@
 
-let rec lastListElement n =
-  match n with
-  | [] -> [[]]
-  | x::[] -> x :: (lastListElement [])
-  | x::y -> lastListElement y;;
+let rec listReverse l = match l with | [] -> [] | h::t -> h @ [];;
 
-let _ = lastListElement ["1"; "2"; "3"];;
+let _ = listReverse ["a"; "b"; "c"; "d"];;

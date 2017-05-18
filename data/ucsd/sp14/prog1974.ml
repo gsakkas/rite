@@ -1,3 +1,9 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (s,i)::t -> if s = k then true else assoc d k t;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem l seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

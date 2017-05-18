@@ -1,5 +1,8 @@
 
-let sqsum xs =
-  let f a x = a ** x in let base = 0.0 in List.fold_left f base xs;;
-
-let _ = sqsum [(-1); (-2); (-3); (-4)];;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input < 10 then input else [loop (input / 10); input mod 10] in
+    loop n
+  else [];;

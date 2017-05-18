@@ -1,2 +1,4 @@
 
-let rec helperR list rr = match rr with | h::t -> (helperR t) :: h;;
+let test = [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+
+let _ = List.mem (3 test);;

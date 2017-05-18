@@ -1,31 +1,14 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+let rec add current next =
+  match current with | [] -> [next] | front::back -> front :: (add back next);;
 
-let padZero l1 l2 =
-  match (List.length l1) - (List.length l2) with
-  | 0 -> (l1, l2)
-  | n ->
-      if n < 0
-      then (((clone 0 (n * (-1))) @ l1), l2)
-      else (((clone 0 n) @ l2), l1);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else add (digitsOfInt (n / 10)) (n mod 10);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let digits n = digitsOfInt (abs n);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match (a, x) with
-      | (_,(fst,sec)) ->
-          if (fst + sec) > 9
-          then (((fst + sec) - 10), 1)
-          else ((fst + sec), 0)
-      | ((carry,digits),(fst,sec)) ->
-          if sec = 1
-          then (1, (digits @ (fst, sec)))
-          else (0, (digits @ (fst, sec))) in
-    let base = (0, []) in
-    let args = [(0, 0)] @ (List.rev (List.combine l1 l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec sumList xs = match xs with | [] -> 0 | xf::xb -> xf + (sumList xb);;
+
+let rec additivePersistence n =
+  let x = sumList digits n in
+  if x > 9 then 1 + (additivePersistence x) else 1;;

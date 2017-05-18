@@ -1,6 +1,11 @@
 
-let stringOfList f l =
-  let fx a b = a ^ b in let base = "" in List.fold_left fx base l;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let _ =
-  stringOfList (stringOfList string_of_int) [[1; 2; 3]; [4; 5]; [6]; []];;
+let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 (padLength l1 l2)) :: l1
+  else (clone 0 (padLength l1 l2)) :: l2;;
+
+let _ = padZero [1; 0; 0; 2] [9; 9];;

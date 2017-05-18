@@ -1,4 +1,7 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let h x y = ((y x), (x < 100));;
 
-let fixpoint (f,b) = wwhile (let fb = f b in ((fb, (fb = b)), b));;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile ((h b f), b);;

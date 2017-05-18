@@ -1,44 +1,28 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec padZero l1 l2 =
+  let diffsize = (List.length l1) - (List.length l2) in
+  if diffsize > 0
+  then (l1, (List.append (clone 0 diffsize) l2))
+  else ((List.append (clone 0 ((-1) * diffsize)) l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (x1,x2) ->
+          (match a with
+           | (_,h2::t2) ->
+               let sum = (x1 + x2) + h2 in
+               ((sum / 10), ((sum / 10) :: (sum mod 10) :: t2))
+           | (_,_) -> (0, [0])) in
+    let base = (0, [0]) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let _ =
-  let rec build (rand,depth) =
-    match (rand, depth) with
-    | (r,depth) ->
-        let r = rand (0, 7) in
-        (match r with
-         | 0 -> buildX ()
-         | 1 -> buildY ()
-         | 2 -> buildSine (build (r, (depth - 1)))
-         | 3 -> buildCosine (build (r, (depth - 1)))
-         | 4 ->
-             buildAverage
-               ((build (r, (depth - 1))), (build (r, (depth - 1))))
-         | 5 ->
-             buildTimes ((build (r, (depth - 1))), (build (r, (depth - 1))))
-         | _ ->
-             buildThresh
-               ((build (r, (depth - 1))), (build (r, (depth - 1))),
-                 (build (r, (depth - 1))), (build (r, (depth - 1))))) in
-  (depth, (depth >= 0));;
+let rec mulByDigit i l = bigAdd bigAdd (l l) (mulByDigit (i - 1) l);;

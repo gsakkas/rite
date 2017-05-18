@@ -1,4 +1,6 @@
 
-let pipe fs = let f a x = x a in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [(fun x  -> x * x); (fun x  -> x + 1)] 3;;
+let rec palinHelper normal reverse =
+  match normal with
+  | [] -> true
+  | x::xs ->
+      if x = (List.hd reverse) then palinHelper xs List.tl reverse else false;;

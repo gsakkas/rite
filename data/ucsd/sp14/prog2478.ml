@@ -1,5 +1,4 @@
 
-let rec sumList xs =
-  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let _ = sumList [1; 3; 5; 7; 9; 11] List.hd 55;;
+let fixpoint (f,b) = wwhile (fun x  -> ((f x not ((f x) = x)), b));;

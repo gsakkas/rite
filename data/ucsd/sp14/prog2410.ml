@@ -1,10 +1,11 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (n mod 10) :: (digitsOfInt (n / 10)) else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | x::l' -> (listReverse l') @ [x];;
-
-let digitsOfInt n =
-  let explodeNum = if n > 0 then (n mod 10) :: (digitsOfInt (n / 10)) else [] in
-  listReverse explodeNum n;;
+let rec exprToString e = match e with | VarX  -> Format.printf "%float" VarX;;

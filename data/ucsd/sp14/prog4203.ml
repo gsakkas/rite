@@ -1,3 +1,4 @@
 
-let rec listReverse l =
-  if (List.length l) > 0 then (listReverse List.tl l) @ [List.hd l] else [];;
+let pipe fs =
+  let f a x = function | g -> g (x a) in
+  let base = function | x -> x in List.fold_left f base fs;;

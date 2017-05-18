@@ -1,5 +1,2 @@
 
-let rec digitsOfInt n =
-  let rec dig acc d =
-    if d < 10 then d :: acc else dig ((d mod 10) :: acc) (d div 10) in
-  dig [] d;;
+let pipe fs = let f a x x a = a in let base f = 0 in List.fold_left f base fs;;

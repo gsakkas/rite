@@ -1,9 +1,3 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "; " l.map f;;
+let rec removeZero l =
+  match List.hd l with | 0 -> removeZero List.tl l | _ -> l;;

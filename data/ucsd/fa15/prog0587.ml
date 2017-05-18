@@ -1,4 +1,3 @@
 
-let abs x = if x < 0.0 then x *. (-1.0) else x;;
-
-let _ = abs - 1.0;;
+let rec digitsOfInt n =
+  (if n < 10 then [n] else (n mod 10) :: ((digitsOfInt n) / 10) : int list);;

@@ -1,9 +1,18 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let additivePersistence n =
-  let count = 0 in
-  if n < 10 then count else count + (1 sumList (digitsOfInt n));;
+let rec eval (e,x,y) =
+  match e with
+  | Sine e' -> sin (pi *. (eval e'))
+  | Cosine e' -> cos (pi *. (eval e'))
+  | Average (x',y') -> (x +. y) /. 2.0
+  | Times (x',y') -> x *. y;;

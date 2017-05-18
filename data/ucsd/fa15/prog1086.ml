@@ -1,3 +1,5 @@
 
-let rec assoc n (d,k,l) =
-  match l with | x::l -> if n <= 0 then x else assoc (n - 1) l;;
+let rec wwhile (f,b) =
+  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+
+let fixpoint (f,b) = wwhile (fun x  -> (f, b));;

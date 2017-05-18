@@ -1,2 +1,3 @@
 
-let helperAppend l n = (0 :: l) * (n helperAppend [0] 5);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> [listReverse t] @ [h];;

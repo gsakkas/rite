@@ -1,8 +1,7 @@
 
-let fun1 x = x + x;;
+let rec wwhile (f,b) =
+  let func = f b in
+  let (value,boo) = func in if boo then wwhile (f, value) else value;;
 
-let fun2 x = x + 3;;
-
-let pipe x y = y x;;
-
-let _ = pipe fun1 fun2 3;;
+let fixpoint (f,b) =
+  wwhile ((let g x = let d = f x in (d, (x = d)) in g b), b);;

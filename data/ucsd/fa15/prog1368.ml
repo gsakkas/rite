@@ -6,7 +6,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Logx of expr
+  | TripMult of expr* expr* expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -14,9 +16,15 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine expr -> (sin pi) * (eval expr)
-  | Cosine expr -> (cos pi) * (eval expr)
-  | Average (expr1,expr2) -> ((eval expr1) + (eval expr2)) / 2
-  | Times (expr1,expr2) -> (eval expr1) * (eval expr2)
-  | Thresh (expr1,expr2,expr3,expr4) ->
-      ((eval expr1) < (eval expr2 ?eval expr3) : eval expr4);;
+  | Sine b -> sin (pi *. (eval (b, x, y)))
+  | Cosine b -> cos (pi *. (eval (b, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Logx a -> log (eval a)
+  | TripMult (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (b, x, y))) *. (eval (c, x, y))
+  | _ -> 0.0;;

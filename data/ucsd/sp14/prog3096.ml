@@ -1,7 +1,4 @@
 
-let getHead b = match b with | [] -> [] | x::xs -> x;;
-
-let rec listReverse l =
-  let a = [] in
-  let getHead b = function | [] -> [] | x::xs -> x :: (a getHead xs) in
-  getHead l;;
+let pipe fs =
+  let f a x = match x with | [] -> (fun b  -> b) in
+  let base = 0 in List.fold_left f base fs;;

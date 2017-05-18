@@ -1,2 +1,4 @@
 
-let fixpoint (f,b) = let b' = f b in if b' = b then b else (f, b');;
+let append x y = x :: y;;
+
+let append x y = match y with | [] -> x | h::t -> h :: (append x t);;

@@ -1,4 +1,7 @@
 
-let rec sumList xs = match xs with | [] -> 0 | x::s -> x + (sumList s);;
-
-let _ = (sumList [1; 3; 5; 7; 9; 11] 55) / 10;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = List.hd + (List.combine a x) in
+    let base = l1 in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

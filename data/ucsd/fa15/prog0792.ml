@@ -1,3 +1,6 @@
 
-let rec digitsOfInt n =
-  (if n > 10 then n else (n % 10) :: ((digitsOfInt n) / 10) : int list);;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if not result then value else wwhile (f, value);;
+
+let fixpoint (f,b) =
+  wwhile ((let func output = ((f b), ((f b) = b)) in func b), b);;

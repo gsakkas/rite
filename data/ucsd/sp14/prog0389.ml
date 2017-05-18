@@ -1,4 +1,10 @@
 
-let foo xs = match xs with | [] -> [] | h::t -> h;;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec digits n digitList =
+       if n = 0 then digitList else digits (n / 10) ((n mod 10) :: digitList) in
+     match n with | 0 -> [0] | _ -> digits n []);;
 
-let _ = foo [(fun x  -> x + 1); (fun y  -> y - 1)];;
+let _ = digitsOfInt - 1;;

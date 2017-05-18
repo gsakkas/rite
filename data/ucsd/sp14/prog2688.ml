@@ -1,4 +1,2 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile func else value;;
+let rec sqsumL xs = match xs with | [] -> 0 | h::t -> (h * h) + sqsumL;;

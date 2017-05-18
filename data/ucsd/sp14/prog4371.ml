@@ -1,5 +1,9 @@
 
-let pipe fs =
-  let f a x g = a (x g) in
-  let base = match fs with | h::t -> f h | [] -> (fun x  -> x) in
-  List.fold_left f base fs;;
+let stringOfList f l =
+  match l with
+  | [] -> ""
+  | h::t ->
+      let m a b = "[" ^ (a ^ (";" ^ (b ^ "]"))) in
+      let base = f h in List.fold_left m base h;;
+
+let _ = stringOfList (fun x  -> x) ["foo"];;

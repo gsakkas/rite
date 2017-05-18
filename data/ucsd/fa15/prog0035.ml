@@ -1,4 +1,4 @@
 
-let rec clone x n = if n > 0 then x @ (clone x (n - 1)) else [];;
+let rec digitsOfInt n = if n < 0 then [] else [8];;
 
-let _ = clone 3 5;;
+let _ = digitsOfInt - 293;;

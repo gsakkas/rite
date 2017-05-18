@@ -1,18 +1,30 @@
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else List.rev ((n mod 10) :: (List.rev (digitsOfInt (n / 10))));;
+let l1 = [0; 0; 9; 9];;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | h::t -> h + (sumList t) | _ -> (-1);;
+let l2 = [1; 0; 0; 2];;
 
-let x = [];;
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
 
-let rec additivePersistence n =
-  let x = x + 1 in
-  if (sumList (digitsOfInt n)) > 9
-  then
-    (print_string "going into then | ";
-     additivePersistence (sumList (digitsOfInt n)))
-  else (print_string "going into else | "; sumList x);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (o,p) = a in
+      let (d1,d2) = x in
+      ((((d1 + d2) + o) / 10), ((((d1 + d2) + o) mod 10) :: p)) in
+    let base = (0, []) in
+    let args = List.rev ((List.combine 0) :: (l1 0) :: l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

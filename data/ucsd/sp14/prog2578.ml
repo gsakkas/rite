@@ -1,5 +1,5 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let rec padZero l1 l2 = (clone 0 List.len l1) - l2;;
+let fixpoint (f,b) = wwhile (fun x  -> (((f b) = b), b));;

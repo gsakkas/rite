@@ -1,2 +1,3 @@
 
-let stringOfList f l = "[" ^ ((List.map f "; " l) ^ "]");;
+let rec listReverse l =
+  match l with | [] -> [] | x::l -> x :: (listReverse l x);;

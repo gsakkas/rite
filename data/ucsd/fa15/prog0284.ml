@@ -1,13 +1,9 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec listReverse l =
+  let rec listReverseHelper l =
+    function | [] -> l | h::t -> listReverseHelper (h :: l) t in
+  listReverseHelper [] l;;
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::[] -> "[" ^ (x ^ "]")
-  | l -> List.map (f, (sepConcat f l));;
+let palindrome w = if w = (listReverse w) then true else false;;
+
+let _ = palindrome "malayalam";;

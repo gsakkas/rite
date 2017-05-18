@@ -1,9 +1,4 @@
 
-let rec stringOfList f l =
-  match l with | [] -> 0 | h::t -> h + (stringOfList f t);;
+let rec wwhile (f,b) = if f b then b else 1;;
 
-let stringOfList f l =
-  match l with | [] -> 0 | h::t -> h + (stringOfList f t);;
-
-let stringOfList f l =
-  match l with | [] -> "" | h::t -> (string_of_int h) ^ (stringOfList f t);;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 3);;

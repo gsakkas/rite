@@ -1,28 +1,24 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l1 in
-  let length2 = List.fold_left (fun acc  -> fun x  -> acc + 1) 0 l2 in
-  if length1 = length2
-  then (l1, l2)
-  else
-    if length1 < length2
-    then ((List.append (clone 0 (length2 - length1)) l1), l2)
-    else (l1, (List.append (clone 0 (length1 - length2)) l2));;
-
-let rec removeZero l =
-  match l with | [] -> l | x::l' -> if x = 0 then removeZero l' else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,acc) = a in
-      let (x1,x2) = x in
-      let sumInit = (x1 + x2) + carry in
-      let carry2 = sumInit / 10 in
-      let dig = sumInit mod 10 in match a with | h::t -> (carry2, (dig :: t)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> e
+  | VarY  -> e
+  | Sine e1 -> Printf.sprintf "%s" (exprToString e1)
+  | Cosine e2 -> Printf.sprintf "%s" (exprToString e2)
+  | Average (e3,e4) ->
+      Printf.sprintf "%s %s" (exprToString e3) (exprToString e4)
+  | Times (e5,e6) ->
+      Printf.sprintf "%s %s" (exprToString e5) (exprToString e6)
+  | Thresh (e7,e8,e9,e0) ->
+      Printf.sprintf "%s %s %s %s" (exprToString e7) (exprToString e8)
+        (exprToString e9) (exprToString e0)
+  | _ -> "";;

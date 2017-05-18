@@ -1,5 +1,5 @@
 
-let rec assoc (d,k,l) =
-  match k with
-  | [] -> d
-  | (k',d')::t -> if k = k' then d' else assoc (d, k, t);;
+let rec listReverse l =
+  match l with | [] -> [] | h::tl -> (listReverse l) @ h;;
+
+let _ = listReverse [1; 2; 3; 4];;

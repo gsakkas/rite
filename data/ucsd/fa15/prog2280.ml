@@ -1,4 +1,6 @@
 
-let rec digitsOfInt n =
-  let return = [] in
-  if n < 0 then return else (n mod 10) :: ((return digitsOfInt n) / 10);;
+let rec removeZero l =
+  let h::t = l in
+  if h = [] then [] else (match h with | 0::[] -> removeZero t | _ -> t);;
+
+let _ = removeZero [0; 0; 0; 0];;

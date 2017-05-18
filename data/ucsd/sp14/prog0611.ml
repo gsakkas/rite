@@ -1,2 +1,5 @@
 
-let pipe fs = let f a x a = a in let base = 0 in List.fold_left f base fs;;
+let append x l =
+  let rec helper x acc =
+    match x with | [] -> acc | h::t -> helper t l (h :: acc) in
+  helper x l;;

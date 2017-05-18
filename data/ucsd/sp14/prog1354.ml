@@ -1,2 +1,8 @@
 
-let pipe fs = let f a x x = x a in let base b = b in List.fold_left f base fs;;
+type nat =
+  | Zero
+  | Succ of nat;;
+
+let rec to_int n = match n with | Zero  -> 0 | Succ m -> 1 + (to_int m);;
+
+let b = to_int Succ Zero;;

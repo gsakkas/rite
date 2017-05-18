@@ -1,7 +1,4 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+let rec wwhile (f,b) = if b = true then wwhile (f, b) else b;;
 
-let fixpoint (f,b) =
-  let funt b = if f b then b else b in wwhile ((funt b), b);;
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

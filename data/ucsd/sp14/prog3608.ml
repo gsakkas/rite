@@ -1,39 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | DivAdd of expr* expr* expr* expr
-  | TriMult of expr* expr* expr;;
+let rec clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
-  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
-  | Average (n1,n2) ->
-      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
-  | DivAdd (ds1,ds2,ds3,ds4) ->
-      "((" ^
-        ((exprToString ds1) ^
-           ("+" ^
-              ((exprToString ds2) ^
-                 (") / (" ^
-                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) "))")))))))
-  | TriMult (tm1,tm2,tm3) ->
-      "(" ^
-        ((exprToString tm1) ^
-           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  if len1 > len2
+  then (l1, ((clone 0 (len1 - len2)) @ l2))
+  else (((clone 0 (len2 - len1)) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | t -> t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let xx = (x1 + x2) + a1 in
+      if xx > 9 then (1, ((xx - 10) :: a2)) else (0, (xx :: a2)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec helper i l acc s =
+    let l2 = List.rev l in
+    match l2 with
+    | [] -> s :: acc
+    | h::t ->
+        let n = (i * h) + s in
+        if n > 9
+        then helper i t ((n mod 10) :: acc) (n / 10)
+        else helper i t (n :: acc) 0 in
+  helper i l [] 0;;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (v,l) = x in
+    let (ac,la) = a in
+    let mul = mulByDigit v l in
+    let shift = mulByDigit mul ac in ((ac * 10), (bigAdd shift la)) in
+  let base = (1, []) in
+  let args = List.map (fun x  -> (x, (List.rev l2))) l1 in
+  let (_,res) = List.fold_left f base args in res;;

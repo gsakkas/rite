@@ -1,9 +1,6 @@
 
-let is10gte n = n >= 10;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let rec digitalRoot n =
-  if is10gte
-  then
-    let digitList = digitsOfInt n in
-    let digitSum = sumList digitList in digitalRoot n
-  else n;;
+let fixpoint (f,b) = wwhile (let g x = (f, (x = (f x))) in (g, b));;

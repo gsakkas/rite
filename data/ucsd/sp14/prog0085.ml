@@ -1,9 +1,8 @@
 
-let rec assoc (d,k,l) =
-  let acc = l in
-  let rec helper acc (d,k,l) =
-    match acc with
-    | [] -> d
-    | h::t ->
-        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
-  helper (d, k, l) acc;;
+let rec listReverse l =
+  let rec listReverseHelper dec acc =
+    match dec with | [] -> acc | h::t -> listReverseHelper t (h :: acc) in
+  listReverseHelper l [];;
+
+let rec digitsOfInt n =
+  if n > 0 then (listReverse (n mod 10)) :: (digitsOfInt (n / 10)) else [];;

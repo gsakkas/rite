@@ -1,11 +1,5 @@
 
-let rec mulByDigit i l =
-  let comb a (hd::tl) = a + hd in
-  let rec mBDhelper i x =
-    match x with
-    | [] -> []
-    | hd::tl ->
-        if ((hd * i) - 9) != 0
-        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
-        else (hd * i) :: (mBDhelper i tl) in
-  mBDhelper i l;;
+let rec wwhile (f,b) =
+  match (f, b) with | (b',y) -> if y = false then b' else wwhile (f, b');;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

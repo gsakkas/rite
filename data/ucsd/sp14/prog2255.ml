@@ -1,25 +1,21 @@
 
-let rec removeZero l =
-  match l with | x::xs -> if x = 0 then removeZero xs else l | _ -> l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec mulByDigit i l =
-  let lre = List.rev l in
-  let rec helper carry accum lrev =
-    match lrev with
-    | [] -> removeZero accum
-    | x::xs ->
-        if carry = 1
-        then
-          (match accum with
-           | x1'::xs' ->
-               let num = (x * i) + x1' in
-               if num < 10
-               then (helper 0 num) :: (xs' xs)
-               else (helper 1 ((num / 10) mod 10)) :: (num mod 10) ::
-                 (xs' xs))
-        else
-          (let num = x * i in
-           if num < 10
-           then (helper 0 num) :: (accum xs)
-           else (helper 1 ((num / 10) mod 10)) :: (num mod 10) :: (accum xs)) in
-  helper 0 [] lre;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi * x
+  | Cosine e -> pi * y
+  | Average (e1,e2) -> (e1 + e2) / 2
+  | Times (e1,e2) -> e1 * e2
+  | Thresh (e1,e2,e3,e4) -> (e1 < (e2 ?e3) : e4);;

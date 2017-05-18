@@ -1,4 +1,8 @@
 
-let test = [1; 6; 2; 4; 12; 2; 13; 6; 9];;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let _ = List.mem (3 test);;
+let fixpoint (f,b) =
+  let fx b = if b = 0 then 0 else if b > 1 then b - 1 else b + 1 in
+  wwhile (fx, f);;

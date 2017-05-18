@@ -1,8 +1,7 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let compose f g x = f g;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pipe fs =
+  let f a x = compose a x in let base f x = x in List.fold_left f base fs;;
 
-let rec additivePersistence n =
-  if n < 10 then 1 else additivePersistence sumList digitsOfInt n;;
+let _ = pipe [(fun x  -> x + 3); (fun x  -> x + 3)] 3;;

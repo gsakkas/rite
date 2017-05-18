@@ -1,5 +1,2 @@
 
-let pipe fs =
-  let f a x g b = g b in let base x = x in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let rec digitsOfInt n = let l = [] in if n < 0 then l;;

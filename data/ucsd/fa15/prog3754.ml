@@ -1,6 +1,7 @@
 
-let pipe fs =
-  let f a x = List.map x a in
-  let base = [(fun x  -> x)] in List.fold_left f base fs;;
+let rec helper (a,x) =
+  match x with | [] -> 0 | h::t -> (h * h) + (helper (a, x));;
 
-let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;
+let sqsum xs =
+  let f a x = helper (a, x) in
+  let base = List.hd xs in List.fold_left f base xs;;

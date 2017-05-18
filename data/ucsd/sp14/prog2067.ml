@@ -1,9 +1,5 @@
 
-let y x = x + 1;;
+let rec wwhile (f,b) =
+  let (f',b') = f b in if b' = true then wwhile (f, f') else f';;
 
-let q x = y x;;
-
-let pipe fs =
-  let f a x el = x (a q) in let base g q = q in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let fixpoint (f,b) = wwhile ((let h x = ((f b), ((f b) != b)) in f), b);;

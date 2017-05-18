@@ -1,10 +1,2 @@
 
-let pipe fs =
-  let rec f a x = let h::t = x in h a in
-  let base = [] in List.fold_left f base fs;;
-
-let pipe fs =
-  let f a x = let h::t = x in pipe t in
-  let base = [] in List.fold_left f base fs;;
-
-let _ = pipe [] 3;;
+let rec clone x n = if x <= 0 then [] else x @ (clone x (n - 1));;

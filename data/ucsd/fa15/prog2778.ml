@@ -1,7 +1,4 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec clone x n = List.combine n x;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f in (ff, (x = (ff x))) in (n, b));;
+let _ = clone 3 5;;

@@ -1,32 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | CosE of expr* expr* expr
-  | ArcSin of expr* expr;;
+let rec clone x n =
+  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
 
-let e_num = 2.718281828;;
+let padZero l1 l2 =
+  match (List.length l1) = (List.length l2) with
+  | true  -> (l1, l2)
+  | false  ->
+      let lendiff = (List.length l1) - (List.length l2) in
+      (match lendiff > 0 with
+       | true  -> (l1, ((clone 0 lendiff) @ l2))
+       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec removeZero l =
+  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
-  | Cosine x1 -> cos (pi *. (eval (x1, x, y)))
-  | Average (x1,x2) -> ((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.
-  | Times (x1,x2) -> (eval (x1, x, y)) *. (eval (x2, x, y))
-  | Thresh (x1,x2,x3,x4) ->
-      if (eval (x1, x, y)) < (eval (x2, x, y))
-      then eval (x3, x, y)
-      else eval (x4, x, y)
-  | CosE (x1,x2,x3) ->
-      (cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y)))) *.
-        (e_num ** ((-. pi) *. ((eval (x3, x, y)) ** 2.)))
-  | ArcSin (x1,x2) -> (asin ((eval (x1, x, y)) ** 2)) /. 1.6;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a (x,y) =
+      match a with
+      | [] -> (x + y) :: a
+      | h::t -> [(x + y) + (h / 10); h mod 10] @ t in
+    let base = [] in
+    let args = List.rev ((0, 0) :: (List.combine l1 l2)) in
+    let res = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let f a x =
+    match a with
+    | [] -> (i * x) :: a
+    | h::t -> [(i * x) + (h / 10); h mod 10] @ t in
+  let base = [] in
+  let args = List.rev (0 :: l) in removeZero (List.fold_left f base args);;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with
+    | [] -> (mulByDigit x l2) :: a
+    | h::t -> [(bigAdd (mulByDigit x l2) h) / 10; h mod 10] @ t in
+  let base = [] in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;

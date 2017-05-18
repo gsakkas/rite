@@ -1,24 +1,9 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec mulByDigit i l =
+  let f a x =
+    let (carry,accList) = a in
+    (((carry + (x * i)) / 10), (((carry + (x * i)) mod 10) :: accList)) in
+  let base = (0, []) in
+  let newlist = List.rev (0 :: l) in List.fold_left f base newlist;;
 
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (j,k) ->
-          if (j + k) > 10
-          then (1, (x :: ((j + k) - 10)))
-          else (0, (x :: (j + k))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let _ = mulByDigit 8 [(4, 3, 2, 7)];;

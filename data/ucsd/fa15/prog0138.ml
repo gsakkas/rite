@@ -1,9 +1,19 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let rec sumListHelper total xs =
+  match xs with | [] -> total | hd::tail -> sumListHelper (total + hd) tail;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let rec digitsOfIntHelper n =
+  if n < 1
+  then []
+  else (digitsOfIntHelper ((n - (n mod 10)) / 10)) @ [n mod 10];;
 
-let fixpoint (f,b) = wwhile ((let g b = ((f b), b) in g), b);;
+let rec digitsOfInt n = digitsOfIntHelper n;;
 
-let _ = fixpoint (collatz, 1);;
+let rec sumList xs = sumListHelper 0 xs;;
+
+let rec aPHelper n = if n >= 10 then sumList (digitsOfInt n) else n;;
+
+let rec additivePersistence n =
+  if (aPHelper n) >= 10 then additivePersistence (aPHelper n) else aPHelper n;;
+
+let _ = additivePersistence - 1;;

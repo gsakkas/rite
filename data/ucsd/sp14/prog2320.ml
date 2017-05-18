@@ -1,3 +1,2 @@
 
-let rec fold_l f base xs =
-  match xs with | [] -> base | h::t -> (fold_l f base t) :: (f h);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile f b' else b';;

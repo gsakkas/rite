@@ -1,2 +1,2 @@
 
-let _ = 312.4 / 10;;
+let rec clone x n = if n > 0 then clone [x] (n - 1) else [];;

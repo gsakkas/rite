@@ -1,78 +1,26 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | AbsThresh of expr* expr* expr
-  | ModThresh of expr* expr* expr;;
+let l1 = [0; 0; 9; 9];;
 
-let buildAbsThresh (e1,e2,e3) = AbsThresh (e1, e2, e3);;
+let l2 = [1; 0; 0; 2];;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
 
-let buildCosine e = Cosine e;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let buildModThresh (e1,e2,e3) = ModThresh (e1, e2, e3);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
 
-let buildThresh (e1,e2,e3,e4) = Thresh (e1, e2, e3, e4);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = rand (0, 99) in
-  if depth = 0
-  then (if r < 50 then buildX () else buildY ())
-  else
-    if r < 5
-    then buildX ()
-    else
-      if r < 10
-      then buildY ()
-      else
-        if r < 30
-        then buildSine (build (rand, (depth - 1)))
-        else
-          if r < 50
-          then buildCosine (build (rand, (depth - 1)))
-          else
-            if r < 60
-            then
-              buildAverage
-                ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-            else
-              if r < 70
-              then
-                buildTimes
-                  ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-              else
-                if r < 80
-                then
-                  buildThresh
-                    ((build (rand, (depth - 1))),
-                      (build (rand, (depth - 1))),
-                      (build (rand, (depth - 1))),
-                      (build (rand, (depth - 1))))
-                else
-                  if r < 90
-                  then
-                    buildAbsThresh
-                      ((build (rand, (depth - 1))),
-                        (build (rand, (depth - 1))),
-                        (build (rand, (depth - 1))))
-                  else
-                    if r < 90
-                    then
-                      buildModThresh
-                        ((build (rand, (depth - 1))),
-                          (build (rand, (depth - 1))),
-                          (build (rand, (depth - 1))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = x in
+    let base = (0, [l1]) in
+    let args = [(3, [])] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;

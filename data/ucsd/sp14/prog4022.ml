@@ -1,14 +1,3 @@
 
-let rec reverse s =
-  let n = String.length s in
-  for i = 0 to (n - 1) / 2 do
-    (let c = s.[i] in s.[i] <- s.[(n - i) - 1]; s.[(n - i) - 1] <- c)
-  done;
-  int_of_string s;;
-
-let z = 0;;
-
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else if z = 0 then (let n2 = reverse (string_of_int n) in z = (z + 1));;
+let pipe fs =
+  let f a x f x f a = f a x in let base y z = z in List.fold_left f base fs;;

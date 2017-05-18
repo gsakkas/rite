@@ -6,45 +6,22 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
+  | Thresh of expr* expr* expr* expr
+  | Half of expr
+  | ThreeAve of expr* expr* expr;;
 
 let buildX () = VarX;;
 
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  let rec buildhelper num depth expr =
-    match num with
-    | 0 -> if (rand (0, 1)) = 0 then buildX () else buildY ()
-    | 1 ->
-        if (rand (0, 1)) = 0
-        then buildSine (buildhelper 0 (depth - 1))
-        else buildCosine (buildhelper 0 (depth - 1))
-    | 2 ->
-        if (rand (0, 1)) = 0
-        then
-          buildAverage
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-        else
-          buildTimes
-            ((buildhelper (num - 1) (depth - 1) expr),
-              (buildhelper (num - 1) (depth - 1) expr))
-    | 3 -> buildhelper (num - 1) depth expr
-    | 4 ->
-        buildThresh
-          ((buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr),
-            (buildhelper (num - 2) (depth - 1) expr)) in
-  buildhelper rand (1, 4) depth "";;
+  match depth with
+  | 0 ->
+      let halff = rand (0, 2) in if halff = 0 then buildY () else buildX ()
+  | 1 ->
+      let halff = rand in
+      if halff = 0
+      then Cosine (build (rand, (depth - 1)))
+      else Sine (build (rand, (depth - 1)))
+  | 2 -> Average ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+  | 3 -> Times ((build (rand, (depth - 1))), (build (rand, (depth - 1))));;

@@ -1,2 +1,6 @@
 
-let rec digitsOfInt n = (n mod 10) :: (if n > 0 then digitsOfInt (n / 10));;
+let pipe fs = let f a x = x a in let base = 0 in List.fold_left f base fs;;
+
+let pipe fs = let f a x = x a in let base = pipe in List.fold_left f base fs;;
+
+let _ = pipe [] 3;;

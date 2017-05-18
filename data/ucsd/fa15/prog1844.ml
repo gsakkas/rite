@@ -1,4 +1,9 @@
 
-let stringOfList f l = "[" ^ ((List.fold_left f "" l) ^ "]");;
-
-let _ = stringOfList string_of_int [1; 2; 3; 4; 5; 6];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h t then h else h :: t in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;

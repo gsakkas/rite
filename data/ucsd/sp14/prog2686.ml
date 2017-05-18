@@ -1,4 +1,3 @@
 
-let wwhile (f,b) = let (func,boo) = f in func;;
-
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let rec fold_l f base xs =
+  match xs with | [] -> base | h::t -> (fold_l f base t) :: (f h);;

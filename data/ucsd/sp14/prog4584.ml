@@ -1,7 +1,5 @@
 
-let f x = let xx = (x * x) * x in (xx, (xx < 100));;
-
-let rec wwhile (f,b) =
-  match f with | (x,false ) -> x | (x,true ) -> wwhile (f, x);;
-
-let _ = let _ = f 2 in wwhile (f, 2);;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | h::t -> [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i];;

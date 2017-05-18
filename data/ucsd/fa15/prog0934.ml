@@ -1,9 +1,10 @@
 
-let rec helper l1 l2 =
-  match l1 with | [] -> [] | h::t -> (h, l2) :: (helper t l2);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
 
-let bigMul l1 l2 =
-  let f a x = let (x1,x2) = x in let (carry,res) = a in carry @ res in
-  let base = [] in
-  let args = List.rev (helper l1 l2) in
-  let (carry,res) = List.fold_left f base args in res;;
+let collatz n =
+  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+
+let fixpoint (f,b) = wwhile (f, b);;
+
+let _ = fixpoint (collatz, 107);;

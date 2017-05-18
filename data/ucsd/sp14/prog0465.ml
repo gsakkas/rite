@@ -1,32 +1,9 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let listReverse l =
+  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
 
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth > (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    (if (randNum = 1) && (randNum2 = 3)
-     then buildX rand
-     else
-       if (randNum = 1) && (randNum2 = 4)
-       then
-         buildSine
-           (buildOp2
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                (build (rand, (depth - 1))))));;
+let rec digitsOfInt n =
+  let this = listReverse n in
+  match n with
+  | 0 -> []
+  | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;

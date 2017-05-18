@@ -23,39 +23,17 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  if depth = 0
-  then let x = rand 1 2 in (if x = 1 then buildX () else buildY ())
-  else
-    (let b = build (rand, (depth - 1)) in
-     match rand 1 5 with
-     | 1 -> buildSine b
-     | 2 -> buildCosine b
-     | 3 -> buildAverage (b, (build (rand, (depth - 1))))
-     | 4 -> buildTimes (b, (build (rand, (depth - 1))))
-     | 5 ->
-         buildThresh
-           (b, (build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1)))));;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
-  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))));;
-
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
-
-let _ = exprToString build (makeRand, 5);;
+  let res = rand (0, 4) in
+  match depth with
+  | 0 -> if (res mod 2) = 0 then buildX () else buildY ()
+  | _ ->
+      let nd = depth - 1 in
+      (match res with
+       | 0 -> buildAverage ((build (rand, nd)), (build (rand, nd)))
+       | 1 ->
+           buildThresh
+             ((build (rand, nd)), (build (rand, nd)), (build (rand, nd)),
+               (build (rand, nd)))
+       | 2 -> buildTimes ((build (rand, nd)), (build (rand, nd)))
+       | 3 -> buildSine (build (rand, nd))
+       | 4 -> buildCosine ((build rand), nd));;

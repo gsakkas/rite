@@ -1,10 +1,19 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((clone 0 ((List.length l2) - (List.length l1))) @ l1) l2
-  else
-    if (List.length l1) > (List.length l2)
-    then l1 ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
-    else l1 l2;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  let r = rand (0. depth) in
+  match depth with
+  | 0 -> if (r mod 2) = 0 then buildX else buildY
+  | d -> if r = 0 then build (rand, (d - 1)) else build (rand, (d - 1));;

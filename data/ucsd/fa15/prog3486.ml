@@ -1,7 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = (sepConcat sep a) @ x in
-      let base = [] in let l = t in List.fold_left f base l;;
+let pipe fs = let f a x y = x a in let base y = y in List.fold_left f base fs;;
+
+let fn = pipe [(fun x  -> x + x)];;

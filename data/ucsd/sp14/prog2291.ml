@@ -1,10 +1,28 @@
 
-let rec build (rand,depth) =
-  match rand with | 1 -> 1 | 2 -> 2 | 3 -> 3 | _ -> 4;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | ArcSine of expr
+  | ArcCosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let makeRand (seed1,seed2) =
-  let seed = Array.of_list [seed1; seed2] in
-  let s = Random.State.make seed in
-  fun (x,y)  -> x + (Random.State.int s (y - x));;
+let pi = 4.0 *. (atan 1.0);;
 
-let _ = let rand = makeRand (1, 3) in let x = rand (1, 3) in build (rand, 1);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> sin (pi *. (eval (e, x, y)))
+  | ArcSine e -> 1 /. (sin (pi *. (eval (e, x, y))))
+  | ArcCosine e -> 1 /. (cos (pi *. (eval (e, x, y))))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;

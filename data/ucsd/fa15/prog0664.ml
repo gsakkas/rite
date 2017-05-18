@@ -1,10 +1,8 @@
 
 let rec wwhile (f,b) =
-  match f b with | (a,b) -> if not b then a else wwhile (f, a);;
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
-
-let fixpoint (f,b) = wwhile (f, b);;
-
-let _ = fixpoint (collatz, 3);;
+let fixpoint (f,b) =
+  let fs bs = if bs = 0 then 0 else if bs > 1 then bs - 1 else bs + 1 in
+  wwhile ((fs b true), b);;

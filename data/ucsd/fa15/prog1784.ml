@@ -1,5 +1,5 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
-
-let _ = digitsOfInt - 23;;
+let rec filter l a =
+  match l with
+  | [] -> []
+  | hd::tl -> if hd = a then filter tl a else hd :: (filter (tl, a));;

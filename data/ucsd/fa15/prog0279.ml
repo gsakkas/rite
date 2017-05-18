@@ -1,8 +1,14 @@
 
-let rec clone x n =
-  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfIntHelper (num,numList) =
+  if num < 10
+  then num :: numList
+  else digitsOfIntHelper ((num / 10), ((num mod 10) :: numList));;
 
-let padZero l1 l2 =
-  match (List.length l1) - (List.length l2) with
-  | 0 -> (l1, l2)
-  | n -> if n < 0 then (clone 0 n) ^ l1 else (clone 0 n) ^ l2;;
+let rec digitsOfInt n = if n < 0 then [] else digitsOfIntHelper (n, []);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistenceHelper (n,nc) =
+  if n < 10
+  then nc
+  else additivePersistenceHelper ((sumList digitsOfInt n), (nc + 1));;

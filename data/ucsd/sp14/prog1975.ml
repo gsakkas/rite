@@ -1,3 +1,4 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (s,i)::t -> if s = k then true else assoc (d k t);;
+let rec wwhile (f,b) = let (b',c') = f b in if b' then wwhile (f, b') else c';;
+
+let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;

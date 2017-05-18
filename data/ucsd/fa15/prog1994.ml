@@ -1,34 +1,21 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Abs of expr
-  | Flip of expr* expr* expr;;
+let rec helper (c,rand,depth) =
+  match depth with
+  | 0 -> let x = rand (0, 1) in (match x with | 0 -> c ^ "0" | _ -> c ^ "1")
+  | _ ->
+      let y = rand (0, 6) in
+      (match y with
+       | 0 -> helper ("0", rand, (depth - 1))
+       | 1 -> helper ("1", rand, (depth - 1))
+       | 2 -> helper ("2", rand, (depth - 1))
+       | 3 -> helper ("3", rand, (depth - 1))
+       | 4 -> helper ("4", rand, (depth - 1))
+       | 5 -> helper ("5", rand, (depth - 1))
+       | _ -> helper ("6", rand, (depth - 1)));;
 
-let pi = 4.0 *. (atan 1.0);;
+let makeRand (seed1,seed2) =
+  let seed = Array.of_list [seed1; seed2] in
+  let s = Random.State.make seed in
+  fun (x,y)  -> x + (Random.State.int s (y - x));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine q -> sin (pi *. (eval (q, x, y)))
-  | Cosine q -> cos (pi *. (eval (q, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | Abs v ->
-      if (eval (v, x, y)) < 0.0
-      then (eval (v, x, y)) *. (-1.0)
-      else eval (v, x, y)
-  | Flip (a,b,c) ->
-      if (eval (a, x, y)) > (eval (b, x, y))
-      then eval ((c *. (-1.0)), x, y)
-      else eval (c, x, y);;
+let _ = helper ("0", makeRand, 5);;

@@ -1,2 +1,5 @@
 
-let _ = max_float 2.0;;
+let rec listReverse n =
+  match n with
+  | [] -> []
+  | hd::tl -> if tl = [] then n else (listReverse tl) :: hd;;

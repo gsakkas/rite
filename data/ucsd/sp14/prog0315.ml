@@ -1,8 +1,3 @@
 
-let rec listCompare l k =
-  if ((List.hd l) = []) && ((List.hd k) = [])
-  then true
-  else
-    if ((List.hd l) - (List.hd k)) != 0
-    then false
-    else listCompare (List.tl l) (List.tl k);;
+let rec sumList xs =
+  if (List.length xs) != 0 then (List.nth xs 0) + (sumList (List.tl xs));;

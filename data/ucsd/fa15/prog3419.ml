@@ -1,5 +1,4 @@
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+let pipe fs = let f a x = x in let base b a = a b in List.fold_left f base fs;;
 
-let rec digitsOfInt n =
-  if n <= 0 then n else (append n) mod (10 digitsOfInt (n / 10));;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

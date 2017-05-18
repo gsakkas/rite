@@ -1,22 +1,15 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e2,e3) -> ((eval e2) + (eval e3)) / 2
-  | Times (e4,e5) -> (eval e4) * (eval e5)
-  | Thresh (e6,e7,e8,e9) ->
-      if (eval e6) < (eval e7) then eval e8 else eval e9;;
+let mulByDigit i l =
+  let rec helpy p q carry accList =
+    let numsList = List.rev q in
+    match numsList with
+    | [] -> accList
+    | h::t ->
+        let initMul = (h * p) + carry in
+        let intKeep = initMul mod 10 in
+        let carrying = (initMul - intKeep) mod 100 in
+        let v = List.rev t in (helpy p v carrying accList) @ intKeep in
+  removeZero (list.rev (helpy i l 0 [(0, 0)]));;

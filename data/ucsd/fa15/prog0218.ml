@@ -1,5 +1,5 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (h,t) -> if t = true then f b else b;;
+let rec equiv x y =
+  match x with | [] -> (List.hd y) = [] | h::tl -> (List.hd y) = h;;
 
-let _ = let f x = let xx = (x * x) * x in (xx, (xx < 100)) in wwhile (f, 2);;
+let test = equiv [1; 2; 3; 4];;

@@ -1,24 +1,28 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
-
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let rec padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  if length1 = length2
+  then (l1, l2)
+  else
+    if length1 < length2 then padZero (0 :: l1) l2 else padZero l1 (0 :: l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (a,b) = List.hd x in (((List.hd a) + 1), ((List.hd b) + 2)) in
-    let base = ([], []) in
-    let args = [(l1, l2)] in
-    let (bar,res) = List.fold_left f base args in res in
+      let (eFromList1,eFromList2) = x in
+      let (cin,result) = a in
+      let sum = (eFromList1 + eFromList2) + cin in
+      let tens = sum / 10 in
+      let ones = sum mod 10 in (tens, (ones :: result)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l = failwith "to be implemented";;
+
+let _ = bigAdd ((bigAdd 2 4) (mulByDigit (i - 2) l));;

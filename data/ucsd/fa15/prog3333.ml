@@ -1,2 +1,4 @@
 
-let pipe fs = let f a x a = x a in let base = fs in List.fold_left f base fs;;
+let pipe fs =
+  let f a x = match a with | [] -> 0 | h::t -> h x in
+  let base = 0 in List.fold_left f base fs;;

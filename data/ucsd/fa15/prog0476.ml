@@ -1,3 +1,5 @@
 
-let rec wwhile (f,b) =
-  match (f, b) with | (f,(h1,h2)) -> if h2 then wwhile (f, h1) else h1;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec digitalRoot n =
+  if n < 10 then n else (let summed = sumList n in digitalRoot summed);;

@@ -1,4 +1,4 @@
 
-let y f g x = f (g x);;
+let pipe fs = let f a x = x a in let base y = y in List.fold_left f base fs;;
 
-let foo = (fun x  -> x + 1) y (fun z  -> 2 * z);;
+let _ = pipe [(fun x  -> x + x); (fun x  -> x + 3)] 3;;

@@ -1,6 +1,8 @@
 
 let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
+  let (b',c') = f b in
+  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
 
 let fixpoint (f,b) =
-  let f1 f2 x = if (f2 x) = x then false else true in wwhile ((f1 f), b);;
+  wwhile
+    ((let y = f b in match y with | b -> (y, false) | _ -> (y, true)), b);;

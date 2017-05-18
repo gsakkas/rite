@@ -1,7 +1,4 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if a = "a" then a ^ (x ^ sep) in
-      let base = "" in let l = sl in List.fold_left f base l;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = let b' = f b in wwhile ((f, (b' = b)), b);;

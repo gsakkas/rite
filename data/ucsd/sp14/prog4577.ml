@@ -1,9 +1,5 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then seen @ h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> 0
+  | h::t -> (List.rev (List.map (fun x  -> x * 10) t)) + (h * i);;

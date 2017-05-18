@@ -1,4 +1,4 @@
 
-let g x = truncate (1e6 *. (cos (1e-6 *. (float x))));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let _ = g 0.739085;;
+let rec digitalRoot n = digitalRoot (sumList n);;

@@ -1,19 +1,6 @@
 
-let rec endChar l =
-  match l with | [] -> [] | h::[] -> [h] | h::t -> endChar t;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec removeLast l =
-  match l with | [] -> [] | h::[] -> [] | h::t -> h :: (removeLast t);;
-
-let palindrome w =
-  let rec palin ls =
-    match ls with
-    | [] -> true
-    | h::[] -> true
-    | h::t -> if h = (endChar t) then palin (removeLast t) else false in
-  palin (explode w);;
+let fixpoint (f,b) = wwhile ((), b);;

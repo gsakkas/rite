@@ -1,6 +1,13 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | h::t -> (match h with | (s,i) -> s);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let _ =
-  assoc ((-1), "william", [("ranjit", 85); ("william", 23); ("moose", 44)]);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let shorter = if len1 < len2 then l1 else l2 in
+  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
+  if shorter = l1
+  then ((List.append (clone 0 zeros) shorter), l2)
+  else (l1, (List.append (clone 0 zeros) shorter));;
+
+let _ = List.combine [1; 3] (padZero [] []);;

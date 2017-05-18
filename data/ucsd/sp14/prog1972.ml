@@ -1,13 +1,7 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec assoc (d,k,l) =
+  match l with
+  | (ki,vi)::tl -> if ki = k then vi else assoc (d, k, tl)
+  | _ -> d;;
 
-let rec listReverse l =
-  let rec listHelper l l2 =
-    match l with | [] -> l2 | h::t -> listHelper t (h :: l2) in
-  listHelper l [];;
-
-let palindrome w =
-  if (listReverse explode w) = (explode w) then true else false;;
+let _ = assoc ([], 123, [(123, "sad"); (321, "happy")]);;

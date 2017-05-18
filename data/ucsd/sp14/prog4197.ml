@@ -1,2 +1,2 @@
 
-let rec digitsOfInt n = if n > 0 then (digitsOfInt n) / 10 else [];;
+let pipe fs = let f a x = a x in let base = fs in List.fold_left f base fs;;
