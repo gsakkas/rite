@@ -41,6 +41,11 @@ tokens :-
   $digit+ \. $digit* { tokS (TokFloat . (++"0")) }
   $digit+ \. $digit* [eE] [\-\+]? $digit+ { tokS (TokFloat . mkExp) }
 
+  "for"        { \_ _ -> alexError "unexpected 'for'" }
+  "ref"        { \_ _ -> alexError "unexpected 'ref'" }
+  \!           { \_ _ -> alexError "unexpected '!'" }
+  \~           { \_ _ -> alexError "unexpected '~'" }
+  \?           { \_ _ -> alexError "unexpected '?'" }
 
  "(*"           { nested_comment }
 
@@ -67,7 +72,6 @@ tokens :-
   \+\.          { tok TokPlusDot }
   \-            { tok TokMinus }
   \-\.          { tok TokMinusDot }
-  \!            { tok TokBang }
 
   \_            { tok TokUnderscore }
   \,            { tok TokComma }
@@ -104,6 +108,7 @@ tokens :-
   "when"        { tok TokWhen }
   "with"        { tok TokWith }
 
+
   [\= \< \> \| \& \$] $symbol* { tokS TokInfixOp0 }
   \!\=                         { tokS TokInfixOp0 }
   [\@ \^]             $symbol* { tokS TokInfixOp1 }
@@ -118,6 +123,8 @@ tokens :-
 
   \" @string* \"            { tokS TokString }
   \' ($printable # [\']) \' { tokS TokChar }
+
+
 
 {
 

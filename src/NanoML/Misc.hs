@@ -160,22 +160,28 @@ palindromeTarget = SrcSpan { srcSpanStartLine = 5
 ignoredMLs =
   [
     -- uses for
-    "prog0722.ml"
-  , "prog0723.ml"
-  , "prog0724.ml"
-  , "prog0725.ml"
-  , "prog0726.ml"
-  , "prog0727.ml"
-  , "prog0728.ml"
-  , "prog0729.ml"
-  , "prog0731.ml"
-    -- uses ref
-  , "prog0667.ml"
-  , "prog1199.ml"
-  , "prog1201.ml"
-  , "prog1202.ml"
-  , "prog1203.ml"
-  , "prog1204.ml"
+  --   "prog4017.ml"
+  -- , "prog4018.ml"
+  -- , "prog4019.ml"
+  -- , "prog4020.ml"
+  -- , "prog4021.ml"
+  -- , "prog4022.ml"
+  -- , "prog4023.ml"
+  -- , "prog4024.ml"
+  -- , "prog4025.ml"
+  -- , "prog4026.ml"
+  -- , "prog4027.ml"
+  -- , "prog4028.ml"
+  -- , "prog4029.ml"
+  -- , "prog4030.ml"
+  --   -- uses ref
+  -- --, "prog0667.ml"
+  -- , "prog1013.ml"
+  -- , "prog1015.ml"
+  -- , "prog1016.ml"
+  -- , "prog1017.ml"
+  -- , "prog1018.ml"
+  -- , "prog3852.ml"
     -- uses printf
   -- , "prog0353.ml"
   -- , "prog0355.ml"
@@ -319,9 +325,9 @@ ignoredMLs =
   -- , "prog3312.ml"
   -- , "prog3313.ml"
     -- uses ( ^^ ) somethign to do with printf
-  , "prog4322.ml"
+  -- , "prog4322.ml"
     -- uses optional param
-  , "prog3137.ml"
+  -- , "prog3137.ml"
   ]
 
 -- ignoredMLs :: [String]

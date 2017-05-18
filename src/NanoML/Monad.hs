@@ -8,9 +8,9 @@
 module NanoML.Monad where
 
 import Control.Monad.Except
-import Control.Monad.Random (RandT, evalRandT, liftRandT, runRandT, MonadRandom)
+import Control.Monad.Random.Strict (RandT, evalRandT, liftRandT, runRandT, MonadRandom)
 import Control.Monad.Reader.Class
-import Control.Monad.State
+import Control.Monad.State.Strict
 import Control.Monad.Writer.Class
 import qualified Data.IntMap as IntMap
 import Data.Foldable
