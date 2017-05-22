@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable    #-}
 {-# LANGUAGE BangPatterns          #-}
 {-# LANGUAGE ConstraintKinds       #-}
 {-# LANGUAGE DefaultSignatures     #-}
@@ -19,6 +20,7 @@ module NanoML.Types where
 
 import           Control.Applicative
 import           Control.Arrow
+import           Control.DeepSeq
 import           Control.Exception            hiding (TypeError)
 import           Control.Monad
 import           Control.Monad.Except
@@ -28,6 +30,8 @@ import           Control.Monad.State
 import           Control.Monad.Writer         hiding (Alt)
 import qualified Data.Aeson                   as Aeson
 import           Data.Aeson                   (FromJSON(..), ToJSON(..), (.=))
+import           Data.Data
+import           Data.Function
 import           Data.Hashable
 import qualified Data.HashMap.Strict          as HashMap
 import           Data.HashMap.Strict          (HashMap)
@@ -41,6 +45,8 @@ import qualified Data.Map.Strict              as Map
 import           Data.Maybe
 import           Data.Sequence                (Seq)
 import qualified Data.Sequence                as Seq
+import           Data.Set                     (Set)
+import qualified Data.Set                     as Set
 import           Data.Typeable (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
@@ -48,6 +54,8 @@ import           GHC.Generics
 import           System.IO.Unsafe
 import           Text.PrettyPrint.Annotated.Leijen (Doc)
 import           Text.Printf
+import qualified Text.Read                    as Read
+import qualified Text.ParserCombinators.ReadP as Read
 
 -- import Test.QuickCheck.GenT
 
@@ -187,8 +195,120 @@ data EvalState = EvalState
   , stSubst    :: !Subst
   , stCallStack :: ![(MSrcSpan,[Value])]
   , stContexts :: !(HashMap Expr Context)
+  , stVarTypes :: !(Map Var Type)
   -- , stExprEnvs :: ![(Expr,Env)]
+  , stConstraints :: ![Constraint]
+  , stConstraintDeps :: !(Map TVar (Set Constraint))
+  , stConstraintStack :: ![Set Constraint]
+  , stUnsatCores :: ![Set Constraint]
   } deriving Show
+
+data Constraint = MkConstraint
+  { constraintSpan :: !MSrcSpan
+  , ct_t1 :: !Type
+  , ct_t2 :: !Type
+  } deriving (Show, Eq, Ord)
+
+-- future proofing with the type equality
+mkConstraint :: MSrcSpan -> Type -> Type -> Constraint
+mkConstraint = MkConstraint
+
+pushConstraints :: MonadEval m => Set Constraint -> m ()
+pushConstraints ss = modify' $ \s -> s { stConstraintStack = ss : stConstraintStack s }
+
+popConstraints :: MonadEval m => m ()
+popConstraints = modify' $ \s -> s { stConstraintStack = tail $ stConstraintStack s }
+
+recordCurrentConstraints :: MonadEval m => TVar -> m ()
+recordCurrentConstraints v = do
+  -- cts <- mconcat <$> gets stConstraintStack
+  -- traceShowM ("recordConstraints", v, cts)
+  modify' $ \s -> s { stConstraintDeps = Map.insert v (mconcat (stConstraintStack s)) (stConstraintDeps s) }
+
+retrieveConstraints :: MonadEval m => TVar -> m (Set Constraint)
+retrieveConstraints v = do
+  cs <- gets stConstraintDeps
+  let c = fromMaybe mempty $ Map.lookup v cs
+  -- traceShowM ("retrieveConstraints", v, c)
+  return c
+
+emitCts :: MonadEval m => [Constraint] -> m ()
+emitCts cts = modify' $ \s -> s { stConstraints = stConstraints s ++ cts }
+
+emitCt :: MonadEval m => Type -> Type -> m ()
+emitCt t1 t2 = withCurrentProvM $ \prv ->
+  let ct = mkConstraint prv t1 t2
+  in modify' $ \s -> s { stConstraints = stConstraints s ++ [ct] }
+
+captureCts :: MonadEval m => m a -> m (a, [Constraint])
+captureCts do_this = do
+  old_cts <- gets stConstraints
+  modify' $ \s -> s { stConstraints = mempty }
+  a <- do_this
+  cts <- gets stConstraints
+  modify' $ \s -> s { stConstraints = old_cts }
+  return (a, cts)
+
+getUnsatCore :: MonadEval m => m (Set Constraint)
+getUnsatCore = do
+  mconcat <$> gets stConstraintStack
+
+addUnsatCore :: MonadEval m => Set Constraint -> m ()
+addUnsatCore cs = do
+  -- traceShowM =<< gets stCurrentExpr
+  -- traceShowM cs
+  -- traceShowM ""
+  modify' $ \s -> s { stUnsatCores = cs : stUnsatCores s }
+
+minimizeCore :: MonadEval m => Set Constraint -> m (Set Constraint)
+minimizeCore cs = do
+  -- traceShowM ("minimizeCore.cs", Set.size cs)
+  st <- get
+  minimal <- go [] (Set.toList cs)
+  put st
+  when (length minimal == 1) $ do
+    traceShowM ("minimizeCore", Set.size cs, length minimal)
+    mapM_ (traceShowM) minimal
+  return (Set.fromList minimal)
+
+  where
+  go used [] = return used
+  go used (ct:cts) = do
+    st <- get
+    put st{ stSubst = mempty, stConstraints = mempty
+          , stConstraintDeps = mempty, stConstraintStack = mempty
+          }
+    err <- (do -- traceShowM ct
+               mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2
+                   ) (used ++ cts)
+               -- traceShowM "SAFE"
+               return False
+           ) `catchError` \e -> return True
+    if err
+      then go used cts
+      else go (used ++ [ct]) cts
+
+subsets :: [a] -> [[a]]
+subsets []     = [[]]
+subsets (x:xs) = subs ++ map (x:) subs
+  where subs = subsets xs
+
+solveCts :: MonadEval m => Bool -> [Constraint] -> m ()
+solveCts produceCore cts = do
+  -- traceM "solveCts.start"
+  -- mapM_ traceShowM cts
+  mapM_ (solveCt produceCore) cts
+  -- traceM "solveCts.done"
+
+solveCt :: MonadEval m => Bool -> Constraint -> m ()
+solveCt produceCore ct@(MkConstraint _ t1 t2) = do
+  pushConstraints (Set.singleton ct)
+  unify t1 t2 `catchError` \ e -> do
+    if produceCore
+      then addUnsatCore =<< minimizeCore
+           =<< getUnsatCore
+      else throwError e
+  popConstraints
 
 pushCallStack :: MonadEval m => MSrcSpan -> [Value] -> m ()
 pushCallStack loc args = do
@@ -202,15 +322,44 @@ popCallStack = modify' $ \s -> s { stCallStack = tail (stCallStack s) }
 
 addSubst :: MonadEval m => TVar -> Type -> m ()
 addSubst a t = do
-  su <- gets stSubst
-  let su' = Map.insert a t (fmap (subst (Map.singleton a t)) su)
-  modify' $ \s -> s { stSubst = su' }
+  -- traceShowM ("addSubst", a, t)
+  let tvs = freeTyVars t
+  pushConstraints =<< fmap mconcat (mapM retrieveConstraints tvs)
+  t <- substM t
+  when (TVar a /= t) $ do
+    when (a `elem` freeTyVars t) $ do
+      -- traceShowM ("addSubst.die", a, t)
+      typeError (TVar a) t
+    recordCurrentConstraints a
+    cts <- retrieveConstraints a
+    su <- gets stSubst
+    ctds <- gets stConstraintDeps
+    let vs = [ v | (v, t) <- Map.toList su
+                 , a `elem` freeTyVars t
+                 ]
+    let ctds' = Map.mapWithKey
+                (\v cts' -> if v `elem` vs
+                            then cts' `Set.union` cts
+                            else cts')
+                ctds
+    let su' = Map.insert a t $ assert (not $ a `Map.member` su)
+              -- su
+              (fmap (subst (Map.singleton a t)) su)
+    let (as,ts) = unzip $ Map.toList su'
+        free    = concatMap freeTyVars ts
+    assert (and [ a `notElem` freeTyVars t | (a, t) <- Map.toList su' ]) $
+      assert ((free \\ as) == free) $ -- su should range over fully-resolved types
+        modify' $ \s -> s { stSubst = su', stConstraintDeps = ctds' }
+    popConstraints
 
 getSubst :: MonadEval m => m Subst
 getSubst = gets stSubst
 
 substM :: MonadEval m => Type -> m Type
 substM t = getSubst >>= \su -> return (subst su t)
+
+subst'M :: MonadEval m => Type -> m Type
+subst'M t = getSubst >>= \su -> return (subst' su t)
 
 withCurrentExpr :: MonadEval m => Expr -> m a -> m a
 withCurrentExpr e x = do
@@ -428,12 +577,19 @@ writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
 type Subst = Map TVar Type -- [(TVar, Type)]
 
 subst :: Subst -> Type -> Type
-subst su t = case t of
+subst su t = case subst' su t of
+  -- t' | t == t'   -> t'
+  --    | otherwise -> subst su t'
+  t' -> t'
+
+subst' :: Subst -> Type -> Type
+subst' su t = case t of
   TVar x -> fromMaybe t (Map.lookup x su)
 --  TCon _ -> t
-  TApp c ts -> TApp c (map (subst su) ts)
-  ti :-> to -> subst su ti :-> subst su to
-  TTup ts -> TTup (map (subst su) ts)
+  TApp c ts -> TApp c (map (subst' su) ts)
+  ti :-> to -> subst' su ti :-> subst' su to
+  TTup ts -> TTup (map (subst' su) ts)
+  TAll tvs t' -> subst (foldl' (flip Map.delete) su tvs) t'
 
 -- TODO: this is not precise enough for the visualizer.
 -- we need an environment graph so we can have, eg multiple
@@ -650,7 +806,7 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON Literal where
   toJSON l = case l of
@@ -662,8 +818,8 @@ instance ToJSON Literal where
 
 instance Hashable Literal
 
-data RecFlag = Rec | NonRec deriving (Show, Generic, Eq, Ord)
-data MutFlag = Mut | NonMut deriving (Show, Generic, Eq, Ord)
+data RecFlag = Rec | NonRec deriving (Show, Data, Generic, Eq, Ord)
+data MutFlag = Mut | NonMut deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON MutFlag
 instance FromJSON MutFlag
@@ -676,14 +832,22 @@ data SrcSpan = SrcSpan
   , srcSpanStartCol  :: !Int
   , srcSpanEndLine   :: !Int
   , srcSpanEndCol    :: !Int
-  } deriving (Generic, Eq, Ord)
+  } deriving (Data, Generic, Eq, Ord)
 
 instance Hashable SrcSpan
+instance NFData SrcSpan
 
 instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
                              srcSpanStartLine srcSpanStartCol
                              srcSpanEndLine   srcSpanEndCol
+
+instance Read SrcSpan where
+  readPrec = do
+    (l1, c1) <- Read.readPrec :: Read.ReadPrec (Int,Int)
+    Read.lift (Read.char '-')
+    (l2, c2) <- Read.readPrec :: Read.ReadPrec (Int,Int)
+    return $! SrcSpan l1 c1 l2 c2
 
 instance ToJSON SrcSpan where
   toJSON = toJSON . show
@@ -724,6 +888,12 @@ instance ToJSON Decl where
     where
     addLoc = (:) ("loc" .= getSrcSpan d)
 
+getDecld :: Decl -> [String]
+getDecld = \case
+  DFun _ _ pes -> bindersOfBinds pes
+  DEvl _ _     -> []
+  DTyp _ tds   -> map tyCon tds
+  DExn _ _     -> []
 
 getSrcSpan :: Decl -> SrcSpan
 getSrcSpan d = case d of
@@ -1047,7 +1217,7 @@ instance Hashable PrimN where
 
 data Uop
   = Neg | FNeg
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Show, Eq, Ord, Data, Generic)
 
 instance ToJSON Uop
 instance FromJSON Uop
@@ -1061,7 +1231,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
-  deriving (Show, Eq, Ord, Generic, Enum)
+  deriving (Show, Eq, Ord, Data, Generic, Enum)
 
 instance ToJSON Bop
 instance FromJSON Bop
@@ -1084,7 +1254,7 @@ data Pat
   | OrPat !MSrcSpan !Pat !Pat
   | AsPat !MSrcSpan !Pat !Var
   | ConstraintPat !MSrcSpan !Pat !Type
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance Hashable Pat
 
@@ -1139,7 +1309,7 @@ data Type
   | !Type :-> !Type
   | TTup [Type]
   | TAll [TVar] !Type
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON Type where
   toJSON t = case t of
@@ -1192,7 +1362,7 @@ freeTyVars t = case t of
 
 data TypeDecl
   = TypeDecl { tyCon :: TCon, tyVars :: [TVar], tyRhs :: TypeRhs }
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Data, Generic)
 instance Hashable TypeDecl
 instance ToJSON TypeDecl
 -- instance FromJSON TypeDecl
@@ -1201,7 +1371,7 @@ data TypeRhs
   = Alias Type
   | Alg   [DataDecl]
   | TRec  [Field]
-  deriving (Show, Eq, Generic)
+  deriving (Show, Eq, Data, Generic)
 instance Hashable TypeRhs
 instance ToJSON TypeRhs
 -- instance FromJSON TypeRhs
@@ -1210,7 +1380,7 @@ type Field = (String, MutFlag, Type)
 
 data DataDecl
   = DataDecl { dCon :: DCon, dArgs :: [Type], dType :: TypeDecl }
-  deriving (Show)
+  deriving (Show, Data, Generic)
 instance Eq DataDecl where
   (DataDecl d1 a1 _) == (DataDecl d2 a2 _) = d1 == d2 && a1 == a2
 instance Hashable DataDecl where
@@ -1239,13 +1409,13 @@ freshTVar = do
   i <- fresh
   return $ 't' : show i
 
--- inst :: MonadEval m
---      => [TVar]
---      -> Type
---      -> m Type
--- inst as t = do
---   as' <- replicateM (length as) freshTVar
---   return $! subst (zip as as') t
+inst :: MonadEval m
+     => [TVar]
+     -> Type
+     -> m Type
+inst as t = do
+  as' <- replicateM (length as) (fmap TVar freshTVar)
+  return $! subst (Map.fromList $ zip as as') t
 
 unify :: MonadEval m
       => Type -- ^ actual type
@@ -1293,10 +1463,42 @@ unify' x y
 
 unifyVar :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
 unifyVar a t
-  | TVar b <- t, a == b = return () -- []
-  -- FIXME: occurs check
-  | a `elem` freeTyVars t = typeError (TVar a) t
-  | otherwise   = addSubst a t -- return [(a,t)]
+  --- | TVar b <- t, a == b   = return ()
+  --- | a `elem` freeTyVars t = typeError (TVar a) t
+  | otherwise = do
+      su <- gets stSubst
+      case Map.lookup a su of
+        Nothing -> do
+          addSubst a t
+        Just t' -> do
+          pushConstraints =<< retrieveConstraints a
+          unify t' t
+          popConstraints
+
+  -- cs <- retrieveConstraints a
+  -- css <- mapM retrieveConstraints (freeTyVars t)
+  -- pushConstraints (mconcat (cs : css))
+  -- ta <- substM (TVar a)
+  -- t' <- substM t
+  -- traceShowM ("unifyVar", (TVar a, ta), (t, t'))
+  -- case ta of
+  --   TVar a'
+  --     | TVar b <- t', a' == b -> return ()
+  --     -- FIXME: occurs check
+  --     | a' `elem` freeTyVars t' -> typeError ta t'
+  --     | otherwise -> do
+  --         addSubst a' t'
+  --         recordCurrentConstraints a'
+  --   _ -> do
+  --     unify ta t'
+  -- popConstraints
+
+-- unifyVar' :: MonadEval m => TVar -> Type -> m () -- [(TVar, Type)]
+-- unifyVar' a t
+--   | TVar b <- t, a == b = return () -- []
+--   -- FIXME: occurs check
+--   | a `elem` freeTyVars t = typeError (TVar a) t
+--   | otherwise   = addSubst a t -- return [(a,t)]
 
 
 unifyAlias :: MonadEval m => TCon -> [Type] -> Type -> Type -> m () -- [(TVar, Type)]
@@ -1427,6 +1629,7 @@ primBops = [("+",Plus), ("-",Minus), ("*",Times), ("/",Div), ("mod",Mod)
            ,("+.",FPlus), ("-.",FMinus), ("*.",FTimes), ("/.",FDiv)
            ,("=",Eq), ("==",Eq), ("<>",Neq), ("!=",Neq)
            ,(">",Gt), (">=", Ge), ("<",Lt), ("<=",Le)
+           ,("&&", And), ("||", Or)
            ]
 
 mkApps :: MSrcSpan -> Expr -> [Expr] -> Expr

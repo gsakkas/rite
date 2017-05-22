@@ -558,3 +558,6 @@ prettyTyCon t = case t of
   TApp c _ -> text c
   _ :-> _ -> text "function"
   TTup x -> pretty (length x) <> char '-' <> text "tuple"
+
+instance Pretty Subst where
+  pretty s = vcat [pretty v <+> text ":=" <+> pretty t | (v,t) <- Map.toList s]
