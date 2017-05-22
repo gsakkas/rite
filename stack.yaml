@@ -1,8 +1,7 @@
-resolver: lts-7.19
+resolver: lts-8.14
 packages:
 - ./features
 extra-deps:
-- async-pool-0.9.0.1
 - dotgen-0.4.2
 - fgl-visualize-0.1.0.1
 flags: {}
