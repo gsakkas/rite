@@ -42,7 +42,7 @@ import Debug.Trace
 main :: IO ()
 main = do
   [src, cls] <- getArgs
-  jsons <- lines <$> (readFile $ "data" </> src </> "raw.json")
+  jsons <- lines <$> (readFile $ "features/data/ucsd/data/derived" </> src </> "pairs.json")
   case cls of
     -- "ops"
     --   -> mkBadFeatures src cls preds_thas jsons
