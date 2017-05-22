@@ -27,7 +27,7 @@ flags.DEFINE_string("data", "", "Path to the data.")
 flags.DEFINE_string("test_data", "", "Path to test data (if separate from training).")
 flags.DEFINE_string("model", "linear",
                     "Valid model types: {'linear', 'svm', 'hidden'}.")
-flags.DEFINE_string("model_dir", "/tmp/tensorflow", '')
+flags.DEFINE_string("model_dir", None, '')
 flags.DEFINE_string("hidden_layers", "", "")
 flags.DEFINE_integer("batch_size", 100, "Size of each training minibatch.")
 flags.DEFINE_integer("n_batches", None, "Number of training rounds.")
@@ -167,8 +167,8 @@ def main(_):
 
 def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=None):
     tf.set_random_seed(FLAGS.seed)
-    train, test, plot, close = build_model(
-        fs, ls, os.path.join(FLAGS.model_dir, 'run{}'.format(i)))
+    model_dir = os.path.join(FLAGS.model_dir, 'run{}'.format(i)) if FLAGS.model_dir is not None else None
+    train, test, plot, close = build_model(fs, ls, model_dir)
 
     if test_data is not None:
         train_model(train, dfs, ls)

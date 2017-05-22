@@ -16,6 +16,8 @@ let rec digitsOfInt n =
       let quotient = n / 10 in
       if quotient = 0 then [n mod 10] else quotient :: (digitsOfInt quotient);;
 
+let _ = digitsOfInt 3124;;
+
 *)
 
 (* changed spans

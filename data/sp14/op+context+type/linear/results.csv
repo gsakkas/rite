@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/linear,sp14,op+context+type,linear,0.610,0.790,0.862,0.633,2709
+op+context+type/linear,sp14,op+context+type,linear,0.619,0.801,0.866,0.640,2709

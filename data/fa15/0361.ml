@@ -15,7 +15,7 @@ let buildX () = VarX;;
 let buildY () = VarY;;
 
 let rec build (rand,depth) =
-  let r = rand (0, depth) in
+  let r = rand 0.4 in
   match depth with
   | 0 -> if (r mod 2) = 0 then buildX else buildY
   | d ->
@@ -53,6 +53,8 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
+(18,15)-(18,18)
+(19,2)-(24,32)
 (20,31)-(20,37)
 (20,43)-(20,49)
 (22,6)-(24,32)
@@ -86,11 +88,9 @@ let rec build (rand,depth) =
 (15,16)-(15,20)
 (17,15)-(24,32)
 (18,2)-(24,32)
-(18,10)-(18,25)
+(18,10)-(18,18)
 (18,10)-(18,14)
-(18,15)-(18,25)
-(18,16)-(18,17)
-(18,19)-(18,24)
+(18,15)-(18,18)
 (19,2)-(24,32)
 (19,8)-(19,13)
 (20,9)-(20,49)

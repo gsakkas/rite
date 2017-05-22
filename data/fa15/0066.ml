@@ -4,7 +4,7 @@ let rec sepConcat sep sl =
   | [] -> ""
   | h::t ->
       let f a x = a ^ (sep ^ x) in
-      let base = [] in let l = sl in List.fold_left f base l;;
+      let base = () in let l = sl in List.fold_left f base l;;
 
 
 (* fix

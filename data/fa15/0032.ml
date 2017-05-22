@@ -18,6 +18,8 @@ let rec digitsOfInt n =
       then [n mod 10]
       else (digitsOfInt (n / 10)) @ [n mod 10];;
 
+let _ = digitsOfInt 3124;;
+
 *)
 
 (* changed spans

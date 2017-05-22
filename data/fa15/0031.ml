@@ -10,6 +10,8 @@ let rec digitsOfInt n =
   | true  -> []
   | false  -> (n mod 10) :: (digitsOfInt (n / 10));;
 
+let _ = digitsOfInt 3124;;
+
 *)
 
 (* changed spans

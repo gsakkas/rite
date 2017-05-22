@@ -1,78 +1,89 @@
 
-let rec build (rand,depth) = match depth with | 0 -> rand (0, 1) | _ -> rand;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 ((List.length l2) - (List.length l1))) :: l1
+  else (clone "0" ((List.length l1) - (List.length l2))) :: l2;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 ->
-      let x = rand (0, 1) in (match x with | 0 -> buildX () | 1 -> buildY ())
-  | _ ->
-      let x = rand (0, 6) in
-      (match x with
-       | 0 -> buildX ()
-       | 1 -> buildY ()
-       | 2 -> buildSine (build (rand, (depth - 1)))
-       | 3 -> buildCosine (build (rand, (depth - 1)))
-       | 4 ->
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 5 ->
-           buildTimes
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-       | 6 ->
-           buildThresh
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (((clone 0 ((List.length l1) - (List.length l2))) @ l2), l1);;
 
 *)
 
 (* changed spans
-(2,15)-(2,76)
-(2,53)-(2,64)
-(2,72)-(2,76)
+(6,7)-(6,60)
+(6,8)-(6,13)
+(7,7)-(7,56)
+(7,7)-(7,62)
+(7,8)-(7,13)
+(7,14)-(7,17)
 *)
 
 (* type error slice
-(2,29)-(2,76)
-(2,29)-(2,76)
-(2,53)-(2,57)
-(2,53)-(2,64)
-(2,72)-(2,76)
+(6,7)-(6,54)
+(6,8)-(6,13)
+(6,14)-(6,15)
+(7,7)-(7,56)
+(7,8)-(7,13)
+(7,14)-(7,17)
 *)
 
 (* all spans
-(2,15)-(2,76)
-(2,29)-(2,76)
-(2,35)-(2,40)
-(2,53)-(2,64)
-(2,53)-(2,57)
-(2,58)-(2,64)
-(2,59)-(2,60)
+(2,14)-(2,65)
+(2,16)-(2,65)
+(2,20)-(2,65)
+(2,23)-(2,29)
+(2,23)-(2,24)
+(2,28)-(2,29)
+(2,35)-(2,37)
+(2,43)-(2,65)
+(2,43)-(2,44)
+(2,48)-(2,65)
+(2,49)-(2,54)
+(2,55)-(2,56)
+(2,57)-(2,64)
+(2,58)-(2,59)
 (2,62)-(2,63)
-(2,72)-(2,76)
+(4,12)-(7,62)
+(4,15)-(7,62)
+(5,2)-(7,62)
+(5,5)-(5,40)
+(5,5)-(5,21)
+(5,6)-(5,17)
+(5,18)-(5,20)
+(5,24)-(5,40)
+(5,25)-(5,36)
+(5,37)-(5,39)
+(6,7)-(6,60)
+(6,7)-(6,54)
+(6,8)-(6,13)
+(6,14)-(6,15)
+(6,16)-(6,53)
+(6,17)-(6,33)
+(6,18)-(6,29)
+(6,30)-(6,32)
+(6,36)-(6,52)
+(6,37)-(6,48)
+(6,49)-(6,51)
+(6,58)-(6,60)
+(7,7)-(7,62)
+(7,7)-(7,56)
+(7,8)-(7,13)
+(7,14)-(7,17)
+(7,18)-(7,55)
+(7,19)-(7,35)
+(7,20)-(7,31)
+(7,32)-(7,34)
+(7,38)-(7,54)
+(7,39)-(7,50)
+(7,51)-(7,53)
+(7,60)-(7,62)
 *)

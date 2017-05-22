@@ -1,83 +1,112 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let buildSine e = Sine e;;
 
-let rec additivePersistence n =
-  if (n / 10) <= 0
-  then n mod 10
-  else additivePersistence sumList digitsOfInt n;;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> ()
+  | 1 -> if (rand mod 2) = 0 then buildX else buildY
+  | n when n > 1 -> buildSine (build (rand, (depth - 1)));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let buildSine e = Sine e;;
 
-let rec additivePersistence n =
-  if (n / 10) <= 0
-  then n mod 10
-  else additivePersistence (sumList (digitsOfInt n));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  match depth with
+  | 0 -> if true then buildX () else buildY ()
+  | n -> buildSine (build (rand, (depth - 1)));;
 
 *)
 
 (* changed spans
-(10,7)-(10,48)
-(10,27)-(10,34)
-(10,35)-(10,46)
+(18,2)-(21,57)
+(19,9)-(19,11)
+(20,12)-(20,24)
+(20,12)-(20,28)
+(20,13)-(20,17)
+(20,22)-(20,23)
+(20,27)-(20,28)
 *)
 
 (* type error slice
-(7,3)-(10,50)
-(7,28)-(10,48)
-(8,2)-(10,48)
-(10,7)-(10,26)
-(10,7)-(10,48)
+(11,3)-(11,26)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(13,3)-(13,22)
+(13,11)-(13,20)
+(17,3)-(21,59)
+(17,15)-(21,57)
+(18,2)-(21,57)
+(18,2)-(21,57)
+(18,2)-(21,57)
+(19,9)-(19,11)
+(20,9)-(20,52)
+(20,34)-(20,40)
+(21,20)-(21,29)
+(21,20)-(21,57)
+(21,30)-(21,57)
+(21,31)-(21,36)
 *)
 
 (* all spans
-(2,20)-(3,60)
-(3,2)-(3,60)
-(3,5)-(3,11)
-(3,5)-(3,6)
-(3,10)-(3,11)
-(3,17)-(3,19)
-(3,25)-(3,60)
-(3,48)-(3,49)
-(3,25)-(3,47)
-(3,26)-(3,37)
-(3,38)-(3,46)
-(3,39)-(3,40)
-(3,43)-(3,45)
-(3,50)-(3,60)
-(3,51)-(3,59)
-(3,51)-(3,52)
-(3,57)-(3,59)
-(5,16)-(5,70)
-(5,21)-(5,70)
-(5,27)-(5,29)
-(5,43)-(5,44)
-(5,55)-(5,70)
-(5,55)-(5,56)
-(5,59)-(5,70)
-(5,60)-(5,67)
-(5,68)-(5,69)
-(7,28)-(10,48)
-(8,2)-(10,48)
-(8,5)-(8,18)
-(8,5)-(8,13)
-(8,6)-(8,7)
-(8,10)-(8,12)
-(8,17)-(8,18)
-(9,7)-(9,15)
-(9,7)-(9,8)
-(9,13)-(9,15)
-(10,7)-(10,48)
-(10,7)-(10,26)
-(10,27)-(10,34)
-(10,35)-(10,46)
-(10,47)-(10,48)
+(11,14)-(11,24)
+(11,18)-(11,24)
+(11,23)-(11,24)
+(13,11)-(13,20)
+(13,16)-(13,20)
+(15,11)-(15,20)
+(15,16)-(15,20)
+(17,15)-(21,57)
+(18,2)-(21,57)
+(18,8)-(18,13)
+(21,11)-(21,16)
+(21,11)-(21,12)
+(21,15)-(21,16)
+(19,9)-(19,11)
+(20,9)-(20,52)
+(20,12)-(20,28)
+(20,12)-(20,24)
+(20,13)-(20,17)
+(20,22)-(20,23)
+(20,27)-(20,28)
+(20,34)-(20,40)
+(20,46)-(20,52)
+(21,20)-(21,57)
+(21,20)-(21,29)
+(21,30)-(21,57)
+(21,31)-(21,36)
+(21,37)-(21,56)
+(21,38)-(21,42)
+(21,44)-(21,55)
+(21,45)-(21,50)
+(21,53)-(21,54)
 *)
