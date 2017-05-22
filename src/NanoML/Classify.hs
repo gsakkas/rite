@@ -1559,7 +1559,9 @@ allSubExprs e = e : case e of
   Let _ _ pes x -> concatMap (allSubExprs.snd) pes ++ allSubExprs x
   Ite _ x y z -> allSubExprs x ++ allSubExprs y ++ allSubExprs z
   Seq _ x y -> allSubExprs x ++ allSubExprs y
-  Case _ x alts -> allSubExprs x ++ concatMap (allSubExprs.thd3) alts
+  Case _ x alts -> allSubExprs x
+                ++ concatMap (maybe [] allSubExprs . snd3) alts
+                ++ concatMap (allSubExprs.thd3) alts
   Tuple _ xs -> concatMap allSubExprs xs
   ConApp _ _ me _ -> case me of
     Nothing -> []
