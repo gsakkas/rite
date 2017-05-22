@@ -620,7 +620,7 @@ type Err = String
 parseAllIn :: FilePath -> IO [(FilePath, Maybe Err, Prog)]
 parseAllIn dir = do
 --  let dir = "../yunounderstand/data/sp14/prog/unify"
-  mls <- filter (`notElem` ignoredMLs) . filter (".ml" `isSuffixOf`)
+  mls <- filter (not . (".orig.ml" `isSuffixOf`)) . filter (".ml" `isSuffixOf`)
           <$> getDirectoryContents dir
   parseAll dir (sort mls)
 
