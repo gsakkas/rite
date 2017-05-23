@@ -24,6 +24,7 @@ import Network.Wai.Middleware.RequestLogger
 
 import NanoML
 import NanoML.Explore
+import NanoML.Learn
 import NanoML.Misc
 import NanoML.Pretty
 
@@ -31,6 +32,7 @@ import Debug.Trace
 
 main = do
  log <- mkRequestLogger def { outputFormat = Detailed False }
+ (net, features) <- stdNet
  scotty 8091 $ do
   middleware log
   get "/" $ do
@@ -141,14 +143,14 @@ main = do
     -- liftIO $ print (var, prog)
     let p = fromRight (parseTopForm prog)
     case parseTopForm prog of
-      Right p -> json =<< run p var
+      Right p -> json =<< run p var net features
       Left  e -> json $ object [ "result" .= ("parse-error" :: String)
                                , "error"  .= e
                                ]
 
 
 
-run p var = do
+run p var net features = do
     -- liftIO $ print (prettyProg p)
     let myOpts = stdOpts { size = 5, maxTests = 100 }
     res <- liftIO $ if null var
@@ -173,6 +175,7 @@ run p var = do
                  , "label" .= show l
                  ]
     -- liftIO $ print res
+    let blame = rankExprs net features p
     case res of
       Success n finalState v -> do
         -- liftIO $ print v
@@ -214,6 +217,7 @@ run p var = do
                         , "root"   .= root
                         , "value"  .= value
                         , "result" .= ("value" :: String)
+                        , "blame"  .= blame
                         ]
 
         -- html . renderText . doctypehtml_ $ do
@@ -279,6 +283,7 @@ run p var = do
                             , "bad"    .= bad
                             , "result" .= ("stuck" :: String)
                             , "reason" .= show (pretty errorMsg)
+                            , "blame"  .= blame
                             ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do

@@ -1,9 +1,9 @@
-resolver: lts-8.14
+flags: {}
+extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
 - dotgen-0.4.2
 - fgl-visualize-0.1.0.1
-flags: {}
-extra-package-dbs: []
-# compiler-check: newer-minor
+# - grenade-0.1.0
+resolver: lts-8.14

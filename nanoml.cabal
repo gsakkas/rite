@@ -83,6 +83,7 @@ library
                      , NanoML.Eval
                      , NanoML.Explore
                      , NanoML.Gen
+                     , NanoML.Learn
                      , NanoML.Lexer
                      , NanoML.Misc
                      , NanoML.Monad
@@ -105,8 +106,10 @@ library
                      , exceptions >= 0.8
                      , fgl, fgl-visualize
                      , filepath
+                     -- , grenade
                      , hashable >= 1.2
                      , haskeline
+                     , hmatrix
                      , mtl >= 2.2
                      , parsers >=0.12
                      , random >= 1.1
