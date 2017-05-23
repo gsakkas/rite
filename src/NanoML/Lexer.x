@@ -42,8 +42,6 @@ tokens :-
   $digit+ \. $digit* [eE] [\-\+]? $digit+ { tokS (TokFloat . mkExp) }
 
   "for"        { \_ _ -> alexError "unexpected 'for'" }
-  "ref"        { \_ _ -> alexError "unexpected 'ref'" }
-  \!           { \_ _ -> alexError "unexpected '!'" }
   \~           { \_ _ -> alexError "unexpected '~'" }
   \?           { \_ _ -> alexError "unexpected '?'" }
 
@@ -81,6 +79,7 @@ tokens :-
   \|            { tok TokPipe }
   \.            { tok TokDot }
   \.\.          { tok TokDotDot }
+  \!            { tok TokBang }
 
   "and"         { tok TokAnd }
   "as"          { tok TokAs }
