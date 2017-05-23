@@ -50,13 +50,11 @@ rankExprs net fs p = second getSpan <$!> rank net samples
     where
     f p e acc = (:acc) $ MkSample
                 { getSpan = infoSpan (texprInfo e)
-                , getSample = vector
-                            $ inSlice (infoSpan (texprInfo e))
-                           ++ concatMap (\(_,c) -> c p e) fs
+                , getSample = vector $ concatMap (\(_,c) -> c p e) fs
                 }
 
 stdNet :: IO (Net, [Feature])
-stdNet = loadNet "models/op+context+type-hidden-500.json" >>= \case
+stdNet = loadNet "../models/op+context+type-hidden-500.json" >>= \case
   Nothing -> fail "could not decode 'models/op+context+type-hidden-500.json'"
   Just net -> return (net, preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx)
 
