@@ -52,7 +52,8 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
 
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
-    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+    if model_dir:
+        summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     if n_out >= 2:
         correct_prediction = tf.equal(tf.argmax(tf.nn.softmax(y),1), tf.argmax(y_,1))
@@ -72,7 +73,8 @@ def build_model(features, labels, learn_rate=0.1, beta=0.01, model_dir=None):
                 [merged, train_step, global_step],
                 feed_dict={x: batch[features], y_: batch[labels]}
             )
-            summary_writer.add_summary(summary, step)
+            if model_dir:
+                summary_writer.add_summary(summary, step)
 
 
     def test(data, store_predictions=False, loud=True):

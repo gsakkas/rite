@@ -97,7 +97,8 @@ def build_model(features, labels, hidden,
     top_k = tf.nn.top_k(tf.transpose(tf.nn.softmax(y)), k)
     sess = tf.InteractiveSession()
     merged = tf.summary.merge_all()
-    summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
+    if model_dir:
+        summary_writer = tf.summary.FileWriter(model_dir, sess.graph)
 
     ## NOTE: must be last!!
     tf.global_variables_initializer().run()
@@ -113,7 +114,8 @@ def build_model(features, labels, hidden,
                            # keep_prob: 0.5})
                            keep_prob: 1.0}  # TODO: should we use dropout??
             )
-            summary_writer.add_summary(summary, step)
+            if model_dir:
+                summary_writer.add_summary(summary, step)
 
 
     def test(data, store_predictions=False, loud=True):
