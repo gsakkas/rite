@@ -29,7 +29,7 @@ import NanoML.Types
 rankExprs :: Net -> [Feature] -> Prog -> [(Confidence, SrcSpan)]
 rankExprs net fs p = second getSpan <$!> rank net samples
   where
-  samples = concatMap mkfsD tbad
+  samples = filter inSlice $ concatMap mkfsD tbad
 
   (tbad, cores, me) = case runEval stdOpts (typeProg p) of
     Left e -> ([], [], Just e)
@@ -39,11 +39,7 @@ rankExprs net fs p = second getSpan <$!> rank net samples
   mkfsD (TDEvl _ e)     = mkTypeOut e
   mkfsD _               = mempty
 
-  inSlice l
-    | any (l ==) cores
-    = [1]
-    | otherwise
-    = [0]
+  inSlice s = any (getSpan s ==) cores
 
   mkTypeOut :: TExpr -> [Sample]
   mkTypeOut te = ctfold f [] te
@@ -89,7 +85,7 @@ instance FromJSON Weights where
     <$> fmap mkmatrix (v .: "weights")
     <*> fmap vector (v .: "biases")
     where
-    mkmatrix (ws :: [[Double]]) = matrix (length ws) (concat ws)
+    mkmatrix (ws :: [[Double]]) = matrix (length $ head ws) (concat ws)
 
 loadNet :: FilePath -> IO (Maybe Net)
 loadNet file = decode <$> LBS.readFile file
@@ -100,7 +96,7 @@ runNet MkNet{..} features =
   where
   runHidden fs ws = relu $ runLayer fs ws
   runLayer fs MkWeights{..} =
-    weights #> fs + biases
+    fs <# weights + biases
 
 relu :: Vector Double -> Vector Double
 relu v = cmap (\x -> max 0 x) v
