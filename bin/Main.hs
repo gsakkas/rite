@@ -174,8 +174,10 @@ run p var net features = do
                  , "from" .= x, "to" .= y
                  , "label" .= show l
                  ]
+    let mkBlame (c, s) =
+          object [ "confidence" .= c, "srcSpan" .= mkSpan s ]
     -- liftIO $ print res
-    let blame = rankExprs net features p
+    let blame = take 3 $ rankExprs net features p
     case res of
       Success n finalState v -> do
         -- liftIO $ print v
@@ -217,7 +219,7 @@ run p var net features = do
                         , "root"   .= root
                         , "value"  .= value
                         , "result" .= ("value" :: String)
-                        , "blame"  .= blame
+                        , "blame"  .= map mkBlame blame
                         ]
 
         -- html . renderText . doctypehtml_ $ do
@@ -283,7 +285,7 @@ run p var net features = do
                             , "bad"    .= bad
                             , "result" .= ("stuck" :: String)
                             , "reason" .= show (pretty errorMsg)
-                            , "blame"  .= blame
+                            , "blame"  .= map mkBlame blame
                             ]
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do

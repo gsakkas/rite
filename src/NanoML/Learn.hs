@@ -50,7 +50,7 @@ rankExprs net fs p = second getSpan <$!> rank net samples
                 }
 
 stdNet :: IO (Net, [Feature])
-stdNet = loadNet "../models/op+context+type-hidden-500.json" >>= \case
+stdNet = loadNet "models/op+context+type-hidden-500.json" >>= \case
   Nothing -> fail "could not decode 'models/op+context+type-hidden-500.json'"
   Just net -> return (net, preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx)
 

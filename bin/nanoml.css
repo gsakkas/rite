@@ -35,3 +35,29 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 .mybody {
   height: 90%;
 }
+
+.blame-1 {
+    /* display: inline-box; */
+    /* padding: 2px; */
+    background-color: rgba(255, 0, 0, 0.5);
+    font-weight: bold;
+}
+.blame-2 {
+    /* display: inline-box; */
+    /* padding: 4px; */
+    background-color: rgba(255, 0, 0, 0.1);
+    /* font-weight: bold; */
+}
+.blame-1.blame-2 {
+    background-color: rgba(255, 0, 0, 0.5);
+    font-weight: bold;
+}
+.blame-3 {
+    /* display: inline-box; */
+    /* padding: 6px; */
+    /* background-color: rgba(255, 0, 0, 0.1); */
+}
+
+* {
+    box-sizing: border-box;
+}
