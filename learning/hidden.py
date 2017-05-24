@@ -116,6 +116,13 @@ def build_model(features, labels, hidden,
             )
             if model_dir:
                 summary_writer.add_summary(summary, step)
+        ws1, bs1, w1, b1 = sess.run([Ws, bs, W, b])
+        with open('models/hidden-' + '-'.join(hidden) + '.json', 'w') as f:
+            d = {'hidden': [{'weights': ws2.tolist(), 'biases': bs2.tolist()}
+                            for ws2, bs2 in zip(ws1, bs1)],
+                 'output': {'weights': w1.tolist(),  'biases': b1.tolist()}}
+            json.dump(d, f, indent=2)
+
 
 
     def test(data, store_predictions=False, loud=True):
@@ -209,13 +216,6 @@ def build_model(features, labels, hidden,
             print('avg prediction time: %f' % np.mean(times))
 
         saver.save(sess, 'hidden-' + '-'.join(hidden))
-
-        ws1, bs1, w1, b1 = sess.run([Ws, bs, W, b])
-        with open('hidden-' + '-'.join(hidden) + '.json', 'w') as f:
-            d = {'hidden': [{'weights': ws2.tolist(), 'biases': bs2.tolist()}
-                            for ws2, bs2 in zip(ws1, bs1)],
-                 'output': {'weights': w1.tolist(),  'biases': b1.tolist()}}
-            json.dump(d, f, indent=2)
 
         return {'top-1': acc1, 'top-2': acc2, 'top-3': acc3, 'recall': np.mean(rs)}
 

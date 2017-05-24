@@ -183,6 +183,12 @@ def train_and_eval(dfs, fs, ls, i=0, train_idxs=None, test_idxs=None, test_data=
         close()
         return r
 
+    else:
+        train_model(train, dfs, ls)
+        if FLAGS.plot:
+            plot()
+        close()
+
 def build_model(fs, ls, model_dir):
     if FLAGS.model == 'linear':
         return linear.build_model(fs, ls,
