@@ -101,6 +101,40 @@ var demos = {
     , "    append (digitsOfInt (n / 10)) [n mod 10]"
     ].join('\n'),
 
+  sepConcat:
+    [ "let rec sepConcat sep sl ="
+    , "  match sl with"
+    , "  | [] -> \"\""
+    , "  | h::t ->"
+    , "      let f a x = a ^ (sep ^ x) in"
+    , "      let base = [] in"
+    , "      List.fold_left f base sl"
+    ].join('\n'),
+
+  padZero:
+    [ "let rec clone x n ="
+    , "  if n <= 0 then"
+    , "     []"
+    , "  else"
+    , "     x :: clone x (n - 1)"
+
+    , "let padZero l1 l2 ="
+    , "  let n = List.length l1 - List.length l2 in"
+    , "  if n < 0 then"
+    , "     (clone 0 ((-1) * n) @ l2, l2)"
+    , "  else"
+    , "     (l1, clone 0 n :: l2)"
+    ].join('\n'),
+
+
+  mulByDigit:
+    [ "let rec mulByDigit d n ="
+    , "  match List.rev n with"
+    , "  | []   -> []"
+    , "  | h::t -> [mulByDigit d t; (h * d) mod 10]"
+    ].join('\n'),
+
+
   wwhile:
     [ "let rec wwhile (f,b) ="
     , "  match f with"
@@ -571,16 +605,22 @@ function setup() {
           // console.log(stuckNode);
           if (data.blame !== undefined) {
             errors = [];
+            var maxConfidence = data.blame[0].confidence;
             data.blame.map(function(b, i) {
+                //if (maxConfidence - b.condfidence > 0.3) return;
+                var text = document.createTextNode("blamed");
+                var widget = document.createElement("span");
+                widget.appendChild(text);
+                widget.className = 'blame-' + (i+1);
                 editor.markText(
                     { line: b.srcSpan.startLine - 1,
                       ch: b.srcSpan.startCol },
                     { line: b.srcSpan.endLine - 1,
                       ch: b.srcSpan.endCol },
                     { className: 'blame-' + (i+1)
-                    // message: 'Suspiciousness: ' + Math.round(100*b.confidence) + '%',
-                    // severity: 'error'
-                });
+                      // replacedWith: widget
+                    }
+                );
             });
           } else {
             errors = [];

@@ -48,6 +48,7 @@ main = do
         link_ [ href_ "/vis.css", rel_ "stylesheet", type_ "text/css" ]
         script_ [ src_ "/vis.js", type_ "text/javascript" ] ("" :: Text)
         script_ [ src_ "/codemirror-min.js", type_ "text/javascript" ] ("" :: Text)
+        script_ [ src_ "/panel.js", type_ "text/javascript" ] ("" :: Text)
         link_ [ href_ "/codemirror.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/dialog.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/lint.css", rel_ "stylesheet", type_ "text/css" ]
@@ -69,6 +70,9 @@ main = do
                 ul_ [class_ "dropdown-menu"] $ do
                   li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
                   li_ $ a_ [onclick_ "loadDemo('sumList')"] "sumList"
+                  li_ $ a_ [onclick_ "loadDemo('sepConcat')"] "sepConcat"
+                  li_ $ a_ [onclick_ "loadDemo('padZero')"] "padZero"
+                  li_ $ a_ [onclick_ "loadDemo('mulByDigit')"] "mulByDigit"
                   li_ $ a_ [onclick_ "loadDemo('digitsOfInt')"] "digitsOfInt"
                   li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
                   li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
@@ -131,6 +135,7 @@ main = do
   get "/vis.css" $ file "bin/dist/vis.css"
   get "/vis.js"  $ file "bin/dist/vis.js"
   get "/codemirror-min.js"  $ file "bin/dist/codemirror-min.js"
+  get "/panel.js"  $ file "bin/dist/panel.js"
   get "/codemirror.css"  $ file "bin/dist/codemirror.css"
   get "/dialog.css" $ file "bin/dist/dialog.css"
   get "/lint.css" $ file "bin/dist/lint.css"
