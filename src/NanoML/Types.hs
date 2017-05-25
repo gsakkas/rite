@@ -264,7 +264,7 @@ minimizeCore :: MonadEval m => Set Constraint -> m (Set Constraint)
 minimizeCore cs = do
   -- traceShowM ("minimizeCore.cs", Set.size cs)
   st <- get
-  minimal <- go [] (Set.toList cs)
+  minimal <- go [] [] (Set.toList cs)
   put st
   when (length minimal == 1) $ do
     traceShowM ("minimizeCore", Set.size cs, length minimal)
@@ -272,8 +272,8 @@ minimizeCore cs = do
   return (Set.fromList minimal)
 
   where
-  go used [] = return used
-  go used (ct:cts) = do
+  go used filled [] = return filled
+  go used filled (ct@(MkConstraint sp t1 t2):cts) = do
     st <- get
     put st{ stSubst = mempty, stConstraints = mempty
           , stConstraintDeps = mempty, stConstraintStack = mempty
@@ -285,8 +285,11 @@ minimizeCore cs = do
                return False
            ) `catchError` \e -> return True
     if err
-      then go used cts
-      else go (used ++ [ct]) cts
+      then go used filled cts
+      else do
+      t1' <- substM t1
+      t2' <- substM t2
+      go (used ++ [ct]) (filled ++ [MkConstraint sp t1' t2']) cts
 
 subsets :: [a] -> [[a]]
 subsets []     = [[]]

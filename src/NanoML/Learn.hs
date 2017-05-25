@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE DataKinds #-}
@@ -14,6 +15,7 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Csv as CSV
 import Data.Function
 import Data.List
+import qualified Data.List as List
 import Data.Maybe
 import qualified Data.Set as Set
 import qualified Data.Vector as V
@@ -26,26 +28,29 @@ import NanoML.Classify
 import NanoML.Monad
 import NanoML.Types
 
-rankExprs :: Net -> [Feature] -> Prog -> [(Confidence, SrcSpan)]
-rankExprs net fs p = second getSpan <$!> rank net samples
+rankExprs :: Net -> [Feature] -> Prog -> [(Confidence, Constraint)]
+rankExprs net fs p = second getThing <$!> rank net samples
   where
-  samples = filter inSlice $ concatMap mkfsD tbad
+  samples = [ s {getThing = c}
+            | s <- concatMap mkfsD tbad
+            , c <- maybeToList (List.find (\c -> getThing s == fromJust (constraintSpan c)) cores)
+            ]
 
   (tbad, cores, me) = case runEval stdOpts (typeProg p) of
     Left e -> ([], [], Just e)
-    Right (tp, cs) -> (tp, mapMaybe constraintSpan $ Set.toList (mconcat cs), Nothing)
+    Right (tp, cs) -> (tp, Set.toList (mconcat cs), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e)     = mkTypeOut e
   mkfsD _               = mempty
 
-  inSlice s = any (getSpan s ==) cores
+  -- inSlice s = any (\c -> getSpan s == fromJust (constraintSpan c)) cores
 
-  mkTypeOut :: TExpr -> [Sample]
+  -- mkTypeOut :: TExpr -> [Sample ()]
   mkTypeOut te = ctfold f [] te
     where
     f p e acc = (:acc) $ MkSample
-                { getSpan = infoSpan (texprInfo e)
+                { getThing = infoSpan (texprInfo e)
                 , getSample = vector $ concatMap (\(_,c) -> c p e) fs
                 }
 
@@ -57,12 +62,12 @@ stdNet = loadNet "models/op+context+type-hidden-500.json" >>= \case
 data Prediction = Change | NoChange
   deriving (Eq, Show)
 
-predict :: Net -> Sample -> Prediction
-predict = undefined
+-- predict :: Net -> Sample -> Prediction
+-- predict = undefined
 
 type Confidence = Double
 
-rank :: Net -> [Sample] -> [(Confidence, Sample)]
+rank :: Net -> [Sample a] -> [(Confidence, Sample a)]
 rank net samples =
   sortBy (flip compare `on` fst)
     [ (r ! 1, s)
@@ -106,14 +111,14 @@ softmax v = cmap (\x -> exp x / summed) v
   where
   summed = sumElements (cmap exp v)
 
-data Sample = MkSample { getSpan :: SrcSpan, getSample :: Vector Double }
+data Sample a = MkSample { getThing :: a, getSample :: Vector Double }
   deriving (Eq, Show, Generic)
-instance CSV.FromRecord Sample where
+instance CSV.FromRecord (Sample SrcSpan) where
   parseRecord r = MkSample
     <$> (maybe mzero return . readMaybe =<< CSV.parseField (r V.! 0))
     <*> fmap vector (CSV.parseRecord (V.drop 4 r))
 
-loadSamples :: FilePath -> IO (Either String (V.Vector Sample))
+loadSamples :: FilePath -> IO (Either String (V.Vector (Sample SrcSpan)))
 loadSamples file = CSV.decode CSV.HasHeader <$> LBS.readFile file
 
 -- net2network :: Net -> Network ts ds

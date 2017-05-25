@@ -179,8 +179,10 @@ run p var net features = do
                  , "from" .= x, "to" .= y
                  , "label" .= show l
                  ]
-    let mkBlame (c, s) =
-          object [ "confidence" .= c, "srcSpan" .= mkSpan s ]
+    let mkBlame (c, MkConstraint s t1 t2) =
+          object [ "confidence" .= c, "srcSpan" .= mkSpan (fromJust s)
+                 , "expected" .= render (pretty t1), "actual" .= render (pretty t2)
+                 ]
     -- liftIO $ print res
     let blame = take 3 $ rankExprs net features p
     case res of
