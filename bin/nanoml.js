@@ -79,7 +79,7 @@ var demos = {
     , "  if n <= 0 then"
     , "    true"
     , "  else"
-    , "    n * fac (n - 1);;"
+    , "    n * fac (n - 1)"
     ].join('\n'),
 
   sumList:
@@ -118,7 +118,7 @@ var demos = {
     , "     []"
     , "  else"
     , "     x :: clone x (n - 1)"
-
+    , ""
     , "let padZero l1 l2 ="
     , "  let n = List.length l1 - List.length l2 in"
     , "  if n < 0 then"
