@@ -78,3 +78,16 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
 * {
     box-sizing: border-box;
 }
+
+.panel {
+    background: #f7f7f7;
+    padding: 3px 7px;
+    font-size: 0.85em;
+    margin-bottom: 0px;
+  }
+.panel.top, .panel.after-top {
+    border-bottom: 1px solid #ddd;
+}
+.panel.bottom, .panel.before-bottom {
+    border-top: 1px solid #ddd;
+}
