@@ -1167,7 +1167,7 @@ typeExpr' in_e = do
       tf <- typeExpr f
       -- traceShowM tf
       tes <- mapM typeExpr es
-      emitCt (getType tf) (foldr (:->) to (map getType tes))
+      emitCt (foldr (:->) to (map getType tes)) (getType tf)
       -- zipWithM_ emitCt ts (map getType tes)
       -- tis <- replicateM (length es) (TVar <$> freshTVar)
       -- zipWithM tryUnify tis (map getType tes)
@@ -1236,7 +1236,7 @@ typeExpr' in_e = do
       -- tryUnify (getType tb) (tCon tBOOL)
       -- tryUnify to (getType tt)
       -- tryUnify to (getType tf)
-      emitCt (getType tb) (tCon tBOOL)
+      emitCt (tCon tBOOL) (getType tb)
       emitCt to (getType tt)
       emitCt to (getType tf)
       return (T_Ite (mkInfo ml to) tb tt tf)
@@ -1256,7 +1256,7 @@ typeExpr' in_e = do
       -- mapM_ (emitCt (getType te)) tps
       -- mapM_ (emitCt to) (map (getType.thd3) tas)
       forM_ (zip tps tas) $ \(tp, ta) -> do
-        emitCt (getType te) tp
+        emitCt tp (getType te) -- tp
         emitCt to (getType (thd3 ta))
       return (T_Case (mkInfo ml to) te tas)
     Tuple ml es -> do
@@ -1413,7 +1413,7 @@ typePat = \case
   ConstraintPat _ p t -> do
     (tp, bnds) <- typePat p
     -- tryUnify tp t
-    emitCt tp t
+    emitCt t tp
     return (tp, bnds)
 
 typeAlt :: MonadEval m => Alt -> Type -> m (Type, TAlt)
@@ -1425,7 +1425,7 @@ typeAlt (p, mg, e) t = do
       Just g  -> do
         tg <- typeExpr g
         -- tryUnify (tCon tBOOL) (getType tg)
-        emitCt (getType tg) (tCon tBOOL)
+        emitCt (tCon tBOOL) (getType tg)
         return (Just tg)
     te <- typeExpr e
     return (tp, (p, tg, te))
@@ -1482,7 +1482,7 @@ makeType :: MonadEval m => Type -> m Type
 makeType t = do
   tv <- TVar <$> freshTVar
   -- tryUnify tv t
-  emitCt tv t
+  emitCt t tv
   return tv
 
 

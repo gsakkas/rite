@@ -104,19 +104,25 @@ collapseEdge (v1,v2,l) gr
   | (Nothing, _) <- Graph.match v2 gr
   = gr
 
+  -- FIXME: self-edge: this really shouldn't be possible..
   | v1 == v2
-    -- FIXME: this really shouldn't be possible..
   = Graph.delEdge (v1,v2) gr
-  | not (null (Graph.lpre gr v1)) || isReturnStep l
+
+  | otherwise
   = let es = [ (x,v2,moreInfo l l') | (x, l') <- Graph.lpre gr v1 ]
-    in if null es -- FIXME: why does this happen?
-       then gr
-       else Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
-  | null (Graph.lpre gr v1)
-  = let es = [ (v1,x,moreInfo l l') | (x, l') <- Graph.lsuc gr v2 ]
-    in if null es -- FIXME: why does this happen?
-       then gr
-       else Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
+    in Graph.delNode v1 . Graph.delEdge (v1,v2) . Graph.insEdges es $ gr
+
+  --- | not (null (Graph.lpre gr v1)) || isReturnStep l
+  --- = let es = [ (x,v2,moreInfo l l') | (x, l') <- Graph.lpre gr v1 ]
+  ---   in if null es -- FIXME: why does this happen?
+  ---      then gr
+  ---      else Graph.delEdge (v1,v2) . Graph.delNode v1 . Graph.insEdges es $ gr
+
+  --- | null (Graph.lpre gr v1)
+  --- = let es = [ (v1,x,moreInfo l l') | (x, l') <- Graph.lsuc gr v2 ]
+  ---   in if null es -- FIXME: why does this happen?
+  ---      then gr
+  ---      else Graph.delEdge (v1,v2) . Graph.delNode v2 . Graph.insEdges es $ gr
 
 isReturnStep (StepsTo ReturnStep) = True
 isReturnStep _                    = False
