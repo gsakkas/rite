@@ -943,13 +943,17 @@ typeProg p = do
     cts <- gets stConstraints
     -- mapM_ traceShowM cts
     solveCts True cts
-    cs <- gets stUnsatCores
+    css <- gets stUnsatCores
     tp' <- forM tp $ \ td -> case td of
       TDFun {} -> everywhereM (mkM substM) td
       TDEvl {} -> everywhereM (mkM substM) td
       -- don't look at TDTyp or TDExn, they contain bottoms
       _ -> return td
-    return (tp', cs)
+    css' <- forM css $ \cs -> fmap Set.fromList $ forM (Set.toList cs) $ \c -> do
+      t1' <- substM (ct_t1 c)
+      t2' <- substM (ct_t2 c)
+      return $! c {ct_t1 = t1', ct_t2 = t2'}
+    return (tp', css)
 
 typeDecl :: MonadEval m => Decl -> m TDecl
 typeDecl = \case
@@ -1196,8 +1200,16 @@ typeExpr' in_e = do
       -- tryUnify t2 (getType te2)
       -- t <- makeType t
       -- tryUnify to t
-      emitCt t1 (getType te1)
-      emitCt t2 (getType te2)
+      let fmt = unlines $
+            [ "This operator expects its left argument"
+            , "to be a `%s' but it appears to be a `%s'."
+            ]
+      emitCtWith t1 (getType te1) fmt
+      let fmt = unlines $
+            [ "This operator expects its right argument"
+            , "to be a `%s' but it appears to be a `%s'."
+            ]
+      emitCtWith t2 (getType te2) fmt
       emitCt to t
       return (T_Bop (mkInfo ml to) b te1 te2)
     Uop ml u e -> do
@@ -1206,7 +1218,11 @@ typeExpr' in_e = do
                 FNeg -> tCon tFLOAT
       te <- typeExpr e
       -- tryUnify t (getType te)
-      emitCt t (getType te)
+      let fmt = unlines $
+            [ "This operator expects its argument"
+            , "to be a `%s' but it appears to be a `%s'."
+            ]
+      emitCtWith t (getType te) fmt
       emitCt to t
       return (T_Uop (mkInfo ml to) u te)
     Lit ml l -> do
@@ -1236,8 +1252,16 @@ typeExpr' in_e = do
       -- tryUnify (getType tb) (tCon tBOOL)
       -- tryUnify to (getType tt)
       -- tryUnify to (getType tf)
-      emitCt (tCon tBOOL) (getType tb)
-      emitCt to (getType tt)
+      let fmt = unlines $
+            [ "The condition in an `if' must be a `%s'"
+            , "but this condition appears to be a `%s'."
+            ]
+      emitCtWith (tCon tBOOL) (getType tb) fmt
+      let fmt = unlines $
+            [ "All branches in an `if' must have the same type"
+            , "but this match contains both `%s' and `%s'."
+            ]
+      emitCtWith (getType tt) (getType tf) fmt
       emitCt to (getType tf)
       return (T_Ite (mkInfo ml to) tb tt tf)
     Seq ml e1 e2 -> do
@@ -1256,8 +1280,20 @@ typeExpr' in_e = do
       -- mapM_ (emitCt (getType te)) tps
       -- mapM_ (emitCt to) (map (getType.thd3) tas)
       forM_ (zip tps tas) $ \(tp, ta) -> do
-        emitCt tp (getType te) -- tp
-        emitCt to (getType (thd3 ta))
+        let fmt = unlines $
+              [ "Due to the patterns in this `match', we expect the scrutinee"
+              , "to be a `%s' but it appears to be a `%s'."
+              ]
+        -- FIXME: this seems backwards, but swapping the types produces the
+        -- wrong message in 'wwhile'..
+        emitCtWith (getType te) tp fmt -- tp
+        -- emitCtWith tp (getType te) fmt -- tp
+        let fmt = unlines $
+              [ "All branches in a `match' must have the same type"
+              , "but this match contains both `%s' and `%s'."
+              ]
+        emitCtWith t (getType (thd3 ta)) fmt
+      emitCt to t
       return (T_Case (mkInfo ml to) te tas)
     Tuple ml es -> do
       ts <- replicateM (length es) (TVar <$> freshTVar)
@@ -1274,19 +1310,28 @@ typeExpr' in_e = do
       let tis = map (subst su) (dArgs d)
           t   = subst su (typeDeclType (dType d))
       -- tryUnify to (subst su (typeDeclType (dType d)))
+      let stringy i = case i of
+            1 -> "1st"
+            2 -> "2nd"
+            3 -> "3rd"
+            _ -> show i ++ "th"
+      let emitChildCt i t1 t2 = emitCtWith t1 t2 $ unlines
+            [ c ++ " expects its " ++ stringy i ++ " argument"
+            , "to be a `%s' but it appears to be a `%s'."
+            ]
       mte <- case (tis, me) of
         ([], Nothing) -> do
           return Nothing
         ([ti], Just e) -> do
           te <- typeExpr e
           -- tryUnify t (getType te)
-          emitCt ti (getType te)
+          emitChildCt 1 ti (getType te)
           return (Just te)
         (ts, Just (Tuple ml' es)) -> do
           tes <- mapM typeExpr es
           -- tryUnify (foldr (:->) to tis) (foldr (:->) to (map getType tes))
           -- zipWithM_ tryUnify ts (map getType tes)
-          zipWithM_ emitCt ts (map getType tes)
+          zipWith3M_ emitChildCt [1..] ts (map getType tes)
           -- emitCt (foldr (:->) t ts)
           --        (foldr (:->) to (map getType tes))
           return (Just (T_Tuple (mkInfo ml' (TTup ts)) tes))
@@ -1301,7 +1346,12 @@ typeExpr' in_e = do
       tes <- mapM typeExpr es
       -- mapM_ (tryUnify t . getType) tes
       -- tryUnify to (mkTApps tARRAY [t])
-      mapM_ (emitCt t . getType) tes
+      let emitChildCt t' = emitCtWith t t' $ unlines
+            [ "All elements of an array must have the same type,"
+            , "but this list contains both `%s' and `%s'."
+            -- , "Did you really mean to use a list?"
+            ]
+      mapM_ (emitChildCt . getType) tes
       emitCt to (mkTApps tARRAY [t])
       -- let to = mkTApps tARRAY [t]
       return (T_Array (mkInfo ml to) tes)
@@ -1310,7 +1360,12 @@ typeExpr' in_e = do
       tes <- mapM typeExpr es
       -- mapM_ (tryUnify t . getType) tes
       -- tryUnify to (mkTApps tLIST [t])
-      mapM_ (emitCt t . getType) tes
+      let emitChildCt t' = emitCtWith t t' $ unlines
+            [ "All elements of a list must have the same type,"
+            , "but this list contains both `%s' and `%s'."
+            -- , "Did you really mean to use a list?"
+            ]
+      mapM_ (emitChildCt . getType) tes
       emitCt to (mkTApps tLIST [t])
       -- let to = mkTApps tLIST [t]
       return (T_List (mkInfo ml to) tes)
@@ -1790,6 +1845,15 @@ killSpanPat = go
     OrPat _ x y -> OrPat Nothing (go x) (go y)
     AsPat _ p v -> AsPat Nothing (go p) v
     ConstraintPat _ p t -> ConstraintPat Nothing (go p) t
+
+zipWith3M_ :: Monad m => (a -> b -> c -> m d) -> [a] -> [b] -> [c] -> m [d]
+zipWith3M_ f []     _      _      = return []
+zipWith3M_ f _      []     _      = return []
+zipWith3M_ f _      _      []     = return []
+zipWith3M_ f (x:xs) (y:ys) (z:zs) = do
+  a <- f x y z
+  as <- zipWith3M_ f xs ys zs
+  return $! (a : as)
 
 Right foo1 = parseTopForm
   "let pipe fs =\

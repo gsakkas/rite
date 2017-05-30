@@ -21,6 +21,7 @@ import Data.Text (Text)
 import Lucid
 import Web.Scotty
 import Network.Wai.Middleware.RequestLogger
+import Text.Printf
 
 import NanoML
 import NanoML.Explore
@@ -179,9 +180,10 @@ run p var net features = do
                  , "from" .= x, "to" .= y
                  , "label" .= show l
                  ]
-    let mkBlame (c, MkConstraint s t1 t2) =
+    let mkBlame (c, MkConstraint s t1 t2 msg) =
           object [ "confidence" .= c, "srcSpan" .= mkSpan (fromJust s)
                  , "expected" .= render (pretty t1), "actual" .= render (pretty t2)
+                 , "message" .= (printf msg (render (pretty t2)) (render (pretty t1)) :: String)
                  ]
     -- liftIO $ print res
     let blame = take 3 $ rankExprs net features p
@@ -282,9 +284,10 @@ run p var net features = do
             -- let root = backback gr'' st
             let stuck = st
 
-            -- let dot = Graph.showDot (Graph.fglToDotGeneric gr'' (fst.fst) show id)
-            -- liftIO $ writeFile "tmp.dot" dot
-            return $ object [ -- ("dot" :: String, dot)
+            let dot = Graph.showDot (Graph.fglToDotGeneric gr'' (fst.fst3) show id)
+            liftIO $ writeFile "tmp.dot" dot
+            -- liftIO $ mapM_ print blame
+            let o = object [ -- ("dot" :: String, dot)
                               "nodes"  .= map mkNode nodes
                             , "edges"  .= map mkEdge edges
                             , "root"   .= root
@@ -294,6 +297,9 @@ run p var net features = do
                             , "reason" .= show (pretty errorMsg)
                             , "blame"  .= map mkBlame blame
                             ]
+            -- traceShowM o
+            -- liftIO $ putStrLn "helo"
+            return o
         -- html . renderText . doctypehtml_ $ do
         --   head_ $ do
         --     title_ "NanoML"

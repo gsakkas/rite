@@ -84,6 +84,7 @@ html,body { height: 100%; margin: 0px; padding: 0px; }
     padding: 3px 7px;
     font-size: 0.85em;
     margin-bottom: 0px;
+    font-family: monospace;
   }
 .panel.top, .panel.after-top {
     border-bottom: 1px solid #ddd;

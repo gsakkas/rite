@@ -207,11 +207,18 @@ data Constraint = MkConstraint
   { constraintSpan :: !MSrcSpan
   , ct_t1 :: !Type
   , ct_t2 :: !Type
+  , ct_fmt :: String
   } deriving (Show, Eq, Ord)
 
 -- future proofing with the type equality
 mkConstraint :: MSrcSpan -> Type -> Type -> Constraint
-mkConstraint = MkConstraint
+mkConstraint sp t1 t2 = MkConstraint sp t1 t2 default_ct_fmt
+
+default_ct_fmt :: String
+default_ct_fmt = unlines
+  [ "This expression has type `%s'"
+  , "which is incompatible with `%s'."
+  ]
 
 pushConstraints :: MonadEval m => Set Constraint -> m ()
 pushConstraints ss = modify' $ \s -> s { stConstraintStack = ss : stConstraintStack s }
@@ -239,6 +246,12 @@ emitCt :: MonadEval m => Type -> Type -> m ()
 emitCt t1 t2 = withCurrentProvM $ \prv ->
   let ct = mkConstraint prv t1 t2
   in modify' $ \s -> s { stConstraints = stConstraints s ++ [ct] }
+
+emitCtWith :: MonadEval m => Type -> Type -> String -> m ()
+emitCtWith t1 t2 fmt = withCurrentProvM $ \prv ->
+  let ct = (mkConstraint prv t1 t2) { ct_fmt = fmt }
+  in modify' $ \s -> s { stConstraints = stConstraints s ++ [ct] }
+
 
 captureCts :: MonadEval m => m a -> m (a, [Constraint])
 captureCts do_this = do
@@ -273,13 +286,13 @@ minimizeCore cs = do
 
   where
   go used filled [] = return filled
-  go used filled (ct@(MkConstraint sp t1 t2):cts) = do
+  go used filled (ct@(MkConstraint sp t1 t2 msg):cts) = do
     st <- get
     put st{ stSubst = mempty, stConstraints = mempty
           , stConstraintDeps = mempty, stConstraintStack = mempty
           }
     err <- (do -- traceShowM ct
-               mapM_ (\(MkConstraint _ t1 t2) -> unify t1 t2
+               mapM_ (\(MkConstraint _ t1 t2 _) -> unify t1 t2
                    ) (used ++ cts)
                -- traceShowM "SAFE"
                return False
@@ -289,7 +302,7 @@ minimizeCore cs = do
       else do
       t1' <- substM t1
       t2' <- substM t2
-      go (used ++ [ct]) (filled ++ [MkConstraint sp t1' t2']) cts
+      go (used ++ [ct]) (filled ++ [MkConstraint sp t1' t2' msg]) cts
 
 subsets :: [a] -> [[a]]
 subsets []     = [[]]
@@ -304,7 +317,7 @@ solveCts produceCore cts = do
   -- traceM "solveCts.done"
 
 solveCt :: MonadEval m => Bool -> Constraint -> m ()
-solveCt produceCore ct@(MkConstraint _ t1 t2) = do
+solveCt produceCore ct@(MkConstraint _ t1 t2 _) = do
   pushConstraints (Set.singleton ct)
   unify t1 t2 `catchError` \ e -> do
     if produceCore

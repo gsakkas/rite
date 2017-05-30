@@ -614,8 +614,8 @@ function setup() {
                 var node = document.createElement('div');
                 node.className = "panel bottom";
                 var label = node.appendChild(document.createElement('span'));
-                label.textContent = '' + b.srcSpan.startLine + ':' + b.srcSpan.startCol +
-                                    ': confidence = ' + Math.round(100*b.confidence) + '%';
+                label.innerHTML = '' + b.srcSpan.startLine + ':' + b.srcSpan.startCol +
+                                    ': confidence = ' + Math.round(100*b.confidence) + '%<br/>' + b.message.replace('\n', '<br/>');
                 var panel = editor.addPanel(node, {position:'bottom', stable:true});
                 panels.push(panel);
                 var marker;
