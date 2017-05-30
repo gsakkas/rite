@@ -72,11 +72,11 @@ main = do
                   li_ $ a_ [onclick_ "loadDemo('factorial')"] "factorial"
                   li_ $ a_ [onclick_ "loadDemo('sumList')"] "sumList"
                   li_ $ a_ [onclick_ "loadDemo('sepConcat')"] "sepConcat"
-                  li_ $ a_ [onclick_ "loadDemo('padZero')"] "padZero"
+                  -- li_ $ a_ [onclick_ "loadDemo('padZero')"] "padZero"
                   li_ $ a_ [onclick_ "loadDemo('mulByDigit')"] "mulByDigit"
-                  li_ $ a_ [onclick_ "loadDemo('digitsOfInt')"] "digitsOfInt"
+                  -- li_ $ a_ [onclick_ "loadDemo('digitsOfInt')"] "digitsOfInt"
                   li_ $ a_ [onclick_ "loadDemo('wwhile')"] "wwhile"
-                  li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
+                  -- li_ $ a_ [onclick_ "loadDemo('palindrome')"] "palindrome"
             form_ [class_ "navbar-form navbar-left"] $ do
               div_ [class_ "form-group"] $ do
                 input_ [ id_ "var-input", name_ "var"
