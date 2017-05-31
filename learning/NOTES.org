@@ -290,3 +290,23 @@ baseline = local syntax
 | +context+type      | 71.9% | 84.7% | 91.3% |  70.5% |
 |--------------------+-------+-------+-------+--------|
 | +context+type+size | 73.5% | 85.8% | 91.5% |  70.8% |
+* TODO try discarding outliers based on fraction of SLICE that changes
+  - rather than fraction of ENTIRE program
+  - might lead to better classifier?
+
+* TODO add study programs to web demo
+  - they ought to be good examples of where our predictions are nice
+  - might want to dig through WIN programs to find others
+* TODO show predictions when program is ill-typed but no witness
+* DONE fix the stupid highlights in codemirror
+  CLOSED: [2017-05-26 Fri 12:35]
+  - [ ] may need to sort spans based on subsumption
+    - add contained spans later to override css
+  - [X] OR, just add a list of spans + error/confidence
+    - highlight text on hover
+* SOMEDAY add error message to highlight
+  - assuming that location is correct to blame, what would the type error be?
+  - can we just use the constraint as the error?
+    - i.e. =substM= the two types and report that as the mismatch?
+* TODO why are there duplicate spans coming to web demo?
+  - must not be filtering by unique span?
