@@ -146,7 +146,10 @@ checkDeclWith opts f prog = do
                   vt <- typeOfM v
                   vt' <- typeOfM v'
                   unifyNoExn vt vt') of
-      Left e -> return $ Failure (n+1) 0 0 (pretty "output-type mismatch!") e st'
+      Left e -> return $ Failure (n+1) 0 0 (pretty "output-type mismatch!")
+                                 -- e
+                                 (OutputTypeMismatch v v')
+                                 st'
       Right {} -> do
         r <- nanoCheck n m opts $ do
           -- prog <- mapM refreshDecl prog

@@ -33,4 +33,4 @@ main = do
       print counterExample
       print (pretty (fst (stCurrentExpr finalState)))
       print (pretty errorMsg)
-      exitFailure
+      exitSuccess

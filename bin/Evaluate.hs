@@ -16,7 +16,7 @@ import Data.Maybe
 import Data.Set (Set)
 import qualified Data.Set as Set
 import GHC.Generics
-import Options.Generic
+import Options.Generic hiding (All(..))
 import System.FilePath
 import System.FilePath.Glob
 import System.IO
@@ -34,7 +34,7 @@ main = do
 
 data Mode
   = Gather Tool FilePath
-  | Evaluate String FilePath (Maybe Prune)
+  | Evaluate String FilePath (Maybe Prune) (Maybe All)
   deriving (Generic, Show)
 instance ParseRecord Mode
 
@@ -42,6 +42,7 @@ data Tool
   = Ocaml
   | Mycroft
   | Sherrloc
+  | SherrlocTop
   | Nanomaly
   deriving (Generic, Show, Read, Eq)
 instance ParseField Tool
@@ -56,6 +57,14 @@ instance ParseField Prune
 instance ParseFields Prune
 instance ParseRecord Prune
 
+data All
+  = DoAll
+  | NoAll
+  deriving (Generic, Show, Read, Eq)
+instance ParseField All
+instance ParseFields All
+instance ParseRecord All
+
 run :: Mode -> IO ()
 run (Gather tool dir) = do
   mls <- glob (dir </> "*.ml")
@@ -65,10 +74,10 @@ run (Gather tool dir) = do
     let n = takeFileName ml
     writeFile (dir </> toolName tool </> n <.> "out")
               (unlines . map show $ spans)
-run (Evaluate "baseline" dir prune) = do
+run (Evaluate "baseline" dir prune _) = do
   doBaseline dir (fromMaybe NoPrune prune)
-run (Evaluate tool dir prune) = do
-  doEval tool dir (fromMaybe NoPrune prune)
+run (Evaluate tool dir prune all) = do
+  doEval tool dir (fromMaybe NoPrune prune) (fromMaybe NoAll all)
 
 
 e2m :: Either SomeException b -> Maybe b
@@ -80,7 +89,8 @@ runTool :: Tool -> FilePath -> IO [SrcSpan]
 runTool t = case t of
   Ocaml -> runOcaml
   Mycroft -> runMycroft
-  Sherrloc -> runSherrloc
+  Sherrloc -> runSherrloc Sherrloc
+  SherrlocTop -> runSherrloc SherrlocTop
   Nanomaly -> runNanomaly
 
 toolName :: Tool -> String
@@ -105,7 +115,7 @@ loadSpans ml = do
 loadToolSpans :: FilePath -> IO [SrcSpan]
 loadToolSpans f = do
   ls <- lines.force <$> readFile f
-  return $! map read $ take 3 $ nub ls
+  return $! map read $ {-take 3 $-} nub ls
 
 data ProcessState = ProcessState
   { good1Progs :: !Int
@@ -116,8 +126,8 @@ data ProcessState = ProcessState
   } deriving (Show)
 
 doEval
-  :: String -> FilePath -> Prune -> IO ()
-doEval t dir prune = do
+  :: String -> FilePath -> Prune -> All -> IO ()
+doEval t dir prune all = do
   let year = takeFileName dir
   let features = takeDirectory t
   let model = takeFileName t
@@ -127,18 +137,21 @@ doEval t dir prune = do
     DoPrune -> flip filterM mls $ \ml -> do
       let (dir, f) = splitFileName ml
       oracle <- loadSpans ml
-      ocs <- loadToolSpans (dir </> "ocaml" </> f <.> "out")
-      mys <- loadToolSpans (dir </> "mycroft" </> f <.> "out")
-      shs <- loadToolSpans (dir </> "sherrloc" </> f <.> "out")
-      return $! not (null ocs || null mys || null shs) &&
-                Set.fromList ocs `Set.isSubsetOf` allSpans oracle &&
-                Set.fromList mys `Set.isSubsetOf` allSpans oracle &&
-                Set.fromList shs `Set.isSubsetOf` allSpans oracle
+      let sh = if all == DoAll then "sherrloctop" else "sherrloc"
+      ocs <- loadToolSpans (dir </> "ocaml"    </> f <.> "out")
+      mys <- loadToolSpans (dir </> "mycroft"  </> f <.> "out")
+      shs <- loadToolSpans (dir </> sh         </> f <.> "out")
+      nms <- loadToolSpans (dir </> "nanomaly" </> f <.> "out")
+      return $! not (null ocs || null mys || null shs || null nms)
+             && Set.fromList ocs `Set.isSubsetOf` allSpans oracle
+             && Set.fromList mys `Set.isSubsetOf` allSpans oracle
+             && Set.fromList shs `Set.isSubsetOf` allSpans oracle
+             && Set.fromList nms `Set.isSubsetOf` allSpans oracle
 
   let init = ProcessState { good1Progs = 0, good2Progs = 0, good3Progs = 0
                           , allProgs = 0, recalls = []
                           }
-  final <- execStateT (mapM_ (processOne t) mls) init
+  final <- execStateT (mapM_ (processOne all t) mls) init
   -- print final
   let top1 = fromIntegral (good1Progs final) / fromIntegral (allProgs final) :: Double
       top2 = fromIntegral (good2Progs final) / fromIntegral (allProgs final) :: Double
@@ -158,8 +171,8 @@ doEval t dir prune = do
     ]
 
 processOne :: (MonadState ProcessState m, MonadIO m)
-           => String -> FilePath -> m ()
-processOne t f = do
+           => All -> String -> FilePath -> m ()
+processOne all t f = do
   let (dir, ml) = splitFileName f
   oracle <- liftIO $ loadSpans f
   let out = dir </> t </> ml <.> "out"
@@ -192,7 +205,8 @@ processOne t f = do
           --  liftIO $ printf "WIN: %s\n" f
         when (any (`Set.member` diffSpans oracle) $ take 2 sps) $ do
           bumpGood2 (+1)
-        when (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
+        let tk = if all == DoAll then id else take 3
+        when (any (`Set.member` diffSpans oracle) $ tk sps) $ do
           bumpGood3 (+1)
         -- unless (any (`Set.member` diffSpans oracle) $ take 3 sps) $ do
         --   liftIO $ printf "FAIL: %s\n" f
@@ -284,17 +298,22 @@ runMycroft ml = do
   --                             (lines out))
   return $! extractSrcSpans (lines out)
 
-runSherrloc :: FilePath -> IO ([SrcSpan])
-runSherrloc ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do
+runSherrloc :: Tool -> FilePath -> IO ([SrcSpan])
+runSherrloc sh ml = withSystemTempDirectory "sherrloc" $ \tmpDir -> do
   let tmp = tmpDir </> "error.con"
   out <- readCreateProcess (proc "eval/bin/ecamlc" [ml]) ""
   writeFile tmp out
-  out <- readCreateProcess (proc "eval/bin/sherrloc" ["-e", "-n2", tmp]) ""
+  let args
+          | Sherrloc <- sh
+          = ["-e", "-n2", tmp]
+          | otherwise
+          = ["-e", tmp]
+  out <- readCreateProcess (proc "eval/bin/sherrloc" args) ""
   return $! extractSrcSpans (lines out)
 
 runNanomaly :: FilePath -> IO ([SrcSpan])
 runNanomaly ml = do
-  out <- readCreateProcess (proc "stack" ["exec", "--", "nano-check", ml]){cwd = Just "../nanoml"} ""
+  out <- readCreateProcess (proc "stack" ["exec", "--", "nano-check", ml]) ""
   return $! extractSrcSpans (lines out)
 
 extractSrcSpans :: [String] -> [SrcSpan]

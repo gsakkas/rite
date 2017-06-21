@@ -107,12 +107,13 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
   -- forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
+  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
   let mkMean f xs = sum (map f xs) / genericLength xs
-  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
-  let mean = mkMean mkFrac feats :: Double
+  let mkFrac (_, (ss, _, _, cs, _all, _)) = genericLength (ss `intersect` cs) / genericLength cs
+  let mean = mkMean mkFrac feats' :: Double
         -- sum [genericLength ss / genericLength all | (_, (ss, _, _, _, all, _)) <- feats]
         --      / genericLength feats :: Double
-  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats
+  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
     if
       | mkFrac f > mean+std -> do
@@ -148,6 +149,7 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
     -- let (header, features) = unzip $ map (runTFeaturesDiff fs) uniqs
     -- let path = "data/" ++ nm ++ ".csv"
     -- LBSC.writeFile path $ encodeByName (head header) (concat features)
+  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
 mkFixFeatures nm fs jsons = do
