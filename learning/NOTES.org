@@ -290,3 +290,50 @@ baseline = local syntax
 | +context+type      | 71.9% | 84.7% | 91.3% |  70.5% |
 |--------------------+-------+-------+-------+--------|
 | +context+type+size | 73.5% | 85.8% | 91.5% |  70.8% |
+* TODO try discarding outliers based on fraction of SLICE that changes
+  - rather than fraction of ENTIRE program
+  - might lead to better classifier?
+** tried, we get a few MORE programs, but results don't appear to change much
+* DONE add study programs to web demo
+  CLOSED: [2017-06-12 Mon 08:22]
+  - they ought to be good examples of where our predictions are nice
+  - might want to dig through WIN programs to find others
+* TODO show predictions when program is ill-typed but no witness
+* DONE fix the stupid highlights in codemirror
+  CLOSED: [2017-05-26 Fri 12:35]
+  - [ ] may need to sort spans based on subsumption
+    - add contained spans later to override css
+  - [X] OR, just add a list of spans + error/confidence
+    - highlight text on hover
+* DONE add error message to highlight
+  CLOSED: [2017-06-12 Mon 08:22]
+  - assuming that location is correct to blame, what would the type error be?
+  - can we just use the constraint as the error?
+    - i.e. =substM= the two types and report that as the mismatch?
+* TODO why are there duplicate spans coming to web demo?
+  - must not be filtering by unique span?
+* FUTURE WORK
+** variable name embedding
+*** PROBLEM
+   - how to distinguish
+#+BEGIN_SRC ocaml
+let rec sumlist xs = match xs with
+  | [] -> []
+  | h::t -> h + sumlist t
+#+END_SRC
+from
+#+BEGIN_SRC ocaml
+let rec concat xs = match xs with
+  | [] -> []
+  | h::t -> h + concat t
+#+END_SRC
+"correct" fix depends on info encoded in fn name
+*** SOLUTION
+   - train word2vec embedding on variable names
+   - need TONS of data (how much exactly?)
+   - could use pre-trained embedding for english
+     - assuming relationship between words is mostly similar (unclear if
+       that's true)
+     - last-mile training on ocaml ala imagenet thingers
+   - may want to split variable name into set of words, based on
+     snake_case, CamelCase, etc
