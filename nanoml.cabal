@@ -47,6 +47,7 @@ executable generate-features
                , directory
                , filepath
                , nanoml
+               , optparse-generic
                , unordered-containers
                , vector
 

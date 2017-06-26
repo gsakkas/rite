@@ -23,6 +23,7 @@ import Data.HashSet (HashSet)
 import qualified Data.Set as Set
 import qualified Data.Vector as Vector
 import GHC.Generics
+import Options.Generic hiding (All(..))
 import System.Directory
 import System.Environment
 import System.FilePath
@@ -39,49 +40,59 @@ import NanoML.Types hiding (Kind)
 
 import Debug.Trace
 
+
+data Generate = Generate
+  { source :: FilePath
+  , features :: String
+  , out :: FilePath
+  }
+  deriving (Generic, Show)
+instance ParseRecord Generate
+
 main :: IO ()
 main = do
-  [src, cls] <- getArgs
-  jsons <- lines <$> (readFile $ "features/data/ucsd/data/derived" </> src </> "pairs.json")
+  Generate {source=src, features=cls, out=out} <-
+    getRecord "generate-features"
+  jsons <- lines <$> readFile src -- (readFile $ "features/data/ucsd/data/derived" </> src </> "pairs.json")
   case cls of
     -- "ops"
-    --   -> mkBadFeatures src cls preds_thas jsons
+    --   -> mkBadFeatures out cls preds_thas jsons
     -- "ops+context"
-    --   -> mkBadFeatures src cls preds_thas_ctx jsons
+    --   -> mkBadFeatures out cls preds_thas_ctx jsons
     -- "op+context"
-    --   -> mkBadFeatures src cls preds_tis_ctx jsons
+    --   -> mkBadFeatures out cls preds_tis_ctx jsons
     -- "op+context-count"
-    --   -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     -- "op+context-count+size"
-    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op"
-      -> mkBadFeatures src cls (preds_tis) jsons
+      -> mkBadFeatures out cls (preds_tis) jsons
     "op+slice"
-      -> mkBadFeaturesWithSlice All src cls (preds_tis) jsons
+      -> mkBadFeaturesWithSlice All out cls (preds_tis) jsons
     "op+context"
-      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tis_ctx) jsons
+      -> mkBadFeatures out cls (preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "op+context+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+      -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "op+context+type"
-      -> mkBadFeatures src cls (preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
+      -> mkBadFeatures out cls (preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     "op+context+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
+      -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     -- "op-cons+context+type+size"
-    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ map only_ctx preds_tis_ctx_cons ++ preds_tcon_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis_cons ++ map only_ctx preds_tis_ctx_cons ++ preds_tcon_ctx) jsons
     -- "op+context-has+type+size"
-    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_thas_ctx ++ preds_tcon_ctx) jsons
     -- "op+context-count+type+size"
-    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx ++ preds_tcon_ctx) jsons
     "op+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis) jsons
+      -> mkBadFeatures out cls (preds_tsize ++ preds_tis) jsons
     "op+type"
-      -> mkBadFeatures src cls (preds_tis ++ preds_tcon_ctx) jsons
+      -> mkBadFeatures out cls (preds_tis ++ preds_tcon_ctx) jsons
     "op+type+size"
-      -> mkBadFeatures src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
+      -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
     -- "op+type+size+slice-full"
-    --   -> mkBadFeaturesWithSlice All src cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
+    --   -> mkBadFeaturesWithSlice All out cls (preds_tsize ++ preds_tis ++ preds_tcon_ctx) jsons
     -- "op-cons+type+size"
-    --   -> mkBadFeatures src cls (preds_tsize ++ preds_tis_cons ++ preds_tcon_ctx) jsons
+    --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis_cons ++ preds_tcon_ctx) jsons
     -- "type-inference"
     --   -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     -- "type-inference+vars"
@@ -93,7 +104,7 @@ mkBadFeatures :: String -> String -> [Feature] -> [String] -> IO ()
 mkBadFeatures = mkBadFeaturesWithSlice JustSlice
 
 mkBadFeaturesWithSlice :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
-mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
+mkBadFeaturesWithSlice withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
   let feats = [ ((h, f'), (ss, bad, fix, c, all, idx))
               | (ss, p, bad, fix, idx) <- uniqs
@@ -103,10 +114,7 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
               -- , length f' > 1
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs p)
-              -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
-  -- let feats = map (runTFeaturesDiff fs) uniqs
-  -- forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
   let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
   let mkMean f xs = sum (map f xs) / genericLength xs
   let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
@@ -114,8 +122,6 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
   -- whole program. Doesn't seem to make a huge difference overall.
   -- let mkFrac (_, (ss, _, _, cs, _all, _)) = genericLength (ss `intersect` cs) / genericLength cs
   let mean = mkMean mkFrac feats' :: Double
-        -- sum [genericLength ss / genericLength all | (_, (ss, _, _, _, all, _)) <- feats]
-        --      / genericLength feats :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
     if
@@ -140,10 +146,10 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
         putStrLn fix
       | otherwise -> do
         let fn = printf "%04d" (i :: Int)
-        let path = "data" </> yr </> nm </> fn <.> "csv"
+        let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
         LBSC.writeFile path $ encodeByName header features
-        let path = "data" </> yr </> fn <.> "ml"
+        let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                    , "(* changed spans" ] ++ map show ss ++ [ "*)" ]
                                 ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
@@ -249,30 +255,10 @@ mkFixes json = case eitherDecode (LBSC.pack json) of
     -> {-trace e-} mempty
   v -> error (show v)
 
-mkDiff' :: String -> String -> Maybe [SrcSpan]
-mkDiff' bad fix
-  | Right bads <- alexScanTokens bad
-  , Right fixs <- alexScanTokens fix
-  = let spans = [ foldr1 joinSrcSpan (map getTokenSpan toks)
-                --- | Diff.First toks <- Diff.getGroupedDiffBy ((==) `on` getToken) bads fixs
-                | Diff.First toks <- Diff.getGroupedDiffBy (eqToken) bads fixs
-                ]
-    in Just (assert (not (null spans)) spans)
-  | otherwise = Nothing
- where
- getTokenSpan (LToken s _) = s
- getToken (LToken _ t) = t
- -- FIXME: this is too strict
- eqToken (LToken s1 t1) (LToken s2 t2) = t1 == t2 && s1 == s2
-
 mkDiff'' :: Prog -> Prog -> [SrcSpan]
 mkDiff'' bad fix
   --- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
-  --- | otherwise
-  -- = x
-  --- | fromIntegral (length x) / fromIntegral (length (concatMap allSubExprs bs)) > 0.4
-  -- = Nothing
   | otherwise
   = assert (not (null x)) $ x
   where
@@ -311,8 +297,6 @@ runTFeaturesDiff fs (ls, bad)
     Left e -> -- traceShow e
               ([], [], Just e)
     Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat cs)), Nothing)
-                                   -- only look at first unsat core for now
-    -- Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat $ take 1 $ reverse $ cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e
