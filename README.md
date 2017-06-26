@@ -235,3 +235,114 @@ hidden-500,op+context+type,0.769,0.879,0.920,0.716
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.
+
+
+### Explaining Predictions (Sec. 4.4)
+
+TODO
+
+
+## Extending / Reusing
+
+There are a few ways in which you may want to build on top of our work.
+You might have your own dataset that you wish to evaluate NATE's models
+on. Perhaps you have some clever ideas for additional features or
+classifiers to use with our data. Or maybe you would like to do your own
+analyses on the raw student interactions with OCaml.
+
+### New Datasets
+
+If you have your own dataset of ill-typed programs paired with fixes,
+and you would like to see how NATE's models perform on it, it should
+be fairly straightforward to integrate your data into our processing
+pipeline.
+
+First, we expect the program pairs to be in a single `pairs.json` file,
+with a single JSON object on each line. Each object should have a `bad`
+field with the ill-typed program, and a `fix` field with the fixed
+program.
+
+Once you have the `pairs.json` file, run
+
+``` shellsession
+$ stack exec -- generate-features \
+    --source path/to/pairs.json \
+    --features <features> \
+    --out path/to/csvs
+```
+
+with a suitable choice of `features`, based on our experiments
+`op+context+type` will probably perform best.
+
+Then you can train and evaluate a model with your data. For example,
+suppose we want to train on the combined sp14/fa15 data and evaluate on
+your data, to see how well the models generalize to other
+datasets. We'll use the MLP-500 classifier and op+context+type features
+since they give the best results.
+
+
+``` shellsession
+$ python learning/learn.py \
+    --data=data/sp14/op+context+type:data/fa15/op+context+type \
+    --test_data=path/to/csvs \
+    --model=hidden --hidden_layers=500 \
+    --learn_rate=0.001 --reg_rate=0.001 \
+    --batch_size=200 --n_epochs=20 \
+    --seed 0
+```
+
+The `learn_rate`, `reg_rate`, `batch_size`, and `n_epochs` are learning
+parameters, feel free to experiment with them, but these values seem to
+work well in practice. `seed` is an optional random seed for
+reproducibility.
+
+
+## New features
+
+Perhaps you have a clever idea for a new feature to improve NATE's
+accuracy.
+
+At a high level we model features as real-valued functions over typed
+expressions, but things are slightly more complex in the implementation.
+
+The feature extraction functions are defined in
+`features/src/NanoML/Classify.hs`, using the type alias
+
+``` haskell
+type Feature = ([String], (TExpr -> TExpr -> [Double]))
+```
+
+That is, a `Feature` is a pair of a list of labels and a function that
+takes two typed expressions and returns a list of `Double`s. The reason
+we define it this way, multiple features together, is that each
+expression is also given features of its parent and children, so it's
+very convenient to define a feature function for the current expression,
+and then use `mkContextLabels` and `mkContextFeatures` to lift it to the
+surrounding context.
+
+As an example, look at how we define the features for the syntactic
+class of an expression, `preds_tis_ctx`, in terms of
+`tis_op_ctx`, `tis_op`, etc.
+
+
+Once you have added your new feature function, you must hook it up to
+the `generate-features` binary. For this, open up
+`features/bin/Generate.hs` and look at the case-analysis in the `main`
+function. Here you just need to add a new case for your desired feature
+set, using the `mkBadFeatures` function. For example, to create a new
+feature set with local syntax and your new feature, you might add:
+
+``` haskell
+    "op+myfeature"
+      -> mkBadFeatures src cls (preds_tis ++ preds_myfeature) jsons
+```
+
+Then, recompile and extract the features:
+
+``` shellsession
+$ stack build && stack exec -- generate-features \
+    --source path/to/pairs.json \
+    --features op+myfeature \
+    --out path/to/csvs
+```
+
