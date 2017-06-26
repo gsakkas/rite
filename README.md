@@ -162,6 +162,33 @@ copy if you wish to rerun the Mycroft benchmarks.
 
 TODO: HOW TO BUILD OCAML/SHERRLOC?
 
+Building OCaml
+
+``` shellsession
+$ cd eval/ocaml
+$ ./configure -prefix $(pwd)/../build
+$ make world world.opt
+# NOTE: at the moment, ocaml's `make install` seems to 
+# get stuck in an infinite recursion, just hit Ctrl-C
+# after a few seconds and it should be fine.. Sorry!
+$ make install
+```
+
+Building Sherrloc
+
+``` shellsession
+# first we have to build sherrloc's version of easyocaml
+$ cd eval/sherrloc/easyocaml++
+$ ./configure -prefix $(pwd)../../build/eocaml
+$ ./build/smallworld.sh
+$ ./build/install.sh
+# now we can build sherrloc itself
+$ cd ..
+$ ant
+```
+
+
+
 Once you have built the tools, we provide another `make` target to
 gather the predictions. Note that SHErrLoc in particular is quite slow
 on some programs, so you may want to use our cached predictions instead
@@ -404,4 +431,4 @@ for the input features to the model.
 ### Other analyses on the interaction traces
 
 If you just want to work with the interaction traces we collected from the
-students, you can find the full dataset at https://github.com/ucsd-progsys/yunounderstand-data.
+students, you can find the full (anonymized) dataset at https://github.com/ucsd-progsys/yunounderstand-data.
