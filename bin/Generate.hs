@@ -101,8 +101,8 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
               -- , length f' > 1
-              , let all = map (fromJust.getSrcSpanExprMaybe)
-                           (concatMap allSubExprs $ progExprs p)
+              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
+                                    (concatMap allSubExprs $ progExprs p)
               -- , any (\r -> r HashMap.! "L-DidChange" == "1.0") f'
               ]
   -- let feats = map (runTFeaturesDiff fs) uniqs
@@ -288,7 +288,7 @@ runTFeaturesDiff fs (ls, bad)
   | null samples
   = Nothing
   | otherwise
-  = Just (header, samples, cores)
+  = Just (header, samples, nub cores)
   where
   header = Vector.fromList
          $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
