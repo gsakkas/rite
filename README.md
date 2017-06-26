@@ -364,3 +364,44 @@ $ python learning/learn.py \
 You may also want to experiment with different settings for the learning
 parameters `--learn_rate`, `--reg_rate` (for L2 regularization),
 `--batch_size`, and `--n_epochs`.
+
+If you want to make more invasive changes, e.g. different activation
+functions or connections between layers, see the `build_model` function
+in `learning/hidden.py`.
+
+It's also quite straightforward to use any of scikit-learn's built-in
+classifiers, just extend the switch at
+https://github.com/ucsd-progsys/ml2/blob/master/learning/trees.py#L103-L119
+with your choice of classifier.
+
+Of course, you can always write your own classifier from scratch if it
+doesn't fit nicely into the tensorflow or scikit-learn models. As long
+as your classifier can read our CSV files and output a sequence of
+ranked predictions in the one-per-line format described above (see
+"Comparing Blame Accuracy"), it will fit nicely into our evaluation
+pipeline. The CSV files themselves are quite simple and look roughly as
+follows.
+
+``` 
+SourceSpan,L-NoChange,L-DidChange,F-InSlice,F-Feature1,F-Feature2,etc.
+"(1,1)-(2,2)",0,1,1,0,0,...
+"(1,5)-(1,8)",1,0,1,1,0,...
+...
+```
+
+The `SourceSpan` column contains the source span for each expression,
+and is what your classifier should output as predictions. The
+`L-{No,Did}Change` columns are the boolean output labels, indicating
+whether the expression changed in the fixed program. Having two columns
+here is redundant, you can just use one of them. The `F-InSlice` column
+indicates whether the expression is part of a type error
+slice. Regardless of the feature set, this column will be present, and
+based on our experiments, you will probably want to preprocess each CSV
+file to discard expressions where `F-InSlice` is false
+(i.e. 0). Finally, there are an arbitrary number of `F-Feature` columns
+for the input features to the model.
+
+### Other analyses on the interaction traces
+
+If you just want to work with the interaction traces we collected from the
+students, you can find the full dataset at https://github.com/ucsd-progsys/yunounderstand-data.
