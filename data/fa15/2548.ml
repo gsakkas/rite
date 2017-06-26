@@ -82,7 +82,6 @@ let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 (* type error slice
 (2,43)-(2,44)
 (2,43)-(2,65)
-(2,43)-(2,65)
 (2,48)-(2,65)
 (2,49)-(2,54)
 (2,55)-(2,56)
@@ -98,7 +97,6 @@ let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 (8,42)-(8,45)
 (8,46)-(8,47)
 (8,48)-(8,50)
-(11,36)-(11,75)
 (11,36)-(11,75)
 (11,51)-(11,61)
 (11,51)-(11,63)
@@ -117,7 +115,6 @@ let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 (27,10)-(27,26)
 (27,14)-(27,20)
 (27,14)-(27,26)
-(27,21)-(27,24)
 (27,21)-(27,24)
 (27,22)-(27,23)
 (28,43)-(28,57)

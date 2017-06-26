@@ -32,7 +32,6 @@ let rec digitsOfInt n = if n = 0 then [0] else help n;;
 
 (* type error slice
 (5,2)-(9,78)
-(5,2)-(9,78)
 (6,7)-(6,10)
 (8,4)-(9,78)
 *)

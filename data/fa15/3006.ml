@@ -18,7 +18,6 @@ let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 (* type error slice
 (2,50)-(2,51)
 (2,50)-(2,56)
-(2,50)-(2,56)
 (2,55)-(2,56)
 *)
 

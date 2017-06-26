@@ -24,7 +24,6 @@ let rec mulByDigit i l =
 
 (* type error slice
 (3,2)-(5,76)
-(3,2)-(5,76)
 (4,10)-(4,11)
 (5,12)-(5,76)
 *)

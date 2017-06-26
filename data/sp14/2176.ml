@@ -32,7 +32,6 @@ let rec assoc (d,k,l) =
 
 (* type error slice
 (3,2)-(11,76)
-(3,2)-(11,76)
 (3,8)-(3,17)
 *)
 

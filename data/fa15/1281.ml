@@ -14,8 +14,6 @@ let rec digitsOfInt n = if n < 0 then [7] else [8];;
 
 (* type error slice
 (2,24)-(2,41)
-(2,24)-(2,41)
-(2,24)-(2,41)
 (2,38)-(2,41)
 *)
 
@@ -27,5 +25,4 @@ let rec digitsOfInt n = if n < 0 then [7] else [8];;
 (2,31)-(2,32)
 (2,38)-(2,41)
 (2,39)-(2,40)
-(2,24)-(2,41)
 *)

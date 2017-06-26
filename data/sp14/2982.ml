@@ -27,7 +27,6 @@ let rec digitsOfInt n = if n >= 10 then app [5] [n mod 10] else app [3] [8];;
 
 (* type error slice
 (5,2)-(5,71)
-(5,2)-(5,71)
 (5,18)-(5,21)
 (5,18)-(5,55)
 (5,61)-(5,64)

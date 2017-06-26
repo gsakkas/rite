@@ -28,7 +28,6 @@ let rec sepConcat sep sl =
 
 (* type error slice
 (3,2)-(8,43)
-(3,2)-(8,43)
 (7,17)-(7,38)
 (7,20)-(7,21)
 *)

@@ -16,7 +16,6 @@ let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
 (* type error slice
 (2,21)-(2,77)
-(2,21)-(2,77)
 (2,43)-(2,45)
 (2,58)-(2,77)
 (2,62)-(2,77)

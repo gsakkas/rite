@@ -24,8 +24,6 @@ let rec additivePersistence n = if lt10 n then count else 8;;
 (2,3)-(2,15)
 (2,12)-(2,13)
 (6,32)-(6,52)
-(6,32)-(6,52)
-(6,32)-(6,52)
 (6,47)-(6,52)
 *)
 
@@ -41,5 +39,4 @@ let rec additivePersistence n = if lt10 n then count else 8;;
 (6,35)-(6,39)
 (6,40)-(6,41)
 (6,47)-(6,52)
-(6,32)-(6,52)
 *)

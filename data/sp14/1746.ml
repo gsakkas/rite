@@ -36,7 +36,6 @@ let palindrome w = (listReverse (explode w)) = (explode w);;
 
 (* type error slice
 (3,2)-(3,58)
-(3,2)-(3,58)
 (3,40)-(3,58)
 (3,41)-(3,53)
 (3,54)-(3,55)
@@ -50,7 +49,6 @@ let palindrome w = (listReverse (explode w)) = (explode w);;
 (11,49)-(11,64)
 (11,50)-(11,61)
 (13,19)-(13,44)
-(13,19)-(13,48)
 (13,19)-(13,48)
 (13,20)-(13,31)
 (13,32)-(13,43)

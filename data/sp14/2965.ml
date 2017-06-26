@@ -17,7 +17,6 @@ let rec digitsOfInt n = if n > 0 then [5] @ (digitsOfInt (n / 10)) else [1];;
 
 (* type error slice
 (2,24)-(2,66)
-(2,24)-(2,66)
 (2,38)-(2,58)
 (2,64)-(2,66)
 *)

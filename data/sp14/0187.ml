@@ -21,7 +21,6 @@ let rec listReverse l = match l with | [] -> [] | _::tl -> listReverse tl;;
 (3,2)-(3,60)
 (3,38)-(3,54)
 (3,38)-(3,60)
-(3,38)-(3,60)
 (3,39)-(3,50)
 *)
 

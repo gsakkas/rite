@@ -48,7 +48,6 @@ let rec additivePersistence n =
 
 (* type error slice
 (12,2)-(18,47)
-(12,2)-(18,47)
 (13,7)-(13,8)
 (15,4)-(18,47)
 (16,5)-(18,46)

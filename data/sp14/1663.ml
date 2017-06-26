@@ -17,9 +17,7 @@ let rec digitsOfInt n = if n < 0 then [] else (n mod 10) :: (digitsOfInt n);;
 (* type error slice
 (2,27)-(2,28)
 (2,27)-(2,32)
-(2,27)-(2,32)
 (2,31)-(2,32)
-(2,46)-(2,72)
 (2,46)-(2,72)
 (2,53)-(2,54)
 *)

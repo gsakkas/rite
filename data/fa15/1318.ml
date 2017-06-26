@@ -20,7 +20,6 @@ let pipe fs = let f a x = a in let base f = 0 in List.fold_left f base fs;;
 (2,20)-(2,29)
 (2,44)-(2,45)
 (2,44)-(2,49)
-(2,44)-(2,49)
 (2,48)-(2,49)
 *)
 

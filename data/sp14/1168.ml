@@ -14,7 +14,6 @@ let rec listReverse l = match l with | [] -> [] | a::b::[] -> [a];;
 
 (* type error slice
 (2,24)-(2,63)
-(2,24)-(2,63)
 (2,45)-(2,47)
 (2,62)-(2,63)
 *)

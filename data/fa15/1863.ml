@@ -15,15 +15,8 @@ let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
 *)
 
 (* type error slice
-(2,3)-(2,62)
-(2,20)-(2,60)
-(2,24)-(2,60)
-(2,24)-(2,60)
 (2,24)-(2,60)
 (2,38)-(2,60)
-(2,38)-(2,60)
-(2,39)-(2,50)
-(2,39)-(2,59)
 *)
 
 (* all spans
@@ -38,5 +31,4 @@ let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
 (2,51)-(2,59)
 (2,52)-(2,53)
 (2,56)-(2,58)
-(2,24)-(2,60)
 *)

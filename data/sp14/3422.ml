@@ -38,7 +38,6 @@ let rec digitalRoot n = digitalRoot (sumList (digits n));;
 
 (* type error slice
 (2,21)-(2,70)
-(2,21)-(2,70)
 (2,55)-(2,70)
 (2,59)-(2,70)
 (2,60)-(2,67)

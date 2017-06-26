@@ -30,7 +30,6 @@ let rec digitalRoot n =
 
 (* type error slice
 (9,2)-(9,75)
-(9,2)-(9,75)
 (9,17)-(9,24)
 (9,30)-(9,75)
 *)

@@ -24,7 +24,6 @@ let rec digitsOfInt n =
 
 (* type error slice
 (6,6)-(6,77)
-(6,6)-(6,77)
 (6,36)-(6,63)
 (6,75)-(6,76)
 *)

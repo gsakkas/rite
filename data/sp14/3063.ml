@@ -15,8 +15,6 @@ let rec digitsOfInt n = let l = [] in if n < 0 then l else l;;
 
 (* type error slice
 (2,24)-(2,40)
-(2,24)-(2,40)
-(2,24)-(2,40)
 (2,38)-(2,40)
 *)
 
@@ -27,5 +25,4 @@ let rec digitsOfInt n = let l = [] in if n < 0 then l else l;;
 (2,27)-(2,28)
 (2,31)-(2,32)
 (2,38)-(2,40)
-(2,24)-(2,40)
 *)

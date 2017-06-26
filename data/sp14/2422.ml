@@ -30,7 +30,6 @@ let rec mulByDigit i l =
 (* type error slice
 (8,11)-(8,60)
 (8,28)-(8,60)
-(8,28)-(8,60)
 (8,43)-(8,59)
 *)
 

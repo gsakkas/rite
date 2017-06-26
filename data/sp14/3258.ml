@@ -25,7 +25,6 @@ let pipe fs = let f a x a x = x in let base x = x in List.fold_left f base fs;;
 (3,8)-(3,63)
 (3,10)-(3,63)
 (3,14)-(3,63)
-(3,14)-(3,63)
 (3,29)-(3,30)
 (3,34)-(3,63)
 (3,50)-(3,58)

@@ -80,7 +80,6 @@ let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 
 (* type error slice
 (11,36)-(11,75)
-(11,36)-(11,75)
 (11,51)-(11,61)
 (11,51)-(11,63)
 (11,69)-(11,75)

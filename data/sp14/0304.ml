@@ -23,7 +23,6 @@ let rec listReverse l = match l with | [] -> [] | h::t -> append [h] [h];;
 
 (* type error slice
 (2,23)-(2,76)
-(2,23)-(2,76)
 (2,63)-(2,76)
 (2,64)-(2,70)
 (2,71)-(2,72)

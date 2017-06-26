@@ -17,8 +17,6 @@ let rec sumList xs = let x::t = xs in x + (if t = [] then 0 else sumList t);;
 
 (* type error slice
 (2,38)-(2,69)
-(2,38)-(2,69)
-(2,38)-(2,69)
 (2,54)-(2,69)
 *)
 
@@ -35,5 +33,4 @@ let rec sumList xs = let x::t = xs in x + (if t = [] then 0 else sumList t);;
 (2,58)-(2,69)
 (2,59)-(2,66)
 (2,67)-(2,68)
-(2,38)-(2,69)
 *)

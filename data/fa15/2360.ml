@@ -30,7 +30,6 @@ let rec additivePersistence n =
 
 (* type error slice
 (5,21)-(5,70)
-(5,21)-(5,70)
 (5,58)-(5,70)
 (5,59)-(5,67)
 (5,68)-(5,69)

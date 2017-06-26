@@ -16,7 +16,6 @@ let rec listReverse l =
 
 (* type error slice
 (2,24)-(2,60)
-(2,24)-(2,60)
 (2,45)-(2,46)
 (2,57)-(2,60)
 *)

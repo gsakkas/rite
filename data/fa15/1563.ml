@@ -39,7 +39,6 @@ let rec additivePersistence n = sumList (digitsOfInt n);;
 
 (* type error slice
 (3,2)-(3,75)
-(3,2)-(3,75)
 (3,24)-(3,29)
 (3,44)-(3,57)
 (3,44)-(3,75)

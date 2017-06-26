@@ -15,9 +15,14 @@ let rec sumList xs = let x::t = xs in x + (if t = [] then 0 else sumList t);;
 *)
 
 (* type error slice
+(2,3)-(2,71)
+(2,16)-(2,69)
+(2,21)-(2,69)
 (2,38)-(2,69)
 (2,42)-(2,69)
 (2,43)-(2,68)
+(2,59)-(2,66)
+(2,59)-(2,68)
 *)
 
 (* all spans

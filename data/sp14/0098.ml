@@ -14,7 +14,6 @@ let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
 
 (* type error slice
 (2,20)-(2,75)
-(2,20)-(2,75)
 (2,26)-(2,27)
 (2,67)-(2,74)
 (2,68)-(2,69)

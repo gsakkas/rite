@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-sherrloc,sp14,.,sherrloc,0.548,0.756,0.847,0.594,2311
+sherrloc,sp14,.,sherrloc,0.550,0.756,0.846,0.659,2262

@@ -20,7 +20,6 @@ let rec digitsOfInt n =
 
 (* type error slice
 (3,2)-(3,68)
-(3,2)-(3,68)
 (3,22)-(3,24)
 (3,32)-(3,68)
 *)

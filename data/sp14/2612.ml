@@ -18,7 +18,6 @@ let rec clone x n = let acc = [x] in if n > 0 then clone x (n - 1) else [];;
 
 (* type error slice
 (3,38)-(3,46)
-(3,38)-(3,46)
 (3,39)-(3,40)
 (3,44)-(3,45)
 *)

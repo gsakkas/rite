@@ -33,7 +33,6 @@ let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
 
 (* type error slice
 (3,21)-(3,74)
-(3,21)-(3,74)
 (3,41)-(3,53)
 (3,61)-(3,67)
 (3,61)-(3,74)

@@ -1,2 +1,2 @@
 tool,year,features,model,top-1,top-2,top-3,recall,total
-sherrloc,fa15,.,sherrloc,0.564,0.758,0.836,0.583,1979
+sherrloc,fa15,.,sherrloc,0.561,0.755,0.833,0.647,1912

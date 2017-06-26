@@ -15,8 +15,6 @@ let rec wwhile (f,b) = match f b with | (h,t) -> if t = true then h;;
 
 (* type error slice
 (2,49)-(2,67)
-(2,49)-(2,67)
-(2,49)-(2,67)
 (2,66)-(2,67)
 *)
 
@@ -31,5 +29,4 @@ let rec wwhile (f,b) = match f b with | (h,t) -> if t = true then h;;
 (2,52)-(2,53)
 (2,56)-(2,60)
 (2,66)-(2,67)
-(2,49)-(2,67)
 *)

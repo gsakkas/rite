@@ -18,8 +18,6 @@ let rec sumList xs = if xs = [] then 0 else (List.hd xs) + (sumList xs);;
 
 (* type error slice
 (2,21)-(2,77)
-(2,21)-(2,77)
-(2,21)-(2,77)
 (2,50)-(2,77)
 *)
 
@@ -38,5 +36,4 @@ let rec sumList xs = if xs = [] then 0 else (List.hd xs) + (sumList xs);;
 (2,65)-(2,77)
 (2,66)-(2,73)
 (2,74)-(2,76)
-(2,21)-(2,77)
 *)
