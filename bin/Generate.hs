@@ -109,7 +109,10 @@ mkBadFeaturesWithSlice withSlice yr nm fs jsons = do
   -- forM_ (zip [0..] feats) $ \ (i, ((header, features), (ss, bad, fix, cs, allspans))) -> do
   let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
   let mkMean f xs = sum (map f xs) / genericLength xs
-  let mkFrac (_, (ss, _, _, cs, _all, _)) = genericLength (ss `intersect` cs) / genericLength cs
+  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
+  -- For discarding outliers by fraction of type error slice that changed rather than
+  -- whole program. Doesn't seem to make a huge difference overall.
+  -- let mkFrac (_, (ss, _, _, cs, _all, _)) = genericLength (ss `intersect` cs) / genericLength cs
   let mean = mkMean mkFrac feats' :: Double
         -- sum [genericLength ss / genericLength all | (_, (ss, _, _, _, all, _)) <- feats]
         --      / genericLength feats :: Double
