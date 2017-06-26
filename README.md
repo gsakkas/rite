@@ -160,9 +160,8 @@ Unfortunately, Mycroft is not available publicly so we are not
 comfortable distributing it ourselves. Please contact the authors for a
 copy if you wish to rerun the Mycroft benchmarks.
 
-TODO: HOW TO BUILD OCAML/SHERRLOC?
 
-Building OCaml
+##### Building OCaml
 
 ``` shellsession
 $ cd eval/ocaml
@@ -174,7 +173,7 @@ $ make world world.opt
 $ make install
 ```
 
-Building Sherrloc
+##### Building Sherrloc
 
 ``` shellsession
 # first we have to build sherrloc's version of easyocaml
