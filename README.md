@@ -81,3 +81,131 @@ top 3
 recall for top 3
 0.416306361952
 ```
+
+
+## Reproducing the evaluation
+
+Running the entire evaluation can take quite a while (i.e. hours) since
+there are so many different combinations of feature sets and models to
+train and evaluate. Where possible, we provide commands to run both the
+full evaluation and a smaller subset, which may be particularly useful
+if you're using our VM.
+
+### Generating all feature sets
+
+We examine many different combinations of feature sets in our evaluation,
+so let's go a head and generate them all.
+
+This will take a while depending on how many cores you have, so you might
+want to go grab a cup of coffee.
+
+``` shellsession
+$ make -j20 csvs
+# FASTER: just the syntax and typing features
+$ make -j2 op+context+type-sp14-csvs op+context+type-fa15-csvs 
+```
+
+### Comparing Blame Accuracy (Sec. 4.2)
+
+The first experiment compares the accuracy of our learned models against
+OCaml and the state-of-the-art SHErrLoc and Mycroft tools.
+
+Let's first train all of NATE's various models. This will also take a
+while, so if you're in a hurry or on a low-powered machine try the
+FASTER command.
+
+``` shellsession
+$ make -j5 linear tree hidden
+# FASTER: just the MLP-500
+$ make -j2 sp14-hidden-500 fa15-hidden-500
+```
+
+Running `make -j` will garble the results printed to stdout, but we also
+store each model's predictions for offline analysis. The predictions are
+stored in `data/{sp14,fa15}/<features>/<model>/<program>.ml.out`, with a
+single predicted blame span per line. For example, to see the
+predictions of the MLP-500 on the op+context+type features from the sp14
+dataset, we would look at the files in
+`data/sp14/op+context+type/hidden-500`.
+
+We can compute the top-k accuracy summaries with the `results` target.
+
+``` shellsession
+$ make -j5 results
+# FASTER: just the MLP-500
+$ make sp14-hidden-500-results fa15-hidden-500-results
+```
+
+This will produce a `results.csv` file in the same directory as the
+`<program>.ml.out` files. For example, here are the results for the
+MLP-500 on the op+context+type features.
+
+``` shellsession
+$ cat data/sp14/op+context+type/hidden-500/results.csv
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+context+type/hidden-500,sp14,op+context+type,hidden-500,0.725,0.861,0.912,0.714,2710
+$ cat data/fa15/op+context+type/hidden-500/results.csv
+tool,year,features,model,top-1,top-2,top-3,recall,total
+op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.718,0.858,0.911,0.701,2393
+```
+
+#### State of the Art
+
+You may also want to compare our models against OCaml, SHErrLoc, and
+Mycroft. We have patched all of these tools slightly to produce source
+locations in a standard format, so you will have to build the included
+versions. 
+
+Unfortunately, Mycroft is not available publicly so we are not
+comfortable distributing it ourselves. Please contact the authors for a
+copy if you wish to rerun the Mycroft benchmarks.
+
+TODO: HOW TO BUILD OCAML/SHERRLOC?
+
+Once you have built the tools, we provide another `make` target to
+gather the predictions. Note that SHErrLoc in particular is quite slow
+on some programs, so you may want to use our cached predictions instead
+of reproducing them yourself.
+
+``` shellsession
+$ make -j6 ocaml sherrloc # mycroft
+# FASTER: just ocaml
+$ make -j2 ocaml
+# EVEN FASTER: use our cached predictions
+```
+
+The predictions are stored as above, in
+`data/{sp14,fa15}/<tool>/<program>.ml.out` files. As before, we provide
+a `make` target to compute the accuracy summaries.
+
+``` shellsession
+$ make -j6 ocaml-results sherrloc-results # mycroft-results
+# FASTER: just ocaml
+$ make ocaml-sp14-results ocaml-fa15-results
+# EVEN FASTER: use the cached results
+```
+
+As before, you should now see `results.csv` files.
+
+``` shellsession
+$ cat data/sp14/ocaml/results.csv
+tool,year,features,model,top-1,top-2,top-3,recall,total
+ocaml,sp14,.,ocaml,0.449,0.449,0.449,0.228,2649
+$ cat data/fa15/ocaml/results.csv
+tool,year,features,model,top-1,top-2,top-3,recall,total
+ocaml,fa15,.,ocaml,0.433,0.433,0.433,0.221,2353
+```
+
+The actual bar graphs in the paper are produced by LaTeX, to rebuild
+them after running the benchmarks:
+
+``` shellsession
+$ cd paper/oopsla17-submission && latexmk -pdf main
+```
+
+
+### Comparing Feature Utility (Sec. 4.3)
+
+``` shellsession
+$ make feature-cross
+```
