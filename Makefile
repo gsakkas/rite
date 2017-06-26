@@ -194,3 +194,45 @@ feature-cross:
 	+$(call HIDDEN_CROSS,op+context+type,500,20)
 	+$(call HIDDEN_CROSS,op+type+size,500,20)
 	+$(call HIDDEN_CROSS,op+context+type+size,500,20)
+
+.PHONY: ocaml ocaml-sp14 ocaml-fa15
+ocaml: ocaml-sp14 ocaml-fa15
+ocaml-sp14:
+	@stack exec -- evaluate gather Ocaml data/sp14
+ocaml-fa15:
+	@stack exec -- evaluate gather Ocaml data/fa15
+
+.PHONY: mycroft mycroft-sp14 mycroft-fa15
+mycroft: mycroft-sp14 mycroft-fa15
+mycroft-sp14:
+	@stack exec -- evaluate gather Mycroft data/sp14
+mycroft-fa15:
+	@stack exec -- evaluate gather Mycroft data/fa15
+
+.PHONY: sherrloc sherrloc-sp14 sherrloc-fa15
+sherrloc: sherrloc-sp14 sherrloc-fa15
+sherrloc-sp14:
+	@stack exec -- evaluate gather Sherrloc data/sp14
+sherrloc-fa15:
+	@stack exec -- evaluate gather Sherrloc data/fa15
+
+.PHONY: ocaml-results ocaml-sp14-results ocaml-fa15-results
+ocaml-results: ocaml-sp14-results ocaml-fa15-results
+ocaml-sp14-results:
+	@stack exec evaluate -- evaluate ocaml data/sp14 $(PRUNE)
+ocaml-fa15-results:
+	@stack exec evaluate -- evaluate ocaml data/fa15 $(PRUNE)
+
+.PHONY: mycroft-results mycroft-sp14-results mycroft-fa15-results
+mycroft-results: mycroft-sp14-results mycroft-fa15-results
+mycroft-sp14-results:
+	@stack exec evaluate -- evaluate mycroft data/sp14 $(PRUNE)
+mycroft-fa15-results:
+	@stack exec evaluate -- evaluate mycroft data/fa15 $(PRUNE)
+
+.PHONY: sherrloc-results sherrloc-sp14-results sherrloc-fa15-results
+sherrloc-results: sherrloc-sp14-results sherrloc-fa15-results
+sherrloc-sp14-results:
+	@stack exec evaluate -- evaluate sherrloc data/sp14 $(PRUNE)
+sherrloc-fa15-results:
+	@stack exec evaluate -- evaluate sherrloc data/fa15 $(PRUNE)
