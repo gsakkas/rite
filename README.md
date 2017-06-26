@@ -206,6 +206,32 @@ $ cd paper/oopsla17-submission && latexmk -pdf main
 
 ### Comparing Feature Utility (Sec. 4.3)
 
+Next, let's see how to reproduce the feature utility results.
+
+This will take quite a while as there are many combinations of feature
+sets and models to test, and each combination does a 10-fold
+cross-validation.
+
 ``` shellsession
-$ make feature-cross
+$ make feature-cross  # this will take a few hours
+# FASTER: just run the MLP-500 on the op+context+type features
+$ python learning/learn.py \
+    --data data/fa15/op+context+type:data/sp14/op+context+type \
+    --model=hidden-500 \
+    --learn_rate=0.001 --reg_rate=0.001 \
+    --batch_size=200 --n_epochs=20 --n_folds=10 \
+    --seed 0
 ```
+
+There's no interleaving of output here, so you can scroll through the log
+if you like, or you can look at the summary csvs we produce in
+`models/<model>-<features>.cross.csv`. For example, to see the results
+for the MLP-500 on the op+context+type feature set:
+
+``` shellsession
+$ cat models/hidden-500-op+context+type.cross.csv
+model,features,top-1,top-2,top-3,recall
+hidden-500,op+context+type,0.769,0.879,0.920,0.716
+```
+
+As before, the bar graphs in the paper are produced directly by LaTeX.
