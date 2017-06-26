@@ -297,7 +297,7 @@ work well in practice. `seed` is an optional random seed for
 reproducibility.
 
 
-## New features
+### New features
 
 Perhaps you have a clever idea for a new feature to improve NATE's
 accuracy.
@@ -346,3 +346,21 @@ $ stack build && stack exec -- generate-features \
     --out path/to/csvs
 ```
 
+### New models
+
+Adding a new model could mean a few things. At the simple end of the
+spectrum, you might want to test a different architectures for the MLP.
+This requires no code changes at all, just a different setting for the
+`--hidden_layers` flag. It accepts a `-` separated list of numbers,
+specifying the number of hidden layers and how many units each should
+have. For example, if we wanted to train an MLP with an initial hidden
+layer of 250 units and a second layer of 500 units, we would call
+
+``` shellsession
+$ python learning/learn.py \
+    --model=hidden --hidden_layers=250-500 # ...
+```
+
+You may also want to experiment with different settings for the learning
+parameters `--learn_rate`, `--reg_rate` (for L2 regularization),
+`--batch_size`, and `--n_epochs`.
