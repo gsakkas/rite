@@ -163,3 +163,4 @@ cabal.project.local
 /paper/oopsla17-submission/comment.cut
 /paper/*/auto/
 .DS_Store
+/.venv/
