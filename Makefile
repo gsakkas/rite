@@ -95,7 +95,7 @@ endef
 define csv_template
 .PHONY: $(1)-$(2)-csvs
 $(1)-$(2)-csvs:
-	+stack exec generate-features -- $(1) $(2)
+	+stack exec generate-features -- --source=features/data/ucsd/data/derived/$(1)/pairs.json --features=$(2) --out=data/$(1)
 ALL_CSVS += $(1)-$(2)-csvs
 endef
 

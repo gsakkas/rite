@@ -37,8 +37,14 @@ checking, so it will sometimes abort with a type error before discovering
 an unbound variable.
 
 ``` shellsession
-$ stack exec -- generate-features features/data/ucsd/derived/sp14/pairs.json op
-$ stack exec -- generate-features features/data/ucsd/derived/fa15/pairs.json op
+$ stack exec -- generate-features \
+    --source features/data/ucsd/data/derived/sp14/pairs.json \
+    --features op \
+    --out data/sp14
+$ stack exec -- generate-features \
+    --source features/data/ucsd/data/derived/fa15/pairs.json \
+    --features op \
+    --out data/fa15
 ```
 
 The result will be a set of `.ml` files in the `data/{sp14,fa15}`
