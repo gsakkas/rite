@@ -10,7 +10,7 @@ We recommend building the Haskell components using the [stack] tool.
 [stack]: https://docs.haskellstack.org/en/stable/README/
 
 ``` shellsession
-$ stack build
+$ stack setup && stack build
 ```
 
 For python we recommend using [virtualenv].
@@ -149,10 +149,10 @@ MLP-500 on the op+context+type features.
 ``` shellsession
 $ cat data/sp14/op+context+type/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,sp14,op+context+type,hidden-500,0.725,0.861,0.912,0.714,2710
+op+context+type/hidden-500,sp14,op+context+type,hidden-500,0.723,0.862,0.908,0.714,2712
 $ cat data/fa15/op+context+type/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.718,0.858,0.911,0.701,2393
+op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.717,0.851,0.908,0.704,2365
 ```
 
 #### State of the Art
@@ -222,10 +222,10 @@ As before, you should now see `results.csv` files.
 ``` shellsession
 $ cat data/sp14/ocaml/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-ocaml,sp14,.,ocaml,0.449,0.449,0.449,0.228,2649
+ocaml,sp14,.,ocaml,0.448,0.448,0.448,0.227,2652
 $ cat data/fa15/ocaml/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-ocaml,fa15,.,ocaml,0.433,0.433,0.433,0.221,2353
+ocaml,fa15,.,ocaml,0.435,0.435,0.435,0.219,2328
 ```
 
 The actual bar graphs in the paper are produced by LaTeX, to rebuild
@@ -263,7 +263,7 @@ for the MLP-500 on the op+context+type feature set:
 ``` shellsession
 $ cat models/hidden-500-op+context+type.cross.csv
 model,features,top-1,top-2,top-3,recall
-hidden-500,op+context+type,0.769,0.879,0.920,0.716
+hidden-500,op+context+type,0.772,0.881,0.927,0.739
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.

@@ -77,11 +77,11 @@ print train.shape
 
 
 
-train_samps = train.loc[:,'F-InSlice':]
+train_samps = train.loc[:,'F-Is-Eq':]
 print train_samps.shape
 train_labels = train.loc[:,'L-DidChange']
 
-test_samps = test.loc[:,'F-InSlice':]
+test_samps = test.loc[:,'F-Is-Eq':]
 del test_samps['SOURCE_FILE']
 test_labels = test.loc[:,'L-DidChange']
 test_span = test.loc[:,'SourceSpan']
@@ -118,6 +118,10 @@ elif model == 'random-forest':
 else:
         clf = tree.DecisionTreeClassifier(random_state=prng)
 clf = clf.fit(train_samps.values, train_labels.values)
+
+from sklearn.externals import joblib
+joblib.dump(clf, os.path.join('models', train_dir.replace('/', '-')+'.pkl'))
+
 # print test_samps
 # print test_samps.values
 anses = clf.predict(test_samps.values)
