@@ -98,7 +98,7 @@ full evaluation and a smaller subset, which may be particularly useful
 if you're using our VM.
 
 If you're running the FASTER commands and want to examine a different
-feature set, here's a simple table to help name a feature set.
+feature set, here's a simple table to help select a feature set.
 
 | Segment  | Description                                   |
 | -------- | --------------------------------------------- |
