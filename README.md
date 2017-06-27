@@ -71,7 +71,7 @@ avg prediction time: 0.115615
 testing complete in 278.65 seconds
 ```
 
-And for good measure let's try a random forest too.
+And for good measure let's try a decision tree too.
 
 ``` shellsession
 $ python learning/trees.py decision-tree data/sp14/op data/fa15/op
@@ -96,6 +96,20 @@ there are so many different combinations of feature sets and models to
 train and evaluate. Where possible, we provide commands to run both the
 full evaluation and a smaller subset, which may be particularly useful
 if you're using our VM.
+
+If you're running the FASTER commands and want to examine a different
+feature set, here's a simple table to help name a feature set.
+
+| Segment  | Description                                   |
+| -------- | --------------------------------------------- |
+| op       | baseline of local syntax (always comes first) |
+| +context | add contextual syntax                         |
+| +type    | add typing features (local and contextual)    |
+| +size    | add expression size                           |
+
+For example, to use the feature set with local and contextual syntax
+features and expression size, we would use `op+context+size`.
+
 
 ### Generating all feature sets
 
@@ -267,7 +281,6 @@ hidden-500,op+context+type,0.772,0.881,0.927,0.739
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.
-
 
 ### Explaining Predictions (Sec. 4.4)
 
