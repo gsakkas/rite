@@ -169,13 +169,16 @@ for ind, _ in enumerate(test_samps):
 	        else:
 	            threshold_sign = ">"
 
-	        print("decision id node %s : (X[%s, %s] (= %s) %s %s)"
-	              % (node_id,
-	                 sample_id,
-	                 feature[node_id],
-	                 X_test[sample_id, feature[node_id]], # <-- changed i to sample_id
-	                 threshold_sign,
-	                 threshold[node_id]))
-	        print(feature_names[feature[node_id]]);
-
-	
+                print("%s : (= %s) %s %s"
+                      % (feature_names[feature[node_id]],
+                         X_test[sample_id, feature[node_id]],
+                         threshold_sign,
+                         threshold[node_id]))
+	        # print("decision id node %s : (X[%s, %s] (= %s) %s %s)"
+	        #       % (node_id,
+	        #          sample_id,
+	        #          feature[node_id],
+	        #          X_test[sample_id, feature[node_id]], # <-- changed i to sample_id
+	        #          threshold_sign,
+	        #          threshold[node_id]))
+	        # print(feature_names[feature[node_id]]);
