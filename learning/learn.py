@@ -106,10 +106,12 @@ def main(_):
 
     if FLAGS.seed is not None:
         random.seed(FLAGS.seed)
+        np.random.seed(FLAGS.seed)
     else:
         random.seed()
         FLAGS.seed = random.randint(0, 1000000)
         random.seed(FLAGS.seed)
+        np.random.seed(FLAGS.seed)
         print('using seed:', FLAGS.seed)
     dirs = FLAGS.data.split(':')
     dfs = []
