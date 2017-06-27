@@ -18,6 +18,7 @@ train_dir = sys.argv[2]
 test_dir = sys.argv[3]
 
 RANDOM_SEED = 0
+np.random.seed(RANDOM_SEED)
 prng=np.random.RandomState(RANDOM_SEED)
 
 train_csvs = [f for f in os.listdir(train_dir) if f.endswith('.csv')]
@@ -120,7 +121,7 @@ else:
 clf = clf.fit(train_samps.values, train_labels.values)
 
 from sklearn.externals import joblib
-joblib.dump(clf, os.path.join('models', train_dir.replace('/', '-')+'.pkl'))
+joblib.dump(clf, os.path.join('models', model+'-'+train_dir.replace('/', '-')+'.pkl'))
 
 # print test_samps
 # print test_samps.values
