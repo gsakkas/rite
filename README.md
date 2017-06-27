@@ -108,7 +108,7 @@ want to go grab a cup of coffee.
 ``` shellsession
 $ make -j20 csvs
 # FASTER: just the syntax and typing features
-$ make -j2 op+context+type-sp14-csvs op+context+type-fa15-csvs 
+$ make -j2 sp14-op+context+type-csvs fa15-op+context+type-csvs
 ```
 
 ### Comparing Blame Accuracy (Sec. 4.2)
@@ -192,7 +192,7 @@ $ cd ..
 $ ant
 ```
 
-
+##### Gathering state-of-the-art predictions
 
 Once you have built the tools, we provide another `make` target to
 gather the predictions. Note that SHErrLoc in particular is quite slow
@@ -271,7 +271,78 @@ As before, the bar graphs in the paper are produced directly by LaTeX.
 
 ### Explaining Predictions (Sec. 4.4)
 
-TODO
+In this final experiment we try to explain specific predictions from our
+decision-tree classifier. We use the op+context+type feature set since
+we don't expect the expression size feature to produce a very intuitive
+explanation.
+
+For this we'll use the `learning/decisionpath.py` script to print out
+the sequence of decisions made by the tree. When we train the
+decision-tree, we also store a copy of the trained model in
+`models/data-<quarter>-<features>.pkl`, so let's use the tree trained on
+the fa15 data with the op+context+type features to explain the first
+bogus prediction.
+
+``` shellsession
+$ python learning/decisionpath.py models/data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
+# This script prints out decision paths for each expression, but we're
+# only interested in the recursive call to `clone` here
+...
+For span
+(3,42)-(3,47)
+with confidence
+0.368530020704
+our prediction is
+0.0
+should be
+1.0
+Rules used to predict sample 2:
+F-Is-Type-Fun : (= 1.0) > 0.5
+F-Is-App : (= 0.0) <= 0.5
+F-Is-Fun-C1 : (= 0.0) <= 0.5
+F-Is-Type-list-C1 : (= 0.0) <= 0.5
+F-Is-Type-Tuple-P : (= 0.0) <= 0.5
+F-Is-Type-float-P : (= 0.0) <= 0.5
+F-Is-Let-C1 : (= 0.0) <= 0.5
+F-Is-Case-P : (= 0.0) <= 0.5
+F-Is-Let-P : (= 0.0) <= 0.5
+F-Is-Type-Var-C1 : (= 0.0) <= 0.5
+F-Is-Fun-P : (= 0.0) <= 0.5
+F-Is-Type-Fun-P : (= 0.0) <= 0.5
+F-Is-Type-int-P : (= 0.0) <= 0.5
+F-Is-(,)-C1 : (= 0.0) <= 0.5
+F-Is-Type-bool-P : (= 0.0) <= 0.5
+F-Is-Type-expr-P : (= 0.0) <= 0.5
+F-Is-Type-unit-P : (= 0.0) <= 0.5
+F-Is-Type-Var-P : (= 0.0) <= 0.5
+F-Is-Type-char-P : (= 0.0) <= 0.5
+F-Is-App-P : (= 1.0) > 0.5
+F-Is-Type-string-P : (= 0.0) <= 0.5
+leaf node 2899 reached, no decision here
+...
+```
+
+There are a few important pieces of information here. First of all, we
+can see that we predicted 0 (i.e. no-blame), when the correct answer was
+1, and furthermore our "confidence" was 0.369. Confidence is a bit of a
+misnomer here, it's really the probability that we should predict blame,
+i.e. < 0.5 means we will predict no-blame, and > 0.5 means we will
+predict blame.
+
+More importantly, we see the sequence of decisions made by the tree. Each
+line is as follows
+
+``` 
+<feature> : (= <feature-value>) [> <=] 0.5
+```
+
+which says that `<feature>`, with a value `<feature-value>` is greater
+or less than the threshold (in our case with binary features, always
+0.5). For example, the first line says that the `F-Is-Type-Fun` feature
+(i.e. the type of this expression mentions the `->` type constructor) is
+1 (i.e. true), which is greater than the threshold. Continuing on, we
+can see that the only enabled features are `F-Is-Type-Fun` and
+`F-Is-App-P` (the parent expression is an application).
 
 
 ## Extending / Reusing
@@ -428,10 +499,11 @@ whether the expression changed in the fixed program. Having two columns
 here is redundant, you can just use one of them. The `F-InSlice` column
 indicates whether the expression is part of a type error
 slice. Regardless of the feature set, this column will be present, and
-based on our experiments, you will probably want to preprocess each CSV
-file to discard expressions where `F-InSlice` is false
-(i.e. 0). Finally, there are an arbitrary number of `F-Feature` columns
-for the input features to the model.
+based on our experiments, but you can safely ignore it unless you are
+working with the op+slice dataset, as we usually discard expressions
+where `F-InSlice` is false during feature extraction. Finally, there are
+an arbitrary number of `F-Feature` columns for the input features to the
+model.
 
 ### Other analyses on the interaction traces
 
