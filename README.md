@@ -135,8 +135,8 @@ want to go grab a cup of coffee.
 
 ``` shellsession
 $ make -j20 csvs
-# FASTER: just the syntax and typing features
-$ make -j2 sp14-op+context+type-csvs fa15-op+context+type-csvs
+# FASTER: just the full feature set
+$ make -j2 sp14-op+context+type+size-csvs fa15-op+context+type+size-csvs
 ```
 
 ### Comparing Blame Accuracy (Sec. 4.2)
@@ -151,7 +151,7 @@ FASTER command.
 ``` shellsession
 $ make -j5 linear tree hidden
 # FASTER: just the MLP-500 with the op+context+type features
-$ make op+context+type-hidden-500
+$ make op+context+type+size-hidden-500
 ```
 
 Running `make -j` will garble the results printed to stdout, but we also
@@ -160,14 +160,14 @@ stored in `data/{sp14,fa15}/<features>/<model>/<program>.ml.out`, with a
 single predicted blame span per line. For example, to see the
 predictions of the MLP-500 on the op+context+type features from the sp14
 dataset, we would look at the files in
-`data/sp14/op+context+type/hidden-500`.
+`data/sp14/op+context+type+size/hidden-500`.
 
 We can compute the top-k accuracy summaries with the `results` target.
 
 ``` shellsession
 $ make -j5 results
 # FASTER: just the MLP-500
-$ make op+context+type-hidden-500-results
+$ make op+context+type+size-hidden-500-results
 ```
 
 This will produce a `results.csv` file in the same directory as the
@@ -175,12 +175,12 @@ This will produce a `results.csv` file in the same directory as the
 MLP-500 on the op+context+type features.
 
 ``` shellsession
-$ cat data/sp14/op+context+type/hidden-500/results.csv
+$ cat data/sp14/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,sp14,op+context+type,hidden-500,0.722,0.851,0.907,0.713,2712
-$ cat data/fa15/op+context+type/hidden-500/results.csv
+op+context+type+size/hidden-500,sp14,op+context+type+size,hidden-500,0.736,0.864,0.915,0.720,2712
+$ cat data/fa15/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.693,0.835,0.887,0.683,2365
+op+context+type+size/hidden-500,fa15,op+context+type+size,hidden-500,0.701,0.841,0.907,0.696,2365
 ```
 
 #### State of the Art
@@ -273,10 +273,10 @@ sets and models to test, and each combination does a 10-fold
 cross-validation.
 
 ``` shellsession
-$ make feature-cross  # this will take a few hours
-# FASTER: just run the MLP-500 on the op+context+type features
+$ make feature-cross  # this will take a few hours, and requires all feature sets
+# FASTER: just run the MLP-500 on the op+context+type+size features
 $ python learning/learn.py \
-    --data data/fa15/op+context+type:data/sp14/op+context+type \
+    --data data/fa15/op+context+type+size:data/sp14/op+context+type+size \
     --model=hidden --hidden_layers=500 \
     --learn_rate=0.001 --reg_rate=0.001 \
     --batch_size=200 --n_epochs=20 --n_folds=10 \
@@ -289,9 +289,9 @@ if you like, or you can look at the summary csvs we produce in
 for the MLP-500 on the op+context+type feature set:
 
 ``` shellsession
-$ cat models/hidden-500-op+context+type.cross.csv
+$ cat models/hidden-500-op+context+type+size.cross.csv
 model,features,top-1,top-2,top-3,recall
-hidden-500,op+context+type,0.772,0.881,0.927,0.739
+hidden-500,op+context+type+size,0.768,0.883,0.931,0.737
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.
@@ -303,8 +303,8 @@ decision-tree classifier. We use the op+context+type feature set since
 we don't expect the expression size feature to produce a very intuitive
 explanation.
 
-If you've been following the FASTER path, you may need to first train a
-decision tree with:
+If you've been following the FASTER path, you may need to first extract
+the op+context+type feature set and train a decision tree with:
 
 ``` shellsession
 $ python learning/trees.py decision-tree data/fa15/op+context+type data/sp14/op+context+type
@@ -377,6 +377,16 @@ or less than the threshold (in our case with binary features, always
 can see that the only enabled features are `F-Is-Type-Fun`,
 `F-Is-App-P` (the parent expression is an application), and
 `F-Is-Type-list-P` (the type of the parent expression mentions `list`).
+
+There should also now be a visualization of the entire tree in
+`models/decision-tree-data-fa15-op+context+type.pkl.pdf`. Each node in
+the tree lists a decision as above, and is shaded either blue
+(indicating the classifier is leaning towards **blame**) or orange
+(indicating it's leaning towards **no-blame**). Deeper shades indicate
+higher confidence. When the condition of a node is true, the tree will
+descend into the left child. Note that all of the conditions have the
+form `<feature> <= 0.5`, so taking the left path means the feature
+was disabled, the right path means the feature was enabled.
 
 
 ## Extending / Reusing
