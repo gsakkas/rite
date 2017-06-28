@@ -21,8 +21,9 @@ RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
 prng=np.random.RandomState(RANDOM_SEED)
 
-train_csvs = [f for f in os.listdir(train_dir) if f.endswith('.csv')]
-test_csvs = [f for f in os.listdir(test_dir) if f.endswith('.csv')]
+# FIXME: sort??
+train_csvs = sorted([f for f in os.listdir(train_dir) if f.endswith('.csv')])
+test_csvs = sorted([f for f in os.listdir(test_dir) if f.endswith('.csv')])
 
 sklearn.utils.shuffle(train_csvs, random_state=prng)
 dfs = []

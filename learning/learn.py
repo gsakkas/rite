@@ -46,7 +46,7 @@ flags.DEFINE_integer("seed", None, '')
 
 
 def load_data(path):
-    csvs = [f for f in os.listdir(path) if f.endswith('.csv')]
+    csvs = sorted([f for f in os.listdir(path) if f.endswith('.csv')])
     random.shuffle(csvs)
     dfs = []
     for i, csv in enumerate(csvs):
