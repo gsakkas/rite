@@ -2,6 +2,20 @@
 
 ## Getting Started
 
+Let's quickly walk through setting up a development environment. If you
+don't mind using a VM and things being a bit slower, we've [provided]
+one for you, the user and password are both "nate". The VM should
+already have everything you need installed, though you'll still need to
+activate the python virtualenv below.
+
+[provided]: https://www.dropbox.com/s/b8a7nfwi8loiwvp/nate-artifact.ova?dl=0
+
+### Getting the source
+
+Make sure you clone with `--recursive` as we have a few submodules.
+
+### Building
+
 This project uses Haskell for feature extraction and Python for
 learning/executing the models.
 
@@ -62,13 +76,13 @@ $ python learning/learn.py \
     --data=data/sp14/op --test_data=data/fa15/op \
     --model=linear --learn_rate=0.01 --reg_rate=0.01 \
     --batch_size=200 --n_epochs=10 --seed=0
-training complete in 8.24 seconds
-final accuracy: 0.507 / 0.679 / 0.803
-avg/std recall: 0.559 / 0.389
+training complete in 5.48 seconds
+final accuracy: 0.492 / 0.663 / 0.782
+avg/std recall: 0.532 / 0.388
 avg / std / med samples: 10.50 / 6.99 / 9.00
 avg / std / med changes: 2.74 / 2.34 / 2.00
-avg prediction time: 0.115615
-testing complete in 278.65 seconds
+avg prediction time: 0.179411
+testing complete in 430.08 seconds
 ```
 
 And for good measure let's try a decision tree too.
@@ -76,16 +90,16 @@ And for good measure let's try a decision tree too.
 ``` shellsession
 $ python learning/trees.py decision-tree data/sp14/op data/fa15/op
 (40938, 49)
-(40938, 46)
+(40938, 45)
 precision for top 3
 top 1
-0.534038054968
+0.534460887949
 top 2
-0.70866807611
+0.707822410148
 top 3
-0.783509513742
+0.780549682875
 recall for top 3
-0.416306361952
+0.415379864114
 ```
 
 
@@ -121,8 +135,8 @@ want to go grab a cup of coffee.
 
 ``` shellsession
 $ make -j20 csvs
-# FASTER: just the syntax and typing features
-$ make -j2 sp14-op+context+type-csvs fa15-op+context+type-csvs
+# FASTER: just the full feature set
+$ make -j2 sp14-op+context+type+size-csvs fa15-op+context+type+size-csvs
 ```
 
 ### Comparing Blame Accuracy (Sec. 4.2)
@@ -136,8 +150,8 @@ FASTER command.
 
 ``` shellsession
 $ make -j5 linear tree hidden
-# FASTER: just the MLP-500
-$ make -j2 sp14-hidden-500 fa15-hidden-500
+# FASTER: just the MLP-500 with the op+context+type features
+$ make op+context+type+size-hidden-500
 ```
 
 Running `make -j` will garble the results printed to stdout, but we also
@@ -146,14 +160,14 @@ stored in `data/{sp14,fa15}/<features>/<model>/<program>.ml.out`, with a
 single predicted blame span per line. For example, to see the
 predictions of the MLP-500 on the op+context+type features from the sp14
 dataset, we would look at the files in
-`data/sp14/op+context+type/hidden-500`.
+`data/sp14/op+context+type+size/hidden-500`.
 
 We can compute the top-k accuracy summaries with the `results` target.
 
 ``` shellsession
 $ make -j5 results
 # FASTER: just the MLP-500
-$ make sp14-hidden-500-results fa15-hidden-500-results
+$ make op+context+type+size-hidden-500-results
 ```
 
 This will produce a `results.csv` file in the same directory as the
@@ -161,12 +175,12 @@ This will produce a `results.csv` file in the same directory as the
 MLP-500 on the op+context+type features.
 
 ``` shellsession
-$ cat data/sp14/op+context+type/hidden-500/results.csv
+$ cat data/sp14/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,sp14,op+context+type,hidden-500,0.723,0.862,0.908,0.714,2712
-$ cat data/fa15/op+context+type/hidden-500/results.csv
+op+context+type+size/hidden-500,sp14,op+context+type+size,hidden-500,0.736,0.864,0.915,0.720,2712
+$ cat data/fa15/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/hidden-500,fa15,op+context+type,hidden-500,0.717,0.851,0.908,0.704,2365
+op+context+type+size/hidden-500,fa15,op+context+type+size,hidden-500,0.701,0.841,0.907,0.696,2365
 ```
 
 #### State of the Art
@@ -198,7 +212,7 @@ $ make install
 ``` shellsession
 # first we have to build sherrloc's version of easyocaml
 $ cd eval/sherrloc/easyocaml++
-$ ./configure -prefix $(pwd)../../build/eocaml
+$ ./configure -prefix $(pwd)/../../build/eocaml
 $ ./build/smallworld.sh
 $ ./build/install.sh
 # now we can build sherrloc itself
@@ -259,11 +273,11 @@ sets and models to test, and each combination does a 10-fold
 cross-validation.
 
 ``` shellsession
-$ make feature-cross  # this will take a few hours
-# FASTER: just run the MLP-500 on the op+context+type features
+$ make feature-cross  # this will take a few hours, and requires all feature sets
+# FASTER: just run the MLP-500 on the op+context+type+size features
 $ python learning/learn.py \
-    --data data/fa15/op+context+type:data/sp14/op+context+type \
-    --model=hidden-500 \
+    --data data/fa15/op+context+type+size:data/sp14/op+context+type+size \
+    --model=hidden --hidden_layers=500 \
     --learn_rate=0.001 --reg_rate=0.001 \
     --batch_size=200 --n_epochs=20 --n_folds=10 \
     --seed 0
@@ -275,9 +289,9 @@ if you like, or you can look at the summary csvs we produce in
 for the MLP-500 on the op+context+type feature set:
 
 ``` shellsession
-$ cat models/hidden-500-op+context+type.cross.csv
+$ cat models/hidden-500-op+context+type+size.cross.csv
 model,features,top-1,top-2,top-3,recall
-hidden-500,op+context+type,0.772,0.881,0.927,0.739
+hidden-500,op+context+type+size,0.768,0.883,0.931,0.737
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.
@@ -289,22 +303,31 @@ decision-tree classifier. We use the op+context+type feature set since
 we don't expect the expression size feature to produce a very intuitive
 explanation.
 
-For this we'll use the `learning/decisionpath.py` script to print out
+If you've been following the FASTER path, you may need to first extract
+the op+context+type feature set and train a decision tree with:
+
+``` shellsession
+$ python learning/trees.py decision-tree data/fa15/op+context+type data/sp14/op+context+type
+```
+
+
+Now, we'll use the `learning/decisionpath.py` script to print out
 the sequence of decisions made by the tree. When we train the
 decision-tree, we also store a copy of the trained model in
 `models/data-<quarter>-<features>.pkl`, so let's use the tree trained on
 the fa15 data with the op+context+type features to explain the first
 bogus prediction.
 
+
 ``` shellsession
-$ python learning/decisionpath.py models/data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
+$ python learning/decisionpath.py models/decision-tree-data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
 # This script prints out decision paths for each expression, but we're
 # only interested in the recursive call to `clone` here
 ...
 For span
 (3,42)-(3,47)
 with confidence
-0.368530020704
+0.369841269841
 our prediction is
 0.0
 should be
@@ -313,25 +336,22 @@ Rules used to predict sample 2:
 F-Is-Type-Fun : (= 1.0) > 0.5
 F-Is-App : (= 0.0) <= 0.5
 F-Is-Fun-C1 : (= 0.0) <= 0.5
-F-Is-Type-list-C1 : (= 0.0) <= 0.5
-F-Is-Type-Tuple-P : (= 0.0) <= 0.5
-F-Is-Type-float-P : (= 0.0) <= 0.5
-F-Is-Let-C1 : (= 0.0) <= 0.5
-F-Is-Case-P : (= 0.0) <= 0.5
-F-Is-Let-P : (= 0.0) <= 0.5
-F-Is-Type-Var-C1 : (= 0.0) <= 0.5
+F-Is-App-C1 : (= 0.0) <= 0.5
 F-Is-Fun-P : (= 0.0) <= 0.5
 F-Is-Type-Fun-P : (= 0.0) <= 0.5
+F-Is-App-P : (= 1.0) > 0.5
+F-Is-Type-Tuple-P : (= 0.0) <= 0.5
+F-Is-Type-float-P : (= 0.0) <= 0.5
+F-Is-Type-Tuple-C1 : (= 0.0) <= 0.5
 F-Is-Type-int-P : (= 0.0) <= 0.5
-F-Is-(,)-C1 : (= 0.0) <= 0.5
-F-Is-Type-bool-P : (= 0.0) <= 0.5
 F-Is-Type-expr-P : (= 0.0) <= 0.5
 F-Is-Type-unit-P : (= 0.0) <= 0.5
-F-Is-Type-Var-P : (= 0.0) <= 0.5
 F-Is-Type-char-P : (= 0.0) <= 0.5
-F-Is-App-P : (= 1.0) > 0.5
+F-Is-Type-bool-P : (= 0.0) <= 0.5
 F-Is-Type-string-P : (= 0.0) <= 0.5
-leaf node 2899 reached, no decision here
+F-Is-Type-Fun-C1 : (= 0.0) <= 0.5
+F-Is-Type-list-P : (= 1.0) > 0.5
+leaf node 2821 reached, no decision here
 ...
 ```
 
@@ -354,8 +374,19 @@ or less than the threshold (in our case with binary features, always
 0.5). For example, the first line says that the `F-Is-Type-Fun` feature
 (i.e. the type of this expression mentions the `->` type constructor) is
 1 (i.e. true), which is greater than the threshold. Continuing on, we
-can see that the only enabled features are `F-Is-Type-Fun` and
-`F-Is-App-P` (the parent expression is an application).
+can see that the only enabled features are `F-Is-Type-Fun`,
+`F-Is-App-P` (the parent expression is an application), and
+`F-Is-Type-list-P` (the type of the parent expression mentions `list`).
+
+There should also now be a visualization of the entire tree in
+`models/decision-tree-data-fa15-op+context+type.pkl.pdf`. Each node in
+the tree lists a decision as above, and is shaded either blue
+(indicating the classifier is leaning towards **blame**) or orange
+(indicating it's leaning towards **no-blame**). Deeper shades indicate
+higher confidence. When the condition of a node is true, the tree will
+descend into the left child. Note that all of the conditions have the
+form `<feature> <= 0.5`, so taking the left path means the feature
+was disabled, the right path means the feature was enabled.
 
 
 ## Extending / Reusing

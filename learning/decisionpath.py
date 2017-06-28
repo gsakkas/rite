@@ -11,7 +11,7 @@ import pandas as pd
 
 # import plotly.plotly as py
 # import plotly.graph_objs as go
-# import pydotplus
+import pydotplus
 # from IPython.display import Image
 
 import sys
@@ -37,16 +37,16 @@ estimator = joblib.load(model)
 
 
 # # -----PLOTTING
-# dot_data = tree.export_graphviz(estimator, out_file=None,
-# 	feature_names=feature_names, 
-# 	filled=True, 
-# 	rounded=True) 
-# graph = pydotplus.graph_from_dot_data(dot_data) 
-# graph.write_png('mytree2.png')
+dot_data = tree.export_graphviz(estimator, out_file=None,
+	feature_names=feature_names,
+	filled=True,
+	rounded=True)
+graph = pydotplus.graph_from_dot_data(dot_data)
+# graph.write_png(model+'.png')
 # ---------
 
 # graph.render(filename='img/g1')
-# graph.write_pdf("smallfa15.pdf") 
+graph.write_pdf(model+".pdf")
 # --------------
 
 X_test = test_samps.values
