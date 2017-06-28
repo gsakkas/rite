@@ -2,11 +2,19 @@
 
 ## Getting Started
 
-Let's quickly walk through setting up a development environment. If you
-don't mind using a VM and things being a bit slower, we've [provided]
-one for you, the user and password are both "nate". The VM should
-already have everything you need installed, though you'll still need to
-activate the python virtualenv below.
+Let's quickly walk through setting up a development environment.
+
+If you don't mind using a VM and things being a bit slower, we've
+[provided] one for you, the user and password are both "nate". The VM
+should already have everything you need installed, and will boot with a
+terminal open in the repository. You just need to activate the python
+virtualenv with
+
+``` shellsession
+~/nate $ source .venv/bin/activate
+```
+
+and then you should be able to skip to "Reproducing the evaluation".
 
 [provided]: https://www.dropbox.com/s/b8a7nfwi8loiwvp/nate-artifact.ova?dl=0
 
@@ -14,17 +22,31 @@ activate the python virtualenv below.
 
 Make sure you clone with `--recursive` as we have a few submodules.
 
+``` shellsession
+~ $ git clone --recursive https://github.com/ucsd-progsys/nate.git
+~ $ cd nate
+```
+
 ### Building
 
 This project uses Haskell for feature extraction and Python for
 learning/executing the models.
+
+There are also some required libraries and tools that won't be installed
+automatically: ncurses, graphviz, BLAS, Tk, and Java/Ant (if you want to
+run the SHErrLoc comparison). If you're on Ubuntu, the following command
+should suffice.
+
+``` shellsession
+$ sudo apt-get insall ncurses-dev graphviz libopenblas-dev python-tk openjdk-8-jdk ant
+```
 
 We recommend building the Haskell components using the [stack] tool.
 
 [stack]: https://docs.haskellstack.org/en/stable/README/
 
 ``` shellsession
-$ stack setup && stack build
+~/nate $ stack setup && stack build
 ```
 
 For python we recommend using [virtualenv].
@@ -32,9 +54,9 @@ For python we recommend using [virtualenv].
 [virtualenv]: https://virtualenv.pypa.io/en/stable/
 
 ``` shellsession
-$ virtualenv .venv
-$ source .venv/bin/activate
-$ pip install -r requirements.txt
+~/nate $ virtualenv .venv
+~/nate $ source .venv/bin/activate
+~/nate $ pip install -r requirements.txt
 ```
 
 ### Testing
@@ -51,14 +73,14 @@ checking, so it will sometimes abort with a type error before discovering
 an unbound variable.
 
 ``` shellsession
-$ stack exec -- generate-features \
-    --source features/data/ucsd/data/derived/sp14/pairs.json \
-    --features op \
-    --out data/sp14
-$ stack exec -- generate-features \
-    --source features/data/ucsd/data/derived/fa15/pairs.json \
-    --features op \
-    --out data/fa15
+~/nate $ stack exec -- generate-features \
+           --source features/data/ucsd/data/derived/sp14/pairs.json \
+           --features op \
+           --out data/sp14
+~/nate $ stack exec -- generate-features \
+           --source features/data/ucsd/data/derived/fa15/pairs.json \
+           --features op \
+           --out data/fa15
 ```
 
 The result will be a set of `.ml` files in the `data/{sp14,fa15}`
@@ -72,10 +94,10 @@ matter here since we're just trying to make sure everything was built
 properly.
 
 ``` shellsession
-$ python learning/learn.py \
-    --data=data/sp14/op --test_data=data/fa15/op \
-    --model=linear --learn_rate=0.01 --reg_rate=0.01 \
-    --batch_size=200 --n_epochs=10 --seed=0
+~/nate $ python learning/learn.py \
+           --data=data/sp14/op --test_data=data/fa15/op \
+           --model=linear --learn_rate=0.01 --reg_rate=0.01 \
+           --batch_size=200 --n_epochs=10 --seed=0
 training complete in 5.48 seconds
 final accuracy: 0.492 / 0.663 / 0.782
 avg/std recall: 0.532 / 0.388
@@ -88,7 +110,7 @@ testing complete in 430.08 seconds
 And for good measure let's try a decision tree too.
 
 ``` shellsession
-$ python learning/trees.py decision-tree data/sp14/op data/fa15/op
+~/nate $ python learning/trees.py decision-tree data/sp14/op data/fa15/op
 (40938, 49)
 (40938, 45)
 precision for top 3
@@ -134,9 +156,9 @@ This will take a while depending on how many cores you have, so you might
 want to go grab a cup of coffee.
 
 ``` shellsession
-$ make -j20 csvs
+~/nate $ make -j20 csvs
 # FASTER: just the full feature set
-$ make -j2 sp14-op+context+type+size-csvs fa15-op+context+type+size-csvs
+~/nate $ make -j2 sp14-op+context+type+size-csvs fa15-op+context+type+size-csvs
 ```
 
 ### Comparing Blame Accuracy (Sec. 4.2)
@@ -149,9 +171,9 @@ while, so if you're in a hurry or on a low-powered machine try the
 FASTER command.
 
 ``` shellsession
-$ make -j5 linear tree hidden
+~/nate $ make -j5 linear tree hidden
 # FASTER: just the MLP-500 with the op+context+type features
-$ make op+context+type+size-hidden-500
+~/nate $ make op+context+type+size-hidden-500
 ```
 
 Running `make -j` will garble the results printed to stdout, but we also
@@ -165,9 +187,9 @@ dataset, we would look at the files in
 We can compute the top-k accuracy summaries with the `results` target.
 
 ``` shellsession
-$ make -j5 results
+~/nate $ make -j5 results
 # FASTER: just the MLP-500
-$ make op+context+type+size-hidden-500-results
+~/nate $ make op+context+type+size-hidden-500-results
 ```
 
 This will produce a `results.csv` file in the same directory as the
@@ -175,10 +197,10 @@ This will produce a `results.csv` file in the same directory as the
 MLP-500 on the op+context+type features.
 
 ``` shellsession
-$ cat data/sp14/op+context+type+size/hidden-500/results.csv
+~/nate $ cat data/sp14/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
 op+context+type+size/hidden-500,sp14,op+context+type+size,hidden-500,0.736,0.864,0.915,0.720,2712
-$ cat data/fa15/op+context+type+size/hidden-500/results.csv
+~/nate $ cat data/fa15/op+context+type+size/hidden-500/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
 op+context+type+size/hidden-500,fa15,op+context+type+size,hidden-500,0.701,0.841,0.907,0.696,2365
 ```
@@ -198,26 +220,26 @@ copy if you wish to rerun the Mycroft benchmarks.
 ##### Building OCaml
 
 ``` shellsession
-$ cd eval/ocaml
-$ ./configure -prefix $(pwd)/../build
-$ make world world.opt
+~/nate $ cd eval/ocaml
+~/nate/eval/ocaml $ ./configure -prefix $(pwd)/../build
+~/nate/eval/ocaml $ make world world.opt
 # NOTE: at the moment, ocaml's `make install` seems to 
 # get stuck in an infinite recursion, just hit Ctrl-C
 # after a few seconds and it should be fine.. Sorry!
-$ make install
+~/nate/eval/ocaml $ make install
 ```
 
 ##### Building Sherrloc
 
 ``` shellsession
 # first we have to build sherrloc's version of easyocaml
-$ cd eval/sherrloc/easyocaml++
-$ ./configure -prefix $(pwd)/../../build/eocaml
-$ ./build/smallworld.sh
-$ ./build/install.sh
+~/nate $ cd eval/sherrloc/easyocaml++
+~/nate/eval/sherrloc/easyocaml++ $ ./configure -prefix $(pwd)/../../build/eocaml
+~/nate/eval/sherrloc/easyocaml++$ ./build/smallworld.sh
+~/nate/eval/sherrloc/easyocaml++$ ./build/install.sh
 # now we can build sherrloc itself
-$ cd ..
-$ ant
+~/eval/sherrloc/easyocaml++ $ cd ..
+~/eval/sherrloc $ ant
 ```
 
 ##### Gathering state-of-the-art predictions
@@ -228,9 +250,9 @@ on some programs, so you may want to use our cached predictions instead
 of reproducing them yourself.
 
 ``` shellsession
-$ make -j6 ocaml sherrloc # mycroft
+~/nate $ make -j6 ocaml sherrloc # mycroft
 # FASTER: just ocaml
-$ make -j2 ocaml
+~/nate $ make -j2 ocaml
 # EVEN FASTER: use our cached predictions
 ```
 
@@ -239,19 +261,19 @@ The predictions are stored as above, in
 a `make` target to compute the accuracy summaries.
 
 ``` shellsession
-$ make -j6 ocaml-results sherrloc-results # mycroft-results
+~/nate $ make -j6 ocaml-results sherrloc-results # mycroft-results
 # FASTER: just ocaml
-$ make ocaml-sp14-results ocaml-fa15-results
+~/nate $ make ocaml-sp14-results ocaml-fa15-results
 # EVEN FASTER: use the cached results
 ```
 
 As before, you should now see `results.csv` files.
 
 ``` shellsession
-$ cat data/sp14/ocaml/results.csv
+~/nate $ cat data/sp14/ocaml/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
 ocaml,sp14,.,ocaml,0.448,0.448,0.448,0.227,2652
-$ cat data/fa15/ocaml/results.csv
+~/nate $ cat data/fa15/ocaml/results.csv
 tool,year,features,model,top-1,top-2,top-3,recall,total
 ocaml,fa15,.,ocaml,0.435,0.435,0.435,0.219,2328
 ```
@@ -260,7 +282,7 @@ The actual bar graphs in the paper are produced by LaTeX, to rebuild
 them after running the benchmarks:
 
 ``` shellsession
-$ cd paper/oopsla17-submission && latexmk -pdf main
+~/nate $ cd paper/oopsla17-submission && latexmk -pdf main
 ```
 
 
@@ -273,14 +295,14 @@ sets and models to test, and each combination does a 10-fold
 cross-validation.
 
 ``` shellsession
-$ make feature-cross  # this will take a few hours, and requires all feature sets
+~/nate $ make feature-cross  # this will take a few hours, and requires all feature sets
 # FASTER: just run the MLP-500 on the op+context+type+size features
-$ python learning/learn.py \
-    --data data/fa15/op+context+type+size:data/sp14/op+context+type+size \
-    --model=hidden --hidden_layers=500 \
-    --learn_rate=0.001 --reg_rate=0.001 \
-    --batch_size=200 --n_epochs=20 --n_folds=10 \
-    --seed 0
+~/nate $ python learning/learn.py \
+           --data data/fa15/op+context+type+size:data/sp14/op+context+type+size \
+           --model=hidden --hidden_layers=500 \
+           --learn_rate=0.001 --reg_rate=0.001 \
+           --batch_size=200 --n_epochs=20 --n_folds=10 \
+           --seed 0
 ```
 
 There's no interleaving of output here, so you can scroll through the log
@@ -289,7 +311,7 @@ if you like, or you can look at the summary csvs we produce in
 for the MLP-500 on the op+context+type feature set:
 
 ``` shellsession
-$ cat models/hidden-500-op+context+type+size.cross.csv
+~/nate $ cat models/hidden-500-op+context+type+size.cross.csv
 model,features,top-1,top-2,top-3,recall
 hidden-500,op+context+type+size,0.773,0.883,0.929,0.737
 ```
@@ -307,7 +329,7 @@ If you've been following the FASTER path, you may need to first extract
 the op+context+type feature set and train a decision tree with:
 
 ``` shellsession
-$ python learning/trees.py decision-tree data/fa15/op+context+type data/sp14/op+context+type
+~/nate $ python learning/trees.py decision-tree data/fa15/op+context+type data/sp14/op+context+type
 ```
 
 
@@ -320,7 +342,7 @@ bogus prediction.
 
 
 ``` shellsession
-$ python learning/decisionpath.py models/decision-tree-data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
+~/nate $ python learning/decisionpath.py models/decision-tree-data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
 # This script prints out decision paths for each expression, but we're
 # only interested in the recursive call to `clone` here
 ...
@@ -412,10 +434,10 @@ program.
 Once you have the `pairs.json` file, run
 
 ``` shellsession
-$ stack exec -- generate-features \
-    --source path/to/pairs.json \
-    --features <features> \
-    --out path/to/csvs
+~/nate $ stack exec -- generate-features \
+           --source path/to/pairs.json \
+           --features <features> \
+           --out path/to/csvs
 ```
 
 with a suitable choice of `features`, based on our experiments
@@ -429,13 +451,13 @@ since they give the best results.
 
 
 ``` shellsession
-$ python learning/learn.py \
-    --data=data/sp14/op+context+type:data/fa15/op+context+type \
-    --test_data=path/to/csvs \
-    --model=hidden --hidden_layers=500 \
-    --learn_rate=0.001 --reg_rate=0.001 \
-    --batch_size=200 --n_epochs=20 \
-    --seed 0
+~/nate $ python learning/learn.py \
+           --data=data/sp14/op+context+type:data/fa15/op+context+type \
+           --test_data=path/to/csvs \
+           --model=hidden --hidden_layers=500 \
+           --learn_rate=0.001 --reg_rate=0.001 \
+           --batch_size=200 --n_epochs=20 \
+           --seed 0
 ```
 
 The `learn_rate`, `reg_rate`, `batch_size`, and `n_epochs` are learning
@@ -487,10 +509,10 @@ feature set with local syntax and your new feature, you might add:
 Then, recompile and extract the features:
 
 ``` shellsession
-$ stack build && stack exec -- generate-features \
-    --source path/to/pairs.json \
-    --features op+myfeature \
-    --out path/to/csvs
+~/nate $ stack build && stack exec -- generate-features \
+           --source path/to/pairs.json \
+           --features op+myfeature \
+           --out path/to/csvs
 ```
 
 ### New models
@@ -504,8 +526,8 @@ have. For example, if we wanted to train an MLP with an initial hidden
 layer of 250 units and a second layer of 500 units, we would call
 
 ``` shellsession
-$ python learning/learn.py \
-    --model=hidden --hidden_layers=250-500 # ...
+~/nate $ python learning/learn.py \
+           --model=hidden --hidden_layers=250-500 # ...
 ```
 
 You may also want to experiment with different settings for the learning
