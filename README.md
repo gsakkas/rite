@@ -172,7 +172,7 @@ FASTER command.
 
 ``` shellsession
 ~/nate $ make -j5 linear tree hidden
-# FASTER: just the MLP-500 with the op+context+type features
+# FASTER: just the MLP-500 with the op+context+type+size features
 ~/nate $ make op+context+type+size-hidden-500
 ```
 
