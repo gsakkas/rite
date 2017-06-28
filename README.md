@@ -291,7 +291,7 @@ for the MLP-500 on the op+context+type feature set:
 ``` shellsession
 $ cat models/hidden-500-op+context+type+size.cross.csv
 model,features,top-1,top-2,top-3,recall
-hidden-500,op+context+type+size,0.768,0.883,0.931,0.737
+hidden-500,op+context+type+size,0.773,0.883,0.929,0.737
 ```
 
 As before, the bar graphs in the paper are produced directly by LaTeX.
