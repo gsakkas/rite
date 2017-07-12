@@ -57,8 +57,8 @@ preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
 -- preds_tis_cons = map (first (take 1) . second (fmap (fmap (take 1))))
 --             preds_tis_ctx_cons
 
-preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
-preds_tis_novar = init preds_tis
+-- preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
+-- preds_tis_novar = init preds_tis
 
 -- preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
 -- preds_tis_ctx
@@ -213,8 +213,8 @@ preds_tcon_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tcon_children = map (first (drop 2) . second (fmap (fmap (drop 2))))
                       preds_tcon_ctx
 
-preds_tcon_novar_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
-preds_tcon_novar_children = init preds_tcon_children
+-- preds_tcon_novar_children :: [Feature] -- [TExpr -> TExpr -> [Double]]
+-- preds_tcon_novar_children = init preds_tcon_children
 
 
 preds_tcon_agg :: [TExpr -> Double]
