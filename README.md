@@ -38,7 +38,7 @@ run the SHErrLoc comparison). If you're on Ubuntu, the following command
 should suffice.
 
 ``` shellsession
-$ sudo apt-get insall ncurses-dev graphviz libopenblas-dev python-tk openjdk-8-jdk ant
+$ sudo apt-get install ncurses-dev graphviz libopenblas-dev python-tk openjdk-8-jdk ant
 ```
 
 We recommend building the Haskell components using the [stack] tool.
