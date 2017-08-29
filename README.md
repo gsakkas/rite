@@ -256,6 +256,20 @@ of reproducing them yourself.
 # EVEN FASTER: use our cached predictions
 ```
 
+NOTE: As mentioned in the paper, there are a number of programs that
+SHErrLoc was unable to check due to unsupported language features or
+exceeding its 1GB heap limit. These will present in the logs as errors
+of the form:
+
+```
+This feature is not supported by EasyOcaml
+eval/bin/ecamlc: line 14: error.con: No such file or directory
+
+OR
+
+OutOfMemoryError
+```
+
 The predictions are stored as above, in
 `data/{sp14,fa15}/<tool>/<program>.ml.out` files. As before, we provide
 a `make` target to compute the accuracy summaries.
@@ -266,6 +280,22 @@ a `make` target to compute the accuracy summaries.
 ~/nate $ make ocaml-sp14-results ocaml-fa15-results
 # EVEN FASTER: use the cached results
 ```
+
+NOTE: As mentioned in the paper, there are a number of programs for
+which SHErrLoc and OCaml either did not produce any blame locations
+(perhaps due to a timeout), or our scripts could not match one of their
+blame locations with program locations as we see them (basically,
+off-by-one errors in comparing source spans). In these cases, you will
+see warnings of the form:
+
+```
+WARN: no blamed spans
+
+OR
+
+WARN: blamed spans not subset of all spans
+```
+
 
 As before, you should now see `results.csv` files.
 
