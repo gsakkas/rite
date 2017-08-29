@@ -29,7 +29,7 @@ Make sure you clone with `--recursive` as we have a few submodules.
 
 ### Building
 
-This project uses Haskell for feature extraction and Python for
+This project uses Haskell for feature extraction and Python (2.7) for
 learning/executing the models.
 
 There are also some required libraries and tools that won't be installed
