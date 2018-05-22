@@ -31,16 +31,51 @@ import NanoML.Pretty
 
 import Debug.Trace
 
+data Tool = Nanomaly | Nate
+
+toolTitle Nanomaly = "NanoMaLy"
+toolTitle Nate     = "NanoMaLy + Nate"
+
+toolJS Nanomaly = "/nanoml.js"
+toolJS Nate     = "/nanoml-nate.js"
+
 main = do
  log <- mkRequestLogger def { outputFormat = Detailed False }
  (net, features) <- stdNet
  scotty 8091 $ do
   middleware log
-  get "/" $ do
+  get "/" $ home Nanomaly
+  get "/nate" $ home Nate
+
+  get "/zepto.min.js"  $ file "bin/dist/zepto.min.js"
+  get "/vis.css" $ file "bin/dist/vis.css"
+  get "/vis.js"  $ file "bin/dist/vis.js"
+  get "/codemirror-min.js"  $ file "bin/dist/codemirror-min.js"
+  get "/panel.js"  $ file "bin/dist/panel.js"
+  get "/codemirror.css"  $ file "bin/dist/codemirror.css"
+  get "/dialog.css" $ file "bin/dist/dialog.css"
+  get "/lint.css" $ file "bin/dist/lint.css"
+  get "/nanoml.css"  $ file "bin/nanoml.css"
+  get "/nanoml.js"  $ file "bin/nanoml.js"
+  get "/nanoml-nate.js"  $ file "bin/nanoml-nate.js"
+
+  post "/check" $ do
+    prog <- param "prog"
+    var  <- param "var" <|> return ""
+    -- liftIO $ print (var, prog)
+    let p = fromRight (parseTopForm prog)
+    case parseTopForm prog of
+      Right p -> json =<< run p var net features
+      Left  e -> json $ object [ "result" .= ("parse-error" :: String)
+                               , "error"  .= e
+                               ]
+
+
+home tool = do
     prog <- lookup "prog" <$> params
     html . renderText . doctypehtml_ $ do
       head_ $ do
-        title_ "NanoMaLy"
+        title_ (toolTitle tool)
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css", rel_ "stylesheet", type_ "text/css" ]
         script_ [ src_ "//code.jquery.com/jquery-2.1.4.min.js", type_ "text/javascript" ] ("" :: Text)
@@ -54,13 +89,13 @@ main = do
         link_ [ href_ "/dialog.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/lint.css", rel_ "stylesheet", type_ "text/css" ]
         link_ [ href_ "/nanoml.css", rel_ "stylesheet", type_ "text/css" ]
-        script_ [ src_ "/nanoml.js", type_ "text/javascript" ] ("" :: Text)
+        script_ [ src_ (toolJS tool), type_ "text/javascript" ] ("" :: Text)
 
       body_ [class_ "container-fluid", onload_ "setup()"] $ do
         nav_ [class_ "navbar navbar-default"] $ do
           div_ [class_ "container-fluid"] $ do
             div_ [class_ "navbar-header"] $ do
-              a_ [class_ "navbar-brand", href_ "#"] "NanoMaLy"
+              a_ [class_ "navbar-brand", href_ "#"] (toolTitle tool)
             ul_ [class_ "nav navbar-nav"] $ do
               li_ [class_ "dropdown"] $ do
                 button_ [ class_ "btn btn-default navbar-btn dropdown-toggle"
@@ -131,30 +166,6 @@ main = do
               "Your program contains a type error!"
             div_ [ id_ "vis", class_ "mybody", style_ "border: 1px solid lightgray;"
                  ] ""
-
-  get "/zepto.min.js"  $ file "bin/dist/zepto.min.js"
-  get "/vis.css" $ file "bin/dist/vis.css"
-  get "/vis.js"  $ file "bin/dist/vis.js"
-  get "/codemirror-min.js"  $ file "bin/dist/codemirror-min.js"
-  get "/panel.js"  $ file "bin/dist/panel.js"
-  get "/codemirror.css"  $ file "bin/dist/codemirror.css"
-  get "/dialog.css" $ file "bin/dist/dialog.css"
-  get "/lint.css" $ file "bin/dist/lint.css"
-  get "/nanoml.css"  $ file "bin/nanoml.css"
-  get "/nanoml.js"  $ file "bin/nanoml.js"
-
-  post "/check" $ do
-    prog <- param "prog"
-    var  <- param "var" <|> return ""
-    -- liftIO $ print (var, prog)
-    let p = fromRight (parseTopForm prog)
-    case parseTopForm prog of
-      Right p -> json =<< run p var net features
-      Left  e -> json $ object [ "result" .= ("parse-error" :: String)
-                               , "error"  .= e
-                               ]
-
-
 
 run p var net features = do
     -- liftIO $ print (prettyProg p)

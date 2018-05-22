@@ -609,55 +609,55 @@ function setup() {
           // console.log(stuckNode);
           if (data.blame !== undefined) {
             errors = [];
-            // var maxConfidence = data.blame[0].confidence;
-            // data.blame.map(function(b, i) {
-            //     var node = document.createElement('div');
-            //     node.className = "panel bottom";
-            //     var label = node.appendChild(document.createElement('span'));
-            //     label.innerHTML = '' + b.srcSpan.startLine + ':' + b.srcSpan.startCol +
-            //                         ': confidence = ' + Math.round(100*b.confidence) + '%<br/>' + b.message.replace('\n', '<br/>');
-            //     var panel = editor.addPanel(node, {position:'bottom', stable:true});
-            //     panels.push(panel);
-            //     var marker;
-            //     node.onmouseover = function() {
-            //         // console.log('hello!!');
-            //         marker = editor.markText(
-            //             { line: b.srcSpan.startLine - 1,
-            //               ch: b.srcSpan.startCol },
-            //             { line: b.srcSpan.endLine - 1,
-            //               ch: b.srcSpan.endCol },
-            //             { className: 'blame-' + (i+1)
-            //             }
-            //         );
-            //     };
-            //     node.onmouseout = function() {
-            //         // console.log('bye!!');
-            //         marker.clear();
-            //         // CLEAR
-            //         // editor.markText(
-            //         //     { line: b.srcSpan.startLine - 1,
-            //         //       ch: b.srcSpan.startCol },
-            //         //     { line: b.srcSpan.endLine - 1,
-            //         //       ch: b.srcSpan.endCol },
-            //         //     { className: 'blame-' + (i+1)
-            //         //     }
-            //         // );
-            //     };
-            //     //if (maxConfidence - b.condfidence > 0.3) return;
-            //     // var text = document.createTextNode("blamed");
-            //     // var widget = document.createElement("span");
-            //     // widget.appendChild(text);
-            //     // widget.className = 'blame-' + (i+1);
-            //     // editor.markText(
-            //     //     { line: b.srcSpan.startLine - 1,
-            //     //       ch: b.srcSpan.startCol },
-            //     //     { line: b.srcSpan.endLine - 1,
-            //     //       ch: b.srcSpan.endCol },
-            //     //     { className: 'blame-' + (i+1)
-            //     //       // replacedWith: widget
-            //     //     }
-            //     // );
-            // });
+            var maxConfidence = data.blame[0].confidence;
+            data.blame.map(function(b, i) {
+                var node = document.createElement('div');
+                node.className = "panel bottom";
+                var label = node.appendChild(document.createElement('span'));
+                label.innerHTML = '' + b.srcSpan.startLine + ':' + b.srcSpan.startCol +
+                                    ': confidence = ' + Math.round(100*b.confidence) + '%<br/>' + b.message.replace('\n', '<br/>');
+                var panel = editor.addPanel(node, {position:'bottom', stable:true});
+                panels.push(panel);
+                var marker;
+                node.onmouseover = function() {
+                    // console.log('hello!!');
+                    marker = editor.markText(
+                        { line: b.srcSpan.startLine - 1,
+                          ch: b.srcSpan.startCol },
+                        { line: b.srcSpan.endLine - 1,
+                          ch: b.srcSpan.endCol },
+                        { className: 'blame-' + (i+1)
+                        }
+                    );
+                };
+                node.onmouseout = function() {
+                    // console.log('bye!!');
+                    marker.clear();
+                    // CLEAR
+                    // editor.markText(
+                    //     { line: b.srcSpan.startLine - 1,
+                    //       ch: b.srcSpan.startCol },
+                    //     { line: b.srcSpan.endLine - 1,
+                    //       ch: b.srcSpan.endCol },
+                    //     { className: 'blame-' + (i+1)
+                    //     }
+                    // );
+                };
+                //if (maxConfidence - b.condfidence > 0.3) return;
+                // var text = document.createTextNode("blamed");
+                // var widget = document.createElement("span");
+                // widget.appendChild(text);
+                // widget.className = 'blame-' + (i+1);
+                // editor.markText(
+                //     { line: b.srcSpan.startLine - 1,
+                //       ch: b.srcSpan.startCol },
+                //     { line: b.srcSpan.endLine - 1,
+                //       ch: b.srcSpan.endCol },
+                //     { className: 'blame-' + (i+1)
+                //       // replacedWith: widget
+                //     }
+                // );
+            });
           } else {
             errors = [];
           }
