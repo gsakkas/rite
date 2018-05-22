@@ -603,6 +603,12 @@ function setup() {
                                      "program": prog, "function": func, "uuid": uuid });
 
           // notifyUnsafe(data.reason);
+          var node = document.createElement('div');
+          node.className = "panel bottom";
+          var label = node.appendChild(document.createElement('span'));
+          label.innerText = data.reason;
+          var panel = editor.addPanel(node, {position:'bottom', stable:true});
+          panels.push(panel);
           var stuckNode = data.nodes.filter(function(n) {
               return n.id === data.bad;
           })[0];
