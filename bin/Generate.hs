@@ -97,6 +97,11 @@ main = do
     --   -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     -- "type-inference+vars"
     --   -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
+    "spans+exps"
+      -> mkSpansWithExprs JustSlice out cls (preds_tis) jsons
+    "spans+trees"
+      -> mkSpansWithTrees JustSlice out cls (preds_tis) jsons
+
 
 data WithSlice = JustSlice | All deriving Eq
 
@@ -160,6 +165,109 @@ mkBadFeaturesWithSlice withSlice out nm fs jsons = do
     -- LBSC.writeFile path $ encodeByName (head header) (concat features)
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
 
+
+-- George
+mkSpansWithExprs :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
+mkSpansWithExprs withSlice out nm fs jsons = do
+  let uniqs = concatMap mkDiffsWithExprs jsons
+  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
+              | (ss', p, bad, fix, idx) <- uniqs
+              , let ss = fst $ unzip ss'
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
+              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
+                                    (concatMap allSubExprs $ progExprs p)
+              ]
+  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
+  let mkMean f xs = sum (map f xs) / genericLength xs
+  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
+  let mean = mkMean mkFrac feats' :: Double
+  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
+  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss' = fst $ unzip ss
+    let ss_expr = map (\(fi, se) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n") ss
+    if
+      | mkFrac f > mean+std -> do
+          printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+      | null cs -> do
+        putStrLn "NO CORE"
+        putStrLn bad
+      | length (nub cs) == 1 -> do
+        putStrLn "SINGLE CONSTRAINT CORE"
+        putStrLn bad
+        print (head cs)
+      | null ss' -> do
+        putStrLn "NO DIFF"
+        putStrLn bad
+        putStrLn "---------------------------"
+        putStrLn fix
+      | null (intersect ss' cs) -> do
+        putStrLn "NO OVERLAP CORE/DIFF"
+        putStrLn bad
+        print cs
+        putStrLn fix
+      | otherwise -> do
+        let fn = printf "%04d" (i :: Int)
+        let path = out </> nm </> fn <.> "csv"
+        createDirectoryIfMissing True (takeDirectory path)
+        LBSC.writeFile path $ encodeByName header features
+        let path = out </> fn <.> "ml"
+        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+
+
+-- George
+mkSpansWithTrees :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
+mkSpansWithTrees withSlice out nm fs jsons = do
+  let uniqs = concatMap mkDiffsWithGenericTrs jsons
+  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
+              | (ss', p, bad, fix, idx) <- uniqs
+              , let ss = fst $ unzip ss'
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
+              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
+                                    (concatMap allSubExprs $ progExprs p)
+              ]
+  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
+  let mkMean f xs = sum (map f xs) / genericLength xs
+  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
+  let mean = mkMean mkFrac feats' :: Double
+  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
+  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss' = fst $ unzip ss
+    let ss_expr = map (\(fi, se) -> (show fi) ++ "\n" ++ (show se) ++ "\n") ss
+    if
+      | mkFrac f > mean+std -> do
+          printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+      | null cs -> do
+        putStrLn "NO CORE"
+        putStrLn bad
+      | length (nub cs) == 1 -> do
+        putStrLn "SINGLE CONSTRAINT CORE"
+        putStrLn bad
+        print (head cs)
+      | null ss' -> do
+        putStrLn "NO DIFF"
+        putStrLn bad
+        putStrLn "---------------------------"
+        putStrLn fix
+      | null (intersect ss' cs) -> do
+        putStrLn "NO OVERLAP CORE/DIFF"
+        putStrLn bad
+        print cs
+        putStrLn fix
+      | otherwise -> do
+        let fn = printf "%04d" (i :: Int)
+        let path = out </> nm </> fn <.> "csv"
+        createDirectoryIfMissing True (takeDirectory path)
+        LBSC.writeFile path $ encodeByName header features
+        let path = out </> fn <.> "ml"
+        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+
+
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
 mkFixFeatures nm fs jsons = do
   let fixes = concatMap mkFixes jsons
@@ -217,25 +325,51 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   -- _ -> mempty
   v -> error (show v)
 
-mkProgs :: String -> Either String (Prog, Prog)
-mkProgs json = case eitherDecode (LBSC.pack json) of
-  Left e -> {-trace e-} Left "bad json"
+-- George
+mkDiffsWithExprs :: String -> [([(SrcSpan, Expr)], Prog, String, String, Int)]
+mkDiffsWithExprs json = case eitherDecode (LBSC.pack json) of
+  Left e -> mempty
   Right (MkInSample bad' fix' _)
     | Left e <- parseTopForm fix'
-    -> {-trace e-} Left "fix no parse"
+    -> mempty
   Right (MkInSample bad' fix' _)
     | Left e <- parseTopForm bad'
-    -> {-trace e-} Left "bad no parse"
+    -> mempty
   Right (MkInSample bad' fix' _)
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
     , concatMap getDecld bad /= nub (concatMap getDecld bad)
-    -> -- traceShow (concatMap getDecld bad)
-       Left "repeat decl"
+    -> mempty
+  Right (MkInSample bad' fix' idx)
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    , let ss = mkDiffWithExprs bad fix
+    -> [(ss, bad, bad', fix', idx)]
+  v -> error (show v)
+
+
+-- George
+mkDiffsWithGenericTrs :: String -> [([(SrcSpan, ExprGeneric)], Prog, String, String, Int)]
+mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
+  Left e -> mempty
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm fix'
+    -> mempty
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm bad'
+    -> mempty
   Right (MkInSample bad' fix' _)
     | Right fix <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
-    -> Right (bad, fix) -- [(ss, bad, bad', fix')]
+    , concatMap getDecld bad /= nub (concatMap getDecld bad)
+    -> mempty
+  Right (MkInSample bad' fix' idx)
+    | Right fix <- parseTopForm fix'
+    , Right bad <- parseTopForm bad'
+    , let ss = mkDiffWithGenericTrs bad fix
+    -> [(ss, bad, bad', fix', idx)]
+  v -> error (show v)
+
 
 mkFixes :: String -> [Prog]
 mkFixes json = case eitherDecode (LBSC.pack json) of
@@ -257,15 +391,31 @@ mkFixes json = case eitherDecode (LBSC.pack json) of
 
 mkDiff'' :: Prog -> Prog -> [SrcSpan]
 mkDiff'' bad fix
-  --- | null x
+  -- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
-  | otherwise
+  -- | otherwise
   = assert (not (null x)) $ x
   where
   -- x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
   x = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
   bs = progExprs bad
   fs = progExprs fix
+
+-- George
+mkDiffWithExprs :: Prog -> Prog -> [(SrcSpan, Expr)]
+mkDiffWithExprs bad fix = assert (not (null x)) $ x
+  where
+    x = Set.toList (diffSpansAndExprs (getDiff $ diffExprsT bs fs) bs)
+    bs = progExprs bad
+    fs = progExprs fix
+
+-- George
+mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, ExprGeneric)]
+mkDiffWithGenericTrs bad fix = assert (not (null x)) $ x
+  where
+    x = Set.toList (diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs)
+    bs = progExprs bad
+    fs = progExprs fix
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)

@@ -977,6 +977,39 @@ instance ToJSON Expr where
     addLoc = (:) ("loc" .= getSrcSpanExprMaybe e')
 
 
+-- George
+data ExprGeneric
+  = VarG !MSrcSpan
+  | LamG !MSrcSpan !ExprGeneric (Maybe Env)
+  | AppG !MSrcSpan !ExprGeneric [ExprGeneric]
+  | BopG !MSrcSpan !ExprGeneric !ExprGeneric
+  | UopG !MSrcSpan !ExprGeneric
+  | LitG !MSrcSpan
+  | LetG !MSrcSpan !RecFlag [ExprGeneric] !ExprGeneric
+  | IteG !MSrcSpan !ExprGeneric !ExprGeneric !ExprGeneric
+  | SeqG !MSrcSpan !ExprGeneric !ExprGeneric
+  | CaseG !MSrcSpan !ExprGeneric [(Maybe ExprGeneric, ExprGeneric)]
+  | TupleG !MSrcSpan [ExprGeneric]
+  | ConAppG !MSrcSpan (Maybe ExprGeneric) (Maybe Type)
+  | RecordG !MSrcSpan [(String, ExprGeneric)] (Maybe Type)
+  | FieldG !MSrcSpan !ExprGeneric !String
+  | SetFieldG !MSrcSpan !ExprGeneric !String !ExprGeneric
+  | ArrayG !MSrcSpan [ExprGeneric] (Maybe Type)
+  | ListG !MSrcSpan [ExprGeneric] (Maybe Type)
+  | TryG !MSrcSpan !ExprGeneric [Alt]
+  | Prim1G !MSrcSpan !Prim1
+  | Prim2G !MSrcSpan !Prim2
+  | Prim3G !MSrcSpan !Prim3
+  | PrimNG !MSrcSpan !PrimN
+  -- ValG !MSrcSpan Value -- embed a value inside an Expr for ease of tracing
+  | WithG !MSrcSpan Env !ExprGeneric
+  | ReplaceG !MSrcSpan Env !ExprGeneric
+  | HoleG !MSrcSpan !Ref (Maybe Type)
+  | RefG !Ref
+  deriving (Show, Generic, Eq, Ord)
+instance Hashable ExprGeneric
+
+
 data Context
   = Here | Elsewhere
   | InAppF !Context

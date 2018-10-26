@@ -53,43 +53,6 @@ preds_tis :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis = map (first (take 1) . second (fmap (fmap (take 1))))
             preds_tis_ctx
 
--- preds_tis_cons :: [Feature] -- [TExpr -> TExpr -> [Double]]
--- preds_tis_cons = map (first (take 1) . second (fmap (fmap (take 1))))
---             preds_tis_ctx_cons
-
--- preds_tis_novar :: [Feature] -- [TExpr -> TExpr -> [Double]]
--- preds_tis_novar = init preds_tis
-
--- preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
--- preds_tis_ctx
---     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
---  =
---   map tis_op_ctx [Eq ..] ++
---   [ tis_anycon_ctx
---   , tis_con_ctx "::", tis_con_ctx "[]"
---   , tis_con_ctx "(,)"
---   , tis_con_ctx "VarX", tis_con_ctx "VarY"
---   , tis_con_ctx "Sine", tis_con_ctx "Cosine"
---   , tis_con_ctx "Average", tis_con_ctx "Times", tis_con_ctx "Thresh"
---   , tis_anycon_case_ctx
---   , tis_con_case_ctx "::", tis_con_case_ctx "[]"
---   , tis_con_case_ctx "(,)"
---   , tis_con_case_ctx "VarX", tis_con_case_ctx "VarY"
---   , tis_con_case_ctx "Sine", tis_con_case_ctx "Cosine"
---   , tis_con_case_ctx "Average", tis_con_case_ctx "Times", tis_con_case_ctx "Thresh"
---   , tis_fun_ctx
---   , tis_app_ctx
---   , tis_lit_int_ctx
---   , tis_lit_float_ctx
---   , tis_lit_bool_ctx
---   , tis_lit_char_ctx
---   , tis_lit_string_ctx
---   , tis_ite_ctx
---   , tis_seq_ctx
---   , tis_var_ctx
---   , tis_let_ctx
---   ]
-
 preds_tis_ctx :: [Feature] -- [TExpr -> TExpr -> [Double]]
 preds_tis_ctx
     -- [ (["Is-"++show o], tis_op_ctx o) | o <- [Eq ..]]
@@ -780,142 +743,6 @@ tis_let_ctx = ( mkContextLabels "Is-Let", mkContextFeatures tis_let )
 tis_seq_ctx :: Feature -- TExpr -> TExpr -> [Double]
 tis_seq_ctx = ( mkContextLabels "Is-Seq", mkContextFeatures tis_seq )
 
-diff :: Expr -> Expr -> Set SrcSpan
-diff e1 e2 = case (e1, e2) of
-  (Var lx x, Var ly y)
-    | x == y
-      -> mempty
-  (Lam lx px x _, Lam ly py y _)
-    | px == py
-      -> diff x y
-  (App lx fx ax, App ly fy ay)
-    | length ax == length ay
-      -> merge $ (diff fx fy) : (zipWith diff ax ay)
-  (Bop lx bx x1 x2, Bop ly by y1 y2)
-    | bx == by
-      -> merge [diff x1 y1, diff x2 y2]
-  (Uop lx ux x, Uop ly uy y)
-    | ux == uy
-      -> diff x y
-  (Lit lx x, Lit ly y)
-    | x == y
-      -> mempty
-  (Let lx rx xbs x, Let ly ry ybs y)
-    | rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
-      -> merge $ diff x y : zipWith diff (map snd xbs) (map snd ybs)
-  (Ite lx bx tx fx, Ite ly by ty fy)
-      -> merge $ [diff bx by, diff tx ty, diff fx fy]
-  (Seq lx x1 x2, Seq ly y1 y2)
-      -> merge $ [diff x1 y1, diff x2 y2]
-  (Case lx x axs, Case ly y ays)
-    | length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
-      -> merge $ diff x y : zipWith diff (map thd3 axs) (map thd3 ays)
-  (Tuple lx xs, Tuple ly ys)
-    | length xs == length ys
-      -> merge (zipWith diff xs ys)
-  (List lx xs _, List ly ys _)
-    | length xs == length ys
-      -> merge (zipWith diff xs ys)
-  (Array lx xs _, Array ly ys _)
-    | length xs == length ys
-      -> merge (zipWith diff xs ys)
-  (ConApp lx cx mx mtx, ConApp ly cy my mty)
-    | cx == cy -> if
-        | Just x <- mx, Just y <- my
-          -> diff x y
-        | Nothing <- mx, Nothing <- my
-          -> mempty
-        | otherwise
-          -> Set.singleton (fromJust lx)
-  (Record lx fxs mtx, Record ly fys mty)
-    | map fst fxs == map fst fys
-      -> merge (zipWith diff (map snd fxs) (map snd fys))
-  (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
-    | vx == vy
-      -> mempty
-  (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
-    | vx == vy
-      -> mempty
-  -- (Val _ x, Val _ y)
-  --   | x == y
-  --     -> Nothing
-  -- (With lx ex x, With ly ey y)
-  --   | lx == ly && envId ex == envId ey
-  --     -> diff x y
-  -- (Replace lx ex x, Replace ly ey y)
-  --   | lx == ly && envId ex == envId ey
-  --     -> diff x y
-  -- (_, Replace _ _ _)
-  --   -> Just (e1, e2)
-  -- (Replace _ env' _, _)
-  --   -> Just (e1, e2)
-  _ -> Set.singleton $ fromJust $ getSrcSpanExprMaybe e1
-
-  where
-  merge = mconcat
-  -- merge ls = case catMaybes ls of
-  --   -- no diff in subexprs => no diff
-  --   []  -> Nothing
-  --   -- diff in *one* subexpr => that expr
-  --   [x] -> Just x
-  --   -- diff in *multiple* subexprs => parent expr
-  --   _   -> getSrcSpanExprMaybe e1
-
--- | Diff two programs by declaration group, and return a set of
--- spans that have changed in the first program.
-diffProg :: Prog -> Prog -> Set SrcSpan
--- we're really only interested in *deletions* from the bad program
--- diffProg []  _   = mempty
--- diffProg bad []  _ foldr joinSrcSpan (map getSrcSpan bad)
--- diffProg bad fix = case (bad, fix) of
---   (DFun x1 y1 ((p1, e1):pes1) : _, DFun x2 y2 ((p2,e2):pes2) : _)
---     | p1 == p2
---       -> diff e1 e2 <> diffProg (DFun x1 y1 pes1) (DFun x2 y2 pes2)
---   (DFun _ _ [] : bad', DFun _ _ [] : fix')
---     -> diffProg bad' fix'
-
--- diffOne :: Decl -> Prog -> Set SrcSpan
--- diffOne (DFun x1 y1 ((p1, e1):pes1)) [] = x1
--- diffOne (DFun x1 y1 ((p1, e1):pes1)) (DFun x2 y2 ((p2, e2)):pes1) = x1
-
-diffProg p1 p2 = mconcat $ map go p1
-  where
-  go (DFun _ _ pes) = mconcat $ map to pes
-  go _              = mempty
-
-  to (VarPat _ v, e1)
-    | Just e2 <- lookup v p2ves
-    = diff e1 e2
-  to _
-    = mempty
-
-  p2ves = [(v,e) | DFun _ _ pes <- p2, (VarPat _ v, e) <- pes]
-
-  -- merge ls = case catMaybes ls of
-  --   -- no diff in subexprs => no diff
-  --   []  -> Nothing
-  --   -- diff in *one* subexpr => that expr
-  --   [x] -> Just x
-  --   -- diff in *multiple* subexprs => parent expr
-  --   _   -> Just $ joinSrcSpan (getSrcSpan (head p1)) (getSrcSpan (last p1))
-
-diffDecl :: Decl -> Decl -> Set SrcSpan
-diffDecl d1 d2 = case (d1, d2) of
-  (DFun _ r1 pes1, DFun _ r2 pes2)
-    | r1 == r2 && map fst pes1 == map fst pes2
-    -> mconcat $ zipWith (\(_,e1) (_,e2) -> diff e1 e2) pes1 pes2
-  (DEvl _ e1, DEvl _ e2)
-    -> diff e1 e2
-  _ -> mempty
-  where
-  -- merge ls = case catMaybes ls of
-  --   -- no diff in subexprs => no diff
-  --   []  -> Nothing
-  --   -- diff in *one* subexpr => that expr
-  --   [x] -> Just x
-  --   -- diff in *multiple* subexprs => parent expr
-  --   _   -> Just $ getSrcSpan d1
-
 type TProg = [TDecl]
 
 data TDecl
@@ -1571,12 +1398,12 @@ cost = \case
   Cpy e d -> S $ cost d
   End     -> Z
 
-showDiff :: Diff -> String
-showDiff = \case
-  Ins e d -> "Ins (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
-  Del e d -> "Del (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
-  Cpy e d -> "Cpy (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
-  End     -> "End"
+-- showDiff :: Diff -> String
+-- showDiff = \case
+--   Ins e d -> "Ins (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+--   Del e d -> "Del (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+--   Cpy e d -> "Cpy (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
+--   End     -> "End"
 
 diffSpans :: Diff -> [Expr] -> Set SrcSpan
 diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
@@ -1604,6 +1431,51 @@ diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   --   Cpy e d -> go d -- getSrcSpanMaybe e : go d
   --   End     -> []
 
+-- George
+diffSpansAndExprs :: Diff -> [Expr] -> Set (SrcSpan, Expr)
+diffSpansAndExprs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
+  where
+  go _ [] = []
+  go d' (x:xs) = case d' of
+    Ins e d -> (getSrcSpanMaybe x, e) : go d (x:xs)
+    Del e (Ins _ d) -> (getSrcSpanMaybe e, e) : go d xs
+    Del e d -> (getSrcSpanMaybe e, e) : go d xs
+    Cpy e d -> go d xs
+    End -> []
+  clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
+
+-- George
+diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, ExprGeneric)
+diffSpansAndGenericTrs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
+  where
+  go _ [] = []
+  go d' (x:xs) = case d' of
+    Ins e d -> (getSrcSpanMaybe x, mkGenericTrees e) : go d (x:xs)
+    Del e (Ins _ d) -> (getSrcSpanMaybe e, mkGenericTrees e) : go d xs
+    Del e d -> (getSrcSpanMaybe e, mkGenericTrees e) : go d xs
+    Cpy e d -> go d xs
+    End -> []
+  clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
+
+-- George
+mkGenericTrees :: Expr -> ExprGeneric
+mkGenericTrees = \case
+  Var ss _ -> VarG ss
+  Lam ss _ e menv -> LamG ss (mkGenericTrees e) menv
+  App ss e es -> AppG ss (mkGenericTrees e) (map mkGenericTrees es)
+  Bop ss _ e1 e2 -> BopG ss (mkGenericTrees e1) (mkGenericTrees e2)
+  Uop ss _ e -> UopG ss (mkGenericTrees e)
+  Lit ss _ -> LitG ss
+  Let ss r pes e -> LetG ss r (map (mkGenericTrees . snd) pes) (mkGenericTrees e)
+  Ite ss e1 e2 e3 -> IteG ss (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
+  Seq ss e1 e2 -> SeqG ss (mkGenericTrees e1) (mkGenericTrees e2)
+  Case ss e as -> CaseG ss (mkGenericTrees e) (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
+  Tuple ss es -> TupleG ss (map mkGenericTrees es)
+  ConApp ss _ me mt -> ConAppG ss (maybeMkGTs me) mt
+  List ss es mt -> ListG ss (map mkGenericTrees es) mt
+  e -> error ("exprKind: " ++ render (pretty e))
+  where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
+
 allSubExprs e = e : case e of
   Var {} -> []
   Lam _ _ x _ -> allSubExprs x
@@ -1630,29 +1502,6 @@ progExprs (d:ds) = case d of
   DFun _ _ pes -> map snd pes ++ progExprs ds
   DEvl _ e -> e : progExprs ds
   _ -> progExprs ds
-
--- diffExprs :: [Expr] -> [Expr] -> Diff
--- diffExprs [] []
---   = end
--- diffExprs [] (y:yss)
---   = ins y (diffExprs [] yss)
--- diffExprs (x:xss) []
---   = del x (diffExprs xss [])
--- diffExprs (x:xss) (y:yss)
---   | exprKind x == exprKind y
---   , length xs == length ys   -- necessary for variadic ctors like case
---   = best_3
---   | otherwise
---   = best_2
---   where
---   xs = subExprs x
---   ys = subExprs y
-
---   best_2 = del x (diffExprs (xs ++ xss) (y : yss))
---            `meet`
---            ins y (diffExprs (x : xss) (ys ++ yss))
---   best_3 = cpy x (diffExprs (xs ++ xss) (ys ++ yss))
---            `meet` best_2
 
 data DiffT
   = CC Expr Expr Diff DiffT DiffT DiffT
@@ -1772,7 +1621,7 @@ data ExprKind
   | TupleK
   | ConAppK DCon
   | ListK
-  deriving (Eq, Show)
+  deriving (Eq, Show, Ord)
 
 exprKind :: Expr -> ExprKind
 exprKind = \case
