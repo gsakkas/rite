@@ -21,6 +21,7 @@ import Data.Hashable
 import Data.List
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
+import Data.Tuple.Select (sel1, sel2, sel3)
 import Data.Maybe
 import Data.Monoid hiding (Alt)
 import qualified Data.Set as Set
@@ -1445,17 +1446,18 @@ diffSpansAndExprs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allS
   clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
 
 -- George
-diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, ExprGeneric)
+diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, ExprGeneric, ExprGeneric)
 diffSpansAndGenericTrs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
   where
   go _ [] = []
   go d' (x:xs) = case d' of
-    Ins e d -> (getSrcSpanMaybe x, mkGenericTrees e) : go d (x:xs)
-    Del e (Ins _ d) -> (getSrcSpanMaybe e, mkGenericTrees e) : go d xs
-    Del e d -> (getSrcSpanMaybe e, mkGenericTrees e) : go d xs
+    Ins e d -> (getSrcSpanMaybe x, mkGenericTrees x, mkGenericTrees e) : go d (x:xs)
+    Del e (Ins e' d) -> (getSrcSpanMaybe e, mkGenericTrees e, mkGenericTrees e') : go d xs
+    -- Del e d -> (getSrcSpanMaybe e, mkGenericTrees e, mkGenericTrees e) : go d xs
+    Del e d -> go d xs
     Cpy e d -> go d xs
     End -> []
-  clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
+  clean tup = if isNothing (sel1 tup) then Nothing else Just (fromJust (sel1 tup), sel2 tup, sel3 tup)
 
 -- George
 mkGenericTrees :: Expr -> ExprGeneric

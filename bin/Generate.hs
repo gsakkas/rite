@@ -223,7 +223,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
-              , let ss = fst $ unzip ss'
+              , let ss = fst3 $ unzip3 ss'
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
@@ -235,8 +235,8 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let mean = mkMean mkFrac feats' :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = fst $ unzip ss
-    let ss_expr = map (\(fi, se) -> (show fi) ++ "\n" ++ (show se) ++ "\n") ss
+    let ss' = fst3 $ unzip3 ss
+    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (show se) ++ "\n" ++ (show td) ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
           printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
@@ -265,7 +265,16 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                     , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  let ss_fixes = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        return $ thd3 $ unzip3 ss) >>= concat
+  let clusters = makeClusters ss_fixes
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+  print $ length ss_fixes
+  print $ length clusters
+
+
+makeClusters :: [ExprGeneric] -> HashSet ExprGeneric
+makeClusters = HashSet.fromList
 
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
@@ -349,7 +358,7 @@ mkDiffsWithExprs json = case eitherDecode (LBSC.pack json) of
 
 
 -- George
-mkDiffsWithGenericTrs :: String -> [([(SrcSpan, ExprGeneric)], Prog, String, String, Int)]
+mkDiffsWithGenericTrs :: String -> [([(SrcSpan, ExprGeneric, ExprGeneric)], Prog, String, String, Int)]
 mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
   Left e -> mempty
   Right (MkInSample bad' fix' _)
@@ -410,7 +419,7 @@ mkDiffWithExprs bad fix = assert (not (null x)) $ x
     fs = progExprs fix
 
 -- George
-mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, ExprGeneric)]
+mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, ExprGeneric, ExprGeneric)]
 mkDiffWithGenericTrs bad fix = assert (not (null x)) $ x
   where
     x = Set.toList (diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs)
