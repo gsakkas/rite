@@ -420,11 +420,63 @@ mkDiffWithExprs bad fix = assert (not (null x)) $ x
 
 -- George
 mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, ExprGeneric, ExprGeneric)]
-mkDiffWithGenericTrs bad fix = assert (not (null x)) $ x
+mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 $ keepBigTrs x
   where
     x = Set.toList (diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs)
     bs = progExprs bad
     fs = progExprs fix
+
+-- George
+keepBigTrs :: [(SrcSpan, ExprGeneric, ExprGeneric)] -> [(SrcSpan, ExprGeneric, ExprGeneric)]
+keepBigTrs = filter bigTrs
+  where
+    bigTrs (_, _, expr) = sizeOfTree expr 0 >= 2
+
+-- George
+sizeOfTree :: ExprGeneric -> Int -> Int
+sizeOfTree e depth = case e of
+  VarG -> depth + 1
+  LamG e' _ -> sizeOfTree e' (depth + 1)
+  AppG e' es -> max (sizeOfTree e' (depth + 1)) (safeMaximum es depth)
+  BopG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  UopG e' -> (sizeOfTree e' (depth + 1))
+  LitG -> depth + 1
+  LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
+  IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
+  SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (map snd as) depth) -- TODO: check 1st arg of as
+  TupleG es -> safeMaximum es depth
+  ConAppG _ _ -> depth + 1 -- TODO: do something better
+  ListG es _ -> safeMaximum es depth
+  _ -> error "keepBigTrs failed: no such expression"
+  where safeMaximum li depth = if li == [] then depth else maximum $ map (\e' -> sizeOfTree e' (depth + 1)) li
+
+-- George
+pruneTrs :: Int -> [(SrcSpan, ExprGeneric, ExprGeneric)] -> [(SrcSpan, ExprGeneric, ExprGeneric)]
+pruneTrs maxd li = map pruneOneTr li
+  where
+    pruneOneTr (ss, e1, e2) =
+      if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
+      where
+        depth = sizeOfTree e2 0
+        ne2 = cutSubTrs e2 maxd
+        cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
+        cutSubTrs e 0 = EmptyG
+        cutSubTrs e d = case e of
+          VarG -> VarG
+          LamG e' me -> LamG (cutSubTrs e' (d - 1)) me
+          AppG e' es -> AppG (cutSubTrs e' (d - 1)) (map (\e'' -> cutSubTrs e'' (d - 1)) es)
+          BopG e1 e2 -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          UopG e' -> UopG (cutSubTrs e' (d - 1))
+          LitG -> LitG
+          LetG r pes e' -> LetG r (map (\e'' -> cutSubTrs e'' (d - 1)) pes) (cutSubTrs e' (d - 1))
+          IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
+          SeqG e1 e2 -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (map (\(me, e'') -> (me >>= (\e'' -> Just (cutSubTrs e'' (d - 1))), (cutSubTrs e'' (d - 1)))) as)
+          TupleG es -> TupleG (map (\e' -> cutSubTrs e' (d - 1)) es)
+          ConAppG me mt -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1)))) mt
+          ListG es mt -> ListG (map (\e' -> cutSubTrs e' (d - 1)) es) mt
+          _ -> error "keepBigTrs failed: no such expression"
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)

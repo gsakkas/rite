@@ -1462,19 +1462,19 @@ diffSpansAndGenericTrs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap
 -- George
 mkGenericTrees :: Expr -> ExprGeneric
 mkGenericTrees = \case
-  Var ss _ -> VarG ss
-  Lam ss _ e menv -> LamG ss (mkGenericTrees e) menv
-  App ss e es -> AppG ss (mkGenericTrees e) (map mkGenericTrees es)
-  Bop ss _ e1 e2 -> BopG ss (mkGenericTrees e1) (mkGenericTrees e2)
-  Uop ss _ e -> UopG ss (mkGenericTrees e)
-  Lit ss _ -> LitG ss
-  Let ss r pes e -> LetG ss r (map (mkGenericTrees . snd) pes) (mkGenericTrees e)
-  Ite ss e1 e2 e3 -> IteG ss (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
-  Seq ss e1 e2 -> SeqG ss (mkGenericTrees e1) (mkGenericTrees e2)
-  Case ss e as -> CaseG ss (mkGenericTrees e) (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
-  Tuple ss es -> TupleG ss (map mkGenericTrees es)
-  ConApp ss _ me mt -> ConAppG ss (maybeMkGTs me) mt
-  List ss es mt -> ListG ss (map mkGenericTrees es) mt
+  Var _ _ -> VarG
+  Lam _ _ e menv -> LamG (mkGenericTrees e) menv
+  App _ e es -> AppG (mkGenericTrees e) (map mkGenericTrees es)
+  Bop _ _ e1 e2 -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
+  Uop _ _ e -> UopG (mkGenericTrees e)
+  Lit _ _ -> LitG
+  Let _ r pes e -> LetG r (map (mkGenericTrees . snd) pes) (mkGenericTrees e)
+  Ite _ e1 e2 e3 -> IteG (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
+  Seq _ e1 e2 -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
+  Case _ e as -> CaseG (mkGenericTrees e) (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
+  Tuple _ es -> TupleG (map mkGenericTrees es)
+  ConApp _ _ me mt -> ConAppG (maybeMkGTs me) mt
+  List _ es mt -> ListG (map mkGenericTrees es) mt
   e -> error ("exprKind: " ++ render (pretty e))
   where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
 
