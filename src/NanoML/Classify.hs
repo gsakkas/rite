@@ -1439,20 +1439,20 @@ diffSpansAndExprs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allS
   go _ [] = []
   go d' (x:xs) = case d' of
     Ins e d -> (getSrcSpanMaybe x, e) : go d (x:xs)
-    Del e (Ins _ d) -> (getSrcSpanMaybe e, e) : go d xs
-    Del e d -> (getSrcSpanMaybe e, e) : go d xs
+    Del e (Ins e' d) -> (getSrcSpanMaybe e, e') : go d xs
+    Del e d -> go d xs
     Cpy e d -> go d xs
     End -> []
   clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
 
 -- George
-diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, ExprGeneric, ExprGeneric)
+diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, Expr, ExprGeneric)
 diffSpansAndGenericTrs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
   where
   go _ [] = []
   go d' (x:xs) = case d' of
-    Ins e d -> (getSrcSpanMaybe x, mkGenericTrees x, mkGenericTrees e) : go d (x:xs)
-    Del e (Ins e' d) -> (getSrcSpanMaybe e, mkGenericTrees e, mkGenericTrees e') : go d xs
+    Ins e d -> (getSrcSpanMaybe x, e, mkGenericTrees e) : go d (x:xs)
+    Del e (Ins e' d) -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs
     -- Del e d -> (getSrcSpanMaybe e, mkGenericTrees e, mkGenericTrees e) : go d xs
     Del e d -> go d xs
     Cpy e d -> go d xs
@@ -1530,12 +1530,11 @@ diffExprsT [] (y:yss)
 diffExprsT (x:xss) (y:yss)
   = CC x y (bestT x y i d c) i d c
   where
-  xs = subExprs x
-  ys = subExprs y
-
-  c = diffExprsT (xs ++ xss) (ys ++ yss)
-  i = extendi x c
-  d = extendd y c
+    xs = subExprs x
+    ys = subExprs y
+    c = diffExprsT (xs ++ xss) (ys ++ yss)
+    i = extendi x c
+    d = extendd y c
 
 extendi :: Expr -> DiffT -> DiffT
 extendi x dt = case dt of
@@ -1589,19 +1588,6 @@ killSpans = mapExpr $ onSrcSpanExpr (const Nothing)
 
 bestT :: Expr -> Expr -> DiffT -> DiffT -> DiffT -> Diff
 bestT x y i d c
-  --- | exprKind x == exprKind y
-  -- , [x1, x2] <- subExprs x
-  -- , [y1, y2] <- subExprs y
-  -- -- can we override the behavior for swapping subtrees?
-  -- , killSpans x1 == killSpans y2 && killSpans x2 == killSpans y1
-  -- -- it's not a swap if both sides were the same
-  -- , not (killSpans x1 == killSpans x2)
-  -- = cpy x (del x1
-  --           (ins y1
-  --             (del x2
-  --               (ins y2
-  --                 (filterDiff (\z -> z `notElem` [x1,x2,y1,y2])
-  --                   (getDiff c))))))
   | exprKind x == exprKind y
   , length (subExprs x) == length (subExprs y)
   = cpy x (getDiff c) -- del x (getDiff d) `meet` ins y (getDiff i)

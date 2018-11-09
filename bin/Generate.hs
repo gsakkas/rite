@@ -236,10 +236,10 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
     let ss' = fst3 $ unzip3 ss
-    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (show se) ++ "\n" ++ (show td) ++ "\n") ss
+    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n" ++ (show td) ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
-          printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
       | null cs -> do
         putStrLn "NO CORE"
         putStrLn bad
@@ -265,16 +265,53 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                     , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
-  let ss_fixes = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-        return $ thd3 $ unzip3 ss) >>= concat
+  let ss_fixes
+        = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+          let ss' = fst3 $ unzip3 ss
+          if
+            | mkFrac f > mean+std -> do
+              return []
+            | null cs -> do
+              return []
+            | length (nub cs) == 1 -> do
+              return []
+            | null ss' -> do
+              return []
+            | null (intersect ss' cs) -> do
+              return []
+            | otherwise -> do
+              return $ thd3 $ unzip3 ss) >>= concat
   let clusters = makeClusters ss_fixes
+  let cls = map (\x -> (x, [])) clusters
+  let elems
+        = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+          let ss' = fst3 $ unzip3 ss
+          if
+            | mkFrac f > mean+std -> do
+              return []
+            | null cs -> do
+              return []
+            | length (nub cs) == 1 -> do
+              return []
+            | null ss' -> do
+              return []
+            | null (intersect ss' cs) -> do
+              return []
+            | otherwise -> do
+              return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
+  let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
+  forM_ (zip [1..] cls) $ \(i, c) -> do
+    let fn = printf "%04d" (i :: Int)
+    let path = out </> "clusters" </> fn <.> "ml"
+    createDirectoryIfMissing True (takeDirectory path)
+    writeFile path $ unlines c
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
   print $ length ss_fixes
   print $ length clusters
 
 
-makeClusters :: [ExprGeneric] -> HashSet ExprGeneric
-makeClusters = HashSet.fromList
+makeClusters :: [ExprGeneric] -> [ExprGeneric]
+makeClusters = HashSet.toList . HashSet.fromList
 
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
@@ -358,7 +395,7 @@ mkDiffsWithExprs json = case eitherDecode (LBSC.pack json) of
 
 
 -- George
-mkDiffsWithGenericTrs :: String -> [([(SrcSpan, ExprGeneric, ExprGeneric)], Prog, String, String, Int)]
+mkDiffsWithGenericTrs :: String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, String, String, Int)]
 mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
   Left e -> mempty
   Right (MkInSample bad' fix' _)
@@ -419,15 +456,15 @@ mkDiffWithExprs bad fix = assert (not (null x)) $ x
     fs = progExprs fix
 
 -- George
-mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, ExprGeneric, ExprGeneric)]
-mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 $ keepBigTrs x
+mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, Expr, ExprGeneric)]
+mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 x
   where
     x = Set.toList (diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs)
     bs = progExprs bad
     fs = progExprs fix
 
 -- George
-keepBigTrs :: [(SrcSpan, ExprGeneric, ExprGeneric)] -> [(SrcSpan, ExprGeneric, ExprGeneric)]
+keepBigTrs :: [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
 keepBigTrs = filter bigTrs
   where
     bigTrs (_, _, expr) = sizeOfTree expr 0 >= 2
@@ -452,7 +489,7 @@ sizeOfTree e depth = case e of
   where safeMaximum li depth = if li == [] then depth else maximum $ map (\e' -> sizeOfTree e' (depth + 1)) li
 
 -- George
-pruneTrs :: Int -> [(SrcSpan, ExprGeneric, ExprGeneric)] -> [(SrcSpan, ExprGeneric, ExprGeneric)]
+pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
 pruneTrs maxd li = map pruneOneTr li
   where
     pruneOneTr (ss, e1, e2) =
