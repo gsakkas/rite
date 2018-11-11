@@ -1,0 +1,12 @@
+TupleG [AppG [EmptyG],AppG [EmptyG],AppG [EmptyG],AppG [EmptyG]]
+(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+(build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+(build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+(build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+(build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+(build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
+(build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
+(build (rand , depth - 1) , buildCosine (build (rand , depth - 1)) , build (rand , depth - 1) , build (rand , depth - 1))
+(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))

@@ -1,0 +1,10 @@
+ConAppG (Just (TupleG [VarG,AppG [VarG]])) Nothing
+hd :: (removeLast tl)
+hd :: (removeLast tl)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse l)
+n :: (digitsOfInt n)
+n :: (digitsOfInt n)

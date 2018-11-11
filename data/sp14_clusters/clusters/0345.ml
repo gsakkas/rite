@@ -1,0 +1,10 @@
+TupleG [VarG,LitG]
+(b , false)
+(ans , false)
+(ans , true)
+(b , true)
+(b , true)
+(b , false)
+(b , true)
+(b , false)
+(b , true)

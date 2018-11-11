@@ -1,0 +1,49 @@
+AppG [BopG EmptyG EmptyG,BopG EmptyG EmptyG,VarG]
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr

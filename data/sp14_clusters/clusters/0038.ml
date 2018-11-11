@@ -1,0 +1,10 @@
+TupleG [ConAppG (Just (TupleG [BopG VarG VarG,VarG])) Nothing,VarG]
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)
+((h1 + h2) :: list1 , list2)

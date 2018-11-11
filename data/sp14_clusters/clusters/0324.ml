@@ -1,0 +1,11 @@
+TupleG [LitG,AppG [EmptyG,EmptyG]]
+(0 , bigAdd z x)
+(0 , bigAdd (templ12 @ [0])
+            multres)
+(0 , bigAdd (templ12 @ [0])
+            multres)
+(0 , bigAdd (templ12 @ [0])
+            multres)
+(0 , bigAdd (templ12 @ [0])
+            multres)
+(0 , bigAdd y x)

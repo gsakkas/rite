@@ -1,0 +1,11 @@
+TupleG [VarG,ListG EmptyG Nothing]
+(t1 , [(h1 + x) mod 10])
+(l1 , [])
+(l1 , [])
+(p1 , [res / 10 ; res mod 10])
+(len , [sum])
+(len , [(-1) ; sum mod 10])
+(len , [sum])
+(len , [(-1) ; sum mod 10])
+(len , [sum])
+(len , [(-1) ; sum mod 10])

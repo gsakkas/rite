@@ -1,0 +1,11 @@
+ConAppG (Just (TupleG [VarG,AppG [VarG,BopG VarG LitG]])) Nothing
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
+x :: (clone x (n - 1))
