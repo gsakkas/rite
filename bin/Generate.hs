@@ -30,7 +30,7 @@ import System.FilePath
 import System.IO
 import Text.Printf
 
-import NanoML.Classify
+import NanoML.Classify hiding (sizeOfTree)
 import NanoML.Lexer
 import NanoML.Monad
 import NanoML.Parser
@@ -472,9 +472,10 @@ keepBigTrs = filter bigTrs
 -- George
 sizeOfTree :: ExprGeneric -> Int -> Int
 sizeOfTree e depth = case e of
+  EmptyG -> depth + 1
   VarG -> depth + 1
-  LamG e' _ -> sizeOfTree e' (depth + 1)
-  AppG e' es -> max (sizeOfTree e' (depth + 1)) (safeMaximum es depth)
+  LamG e' -> sizeOfTree e' (depth + 1)
+  AppG es -> safeMaximum es depth
   BopG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
   UopG e' -> (sizeOfTree e' (depth + 1))
   LitG -> depth + 1
@@ -484,8 +485,8 @@ sizeOfTree e depth = case e of
   CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (map snd as) depth) -- TODO: check 1st arg of as
   TupleG es -> safeMaximum es depth
   ConAppG _ _ -> depth + 1 -- TODO: do something better
-  ListG es _ -> safeMaximum es depth
-  _ -> error "keepBigTrs failed: no such expression"
+  ListG e' _ -> sizeOfTree e' (depth + 1)
+  _ -> error ("sizeOfTree failed: no such expression " ++ show e)
   where safeMaximum li depth = if li == [] then depth else maximum $ map (\e' -> sizeOfTree e' (depth + 1)) li
 
 -- George
@@ -500,9 +501,10 @@ pruneTrs maxd li = map pruneOneTr li
         cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
         cutSubTrs e 0 = EmptyG
         cutSubTrs e d = case e of
+          EmptyG -> EmptyG
           VarG -> VarG
-          LamG e' me -> LamG (cutSubTrs e' (d - 1)) me
-          AppG e' es -> AppG (cutSubTrs e' (d - 1)) (map (\e'' -> cutSubTrs e'' (d - 1)) es)
+          LamG e' -> LamG (cutSubTrs e' (d - 1))
+          AppG es -> AppG (map (\e'' -> cutSubTrs e'' (d - 1)) es)
           BopG e1 e2 -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
           UopG e' -> UopG (cutSubTrs e' (d - 1))
           LitG -> LitG
@@ -512,8 +514,8 @@ pruneTrs maxd li = map pruneOneTr li
           CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (map (\(me, e'') -> (me >>= (\e'' -> Just (cutSubTrs e'' (d - 1))), (cutSubTrs e'' (d - 1)))) as)
           TupleG es -> TupleG (map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me mt -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1)))) mt
-          ListG es mt -> ListG (map (\e' -> cutSubTrs e' (d - 1)) es) mt
-          _ -> error "keepBigTrs failed: no such expression"
+          ListG e' mt -> ListG (cutSubTrs e' (d - 1)) mt
+          _ -> error ("pruneTrs failed: no such expression " ++ show e)
 
 runTFeaturesDiff
   :: [Feature] -> ([SrcSpan], Prog)

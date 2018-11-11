@@ -980,8 +980,8 @@ instance ToJSON Expr where
 -- George
 data ExprGeneric
   = VarG
-  | LamG !ExprGeneric (Maybe Env)
-  | AppG !ExprGeneric [ExprGeneric]
+  | LamG !ExprGeneric
+  | AppG [ExprGeneric]
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
@@ -995,7 +995,7 @@ data ExprGeneric
   | FieldG !ExprGeneric !String
   | SetFieldG !ExprGeneric !String !ExprGeneric
   | ArrayG [ExprGeneric] (Maybe Type)
-  | ListG [ExprGeneric] (Maybe Type)
+  | ListG !ExprGeneric (Maybe Type)
   | TryG !ExprGeneric [Alt]
   | Prim1G !Prim1
   | Prim2G !Prim2
