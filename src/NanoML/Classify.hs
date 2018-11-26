@@ -1464,15 +1464,15 @@ mkGenericTrees :: Expr -> ExprGeneric
 mkGenericTrees = \case
   Var _ _ -> VarG
   Lam _ _ e _ -> LamG (mkGenericTrees e)
-  App _ _ es -> AppG (map mkGenericTrees es)
+  App _ _ es -> AppG $ Set.fromList (map mkGenericTrees es)
   Bop _ _ e1 e2 -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
   Uop _ _ e -> UopG (mkGenericTrees e)
   Lit _ _ -> LitG
-  Let _ r pes e -> LetG r (map (mkGenericTrees . snd) pes) (mkGenericTrees e)
+  Let _ r pes e -> LetG r (Set.fromList (map (mkGenericTrees . snd) pes)) (mkGenericTrees e)
   Ite _ e1 e2 e3 -> IteG (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
   Seq _ e1 e2 -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
-  Case _ e as -> CaseG (mkGenericTrees e) (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
-  Tuple _ es -> TupleG (map mkGenericTrees es)
+  Case _ e as -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
+  Tuple _ es -> TupleG $ Set.fromList (map mkGenericTrees es)
   ConApp _ _ me mt -> ConAppG (maybeMkGTs me) mt
   List _ es mt -> ListG (returnSimplest (map mkGenericTrees es)) mt
   e -> error ("exprKind: " ++ render (pretty e))
@@ -1491,12 +1491,12 @@ sizeOfTree e depth = case e of
   LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
   IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
   SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (map snd as) depth) -- TODO: check 1st arg of as
+  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
   TupleG es -> safeMaximum es depth
   ConAppG _ _ -> depth + 1 -- TODO: do something better
   ListG e' _ -> sizeOfTree e' (depth + 1)
   _ -> error ("sizeOfTree failed: no such expression " ++ show e)
-  where safeMaximum li depth = if li == [] then depth else maximum $ map (\e' -> sizeOfTree e' (depth + 1)) li
+  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
 -- George
 returnSimplest :: [ExprGeneric] -> ExprGeneric

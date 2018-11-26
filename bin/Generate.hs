@@ -282,7 +282,6 @@ mkSpansWithTrees withSlice out nm fs jsons = do
             | otherwise -> do
               return $ thd3 $ unzip3 ss) >>= concat
   let clusters = makeClusters ss_fixes
-  let cls = map (\x -> (x, [])) clusters
   let elems
         = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = fst3 $ unzip3 ss
@@ -300,6 +299,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
             | otherwise -> do
               return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
   let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
+  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
   forM_ (zip [1..] cls) $ \(i, c) -> do
     let fn = printf "%04d" (i :: Int)
     let path = out </> "clusters" </> fn <.> "ml"
@@ -308,10 +308,11 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
   print $ length ss_fixes
   print $ length clusters
+  print $ cluster_lens
 
 
 makeClusters :: [ExprGeneric] -> [ExprGeneric]
-makeClusters = HashSet.toList . HashSet.fromList
+makeClusters = Set.toList . Set.fromList
 
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
@@ -482,12 +483,12 @@ sizeOfTree e depth = case e of
   LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
   IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
   SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (map snd as) depth) -- TODO: check 1st arg of as
+  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
   TupleG es -> safeMaximum es depth
   ConAppG _ _ -> depth + 1 -- TODO: do something better
   ListG e' _ -> sizeOfTree e' (depth + 1)
   _ -> error ("sizeOfTree failed: no such expression " ++ show e)
-  where safeMaximum li depth = if li == [] then depth else maximum $ map (\e' -> sizeOfTree e' (depth + 1)) li
+  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
 -- George
 pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
@@ -504,15 +505,15 @@ pruneTrs maxd li = map pruneOneTr li
           EmptyG -> EmptyG
           VarG -> VarG
           LamG e' -> LamG (cutSubTrs e' (d - 1))
-          AppG es -> AppG (map (\e'' -> cutSubTrs e'' (d - 1)) es)
+          AppG es -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
           BopG e1 e2 -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
           UopG e' -> UopG (cutSubTrs e' (d - 1))
           LitG -> LitG
-          LetG r pes e' -> LetG r (map (\e'' -> cutSubTrs e'' (d - 1)) pes) (cutSubTrs e' (d - 1))
+          LetG r pes e' -> LetG r (Set.map (\e'' -> cutSubTrs e'' (d - 1)) pes) (cutSubTrs e' (d - 1))
           IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
           SeqG e1 e2 -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (map (\(me, e'') -> (me >>= (\e'' -> Just (cutSubTrs e'' (d - 1))), (cutSubTrs e'' (d - 1)))) as)
-          TupleG es -> TupleG (map (\e' -> cutSubTrs e' (d - 1)) es)
+          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(me, e'') -> (me >>= (\e'' -> Just (cutSubTrs e'' (d - 1))), (cutSubTrs e'' (d - 1)))) as)
+          TupleG es -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me mt -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1)))) mt
           ListG e' mt -> ListG (cutSubTrs e' (d - 1)) mt
           _ -> error ("pruneTrs failed: no such expression " ++ show e)

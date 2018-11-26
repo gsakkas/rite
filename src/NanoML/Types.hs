@@ -981,20 +981,20 @@ instance ToJSON Expr where
 data ExprGeneric
   = VarG
   | LamG !ExprGeneric
-  | AppG [ExprGeneric]
+  | AppG (Set ExprGeneric)
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
-  | LetG !RecFlag [ExprGeneric] !ExprGeneric
+  | LetG !RecFlag (Set ExprGeneric) !ExprGeneric
   | IteG !ExprGeneric !ExprGeneric !ExprGeneric
   | SeqG !ExprGeneric !ExprGeneric
-  | CaseG !ExprGeneric [(Maybe ExprGeneric, ExprGeneric)]
-  | TupleG [ExprGeneric]
+  | CaseG !ExprGeneric (Set (Maybe ExprGeneric, ExprGeneric))
+  | TupleG (Set ExprGeneric)
   | ConAppG (Maybe ExprGeneric) (Maybe Type)
   | RecordG [(String, ExprGeneric)] (Maybe Type)
   | FieldG !ExprGeneric !String
   | SetFieldG !ExprGeneric !String !ExprGeneric
-  | ArrayG [ExprGeneric] (Maybe Type)
+  | ArrayG (Set ExprGeneric) (Maybe Type)
   | ListG !ExprGeneric (Maybe Type)
   | TryG !ExprGeneric [Alt]
   | Prim1G !Prim1
@@ -1007,7 +1007,7 @@ data ExprGeneric
   | RefG !Ref
   | EmptyG -- Just an empty expr for easier pruning
   deriving (Show, Generic, Eq, Ord)
-instance Hashable ExprGeneric
+-- instance Hashable ExprGeneric
 
 
 data Context
