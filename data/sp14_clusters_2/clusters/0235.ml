@@ -1,0 +1,11 @@
+ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
+hd :: (removeLast tl)
+hd :: (removeLast tl)
+h :: (append x t)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse t)
+h :: (listReverse l)
+n :: (digitsOfInt n)
+n :: (digitsOfInt n)

@@ -1,0 +1,6 @@
+AppG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
+helper [] (h * i)
+helper [] (h * i)
+helper [] (h * i)
+helper [] (h * i)
+helper [] (h * i)
