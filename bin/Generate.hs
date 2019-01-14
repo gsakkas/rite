@@ -101,6 +101,8 @@ main = do
       -> mkSpansWithExprs JustSlice out cls (preds_tis) jsons
     "spans+trees"
       -> mkSpansWithTrees JustSlice out cls (preds_tis) jsons
+    "spans+trees+all"
+      -> mkSpansWithTrees JustSlice out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
 
 
 data WithSlice = JustSlice | All deriving Eq
@@ -234,37 +236,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
   let mean = mkMean mkFrac feats' :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
-  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = fst3 $ unzip3 ss
-    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n" ++ (show td) ++ "\n") ss
-    if
-      | mkFrac f > mean+std -> do
-        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
-      | null cs -> do
-        putStrLn "NO CORE"
-        putStrLn bad
-      | length (nub cs) == 1 -> do
-        putStrLn "SINGLE CONSTRAINT CORE"
-        putStrLn bad
-        print (head cs)
-      | null ss' -> do
-        putStrLn "NO DIFF"
-        putStrLn bad
-        putStrLn "---------------------------"
-        putStrLn fix
-      | null (intersect ss' cs) -> do
-        putStrLn "NO OVERLAP CORE/DIFF"
-        putStrLn bad
-        print cs
-        putStrLn fix
-      | otherwise -> do
-        let fn = printf "%04d" (i :: Int)
-        let path = out </> nm </> fn <.> "csv"
-        createDirectoryIfMissing True (takeDirectory path)
-        LBSC.writeFile path $ encodeByName header features
-        let path = out </> fn <.> "ml"
-        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
-                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  -- Find clusters of fixes to be used as templates
   let ss_fixes
         = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = fst3 $ unzip3 ss
@@ -300,7 +272,49 @@ mkSpansWithTrees withSlice out nm fs jsons = do
               return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
   let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
-  forM_ (zip [1..] cls) $ \(i, c) -> do
+  let sorted_cls = reverse $ sortOn length cls
+  -- Keep only top 30 clusters as templates for ML labels
+  let top_cls = take 30 $ snd $ unzip $ reverse $ sortOn (\(x, _) -> length x) $ zip cls clusters
+  let cls_names = zipWith (\x y -> BSC.pack $ x ++ (show y)) (replicate (length top_cls) "L-Cluster") [0..]
+
+  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss' = fst3 $ unzip3 ss
+    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n" ++ (show td) ++ "\n") ss
+    if
+      | mkFrac f > mean+std -> do
+        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+      | null cs -> do
+        putStrLn "NO CORE"
+        putStrLn bad
+      | length (nub cs) == 1 -> do
+        putStrLn "SINGLE CONSTRAINT CORE"
+        putStrLn bad
+        print (head cs)
+      | null ss' -> do
+        putStrLn "NO DIFF"
+        putStrLn bad
+        putStrLn "---------------------------"
+        putStrLn fix
+      | null (intersect ss' cs) -> do
+        putStrLn "NO OVERLAP CORE/DIFF"
+        putStrLn bad
+        print cs
+        putStrLn fix
+      | otherwise -> do
+        let fn = printf "%04d" (i :: Int)
+        let path = out </> nm </> fn <.> "csv"
+        createDirectoryIfMissing True (takeDirectory path)
+        let new_header = (Vector.take 1 header) Vector.++ (Vector.fromList cls_names) Vector.++ (Vector.tail header)
+        let in_cluster = (\xx -> namedRecord $ map (\(cluster, label) -> if xx == cluster then (label .= (1::Double)) else (label .= (0::Double))) $ zip top_cls cls_names)
+        let labels = map in_cluster $ thd3 $ unzip3 ss
+        -- print $ length labels
+        -- print $ take 1 features
+        let new_features = map (\(x, y) -> HashMap.union x y) $ zip labels features
+        LBSC.writeFile path $ encodeByName new_header new_features
+        let path = out </> fn <.> "ml"
+        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
     let fn = printf "%04d" (i :: Int)
     let path = out </> "clusters" </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
@@ -518,14 +532,10 @@ pruneTrs maxd li = map pruneOneTr li
           ListG e' mt -> ListG (cutSubTrs e' (d - 1)) mt
           _ -> error ("pruneTrs failed: no such expression " ++ show e)
 
-runTFeaturesDiff
-  :: [Feature] -> ([SrcSpan], Prog)
-  -> Maybe (Header, [NamedRecord], [SrcSpan])
+runTFeaturesDiff :: [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [NamedRecord], [SrcSpan])
 runTFeaturesDiff fs (ls, bad)
-  | null samples
-  = Nothing
-  | otherwise
-  = Just (header, samples, nub cores)
+  | null samples = Nothing
+  | otherwise = Just (header, samples, nub cores)
   where
   header = Vector.fromList
          $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
@@ -534,7 +544,7 @@ runTFeaturesDiff fs (ls, bad)
   samples
     | null cores
     -- something went wrong other than typechecking success
-    , Just e <- me = trace ("WARNING: "++show e) []
+    , Just e <- me = trace ("WARNING: " ++ show e) []
     --- | null cores || length cores == 1
     -- = trace (show (prettyProg bad) ++ "\n------------------------------------------\n") [] -- undefined -- FIXME: shouldn't happen!!
     --- | otherwise
@@ -577,9 +587,7 @@ runTFeaturesDiff fs (ls, bad)
              ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
-runTFeaturesTypes
-  :: [Feature] -> Prog
-  -> (Header, [NamedRecord])
+runTFeaturesTypes :: [Feature] -> Prog -> (Header, [NamedRecord])
 runTFeaturesTypes fs fix = (header, samples)
   where
   header = Vector.fromList
