@@ -1,0 +1,25 @@
+ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
+(h + y) :: t
+(h + y) :: t
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2
+(l1x + l2x) :: a2

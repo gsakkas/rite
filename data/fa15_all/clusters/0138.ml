@@ -1,0 +1,6 @@
+AppG (fromList [UopG EmptyG,LitG])
+clone 0 (- n)
+clone 0 (- n)
+clone 0 (- n)
+clone 0 (- sizDif)
+clone 0 (- sizDif)
