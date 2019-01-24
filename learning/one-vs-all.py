@@ -133,7 +133,7 @@ elif model == 'random-forest':
                                  random_state=prng)
 else:
     clf = tree.DecisionTreeClassifier(random_state=prng)
-clf = OneVsRestClassifier(clf).fit(train_samps.values, train_labels.values)
+clf = OneVsRestClassifier(clf, n_jobs=-1).fit(train_samps.values, train_labels.values)
 
 joblib.dump(
     clf,
