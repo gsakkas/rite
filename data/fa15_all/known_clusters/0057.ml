@@ -1,0 +1,35 @@
+TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(f b , f b = b)
+(num mod 9 , [7] @ list)
+(num mod 9 , [7] @ list)
+(num mod 9 , [7] @ list)
+(num / 10 , [num mod 10] @ list)
+(f b , b = f b)
+(f b , b = f b)
+(f b , b = f b)
+(f b , b = f b)
+(f b , b = f b)
+(f b , b = f b)
+(f b , f b = b)
+(y + z , b @ ([w mod 10] @ [w / 10]))
+(y + z , b @ ([w mod 10] @ [w / 10]))
+(y + z , b @ ([w mod 10] @ [w / 10]))
+(f b , f b = b)
+(f b , 3 < 4)
+(f b , 3 < 4)
+(10 * o , bigAdd (mulByDigit o
+                             l1) l)
+(10 * o , bigAdd (mulByDigit o
+                             l1) l)
+(10 * o , bigAdd (mulByDigit o
+                             l1) l)
+(10 * o , bigAdd (mulByDigit o
+                             l1) l)
+(a1 + 1 , bigAdd a2
+                 (appZero a1 (mulByDigit x
+                                         l2)))
+(f b , b = f b)
+(f b , b = f b)
+(f b , b = f b)
+(f x , x <> f x)
+(f x , x <> f x)

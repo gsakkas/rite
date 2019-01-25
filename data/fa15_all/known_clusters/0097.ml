@@ -1,0 +1,13 @@
+ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),TupleG (fromList [VarG])]))) Nothing
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)
+(h , l2) :: (helper t l2)

@@ -1,0 +1,6 @@
+TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing])
+(h , (List.hd t) :: c)
+(h , (List.hd t) :: c)
+(h , (List.hd t) :: c)
+(h , (List.hd t) :: c)
+(h , (List.hd t) :: c)
