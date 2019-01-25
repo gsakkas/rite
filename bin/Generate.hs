@@ -238,7 +238,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   -- Find clusters of fixes to be used as templates
   let ss_fixes
-        = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = fst3 $ unzip3 ss
           if
             | mkFrac f > mean+std -> do
@@ -255,7 +255,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
               return $ thd3 $ unzip3 ss) >>= concat
   let clusters = makeClusters ss_fixes
   let elems
-        = (forM feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = fst3 $ unzip3 ss
           if
             | mkFrac f > mean+std -> do
@@ -279,7 +279,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
 
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
     let ss' = fst3 $ unzip3 ss
-    let ss_expr = map (\(fi, se, td) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n" ++ (show td) ++ "\n") ss
+    let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
         printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
@@ -322,7 +322,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
   print $ length ss_fixes
   print $ length clusters
-  print $ cluster_lens
+  print cluster_lens
 
 
 makeClusters :: [ExprGeneric] -> [ExprGeneric]
@@ -506,7 +506,7 @@ sizeOfTree e depth = case e of
 
 -- George
 pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
-pruneTrs maxd li = map pruneOneTr li
+pruneTrs maxd = map pruneOneTr
   where
     pruneOneTr (ss, e1, e2) =
       if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
@@ -526,7 +526,7 @@ pruneTrs maxd li = map pruneOneTr li
           LetG r pes e' -> LetG r (Set.map (\e'' -> cutSubTrs e'' (d - 1)) pes) (cutSubTrs e' (d - 1))
           IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
           SeqG e1 e2 -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(me, e'') -> (me >>= (\e'' -> Just (cutSubTrs e'' (d - 1))), (cutSubTrs e'' (d - 1)))) as)
+          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(me, e'') -> (me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
           TupleG es -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me mt -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1)))) mt
           ListG e' mt -> ListG (cutSubTrs e' (d - 1)) mt
