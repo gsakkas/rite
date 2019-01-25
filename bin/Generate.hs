@@ -45,13 +45,14 @@ data Generate = Generate
   { source :: FilePath
   , features :: String
   , out :: FilePath
+  , clusters :: String
   }
   deriving (Generic, Show)
 instance ParseRecord Generate
 
 main :: IO ()
 main = do
-  Generate {source=src, features=cls, out=out} <-
+  Generate {source=src, features=cls, out=out, clusters=clusters_file} <-
     getRecord "generate-features"
   jsons <- lines <$> readFile src -- (readFile $ "features/data/ucsd/data/derived" </> src </> "pairs.json")
   case cls of
@@ -103,6 +104,8 @@ main = do
       -> mkSpansWithTrees JustSlice out cls (preds_tis) jsons
     "spans+trees+all"
       -> mkSpansWithTrees JustSlice out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
+    "spans+clusters+all"
+      -> mkSpansFromClusters JustSlice out cls clusters_file (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
 
 
 data WithSlice = JustSlice | All deriving Eq
@@ -273,8 +276,8 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
   let sorted_cls = reverse $ sortOn length cls
-  -- Keep only top 30 clusters as templates for ML labels
-  let top_cls = take 30 $ snd $ unzip $ reverse $ sortOn (\(x, _) -> length x) $ zip cls clusters
+  -- Keep only top N clusters as templates for ML labels
+  let top_cls = take 40 $ snd $ unzip $ reverse $ sortOn (\(x, _) -> length x) $ zip cls clusters
   let cls_names = zipWith (\x y -> BSC.pack $ x ++ (show y)) (replicate (length top_cls) "L-Cluster") [0..]
 
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
@@ -304,8 +307,8 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         let fn = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
-        let new_header = (Vector.take 1 header) Vector.++ (Vector.fromList cls_names) Vector.++ (Vector.tail header)
-        let in_cluster = (\xx -> namedRecord $ map (\(cluster, label) -> if xx == cluster then (label .= (1::Double)) else (label .= (0::Double))) $ zip top_cls cls_names)
+        let new_header = Vector.take 1 header Vector.++ Vector.fromList cls_names Vector.++ Vector.tail header
+        let in_cluster xx = namedRecord $ map (\(cluster, label) -> if xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
         let labels = map in_cluster $ thd3 $ unzip3 ss
         -- print $ length labels
         -- print $ take 1 features
@@ -317,6 +320,113 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
     let fn = printf "%04d" (i :: Int)
     let path = out </> "clusters" </> fn <.> "ml"
+    createDirectoryIfMissing True (takeDirectory path)
+    writeFile path $ unlines c
+  let clu_path = out </> "clusters" </> "top_clusters.txt"
+  writeFile clu_path $ unlines $ map show top_cls
+  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+  print $ length ss_fixes
+  print $ length clusters
+  print cluster_lens
+
+
+-- George
+mkSpansFromClusters :: WithSlice -> String -> String -> String -> [Feature] -> [String] -> IO ()
+mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
+  top_cls <- lines <$> readFile clusters_file
+  let uniqs = concatMap mkDiffsWithGenericTrs jsons
+  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
+              | (ss', p, bad, fix, idx) <- uniqs
+              , let ss = fst3 $ unzip3 ss'
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
+              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
+                                    (concatMap allSubExprs $ progExprs p)
+              ]
+  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
+  let mkMean f xs = sum (map f xs) / genericLength xs
+  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
+  let mean = mkMean mkFrac feats' :: Double
+  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
+  -- Find clusters of fixes to be used as templates
+  let ss_fixes
+        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+          let ss' = fst3 $ unzip3 ss
+          if
+            | mkFrac f > mean+std -> do
+              return []
+            | null cs -> do
+              return []
+            | length (nub cs) == 1 -> do
+              return []
+            | null ss' -> do
+              return []
+            | null (intersect ss' cs) -> do
+              return []
+            | otherwise -> do
+              return $ thd3 $ unzip3 ss) >>= concat
+  let clusters = makeClusters ss_fixes
+  let elems
+        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+          let ss' = fst3 $ unzip3 ss
+          if
+            | mkFrac f > mean+std -> do
+              return []
+            | null cs -> do
+              return []
+            | length (nub cs) == 1 -> do
+              return []
+            | null ss' -> do
+              return []
+            | null (intersect ss' cs) -> do
+              return []
+            | otherwise -> do
+              return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
+  let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
+  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
+  let sorted_cls = reverse $ sortOn length cls
+  let cls_names = zipWith (\x y -> BSC.pack $ x ++ (show y)) (replicate (length top_cls) "L-Cluster") [0..]
+
+  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss' = fst3 $ unzip3 ss
+    let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
+    if
+      | mkFrac f > mean+std -> do
+        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+      | null cs -> do
+        putStrLn "NO CORE"
+        putStrLn bad
+      | length (nub cs) == 1 -> do
+        putStrLn "SINGLE CONSTRAINT CORE"
+        putStrLn bad
+        print (head cs)
+      | null ss' -> do
+        putStrLn "NO DIFF"
+        putStrLn bad
+        putStrLn "---------------------------"
+        putStrLn fix
+      | null (intersect ss' cs) -> do
+        putStrLn "NO OVERLAP CORE/DIFF"
+        putStrLn bad
+        print cs
+        putStrLn fix
+      | otherwise -> do
+        let fn = printf "%04d" (i :: Int)
+        let path = out </> nm </> fn <.> "csv"
+        createDirectoryIfMissing True (takeDirectory path)
+        let new_header = Vector.take 1 header Vector.++ Vector.fromList cls_names Vector.++ Vector.tail header
+        let in_cluster xx = namedRecord $ map (\(cluster, label) -> if show xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
+        let labels = map in_cluster $ thd3 $ unzip3 ss
+        -- print $ length labels
+        -- print $ take 1 features
+        let new_features = map (\(x, y) -> HashMap.union x y) $ zip labels features
+        LBSC.writeFile path $ encodeByName new_header new_features
+        let path = out </> fn <.> "ml"
+        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
+                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+  forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
+    let fn = printf "%04d" (i :: Int)
+    let path = out </> "known_clusters" </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
     writeFile path $ unlines c
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
@@ -492,7 +602,7 @@ sizeOfTree e depth = case e of
   LamG e' -> sizeOfTree e' (depth + 1)
   AppG es -> safeMaximum es depth
   BopG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  UopG e' -> (sizeOfTree e' (depth + 1))
+  UopG e' -> sizeOfTree e' (depth + 1)
   LitG -> depth + 1
   LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
   IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
