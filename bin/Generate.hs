@@ -1,44 +1,44 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
+-- {-# LANGUAGE TupleSections #-}
 module Main where
 
-import Control.Exception (assert)
-import Control.Monad
-import Data.Aeson (ToJSON(..), FromJSON(..), eitherDecode)
-import qualified Data.Aeson as Aeson
-import qualified Data.Algorithm.Diff as Diff
-import qualified Data.ByteString.Char8 as BSC
+import           Control.Exception          (assert)
+import           Control.Monad
+import           Data.Aeson                 (ToJSON(..), FromJSON(..), eitherDecode)
+import qualified Data.Aeson                 as Aeson
+import qualified Data.Algorithm.Diff        as Diff
+import qualified Data.ByteString.Char8      as BSC
 import qualified Data.ByteString.Lazy.Char8 as LBSC
-import Data.Csv
-import Data.Either
-import Data.Function
-import Data.List
-import qualified Data.Map.Strict as Map
-import Data.Maybe
-import qualified Data.HashMap.Strict as HashMap
-import qualified Data.HashSet as HashSet
-import Data.HashSet (HashSet)
-import qualified Data.Set as Set
-import qualified Data.Vector as Vector
-import GHC.Generics
-import Options.Generic hiding (All(..))
-import System.Directory
-import System.Environment
-import System.FilePath
-import System.IO
-import Text.Printf
+import           Data.Ord                   as DO
+import           Data.Csv
+import           Data.Either
+import           Data.Function
+import           Data.List
+import qualified Data.Map.Strict            as Map
+import           Data.Maybe
+import qualified Data.HashMap.Strict        as HashMap
+import qualified Data.HashSet               as HashSet
+import           Data.HashSet               (HashSet)
+import qualified Data.Set                   as Set
+import qualified Data.Vector                as Vector
+import           GHC.Generics
+import           Options.Generic            hiding (All(..))
+import           System.Directory
+import           System.Environment
+import           System.FilePath
+import           System.IO
+import           Text.Printf
 
-import NanoML.Classify hiding (sizeOfTree)
-import NanoML.Lexer
-import NanoML.Monad
-import NanoML.Parser
-import NanoML.Pretty
-import NanoML.Types hiding (Kind)
+import           NanoML.Classify            hiding (sizeOfTree)
+import           NanoML.Lexer
+import           NanoML.Monad
+import           NanoML.Parser
+import           NanoML.Pretty
+import           NanoML.Types               hiding (Kind)
 
-
-import Debug.Trace
+import           Debug.Trace
 
 
 data Generate = Generate
@@ -67,9 +67,9 @@ main = do
     -- "op+context-count+size"
     --   -> mkBadFeatures out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tcount_ctx) jsons
     "op"
-      -> mkBadFeatures out cls (preds_tis) jsons
+      -> mkBadFeatures out cls preds_tis jsons
     "op+slice"
-      -> mkBadFeaturesWithSlice All out cls (preds_tis) jsons
+      -> mkBadFeaturesWithSlice All out cls preds_tis jsons
     "op+context"
       -> mkBadFeatures out cls (preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "op+context+size"
@@ -99,9 +99,9 @@ main = do
     -- "type-inference+vars"
     --   -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
     "spans+exps"
-      -> mkSpansWithExprs JustSlice out cls (preds_tis) jsons
+      -> mkSpansWithExprs JustSlice out cls preds_tis jsons
     "spans+trees"
-      -> mkSpansWithTrees JustSlice out cls (preds_tis) jsons
+      -> mkSpansWithTrees JustSlice out cls preds_tis jsons
     "spans+trees+all"
       -> mkSpansWithTrees JustSlice out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     "spans+clusters+all"
@@ -149,7 +149,7 @@ mkBadFeaturesWithSlice withSlice out nm fs jsons = do
         putStrLn bad
         putStrLn "---------------------------"
         putStrLn fix
-      | null (intersect ss cs) -> do
+      | null (ss `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
         putStrLn bad
         print cs
@@ -177,7 +177,7 @@ mkSpansWithExprs withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffsWithExprs jsons
   let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
-              , let ss = fst $ unzip ss'
+              , let ss = map fst ss'
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
@@ -189,11 +189,11 @@ mkSpansWithExprs withSlice out nm fs jsons = do
   let mean = mkMean mkFrac feats' :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = fst $ unzip ss
-    let ss_expr = map (\(fi, se) -> (show fi) ++ "\n" ++ (render $ pretty se) ++ "\n") ss
+    let ss' = map fst ss
+    let ss_expr = map (\(fi, se) -> show fi ++ "\n" ++ render (pretty se) ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
-          printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
+        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
       | null cs -> do
         putStrLn "NO CORE"
         putStrLn bad
@@ -206,7 +206,7 @@ mkSpansWithExprs withSlice out nm fs jsons = do
         putStrLn bad
         putStrLn "---------------------------"
         putStrLn fix
-      | null (intersect ss' cs) -> do
+      | null (ss' `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
         putStrLn bad
         print cs
@@ -228,7 +228,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
-              , let ss = fst3 $ unzip3 ss'
+              , let ss = map fst3 ss'
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
@@ -242,46 +242,36 @@ mkSpansWithTrees withSlice out nm fs jsons = do
   -- Find clusters of fixes to be used as templates
   let ss_fixes
         = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-          let ss' = fst3 $ unzip3 ss
+          let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> do
-              return []
-            | null cs -> do
-              return []
-            | length (nub cs) == 1 -> do
-              return []
-            | null ss' -> do
-              return []
-            | null (intersect ss' cs) -> do
-              return []
-            | otherwise -> do
-              return $ thd3 $ unzip3 ss) >>= concat
+            | mkFrac f > mean+std -> return []
+            | null cs -> return []
+            | length (nub cs) == 1 -> return []
+            | null ss' -> return []
+            | null (ss' `intersect` cs) -> return []
+            | otherwise -> return $ thd3 $ unzip3 ss)
+            >>= concat
   let clusters = makeClusters ss_fixes
   let elems
         = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-          let ss' = fst3 $ unzip3 ss
+          let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> do
-              return []
-            | null cs -> do
-              return []
-            | length (nub cs) == 1 -> do
-              return []
-            | null ss' -> do
-              return []
-            | null (intersect ss' cs) -> do
-              return []
-            | otherwise -> do
-              return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
-  let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
-  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
-  let sorted_cls = reverse $ sortOn length cls
+            | mkFrac f > mean+std -> return []
+            | null cs -> return []
+            | length (nub cs) == 1 -> return []
+            | null ss' -> return []
+            | null (ss' `intersect` cs) -> return []
+            | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
+            >>= concat
+  let cls = map (\c -> ((show c) : map snd (filter (\(x, _) -> x == c) elems))) clusters
+  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
+  let sorted_cls = sortOn (DO.Down . length) cls
   -- Keep only top N clusters as templates for ML labels
-  let top_cls = take 40 $ snd $ unzip $ reverse $ sortOn (\(x, _) -> length x) $ zip cls clusters
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ (show y)) (replicate (length top_cls) "L-Cluster") [0..]
+  let top_cls = take 40 $ map snd $ sortOn (DO.Down . \(x, _) -> length x) (zip cls clusters)
+  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [0..]
 
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = fst3 $ unzip3 ss
+    let ss' = map fst3 ss
     let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
@@ -298,7 +288,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         putStrLn bad
         putStrLn "---------------------------"
         putStrLn fix
-      | null (intersect ss' cs) -> do
+      | null (ss' `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
         putStrLn bad
         print cs
@@ -337,7 +327,7 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
-              , let ss = fst3 $ unzip3 ss'
+              , let ss = map fst3 ss'
               , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
@@ -351,44 +341,34 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
   -- Find clusters of fixes to be used as templates
   let ss_fixes
         = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-          let ss' = fst3 $ unzip3 ss
+          let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> do
-              return []
-            | null cs -> do
-              return []
-            | length (nub cs) == 1 -> do
-              return []
-            | null ss' -> do
-              return []
-            | null (intersect ss' cs) -> do
-              return []
-            | otherwise -> do
-              return $ thd3 $ unzip3 ss) >>= concat
+            | mkFrac f > mean+std -> return []
+            | null cs -> return []
+            | length (nub cs) == 1 -> return []
+            | null ss' -> return []
+            | null (ss' `intersect` cs) -> return []
+            | otherwise -> return $ thd3 $ unzip3 ss)
+            >>= concat
   let clusters = makeClusters ss_fixes
   let elems
         = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-          let ss' = fst3 $ unzip3 ss
+          let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> do
-              return []
-            | null cs -> do
-              return []
-            | length (nub cs) == 1 -> do
-              return []
-            | null ss' -> do
-              return []
-            | null (intersect ss' cs) -> do
-              return []
-            | otherwise -> do
-              return $ map (\(_, x, y) -> (y, (render $ pretty x))) ss) >>= concat
-  let cls = map (\c -> ((show c) : map (\(_, y) -> y) (filter (\(x, _) -> x == c) elems))) clusters
-  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ groupBy (==) $ sort $ map (\c -> (length c) - 1) cls
-  let sorted_cls = reverse $ sortOn length cls
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ (show y)) (replicate (length top_cls) "L-Cluster") [0..]
+            | mkFrac f > mean+std -> return []
+            | null cs -> return []
+            | length (nub cs) == 1 -> return []
+            | null ss' -> return []
+            | null (ss' `intersect` cs) -> return []
+            | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
+            >>= concat
+  let cls = map (\c -> ((show c) : map snd (filter (\(x, _) -> x == c) elems))) clusters
+  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
+  let sorted_cls = sortOn (DO.Down . length) cls
+  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [0..]
 
   forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = fst3 $ unzip3 ss
+    let ss' = map fst3 ss
     let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
@@ -405,7 +385,7 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
         putStrLn bad
         putStrLn "---------------------------"
         putStrLn fix
-      | null (intersect ss' cs) -> do
+      | null (ss' `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
         putStrLn bad
         print cs
@@ -667,7 +647,7 @@ runTFeaturesDiff fs (ls, bad)
   (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
     Left e -> -- traceShow e
               ([], [], Just e)
-    Right (p, cs) -> (p, mapMaybe (constraintSpan) $ (Set.toList (mconcat cs)), Nothing)
+    Right (p, cs) -> (p, mapMaybe constraintSpan $ (Set.toList (mconcat cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e

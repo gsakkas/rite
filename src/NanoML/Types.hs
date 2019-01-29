@@ -11,7 +11,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
-{-# LANGUAGE OverlappingInstances  #-}
+-- {-# LANGUAGE OverlappingInstances  #-}
 {-# LANGUAGE TupleSections         #-}
 {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE TypeOperators         #-}
