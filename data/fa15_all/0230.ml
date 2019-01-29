@@ -1,45 +1,22 @@
 
 let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
-
-let fixpoint (f,b) = wwhile (let n x = (f, (b < (f b))) in (n, b));;
+  let y = f b in match y with | (b',c') -> if c' then b' else f b';;
 
 
 (* fix
 
 let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
-
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+  let y = f b in match y with | (b',c') -> if c' then b' else wwhile (f, b');;
 
 *)
 
 (* changed spans
-(6,44)-(6,45)
-let ff = f b in (ff , b = ff)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(6,60)-(6,61)
-ff
+(3,62)-(3,63)
+wwhile
 VarG
 
-(6,60)-(6,61)
-b
-VarG
-
-(6,60)-(6,61)
-ff
-VarG
-
-(6,60)-(6,61)
-b = ff
-BopG VarG VarG
-
-(6,60)-(6,61)
-(n , b)
+(3,62)-(3,63)
+(f , b')
 TupleG (fromList [VarG])
 
 *)

@@ -1,107 +1,37 @@
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| hd :: tl -> mulByDigit i
-                         tl @ [hd * i]
-match l with
-| [] -> []
-| x :: xs' -> listReverse xs' @ [x]
-match l with
-| [] -> []
-| head :: [] -> [head]
-| head :: tail -> listReverse tail @ [head]
-match l with
-| [] -> []
-| h :: tail -> listReverse tail @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-match n with
-| 0 -> []
-| 1 -> [0]
-| x -> [0] @ listZeros (n - 1)
-match n with
-| 0 -> []
-| 1 -> [0]
-| x -> [0] @ listZeros (n - 1)
-match t with
-| [] -> [remainder i h]
-| h' :: t' -> [h' * i] @ mulByDigit i
-                                    t'
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
+AppG (fromList [VarG,LitG])
+sepConcat " " l
+clone 0 diff
+clone 0 l
+clone 0 l
+r_digitalRoot n (-1)
+f 2 xs
+f 2 xs
+f 2 xs
+f 0 xs
+f 4 xs
+f 0 hd
+helper 0 n
+clone 0 l1G
+clone 0 l2G
+clone 0 l1G
+clone 0 l2G
+clone 0 l1G
+clone 0 l2G
+clone 0 l1G
+clone 0 l2G
+clone 0 l1G
+clone 0 l1G
+clone 0 l2G
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+buildhelper 0 0 expr
+reverseInt n 0
+reverseInt n 0
+reverseInt n 0
+reverseInt n 0
+reverseInt n 0
+" " ^ x

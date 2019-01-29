@@ -1,32 +1,29 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
 
-let fixpoint (f,b) = wwhile (let n x = (f, (x = (f x))) in (f, b));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec additivePersistence n =
+  let x = 0 in if n < 10 then x else additivePersistence (digits n);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
-
-let fixpoint (f,b) = wwhile (let n x = ((f x), (x = (f x))) in (n, b));;
+let rec additivePersistence n =
+  let x = 0 in if n < 10 then x else additivePersistence (n - 50);;
 
 *)
 
 (* changed spans
-(6,40)-(6,41)
-f x
-AppG (fromList [VarG])
-
-(6,43)-(6,54)
-x
-VarG
-
-(6,60)-(6,61)
-n
-VarG
+(14,58)-(14,64)
+n - 50
+BopG VarG LitG
 
 *)

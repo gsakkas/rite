@@ -1,26 +1,26 @@
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
-
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t -> [remainder i t] @ (mulByDigit i t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length ()) = 0 then a ^ x else a ^ (x ^ sep) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
-
-let rec mulByDigit i l =
-  match List.rev l with
-  | [] -> []
-  | h::t -> [remainder i h] @ (mulByDigit i t);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) = 0 then a ^ x else a ^ (x ^ sep) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(7,25)-(7,26)
-h
+(6,34)-(6,36)
+sl
 VarG
 
 *)

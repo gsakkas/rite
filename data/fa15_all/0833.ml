@@ -1,24 +1,27 @@
 
-let count = 0;;
-
-let lt10 q = q < 10;;
-
-let rec additivePersistence n = if lt10 n then count;;
+let rec wwhile (f,b) =
+  let rec acc result =
+    let res = f result in
+    match res with | (b',c') -> if c' then acc b' else b' | b' -> b' in
+  acc b;;
 
 
 (* fix
 
-let count = 0;;
-
-let lt10 q = q < 10;;
-
-let rec additivePersistence n = if lt10 n then count else 8;;
+let rec wwhile (f,b) =
+  let rec acc result =
+    let res = f result in
+    match res with | (b',c') -> if c' then acc b' else b' in
+  acc b;;
 
 *)
 
 (* changed spans
-(6,32)-(6,52)
-8
-LitG
+(5,4)-(5,68)
+match res with
+| (b' , c') -> if c'
+               then acc b'
+               else b'
+CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)

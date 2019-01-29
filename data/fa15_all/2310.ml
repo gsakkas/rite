@@ -1,70 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> exprToString x "*" exprToString y;;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in ([], (0 :: a)) in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = let (h::t,_) = a in ([], []) in
+    let base = ((List.rev l1), []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(19,19)-(19,31)
-(^)
-VarG
-
-(19,19)-(19,31)
-exprToString x
-AppG (fromList [VarG])
-
-(19,19)-(19,52)
-exprToString x ^ ("*" ^ exprToString y)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(19,34)-(19,37)
-(^)
-VarG
-
-(19,34)-(19,37)
-"*" ^ exprToString y
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(19,38)-(19,50)
-exprToString y
-AppG (fromList [VarG])
+(19,47)-(19,48)
+[]
+ListG EmptyG Nothing
 
 *)

@@ -1,20 +1,23 @@
 
-let rec digitsOfInt n = if n < 0 then 7;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (match n with | hd::tl -> hd :: (digitsOfInt tl));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [7] else [8];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (match n with | n -> [] @ [n mod 10]);;
 
 *)
 
 (* changed spans
-(2,24)-(2,39)
-[8]
-ListG LitG Nothing
+(3,25)-(3,74)
+match n with
+| n -> [] @ [n mod 10]
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
 
-(2,38)-(2,39)
-[7]
-ListG LitG Nothing
+(3,70)-(3,72)
+[] @ [n mod 10]
+AppG (fromList [ListG EmptyG Nothing])
 
 *)

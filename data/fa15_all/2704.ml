@@ -1,35 +1,17 @@
 
-let rec wwhile (f,b) =
-  let x = f b in
-  match x with | h::t -> if t = false then h else wwhile (f, h);;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) :: (n mod 10) else [];;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let x = f b in
-  match x with | (x,y) -> if y = false then x else wwhile (f, x);;
+let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
 
 *)
 
 (* changed spans
-(4,2)-(4,63)
-match x with
-| (x , y) -> if y = false
-             then x
-             else wwhile (f , x)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(4,28)-(4,29)
-y
-VarG
-
-(4,43)-(4,44)
-x
-VarG
-
-(4,61)-(4,62)
-x
-VarG
+(3,17)-(3,28)
+[n / 10 ; n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
 *)

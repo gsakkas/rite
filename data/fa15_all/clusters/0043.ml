@@ -1,80 +1,51 @@
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let ff = f b in (ff , b = ff)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let x = f b' in (x , b' <> x)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let x = f b in (x , x <> b)
-let result = f b in
-(result , result = b)
-let result = f b in
-(result , result = b)
-let result = f b in
-(result , result = b)
-let pad = clone 0 sizDif in
-(l1 , pad @ l2)
-let pad =
-  clone 0 (- sizDif) in
-(pad @ l1 , l2)
-let pad = clone 0 sizDif in
-(l1 , pad @ l2)
-let pad =
-  clone 0 (- sizDif) in
-(pad @ l1 , l2)
-let pad = clone 0 sizDif in
-(l1 , pad @ l2)
-let pad =
-  clone 0 (- sizDif) in
-(pad @ l1 , l2)
-let calcfx = f x in
-(calcfx , calcfx = x)
-let calcx = f x in
-(calcx , calcx = x)
-let s = bigAdd m a' in
-(c + 1 , s)
-let s = bigAdd m a' in
-(c + 1 , s)
-let s = bigAdd m a' in
-(c + 1 , s)
-let s = bigAdd m a' in
-(c + 1 , s)
+TupleG (fromList [LitG])
+(2 , 6)
+(2 , 6)
+(2 , 6)
+(0 , 1)
+(0 , 6)
+(0 , 4)
+(0 , 1)
+(0 , 4)
+(0 , 1)
+(0 , 2)
+(2 , 7)
+(0 , 2)
+(2 , 7)
+(0 , 0)
+(0 , 7)
+(0 , 1)
+(0 , 1)
+(0 , 2)
+(0 , 5)
+(0 , 0)
+(0 , 0)
+(0 , 0)
+(0 , 0)
+(10 , 13 , 57)
+(10 , 13 , 57)
+(0 , 100)
+(0 , 100)
+(0 , 1)
+(0 , 1)
+(0 , 1)
+(0 , 1)
+(10 , 39)
+(1 , 4)
+(0 , 4)
+(0 , 4)
+(0 , 4)
+(0 , 4)
+(0 , 4)
+(3 , 3)
+(3 , 3)
+(3 , 3)
+(3 , 3)
+(3 , 3)
+(3 , 3)
+(3 , 3)
+(0 , true)
+(0 , true)
+(0 , 2)
+(0 , 2)
+(0 , 2)

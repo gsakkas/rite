@@ -1,79 +1,100 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let fixpoint (f,b) =
-  let fs bs = if bs = 0 then 0 else if bs > 1 then bs - 1 else bs + 1 in
-  wwhile (fs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1 /. (1 - (exp ((-1) *. a)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sigmoid of expr;;
 
-let fixpoint (f,b) =
-  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Sigmoid a -> 1. /. (1. -. (exp ((-1.) *. (eval (a, x, y)))))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(7,17)-(7,19)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-LamG (IteG EmptyG EmptyG EmptyG)
+(20,23)-(20,24)
+1.0
+LitG
 
-(7,29)-(7,30)
-let funt =
-  fun b ->
-    if f b
-    then (b , true)
-    else (b , false) in
-wwhile (funt , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+(20,27)-(20,44)
+1.0 -. exp ((- 1.0) *. eval (a , x , y))
+BopG LitG (AppG (fromList [EmptyG]))
 
-(7,63)-(7,65)
-f
+(20,27)-(20,44)
+1.0
+LitG
+
+(20,33)-(20,37)
+(- 1.0)
+UopG LitG
+
+(20,41)-(20,42)
+eval
 VarG
 
-(7,63)-(7,65)
-b
-VarG
-
-(7,63)-(7,65)
-b
-VarG
-
-(7,63)-(7,65)
-b
-VarG
-
-(7,63)-(7,65)
-wwhile (funt , b)
+(20,41)-(20,42)
+eval (a , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(7,63)-(7,65)
-true
+(20,41)-(20,42)
+1.0
 LitG
 
-(7,63)-(7,65)
-false
-LitG
+(20,41)-(20,42)
+(a , x , y)
+TupleG (fromList [VarG])
 
-(7,63)-(7,65)
-(b , true)
-TupleG (fromList [VarG,LitG])
+(21,21)-(21,65)
+x
+VarG
 
-(7,63)-(7,65)
-(b , false)
-TupleG (fromList [VarG,LitG])
-
-(8,10)-(8,12)
-funt
+(21,21)-(21,65)
+y
 VarG
 
 *)

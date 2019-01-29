@@ -1,3 +1,7 @@
-CaseG VarG (fromList [(Nothing,ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG LitG]))) Nothing)])
-match n with
-| n_ -> (n_ mod 10) :: (digitsOfInt n_)
+CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ConAppG (Just EmptyG) Nothing)])
+match n > 9 with
+| false -> n :: (digitsOfInt n)
+| true -> digitsOfInt (n mod 10)
+match n > 9 with
+| false -> n :: (digitsOfInt n)
+| true -> digitsOfInt (n mod 10)

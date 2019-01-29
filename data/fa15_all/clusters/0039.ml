@@ -1,220 +1,55 @@
-LamG (IteG EmptyG EmptyG EmptyG)
-fun numZeros ->
-  if numZeros <= 0
-  then []
-  else 0 :: (generatePadding (numZeros - 1))
-fun n ->
-  if x <= 0
-  then []
-  else cloneHelper x (n - 1)
-fun n ->
-  if x <= 0
-  then []
-  else cloneHelper x (n - 1)
-fun n ->
-  if x <= 0
-  then []
-  else cloneHelper x (n - 1)
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun l ->
-  if i > 0
-  then bigAdd l
-              (mulByDigit (i - 1) l)
-  else []
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun x ->
-  if f x = b
-  then (b , true)
-  else (f x , false)
-fun n ->
-  if n < 10 then n else helper n
-fun seen ->
-  if List.mem h r
-  then seen
-  else h :: seen
-fun seen ->
-  if List.mem h r
-  then seen
-  else h :: seen
-fun l ->
-  if x > 0
-  then l @ []
-  else appZero (x - 1) l
-fun b ->
-  if f b = b
-  then (b , false)
-  else (f b , true)
-fun b' ->
-  if f b' = b'
-  then (f b' , false)
-  else (f b' , true)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
+AppG (fromList [BopG EmptyG EmptyG])
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+sin ((pi *. eval (e , x , y)) *. 0.5)
+sin ((pi *. eval (e , x , y)) *. 0.5)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+not (f b = b)
+not (f x = x)
+not (f x = x)
+cos (pi *. eval (e' , x , y))
+sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y)))
+sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y)))
+digitsOfInt (n / 10)
+cos (pi *. eval (u , x , y))
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+helper (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+getDigits (n / 10)
+getDigits (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n mod 10)
+digitsOfInt (n mod 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+sin (pi *. evalhelper p1 x y)
+cos (pi *. evalhelper p1 x y)
+sin (pi *. evalhelper p1 x y)
+cos (pi *. evalhelper p1 x y)
+sin (pi *. evalhelper p1 x y)
+cos (pi *. evalhelper p1 x y)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)
+digitsOfInt (n / 10)

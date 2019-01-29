@@ -1,4 +1,2 @@
-IteG (AppG (fromList [EmptyG])) VarG (AppG (fromList [EmptyG]))
-if List.mem h seen
-then seen
-else seen @ [h]
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG (BopG (BopG VarG LitG) LitG)]))) Nothing
+(n - ((n / 10) * 10)) :: (digitsOfInt (n / 10))

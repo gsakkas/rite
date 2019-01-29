@@ -1,37 +1,18 @@
 
-let rec listReverse l =
-  let newList = [] in
-  match l with
-  | [] -> []
-  | head::[] -> head
-  | head::tail -> (listReverse tail) :: head;;
+let rec sumList xs =
+  match xs with | [] -> [] | head::tail -> head + (sumList tail);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with
-  | [] -> []
-  | head::[] -> [head]
-  | head::tail -> (listReverse tail) @ [head];;
+let rec sumList xs =
+  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
 
 *)
 
 (* changed spans
-(6,16)-(6,20)
-[head]
-ListG VarG Nothing
-
-(7,18)-(7,36)
-(@)
-VarG
-
-(7,18)-(7,44)
-listReverse tail @ [head]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(7,40)-(7,44)
-[head]
-ListG VarG Nothing
+(3,24)-(3,26)
+0
+LitG
 
 *)

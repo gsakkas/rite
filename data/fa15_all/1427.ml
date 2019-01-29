@@ -1,26 +1,100 @@
 
+let append x l = match l with | [] -> [x] | h::t -> x :: l;;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: [] :: (digitsOfInt (n / 10));;
+  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 
 (* fix
 
+let append x l =
+  let rec helper x l acc =
+    match x with | [] -> l | h::t -> helper t l (h :: acc) in
+  helper x l [];;
+
 let rec digitsOfInt n =
-  if n <= 0 then [] else [n mod 10] @ (digitsOfInt (n / 10));;
+  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 *)
 
 (* changed spans
-(3,25)-(3,35)
-(@)
+(2,17)-(2,58)
+fun x ->
+  fun l ->
+    fun acc ->
+      match x with
+      | [] -> l
+      | h :: t -> helper t l
+                         (h :: acc)
+LamG (LamG EmptyG)
+
+(2,17)-(2,58)
+fun l ->
+  fun acc ->
+    match x with
+    | [] -> l
+    | h :: t -> helper t l
+                       (h :: acc)
+LamG (LamG EmptyG)
+
+(2,17)-(2,58)
+fun acc ->
+  match x with
+  | [] -> l
+  | h :: t -> helper t l
+                     (h :: acc)
+LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(2,17)-(2,58)
+let rec helper =
+  fun x ->
+    fun l ->
+      fun acc ->
+        match x with
+        | [] -> l
+        | h :: t -> helper t l
+                           (h :: acc) in
+helper x l []
+LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(2,52)-(2,53)
+h
 VarG
 
-(3,25)-(3,35)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(2,52)-(2,53)
+acc
+VarG
 
-(3,25)-(3,67)
-[n mod 10] @ digitsOfInt (n / 10)
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(2,52)-(2,53)
+helper
+VarG
+
+(2,52)-(2,53)
+helper x l []
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(2,52)-(2,58)
+l
+VarG
+
+(2,52)-(2,58)
+helper
+VarG
+
+(2,52)-(2,58)
+t
+VarG
+
+(2,52)-(2,58)
+l
+VarG
+
+(2,52)-(2,58)
+helper t l (h :: acc)
+AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+
+(4,20)-(5,65)
+[]
+ListG EmptyG Nothing
 
 *)

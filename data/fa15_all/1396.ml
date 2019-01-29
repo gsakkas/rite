@@ -1,33 +1,41 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  wwhile (let fin b' = (b', ((f b') = b')) in ((fin b), b));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ sep in
+      let base = h ^ sep in let l = h in List.fold_left f base l;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (let fin bt = (bt, ((f bt) = bt)) in (fin, b));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(5,18)-(5,42)
-fun bt -> (bt , f bt = bt)
-LamG (TupleG (fromList [EmptyG]))
-
-(5,24)-(5,26)
-bt
+(7,28)-(7,64)
+x
 VarG
 
-(5,38)-(5,40)
-bt
+(7,36)-(7,37)
+let base = h in
+let l = sl in
+List.fold_left f base l
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(7,41)-(7,64)
+sl
 VarG
 
-(5,46)-(5,58)
-bt
-VarG
+(7,41)-(7,64)
+let l = sl in
+List.fold_left f base l
+LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
 
 *)

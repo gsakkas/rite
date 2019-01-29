@@ -1,16 +1,18 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> t @ h;;
+let pipe fs =
+  let f a x g = (a x) g in let base g = g in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec listReverse l = match l with | [] -> [] | h::t -> t @ [h];;
+let pipe fs =
+  let f a x g = x (a g) in let base g = g in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,62)-(2,63)
-[h]
-ListG VarG Nothing
+(3,16)-(3,21)
+x
+VarG
 
 *)

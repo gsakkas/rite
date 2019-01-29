@@ -8,8 +8,15 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let pi = 4.0 *. (atan 1.0);;
+
 let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e1);;
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) /. 2;;
 
 
 (* fix
@@ -23,14 +30,25 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
+let pi = 4.0 *. (atan 1.0);;
+
 let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin x;;
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.;;
 
 *)
 
 (* changed spans
-(12,64)-(12,66)
-x
-VarG
+(19,23)-(19,62)
+eval (e1 , x , y) +. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(19,66)-(19,67)
+2.0
+LitG
 
 *)

@@ -1,58 +1,43 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) = wwhile ((let f' b = (f b) = b in f'), b);;
+let sqsum xs =
+  let f a x = match x with | [] -> a | hd::tl -> a + (hd * hd) in
+  let base = f 0 xs in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let f' b = if (f b) = b then (b, true) else ((f b), false) in f'), b);;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(5,41)-(5,50)
-if f b = b
-then (b , true)
-else (f b , false)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(5,54)-(5,56)
-b
+(3,59)-(3,61)
+x
 VarG
 
-(5,54)-(5,56)
-f
+(4,2)-(4,47)
+x
 VarG
 
-(5,54)-(5,56)
-b
+(4,13)-(4,19)
+xs
 VarG
 
-(5,54)-(5,56)
-f b
-AppG (fromList [VarG])
-
-(5,54)-(5,56)
-true
+(4,13)-(4,19)
+0
 LitG
 
-(5,54)-(5,56)
-false
-LitG
+(4,13)-(4,19)
+match xs with
+| [] -> 0
+| hd :: tl -> f 0 hd
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
 
-(5,54)-(5,56)
-(b , true)
-TupleG (fromList [VarG,LitG])
-
-(5,54)-(5,56)
-(f b , false)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
+(4,17)-(4,19)
+hd
+VarG
 
 *)

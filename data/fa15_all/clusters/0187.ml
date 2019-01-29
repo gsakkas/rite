@@ -1,2 +1,3 @@
-ConAppG (Just (TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing
-Average (Times (ex1 , ex2) , Times (ex2 , ex3))
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) LitG) LitG]))) Nothing
+(((d1 + d2) + 1) - 10) :: result
+(((arg1 + arg2) + 1) mod 10) :: acc

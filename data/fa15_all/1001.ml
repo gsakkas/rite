@@ -1,30 +1,21 @@
 
-let helper (f,b) = let f b = let x = f in (x, (x != b)) in f b;;
-
-let rec wwhile (f,b) =
-  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
-
-let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
+let pipe fs = let f a x = a x in let base d = d in List.fold_left f base fs;;
 
 
 (* fix
 
-let helper (f,b) = let f b = let x = f b in (x, (x != b)) in f;;
-
-let rec wwhile (f,b) =
-  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
-
-let fixpoint (f,b) = wwhile ((helper (f, b)), b);;
+let pipe fs =
+  let f a x a x = a x in let base d = d in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,37)-(2,38)
-f b
-AppG (fromList [VarG])
+(2,26)-(2,29)
+fun a -> fun x -> a x
+LamG (LamG EmptyG)
 
-(2,42)-(2,55)
-b
-VarG
+(2,26)-(2,29)
+fun x -> a x
+LamG (AppG (fromList [EmptyG]))
 
 *)

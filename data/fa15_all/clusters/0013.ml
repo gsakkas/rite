@@ -1,181 +1,194 @@
-ListG (BopG EmptyG EmptyG) Nothing
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 100 ; n mod 10]
-[addition (m , n) mod 10]
-[hd * i]
-[hd * i]
-[hd * i]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[((h + c) + d) / 10]
-[((h + c) + d) mod 10]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[((h + c) + d) / 10]
-[((h + c) + d) mod 10]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[((h + c) + d) / 10]
-[((h + c) + d) mod 10]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[((h + c) + d) / 10]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[((h + c) + d) / 10]
-[((h + c) + d) mod 10]
-[(n + c) + d]
-[n + 1]
-[((n + c) + d) mod 10]
-[(c + d) + h]
-[n mod 10]
-[((a1 + x1) + x2) - 10]
-[(a1 + x1) + x2]
-[((a1 + x1) + x2) - 10]
-[(a1 + x1) + x2]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[num mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[b / 10 ; b mod 10]
-[(fst x + snd x) mod 10]
-[(fst x + snd x) mod 10]
-[(fst x + snd x) mod 10]
-[(fst x + snd x) mod 10]
-[(fst x + snd x) mod 10]
-[(fst x + snd x) mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[b mod 10]
-[b mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[((y + z) + carry) mod 10]
-[(y + z) + carry]
-[(y + z) + carry]
-[(y + z) + carry]
-[((y + z) + carry) mod 10]
-[((y + z) + carry) mod 10]
-[(y + z) + carry]
-[((y + z) + carry) mod 10]
-[(y + z) + carry]
-[((y + z) + carry) mod 10]
-[(y + z) + carry]
-[((y + z) + carry) mod 10]
-[(y + z) + carry]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[n mod 10]
-[w mod 10]
-[w / 10]
-[w mod 10]
-[w / 10]
-[x mod 10]
-[x mod 10]
-[n mod 10]
-[n mod 10]
-[carry + 1 ; ((carry + b) + c) mod 10]
-[((h + b) + c) / 10]
-[((h + b) + c) mod 10]
-[carry + 1 ; ((carry + b) + c) mod 10]
-[((h + b) + c) / 10]
-[((h + b) + c) mod 10]
-[((h + b) + c) mod 10]
-[n mod 10]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[(1 + h') + h]
-[h' + h]
-[i * h]
-[h * i]
-[h * i]
-[h' * i]
-[i * h]
-[i * h]
-[n mod 10]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[x1 + x2]
-[(x1 + x2) mod 10]
-[(x1 + x2) mod 10]
-[(x1 + x2) mod 10]
-[((x1 + x2) + c) / 10]
-[(x1 + x2) mod 10]
-[((x1 + x2) + c) mod 10]
-[(x1 + x2) mod 10]
-[((x1 + x2) + c) mod 10]
-[(x1 + x2) mod 10]
-[((x1 + x2) + c) mod 10]
-[(x1 + x2) mod 10]
-[v mod 10]
-[((x * i) mod 10) + x']
-[((x * i) mod 10) + x']
-[((x * i) mod 10) + x']
-[((x * i) mod 10) + x']
-[((z * i) mod 10) + x]
+BopG (BopG EmptyG EmptyG) VarG
+(l1' + l2') + carry
+(l1' + l2') + carry
+(l1' + l2') + carry
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(c + x') + x''
+(a * a) + x
+(a * a) + x
+(a * a) + x
+(a * a) + x
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(o + x1) + x2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(carry + add1) + add2
+(add1 + add2) + carry
+(add1 + add2) + carry
+(add1 + add2) + carry
+(add1 + add2) + carry
+(add1 + add2) + carry
+(add1 + add2) + carry
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(i + j) + s
+(d1 + d2) + carry
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+((fir + sec) / 10) + b1
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(x * x) * x
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(f + g) + carry
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(carry + addend_a) + addend_b
+(a * a) + x

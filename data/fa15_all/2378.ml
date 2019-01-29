@@ -1,135 +1,40 @@
 
-let getHead h = match h with | [] -> [] | h::t -> h;;
+let rec digitsOfIntHelper n =
+  if n > 0 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [];;
 
-let getTail t = match t with | [] -> [] | h::t -> t;;
+let rec digitsOfInt n = if n == 0 then [0] else digitsOfIntHelper n;;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let digits n = digitsOfInt (abs n);;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec sumList xs = match xs with | [] -> 0 | x::s -> x + (sumList s);;
 
-let rec matchHeads x y =
-  match x with
-  | [] -> true
-  | h::t ->
-      if (getHead x) = (getHead y) then matchHeads t (getTail y) else false;;
-
-let palindrome w =
-  match explode w with
-  | [] -> true
-  | h::t -> matchHeads (listReverse (explode w)) (listReverse (explode w));;
+let rec additivePersistence n =
+  if n = 0 then 0 else 1 + (additivePersistence sumList (digits n));;
 
 
 (* fix
 
-let getHead h = match h with | [] -> [] | h::t -> h;;
+let rec digitsOfIntHelper n =
+  if n > 0 then (digitsOfIntHelper (n / 10)) @ [n mod 10] else [];;
 
-let getTail t = match t with | [] -> [] | h::t -> t;;
+let rec digitsOfInt n = if n == 0 then [0] else digitsOfIntHelper n;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let digits n = digitsOfInt (abs n);;
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+let rec sumList xs = match xs with | [] -> 0 | x::s -> x + (sumList s);;
 
-let rec matchHeads x =
-  match x with
-  | [] -> true
-  | h::t ->
-      if (getHead x) = (getHead (listReverse x))
-      then matchHeads (getTail (listReverse t))
-      else false;;
-
-let palindrome w =
-  match explode w with | [] -> true | h::t -> matchHeads [["b"]];;
+let rec additivePersistence n =
+  if n = 0 then 0 else 1 + (additivePersistence (sumList (digits n)));;
 
 *)
 
 (* changed spans
-(6,12)-(9,6)
-l
-VarG
-
-(6,12)-(9,6)
-listReverse
-VarG
-
-(6,12)-(9,6)
-t
-VarG
-
-(6,12)-(9,6)
-(@)
-VarG
-
-(6,12)-(9,6)
-h
-VarG
-
-(6,12)-(9,6)
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> listReverse t @ [h]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(6,12)-(9,6)
-listReverse t
-AppG (fromList [VarG])
-
-(6,12)-(9,6)
-listReverse t @ [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(6,12)-(9,6)
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-
-(6,12)-(9,6)
-[]
-ListG EmptyG Nothing
-
-(6,12)-(9,6)
-[h]
-ListG VarG Nothing
-
-(18,40)-(18,50)
-listReverse
-VarG
-
-(18,40)-(18,50)
-x
-VarG
-
-(18,40)-(18,50)
-matchHeads (getTail (listReverse t))
+(12,27)-(12,67)
+additivePersistence (sumList (digits n))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(18,40)-(18,64)
-listReverse x
-AppG (fromList [VarG])
-
-(18,62)-(18,63)
-listReverse t
-AppG (fromList [VarG])
-
-(18,70)-(18,75)
-listReverse
-VarG
-
-(18,70)-(18,75)
-t
-VarG
-
-(23,71)-(23,72)
-matchHeads
-VarG
+(12,48)-(12,55)
+sumList (digits n)
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

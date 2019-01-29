@@ -1,136 +1,40 @@
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (first,second) -> ([2], [1]) in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x = match x with | [] -> (fun b  -> b) in
+  let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x y = a (x y) in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(16,16)-(16,59)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+(3,14)-(3,48)
+fun y -> a (x y)
+LamG (AppG (fromList [EmptyG]))
 
-(16,49)-(16,59)
+(3,20)-(3,21)
 a
 VarG
 
-(16,49)-(16,59)
-lh1
+(3,20)-(3,21)
+a (x y)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(3,20)-(3,21)
+x y
+AppG (fromList [VarG])
+
+(3,35)-(3,48)
+y
 VarG
 
-(16,49)-(16,59)
-lh2
-VarG
-
-(16,49)-(16,59)
-carry
-VarG
-
-(16,49)-(16,59)
-lh1 + lh2
-BopG VarG VarG
-
-(16,49)-(16,59)
-(lh1 + lh2) + carry
-BopG (BopG EmptyG EmptyG) VarG
-
-(16,49)-(16,59)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(16,49)-(16,59)
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(16,56)-(16,57)
-num / 10
-BopG VarG LitG
-
-(17,4)-(19,51)
-num
-VarG
-
-(17,4)-(19,51)
-num
-VarG
-
-(17,4)-(19,51)
-res
-VarG
-
-(17,4)-(19,51)
-num mod 10
-BopG VarG LitG
-
-(17,4)-(19,51)
-10
-LitG
-
-(17,4)-(19,51)
-10
-LitG
-
-(17,4)-(19,51)
-(num mod 10) :: res
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
-
-(17,15)-(17,17)
-0
-LitG
-
-(17,15)-(17,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+(3,35)-(3,48)
+let base = fun b -> b in
+List.fold_left f base fs
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
 
 *)

@@ -1,21 +1,21 @@
-TupleG (fromList [LitG,LetG NonRec (fromList [EmptyG]) EmptyG])
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
+CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG)])
+match e with
+| Average (x' , y') -> (x +. y) /. 2.0
+match e with
+| Average (x' , y') -> (x +. y) /. 2.0
+match e with
+| Average (x' , y') -> (x +. y) /. 2.0
+match e with
+| Average (x' , y') -> (x +. y) /. 2.0
+match e with
+| Average (x' , y') -> (x +. y) /. 2.0
+match x with
+| (f , g) -> (f + g) + (carry mod 10)
+match x with
+| (f , g) -> (f + g) + (carry mod 10)
+match x with
+| (f , g) -> (f + g) + (carry mod 10)
+match x with
+| (f , g) -> (f + g) + (carry mod 10)
+match x with
+| (f , g) -> ((f + g) + carry) mod 10

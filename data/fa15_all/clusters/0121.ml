@@ -1,15 +1,7 @@
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,LitG)])
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
-match explode x with
-| h :: t -> false
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+(0 , carry :: rest)
+(0 , carry :: rest)
+(0 , digit :: sum)
+(0 , digit :: sum)
+(0 , digit :: sum)
+(0 , digit :: sum)

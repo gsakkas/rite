@@ -1,41 +1,75 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let g x = (f, (b = (f b))) in (g, b));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0 then (if (rand (0, 1)) = 0 then buildX () else buildY ());;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else (let y = rand (2, 6) in buildX ());;
 
 *)
 
 (* changed spans
-(6,28)-(6,66)
-let n =
-  fun x ->
-    (let ff = f b in
-     (ff , b = ff)) in
-(n , b)
-LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(6,44)-(6,45)
-let ff = f b in (ff , b = ff)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(6,60)-(6,61)
-ff
+(16,2)-(16,72)
+rand
 VarG
 
-(6,63)-(6,64)
-b = ff
-BopG VarG VarG
+(16,2)-(16,72)
+buildX
+VarG
+
+(16,2)-(16,72)
+rand (2 , 6)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(16,2)-(16,72)
+buildX ()
+AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+
+(16,2)-(16,72)
+2
+LitG
+
+(16,2)-(16,72)
+6
+LitG
+
+(16,2)-(16,72)
+let y = rand (2 , 6) in
+buildX ()
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+
+(16,2)-(16,72)
+(2 , 6)
+TupleG (fromList [LitG])
 
 *)

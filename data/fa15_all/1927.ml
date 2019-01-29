@@ -1,34 +1,38 @@
 
-let rec digitsOfInt n =
-  let digit = n mod 10
-  and r = n / 10 in
-  match n with
-  | _ when n <= 0 -> []
-  | _ when n > 0 -> (digitsOfInt r) :: digit;;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
+
+let fixpoint (f,b) = let g b = b in wwhile ((g, true), b);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let digit = n mod 10
-  and r = n / 10 in
-  match n with
-  | _ when n <= 0 -> []
-  | _ when n > 0 -> (digitsOfInt r) @ [digit];;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
+
+let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
 
 *)
 
 (* changed spans
-(6,16)-(6,17)
-(@)
+(7,31)-(7,32)
+(b , f b)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(7,36)-(7,42)
+f
 VarG
 
-(7,15)-(7,16)
-[digit]
-ListG VarG Nothing
+(7,36)-(7,42)
+b
+VarG
 
-(7,20)-(7,44)
-digitsOfInt r @ [digit]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(7,36)-(7,42)
+wwhile (g , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

@@ -1,36 +1,29 @@
 
-let rec wwhile (f,b) = let (x,y) = f b in if y then wwhile (f, x) else x;;
-
-let fixpoint (f,b) = wwhile ((fun f  -> b = (f b)), b);;
+let rec listReverse l = match l with | [] -> [] | h::t -> [t; listReverse h];;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (x,y) = f b in if y then wwhile (f, x) else x;;
-
-let fixpoint (f,b) = wwhile ((fun y  -> ((f b), (b = (f b)))), b);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(4,29)-(4,50)
-fun y -> (f b , b = f b)
-LamG (TupleG (fromList [EmptyG]))
+(2,59)-(2,60)
+listReverse t @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(4,40)-(4,49)
-f
+(2,62)-(2,75)
+(@)
 VarG
 
-(4,40)-(4,49)
-b
+(2,74)-(2,75)
+t
 VarG
 
-(4,40)-(4,49)
-f b
-AppG (fromList [VarG])
-
-(4,40)-(4,49)
-(f b , b = f b)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(2,74)-(2,75)
+[h]
+ListG VarG Nothing
 
 *)

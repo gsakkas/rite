@@ -1,22 +1,18 @@
-TupleG (fromList [VarG,LamG EmptyG])
-(fun x -> (f x , b = f b) , b)
-(fun x -> (f b , 3 < 4) , b)
-(fun x -> (f b , 3 < 4) , b)
-(fun x -> (f b , 3 < 4) , b)
-(fun x ->
-   (f x , x <> f x) , b)
-(fun input ->
-   (let b = f input in
-    (b , b <> input)) , b)
-(fun x ->
-   (let b = f x in
-    (b , b <> x)) , b)
-(fun x ->
-   (let b = f x in
-    (b , b <> x)) , b)
-(fun x ->
-   (let b = f x in
-    (b , b <> x)) , b)
-(fun x ->
-   (let b = f x in
-    (b , b <> x)) , b)
+ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG LitG]))) Nothing
+(n mod 10) :: (digitsOfInt n)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod / 10) :: (mulByDigit i
+                           t)

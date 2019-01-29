@@ -1,9 +1,8 @@
-LamG (ConAppG Nothing Nothing)
-fun () -> VarX
-fun () -> VarY
-fun () -> VarX
-fun () -> VarY
-fun () -> VarX
-fun () -> VarY
-fun () -> VarX
-fun () -> VarY
+BopG VarG (ListG EmptyG Nothing)
+carry <> []
+carry <> []
+carry <> []
+carry <> []
+t = []
+t = []
+t = []

@@ -1,4 +1,3 @@
-IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) LitG
-if x > 10
-then 1 + additivePersistence x
-else 0
+LetG NonRec (fromList [VarG]) VarG
+let an = a in x
+let an = a in x

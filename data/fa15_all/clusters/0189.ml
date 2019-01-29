@@ -1,2 +1,3 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG (AppG (fromList [VarG]))]))) Nothing
-(sum + fst a) :: (snd a)
+TupleG (fromList [ConAppG Nothing Nothing])
+(VarX , VarY)
+(VarX , VarX , VarX , VarX)

@@ -1,13 +1,11 @@
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
-(f b , if f b = b
-       then false
-       else true)
-(f b , if f b = b
-       then true
-       else false)
-(f b , if f b = b
-       then true
-       else false)
-(f b , if f b = b
-       then true
-       else false)
+AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+List.fold_left (^) ""
+               (List.map f l)
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""

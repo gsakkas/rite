@@ -1,18 +1,41 @@
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_right f base xs;;
+let pipe fs = let f a x a = x in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let pipe fs =
+  let f a x c = x (a c) in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,45)-(3,60)
-List.fold_left
+(2,24)-(2,29)
+fun c -> x (a c)
+LamG (AppG (fromList [EmptyG]))
+
+(2,28)-(2,29)
+x (a c)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(2,33)-(2,73)
+a
+VarG
+
+(2,33)-(2,73)
+c
+VarG
+
+(2,33)-(2,73)
+a c
+AppG (fromList [VarG])
+
+(2,44)-(2,45)
+fun x -> x
+LamG VarG
+
+(2,49)-(2,73)
+x
 VarG
 
 *)

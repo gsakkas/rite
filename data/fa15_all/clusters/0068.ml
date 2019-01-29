@@ -1,79 +1,20 @@
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
+ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
+(addit / 10) :: num
+(addit / 10) :: num
+(addit / 10) :: num
+(n mod 10) :: ns
+(n mod 10) :: digitList
+(a mod 10) :: b
+(a mod 10) :: b
+(digit - 10) :: sum
+(digit - 10) :: sum
+(n mod 10) :: result
+(digit - 10) :: sum
+(v mod 10) :: acc
+(v mod 10) :: acc
+(v mod 10) :: acc
+(v mod 10) :: acc
+(n mod 10) :: myList
+(n mod 10) :: myList
+(n mod 10) :: myList
+(n mod 10) :: myList

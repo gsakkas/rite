@@ -1,42 +1,30 @@
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let x l = List.map string_of_int;;
-
-let y = [1; 2; 3];;
-
-let rec mulByDigit i l =
-  if i <= 0
-  then []
-  else
-    (match l with
-     | [] -> []
-     | h::t ->
-         if (List.length t) > 1
-         then (remainder i h) :: (mulByDigit i t)
-         else [x * y]);;
+let stringOfList f l = sepConcat ";" (List.map (f l));;
 
 
 (* fix
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec mulByDigit i l =
-  if i <= 0
-  then []
-  else
-    (match l with
-     | [] -> []
-     | h::t ->
-         if (List.length t) > 1
-         then (remainder i h) :: (mulByDigit i t)
-         else [i * h]);;
+let stringOfList f l = sepConcat ";" (List.map f l);;
 
 *)
 
 (* changed spans
-(17,19)-(17,20)
-i
-VarG
+(9,37)-(9,53)
+List.map f l
+AppG (fromList [VarG])
 
 *)

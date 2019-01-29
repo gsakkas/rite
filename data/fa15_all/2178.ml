@@ -1,35 +1,64 @@
 
-let pipe fs =
-  let f a x a x = x a in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi * (eval (a, x, y)))
+  | Cosine a -> cos (pi * (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(3,14)-(3,21)
-fun y -> x (a y)
-LamG (AppG (fromList [EmptyG]))
+(17,18)-(17,41)
+pi *. eval (a , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
 
-(3,20)-(3,21)
-a y
-AppG (fromList [VarG])
-
-(3,43)-(3,67)
-x
-VarG
-
-(3,43)-(3,67)
-fun x -> x
-LamG VarG
-
-(3,43)-(3,67)
-let base = fun x -> x in
-List.fold_left f base fs
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+(18,20)-(18,43)
+pi *. eval (a , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
 
 *)

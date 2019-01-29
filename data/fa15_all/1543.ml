@@ -1,30 +1,22 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let f' b' = if (f b) = b then (b, true) else ((f b), false) in f' b),
-      b);;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> [] | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let f' b = if (f b) = b then (b, true) else ((f b), false) in f'), b);;
+let sqsum xs =
+  let f a x = a + (x * x) in
+  let base = match xs with | [] -> 0 | hd::tl -> f 0 hd in
+  List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(7,13)-(7,65)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-LamG (IteG EmptyG EmptyG EmptyG)
+(4,35)-(4,37)
+0
+LitG
 
 *)

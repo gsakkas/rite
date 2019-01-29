@@ -1,26 +1,36 @@
 
-let rec listReverse l =
-  match l with | [] -> l | hd::tail -> (listReverse tail) :: hd;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildX () = VarX;;
+
+let rec eval (e,x,y) = match e with | VarX  -> buildX * 1.0;;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> l | hd::tail -> (listReverse tail) @ [hd];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x;;
 
 *)
 
 (* changed spans
-(3,39)-(3,57)
-(@)
+(13,56)-(13,59)
+x
 VarG
-
-(3,39)-(3,63)
-listReverse tail @ [hd]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(3,61)-(3,63)
-[hd]
-ListG VarG Nothing
 
 *)

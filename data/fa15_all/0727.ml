@@ -6,36 +6,41 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine build (rand', (depth - 1))
-    | 2 -> buildCosine build (rand', (depth - 1))
-    | 3 -> buildTimes ((build (rand', (depth - 1))), buildY)
-    | 4 -> buildAverage ((build (rand', (depth - 1))), buildY)
-    | 5 ->
-        buildThresh
-          (buildX, buildY, (build (rand', (depth - 1))),
-            (build (rand', (depth - 1))))
-  else buildX;;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ")")))))));;
 
 
 (* fix
@@ -47,114 +52,51 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Nom of expr* expr* expr
+  | Squa of expr;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine (build (rand, (depth - 1)))
-    | 2 -> buildCosine (build (rand, (depth - 1)))
-    | 3 -> buildTimes ((build (rand, (depth - 1))), (buildY ()))
-    | 4 -> buildAverage ((build (rand, (depth - 1))), (buildY ()))
-    | 5 ->
-        buildThresh
-          ((buildX ()), (buildY ()), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))))
-  else buildX ();;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+  | Cosine expr -> "cos(pi*" ^ ((exprToString expr) ^ ")")
+  | Average (expr,expr1) ->
+      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr1) ^ ")/2)")))
+  | Times (expr,expr1) -> (exprToString expr) ^ ("*" ^ (exprToString expr1))
+  | Nom (expr1,expr2,expr3) ->
+      let (res1,res2,res3) =
+        ((exprToString expr1), (exprToString expr2), (exprToString expr3)) in
+      "(" ^
+        (res1 ^
+           ("+" ^
+              (res2 ^
+                 ("+" ^
+                    (res3 ^
+                       (")/(abs(" ^
+                          (res1 ^
+                             (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))")))))))))))
+  | Squa expr ->
+      let res = exprToString expr in res ^ ("/(abs(" ^ (res ^ ")+1)"))
+  | Thresh (expr,expr1,expr2,expr3) ->
+      "(" ^
+        ((exprToString expr) ^
+           ("<" ^
+              ((exprToString expr1) ^
+                 ("?" ^
+                    ((exprToString expr2) ^
+                       (":" ^ ((exprToString expr3) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(30,11)-(30,47)
-buildSine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+(43,30)-(43,56)
+exprToString expr3 ^ ")"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(30,21)-(30,26)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(30,28)-(30,33)
-rand
+(43,31)-(43,51)
+(^)
 VarG
-
-(31,11)-(31,49)
-buildCosine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(31,23)-(31,28)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(31,30)-(31,35)
-rand
-VarG
-
-(32,31)-(32,36)
-rand
-VarG
-
-(32,53)-(32,59)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(33,11)-(33,62)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(33,33)-(33,38)
-rand
-VarG
-
-(33,55)-(33,61)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(35,8)-(37,41)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,11)-(36,17)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(36,19)-(36,25)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(36,19)-(36,25)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,27)-(36,55)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,35)-(36,40)
-rand
-VarG
-
-(37,20)-(37,25)
-rand
-VarG
-
-(38,7)-(38,13)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
 
 *)

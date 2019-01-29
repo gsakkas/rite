@@ -1,84 +1,38 @@
 
-let f' (f,b) = (f b) = b;;
-
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) = wwhile ((f' (f, b)), b);;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = f 4 xs in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (h1,h2) -> if h2 then wwhile (f, h1) else h1;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let f' b = if (f b) = b then (b, true) else ((f b), false) in f'), b);;
+let sqsum xs =
+  let f a x = a * a in let base = f (f 0 xs) xs in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(7,29)-(7,40)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-LamG (IteG EmptyG EmptyG EmptyG)
+(3,23)-(3,24)
+a
+VarG
 
-(7,29)-(7,40)
-f b = b
-BopG (AppG (fromList [EmptyG])) VarG
+(3,29)-(3,74)
+a
+VarG
 
-(7,29)-(7,40)
-let f' =
-  fun b ->
-    if f b = b
-    then (b , true)
-    else (f b , false) in
-f'
-LetG NonRec (fromList [LamG EmptyG]) VarG
+(3,42)-(3,43)
+f 0 xs
+AppG (fromList [VarG,LitG])
 
-(7,29)-(7,40)
-if f b = b
-then (b , true)
-else (f b , false)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(7,30)-(7,32)
+(3,44)-(3,46)
 f
 VarG
 
-(7,33)-(7,39)
-b
-VarG
-
-(7,33)-(7,39)
-b
-VarG
-
-(7,34)-(7,35)
-b
-VarG
-
-(7,34)-(7,35)
-f b
-AppG (fromList [VarG])
-
-(7,34)-(7,35)
-true
+(3,44)-(3,46)
+0
 LitG
 
-(7,34)-(7,35)
-(f b , false)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(7,42)-(7,43)
-f'
+(3,50)-(3,74)
+xs
 VarG
-
-(7,42)-(7,43)
-false
-LitG
 
 *)

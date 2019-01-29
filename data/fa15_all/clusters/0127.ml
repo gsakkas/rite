@@ -1,7 +1,7 @@
-BopG LitG LitG
-3 < 4
-3 < 4
-3 < 4
-1.0 /. 3.0
-1.0 /. 3.0
-1.0 /. 3.0
+BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
+eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
+eval (f , x , y) +. (eval (g , x , y) *. eval (h , x , y))
+eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
+eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
+eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
+eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))

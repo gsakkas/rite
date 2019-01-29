@@ -1,40 +1,176 @@
-TupleG (fromList [AppG (fromList [EmptyG])])
-(f x , isFPoint x)
-(f x , isFPoint x)
-(f x , isFPoint x)
-(f x , isFPoint x)
-(f x , isFPoint x)
-(f x , isFPoint x)
-(f x , isFPoint x)
-(buildX () , build (rand , d))
-(buildX () , build (rand , d))
-(buildX () , build (rand , d))
-(buildX () , build (rand , d))
-(buildX () , build (rand , d))
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-(build (rand , depth - 1) , buildX () , buildY () , buildX ())
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-(build (rand , d) , build (rand , d))
-(build (rand , d) , build (rand , d))
-(a1 @ [((x1 + x2) + c) / 10] , a2 @ [((x1 + x2) + c) mod 10])
+LetG NonRec (fromList [LamG EmptyG]) VarG
+let fn = fun d -> d in fn
+let fn = fun d -> d in fn
+let fn = fun d -> d in fn
+let d =
+  fun x ->
+    (let xx = f b in
+     (xx , xx = b)) in
+d
+let d =
+  fun x ->
+    (let xx = f b in
+     (xx , xx = b)) in
+d
+let d =
+  fun x ->
+    (let xx = f b in
+     (xx , xx = b)) in
+d
+let func =
+  fun b ->
+    (let ans = f b in
+     if b = ans
+     then (ans , false)
+     else (ans , true)) in
+func
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let f =
+  fun x ->
+    (let xx = (x * x) * x in
+     (xx , xx < 100)) in
+f
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g
+let g =
+  fun x ->
+    (let xx = f x in
+     (xx , xx <> b)) in
+g

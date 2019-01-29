@@ -1,3 +1,4 @@
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing
-((h + b) / 10) :: (((h + b) mod 10) :: t)
-((h + b) / 10) :: (((h + b) mod 10) :: t)
+TupleG (fromList [BopG EmptyG EmptyG])
+(x * x , x < 100)
+(x * x , x < 100)
+(sum / 10 , sum mod 10)

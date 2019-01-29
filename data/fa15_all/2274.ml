@@ -1,101 +1,76 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr
+  | Timmy2 of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then [0] else if i = 1 then l else mulByDigit (i - 1) bigAdd l l;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2) ->
+      ((sin (pi *. (eval (e1, x, y)))) ** 2.0) *.
+        (cos (pi *. (eval (e2, x, y))))
+  | Timmy2 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e1, x, y)))) ** 3) *.
+        (((cos (pi *. (eval (e2, x, y)))) ** 2.0) *. (cos (eval (e3, x, y))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Timmy1 of expr* expr
+  | Timmy2 of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let difference = (List.length l1) - (List.length l2) in
-  if difference > 0
-  then (l1, ((clone 0 difference) @ l2))
-  else
-    if difference < 0
-    then (((clone 0 ((-1) * difference)) @ l1), l2)
-    else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (o,l) ->
-          let sum = x + o in
-          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
-    let base = (0, []) in
-    let args =
-      let combine (a,b) = a + b in
-      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0
-  then [0]
-  else if i = 1 then l else (let l' = bigAdd l l in mulByDigit (i - 1) l');;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Timmy1 (e1,e2) ->
+      ((sin (pi *. (eval (e1, x, y)))) ** 2.0) *.
+        (cos (pi *. (eval (e2, x, y))))
+  | Timmy2 (e1,e2,e3) ->
+      ((sin (pi *. (eval (e1, x, y)))) ** 0.5) *.
+        (((cos (pi *. (eval (e2, x, y)))) ** 2.0) *. (cos (eval (e3, x, y))));;
 
 *)
 
 (* changed spans
-(31,46)-(31,56)
-bigAdd
-VarG
-
-(31,46)-(31,56)
-l
-VarG
-
-(31,46)-(31,56)
-l
-VarG
-
-(31,46)-(31,56)
-bigAdd l l
-AppG (fromList [VarG])
-
-(31,46)-(31,56)
-mulByDigit (i - 1) l'
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(31,46)-(31,75)
-let l' = bigAdd l l in
-mulByDigit (i - 1) l'
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
-
-(31,74)-(31,75)
-l'
-VarG
+(31,42)-(31,43)
+0.5
+LitG
 
 *)

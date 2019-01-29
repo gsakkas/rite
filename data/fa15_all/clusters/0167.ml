@@ -1,3 +1,4 @@
-ConAppG (Just (TupleG (fromList [VarG,ListG EmptyG Nothing]))) Nothing
-[] :: seen
-[] :: seen
+TupleG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(mulByDigit x q , [])
+(List.length l1 , [])
+(List.length l1 , [])

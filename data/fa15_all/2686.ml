@@ -1,43 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with | VarX  -> "x" | VarY  -> "y" | Sine i -> "sin" ^ i;;
+let rec assoc (d,k,l) =
+  let acc = l in
+  let rec helper acc (d,k,l) =
+    match acc with
+    | [] -> d
+    | h::t ->
+        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
+  helper (d, k, l) acc;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine i -> "sin" ^ (exprToString i);;
+let rec assoc (d,k,l) =
+  let acc = l in
+  let rec helper acc (d,k,l) =
+    match acc with
+    | [] -> d
+    | h::t ->
+        (match h with | (s,v) -> if s = k then v else helper t (d, k, l)) in
+  helper acc (d, k, l);;
 
 *)
 
 (* changed spans
-(12,65)-(12,66)
-exprToString
+(9,9)-(9,18)
+acc
 VarG
-
-(12,65)-(12,66)
-exprToString i
-AppG (fromList [VarG])
 
 *)

@@ -1,90 +1,85 @@
 
-let rec clone x n = if n < 1 then [] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 < length2
-  then (((clone 0 (length2 - length1)) @ l1), l2)
-  else
-    if length2 < length1
-    then (l1, ((clone 0 (length1 - length2)) @ l2))
-    else (l1, l2);;
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else [h] @ t;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (j,k) = x in
-      let (carry,rest) = a in
-      ((((j + k) + carry) / 10), ([((j + k) + carry) mod 10] @ rest)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (car,res) = List.fold_left f base args in [car] @ res in
-  removeZero (add (padZero l1 l2));;
-
-let rec listZeros n =
-  match n with | 0 -> [] | 1 -> [0] | x -> [0] @ (listZeros (n - 1));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | 1 -> l | n -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (pow,total) = a in
-    ((pow + 1), (((bigAdd total) + (mulByDigit x l2)) @ (listZeros pow))) in
-  let base = (0, []) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial eval (e', x, y) 1
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Factorial of expr
+  | Sum3 of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let length1 = List.length l1 in
-  let length2 = List.length l2 in
-  if length1 < length2
-  then (((clone 0 (length2 - length1)) @ l1), l2)
-  else
-    if length2 < length1
-    then (l1, ((clone 0 (length1 - length2)) @ l2))
-    else (l1, l2);;
+let rec factorial x acc =
+  if x = 0.0 then acc else factorial (x -. 1.0) (x *. acc);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else [h] @ t;;
+let pi = 4.0 *. (atan 1.0);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (j,k) = x in
-      let (carry,rest) = a in
-      ((((j + k) + carry) / 10), ([((j + k) + carry) mod 10] @ rest)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (car,res) = List.fold_left f base args in [car] @ res in
-  removeZero (add (padZero l1 l2));;
-
-let rec listZeros n =
-  match n with | 0 -> [] | 1 -> [0] | x -> [0] @ (listZeros (n - 1));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [] | 1 -> l | n -> bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (pow,total) = a in
-    ((pow + 1), ((bigAdd total (mulByDigit x l2)) @ (listZeros pow))) in
-  let base = (0, []) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Factorial e' -> factorial (eval (e', x, y)) 1.0
+  | Sum3 (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(37,18)-(37,32)
-bigAdd total (mulByDigit x l2)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+(30,20)-(30,47)
+factorial (eval (e' , x , y))
+          1.0
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(30,30)-(30,34)
+eval (e' , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(30,46)-(30,47)
+1.0
+LitG
 
 *)

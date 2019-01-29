@@ -1,92 +1,152 @@
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let fixpoint (f,b) = wwhile (if f = true then b else ((f b), b));;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
+
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (a @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (h,t) -> if t = true then wwhile (f, h) else h;;
+let rec clone x n =
+  let rec clonehelper tx tn =
+    match tn = 0 with
+    | true  -> []
+    | false  -> tx :: (clonehelper tx (tn - 1)) in
+  clonehelper x (abs n);;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let g b = let t = f b in if b = t then (b, false) else (t, true) in g),
-      b);;
+let padZero l1 l2 =
+  match (List.length l1) > (List.length l2) with
+  | true  ->
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+  | false  ->
+      ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2);;
+
+let rec removeZero l =
+  let rec removeZH templ =
+    match templ with
+    | [] -> []
+    | hd::tl -> if hd = 0 then removeZH tl else hd :: tl in
+  removeZH l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (addend_a,addend_b) ->
+          let prevcarry = match a with | (x,y) -> x in
+          let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+          let digit = ((prevcarry + addend_a) + addend_b) mod 10 in
+          (match a with
+           | (x,c::d::y) -> (new_carry, (new_carry :: digit :: d :: y))
+           | _ -> (new_carry, [new_carry; digit])) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let comb a b = match b with | [] -> [a] | hd::tl -> List.append [a + hd] tl in
+  let rec mBDhelper i x =
+    match x with
+    | [] -> []
+    | hd::tl ->
+        if (hd * i) > 9
+        then ((hd * i) / 10) :: (comb ((hd * i) mod 10) (mBDhelper i tl))
+        else (hd * i) :: (mBDhelper i tl) in
+  mBDhelper i l;;
+
+let bigMul l1 l2 =
+  let f a x =
+    match x with
+    | (l2digit,templ1) ->
+        let (l2digit2,templ12) = a in
+        let multres = mulByDigit l2digit templ1 in
+        (0, (bigAdd (templ12 @ [0]) multres)) in
+  let base = (0, []) in
+  let args =
+    let rec argmaker x y =
+      match y with
+      | [] -> []
+      | hd::tl -> if tl = [] then [(hd, x)] else (hd, x) :: (argmaker x tl) in
+    argmaker l1 l2 in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(5,28)-(5,64)
-f
+(54,8)-(55,39)
+a
 VarG
 
-(5,28)-(5,64)
-b
+(54,8)-(55,39)
+let (l2digit2 , templ12) =
+  a in
+let multres =
+  mulByDigit l2digit templ1 in
+(0 , bigAdd (templ12 @ [0])
+            multres)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(55,21)-(55,22)
+templ12
 VarG
-
-(5,28)-(5,64)
-fun b ->
-  (let t = f b in
-   if b = t
-   then (b , false)
-   else (t , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(5,28)-(5,64)
-f b
-AppG (fromList [VarG])
-
-(5,28)-(5,64)
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(5,28)-(5,64)
-let t = f b in
-if b = t
-then (b , false)
-else (t , true)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
-
-(5,28)-(5,64)
-(let g =
-   fun b ->
-     (let t = f b in
-      if b = t
-      then (b , false)
-      else (t , true)) in
- g , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [EmptyG]) EmptyG])
-
-(5,53)-(5,63)
-t
-VarG
-
-(5,61)-(5,62)
-t
-VarG
-
-(5,61)-(5,62)
-g
-VarG
-
-(5,61)-(5,62)
-false
-LitG
-
-(5,61)-(5,62)
-true
-LitG
-
-(5,61)-(5,62)
-(t , true)
-TupleG (fromList [VarG,LitG])
 
 *)

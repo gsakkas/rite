@@ -8,19 +8,14 @@ type expr =
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) -> buildThresh (x, y, x, y);;
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. a);;
 
 
 (* fix
@@ -40,54 +35,14 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+  | Sine a -> sin (pi *. x)
+  | Cosine a -> cos (pi *. y);;
 
 *)
 
 (* changed spans
-(23,28)-(23,52)
-eval (e1 , x , y) < eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,28)-(23,52)
-if eval (e1 , x , y) < eval (e2 , x , y)
-then eval (e3 , x , y)
-else eval (e4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,40)-(23,52)
-eval
+(18,27)-(18,28)
+y
 VarG
-
-(23,41)-(23,42)
-e1
-VarG
-
-(23,41)-(23,42)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(23,47)-(23,48)
-eval
-VarG
-
-(23,47)-(23,48)
-e2
-VarG
-
-(23,47)-(23,48)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,47)-(23,48)
-(e2 , x , y)
-TupleG (fromList [VarG])
 
 *)

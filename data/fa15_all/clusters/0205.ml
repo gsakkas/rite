@@ -1,7 +1,7 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-if i < 1
-then []
-else (match i with
-      | 1 -> l
-      | _ -> bigAdd l
-                    (mulByDigit (i - 1) l))
+IteG (AppG (fromList [EmptyG])) VarG (ConAppG (Just EmptyG) Nothing)
+if List.mem h seen
+then seen
+else h :: seen
+if List.mem h seen
+then seen
+else h :: seen

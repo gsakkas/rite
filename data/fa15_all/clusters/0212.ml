@@ -1,4 +1,4 @@
-IteG (BopG EmptyG EmptyG) VarG (ListG EmptyG Nothing)
-if List.length t <> 0
-then t
-else []
+AppG (fromList [ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing])
+List.combine (0 :: (List.rev l1))
+             (0 :: (List.rev l2))
+List.rev (0 :: (List.rev a))

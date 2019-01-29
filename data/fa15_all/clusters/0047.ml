@@ -1,39 +1,46 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-(((x1 + x2) + carry) mod 10) :: sum
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x1 + x2) + carry) mod 10) :: res
-(((x + y) + w) mod 10) :: z
-(((x + y) + w) mod 10) :: z
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((x1 + x2) + a1) - 10) :: a2
-(((i + j) + m) - 10) :: n
-(((i + j) + m) - 10) :: n
-(((a1 + x1) + x2) mod 10) :: a2
-(((a1 + x1) + x2) mod 10) :: a2
-(((a1 + x1) + x2) mod 10) :: a2
-(((j + k) + l) - 10) :: m
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
-(((num1 + num2) + carry) mod 10) :: sum
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(List.length acc = List.length l1) || (List.length acc = List.length l2)
+(List.length acc = List.length l1) || (List.length acc = List.length l2)
+(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
+(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
+(eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))
+((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
+((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
+(eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(x1 + x2) + (h / 10)
+(x1 + x2) + (h mod 10)
+(a * a) + (x * x)
+((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
+(1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))
+((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
+(1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))
+((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)) -. ((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y))
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(f + g) + (carry mod 10)
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))
+((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))
+(eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))
+((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))
+(eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))
+((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))
+(eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))
+((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))
+(eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))

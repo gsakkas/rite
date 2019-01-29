@@ -1,144 +1,275 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let shorter = if len1 < len2 then l1 else l2 in
+  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
+  if shorter = l1
+  then ((List.append (clone 0 zeros) shorter), l2)
+  else (l1, (List.append (clone 0 zeros) shorter));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = (eval (m, x, y)) ** (eval (n, x, y)) in
-      if (d > 1.0) || (d < (-1.0)) then 1.0
-  | Op (m,n,o) ->
-      let d =
-        (((eval (m, x, y)) *. (eval (n, x, y))) *. (eval (o, x, y))) /.
-          (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y))) in
-      if d > 1.0 then 1.0 else if d < (-1.0) then (-1.0) else d;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = [] in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Op of expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let len1 = List.length l1 in
+  let len2 = List.length l2 in
+  let shorter = if len1 < len2 then l1 else l2 in
+  let zeros = if shorter = l1 then len2 - len1 else len1 - len2 in
+  if shorter = l1
+  then ((List.append (clone 0 zeros) shorter), l2)
+  else (l1, (List.append (clone 0 zeros) shorter));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine n -> sin (pi *. (eval (n, x, y)))
-  | Cosine n -> cos (pi *. (eval (n, x, y)))
-  | Average (m,n) -> ((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0
-  | Times (m,n) -> (eval (m, x, y)) *. (eval (n, x, y))
-  | Thresh (m,n,o,p) ->
-      if (eval (m, x, y)) < (eval (n, x, y))
-      then eval (o, x, y)
-      else eval (p, x, y)
-  | Power (m,n) ->
-      let d = eval (n, x, y) in
-      if d > 1.0
-      then eval (m, x, y)
-      else (eval (m, x, y)) ** (eval (n, x, y))
-  | Op (m,n,o) ->
-      let d =
-        (((eval (m, x, y)) *. (eval (n, x, y))) *. (eval (o, x, y))) /.
-          (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y))) in
-      if d > 1.0 then 1.0 else if d < (-1.0) then (-1.0) else d;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let prevN (n1,n2) = n1 in
+      let prev = prevN a in
+      let sumlist (p1,p2) = p2 in
+      let sum = sumlist a in
+      let add (m,n) = m + n in
+      let digit = (add x) + prev in
+      if digit > 10 then (1, ((digit - 10) :: sum)) else (0, (digit :: sum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(28,14)-(28,50)
-eval
+(18,16)-(18,18)
+let prevN =
+  fun (n1 , n2) -> n1 in
+let prev = prevN a in
+let sumlist =
+  fun (p1 , p2) -> p2 in
+let sum = sumlist a in
+let add =
+  fun (m , n) -> m + n in
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(19,4)-(21,51)
+n1
 VarG
 
-(28,14)-(28,50)
-n
+(19,4)-(21,51)
+prevN
 VarG
 
-(28,14)-(28,50)
-x
+(19,4)-(21,51)
+a
 VarG
 
-(28,14)-(28,50)
-y
+(19,4)-(21,51)
+p2
 VarG
 
-(28,14)-(28,50)
-d
+(19,4)-(21,51)
+sumlist
 VarG
 
-(28,14)-(28,50)
-eval
+(19,4)-(21,51)
+a
 VarG
 
-(28,14)-(28,50)
+(19,4)-(21,51)
 m
 VarG
 
-(28,14)-(28,50)
+(19,4)-(21,51)
+n
+VarG
+
+(19,4)-(21,51)
+add
+VarG
+
+(19,4)-(21,51)
 x
 VarG
 
-(28,14)-(28,50)
-y
+(19,4)-(21,51)
+prev
 VarG
 
-(28,14)-(28,50)
-eval (n , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(19,4)-(21,51)
+digit
+VarG
 
-(28,14)-(28,50)
-eval (m , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(19,4)-(21,51)
+digit
+VarG
 
-(28,14)-(28,50)
-d > 1.0
+(19,4)-(21,51)
+sum
+VarG
+
+(19,4)-(21,51)
+digit
+VarG
+
+(19,4)-(21,51)
+sum
+VarG
+
+(19,4)-(21,51)
+fun (n1 , n2) -> n1
+LamG VarG
+
+(19,4)-(21,51)
+fun (p1 , p2) -> p2
+LamG VarG
+
+(19,4)-(21,51)
+fun (m , n) -> m + n
+LamG (BopG EmptyG EmptyG)
+
+(19,4)-(21,51)
+prevN a
+AppG (fromList [VarG])
+
+(19,4)-(21,51)
+sumlist a
+AppG (fromList [VarG])
+
+(19,4)-(21,51)
+add x
+AppG (fromList [VarG])
+
+(19,4)-(21,51)
+m + n
+BopG VarG VarG
+
+(19,4)-(21,51)
+add x + prev
+BopG (AppG (fromList [EmptyG])) VarG
+
+(19,4)-(21,51)
+digit > 10
 BopG VarG LitG
 
-(28,14)-(28,50)
-1.0
+(19,4)-(21,51)
+digit - 10
+BopG VarG LitG
+
+(19,4)-(21,51)
+10
 LitG
 
-(28,14)-(28,50)
-if d > 1.0
-then eval (m , x , y)
-else eval (m , x , y) ** eval (n , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(19,4)-(21,51)
+1
+LitG
 
-(28,14)-(28,50)
-(n , x , y)
-TupleG (fromList [VarG])
+(19,4)-(21,51)
+10
+LitG
 
-(28,14)-(28,50)
-(m , x , y)
-TupleG (fromList [VarG])
+(19,4)-(21,51)
+0
+LitG
+
+(19,4)-(21,51)
+let prev = prevN a in
+let sumlist =
+  fun (p1 , p2) -> p2 in
+let sum = sumlist a in
+let add =
+  fun (m , n) -> m + n in
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(19,4)-(21,51)
+let sumlist =
+  fun (p1 , p2) -> p2 in
+let sum = sumlist a in
+let add =
+  fun (m , n) -> m + n in
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(19,4)-(21,51)
+let sum = sumlist a in
+let add =
+  fun (m , n) -> m + n in
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(19,4)-(21,51)
+let add =
+  fun (m , n) -> m + n in
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(19,4)-(21,51)
+let digit = add x + prev in
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (IteG EmptyG EmptyG EmptyG)
+
+(19,4)-(21,51)
+if digit > 10
+then (1 , (digit - 10) :: sum)
+else (0 , digit :: sum)
+IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+
+(19,4)-(21,51)
+(1 , (digit - 10) :: sum)
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
+
+(19,4)-(21,51)
+(0 , digit :: sum)
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+
+(19,4)-(21,51)
+(digit - 10) :: sum
+ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
+
+(19,4)-(21,51)
+digit :: sum
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+
+(19,15)-(19,17)
+0
+LitG
+
+(19,15)-(19,17)
+(0 , [])
+TupleG (fromList [LitG,ListG EmptyG Nothing])
 
 *)

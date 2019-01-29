@@ -6,7 +6,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -14,9 +16,19 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi * (eval (e', x, y)))
-  | Cosine e' -> cos (pi * (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2;;
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        / 2
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 
 (* fix
@@ -28,7 +40,9 @@ type expr =
   | Cosine of expr
   | Average of expr* expr
   | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
 
 let pi = 4.0 *. (atan 1.0);;
 
@@ -36,30 +50,28 @@ let rec eval (e,x,y) =
   match e with
   | VarX  -> x
   | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0;;
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (((eval (a, x, y)) *. (eval (a, x, y))) +.
+         ((eval (b, x, y)) *. (eval (c, x, y))))
+        /. 2.0
+  | Tan a -> (sin (pi *. (eval (a, x, y)))) /. (cos (pi *. (eval (a, x, y))));;
 
 *)
 
 (* changed spans
-(17,19)-(17,43)
-pi *. eval (e' , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(18,21)-(18,45)
-pi *. eval (e' , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(19,23)-(19,62)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+(28,6)-(30,11)
+((eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(19,24)-(19,41)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(19,65)-(19,66)
+(30,10)-(30,11)
 2.0
 LitG
 

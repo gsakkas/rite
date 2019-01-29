@@ -1,34 +1,15 @@
 
-let rec wwhile (f,b) =
-  let x = wwhile (f, b) in
-  let h::t = x in
-  let r::l = t in match r with | false  -> h | true  -> wwhile (f, h);;
+let pipe fs = let f a x x = a in let base p = p in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (x,y) = f b in match y with | false  -> x | true  -> wwhile (f, x);;
+let pipe fs = let f a x x = x in let base p = p in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,2)-(5,69)
-let (x , y) = f b in
-match y with
-| false -> x
-| true -> wwhile (f , x)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(5,43)-(5,44)
-y
-VarG
-
-(5,56)-(5,69)
-x
-VarG
-
-(5,67)-(5,68)
+(2,28)-(2,29)
 x
 VarG
 

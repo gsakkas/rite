@@ -1,107 +1,78 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = rand (0, 11) in
-  match depth with
-  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
-  | d ->
-      if r <= 2
-      then buildSine (build (rand, (d - 1)))
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      if
+        ((List.length acc) = ((List.length l1) - 1)) ||
+          ((List.length acc) = ((List.length l2) - 1))
+      then (if rem = 1 then (0, ([1; 0] :: acc)) else (0, acc))
       else
-        if r <= 9
-        then
-          (match r with
-           | 3 ->
-               buildAverage
-                 ((build (rand, (d - 1))), (build (rand, (d - 1))))
-           | 4 ->
-               buildTimes ((build (rand, (d - 1))), (build (rand, (d - 1))))
-           | 5 ->
-               buildThresh
-                 ((build (rand, (d - 1))), (build (rand, (d - 1))),
-                   (build (rand, (d - 1))), (build (rand, (d - 1))))
-           | 6 -> 0.
-           | 7 -> 0.)
-        else buildCosine (build (rand, (d - 1)));;
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
-let buildCosine e = Cosine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = rand (0, 11) in
-  match depth with
-  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
-  | d ->
-      if r <= 2
-      then buildSine (build (rand, (d - 1)))
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      if
+        ((List.length acc) = ((List.length l1) - 1)) ||
+          ((List.length acc) = ((List.length l2) - 1))
+      then (if rem = 1 then (0, ([1; 0] @ acc)) else (0, acc))
       else
-        if r <= 9
-        then
-          (match r with
-           | 3 ->
-               buildAverage
-                 ((build (rand, (d - 1))), (build (rand, (d - 1))))
-           | 4 ->
-               buildTimes ((build (rand, (d - 1))), (build (rand, (d - 1))))
-           | 5 ->
-               buildThresh
-                 ((build (rand, (d - 1))), (build (rand, (d - 1))),
-                   (build (rand, (d - 1))), (build (rand, (d - 1)))))
-        else buildCosine (build (rand, (d - 1)));;
+        (let (el1,el2) = x in
+         let new_sum = (rem + el1) + el2 in
+         let new_rem = if new_sum > 9 then 1 else 0 in
+         let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+         (new_rem, (norm_sum :: acc))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(35,10)-(46,21)
-match r with
-| 3 -> buildAverage (build (rand , d - 1) , build (rand , d - 1))
-| 4 -> buildTimes (build (rand , d - 1) , build (rand , d - 1))
-| 5 -> buildThresh (build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+(21,32)-(21,47)
+[1 ; 0] @ acc
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(21,33)-(21,39)
+(@)
+VarG
 
 *)

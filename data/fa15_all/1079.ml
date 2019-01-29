@@ -1,16 +1,33 @@
 
-let pipe fs = let f a x x = x a in let base x = x in List.fold_left f base fs;;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
+  cloneHelper x n [];;
 
 
 (* fix
 
-let pipe fs = let f a x a x = x in let base x = x in List.fold_left f base fs;;
+let rec clone x n =
+  let rec cloneHelper (x,n,acc) =
+    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
+  cloneHelper (x, n, []);;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-fun a -> fun x -> x
-LamG (LamG EmptyG)
+(3,26)-(4,63)
+fun (x , n , acc) ->
+  if n < 0
+  then acc
+  else cloneHelper (x , n - 1 , x :: acc)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(5,2)-(5,20)
+cloneHelper (x , n , [])
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(5,14)-(5,15)
+(x , n , [])
+TupleG (fromList [VarG,ListG EmptyG Nothing])
 
 *)

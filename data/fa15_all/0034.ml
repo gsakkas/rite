@@ -1,40 +1,65 @@
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
+
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
   | false  ->
-      if (n / 10) = 0 then n mod 10 else (digitsOfInt (n / 10)) :: (n mod 10);;
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | h1::t1 -> (l1, [0; 0; 0; 0]) in
+    let base = (l1, []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  match n < 0 with
-  | true  -> []
-  | false  ->
-      if (n / 10) = 0
-      then [n mod 10]
-      else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec clone x n =
+  match n > 0 with | true  -> x :: (clone x (n - 1)) | false  -> [];;
 
-let _ = digitsOfInt 3124;;
+let padZero l1 l2 =
+  let length1 = List.length l1 in
+  let length2 = List.length l2 in
+  match length1 >= length2 with
+  | true  ->
+      let n = length1 - length2 in
+      let zeroes = clone 0 n in (l1, (List.append zeroes l2))
+  | false  ->
+      let n = length2 - length1 in
+      let zeroes = clone 0 n in ((List.append zeroes l1), l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (h1::t1,_) -> (l1, [0; 0; 0; 0]) in
+    let base = (l1, []) in
+    let args = l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(6,27)-(6,35)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(6,41)-(6,63)
-(@)
-VarG
-
-(6,41)-(6,77)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(6,67)-(6,77)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(23,16)-(23,59)
+match a with
+| (h1 :: t1 , _) -> (l1 , [0 ; 0 ; 0 ; 0])
+CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
 
 *)

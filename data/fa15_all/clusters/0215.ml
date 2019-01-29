@@ -1,4 +1,3 @@
-IteG (AppG (fromList [EmptyG])) (ConAppG (Just EmptyG) Nothing) VarG
-if List.mem h seen
-then h :: seen
-else seen
+AppG (fromList [LamG EmptyG])
+x (fun a -> a)
+x (fun a -> a)

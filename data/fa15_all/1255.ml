@@ -1,81 +1,128 @@
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff > 0
-  then (l1, ((clone 0 diff) @ l2))
-  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (n1,n2) = x in
-      let sum = n1 + n2 in
-      match a with
-      | [] -> if sum > 9 then [1; sum - 1] else [0; sum]
-      | c::x' ->
-          if (sum + c) > 9
-          then 1 :: ((sum + c) - 10) :: x'
-          else (sum + c) :: x' in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec helper acc n lis =
+    match n with | 1 -> lis + acc | _ -> helper (n - 1) (bigAdd l lis) in
+  helper [] i l;;
 
 
 (* fix
 
-let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let diff = (List.length l1) - (List.length l2) in
-  if diff > 0
-  then (l1, ((clone 0 diff) @ l2))
-  else if diff < 0 then (((clone 0 (diff * (-1))) @ l1), l2) else (l1, l2);;
+  let dl = (List.length l1) - (List.length l2) in
+  match dl with
+  | 0 -> (l1, l2)
+  | _ ->
+      if dl > 0
+      then (l1, ((clone 0 dl) @ l2))
+      else (((clone 0 (dl / (-1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with | [] -> [] | h::l' -> if h = 0 then removeZero l' else l;;
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (n1,n2) = x in
-      let sum = n1 + n2 in
-      match a with
-      | [] -> [sum]
-      | c::x' -> if c > 9 then (sum + 1) :: (c - 10) :: x' else sum :: a in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let res = List.fold_left f base args in res in
+      let z = (fst x) + (snd x) in
+      match a with | (w,y) -> (((w + z) / 10), (((w + z) mod 10) :: y)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  let rec helper i l acc =
+    match i with | 0 -> [0] | 1 -> l | _ -> helper (i - 1) l (bigAdd acc l) in
+  helper i l [0];;
 
 *)
 
 (* changed spans
-(19,49)-(19,50)
-[sum]
-ListG VarG Nothing
+(27,17)-(28,70)
+fun i ->
+  fun l ->
+    fun acc ->
+      match i with
+      | 0 -> [0]
+      | 1 -> l
+      | _ -> helper (i - 1) l
+                    (bigAdd acc l)
+LamG (LamG EmptyG)
 
-(22,15)-(22,16)
-sum
+(27,17)-(28,70)
+fun l ->
+  fun acc ->
+    match i with
+    | 0 -> [0]
+    | 1 -> l
+    | _ -> helper (i - 1) l
+                  (bigAdd acc l)
+LamG (LamG EmptyG)
+
+(28,41)-(28,47)
+i
 VarG
 
-(22,15)-(22,16)
-sum + 1
-BopG VarG LitG
-
-(23,28)-(23,30)
-a
+(28,41)-(28,47)
+l
 VarG
 
-(26,4)-(26,51)
-let res =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+(28,41)-(28,47)
+helper (i - 1) l (bigAdd acc
+                         l)
+AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+
+(28,41)-(28,47)
+0
+LitG
+
+(28,41)-(28,47)
+[0]
+ListG LitG Nothing
+
+(28,41)-(28,70)
+match i with
+| 0 -> [0]
+| 1 -> l
+| _ -> helper (i - 1) l
+              (bigAdd acc l)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+
+(28,49)-(28,50)
+i
+VarG
+
+(28,56)-(28,70)
+l
+VarG
+
+(28,64)-(28,65)
+acc
+VarG
 
 *)

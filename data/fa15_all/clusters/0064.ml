@@ -1,26 +1,25 @@
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-(0 , mulByDigit x l1)
-(0 , mulByDigit x l1)
-(1 , digits @ [fst'])
-(0 , digits @ [fst'])
-(f b , false)
-(f b , false)
-(f b , false)
-(f b , false)
-(f b , false)
-(f b , false)
-(f b , false)
-(f b , false)
-(false , f b)
-(true , f2 x)
-(false , f b)
-(true , f b)
-(0 , List.fold_left f base
-                    args)
-(0 , List.fold_left f base
-                    args)
-(0 , mulByDigit x res)
-(f b , true)
-(f b , true)
-(f b' , false)
-(f b' , true)
+ListG (TupleG (fromList [EmptyG])) Nothing
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[(0 , 0)]
+[(h1 , h2)]
+[(h1 , h2)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(h , l2)]
+[(h , l2)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]

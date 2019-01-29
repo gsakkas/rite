@@ -1,142 +1,105 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> String.concat ("", ["sin(pi*"; exprToString s; ")"])
-  | Cosine s -> ("cos(pi*" + (exprToString s)) + ")"
-  | Average (s,p) ->
-      ((("((" + (exprToString s)) + "+") + (exprToString p)) + ")/2"
-  | Times (s,p) -> ((exprToString s) + "*") + (exprToString p)
-  | Thresh (s,p,r,d) ->
-      ((((((("(" + (exprToString s)) + "<") + (exprToString p)) + "?") +
-           (exprToString r))
-          + ":")
-         + (exprToString d))
-        + ")"
-  | _ -> 0;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else
+    if (n mod 10) = 0
+    then 0 :: (digitsOfInt (n / 10))
+    else if ((n - 1) mod 10) = 0 then 1 :: (digitsOfInt ((n - 1) / 10));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> String.concat "" ["sin(pi*"; exprToString s; ")"]
-  | Cosine s -> String.concat "" ["cos(pi*"; exprToString s; ")"]
-  | Average (s,p) ->
-      String.concat "" ["(("; exprToString s; "+"; exprToString p; ")/2"]
-  | Times (s,p) -> String.concat "" [exprToString s; "*"; exprToString p]
-  | Thresh (s,p,r,d) ->
-      String.concat ""
-        ["(";
-        exprToString s;
-        "<";
-        exprToString p;
-        "?";
-        exprToString r;
-        ":";
-        exprToString d;
-        ")"]
-  | _ -> "";;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let rec digits n digitList =
+       if n = 0 then digitList else digits (n / 10) ((n mod 10) :: digitList) in
+     match n with | 0 -> [0] | _ -> digits n []);;
 
 *)
 
 (* changed spans
-(15,14)-(15,66)
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+(3,5)-(3,11)
+n < 0
+BopG VarG LitG
 
-(16,16)-(16,46)
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+(6,4)-(8,71)
+fun n ->
+  fun digitList ->
+    if n = 0
+    then digitList
+    else digits (n / 10)
+                ((n mod 10) :: digitList)
+LamG (LamG EmptyG)
 
-(16,17)-(16,26)
-String.concat
+(6,4)-(8,71)
+fun digitList ->
+  if n = 0
+  then digitList
+  else digits (n / 10)
+              ((n mod 10) :: digitList)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(6,4)-(8,71)
+let rec digits =
+  fun n ->
+    fun digitList ->
+      if n = 0
+      then digitList
+      else digits (n / 10)
+                  ((n mod 10) :: digitList) in
+match n with
+| 0 -> [0]
+| _ -> digits n []
+LetG Rec (fromList [LamG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(7,15)-(7,26)
+digitList
 VarG
 
-(16,17)-(16,26)
-""
-LitG
-
-(16,17)-(16,26)
-["cos(pi*" ; exprToString s ; ")"]
-ListG LitG Nothing
-
-(18,8)-(18,33)
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(18,9)-(18,13)
-String.concat
+(7,27)-(7,35)
+digits
 VarG
 
-(18,9)-(18,13)
-""
-LitG
+(7,27)-(7,35)
+digits (n / 10)
+       ((n mod 10) :: digitList)
+AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
 
-(18,9)-(18,13)
-["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-ListG LitG Nothing
+(8,9)-(8,71)
+[]
+ListG EmptyG Nothing
 
-(19,19)-(19,43)
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+(8,12)-(8,32)
+(n mod 10) :: digitList
+ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
 
-(19,20)-(19,36)
-String.concat
+(8,31)-(8,32)
+digitList
 VarG
 
-(19,20)-(19,36)
-""
-LitG
-
-(19,20)-(19,36)
-[exprToString s ; "*" ; exprToString p]
-ListG LitG Nothing
-
-(21,12)-(21,36)
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(21,13)-(21,16)
-String.concat
+(8,31)-(8,32)
+n
 VarG
 
-(21,13)-(21,16)
-""
-LitG
+(8,31)-(8,32)
+match n with
+| 0 -> [0]
+| _ -> digits n []
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
 
-(21,13)-(21,16)
-["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
+(8,31)-(8,32)
+[0]
 ListG LitG Nothing
 
-(26,9)-(26,10)
-""
-LitG
+(8,57)-(8,64)
+digits n []
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(8,58)-(8,59)
+digits
+VarG
 
 *)

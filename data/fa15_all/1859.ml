@@ -1,61 +1,94 @@
 
-let rec intToReverseList n =
-  if n <= 0 then [] else (n mod 10) :: (intToReverseList (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverseHelper l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec digitsOfInt n = listReverseHelper (intToReverseList n);;
+let buildCosine e = Cosine e;;
 
-let digits n = digitsOfInt (abs n);;
+let buildSine e = Sine e;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
 
-let rec additivePersistence n =
-  let rec count acc n =
-    if n < 10 then acc else (acc + 1) (sumList (digits n)) in
-  count 0 n;;
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then
+    let bin_rand = rand (1, 2) in
+    (if bin_rand = 1 then buildX () else buildY ())
+  else
+    (let exp_rand = rand (1, 5) in
+     let first_forced = build (rand, (depth - 1)) in
+     match exp_rand with
+     | 1 -> buildSine first_forced
+     | 2 -> buildCosine first_forced
+     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
+     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           (first_forced, (build (rand, (depth - 1))),
+             (build (rand, (depth - 1)))));;
 
 
 (* fix
 
-let rec intToReverseList n =
-  if n <= 0 then [] else (n mod 10) :: (intToReverseList (n / 10));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverseHelper l =
-  let rec go i =
-    function
-    | [] -> i
-    | headElement::tailList -> go (headElement :: i) tailList in
-  go [] l;;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec digitsOfInt n = listReverseHelper (intToReverseList n);;
+let buildCosine e = Cosine e;;
 
-let digits n = digitsOfInt (abs n);;
+let buildSine e = Sine e;;
 
-let rec sumList xs =
-  match xs with | [] -> 0 | head::tail -> head + (sumList tail);;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
 
-let rec additivePersistence n =
-  let rec count acc n =
-    if n < 10 then acc else count (acc + 1) (sumList (digits n)) in
-  count 0 n;;
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth <= 0
+  then
+    let bin_rand = rand (1, 2) in
+    (if bin_rand = 1 then buildX () else buildY ())
+  else
+    (let exp_rand = rand (1, 5) in
+     let first_forced = build (rand, (depth - 1)) in
+     match exp_rand with
+     | 1 -> buildSine first_forced
+     | 2 -> buildCosine first_forced
+     | 3 -> buildAverage (first_forced, (build (rand, (depth - 1))))
+     | 4 -> buildTimes (first_forced, (build (rand, (depth - 1))))
+     | 5 ->
+         buildThresh
+           (first_forced, (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
 
 *)
 
 (* changed spans
-(21,28)-(21,37)
-count
-VarG
-
-(21,28)-(21,58)
-count (acc + 1)
-      (sumList (digits n))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(40,11)-(41,41)
+(first_forced , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

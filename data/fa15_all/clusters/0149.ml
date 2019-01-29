@@ -1,7 +1,13 @@
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-helper (x :: acc) (n' - 1)
-helper (x :: acc) (n' - 1)
-helper ((sum mod 10) :: acc)
-       (sum / 10)
-helper ((sum mod 10) :: acc)
-       (sum / 10)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing)])
+match x with
+| (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
+| _ -> a
+match x with
+| (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
+| _ -> a
+match x with
+| (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
+| _ -> a
+match x with
+| (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
+| _ -> a

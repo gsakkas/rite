@@ -1,36 +1,41 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG)])
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
+CaseG VarG (fromList [(Nothing,LitG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+match sl with
+| [] -> ""
+| h :: t -> (let f =
+               fun a ->
+                 fun x -> a ^ (sep ^ x) in
+             let base = h in
+             let l = t in
+             List.fold_left f base l)
+match l with
+| [] -> "[]"
+| x :: xs -> (let g =
+                fun a ->
+                  fun x -> a ^ ("; " ^ f x) in
+              let base = "[" ^ f x in
+              List.fold_left g base
+                             xs ^ "]")
+match l with
+| [] -> "[]"
+| x :: xs -> (let g =
+                fun a ->
+                  fun x -> a ^ ("; " ^ f x) in
+              let base = "[" ^ f x in
+              List.fold_left g base
+                             xs ^ "]")
+match l with
+| [] -> "[]"
+| x :: xs -> (let g =
+                fun a ->
+                  fun x -> a ^ ("; " ^ f x) in
+              let base = "[" ^ f x in
+              List.fold_left g base
+                             xs ^ "]")
+match l with
+| [] -> "[]"
+| x :: xs -> (let g =
+                fun a ->
+                  fun x -> a ^ ("; " ^ f x) in
+              let base = "[" ^ f x in
+              List.fold_left g base
+                             xs ^ "]")

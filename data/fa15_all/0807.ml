@@ -1,42 +1,120 @@
 
-let rec digitsOfInt n =
-  let rec loop x listX =
-    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
-  match n with | 0 -> [0] | x' -> loop x' [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Quad of expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  let rec loop x y = if x = 0 then y else (loop sumList (digitsOfInt x)) + y in
-  match n with | 0 -> 0 | x' -> loop x' 0;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Quad (e1,e2,e3) ->
+      (((eval (e1, x, y)) + (eval (e2, x, y))) ** 2) + (eval (e3, x, y))
+  | _ -> failwith "we are seriously writing a lisp compiler god save us all";;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let rec loop x listX =
-    if x = 0 then listX else loop (x / 10) ((x mod 10) :: listX) in
-  match n with | 0 -> [0] | x' -> loop x' [];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Sqrt of expr
+  | Abs of expr
+  | Gauss of expr* expr* expr;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec additivePersistence n =
-  let rec loop x y = if x < 10 then y else (sumList (digitsOfInt x)) + y in
-  match n with | 0 -> 0 | x' -> loop x' 0;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Sqrt e -> sqrt (abs_float (eval (e, x, y)))
+  | Gauss (e1,e2,e3) ->
+      2.0 *.
+        (exp
+           (-.
+              ((((eval (e1, x, y)) -. (eval (e2, x, y))) ** 2.0) /.
+                 (eval (e3, x, y)))));;
 
 *)
 
 (* changed spans
-(10,24)-(10,29)
-x < 10
-BopG VarG LitG
+(17,2)-(31,76)
+match e with
+| VarX -> x
+| VarY -> y
+| Sine e' -> sin (pi *. eval (e' , x , y))
+| Cosine e' -> cos (pi *. eval (e' , x , y))
+| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
+| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
+                                then eval (e3 , x , y)
+                                else eval (e4 , x , y)
+| Sqrt e -> sqrt (abs_float (eval (e , x , y)))
+| Gauss (e1 , e2 , e3) -> 2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(10,28)-(10,29)
-10
+(30,6)-(30,52)
+exp
+VarG
+
+(30,6)-(30,52)
+exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+AppG (fromList [UopG EmptyG])
+
+(30,6)-(30,52)
+((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(30,6)-(30,52)
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+UopG (BopG EmptyG EmptyG)
+
+(30,6)-(30,52)
+2.0
 LitG
 
-(10,43)-(10,47)
-sumList (digitsOfInt x)
-AppG (fromList [AppG (fromList [EmptyG])])
+(30,6)-(30,72)
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+BopG LitG (AppG (fromList [EmptyG]))
+
+(30,7)-(30,46)
+eval (e1 , x , y) -. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(30,50)-(30,51)
+2.0
+LitG
 
 *)

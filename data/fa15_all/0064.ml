@@ -1,25 +1,26 @@
 
-let pipe fs = let f a x = a x in let base b = b in List.fold_left f base fs;;
+let pipe fs = let f a x y = y a in let base b = b in List.fold_left f base fs;;
 
 
 (* fix
 
 let pipe fs =
-  let f a x x a = x a in let base b = b in List.fold_left f base fs;;
+  let f a x fn = x (fun a  -> a) in
+  let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,26)-(2,29)
-fun x -> fun a -> x a
-LamG (LamG EmptyG)
-
-(2,26)-(2,29)
-fun a -> x a
+(2,24)-(2,31)
+fun fn -> x (fun a -> a)
 LamG (AppG (fromList [EmptyG]))
 
-(2,33)-(2,75)
-a
+(2,28)-(2,29)
+x
 VarG
+
+(2,30)-(2,31)
+fun a -> a
+LamG VarG
 
 *)

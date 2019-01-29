@@ -1,34 +1,97 @@
 
-let pipe fs = let f a x x = x a in let base y = y in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      (eval ((a, x, y) *. (a, x, y))) + ((b, x, y) *. (c, x, y));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Poly of expr* expr* expr
+  | Tan of expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Poly (a,b,c) ->
+      ((eval (a, x, y)) *. (eval (a, x, y))) +.
+        ((eval (b, x, y)) *. (eval (c, x, y)));;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-fun y -> x (a y)
-LamG (AppG (fromList [EmptyG]))
+(28,6)-(28,37)
+eval (a , x , y) *. eval (a , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(2,30)-(2,31)
-a y
-AppG (fromList [VarG])
+(28,6)-(28,64)
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(2,53)-(2,77)
-x
+(28,26)-(28,35)
+eval
 VarG
 
-(2,53)-(2,77)
-fun x -> x
-LamG VarG
+(28,26)-(28,35)
+eval (a , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(2,53)-(2,77)
-let base = fun x -> x in
-List.fold_left f base fs
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+(28,41)-(28,50)
+eval
+VarG
+
+(28,41)-(28,50)
+eval (b , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(28,54)-(28,63)
+eval
+VarG
+
+(28,54)-(28,63)
+eval (c , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

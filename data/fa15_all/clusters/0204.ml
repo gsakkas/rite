@@ -1,4 +1,7 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ListG EmptyG Nothing)
-if n > 0
-then [n mod 10]
-else []
+IteG (BopG EmptyG EmptyG) LitG LitG
+if ((f + g) + carry) > 9
+then 1
+else 0
+if explosion = listReverse explosion
+then true
+else false

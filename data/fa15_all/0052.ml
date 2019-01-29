@@ -1,20 +1,26 @@
 
-let pipe fs = let f a x = a x in let base = () in List.fold_left f base fs;;
+let pipe fs =
+  let f a x = match x with | [] -> 1 | _ -> x a in
+  let base = f 0 [] in List.fold_left f base fs;;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
+let pipe fs n = let f a x = x a in let base = n in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,44)-(2,46)
-fun y -> y
-LamG VarG
+(3,2)-(4,47)
+fun n ->
+  (let f =
+     fun a -> fun x -> x a in
+   let base = n in
+   List.fold_left f base fs)
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(2,50)-(2,74)
-y
+(4,17)-(4,19)
+n
 VarG
 
 *)

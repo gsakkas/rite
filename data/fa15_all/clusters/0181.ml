@@ -1,7 +1,7 @@
-LetG NonRec (fromList [ListG EmptyG Nothing]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-let base = [] in
-let args = [] in
-List.fold_left f base args
-let base = [] in
-let args = l2 in
-List.fold_left f base args
+LetG NonRec (fromList [VarG]) (BopG EmptyG EmptyG)
+let x :: t = xs in
+x + sumList t
+let x :: t = xs in
+x + sumList t
+let x :: t = xs in
+x + sumList t

@@ -1,7 +1,7 @@
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (ListG EmptyG Nothing)
-let d :: [] =
-  digitsOfInt (n / 10) in
-[d ; n mod 10]
-let d :: [] =
-  digitsOfInt (n / 10) in
-[d ; n mod 10]
+ListG (AppG (fromList [EmptyG])) Nothing
+[sqsum (mulByDigit i
+                   (List.rev (List.map (fun x ->
+                                          x * 10)
+                                       t)) @ [h * i])]
+[List.fold_left f base
+                (h :: t)]

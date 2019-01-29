@@ -1,68 +1,38 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let f x = let xx = (x * x) * x in (xx, (xx < 100));;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, l2);;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let (x,y) = f 8;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,res) = a in
-      ((((x1 + x2) + carry) / 10), ((((x1 + x2) + carry) mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (carry,res) = List.fold_left f base args in [res; carry] in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = let f x = (f, ((f b) = b)) in wwhile (f, x);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let wwhile (f,b) =
+  let rec helper (f,b) (x,y) =
+    match y with | true  -> helper (f, x) (f b) | false  -> x in
+  helper (f, b) (b, true);;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else
-    if (List.length l1) < (List.length l2)
-    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (carry,res) = a in
-      ((((x1 + x2) + carry) / 10), ((((x1 + x2) + carry) mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (carry,res) = List.fold_left f base args in res @ [carry] in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = let f x = ((f x), ((f b) = b)) in wwhile (f, b);;
 
 *)
 
 (* changed spans
-(23,52)-(23,64)
-res @ [carry]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+(11,32)-(11,33)
+f x
+AppG (fromList [VarG])
 
-(23,53)-(23,56)
-(@)
+(11,35)-(11,46)
+x
 VarG
 
-(23,58)-(23,63)
-[carry]
-ListG VarG Nothing
+(11,62)-(11,63)
+b
+VarG
 
 *)

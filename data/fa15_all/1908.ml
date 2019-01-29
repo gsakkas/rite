@@ -1,47 +1,74 @@
 
-let intboolf f b = ((f b), ((f b) == 0));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile (intboolf, b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Squared e -> (eval (e, x, y)) ** 2.
+  | Flatten (e1,e2,e3) ->
+      ((eval (e1, x, y)) / (eval (e2, x, y))) / (eval (e3, x, y));;
 
 
 (* fix
 
-let func (f,b) b = ((f b), ((f b) == b));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Squared of expr
+  | Flatten of expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile ((func (f, b)), b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Squared e -> (eval (e, x, y)) ** 2.
+  | Flatten (e1,e2,e3) ->
+      ((eval (e1, x, y)) /. (eval (e2, x, y))) /. (eval (e3, x, y));;
 
 *)
 
 (* changed spans
-(2,13)-(2,40)
-fun (f , b) ->
-  fun b -> (f b , f b = b)
-LamG (LamG EmptyG)
+(29,6)-(29,45)
+(eval (e1 , x , y) /. eval (e2 , x , y)) /. eval (e3 , x , y)
+BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(2,37)-(2,38)
-b
-VarG
-
-(7,29)-(7,37)
-func (f , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(7,39)-(7,40)
-func
-VarG
-
-(7,39)-(7,40)
-f
-VarG
-
-(7,39)-(7,40)
-(f , b)
-TupleG (fromList [VarG])
+(29,7)-(29,24)
+eval (e1 , x , y) /. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)

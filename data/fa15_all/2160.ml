@@ -1,30 +1,38 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((fun x  -> if b f b then b else f b), b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if !(List.mem h seen) then h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile ((fun x  -> ((f b), ((f b) = b))), b);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then h :: seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(5,43)-(5,44)
-(f b , f b = b)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(7,20)-(7,56)
+h :: seen
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
 
-(5,45)-(5,46)
-f b
-AppG (fromList [VarG])
+(8,8)-(8,46)
+h
+VarG
 
-(5,54)-(5,55)
-f b = b
-BopG (AppG (fromList [EmptyG])) VarG
+(8,8)-(8,46)
+seen
+VarG
 
 *)

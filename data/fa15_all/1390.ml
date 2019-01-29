@@ -1,78 +1,48 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Circ of expr* expr
-  | NatLog of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine sine -> "sin(pi*" ^ ((exprToString sine) ^ ")")
-  | Cosine cosine -> "cos(pi*" ^ ((exprToString cosine) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
-  | Circ (circ1,circ2) ->
-      "(" ^ ((exprToString circ1) ^ ("^2+" ^ ((exprToString circ2) ^ ")")))
-  | NatLog nlog -> "ln(" ^ (nlog ^ ")");;
+let pipe fs = let f a x = a x in let base = [] in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Circ of expr* expr
-  | NatLog of expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine sine -> "sin(pi*" ^ ((exprToString sine) ^ ")")
-  | Cosine cosine -> "cos(pi*" ^ ((exprToString cosine) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
-  | Circ (circ1,circ2) ->
-      "(" ^ ((exprToString circ1) ^ ("^2+" ^ ((exprToString circ2) ^ ")")))
-  | NatLog nlog -> "ln(" ^ ((exprToString nlog) ^ ")");;
+let pipe fs =
+  let f a x f x f a = f a x in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(31,28)-(31,32)
-exprToString
+(2,26)-(2,27)
+f
 VarG
 
-(31,28)-(31,32)
-exprToString nlog
+(2,26)-(2,27)
+fun x ->
+  fun f -> fun a -> f a x
+LamG (LamG EmptyG)
+
+(2,26)-(2,27)
+fun f -> fun a -> f a x
+LamG (LamG EmptyG)
+
+(2,26)-(2,27)
+fun a -> f a x
+LamG (AppG (fromList [EmptyG]))
+
+(2,26)-(2,27)
+f a x
 AppG (fromList [VarG])
+
+(2,26)-(2,29)
+fun f ->
+  fun x ->
+    fun f -> fun a -> f a x
+LamG (LamG EmptyG)
+
+(2,44)-(2,46)
+fun y -> y
+LamG VarG
+
+(2,50)-(2,74)
+y
+VarG
 
 *)

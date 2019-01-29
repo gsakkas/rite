@@ -1,16 +1,18 @@
 
-let rec digitsOfInt n = if n < 0 then [7];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (match n with | n -> [] @ (n mod 10));;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [7] else [8];;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (match n with | n -> [] @ [n mod 10]);;
 
 *)
 
 (* changed spans
-(2,24)-(2,41)
-[8]
-ListG LitG Nothing
+(3,51)-(3,61)
+[n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
 *)

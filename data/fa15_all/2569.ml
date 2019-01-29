@@ -1,34 +1,32 @@
 
-let sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+let x = [1; 2; 3];;
 
-let stringOfList f l = "[" ^ ((sepConcat (List.map f l)) ^ "]");;
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail::t::s -> s :: t :: tail :: head;;
 
 
 (* fix
 
-let sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+let x = [1; 2; 3];;
 
-let stringOfList f l = "[" ^ ((sepConcat "" (List.map f l)) ^ "]");;
+let rec listReverse l =
+  match l with | [] -> [] | x::[] -> [x] | head::tail::third -> [head; tail];;
 
 *)
 
 (* changed spans
-(9,30)-(9,56)
-sepConcat "" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(5,2)-(8,46)
+match l with
+| [] -> []
+| x :: [] -> [x]
+| head :: tail :: third -> [head ; tail]
+CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
 
-(9,41)-(9,55)
-""
-LitG
+(8,34)-(8,38)
+[head ; tail]
+ListG VarG Nothing
 
 *)

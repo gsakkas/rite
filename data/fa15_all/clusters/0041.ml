@@ -1,72 +1,69 @@
-LamG (TupleG (fromList [EmptyG]))
-fun x -> (x , f x = x)
-fun x -> (x , f x = x)
-fun x -> (x , f x = x)
-fun x -> (x , f x = x)
-fun x -> (x , f x = x)
-fun x -> (x , f x = x)
-fun b ->
-  (f b , if f b = b
-         then false
-         else true)
-fun b ->
-  (f b , if f b = b
-         then false
-         else true)
-fun b ->
-  (f b , if f b = b
-         then false
-         else true)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-fun x -> (2 , f b = b)
-fun x -> (2 , f b = b)
-fun x -> (2 , f b = b)
-fun x -> (f b , f b = b)
-fun x -> (b , f b = b)
-fun bt -> (bt , f bt = bt)
-fun bt -> (bt , f bt = bt)
-fun bt -> (bt , f bt = bt)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun b -> (f b , b = f b)
-fun x -> (f x , f x = x)
-fun x -> (f x , f x = x)
-fun b -> (f b , f b = b)
-fun b -> (f b , f b = b)
-fun x -> (f b , 3 < 4)
-fun b' -> (f b' , f b' <> b')
-fun b' -> (f b' , f b' <> b')
-fun b' -> (f b' , f b' <> b')
-fun b' -> (f b' , f b' <> b')
-fun input ->
-  (f input , f input = b)
-fun b ->
-  (f b , (b = f b) = false)
-fun y -> (f b , b = f b)
-fun y -> (f b , b = f b)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
-fun x -> (f x , x <> f x)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+let xx = f b in (xx , xx = b)
+let xx = f b in (xx , xx <> b)
+let xx = f b in (xx , xx <> b)
+let xx = f b in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let bb = f b in (bb , bb = b)
+let xx = f x in (xx , xx <> x)
+let xx = f x in (xx , xx <> x)
+let xx = f x in (xx , xx <> x)
+let b = f x in (b , b <> x)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let xx = f x in (xx , x <> b)
+let fOfB = f' b' in
+(fOfB , fOfB = b')
+let ll2 = List.length l2 in
+(clone 0
+       (ll2 - ll1) @ l1 , clone 0
+                                (ll1 - ll2) @ l2)
+let xx = h x in
+(xx , xx = h x)
+let xx = h x in
+(xx , xx = h x)
+let b' = f b in
+(b' , f b <> b)
+let b' = f b in
+(b' , f b <> b)
+let b = f z in (b , b <> z)
+let y = f x in (y , y <> x)
+let y = f x in (y , y <> x)
+let (_ , asd4) =
+  padZero asd3 (asd2 :: b) in
+(asd3 , asd4)
+let (_ , asd4) =
+  padZero asd3 (asd2 :: b) in
+(asd3 , asd4)
+let (_ , asd4) =
+  padZero asd3 (asd2 :: b) in
+(asd3 , asd4)
+let (_ , asd4) =
+  padZero asd3 (asd2 :: b) in
+(asd3 , asd4)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)
+let xx = f x in (xx , xx <> b)

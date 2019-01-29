@@ -1,22 +1,29 @@
 
-let pipe fs =
-  let f a x = match fs with | x::y -> x in
-  let base = [fs] in List.fold_left f base fs;;
+let rec append first second =
+  match first with | [] -> second | h::t -> h :: (append t second);;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n = 0 then [] else append ((digitsOfInt (n / 10)) [n mod 10]);;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
+let rec append first second =
+  match first with | [] -> second | h::t -> h :: (append t second);;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else if n = 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 *)
 
 (* changed spans
-(4,14)-(4,16)
-fun y -> y
-LamG VarG
-
-(4,21)-(4,45)
-y
-VarG
+(8,29)-(8,71)
+append (digitsOfInt (n / 10))
+       [n mod 10]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
 *)

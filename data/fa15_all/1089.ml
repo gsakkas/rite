@@ -1,32 +1,37 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> 0 | h::t -> a * a in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0 then List.append (clone 0 (abs diff)) l1;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + (x * x) in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((List.append (clone 0 (abs diff)) l1), l2)
+  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,35)-(3,36)
-(a * a) + (x * x)
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-
-(4,2)-(4,51)
-x
+(9,2)-(9,54)
+l2
 VarG
 
-(4,2)-(4,51)
-x
-VarG
-
-(4,2)-(4,51)
-x * x
-BopG VarG VarG
+(9,19)-(9,54)
+(List.append (clone 0
+                    (abs diff)) l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

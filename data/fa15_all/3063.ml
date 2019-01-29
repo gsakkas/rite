@@ -1,20 +1,25 @@
 
-let bigMul l1 l2 =
-  let f a x = a @ 0 in
-  let base = [] in let args = l2 in List.fold_left f base args;;
+let rec digitsOfInt n = if n < 0 then [];;
 
 
 (* fix
 
-let bigMul l1 l2 =
-  let f a x = a @ [0] in
-  let base = [] in let args = l2 in List.fold_left f base args;;
+let rec digitsOfInt n = let l = [] in if n < 0 then l else l;;
 
 *)
 
 (* changed spans
-(3,18)-(3,19)
-[0]
-ListG LitG Nothing
+(2,24)-(2,40)
+l
+VarG
+
+(2,24)-(2,40)
+let l = [] in
+if n < 0 then l else l
+LetG NonRec (fromList [ListG EmptyG Nothing]) (IteG EmptyG EmptyG EmptyG)
+
+(2,24)-(2,40)
+[]
+ListG EmptyG Nothing
 
 *)

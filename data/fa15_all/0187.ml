@@ -1,30 +1,19 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = true then seen else seen @ h in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> (listReverse tl) :: hd;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = true then seen else seen @ [h] in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec listReverse l = match l with | [] -> [] | _::tl -> listReverse tl;;
 
 *)
 
 (* changed spans
-(7,70)-(7,71)
-[h]
-ListG VarG Nothing
+(3,2)-(3,60)
+match l with
+| [] -> []
+| _ :: tl -> listReverse tl
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
 
 *)

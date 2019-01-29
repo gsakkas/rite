@@ -1,19 +1,25 @@
 
-let stringOfList f l =
-  let fx a b = match b with | [] -> "" | h::t -> List.append a (f b) in
-  let base = [""] in List.fold_left fx base l;;
+let rec app l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (app t l2);;
+
+let rec digitsOfInt n =
+  if n >= 10 then app ([n / 10] [n mod 10]) else app [3] [8];;
 
 
 (* fix
 
-let stringOfList f l =
-  let fx a b = a ^ b in let base = "" in List.fold_left fx base l;;
+let rec app l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (app t l2);;
+
+let rec digitsOfInt n = if n >= 10 then app [5] [n mod 10] else app [3] [8];;
 
 *)
 
 (* changed spans
-(3,49)-(3,60)
-(^)
-VarG
+(5,18)-(5,43)
+app [5] [n mod 10]
+AppG (fromList [ListG EmptyG Nothing])
+
+(5,28)-(5,30)
+5
+LitG
 
 *)

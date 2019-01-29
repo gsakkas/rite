@@ -1,42 +1,26 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::[] -> "[" ^ (x ^ "]")
-  | l -> sepConcat " " (List.map (f, l));;
+let sqsum xs =
+  let f a x = a ^ (2 :: x) in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::[] -> "[" ^ (x ^ "]")
-  | l -> sepConcat "" (List.map f l);;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(13,23)-(13,40)
-""
-LitG
+(3,16)-(3,17)
+a + (x * x)
+BopG VarG (BopG EmptyG EmptyG)
 
-(13,24)-(13,32)
-List.map f l
-AppG (fromList [VarG])
+(3,19)-(3,20)
+x * x
+BopG VarG VarG
+
+(3,30)-(3,70)
+x
+VarG
 
 *)

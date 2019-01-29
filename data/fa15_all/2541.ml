@@ -1,72 +1,63 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec reverseInt x y =
+  if x != 0 then reverseInt (x / 10) ((y * 10) + (10 mod 10)) else y;;
 
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if (x1 + x2) > 10
-      then (1, (((x1 + x2) + a1) - 10))
-      else (0, ((x1 + x2) + a1)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let m = reverseInt n in
+     let x = m / 10
+     and y = m mod 10 in
+     if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec reverseInt x y =
+  if x != 0 then reverseInt (x / 10) ((y * 10) + (10 mod 10)) else y;;
 
-let padZero l1 l2 =
-  let sizDif = (List.length l1) - (List.length l2) in
-  if sizDif > 0
-  then let pad = clone 0 sizDif in (l1, (pad @ l2))
-  else (let pad = clone 0 (- sizDif) in ((pad @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      if (x1 + x2) > 10
-      then (1, ((((x1 + x2) + a1) - 10) :: a2))
-      else (0, (((x1 + x2) + a1) :: a2)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let x = (reverseInt n 0) / 10
+     and y = (reverseInt n 0) mod 10 in
+     if (x = 0) && (y = 0) then [] else y :: (digitsOfInt x));;
 
 *)
 
 (* changed spans
-(19,15)-(19,38)
-(((x1 + x2) + a1) - 10) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
+(10,13)-(10,14)
+reverseInt n 0
+AppG (fromList [VarG,LitG])
 
-(20,11)-(20,32)
-a2
+(10,17)-(10,19)
+reverseInt
 VarG
 
-(20,15)-(20,31)
-((x1 + x2) + a1) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-
-(21,4)-(23,51)
-a2
+(10,17)-(10,19)
+n
 VarG
+
+(10,17)-(10,19)
+0
+LitG
+
+(11,13)-(11,14)
+reverseInt n 0
+AppG (fromList [VarG,LitG])
+
+(11,19)-(11,21)
+reverseInt
+VarG
+
+(11,19)-(11,21)
+n
+VarG
+
+(11,19)-(11,21)
+0
+LitG
 
 *)

@@ -1,21 +1,24 @@
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (AppG (fromList [EmptyG]))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+match l with
+| x :: [] -> x
+| hd :: tl -> last tl
+| [] -> []
+match l with
+| x :: [] -> x
+| hd :: tl -> last tl
+| [] -> []
+match i with
+| 0 -> [0]
+| 1 -> l
+| _ -> helper (i - 1) l
+              (bigAdd acc l)
+match i with
+| 0 -> [0]
+| 1 -> l
+| _ -> helper (i - 1) l
+              (bigAdd acc l)
+match i with
+| 0 -> [0]
+| 1 -> l
+| _ -> helper (i - 1) l
+              (bigAdd acc l)

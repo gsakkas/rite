@@ -1,94 +1,69 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildCosine e = Cosine e;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = rand 0.4 in
-  match depth with
-  | 0 -> if (r mod 2) = 0 then buildX else buildY
-  | d ->
-      if r = 0
-      then buildSine (build (rand, (d - 1)))
-      else buildCosine build (rand, (d - 1));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (y,z) ->
+          let sum = y + z in
+          (match a with
+           | h::t -> ((sum + h) / 10) :: ((sum + h) mod 10) :: t
+           | [] -> [sum / 10; sum mod 10]) in
+    let base = [] in
+    let args = failwith List.combine (l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildSine e = Sine e;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
-let buildX () = VarX;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let r = rand (0, depth) in
-  match depth with
-  | 0 -> if (r mod 2) = 0 then buildX () else buildY ()
-  | d ->
-      if r = 0
-      then buildSine (build (rand, (depth - 1)))
-      else build (rand, (d - 1));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (y,z) ->
+          let sum = y + z in
+          (match a with
+           | h::t -> ((sum + h) / 10) :: ((sum + h) mod 10) :: t
+           | _ -> [sum / 10; sum mod 10]) in
+    let base = [] in
+    let args = List.rev (List.combine l1 l2) in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(20,15)-(20,18)
-(0 , depth)
-TupleG (fromList [VarG,LitG])
+(18,10)-(20,42)
+match a with
+| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
+| _ -> [sum / 10 ; sum mod 10]
+CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
 
-(21,2)-(26,44)
-depth
+(22,15)-(22,44)
+List.rev
 VarG
 
-(21,2)-(26,44)
-0
-LitG
-
-(22,31)-(22,37)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(22,43)-(22,49)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(22,43)-(22,49)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(24,6)-(26,44)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(25,36)-(25,37)
-depth
-VarG
-
-(26,11)-(26,22)
-build (rand , d - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(22,15)-(22,44)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

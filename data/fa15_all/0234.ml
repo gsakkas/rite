@@ -1,33 +1,167 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f in (ff, (x = (f x))) in (n, b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Inverse a ->
+      let result = eval a in if result = 0. then 0 else 1 /. result
+  | Max (a,b) ->
+      let aResult = eval a in
+      let bResult = eval b in if aResult > bResult then aResult else bResult
+  | Range (a,b,c) ->
+      let aResult = eval a in
+      let bResult = eval b in
+      let cResult = eval c in
+      if aResult < bResult
+      then bResult
+      else if aResult < cResult then cResult else aResult;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Inverse of expr
+  | Max of expr* expr
+  | Range of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (let n x = ((f x), (x = (f x))) in (n, b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Inverse a ->
+      let result = eval (a, x, y) in if result = 0. then 0. else 1. /. result
+  | Max (a,b) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      if aResult > bResult then aResult else bResult
+  | Range (a,b,c) ->
+      let aResult = eval (a, x, y) in
+      let bResult = eval (b, x, y) in
+      let cResult = eval (c, x, y) in
+      if aResult < bResult
+      then bResult
+      else if aResult < cResult then cResult else aResult;;
 
 *)
 
 (* changed spans
-(7,35)-(7,37)
-f x
-AppG (fromList [VarG])
+(29,24)-(29,25)
+(a , x , y)
+TupleG (fromList [VarG])
 
-(7,39)-(7,50)
-f
+(29,29)-(29,67)
+x
 VarG
 
-(7,39)-(7,50)
+(29,29)-(29,67)
+y
+VarG
+
+(29,49)-(29,50)
+0.0
+LitG
+
+(29,56)-(29,57)
+1.0
+LitG
+
+(31,25)-(31,26)
+(a , x , y)
+TupleG (fromList [VarG])
+
+(32,6)-(32,76)
 x
+VarG
+
+(32,6)-(32,76)
+y
+VarG
+
+(32,25)-(32,26)
+(b , x , y)
+TupleG (fromList [VarG])
+
+(32,30)-(32,76)
+x
+VarG
+
+(32,30)-(32,76)
+y
+VarG
+
+(34,25)-(34,26)
+(a , x , y)
+TupleG (fromList [VarG])
+
+(35,6)-(39,57)
+x
+VarG
+
+(35,6)-(39,57)
+y
+VarG
+
+(35,25)-(35,26)
+(b , x , y)
+TupleG (fromList [VarG])
+
+(36,6)-(39,57)
+x
+VarG
+
+(36,6)-(39,57)
+y
+VarG
+
+(36,25)-(36,26)
+(c , x , y)
+TupleG (fromList [VarG])
+
+(37,6)-(39,57)
+x
+VarG
+
+(37,6)-(39,57)
+y
 VarG
 
 *)

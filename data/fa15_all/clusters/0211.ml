@@ -1,5 +1,5 @@
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ListG EmptyG Nothing)
-if i > 0
-then bigAdd l
-            (mulByDigit (i - 1) l)
-else []
+AppG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
+List.append ("[" :: (List.map f
+                              l)) ["]"]
+List.append ("[" :: (List.map f
+                              l)) ["]"]

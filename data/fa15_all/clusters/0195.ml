@@ -1,9 +1,9 @@
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
-match i with
-| i -> []
-| _ -> match l with
-       | [] -> []
-       | h :: t -> if List.length t = 0
-                   then [h * i] @ mulByDigit i t
-                   else (remainder i
-                                   h) :: (mulByDigit i t)
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+match f b with
+| (x , trueOrFalse) -> if trueOrFalse
+                       then wwhile (f , x)
+                       else x
+match f b with
+| (f' , x') -> if x'
+               then wwhile (f , f')
+               else f'

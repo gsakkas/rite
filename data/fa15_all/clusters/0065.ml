@@ -1,24 +1,25 @@
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-(x , f x = x)
-(ff , b = ff)
-(ff , b = ff)
-(ff , b = ff)
-(rand , d - 1)
-(xx , xx = x)
-(xx , xx = x)
-(x , b' <> x)
-(x , x <> b)
-(rand , depth - 1)
-(rand , depth - 1)
-(rand , depth - 1)
-(rand , depth - 1)
-(rand , depth - 1)
-(result , result = b)
-(result , result = b)
-(result , result = b)
-(calcfx , calcfx = x)
-(calcx , calcx = x)
-(c + 1 , s)
-(c + 1 , s)
-(c + 1 , s)
-(c + 1 , s)
+BopG (AppG (fromList [EmptyG])) VarG
+f b = b
+f b = b
+f b = b
+f b = b
+f b' = b'
+f b' = b'
+f b = b
+eval (a , x , y) *. pi
+eval (a , x , y) *. pi
+eval (a , x , y) *. pi
+add x + prev
+add x + prev
+add x + prev
+f b <> b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b
+f b = b

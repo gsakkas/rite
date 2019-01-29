@@ -1,70 +1,162 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let x x = x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let buildCosine e = Cosine e;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX _ -> x
-  | VarY _ -> y
-  | Sine x1 -> eval ((buildSine x1), x, y)
-  | Cosine x2 -> eval ((buildCosine x2), x, y)
-  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
-  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
-  | Thresh (x7,x8,x9,x0) -> eval (buildThresh (x7, x8, x9, x0));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = [1] in
+    let args = [(l1, l2)] in let (_,res) = List.fold_left f base args in res in
+  (removeZero (add (padZero l1 l2)) 0 0 9 9) + (1 0 0 2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let l1 = [0; 0; 9; 9];;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let l2 = [1; 0; 0; 2];;
 
-let buildCosine e = Cosine e;;
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
 
-let buildSine e = Sine e;;
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
 
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
 
-let buildTimes (e1,e2) = Times (e1, e2);;
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX _ -> x
-  | VarY _ -> y
-  | Sine x1 -> eval ((buildSine x1), x, y)
-  | Cosine x2 -> eval ((buildCosine x2), x, y)
-  | Average (x3,x4) -> eval ((buildAverage (x3, x4)), x, y)
-  | Times (x5,x6) -> eval ((buildTimes (x5, x6)), x, y)
-  | Thresh (x7,x8,x9,x0) -> eval ((buildThresh (x7, x8, x9, x0)), x, y);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = x in
+    let base = (0, []) in
+    let args = [(0, [])] in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(29,33)-(29,63)
-(buildThresh (x7 , x8 , x9 , x0) , x , y)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+(2,10)-(2,11)
+[0 ; 0 ; 9 ; 9]
+ListG LitG Nothing
+
+(4,10)-(7,15)
+List.rev
+VarG
+
+(4,10)-(7,15)
+List.combine
+VarG
+
+(4,10)-(7,15)
+l1
+VarG
+
+(4,10)-(7,15)
+l2
+VarG
+
+(4,10)-(7,15)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(4,10)-(7,15)
+List.combine l1 l2
+AppG (fromList [VarG])
+
+(4,10)-(7,15)
+0
+LitG
+
+(4,10)-(7,15)
+0
+LitG
+
+(4,10)-(7,15)
+9
+LitG
+
+(4,10)-(7,15)
+9
+LitG
+
+(4,10)-(7,15)
+1
+LitG
+
+(4,10)-(7,15)
+0
+LitG
+
+(4,10)-(7,15)
+0
+LitG
+
+(4,10)-(7,15)
+2
+LitG
+
+(4,10)-(7,15)
+3
+LitG
+
+(4,10)-(7,15)
+3
+LitG
+
+(4,10)-(7,15)
+(3 , 3)
+TupleG (fromList [LitG])
+
+(4,10)-(7,15)
+(3 , 3) :: (List.rev (List.combine l1
+                                   l2))
+ConAppG (Just (TupleG (fromList [AppG (fromList [AppG (fromList [VarG])]),TupleG (fromList [LitG])]))) Nothing
+
+(4,10)-(7,15)
+[1 ; 0 ; 0 ; 2]
+ListG LitG Nothing
+
+(20,16)-(20,17)
+(0 , [])
+TupleG (fromList [LitG,ListG EmptyG Nothing])
+
+(21,4)-(21,76)
+0
+LitG
+
+(21,4)-(21,76)
+[]
+ListG EmptyG Nothing
+
+(21,21)-(21,23)
+0
+LitG
+
+(21,29)-(21,76)
+[]
+ListG EmptyG Nothing
+
+(22,2)-(22,44)
+removeZero (add (padZero l1
+                         l2))
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

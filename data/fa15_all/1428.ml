@@ -1,15 +1,25 @@
 
-let rec listReverse l = match l with | h::t -> listReverse h | [] -> [];;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) :: h;;
 
 
 (* fix
 
-let rec listReverse l = match l with | h::t -> listReverse [h] | [] -> [];;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(2,59)-(2,60)
+(3,36)-(3,51)
+(@)
+VarG
+
+(3,36)-(3,56)
+listReverse t @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(3,55)-(3,56)
 [h]
 ListG VarG Nothing
 

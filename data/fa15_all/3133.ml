@@ -1,98 +1,116 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let l1 = [0; 0; 9; 9];;
 
-let pi = 4.0 *. (atan 1.0);;
+let l2 = [1; 0; 0; 2];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 / (eval (e, x, y)) else 1 / 3
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) / 3.0;;
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match x with | (c,d::t) -> (c, (t :: a)) in
+    let base = (0, []) in
+    let args = match l1 with | h::t -> [(h, (List.rev l2))] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | OneOver of expr
-  | OneOverAvg of expr* expr* expr;;
+let l1 = [0; 0; 9; 9];;
 
-let pi = 4.0 *. (atan 1.0);;
+let l2 = [1; 0; 0; 2];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | OneOver e ->
-      if (eval (e, x, y)) > 1.0 then 1.0 /. (eval (e, x, y)) else 1.0 /. 3.0
-  | OneOverAvg (e1,e2,e3) ->
-      if
-        (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) > 1.0
-      then
-        1.0 /.
-          (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y)))
-      else (-1.0) /. 3.0;;
+let x = (3, 3) :: (List.rev (List.combine l1 l2));;
+
+let clone x n =
+  let rec helper x n acc =
+    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
+  helper x n [];;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
+  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match x with
+      | (d1,d2) ->
+          ((d1 + d2), ((d1 + d2) :: ((match a with | (a1,a2) -> a2)))) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(28,37)-(28,59)
-1.0 /. eval (e , x , y)
-BopG LitG (AppG (fromList [EmptyG]))
+(23,16)-(23,56)
+match x with
+| (d1 , d2) -> (d1 + d2 , (d1 + d2) :: (match a with
+                                        | (a1 , a2) -> a2))
+CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
 
-(28,69)-(28,70)
-1.0 /. 3.0
-BopG LitG LitG
+(23,44)-(23,45)
+d1 + d2
+BopG VarG VarG
 
-(30,6)-(35,23)
-1.0
-LitG
+(23,47)-(23,55)
+d1
+VarG
 
-(30,6)-(35,23)
-3.0
-LitG
+(23,47)-(23,55)
+d2
+VarG
 
-(35,11)-(35,23)
-(- 1.0) /. 3.0
-BopG (UopG EmptyG) LitG
+(23,48)-(23,49)
+d1 + d2
+BopG VarG VarG
+
+(23,53)-(23,54)
+d1
+VarG
+
+(23,53)-(23,54)
+d2
+VarG
+
+(23,53)-(23,54)
+match a with
+| (a1 , a2) -> a2
+CaseG VarG (fromList [(Nothing,VarG)])
+
+(24,4)-(26,51)
+a2
+VarG
+
+(25,54)-(25,56)
+List.combine
+VarG
+
+(25,54)-(25,56)
+l1
+VarG
+
+(25,54)-(25,56)
+List.combine l1 l2
+AppG (fromList [VarG])
 
 *)

@@ -1,82 +1,50 @@
 
-let rec wwhile (f,b) = let (i,t) = f b in if t then wwhile (f, i) else i;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let fixpoint (f,b) = wwhile ((let (i,t) = f b in i = b), b);;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n 0) in l;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (i,t) = f b in if t then wwhile (f, i) else i;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let g b = let xx = f b in if b = xx then (xx, false) else (xx, true) in
-      g), b);;
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec additivePersistence n =
+  let (l,r) = additivePersAndRoot (abs n) 0 in l;;
 
 *)
 
 (* changed spans
-(4,29)-(4,55)
-let g =
-  fun b ->
-    (let xx = f b in
-     if b = xx
-     then (xx , false)
-     else (xx , true)) in
-g
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(4,42)-(4,45)
-fun b ->
-  (let xx = f b in
-   if b = xx
-   then (xx , false)
-   else (xx , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(4,42)-(4,45)
-let xx = f b in
-if b = xx
-then (xx , false)
-else (xx , true)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
-
-(4,49)-(4,54)
-if b = xx
-then (xx , false)
-else (xx , true)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(4,57)-(4,58)
-xx
+(17,35)-(17,38)
+additivePersAndRoot
 VarG
 
-(4,57)-(4,58)
-xx
-VarG
-
-(4,57)-(4,58)
-xx
-VarG
-
-(4,57)-(4,58)
-g
-VarG
-
-(4,57)-(4,58)
-false
-LitG
-
-(4,57)-(4,58)
-true
-LitG
-
-(4,57)-(4,58)
-(xx , false)
-TupleG (fromList [VarG,LitG])
-
-(4,57)-(4,58)
-(xx , true)
-TupleG (fromList [VarG,LitG])
+(17,35)-(17,38)
+abs n
+AppG (fromList [VarG])
 
 *)

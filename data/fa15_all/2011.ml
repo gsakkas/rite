@@ -1,74 +1,38 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Log of expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
-  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
-  | Power (x,y) -> (exprToString x) ^ ("**" (exprToString y))
-  | Log n -> "log " ^ (exprToString n);;
+let stringOfList f l = sepConcat (List.map f);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Log of expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
-  | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (x,y,z,w) ->
-      "(" ^
-        ((exprToString x) ^
-           ("<" ^
-              ((exprToString y) ^
-                 ("?" ^ ((exprToString z) ^ (":" ^ ((exprToString w) ^ ")")))))))
-  | Power (x,y) -> (exprToString x) ^ ("**" ^ (exprToString y))
-  | Log n -> "log " ^ (exprToString n);;
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(28,38)-(28,61)
-"**" ^ exprToString y
+(9,23)-(9,45)
+sepConcat "; " (List.map f l)
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(28,39)-(28,43)
-(^)
-VarG
+(9,33)-(9,45)
+"; "
+LitG
+
+(9,34)-(9,42)
+List.map f l
+AppG (fromList [VarG])
 
 *)

@@ -1,40 +1,25 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let f::e = h in if f = k then e else assoc d k t;;
+let rec append xs x =
+  match xs with | [] -> [x] | hd::tl -> hd :: (append tl x);;
+
+let rec digitsOfInt n =
+  if n <= 0 then [] else n - ((n / 10) * (10 append digitsOfInt (n / 10)));;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (n,m)::t -> if n = k then m else assoc (d, k, t);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n - ((n / 10) * 10)) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(3,2)-(5,60)
-match l with
-| [] -> d
-| (n , m) :: t -> if n = k
-                  then m
-                  else assoc (d , k , t)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+(6,25)-(6,74)
+(n - ((n / 10) * 10)) :: (digitsOfInt (n / 10))
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG (BopG (BopG VarG LitG) LitG)]))) Nothing
 
-(5,31)-(5,32)
-n
-VarG
-
-(5,49)-(5,54)
-assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(5,49)-(5,60)
-m
-VarG
-
-(5,55)-(5,56)
-(d , k , t)
-TupleG (fromList [VarG])
+(6,45)-(6,51)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
 
 *)

@@ -1,26 +1,16 @@
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (a,b) = h in if a = k then b else assoc d k t;;
+let rec digitsOfInt n = if n > 0 then (n / 10) :: (n mod 10) else [];;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (a,b) = h in if a = k then b else assoc (d, k, t);;
+let rec digitsOfInt n = if n > 0 then [n / 10; n mod 10] else [];;
 
 *)
 
 (* changed spans
-(5,50)-(5,61)
-assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(5,56)-(5,57)
-(d , k , t)
-TupleG (fromList [VarG])
+(2,38)-(2,60)
+[n / 10 ; n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
 *)

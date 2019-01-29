@@ -1,2 +1,4 @@
-BopG LitG (BopG EmptyG EmptyG)
-1.0 /. ((eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y))
+TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
+(if addit >= 10
+ then 1
+ else 0 , num @ [addit mod 10])

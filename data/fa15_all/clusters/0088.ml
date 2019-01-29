@@ -1,15 +1,44 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) VarG) LitG]))) Nothing
-(((fst x + snd x) + a) mod 10) :: t
-(((fst x + snd x) + a) mod 10) :: t
-(((fst x + snd x) + a) mod 10) :: t
-(((fst x + snd x) + a) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
-(((fst x + snd x) + c) mod 10) :: t
+CaseG (TupleG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match (a , x) with
+| ((b , c) , (d , e)) -> (b , (d + e) :: c)
+match (a , x) with
+| ((b , c) , (d , e)) -> (b , (d + e) :: c)

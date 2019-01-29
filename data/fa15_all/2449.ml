@@ -1,104 +1,36 @@
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x = y
-  then (l1, l2)
-  else
-    if x < y
-    then (((clone 0 (y - x)) @ l1), l2)
-    else (l1, ((clone 0 (x - y)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (l1x,l2x) = x in
-      let (a1,a2) = a in
-      let test = match a1 with | [] -> 0 | h::t -> h in
-      let sum = (l1x + l2x) + test in
-      let terms =
-        match a2 with | [] -> (sum / 10) :: (sum mod 10) | h::t -> sum mod 10 in
-      (((sum / 10) :: a1), (terms :: a2)) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  match fs with
+  | [] -> 0
+  | f::fs' -> let f a x = x a in let base = f 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
-
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x = y
-  then (l1, l2)
-  else
-    if x < y
-    then (((clone 0 (y - x)) @ l1), l2)
-    else (l1, ((clone 0 (x - y)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (l1x,l2x) = x in
-      let (a1,a2) = a in
-      let test = match a1 with | [] -> 0 | h::t -> h in
-      let sum = (l1x + l2x) + test in
-      match a2 with
-      | [] -> ((0 :: a1), ((sum / 10) :: (sum mod 10) :: a2))
-      | h::t -> (((sum / 10) :: a1), ((sum mod 10) :: a2)) in
-    let base = ([], []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let pipe fs =
+  let f a x p = x (a p) in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(25,30)-(25,40)
-a1
+(5,26)-(5,29)
+fun p -> x (a p)
+LamG (AppG (fromList [EmptyG]))
+
+(5,28)-(5,29)
+a p
+AppG (fromList [VarG])
+
+(5,33)-(5,75)
+p
 VarG
 
-(25,30)-(25,40)
-0
-LitG
+(5,46)-(5,47)
+fun b -> b
+LamG VarG
 
-(25,30)-(25,40)
-(sum / 10) :: ((sum mod 10) :: a2)
-ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
-
-(25,30)-(25,56)
-(0 :: a1 , (sum / 10) :: ((sum mod 10) :: a2))
-TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing,ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing])
-
-(25,53)-(25,55)
-(sum mod 10) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
-
-(26,6)-(26,41)
-a2
+(5,51)-(5,75)
+b
 VarG
-
-(26,28)-(26,33)
-sum mod 10
-BopG VarG LitG
-
-(26,37)-(26,39)
-sum
-VarG
-
-(26,37)-(26,39)
-10
-LitG
 
 *)

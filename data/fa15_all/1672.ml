@@ -1,42 +1,54 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((List.map sepConcat "; " l) ^ "]");;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (eval (e1, x, y))
+  | Cosine e1 -> cos (eval (e1, x, y))
+  | Average (e1,e2) -> (eval (e1, x, y)) + ((eval (e2, x, y)) / 2);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (eval (e1, x, y))
+  | Cosine e1 -> cos (eval (e1, x, y))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0);;
 
 *)
 
 (* changed spans
-(9,31)-(9,39)
-sepConcat "; " (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(17,23)-(17,66)
+eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
+BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
 
-(9,55)-(9,56)
-List.map
-VarG
+(17,43)-(17,66)
+eval (e2 , x , y) /. 2.0
+BopG (AppG (fromList [EmptyG])) LitG
 
-(9,55)-(9,56)
-f
-VarG
-
-(9,55)-(9,56)
-List.map f l
-AppG (fromList [VarG])
+(17,64)-(17,65)
+2.0
+LitG
 
 *)

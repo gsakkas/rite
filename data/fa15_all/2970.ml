@@ -1,85 +1,28 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x a in
-      let base = h ^ (sepConcat sep t) in
-      let l = t in List.fold_left f base l;;
+let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
+
+let rec digitsOfInt n =
+  if n > 10 then app ((digitsOfInt (n / 10)) [n mod 10]) else [n];;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a in
-      let base = if (List.length t) <> 0 then "" else sep in
-      let l = if (List.length t) <> 0 then t else [] in
-      List.fold_left f base l;;
+let rec digitsOfInt n =
+  if n >= 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
 
 *)
 
 (* changed spans
-(7,32)-(7,35)
-if List.length t <> 0
-then ""
-else sep
-IteG (BopG EmptyG EmptyG) LitG VarG
+(5,5)-(5,11)
+n >= 10
+BopG VarG LitG
 
-(7,36)-(7,37)
-List.length
+(5,21)-(5,56)
+digitsOfInt (n / 10) @ [n mod 10]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(5,22)-(5,44)
+(@)
 VarG
-
-(7,36)-(7,37)
-List.length t
-AppG (fromList [VarG])
-
-(7,36)-(7,37)
-List.length t <> 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(8,6)-(8,42)
-sep
-VarG
-
-(8,6)-(8,42)
-0
-LitG
-
-(8,6)-(8,42)
-""
-LitG
-
-(8,14)-(8,15)
-List.length
-VarG
-
-(8,14)-(8,15)
-List.length t
-AppG (fromList [VarG])
-
-(8,14)-(8,15)
-List.length t <> 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(8,14)-(8,15)
-if List.length t <> 0
-then t
-else []
-IteG (BopG EmptyG EmptyG) VarG (ListG EmptyG Nothing)
-
-(8,19)-(8,42)
-t
-VarG
-
-(8,19)-(8,42)
-0
-LitG
-
-(8,19)-(8,42)
-[]
-ListG EmptyG Nothing
 
 *)

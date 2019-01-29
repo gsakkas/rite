@@ -1,50 +1,86 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      let (el1,el2) = x in
+      let new_sum = (rem + el1) + el2 in
+      let new_rem = if new_sum > 9 then 1 else 0 in
+      let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+      let larger = if (List.length l1) > (List.length l2) then l1 else l2 in
+      if (List.length acc) = ((List.length larger) - 1)
+      then
+        (if rem = 1
+         then (0, ([1; norm_sum] @ acc))
+         else (0, (norm_sum :: acc)))
+      else (new_rem, (norm_sum :: acc)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 1 -> l | _ -> bigAdd ((mulByDigit i) - 1) l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let lenl1 = List.length l1 in
+  let lenl2 = List.length l2 in
+  if lenl1 > lenl2
+  then (l1, ((clone 0 (lenl1 - lenl2)) @ l2))
+  else (((clone 0 (lenl2 - lenl1)) @ l1), l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | varX -> x
-  | varY -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (rem,acc) = a in
+      let (el1,el2) = x in
+      let new_sum = (rem + el1) + el2 in
+      let new_rem = if new_sum > 9 then 1 else 0 in
+      let norm_sum = if new_sum > 9 then new_sum - 10 else new_sum in
+      let larger = if (List.length l1) > (List.length l2) then l1 else l2 in
+      if (List.length acc) = ((List.length larger) - 1)
+      then
+        (if rem = 1
+         then (0, ([1; norm_sum] @ acc))
+         else (0, (norm_sum :: acc)))
+      else (new_rem, (norm_sum :: acc)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 1 -> l | _ -> bigAdd (mulByDigit (i - 1) l) l;;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
-2.0
-LitG
+(35,39)-(35,53)
+mulByDigit (i - 1) l
+AppG (fromList [VarG,BopG EmptyG EmptyG])
+
+(35,51)-(35,52)
+i - 1
+BopG VarG LitG
 
 *)

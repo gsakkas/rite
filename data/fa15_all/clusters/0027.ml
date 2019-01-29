@@ -1,90 +1,87 @@
-TupleG (fromList [VarG,LitG])
-(result , false)
-(result , true)
-(result , false)
-(result , true)
-(0 , depth)
-(0 , depth)
-(0 , depth)
-(0 , depth)
-(0 , depth)
-(0 , depth)
-(b , true)
-(b , false)
-(b , false)
-(b , false)
-(b , false)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , true)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , false)
-(b , true)
-(b , false)
-(b , false)
-(b , true)
-(b , false)
-(b , false)
-(b , false)
-(b , false)
-(b , true)
-(b , false)
-(b , false)
-(b , true)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , true)
-(b , false)
-(b , false)
-(b , true)
-(b , false)
-(t , true)
-(t , true)
-(t , true)
-(t , true)
-(t , true)
-(t , true)
-(b , false)
-(t , true)
-(t , true)
-(t , true)
-(t , true)
-(t , true)
-(b , true)
-(b , true)
-(b , true)
-(b , true)
-(b , true)
-(b , true)
-(b , true)
-(y , false)
-(y , false)
-(y , true)
-(y , false)
-(y , true)
-(y , false)
-(y , true)
-(y , false)
-(y , true)
-(y , false)
-(y , true)
-(true , b)
-(false , x)
-(xx , false)
-(xx , true)
-(true , fb)
-(false , fb)
-(true , fb)
-(false , fb)
-(b , false)
+ListG LitG Nothing
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0 ; 0]
+[0 ; 0 ; 0 ; 0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[1]
+[0]
+[0]
+["]"]
+["]"]
+[1]
+[1 ; 2 ; 3]
+[0]
+[0]
+[0]
+[0]
+[2]
+[5]
+[1]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[1]
+[1]
+[0]
+[0]
+[1]
+[0]
+[(-1) ; sum mod 10]
+[(-1) ; sum mod 10]
+[(-1) ; sum mod 10]
+[0]
+[0]
+[1 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]
+[0 ; 0 ; 9 ; 9]
+[1 ; 0 ; 0 ; 2]

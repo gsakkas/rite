@@ -1,150 +1,74 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let padZero l1 l2 =
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,num) = a in
+      let (l1',l2') = x in
+      let addit = (l1' + l2') + carry in
+      ((if addit >= 10 then 1 else 0), (num @ [addit mod 10])) in
+    let base = (0, []) in
+    let args = List.combine [0; l1] [0; l2] in
+    let (car,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let diff = (List.length l2) - (List.length l1) in
+  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,num) = a in
+      let (l1',l2') = x in
+      let addit = (l1' + l2') + carry in
+      ((if addit >= 10 then 1 else 0), (num @ [addit mod 10])) in
+    let base = (0, []) in
+    let args = List.combine ([0] @ l1) ([0] @ l2) in
+    let (car,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(36,67)-(36,68)
-2.0
-LitG
+(19,28)-(19,35)
+[0] @ l1
+AppG (fromList [VarG,ListG EmptyG Nothing])
 
-(40,9)-(40,26)
-eval (e1 , x , y) < eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(40,10)-(40,22)
-eval
+(19,29)-(19,30)
+(@)
 VarG
 
-(40,23)-(40,25)
-(e1 , x , y)
-TupleG (fromList [VarG])
+(19,29)-(19,30)
+[0]
+ListG LitG Nothing
 
-(40,27)-(40,28)
-if eval (e1 , x , y) < eval (e2 , x , y)
-then eval (e3 , x , y)
-else eval (e4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(19,36)-(19,43)
+[0] @ l2
+AppG (fromList [VarG,ListG EmptyG Nothing])
 
-(42,15)-(42,32)
-y
+(19,37)-(19,38)
+(@)
 VarG
 
-(42,16)-(42,28)
-eval
-VarG
-
-(42,29)-(42,31)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(42,33)-(42,34)
-x
-VarG
-
-(44,21)-(44,38)
-y
-VarG
-
-(44,22)-(44,34)
-eval
-VarG
-
-(44,35)-(44,37)
-(e3 , x , y)
-TupleG (fromList [VarG])
-
-(44,39)-(44,40)
-x
-VarG
-
-(44,49)-(44,66)
-y
-VarG
-
-(44,50)-(44,62)
-eval
-VarG
-
-(44,63)-(44,65)
-(e4 , x , y)
-TupleG (fromList [VarG])
-
-(44,67)-(44,68)
-x
-VarG
-
-(44,69)-(44,72)
-x
-VarG
+(19,37)-(19,38)
+[0]
+ListG LitG Nothing
 
 *)

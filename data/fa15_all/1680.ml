@@ -1,34 +1,43 @@
 
-let rec digitsOfInt n =
-  if n > 0 then let x = n mod 10 in (digitsOfInt n) :: x else [];;
+let (x,y) = ("5", 5);;
+
+let rec wwhile (f,b) =
+  let f b = (x, y) in if y = true then wwhile (f, x) else x;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (let x = n mod 10 in (digitsOfInt n) @ [x]);;
+let rec wwhile (f,b) =
+  let (a',b') = f b in if b' = true then wwhile (f, b') else a';;
 
 *)
 
 (* changed spans
-(3,5)-(3,10)
-n < 0
-BopG VarG LitG
+(5,16)-(5,17)
+let (a' , b') = f b in
+if b' = true
+then wwhile (f , b')
+else a'
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
 
-(3,16)-(3,56)
-[]
-ListG EmptyG Nothing
-
-(3,36)-(3,51)
-(@)
+(5,22)-(5,59)
+f
 VarG
 
-(3,36)-(3,56)
-digitsOfInt n @ [x]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(5,22)-(5,59)
+b
+VarG
 
-(3,55)-(3,56)
-[x]
-ListG VarG Nothing
+(5,22)-(5,59)
+f b
+AppG (fromList [VarG])
+
+(5,25)-(5,26)
+b'
+VarG
+
+(5,58)-(5,59)
+b'
+VarG
 
 *)

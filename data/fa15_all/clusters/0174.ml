@@ -1,17 +1,19 @@
-CaseG VarG (fromList [(Nothing,LitG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-match sl with
-| [] -> ""
-| h :: t -> (let f =
-               fun a ->
-                 fun x -> a ^ (sep ^ x) in
-             let base = h in
-             let l = t in
-             List.fold_left f base l)
-match sl with
-| [] -> ""
-| h :: t -> (let f =
-               fun a ->
-                 fun x -> a ^ (sep ^ x) in
-             let base = h in
-             let l = t in
-             List.fold_left f base l)
+IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (IteG EmptyG EmptyG EmptyG)
+if i = 0
+then []
+else if i = 1
+     then l
+     else bigAdd (bigAdd l l)
+                 (mulByDigit (i - 2) l)
+if i = 0
+then []
+else if i = 1
+     then l
+     else bigAdd (bigAdd l l)
+                 (mulByDigit (i - 2) l)
+if i = 0
+then []
+else if i = 1
+     then l
+     else bigAdd (bigAdd l l)
+                 (mulByDigit (i - 2) l)

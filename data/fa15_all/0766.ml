@@ -1,116 +1,45 @@
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (x1,x2) = x in (0, (x1 + x2)) :: a in
-    let base = [(0, 0)] in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec wwhile (f,b) = match b with | (e,boo) -> if boo = true then e b;;
 
 
 (* fix
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
-    let base = (0, [0]) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec wwhile (f,b) =
+  let ans = f b in
+  match ans with | (num,boo) -> if boo = true then wwhile (f, num) else num;;
 
 *)
 
 (* changed spans
-(14,35)-(14,49)
-a
+(2,23)-(2,71)
+let ans = f b in
+match ans with
+| (num , boo) -> if boo = true
+                 then wwhile (f , num)
+                 else num
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(2,29)-(2,30)
+f
 VarG
 
-(14,35)-(14,54)
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+(2,29)-(2,30)
+f b
+AppG (fromList [VarG])
 
-(14,36)-(14,37)
-a1
+(2,49)-(2,71)
+ans
 VarG
 
-(14,36)-(14,37)
-x1
+(2,49)-(2,71)
+wwhile
 VarG
 
-(14,36)-(14,37)
-x2
-VarG
-
-(14,36)-(14,37)
-(a1 + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(14,36)-(14,37)
-((a1 + x1) + x2) >= 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,36)-(14,37)
-a1 + x1
-BopG VarG VarG
-
-(14,36)-(14,37)
-10
-LitG
-
-(14,36)-(14,37)
-1
-LitG
-
-(14,36)-(14,37)
-if ((a1 + x1) + x2) >= 10
-then 1
-else 0
-IteG (BopG EmptyG EmptyG) LitG LitG
-
-(14,39)-(14,48)
-((a1 + x1) + x2) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-
-(14,40)-(14,42)
-a1
-VarG
-
-(14,40)-(14,42)
-a1 + x1
-BopG VarG VarG
-
-(14,53)-(14,54)
-a2
-VarG
-
-(15,20)-(15,21)
-[0]
-ListG LitG Nothing
+(2,49)-(2,71)
+match ans with
+| (num , boo) -> if boo = true
+                 then wwhile (f , num)
+                 else num
+CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)

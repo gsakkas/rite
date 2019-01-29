@@ -1,30 +1,32 @@
 
-let cout (x,y) = (x * y) mod 10;;
-
-let rec mulByDigit i l =
-  let f a x =
-    let c = cout (i, x) in
-    match a with | _ -> c | h::t -> (((h * i) + c) mod 10) :: t in
-  let base = [] in
-  let args = List.rev l in let res = List.fold_left f base args in res;;
+let rec digitsOfInt n =
+  match n with | 0 -> [] | _ -> ([n mod 10], (digitsOfInt (n / 10)));;
 
 
 (* fix
 
-let cout (x,y) = (x * y) mod 10;;
-
-let rec mulByDigit i l =
-  let f a x =
-    let c = cout (i, x) in
-    match a with | _ -> [c] | h::t -> (((h * i) + c) mod 10) :: t in
-  let base = [] in
-  let args = List.rev l in let res = List.fold_left f base args in res;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(7,24)-(7,25)
-[c]
-ListG VarG Nothing
+(3,2)-(3,68)
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
+
+(3,8)-(3,9)
+n <= 0
+BopG VarG LitG
+
+(3,22)-(3,24)
+0
+LitG
+
+(3,33)-(3,43)
+(n mod 10) :: (digitsOfInt (n / 10))
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
 
 *)

@@ -1,51 +1,39 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
+let pi = 4.0 *. (atan 1.0);;
 
-let palindrome w = explode (listReverse w);;
+let rec eval (e,x,y) =
+  match e with | VarX  -> x | VarY  -> y | Sine e -> pi * e;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
-
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 
 *)
 
 (* changed spans
-(10,19)-(10,42)
-explode w = listReverse (explode w)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(10,19)-(10,42)
-if explode w = listReverse (explode w)
-then true
-else false
-IteG (BopG EmptyG EmptyG) LitG LitG
-
-(10,27)-(10,42)
-w
-VarG
-
-(10,40)-(10,41)
-explode
-VarG
-
-(10,40)-(10,41)
-explode w
-AppG (fromList [VarG])
+(14,2)-(14,59)
+match e with
+| VarX -> x
+| VarY -> y
+CaseG VarG (fromList [(Nothing,VarG)])
 
 *)

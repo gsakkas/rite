@@ -1,39 +1,95 @@
 
-let pipe fs =
-  let f a x = (fun result  -> fun x  -> a + x) 0 in
-  let base = 1 in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if carry <> []
+      then
+        let tens = ((x1 + x2) + carry) / 10 in
+        let ones = ((x1 + x2) + carry) mod 10 in
+        ([tens], (tens :: ones :: res))
+      else
+        (let tens = (x1 + x2) / 10 in
+         let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,res) = a in
+      if carry <> []
+      then
+        let ch::_ = carry in
+        let tens = ((x1 + x2) + ch) / 10 in
+        let ones = ((x1 + x2) + ch) mod 10 in ([tens], (tens :: ones :: res))
+      else
+        (let tens = (x1 + x2) / 10 in
+         let ones = (x1 + x2) mod 10 in ([tens], (tens :: ones :: res))) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(3,14)-(3,48)
-fun n -> x (a n)
-LamG (AppG (fromList [EmptyG]))
-
-(3,47)-(3,48)
-a n
-AppG (fromList [VarG])
-
-(4,2)-(4,42)
-a
+(24,8)-(26,39)
+carry
 VarG
 
-(4,2)-(4,42)
-n
+(24,8)-(26,39)
+let ch :: _ = carry in
+let tens =
+  ((x1 + x2) + ch) / 10 in
+let ones =
+  ((x1 + x2) + ch) mod 10 in
+([tens] , tens :: (ones :: res))
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(24,32)-(24,37)
+ch
 VarG
 
-(4,13)-(4,14)
-fun f -> 0
-LamG LitG
-
-(4,18)-(4,42)
-0
-LitG
+(25,32)-(25,37)
+ch
+VarG
 
 *)

@@ -1,96 +1,97 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squares of expr
-  | Volume of expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
-  | Squares e -> exprToString e "*" exprToString e
-  | Volume (l,w,h) ->
-      "(" ^
-        ((exprToString e) ^
-           ("*(" ^ ((exprToString e) ^ (")*" ^ ((exprToString e) ^ ")")))));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x / h) > 0
+      then
+        let asd = x / h in
+        let asd2 = (x + h) - (asd * 10) in
+        let asd3 = asd :: t in (asd3, (padZero (asd3 asd2)))
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squares of expr
-  | Volume of expr* expr* expr;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (x,y) ->
-      "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
-  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
-  | Thresh (w,x,y,z) ->
-      "(" ^
-        ((exprToString w) ^
-           ("<" ^
-              ((exprToString x) ^
-                 ("?" ^ ((exprToString y) ^ (":" ^ (exprToString z)))))))
-  | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
-  | Volume (l,w,h) ->
-      "(" ^
-        ((exprToString e) ^
-           ("*(" ^ ((exprToString e) ^ (")*" ^ ((exprToString e) ^ ")")))));;
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (h::t,b) = a in
+      if (x / h) > 0
+      then
+        let asd = x / h in
+        let asd2 = (x + h) - (asd * 10) in
+        let asd3 = asd :: t in
+        let (_,asd4) = padZero asd3 (asd2 :: b) in (asd3, asd4)
+      else (t, ((x + h) :: b)) in
+    let base = ((List.rev l1), []) in
+    let args = List.rev l2 in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(28,17)-(28,29)
-(^)
+(25,38)-(25,59)
+let (_ , asd4) =
+  padZero asd3 (asd2 :: b) in
+(asd3 , asd4)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+
+(25,39)-(25,46)
+padZero asd3 (asd2 :: b)
+AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+
+(25,53)-(25,57)
+asd2 :: b
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+
+(26,11)-(26,30)
+b
 VarG
 
-(28,17)-(28,29)
-exprToString e
-AppG (fromList [VarG])
-
-(28,17)-(28,50)
-exprToString e ^ ("*" ^ exprToString e)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(28,32)-(28,35)
-(^)
+(26,12)-(26,13)
+asd3
 VarG
 
-(28,32)-(28,35)
-"*" ^ exprToString e
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(26,12)-(26,13)
+asd4
+VarG
 
-(28,36)-(28,48)
-exprToString e
-AppG (fromList [VarG])
+(26,12)-(26,13)
+(t , (x + h) :: b)
+TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
 
 *)

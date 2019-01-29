@@ -1,4 +1,4 @@
-resolver: lts-8.14
+resolver: lts-11.22
 packages:
 - ./features
 extra-deps:
@@ -7,4 +7,3 @@ extra-deps:
 flags: {}
 extra-package-dbs: []
 # compiler-check: newer-minor
-

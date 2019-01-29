@@ -1,68 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input < 10 then input else [loop (input / 10); input mod 10] in
+    loop n
+  else [];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
-  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
+let rec digitsOfInt n =
+  if ((n mod 2) = 0) && (n > 0)
+  then
+    let rec loop input =
+      if input < 10
+      then [input]
+      else (let y::[] = loop (input / 10) in [y; input mod 10]) in
+    loop n
+  else [];;
 
 *)
 
 (* changed spans
-(19,42)-(19,45)
-(^)
+(6,25)-(6,30)
+[input]
+ListG VarG Nothing
+
+(6,36)-(6,69)
+let y :: [] =
+  loop (input / 10) in
+[y ; input mod 10]
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (ListG EmptyG Nothing)
+
+(6,56)-(6,68)
+y
 VarG
 
-(19,46)-(19,58)
-exprToString e2
-AppG (fromList [VarG])
+(6,56)-(6,68)
+[y ; input mod 10]
+ListG VarG Nothing
 
 *)

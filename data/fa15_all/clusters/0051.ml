@@ -1,66 +1,188 @@
-AppG (fromList [LitG,ListG EmptyG Nothing])
-helper [] 0
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["sin(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
+LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+fun sl ->
+  match sl with
+  | [] -> ""
+  | h :: t -> (let f =
+                 fun a ->
+                   fun x -> a ^ (sep ^ x) in
+               let base = h in
+               let l = t in
+               List.fold_left f base l)
+fun l ->
+  match l with
+  | x :: [] -> []
+  | hd :: tl -> hd :: (removeLast tl)
+  | [] -> []
+fun l ->
+  match l with
+  | x :: [] -> []
+  | hd :: tl -> hd :: (removeLast tl)
+  | [] -> []
+fun y ->
+  match y with
+  | [] -> [x]
+  | h :: t -> h :: (append x t)
+fun xs ->
+  match xs with
+  | [] -> 0
+  | xs -> List.hd xs + sumList (List.tl xs)
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))
+function | y -> y
+fun b ->
+  match a with
+  | [] -> []
+fun l ->
+  match l with
+  | [] -> []
+  | h :: t -> if h = 0
+              then removeZero t
+              else l
+fun acc ->
+  match x with
+  | [] -> l
+  | h :: t -> helper t l
+                     (h :: acc)
+fun acc ->
+  match x with
+  | [] -> l
+  | h :: t -> helper t l
+                     (h :: acc)
+fun acc ->
+  match x with
+  | [] -> l
+  | h :: t -> helper t l
+                     (h :: acc)
+fun b ->
+  match b with
+  | [] -> [a]
+  | hd :: tl -> [a + hd]
+fun b ->
+  match b with
+  | [] -> [a]
+  | hd :: tl -> [a + hd]
+fun b ->
+  match b with
+  | [] -> [a]
+  | hd :: tl -> [a + hd]
+fun b ->
+  match b with
+  | [] -> [a]
+  | hd :: tl -> [a + hd]
+fun (x , y) ->
+  match x with
+  | [] -> y
+  | h :: t -> reverse (t , h :: y)
+fun l ->
+  match l with
+  | [] -> []
+  | h :: t -> reverse (l , [])
+fun n ->
+  match l with
+  | [] -> [n]
+  | h :: t -> h :: (myAppend t
+                             n)
+fun n ->
+  match n with
+  | 0 -> []
+  | _ -> myAppend (getDigits (n / 10))
+                  (n mod 10)
+fun l ->
+  match l with
+  | [] -> []
+  | h :: t -> t
+fun xs ->
+  match xs with
+  | [] -> 0
+  | h :: t -> h + sumList t
+function | g -> g
+function | x -> x
+function | g -> g
+function | x -> x
+function | g -> g
+function | x -> x
+function | g -> g
+function | x -> x
+fun l ->
+  match l with
+  | [] -> []
+  | hd :: tl -> helper (hd :: xs)
+                       l
+fun list ->
+  match list with
+  | [] -> 0
+  | head :: tail -> head
+fun list ->
+  match list with
+  | [] -> 0
+  | head :: tail -> head
+fun list ->
+  match list with
+  | [] -> 0
+  | head :: tail -> head
+fun list ->
+  match list with
+  | [] -> 0
+  | head :: tail -> head
+fun l ->
+  match l with
+  | [] -> "[]"
+  | x :: xs -> (let g =
+                  fun a ->
+                    fun x -> a ^ ("; " ^ f x) in
+                let base = "[" ^ f x in
+                List.fold_left g base
+                               xs ^ "]")
+fun l ->
+  match l with
+  | [] -> "[]"
+  | x :: xs -> (let g =
+                  fun a ->
+                    fun x -> a ^ ("; " ^ f x) in
+                let base = "[" ^ f x in
+                List.fold_left g base
+                               xs ^ "]")
+fun l ->
+  match l with
+  | [] -> "[]"
+  | x :: xs -> (let g =
+                  fun a ->
+                    fun x -> a ^ ("; " ^ f x) in
+                let base = "[" ^ f x in
+                List.fold_left g base
+                               xs ^ "]")
+fun l ->
+  match l with
+  | [] -> "[]"
+  | x :: xs -> (let g =
+                  fun a ->
+                    fun x -> a ^ ("; " ^ f x) in
+                let base = "[" ^ f x in
+                List.fold_left g base
+                               xs ^ "]")
+fun dest ->
+  match l with
+  | [] -> []
+  | h :: t -> listReverse2 t
+                           (h :: dest)
+fun xs ->
+  match xs with
+  | [] -> 0
+  | h :: t -> h + sumList t
+  | _ -> (-1)

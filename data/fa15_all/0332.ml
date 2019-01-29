@@ -1,60 +1,69 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e1less, x, y)
-      else eval (e2less, x, y);;
+let fixpoint (f,b) =
+  wwhile ((if b = (f b) then (b, false) else ((f b), true)), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e1less,e2less) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e1less, x, y)
-      else eval (e2less, x, y);;
+let fixpoint (f,b) =
+  let helper x = if x = (f x) then (x, false) else ((f x), true) in
+  wwhile (helper, b);;
 
 *)
 
 (* changed spans
-(19,67)-(19,68)
-2.0
-LitG
+(6,9)-(6,63)
+let helper =
+  fun x ->
+    if x = f x
+    then (x , false)
+    else (f x , true) in
+wwhile (helper , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(6,10)-(6,59)
+fun x ->
+  if x = f x
+  then (x , false)
+  else (f x , true)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(6,14)-(6,15)
+x
+VarG
+
+(6,21)-(6,22)
+x
+VarG
+
+(6,30)-(6,31)
+x
+VarG
+
+(6,49)-(6,50)
+x
+VarG
+
+(6,61)-(6,62)
+wwhile
+VarG
+
+(6,61)-(6,62)
+helper
+VarG
+
+(6,61)-(6,62)
+wwhile (helper , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(6,61)-(6,62)
+(helper , b)
+TupleG (fromList [VarG])
 
 *)

@@ -1,32 +1,52 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> 0 | x::xs' -> x * x in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then List.append (clone 0 (abs diff)) l1
+  else if diff > 0 then List.append (clone 0 diff) l2;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + (x * x) in
-  let base = List.hd xs in List.fold_left f base xs;;
+let rec clone x n =
+  let rec cloneHelper x n acc =
+    if n < 0 then acc else cloneHelper x (n - 1) (x :: acc) in
+  cloneHelper x n [];;
+
+let padZero l1 l2 =
+  let diff = (List.length l1) - (List.length l2) in
+  if diff < 0
+  then ((List.append (clone 0 (abs diff)) l1), l2)
+  else if diff > 0 then (l1, (List.append (clone 0 diff) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,35)-(3,36)
-(a * a) + (x * x)
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(10,7)-(10,42)
+(List.append (clone 0
+                    (abs diff)) l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(3,49)-(3,50)
-a
+(11,7)-(11,53)
+l2
 VarG
 
-(3,49)-(3,50)
-a
+(11,7)-(11,53)
+(l1 , l2)
+TupleG (fromList [VarG])
+
+(11,24)-(11,53)
+l1
 VarG
 
-(3,49)-(3,50)
-x * x
-BopG VarG VarG
+(11,24)-(11,53)
+(l1 , List.append (clone 0
+                         diff) l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

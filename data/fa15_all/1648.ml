@@ -1,221 +1,193 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = let (y,z) = x in (y + z) @ a in
-    let base = [] in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> ("sin(pi*" + (exprToString x)) + ")"
+  | Cosine x -> ("cos(pi*" + (exprToString x)) + ")"
+  | Average (x,y) ->
+      ((("((" + (exprToString x)) + "*") + (exprToString y)) + ")/2)"
+  | Times (x,y) -> ((exprToString x) + "*") + (exprToString y)
+  | Thresh (a,b,c,d) ->
+      ((((("(" + (exprToString a)) + "<") + (exprToString b)) +
+          ("?" exprToString c))
+         + ":")
+        + (exprToString d);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      if let (carry,ans) = a in let (y,z) = x in ((y + z) + carry) > 9
-      then
-        let (carry,ans) = a in
-        (1, (let (y,z) = x in [((y + z) + carry) mod 10] @ ans))
-      else
-        (let (carry,ans) = a in
-         (0, (let (y,z) = x in [(y + z) + carry] @ ans))) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+  | Average (x,y) ->
+      "((" ^ ((exprToString x) ^ ("*" ^ ((exprToString y) ^ ")/2)")))
+  | Times (x,y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+  | Thresh (a,b,c,d) ->
+      "(" ^
+        ((exprToString a) ^
+           ("<" ^
+              ((exprToString b) ^
+                 ("?" ^ ((exprToString c) ^ (":" ^ (exprToString d)))))));;
 
 *)
 
 (* changed spans
-(14,16)-(14,44)
-a
+(15,14)-(15,44)
+"sin(pi*" ^ (exprToString x ^ ")")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(15,15)-(15,24)
+(^)
 VarG
 
-(14,16)-(14,44)
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(14,16)-(14,44)
-if (let (carry , ans) = a in
-    let (y , z) = x in
-    ((y + z) + carry) > 9)
-then (let (carry , ans) = a in
-      (1 , let (y , z) = x in
-           [((y + z) + carry) mod 10] @ ans))
-else (let (carry , ans) = a in
-      (0 , let (y , z) = x in
-           [(y + z) + carry] @ ans))
-IteG (LetG NonRec (fromList [EmptyG]) EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(14,33)-(14,40)
-((y + z) + carry) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,33)-(14,40)
-[((y + z) + carry) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(14,33)-(14,44)
-y
+(15,27)-(15,43)
+(^)
 VarG
 
-(14,33)-(14,44)
-z
+(15,27)-(15,43)
+exprToString x ^ ")"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(16,16)-(16,46)
+"cos(pi*" ^ (exprToString x ^ ")")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(16,17)-(16,26)
+(^)
 VarG
 
-(14,33)-(14,44)
-carry
+(16,29)-(16,45)
+(^)
 VarG
 
-(14,33)-(14,44)
-a
+(16,29)-(16,45)
+exprToString x ^ ")"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(18,8)-(18,33)
+"((" ^ (exprToString x ^ ("*" ^ (exprToString y ^ ")/2)")))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(18,9)-(18,13)
+(^)
 VarG
 
-(14,33)-(14,44)
-x
+(18,16)-(18,32)
+(^)
 VarG
 
-(14,33)-(14,44)
-(y + z) + carry
-BopG (BopG EmptyG EmptyG) VarG
+(18,16)-(18,32)
+exprToString x ^ ("*" ^ (exprToString y ^ ")/2)"))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(14,33)-(14,44)
-((y + z) + carry) > 9
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,33)-(14,44)
-y + z
-BopG VarG VarG
-
-(14,33)-(14,44)
-9
-LitG
-
-(14,33)-(14,44)
-1
-LitG
-
-(14,33)-(14,44)
-let (carry , ans) = a in
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(14,33)-(14,44)
-let (y , z) = x in
-[((y + z) + carry) mod 10] @ ans
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
-
-(14,33)-(14,44)
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-TupleG (fromList [LitG,LetG NonRec (fromList [EmptyG]) EmptyG])
-
-(14,34)-(14,35)
-y + z
-BopG VarG VarG
-
-(14,43)-(14,44)
-carry
+(18,36)-(18,39)
+(^)
 VarG
 
-(14,43)-(14,44)
-ans
+(18,36)-(18,39)
+"*" ^ (exprToString y ^ ")/2)")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(18,43)-(18,59)
+(^)
 VarG
 
-(14,43)-(14,44)
-10
-LitG
+(18,43)-(18,59)
+exprToString y ^ ")/2)"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(14,43)-(14,44)
-let (carry , ans) = a in
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+(19,19)-(19,43)
+exprToString x ^ ("*" ^ exprToString y)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(15,4)-(17,51)
-x
+(19,20)-(19,36)
+(^)
 VarG
 
-(15,4)-(17,51)
-y
+(19,39)-(19,42)
+(^)
 VarG
 
-(15,4)-(17,51)
-z
+(19,39)-(19,42)
+"*" ^ exprToString y
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(21,10)-(21,34)
+"(" ^ (exprToString a ^ ("<" ^ (exprToString b ^ ("?" ^ (exprToString c ^ (":" ^ exprToString d))))))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(21,11)-(21,14)
+(^)
 VarG
 
-(15,4)-(17,51)
-carry
+(21,17)-(21,33)
+(^)
 VarG
 
-(15,4)-(17,51)
-(@)
+(21,17)-(21,33)
+exprToString a ^ ("<" ^ (exprToString b ^ ("?" ^ (exprToString c ^ (":" ^ exprToString d)))))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(21,37)-(21,40)
+(^)
 VarG
 
-(15,4)-(17,51)
-ans
+(21,37)-(21,40)
+"<" ^ (exprToString b ^ ("?" ^ (exprToString c ^ (":" ^ exprToString d))))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(21,44)-(21,60)
+(^)
 VarG
 
-(15,4)-(17,51)
-[(y + z) + carry] @ ans
-AppG (fromList [VarG,ListG EmptyG Nothing])
+(21,44)-(21,60)
+exprToString b ^ ("?" ^ (exprToString c ^ (":" ^ exprToString d)))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(15,4)-(17,51)
-y + z
-BopG VarG VarG
+(22,11)-(22,14)
+(^)
+VarG
 
-(15,4)-(17,51)
-(y + z) + carry
-BopG (BopG EmptyG EmptyG) VarG
+(22,15)-(22,27)
+(^)
+VarG
 
-(15,4)-(17,51)
-0
-LitG
+(22,15)-(22,27)
+exprToString c ^ (":" ^ exprToString d)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(15,4)-(17,51)
-let (y , z) = x in
-[(y + z) + carry] @ ans
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
+(22,15)-(22,27)
+exprToString c
+AppG (fromList [VarG])
 
-(15,4)-(17,51)
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-TupleG (fromList [LitG,LetG NonRec (fromList [EmptyG]) EmptyG])
+(23,11)-(23,14)
+(^)
+VarG
 
-(15,4)-(17,51)
-[(y + z) + carry]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(15,15)-(15,17)
-0
-LitG
-
-(15,15)-(15,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+(23,11)-(23,14)
+":" ^ exprToString d
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)

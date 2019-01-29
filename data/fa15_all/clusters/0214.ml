@@ -1,2 +1,3 @@
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
-if n < 10 then n else helper n
+AppG (fromList [UopG EmptyG,LitG])
+clone 0 (- diff)
+clone 0 (- lendiff)

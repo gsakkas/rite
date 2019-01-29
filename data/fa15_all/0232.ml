@@ -1,30 +1,64 @@
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f in (ff, (b = (ff b))) in (n, b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi * (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let temp = f b in
-  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
+  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y);;
 
 *)
 
 (* changed spans
-(7,29)-(7,30)
-f b
-AppG (fromList [VarG])
+(18,20)-(18,43)
+pi *. eval (a , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
 
-(7,34)-(7,52)
-b
-VarG
+(19,63)-(19,64)
+2.0
+LitG
 
 *)

@@ -1,7 +1,37 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
-(0 , 0 :: c)
-(0 , 0 :: c)
-(0 , 0 :: c)
-(0 , 0 :: c)
-(0 , 0 :: c)
-(0 , 0 :: c)
+IteG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG)
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())

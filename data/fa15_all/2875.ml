@@ -1,16 +1,34 @@
 
-let pipe fs = let f a x = x in let base y = y in List.fold_right f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ (sepConcat sep t)) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat "; " List.map f l) ^ "]");;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = h ^ (sep ^ (sepConcat sep t)) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(2,49)-(2,64)
-List.fold_left
-VarG
+(9,30)-(9,59)
+sepConcat "; " (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,46)-(9,54)
+List.map f l
+AppG (fromList [VarG])
 
 *)

@@ -81,12 +81,12 @@ print train.shape
 train_samps = train.loc[:, 'F-Is-Eq':]
 print train_samps.shape
 # train_labels = train.loc[:, 'L-DidChange']
-train_labels = train.loc[:, 'L-Cluster0':'L-Cluster19']
+train_labels = train.loc[:, 'L-Cluster0':'L-Cluster39']
 
 test_samps = test.loc[:, 'F-Is-Eq':]
 del test_samps['SOURCE_FILE']
 # test_labels = test.loc[:, 'L-DidChange']
-test_labels = test.loc[:, 'L-Cluster0':'L-Cluster19']
+test_labels = test.loc[:, 'L-Cluster0':'L-Cluster39']
 test_span = test.loc[:, 'SourceSpan']
 test_file = test.loc[:, 'SOURCE_FILE']
 print test_samps.shape
@@ -105,7 +105,7 @@ print test_samps.shape
 
 if model == 'mlp':
     clf = neural_network.MLPClassifier(
-        hidden_layer_sizes=(100, 20),
+        hidden_layer_sizes=(160, 40),
         learning_rate='adaptive',
         learning_rate_init=0.001,
         alpha=0.001,

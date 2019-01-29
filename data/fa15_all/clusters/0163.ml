@@ -1,16 +1,4 @@
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing])
+(1 , (((o + x1) + x2) mod 10) :: z)
+(1 , (((o + x1) + x2) mod 10) :: z)
+(1 , (((o + x1) + x2) mod 10) :: z)

@@ -1,34 +1,94 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " List.map f l) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin * (pi (eval (e1, x, y)))
+  | Cosine e1 -> cos * (pi (eval (e1, x, y)))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Magic e1 -> sin * (pi (cos (pi *. (eval (e1, x, y)))))
+  | Weird (e1,e2,e3) ->
+      cos
+        ((pi *. (eval (e1, x, y))) *.
+           ((eval (e2, x, y)) *. (eval (e3, x, y))));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Magic of expr
+  | Weird of expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Magic e1 -> sin (pi *. (cos (pi *. (eval (e1, x, y)))))
+  | Weird (e1,e2,e3) ->
+      cos
+        ((pi *. (eval (e1, x, y))) *.
+           ((eval (e2, x, y)) *. (eval (e3, x, y))));;
 
 *)
 
 (* changed spans
-(9,30)-(9,59)
-sepConcat "; " (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(19,22)-(19,24)
+sin
+VarG
 
-(9,46)-(9,54)
-List.map f l
-AppG (fromList [VarG])
+(19,22)-(19,24)
+pi *. eval (e1 , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(20,24)-(20,26)
+cos
+VarG
+
+(20,24)-(20,26)
+pi *. eval (e1 , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(27,23)-(27,25)
+sin
+VarG
+
+(27,23)-(27,25)
+pi *. cos (pi *. eval (e1 , x , y))
+BopG VarG (AppG (fromList [EmptyG]))
 
 *)

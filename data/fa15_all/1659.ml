@@ -1,136 +1,40 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      if let (y,z) = x in (y + z) > 9
-      then [(1, ((let (y,z) = x in (y + z) mod 10)))] @ a
-      else [(0, ((let (y,z) = x in y + z)))] @ a in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' = let fOfB = f' b in (fOfB, (fOfB = b)) in whilesFun f),
+      b);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let f' = f b in
+  match f' with | (b',false ) -> b' | (b',true ) -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
-  else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      if let (carry,ans) = a in let (y,z) = x in ((y + z) + carry) > 9
-      then
-        let (carry,ans) = a in
-        (1, (let (y,z) = x in [((y + z) + carry) mod 10] @ ans))
-      else
-        (let (carry,ans) = a in
-         (0, (let (y,z) = x in [(y + z) + carry] @ ans))) in
-    let base = (0, []) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile
+    ((let whilesFun f' b' = let fOfB = f' b' in (fOfB, (fOfB = b')) in
+      whilesFun f), b);;
 
 *)
 
 (* changed spans
-(15,9)-(15,37)
-a
+(8,25)-(8,62)
+fun b' ->
+  (let fOfB = f' b' in
+   (fOfB , fOfB = b'))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(8,39)-(8,40)
+b'
 VarG
 
-(15,9)-(15,37)
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(15,27)-(15,28)
-y + z
-BopG VarG VarG
-
-(15,36)-(15,37)
-carry
-VarG
-
-(16,11)-(16,53)
-let (carry , ans) = a in
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(16,12)-(16,52)
-a
-VarG
-
-(16,35)-(16,49)
-(@)
-VarG
-
-(16,35)-(16,49)
-[((y + z) + carry) mod 10] @ ans
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(16,35)-(16,49)
-[((y + z) + carry) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(16,36)-(16,37)
-y + z
-BopG VarG VarG
-
-(16,47)-(16,49)
-carry
-VarG
-
-(16,56)-(16,57)
-ans
-VarG
-
-(16,56)-(16,57)
-let (carry , ans) = a in
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(17,35)-(17,36)
-y + z
-BopG VarG VarG
-
-(17,35)-(17,40)
-(@)
-VarG
-
-(17,35)-(17,40)
-[(y + z) + carry] @ ans
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(17,35)-(17,40)
-[(y + z) + carry]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(17,47)-(17,48)
-carry
-VarG
-
-(18,4)-(20,51)
-ans
+(8,59)-(8,60)
+b'
 VarG
 
 *)

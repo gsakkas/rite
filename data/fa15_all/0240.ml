@@ -1,51 +1,72 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = List.mem h t in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digits n)) < 10
+  then numdigits n
+  else additivePersistence sumList n;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
+
+let rec digitsOfInt n =
+  if n < 0
+  then []
+  else
+    (let (x,y) = ((n mod 10), (n / 10)) in
+     if n < 10 then [n] else append x (digitsOfInt y));;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if (sumList (digits n)) < 10
+  then numdigits (digits n)
+  else additivePersistence (sumList (digits n));;
 
 *)
 
 (* changed spans
-(7,20)-(7,32)
-if List.mem h seen
-then seen
-else h :: seen
-IteG (AppG (fromList [EmptyG])) VarG (ConAppG (Just EmptyG) Nothing)
-
-(7,31)-(7,32)
-seen
+(19,17)-(19,18)
+digits
 VarG
 
-(7,36)-(7,74)
-seen
+(19,17)-(19,18)
+digits n
+AppG (fromList [VarG])
+
+(20,7)-(20,36)
+additivePersistence (sumList (digits n))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(20,27)-(20,34)
+sumList (digits n)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(20,35)-(20,36)
+digits
 VarG
 
-(7,36)-(7,74)
-h
-VarG
-
-(7,36)-(7,74)
-seen
-VarG
-
-(7,36)-(7,74)
-h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+(20,35)-(20,36)
+digits n
+AppG (fromList [VarG])
 
 *)

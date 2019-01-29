@@ -1,60 +1,21 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec digitsOfInt n = if n > 0 then [n; n mod 10];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let rec digitsOfInt n =
+  if n > 0 then (n mod 10) :: (digitsOfInt (n / 10)) else [];;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
-2.0
-LitG
+(2,24)-(2,51)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
+
+(2,39)-(2,40)
+(n mod 10) :: (digitsOfInt (n / 10))
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
 
 *)

@@ -1,124 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Square of expr
-  | Quarter of expr;;
+let rec append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> h :: (append t list2);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append (listReverse t) [h];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Square e -> e *. e
-  | Quarter e -> e /. 4.0;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else listReverse ([n mod 10] append digitsOfInt (n / 10));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Square of expr
-  | Quarter of expr;;
+let rec append list1 list2 =
+  match list1 with | [] -> list2 | h::t -> h :: (append t list2);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append (listReverse t) [h];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Square e -> (eval (e, x, y)) *. (eval (e, x, y))
-  | Quarter e -> (eval (e, x, y)) /. 4.0;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else listReverse (append [n mod 10] (digitsOfInt (n / 10)));;
 
 *)
 
 (* changed spans
-(27,16)-(27,17)
-eval
+(9,37)-(9,77)
+append [n mod 10]
+       (digitsOfInt (n / 10))
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(9,38)-(9,48)
+append
 VarG
 
-(27,16)-(27,17)
-eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(27,16)-(27,17)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(27,21)-(27,22)
-x
-VarG
-
-(27,21)-(27,22)
-y
-VarG
-
-(27,21)-(27,22)
-eval
-VarG
-
-(27,21)-(27,22)
-eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(27,21)-(27,22)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,17)-(28,18)
-eval
-VarG
-
-(28,17)-(28,18)
-eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(28,17)-(28,18)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,17)-(28,25)
-x
-VarG
-
-(28,17)-(28,25)
-y
-VarG
-
-(28,22)-(28,25)
-x
-VarG
-
-(28,22)-(28,25)
-y
-VarG
+(9,49)-(9,55)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
 
 *)

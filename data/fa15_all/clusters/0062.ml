@@ -1,101 +1,93 @@
-LetG NonRec (fromList [VarG]) (IteG EmptyG EmptyG EmptyG)
-let (f , s) = h in
-if k = f
-then s
-else assoc (d , k , t)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+match n with
+| [] -> n
+| _ -> y b
+match i with
+| 1 -> l
+| _ -> bigAdd (mulByDigit (i - 1)
+                          l) l
+match x with
+| [] -> l
+| h :: t -> helper t l
+                   (h :: acc)
+match x with
+| [] -> l
+| h :: t -> helper t l
+                   (h :: acc)
+match x with
+| [] -> y
+| h :: t -> reverse (t , h :: y)
+match e with
+| VarX -> x
+| Sine m -> sin (pi *. eval (m , x , y))
+| _ -> x
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'

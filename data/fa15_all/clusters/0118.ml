@@ -1,9 +1,8 @@
-ConAppG Nothing Nothing
-VarX
-VarY
-VarX
-VarY
-VarX
-VarY
-VarX
-VarY
+TupleG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
+([tens] , tens :: (ones :: res))
+([tens] , tens :: (ones :: res))
+([tens] , tens :: (ones :: res))
+([tens] , tens :: (ones :: res))
+([tens] , tens :: (ones :: res))
+([] , (fir + sec) :: b2)
+([] , (fir + sec) :: b2)

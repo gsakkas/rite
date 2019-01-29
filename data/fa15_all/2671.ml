@@ -1,65 +1,73 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n >= 0
-  then (l1, ((clone 0 n) @ l2))
-  else (((clone 0 (n * (-1))) @ l1), l2);;
-
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,accum) = a in
-      let (x1,x2) = x in
-      let n = (carry + x1) + x2 in ((n / 10), ((n mod 10) :: accum)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0 then l else bigAdd l ((mulByDigit i) - (1 l));;
+let fixpoint (f,b) = wwhile (let f' = (f, (b = (f b))) in ((f b), f'));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let h x = let xx = (x * x) * x in (xx, (xx < 512));;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n >= 0
-  then (l1, ((clone 0 n) @ l2))
-  else (((clone 0 (n * (-1))) @ l1), l2);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,accum) = a in
-      let (x1,x2) = x in
-      let n = (carry + x1) + x2 in ((n / 10), ((n mod 10) :: accum)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l = if i = 0 then l else bigAdd l (mulByDigit (i - 1) l);;
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(25,33)-(25,47)
-mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+(2,16)-(2,77)
+x
+VarG
 
-(25,45)-(25,46)
-i - 1
+(2,16)-(2,77)
+x
+VarG
+
+(2,16)-(2,77)
+x
+VarG
+
+(2,16)-(2,77)
+xx
+VarG
+
+(2,16)-(2,77)
+xx
+VarG
+
+(2,16)-(2,77)
+fun x ->
+  (let xx = (x * x) * x in
+   (xx , xx < 512))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(2,16)-(2,77)
+x * x
+BopG VarG VarG
+
+(2,16)-(2,77)
+(x * x) * x
+BopG (BopG EmptyG EmptyG) VarG
+
+(2,16)-(2,77)
+xx < 512
 BopG VarG LitG
+
+(2,16)-(2,77)
+512
+LitG
+
+(2,16)-(2,77)
+let xx = (x * x) * x in
+(xx , xx < 512)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
+
+(2,16)-(2,77)
+(xx , xx < 512)
+TupleG (fromList [VarG,BopG EmptyG EmptyG])
+
+(4,60)-(4,61)
+h
+VarG
 
 *)

@@ -1,44 +1,48 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = [] in
-        let rest' = List.rev t in
-        if List.mem h rest'
-        then rest = t
-        else h :: (seen' helper (seen', rest')) in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec digitalRoot n = let (l,r) = additivePersAndRoot abs n 0 in r;;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t -> let seen' = h :: seen in let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | t::h -> t + (sumList h);;
+
+let rec additivePersAndRoot absNum persCount =
+  if absNum < 10
+  then (persCount, absNum)
+  else
+    (let xs = digits absNum in
+     let theSum = sumList xs in additivePersAndRoot theSum (persCount + 1));;
+
+let rec digitalRoot n = let (l,r) = additivePersAndRoot (abs n) 0 in r;;
 
 *)
 
 (* changed spans
-(11,19)-(11,24)
-seen
-VarG
+(16,36)-(16,63)
+additivePersAndRoot (abs n) 0
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(11,25)-(11,31)
-t
-VarG
-
-(11,25)-(11,31)
-helper (seen' , rest')
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(11,25)-(11,31)
-let rest' = t in
-helper (seen' , rest')
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
+(16,56)-(16,59)
+abs n
+AppG (fromList [VarG])
 
 *)

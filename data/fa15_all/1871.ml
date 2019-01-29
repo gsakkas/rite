@@ -1,26 +1,76 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | x::y -> (listReverse y) :: x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) -> if e1 > e2 then abs_float e3 else - (abs_float e3);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | x::y -> (listReverse y) @ [x];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Acossin of expr* expr
+  | Crazy of expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Acossin (e1,e2) ->
+      (((acos (eval (e1, x, y))) *. (asin (eval (e2, x, y)))) *. 2.0) /.
+        (pi *. pi)
+  | Crazy (e1,e2,e3) -> if e1 > e2 then 1.0 else (-1.0);;
 
 *)
 
 (* changed spans
-(3,36)-(3,51)
-(@)
-VarG
+(30,50)-(30,52)
+1.0
+LitG
 
-(3,36)-(3,56)
-listReverse y @ [x]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(3,55)-(3,56)
-[x]
-ListG VarG Nothing
+(30,71)-(30,73)
+1.0
+LitG
 
 *)

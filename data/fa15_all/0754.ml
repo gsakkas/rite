@@ -1,136 +1,102 @@
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (x1,x2) -> (0, (x1 + x2)) @ a in
-    let base = [] in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;
 
 
 (* fix
 
-let rec clone x n =
-  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | DivAdd of expr* expr* expr* expr
+  | TriMult of expr* expr* expr;;
 
-let padZero l1 l2 =
-  let n = (List.length l1) - (List.length l2) in
-  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (x1,x2) = x in
-      let (a1,a2) = a in
-      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
-    let base = (0, [0]) in
-    let args = List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (n1,n2) ->
+      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
+  | DivAdd (ds1,ds2,ds3,ds4) ->
+      "((" ^
+        ((exprToString ds1) ^
+           ("+" ^
+              ((exprToString ds2) ^
+                 (") / (" ^
+                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) ^ "))")))))))
+  | TriMult (tm1,tm2,tm3) ->
+      "(" ^
+        ((exprToString tm1) ^
+           ("*" ^ ((exprToString tm2) ^ ("*" ^ ((exprToString tm3) ^ ")")))));;
 
 *)
 
 (* changed spans
-(14,16)-(14,60)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+(35,49)-(35,74)
+exprToString ds4 ^ "))"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(14,42)-(14,56)
-a
+(35,50)-(35,68)
+(^)
 VarG
 
-(14,43)-(14,44)
-a1
+(39,46)-(39,64)
+(^)
 VarG
 
-(14,43)-(14,44)
-x1
-VarG
-
-(14,43)-(14,44)
-x2
-VarG
-
-(14,43)-(14,44)
-(a1 + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(14,43)-(14,44)
-((a1 + x1) + x2) >= 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,43)-(14,44)
-a1 + x1
-BopG VarG VarG
-
-(14,43)-(14,44)
-10
-LitG
-
-(14,43)-(14,44)
-1
-LitG
-
-(14,43)-(14,44)
-if ((a1 + x1) + x2) >= 10
-then 1
-else 0
-IteG (BopG EmptyG EmptyG) LitG LitG
-
-(14,46)-(14,55)
-((a1 + x1) + x2) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-
-(14,47)-(14,49)
-a1
-VarG
-
-(14,47)-(14,49)
-a1 + x1
-BopG VarG VarG
-
-(14,57)-(14,58)
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(14,59)-(14,60)
-a2
-VarG
-
-(15,15)-(15,17)
-(0 , [0])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(16,4)-(17,51)
-0
-LitG
-
-(16,4)-(17,51)
-0
-LitG
-
-(16,4)-(17,51)
-[0]
-ListG LitG Nothing
+(39,46)-(39,64)
+exprToString tm3 ^ ")"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)

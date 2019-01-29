@@ -1,6 +1,10 @@
-CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| h :: t -> [h]
-match n with
-| 0 -> []
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,LitG)])
+match list with
+| [] -> 0
+| head :: tail -> head
+match list with
+| [] -> 0
+| head :: tail -> head
+match list with
+| [] -> 0
+| head :: tail -> head

@@ -1,37 +1,52 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let palindrome w = if (explode w) = (listReverse w) then true else false;;
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> pi * e
+  | Cosine e -> pi * e
+  | Average (e1,e2) -> buildAverage (e1, e2)
+  | Times (e1,e2) -> buildTimes (e1, e2)
+  | Thresh (e1,e2,e3,e4) -> buildThresh (e1, e2, e3, e4);;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec listReverse l =
-  match l with | [] -> [] | h::tail -> (listReverse tail) @ [h];;
-
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 
 *)
 
 (* changed spans
-(10,49)-(10,50)
-explode
-VarG
-
-(10,49)-(10,50)
-explode w
-AppG (fromList [VarG])
+(20,2)-(27,56)
+match e with
+| VarX -> x
+| VarY -> y
+CaseG VarG (fromList [(Nothing,VarG)])
 
 *)

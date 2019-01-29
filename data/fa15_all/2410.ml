@@ -1,56 +1,71 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (eval (e, x, y))
-  | Cosine e -> cos (eval (e, x, y))
-  | Average (e,f) -> ((eval (e, x, y)) +. (eval (f, x, y))) /. 2.0
-  | Times (e,f) -> (eval (e, x, y)) * (eval (f, x, y))
-  | Thresh (e,f,g,h) ->
-      (match (eval (e, x, y)) < (eval (f, x, y)) with
-       | true  -> eval (g, x, y)
-       | false  -> eval (h, x, y));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let l1G = (List.length l1) - (List.length l2) in
+    (l1, (List.append (clone 0 l1G) l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let l2G = (List.length l2) - (List.length l1) in
+       ((List.append (clone 0 l2G) l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (n1,n2) = x in
+      let (carry,rest) = a in
+      let total = (n1 + n2) + carry in
+      ((total / 10), ((total mod 10) :: rest)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine ((0 :: l1), (0 :: l2))) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (eval (e, x, y))
-  | Cosine e -> cos (eval (e, x, y))
-  | Average (e,f) -> ((eval (e, x, y)) +. (eval (f, x, y))) /. 2.0
-  | Times (e,f) -> (eval (e, x, y)) *. (eval (f, x, y))
-  | Thresh (e,f,g,h) ->
-      (match (eval (e, x, y)) < (eval (f, x, y)) with
-       | true  -> eval (g, x, y)
-       | false  -> eval (h, x, y));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let l1G = (List.length l1) - (List.length l2) in
+    (l1, (List.append (clone 0 l1G) l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let l2G = (List.length l2) - (List.length l1) in
+       ((List.append (clone 0 l2G) l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (n1,n2) = x in
+      let (carry,rest) = a in
+      let total = (n1 + n2) + carry in
+      ((total / 10), ((total mod 10) :: rest)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(18,19)-(18,54)
-eval (e , x , y) *. eval (f , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(27,24)-(27,61)
+List.combine (0 :: l1)
+             (0 :: l2)
+AppG (fromList [ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
 
 *)

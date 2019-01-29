@@ -1,117 +1,125 @@
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-(0 , [])
-(0 , [])
-(0 , [0])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [0])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [])
-(0 , [0])
+LamG VarG
+fun a -> a
+fun b -> b
+fun a -> a
+fun a -> a
+fun a -> a
+fun a -> a
+fun a -> a
+fun d -> d
+fun d -> d
+fun d -> d
+fun a -> x
+fun x -> x
+fun a -> x
+fun a -> x
+fun y -> y
+fun q -> q
+fun y -> y
+fun y -> y
+fun x -> x
+fun a -> a
+fun x -> x
+fun a -> a
+fun x -> x
+fun a -> a
+fun a -> a
+fun a -> a
+fun a -> a
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun y -> y
+fun y -> y
+fun y -> y
+fun y -> y
+fun y -> y
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun a -> a
+fun p -> p
+fun a -> a
+fun a -> a
+fun p -> p
+fun p -> p
+fun p -> p
+fun x -> x
+fun b -> b
+fun y -> y
+fun x -> x
+fun y -> y
+fun y -> y
+fun y -> y
+fun x -> x
+fun y -> y
+fun y -> y
+fun x -> x
+fun x -> x
+fun (n1 , n2) -> n1
+fun (p1 , p2) -> p2
+fun (n1 , n2) -> n1
+fun (p1 , p2) -> p2
+fun (n1 , n2) -> n1
+fun (p1 , p2) -> p2
+fun z -> z
+fun x -> x
+fun b -> b
+fun b -> b
+fun b -> b
+fun b -> b
+fun b -> b
+fun b -> b
+fun (c , l) -> c
+fun (c , l) -> l
+fun z -> z
+fun z -> z
+fun z -> z
+fun x -> x
+fun x -> x
+fun b -> b
+fun b -> b
+fun a -> a
+fun x -> x
+fun a -> a
+fun x -> x
+fun x -> x
+fun x -> x
+fun y -> y
+fun x -> x
+fun y -> y
+fun x -> x
+fun y -> y
+fun x -> x
+fun y -> y
+fun x -> x
+fun y -> y
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun x -> x
+fun q -> q
+fun q -> q
+fun q -> q
+fun q -> q
+fun a -> a
+fun a -> a

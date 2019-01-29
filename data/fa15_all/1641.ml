@@ -1,64 +1,93 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in
-  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let y = f b in match y with | b -> (y, false) | _ -> (y, true)), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine u -> pi *. (eval (u, x, y))
+  | Cosine u -> cos (pi *. (eval (u, x, y)))
+  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
+  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
+  | Thresh (s,t,u,v) -> if (eval s) < (eval t) then eval u else eval v;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let helper x = let y = f x in if y = x then (y, false) else (y, true) in
-      helper), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine u -> pi *. (eval (u, x, y))
+  | Cosine u -> cos (pi *. (eval (u, x, y)))
+  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
+  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
+  | Thresh (s,t,u,v) ->
+      if (eval (s, x, y)) < (eval (t, x, y))
+      then eval (u, x, y)
+      else eval (v, x, y);;
 
 *)
 
 (* changed spans
-(8,5)-(8,69)
-fun x ->
-  (let y = f x in
-   if y = x
-   then (y , false)
-   else (y , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+(21,33)-(21,34)
+(s , x , y)
+TupleG (fromList [VarG])
 
-(8,5)-(8,69)
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(8,21)-(8,68)
+(21,38)-(21,46)
 x
 VarG
 
-(8,27)-(8,28)
-y = x
-BopG VarG VarG
+(21,38)-(21,46)
+y
+VarG
 
-(8,27)-(8,28)
-if y = x
-then (y , false)
-else (y , true)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+(21,44)-(21,45)
+(t , x , y)
+TupleG (fromList [VarG])
 
-(8,41)-(8,51)
+(21,52)-(21,58)
 x
 VarG
 
-(8,71)-(8,72)
-helper
+(21,52)-(21,58)
+y
 VarG
+
+(21,57)-(21,58)
+(u , x , y)
+TupleG (fromList [VarG])
+
+(21,64)-(21,70)
+x
+VarG
+
+(21,64)-(21,70)
+y
+VarG
+
+(21,69)-(21,70)
+(v , x , y)
+TupleG (fromList [VarG])
 
 *)

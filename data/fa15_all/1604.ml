@@ -1,27 +1,61 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | [] -> [] | h::t -> [h; digitsOfInt t]);;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let f f b =
+        if ((f b) = (b, true)) && ((b, true) = ((f b) - 1)) then (b, false) in
+      f), b);;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [] else [] @ [n mod 10];;
+let rec wwhile (f,b) =
+  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+
+let fixpoint (f,b) =
+  wwhile ((let a x = let xx = f x in (xx, (x <> b)) in a), b);;
 
 *)
 
 (* changed spans
-(5,14)-(5,15)
-[] @ [n mod 10]
-AppG (fromList [ListG EmptyG Nothing])
+(8,47)-(8,58)
+let a =
+  fun x ->
+    (let xx = f x in
+     (xx , x <> b)) in
+a
+LetG NonRec (fromList [LamG EmptyG]) VarG
 
-(5,29)-(5,31)
-(@)
+(8,48)-(8,53)
+fun x ->
+  (let xx = f x in
+   (xx , x <> b))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(8,48)-(8,53)
+let xx = f x in (xx , x <> b)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+
+(8,56)-(8,57)
+x
 VarG
 
-(5,58)-(5,59)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(8,66)-(8,67)
+xx
+VarG
+
+(8,66)-(8,67)
+x
+VarG
+
+(8,66)-(8,67)
+x <> b
+BopG VarG VarG
+
+(9,6)-(9,7)
+a
+VarG
 
 *)

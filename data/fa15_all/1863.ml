@@ -1,20 +1,64 @@
 
-let rec digitsOfInt n = if n > 0 then [digitsOfInt (n / 10)];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Cosine e' -> cos (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(2,27)-(2,32)
-n < 0
-BopG VarG LitG
+(19,23)-(19,67)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
-(2,38)-(2,60)
-[]
-ListG EmptyG Nothing
+(19,66)-(19,67)
+2.0
+LitG
 
 *)

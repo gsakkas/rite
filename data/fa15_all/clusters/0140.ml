@@ -1,5 +1,6 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG (BopG VarG LitG) (AppG (fromList [VarG]))]))) Nothing
-((sum - 10) + fst a) :: (snd a)
-((sum - 10) + fst a) :: (snd a)
-((sum - 10) + fst a) :: (snd a)
-((sum - 10) + fst a) :: (snd a)
+UopG (BopG EmptyG EmptyG)
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+(-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))

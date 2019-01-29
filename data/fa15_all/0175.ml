@@ -1,20 +1,29 @@
 
-let rec sumList xs = match xs with | [] -> [] | h::t -> h + (sumList t);;
+let stringOfList f l = "[" ^ ((List.map f l) ^ "]");;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList xs);;
+let stringOfList f l = "[" ^ ((List.fold_left (^) "" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(2,43)-(2,45)
-0
-LitG
-
-(2,69)-(2,70)
-xs
+(2,30)-(2,44)
+List.fold_left
 VarG
+
+(2,30)-(2,44)
+(^)
+VarG
+
+(2,30)-(2,44)
+List.fold_left (^) ""
+               (List.map f l)
+AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+
+(2,30)-(2,44)
+""
+LitG
 
 *)

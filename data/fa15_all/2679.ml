@@ -1,56 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) / 2
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | _ ->
+        let seen' = if List.mem 0 seen then seen else 0 :: seen in
+        let rest' = 0 in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine i -> sin (pi *. (eval (i, x, y)))
-  | Cosine i -> cos (pi *. (eval (i, x, y)))
-  | Average (i1,i2) -> ((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0
-  | Times (i1,i2) -> (eval (i1, x, y)) *. (eval (i2, x, y));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | _ ->
+        let seen' = if List.mem 0 seen then seen else 0 :: seen in
+        let rest' = [0] in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(19,23)-(19,67)
-(eval (i1 , x , y) +. eval (i2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(19,66)-(19,67)
-2.0
-LitG
+(8,20)-(8,21)
+[0]
+ListG LitG Nothing
 
 *)

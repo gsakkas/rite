@@ -1,78 +1,211 @@
 
-let rec append xs ys = match xs with | [] -> ys | h::t -> h :: (append t ys);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let digits n = digitsOfInt (abs n);;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
 
-let rec additivePersistence n = if (n / 10) <= 0 then 0 else digits n;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec append xs ys = match xs with | [] -> ys | h::t -> h :: (append t ys);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10];;
+let padZero l1 l2 =
+  let x1 = List.length l1 in
+  let x2 = List.length l2 in
+  if x1 < x2
+  then (((clone 0 (x2 - x1)) @ l1), l2)
+  else (l1, ((clone 0 (x1 - x2)) @ l2));;
 
-let digits n = digitsOfInt (abs n);;
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::[] -> if h <> 0 then l else []
+  | h::t -> if h <> 0 then l else removeZero t;;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (n / 10) <= 0 then 0 else sumList (digits n);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      let h::_ = a1 in
+      let tens = (x1 + x2) + (h / 10) in
+      let ones = (x1 + x2) + (h mod 10) in ((tens :: a1), (ones :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(9,28)-(9,69)
-xs
+(19,16)-(19,17)
+let (x1 , x2) = x in
+let (a1 , a2) = a in
+let h :: _ = a1 in
+let tens =
+  (x1 + x2) + (h / 10) in
+let ones =
+  (x1 + x2) + (h mod 10) in
+(tens :: a1 , ones :: a2)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(22,51)
+a
 VarG
 
-(9,28)-(9,69)
+(20,4)-(22,51)
+a1
+VarG
+
+(20,4)-(22,51)
+x1
+VarG
+
+(20,4)-(22,51)
+x2
+VarG
+
+(20,4)-(22,51)
 h
 VarG
 
-(9,28)-(9,69)
-sumList
+(20,4)-(22,51)
+x1
 VarG
 
-(9,28)-(9,69)
-t
+(20,4)-(22,51)
+x2
 VarG
 
-(9,28)-(9,69)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+(20,4)-(22,51)
+h
+VarG
 
-(9,28)-(9,69)
-sumList t
-AppG (fromList [VarG])
+(20,4)-(22,51)
+tens
+VarG
 
-(9,28)-(9,69)
-h + sumList t
-BopG VarG (AppG (fromList [EmptyG]))
+(20,4)-(22,51)
+a1
+VarG
 
-(9,28)-(9,69)
-0
+(20,4)-(22,51)
+ones
+VarG
+
+(20,4)-(22,51)
+a2
+VarG
+
+(20,4)-(22,51)
+x1 + x2
+BopG VarG VarG
+
+(20,4)-(22,51)
+(x1 + x2) + (h / 10)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+
+(20,4)-(22,51)
+h / 10
+BopG VarG LitG
+
+(20,4)-(22,51)
+x1 + x2
+BopG VarG VarG
+
+(20,4)-(22,51)
+(x1 + x2) + (h mod 10)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+
+(20,4)-(22,51)
+h mod 10
+BopG VarG LitG
+
+(20,4)-(22,51)
+10
 LitG
 
-(9,28)-(9,69)
-match xs with
-| [] -> 0
-| h :: t -> h + sumList t
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+(20,4)-(22,51)
+10
+LitG
 
-(9,61)-(9,67)
-sumList
+(20,4)-(22,51)
+let (a1 , a2) = a in
+let h :: _ = a1 in
+let tens =
+  (x1 + x2) + (h / 10) in
+let ones =
+  (x1 + x2) + (h mod 10) in
+(tens :: a1 , ones :: a2)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(22,51)
+let h :: _ = a1 in
+let tens =
+  (x1 + x2) + (h / 10) in
+let ones =
+  (x1 + x2) + (h mod 10) in
+(tens :: a1 , ones :: a2)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(22,51)
+let tens =
+  (x1 + x2) + (h / 10) in
+let ones =
+  (x1 + x2) + (h mod 10) in
+(tens :: a1 , ones :: a2)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(22,51)
+let ones =
+  (x1 + x2) + (h mod 10) in
+(tens :: a1 , ones :: a2)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
+
+(20,4)-(22,51)
+(tens :: a1 , ones :: a2)
+TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+
+(20,4)-(22,51)
+tens :: a1
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+
+(20,4)-(22,51)
+ones :: a2
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+
+(20,15)-(20,17)
+([] , [])
+TupleG (fromList [ListG EmptyG Nothing])
+
+(21,4)-(22,51)
+[]
+ListG EmptyG Nothing
+
+(21,15)-(21,33)
+List.rev
 VarG
 
-(9,61)-(9,67)
-digits n
-AppG (fromList [VarG])
+(21,15)-(21,33)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

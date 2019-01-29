@@ -1,30 +1,28 @@
 
-let pipe fs =
-  let f a x n fs = a in let base n = n in List.fold_left f base fs;;
+let rec append l1 l2 = match l1 with | [] -> l2 | h::t -> h :: (append t l2);;
+
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> append listReverse t [h];;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = (fun a  -> x) x in let base n = n in List.fold_left f base fs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(3,19)-(3,20)
-(fun a -> x) x
+(5,36)-(5,42)
+listReverse t @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(5,43)-(5,54)
+(@)
+VarG
+
+(5,43)-(5,54)
+listReverse t
 AppG (fromList [VarG])
-
-(3,24)-(3,66)
-x
-VarG
-
-(3,24)-(3,66)
-x
-VarG
-
-(3,24)-(3,66)
-fun a -> x
-LamG VarG
 
 *)

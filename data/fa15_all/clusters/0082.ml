@@ -1,17 +1,17 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing])
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((x1 + x2) + a1) - 10) :: a2)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
-(1 , (((j + k) + l) - 10) :: m)
+ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
+(d1 + d2) :: result
+(fir + sec) :: b2
+(fir + sec) :: b2
+(arg1 + arg2) :: acc
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1
+(h1 + h2) :: list1

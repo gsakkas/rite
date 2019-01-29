@@ -1,39 +1,68 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let gs x =
-    let isFPoint s = ((f s) - s) < 0 in
-    let iterate (t,y) = t y in
-    let rec go r = if isFPoint r then r else go (iterate (x, r)) in b in
-  wwhile (gs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
-  wwhile (gs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y);;
 
 *)
 
 (* changed spans
-(9,17)-(9,27)
-(f x , isFPoint x)
-TupleG (fromList [AppG (fromList [EmptyG])])
+(19,23)-(19,62)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
-(10,4)-(10,69)
-x
-VarG
+(19,24)-(19,41)
+eval (e1 , x , y) +. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(10,19)-(10,64)
-f
-VarG
+(19,65)-(19,66)
+2.0
+LitG
 
 *)

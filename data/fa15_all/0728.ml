@@ -1,152 +1,61 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine (build (rand', (depth - 1)))
-    | 2 -> buildCosine build (rand', (depth - 1))
-    | 3 -> buildTimes ((build (rand', (depth - 1))), buildY)
-    | 4 -> buildAverage ((build (rand', (depth - 1))), buildY)
-    | 5 ->
-        buildThresh
-          (buildX, buildY, (build (rand', (depth - 1))),
-            (build (rand', (depth - 1))))
-  else buildX;;
+let fixpoint (f,b) =
+  wwhile
+    (let g y x =
+       let sec s fi m = if s = fi then (s, (s = (m s))) else (s, false) in
+       sec (y x) x in
+     ((g f b), b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let h x = ((x * x), (x < 100));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
+let rec wwhile (f,b) =
+  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
 
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    let rand' = rand (1, 5) in
-    match rand' with
-    | 1 -> buildSine (build (rand, (depth - 1)))
-    | 2 -> buildCosine (build (rand, (depth - 1)))
-    | 3 -> buildTimes ((build (rand, (depth - 1))), (buildY ()))
-    | 4 -> buildAverage ((build (rand, (depth - 1))), (buildY ()))
-    | 5 ->
-        buildThresh
-          ((buildX ()), (buildY ()), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))))
-  else buildX ();;
+let fixpoint (f,b) = wwhile (h, b);;
 
 *)
 
 (* changed spans
-(30,29)-(30,34)
-rand
+(2,16)-(3,62)
+x
 VarG
 
-(31,11)-(31,49)
-buildCosine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(31,23)-(31,28)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(31,30)-(31,35)
-rand
+(2,16)-(3,62)
+x
 VarG
 
-(32,31)-(32,36)
-rand
+(2,16)-(3,62)
+x
 VarG
 
-(32,53)-(32,59)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+(2,16)-(3,62)
+fun x -> (x * x , x < 100)
+LamG (TupleG (fromList [EmptyG]))
 
-(33,11)-(33,62)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+(2,16)-(3,62)
+x * x
+BopG VarG VarG
 
-(33,33)-(33,38)
-rand
+(2,16)-(3,62)
+x < 100
+BopG VarG LitG
+
+(2,16)-(3,62)
+100
+LitG
+
+(2,16)-(3,62)
+(x * x , x < 100)
+TupleG (fromList [BopG EmptyG EmptyG])
+
+(10,11)-(10,12)
+h
 VarG
-
-(33,55)-(33,61)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(35,8)-(37,41)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,11)-(36,17)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(36,19)-(36,25)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(36,19)-(36,25)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,27)-(36,55)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,35)-(36,40)
-rand
-VarG
-
-(37,20)-(37,25)
-rand
-VarG
-
-(38,7)-(38,13)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
 
 *)

@@ -1,80 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr;;
+let g (f,x) = let xx = f x in (xx, (xx = (f x)));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Power (a,b) -> x + y;;
+let fixpoint (f,b) = wwhile ((g (f, b)), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr;;
+let g h x = let xx = h x in (xx, (xx = (h x)));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y)
-  | Power (a,b) -> (eval (a, x, y)) +. (eval (b, x, y));;
+let fixpoint (f,b) = wwhile ((g f), b);;
 
 *)
 
 (* changed spans
-(26,19)-(26,20)
-eval
+(2,7)-(2,48)
+fun h ->
+  fun x ->
+    (let xx = h x in
+     (xx , xx = h x))
+LamG (LamG EmptyG)
+
+(2,14)-(2,48)
+fun x ->
+  (let xx = h x in
+   (xx , xx = h x))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(2,23)-(2,24)
+h
 VarG
 
-(26,19)-(26,20)
-a
+(2,42)-(2,43)
+h
 VarG
-
-(26,19)-(26,20)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(26,19)-(26,20)
-(a , x , y)
-TupleG (fromList [VarG])
-
-(26,19)-(26,24)
-eval (a , x , y) +. eval (b , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)

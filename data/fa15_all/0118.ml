@@ -1,30 +1,41 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h -> [h] | h::t -> h :: (listReverse [t]);;
+let rec wwhile (f,b) =
+  let helper = f b in
+  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
+
+let fixpoint (f,b) =
+  wwhile
+    (let g b =
+       let helper = f b in
+       match helper with | (x,y) -> if x = b then (f, false) else (f, true) in
+     (g, b));;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h -> h | h::t -> t @ (listReverse [h]);;
+let rec wwhile (f,b) =
+  let helper = f b in
+  match helper with | (x,y) -> if y = false then x else wwhile (f, x);;
+
+let fixpoint (f,b) =
+  wwhile
+    (let g b =
+       let helper = f b in
+       match helper with | f -> if f = b then (f, false) else (f, true) in
+     (g, b));;
 
 *)
 
 (* changed spans
-(3,47)-(3,48)
-t @ listReverse [h]
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+(10,7)-(10,75)
+match helper with
+| f -> if f = b
+       then (f , false)
+       else (f , true)
+CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(3,52)-(3,69)
-t
-VarG
-
-(3,52)-(3,69)
-(@)
-VarG
-
-(3,66)-(3,67)
-h
+(10,39)-(10,40)
+f
 VarG
 
 *)

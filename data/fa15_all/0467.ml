@@ -1,37 +1,74 @@
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Negate of expr
+  | Foo of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let gs x =
-    let isFPoint s = ((f s) - s) < 0 in
-    let iterate (t,y) = t y in
-    let rec go r =
-      if isFPoint r then (r, true) else go ((iterate (x, r)), false) in
-    go x in
-  wwhile (gs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Negate e -> (eval (e, x, y)) *. (-1)
+  | Foo (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. ((eval (e2, x, y)) *. (eval (e3, x, y)))) /. 2.0;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let res = f b in
-  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Negate of expr
+  | Foo of expr* expr* expr;;
 
-let fixpoint (f,b) =
-  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
-  wwhile (gs, b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,a_less,b_less) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (a_less, x, y)
+      else eval (b_less, x, y)
+  | Negate e -> (eval (e, x, y)) *. (-1.0)
+  | Foo (e1,e2,e3) ->
+      ((eval (e1, x, y)) +. ((eval (e2, x, y)) *. (eval (e3, x, y)))) /. 2.0;;
 
 *)
 
 (* changed spans
-(11,53)-(11,59)
-f
-VarG
+(27,36)-(27,40)
+(- 1.0)
+UopG LitG
 
-(12,4)-(12,6)
-isFPoint
-VarG
+(29,6)-(29,76)
+1.0
+LitG
 
 *)

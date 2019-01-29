@@ -1,64 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec mulByDigit i l =
+  let f a x =
+    match i with
+    | 0 -> []
+    | _ ->
+        let (i,j) = x in
+        let (s,t) = a in
+        ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec mulByDigit i l =
+  let f a x =
+    match i with
+    | 0 -> (0, [])
+    | _ ->
+        let (i,j) = x in
+        let (s,t) = a in
+        ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
+  let base = (0, []) in
+  let args = List.combine (List.rev (0 :: l)) (clone i ((List.length l) + 1)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(19,23)-(19,62)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(19,66)-(19,67)
-2.0
+(7,11)-(7,13)
+0
 LitG
+
+(7,11)-(7,13)
+(0 , [])
+TupleG (fromList [LitG,ListG EmptyG Nothing])
 
 *)

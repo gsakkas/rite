@@ -1,4 +1,13 @@
-ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
-(sum / 10) :: ((sum mod 10) :: a2)
-(sum / 10) :: ((sum mod 10) :: a2)
-(sum / 10) :: ((sum mod 10) :: a2)
+IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+if n < 1
+then []
+else x :: (clone x (n - 1))

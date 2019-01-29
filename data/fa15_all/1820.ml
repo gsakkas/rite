@@ -1,37 +1,44 @@
 
-let rec wwhile (f,b) = if f b then f (f, b) else 1;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let counter = 0;;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then counter
+  else
+    (let myList = digits n in
+     let num = sumList myList in
+     let counter = 0 in
+     counter = ((counter + (1 num)) + (additivePersistence num)));;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (i,t) = f b in if t then wwhile (f, i) else i;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if n < 10
+  then 0
+  else
+    (let myList = digits n in
+     let num = sumList myList in num + (additivePersistence num));;
 
 *)
 
 (* changed spans
-(2,23)-(2,50)
-let (i , t) = f b in
-if t
-then wwhile (f , i)
-else i
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
-
-(2,35)-(2,36)
-wwhile
-VarG
-
-(2,35)-(2,43)
-t
-VarG
-
-(2,35)-(2,43)
-if t
-then wwhile (f , i)
-else i
-IteG VarG (AppG (fromList [EmptyG])) VarG
-
-(2,49)-(2,50)
-i
-VarG
+(13,7)-(13,14)
+0
+LitG
 
 *)

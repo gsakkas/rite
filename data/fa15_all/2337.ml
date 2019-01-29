@@ -1,47 +1,54 @@
 
-let rec assoc (d,k,l) =
-  match k with | [] -> d | h::t -> if k = h then h else assoc d k t;;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then List.append (clone 0 (b - a)) l1
+  else if b < a then List.append (clone 0 (a - b)) l2;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | h::t -> let (f,s) = h in if k = f then s else assoc (d, k, t);;
+let rec clone x n =
+  let accum = [] in
+  let rec helper accum n =
+    if n < 1 then accum else helper (x :: accum) (n - 1) in
+  helper accum n;;
+
+let padZero l1 l2 =
+  let (a,b) = ((List.length l1), (List.length l2)) in
+  if a < b
+  then ((List.append (clone 0 (b - a)) l1), l2)
+  else if b < a then (l1, (List.append (clone 0 (a - b)) l2)) else (l1, l2);;
 
 *)
 
 (* changed spans
-(3,8)-(3,9)
-l
+(11,7)-(11,39)
+(List.append (clone 0 (b - a))
+             l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(12,7)-(12,53)
+l2
 VarG
 
-(3,35)-(3,67)
-h
-VarG
-
-(3,35)-(3,67)
-let (f , s) = h in
-if k = f
-then s
-else assoc (d , k , t)
-LetG NonRec (fromList [VarG]) (IteG EmptyG EmptyG EmptyG)
-
-(3,56)-(3,61)
-s
-VarG
-
-(3,56)-(3,61)
-assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(3,56)-(3,67)
-f
-VarG
-
-(3,62)-(3,63)
-(d , k , t)
+(12,7)-(12,53)
+(l1 , l2)
 TupleG (fromList [VarG])
+
+(12,21)-(12,53)
+l1
+VarG
+
+(12,21)-(12,53)
+(l1 , List.append (clone 0
+                         (a - b)) l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

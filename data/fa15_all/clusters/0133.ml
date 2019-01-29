@@ -1,26 +1,208 @@
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (BopG EmptyG EmptyG)
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
+match num with
+| 0 -> if rand (0 , 1) = 0
+       then buildX ()
+       else buildY ()
+| 1 -> if rand (0 , 1) = 0
+       then buildSine (buildhelper 0
+                                   0 expr)
+       else buildCosine (buildhelper 0
+                                     0 expr)
+| 2 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 3 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 4 -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+| _ -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+match num with
+| 0 -> if rand (0 , 1) = 0
+       then buildX ()
+       else buildY ()
+| 1 -> if rand (0 , 1) = 0
+       then buildSine (buildhelper 0
+                                   0 expr)
+       else buildCosine (buildhelper 0
+                                     0 expr)
+| 2 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 3 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 4 -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+| _ -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+match num with
+| 0 -> if rand (0 , 1) = 0
+       then buildX ()
+       else buildY ()
+| 1 -> if rand (0 , 1) = 0
+       then buildSine (buildhelper 0
+                                   0 expr)
+       else buildCosine (buildhelper 0
+                                     0 expr)
+| 2 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 3 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 4 -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+| _ -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+match num with
+| 0 -> if rand (0 , 1) = 0
+       then buildX ()
+       else buildY ()
+| 1 -> if rand (0 , 1) = 0
+       then buildSine (buildhelper 0
+                                   0 expr)
+       else buildCosine (buildhelper 0
+                                     0 expr)
+| 2 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 3 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 4 -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+| _ -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+match recurse with
+| 0 -> buildSine (build (rand , depth - 1))
+| 1 -> buildCosine (build (rand , depth - 1))
+| 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+| 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+| 4 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+| 5 -> buildSpecial1 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+| 6 -> buildSpecial2 (build (rand , depth - 1) , build (rand , depth - 1))
+| _ -> if recurse > 2
+       then buildCosine (build (rand , depth - 1))
+       else buildSine (build (rand , depth - 1))

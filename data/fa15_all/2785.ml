@@ -1,39 +1,70 @@
 
-let pipe fs = let f a x = x in let base = fs in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y)
+  | _ -> "ya dun f*cked up";;
 
 
 (* fix
 
-let x l = List.map string_of_int;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let pipe fs = let f a x = a in let base = x in List.fold_left f base fs;;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e0 -> sin (pi *. (eval (e0, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e2,e3) -> ((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0
+  | Times (e4,e5) -> (eval (e4, x, y)) *. (eval (e5, x, y))
+  | Thresh (e6,e7,e8,e9) ->
+      if (eval (e6, x, y)) < (eval (e7, x, y))
+      then eval (e8, x, y)
+      else eval (e9, x, y);;
 
 *)
 
 (* changed spans
-(2,9)-(2,72)
-List.map
-VarG
-
-(2,9)-(2,72)
-string_of_int
-VarG
-
-(2,9)-(2,72)
-fun l ->
-  List.map string_of_int
-LamG (AppG (fromList [EmptyG]))
-
-(2,9)-(2,72)
-List.map string_of_int
-AppG (fromList [VarG])
-
-(2,26)-(2,27)
-a
-VarG
-
-(2,42)-(2,44)
-x
-VarG
+(14,2)-(25,27)
+match e with
+| VarX -> x
+| VarY -> y
+| Sine e0 -> sin (pi *. eval (e0 , x , y))
+| Cosine e1 -> cos (pi *. eval (e1 , x , y))
+| Average (e2 , e3) -> (eval (e2 , x , y) +. eval (e3 , x , y)) /. 2.0
+| Times (e4 , e5) -> eval (e4 , x , y) *. eval (e5 , x , y)
+| Thresh (e6 , e7 , e8 , e9) -> if eval (e6 , x , y) < eval (e7 , x , y)
+                                then eval (e8 , x , y)
+                                else eval (e9 , x , y)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)

@@ -1,34 +1,42 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" List.map (f l)) ^ "]");;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, a1, a2));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x +. 0.0
+  | VarY  -> y +. 0.0
+  | Average (a1,a2) -> (eval (VarX, x, y)) +. (eval (VarY, x, y));;
 
 *)
 
 (* changed spans
-(9,30)-(9,60)
-sepConcat ";" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(9,45)-(9,53)
-List.map f l
-AppG (fromList [VarG])
+(15,63)-(15,65)
+x
+VarG
 
 *)

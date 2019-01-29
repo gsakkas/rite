@@ -1,42 +1,54 @@
 
-let rec clone x n = match n with | 0 -> [] | _ -> [clone (x, (n - 1)); x];;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | ((s,i) as h)::t -> if s = k then i else assoc (d k t);;
 
 
 (* fix
 
-let helper (x,m) = x :: m;;
-
-let rec clone x n = match n with | 0 -> [] | _ -> helper (x, (clone x n));;
+let rec assoc (d,k,l) =
+  match l with
+  | [] -> d
+  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(2,14)-(2,73)
-x
-VarG
+(3,2)-(5,57)
+match l with
+| [] -> d
+| h :: t -> if fst h = k
+            then snd h
+            else assoc (d , k , t)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(2,14)-(2,73)
-m
-VarG
-
-(2,14)-(2,73)
-fun (x , m) -> x :: m
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(2,14)-(2,73)
-x :: m
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(2,51)-(2,56)
-helper
-VarG
-
-(2,66)-(2,67)
-clone x n
+(5,26)-(5,27)
+fst h
 AppG (fromList [VarG])
 
-(2,71)-(2,72)
-clone
+(5,30)-(5,31)
+fst
 VarG
+
+(5,30)-(5,31)
+h
+VarG
+
+(5,44)-(5,49)
+snd
+VarG
+
+(5,44)-(5,49)
+h
+VarG
+
+(5,44)-(5,49)
+assoc (d , k , t)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(5,50)-(5,57)
+(d , k , t)
+TupleG (fromList [VarG])
 
 *)

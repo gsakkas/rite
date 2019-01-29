@@ -1,20 +1,19 @@
-BopG (AppG (fromList [EmptyG])) VarG
-f x = x
-f b = b
-f b = b
-f b = b
-eval (e1 , x , y) *. pi
-sumList (digitsOfInt x) + y
-additivePersistence (n mod 10) + n
-additivePersistence (n mod 10) + n
-f b = b
-f b = b
-f b <> b
-f x <> x
-f b = b
-f b = b
-f b = b
-f b = b
-f b' <> b'
-f x = x
-f b = b
+BopG LitG (AppG (fromList [EmptyG]))
+1.0 -. exp ((- 1.0) *. eval (a , x , y))
+1.0 -. exp ((- 1.0) *. eval (a , x , y))
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+1 + additivePersistence (sumList (digitsOfInt n))

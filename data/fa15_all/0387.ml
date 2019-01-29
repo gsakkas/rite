@@ -1,68 +1,44 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Trip of expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
-  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
-  | Thresh (t,r,s,q) ->
-      if (eval (t, x, y)) < (eval (r, x, y))
-      then eval (s, x, y)
-      else eval (q, x, y)
-  | Trip (t,r,s) ->
-      ((sin (pi *. (eval (r, x, y)))) * (tan (pi *. (eval (s, x, y))))) *.
-        (sin (pi *. (eval (t, x, y))));;
+let palindrome w = (listReverse explode w) == w;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Trip of expr* expr* expr;;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Average (t,s) -> ((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0
-  | Times (t,s) -> (eval (t, x, y)) *. (eval (s, x, y))
-  | Thresh (t,r,s,q) ->
-      if (eval (t, x, y)) < (eval (r, x, y))
-      then eval (s, x, y)
-      else eval (q, x, y)
-  | Trip (t,r,s) ->
-      ((sin (pi *. (eval (r, x, y)))) *. (tan (pi *. (eval (s, x, y))))) *.
-        (sin (pi *. (eval (t, x, y))));;
+let palindrome w = (listReverse (explode w)) == (explode w);;
 
 *)
 
 (* changed spans
-(27,6)-(27,71)
-sin (pi *. eval (r , x , y)) *. tan (pi *. eval (s , x , y))
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(10,19)-(10,42)
+listReverse (explode w)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(10,32)-(10,39)
+explode w
+AppG (fromList [VarG])
+
+(10,46)-(10,47)
+explode
+VarG
+
+(10,46)-(10,47)
+explode w
+AppG (fromList [VarG])
 
 *)

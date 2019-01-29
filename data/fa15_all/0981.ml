@@ -1,137 +1,74 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> String.concat "" ["sin(pi*"; exprToString s; ")"]
-  | Cosine s -> ("cos(pi*" + (exprToString s)) + ")"
-  | Average (s,p) ->
-      ((("((" + (exprToString s)) + "+") + (exprToString p)) + ")/2"
-  | Times (s,p) -> ((exprToString s) + "*") + (exprToString p)
-  | Thresh (s,p,r,d) ->
-      ((((((("(" + (exprToString s)) + "<") + (exprToString p)) + "?") +
-           (exprToString r))
-          + ":")
-         + (exprToString d))
-        + ")"
-  | _ -> 0;;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ initsum)) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine s -> String.concat "" ["sin(pi*"; exprToString s; ")"]
-  | Cosine s -> String.concat "" ["cos(pi*"; exprToString s; ")"]
-  | Average (s,p) ->
-      String.concat "" ["(("; exprToString s; "+"; exprToString p; ")/2"]
-  | Times (s,p) -> String.concat "" [exprToString s; "*"; exprToString p]
-  | Thresh (s,p,r,d) ->
-      String.concat ""
-        ["(";
-        exprToString s;
-        "<";
-        exprToString p;
-        "?";
-        exprToString r;
-        ":";
-        exprToString d;
-        ")"]
-  | _ -> "";;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then
+    let x = (List.length l1) - (List.length l2) in
+    let list_p = clone 0 x in (l1, (list_p @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then
+      (let x = (List.length l2) - (List.length l1) in
+       let list_p = clone 0 x in ((list_p @ l1), l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h == 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (carry,listy) = a in
+      let (num1,num2) = x in
+      let initsum = (num1 + num2) + carry in
+      if initsum > 9
+      then (1, (listy @ [initsum mod 10]))
+      else (0, (listy @ [initsum])) in
+    let base = (0, []) in
+    let args = (List.rev (List.combine l1 l2)) @ [(0, 0)] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(16,16)-(16,46)
-String.concat ""
-              ["cos(pi*" ; exprToString s ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(16,17)-(16,26)
-String.concat
-VarG
-
-(16,17)-(16,26)
-""
-LitG
-
-(16,17)-(16,26)
-["cos(pi*" ; exprToString s ; ")"]
-ListG LitG Nothing
-
-(18,8)-(18,33)
-String.concat ""
-              ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(18,9)-(18,13)
-String.concat
-VarG
-
-(18,9)-(18,13)
-""
-LitG
-
-(18,9)-(18,13)
-["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-ListG LitG Nothing
-
-(19,19)-(19,43)
-String.concat ""
-              [exprToString s ; "*" ; exprToString p]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(19,20)-(19,36)
-String.concat
-VarG
-
-(19,20)-(19,36)
-""
-LitG
-
-(19,20)-(19,36)
-[exprToString s ; "*" ; exprToString p]
-ListG LitG Nothing
-
-(21,12)-(21,36)
-String.concat ""
-              ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(21,13)-(21,16)
-String.concat
-VarG
-
-(21,13)-(21,16)
-""
-LitG
-
-(21,13)-(21,16)
-["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-ListG LitG Nothing
-
-(26,9)-(26,10)
-""
-LitG
+(27,24)-(27,31)
+[initsum]
+ListG VarG Nothing
 
 *)

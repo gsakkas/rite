@@ -1,76 +1,69 @@
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> 0 | _ -> (bigAdd l l) + (mulByDigit (i - 1) l);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec clone x n =
-  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then let z = x - y in (l1, ((clone 0 z) @ l2))
-  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with
-  | [] -> []
-  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (y,z) = a in
-      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  match i with | 0 -> [0] | _ -> bigAdd (bigAdd l l) (mulByDigit (i - 1) l);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) ->
+      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(27,21)-(28,68)
-[0]
-ListG LitG Nothing
+(19,23)-(19,67)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. float_of_int 2
+BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(28,31)-(28,68)
-bigAdd
+(19,66)-(19,67)
+float_of_int
 VarG
 
-(28,31)-(28,68)
-bigAdd l l
-AppG (fromList [VarG])
+(19,66)-(19,67)
+float_of_int 2
+AppG (fromList [LitG])
 
 *)

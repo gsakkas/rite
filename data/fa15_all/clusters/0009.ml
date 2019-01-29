@@ -1,1055 +1,402 @@
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-let (carry , currentSum) =
-  a in
-let (toSum1 , toSum2) = x in
-let intermediateValue =
-  (toSum1 + toSum2) + carry in
-let valueToAddToArray =
-  intermediateValue mod 10 in
-let carry =
-  intermediateValue / 10 in
-(carry , valueToAddToArray :: currentSum)
-let (toSum1 , toSum2) = x in
-let intermediateValue =
-  (toSum1 + toSum2) + carry in
-let valueToAddToArray =
-  intermediateValue mod 10 in
-let carry =
-  intermediateValue / 10 in
-(carry , valueToAddToArray :: currentSum)
-let (m , n) = x in
-let (y , z) = a in
-(addition (m , n) / 10 , [addition (m , n) mod 10])
-let (ll , accumulate) = a in
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let (ll , accumulate) = a in
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let (ll , accumulate) = a in
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let (ll , accumulate) = a in
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let (ll , accumulate) = a in
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-let (x1 , x2) = x in
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-let sum = (x1 + x2) + carry in
-(sum / 10 , (sum mod 10) :: acc)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (a1 , a2) = a in
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (fst , sec) = x in
-let (fst' , sec') =
-  if (fst + sec) > 9
-  then ((fst + sec) - 10 , 1)
-  else (fst + sec , 0) in
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (fst , sec) = x in
-let (fst' , sec') =
-  if (fst + sec) > 9
-  then ((fst + sec) - 10 , 1)
-  else (fst + sec , 0) in
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (fst , sec) = x in
-let (fst' , sec') =
-  if (fst + sec) > 9
-  then ((fst + sec) - 10 , 1)
-  else (fst + sec , 0) in
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let (y , z) = a in
-let (r , s) = x in
-let m = (r + s) + y in
-(m / 10 , (m mod 10) :: z)
-let base = h in
-let l = t in
-List.fold_left f base l
-let base = h in
-let l = t in
-List.fold_left f base l
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (x1 , x2) = x in
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , temp) = a in
-let s = (x1 + x2) + carry in
-let carry' = s / 10 in
-let rem = s mod 10 in
-let acc = rem :: temp in
-if List.length acc = List.length l1
-then (0 , carry' :: acc)
-else (carry' , acc)
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (carry , ans) = a in
-let (y , z) = x in
-((y + z) + carry) > 9
-let (x1 , x2) = x in
-let (carry , res) = a in
-(((x1 + x2) + carry) / 10 , (((x1 + x2) + carry) mod 10) :: res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(((x1 + x2) + carry) / 10 , (((x1 + x2) + carry) mod 10) :: res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (x1 , x2) = x in
-let (carry , res) = a in
-(carry @ [0] , bigAdd (mulByDigit x1
-                                  x2 @ carry) res)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (l1x , l2x) = x in
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (a1 , a2) = a in
-let test =
-  match a1 with
-  | [] -> 1
-  | h :: t -> 10 * h in
-let multi =
-  mulByDigit (test * x) l1 in
-(test :: a1 , bigAdd multi a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-if (x1 + x2) > 10
-then (1 , (((x1 + x2) + a1) - 10) :: a2)
-else (0 , ((x1 + x2) + a1) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (x1 , x2) = x in
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-let (m , n) = a in
-let (o , p) = x in
-let z = (o + p) + m in
-if z > 9
-then (1 , (z - 10) :: n)
-else (0 , z :: n)
-let (o , p) = x in
-let z = (o + p) + m in
-if z > 9
-then (1 , (z - 10) :: n)
-else (0 , z :: n)
-let (m , n) = a in
-let (o , p) = x in
-let z = (o + p) + m in
-if z > 9
-then (1 , (z - 10) :: n)
-else (0 , z :: n)
-let (o , p) = x in
-let z = (o + p) + m in
-if z > 9
-then (1 , (z - 10) :: n)
-else (0 , z :: n)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (lh1 , lh2) = x in
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (carry , res) = a in
-let num =
-  (lh1 + lh2) + carry in
-(num / 10 , (num mod 10) :: res)
-let (j , k) = x in
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
-let (c , a') = a in
-let m = mulByDigit x l2 in
-let s = bigAdd m a' in
-(c + 1 , s)
-let (c , a') = a in
-let m = mulByDigit x l2 in
-let s = bigAdd m a' in
-(c + 1 , s)
-let (c , a') = a in
-let m = mulByDigit x l2 in
-let s = bigAdd m a' in
-(c + 1 , s)
-let (c , a') = a in
-let m = mulByDigit x l2 in
-let s = bigAdd m a' in
-(c + 1 , s)
-let (c , a1 :: a2) = a in
-let v = (x1 + x2) + c in
-(v / 10 , [v / 10] @ ([v mod 10] @ a2))
+AppG (fromList [TupleG (fromList [EmptyG])])
+rand (2 , 6)
+rand (2 , 6)
+rand (2 , 6)
+rand (0 , 1)
+rand (0 , 6)
+rand (0 , 4)
+rand (0 , 1)
+wwhile (helper , b)
+wwhile (helper , b)
+wwhile (helper , b)
+wwhile (helper , b)
+wwhile (helper , b)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e3 , x , y)
+eval (e , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (a , x , y)
+eval (a , x , y)
+eval (a , x , y)
+eval (a , x , y)
+wwhile (w , b)
+wwhile (w , b)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+buildECosSin (build (rand , depth - 1) , build (rand , depth - 1))
+build (rand , depth - 1)
+eval (c , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (b , x , y)
+eval (a , x , y)
+eval (c , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (b , x , y)
+eval (a , x , y)
+eval (expr , x , y)
+eval (expr , x , y)
+eval (expr , x , y)
+eval (expr1 , x , y)
+eval (expr , x , y)
+eval (expr1 , x , y)
+eval (expr , x , y)
+eval (expr1 , x , y)
+eval (expr2 , x , y)
+eval (expr3 , x , y)
+helper ([] , l)
+wwhile (f , a)
+wwhile (f , num)
+wwhile (f , num)
+wwhile (f , num)
+build (rand , depth - 1)
+buildAverage (next , next)
+buildTimes (next , next)
+buildThresh (next , next , next , next)
+buildGauss (next , next , next)
+buildTimes (next , next)
+buildThresh (next , next , next , next)
+buildGauss (next , next , next)
+buildTimes (next , next)
+buildThresh (next , next , next , next)
+buildGauss (next , next , next)
+addHelp (count + 1 , addNum n)
+assoc (d , k , t)
+assoc (d , k , t)
+assoc (d , k , t)
+assoc (d , k , t)
+rand (0 , 2)
+rand (2 , 7)
+rand (0 , 2)
+rand (2 , 7)
+eval (e2 , x , y)
+wwhile (fx , b)
+wwhile (fx , b)
+wwhile (fx , b)
+wwhile (fx , b)
+wwhile (f , fst (f b))
+wwhile (f , b')
+cloneHelper (x , n - 1 , x :: acc)
+cloneHelper (x , n , [])
+cloneHelper (x , n , [])
+cloneHelper (x , n - 1 , x :: acc)
+cloneHelper (x , n - 1 , x :: acc)
+cloneHelper (x , n , [])
+build (rand , depth - 1)
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+wwhile (g , b)
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+eval (e2 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e , x , y)
+eval (e , x , y)
+build (rand , depth)
+build (rand , depth)
+build (rand , depth)
+rand (0 , 1)
+buildTimes (build (rand , depth) , build (rand , depth))
+buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+build (rand , depth)
+build (rand , depth)
+build (rand , depth)
+rand (0 , 1)
+buildTimes (build (rand , depth) , build (rand , depth))
+buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+buildTimes (build (rand , depth) , build (rand , depth))
+buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
+build (rand , depth)
+build (rand , depth)
+build (rand , depth)
+build (rand , depth)
+reverse (t , h :: y)
+eval (Average (e1 , e2) , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e3 , x , y)
+eval (e3 , x , y)
+eval (e , x , y)
+eval (e , x , y)
+eval (e , x , y)
+wwhile (g , b)
+wwhile (g , b)
+wwhile (g , b)
+wwhile (g , b)
+wwhile (g , b)
+wwhile (g , b)
+wwhile (g , f b)
+wwhile (g , f b)
+rand (0 , 2)
+rand (0 , 5)
+wwhile (f , b)
+eval (a , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (a , x , y)
+buildThresh (a , b , c , d)
+buildTimes (a , b)
+buildAverage (a , b)
+buildThresh (a , b , c , d)
+buildTimes (a , b)
+buildAverage (a , b)
+buildThresh (a , b , c , d)
+buildTimes (a , b)
+buildAverage (a , b)
+buildThresh (a , b , c , d)
+buildTimes (a , b)
+buildAverage (a , b)
+buildTimes (a , b)
+buildAverage (a , b)
+eval (s1 , x , y)
+eval (a , x , y)
+eval (a , x , y)
+eval (a , x , y)
+eval (b , x , y)
+eval (c , x , y)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+eval (x1 , x , y)
+assoc (d , k , ls)
+assoc (d , k , ls)
+assoc (d , k , ls)
+build (rand , depth - 1)
+build (rand , depth - 1)
+eval (u , x , y)
+eval (u , x , y)
+wwhile (f , b')
+rand (0 , 100)
+rand (0 , 100)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+rand (0 , 1)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+rand (1 , 4)
+rand (0 , 1)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+rand (1 , 4)
+rand (0 , 1)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+rand (1 , 4)
+rand (0 , 1)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+makeRand (10 , 39)
+rand (1 , 4)
+eval (e' , x , y)
+eval (e' , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e' , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e' , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e' , x , y)
+wwhile (f , b')
+eval (b , x , y)
+buildAverage (build (rand , depth - 2) , build (rand , depth - 2))
+build (rand , depth - 2)
+build (rand , depth - 2)
+build (rand , depth - 2)
+build (rand , depth - 4)
+buildTimes (build (rand , depth - 2) , build (rand , depth - 2))
+build (rand , depth - 2)
+build (rand , depth - 4)
+build (rand , depth - 4)
+rand (0 , 4)
+build (rand , depth - 2)
+build (rand , depth - 2)
+rand (0 , 4)
+eval (e0 , x , y)
+eval (e1 , x , y)
+eval (e1 , x , y)
+build (rand , depth - (depth - 1))
+buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+build (rand , depth - 1)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e3 , x , y)
+eval (e4 , x , y)
+build (rand , depth - 1)
+build (rand , depth - 1)
+build (rand , depth - 1)
+buildSpecial2 (build (rand , depth - 1) , build (rand , depth - 1))
+build (rand , depth - 1)
+build (rand , depth - 1)
+eval (ex , x , y)
+eval (ex , x , y)
+eval (ex , x , y)
+buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+rand (0 , 2)
+rand (0 , 2)
+rand (0 , 2)
+eval (ex , x , y)
+helper (h :: seen , t)
+helper (h :: seen , t)

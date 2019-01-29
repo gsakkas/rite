@@ -1,65 +1,22 @@
 
-let rec wwhile (f,b) =
-  let (x,y) = f b in if y = false then x else wwhile (f, x);;
-
-let fixpoint (f,b) =
-  wwhile (if (f b) = b then (b, false) else (((f b), true), b));;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> tl :: (listReverse hd);;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (x,y) = f b in if y then wwhile (f, x) else x;;
-
-let fixpoint (f,b) =
-  wwhile (let g b = ((f b), (if (f b) = b then false else true)) in (g, b));;
+let rec listReverse l =
+  match l with | [] -> [] | hd::tl -> hd :: (listReverse tl);;
 
 *)
 
 (* changed spans
-(5,14)-(6,63)
-x
+(3,38)-(3,40)
+hd
 VarG
 
-(6,9)-(6,63)
-f
+(3,57)-(3,59)
+tl
 VarG
-
-(6,9)-(6,63)
-b
-VarG
-
-(6,9)-(6,63)
-fun b ->
-  (f b , if f b = b
-         then false
-         else true)
-LamG (TupleG (fromList [EmptyG]))
-
-(6,9)-(6,63)
-f b
-AppG (fromList [VarG])
-
-(6,9)-(6,63)
-let g =
-  fun b ->
-    (f b , if f b = b
-           then false
-           else true) in
-(g , b)
-LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(6,9)-(6,63)
-(f b , if f b = b
-       then false
-       else true)
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
-
-(6,60)-(6,61)
-g
-VarG
-
-(6,60)-(6,61)
-(g , b)
-TupleG (fromList [VarG])
 
 *)

@@ -11,13 +11,13 @@ type expr =
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> x
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> float x
+    | VarY  -> float y
+    | Sine p1 -> sin (pi *. (evalhelper p1))
+    | Cosine p1 -> cos (pi *. (evalhelper p1)) in
+  evalhelper e x y;;
 
 
 (* fix
@@ -34,19 +34,39 @@ type expr =
 let pi = 4.0 *. (atan 1.0);;
 
 let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> x
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+  let rec evalhelper e x y =
+    match e with
+    | VarX  -> x
+    | VarY  -> y
+    | Sine p1 -> sin (pi *. (evalhelper p1 x y))
+    | Cosine p1 -> cos (pi *. (evalhelper p1 x y)) in
+  evalhelper e x y;;
 
 *)
 
 (* changed spans
-(19,67)-(19,68)
-2.0
-LitG
+(18,28)-(18,43)
+evalhelper p1 x y
+AppG (fromList [VarG])
+
+(19,19)-(19,46)
+x
+VarG
+
+(19,19)-(19,46)
+y
+VarG
+
+(19,30)-(19,45)
+evalhelper p1 x y
+AppG (fromList [VarG])
+
+(20,2)-(20,18)
+x
+VarG
+
+(20,2)-(20,18)
+y
+VarG
 
 *)

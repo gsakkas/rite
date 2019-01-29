@@ -1,28 +1,93 @@
 
-let rec add current next =
-  match current with | [] -> [next] | front::back -> front (add back next);;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) add [n mod 10];;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x',x'') = x in
+      let (c,s) = a in
+      if (List.length s) = ((List.length l1) - 1)
+      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
+      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (l1',a') = x in
+    match a with | [] -> (l1', a') | h::t -> bigAdd (mulByDigit (h l1') a') in
+  let base = (l1, [0]) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec add current next =
-  match current with | [] -> [next] | front::back -> front :: (add back next);;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else add (digitsOfInt (n / 10)) (n mod 10);;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x',x'') = x in
+      let (c,s) = a in
+      if (List.length s) = ((List.length l1) - 1)
+      then (c, ((((c + x') + x'') / 10) :: (((c + x') + x'') mod 10) :: s))
+      else ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i > 0 then bigAdd l (mulByDigit (i - 1) l) else [0];;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with | (l1',a') -> (l1', (bigAdd (mulByDigit x l1') a')) in
+  let base = (l1, []) in
+  let args = List.rev l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(3,53)-(3,74)
-front :: (add back next)
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
+(32,4)-(32,75)
+match a with
+| (l1' , a') -> (l1' , bigAdd (mulByDigit x
+                                          l1') a')
+CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
 
-(6,25)-(6,47)
-add
+(32,45)-(32,75)
+bigAdd (mulByDigit x l1') a'
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(32,65)-(32,66)
+x
 VarG
+
+(33,19)-(33,20)
+[]
+ListG EmptyG Nothing
 
 *)

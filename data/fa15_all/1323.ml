@@ -1,26 +1,28 @@
 
-let sqsum xs =
-  let f a x = match x with | [] -> a | x::t -> x * x in
-  let base = [] in List.fold_left f base xs;;
+let pipe fs = let f a x = fs a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = match x with | 0 -> a | x -> x * x in
-  let base = 0 in List.fold_left f base xs;;
+let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,14)-(3,52)
-match x with
-| 0 -> a
-| x -> x * x
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG)])
+(2,14)-(2,74)
+fun y ->
+  (let f =
+     fun a -> fun x -> x a in
+   let base = y in
+   List.fold_left f base fs)
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(4,13)-(4,15)
-0
-LitG
+(2,26)-(2,28)
+x
+VarG
+
+(2,45)-(2,46)
+y
+VarG
 
 *)

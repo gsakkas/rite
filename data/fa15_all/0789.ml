@@ -1,30 +1,103 @@
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0 then n else append (digitsOfInt (n / 10) [n mod 10]);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) / 2.0)
+  | Op2 (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Op1 of expr
+  | Op2 of expr* expr* expr;;
 
-let rec digitsOfInt n =
-  if n <= 0 then [n] else append (digitsOfInt (n / 10)) [n mod 10];;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e -> sin (pi *. (eval (e, x, y)))
+  | Cosine e -> cos (pi *. (eval (e, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Op1 e ->
+      (tan (pi *. (eval (e, x, y)))) -.
+        ((tan (pi *. (eval (e, x, y)))) /. 2.0)
+  | Op2 (e1,e2,e3) ->
+      if (eval (e1, x, y)) > (eval (e2, x, y))
+      then eval (e3, x, y)
+      else (eval (e1, x, y)) -. (eval (e2, x, y));;
 
 *)
 
 (* changed spans
-(5,17)-(5,18)
-[n]
-ListG VarG Nothing
+(16,2)-(33,26)
+match e with
+| VarX -> x
+| VarY -> y
+| Sine e -> sin (pi *. eval (e , x , y))
+| Cosine e -> cos (pi *. eval (e , x , y))
+| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
+| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
+                                then eval (e3 , x , y)
+                                else eval (e4 , x , y)
+| Op1 e -> tan (pi *. eval (e , x , y)) -. (tan (pi *. eval (e , x , y)) /. 2.0)
+| Op2 (e1 , e2 , e3) -> if eval (e1 , x , y) > eval (e2 , x , y)
+                        then eval (e3 , x , y)
+                        else eval (e1 , x , y) -. eval (e2 , x , y)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(5,32)-(5,43)
-append
+(29,8)-(29,46)
+tan (pi *. eval (e , x , y)) /. 2.0
+BopG (AppG (fromList [EmptyG])) LitG
+
+(33,11)-(33,26)
+eval (e1 , x , y) -. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(33,17)-(33,19)
+e1
 VarG
-
-(5,32)-(5,43)
-digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
 
 *)

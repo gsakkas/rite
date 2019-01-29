@@ -1,38 +1,28 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat List.map l;;
+let pipe fs = let f a x = a x in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "; " (List.map f l);;
+let pipe fs y = let f a x = x a in let base = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(9,33)-(9,41)
-List.map f l
-AppG (fromList [VarG])
+(2,14)-(2,73)
+fun y ->
+  (let f =
+     fun a -> fun x -> x a in
+   let base = y in
+   List.fold_left f base fs)
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(9,33)-(9,41)
-"; "
-LitG
+(2,33)-(2,73)
+a
+VarG
 
-(9,42)-(9,43)
-f
+(2,44)-(2,45)
+y
 VarG
 
 *)

@@ -1,28 +1,26 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (let h x = (f, ((f x) = x)) in (h, b));;
+let pipe fs =
+  let f a x g = a (x g) in
+  let base = match fs with | [] -> (fun x  -> x) | h::t -> f t h in
+  List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) = wwhile (let h x = ((f x), ((f x) != x)) in (h, b));;
+let pipe fs =
+  let f a x g = a (x g) in
+  let base = match fs with | [] -> (fun x  -> x) | h::t -> f (fun x  -> x) h in
+  List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(4,40)-(4,41)
-f x
-AppG (fromList [VarG])
+(4,61)-(4,62)
+fun x -> x
+LamG VarG
 
-(4,43)-(4,54)
+(4,63)-(4,64)
 x
 VarG
-
-(4,44)-(4,49)
-f x <> x
-BopG (AppG (fromList [EmptyG])) VarG
 
 *)

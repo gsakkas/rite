@@ -1,72 +1,29 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) + (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) * (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(19,23)-(19,62)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
+(2,47)-(2,69)
+(n mod 10) :: (digitsOfInt (n / 10))
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
 
-(19,24)-(19,41)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(2,48)-(2,68)
+n
+VarG
 
-(20,21)-(20,38)
-eval (e1 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(2,48)-(2,68)
+n mod 10
+BopG VarG LitG
 
-(20,21)-(20,58)
-2.0
+(2,48)-(2,68)
+10
 LitG
 
 *)

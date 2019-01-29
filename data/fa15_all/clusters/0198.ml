@@ -1,6 +1,7 @@
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
-match depth with
-| 0 -> if true
-       then buildX ()
-       else buildY ()
-| n -> buildSine (build (rand , depth - 1))
+CaseG VarG (fromList [(Nothing,LamG EmptyG),(Nothing,AppG (fromList [EmptyG]))])
+match fs with
+| h :: t -> f h h
+| [] -> fun x -> x
+match fs with
+| [] -> fun x -> x
+| h :: t -> f (fun x -> x) h

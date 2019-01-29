@@ -1,22 +1,22 @@
 
-let pipe fs =
-  let f a x = match fs with | x::y -> x in
-  let base = f in List.fold_left f base fs;;
+let rec sumList xs =
+  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList List.tl xs);;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
+let rec sumList xs =
+  match xs with | [] -> 0 | xs -> (List.hd xs) + (sumList (List.tl xs));;
 
 *)
 
 (* changed spans
-(4,13)-(4,14)
-fun y -> y
-LamG VarG
+(3,49)-(3,69)
+sumList (List.tl xs)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(4,18)-(4,42)
-y
-VarG
+(3,58)-(3,65)
+List.tl xs
+AppG (fromList [VarG])
 
 *)

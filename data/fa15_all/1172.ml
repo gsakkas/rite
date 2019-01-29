@@ -1,205 +1,47 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Funny of expr* expr* expr
-  | Funny1 of expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildFunny (c,d,e) = Funny (c, d, e);;
-
-let buildFunny1 f = Funny1 f;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (0, 8) with
-  | 0 -> if (rand (0, 2)) = 0 then buildX () else buildY ()
-  | 1 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildSine (build (rand, (depth - 1)))
-  | 2 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildFunny (build (rand, (depth - 1)))
-  | 7 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildFunny1 (build (rand, (depth - 1)));;
+let rec listReverse l =
+  let a = [] in
+  let rec get a = match a with | [] -> [] | x::xs -> [get xs; x] in get l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Funny of expr* expr* expr
-  | Funny1 of expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildFunny (c,d,e) = Funny (c, d, e);;
-
-let buildFunny1 f = Funny1 f;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (0, 8) with
-  | 0 -> if (rand (0, 2)) = 0 then buildX () else buildY ()
-  | 1 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildSine (build (rand, (depth - 1)))
-  | 2 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildCosine (build (rand, (depth - 1)))
-  | 3 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 4 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else
-        buildFunny
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))))
-  | 7 ->
-      if depth = 0
-      then (if (rand (0, 2)) = 0 then buildX () else buildY ())
-      else buildFunny1 (build (rand, (depth - 1)));;
+let rec listReverse l =
+  let rec getList a b = match a with | [] -> [] in getList [] l;;
 
 *)
 
 (* changed spans
-(63,22)-(63,49)
-(build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [AppG (fromList [EmptyG])])
+(4,2)-(4,73)
+let rec getList =
+  fun a ->
+    fun b ->
+      match a with
+      | [] -> [] in
+getList [] l
+LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
 
-(65,6)-(67,50)
-build
+(4,18)-(4,64)
+fun b ->
+  match a with
+  | [] -> []
+LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(4,24)-(4,25)
+match a with
+| [] -> []
+CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
+
+(4,68)-(4,71)
+getList [] l
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(4,72)-(4,73)
+getList
 VarG
 
-(65,6)-(67,50)
-rand
-VarG
-
-(65,6)-(67,50)
-depth
-VarG
-
-(65,6)-(67,50)
-build
-VarG
-
-(65,6)-(67,50)
-rand
-VarG
-
-(65,6)-(67,50)
-depth
-VarG
-
-(65,6)-(67,50)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(65,6)-(67,50)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(65,6)-(67,50)
-depth - 1
-BopG VarG LitG
-
-(65,6)-(67,50)
-depth - 1
-BopG VarG LitG
-
-(65,6)-(67,50)
-1
-LitG
-
-(65,6)-(67,50)
-1
-LitG
-
-(65,6)-(67,50)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(65,6)-(67,50)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
+(4,72)-(4,73)
+[]
+ListG EmptyG Nothing
 
 *)

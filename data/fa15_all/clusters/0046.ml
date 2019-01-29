@@ -1,44 +1,48 @@
-AppG (fromList [VarG,LitG])
-clone 0 absNumZeros
-clone 0 absNumZeros
-clone 0 absNumZeros
-clone 0 absNumZeros
-clone 0 absNumZeros
-clone 0 absNumZeros
-clone 0 absNumZeros
-sepConcat "; " newList
-sepConcat "; " newList
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 diff
-clone 0 n
-itt y' 0
-itt y' 0
-clone 0 n
-clone 0 n
-clone 0 z
-clone 0 z
-clone 0 difference2
-clone 0 difference1
-sepConcat "; " l
-sepConcat "; " l
-sepConcat "; " l
-sepConcat "; " l
-sepConcat "; " l
-sepConcat " " l
-sepConcat " " l
-sepConcat " " l
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((c + x') + x'') mod 10) :: s
+(((o + x1) + x2) mod 10) :: z
+(((o + x1) + x2) mod 10) :: z
+(((o + x1) + x2) mod 10) :: z
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((add1 + add2) + carry) mod 10) :: rest
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((i + j) + s) mod 10) :: t
+(((c + x1) + x2) mod 10) :: ds

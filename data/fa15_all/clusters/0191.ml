@@ -1,2 +1,11 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) LitG]))) Nothing
-((fst x + snd x) mod 10) :: a
+TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)

@@ -1,9 +1,10 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-match y with
-| [] -> x
-| h :: t -> (let z = h :: x in
-             append (z , t))
-match y with
-| [] -> x
-| h :: t -> (let z = h :: x in
-             append (z , t))
+IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) LitG
+if addit > 10
+then addit mod 10
+else 0
+if addit > 10
+then addit mod 10
+else 0
+if addit > 10
+then addit mod 10
+else 0

@@ -1,20 +1,34 @@
 
-let rec clone x n = if n = 0 then [] else x :: (clone ((x n) - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sl in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ";") ^ ([List.map (f l)] ^ "]"));;
 
 
 (* fix
 
-let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(2,47)-(2,66)
-clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+(7,30)-(7,32)
+t
+VarG
 
-(2,58)-(2,59)
-n - 1
-BopG VarG LitG
+(9,30)-(9,45)
+sepConcat ";" (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)

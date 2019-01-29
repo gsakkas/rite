@@ -1,86 +1,62 @@
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (place,res) = a in
-    if place <= 0
-    then ((place + 1), (res + (mulByDigit l2 a)))
-    else ((place + 1), (mulByDigit ((x * 10) * place) res)) in
-  let base = (0, []) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e' (e', x, y))))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else List.append [x] (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let x = List.length l1 in
-  let y = List.length l2 in
-  if x > y
-  then (l1, (List.append (clone 0 (x - y)) l2))
-  else if x < y then ((List.append (clone 0 (y - x)) l1), l2) else (l1, l2);;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (lh1,lh2) = x in
-      let (carry,res) = a in
-      let num = (lh1 + lh2) + carry in ((num / 10), ((num mod 10) :: res)) in
-    let base = (0, []) in
-    let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
-
-let bigMul l1 l2 =
-  let f a x =
-    let (place,res) = a in
-    if place <= 0
-    then ((place + 1), (mulByDigit x res))
-    else ((place + 1), (mulByDigit ((x * 10) * place) res)) in
-  let base = (0, []) in
-  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e' -> sin (pi *. (eval (e', x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y);;
 
 *)
 
 (* changed spans
-(32,45)-(32,46)
-x
-VarG
+(18,23)-(18,67)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
-(33,9)-(33,59)
-res
-VarG
+(18,66)-(18,67)
+2.0
+LitG
 
 *)

@@ -1,33 +1,29 @@
 
-let pipe fs = let f a x d = x a in let base = 0 in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  if n > 10 then [digitsOfInt (n / 10); n mod 10] else n;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base i = i in List.fold_left f base fs;;
+let rec digitsOfInt n = if n >= 100 then [n mod 10] else [n];;
 
 *)
 
 (* changed spans
-(2,24)-(2,31)
-fun y -> x (a y)
-LamG (AppG (fromList [EmptyG]))
+(3,30)-(3,38)
+n >= 100
+BopG VarG LitG
 
-(2,30)-(2,31)
-a y
-AppG (fromList [VarG])
+(3,35)-(3,37)
+100
+LitG
 
-(2,35)-(2,75)
-y
-VarG
+(3,40)-(3,48)
+[n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
-(2,46)-(2,47)
-fun i -> i
-LamG VarG
-
-(2,51)-(2,75)
-i
-VarG
+(3,55)-(3,56)
+[n]
+ListG VarG Nothing
 
 *)

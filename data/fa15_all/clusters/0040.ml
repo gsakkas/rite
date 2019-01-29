@@ -1,52 +1,53 @@
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-mulByDigit (i - 1) l
-clone x (n - 1)
-clone x (n - 1)
-cloneHelper x (n - 1)
-cloneHelper x (n - 1)
-clone x (n - 1)
-clone x (n - 1)
-clone x (n - 1)
-clone x (n - 1)
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-clone x (n - 1)
-count (acc + 1) n
-clone x (n - 1)
-clone x (n - 1)
-clone x (n - 1)
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (o * x) l1
-mulByDigit (place * 10) l1
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l'
-mulByDigit (i - 1) l'
-mulByDigit (i - 1) l'
-mulByDigit (i - 1) l'
-appZero (x - 1) l
-clone x (n - 1)
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-mulByDigit (i - 1) l
-clone x (n - 1)
-clone x (n - 1)
-clone x (n - 1)
+TupleG (fromList [ListG EmptyG Nothing])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([] , [])
+([x + 1] , [x + 1])
+([x + 1] , [x + 1])
+([0] , [0])
+([0] , [0])
+([0] , [0])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])
+([] , [])

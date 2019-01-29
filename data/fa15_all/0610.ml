@@ -1,25 +1,21 @@
 
-let rec clone x n = if n > 0 then List.append [x] (clone x (n - 1)) else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let padZero l1 l2 =
-  ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1),
-    (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | _ -> let h::t = l in (match h with | 0 -> removeZero t | _ -> l);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
-    let f a x =
-      let (a1,a2) = a in
-      match x with
-      | [] -> if a1 = 0 then [] else [a1]
-      | (x1,x2)::t ->
-          let value = (a1 + x1) + x2 in
-          if value > 9 then (value - 10) :: a else value :: a in
-    let base = [] in
+    let f a x c =
+      let (s,t) = x in
+      let sum = (c + s) + t in ((sum / 10), (sum mod 10)) :: a in
+    let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
   removeZero (add (padZero l1 l2));;
@@ -27,24 +23,23 @@ let bigAdd l1 l2 =
 
 (* fix
 
-let rec clone x n = if n > 0 then List.append [x] (clone x (n - 1)) else [];;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let padZero l1 l2 =
-  ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1),
-    (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
+let rec padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 let rec removeZero l =
-  match l with
-  | [] -> []
-  | _ -> let h::t = l in (match h with | 0 -> removeZero t | _ -> l);;
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
 let bigAdd l1 l2 =
   let add (l1,l2) =
     let f a x =
-      let (a1,a2) = a in
-      let (x1,x2) = x in
-      let val1 = (a1 + x1) + x2 in
-      let val2 = (x1 + x2) / 10 in (val2, (val1 :: a2)) in
+      let (x',x'') = x in
+      let (c,s) = a in
+      ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s)) in
     let base = (0, []) in
     let args = List.rev (List.combine l1 l2) in
     let (_,res) = List.fold_left f base args in res in
@@ -53,62 +48,63 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,6)-(21,61)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,10)-(21,61)
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(21,29)-(21,34)
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(21,37)-(21,39)
-x1
+(16,6)-(17,62)
+a
 VarG
 
-(21,37)-(21,39)
-x2
-VarG
-
-(21,37)-(21,39)
-x1 + x2
-BopG VarG VarG
-
-(21,37)-(21,39)
-(x1 + x2) / 10
+(16,6)-(17,62)
+((c + x') + x'') / 10
 BopG (BopG EmptyG EmptyG) LitG
 
-(21,44)-(21,45)
-(val2 , val1 :: a2)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+(16,6)-(17,62)
+let (x' , x'') = x in
+let (c , s) = a in
+(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(21,51)-(21,61)
-val2
+(16,6)-(17,62)
+(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+
+(17,6)-(17,62)
+let (c , s) = a in
+(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+
+(17,31)-(17,57)
+x''
 VarG
 
-(21,60)-(21,61)
-val1
+(17,32)-(17,42)
+(((c + x') + x'') mod 10) :: s
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
+
+(17,33)-(17,36)
+x'
 VarG
 
-(22,4)-(24,51)
-a2
+(17,39)-(17,41)
+c
 VarG
 
-(22,15)-(22,17)
-0
-LitG
+(17,39)-(17,41)
+x'
+VarG
 
-(22,15)-(22,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+(17,39)-(17,41)
+x''
+VarG
+
+(17,39)-(17,41)
+c + x'
+BopG VarG VarG
+
+(17,45)-(17,48)
+(c + x') + x''
+BopG (BopG EmptyG EmptyG) VarG
+
+(17,61)-(17,62)
+s
+VarG
 
 *)

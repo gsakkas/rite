@@ -1,30 +1,35 @@
 
-let pipe fs =
-  let f a x n = n (a x) in let base = f in List.fold_left f base fs;;
+let sqsum xs =
+  let f a x = a + (x ** 2) in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
+let sqsum xs =
+  let f a x = a + (int_of_float ((float_of_int x) ** 2.0)) in
+  let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(3,16)-(3,17)
-x
+(3,18)-(3,26)
+int_of_float
 VarG
 
-(3,21)-(3,22)
-n
+(3,18)-(3,26)
+int_of_float (float_of_int x ** 2.0)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(3,19)-(3,20)
+float_of_int
 VarG
 
-(3,38)-(3,39)
-fun f -> 0
-LamG LitG
+(3,19)-(3,20)
+float_of_int x
+AppG (fromList [VarG])
 
-(3,43)-(3,67)
-0
+(3,24)-(3,25)
+2.0
 LitG
 
 *)

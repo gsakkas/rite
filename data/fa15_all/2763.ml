@@ -1,59 +1,34 @@
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
-
-let rec mulByDigit i l =
-  match i with
-  | i -> []
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
   | h::t ->
-      if (List.length t) = 0
-      then [h * i] @ (mulByDigit i t)
-      else (remainder i h) :: (mulByDigit i t);;
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat ";" List.map f l;;
 
 
 (* fix
 
-let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec mulByDigit i l =
-  match i with
-  | i -> []
-  | _ ->
-      (match l with
-       | [] -> []
-       | h::t ->
-           if (List.length t) = 0
-           then [h * i] @ (mulByDigit i t)
-           else (remainder i h) :: (mulByDigit i t));;
+let stringOfList f l = sepConcat ";" (List.map f l);;
 
 *)
 
 (* changed spans
-(5,2)-(10,46)
-match i with
-| i -> []
-| _ -> match l with
-       | [] -> []
-       | h :: t -> if List.length t = 0
-                   then [h * i] @ mulByDigit i t
-                   else (remainder i
-                                   h) :: (mulByDigit i t)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
+(9,23)-(9,49)
+sepConcat ";" (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(8,6)-(10,46)
-l
-VarG
-
-(8,6)-(10,46)
-match l with
-| [] -> []
-| h :: t -> if List.length t = 0
-            then [h * i] @ mulByDigit i t
-            else (remainder i
-                            h) :: (mulByDigit i t)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-
-(8,6)-(10,46)
-[]
-ListG EmptyG Nothing
+(9,37)-(9,45)
+List.map f l
+AppG (fromList [VarG])
 
 *)

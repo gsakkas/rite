@@ -1,38 +1,76 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let ll1 = List.length l1
-  and ll2 = List.length l2 in
-  if ll1 > ll2
-  then (l1, (((clone 0 ll1) - ll2) @ l2))
-  else (((clone ((0 ll2) - ll1)) @ l1), l2);;
+let pipe fs =
+  let f a x a x n = x a in let base = 0 in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let ll1 = List.length l1
-  and ll2 = List.length l2 in
-  if ll1 > ll2
-  then (l1, ((clone 0 (ll1 - ll2)) @ l2))
-  else (((clone 0 (ll2 - ll1)) @ l1), l2);;
+let pipe fs =
+  let f a x g b y n = match n with | [] -> n | _ -> y b in
+  let base = f 0 [] in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(8,23)-(8,26)
-ll1 - ll2
-BopG VarG VarG
+(3,14)-(3,23)
+fun g ->
+  fun b ->
+    fun y ->
+      fun n ->
+        match n with
+        | [] -> n
+        | _ -> y b
+LamG (LamG EmptyG)
 
-(9,9)-(9,32)
-clone 0 (ll2 - ll1)
-AppG (fromList [BopG EmptyG EmptyG,LitG])
+(3,16)-(3,23)
+fun b ->
+  fun y ->
+    fun n ->
+      match n with
+      | [] -> n
+      | _ -> y b
+LamG (LamG EmptyG)
 
-(9,20)-(9,23)
-ll2 - ll1
-BopG VarG VarG
+(3,16)-(3,23)
+fun y ->
+  fun n ->
+    match n with
+    | [] -> n
+    | _ -> y b
+LamG (LamG EmptyG)
+
+(3,20)-(3,23)
+n
+VarG
+
+(3,20)-(3,23)
+n
+VarG
+
+(3,20)-(3,23)
+match n with
+| [] -> n
+| _ -> y b
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+
+(3,22)-(3,23)
+y
+VarG
+
+(3,27)-(3,67)
+b
+VarG
+
+(3,38)-(3,39)
+f
+VarG
+
+(3,38)-(3,39)
+f 0 []
+AppG (fromList [LitG,ListG EmptyG Nothing])
+
+(3,43)-(3,67)
+[]
+ListG EmptyG Nothing
 
 *)

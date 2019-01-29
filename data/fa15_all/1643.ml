@@ -1,100 +1,86 @@
 
-let fpHelper (f,x,y) =
-  let n = f x in match n with | y -> (n, false) | _ -> (n, false);;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in
-  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile ((fpHelper (f, b)), b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine u -> sin (pi *. (eval (u, x, y)))
+  | Cosine u -> cos (pi *. (eval (u, x, y)))
+  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
+  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
+  | Thresh (s,t,u,v) ->
+      if (eval (s, x, y)) < (eval (t, x, y))
+      then eval (u, x, y)
+      else eval (v, x, y)
+  | Halve u -> (eval (u, x, y)) /. 2
+  | Wow (u,v,w) ->
+      sqrt
+        (((abs (eval (u, x, y))) *. (abs (eval (v, x, y)))) *.
+           (abs (eval (w, x, y))));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Halve of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Wow of expr* expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let helper x = let y = f x in if y = x then (y, false) else (y, true) in
-      helper), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine u -> sin (pi *. (eval (u, x, y)))
+  | Cosine u -> cos (pi *. (eval (u, x, y)))
+  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
+  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
+  | Thresh (s,t,u,v) ->
+      if (eval (s, x, y)) < (eval (t, x, y))
+      then eval (u, x, y)
+      else eval (v, x, y)
+  | Halve u -> (eval (u, x, y)) /. 2.0
+  | Wow (u,v,w) ->
+      sqrt
+        (((abs_float (eval (u, x, y))) *. (abs_float (eval (v, x, y)))) *.
+           (abs_float (eval (w, x, y))));;
 
 *)
 
 (* changed spans
-(9,29)-(9,46)
-fun x ->
-  (let y = f x in
-   if y = x
-   then (y , false)
-   else (y , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(9,29)-(9,46)
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(9,29)-(9,46)
-let y = f x in
-if y = x
-then (y , false)
-else (y , true)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
-
-(9,43)-(9,44)
-x
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-x
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-helper
-VarG
-
-(9,48)-(9,49)
-y = x
-BopG VarG VarG
-
-(9,48)-(9,49)
-false
+(27,35)-(27,36)
+2.0
 LitG
 
-(9,48)-(9,49)
-true
-LitG
+(30,11)-(30,14)
+abs_float
+VarG
 
-(9,48)-(9,49)
-if y = x
-then (y , false)
-else (y , true)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+(30,37)-(30,40)
+abs_float
+VarG
 
-(9,48)-(9,49)
-(y , false)
-TupleG (fromList [VarG,LitG])
-
-(9,48)-(9,49)
-(y , true)
-TupleG (fromList [VarG,LitG])
+(31,12)-(31,15)
+abs_float
+VarG
 
 *)

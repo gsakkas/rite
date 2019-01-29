@@ -1,30 +1,38 @@
 
-let rec digitsOfInt n =
-  let m = n in if n < 0 then [] else [digitsOfInt (m / 10); n mod 10];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen @ [h] in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem h seen) = false then seen @ [h] else seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(3,37)-(3,69)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(3,38)-(3,58)
-(@)
+(7,20)-(7,54)
+seen
 VarG
 
-(3,51)-(3,52)
-n
-VarG
+(7,23)-(7,38)
+List.mem h seen = false
+BopG (AppG (fromList [EmptyG])) LitG
 
-(3,60)-(3,68)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(7,44)-(7,54)
+false
+LitG
 
 *)

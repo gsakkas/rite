@@ -1,22 +1,16 @@
 
-let rec assoc (d,k,l) =
-  match k with
-  | [] -> d
-  | (k',d')::t -> if k = k' then d' else assoc (d, k, t);;
+let rec listReverse l = match l with | [] -> [] | a::b -> listReverse [a] b;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match l with
-  | [] -> d
-  | (k',d')::t -> if k = k' then d' else assoc (d, k, t);;
+let rec listReverse l = match l with | [] -> [] | a::b -> listReverse [a];;
 
 *)
 
 (* changed spans
-(3,8)-(3,9)
-l
-VarG
+(2,58)-(2,75)
+listReverse [a]
+AppG (fromList [ListG EmptyG Nothing])
 
 *)

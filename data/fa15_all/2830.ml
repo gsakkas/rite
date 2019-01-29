@@ -1,16 +1,20 @@
 
-let pipe fs = let f a x a x = a in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f, b);;
 
 
 (* fix
 
-let pipe fs = let f a x = x in let base x = x in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let rec helper (b',c') = if c' = true then helper (f b') else b' in
+  helper (f b);;
 
 *)
 
 (* changed spans
-(2,30)-(2,31)
-x
-VarG
+(4,9)-(4,15)
+f b
+AppG (fromList [VarG])
 
 *)
