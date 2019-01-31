@@ -263,7 +263,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
             | null (ss' `intersect` cs) -> return []
             | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
             >>= concat
-  let cls = map (\c -> ((show c) : map snd (filter (\(x, _) -> x == c) elems))) clusters
+  let cls = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
   let sorted_cls = sortOn (DO.Down . length) cls
   -- Keep only top N clusters as templates for ML labels
@@ -302,7 +302,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         let labels = map in_cluster $ thd3 $ unzip3 ss
         -- print $ length labels
         -- print $ take 1 features
-        let new_features = map (\(x, y) -> HashMap.union x y) $ zip labels features
+        let new_features = zipWith HashMap.union labels features
         LBSC.writeFile path $ encodeByName new_header new_features
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
@@ -362,7 +362,7 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
             | null (ss' `intersect` cs) -> return []
             | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
             >>= concat
-  let cls = map (\c -> ((show c) : map snd (filter (\(x, _) -> x == c) elems))) clusters
+  let cls = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
   let sorted_cls = sortOn (DO.Down . length) cls
   let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [0..]
@@ -399,7 +399,7 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
         let labels = map in_cluster $ thd3 $ unzip3 ss
         -- print $ length labels
         -- print $ take 1 features
-        let new_features = map (\(x, y) -> HashMap.union x y) $ zip labels features
+        let new_features = zipWith HashMap.union labels features
         LBSC.writeFile path $ encodeByName new_header new_features
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
@@ -585,7 +585,7 @@ sizeOfTree e depth = case e of
   UopG e' -> sizeOfTree e' (depth + 1)
   LitG -> depth + 1
   LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
-  IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
+  IteG e1 e2 e3 -> maximum [sizeOfTree e1 (depth + 1), sizeOfTree e2 (depth + 1), sizeOfTree e3 (depth + 1)]
   SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
   CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
   TupleG es -> safeMaximum es depth
@@ -668,7 +668,7 @@ runTFeaturesDiff fs (ls, bad)
     = ["F-InSlice" .= (0::Double)]
 
   mkTypeOut :: TExpr -> [NamedRecord]
-  mkTypeOut te = ctfold f [] te
+  mkTypeOut = ctfold f []
     where
     f p e acc = (:acc) . namedRecord $
                 ["SourceSpan" .= show (infoSpan (texprInfo e))]
@@ -695,7 +695,7 @@ runTFeaturesTypes fs fix = (header, samples)
   mkfsD _ = mempty
 
   mkTypeOut :: TExpr -> [NamedRecord]
-  mkTypeOut te = ctfold f [] te
+  mkTypeOut = ctfold f []
     where
     f p e acc = (:acc) . namedRecord $
                 map (\(l,c) -> mkLabel l .= c e) preds_tcon
