@@ -1,47 +1,60 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let fixpoint (f,b) = wwhile (let xx = f b in ((xx, (xx = b)), b));;
+let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 (padLength l1 l2)) * l1
+  else (clone 0 (padLength l1 l2)) * l2;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let fixpoint (f,b) =
-  wwhile ((let d x = let xx = f b in (xx, (xx = b)) in d), b);;
+let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 (padLength l1 l2)) l1), l2)
+  else (l1, (List.append (clone 0 (padLength l1 l2)) l2));;
 
 *)
 
 (* changed spans
-(6,28)-(6,65)
-fun x ->
-  (let xx = f b in
-   (xx , xx = b))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+(8,7)-(8,39)
+(List.append (clone 0
+                    (padLength l1 l2)) l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(6,28)-(6,65)
-let d =
-  fun x ->
-    (let xx = f b in
-     (xx , xx = b)) in
-d
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(6,28)-(6,65)
-(let d =
-   fun x ->
-     (let xx = f b in
-      (xx , xx = b)) in
- d , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [EmptyG]) EmptyG])
-
-(6,62)-(6,63)
-d
+(8,8)-(8,13)
+List.append
 VarG
+
+(8,8)-(8,13)
+clone 0 (padLength l1 l2)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,7)-(9,34)
+l1
+VarG
+
+(9,7)-(9,34)
+(l1 , List.append (clone 0
+                         (padLength l1 l2)) l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(9,7)-(9,39)
+l2
+VarG
+
+(9,8)-(9,13)
+List.append
+VarG
+
+(9,8)-(9,13)
+clone 0 (padLength l1 l2)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)

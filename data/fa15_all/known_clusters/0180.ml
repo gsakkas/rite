@@ -1,7 +1,6 @@
-IteG VarG (AppG (fromList [EmptyG])) VarG
-if t
-then wwhile (f , i)
-else i
-if c'
-then wwhile (f , b')
-else b'
+CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
+match l with
+| [] -> []
+| h :: t -> [h]
+match n with
+| 0 -> []

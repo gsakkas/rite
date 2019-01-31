@@ -1,22 +1,16 @@
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile f a;;
+let rec sumList xs = match xs with | [] -> [] | x::xs' -> x + (sumList xs');;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (a,c) -> if not c then a else wwhile (f, a);;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
 *)
 
 (* changed spans
-(3,49)-(3,59)
-wwhile (f , a)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(3,56)-(3,57)
-(f , a)
-TupleG (fromList [VarG])
+(2,43)-(2,45)
+0
+LitG
 
 *)

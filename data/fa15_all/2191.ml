@@ -1,20 +1,30 @@
 
-let rec wwhile (f,b) =
-  let check = f b in
-  match (f, b) with | (x,y) -> if y = false then x else wwhile (f, x);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if (List.mem (h, seen)) = true then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let check = f b in
-  match check with | (x,y) -> if y = false then x else wwhile (f, x);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(4,12)-(4,13)
-check
-VarG
+(7,23)-(7,43)
+List.mem h seen
+AppG (fromList [VarG])
 
 *)

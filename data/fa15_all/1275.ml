@@ -1,50 +1,32 @@
 
-let digitsOfInt n =
-  let rec lastDigit n acc =
-    if n <= 0 then acc else lastDigit (n / 10) ((n mod 10) :: acc) in
-  match n with | _ -> lastDigit n [];;
-
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec additivePersistence n count =
-  match n with
-  | 0 -> count
-  | _ -> additivePersistence ((sumList (digitsOfInt n)) (count + 1));;
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | head::[] -> [head]
+  | head::tail -> [listReverse [tail]; head];;
 
 
 (* fix
 
-let digitsOfInt n =
-  let rec lastDigit n accu =
-    if n <= 0 then accu else lastDigit (n / 10) ((n mod 10) :: accu) in
-  match n with | _ -> lastDigit n [];;
-
-let rec sumList xs = match xs with | [] -> 0 | hd::tl -> hd + (sumList tl);;
-
-let rec additivePersistence n =
-  match n with | 0 -> 0 | _ -> additivePersistence (sumList (digitsOfInt n));;
+let rec listReverse l =
+  match l with
+  | [] -> []
+  | head::[] -> [head]
+  | head::tail -> (listReverse tail) @ [head];;
 
 *)
 
 (* changed spans
-(3,22)-(4,66)
-fun accu ->
-  if n <= 0
-  then accu
-  else lastDigit (n / 10)
-                 ((n mod 10) :: accu)
-LamG (IteG EmptyG EmptyG EmptyG)
+(6,18)-(6,44)
+listReverse tail @ [head]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(4,19)-(4,22)
-accu
+(6,19)-(6,37)
+(@)
 VarG
 
-(4,62)-(4,65)
-accu
-VarG
-
-(11,9)-(11,14)
-0
-LitG
+(6,39)-(6,43)
+[head]
+ListG VarG Nothing
 
 *)

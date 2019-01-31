@@ -1,175 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> let num = rand (1, 10) in if num > 3 then buildX () else buildY ()
-  | 1 ->
-      let num = rand (1, 10) in
-      if (num mod 2) = 0
-      then buildSine (build (rand, (depth - 1)))
-      else buildCosine (build (rand, (depth - 1)))
-  | 2 ->
-      let num = rand (1, 30) in
-      if (num mod 2) == 0
-      then
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (build (rand, (depth - 1))))
-      else
-        buildTimes
-          ((buildCosine (build (rand, (depth - 1)))),
-            (build (rand, (depth - 1))))
-  | 3 ->
-      let num = rand (1, 50) in
-      if (num mod 2) = 0
-      then
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildCosine (build (rand, (depth - 1)))))
-      else
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildSine (build (rand, (depth - 1)))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      let num = rand (1, 10) in
-      if num = 1
-      then buildSine (buildSine (buildSine (build (rand, (depth - 1)))))
-      else
-        if num = 2
-        then
-          buildCosine (buildCosine (buildCosine (build (rand, (depth - 1)))))
-        else
-          if num = 3
-          then buildSine (buildCosine (build (rand, (depth - 1))))
-          else buildCosine (buildSine (build (rand, (depth - 1))))
-  | 6 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 ->
-      buildTimes
-        (buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1)))))
-  | _ -> build (rand, (depth - 1));;
+let fixpoint (f,b) =
+  let funt b = if f b then (1, b) else (1, b) in wwhile (funt, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> let num = rand (1, 10) in if num > 3 then buildX () else buildY ()
-  | 1 ->
-      let num = rand (1, 10) in
-      if (num mod 2) = 0
-      then buildSine (build (rand, (depth - 1)))
-      else buildCosine (build (rand, (depth - 1)))
-  | 2 ->
-      let num = rand (1, 30) in
-      if (num mod 2) == 0
-      then
-        buildTimes
-          ((buildSine (build (rand, (depth - 1)))),
-            (build (rand, (depth - 1))))
-      else
-        buildTimes
-          ((buildCosine (build (rand, (depth - 1)))),
-            (build (rand, (depth - 1))))
-  | 3 ->
-      let num = rand (1, 50) in
-      if (num mod 2) = 0
-      then
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildCosine (build (rand, (depth - 1)))))
-      else
-        buildTimes
-          ((buildAverage
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-            (buildSine (build (rand, (depth - 1)))))
-  | 4 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      let num = rand (1, 10) in
-      if num = 1
-      then buildSine (buildSine (buildSine (build (rand, (depth - 1)))))
-      else
-        if num = 2
-        then
-          buildCosine (buildCosine (buildCosine (build (rand, (depth - 1)))))
-        else
-          if num = 3
-          then buildSine (buildCosine (build (rand, (depth - 1))))
-          else buildCosine (buildSine (build (rand, (depth - 1))))
-  | 6 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 7 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 8 ->
-      buildTimes
-        ((buildAverage
-            ((build (rand, (depth - 1))), (build (rand, (depth - 1))))),
-          (buildSine (build (rand, (depth - 1)))))
-  | _ -> build (rand, (depth - 1));;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, b) else (b, b) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(75,8)-(76,70)
-(buildAverage (build (rand , depth - 1) , build (rand , depth - 1)) , buildSine (build (rand , depth - 1)))
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(77,9)-(77,14)
-buildSine
+(7,27)-(7,33)
+b
 VarG
 
-(77,9)-(77,14)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(7,39)-(7,45)
+b
+VarG
 
 *)

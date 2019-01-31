@@ -1,103 +1,55 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi * x
-  | Cosine e -> pi * y
-  | Average (e1,e2) -> buildAverage (e1, e2);;
+let stringOfList f l = sepConcat List.map (f l);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+let stringOfList f l = "[" ^ ((sepConcat ";" (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(16,2)-(21,44)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> pi *. x
-| Cosine e -> pi *. y
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG)])
-
-(19,14)-(19,20)
-pi *. x
-BopG VarG VarG
-
-(20,16)-(20,22)
-pi *. y
-BopG VarG VarG
-
-(21,23)-(21,44)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(21,23)-(21,44)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(21,36)-(21,44)
-eval
+(9,23)-(9,32)
+(^)
 VarG
 
-(21,37)-(21,39)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(21,41)-(21,43)
-x
+(9,23)-(9,32)
+(^)
 VarG
 
-(21,41)-(21,43)
-y
-VarG
+(9,23)-(9,32)
+sepConcat ";" (List.map f
+                        l) ^ "]"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(21,41)-(21,43)
-eval
-VarG
+(9,23)-(9,32)
+sepConcat ";" (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(21,41)-(21,43)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(9,23)-(9,32)
+"["
+LitG
 
-(21,41)-(21,43)
-(e2 , x , y)
-TupleG (fromList [VarG])
+(9,33)-(9,41)
+List.map f l
+AppG (fromList [VarG])
+
+(9,33)-(9,41)
+";"
+LitG
 
 *)

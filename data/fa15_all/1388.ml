@@ -1,54 +1,68 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0 then (((clone (-1)) * (l l2)), l2) else (l1, (clone l l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> e
+  | VarY  -> e
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<*" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l2), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((exprToString th1) ^
+           ("<*" ^
+              ((exprToString th2) ^
+                 ("?" ^
+                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(6,18)-(6,30)
-clone 0 ((-1) * l) @ l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(6,19)-(6,24)
-(@)
-VarG
-
-(6,19)-(6,24)
-clone 0 ((-1) * l)
-AppG (fromList [BopG EmptyG EmptyG,LitG])
-
-(6,25)-(6,29)
-(-1) * l
-BopG LitG VarG
-
-(6,25)-(6,29)
-0
+(14,13)-(14,14)
+"x"
 LitG
 
-(6,57)-(6,62)
-(@)
-VarG
-
-(6,57)-(6,62)
-clone 0 l
-AppG (fromList [VarG,LitG])
-
-(6,63)-(6,64)
-0
+(15,16)-(15,54)
+"y"
 LitG
 
 *)

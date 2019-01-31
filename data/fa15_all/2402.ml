@@ -1,142 +1,139 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = (fst x) + (snd x) in
-      match a with
-      | h::t -> ((h + carry) / 10) :: ((h + carry) mod 10) :: t
-      | _ -> [carry / 10; carry mod 10] in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w =
+  match explode w with | [] -> true | h::t -> listReverse (explode w);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
-let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
-  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
+let explode s =
+  let rec go i =
+    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
+  go 0;;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+let rec matchHeads w =
+  match w with
+  | [] -> true
+  | h::t -> if h = (List.hd (listReverse w)) then true else false;;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (addend_a,addend_b) ->
-          let new_carry = ((carry + addend_a) + addend_b) / 10 in
-          let digit = ((carry + addend_a) + addend_b) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let palindrome w =
+  match explode w with | [] -> true | h::t -> matchHeads (explode w);;
 
 *)
 
 (* changed spans
-(15,19)-(15,22)
-match a with
-| (x , y) -> x
-CaseG VarG (fromList [(Nothing,VarG)])
-
-(15,23)-(15,24)
-a
+(2,12)-(5,6)
+l
 VarG
 
-(15,29)-(15,32)
-match x with
-| (addend_a , addend_b) -> (let new_carry =
-                              ((carry + addend_a) + addend_b) / 10 in
-                            let digit =
-                              ((carry + addend_a) + addend_b) mod 10 in
-                            match a with
-                            | (x , y) -> (new_carry , digit :: y))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(17,16)-(17,63)
-let new_carry =
-  ((carry + addend_a) + addend_b) / 10 in
-let digit =
-  ((carry + addend_a) + addend_b) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(18,14)-(18,19)
-addend_a
+(2,12)-(5,6)
+listReverse
 VarG
 
-(18,22)-(18,24)
-addend_b
+(2,12)-(5,6)
+t
 VarG
 
-(18,26)-(18,31)
-(carry + addend_a) + addend_b
-BopG (BopG EmptyG EmptyG) VarG
-
-(18,26)-(18,31)
-carry + addend_a
-BopG VarG VarG
-
-(18,26)-(18,38)
-let digit =
-  ((carry + addend_a) + addend_b) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(18,36)-(18,38)
-addend_a
+(2,12)-(5,6)
+(@)
 VarG
 
-(18,36)-(18,38)
-addend_b
+(2,12)-(5,6)
+h
 VarG
 
-(19,4)-(21,51)
-a
+(2,12)-(5,6)
+fun l ->
+  match l with
+  | [] -> []
+  | h :: t -> listReverse t @ [h]
+LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(2,12)-(5,6)
+listReverse t
+AppG (fromList [VarG])
+
+(2,12)-(5,6)
+listReverse t @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(2,12)-(5,6)
+match l with
+| [] -> []
+| h :: t -> listReverse t @ [h]
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+
+(2,12)-(5,6)
+[]
+ListG EmptyG Nothing
+
+(2,12)-(5,6)
+[h]
+ListG VarG Nothing
+
+(7,20)-(8,57)
+fun w ->
+  match w with
+  | [] -> true
+  | h :: t -> if h = List.hd (listReverse w)
+              then true
+              else false
+LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+
+(8,36)-(8,51)
+h
 VarG
 
-(19,4)-(21,51)
-new_carry
+(8,36)-(8,51)
+h = List.hd (listReverse w)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(8,36)-(8,51)
+true
+LitG
+
+(8,36)-(8,51)
+if h = List.hd (listReverse w)
+then true
+else false
+IteG (BopG EmptyG EmptyG) LitG LitG
+
+(8,37)-(8,48)
+List.hd
 VarG
 
-(19,4)-(21,51)
-digit
+(8,37)-(8,48)
+listReverse w
+AppG (fromList [VarG])
+
+(8,52)-(8,53)
+w
 VarG
 
-(19,4)-(21,51)
-y
+(8,55)-(8,56)
+w
 VarG
 
-(19,4)-(21,51)
-match a with
-| (x , y) -> (new_carry , digit :: y)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+(10,15)-(11,69)
+true
+LitG
 
-(19,4)-(21,51)
-(new_carry , digit :: y)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+(10,15)-(11,69)
+false
+LitG
 
-(19,4)-(21,51)
-digit :: y
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+(11,46)-(11,57)
+matchHeads
+VarG
 
 *)

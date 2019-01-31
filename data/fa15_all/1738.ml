@@ -1,45 +1,32 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else
-    (let leading = (digitsOfInt (n / 10)) :: (n mod 10) in
-     listReverse leading);;
+let fixpoint (f,b) = wwhile (((f b), (b = (f b))), b);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0
-  then []
-  else (let digits = digitsOfInt (n / 10) in digits @ [n mod 10]);;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+
+let fixpoint (f,b) = wwhile ((let f' b = ((f b), (b = (f b))) in f'), b);;
 
 *)
 
 (* changed spans
-(9,19)-(9,55)
-let digits =
-  digitsOfInt (n / 10) in
-digits @ [n mod 10]
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+(5,29)-(5,49)
+fun b -> (f b , b = f b)
+LamG (TupleG (fromList [EmptyG]))
 
-(9,45)-(9,55)
-digits
+(5,29)-(5,49)
+let f' =
+  fun b -> (f b , b = f b) in
+f'
+LetG NonRec (fromList [LamG EmptyG]) VarG
+
+(5,51)-(5,52)
+f'
 VarG
-
-(9,45)-(9,55)
-(@)
-VarG
-
-(9,45)-(9,55)
-digits @ [n mod 10]
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(9,45)-(9,55)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
 
 *)

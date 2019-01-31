@@ -1,33 +1,20 @@
 
-let rec clone x n =
-  let rec helper = match n with | 0 -> [] | _ -> (helper n) - 1 in helper n;;
+let pipe fs = let f a x a = x a in let base = [] in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
+let pipe fs = let f a x a = x a in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,49)-(3,63)
-x
+(2,46)-(2,48)
+fun y -> y
+LamG VarG
+
+(2,52)-(2,76)
+y
 VarG
-
-(3,49)-(3,63)
-clone
-VarG
-
-(3,49)-(3,63)
-x
-VarG
-
-(3,49)-(3,63)
-clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(3,49)-(3,63)
-x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
 
 *)

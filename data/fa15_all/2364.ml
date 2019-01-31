@@ -1,46 +1,30 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = failwith List.map sepConcat l;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (n mod 10) :: [] :: ((digitsOfInt n) / 10);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "," (List.map f l);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else [n mod 10] @ (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(9,32)-(9,40)
-sepConcat "," (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(9,51)-(9,52)
-List.map
+(3,25)-(3,35)
+(@)
 VarG
 
-(9,51)-(9,52)
-f
-VarG
+(3,25)-(3,35)
+[n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
-(9,51)-(9,52)
-List.map f l
-AppG (fromList [VarG])
+(3,25)-(3,67)
+[n mod 10] @ digitsOfInt (n / 10)
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(9,51)-(9,52)
-","
-LitG
+(3,59)-(3,60)
+n / 10
+BopG VarG LitG
 
 *)

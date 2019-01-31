@@ -1,40 +1,33 @@
 
-let rec assoc (d,k,l) =
-  match (d, k, l) with
-  | [] -> 0
-  | (d,k,l) ->
-      if l = []
-      then d
-      else
-        (match l with
-         | h::t ->
-             (match h with | (a,b) -> if a = k then b else assoc (d, k, t)));;
+let pipe fs = let f a x = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
-  match (d, k, l) with
-  | (d,k,l) ->
-      if l = []
-      then d
-      else
-        (match l with
-         | h::t ->
-             (match h with | (a,b) -> if a = k then b else assoc (d, k, t)));;
+let pipe fs =
+  let f a x x a = x a in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,2)-(11,76)
-match (d , k , l) with
-| (d , k , l) -> if l = []
-                 then d
-                 else (match l with
-                       | h :: t -> match h with
-                                   | (a , b) -> if a = k
-                                                then b
-                                                else assoc (d , k , t))
-CaseG (TupleG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+(2,26)-(2,29)
+fun x -> fun a -> x a
+LamG (LamG EmptyG)
+
+(2,26)-(2,29)
+fun a -> x a
+LamG (AppG (fromList [EmptyG]))
+
+(2,33)-(2,75)
+a
+VarG
+
+(2,46)-(2,47)
+fun y -> y
+LamG VarG
+
+(2,51)-(2,75)
+y
+VarG
 
 *)

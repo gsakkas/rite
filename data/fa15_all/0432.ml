@@ -1,146 +1,28 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumSquared of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildNegate e = Negate e;;
-
-let buildPercent e = Percent e;;
-
-let buildSine e = Sine e;;
-
-let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with
-     | 1|2 -> buildSine (build (rand, (depth - 1)))
-     | 3|4 -> buildCosine (build (rand, (depth - 1)))
-     | 5|6 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7|8 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 9 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if (num mod 2) = 0
-         then buildPercent (rand, (depth - 1))
-         else
-           if (num mod 3) = 0
-           then buildNegate (rand, (depth - 1))
-           else
-             buildSumSquared
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1)))));;
+let fixpoint (f,b) = let funt x = (f, ((f b) = b)) in wwhile (funt, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumSquared of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildNegate e = Negate e;;
-
-let buildPercent e = Percent e;;
-
-let buildSine e = Sine e;;
-
-let buildSumSquared (e1,e2,e3) = SumSquared (e1, e2, e3);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then let num = rand (1, 10) in (if num > 4 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with
-     | 1|2 -> buildSine (build (rand, (depth - 1)))
-     | 3|4 -> buildCosine (build (rand, (depth - 1)))
-     | 5|6 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 7|8 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 9 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | _ ->
-         if (num mod 2) = 0
-         then buildPercent (build (rand, (depth - 1)))
-         else
-           if (num mod 3) = 0
-           then buildNegate (build (rand, (depth - 1)))
-           else
-             buildSumSquared
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                 (build (rand, (depth - 1)))));;
+let fixpoint (f,b) = let funt x = ((f b), ((f b) = b)) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(54,27)-(54,46)
-build
+(6,21)-(6,70)
+f b
+AppG (fromList [VarG])
+
+(6,30)-(6,50)
+b
 VarG
-
-(54,27)-(54,46)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(57,28)-(57,47)
-build
-VarG
-
-(57,28)-(57,47)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

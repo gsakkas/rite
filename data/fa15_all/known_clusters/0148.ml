@@ -1,5 +1,13 @@
-BopG (UopG EmptyG) LitG
-(- 1.0) /. 3.0
-(- 1.0) /. 3.0
-(- 1.0) /. 3.0
-(- 1.0) /. 3.0
+TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
+(f b , if f b = b
+       then false
+       else true)
+(f b , if f b = b
+       then true
+       else false)
+(f b , if f b = b
+       then true
+       else false)
+(f b , if f b = b
+       then true
+       else false)

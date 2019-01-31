@@ -1,3 +1,5 @@
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [BopG VarG LitG])]))) Nothing
-n :: (digitsOfInt (n / 10))
-n :: (digitsOfInt (n / 10))
+AppG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
+List.append ("[" :: (List.map f
+                              l)) ["]"]
+List.append ("[" :: (List.map f
+                              l)) ["]"]

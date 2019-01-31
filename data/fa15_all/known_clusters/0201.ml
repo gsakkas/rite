@@ -1,5 +1,10 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
-match xs with
-| [] -> 0
-| h :: _ -> h
-| h :: t -> h + sumList t
+IteG (BopG EmptyG EmptyG) VarG (LetG NonRec (fromList [EmptyG]) EmptyG)
+if l = []
+then d
+else (let h :: t = l in
+      if t = []
+      then d
+      else (let (x , y) = h in
+            if x = k
+            then y
+            else assoc (d , k , t)))

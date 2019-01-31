@@ -1,70 +1,73 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let buildX () = VarX;;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      if ((a1 + x1) + x2) >= 10
+      then (1, ((((a1 + x1) + x2) - 10) :: a2))
+      else (0, (((a1 + x1) + x2) :: a2)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
-let rec build (rand,depth) =
-  if depth = (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    (if (randNum = 1) && (randNum2 = 3)
-     then buildX ()
-     else
-       if (randNum = 1) && (randNum2 = 4)
-       then
-         buildSine
-           (buildOp2
-              ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-                (build (rand, (depth - 1))))));;
+let rec mulByDigit i l =
+  if i = 0 then 0 else if i = 1 then l else mulByDigit (i - 1) bigAdd l l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let buildSine e = Sine e;;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
-let buildX () = VarX;;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let rec build (rand,depth) =
-  if depth = 0 then buildSine (buildX ()) else buildX ();;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      if ((a1 + x1) + x2) >= 10
+      then (1, ((((a1 + x1) + x2) - 10) :: a2))
+      else (0, (((a1 + x1) + x2) :: a2)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else if i = 1 then l else mulByDigit (i - 1) (bigAdd l l);;
 
 *)
 
 (* changed spans
-(23,4)-(32,46)
-0
-LitG
+(26,16)-(26,17)
+[0]
+ListG LitG Nothing
 
-(24,37)-(24,38)
-buildSine
-VarG
+(26,44)-(26,73)
+mulByDigit (i - 1) (bigAdd l
+                           l)
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(27,7)-(32,45)
-buildX
-VarG
+(26,63)-(26,69)
+bigAdd l l
+AppG (fromList [VarG])
 
 *)

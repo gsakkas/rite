@@ -1,89 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((-1) * (eval (e1, x, y))) * (eval (e2, x, y))) * (eval (e3, x, y));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (clone 0 z) :: y
+  else (let z = y - x in (clone 0 z) :: x);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Power of expr* expr
-  | Comp of expr* expr* expr;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) +. (eval (e2, x, y))) /. (float_of_int 2)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Power (e1,e2) -> (eval (e1, x, y)) ** (eval (e2, x, y))
-  | Comp (e1,e2,e3) ->
-      (((float_of_int (-1)) *. (eval (e1, x, y))) *. (eval (e2, x, y))) *.
-        (eval (e3, x, y));;
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
 
 *)
 
 (* changed spans
-(30,7)-(30,33)
-((float_of_int (-1) *. eval (e1 , x , y)) *. eval (e2 , x , y)) *. eval (e3 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(30,8)-(30,12)
-float_of_int
+(9,15)-(9,16)
+l1
 VarG
 
-(30,8)-(30,12)
-float_of_int (-1)
-AppG (fromList [LitG])
+(9,19)-(9,20)
+(@)
+VarG
 
-(30,8)-(30,12)
-(float_of_int (-1) *. eval (e1 , x , y)) *. eval (e2 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+(9,19)-(9,20)
+clone 0 z
+AppG (fromList [VarG,LitG])
 
-(30,8)-(30,12)
-float_of_int (-1) *. eval (e1 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(9,24)-(9,40)
+(l1 , clone 0 z @ l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(9,39)-(9,40)
+l2
+VarG
+
+(10,20)-(10,21)
+(@)
+VarG
+
+(10,20)-(10,21)
+clone 0 z
+AppG (fromList [VarG,LitG])
+
+(10,25)-(10,41)
+(clone 0 z @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(10,32)-(10,33)
+l2
+VarG
+
+(10,40)-(10,41)
+l1
+VarG
 
 *)

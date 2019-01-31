@@ -1,43 +1,30 @@
 
-let rec clone x n = if n < 0 then [] else clone (x, (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ t) in
+      let base = h in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec cloneHelper (x,n,acc) =
-    if n < 0 then acc else cloneHelper (x, (n - 1), (x :: acc)) in
-  cloneHelper (x, n, []);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(2,20)-(2,60)
-fun (x , n , acc) ->
-  if n < 0
-  then acc
-  else cloneHelper (x , n - 1 , x :: acc)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(2,20)-(2,60)
-let rec cloneHelper =
-  fun (x , n , acc) ->
-    if n < 0
-    then acc
-    else cloneHelper (x , n - 1 , x :: acc) in
-cloneHelper (x , n , [])
-LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
-
-(2,34)-(2,36)
-acc
+(6,29)-(6,30)
+x
 VarG
 
-(2,48)-(2,60)
-cloneHelper
-VarG
-
-(2,49)-(2,50)
-(x , n - 1 , x :: acc)
-TupleG (fromList [VarG,BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+(7,17)-(7,18)
+""
+LitG
 
 *)

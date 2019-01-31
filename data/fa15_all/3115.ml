@@ -1,65 +1,36 @@
 
-let l1 = [0; 0; 9; 9];;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
 
-let l2 = [1; 0; 0; 2];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
-let x = (3, 3) :: (List.rev (List.combine l1 l2));;
-
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = x in
-    let base = (0, []) in
-    let args = [((l1 + l2), [])] in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  if n < 10 then n else additivePersistence sumList digitsOfInt n;;
 
 
 (* fix
 
-let l1 = [0; 0; 9; 9];;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt ((n - (n mod 10)) / 10)) @ [n mod 10] else [];;
 
-let l2 = [1; 0; 0; 2];;
+let rec sumList xs = match xs with | [] -> 0 | x::xs' -> x + (sumList xs');;
 
-let x = (3, 3) :: (List.rev (List.combine l1 l2));;
-
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = x in
-    let base = (0, []) in
-    let args = [(3, [])] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  if n < 10 then n else additivePersistence (sumList (digitsOfInt n));;
 
 *)
 
 (* changed spans
-(25,23)-(25,25)
-3
-LitG
+(8,24)-(8,65)
+additivePersistence (sumList (digitsOfInt n))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(8,44)-(8,51)
+sumList (digitsOfInt n)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(8,52)-(8,63)
+digitsOfInt n
+AppG (fromList [VarG])
 
 *)

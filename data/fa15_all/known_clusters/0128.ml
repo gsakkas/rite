@@ -1,7 +1,7 @@
-BopG (AppG (fromList [EmptyG])) (UopG EmptyG)
-eval (q , x , y) *. (- 1.0)
-eval (c , x , y) *. (- 1.0)
-eval (c , x , y) *. (- 1.0)
-eval (c , x , y) *. (- 1.0)
-eval (c , x , y) *. (- 1.0)
-eval (c , x , y) *. (- 1.0)
+ConAppG (Just VarG) Nothing
+Sine e
+Sine e
+Sine e
+Sine e
+SinCos e
+Sine e

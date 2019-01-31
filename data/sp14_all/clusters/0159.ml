@@ -1,5 +1,5 @@
-AppG (fromList [UopG EmptyG])
-exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing
+0 :: (List.rev l2)
+0 :: (List.rev l)
+"[" :: (List.map f l)
+"[" :: (List.map f l)

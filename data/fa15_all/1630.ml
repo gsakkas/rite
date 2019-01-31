@@ -1,29 +1,26 @@
 
-let rec wwhile (f,b) = match f with | (x,true ) -> f x | (x,false ) -> x;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) :: h;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
+let rec listReverse l =
+  match l with | [] -> [] | h::t -> (listReverse t) @ [h];;
 
 *)
 
 (* changed spans
-(2,29)-(2,30)
-f b
-AppG (fromList [VarG])
-
-(2,51)-(2,52)
-wwhile
+(3,36)-(3,51)
+(@)
 VarG
 
-(2,51)-(2,52)
-(f , x)
-TupleG (fromList [VarG])
+(3,36)-(3,56)
+listReverse t @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(2,51)-(2,54)
-b
-VarG
+(3,55)-(3,56)
+[h]
+ListG VarG Nothing
 
 *)

@@ -1,34 +1,42 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then [seen; h] else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if result then wwhile (f, value) else value;;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let helper func = let result = func b in (result, (result = b)) in
+      helper f), b);;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if (List.mem h seen) = false then h :: seen else seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if result then wwhile (f, value) else value;;
+
+let fixpoint (f,b) =
+  wwhile
+    ((let helper b' = let result = f b' in (result, (result = b')) in helper),
+      b);;
 
 *)
 
 (* changed spans
-(7,55)-(7,59)
-h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+(7,17)-(7,69)
+fun b' ->
+  (let result = f b' in
+   (result , result = b'))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(8,8)-(8,46)
-seen
+(7,42)-(7,43)
+f
+VarG
+
+(7,47)-(7,69)
+b'
+VarG
+
+(8,6)-(8,14)
+b'
 VarG
 
 *)

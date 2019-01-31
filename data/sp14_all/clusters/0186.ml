@@ -1,5 +1,11 @@
-ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG LitG]))) Nothing]))) Nothing
-(prod mod 10) :: ((prod / 10) :: (mulByDigit i
-                                             t))
-(prod mod 10) :: ((prod / 10) :: (mulByDigit i
-                                             t))
+AppG (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])])
+listReverse (match n > 0 with
+             | false -> []
+             | true -> match n > 9 with
+                       | false -> n :: (digitsOfInt (n / 10))
+                       | true -> (n mod 10) :: (digitsOfInt (n / 10)))
+listReverse (match n > 0 with
+             | false -> []
+             | true -> match n > 9 with
+                       | false -> n :: (digitsOfInt (n / 10))
+                       | true -> (n mod 10) :: (digitsOfInt (n / 10)))

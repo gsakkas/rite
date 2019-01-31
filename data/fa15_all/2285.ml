@@ -1,22 +1,34 @@
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> let y = (f, x) in (y, (y != x))), b);;
+let stringOfList f l = sepConcat "; " List.map f l;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (num,b00l) -> if not b00l then num else wwhile (f, num);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let fixpoint (f,b) = wwhile ((fun x  -> let y = f x in (y, (y != x))), b);;
+let stringOfList f l = sepConcat "; " (List.map f l);;
 
 *)
 
 (* changed spans
-(5,48)-(5,54)
-f x
+(9,23)-(9,50)
+sepConcat "; " (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,38)-(9,46)
+List.map f l
 AppG (fromList [VarG])
 
 *)

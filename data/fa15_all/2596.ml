@@ -1,60 +1,36 @@
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([x + a], [x + a]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence sumList (digitsOfInt n))
+  else 0;;
 
 
 (* fix
 
-let rec clone x n =
-  let rec helper a b acc = if b > 0 then helper a (b - 1) (a :: acc) else acc in
-  helper x n [];;
+let rec digitsOfInt n =
+  if 0 >= n then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let padZero l1 l2 =
-  let l1_len = List.length l1 in
-  let l2_len = List.length l2 in
-  let l_diff = l1_len - l2_len in
-  if l_diff < 0
-  then (((clone 0 (l_diff * (-1))) @ l1), l2)
-  else (l1, ((clone 0 l_diff) @ l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = ([x + 1], [x + 1]) in
-    let base = ([], []) in
-    let args = l1 in let (bar,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec additivePersistence n =
+  if (n / 10) != 0
+  then 1 + (additivePersistence (sumList (digitsOfInt n)))
+  else 0;;
 
 *)
 
 (* changed spans
-(19,22)-(19,23)
-1
-LitG
+(9,11)-(9,56)
+additivePersistence (sumList (digitsOfInt n))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(19,31)-(19,32)
-1
-LitG
+(9,32)-(9,39)
+sumList (digitsOfInt n)
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

@@ -1,26 +1,46 @@
 
-let sqsum xs =
-  let f a x = (a ^ 2) :: x in let base = 0 in List.fold_left f base xs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::[] -> "[" ^ (x ^ "]")
+  | l -> sepConcat (";", (List.map (f, l)));;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = (a * a) + x in let base = 0 in List.fold_left f base xs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l =
+  match l with
+  | [] -> "[]"
+  | x::[] -> "[" ^ (x ^ "]")
+  | l -> sepConcat "" (List.map f l);;
 
 *)
 
 (* changed spans
-(3,15)-(3,16)
-a * a
-BopG VarG VarG
+(13,9)-(13,43)
+sepConcat "" (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(3,17)-(3,18)
-(a * a) + x
-BopG (BopG EmptyG EmptyG) VarG
+(13,25)-(13,42)
+""
+LitG
 
-(3,19)-(3,20)
-a
-VarG
+(13,26)-(13,34)
+List.map f l
+AppG (fromList [VarG])
 
 *)

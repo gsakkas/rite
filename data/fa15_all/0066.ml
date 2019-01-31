@@ -1,27 +1,26 @@
 
-let pipe fs =
-  let f a x fn x a = fn in let base b = b in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = () in let l = sl in List.fold_left f base l;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x fn = x (fun a  -> a) in
-  let base b = b in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = "" in let l = sl in List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(3,15)-(3,23)
-x (fun a -> a)
-AppG (fromList [LamG EmptyG])
-
-(3,17)-(3,23)
-x
-VarG
-
-(3,21)-(3,23)
-a
-VarG
+(7,17)-(7,19)
+""
+LitG
 
 *)

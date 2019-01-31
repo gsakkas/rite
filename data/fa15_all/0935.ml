@@ -2,22 +2,9 @@
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let leng1 = List.length l1 in
-  let leng2 = List.length l2 in
-  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      ((((fst x) + (snd x)) / 10), (((fst a) + (((fst x) + (snd x)) mod 10))
-        :: (snd a))) in
-    let base = (0, []) in
-    let args = List.rev List.combine l1 l2 in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+  if (List.length l1) < (List.length l2)
+  then ((clone "0" List.length l2) - (List.length l1)) :: l1
+  else ((clone "0" List.length l1) - (List.length l2)) :: l2;;
 
 
 (* fix
@@ -25,32 +12,77 @@ let bigAdd l1 l2 =
 let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
 let padZero l1 l2 =
-  let leng1 = List.length l1 in
-  let leng2 = List.length l2 in
-  (((clone 0 (leng2 - leng1)) @ l1), ((clone 0 (leng1 - leng2)) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      ((((fst x) + (snd x)) / 10), (((fst a) + (((fst x) + (snd x)) mod 10))
-        :: (snd a))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else (((clone 0 ((List.length l1) - (List.length l2))) @ l2), l1);;
 
 *)
 
 (* changed spans
-(18,15)-(18,42)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+(6,8)-(6,34)
+(clone 0
+       (List.length l2 - List.length l1) @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(18,24)-(18,36)
-List.combine l1 l2
+(6,9)-(6,14)
+(@)
+VarG
+
+(6,9)-(6,14)
+clone 0
+      (List.length l2 - List.length l1) @ l1
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(6,9)-(6,14)
+clone 0
+      (List.length l2 - List.length l1)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(6,15)-(6,18)
+0
+LitG
+
+(6,19)-(6,30)
+List.length l2
 AppG (fromList [VarG])
+
+(6,19)-(6,30)
+List.length l2 - List.length l1
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(7,8)-(7,34)
+l2
+VarG
+
+(7,9)-(7,14)
+(@)
+VarG
+
+(7,9)-(7,14)
+clone 0
+      (List.length l1 - List.length l2) @ l2
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(7,9)-(7,14)
+clone 0
+      (List.length l1 - List.length l2)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(7,9)-(7,14)
+(clone 0
+       (List.length l1 - List.length l2) @ l2 , l1)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(7,15)-(7,18)
+0
+LitG
+
+(7,19)-(7,30)
+List.length l1
+AppG (fromList [VarG])
+
+(7,19)-(7,30)
+List.length l1 - List.length l2
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)

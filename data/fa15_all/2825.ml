@@ -1,32 +1,24 @@
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((f, ((f b) = b)), b);;
+let pipe fs = let f a x x a = x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec helper (b',c') = if c' = true then helper (f b') else b' in
-  helper (f b);;
-
-let fixpoint (f,b) = wwhile ((fun b  -> ((f b), ((f b) = b))), b);;
+let pipe fs = let f a x a = a in let base f = f in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,29)-(6,45)
-fun b -> (f b , f b = b)
-LamG (TupleG (fromList [EmptyG]))
+(2,30)-(2,31)
+a
+VarG
 
-(6,30)-(6,31)
-f b
-AppG (fromList [VarG])
+(2,48)-(2,49)
+fun f -> f
+LamG VarG
 
-(6,33)-(6,44)
-b
+(2,53)-(2,77)
+f
 VarG
 
 *)

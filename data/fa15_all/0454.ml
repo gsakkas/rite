@@ -1,76 +1,55 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> VarX
-  | VarY  -> VarY
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3) ->
-      (exprToString e1) ^ ((exprToString e2) ^ (exprToString e3));;
+let fixpoint (f,b) =
+  let gs x = let isFPoint x = ((f x) - x) < 0 in f b in wwhile (gs, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> ""
-  | VarY  -> ""
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
+let fixpoint (f,b) =
+  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(12,2)-(20,65)
-match e with
-| VarX -> ""
-| VarY -> ""
-| Sine e1 -> exprToString e1
-| Cosine e1 -> exprToString e1
-| Average (e1 , e2) -> exprToString e1 ^ exprToString e2
-| Times (e1 , e2) -> exprToString e1 ^ exprToString e2
-| Thresh (e1 , e2 , e3 , e4) -> exprToString e1 ^ (exprToString e2 ^ (exprToString e3 ^ exprToString e4))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+(7,26)-(7,45)
+fun s -> (f s - s) < 0
+LamG (BopG EmptyG EmptyG)
 
-(14,13)-(14,17)
-""
-LitG
-
-(15,15)-(15,30)
-""
-LitG
-
-(20,47)-(20,64)
-(^)
+(7,32)-(7,33)
+s
 VarG
 
-(20,47)-(20,64)
-exprToString e3 ^ exprToString e4
-AppG (fromList [AppG (fromList [EmptyG])])
+(7,34)-(7,35)
+(f x , isFPoint x)
+TupleG (fromList [AppG (fromList [EmptyG])])
+
+(7,39)-(7,40)
+s
+VarG
+
+(7,49)-(7,50)
+isFPoint
+VarG
+
+(7,49)-(7,50)
+x
+VarG
+
+(7,49)-(7,50)
+wwhile (gs , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(7,51)-(7,52)
+x
+VarG
 
 *)

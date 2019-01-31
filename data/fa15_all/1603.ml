@@ -1,53 +1,16 @@
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
-
-let fixpoint (f,b) =
-  wwhile
-    ((let (x,y) = f b in
-      if (x <> b) && (y = true) then (x, true) else if x = b then (x, false)),
-      b);;
+let rec sumList xs = match xs with | [] -> [] | h::t -> h + (sumList t);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (x,true ) -> wwhile (f, x) | (x,false ) -> x;;
-
-let fixpoint (f,b) =
-  wwhile ((let a x = let xx = f x in (xx, (x <> b)) in a), b);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
 *)
 
 (* changed spans
-(7,5)-(8,77)
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(7,18)-(7,21)
-fun x ->
-  (let xx = f x in
-   (xx , x <> b))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(7,18)-(7,21)
-let xx = f x in (xx , x <> b)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(8,52)-(8,76)
-a
-VarG
-
-(8,55)-(8,56)
-x <> b
-BopG VarG VarG
-
-(8,55)-(8,60)
-xx
-VarG
+(2,43)-(2,45)
+0
+LitG
 
 *)

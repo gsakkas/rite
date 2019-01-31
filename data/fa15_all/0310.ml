@@ -1,16 +1,22 @@
 
-let rec sumList xs = match 1 with | [] -> 0 | h::t -> h + (sumList t);;
+let pipe fs =
+  let f a x n x = a n in let base n = n in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let pipe fs =
+  let f a x n = x (a n) in let base n = n in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,27)-(2,28)
-xs
+(3,18)-(3,19)
+x
 VarG
+
+(3,18)-(3,19)
+a n
+AppG (fromList [VarG])
 
 *)

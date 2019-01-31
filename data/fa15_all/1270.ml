@@ -1,38 +1,51 @@
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
 let rec listReverse l =
-  match l with | [] -> [] | head::tail -> (listReverse tail) @ [head];;
-
-let palindrome w =
-  if (explode w) = (explode (listReverse w)) then true else false;;
+  let newList = [] in
+  match l with
+  | [] -> newList
+  | head::tail -> (listReverse tail) :: newList :: head;;
 
 
 (* fix
 
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
 let rec listReverse l =
-  match l with | [] -> [] | head::tail -> (listReverse tail) @ [head];;
-
-let palindrome w =
-  if (explode w) = (listReverse (explode w)) then true else false;;
+  match l with
+  | [] -> []
+  | head::[] -> [head]
+  | head::tail -> (listReverse tail) @ [head];;
 
 *)
 
 (* changed spans
-(11,41)-(11,42)
-explode
+(4,2)-(6,55)
+match l with
+| [] -> []
+| head :: [] -> [head]
+| head :: tail -> listReverse tail @ [head]
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+
+(6,18)-(6,36)
+head
 VarG
 
-(11,41)-(11,42)
-explode w
-AppG (fromList [VarG])
+(6,18)-(6,36)
+(@)
+VarG
+
+(6,18)-(6,36)
+listReverse tail @ [head]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(6,18)-(6,36)
+[head]
+ListG VarG Nothing
+
+(6,18)-(6,55)
+[]
+ListG EmptyG Nothing
+
+(6,40)-(6,47)
+[head]
+ListG VarG Nothing
 
 *)

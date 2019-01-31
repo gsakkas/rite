@@ -1,56 +1,42 @@
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
-
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits (digits n)
-  else additivePersistence (sumList n);;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h t then h else h @ t in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let rec append x y = match y with | [] -> [x] | h::t -> h :: (append x t);;
-
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (let (x,y) = ((n mod 10), (n / 10)) in
-     if n < 10 then [n] else append x (digitsOfInt y));;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec numdigits x = match x with | [] -> 0 | h::t -> 1 + (numdigits x);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if (sumList (digits n)) < 10
-  then numdigits (digits n)
-  else additivePersistence (sumList (digits n));;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let seen' = if List.mem h seen then seen else h :: seen in
+        let rest' = t in helper (seen', rest') in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(20,36)-(20,37)
-digits
+(7,48)-(7,49)
+seen
 VarG
 
-(20,36)-(20,37)
-digits n
-AppG (fromList [VarG])
+(7,48)-(7,49)
+h :: seen
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+
+(7,50)-(7,51)
+seen
+VarG
+
+(7,52)-(7,53)
+seen
+VarG
 
 *)

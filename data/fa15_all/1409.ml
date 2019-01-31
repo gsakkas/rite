@@ -1,52 +1,34 @@
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ ->
-         if (n / 10) != 0
-         then (digitsOfInt (n / 10)) @ [n mod 10]
-         else [n mod 10]);;
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
 
 let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) < 9
-  then 0
-  else 1 + (additivePersistence (sumList n));;
+let rec digitalRoot n =
+  match digits n with | [] -> 0 | h::t -> digitalRoot (sumList n);;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else
-    (match n with
-     | 0 -> [0]
-     | _ ->
-         if (n / 10) != 0
-         then (digitsOfInt (n / 10)) @ [n mod 10]
-         else [n mod 10]);;
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+let digits n = digitsOfInt (abs n);;
 
-let rec additivePersistence n =
-  if (sumList (digitsOfInt n)) < 9
-  then 0
-  else 1 + (additivePersistence (sumList (digitsOfInt n)));;
+let rec digitalRoot n = match digits n with | x::[] -> x;;
 
 *)
 
 (* changed spans
-(18,41)-(18,42)
-digitsOfInt
-VarG
+(10,2)-(10,65)
+match digits n with
+| x :: [] -> x
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,VarG)])
 
-(18,41)-(18,42)
-digitsOfInt n
-AppG (fromList [VarG])
+(10,63)-(10,64)
+x
+VarG
 
 *)

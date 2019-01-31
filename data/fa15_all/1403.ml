@@ -1,42 +1,20 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = List.map sepConcat "" l;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile f b' else b';;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
-
-let stringOfList f l = sepConcat "" (List.map f l);;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 
 *)
 
 (* changed spans
-(9,23)-(9,31)
-sepConcat "" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(2,55)-(2,66)
+wwhile (f , b')
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(9,45)-(9,46)
-List.map
-VarG
-
-(9,45)-(9,46)
-f
-VarG
-
-(9,45)-(9,46)
-List.map f l
-AppG (fromList [VarG])
+(2,62)-(2,63)
+(f , b')
+TupleG (fromList [VarG])
 
 *)

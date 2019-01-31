@@ -1,36 +1,76 @@
 
-let pipe fs =
-  match fs with
-  | [] -> 0
-  | f::fs' -> let f a x = x a in let base = f in List.fold_left f base fs;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x = y
+  then (l1, l2)
+  else
+    if x < y
+    then (((clone 0 (y - x)) @ l1), l2)
+    else (l1, ((clone 0 (x - y)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (l1x,l2x) = x in
+      let (a1,a2) = a in
+      let test = match a1 with | [] -> 0 | h::t -> h in
+      let sum = (l1x + l2x) + test in
+      match a2 with
+      | [] -> (0, ((sum / 10) :: (sum mod 10) :: a2))
+      | h::t -> (((sum / 10) :: a1), ((sum mod 10) :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let pipe fs =
-  let f a x p = x (a p) in let base b = b in List.fold_left f base fs;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x = y
+  then (l1, l2)
+  else
+    if x < y
+    then (((clone 0 (y - x)) @ l1), l2)
+    else (l1, ((clone 0 (x - y)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (l1x,l2x) = x in
+      let (a1,a2) = a in
+      let test = match a1 with | [] -> 0 | h::t -> h in
+      let sum = (l1x + l2x) + test in
+      match a2 with
+      | [] -> ((0 :: a1), ((sum / 10) :: (sum mod 10) :: a2))
+      | h::t -> (((sum / 10) :: a1), ((sum mod 10) :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(5,26)-(5,29)
-fun p -> x (a p)
-LamG (AppG (fromList [EmptyG]))
+(25,15)-(25,16)
+0 :: a1
+ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
 
-(5,28)-(5,29)
-a p
-AppG (fromList [VarG])
-
-(5,33)-(5,73)
-p
-VarG
-
-(5,44)-(5,45)
-fun b -> b
-LamG VarG
-
-(5,49)-(5,73)
-b
+(25,18)-(25,52)
+a1
 VarG
 
 *)

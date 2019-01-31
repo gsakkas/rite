@@ -1,303 +1,136 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | DivAdd of expr* expr* expr* expr
-  | TriMult of expr* expr* expr;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
-  | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
-  | Average (n1,n2) ->
-      "((" ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2)")))
-  | Times (t1,t2) -> (exprToString t1) ^ ("*" ^ (exprToString t2))
-  | Thresh (th1,th2,th3,th4) ->
-      "(" ^
-        ((exprToString th1) ^
-           ("<" ^
-              ((exprToString th2) ^
-                 ("?" ^
-                    ((exprToString th3) ^ (":" ^ ((exprToString th4) ^ ")")))))))
-  | DivAdd (ds1,ds2,ds3,ds4) ->
-      "((" ^
-        ((exprToString ds1) ^
-           ("+" ^
-              ((exprToString ds2) ^
-                 (") / (" ^
-                    ((exprToString ds3) ^ ("+" ^ ((exprToString ds4) "))")))))))
-  | TriMult (tm1,tm2,tm3) ->
-      "(" ^
-        ((exprToString tm1) ^
-           ("*" ^ ((exprToString tm2) ^ (("*" (exprToString tm3)) ^ ")"))));;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match x with | (x1,x2) -> (0, ((x1 + x2) @ a)) in
+    let base = [] in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let ans = f b in
-  match ans with | (num,tf) -> if tf = true then wwhile (f, num) else num;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let collatz n =
-  match n with | 1 -> 1 | _ when (n mod 2) = 0 -> n / 2 | _ -> (3 * n) + 1;;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
-let fixpoint (f,b) =
-  wwhile
-    ((let func b =
-        let ans = f b in if b = ans then (ans, false) else (ans, true) in
-      func), b);;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
 
-let _ = fixpoint (collatz, 9001);;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (a1,a2) = a in
+      ((if ((a1 + x1) + x2) >= 10 then 1 else 0), (((a1 + x1) + x2) :: a2)) in
+    let base = (0, [0]) in
+    let args = List.combine l1 l2 in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(35,49)-(35,74)
-fun (f , b) ->
-  (let ans = f b in
-   match ans with
-   | (num , tf) -> if tf = true
-                   then wwhile (f , num)
-                   else num)
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+(14,16)-(14,62)
+let (x1 , x2) = x in
+let (a1 , a2) = a in
+(if ((a1 + x1) + x2) >= 10
+ then 1
+ else 0 , ((a1 + x1) + x2) :: a2)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(35,50)-(35,68)
-let ans = f b in
-match ans with
-| (num , tf) -> if tf = true
-                then wwhile (f , num)
-                else num
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(38,9)-(38,27)
-b
+(14,42)-(14,62)
+a
 VarG
 
-(38,9)-(38,27)
-ans
+(14,42)-(14,62)
+let (a1 , a2) = a in
+(if ((a1 + x1) + x2) >= 10
+ then 1
+ else 0 , ((a1 + x1) + x2) :: a2)
+LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+
+(14,43)-(14,44)
+a1
 VarG
 
-(38,9)-(38,27)
-tf
+(14,43)-(14,44)
+x1
 VarG
 
-(38,9)-(38,27)
-tf = true
-BopG VarG LitG
-
-(38,9)-(38,27)
-true
-LitG
-
-(38,9)-(38,27)
-if tf = true
-then wwhile (f , num)
-else num
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
-
-(38,9)-(38,27)
-match ans with
-| (num , tf) -> if tf = true
-                then wwhile (f , num)
-                else num
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(38,28)-(38,29)
-f
+(14,43)-(14,44)
+x2
 VarG
 
-(39,19)-(39,37)
-f
-VarG
+(14,43)-(14,44)
+(a1 + x1) + x2
+BopG (BopG EmptyG EmptyG) VarG
 
-(39,19)-(39,37)
-num
-VarG
-
-(39,19)-(39,37)
-num
-VarG
-
-(39,19)-(39,37)
-n
-VarG
-
-(39,19)-(39,37)
-n
-VarG
-
-(39,19)-(39,37)
-n
-VarG
-
-(39,19)-(39,37)
-fun n ->
-  match n with
-  | 1 -> 1
-  | _ when (n mod 2) = 0 -> n / 2
-  | _ -> (3 * n) + 1
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG),(Just EmptyG,EmptyG)]))
-
-(39,19)-(39,37)
-fun (f , b) ->
-  wwhile (let func =
-            fun b ->
-              (let ans = f b in
-               if b = ans
-               then (ans , false)
-               else (ans , true)) in
-          func , b)
-LamG (AppG (fromList [EmptyG]))
-
-(39,19)-(39,37)
-n / 2
-BopG VarG LitG
-
-(39,19)-(39,37)
-3 * n
-BopG LitG VarG
-
-(39,19)-(39,37)
-(3 * n) + 1
+(14,43)-(14,44)
+((a1 + x1) + x2) >= 10
 BopG (BopG EmptyG EmptyG) LitG
 
-(39,19)-(39,37)
-1
-LitG
-
-(39,19)-(39,37)
-2
-LitG
-
-(39,19)-(39,37)
-3
-LitG
-
-(39,19)-(39,37)
-1
-LitG
-
-(39,19)-(39,37)
-match n with
-| 1 -> 1
-| _ when (n mod 2) = 0 -> n / 2
-| _ -> (3 * n) + 1
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG),(Just (BopG EmptyG EmptyG),BopG EmptyG EmptyG)])
-
-(39,19)-(39,37)
-(f , num)
-TupleG (fromList [VarG])
-
-(39,38)-(39,39)
-wwhile
-VarG
-
-(39,41)-(39,65)
-fun b ->
-  (let ans = f b in
-   if b = ans
-   then (ans , false)
-   else (ans , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(39,41)-(39,65)
-let func =
-  fun b ->
-    (let ans = f b in
-     if b = ans
-     then (ans , false)
-     else (ans , true)) in
-func
-LetG NonRec (fromList [LamG EmptyG]) VarG
-
-(39,41)-(39,65)
-let ans = f b in
-if b = ans
-then (ans , false)
-else (ans , true)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
-
-(39,41)-(39,65)
-(let func =
-   fun b ->
-     (let ans = f b in
-      if b = ans
-      then (ans , false)
-      else (ans , true)) in
- func , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [EmptyG]) EmptyG])
-
-(39,42)-(39,45)
-f
-VarG
-
-(39,46)-(39,64)
-b
-VarG
-
-(39,46)-(39,64)
-b
-VarG
-
-(39,46)-(39,64)
-ans
-VarG
-
-(39,46)-(39,64)
-ans
-VarG
-
-(39,46)-(39,64)
-ans
-VarG
-
-(39,46)-(39,64)
-func
-VarG
-
-(39,46)-(39,64)
-b
-VarG
-
-(39,46)-(39,64)
-b = ans
+(14,43)-(14,44)
+a1 + x1
 BopG VarG VarG
 
-(39,46)-(39,64)
-false
+(14,43)-(14,44)
+10
 LitG
 
-(39,46)-(39,64)
-true
+(14,43)-(14,44)
+1
 LitG
 
-(39,46)-(39,64)
-if b = ans
-then (ans , false)
-else (ans , true)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+(14,43)-(14,44)
+if ((a1 + x1) + x2) >= 10
+then 1
+else 0
+IteG (BopG EmptyG EmptyG) LitG LitG
 
-(39,46)-(39,64)
-(ans , false)
-TupleG (fromList [VarG,LitG])
-
-(39,46)-(39,64)
-(ans , true)
-TupleG (fromList [VarG,LitG])
-
-(39,66)-(39,67)
-wwhile
+(14,48)-(14,50)
+a1
 VarG
 
-(39,68)-(39,71)
-fixpoint
+(14,48)-(14,50)
+a1 + x1
+BopG VarG VarG
+
+(14,57)-(14,58)
+((a1 + x1) + x2) :: a2
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
+
+(14,59)-(14,60)
+a2
 VarG
+
+(15,15)-(15,17)
+(0 , [0])
+TupleG (fromList [LitG,ListG EmptyG Nothing])
+
+(16,4)-(17,51)
+0
+LitG
+
+(16,4)-(17,51)
+0
+LitG
+
+(16,4)-(17,51)
+[0]
+ListG LitG Nothing
 
 *)

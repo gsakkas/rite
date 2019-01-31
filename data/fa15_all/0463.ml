@@ -1,37 +1,39 @@
 
-let pipe fs = let f a x = [fs a] in let base = 0 in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+
+let fixpoint (f,b) =
+  let gs x =
+    let isFPoint s = ((f s) - s) < 0 in
+    let iterate (t,y) = t y in
+    let rec go r = if isFPoint r then r else go (iterate (x, r)) in go (go x) in
+  wwhile (gs, b);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base y = y in List.fold_left f base fs;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
+
+let fixpoint (f,b) =
+  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(2,26)-(2,32)
-fun y -> x (a y)
-LamG (AppG (fromList [EmptyG]))
-
-(2,27)-(2,29)
+(10,61)-(10,62)
 x
 VarG
 
-(2,30)-(2,31)
-a y
-AppG (fromList [VarG])
-
-(2,36)-(2,76)
-y
+(10,68)-(10,70)
+f
 VarG
 
-(2,47)-(2,48)
-fun y -> y
-LamG VarG
-
-(2,52)-(2,76)
-y
+(10,72)-(10,74)
+isFPoint
 VarG
 
 *)

@@ -1,13 +1,13 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),TupleG (fromList [VarG])]))) Nothing
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
-(h , l2) :: (helper t l2)
+BopG LitG (AppG (fromList [EmptyG]))
+1.0 /. sin (pi *. eval (e1 , x , y))
+1.0 /. sin (pi *. eval (e1 , x , y))
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+1.0 *. eval (e1 , x , y)
+4.0 *. atan 1.0
+4.0 *. atan 1.0
+1.0 /. eval (e , x , y)
+1.0 /. eval (e , x , y)

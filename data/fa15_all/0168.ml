@@ -1,76 +1,84 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      ((addit / 10), ((addit mod 10) :: num)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev ([0] @ l1)) (List.rev ([0] @ l2)) in
-    let (car,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0
-  then 0
-  else
-    if i = 1
-    then l
-    else
-      if (i mod 2) = 0
-      then mulByDigit (i / 2) (bigAdd l l)
-      else bigAdd l (mulByDigit (i - 1) l);;
+let rec additivePersistence n =
+  if (sumList (digitsOfInt n)) > 10 then 1 + additivePersistence else 0;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
 
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let digits n = digitsOfInt (abs n);;
 
-let rec removeZero l =
-  match l with | [] -> l | h::t -> if h = 0 then removeZero t else l;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (carry,num) = a in
-      let (l1',l2') = x in
-      let addit = (l1' + l2') + carry in
-      ((addit / 10), ((addit mod 10) :: num)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev ([0] @ l1)) (List.rev ([0] @ l2)) in
-    let (car,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
-
-let rec mulByDigit i l =
-  if i = 0
-  then []
-  else
-    if i = 1
-    then l
-    else
-      if (i mod 2) = 0
-      then mulByDigit (i / 2) (bigAdd l l)
-      else bigAdd l (mulByDigit (i - 1) l);;
+let rec additivePersistence n =
+  let x = sumList (digits n) in
+  if x > 10 then 1 + (additivePersistence x) else 0;;
 
 *)
 
 (* changed spans
-(25,7)-(25,8)
-[]
-ListG EmptyG Nothing
+(5,16)-(5,70)
+digitsOfInt
+VarG
+
+(5,16)-(5,70)
+abs
+VarG
+
+(5,16)-(5,70)
+n
+VarG
+
+(5,16)-(5,70)
+fun n -> digitsOfInt (abs n)
+LamG (AppG (fromList [EmptyG]))
+
+(5,16)-(5,70)
+digitsOfInt (abs n)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(5,16)-(5,70)
+abs n
+AppG (fromList [VarG])
+
+(8,5)-(8,35)
+let x = sumList (digits n) in
+if x > 10
+then 1 + additivePersistence x
+else 0
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
+
+(8,15)-(8,26)
+digits
+VarG
+
+(8,33)-(8,35)
+x
+VarG
+
+(8,33)-(8,35)
+x > 10
+BopG VarG LitG
+
+(8,33)-(8,35)
+if x > 10
+then 1 + additivePersistence x
+else 0
+IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) LitG
+
+(8,45)-(8,64)
+additivePersistence x
+AppG (fromList [VarG])
+
+(8,70)-(8,71)
+x
+VarG
 
 *)

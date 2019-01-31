@@ -1,10 +1,37 @@
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-eval (a , x , y) +. (eval (b , x , y) /. 2.0)
-eval (m4 , x , y) *. (1.0 +. sqrt 5.0)
-eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-eval (e1 , x , y) /. (eval (e1 , x , y) *. eval (e1 , x , y))
+CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))

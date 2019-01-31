@@ -1,74 +1,41 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let fu x b = (x, (b < (x b)));;
 
-let buildX () = VarX;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let y = rand (2, 6) in
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else if y = 2 then y;;
+let fixpoint (f,b) = wwhile ((fu f), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
-  else (let y = rand (2, 6) in buildX ());;
+let fixpoint (f,b) =
+  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
 
 *)
 
 (* changed spans
-(19,7)-(19,22)
-buildX
-VarG
+(8,28)-(8,39)
+let n =
+  fun x ->
+    (let ff = f b in
+     (ff , b = ff)) in
+(n , b)
+LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
 
-(19,7)-(19,22)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+(8,29)-(8,35)
+fun x ->
+  (let ff = f b in
+   (ff , b = ff))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(19,10)-(19,11)
-let y = rand (2 , 6) in
-buildX ()
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
-
-(19,14)-(19,15)
-rand
-VarG
-
-(19,14)-(19,15)
-rand (2 , 6)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(19,14)-(19,15)
-(2 , 6)
-TupleG (fromList [LitG])
-
-(19,21)-(19,22)
-6
-LitG
+(8,29)-(8,35)
+let ff = f b in (ff , b = ff)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
 
 *)

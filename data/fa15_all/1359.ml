@@ -1,176 +1,165 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | _ -> [a mod 10]
-      | h::t -> ((a + h) mod 10) :: ((a + h) / 10) in
-    let base = (0, 0) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin sine
+  | Cosine cos -> "cos(pi*" ^ ((eval (cos, x, y)) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((eval (e1, x, y)) ^ ("+" ^ ((eval (e2, x, y)) ^ ")/2)")))
+  | Times (t1,t2) -> (eval (t1, x, y)) ^ ("*" ^ (eval (t2, x, y)))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((eval (th1, x, y)) ^
+           ("<*" ^
+              ((eval (th2, x, y)) ^
+                 ("?" ^
+                    ((eval (th3, x, y)) ^ (":" ^ ((eval (th4, x, y)) ^ ")")))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let carry = match a with | (x,y) -> x in
-      match x with
-      | (add1,add2) ->
-          let new_carry = ((carry + add1) + add2) / 10 in
-          let digit = ((carry + add1) + add2) mod 10 in
-          (match a with | (x,y) -> (new_carry, (digit :: y))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin (pi *. (eval (sine, x, y)))
+  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (th1,th2,th3,th4) ->
+      if (eval (th1, x, y)) < (eval (th2, x, y))
+      then eval (th3, x, y)
+      else eval (th4, x, y);;
 
 *)
 
 (* changed spans
-(17,14)-(17,15)
-match a with
-| (x , y) -> x
-CaseG VarG (fromList [(Nothing,VarG)])
+(11,14)-(26,81)
+atan
+VarG
 
-(17,14)-(17,22)
-let carry =
-  match a with
-  | (x , y) -> x in
-match x with
-| (add1 , add2) -> (let new_carry =
-                      ((carry + add1) + add2) / 10 in
-                    let digit =
-                      ((carry + add1) + add2) mod 10 in
-                    match a with
-                    | (x , y) -> (new_carry , digit :: y))
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+(11,14)-(26,81)
+atan 1.0
+AppG (fromList [LitG])
 
-(17,20)-(17,22)
+(11,14)-(26,81)
+4.0 *. atan 1.0
+BopG LitG (AppG (fromList [EmptyG]))
+
+(11,14)-(26,81)
+4.0
+LitG
+
+(11,14)-(26,81)
+1.0
+LitG
+
+(12,2)-(26,81)
+match e with
+| VarX -> x
+| VarY -> y
+| Sine sine -> sin (pi *. eval (sine , x , y))
+| Cosine cosine -> cos (pi *. eval (cosine , x , y))
+| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+| Times (t1 , t2) -> eval (t1 , x , y) *. eval (t2 , x , y)
+| Thresh (th1 , th2 , th3 , th4) -> if eval (th1 , x , y) < eval (th2 , x , y)
+                                    then eval (th3 , x , y)
+                                    else eval (th4 , x , y)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(16,31)-(16,49)
+pi
+VarG
+
+(16,38)-(16,41)
+sine
+VarG
+
+(16,38)-(16,41)
 x
 VarG
 
-(17,20)-(17,22)
-x
-VarG
-
-(17,20)-(17,22)
-carry
-VarG
-
-(17,20)-(17,22)
-add1
-VarG
-
-(17,20)-(17,22)
-add2
-VarG
-
-(17,20)-(17,22)
-(carry + add1) + add2
-BopG (BopG EmptyG EmptyG) VarG
-
-(17,20)-(17,22)
-((carry + add1) + add2) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,20)-(17,22)
-carry + add1
-BopG VarG VarG
-
-(17,20)-(17,22)
-let new_carry =
-  ((carry + add1) + add2) / 10 in
-let digit =
-  ((carry + add1) + add2) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(17,20)-(17,22)
-match x with
-| (add1 , add2) -> (let new_carry =
-                      ((carry + add1) + add2) / 10 in
-                    let digit =
-                      ((carry + add1) + add2) mod 10 in
-                    match a with
-                    | (x , y) -> (new_carry , digit :: y))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(18,16)-(18,50)
-let digit =
-  ((carry + add1) + add2) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(18,42)-(18,43)
-carry
-VarG
-
-(18,47)-(18,49)
-add1
-VarG
-
-(18,47)-(18,49)
-add2
-VarG
-
-(19,4)-(21,51)
-a
-VarG
-
-(19,4)-(21,51)
-new_carry
-VarG
-
-(19,4)-(21,51)
-digit
-VarG
-
-(19,4)-(21,51)
+(16,38)-(16,41)
 y
 VarG
 
-(19,4)-(21,51)
-match a with
-| (x , y) -> (new_carry , digit :: y)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+(16,38)-(16,41)
+cos (pi *. eval (cosine , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(19,4)-(21,51)
-(new_carry , digit :: y)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+(16,43)-(16,44)
+pi
+VarG
 
-(19,4)-(21,51)
-digit :: y
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+(16,43)-(16,44)
+eval
+VarG
 
-(19,19)-(19,20)
-[]
-ListG EmptyG Nothing
+(16,43)-(16,44)
+cosine
+VarG
+
+(16,43)-(16,44)
+eval (cosine , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(16,43)-(16,44)
+pi *. eval (cosine , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(16,43)-(16,44)
+(cosine , x , y)
+TupleG (fromList [VarG])
+
+(16,50)-(16,51)
+pi *. eval (sine , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(18,14)-(18,31)
+eval (e1 , x , y) +. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(18,32)-(18,33)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
+(19,21)-(19,38)
+eval (t1 , x , y) *. eval (t2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(19,39)-(19,40)
+2.0
+LitG
+
+(22,9)-(22,27)
+eval (th1 , x , y) < eval (th2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(22,28)-(22,29)
+if eval (th1 , x , y) < eval (th2 , x , y)
+then eval (th3 , x , y)
+else eval (th4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)

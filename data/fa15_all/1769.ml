@@ -1,78 +1,45 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then (l1, (List.append (clone 0 (first - sec)) l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (i,j) = x in
-      let (s,t) = a in (((i + j) / 10), (t :: ((i + j) mod 10))) = a in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  let f1 f2 x = if (f2 x) = x then false else true in wwhile ((f1 f), b);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
 
-let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then (l1, (List.append (clone 0 (first - sec)) l2))
-    else (l1, l2);;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      let (i,j) = x in
-      let (s,t) = a in ((((i + j) + s) / 10), ((((i + j) + s) mod 10) :: t)) in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  let f1 f2 x = if (f2 x) = x then (false, x) else (true, (f2 x)) in
+  wwhile ((f1 f), b);;
 
 *)
 
 (* changed spans
-(21,26)-(21,27)
-i + j
-BopG VarG VarG
+(6,35)-(6,40)
+(false , x)
+TupleG (fromList [VarG,LitG])
 
-(21,35)-(21,37)
-s
+(6,46)-(6,50)
+x
 VarG
 
-(21,48)-(21,49)
-i + j
-BopG VarG VarG
+(6,46)-(6,50)
+(true , f2 x)
+TupleG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(21,59)-(21,61)
-s
+(6,54)-(6,60)
+f2
 VarG
 
-(21,67)-(21,68)
-t
+(6,54)-(6,60)
+x
 VarG
+
+(6,54)-(6,60)
+wwhile (f1 f , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

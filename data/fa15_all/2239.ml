@@ -1,86 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Tan of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | TimesMod of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (w,t,u,z) ->
-      if (eval (w, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (z, x, y)
-  | TimesMod (w,t,u) ->
-      ((eval (w, x, y)) *. (eval (t, x, y))) /.
-        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) u)
-  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
-  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | VarX  -> x
-  | VarY  -> y;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = o + x in
+          if sum < 10 then (0, (x :: l)) else (1, ((x mod 10) :: 1)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      List.map combine (List.rev (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Tan of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | TimesMod of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (w,t,u,z) ->
-      if (eval (w, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (z, x, y)
-  | TimesMod (w,t,u) ->
-      ((eval (w, x, y)) *. (eval (t, x, y))) /.
-        (mod_float ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y)))
-  | Times (t,u) -> (eval (t, x, y)) *. (eval (u, x, y))
-  | Average (t,u) -> ((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0
-  | Cosine t -> cos (pi *. (eval (t, x, y)))
-  | Sine t -> sin (pi *. (eval (t, x, y)))
-  | VarX  -> x
-  | VarY  -> y;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = o + x in
+          if sum < 10 then (0, (x :: l)) else (1, ((x mod 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      List.map combine (List.rev (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(23,58)-(23,59)
-eval
-VarG
-
-(23,58)-(23,59)
-eval (u , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,58)-(23,59)
-(u , x , y)
-TupleG (fromList [VarG])
-
-(24,19)-(24,55)
-x
-VarG
-
-(24,19)-(24,55)
-y
+(22,65)-(22,66)
+l
 VarG
 
 *)

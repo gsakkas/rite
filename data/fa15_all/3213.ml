@@ -1,106 +1,40 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let case = rand (0, 6) in
-  if depth = 0
-  then
-    let case = rand (0, 1) in
-    match case with
-    | 0 -> buildX
-    | 1 -> buildY
-    | 2 -> buildSine (build (rand, (depth - 1)))
-    | 3 -> buildCosine (build (rand, (depth - 1)))
-    | 4 ->
-        buildAverage
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 5 ->
-        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-    | 6 ->
-        buildThresh
-          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-            (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let rec mulByDigit i l =
+  if l = []
+  then []
+  else (let h::t = l in match t with | [] -> h | _ -> [(h * i) / 10]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  let case = rand (0, 6) in
-  match case with
-  | 0 -> buildX ()
-  | 1 -> buildY ()
-  | 2 -> buildSine (build (rand, (depth - 1)))
-  | 3 -> buildCosine (build (rand, (depth - 1)))
-  | 4 ->
-      buildAverage ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 5 ->
-      buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-  | 6 ->
-      buildThresh
-        ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-          (build (rand, (depth - 1))), (build (rand, (depth - 1))));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x'::x'' ->
+      [(x * i) / 10] @
+        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
 
 *)
 
 (* changed spans
-(31,11)-(31,17)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+(3,5)-(3,11)
+match l with
+| [] -> []
+| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
+                                                                            [x'] @ x''))
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
 
-(32,11)-(32,17)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+(5,45)-(5,46)
+[(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
+                                                        [x'] @ x''))
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(32,11)-(32,17)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+(5,54)-(5,68)
+(@)
+VarG
 
-(33,11)-(33,48)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+(5,56)-(5,57)
+x
+VarG
 
 *)

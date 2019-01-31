@@ -1,28 +1,30 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), (((clone 0) - diff) @ l2));;
+let rec digitsOfInt n = [digitsOfInt n; n mod 10];;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  let diff = (List.length l2) - (List.length l1) in
-  (((clone 0 diff) @ l1), ((clone 0 (- diff)) @ l2));;
+let rec digitsOfInt n = if n > 0 then [n mod 10] else [];;
 
 *)
 
 (* changed spans
-(6,28)-(6,37)
-clone 0 (- diff)
-AppG (fromList [UopG EmptyG,LitG])
+(2,25)-(2,36)
+if n > 0
+then [n mod 10]
+else []
+IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ListG EmptyG Nothing)
 
-(6,40)-(6,44)
-(- diff)
-UopG VarG
+(2,37)-(2,38)
+n > 0
+BopG VarG LitG
+
+(2,40)-(2,48)
+0
+LitG
+
+(2,40)-(2,48)
+[n mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
 *)

@@ -1,82 +1,103 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Halve of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Wow of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let helper (f,a,y) = let x = f a in if x = y then (x, false) else (x, true);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  let (b',c') = f b in
+  match c' with | false  -> (b', c') | true  -> wwhile (f, b');;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine u -> sin (pi *. (eval (u, x, y)))
-  | Cosine u -> cos (pi *. (eval (u, x, y)))
-  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
-  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
-  | Thresh (s,t,u,v) ->
-      if (eval (s, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (v, x, y)
-  | Halve u -> (eval (u, x, y)) /. 2.0
-  | Wow (u,v,w) ->
-      sqrt
-        (((abs (eval (u, x, y))) *. (abs (eval (v, x, y)))) *.
-           (abs (eval (w, x, y))));;
+let fixpoint (f,b) = wwhile (helper, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Halve of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Wow of expr* expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine u -> sin (pi *. (eval (u, x, y)))
-  | Cosine u -> cos (pi *. (eval (u, x, y)))
-  | Average (u,v) -> ((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0
-  | Times (u,v) -> (eval (u, x, y)) *. (eval (v, x, y))
-  | Thresh (s,t,u,v) ->
-      if (eval (s, x, y)) < (eval (t, x, y))
-      then eval (u, x, y)
-      else eval (v, x, y)
-  | Halve u -> (eval (u, x, y)) /. 2.0
-  | Wow (u,v,w) ->
-      sqrt
-        (((abs_float (eval (u, x, y))) *. (abs_float (eval (v, x, y)))) *.
-           (abs_float (eval (w, x, y))));;
+let fixpoint (f,b) =
+  wwhile
+    ((let helper x = let y = f x in if y = x then (y, false) else (y, true) in
+      helper), b);;
 
 *)
 
 (* changed spans
-(30,11)-(30,14)
-abs_float
+(8,29)-(8,35)
+f
 VarG
 
-(30,37)-(30,40)
-abs_float
+(8,29)-(8,35)
+x
 VarG
 
-(31,12)-(31,15)
-abs_float
+(8,29)-(8,35)
+y
 VarG
+
+(8,29)-(8,35)
+x
+VarG
+
+(8,29)-(8,35)
+y
+VarG
+
+(8,29)-(8,35)
+y
+VarG
+
+(8,29)-(8,35)
+fun x ->
+  (let y = f x in
+   if y = x
+   then (y , false)
+   else (y , true))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(8,29)-(8,35)
+f x
+AppG (fromList [VarG])
+
+(8,29)-(8,35)
+y = x
+BopG VarG VarG
+
+(8,29)-(8,35)
+false
+LitG
+
+(8,29)-(8,35)
+true
+LitG
+
+(8,29)-(8,35)
+let helper =
+  fun x ->
+    (let y = f x in
+     if y = x
+     then (y , false)
+     else (y , true)) in
+helper
+LetG NonRec (fromList [LamG EmptyG]) VarG
+
+(8,29)-(8,35)
+let y = f x in
+if y = x
+then (y , false)
+else (y , true)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
+
+(8,29)-(8,35)
+if y = x
+then (y , false)
+else (y , true)
+IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+
+(8,29)-(8,35)
+(y , false)
+TupleG (fromList [VarG,LitG])
+
+(8,29)-(8,35)
+(y , true)
+TupleG (fromList [VarG,LitG])
 
 *)

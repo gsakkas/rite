@@ -1,20 +1,42 @@
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone ((x n) - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec eval (e,x,y) = buildTimes (buildX, buildY);;
 
 
 (* fix
 
-let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
+
+let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 
 *)
 
 (* changed spans
-(2,55)-(2,74)
-clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(2,66)-(2,67)
-n - 1
-BopG VarG LitG
+(17,43)-(17,49)
+match e with
+| VarX -> x
+| VarY -> y
+CaseG VarG (fromList [(Nothing,VarG)])
 
 *)

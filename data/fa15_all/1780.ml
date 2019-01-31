@@ -1,42 +1,118 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let l1 = [9; 9; 9];;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length + 1) l)) in
-  let (_,res) = List.fold_left f base args in res;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand 0 1) = 0 then buildX () else buildY ())
+  else
+    (let x = rand 0 6 in
+     match x with
+     | 0 -> buildX ()
+     | 1 -> buildY ()
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ -> []);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let l1 = [9; 9; 9];;
+let buildAverage (e1,e2) = Average (e1, e2);;
 
-let rec mulByDigit i l =
-  let f a x =
-    let (i,j) = x in
-    let (s,t) = a in ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t)) in
-  let base = (0, []) in
-  let args =
-    List.combine (List.rev (0 :: l1)) (clone i ((List.length l) + 1)) in
-  let (_,res) = List.fold_left f base args in res;;
+let buildCosine e = Cosine e;;
+
+let buildSine e = Sine e;;
+
+let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
+
+let buildTimes (e1,e2) = Times (e1, e2);;
+
+let buildX () = VarX;;
+
+let buildY () = VarY;;
+
+let rec build (rand,depth) =
+  if depth = 0
+  then (if (rand (0, 1)) = 0 then buildX () else buildY ())
+  else
+    (let x = rand (0, 6) in
+     match x with
+     | 0 -> buildX ()
+     | 1 -> buildY ()
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | _ -> buildX ());;
 
 *)
 
 (* changed spans
-(12,49)-(12,60)
-List.length l
-AppG (fromList [VarG])
+(27,11)-(27,21)
+rand (0 , 1)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(13,2)-(13,49)
-1
-LitG
+(27,17)-(27,18)
+(0 , 1)
+TupleG (fromList [LitG])
+
+(29,13)-(29,21)
+rand (0 , 6)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(29,18)-(29,19)
+(0 , 6)
+TupleG (fromList [LitG])
+
+(45,12)-(45,14)
+buildX ()
+AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
 
 *)

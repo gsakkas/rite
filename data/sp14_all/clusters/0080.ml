@@ -1,33 +1,18 @@
-ConAppG (Just (TupleG (fromList [BopG VarG VarG,CaseG VarG (fromList [(Nothing,VarG)])]))) Nothing
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+clone 0 (s2 - s1)
+clone 0 (s1 - s2)
+clone 0 (len2 - len1)
+clone 0 (len1 - len2)
+clone 0 (len1 - len2)
+clone 0 (len1 - len2)
+clone 0 (length2 - length1)
+clone 0 (length1 - length2)
+clone 0 (length2 - length1)
+clone 0 (length1 - length2)
+clone 0 ((-1) * l)
+clone 0 (sec - first)
+clone 0 (first - sec)
+clone 0 (lenl1 - lenl2)
+clone 0 (b - a)
+clone 0
+      (List.length l2 - List.length l1)

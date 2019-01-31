@@ -1,51 +1,75 @@
-TupleG (fromList [LitG])
-(2 , 6)
-(2 , 6)
-(2 , 6)
-(0 , 1)
-(0 , 6)
-(0 , 4)
-(0 , 1)
-(0 , 4)
-(0 , 1)
-(0 , 2)
-(2 , 7)
-(0 , 2)
-(2 , 7)
-(0 , 0)
-(0 , 7)
-(0 , 1)
-(0 , 1)
-(0 , 2)
-(0 , 5)
-(0 , 0)
-(0 , 0)
-(0 , 0)
-(0 , 0)
-(10 , 13 , 57)
-(10 , 13 , 57)
-(0 , 100)
-(0 , 100)
-(0 , 1)
-(0 , 1)
-(0 , 1)
-(0 , 1)
-(10 , 39)
-(1 , 4)
-(0 , 4)
-(0 , 4)
-(0 , 4)
-(0 , 4)
-(0 , 4)
-(3 , 3)
-(3 , 3)
-(3 , 3)
-(3 , 3)
-(3 , 3)
-(3 , 3)
-(3 , 3)
-(0 , true)
-(0 , true)
-(0 , 2)
-(0 , 2)
-(0 , 2)
+AppG (fromList [VarG,BopG EmptyG EmptyG])
+mulByDigit (i - 2) l
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+mulByDigit (i - 1) l
+mulByDigit (i - 1) l
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+helper x (n - 1)
+helper x (n - 1)
+clone x (n - 1)
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+buildhelper (depth - 1)
+            (depth - 1) expr
+Random.State.int s (y - x)
+clone x (n - 1)
+mulByDigit (i - 1) l
+mulByDigit (i - 1) l
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+clone x (n - 1)
+mulByDigit (i - 1) l
+mulByDigit (i - 1) l
+helpFac (10 * a) b

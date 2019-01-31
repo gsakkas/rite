@@ -1,150 +1,48 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let stringOfList f l = "[" ^ ((List.map (sepConcat "; ") l) ^ "]");;
+let padZero l1 l2 =
+  (((clone 0 ((List.length l2) - (List.length l1))) @ l1),
+    ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (num1,num2) = x in
+      let (carry,sum) = a in
+      ((((num1 + num2) + carry) / 10), ((((num1 + num2) + carry) mod 10) ::
+        sum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (c,res) = List.fold_left f base args in c :: res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x = ((bigAdd [a; 0]), (mulByDigit x l1)) in
+  let base = [] in let args = l2 in List.fold_left f base args;;
 
 
 (* fix
 
-let stringOfList f l =
-  match l with
-  | [] -> "[]"
-  | x::xs ->
-      let g a x = a ^ ("; " ^ (f x)) in
-      let base = "[" ^ (f x) in (List.fold_left g base xs) ^ "]";;
-
-let stringOfList f l = "[" ^ ((stringOfList f (List.map f l)) ^ "]");;
+let bigMul l1 l2 =
+  let f a x = a @ [0] in
+  let base = [] in let args = l2 in List.fold_left f base args;;
 
 *)
 
 (* changed spans
-(6,6)-(7,58)
-fun f ->
-  fun l ->
-    match l with
-    | [] -> "[]"
-    | x :: xs -> (let g =
-                    fun a ->
-                      fun x -> a ^ ("; " ^ f x) in
-                  let base = "[" ^ f x in
-                  List.fold_left g base
-                                 xs ^ "]")
-LamG (LamG EmptyG)
-
-(6,12)-(6,31)
-l
+(27,23)-(27,29)
+(@)
 VarG
 
-(6,12)-(6,31)
-fun l ->
-  match l with
-  | [] -> "[]"
-  | x :: xs -> (let g =
-                  fun a ->
-                    fun x -> a ^ ("; " ^ f x) in
-                let base = "[" ^ f x in
-                List.fold_left g base
-                               xs ^ "]")
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(6,12)-(6,31)
-"[]"
-LitG
-
-(6,12)-(6,31)
-let g =
-  fun a ->
-    fun x -> a ^ ("; " ^ f x) in
-let base = "[" ^ f x in
-List.fold_left g base xs ^ "]"
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(6,12)-(6,31)
-match l with
-| [] -> "[]"
-| x :: xs -> (let g =
-                fun a ->
-                  fun x -> a ^ ("; " ^ f x) in
-              let base = "[" ^ f x in
-              List.fold_left g base
-                             xs ^ "]")
-CaseG VarG (fromList [(Nothing,LitG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(6,23)-(6,26)
-"; "
-LitG
-
-(6,29)-(6,30)
-f
-VarG
-
-(6,29)-(6,30)
-f x
-AppG (fromList [VarG])
-
-(7,30)-(7,31)
-"[" ^ f x
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(7,35)-(7,58)
-(^)
-VarG
-
-(7,35)-(7,58)
-f
-VarG
-
-(7,35)-(7,58)
-x
-VarG
-
-(7,35)-(7,58)
-(^)
-VarG
-
-(7,35)-(7,58)
-f x
-AppG (fromList [VarG])
-
-(7,35)-(7,58)
-List.fold_left g base xs ^ "]"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(7,35)-(7,58)
-"["
-LitG
-
-(7,50)-(7,51)
-g
-VarG
-
-(7,57)-(7,58)
-xs
-VarG
-
-(9,17)-(9,66)
-"]"
-LitG
-
-(9,31)-(9,39)
-stringOfList
-VarG
-
-(9,31)-(9,39)
-f
-VarG
-
-(9,31)-(9,39)
-List.map f l
-AppG (fromList [VarG])
-
-(9,51)-(9,55)
-f
-VarG
+(27,27)-(27,28)
+[0]
+ListG LitG Nothing
 
 *)

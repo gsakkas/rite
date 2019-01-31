@@ -1,56 +1,54 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2.0
-  | Cosine e1 -> cos (3.142 *. (eval (e1, x, y)))
-  | Sine e1 -> sin (3.142 *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let fixpoint (f,b) =
+  wwhile (let g x = let x = f in (x, (b = (f b))) in (g, b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let temp = f b in
+  match temp with | (a,boolean) -> if boolean then wwhile (f, a) else a;;
 
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Cosine e1 -> cos (3.142 *. (eval (e1, x, y)))
-  | Sine e1 -> sin (3.142 *. (eval (e1, x, y)))
-  | VarY  -> y
-  | VarX  -> x;;
+let fixpoint (f,b) =
+  wwhile (let n x = let ff = f b in (ff, (b = ff)) in (n, b));;
 
 *)
 
 (* changed spans
-(18,23)-(18,69)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
+(7,9)-(7,60)
+let n =
+  fun x ->
+    (let ff = f b in
+     (ff , b = ff)) in
+(n , b)
+LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
+
+(7,20)-(7,49)
+let ff = f b in (ff , b = ff)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+
+(7,28)-(7,29)
+f b
+AppG (fromList [VarG])
+
+(7,33)-(7,49)
+b
+VarG
+
+(7,34)-(7,35)
+ff
+VarG
+
+(7,45)-(7,46)
+ff
+VarG
+
+(7,54)-(7,55)
+n
+VarG
 
 *)

@@ -1,33 +1,40 @@
 
-let rec wwhile (f,b) =
-  match b with | (f',b') -> if b' then wwhile (f, f') else f';;
+let rec wwhile (f,b) = match f b with | (h,t) -> if t = false then h else f h;;
 
 
 (* fix
 
 let rec wwhile (f,b) =
-  match f b with | (f',x') -> if x' then wwhile (f, f') else f';;
+  match f b with | (b',c') -> if c' = false then b' else wwhile (f, b');;
 
 *)
 
 (* changed spans
-(3,2)-(3,61)
+(2,23)-(2,77)
 match f b with
-| (f' , x') -> if x'
-               then wwhile (f , f')
-               else f'
+| (b' , c') -> if c' = false
+               then b'
+               else wwhile (f , b')
 CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(3,8)-(3,9)
-f
+(2,52)-(2,53)
+c'
 VarG
 
-(3,8)-(3,9)
-f b
-AppG (fromList [VarG])
+(2,67)-(2,68)
+b'
+VarG
 
-(3,31)-(3,33)
-x'
+(2,74)-(2,75)
+wwhile
+VarG
+
+(2,74)-(2,75)
+(f , b')
+TupleG (fromList [VarG])
+
+(2,76)-(2,77)
+b'
 VarG
 
 *)

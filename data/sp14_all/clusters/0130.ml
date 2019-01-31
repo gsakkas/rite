@@ -1,6 +1,11 @@
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG LitG) LitG]))) Nothing]))) Nothing])
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
+AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+helper (i - 1) l (bigAdd acc
+                         l)
+helper (i - 1) l (bigAdd acc
+                         l)
+helper (i - 1) l (bigAdd acc
+                         l)
+helper (x - 1) l (bigAdd l
+                         accum)
+helper (i - 1) (bigAdd acc l)
+       l

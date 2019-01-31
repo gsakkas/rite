@@ -1,2 +1,3 @@
-BopG (UopG EmptyG) (AppG (fromList [EmptyG]))
-(- 1.0) *. eval (e1 , x , y)
+ConAppG (Just (TupleG (fromList [AppG (fromList [VarG])]))) Nothing
+(remainder h
+           i) :: (mulByDigit i t)

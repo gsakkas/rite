@@ -1,15 +1,10 @@
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG),(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
-match depth with
-| 0 -> match rand (1 , 2) with
-       | 1 -> VarX
-       | 2 -> VarY
-| _ -> (let next =
-          build (rand , depth - 1) in
-        match rand (1 , 7) with
-        | 1 -> buildSine next
-        | 2 -> buildCosine next
-        | 3 -> buildAverage (next , next)
-        | 4 -> buildTimes (next , next)
-        | 5 -> buildThresh (next , next , next , next)
-        | 6 -> buildSqrt next
-        | 7 -> buildGauss (next , next , next))
+LetG NonRec (fromList [TupleG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
+let (a , b) =
+  (List.length l1 , List.length l2) in
+if a < b
+then (List.append (clone 0
+                         (b - a)) l1 , l2)
+else if b < a
+     then (l1 , List.append (clone 0
+                                   (a - b)) l2)
+     else (l1 , l2)

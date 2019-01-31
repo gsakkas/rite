@@ -1,6 +1,2 @@
-TupleG (fromList [IteG EmptyG EmptyG EmptyG])
-(if depth = 0
- then buildX ()
- else build (rand , depth - 1) , if depth = 0
-                                 then buildY ()
-                                 else build (rand , depth - 1))
+AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,TupleG (fromList [VarG])]))) Nothing])
+pair ((h1 , h2) :: acc) t1 t2

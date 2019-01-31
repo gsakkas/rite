@@ -1,78 +1,76 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr
-  | DivideByOne of expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (eval (e', x, y))
-  | DivideByOne (e1,e2,e3) ->
-      sin
-        ((1.0 /. (eval (e1, x, y))) (1.0 /. (eval (e2, x, y)))
-           (1.0 /. (eval (e3, x, y))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (c,h::t) ->
+          if (((fst x) + (snd x)) + c) > 9
+          then (1, (((((fst x) + (snd x)) + c) mod 10) :: t))
+          else (0, (((((fst x) + (snd x)) + c) mod 10) :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, (((fst x) + (snd x)) mod 10))
+          else (0, (((fst x) + (snd x)) mod 10)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | SquareRoot of expr
-  | DivideByOne of expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e' -> sin (pi *. (eval (e', x, y)))
-  | Cosine e' -> cos (pi *. (eval (e', x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | SquareRoot e' -> sqrt (eval (e', x, y))
-  | DivideByOne (e1,e2,e3) ->
-      sin
-        (((1.0 /. (eval (e1, x, y))) +. (1.0 /. (eval (e2, x, y)))) +.
-           (1.0 /. (eval (e3, x, y))));;
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (c,h::t) ->
+          if (((fst x) + (snd x)) + c) > 9
+          then (1, (((((fst x) + (snd x)) + c) mod 10) :: t))
+          else (0, (((((fst x) + (snd x)) + c) mod 10) :: t))
+      | _ ->
+          if ((fst x) + (snd x)) > 9
+          then (1, [((fst x) + (snd x)) mod 10])
+          else (0, [((fst x) + (snd x)) mod 10]) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(30,8)-(31,38)
-((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(25,19)-(25,47)
+[(fst x + snd x) mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
-(30,9)-(30,35)
-(1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(26,19)-(26,47)
+[(fst x + snd x) mod 10]
+ListG (BopG EmptyG EmptyG) Nothing
 
 *)

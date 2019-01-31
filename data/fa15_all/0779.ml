@@ -1,79 +1,46 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let buildCosine e = Cosine e;;
-
-let buildOp1 e = Op1 e;;
-
-let buildOp2 (a,b,a_less,b_less) = Op2 (a, b, a_less);;
-
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth > (-1)
-  then
-    let randNum = rand (1, 2) in
-    let randNum2 = rand (3, 4) in
-    match (randNum, randNum2) with
-    | (1,3) -> buildCosine (buildOp1 (buildX rand))
-    | (1,4) ->
-        buildSine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (2,3) -> buildCosine (buildOp1 (buildX ()))
-    | (2,4) ->
-        buildCosine
-          (buildOp2
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-               (build (rand, (depth - 1)))))
-    | (x,y) -> failwith "didnt work";;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then ((((clone 0) - n) :: l1), l2) else (l1, ((clone 0 n) :: l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Op1 of expr
-  | Op2 of expr* expr* expr;;
+let rec clone x n =
+  if n <= 0 then [] else if n = 1 then [x] else [x] @ (clone x (n - 1));;
 
-let buildSine e = Sine e;;
-
-let buildX () = VarX;;
-
-let rec build (rand,depth) =
-  if depth = 0 then buildSine (buildX ()) else buildX ();;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n < 0 then (((clone 0 (- n)) @ l1), l2) else (l1, ((clone 0 n) @ l2));;
 
 *)
 
 (* changed spans
-(24,5)-(24,17)
-depth = 0
-BopG VarG LitG
+(7,19)-(7,28)
+clone 0 (- n) @ l1
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(29,45)-(29,49)
-0
-LitG
-
-(41,24)-(41,36)
-buildX
+(7,20)-(7,25)
+(@)
 VarG
+
+(7,20)-(7,25)
+clone 0 (- n)
+AppG (fromList [UopG EmptyG,LitG])
+
+(7,31)-(7,32)
+(- n)
+UopG VarG
+
+(7,58)-(7,63)
+(@)
+VarG
+
+(7,58)-(7,63)
+clone 0 n
+AppG (fromList [VarG,LitG])
 
 *)

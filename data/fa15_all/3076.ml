@@ -1,22 +1,18 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> cat l (listReverse t h);;
+let rec digitsOfInt n =
+  let numL = [] in if n > 0 then (n mod 10) :: (numL digitsOfInt n) else numL;;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> cat (listReverse t) h;;
+let rec digitsOfInt n =
+  let numL = [] in if n > 0 then (n mod 10) :: (digitsOfInt n) else numL;;
 
 *)
 
 (* changed spans
-(5,42)-(5,59)
-listReverse t
+(3,48)-(3,52)
+digitsOfInt n
 AppG (fromList [VarG])
 
 *)

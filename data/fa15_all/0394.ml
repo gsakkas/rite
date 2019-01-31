@@ -1,77 +1,79 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" exprToString expr2)
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^ (":" ^ (exprToString expr4 ")")))))));;
+let fixpoint (f,b) =
+  let fx x = if x = 0 then 0 else if x > 1 then x - 1 else x + 1 in
+  wwhile ((fx b), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
-  | Cosine expr -> "cos(pi" ^ ((exprToString expr) ^ ")")
-  | Average (expr,expr2) ->
-      "((" ^ ((exprToString expr) ^ ("+" ^ ((exprToString expr2) ^ "/2)")))
-  | Times (expr,expr2) -> (exprToString expr) ^ ("*" ^ (exprToString expr2))
-  | Thresh (expr,expr2,expr3,expr4) ->
-      "(" ^
-        ((exprToString expr) ^
-           ("<" ^
-              ((exprToString expr2) ^
-                 ("?" ^
-                    ((exprToString expr3) ^
-                       (":" ^ ((exprToString expr4) ^ ")")))))));;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(19,49)-(19,52)
-(^)
+(7,16)-(7,17)
+fun b ->
+  if f b
+  then (b , true)
+  else (b , false)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(7,27)-(7,28)
+let funt =
+  fun b ->
+    if f b
+    then (b , true)
+    else (b , false) in
+wwhile (funt , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(7,63)-(7,64)
+b
 VarG
 
-(19,53)-(19,65)
-exprToString expr2
-AppG (fromList [VarG])
-
-(26,52)-(26,64)
-(^)
+(8,2)-(8,8)
+f
 VarG
 
-(26,52)-(26,64)
-exprToString expr4
-AppG (fromList [VarG])
+(8,10)-(8,16)
+true
+LitG
+
+(8,10)-(8,16)
+(b , false)
+TupleG (fromList [VarG,LitG])
+
+(8,11)-(8,13)
+wwhile
+VarG
+
+(8,11)-(8,13)
+funt
+VarG
+
+(8,11)-(8,13)
+b
+VarG
+
+(8,11)-(8,13)
+wwhile (funt , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(8,11)-(8,13)
+false
+LitG
+
+(8,11)-(8,13)
+(funt , b)
+TupleG (fromList [VarG])
 
 *)

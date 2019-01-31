@@ -14,21 +14,21 @@ BopG (BopG EmptyG EmptyG) VarG
 CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
 TupleG (fromList [LitG,ListG EmptyG Nothing])
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
-ListG (BopG EmptyG EmptyG) Nothing
 CaseG VarG (fromList [(Nothing,VarG)])
+ListG (BopG EmptyG EmptyG) Nothing
 LamG VarG
 LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
 BopG VarG (AppG (fromList [EmptyG]))
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
 LamG (AppG (fromList [EmptyG]))
+TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
 LamG (LamG EmptyG)
 LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-ListG LitG Nothing
 LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+ListG LitG Nothing
 CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 LamG (TupleG (fromList [EmptyG]))
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 ListG VarG Nothing
 LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
@@ -37,4 +37,4 @@ TupleG (fromList [VarG,BopG EmptyG EmptyG])
 TupleG (fromList [AppG (fromList [EmptyG])])
 TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
 AppG (fromList [BopG EmptyG EmptyG])
-TupleG (fromList [ListG EmptyG Nothing])
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))

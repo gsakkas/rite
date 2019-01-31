@@ -1,15 +1,15 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n' mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
-(n mod 10) :: (digitsOfInt (n / 10))
+LamG LitG
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0
+fun f -> 0

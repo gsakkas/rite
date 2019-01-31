@@ -1,46 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex x y)));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> [0]
+  | x::x' -> [(x * i) / 10] @ [((x * i) mod 10) + (mulByDigit i x')];;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine ex -> sin (pi *. (eval (ex, x, y)));;
+let rec mulByDigit i l =
+  match l with
+  | [] -> []
+  | x::x'::x'' ->
+      [(x * i) / 10] @
+        ([((x * i) mod 10) + x'] @ ((mulByDigit i [x']) @ x''));;
 
 *)
 
 (* changed spans
-(17,32)-(17,40)
-(ex , x , y)
-TupleG (fromList [VarG])
+(3,2)-(5,68)
+match l with
+| [] -> []
+| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
+                                                                            [x'] @ x''))
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+
+(4,11)-(4,12)
+[]
+ListG EmptyG Nothing
+
+(5,30)-(5,68)
+(@)
+VarG
+
+(5,30)-(5,68)
+[((x * i) mod 10) + x'] @ (mulByDigit i
+                                      [x'] @ x'')
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(5,50)-(5,67)
+x'
+VarG
+
+(5,51)-(5,61)
+(@)
+VarG
+
+(5,51)-(5,61)
+mulByDigit i [x']
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(5,64)-(5,66)
+[x']
+ListG VarG Nothing
 
 *)

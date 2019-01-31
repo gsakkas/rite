@@ -1,77 +1,101 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | Thresh (a,b,c,d) ->
-      ((exprToString a), (exprToString b), (exprToString c),
-        (exprToString d));;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else if i = 1 then l else mulByDigit ((i - 1) bigAdd) l l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")");;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0
+  then [0]
+  else if i = 1 then l else (let l' = bigAdd l l in mulByDigit (i - 1) l');;
 
 *)
 
 (* changed spans
-(12,2)-(15,25)
-match e with
-| VarX -> "x"
-| VarY -> "y"
-| Sine e -> "sin (pi*" ^ (exprToString e ^ ")")
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
-
-(14,57)-(14,58)
-"x"
-LitG
-
-(15,8)-(15,24)
-(^)
+(31,46)-(31,56)
+bigAdd
 VarG
 
-(15,8)-(15,24)
-(^)
+(31,46)-(31,56)
+l
 VarG
 
-(15,8)-(15,24)
-"sin (pi*" ^ (exprToString e ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(31,46)-(31,56)
+l
+VarG
 
-(15,8)-(15,24)
-exprToString e ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(31,46)-(31,56)
+bigAdd l l
+AppG (fromList [VarG])
 
-(15,8)-(15,24)
-"y"
-LitG
+(31,46)-(31,56)
+mulByDigit (i - 1) l'
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
-(15,8)-(15,24)
-"sin (pi*"
-LitG
+(31,46)-(31,77)
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
 
-(15,22)-(15,23)
-e
+(31,76)-(31,77)
+l'
 VarG
 
 *)

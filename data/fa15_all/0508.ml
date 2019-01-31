@@ -1,33 +1,35 @@
 
-let pipe fs = let f a x = x a in let base = fs in List.fold_left f base fs;;
+let pipe fs =
+  let f a x result = a x in let base = f 0 in List.fold_left f base fs;;
 
 
 (* fix
 
 let pipe fs =
-  let f a x q = x (a q) in let base x = x in List.fold_left f base fs;;
+  let f a x n = x (a n) in let base f = 0 in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(2,26)-(2,29)
-fun q -> x (a q)
+(3,12)-(3,24)
+fun n -> x (a n)
 LamG (AppG (fromList [EmptyG]))
 
-(2,28)-(2,29)
-a q
-AppG (fromList [VarG])
-
-(2,33)-(2,74)
-q
+(3,39)-(3,40)
+a
 VarG
 
-(2,44)-(2,46)
-fun x -> x
-LamG VarG
-
-(2,50)-(2,74)
-x
+(3,41)-(3,42)
+n
 VarG
+
+(3,41)-(3,42)
+fun f -> 0
+LamG LitG
+
+(3,41)-(3,42)
+let base = fun f -> 0 in
+List.fold_left f base fs
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
 
 *)

@@ -1,4 +1,4 @@
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (ListG EmptyG Nothing)
-let y :: [] =
-  loop (input / 10) in
-[y ; input mod 10]
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,ConAppG Nothing Nothing)])
+match rand (1 , 2) with
+| 1 -> VarX
+| 2 -> VarY

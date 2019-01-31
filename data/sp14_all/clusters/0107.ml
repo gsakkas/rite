@@ -1,10 +1,10 @@
-ConAppG (Just VarG) Nothing
-Op1 e
-Abs e
-Sine e
-Cosine e
-Sine e
-Cosine e
-Sine e
-Sine e
-Sine e
+AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+mulByDigit h1 (rh :: rt)
+helper t l (h :: acc)
+helper t l (h :: acc)
+helper t l (h :: acc)
+padZero asd3 (asd2 :: b)
+padZero asd3 (asd2 :: b)
+mulByDigit i (m :: t)
+mulByDigit i (m :: t)
+listReverse2 t (h :: dest)

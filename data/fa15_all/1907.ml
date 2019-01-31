@@ -1,68 +1,63 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Root of expr;;
+let intboolf f x = ((f x), ((f x) < 1));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Squared e -> (eval (e, x, y)) ** 2.
-  | Root e -> (eval (e, x, y)) ** 0.5;;
+let fixpoint (f,b) = wwhile (intboolf, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Root of expr;;
+let func (f,b) b = ((f b), ((f b) == b));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  match f b with | (b',c') -> if c' then wwhile (f, b') else b';;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Squared e -> (eval (e, x, y)) ** 2.
-  | Root e -> (eval (e, x, y)) ** 0.5;;
+let fixpoint (f,b) = wwhile ((func (f, b)), b);;
 
 *)
 
 (* changed spans
-(21,67)-(21,68)
-2.0
-LitG
+(2,15)-(2,39)
+fun (f , b) ->
+  fun b -> (f b , f b = b)
+LamG (LamG EmptyG)
+
+(2,19)-(2,39)
+fun b -> (f b , f b = b)
+LamG (TupleG (fromList [EmptyG]))
+
+(2,27)-(2,38)
+b
+VarG
+
+(2,28)-(2,33)
+f b = b
+BopG (AppG (fromList [EmptyG])) VarG
+
+(2,36)-(2,37)
+b
+VarG
+
+(4,16)-(5,63)
+b
+VarG
+
+(7,29)-(7,37)
+func (f , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(7,39)-(7,40)
+func
+VarG
+
+(7,39)-(7,40)
+f
+VarG
+
+(7,39)-(7,40)
+(f , b)
+TupleG (fromList [VarG])
 
 *)

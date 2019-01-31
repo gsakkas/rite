@@ -1,56 +1,52 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (1, 10) in
-    (if (rand mod 2) = 0 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with | _ -> build (rand, (depth - 1)));;
+let fixpoint (f,b) = let funt x = b in wwhile (funt, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then
-    let num = rand (1, 10) in
-    (if (num mod 2) = 0 then buildX () else buildY ())
-  else
-    (let num = rand (1, 10) in
-     match num with | _ -> build (rand, (depth - 1)));;
+let fixpoint (f,b) = let funt x = ((f b), ((f b) = b)) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(19,9)-(19,13)
-num
+(6,14)-(6,55)
+f
 VarG
+
+(6,14)-(6,55)
+f b
+AppG (fromList [VarG])
+
+(6,14)-(6,55)
+(f b , f b = b)
+TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+
+(6,21)-(6,55)
+f b = b
+BopG (AppG (fromList [EmptyG])) VarG
+
+(6,30)-(6,35)
+f
+VarG
+
+(6,30)-(6,35)
+b
+VarG
+
+(6,30)-(6,35)
+b
+VarG
+
+(6,30)-(6,35)
+wwhile (funt , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

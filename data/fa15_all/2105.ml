@@ -1,124 +1,122 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildTimes VarX
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then let n = (List.length l2) - (List.length l1) in clone (0 n)
+  else
+    if (List.length l2) < (List.length l1)
+    then (let n = (List.length l1) - (List.length l2) in clone (0 n))
+    else (l1, l2);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  match rand (1, 7) with
-  | _ -> buildThresh (VarX, VarX, VarX, VarX)
-  | 1 -> buildX ()
-  | 2 -> buildY ()
-  | 3 ->
-      buildSine (if depth = 0 then buildX () else build (rand, (depth - 1)))
-  | 4 ->
-      buildCosine
-        (if depth = 0 then buildY () else build (rand, (depth - 1)))
-  | 5 ->
-      buildAverage
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 6 ->
-      buildTimes
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))))
-  | 7 ->
-      buildThresh
-        ((if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))),
-          (if depth = 0 then buildX () else build (rand, (depth - 1))),
-          (if depth = 0 then buildY () else build (rand, (depth - 1))));;
+let padZero l1 l2 =
+  if (List.length l1) = (List.length l2)
+  then (l1, l2)
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 *)
 
 (* changed spans
-(27,9)-(27,19)
-buildThresh
+(5,5)-(5,40)
+List.length l1 = List.length l2
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(6,16)-(6,27)
+(l1 , l2)
+TupleG (fromList [VarG])
+
+(6,28)-(6,30)
+l1
 VarG
 
-(27,20)-(27,24)
-(VarX , VarX , VarX , VarX)
-TupleG (fromList [ConAppG Nothing Nothing])
+(6,34)-(6,50)
+List.length l1 < List.length l2
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(28,9)-(28,18)
-VarX
-ConAppG Nothing Nothing
+(6,34)-(6,50)
+if List.length l1 < List.length l2
+then (clone 0
+            (List.length l2 - List.length l1) @ l1 , l2)
+else (l1 , clone 0
+                 (List.length l1 - List.length l2) @ l2)
+IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
 
-(28,9)-(28,18)
-VarX
-ConAppG Nothing Nothing
+(6,54)-(6,59)
+List.length
+VarG
 
-(28,9)-(28,18)
-VarX
-ConAppG Nothing Nothing
+(6,54)-(6,59)
+l2
+VarG
+
+(6,54)-(6,59)
+(@)
+VarG
+
+(6,54)-(6,59)
+clone 0
+      (List.length l2 - List.length l1) @ l1
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(6,54)-(6,59)
+clone 0
+      (List.length l2 - List.length l1)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(6,54)-(6,59)
+(clone 0
+       (List.length l2 - List.length l1) @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(8,7)-(8,42)
+List.length l2 - List.length l1
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(9,9)-(9,69)
+l1
+VarG
+
+(9,18)-(9,53)
+l2
+VarG
+
+(9,18)-(9,53)
+l1
+VarG
+
+(9,18)-(9,53)
+clone
+VarG
+
+(9,18)-(9,53)
+(@)
+VarG
+
+(9,18)-(9,53)
+clone 0
+      (List.length l1 - List.length l2) @ l2
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(9,18)-(9,53)
+clone 0
+      (List.length l1 - List.length l2)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(9,18)-(9,53)
+0
+LitG
+
+(9,18)-(9,53)
+(l1 , clone 0
+            (List.length l1 - List.length l2) @ l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

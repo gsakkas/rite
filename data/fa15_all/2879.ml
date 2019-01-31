@@ -1,58 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) * (eval (e2, x, y))) / 2;;
+let sqsum xs =
+  let f a x = (a ** 2) + (x ** 2) in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y))) /. 2.0;;
+let sqsum xs =
+  let f a x = (a * a) + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(19,23)-(19,62)
-(eval (e1 , x , y) *. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
+(3,17)-(3,19)
+a * a
+BopG VarG VarG
 
-(19,24)-(19,41)
-eval (e1 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(3,26)-(3,27)
+x * x
+BopG VarG VarG
 
-(19,65)-(19,66)
-2.0
-LitG
+(3,28)-(3,30)
+a
+VarG
+
+(3,31)-(3,32)
+x
+VarG
 
 *)

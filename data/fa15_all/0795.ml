@@ -1,120 +1,30 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildSqrt e = Sqrt (Abs e);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> VarX
-  | _ ->
-      let next = build (rand, (depth - 1)) in
-      (match rand (1, 7) with
-       | 1 -> buildSine next
-       | 2 -> buildCosine next
-       | 3 -> buildAverage next next
-       | 4 -> buildTimes next next
-       | 5 -> buildThresh next next next next
-       | 6 -> buildSqrt next
-       | 7 -> buildGauss next next next);;
+let rec digitsOfInt n =
+  if n <= 0 then [n] else (append digitsOfInt n) / (10 [n]);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Sqrt of expr
-  | Abs of expr
-  | Gauss of expr* expr* expr;;
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildGauss (e1,e2,e3) = Gauss (e1, e2, e3);;
-
-let buildSine e = Sine e;;
-
-let buildSqrt e = Sqrt (Abs e);;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let rec build (rand,depth) =
-  match depth with
-  | 0 -> VarX
-  | _ ->
-      let next = build (rand, (depth - 1)) in
-      (match rand (1, 7) with
-       | 1 -> buildSine next
-       | 2 -> buildCosine next
-       | 3 -> buildAverage (next, next)
-       | 4 -> buildTimes (next, next)
-       | 5 -> buildThresh (next, next, next, next)
-       | 6 -> buildSqrt next
-       | 7 -> buildGauss (next, next, next));;
+let rec digitsOfInt n =
+  if n <= 0 then [n] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 *)
 
 (* changed spans
-(36,14)-(36,36)
-buildAverage (next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(5,34)-(5,45)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
 
-(36,27)-(36,31)
-(next , next)
-TupleG (fromList [VarG])
+(5,46)-(5,47)
+n / 10
+BopG VarG LitG
 
-(37,14)-(37,34)
-buildTimes (next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(37,25)-(37,29)
-(next , next)
-TupleG (fromList [VarG])
-
-(38,14)-(38,45)
-buildThresh (next , next , next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(38,26)-(38,30)
-(next , next , next , next)
-TupleG (fromList [VarG])
-
-(40,14)-(40,39)
-buildGauss (next , next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(40,25)-(40,29)
-(next , next , next)
-TupleG (fromList [VarG])
+(5,56)-(5,57)
+n mod 10
+BopG VarG LitG
 
 *)

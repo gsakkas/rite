@@ -1,97 +1,42 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> ((e1 * 1.00) +. (e2 * 1.00)) /. 2.0;;
+let rec additivePersistence n =
+  let rec recCounter n count =
+    if n < 10
+    then count
+    else recCounter ((sumList (digitsOfInt n)) (count + 1)) in
+  recCounter n 0;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> pi *. x
-  | Cosine e -> pi *. y
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y));;
+let rec additivePersistence n =
+  let rec recCounter n count =
+    if n < 10
+    then count
+    else (recCounter (sumList (digitsOfInt n)) count) + 1 in
+  recCounter n 0;;
 
 *)
 
 (* changed spans
-(14,2)-(19,58)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> pi *. x
-| Cosine e -> pi *. y
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG)])
+(11,9)-(11,19)
+recCounter (sumList (digitsOfInt n))
+           count
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(19,24)-(19,35)
-eval (e1 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(19,25)-(19,27)
-eval
-VarG
-
-(19,25)-(19,27)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(19,39)-(19,50)
-x
-VarG
-
-(19,40)-(19,42)
-y
-VarG
-
-(19,40)-(19,42)
-eval
-VarG
-
-(19,40)-(19,42)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(19,40)-(19,42)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(19,45)-(19,49)
-x
-VarG
-
-(19,55)-(19,58)
-y
-VarG
+(11,9)-(11,59)
+recCounter (sumList (digitsOfInt n))
+           count + 1
+BopG (AppG (fromList [EmptyG])) LitG
 
 *)

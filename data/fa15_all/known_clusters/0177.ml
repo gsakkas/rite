@@ -1,7 +1,9 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
-if numZeros <= 0
-then []
-else 0 :: (generatePadding (numZeros - 1))
-if n = 0
-then []
-else x :: (clone x (n - 1))
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+match y with
+| [] -> x
+| h :: t -> (let z = h :: x in
+             append (z , t))
+match y with
+| [] -> x
+| h :: t -> (let z = h :: x in
+             append (z , t))

@@ -1,7 +1,7 @@
-BopG LitG LitG
-3 < 4
-3 < 4
-3 < 4
-1.0 /. 3.0
-1.0 /. 3.0
-1.0 /. 3.0
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
+(0 , 0 :: c)
+(0 , 0 :: c)
+(0 , 0 :: c)
+(0 , 0 :: c)
+(0 , 0 :: c)
+(0 , 0 :: c)

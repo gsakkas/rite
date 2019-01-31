@@ -1,20 +1,45 @@
-BopG (AppG (fromList [EmptyG])) LitG
-eval (e1 , x , y) /. 2.0
-addition (m , n) / 10
-addition (m , n) mod 10
-eval (t , x , y) /. 30.0
-eval (t , x , y) /. 30.0
-eval (t , x , y) /. 30.0
-eval (b , x , y) /. 2.0
-sqrt (abs_float (eval (n , x , y))) /. 1000.0
-sqrt (abs_float (eval (n , x , y))) /. 1000.0
-recCounter (sumList (digitsOfInt n))
-           count + 1
-eval (e2 , x , y) /. 2.0
-rand (0 , 1) = 0
-sqrt (d ** d) /. 3.0
-additivePersistence (sumList (digitsOfInt n)) + 1
-List.mem h seen = false
-List.mem h seen = false
-List.length t <> 0
-List.length t <> 0
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+let newList = List.map f l in
+"[" ^ (sepConcat "; "
+                 newList ^ "]")
+let newList = List.map f l in
+"[" ^ (sepConcat "; "
+                 newList ^ "]")
+let newList = List.map f l in
+"[" ^ (sepConcat "; "
+                 newList ^ "]")
+let digits = digitsOfInt n in
+sumList digits
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let x0 = digitsOfInt n in
+sumList x0
+let x0 = digitsOfInt n in
+sumList x0
+let x0 = digitsOfInt n in
+sumList x0
+let n = digitsOfInt n in
+sumList n
+let rest' = filter t h in
+helper (seen' , rest')
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'

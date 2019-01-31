@@ -1,54 +1,21 @@
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-let carry =
-  match a with
-  | (f , g) -> f in
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
+LetG NonRec (fromList [ListG EmptyG Nothing]) (IteG EmptyG EmptyG EmptyG)
+let myList = [] in
+if n <= 0
+then []
+else if n < 10
+     then [n]
+     else digitsOfInt (n / 10) @ [n mod 10]
+let accum = [] in
+if n < 1
+then []
+else clone x n
+let accum = [] in
+if n < 1
+then []
+else clone x n
+let l = [] in
+if n < 0 then l else l
+let myList = [] in
+if n <= 0
+then []
+else (n mod 10) :: myList

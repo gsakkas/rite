@@ -1,3 +1,4 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) LitG) LitG]))) Nothing
-(((d1 + d2) + 1) - 10) :: result
-(((arg1 + arg2) + 1) mod 10) :: acc
+AppG (fromList [ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing])
+List.combine (0 :: (List.rev l1))
+             (0 :: (List.rev l2))
+List.rev (0 :: (List.rev a))

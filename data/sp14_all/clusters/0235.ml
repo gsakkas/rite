@@ -1,4 +1,4 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),AppG (fromList [AppG (fromList [VarG])])]))) Nothing)])
-match l with
-| [] -> l'
-| h :: t -> (List.hd l) :: (listReverse (List.tl l))
+IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+if n < 10
+then count + 1
+else addHelp (count + 1 , addNum n)

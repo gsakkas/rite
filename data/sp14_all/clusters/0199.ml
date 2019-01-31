@@ -1,7 +1,7 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing)])
 match l with
-| [] -> []
-| h :: t -> t
+| [] -> l
+| h :: t -> h :: (listReverse t)
 match l with
-| [] -> []
-| h :: m :: t -> t
+| [] -> l
+| h :: t -> h :: (listReverse t)

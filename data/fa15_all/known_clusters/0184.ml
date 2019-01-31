@@ -1,7 +1,7 @@
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (ListG EmptyG Nothing)
-let d :: [] =
-  digitsOfInt (n / 10) in
-[d ; n mod 10]
-let d :: [] =
-  digitsOfInt (n / 10) in
-[d ; n mod 10]
+TupleG (fromList [IteG EmptyG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+(if ((a1 + x1) + x2) >= 10
+ then 1
+ else 0 , ((a1 + x1) + x2) :: a2)
+(if ((a1 + x1) + x2) >= 10
+ then 1
+ else 0 , ((a1 + x1) + x2) :: a2)

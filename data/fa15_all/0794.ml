@@ -1,43 +1,31 @@
 
-let rec wwhile (f,b) = if (f, b) > 100 then (f, b) else f (f, b);;
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+
+let rec digitsOfInt n =
+  if n <= 0 then [n] else append digitsOfInt (n / 10) [n];;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with
-  | (x,trueOrFalse) -> if trueOrFalse then wwhile (f, x) else x;;
+let rec append l r = match l with | [] -> r | h::t -> h :: (append t r);;
+
+let rec digitsOfInt n =
+  if n <= 0 then [n] else append (digitsOfInt (n / 10)) [n mod 10];;
 
 *)
 
 (* changed spans
-(2,44)-(2,50)
-match f b with
-| (x , trueOrFalse) -> if trueOrFalse
-                       then wwhile (f , x)
-                       else x
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+(5,26)-(5,57)
+append (digitsOfInt (n / 10))
+       [n mod 10]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(2,45)-(2,46)
-f b
-AppG (fromList [VarG])
+(5,33)-(5,44)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
 
-(2,56)-(2,57)
-wwhile
-VarG
-
-(2,56)-(2,64)
-trueOrFalse
-VarG
-
-(2,56)-(2,64)
-if trueOrFalse
-then wwhile (f , x)
-else x
-IteG VarG (AppG (fromList [EmptyG])) VarG
-
-(2,62)-(2,63)
-x
-VarG
+(5,55)-(5,56)
+n mod 10
+BopG VarG LitG
 
 *)

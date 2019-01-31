@@ -1,308 +1,146 @@
-LetG NonRec (fromList [LamG EmptyG]) VarG
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let f' =
-  fun b ->
-    if f b = b
-    then (b , true)
-    else (f b , false) in
-f'
-let f' =
-  fun b ->
-    if f b = b
-    then (b , true)
-    else (f b , false) in
-f'
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let g =
-  fun b ->
-    (let xx = f b in
-     if b = xx
-     then (xx , false)
-     else (xx , true)) in
-g
-let g =
-  fun b ->
-    (let xx = f b in
-     if b = xx
-     then (xx , false)
-     else (xx , true)) in
-g
-let f' =
-  fun x -> (f x , f x = x) in
-f'
-let c = fun y -> x (a y) in c
-let g = fun y -> y in g
-let c = fun y -> x (a y) in c
-let g = fun y -> y in g
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
+let carry =
+  intermediateValue / 10 in
+(carry , valueToAddToArray :: currentSum)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let val2 = (x1 + x2) / 10 in
+(val2 , val1 :: a2)
+let num =
+  (l1e + l2e) + carry in
+(num mod 9 , [7] @ list)
+let num =
+  (l1e + l2e) + carry in
+(num mod 9 , [7] @ list)
+let num =
+  (l1e + l2e) + carry in
+(num mod 9 , [7] @ list)
+let num =
+  (l1e + l2e) + carry in
+(num mod 9 , [7] @ list)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let m = (r + s) + y in
+(m / 10 , (m mod 10) :: z)
+let prod = o * x in
+(10 * o , bigAdd (mulByDigit prod
+                             l1) l)
+let prod = o * x in
+(10 * o , bigAdd (mulByDigit prod
+                             l1) l)
+let prod = o * x in
+(10 * o , bigAdd (mulByDigit prod
+                             l1) l)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)
+let num =
+  (lh1 + lh2) + carry in
+(num / 10 , (num mod 10) :: res)

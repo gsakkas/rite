@@ -1,36 +1,18 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let buildX () = VarX;;
-
-let rec eval (e,x,y) = match e with | VarX  -> (buildX ()) * 1.0;;
+let rec listReverse l =
+  match l with | [] -> l | hd::tail -> (listReverse tail) @ hd;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) = match e with | VarX  -> x;;
+let rec listReverse l =
+  match l with | [] -> l | hd::tail -> (listReverse tail) @ [hd];;
 
 *)
 
 (* changed spans
-(13,61)-(13,64)
-x
-VarG
+(3,60)-(3,62)
+[hd]
+ListG VarG Nothing
 
 *)

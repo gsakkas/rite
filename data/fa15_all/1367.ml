@@ -1,114 +1,81 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | (add1,add2) -> [((add1 + add2) + a) mod 10] in
-    let base = 0 in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin (pi *. (eval (sine, x, y)))
+  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
+  | Average (e1,e2) -> (eval (e1, x, y)) +. ((eval (e2, x, y)) / 2)
+  | Times (t1,t2) -> (eval (t1, x, y)) ^ ("*" ^ (eval (t2, x, y)))
+  | Thresh (th1,th2,th3,th4) ->
+      "(" ^
+        ((eval (th1, x, y)) ^
+           ("<*" ^
+              ((eval (th2, x, y)) ^
+                 ("?" ^
+                    ((eval (th3, x, y)) ^ (":" ^ ((eval (th4, x, y)) ^ ")")))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let l = (List.length l1) - (List.length l2) in
-  if l < 0
-  then (((clone 0 ((-1) * l)) @ l1), l2)
-  else (l1, ((clone 0 l) @ l2));;
+let pi = 4.0 *. (atan 1.0);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match a with
-      | (carry,rest) ->
-          (match x with
-           | (add1,add2) ->
-               ((((add1 + add2) + carry) / 10),
-                 ((((add1 + add2) + carry) mod 10) :: rest))) in
-    let base = (0, []) in
-    let args = List.rev (List.combine l1 l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine sine -> sin (pi *. (eval (sine, x, y)))
+  | Cosine cosine -> cos (pi *. (eval (cosine, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (t1,t2) -> (eval (t1, x, y)) *. (eval (t2, x, y))
+  | Thresh (th1,th2,th3,th4) ->
+      if (eval (th1, x, y)) < (eval (th2, x, y))
+      then eval (th3, x, y)
+      else eval (th4, x, y);;
 
 *)
 
 (* changed spans
-(15,16)-(15,74)
-a
-VarG
-
-(15,16)-(15,74)
-match a with
-| (carry , rest) -> match x with
-                    | (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
-
-(15,46)-(15,74)
-(((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(15,47)-(15,73)
-add1
-VarG
-
-(15,47)-(15,73)
-add2
-VarG
-
-(15,47)-(15,73)
-carry
-VarG
-
-(15,47)-(15,73)
-((add1 + add2) + carry) / 10
+(19,23)-(19,67)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(15,47)-(15,73)
-(add1 + add2) + carry
-BopG (BopG EmptyG EmptyG) VarG
+(20,21)-(20,38)
+eval (t1 , x , y) *. eval (t2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(15,47)-(15,73)
-add1 + add2
-BopG VarG VarG
-
-(15,47)-(15,73)
-10
+(20,39)-(20,40)
+2.0
 LitG
 
-(15,47)-(15,73)
-(((add1 + add2) + carry) mod 10) :: rest
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
+(23,9)-(23,27)
+eval (th1 , x , y) < eval (th2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(15,64)-(15,65)
-carry
-VarG
-
-(16,4)-(18,51)
-rest
-VarG
-
-(16,15)-(16,16)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(17,4)-(18,51)
-[]
-ListG EmptyG Nothing
+(23,28)-(23,29)
+if eval (th1 , x , y) < eval (th2 , x , y)
+then eval (th3 , x , y)
+else eval (th4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)

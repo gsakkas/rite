@@ -1,48 +1,41 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let fixpoint (f,b) =
-  let f x = let xx = f x in (xx, (xx != b)) in f wwhile (f, b);;
+let rec digitsOfInt n = if n < 0 then [] else n mod 10; (digitsOfInt n) / 10;;
 
 
 (* fix
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
+let rec digitsOfInt n =
+  if n < 0 then print_int 0 else print_int (n / 10); digitsOfInt (n / 10);;
 
 *)
 
 (* changed spans
-(8,23)-(8,24)
-let g = fun b -> (b , f b) in
-wwhile (g , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
-
-(8,28)-(8,43)
-fun b -> (b , f b)
-LamG (TupleG (fromList [EmptyG]))
-
-(8,47)-(8,62)
-f b
-AppG (fromList [VarG])
-
-(8,49)-(8,55)
-b
+(2,46)-(2,47)
+print_int
 VarG
 
-(8,49)-(8,55)
-wwhile (g , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(8,57)-(8,58)
-g
+(2,46)-(2,47)
+print_int
 VarG
+
+(2,46)-(2,47)
+print_int (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
+
+(2,46)-(2,47)
+n / 10
+BopG VarG LitG
+
+(2,46)-(2,47)
+0
+LitG
+
+(2,46)-(2,54)
+print_int 0
+AppG (fromList [LitG])
+
+(2,69)-(2,70)
+n / 10
+BopG VarG LitG
 
 *)

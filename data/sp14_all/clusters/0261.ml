@@ -1,3 +1,2 @@
-LamG (ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing)
-fun (x , y) ->
-  ((x + y) / 10) :: a
+ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [ListG EmptyG Nothing])]))) Nothing
+h :: (listReverse [])

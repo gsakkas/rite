@@ -1,39 +1,52 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x a in
-      let base = "" in let l = (^) sep in List.fold_left f base l;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  (((clone 0 ((List.length l2) - (List.length l1))) @ l1),
+    ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (num1,num2) = x in
+      let (carry,sum) = a in
+      ((((num1 + num2) + carry) / 10), ((((num1 + num2) + carry) mod 10) ::
+        sum)) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (c,res) = List.fold_left f base args in c :: res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i <= 0 then [] else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x = (bigAdd a) :: (0 (mulByDigit x l1)) in
+  let base = 0 in let args = l2 in List.fold_left f base args;;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = x a in
-      let base = "" in
-      let l = [(fun x  -> x ^ sep)] in List.fold_left f base l;;
+let bigMul l1 l2 =
+  let f a x = a @ [0] in
+  let base = [] in let args = l2 in List.fold_left f base args;;
 
 *)
 
 (* changed spans
-(7,31)-(7,34)
-fun x -> x ^ sep
-LamG (AppG (fromList [EmptyG]))
-
-(7,31)-(7,34)
-x ^ sep
-AppG (fromList [VarG])
-
-(7,31)-(7,38)
-[fun x -> x ^ sep]
-ListG (LamG EmptyG) Nothing
-
-(7,35)-(7,38)
-x
+(27,15)-(27,21)
+(@)
 VarG
+
+(27,28)-(27,49)
+[0]
+ListG LitG Nothing
+
+(28,13)-(28,14)
+[]
+ListG EmptyG Nothing
 
 *)

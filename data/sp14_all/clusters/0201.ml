@@ -1,17 +1,7 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG]))])
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e1 -> sin (pi *. eval (e1 , x , y))
-| Cosine e1 -> cos (pi *. eval (e1 , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e1 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) when eval (e1 , x , y) < eval (e2 , x , y) -> eval (e3 , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e1 -> sin (pi *. eval (e1 , x , y))
-| Cosine e1 -> cos (pi *. eval (e1 , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e1 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) when eval (e1 , x , y) < eval (e2 , x , y) -> eval (e3 , x , y)
+CaseG VarG (fromList [(Nothing,LamG EmptyG),(Nothing,AppG (fromList [EmptyG]))])
+match fs with
+| h :: t -> f h h
+| [] -> fun x -> x
+match fs with
+| [] -> fun x -> x
+| h :: t -> f (fun x -> x) h

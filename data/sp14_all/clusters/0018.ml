@@ -1,258 +1,127 @@
-CaseG VarG (fromList [(Nothing,VarG)])
-match l with
-| [] -> l
-| (_ :: tail :: []) :: [] -> l
-match $x with
-| y -> y
-match x with
-| _ -> a
-match x with
-| (_ , _) -> a
-match x with
-| (_ , _) -> a
-match x with
-| (_ , _) -> a
-match x with
-| (_ , _) -> a
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-| VarY -> y
-match e with
-| VarX -> x
-| VarY -> y
-match e with
-| VarX -> x
-| VarY -> y
-match e with
-| VarX -> x
-| VarY -> y
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match $x with
-| g -> g
-match $x with
-| x -> x
-match $x with
-| g -> g
-match $x with
-| x -> x
-match $x with
-| g -> g
-match $x with
-| x -> x
-match $x with
-| g -> g
-match $x with
-| x -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (f , g) -> f
-match a with
-| (f , g) -> f
-match x with
-| x' :: xs -> x'
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (a1 , a2) -> a2
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
-match a with
-| (x , y) -> x
+ListG (BopG EmptyG EmptyG) Nothing
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
+[addit mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[sum / 10 ; sum mod 10]
+[sum / 10 ; sum mod 10]
+[sum / 10 ; sum mod 10]
+[sum / 10 ; sum mod 10]
+[n mod 10]
+[result / 10]
+[n mod 10]
+[z mod 10]
+[z / 10 ; z mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[a + hd]
+[a + hd]
+[a + hd]
+[a + hd]
+[a + hd]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 1]
+[x + 2]
+[n / 10 ; n mod 10]
+[n / 10 ; n mod 10]
+[n / 10 ; n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[x mod 10]
+[x mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[n mod 10]
+[(h * i) mod 10]
+[(h * i) mod 10 ; ((h * i) / 10) + h]
+[h * i]
+[(h * i) mod 10 ; ((h * i) / 10) + (m * i)]
+[((h * i) / 10) + ((m * i) mod 10) ; (h * i) mod 10]
+[h * i]
+[h * i]
+[h * i]
+[h1 mod 10]
+[h * i]
+[h * i]
+[h * i]
+[h * i]
+[h * i]
+[h * i]
+[v mod 10]

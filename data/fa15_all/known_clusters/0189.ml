@@ -1,2 +1,2 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG (AppG (fromList [VarG]))]))) Nothing
-(sum + fst a) :: (snd a)
+AppG (fromList [ConAppG (Just (TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing])
+exprToString (Average (Times (ex1 , ex2) , Times (ex2 , ex3)))

@@ -1,13 +1,11 @@
-LetG NonRec (fromList [LamG EmptyG]) (IteG EmptyG EmptyG EmptyG)
-let int =
-  fun list ->
-    fun digInt -> n mod 10 in
-if n > 0
-then digitsOfInt (n / 10)
-else []
-let int =
-  fun list ->
-    fun digInt -> n mod 10 in
-if n > 0
-then digitsOfInt (n / 10)
-else []
+TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)

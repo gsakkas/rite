@@ -1,38 +1,83 @@
 
-let pipe fs = let f a x c = a in let base b = b in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Uncreative of expr* expr* expr
+  | Creative of expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Uncreative (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("/2*" ^ ((exprToString e2) ^ ("/3*" ^ (exprToString e3 "/4)")))))
+  | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")");;
 
 
 (* fix
 
-let pipe fs =
-  let f a x c = x (let fn d = d in fn) in
-  let base b = b in List.fold_left f base fs;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Uncreative of expr* expr* expr
+  | Creative of expr;;
+
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
+  | Uncreative (e1,e2,e3) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("/2*" ^
+              ((exprToString e2) ^ ("/3*" ^ ((exprToString e3) ^ "/4)")))))
+  | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")");;
 
 *)
 
 (* changed spans
-(2,28)-(2,29)
-x (let fn = fun d -> d in fn)
-AppG (fromList [LetG NonRec (fromList [EmptyG]) EmptyG])
-
-(2,33)-(2,75)
-x
+(32,51)-(32,63)
+(^)
 VarG
 
-(2,33)-(2,75)
-d
-VarG
-
-(2,33)-(2,75)
-fn
-VarG
-
-(2,33)-(2,75)
-fun d -> d
-LamG VarG
-
-(2,33)-(2,75)
-let fn = fun d -> d in fn
-LetG NonRec (fromList [LamG EmptyG]) VarG
+(32,51)-(32,63)
+exprToString e3
+AppG (fromList [VarG])
 
 *)

@@ -1,36 +1,25 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval e);;
+let pipe fs = let f a x x = x a in let base y = y in List.fold_left f base fs;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec eval (e,x,y) =
-  match e with | VarX  -> x | VarY  -> y | Sine e1 -> sin (eval (e1, x, y));;
+let pipe fs =
+  let f a x z = x (a z) in let base y = y in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(12,64)-(12,65)
-(e1 , x , y)
-TupleG (fromList [VarG])
+(2,24)-(2,31)
+fun z -> x (a z)
+LamG (AppG (fromList [EmptyG]))
+
+(2,30)-(2,31)
+a z
+AppG (fromList [VarG])
+
+(2,35)-(2,77)
+z
+VarG
 
 *)

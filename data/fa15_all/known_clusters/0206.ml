@@ -1,2 +1,4 @@
-IteG (BopG EmptyG EmptyG) (ConAppG Nothing Nothing) (ConAppG Nothing Nothing)
-if 1 > 0 then VarY else VarY
+IteG (BopG EmptyG EmptyG) LitG VarG
+if List.length t <> 0
+then ""
+else sep

@@ -1,7 +1,9 @@
-IteG (BopG EmptyG EmptyG) LitG LitG
-if ((f + g) + carry) > 9
-then 1
-else 0
-if explosion = listReverse explosion
-then true
-else false
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+match f b with
+| (x , trueOrFalse) -> if trueOrFalse
+                       then wwhile (f , x)
+                       else x
+match f b with
+| (f' , x') -> if x'
+               then wwhile (f , f')
+               else f'

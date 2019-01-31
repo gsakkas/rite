@@ -1,76 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> []
-  | VarY  -> []
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3) ->
-      (exprToString e1) ^ ((exprToString e2) ^ (exprToString e3));;
+let fixpoint (f,b) =
+  let isFPoint x = ((f x) - x) < 0 in
+  let rec test x = if isFPoint x then (x, true) else test (f x) in
+  wwhile (isFPoint, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> ""
-  | VarY  -> ""
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
+let fixpoint (f,b) =
+  let gs x = let isFPoint x = ((f x) - x) < 0 in (x, (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(12,2)-(20,65)
-match e with
-| VarX -> ""
-| VarY -> ""
-| Sine e1 -> exprToString e1
-| Cosine e1 -> exprToString e1
-| Average (e1 , e2) -> exprToString e1 ^ exprToString e2
-| Times (e1 , e2) -> exprToString e1 ^ exprToString e2
-| Thresh (e1 , e2 , e3 , e4) -> exprToString e1 ^ (exprToString e2 ^ (exprToString e3 ^ exprToString e4))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+(4,53)-(4,54)
+fun x ->
+  (let isFPoint =
+     fun x -> (f x - x) < 0 in
+   (x , isFPoint x))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(14,13)-(14,15)
-""
-LitG
+(4,53)-(4,54)
+let gs =
+  fun x ->
+    (let isFPoint =
+       fun x -> (f x - x) < 0 in
+     (x , isFPoint x)) in
+wwhile (gs , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
 
-(15,15)-(15,30)
-""
-LitG
-
-(20,47)-(20,64)
-(^)
+(8,59)-(8,60)
+isFPoint
 VarG
 
-(20,47)-(20,64)
-exprToString e3 ^ exprToString e4
-AppG (fromList [AppG (fromList [EmptyG])])
+(9,10)-(9,18)
+gs
+VarG
 
 *)

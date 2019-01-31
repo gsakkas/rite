@@ -1,53 +1,44 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile (if b = (f b) then (b, false) else (((f b), true), b));;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n > 0 then (clone 0 n) @ l2 else ((clone 0) - (1 * n)) @ l1;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  let helper x = if b = (f b) then (b, false) else (b, true) in
-  wwhile (helper, b);;
+let padZero l1 l2 =
+  let n = (List.length l1) - (List.length l2) in
+  if n > 0 then (l1, ((clone 0 n) @ l2)) else (((clone 0 (0 - n)) @ l1), l2);;
 
 *)
 
 (* changed spans
-(6,2)-(6,8)
-let helper =
-  fun x ->
-    if b = f b
-    then (b , false)
-    else (b , true) in
-wwhile (helper , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
-
-(6,9)-(6,63)
-fun x ->
-  if b = f b
-  then (b , false)
-  else (b , true)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(6,60)-(6,61)
-wwhile
+(6,16)-(6,32)
+l1
 VarG
 
-(6,60)-(6,61)
-helper
-VarG
+(6,16)-(6,32)
+(l1 , clone 0 n @ l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(6,60)-(6,61)
-wwhile (helper , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(6,38)-(6,64)
+(clone 0 (0 - n) @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(6,60)-(6,61)
-(helper , b)
-TupleG (fromList [VarG])
+(6,39)-(6,48)
+clone 0 (0 - n)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(6,52)-(6,53)
+0 - n
+BopG LitG VarG
+
+(6,56)-(6,57)
+0
+LitG
 
 *)

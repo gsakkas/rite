@@ -1,50 +1,26 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  wwhile
-    ((if (f b) = b then ((failwith "asd"), true) else failwith "asd"), b);;
+let pipe fs =
+  let f a x = a + (x fs) in let base fs = fs in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  wwhile
-    ((if (f b) = b
-      then fun b''  -> ((f b), false)
-      else (fun b''  -> ((f b), true))), b);;
+let pipe fs =
+  let f a x x a = x a in let base fs = fs in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,24)-(6,48)
-fun b'' -> (f b , false)
-LamG (TupleG (fromList [EmptyG]))
+(3,14)-(3,15)
+fun x -> fun a -> x a
+LamG (LamG EmptyG)
 
-(6,43)-(6,47)
-f
-VarG
+(3,18)-(3,24)
+fun a -> x a
+LamG (AppG (fromList [EmptyG]))
 
-(6,54)-(6,68)
-b
-VarG
-
-(6,54)-(6,68)
-fun b'' -> (f b , true)
-LamG (TupleG (fromList [EmptyG]))
-
-(6,54)-(6,68)
-false
-LitG
-
-(6,54)-(6,68)
-(f b , true)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(6,63)-(6,68)
-f
+(3,21)-(3,23)
+a
 VarG
 
 *)

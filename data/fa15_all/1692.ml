@@ -1,68 +1,54 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (("^" exprToString y) ^ ")")))));;
+let rec assoc (d,k,l) =
+  match k with
+  | (h1,h2)::t -> if k = h2 then h1 else (h1, h2) :: (assoc (d, k, t))
+  | _ -> d;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
-
-let rec exprToString e =
-  match e with
-  | VarX  -> "X"
-  | VarY  -> "Y"
-  | Sine v -> "sin(pi*" ^ ((exprToString v) ^ ")")
-  | Cosine v -> "cos(pi*" ^ ((exprToString v) ^ ")")
-  | Average (v,w) ->
-      "((" ^ ((exprToString v) ^ ("+" ^ ((exprToString w) ^ ")/2)")))
-  | Times (v,w) -> (exprToString v) ^ ("*" ^ (exprToString w))
-  | Thresh (v,w,x,y) ->
-      (exprToString v) ^
-        ("<" ^
-           ((exprToString w) ^
-              ("?" ^ ((exprToString x) ^ (":" ^ ((exprToString y) ^ ")"))))));;
+let rec assoc (d,k,l) =
+  let (h1,h2)::t = l in
+  match k with | h2 -> h1 | _ -> if l = [] then d else assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(24,42)-(24,62)
-":"
-LitG
+(3,2)-(5,10)
+let (h1 , h2) :: t = l in
+match k with
+| h2 -> h1
+| _ -> if l = []
+       then d
+       else assoc (d , k , t)
+LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
 
-(24,43)-(24,46)
-(^)
+(3,8)-(3,9)
+l
 VarG
 
-(24,47)-(24,59)
-exprToString y
-AppG (fromList [VarG])
+(3,8)-(3,9)
+match k with
+| h2 -> h1
+| _ -> if l = []
+       then d
+       else assoc (d , k , t)
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(4,18)-(4,70)
+h1
+VarG
+
+(4,46)-(4,48)
+l
+VarG
+
+(4,53)-(4,70)
+d
+VarG
+
+(4,53)-(4,70)
+[]
+ListG EmptyG Nothing
 
 *)

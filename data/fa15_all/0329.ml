@@ -1,53 +1,29 @@
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  wwhile (if b = (f b) then (b, false) else ((b, true), b));;
+let pipe fs = let f a x = a x in let base p = p in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  match f b with | (i,true ) -> wwhile (f, i) | (i,false ) -> i;;
-
-let fixpoint (f,b) =
-  let helper x = if b = (f b) then (b, false) else (b, true) in
-  wwhile (helper, b);;
+let pipe fs =
+  let f a x p_pre = x (a p_pre) in let base p = p in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(6,2)-(6,8)
-let helper =
-  fun x ->
-    if b = f b
-    then (b , false)
-    else (b , true) in
-wwhile (helper , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+(2,26)-(2,29)
+fun p_pre -> x (a p_pre)
+LamG (AppG (fromList [EmptyG]))
 
-(6,9)-(6,59)
-fun x ->
-  if b = f b
-  then (b , false)
-  else (b , true)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(6,56)-(6,57)
-wwhile
+(2,33)-(2,75)
+a
 VarG
 
-(6,56)-(6,57)
-helper
+(2,33)-(2,75)
+p_pre
 VarG
 
-(6,56)-(6,57)
-wwhile (helper , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(6,56)-(6,57)
-(helper , b)
-TupleG (fromList [VarG])
+(2,33)-(2,75)
+a p_pre
+AppG (fromList [VarG])
 
 *)

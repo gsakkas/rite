@@ -1,48 +1,53 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then (let y = clone l1 ((List.length l1) - (List.length l2)) in (y, l2))
-    else (let z = clone l2 ((List.length l2) - (List.length l1)) in (z, l1));;
+let rec clone x n = sepConcat ";" ((clone x n) - 1);;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then
-      (let y = clone (List.hd l1) ((List.length l1) - (List.length l2)) in
-       (y, l2))
-    else
-      (let z = clone (List.hd l2) ((List.length l2) - (List.length l1)) in
-       (z, l1));;
+let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
 
 *)
 
 (* changed spans
-(9,24)-(9,26)
-List.hd
+(9,34)-(9,51)
+if n = 0
+then []
+else x :: (clone x (n - 1))
+IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
+
+(9,35)-(9,46)
+n
 VarG
 
-(9,24)-(9,26)
-List.hd l1
-AppG (fromList [VarG])
-
-(10,24)-(10,26)
-List.hd
+(9,35)-(9,46)
+x
 VarG
 
-(10,24)-(10,26)
-List.hd l2
-AppG (fromList [VarG])
+(9,35)-(9,46)
+n = 0
+BopG VarG LitG
+
+(9,35)-(9,46)
+0
+LitG
+
+(9,35)-(9,46)
+x :: (clone x (n - 1))
+ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
+
+(9,35)-(9,46)
+[]
+ListG EmptyG Nothing
+
+(9,44)-(9,45)
+n - 1
+BopG VarG LitG
 
 *)

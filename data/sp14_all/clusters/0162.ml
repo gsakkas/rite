@@ -1,4 +1,4 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-((o + x1) + x2) :: z
-((o + x1) + x2) :: z
-((o + x1) + x2) :: z
+BopG VarG (BopG EmptyG EmptyG)
+a + (x * x)
+a + (x * x)
+a + (x * x)

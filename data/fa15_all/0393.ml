@@ -1,74 +1,83 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Chunky of expr* expr* expr
-  | Monkey of expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) /. 2.0) +. ((eval (e2, x, y)) /. 2.0)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Chunky (e1,e2,e3) ->
-      ((eval (e1, x, y)) ** (eval (e2, x, y))) ** (eval (e3, x, y))
-  | Monkey (e1,e2) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y)) then (-1) else 1;;
+let fixpoint (f,b) = wwhile (f, (f b));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Chunky of expr* expr* expr
-  | Monkey of expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) ->
-      ((eval (e1, x, y)) /. 2.0) +. ((eval (e2, x, y)) /. 2.0)
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Chunky (e1,e2,e3) ->
-      ((eval (e1, x, y)) ** (eval (e2, x, y))) ** (eval (e3, x, y))
-  | Monkey (e1,e2) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y)) then (-1.0) else 1.0;;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(31,62)-(31,63)
-(- 1.0)
-UopG LitG
+(4,53)-(4,54)
+fun b ->
+  if f b
+  then (b , true)
+  else (b , false)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(4,53)-(4,54)
+let funt =
+  fun b ->
+    if f b
+    then (b , true)
+    else (b , false) in
+wwhile (funt , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(4,53)-(4,54)
+if f b
+then (b , true)
+else (b , false)
+IteG (AppG (fromList [EmptyG])) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+
+(6,21)-(6,27)
+b
+VarG
+
+(6,21)-(6,27)
+b
+VarG
+
+(6,21)-(6,27)
+b
+VarG
+
+(6,21)-(6,27)
+true
+LitG
+
+(6,21)-(6,27)
+false
+LitG
+
+(6,21)-(6,27)
+(b , true)
+TupleG (fromList [VarG,LitG])
+
+(6,21)-(6,27)
+(b , false)
+TupleG (fromList [VarG,LitG])
+
+(6,29)-(6,30)
+funt
+VarG
+
+(6,29)-(6,30)
+(funt , b)
+TupleG (fromList [VarG])
+
+(6,33)-(6,34)
+wwhile
+VarG
 
 *)

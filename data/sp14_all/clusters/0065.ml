@@ -1,25 +1,25 @@
-BopG (AppG (fromList [EmptyG])) VarG
-f b = b
-f b = b
-f b = b
-f b = b
-f b' = b'
-f b' = b'
-f b = b
-eval (a , x , y) *. pi
-eval (a , x , y) *. pi
-eval (a , x , y) *. pi
-add x + prev
-add x + prev
-add x + prev
-f b <> b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
+ListG (TupleG (fromList [EmptyG])) Nothing
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[([] , [])]
+[(0 , 0)]
+[(h1 , h2)]
+[(h1 , h2)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(0 , [])]
+[(h , l2)]
+[(h , l2)]
+[(0 , 0)]
+[(0 , 0)]
+[(0 , 0)]

@@ -1,98 +1,34 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> eval (a, x, y) ( *. ) eval (b, x, y)
-  | Average (a,b) -> (eval (a, x, y) ( *. ) eval (b, x, y)) / 2
-  | Cosine a -> cos (pi * (float_of_int (eval (a, x, y))))
-  | Sine a -> sin (pi * (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+let stringOfList f l = sepConcat "" List.map f l;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | Thresh (a,b,c,d) -> eval (a, x, y)
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Average (a,b) -> ((eval (a, x, y)) *. (eval (b, x, y))) /. 2.0
-  | Cosine a -> cos (pi ** (eval (a, x, y)))
-  | Sine a -> sin (pi ** (eval (a, x, y)))
-  | VarY  -> x
-  | VarX  -> y;;
+let stringOfList f l = sepConcat "; " l;;
 
 *)
 
 (* changed spans
-(16,19)-(16,23)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(9,23)-(9,48)
+sepConcat "; " l
+AppG (fromList [VarG,LitG])
 
-(16,19)-(16,55)
-eval (a , x , y) *. eval (b , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,34)-(16,40)
-eval (b , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(17,21)-(17,59)
-(eval (a , x , y) *. eval (b , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,22)-(17,26)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(17,22)-(17,26)
-eval (a , x , y) *. eval (b , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(17,37)-(17,43)
-eval (b , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(17,62)-(17,63)
-2.0
+(9,45)-(9,46)
+"; "
 LitG
-
-(18,20)-(18,58)
-pi ** eval (a , x , y)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(18,21)-(18,23)
-(**)
-VarG
-
-(19,18)-(19,41)
-pi ** eval (a , x , y)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(19,19)-(19,21)
-(**)
-VarG
 
 *)

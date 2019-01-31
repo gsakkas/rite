@@ -1,27 +1,29 @@
 
-let rec listReverse l =
-  match l with | h::t -> h :: (l listReverse t) | [] -> l;;
+let pipe fs = let f a x = a x in let base = [] in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec listReverse l = match l with | [] -> l | h::t -> h :: (listReverse t);;
+let pipe fs =
+  let f a x = (fun n  -> n) a in let base n = n in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(3,2)-(3,57)
-match l with
-| [] -> l
-| h :: t -> h :: (listReverse t)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing)])
-
-(3,25)-(3,47)
-l
+(2,26)-(2,27)
+n
 VarG
 
-(3,31)-(3,32)
-listReverse t
-AppG (fromList [VarG])
+(2,26)-(2,27)
+fun n -> n
+LamG VarG
+
+(2,44)-(2,46)
+fun n -> n
+LamG VarG
+
+(2,50)-(2,74)
+n
+VarG
 
 *)

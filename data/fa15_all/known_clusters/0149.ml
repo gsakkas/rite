@@ -1,7 +1,5 @@
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-helper (x :: acc) (n' - 1)
-helper (x :: acc) (n' - 1)
-helper ((sum mod 10) :: acc)
-       (sum / 10)
-helper ((sum mod 10) :: acc)
-       (sum / 10)
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing
+((h * i) mod 10) :: t
+((h + b) mod 10) :: t
+((h + b) mod 10) :: t
+((h + b) mod 10) :: t

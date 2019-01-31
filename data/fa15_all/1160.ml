@@ -1,58 +1,41 @@
 
-let rec digitsOfInt n =
-  let rec integers a b =
-    if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-  integers n 0;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = let y x = List.map f l in sepConcat "[" y;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n = 0
-  then [0]
-  else
-    (let rec integers a b =
-       if a = 0 then b else integers (a / 10) ((a mod 10) :: b) in
-     integers n []);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = let fix l x = List.map f l in sepConcat "[" l;;
 
 *)
 
 (* changed spans
-(3,2)-(5,14)
-n
+(9,23)-(9,64)
+let fix =
+  fun l ->
+    fun x -> List.map f l in
+sepConcat "[" l
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(9,29)-(9,45)
+fun l -> fun x -> List.map f l
+LamG (LamG EmptyG)
+
+(9,63)-(9,64)
+l
 VarG
-
-(3,2)-(5,14)
-n = 0
-BopG VarG LitG
-
-(3,2)-(5,14)
-0
-LitG
-
-(3,2)-(5,14)
-0
-LitG
-
-(3,2)-(5,14)
-if n = 0
-then [0]
-else (let rec integers =
-        fun a ->
-          fun b ->
-            if a = 0
-            then b
-            else integers (a / 10)
-                          ((a mod 10) :: b) in
-      integers n [])
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (LetG Rec (fromList [EmptyG]) EmptyG)
-
-(3,2)-(5,14)
-[0]
-ListG LitG Nothing
-
-(5,13)-(5,14)
-[]
-ListG EmptyG Nothing
 
 *)

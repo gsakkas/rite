@@ -1,130 +1,269 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  if difference2 > 0
+  then (((clone 0 difference2) @ l1), l2)
   else
-    (let x = rand (0, 5) in
-     if x = 0
-     then buildSine (build (rand, (depth - 1)))
-     else
-       if x = 1
-       then buildCosine (build (rand, (depth - 1)))
-       else
-         if x = 2
-         then
-           buildAverage
-             ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-         else
-           if x = 3
-           then
-             buildTimes
-               ((build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = a + x in
+    let base = 0 in
+    let args = (l1, l2) in let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let buildAverage (e1,e2) = Average (e1, e2);;
-
-let buildCosine e = Cosine e;;
-
-let buildSine e = Sine e;;
-
-let buildThresh (a,b,a_less,b_less) = Thresh (a, b, a_less, b_less);;
-
-let buildTimes (e1,e2) = Times (e1, e2);;
-
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth = 0
-  then (if (rand (0, 2)) < 1 then buildX () else buildY ())
+let padZero l1 l2 =
+  let difference1 = (List.length l1) - (List.length l2) in
+  let difference2 = (List.length l2) - (List.length l1) in
+  if difference2 > 0
+  then (((clone 0 difference2) @ l1), l2)
   else
-    (let x = rand (0, 5) in
-     match x with
-     | 0 -> buildSine (build (rand, (depth - 1)))
-     | 1 -> buildCosine (build (rand, (depth - 1)))
-     | 2 ->
-         buildAverage
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 3 ->
-         buildTimes
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
-     | 4 ->
-         buildThresh
-           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
-             (build (rand, (depth - 1))), (build (rand, (depth - 1)))));;
+    if difference1 > 0 then (l1, ((clone 0 difference1) @ l2)) else (l1, l2);;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> if h = 0 then removeZero t else h :: (removeZero t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (x1,x2) = x in
+      let (carry,temp) = a in
+      let s = (x1 + x2) + carry in
+      let carry' = s / 10 in
+      let rem = s mod 10 in
+      let acc = rem :: temp in
+      if (List.length acc) = (List.length l1)
+      then (0, (carry' :: acc))
+      else (carry', acc) in
+    let base = (0, []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(17,16)-(17,39)
+(19,16)-(19,17)
+let (x1 , x2) = x in
+let (carry , temp) = a in
+let s = (x1 + x2) + carry in
+let carry' = s / 10 in
+let rem = s mod 10 in
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(21,74)
 a
 VarG
 
-(17,16)-(17,39)
-b
+(20,4)-(21,74)
+x1
 VarG
 
-(17,16)-(17,39)
-a_less
+(20,4)-(21,74)
+x2
 VarG
 
-(17,16)-(17,39)
-b_less
+(20,4)-(21,74)
+carry
 VarG
 
-(17,16)-(17,39)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
+(20,4)-(21,74)
+s
+VarG
 
-(17,16)-(17,39)
-Thresh (a , b , a_less , b_less)
+(20,4)-(21,74)
+s
+VarG
+
+(20,4)-(21,74)
+rem
+VarG
+
+(20,4)-(21,74)
+temp
+VarG
+
+(20,4)-(21,74)
+List.length
+VarG
+
+(20,4)-(21,74)
+acc
+VarG
+
+(20,4)-(21,74)
+List.length
+VarG
+
+(20,4)-(21,74)
+l1
+VarG
+
+(20,4)-(21,74)
+carry'
+VarG
+
+(20,4)-(21,74)
+acc
+VarG
+
+(20,4)-(21,74)
+carry'
+VarG
+
+(20,4)-(21,74)
+acc
+VarG
+
+(20,4)-(21,74)
+List.length acc
+AppG (fromList [VarG])
+
+(20,4)-(21,74)
+List.length l1
+AppG (fromList [VarG])
+
+(20,4)-(21,74)
+x1 + x2
+BopG VarG VarG
+
+(20,4)-(21,74)
+(x1 + x2) + carry
+BopG (BopG EmptyG EmptyG) VarG
+
+(20,4)-(21,74)
+s / 10
+BopG VarG LitG
+
+(20,4)-(21,74)
+s mod 10
+BopG VarG LitG
+
+(20,4)-(21,74)
+List.length acc = List.length l1
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(20,4)-(21,74)
+10
+LitG
+
+(20,4)-(21,74)
+10
+LitG
+
+(20,4)-(21,74)
+0
+LitG
+
+(20,4)-(21,74)
+let (carry , temp) = a in
+let s = (x1 + x2) + carry in
+let carry' = s / 10 in
+let rem = s mod 10 in
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(21,74)
+let s = (x1 + x2) + carry in
+let carry' = s / 10 in
+let rem = s mod 10 in
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(21,74)
+let carry' = s / 10 in
+let rem = s mod 10 in
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(21,74)
+let rem = s mod 10 in
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(20,4)-(21,74)
+let acc = rem :: temp in
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+LetG NonRec (fromList [ConAppG (Just EmptyG) Nothing]) (IteG EmptyG EmptyG EmptyG)
+
+(20,4)-(21,74)
+if List.length acc = List.length l1
+then (0 , carry' :: acc)
+else (carry' , acc)
+IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+
+(20,4)-(21,74)
+(0 , carry' :: acc)
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+
+(20,4)-(21,74)
+(carry' , acc)
+TupleG (fromList [VarG])
+
+(20,4)-(21,74)
+rem :: temp
 ConAppG (Just (TupleG (fromList [VarG]))) Nothing
 
-(28,8)-(28,13)
-match x with
-| 0 -> buildSine (build (rand , depth - 1))
-| 1 -> buildCosine (build (rand , depth - 1))
-| 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
-| 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
-| 4 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+(20,4)-(21,74)
+carry' :: acc
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
 
-(39,11)-(42,73)
-buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+(20,15)-(20,16)
+(0 , [])
+TupleG (fromList [LitG,ListG EmptyG Nothing])
+
+(21,4)-(21,74)
+[]
+ListG EmptyG Nothing
+
+(21,15)-(21,23)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(21,16)-(21,18)
+List.rev
+VarG
+
+(21,16)-(21,18)
+List.combine
+VarG
+
+(21,16)-(21,18)
+List.combine l1 l2
+AppG (fromList [VarG])
 
 *)

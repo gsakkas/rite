@@ -1,30 +1,30 @@
 
-let pipe fs =
-  let f a x = let g b y n = match n with | [] -> n | _ -> y b in g a x in
-  let base = f 0 [] in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let ll1 = List.length l1
+  and ll2 = List.length l2 in
+  if ll1 > ll2
+  then (l1, ((clone 0 (ll1 - ll2)) @ l2))
+  else (((clone (0 (ll2 - ll1))) @ l1), l2);;
 
 
 (* fix
 
-let pipe fs n = let f a x = x a in let base = n in List.fold_left f base fs;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let ll1 = List.length l1
+  and ll2 = List.length l2 in
+  if ll1 > ll2
+  then (l1, ((clone 0 (ll1 - ll2)) @ l2))
+  else (((clone 0 (ll2 - ll1)) @ l1), l2);;
 
 *)
 
 (* changed spans
-(3,2)-(4,47)
-fun n ->
-  (let f =
-     fun a -> fun x -> x a in
-   let base = n in
-   List.fold_left f base fs)
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(4,2)-(4,47)
-a
-VarG
-
-(4,17)-(4,19)
-n
-VarG
+(9,9)-(9,32)
+clone 0 (ll2 - ll1)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
 
 *)

@@ -1,44 +1,25 @@
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listCompare l k =
-  if ((List.hd l) = []) && ((List.hd k) = [])
-  then true
-  else
-    if (List.hd l) != (List.hd k)
-    then false
-    else listCompare (List.tl l) (List.tl k);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
-
-let palindrome w = listCompare (explode w) (listReverse (explode w));;
+let sqsum xs = let f a x = a ** x in let base = 0 in List.fold_left f base xs;;
 
 
 (* fix
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
-
-let explode s =
-  let rec go i =
-    if i >= (String.length s) then [] else (s.[i]) :: (go (i + 1)) in
-  go 0;;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> myAppend (listReverse t) h;;
-
-let palindrome w = (explode w) = (listReverse (explode w));;
+let sqsum xs =
+  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(20,19)-(20,30)
-explode w = listReverse (explode w)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(2,29)-(2,31)
+a + (x * x)
+BopG VarG (BopG EmptyG EmptyG)
+
+(2,32)-(2,33)
+x * x
+BopG VarG VarG
+
+(2,37)-(2,77)
+x
+VarG
 
 *)

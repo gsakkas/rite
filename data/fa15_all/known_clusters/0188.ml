@@ -1,2 +1,3 @@
-ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),LitG]))) Nothing
-0 :: (generatePadding (numZeros - 1))
+AppG (fromList [VarG,LamG EmptyG,LitG])
+List.fold_left (fun a ->
+                  fun x -> a + (x * x)) 0 xs

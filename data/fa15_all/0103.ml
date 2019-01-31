@@ -1,25 +1,23 @@
 
-let pipe fs = let f a x = a + x in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  let return = [] in
+  if n < 0 then return else (n mod 10) :: ((return digitsOfInt n) /. 10);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x = (fun a  -> x) a in let base x = x in List.fold_left f base fs;;
+let rec digitsOfInt n =
+  let return = [] in if n < 0 then return else digitsOfInt 1;;
 
 *)
 
 (* changed spans
-(2,26)-(2,27)
-(fun a -> x) a
-AppG (fromList [VarG])
+(4,44)-(4,50)
+digitsOfInt 1
+AppG (fromList [LitG])
 
-(2,30)-(2,31)
-fun a -> x
-LamG VarG
-
-(2,35)-(2,77)
-a
-VarG
+(4,69)-(4,71)
+1
+LitG
 
 *)

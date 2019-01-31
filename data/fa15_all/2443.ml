@@ -1,70 +1,67 @@
 
-let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let l1G = (List.length l1) - (List.length l2) in
-    List.append (l1 clone (0 l1G))
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x = y
+  then (l1, l2)
   else
-    if (List.length l1) < (List.length l2)
-    then
-      (let l2G = (List.length l2) - (List.length l2) in
-       List.append (clone (0 l2G) l2))
-    else (l1, l2);;
+    if x < y
+    then (((clone 0 (y - x)) @ l1), l2)
+    else (l1, ((clone 0 (x - y)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (l1x,l2x) = x in
+      let (a1,a2) = a in let sum = l1x + l2x in (0, ((sum mod 10) :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else [x] @ (clone x (n - 1));;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
 let padZero l1 l2 =
-  if (List.length l1) > (List.length l2)
-  then
-    let l1G = (List.length l1) - (List.length l2) in
-    (l1, (List.append (clone 0 l1G) l2))
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x = y
+  then (l1, l2)
   else
-    if (List.length l1) < (List.length l2)
-    then
-      (let l2G = (List.length l2) - (List.length l1) in
-       ((List.append (clone 0 l2G) l1), l2))
-    else (l1, l2);;
+    if x < y
+    then (((clone 0 (y - x)) @ l1), l2)
+    else (l1, ((clone 0 (x - y)) @ l2));;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (l1x,l2x) = x in
+      let (a1,a2) = a in
+      let sum = l1x + l2x in ((0 :: a2), ((sum mod 10) :: a2)) in
+    let base = ([], []) in
+    let args = List.rev (List.combine l1 l2) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(8,4)-(8,15)
-l1
-VarG
+(21,49)-(21,50)
+0 :: a2
+ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
 
-(8,4)-(8,15)
-List.append (clone 0 l1G) l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(8,4)-(8,34)
-(l1 , List.append (clone 0
-                         l1G) l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(10,4)-(14,17)
-l2
-VarG
-
-(13,7)-(13,18)
-List.append (clone 0 l2G) l1
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(13,7)-(13,18)
-(List.append (clone 0 l2G)
-             l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(13,7)-(13,37)
-l1
-VarG
-
-(13,34)-(13,36)
-l1
+(21,52)-(21,72)
+a2
 VarG
 
 *)

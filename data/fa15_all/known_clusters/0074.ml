@@ -1,20 +1,20 @@
-BopG (AppG (fromList [EmptyG])) VarG
-f x = x
-f b = b
-f b = b
-f b = b
-eval (e1 , x , y) *. pi
-sumList (digitsOfInt x) + y
-additivePersistence (n mod 10) + n
-additivePersistence (n mod 10) + n
-f b = b
-f b = b
-f b <> b
-f x <> x
-f b = b
-f b = b
-f b = b
-f b = b
-f b' <> b'
-f x = x
-f b = b
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing])
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((x1 + x2) + a1) :: a2)
+(0 , ((i + j) + m) :: n)
+(0 , ((i + j) + m) :: n)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)
+(0 , ((j + k) + l) :: m)

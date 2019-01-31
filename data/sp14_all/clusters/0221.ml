@@ -1,2 +1,2 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing])
-(0 :: (List.rev l1) , 0)
+AppG (fromList [LitG,ListG EmptyG Nothing])
+f 0 []

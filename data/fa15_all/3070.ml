@@ -1,25 +1,16 @@
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l = match l with | [] -> [] | h::t -> (cat t l) :: h;;
+let pipe fs = let f a x a = a x in let base x = x in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec cat x y = match x with | [] -> [y] | h::t -> h :: (cat t y);;
-
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> listReverse (cat l h);;
+let pipe fs = let f a x a = x a in let base x = x in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(4,58)-(4,67)
-listReverse
+(2,35)-(2,77)
+a
 VarG
-
-(4,58)-(4,72)
-listReverse (cat l h)
-AppG (fromList [AppG (fromList [EmptyG])])
 
 *)

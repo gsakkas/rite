@@ -1,4 +1,2 @@
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
-(if addit >= 10
- then 1
- else 0 , num @ [addit mod 10])
+AppG (fromList [ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
+List.hd ((n mod 10) :: ns)

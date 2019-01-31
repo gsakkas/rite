@@ -1,68 +1,68 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let fixpointHelper (f,b) = if (f b) = b then (b, true) else (b, false);;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  match f b with | (num,expr) -> if expr then wwhile (f, num) else num;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos ((pi *. (eval e)), x, y)
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) / 2
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let fixpoint (f,b) = wwhile ((fixpointHelper (f, b)), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let fixpointHelper f b b = ((f b), (if (f b) = b then true else false));;
 
-let pi = 4.0 *. (atan 1.0);;
+let rec wwhile (f,b) =
+  match f b with | (num,expr) -> if expr then wwhile (f, num) else num;;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y);;
+let fixpoint (f,b) = wwhile ((fixpointHelper f b), b);;
 
 *)
 
 (* changed spans
-(18,34)-(18,35)
-(e , x , y)
-TupleG (fromList [VarG])
+(2,20)-(2,70)
+fun f ->
+  fun b ->
+    fun b ->
+      (f b , if f b = b
+             then true
+             else false)
+LamG (LamG EmptyG)
 
-(19,23)-(19,67)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
+(2,27)-(2,70)
+f
+VarG
 
-(19,66)-(19,67)
-2.0
-LitG
+(2,27)-(2,70)
+b
+VarG
+
+(2,27)-(2,70)
+fun b ->
+  fun b ->
+    (f b , if f b = b
+           then true
+           else false)
+LamG (LamG EmptyG)
+
+(2,27)-(2,70)
+fun b ->
+  (f b , if f b = b
+         then true
+         else false)
+LamG (TupleG (fromList [EmptyG]))
+
+(2,27)-(2,70)
+f b
+AppG (fromList [VarG])
+
+(2,27)-(2,70)
+(f b , if f b = b
+       then true
+       else false)
+TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
+
+(7,29)-(7,52)
+fixpointHelper f b
+AppG (fromList [VarG])
 
 *)

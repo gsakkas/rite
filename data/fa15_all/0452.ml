@@ -1,76 +1,49 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumPercent of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | SumPercent (e1,e2,e3) ->
-      (((eval (e1, x, y)) + (eval (e2, x, y))) + (eval (e3, x, y))) *. 0.01
-  | Negate e1 -> (eval (e1, x, y)) *. (-1.0);;
+let fixpoint (f,b) =
+  let isFPoint x = ((f x) - x) < 0 in
+  let rec test x = if isFPoint x then (x, true) else test ((f x), false) in
+  wwhile (isFPoint, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Percent of expr
-  | Negate of expr
-  | SumPercent of expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
-  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (a,b,a_less,b_less) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (a_less, x, y)
-      else eval (b_less, x, y)
-  | SumPercent (e1,e2,e3) ->
-      (((eval (e1, x, y)) +. (eval (e2, x, y))) +. (eval (e3, x, y))) *. 0.01
-  | Negate e1 -> (eval (e1, x, y)) *. (-1.0);;
+let fixpoint (f,b) =
+  let gs x = let isFPoint x = ((f x) - x) < 0 in (x, (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(29,7)-(29,46)
-(eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+(4,53)-(4,54)
+fun x ->
+  (let isFPoint =
+     fun x -> (f x - x) < 0 in
+   (x , isFPoint x))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(29,8)-(29,25)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+(4,53)-(4,54)
+let gs =
+  fun x ->
+    (let isFPoint =
+       fun x -> (f x - x) < 0 in
+     (x , isFPoint x)) in
+wwhile (gs , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(8,60)-(8,61)
+isFPoint
+VarG
+
+(9,10)-(9,18)
+gs
+VarG
 
 *)

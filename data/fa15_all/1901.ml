@@ -7,25 +7,23 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Root of expr;;
+  | SqDist of expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
+  let ex = exprToString in
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Squared e -> eval (e ** 2)
-  | Root e -> eval (e ** (1 / 2));;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((ex x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((ex x) ^ ")")
+  | Average (x,y) -> "((" ^ ((ex x) ^ ("+" ^ ((ex y) ^ ")/2)")))
+  | Times (x,y) -> (ex x) ^ ("*" ^ (ex y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((ex w) ^
+           ("<" ^ ((ex x) ^ ("?" ^ ((ex y) ^ (":" ^ ((ex z) ^ ")")))))))
+  | SqDist (x,y) ->
+      "(" ^ ((ex x) ^ (")" ^ ("^2+" ^ ("(" ^ ((ex y ")") ^ "^2")))));;
 
 
 (* fix
@@ -38,63 +36,37 @@ type expr =
   | Average of expr* expr
   | Times of expr* expr
   | Thresh of expr* expr* expr* expr
-  | Squared of expr
-  | Root of expr;;
+  | SqDist of expr* expr;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
+let rec exprToString e =
+  let ex = exprToString in
   match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine e -> sin (pi *. (eval (e, x, y)))
-  | Cosine e -> cos (pi *. (eval (e, x, y)))
-  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
-  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
-  | Thresh (e1,e2,e3,e4) ->
-      if (eval (e1, x, y)) < (eval (e2, x, y))
-      then eval (e3, x, y)
-      else eval (e4, x, y)
-  | Squared e -> (eval (e, x, y)) ** 2.
-  | Root e -> (eval (e, x, y)) ** 0.5;;
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine x -> "sin(pi*" ^ ((ex x) ^ ")")
+  | Cosine x -> "cos(pi*" ^ ((ex x) ^ ")")
+  | Average (x,y) -> "((" ^ ((ex x) ^ ("+" ^ ((ex y) ^ ")/2)")))
+  | Times (x,y) -> (ex x) ^ ("*" ^ (ex y))
+  | Thresh (w,x,y,z) ->
+      "(" ^
+        ((ex w) ^
+           ("<" ^ ((ex x) ^ ("?" ^ ((ex y) ^ (":" ^ ((ex z) ^ ")")))))))
+  | SqDist (x,y) ->
+      "(" ^ ((ex x) ^ (")" ^ ("^2+" ^ ("(" ^ ((ex y) ^ (")" ^ "^2"))))));;
 
 *)
 
 (* changed spans
-(28,19)-(28,33)
-e
+(26,46)-(26,56)
+ex y
+AppG (fromList [VarG])
+
+(26,52)-(26,55)
+(^)
 VarG
 
-(28,19)-(28,33)
-x
-VarG
-
-(28,19)-(28,33)
-y
-VarG
-
-(28,19)-(28,33)
-2.0
-LitG
-
-(28,19)-(28,33)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,20)-(28,21)
-eval
-VarG
-
-(28,20)-(28,21)
-eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(28,20)-(28,21)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,30)-(28,31)
-x
-VarG
+(26,52)-(26,55)
+")" ^ "^2"
+AppG (fromList [LitG])
 
 *)

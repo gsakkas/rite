@@ -1,4 +1,10 @@
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing]))) Nothing])
-(len , (-1) :: (0 :: xs'))
-(len , (-1) :: (0 :: xs'))
-(len , (-1) :: (0 :: xs'))
+IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) LitG
+if addit > 10
+then addit mod 10
+else 0
+if addit > 10
+then addit mod 10
+else 0
+if addit > 10
+then addit mod 10
+else 0

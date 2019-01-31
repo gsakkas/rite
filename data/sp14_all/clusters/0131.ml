@@ -1,26 +1,11 @@
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
+AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+List.fold_left (^) ""
+               (List.map f l)
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""
+buildhelper (rand (1 , 4))
+            depth ""

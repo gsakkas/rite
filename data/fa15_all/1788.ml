@@ -1,40 +1,50 @@
 
-let pipe fs =
-  let f a x g = a (x g) in
-  let base = match fs with | h::t -> f h | [] -> (fun x  -> x) in
-  List.fold_left f base fs;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile ((f, ((f b) = b)), b);;
 
 
 (* fix
 
-let pipe fs =
-  let f a x g = a (x g) in
-  let base = match fs with | [] -> (fun x  -> x) | h::t -> f (fun x  -> x) h in
-  List.fold_left f base fs;;
+let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+
+let fixpoint (f,b) = wwhile (let h x = ((f x), ((f x) = x)) in (h, b));;
 
 *)
 
 (* changed spans
-(4,13)-(4,62)
-match fs with
-| [] -> fun x -> x
-| h :: t -> f (fun x -> x) h
-CaseG VarG (fromList [(Nothing,LamG EmptyG),(Nothing,AppG (fromList [EmptyG]))])
+(4,28)-(4,49)
+let h =
+  fun x -> (f x , f x = x) in
+(h , b)
+LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
 
-(4,37)-(4,38)
+(4,29)-(4,45)
+fun x -> (f x , f x = x)
+LamG (TupleG (fromList [EmptyG]))
+
+(4,30)-(4,31)
+f x
+AppG (fromList [VarG])
+
+(4,33)-(4,44)
 x
 VarG
 
-(4,37)-(4,38)
-f (fun x -> x) h
-AppG (fromList [VarG,LamG EmptyG])
+(4,42)-(4,43)
+x
+VarG
 
-(4,37)-(4,40)
-fun x -> x
-LamG VarG
+(4,47)-(4,48)
+x
+VarG
 
-(5,2)-(5,26)
+(4,47)-(4,48)
 h
 VarG
+
+(4,47)-(4,48)
+(h , b)
+TupleG (fromList [VarG])
 
 *)

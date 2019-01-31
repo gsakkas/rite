@@ -1,60 +1,83 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> float x
-  | VarY  -> float y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let fixpoint (f,b) = let fx x = x in wwhile (b, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let pi = 4.0 *. (atan 1.0);;
-
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Sine a -> sin (pi *. (eval (a, x, y)))
-  | Cosine a -> cos (pi *. (eval (a, x, y)))
-  | Average (a,b) -> ((eval (a, x, y)) +. (eval (b, x, y))) /. 2.
-  | Times (a,b) -> (eval (a, x, y)) *. (eval (b, x, y))
-  | Thresh (a,b,c,d) ->
-      if (eval (a, x, y)) < (eval (b, x, y))
-      then eval (c, x, y)
-      else eval (d, x, y);;
+let fixpoint (f,b) =
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(19,63)-(19,64)
-2.0
+(6,21)-(6,50)
+fun b ->
+  if f b
+  then (b , true)
+  else (b , false)
+LamG (IteG EmptyG EmptyG EmptyG)
+
+(6,21)-(6,50)
+if f b
+then (b , true)
+else (b , false)
+IteG (AppG (fromList [EmptyG])) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+
+(6,32)-(6,33)
+b
+VarG
+
+(6,32)-(6,33)
+let funt =
+  fun b ->
+    if f b
+    then (b , true)
+    else (b , false) in
+wwhile (funt , b)
+LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+
+(6,37)-(6,43)
+f
+VarG
+
+(6,37)-(6,43)
+true
 LitG
+
+(6,37)-(6,43)
+(b , false)
+TupleG (fromList [VarG,LitG])
+
+(6,44)-(6,50)
+wwhile
+VarG
+
+(6,44)-(6,50)
+funt
+VarG
+
+(6,44)-(6,50)
+b
+VarG
+
+(6,44)-(6,50)
+wwhile (funt , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(6,44)-(6,50)
+false
+LitG
+
+(6,44)-(6,50)
+(funt , b)
+TupleG (fromList [VarG])
 
 *)

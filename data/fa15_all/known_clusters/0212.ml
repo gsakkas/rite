@@ -1,4 +1,4 @@
-IteG (BopG EmptyG EmptyG) VarG (ListG EmptyG Nothing)
-if List.length t <> 0
-then t
-else []
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG)])
+match x with
+| 0 -> a
+| x -> x * x

@@ -1,22 +1,26 @@
 
-let rec clone x n =
-  let acc = [] in if n > 0 then clone (x :: acc) (n - 1) else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2));;
 
 
 (* fix
 
-let rec clone x n =
-  let acc = [] in if n > 0 then clone (x @ acc) (n - 1) else [];;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2);;
 
 *)
 
 (* changed spans
-(3,38)-(3,48)
-x @ acc
-AppG (fromList [VarG])
-
-(3,39)-(3,40)
-(@)
-VarG
+(5,2)-(6,67)
+(clone 0
+       (List.length l2 - List.length l1) @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

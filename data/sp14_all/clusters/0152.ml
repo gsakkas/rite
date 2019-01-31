@@ -1,13 +1,45 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n < 1
-then []
-else x :: (clone x (n - 1))
+IteG (BopG EmptyG EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG)
+if carry <> []
+then (let ch :: _ = carry in
+      let tens =
+        ((x1 + x2) + ch) / 10 in
+      let ones =
+        ((x1 + x2) + ch) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+else (let tens =
+        (x1 + x2) / 10 in
+      let ones = (x1 + x2) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+if carry <> []
+then (let ch :: _ = carry in
+      let tens =
+        ((x1 + x2) + ch) / 10 in
+      let ones =
+        ((x1 + x2) + ch) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+else (let tens =
+        (x1 + x2) / 10 in
+      let ones = (x1 + x2) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+if carry <> []
+then (let ch :: _ = carry in
+      let tens =
+        ((x1 + x2) + ch) / 10 in
+      let ones =
+        ((x1 + x2) + ch) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+else (let tens =
+        (x1 + x2) / 10 in
+      let ones = (x1 + x2) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+if carry <> []
+then (let ch :: _ = carry in
+      let tens =
+        ((x1 + x2) + ch) / 10 in
+      let ones =
+        ((x1 + x2) + ch) mod 10 in
+      ([tens] , tens :: (ones :: res)))
+else (let tens =
+        (x1 + x2) / 10 in
+      let ones = (x1 + x2) mod 10 in
+      ([tens] , tens :: (ones :: res)))

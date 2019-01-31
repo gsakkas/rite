@@ -1,191 +1,82 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  let return = [n mod 10] in
+  if (n / 10) <> 0
+  then ((n mod 10) :: return; (digitsOfInt (n / 10)) @ return)
+  else return;;
 
-let padZero l1 l2 =
-  let s1 = List.length l1 in
-  let s2 = List.length l2 in
-  if s1 < s2
-  then (((clone 0 (s2 - s1)) @ l1), l2)
-  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = match x with | [] -> [] in
-    let base = [] in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitalRoot n =
+  let digits = digitsOfInt n in
+  let s = sumList digits in if (n / 10) <> 0 then digitalRoot else digits;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+let rec digitsOfInt n =
+  let return = [n mod 10] in
+  if (n / 10) <> 0
+  then ((n mod 10) :: return; (digitsOfInt (n / 10)) @ return)
+  else return;;
 
-let padZero l1 l2 =
-  let s1 = List.length l1 in
-  let s2 = List.length l2 in
-  if s1 < s2
-  then (((clone 0 (s2 - s1)) @ l1), l2)
-  else if s2 < s1 then (l1, ((clone 0 (s1 - s2)) @ l2)) else (l1, l2);;
+let digits n = digitsOfInt (abs n);;
 
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h != 0 then h :: t else removeZero t;;
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match snd a with
-      | [] ->
-          (((fst x) + (snd x)),
-            [((fst x) + (snd x)) / 10; ((fst x) + (snd x)) mod 10])
-      | h::t -> (0, []) in
-    let base = (0, []) in
-    let args = List.combine (List.rev l1) (List.rev l2) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec digitalRoot n =
+  let d = digits n in
+  let s = sumList d in if (n / 10) <> 0 then digitalRoot s else s;;
 
 *)
 
 (* changed spans
-(16,16)-(16,39)
-match snd a with
-| [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-| h :: t -> (0 , [])
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-
-(16,22)-(16,23)
-snd
+(8,16)-(8,70)
+digitsOfInt
 VarG
 
-(16,22)-(16,23)
-a
+(8,16)-(8,70)
+abs
 VarG
 
-(16,22)-(16,23)
-fst
+(8,16)-(8,70)
+n
 VarG
 
-(16,22)-(16,23)
-snd a
+(8,16)-(8,70)
+fun n -> digitsOfInt (abs n)
+LamG (AppG (fromList [EmptyG]))
+
+(8,16)-(8,70)
+digitsOfInt (abs n)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(8,16)-(8,70)
+abs n
 AppG (fromList [VarG])
 
-(16,22)-(16,23)
-fst x
+(11,2)-(12,73)
+let d = digits n in
+let s = sumList d in
+if (n / 10) <> 0
+then digitalRoot s
+else s
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+
+(11,15)-(11,26)
+digits
+VarG
+
+(12,18)-(12,24)
+d
+VarG
+
+(12,50)-(12,61)
+digitalRoot s
 AppG (fromList [VarG])
 
-(16,22)-(16,23)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,22)-(16,23)
-(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-TupleG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
-
-(16,37)-(16,39)
-snd
+(12,67)-(12,73)
+s
 VarG
-
-(16,37)-(16,39)
-x
-VarG
-
-(16,37)-(16,39)
-fst
-VarG
-
-(16,37)-(16,39)
-x
-VarG
-
-(16,37)-(16,39)
-snd
-VarG
-
-(16,37)-(16,39)
-x
-VarG
-
-(16,37)-(16,39)
-fst
-VarG
-
-(16,37)-(16,39)
-x
-VarG
-
-(16,37)-(16,39)
-snd
-VarG
-
-(16,37)-(16,39)
-x
-VarG
-
-(16,37)-(16,39)
-snd x
-AppG (fromList [VarG])
-
-(16,37)-(16,39)
-fst x
-AppG (fromList [VarG])
-
-(16,37)-(16,39)
-snd x
-AppG (fromList [VarG])
-
-(16,37)-(16,39)
-fst x
-AppG (fromList [VarG])
-
-(16,37)-(16,39)
-snd x
-AppG (fromList [VarG])
-
-(16,37)-(16,39)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,37)-(16,39)
-(fst x + snd x) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,37)-(16,39)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,37)-(16,39)
-(fst x + snd x) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,37)-(16,39)
-10
-LitG
-
-(16,37)-(16,39)
-10
-LitG
-
-(16,37)-(16,39)
-0
-LitG
-
-(16,37)-(16,39)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(16,37)-(16,39)
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(17,15)-(17,17)
-0
-LitG
-
-(17,15)-(17,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
 
 *)

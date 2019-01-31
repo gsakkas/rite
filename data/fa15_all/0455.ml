@@ -1,58 +1,51 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> VarX
-  | VarY  -> VarY
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
+let fixpoint (f,b) =
+  let gs x = let isFPoint x = ((f x) - x) < 0 in (f, (f b)) in wwhile (gs, b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec wwhile (f,b) =
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let rec exprToString e =
-  match e with
-  | VarX  -> ""
-  | VarY  -> ""
-  | Sine e1 -> exprToString e1
-  | Cosine e1 -> exprToString e1
-  | Average (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Times (e1,e2) -> (exprToString e1) ^ (exprToString e2)
-  | Thresh (e1,e2,e3,e4) ->
-      (exprToString e1) ^
-        ((exprToString e2) ^ ((exprToString e3) ^ (exprToString e4)));;
+let fixpoint (f,b) =
+  let gs x = let isFPoint s = ((f s) - s) < 0 in ((f x), (isFPoint x)) in
+  wwhile (gs, b);;
 
 *)
 
 (* changed spans
-(14,13)-(14,17)
-""
-LitG
+(7,26)-(7,45)
+fun s -> (f s - s) < 0
+LamG (BopG EmptyG EmptyG)
 
-(15,15)-(15,30)
-""
-LitG
+(7,32)-(7,33)
+s
+VarG
+
+(7,39)-(7,40)
+s
+VarG
+
+(7,54)-(7,55)
+isFPoint
+VarG
+
+(7,54)-(7,55)
+x
+VarG
+
+(7,54)-(7,55)
+wwhile (gs , b)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(7,56)-(7,57)
+x
+VarG
 
 *)

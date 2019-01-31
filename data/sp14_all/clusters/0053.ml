@@ -1,176 +1,38 @@
-LetG NonRec (fromList [LamG EmptyG]) VarG
-let fn = fun d -> d in fn
-let fn = fun d -> d in fn
-let fn = fun d -> d in fn
-let d =
-  fun x ->
-    (let xx = f b in
-     (xx , xx = b)) in
-d
-let d =
-  fun x ->
-    (let xx = f b in
-     (xx , xx = b)) in
-d
-let d =
-  fun x ->
-    (let xx = f b in
-     (xx , xx = b)) in
-d
-let func =
-  fun b ->
-    (let ans = f b in
-     if b = ans
-     then (ans , false)
-     else (ans , true)) in
-func
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
+AppG (fromList [VarG,ListG EmptyG Nothing])
+List.append r [0]
+List.append r [0]
+[0] @ l1
+[0] @ l2
+[1 ; 0] @ acc
+List.append [result mod 10] l
+List.append [result mod 10] l
+digits n []
+digits n []
+digits n []
+upper_mult @ [0]
+integers n []
+integers n []
+getList [] l
+helper x l []
+helper x l []
+helper x l []
+templ12 @ [0]
+templ12 @ [0]
+templ12 @ [0]
+templ12 @ [0]
+templ12 @ [0]
+[a + hd] @ tl
+[a + hd] @ tl
+digits @ [n mod 10]
+digits @ [n mod 10]
+digits @ [n mod 10]
+t @ [h]
+append t [h]
+append t [h]
+append t [h]
+append t [h]
+helper [] l
+helper [] h
+helper [] h
+helper [] h
+helper [] h

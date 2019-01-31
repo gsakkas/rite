@@ -1,7 +1,31 @@
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
-eval (f , x , y) +. (eval (g , x , y) *. eval (h , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
+CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)
+match List.length l1 > List.length l2 with
+| true -> (l1 , clone 0
+                      (List.length l1 - List.length l2) @ l2)
+| false -> (clone 0
+                  (List.length l2 - List.length l1) @ l1 , l2)

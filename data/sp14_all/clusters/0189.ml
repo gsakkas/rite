@@ -1,3 +1,3 @@
-TupleG (fromList [ConAppG Nothing Nothing])
-(VarX , VarY)
-(VarX , VarX , VarX , VarX)
+BopG LitG LitG
+0.0 -. 1.0
+0.0 -. 1.0

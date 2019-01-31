@@ -1,80 +1,121 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | TowerInv of expr* expr* expr;;
 
-let fixpoint (f,b) = wwhile (((=) f), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Power (a,b) ->
+      if ((x < 1.0) && (x > (-1.0))) || ((y < 1.0) && (y > (-1.0)))
+      then 0.5
+      else a ** b
+  | TowerInv (a,b,c) ->
+      if ((x < 1.0) && (x > (-1.0))) || ((y < 1.0) && (y > (-1.0)))
+      then 0.5
+      else 1 /. ((eval (a, x, y)) ** ((eval (b, x, y)) ** (eval (c, x, y))));;
 
 
 (* fix
 
-let g h x = let xx = h x in (xx, (xx = (h x)));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Power of expr* expr
+  | TowerInv of expr* expr* expr;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile ((g f), b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine a -> sin (pi *. (eval (a, x, y)))
+  | Cosine a -> cos (pi *. (eval (a, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (a,b,c,d) ->
+      if (eval (a, x, y)) < (eval (b, x, y))
+      then eval (c, x, y)
+      else eval (d, x, y)
+  | Power (a,b) ->
+      if ((x < 1.0) && (x > (-1.0))) || ((y < 1.0) && (y > (-1.0)))
+      then 0.5
+      else (eval (a, x, y)) ** (eval (b, x, y))
+  | TowerInv (a,b,c) ->
+      if ((x < 1.0) && (x > (-1.0))) || ((y < 1.0) && (y > (-1.0)))
+      then 0.5
+      else
+        1.0 /. ((eval (a, x, y)) ** ((eval (b, x, y)) ** (eval (c, x, y))));;
 
 *)
 
 (* changed spans
-(2,16)-(2,77)
-h
+(30,11)-(30,12)
+eval
 VarG
 
-(2,16)-(2,77)
+(30,11)-(30,12)
+eval (a , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(30,11)-(30,12)
+(a , x , y)
+TupleG (fromList [VarG])
+
+(30,16)-(30,17)
 x
 VarG
 
-(2,16)-(2,77)
-xx
+(30,16)-(30,17)
+y
 VarG
 
-(2,16)-(2,77)
-xx
+(30,16)-(30,17)
+eval
 VarG
 
-(2,16)-(2,77)
-h
-VarG
+(30,16)-(30,17)
+eval (b , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(2,16)-(2,77)
+(30,16)-(30,17)
+(b , x , y)
+TupleG (fromList [VarG])
+
+(32,6)-(34,76)
 x
 VarG
 
-(2,16)-(2,77)
-fun h ->
-  fun x ->
-    (let xx = h x in
-     (xx , xx = h x))
-LamG (LamG EmptyG)
-
-(2,16)-(2,77)
-fun x ->
-  (let xx = h x in
-   (xx , xx = h x))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(2,16)-(2,77)
-h x
-AppG (fromList [VarG])
-
-(2,16)-(2,77)
-h x
-AppG (fromList [VarG])
-
-(2,16)-(2,77)
-xx = h x
-BopG VarG (AppG (fromList [EmptyG]))
-
-(2,16)-(2,77)
-let xx = h x in
-(xx , xx = h x)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(2,16)-(2,77)
-(xx , xx = h x)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(4,30)-(4,33)
-g
+(32,6)-(34,76)
+y
 VarG
+
+(34,11)-(34,12)
+1.0
+LitG
 
 *)

@@ -1,80 +1,45 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then
-      (let y = (clone 0 ((List.length l1) - (List.length l2))) @ l2 in
-       (l1, y))
-    else
-      (let z = (clone 0 ((List.length l2) - (List.length l1))) @ l1 in
-       (z, l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (d1,d2) ->
-          (match a with
-           | (carry,result) ->
-               if ((d1 + d2) + carry) > 9
-               then (1, ((((d1 + d2) + carry) - 10) :: result))
-               else (0, (((d1 + d2) + carry) :: result))) in
-    let base = (0, []) in
-    let args = [0] @ (List.combine (List.rev l1) (List.rev l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let bigMul l1 l2 =
+  let f a x =
+    let (val1,val2) = x in
+    let (lastCarry,lastTupleMult) = a in
+    let tupleMult = (val1 * val2) + lastCarry in
+    let newCarry = tupleMult / 10 in
+    let nextDigit = tupleMult mod 10 in
+    (newCarry, (nextDigit :: lastTupleMult)) in
+  let base = (1, []) in
+  let args = List.rev ((List.combine 0) :: (l1 0) :: l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  if (List.length l1) = (List.length l2)
-  then (l1, l2)
-  else
-    if (List.length l1) > (List.length l2)
-    then
-      (let y = (clone 0 ((List.length l1) - (List.length l2))) @ l2 in
-       (l1, y))
-    else
-      (let z = (clone 0 ((List.length l2) - (List.length l1))) @ l1 in
-       (z, l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x =
-      match x with
-      | (d1,d2) ->
-          (match a with
-           | (carry,result) ->
-               if ((d1 + d2) + carry) > 9
-               then (1, ((((d1 + d2) + carry) - 10) :: result))
-               else (0, (((d1 + d2) + carry) :: result))) in
-    let base = (0, []) in
-    let args = [(0, 0)] @ (List.combine (List.rev l1) (List.rev l2)) in
-    let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let bigMul l1 l2 =
+  let f a x =
+    let (val1,val2) = x in
+    let (lastCarry,lastTupleMult) = a in
+    let tupleMult = (val1 * val2) + lastCarry in
+    let newCarry = tupleMult / 10 in
+    let nextDigit = tupleMult mod 10 in
+    (newCarry, (nextDigit :: lastTupleMult)) in
+  let base = (1, []) in
+  let args = List.rev (List.combine (0 :: l1) (0 :: l2)) in
+  let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(30,16)-(30,17)
-(0 , 0)
-TupleG (fromList [LitG])
+(11,23)-(11,39)
+List.combine (0 :: l1)
+             (0 :: l2)
+AppG (fromList [ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
 
-(30,21)-(30,63)
+(11,43)-(11,49)
 0
 LitG
+
+(11,47)-(11,48)
+0 :: l2
+ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
 
 *)

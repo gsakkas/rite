@@ -1,33 +1,33 @@
 
-let pipe fs =
-  let f a x = a = (x a) in let base = 0 in List.fold_left f base fs;;
+let f a x = a * a;;
+
+let sqsum xs =
+  let f a x = let aa = a * a in aa + f in
+  let base = List.hd xs in List.fold_left f base xs;;
 
 
 (* fix
 
-let pipe fs =
-  let f a x y = x (a y) in let base x = x in List.fold_left f base fs;;
+let sqsum xs =
+  let f a x = (a * a) + (x * x) in
+  let base = List.hd xs in List.fold_left f base xs;;
 
 *)
 
 (* changed spans
-(3,14)-(3,15)
-fun y -> x (a y)
-LamG (AppG (fromList [EmptyG]))
+(5,14)-(5,38)
+(a * a) + (x * x)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(3,21)-(3,22)
-a y
-AppG (fromList [VarG])
+(5,37)-(5,38)
+x * x
+BopG VarG VarG
 
-(3,27)-(3,67)
-y
+(6,2)-(6,51)
+x
 VarG
 
-(3,38)-(3,39)
-fun x -> x
-LamG VarG
-
-(3,43)-(3,67)
+(6,2)-(6,51)
 x
 VarG
 

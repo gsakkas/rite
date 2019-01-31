@@ -1,92 +1,93 @@
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
 match n with
-| 0 -> [0]
-| _ -> digits n []
-match n with
-| 0 -> [0]
-| _ -> digits n []
-match n with
-| 0 -> [0]
-| _ -> digits n []
-match l with
-| [] -> []
-| a :: b -> listReverse b @ [a]
-match l with
-| [] -> []
-| a :: b -> listReverse b @ [a]
+| [] -> n
+| _ -> y b
 match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match n with
-| 0 -> [0]
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> [0]
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| n -> [x] @ clone x (n - 1)
-match n with
-| 0 -> []
-| _ -> clone x (n - 1) @ [x]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
+| 1 -> l
+| _ -> bigAdd (mulByDigit (i - 1)
+                          l) l
+match x with
+| [] -> l
+| h :: t -> helper t l
+                   (h :: acc)
+match x with
+| [] -> l
+| h :: t -> helper t l
+                   (h :: acc)
+match x with
+| [] -> y
+| h :: t -> reverse (t , h :: y)
+match e with
+| VarX -> x
+| Sine m -> sin (pi *. eval (m , x , y))
+| _ -> x
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'
+match c' with
+| true -> wwhile (f , b')
+| false -> b'

@@ -1,4 +1,4 @@
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing
-((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-((sum + h) / 10) :: (((sum + h) mod 10) :: t)
+AppG (fromList [VarG,LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+helper 0 (num :: xs') xs
+helper 0 (num :: accum) xs
+helper 0 (num :: accum) xs

@@ -1,39 +1,67 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = if (List.length sl) > 1 then h else h in
-      let l = t in List.fold_left f base l;;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let stringOfList f l = sepConcat (";", (List.map (fun c  -> c l)));;
+let y = [1; 2; 3];;
+
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      if (List.length t) = 0
+      then h * i
+      else (remainder h y) @ (mulByDigit i t);;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = if (List.length sl) > 1 then a ^ (sep ^ x) else a ^ x in
-      let base = h in let l = t in List.fold_left f base l;;
+let remainder x y = if (x * y) > 10 then (x * y) mod 10 else 0;;
 
-let stringOfList f l = sepConcat ";" (List.map f l);;
+let rec mulByDigit i l =
+  match List.rev l with
+  | [] -> []
+  | h::t ->
+      if (List.length t) = 0
+      then [h * i] @ (mulByDigit i t)
+      else [remainder i h] @ (mulByDigit i t);;
 
 *)
 
 (* changed spans
-(10,23)-(10,66)
-sepConcat ";" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(10,39)-(10,65)
-List.map f l
-AppG (fromList [VarG])
-
-(10,60)-(10,61)
-f
+(11,11)-(11,16)
+(@)
 VarG
+
+(11,11)-(11,16)
+[h * i] @ mulByDigit i t
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(11,11)-(11,16)
+[h * i]
+ListG (BopG EmptyG EmptyG) Nothing
+
+(12,11)-(12,26)
+[remainder i h]
+ListG (AppG (fromList [EmptyG])) Nothing
+
+(12,22)-(12,23)
+i
+VarG
+
+(12,27)-(12,28)
+mulByDigit
+VarG
+
+(12,27)-(12,28)
+i
+VarG
+
+(12,27)-(12,28)
+t
+VarG
+
+(12,27)-(12,28)
+[remainder i h] @ mulByDigit i
+                             t
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
 *)

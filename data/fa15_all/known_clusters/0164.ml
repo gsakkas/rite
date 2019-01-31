@@ -1,13 +1,4 @@
-LetG NonRec (fromList [LetG NonRec (fromList [EmptyG]) EmptyG]) (AppG (fromList [EmptyG]))
-let n1 =
-  (let x0 = digitsOfInt n in
-   sumList x0) in
-additivePersistence n1
-let n1 =
-  (let x0 = digitsOfInt n in
-   sumList x0) in
-additivePersistence n1
-let n1 =
-  (let x0 = digitsOfInt n in
-   sumList x0) in
-additivePersistence n1
+ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
+(sum / 10) :: ((sum mod 10) :: a2)
+(sum / 10) :: ((sum mod 10) :: a2)
+(sum / 10) :: ((sum mod 10) :: a2)

@@ -1,43 +1,34 @@
 
-let rec sumList xs = match sumList with | head::tail -> head + (sumList tail);;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat (List.map l);;
 
 
 (* fix
 
-let rec sum list = match list with | [] -> 0 | head::tail -> head;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
 
-let rec sumList xs = sum xs;;
+let stringOfList f l = sepConcat " " l;;
 
 *)
 
 (* changed spans
-(2,56)-(2,60)
-list
-VarG
+(9,23)-(9,45)
+sepConcat " " l
+AppG (fromList [VarG,LitG])
 
-(2,56)-(2,60)
-0
+(9,34)-(9,42)
+" "
 LitG
-
-(2,56)-(2,60)
-match list with
-| [] -> 0
-| head :: tail -> head
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,LitG)])
-
-(2,56)-(2,77)
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(2,63)-(2,77)
-fun xs -> sum xs
-LamG (AppG (fromList [EmptyG]))
-
-(2,72)-(2,76)
-sum
-VarG
 
 *)

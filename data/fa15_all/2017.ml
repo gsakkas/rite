@@ -1,62 +1,29 @@
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
+let rec wwhile (f,b) =
+  let (b',c') = f b in match c' with | false  -> b' | true  -> wwhile (f, b');;
 
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a (x,y) = ((x + y) / 10) :: a in
-    let base = [] in
-    let args = List.rev List.combine l1 l2 in
-    let res = List.fold_left f base args in List.rev res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) =
+  wwhile ((let g x = if (f x) = b then f x else f (x + 1) in g 0), b);;
 
 
 (* fix
 
-let rec clone x n =
-  match n > 0 with | false  -> [] | true  -> x :: (clone x (n - 1));;
-
-let padZero l1 l2 =
-  match (List.length l1) = (List.length l2) with
-  | true  -> (l1, l2)
-  | false  ->
-      let lendiff = (List.length l1) - (List.length l2) in
-      (match lendiff > 0 with
-       | true  -> (l1, ((clone 0 lendiff) @ l2))
-       | false  -> (((clone 0 (- lendiff)) @ l1), l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | 0::t -> removeZero t | _ -> l;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a (x,y) = ((x + y) / 10) :: a in
-    let base = [] in
-    let args = List.rev (List.combine l1 l2) in
-    let res = List.fold_left f base args in List.rev res in
-  removeZero (add (padZero l1 l2));;
+let fixpoint (f,b) = let rec g x = if (f x) = b then x else g (x + 1) in g 0;;
 
 *)
 
 (* changed spans
-(21,15)-(21,42)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+(6,10)-(6,65)
+let rec g =
+  fun x ->
+    if f x = b
+    then x
+    else g (x + 1) in
+g 0
+LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
 
-(21,24)-(21,36)
-List.combine l1 l2
-AppG (fromList [VarG])
+(6,48)-(6,49)
+g
+VarG
 
 *)

@@ -1,20 +1,44 @@
 
-let pipe fs = let f a x = a x in let base d = d in List.fold_left f base fs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let x = List.mem h seen in
+        if x
+        then helper (seen, t)
+        else
+          (let seen' = seen :: h in let rest' = t in helper (seen', rest')) in
+  List.rev (helper ([], l));;
 
 
 (* fix
 
-let pipe fs = let f a x a = x a in let base d = d in List.fold_left f base fs;;
+let removeDuplicates l =
+  let rec helper (seen,rest) =
+    match rest with
+    | [] -> seen
+    | h::t ->
+        let x = List.mem h seen in
+        if x
+        then helper (seen, t)
+        else
+          (let seen' = seen @ [h] in let rest' = t in helper (seen', rest')) in
+  List.rev (helper ([], l));;
 
 *)
 
 (* changed spans
-(2,26)-(2,29)
-fun a -> x a
-LamG (AppG (fromList [EmptyG]))
-
-(2,33)-(2,75)
-a
+(11,23)-(11,27)
+(@)
 VarG
+
+(11,23)-(11,32)
+seen @ [h]
+AppG (fromList [VarG,ListG EmptyG Nothing])
+
+(11,31)-(11,32)
+[h]
+ListG VarG Nothing
 
 *)

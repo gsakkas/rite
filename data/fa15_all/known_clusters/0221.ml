@@ -1,3 +1,4 @@
-LetG NonRec (fromList [VarG]) (BopG EmptyG EmptyG)
-let h :: t = xs in
-h + sumList t
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,VarG),(Nothing,ListG EmptyG Nothing)])
+match listReverse z with
+| [] -> []
+| h :: t -> t

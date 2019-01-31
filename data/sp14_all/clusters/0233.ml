@@ -1,3 +1,2 @@
-CaseG VarG (fromList [(Nothing,LitG)])
-match xs with
-| [] -> 0
+LetG NonRec (fromList [ListG EmptyG Nothing]) VarG
+let c = [a ; b] in c

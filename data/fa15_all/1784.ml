@@ -1,41 +1,91 @@
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then List.append l1 ((clone 0 (first - sec)) :: l2)
-    else (l1, l2);;
+let rec exprToString e =
+  match e with
+  | [] -> []
+  | h::e' ->
+      (match h with
+       | VarX  -> "x" ^ (exprToString e')
+       | VarY  -> "y" ^ (exprToString e')
+       | Sine  -> "sin(pi*" ^ ((exprToString e') ^ ")")
+       | Cosine  -> "cos(pi*" ^ ((exprToString e') ^ ")")
+       | Average  ->
+           let (e1,e2) = h in
+           "((" ^
+             ((exprToString e1) ^
+                ("+" ^ ((exprToString e2) ^ (")/2)" ^ (exprToString e')))))
+       | Times  ->
+           let (e1,e2) = h in
+           (exprToString e1) ^
+             ("*" ^ ((exprToString e2) ^ (exprToString e')))
+       | Thresh  ->
+           let (e1,e2,e3,e4) = h in
+           "(" ^
+             ((exprToString e1) ^
+                ("<" ^
+                   ((exprToString e2) ^
+                      ("?" ^
+                         ((exprToString e3) ^
+                            (":" ^
+                               ((exprToString e4) ^ (")" ^ (exprToString e'))))))))));;
 
 
 (* fix
 
-let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let padZero l1 l2 =
-  let first = List.length l1 in
-  let sec = List.length l2 in
-  if first < sec
-  then ((List.append (clone 0 (sec - first)) l1), l2)
-  else
-    if first > sec
-    then (l1, (List.append (clone 0 (first - sec)) l2))
-    else (l1, l2);;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+  | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+  | Average (e1,e2) ->
+      "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(11,9)-(11,55)
-l1
+(12,2)-(38,85)
+match e with
+| VarX -> "x"
+| VarY -> "y"
+| Sine e1 -> "sin(pi*" ^ (exprToString e1 ^ ")")
+| Cosine e1 -> "cos(pi*" ^ (exprToString e1 ^ ")")
+| Average (e1 , e2) -> "((" ^ (exprToString e1 ^ ("+" ^ (exprToString e2 ^ ")/2)")))
+| Times (e1 , e2) -> exprToString e1 ^ ("*" ^ exprToString e2)
+| Thresh (e1 , e2 , e3 , e4) -> "(" ^ (exprToString e1 ^ ("<" ^ (exprToString e2 ^ ("?" ^ (exprToString e3 ^ (":" ^ (exprToString e4 ^ ")")))))))
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+
+(18,45)-(18,47)
+e1
 VarG
 
-(11,9)-(11,55)
-(l1 , List.append (clone 0
-                         (first - sec)) l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+(19,47)-(19,49)
+e1
+VarG
 
 *)

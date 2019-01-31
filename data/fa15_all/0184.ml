@@ -1,26 +1,56 @@
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (digitsOfInt (n / 10)) :: (n mod 10);;
+let rec wwhile (f,b) =
+  let (x,y) = f b in if y = false then x else wwhile (f, x);;
+
+let fixpoint (f,b) = wwhile ((wwhile (f, b)), b);;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
+let rec wwhile (f,b) = let (x,y) = f b in if y then wwhile (f, x) else x;;
+
+let fixpoint (f,b) =
+  wwhile (let g b = ((f b), (if (f b) = b then false else true)) in (g, b));;
 
 *)
 
 (* changed spans
-(3,25)-(3,47)
-n
+(5,14)-(5,48)
+x
 VarG
 
-(3,25)-(3,47)
-n mod 10
-BopG VarG LitG
+(5,28)-(5,48)
+fun b ->
+  (f b , if f b = b
+         then false
+         else true)
+LamG (TupleG (fromList [EmptyG]))
 
-(3,25)-(3,47)
-10
-LitG
+(5,28)-(5,48)
+let g =
+  fun b ->
+    (f b , if f b = b
+           then false
+           else true) in
+(g , b)
+LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
+
+(5,46)-(5,47)
+f
+VarG
+
+(5,46)-(5,47)
+f b
+AppG (fromList [VarG])
+
+(5,46)-(5,47)
+f b = b
+BopG (AppG (fromList [EmptyG])) VarG
+
+(5,46)-(5,47)
+if f b = b
+then false
+else true
+IteG (BopG EmptyG EmptyG) LitG LitG
 
 *)

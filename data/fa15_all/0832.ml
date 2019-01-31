@@ -1,29 +1,60 @@
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' in
-  acc b;;
+let modulus ss = ss mod 10;;
 
-let fixpoint (f,b) = ((wwhile (fun xx  -> (xx, ((f xx) = xx)))), b);;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
+
+let lt10 q = q < 10;;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if lt10 n
+  then n
+  else (match n with | n -> let x_ = digitsOfInt n in [sumList x_]);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let rec acc result =
-    let res = f result in
-    match res with | (b',c') -> if c' then acc b' else b' in
-  acc b;;
+let modulus ss = ss mod 10;;
 
-let fixpoint (f,b) = wwhile ((fun xx  -> (xx, ((f xx) = xx))), b);;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | x -> (digitsOfInt (n / 10)) @ [modulus x]);;
+
+let lt10 q = q < 10;;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
+let rec additivePersistence n =
+  if lt10 n
+  then n
+  else
+    (match n with
+     | n ->
+         let n1 = let x0 = digitsOfInt n in sumList x0 in
+         additivePersistence n1);;
 
 *)
 
 (* changed spans
-(8,30)-(8,62)
-(fun xx ->
-   (xx , f xx = xx) , b)
-TupleG (fromList [VarG,LamG EmptyG])
+(16,28)-(16,66)
+let n1 =
+  (let x0 = digitsOfInt n in
+   sumList x0) in
+additivePersistence n1
+LetG NonRec (fromList [LetG NonRec (fromList [EmptyG]) EmptyG]) (AppG (fromList [EmptyG]))
+
+(16,37)-(16,50)
+let x0 = digitsOfInt n in
+sumList x0
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+
+(16,63)-(16,65)
+x0
+VarG
 
 *)

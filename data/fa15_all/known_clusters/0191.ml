@@ -1,2 +1,2 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) LitG]))) Nothing
-((fst x + snd x) mod 10) :: a
+BopG LitG (BopG EmptyG EmptyG)
+1.0 /. ((eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y))

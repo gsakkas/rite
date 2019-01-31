@@ -1,157 +1,64 @@
 
-let x x = x;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
+let pi = 4.0 *. (atan 1.0);;
 
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = a + x in
-    let base = 0 in
-    let args = [l1] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Average (x3,x4) -> ((eval (x3, x, y)) +. (eval (x4, x, y))) / 2
+  | Times (x5,x6) -> (eval (x5, x, y)) *. (eval (x6, x, y))
+  | Thresh (x7,x8,x9,x0) ->
+      if (eval (x7, x, y)) < (eval (x8, x, y))
+      then eval (x9, x, y)
+      else eval (x0, x, y);;
 
 
 (* fix
 
-let l1 = [0; 0; 9; 9];;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let l2 = [1; 0; 0; 2];;
+let pi = 4.0 *. (atan 1.0);;
 
-let x = (3, 3) :: (List.rev (List.combine l1 l2));;
-
-let clone x n =
-  let rec helper x n acc =
-    if n <= 0 then acc else helper x (n - 1) (x :: acc) in
-  helper x n [];;
-
-let padZero l1 l2 =
-  if (List.length l1) < (List.length l2)
-  then ((List.append (clone 0 ((List.length l2) - (List.length l1))) l1), l2)
-  else (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2));;
-
-let rec removeZero l =
-  match l with | [] -> [] | x::xs -> if x = 0 then removeZero xs else x :: xs;;
-
-let bigAdd l1 l2 =
-  let add (l1,l2) =
-    let f a x = x in
-    let base = (0, []) in
-    let args = [(0, [])] in let (_,res) = List.fold_left f base args in res in
-  removeZero (add (padZero l1 l2));;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine x1 -> sin (pi *. (eval (x1, x, y)))
+  | Cosine x2 -> cos (pi *. (eval (x2, x, y)))
+  | Average (x3,x4) -> ((eval (x3, x, y)) +. (eval (x4, x, y))) /. 2.
+  | Times (x5,x6) -> (eval (x5, x, y)) *. (eval (x6, x, y))
+  | Thresh (x7,x8,x9,x0) ->
+      if (eval (x7, x, y)) < (eval (x8, x, y))
+      then eval (x9, x, y)
+      else eval (x0, x, y);;
 
 *)
 
 (* changed spans
-(2,10)-(2,11)
-[0 ; 0 ; 9 ; 9]
-ListG LitG Nothing
+(19,23)-(19,67)
+(eval (x3 , x , y) +. eval (x4 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
-(4,10)-(7,15)
-List.rev
-VarG
-
-(4,10)-(7,15)
-List.combine
-VarG
-
-(4,10)-(7,15)
-l1
-VarG
-
-(4,10)-(7,15)
-l2
-VarG
-
-(4,10)-(7,15)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(4,10)-(7,15)
-List.combine l1 l2
-AppG (fromList [VarG])
-
-(4,10)-(7,15)
-0
+(19,66)-(19,67)
+2.0
 LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-9
-LitG
-
-(4,10)-(7,15)
-9
-LitG
-
-(4,10)-(7,15)
-1
-LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-2
-LitG
-
-(4,10)-(7,15)
-3
-LitG
-
-(4,10)-(7,15)
-3
-LitG
-
-(4,10)-(7,15)
-(3 , 3)
-TupleG (fromList [LitG])
-
-(4,10)-(7,15)
-(3 , 3) :: (List.rev (List.combine l1
-                                   l2))
-ConAppG (Just (TupleG (fromList [AppG (fromList [AppG (fromList [VarG])]),TupleG (fromList [LitG])]))) Nothing
-
-(4,10)-(7,15)
-[1 ; 0 ; 0 ; 2]
-ListG LitG Nothing
-
-(20,15)-(20,16)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(21,4)-(21,70)
-[]
-ListG EmptyG Nothing
-
-(21,16)-(21,18)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(21,23)-(21,70)
-0
-LitG
-
-(21,23)-(21,70)
-[]
-ListG EmptyG Nothing
 
 *)

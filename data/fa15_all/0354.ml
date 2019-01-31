@@ -1,24 +1,26 @@
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile func else value;;
+let rec assoc (d,k,l) =
+  match l with | (x,y)::t when x = k -> y | h::t -> assoc d k t | _ -> d;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let func = f b in
-  let (value,boo) = func in if boo then wwhile (f, value) else value;;
+let rec assoc (d,k,l) = match l with | h::t -> assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(4,47)-(4,51)
-(f , value)
+(3,2)-(3,72)
+match l with
+| h :: t -> assoc (d , k , t)
+CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+
+(3,40)-(3,41)
+(d , k , t)
 TupleG (fromList [VarG])
 
-(4,57)-(4,62)
-f
-VarG
+(3,52)-(3,63)
+assoc (d , k , t)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

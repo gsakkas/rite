@@ -1,37 +1,28 @@
 
-let listReverse l =
-  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  let xxx =
-    match n with
-    | 0 -> []
-    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
-  listReverse (xxx n);;
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n -> if n < 0 then (((clone 0 n) @ l1), l2);;
 
 
 (* fix
 
-let listReverse l =
-  let rec lr l' = function | [] -> l' | h::t -> lr (h :: l') t in lr [] l;;
+let rec clone x n =
+  match n with | 0 -> [] | n -> if n < 0 then [] else x :: (clone x (n - 1));;
 
-let rec digitsOfInt n =
-  let xxx n =
-    match n with
-    | 0 -> []
-    | n -> if n < 0 then [] else (n mod 10) :: (digitsOfInt (n / 10)) in
-  listReverse (xxx n);;
+let padZero l1 l2 =
+  match (List.length l1) - (List.length l2) with
+  | 0 -> (l1, l2)
+  | n -> if n < 0 then (((clone 0 n) @ l1), l2) else (((clone 0 n) @ l2), l1);;
 
 *)
 
 (* changed spans
-(7,4)-(9,69)
-fun n ->
-  match n with
-  | 0 -> []
-  | n -> if n < 0
-         then []
-         else (n mod 10) :: (digitsOfInt (n / 10))
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+(8,9)-(8,47)
+(clone 0 n @ l2 , l1)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)

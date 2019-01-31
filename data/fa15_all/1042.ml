@@ -1,56 +1,136 @@
 
-let rec assoc (d,k,l) =
-  match l with | [] -> d | (s,i)::t -> if s = k then true else assoc d k t;;
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
+  match l with
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [0] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (b,c) = a in
+    let (o,p) = x in
+    let r = bigAdd (mulByDigit o (List.rev l2)) [b] in
+    ((r / 10), ((r mod 10) :: b)) in
+  let base = (0, []) in
+  let args = List.combine (List.rev l1) (List.rev l2) in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec assoc (d,k,l) =
+let rec clone x n =
+  match n with | n when n <= 0 -> [] | _ -> x :: (clone x (n - 1));;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x > y
+  then let z = x - y in (l1, ((clone 0 z) @ l2))
+  else (let z = y - x in (((clone 0 z) @ l1), l2));;
+
+let rec removeZero l =
   match l with
-  | [] -> d
-  | h::t -> if (fst h) = k then snd h else assoc (d, k, t);;
+  | [] -> []
+  | h::t -> (match h with | 0 -> removeZero t | _ -> h :: t);;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      let (y,z) = a in
+      let (r,s) = x in let m = (r + s) + y in ((m / 10), ((m mod 10) :: z)) in
+    let base = (0, []) in
+    let args = List.combine (List.rev (0 :: l1)) (List.rev (0 :: l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  match i with | 0 -> [0] | _ -> bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    let (b,c) = a in
+    let r = bigAdd (mulByDigit x (List.rev l2)) [b] in
+    match r with | [] -> (0, (0 :: c)) | h::t -> (h, ((List.hd t) :: c)) in
+  let base = (0, []) in
+  let args = List.rev l1 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(3,2)-(3,74)
-match l with
-| [] -> d
-| h :: t -> if fst h = k
-            then snd h
-            else assoc (d , k , t)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(3,42)-(3,43)
-fst h
-AppG (fromList [VarG])
-
-(3,46)-(3,47)
-fst
+(34,31)-(34,32)
+x
 VarG
 
-(3,46)-(3,47)
+(35,5)-(35,13)
+0
+LitG
+
+(35,5)-(35,13)
+match r with
+| [] -> (0 , 0 :: c)
+| h :: t -> (h , (List.hd t) :: c)
+CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+
+(35,10)-(35,12)
+(0 , 0 :: c)
+TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
+
+(35,17)-(35,18)
+c
+VarG
+
+(35,17)-(35,18)
 h
 VarG
 
-(3,63)-(3,68)
-snd
+(35,17)-(35,18)
+List.hd
 VarG
 
-(3,63)-(3,68)
-h
+(35,17)-(35,18)
+t
 VarG
 
-(3,63)-(3,68)
-assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(35,17)-(35,18)
+c
+VarG
 
-(3,63)-(3,74)
-snd h
+(35,17)-(35,18)
+List.hd t
 AppG (fromList [VarG])
 
-(3,69)-(3,70)
-(d , k , t)
-TupleG (fromList [VarG])
+(35,17)-(35,18)
+(h , (List.hd t) :: c)
+TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing])
+
+(35,17)-(35,18)
+(List.hd t) :: c
+ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
+
+(35,30)-(35,31)
+0
+LitG
 
 *)

@@ -1,42 +1,126 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) = wwhile ((fun (f,b)  -> if (f b) = b then b else f b), b);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with
+    | (o,l) ->
+        let prod = mulByDigit x l in
+        if prod < 10
+        then (0, (prod :: l))
+        else ((prod / 10), ((prod mod 10) :: l)) in
+  let base = (0, []) in
+  let args =
+    let combine (a,b) = a + b in
+    (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+  let (_,res) = List.fold_left f base args in res;;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in match c' with | false  -> b' | _ -> wwhile (f, b');;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let fixpoint (f,b) =
-  wwhile ((fun f'  -> if (f b) = b then (b, true) else (b, false)), b);;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | (o,l) ->
+          let sum = x + o in
+          if sum < 10 then (0, (sum :: l)) else (1, ((sum - 10) :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      (List.map combine (List.rev (List.combine l1 l2))) @ [0] in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
+
+let rec mulByDigit i l =
+  if i = 0 then [0] else if i = 1 then l else bigAdd l (mulByDigit (i - 1) l);;
+
+let bigMul l1 l2 =
+  let f a x =
+    match a with | (o,l) -> ((10 * o), (bigAdd (mulByDigit o l1) l)) in
+  let base = (1, []) in
+  let args = l2 in let (_,res) = List.fold_left f base args in res;;
 
 *)
 
 (* changed spans
-(5,29)-(5,73)
-fun f' ->
-  if f b = b
-  then (b , true)
-  else (b , false)
-LamG (IteG EmptyG EmptyG EmptyG)
+(40,29)-(40,33)
+10 * o
+BopG LitG VarG
 
-(5,62)-(5,63)
-(b , true)
-TupleG (fromList [VarG,LitG])
+(40,45)-(40,46)
+o
+VarG
 
-(5,69)-(5,70)
-true
-LitG
+(40,45)-(40,46)
+bigAdd
+VarG
 
-(5,71)-(5,72)
-(b , false)
-TupleG (fromList [VarG,LitG])
+(40,45)-(40,46)
+mulByDigit
+VarG
 
-(5,75)-(5,76)
-false
+(40,45)-(40,46)
+o
+VarG
+
+(40,45)-(40,46)
+l1
+VarG
+
+(40,45)-(40,46)
+bigAdd (mulByDigit o l1) l
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(40,45)-(40,46)
+mulByDigit o l1
+AppG (fromList [VarG])
+
+(41,14)-(41,15)
+1
 LitG
 
 *)

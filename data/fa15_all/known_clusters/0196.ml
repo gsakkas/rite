@@ -1,7 +1,4 @@
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| h :: t -> if List.length t = 0
-            then [h * i] @ mulByDigit i t
-            else (remainder i
-                            h) :: (mulByDigit i t)
+LetG NonRec (fromList [BopG EmptyG EmptyG]) (BopG EmptyG EmptyG)
+let d =
+  (eval (m , x , y) +. eval (n , x , y)) +. eval (o , x , y) in
+sqrt (d ** d) /. 3.0

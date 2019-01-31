@@ -1,30 +1,18 @@
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [0] | _ -> [digitsOfInt (n / 10); n mod 10]);;
+  if n <= 0 then [] else (n mod 10) @ (digitsOfInt (n / 10));;
 
 
 (* fix
 
 let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [0] | _ -> (digitsOfInt (n / 10)) @ [n mod 10]);;
+  if n <= 0 then [] else (n mod 10) :: (digitsOfInt (n / 10));;
 
 *)
 
 (* changed spans
-(5,39)-(5,71)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(5,40)-(5,60)
-(@)
-VarG
-
-(5,62)-(5,70)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(3,36)-(3,37)
+(n mod 10) :: (digitsOfInt (n / 10))
+ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
 
 *)

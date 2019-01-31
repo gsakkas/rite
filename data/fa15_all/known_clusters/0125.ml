@@ -1,7 +1,29 @@
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
-(0 :: l1 , l2)
-(l1 , 0 :: l2)
-(0 :: l1 , l2)
-(l1 , 0 :: l2)
-(0 :: l1 , l2)
-(l1 , 0 :: l2)
+LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+let (h1 , h2) :: t = l in
+match k with
+| h2 -> h1
+| _ -> if l = []
+       then d
+       else assoc (d , k , t)
+let (h1 , h2) :: t = l in
+match k with
+| h2 -> h1
+| _ -> if l = []
+       then d
+       else assoc (d , k , t)
+let h :: t = l in
+match h with
+| 0 -> removeZero t
+| _ -> l
+let h :: t = l in
+match h with
+| 0 -> removeZero t
+| _ -> l
+let h :: t = l in
+match h with
+| 0 -> removeZero t
+| _ -> l
+let h :: t = l in
+match h with
+| 0 -> removeZero t
+| _ -> l

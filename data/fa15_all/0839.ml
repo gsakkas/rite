@@ -1,26 +1,56 @@
 
-let rec sumDigits n1 =
-  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
-
-let rec digitalRoot n = if n > 10 then digitalRoot sumDigits n else n;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | n' -> (digitsOfInt (n / 10)) :: (n' mod 10));;
 
 
 (* fix
 
-let rec sumDigits n1 =
-  if n1 < 10 then n1 else (n1 mod 10) + (sumDigits (n1 / 10));;
+let modulus ss = ss mod 10;;
 
-let rec digitalRoot n = if n > 10 then digitalRoot (sumDigits n) else n;;
+let rec digitsOfInt n =
+  if n <= 0
+  then []
+  else (match n with | n' -> (digitsOfInt (n / 10)) @ [modulus n']);;
 
 *)
 
 (* changed spans
-(5,39)-(5,62)
-digitalRoot (sumDigits n)
-AppG (fromList [AppG (fromList [EmptyG])])
+(2,20)-(5,67)
+ss
+VarG
 
-(5,51)-(5,60)
-sumDigits n
+(2,20)-(5,67)
+fun ss -> ss mod 10
+LamG (BopG EmptyG EmptyG)
+
+(2,20)-(5,67)
+ss mod 10
+BopG VarG LitG
+
+(2,20)-(5,67)
+10
+LitG
+
+(5,29)-(5,51)
+(@)
+VarG
+
+(5,29)-(5,66)
+digitsOfInt (n / 10) @ [modulus n']
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(5,55)-(5,66)
+[modulus n']
+ListG (AppG (fromList [EmptyG])) Nothing
+
+(5,56)-(5,58)
+modulus
+VarG
+
+(5,56)-(5,58)
+modulus n'
 AppG (fromList [VarG])
 
 *)

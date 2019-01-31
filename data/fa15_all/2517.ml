@@ -1,47 +1,33 @@
 
 let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+  let (value,result) = f b in if not result then value else wwhile (f, value);;
 
-let fixpoint (f,b) = wwhile ((let g x = (f x) != x in g b), b);;
+let fixpoint (f,b) =
+  wwhile ((let func output = ((f output), ((f output) = b)) in func b), b);;
 
 
 (* fix
 
 let rec wwhile (f,b) =
-  let rec wwhelper f b =
-    let (b',c') = f b in if c' = false then b' else wwhelper f b' in
-  wwhelper f b;;
+  let (value,result) = f b in if not result then value else wwhile (f, value);;
 
 let fixpoint (f,b) =
-  wwhile ((let g x = let xx = f x in (xx, (xx != b)) in g), b);;
+  wwhile ((let func input = ((f input), ((f input) = b)) in func), b);;
 
 *)
 
 (* changed spans
-(7,40)-(7,50)
-let xx = f x in (xx , xx <> b)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+(6,20)-(6,59)
+fun input ->
+  (f input , f input = b)
+LamG (TupleG (fromList [EmptyG]))
 
-(7,54)-(7,55)
-(xx , xx <> b)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(7,56)-(7,57)
-xx
+(6,33)-(6,39)
+input
 VarG
 
-(7,56)-(7,57)
-xx
-VarG
-
-(7,56)-(7,57)
-xx <> b
-BopG VarG VarG
-
-(7,60)-(7,61)
-g
+(6,46)-(6,52)
+input
 VarG
 
 *)

@@ -1,4 +1,7 @@
-IteG (BopG EmptyG EmptyG) (ConAppG (Just EmptyG) Nothing) (ListG EmptyG Nothing)
-if n > 0
-then x :: (clone x (n - 1))
-else []
+CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
+match n with
+| _ -> listReverse ns
+| 0 -> ns
+| n -> if n < 0
+       then []
+       else (n mod 10) :: (digitsOfInt (n / 10))

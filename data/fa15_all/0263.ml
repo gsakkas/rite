@@ -1,59 +1,30 @@
 
-let rec digitsOfInt n = if n <= 0 then [] else [digitsOfInt (n / 10)];;
+let rec clone x n = if x <= 0 then [] else List.fold_left n;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  let myList = [] in
-  if n <= 0
-  then []
-  else if n < 10 then [n] else (digitsOfInt (n / 10)) @ [n mod 10];;
+let rec cloneHelper x n = if x <= 0 then [] else cloneHelper x (n - 1);;
+
+let rec clone x n = cloneHelper x n;;
 
 *)
 
 (* changed spans
-(2,24)-(2,69)
-let myList = [] in
-if n <= 0
-then []
-else if n < 10
-     then [n]
-     else digitsOfInt (n / 10) @ [n mod 10]
-LetG NonRec (fromList [ListG EmptyG Nothing]) (IteG EmptyG EmptyG EmptyG)
+(2,43)-(2,57)
+cloneHelper x (n - 1)
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
-(2,24)-(2,69)
-[]
-ListG EmptyG Nothing
-
-(2,47)-(2,69)
-n
+(2,58)-(2,59)
+cloneHelper
 VarG
 
-(2,47)-(2,69)
-n < 10
+(2,58)-(2,59)
+x
+VarG
+
+(2,58)-(2,59)
+n - 1
 BopG VarG LitG
-
-(2,47)-(2,69)
-10
-LitG
-
-(2,47)-(2,69)
-if n < 10
-then [n]
-else digitsOfInt (n / 10) @ [n mod 10]
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (AppG (fromList [EmptyG]))
-
-(2,48)-(2,68)
-n
-VarG
-
-(2,48)-(2,68)
-(@)
-VarG
-
-(2,48)-(2,68)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
 *)

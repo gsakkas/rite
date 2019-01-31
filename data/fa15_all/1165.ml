@@ -1,36 +1,22 @@
 
-let rec listReverse l =
-  match l with | [] -> [] | a::[] -> [a] | a::b::[] -> b :: (listReverse a);;
+let rec assoc (d,k,l) =
+  match [(k, d)] with
+  | [] -> d
+  | h::t -> if (k, d) = l then d else assoc (d, k, t);;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | a::b -> (listReverse b) @ [a];;
+let rec assoc (d,k,l) =
+  match [(k, d)] with
+  | [] -> d
+  | h::t -> if (k, d) = h then d else assoc (d, k, t);;
 
 *)
 
 (* changed spans
-(3,2)-(3,75)
-match l with
-| [] -> []
-| a :: b -> listReverse b @ [a]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-
-(3,55)-(3,56)
-listReverse b @ [a]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(3,60)-(3,75)
-(@)
+(5,24)-(5,25)
+h
 VarG
-
-(3,73)-(3,74)
-b
-VarG
-
-(3,73)-(3,74)
-[a]
-ListG VarG Nothing
 
 *)

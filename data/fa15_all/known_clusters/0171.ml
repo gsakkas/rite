@@ -1,7 +1,7 @@
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-match f x with
-| x -> (x , false)
-| y -> (y , true)
-match f x with
-| x -> (x , false)
-| y -> (y , true)
+LetG NonRec (fromList [ListG EmptyG Nothing]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+let base = [] in
+let args = [] in
+List.fold_left f base args
+let base = [] in
+let args = l2 in
+List.fold_left f base args

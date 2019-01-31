@@ -1,39 +1,71 @@
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ (sepConcat "; " (List.map f l) "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin" ^ (exprToString e)
+  | Cosine e -> "cos" ^ (exprToString e)
+  | Average (e,e1) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e1) ^ (")" ^ "/2"))))
+  | Times (e,e1) -> (exprToString e) ^ ("*" ^ (exprToString e1))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2 "?") ^
+                 ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")"))))));;
 
 
 (* fix
 
-let rec sepConcat sep sl =
-  match sl with
-  | [] -> ""
-  | h::t ->
-      let f a x = a ^ (sep ^ x) in
-      let base = h in let l = t in List.fold_left f base l;;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr;;
 
-let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
+let rec exprToString e =
+  match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine e -> "sin" ^ (exprToString e)
+  | Cosine e -> "cos" ^ (exprToString e)
+  | Average (e,e1) ->
+      "(" ^ ((exprToString e) ^ ("+" ^ ((exprToString e1) ^ (")" ^ "/2"))))
+  | Times (e,e1) -> (exprToString e) ^ ("*" ^ (exprToString e1))
+  | Thresh (e1,e2,e3,e4) ->
+      "(" ^
+        ((exprToString e1) ^
+           ("<" ^
+              ((exprToString e2) ^
+                 ("?" ^
+                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))));;
 
 *)
 
 (* changed spans
-(9,29)-(9,64)
-sepConcat "; " (List.map f
-                         l) ^ "]"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(24,15)-(24,36)
+exprToString e2
+AppG (fromList [VarG])
 
-(9,30)-(9,39)
+(24,32)-(24,35)
 (^)
 VarG
 
-(9,30)-(9,39)
-sepConcat "; " (List.map f l)
+(24,32)-(24,35)
+"?" ^ (exprToString e3 ^ (":" ^ (exprToString e4 ^ ")")))
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)

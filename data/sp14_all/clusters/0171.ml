@@ -1,4 +1,13 @@
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-(len , (sum + 1) :: xs')
-(len , (sum + 1) :: xs')
-(len , (sum + 1) :: xs')
+SeqG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG)
+x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x
+x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x
+x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x

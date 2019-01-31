@@ -1,73 +1,16 @@
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let fixpoint (f,b) = if b != (f b) then wwhile (f, (f b)) else b;;
+let rec digitsOfInt n = if n < 0 then [];;
 
 
 (* fix
 
-let wwhile (f,b) =
-  let rec helper (f,b) (x,y) =
-    match y with | true  -> helper (f, x) (f b) | false  -> x in
-  helper (f, b) (b, true);;
-
-let fixpoint (f,b) =
-  if b = (f b) then f b else (let g b = ((f b), true) in wwhile (g, (f b)));;
+let rec digitsOfInt n = if n < 0 then [] else [1];;
 
 *)
 
 (* changed spans
-(7,24)-(7,34)
-b = f b
-BopG VarG (AppG (fromList [EmptyG]))
-
-(7,51)-(7,56)
-b
-VarG
-
-(7,51)-(7,56)
-fun b -> (f b , true)
-LamG (TupleG (fromList [EmptyG]))
-
-(7,51)-(7,56)
-let g =
-  fun b -> (f b , true) in
-wwhile (g , f b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
-
-(7,51)-(7,56)
-(f b , true)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(7,63)-(7,64)
-wwhile
-VarG
-
-(7,63)-(7,64)
-g
-VarG
-
-(7,63)-(7,64)
-f
-VarG
-
-(7,63)-(7,64)
-wwhile (g , f b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(7,63)-(7,64)
-f b
-AppG (fromList [VarG])
-
-(7,63)-(7,64)
-true
-LitG
-
-(7,63)-(7,64)
-(g , f b)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+(2,24)-(2,40)
+[1]
+ListG LitG Nothing
 
 *)

@@ -1,40 +1,32 @@
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | _ -> (digitsOfInt (n / 10)) :: (n mod 10));;
+let pipe fs = let f a x = fs + x in let base = [] in List.fold_left f base fs;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n < 0
-  then []
-  else (match n with | 0 -> [] | _ -> (digitsOfInt (n / 10)) @ [n mod 10]);;
+let pipe fs = let f a x b = x b in let base b = b in List.fold_left f base fs;;
 
 *)
 
 (* changed spans
-(5,7)-(5,65)
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+(2,26)-(2,28)
+fun b -> x b
+LamG (AppG (fromList [EmptyG]))
 
-(5,28)-(5,50)
-(@)
+(2,31)-(2,32)
+x b
+AppG (fromList [VarG])
+
+(2,36)-(2,77)
+b
 VarG
 
-(5,28)-(5,50)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(2,47)-(2,49)
+fun b -> b
+LamG VarG
 
-(5,28)-(5,64)
-[]
-ListG EmptyG Nothing
-
-(5,54)-(5,64)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+(2,53)-(2,77)
+b
+VarG
 
 *)

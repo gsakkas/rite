@@ -1,44 +1,26 @@
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  let f' = if (f b) = b then (b, true) else (b, false) in wwhile (f', b);;
+let rec digitsOfInt n =
+  if n < 0 then [] else (let x = n mod 10 in (digitsOfInt n) :: x);;
 
 
 (* fix
 
-let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = true then wwhile (f, b') else b';;
-
-let fixpoint (f,b) =
-  let f' b' = if (f b') = b' then (b', true) else (b', false) in
-  wwhile (f', b);;
+let rec digitsOfInt n =
+  if n < 0 then [] else (let x = n mod 10 in (digitsOfInt n) @ [x]);;
 
 *)
 
 (* changed spans
-(6,11)-(6,54)
-fun b' ->
-  if f b' = b'
-  then (b' , true)
-  else (b' , false)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(6,22)-(6,23)
-b'
+(3,45)-(3,60)
+(@)
 VarG
 
-(6,29)-(6,38)
-b'
-VarG
+(3,45)-(3,65)
+digitsOfInt n @ [x]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
 
-(6,30)-(6,31)
-b'
-VarG
-
-(6,45)-(6,46)
-b'
-VarG
+(3,64)-(3,65)
+[x]
+ListG VarG Nothing
 
 *)

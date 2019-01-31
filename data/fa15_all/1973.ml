@@ -1,48 +1,42 @@
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec getDigits n =
-  match n with | 0 -> [] | _ -> myAppend (getDigits (n / 10)) (n mod 10);;
-
-let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  match n with | 0 -> 1 | _ -> 1 + (additivePersistence sumList digits n);;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+  else
+    if (List.length l1) < (List.length l2)
+    then (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @ l2)
+    else [];;
 
 
 (* fix
 
-let rec myAppend l n = match l with | [] -> [n] | h::t -> h :: (myAppend t n);;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let rec getDigits n =
-  match n with | 0 -> [] | _ -> myAppend (getDigits (n / 10)) (n mod 10);;
-
-let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
-
-let digits n = digitsOfInt (abs n);;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  match n with | 0 -> 1 | _ -> 1 + (additivePersistence (sumList (digits n)));;
+let padZero l1 l2 =
+  if (List.length l1) > (List.length l2)
+  then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+  else
+    if (List.length l1) < (List.length l2)
+    then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+    else (l1, l2);;
 
 *)
 
 (* changed spans
-(14,35)-(14,73)
-additivePersistence (sumList (digits n))
-AppG (fromList [AppG (fromList [EmptyG])])
+(6,10)-(6,11)
+(l1 , clone 0
+            (List.length l1 - List.length l2) @ l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,56)-(14,63)
-sumList (digits n)
-AppG (fromList [AppG (fromList [EmptyG])])
+(9,9)-(9,68)
+(clone 0
+       (List.length l2 - List.length l1) @ l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,64)-(14,70)
-digits n
-AppG (fromList [VarG])
+(10,9)-(10,11)
+(l1 , l2)
+TupleG (fromList [VarG])
 
 *)

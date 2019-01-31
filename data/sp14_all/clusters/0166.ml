@@ -1,4 +1,16 @@
-TupleG (fromList [BopG EmptyG EmptyG])
-(x * x , x < 100)
-(x * x , x < 100)
-(sum / 10 , sum mod 10)
+LetG NonRec (fromList [LitG]) (SeqG EmptyG EmptyG)
+let x = 1 in
+(x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x)
+let x = 1 in
+(x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x)
+let x = 1 in
+(x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x)

@@ -1,51 +1,64 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec eval (e,x,y) =
-  match e with
-  | VarX  -> x
-  | VarY  -> y
-  | Average (x',y') -> ((eval x') + (eval y')) / 2;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | hd::tl -> ((((fst x) + (snd x)) + hd) / 10) ::
+          ((((fst x) + (snd x)) + hd) mod 10) :: tl
+      | _ -> (((fst x) + (snd x)) / 10) :: (((fst x) + (snd x)) mod 10) in
+    let base = [] in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n < 1 then [] else x :: (clone x (n - 1));;
 
-let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (((clone 0 ((List.length l2) - (List.length l1))) @ l1), l2)
+  else
+    if (List.length l1) > (List.length l2)
+    then (l1, ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+    else (l1, l2);;
+
+let rec removeZero l =
+  match l with | [] -> [] | h::t -> if h = 0 then removeZero t else l;;
+
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x =
+      match a with
+      | hd::tl -> ((((fst x) + (snd x)) + hd) / 10) ::
+          ((((fst x) + (snd x)) + hd) mod 10) :: tl
+      | _ -> (((fst x) + (snd x)) / 10) :: (((fst x) + (snd x)) mod 10) :: a in
+    let base = [] in
+    let args = List.combine l1 l2 in List.fold_left f base args in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(12,2)-(15,50)
-match e with
-| Average (x' , y') -> (x +. y) /. 2.0
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG)])
+(21,43)-(21,71)
+((fst x + snd x) mod 10) :: a
+ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) LitG]))) Nothing
 
-(13,13)-(13,14)
-x +. y
-BopG VarG VarG
-
-(13,13)-(13,14)
-(x +. y) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(15,49)-(15,50)
-2.0
-LitG
+(22,4)-(23,63)
+a
+VarG
 
 *)

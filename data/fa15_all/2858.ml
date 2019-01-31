@@ -1,60 +1,54 @@
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = [h] in let rest' = List.mem h l in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n =
+  if n <= 0 then [] else (let y = clone x (n - 1) in x :: y);;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x < y then ((clone 0 (y - x)), y) else (x, (clone 0 (x - y)));;
 
 
 (* fix
 
-let removeDuplicates l =
-  let rec helper (seen,rest) =
-    match rest with
-    | [] -> seen
-    | h::t ->
-        let seen' = if List.mem h seen then seen else h :: seen in
-        let rest' = t in helper (seen', rest') in
-  List.rev (helper ([], l));;
+let rec clone x n =
+  if n <= 0 then [] else (let y = clone x (n - 1) in x :: y);;
+
+let padZero l1 l2 =
+  let x = List.length l1 in
+  let y = List.length l2 in
+  if x < y
+  then (((clone 0 (y - x)) @ l1), l2)
+  else (l1, ((clone 0 (x - y)) @ l2));;
 
 *)
 
 (* changed spans
-(7,27)-(7,76)
-if List.mem h seen
-then seen
-else h :: seen
-IteG (AppG (fromList [EmptyG])) VarG (ConAppG (Just EmptyG) Nothing)
-
-(7,50)-(7,51)
-seen
+(8,18)-(8,23)
+(@)
 VarG
 
-(7,55)-(7,76)
-seen
+(8,18)-(8,23)
+clone 0 (y - x)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+
+(8,36)-(8,37)
+l1
 VarG
 
-(7,55)-(7,76)
-h
+(8,44)-(8,66)
+l2
 VarG
 
-(7,55)-(7,76)
-seen
+(8,45)-(8,46)
+l1
 VarG
 
-(7,55)-(7,76)
-t
+(8,49)-(8,54)
+(@)
 VarG
 
-(7,55)-(7,76)
-let rest' = t in
-helper (seen' , rest')
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
-
-(7,55)-(7,76)
-h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+(8,49)-(8,54)
+clone 0 (x - y)
+AppG (fromList [BopG EmptyG EmptyG,LitG])
 
 *)

@@ -1,24 +1,42 @@
 
-let rec app x y = match x with | [] -> y | h::t -> h :: (app t y);;
-
-let rec digitsOfInt n =
-  if n >= 10 then app ((digitsOfInt (n / 10)) [n mod 10]) else [n];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = if (List.length t) <> 0 then t else [] in
+      let l = if (List.length t) <> 0 then "" else sep in
+      List.fold_left f base l;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n >= 10 then (digitsOfInt (n / 10)) @ [n mod 10] else [n];;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = x ^ a in
+      let base = if (List.length t) <> 0 then "" else sep in
+      let l = if (List.length t) <> 0 then t else [] in
+      List.fold_left f base l;;
 
 *)
 
 (* changed spans
-(5,22)-(5,57)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(7,53)-(7,55)
+""
+LitG
 
-(5,23)-(5,45)
-(@)
+(8,6)-(9,29)
+sep
 VarG
+
+(8,51)-(8,54)
+t
+VarG
+
+(9,6)-(9,29)
+[]
+ListG EmptyG Nothing
 
 *)

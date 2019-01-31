@@ -1,3 +1,3 @@
-ListG (LamG EmptyG) Nothing
-[fun x -> x ^ sep]
-[fun x -> x ^ sep]
+AppG (fromList [UopG EmptyG,LitG])
+clone 0 (- diff)
+clone 0 (- lendiff)

@@ -1,32 +1,42 @@
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10 then 1 else 1 + (additivePersistence sumList (digitsOfInt n));;
+let rec wwhile (f,b) =
+  let x = f b in match x with | h::t -> if t then wwhile (f, h) else h;;
 
 
 (* fix
 
-let rec digitsOfInt n =
-  if n > 0 then (digitsOfInt (n / 10)) @ [n mod 10] else [];;
-
-let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
-
-let rec additivePersistence n =
-  if n < 10 then 1 else 1 + (additivePersistence (sumList (digitsOfInt n)));;
+let rec wwhile (f,b) =
+  let x = f b in
+  match x with | (x,y) -> if y = false then x else wwhile (f, x);;
 
 *)
 
 (* changed spans
-(8,28)-(8,73)
-additivePersistence (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
+(3,17)-(3,70)
+match x with
+| (x , y) -> if y = false
+             then x
+             else wwhile (f , x)
+CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(8,49)-(8,56)
-sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+(3,43)-(3,44)
+y = false
+BopG VarG LitG
+
+(3,50)-(3,63)
+y
+VarG
+
+(3,50)-(3,63)
+x
+VarG
+
+(3,50)-(3,63)
+false
+LitG
+
+(3,69)-(3,70)
+x
+VarG
 
 *)

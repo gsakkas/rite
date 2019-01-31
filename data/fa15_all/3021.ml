@@ -1,20 +1,60 @@
 
-let pipe fs = let f a x a = a in let base = 0 in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = sepConcat List.map f l;;
 
 
 (* fix
 
-let pipe fs = let f a x a = a in let base x = x in List.fold_left f base fs;;
+let rec sepConcat sep sl =
+  match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = t in List.fold_left f base l;;
+
+let stringOfList f l = "[" ^ ((sepConcat "; " (List.map f l)) ^ "]");;
 
 *)
 
 (* changed spans
-(2,44)-(2,45)
-fun x -> x
-LamG VarG
-
-(2,49)-(2,73)
-x
+(9,23)-(9,32)
+(^)
 VarG
+
+(9,23)-(9,32)
+(^)
+VarG
+
+(9,23)-(9,32)
+sepConcat "; " (List.map f
+                         l) ^ "]"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,23)-(9,32)
+sepConcat "; " (List.map f l)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,23)-(9,32)
+"["
+LitG
+
+(9,23)-(9,45)
+"[" ^ (sepConcat "; "
+                 (List.map f l) ^ "]")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,33)-(9,41)
+List.map f l
+AppG (fromList [VarG])
+
+(9,33)-(9,41)
+"; "
+LitG
 
 *)

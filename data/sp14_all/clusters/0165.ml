@@ -1,4 +1,55 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-(1 , (digit - 10) :: sum)
-(1 , (digit - 10) :: sum)
-(1 , (digit - 10) :: sum)
+LetG NonRec (fromList [LamG EmptyG]) (LetG Rec (fromList [EmptyG]) EmptyG)
+let comb =
+  fun a ->
+    fun b ->
+      match b with
+      | [] -> [a]
+      | hd :: tl -> [a + hd] in
+let rec mBDhelper =
+  fun i ->
+    fun x ->
+      match x with
+      | [] -> []
+      | hd :: tl -> if ((hd * i) - 9) <> 0
+                    then ((hd * i) / 10) :: (comb ((hd * i) mod 10)
+                                                  (mBDhelper i
+                                                             tl))
+                    else (hd * i) :: (mBDhelper i
+                                                tl) in
+mBDhelper i l
+let comb =
+  fun a ->
+    fun b ->
+      match b with
+      | [] -> [a]
+      | hd :: tl -> [a + hd] in
+let rec mBDhelper =
+  fun i ->
+    fun x ->
+      match x with
+      | [] -> []
+      | hd :: tl -> if ((hd * i) - 9) <> 0
+                    then ((hd * i) / 10) :: (comb ((hd * i) mod 10)
+                                                  (mBDhelper i
+                                                             tl))
+                    else (hd * i) :: (mBDhelper i
+                                                tl) in
+mBDhelper i l
+let comb =
+  fun a ->
+    fun b ->
+      match b with
+      | [] -> [a]
+      | hd :: tl -> [a + hd] in
+let rec mBDhelper =
+  fun i ->
+    fun x ->
+      match x with
+      | [] -> []
+      | hd :: tl -> if ((hd * i) - 9) <> 0
+                    then ((hd * i) / 10) :: (comb ((hd * i) mod 10)
+                                                  (mBDhelper i
+                                                             tl))
+                    else (hd * i) :: (mBDhelper i
+                                                tl) in
+mBDhelper i l

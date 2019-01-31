@@ -1,32 +1,30 @@
 
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
+
 let rec digitalRoot n =
-  if n = 0
-  then 0
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> r_digitalRoot | _ -> r_digitalRoot n (n mod 10));;
+  match digits n with | [] -> 0 | h::t -> digitalRoot (digits (sumList n));;
 
 
 (* fix
 
-let rec digitalRoot n =
-  if n = 0
-  then 0
-  else
-    (let rec r_digitalRoot n m =
-       if n <= 9 then n else r_digitalRoot (n / 10) ((n mod 10) + m) in
-     match n with | 0 -> 0 | _ -> r_digitalRoot n 0);;
+let rec digitsOfInt n =
+  if n <= 0 then [] else (digitsOfInt (n / 10)) @ [n mod 10];;
+
+let digits n = digitsOfInt (abs n);;
+
+let rec digitalRoot n = match digits n with | x::[] -> x;;
 
 *)
 
 (* changed spans
-(8,25)-(8,38)
-0
-LitG
-
-(8,69)-(8,71)
-0
-LitG
+(10,42)-(10,53)
+match digits n with
+| x :: [] -> x
+CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,VarG)])
 
 *)

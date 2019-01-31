@@ -1,26 +1,30 @@
 
-let sqsum xs =
-  let f a x = a +. (x ** 2.0) in let base = 0 in List.fold_left f base xs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::tl -> (listReverse l) :: h;;
 
 
 (* fix
 
-let sqsum xs =
-  let f a x = a + (x * x) in let base = 0 in List.fold_left f base xs;;
+let rec listReverse l =
+  match l with | [] -> [] | h::tl -> (listReverse tl) @ [h];;
 
 *)
 
 (* changed spans
-(3,14)-(3,29)
-a + (x * x)
-BopG VarG (BopG EmptyG EmptyG)
-
-(3,22)-(3,24)
-x * x
-BopG VarG VarG
-
-(3,25)-(3,28)
-x
+(3,37)-(3,52)
+(@)
 VarG
+
+(3,37)-(3,57)
+listReverse tl @ [h]
+AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+
+(3,50)-(3,51)
+tl
+VarG
+
+(3,56)-(3,57)
+[h]
+ListG VarG Nothing
 
 *)

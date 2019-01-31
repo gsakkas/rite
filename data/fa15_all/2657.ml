@@ -1,73 +1,80 @@
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Arctan of expr
+  | Strange of expr* expr* expr;;
 
-let fixpoint (f,b) = ((wwhile (f, ((f b) = b))), b);;
+let pi = 4.0 *. (atan 1.0);;
+
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Arctan e1 -> (2 *. (atan eval (e1, x, y))) / pi
+  | Strange (e1,e2,e3) ->
+      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
+          ((eval (e2, x, y)) *. (eval (e2, x, y))))
+         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
+        /. 3.;;
 
 
 (* fix
 
-let h x = let xx = (x * x) * x in (xx, (xx < 512));;
+type expr =
+  | VarX
+  | VarY
+  | Sine of expr
+  | Cosine of expr
+  | Average of expr* expr
+  | Times of expr* expr
+  | Thresh of expr* expr* expr* expr
+  | Arctan of expr
+  | Strange of expr* expr* expr;;
 
-let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
+let pi = 4.0 *. (atan 1.0);;
 
-let fixpoint (f,b) = wwhile (h, b);;
+let rec eval (e,x,y) =
+  match e with
+  | VarX  -> x
+  | VarY  -> y
+  | Sine e1 -> sin (pi *. (eval (e1, x, y)))
+  | Cosine e1 -> cos (pi *. (eval (e1, x, y)))
+  | Average (e1,e2) -> ((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.
+  | Times (e1,e2) -> (eval (e1, x, y)) *. (eval (e2, x, y))
+  | Thresh (e1,e2,e3,e4) ->
+      if (eval (e1, x, y)) < (eval (e2, x, y))
+      then eval (e3, x, y)
+      else eval (e4, x, y)
+  | Arctan e1 -> atan (eval (e1, x, y))
+  | Strange (e1,e2,e3) ->
+      ((((eval (e1, x, y)) *. (eval (e1, x, y))) +.
+          ((eval (e2, x, y)) *. (eval (e2, x, y))))
+         +. ((eval (e3, x, y)) *. (eval (e3, x, y))))
+        /. 3.;;
 
 *)
 
 (* changed spans
-(2,16)-(2,77)
-x
-VarG
+(27,23)-(27,45)
+atan (eval (e1 , x , y))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(2,16)-(2,77)
-x
-VarG
-
-(2,16)-(2,77)
-x
-VarG
-
-(2,16)-(2,77)
-xx
-VarG
-
-(2,16)-(2,77)
-xx
-VarG
-
-(2,16)-(2,77)
-fun x ->
-  (let xx = (x * x) * x in
-   (xx , xx < 512))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(2,16)-(2,77)
-x * x
-BopG VarG VarG
-
-(2,16)-(2,77)
-(x * x) * x
-BopG (BopG EmptyG EmptyG) VarG
-
-(2,16)-(2,77)
-xx < 512
-BopG VarG LitG
-
-(2,16)-(2,77)
-512
-LitG
-
-(2,16)-(2,77)
-let xx = (x * x) * x in
-(xx , xx < 512)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(2,16)-(2,77)
-(xx , xx < 512)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(4,43)-(4,44)
-h
-VarG
+(27,29)-(27,33)
+eval (e1 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)

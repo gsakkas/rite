@@ -1,58 +1,15 @@
-TupleG (fromList [VarG,LetG NonRec (fromList [EmptyG]) EmptyG])
-(let d =
-   fun x ->
-     (let xx = f b in
-      (xx , xx = b)) in
- d , b)
-(let d =
-   fun x ->
-     (let xx = f b in
-      (xx , xx = b)) in
- d , b)
-(let func =
-   fun b ->
-     (let ans = f b in
-      if b = ans
-      then (ans , false)
-      else (ans , true)) in
- func , b)
-(let g =
-   fun x ->
-     (let xx = f x in
-      (xx , xx <> b)) in
- g , b)
-(let g =
-   fun x ->
-     (let xx = f x in
-      (xx , xx <> b)) in
- g , b)
-(let g =
-   fun x ->
-     (let xx = f x in
-      (xx , xx <> b)) in
- g , b)
-(let g =
-   fun x ->
-     (let xx = f x in
-      (xx , xx <> b)) in
- g , b)
-(let g =
-   fun x ->
-     (let xx = f x in
-      (xx , xx <> b)) in
- g , b)
-(let helper =
-   fun x -> (f x , f x = f b) in
- helper , b)
-(let helper =
-   fun x -> (f x , f x = f b) in
- helper , b)
-(let helper =
-   fun x -> (f x , f x = f b) in
- helper , b)
-(let helper =
-   fun x -> (f x , f x = f b) in
- helper , b)
-(let helper =
-   fun x -> (f x , f x = f b) in
- helper , b)
+LamG (BopG EmptyG EmptyG)
+fun x -> x + 1
+fun x -> x * 1
+fun (m , n) -> m + n
+fun (m , n) -> m + n
+fun (m , n) -> m + n
+fun (x , y) ->
+  x + Random.State.int s (y - x)
+fun (m , n) -> m + n
+fun x -> x * 10
+fun x -> x * 10
+fun x -> x * 10
+fun x -> x * 10
+fun digInt -> n mod 10
+fun digInt -> n mod 10

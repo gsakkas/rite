@@ -1,78 +1,90 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildCosine e = Cosine e;;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (0, 6) with
-    | 0 -> buildX ()
-    | 1 -> buildY ()
-    | 2 -> buildSine (build rand (depth - 1))
-    | 3 -> buildCosine (build rand (depth - 1))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = if x < 10 then a @ (0, x) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      List.map combine (List.rev (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr;;
+let rec clone x n = if n <= 0 then [] else x :: (clone x (n - 1));;
 
-let buildCosine e = Cosine e;;
+let padZero l1 l2 =
+  let difference = (List.length l1) - (List.length l2) in
+  if difference > 0
+  then (l1, ((clone 0 difference) @ l2))
+  else
+    if difference < 0
+    then (((clone 0 ((-1) * difference)) @ l1), l2)
+    else (l1, l2);;
 
-let buildSine e = Sine e;;
+let rec removeZero l =
+  match l with | [] -> l | h::t -> if h = 0 then removeZero t else h :: t;;
 
-let buildX () = VarX;;
-
-let buildY () = VarY;;
-
-let rec build (rand,depth) =
-  if depth > 0
-  then
-    match rand (0, 6) with
-    | 0 -> buildX ()
-    | 1 -> buildY ()
-    | 2 -> buildSine (build (rand, (depth - 1)))
-    | 3 -> buildCosine (build (rand, (depth - 1)))
-  else (match rand (0, 1) with | 0 -> buildX () | 1 -> buildY ());;
+let bigAdd l1 l2 =
+  let add (l1,l2) =
+    let f a x = match a with | (o,[]) -> (o, [x]) | (o,l) -> (o, (x :: l)) in
+    let base = (0, []) in
+    let args =
+      let combine (a,b) = a + b in
+      List.map combine (List.rev (List.combine l1 l2)) in
+    let (_,res) = List.fold_left f base args in res in
+  removeZero (add (padZero l1 l2));;
 
 *)
 
 (* changed spans
-(25,21)-(25,45)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(18,16)-(18,41)
+(o , x :: l)
+TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
 
-(25,28)-(25,32)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
+(18,33)-(18,34)
+match a with
+| (o , []) -> (o , [x])
+| (o , l) -> (o , x :: l)
+CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
 
-(26,23)-(26,47)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+(18,36)-(18,37)
+o
+VarG
 
-(26,30)-(26,34)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
+(18,39)-(18,40)
+[x]
+ListG VarG Nothing
+
+(19,4)-(23,51)
+o
+VarG
+
+(19,4)-(23,51)
+x
+VarG
+
+(19,4)-(23,51)
+l
+VarG
+
+(19,4)-(23,51)
+x :: l
+ConAppG (Just (TupleG (fromList [VarG]))) Nothing
 
 *)

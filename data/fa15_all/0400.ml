@@ -1,53 +1,55 @@
 
 let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
-let fixpoint (f,b) = let b' = f b in if b = b' then b else wwhile (f, b);;
+let fixpoint (f,b) =
+  let funt = let res = f b in match b with | res -> b in wwhile (funt, f);;
 
 
 (* fix
 
 let rec wwhile (f,b) =
-  let (b',c') = f b in if c' = false then b' else wwhile (f, b');;
+  let res = f b in
+  match res with | (x,y) when y = true -> wwhile (f, x) | (x,y) -> x;;
 
 let fixpoint (f,b) =
-  let f x = let xx = f b in (xx, (xx <> b)) in wwhile (f, b);;
+  let funt b = if f b then (b, true) else (b, false) in wwhile (funt, b);;
 
 *)
 
 (* changed spans
-(5,21)-(5,72)
-let f =
-  fun x ->
-    (let xx = f b in
-     (xx , xx <> b)) in
-wwhile (f , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+(6,14)-(7,73)
+if f b
+then (b , true)
+else (b , false)
+IteG (AppG (fromList [EmptyG])) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
 
-(5,30)-(5,33)
-fun x ->
-  (let xx = f b in
-   (xx , xx <> b))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+(7,13)-(7,53)
+fun b ->
+  if f b
+  then (b , true)
+  else (b , false)
+LamG (IteG EmptyG EmptyG EmptyG)
 
-(5,30)-(5,33)
-let xx = f b in (xx , xx <> b)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+(7,25)-(7,26)
+true
+LitG
 
-(5,44)-(5,46)
-(xx , xx <> b)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
+(7,25)-(7,26)
+(b , false)
+TupleG (fromList [VarG,LitG])
 
-(5,52)-(5,53)
-xx
+(7,30)-(7,53)
+false
+LitG
+
+(7,30)-(7,53)
+(b , true)
+TupleG (fromList [VarG,LitG])
+
+(7,71)-(7,72)
+b
 VarG
-
-(5,52)-(5,53)
-xx
-VarG
-
-(5,52)-(5,53)
-xx <> b
-BopG VarG VarG
 
 *)

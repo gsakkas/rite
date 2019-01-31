@@ -1,24 +1,26 @@
-LamG (BopG EmptyG EmptyG)
-fun (x , y) -> x + y
-fun x -> (f x - x) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun s -> (f s - s) < 0
-fun i -> i + 1
-fun i -> i + 1
-fun i -> i + 1
-fun ss -> ss mod 10
-fun ss -> ss mod 10
-fun (a , b) -> a + b
-fun (a , b) -> a + b
-fun x -> a + (x * x)
-fun x -> a + (x * x)
-fun x -> a + (x * x)
-fun x -> a + (x * x)
-fun x -> a + (x * x)
-fun x -> a + (x * x)
+TupleG (fromList [AppG (fromList [EmptyG]),LitG])
+(0 , mulByDigit x l1)
+(0 , mulByDigit x l1)
+(1 , digits @ [fst'])
+(0 , digits @ [fst'])
+(f b , false)
+(f b , false)
+(f b , false)
+(f b , false)
+(f b , false)
+(f b , false)
+(f b , false)
+(f b , false)
+(false , f b)
+(true , f2 x)
+(false , f b)
+(true , f b)
+(0 , List.fold_left f base
+                    args)
+(0 , List.fold_left f base
+                    args)
+(0 , mulByDigit x res)
+(f b , true)
+(f b , true)
+(f b' , false)
+(f b' , true)

@@ -1,25 +1,29 @@
 
-let rec listReverse l = match l with | [] -> [] | h::t -> [listReverse t; h];;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+
+let fixpoint (f,b) =
+  wwhile (let f' (f,b) = ((f b), (b == (f b))) in ((f' (f, b)), b));;
 
 
 (* fix
 
-let rec listReverse l =
-  match l with | [] -> [] | h::t -> h :: (listReverse l);;
+let rec wwhile (f,b) =
+  let (b',c) = f b in if not c then b' else wwhile (f, b');;
+
+let fixpoint (f,b) = wwhile ((let f' b = ((f b), (b = (f b))) in f'), b);;
 
 *)
 
 (* changed spans
-(2,58)-(2,76)
-h :: (listReverse l)
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
+(6,9)-(6,67)
+(let f' =
+   fun b -> (f b , b = f b) in
+ f' , b)
+TupleG (fromList [VarG,LetG NonRec (fromList [EmptyG]) EmptyG])
 
-(2,59)-(2,72)
-h
-VarG
-
-(2,74)-(2,75)
-l
-VarG
+(6,18)-(6,46)
+fun b -> (f b , b = f b)
+LamG (TupleG (fromList [EmptyG]))
 
 *)

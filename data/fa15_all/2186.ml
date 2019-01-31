@@ -1,76 +1,56 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if result then wwhile (f, value) else value;;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ")")));;
+let fixpoint (f,b) = wwhile ((let helper f = not f in helper), b);;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | Poly of expr* expr* expr
-  | Tan of expr;;
+let rec wwhile (f,b) =
+  let (value,result) = f b in if result then wwhile (f, value) else value;;
 
-let rec exprToString e =
-  let expr = exprToString in
-  match e with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
-  | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
-  | Average (a,b) -> "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
-  | Times (a,b) -> (expr a) ^ ("*" ^ (expr b))
-  | Thresh (a,b,c,d) ->
-      "(" ^
-        ((expr a) ^
-           ("<" ^ ((expr b) ^ ("?" ^ ((expr c) ^ (":" ^ ((expr d) ^ ")")))))))
-  | Poly (a,b,c) ->
-      "(" ^
-        ((expr a) ^
-           ("*" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ("*" ^ ((expr c) ^ ")")))))))
-  | Tan a -> "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ ((expr a) ^ ")")));;
+let fixpoint (f,b) =
+  wwhile
+    ((let helper func = let result = f b in (result, (result = b)) in helper),
+      b);;
 
 *)
 
 (* changed spans
-(30,52)-(30,66)
-expr a ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(5,41)-(5,50)
+fun func ->
+  (let result = f b in
+   (result , result = b))
+LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
 
-(30,53)-(30,61)
-(^)
+(5,45)-(5,50)
+let result = f b in
+(result , result = b)
+LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+
+(5,54)-(5,60)
+b
 VarG
+
+(5,54)-(5,60)
+result
+VarG
+
+(5,54)-(5,60)
+result
+VarG
+
+(5,54)-(5,60)
+b
+VarG
+
+(5,54)-(5,60)
+result = b
+BopG VarG VarG
+
+(5,54)-(5,60)
+(result , result = b)
+TupleG (fromList [VarG,BopG EmptyG EmptyG])
 
 *)

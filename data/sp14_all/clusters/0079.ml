@@ -1,18 +1,18 @@
-AppG (fromList [LitG])
-atan 1.0
-atan 1.0
-atan 1.0
-float_of_int 2
-float_of_int 2
-float_of_int (-1)
-atan 1.0
-atan 1.0
-Format.sprintf "%expr" 1.0
-atan 1.0
-atan 1.0
-atan 1.0
-(+) 0
-(+) 0
-(+) 0
-Format.sprintf "x"
-print_string "going into then"
+ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
+0 :: ns
+0 :: l2
+0 :: l2
+0 :: l1
+0 :: l2
+0 :: l2
+0 :: l1
+0 :: l2
+0 :: l1
+0 :: l1
+0 :: l2
+0 :: l1
+0 :: l2
+0 :: l2
+0 :: l2
+0 :: l2
+0 :: l2

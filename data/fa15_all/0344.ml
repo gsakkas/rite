@@ -1,84 +1,60 @@
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | MyExpr1 (e1,e2,e3) ->
-      "(sqrt(" ^
-        ((exprToString e1) ^
-           (")*sqrt(" ^
-              ((exprToString e2) ^ (")*" ^ ((exprToString e3) ^ ")")))))
-  | MyExpr2 e -> "halve(" ^ (exprToString ^ ")");;
+let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then (clone 0 (padLength l1 l2)) :: l1
+  else (clone 0 (padLength l1 l2)) l2;;
 
 
 (* fix
 
-type expr =
-  | VarX
-  | VarY
-  | Sine of expr
-  | Cosine of expr
-  | Average of expr* expr
-  | Times of expr* expr
-  | Thresh of expr* expr* expr* expr
-  | MyExpr1 of expr* expr* expr
-  | MyExpr2 of expr;;
+let rec clone x n = if n > 0 then x :: (clone x (n - 1)) else [];;
 
-let rec exprToString ex =
-  match ex with
-  | VarX  -> "x"
-  | VarY  -> "y"
-  | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
-  | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
-  | Average (e1,e2) ->
-      "((" ^ ((exprToString e1) ^ (" + " ^ ((exprToString e2) ^ ")/2)")))
-  | Times (e1,e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
-  | Thresh (e1,e2,e3,e4) ->
-      "(" ^
-        ((exprToString e1) ^
-           ("<" ^
-              ((exprToString e2) ^
-                 ("?" ^
-                    ((exprToString e3) ^ (":" ^ ((exprToString e4) ^ ")")))))))
-  | MyExpr1 (e1,e2,e3) ->
-      "(sqrt(" ^
-        ((exprToString e1) ^
-           (")*sqrt(" ^
-              ((exprToString e2) ^ (")*" ^ ((exprToString e3) ^ ")")))))
-  | MyExpr2 e -> "halve(" ^ ((exprToString e) ^ ")");;
+let padLength l1 l2 = abs ((List.length l1) - (List.length l2));;
+
+let padZero l1 l2 =
+  if (List.length l1) < (List.length l2)
+  then ((List.append (clone 0 (padLength l1 l2)) l1), l2)
+  else (l1, (List.append (clone 0 (padLength l1 l2)) l2));;
 
 *)
 
 (* changed spans
-(34,29)-(34,41)
-exprToString e
-AppG (fromList [VarG])
+(8,7)-(8,40)
+(List.append (clone 0
+                    (padLength l1 l2)) l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(34,44)-(34,47)
-e
+(8,8)-(8,13)
+List.append
 VarG
+
+(8,8)-(8,13)
+clone 0 (padLength l1 l2)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(9,7)-(9,34)
+l1
+VarG
+
+(9,7)-(9,34)
+(l1 , List.append (clone 0
+                         (padLength l1 l2)) l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+
+(9,7)-(9,37)
+l2
+VarG
+
+(9,8)-(9,13)
+List.append
+VarG
+
+(9,8)-(9,13)
+clone 0 (padLength l1 l2)
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
