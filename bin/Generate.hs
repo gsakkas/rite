@@ -42,10 +42,10 @@ import           Debug.Trace
 
 
 data Generate = Generate
-  { source :: FilePath
+  { source   :: FilePath
   , features :: String
-  , out :: FilePath
-  , clusters :: String
+  , out      :: FilePath
+  , clusters :: Maybe String
   }
   deriving (Generic, Show)
 instance ParseRecord Generate
@@ -105,7 +105,7 @@ main = do
     "spans+trees+all"
       -> mkSpansWithTrees JustSlice out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
     "spans+clusters+all"
-      -> mkSpansFromClusters JustSlice out cls clusters_file (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
+      -> mkSpansFromClusters JustSlice out cls (fromMaybe "data/sp14_all/clusters/top_clusters.txt" clusters_file) (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx ++ preds_tcon_ctx) jsons
 
 
 data WithSlice = JustSlice | All deriving Eq
