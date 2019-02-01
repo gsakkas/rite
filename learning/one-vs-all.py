@@ -98,14 +98,14 @@ def categorize(labels):
 train_samps = train.loc[:, 'F-Is-Eq':]
 print train_samps.shape
 # train_labels = train.loc[:, 'L-DidChange']
-train_labels = train.loc[:, 'L-Cluster0':'L-Cluster29']
+train_labels = train.loc[:, 'L-Cluster0':'L-Cluster39']
 train_labels = categorize(train_labels)
 # print train_labels.iloc[1]
 
 test_samps = test.loc[:, 'F-Is-Eq':]
 del test_samps['SOURCE_FILE']
 # test_labels = test.loc[:, 'L-DidChange']
-test_labels = test.loc[:, 'L-Cluster0':'L-Cluster29']
+test_labels = test.loc[:, 'L-Cluster0':'L-Cluster39']
 test_labels = categorize(test_labels)
 test_span = test.loc[:, 'SourceSpan']
 test_file = test.loc[:, 'SOURCE_FILE']
