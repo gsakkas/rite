@@ -22,7 +22,7 @@ import qualified Data.HashMap.Strict        as HashMap
 import qualified Data.HashSet               as HashSet
 import           Data.HashSet               (HashSet)
 import qualified Data.Set                   as Set
-import qualified Data.Vector                as Vector
+import qualified Data.Vector                as V
 import           GHC.Generics
 import           Options.Generic            hiding (All(..))
 import           System.Directory
@@ -297,7 +297,7 @@ mkSpansWithTrees withSlice out nm fs jsons = do
         let fn = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
-        let new_header = Vector.take 1 header Vector.++ Vector.fromList cls_names Vector.++ Vector.tail header
+        let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
         let in_cluster xx = namedRecord $ map (\(cluster, label) -> if xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
         let labels = map in_cluster $ thd3 $ unzip3 ss
         -- print $ length labels
@@ -394,7 +394,7 @@ mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
         let fn = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
-        let new_header = Vector.take 1 header Vector.++ Vector.fromList cls_names Vector.++ Vector.tail header
+        let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
         let in_cluster xx = namedRecord $ map (\(cluster, label) -> if show xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
         let labels = map in_cluster $ thd3 $ unzip3 ss
         -- print $ length labels
@@ -627,7 +627,7 @@ runTFeaturesDiff fs (ls, bad)
   | null samples = Nothing
   | otherwise = Just (header, samples, nub cores)
   where
-  header = Vector.fromList
+  header = V.fromList
          $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
@@ -680,7 +680,7 @@ runTFeaturesDiff fs (ls, bad)
 runTFeaturesTypes :: [Feature] -> Prog -> (Header, [NamedRecord])
 runTFeaturesTypes fs fix = (header, samples)
   where
-  header = Vector.fromList
+  header = V.fromList
          $ map (\(l,_) -> mkLabel l) preds_tcon
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
