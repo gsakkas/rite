@@ -1,3 +1,0 @@
-[submodule "data/ucsd"]
-	path = data/ucsd
-	url = git://github.com/ucsd-progsys/yunounderstand-data.git
