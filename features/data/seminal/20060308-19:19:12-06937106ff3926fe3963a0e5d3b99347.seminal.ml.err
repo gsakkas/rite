@@ -1,0 +1,5 @@
+File "./20060308-19:19:12-06937106ff3926fe3963a0e5d3b99347.seminal.ml", line 94, characters 12-26:
+Error: This expression has type charCounter -> string -> charCounter
+       but an expression was expected of type
+         charCounter -> char -> charCounter
+       Type string is not compatible with type char 

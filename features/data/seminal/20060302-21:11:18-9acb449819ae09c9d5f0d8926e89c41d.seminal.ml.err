@@ -1,0 +1,8 @@
+File "./20060302-21:11:18-9acb449819ae09c9d5f0d8926e89c41d.seminal.ml", line 13, characters 2-6:
+Error: This expression has type
+         string ->
+         ('a -> 'b -> 'c -> 'd -> 'e) -> int -> 'a -> 'b -> 'c -> 'd -> 'e
+       but an expression was expected of type 'a
+       The type variable 'a occurs inside
+       string ->
+       ('a -> 'b -> 'c -> 'd -> 'e) -> int -> 'a -> 'b -> 'c -> 'd -> 'e

@@ -1,0 +1,4 @@
+File "./20060420-13:46:42-6b7b9df433faea187437ee73710fed1e.seminal.ml", line 162, characters 22-25:
+Error: This expression has type (string * exp) list
+       but an expression was expected of type ('a * 'b * 'c) list
+       Type string * exp is not compatible with type 'a * 'b * 'c 

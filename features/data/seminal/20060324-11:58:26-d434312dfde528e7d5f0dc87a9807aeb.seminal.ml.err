@@ -1,0 +1,3 @@
+File "./20060324-11:58:26-d434312dfde528e7d5f0dc87a9807aeb.seminal.ml", line 104, characters 11-22:
+Error: This expression has type 'a list
+       but an expression was expected of type 'b * 'c

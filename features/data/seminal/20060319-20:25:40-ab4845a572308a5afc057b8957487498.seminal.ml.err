@@ -1,0 +1,6 @@
+File "./20060319-20:25:40-ab4845a572308a5afc057b8957487498.seminal.ml", line 61, characters 8-20:
+Error: This expression has type
+         float -> float -> 'a -> 'b -> 'c * 'd * 'e * 'f * 'g
+       but an expression was expected of type 'c
+       The type variable 'c occurs inside
+       float -> float -> 'a -> 'b -> 'c * 'd * 'e * 'f * 'g

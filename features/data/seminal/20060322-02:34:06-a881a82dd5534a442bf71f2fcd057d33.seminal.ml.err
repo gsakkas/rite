@@ -1,0 +1,3 @@
+File "./20060322-02:34:06-a881a82dd5534a442bf71f2fcd057d33.seminal.ml", line 39, characters 33-38:
+Error: This expression has type int but an expression was expected of type
+         'a list

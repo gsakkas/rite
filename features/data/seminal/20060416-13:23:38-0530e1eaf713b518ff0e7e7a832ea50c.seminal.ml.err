@@ -1,0 +1,4 @@
+File "./20060416-13:23:38-0530e1eaf713b518ff0e7e7a832ea50c.seminal.ml", line 108, characters 45-52:
+Error: This expression has type typ -> typ -> bool
+       but an expression was expected of type typ -> bool
+       Type typ -> bool is not compatible with type bool 

@@ -1,0 +1,3 @@
+File "./20060321-21:07:58-0ebbcafc7586fac16a56ba7b103f69f7.seminal.ml", line 91, characters 11-22:
+Error: This expression has type (float * float) list
+       This is not a function; it cannot be applied.

@@ -1,0 +1,4 @@
+File "./20060319-20:09:28-2e71af609448d8c60fd4e0273e9ff9bd.seminal.ml", line 58, characters 4-8:
+Error: This expression has type 'a -> 'b -> 'c -> 'd -> 'e -> 'f
+       but an expression was expected of type 'f
+       The type variable 'f occurs inside 'a -> 'b -> 'c -> 'd -> 'e -> 'f

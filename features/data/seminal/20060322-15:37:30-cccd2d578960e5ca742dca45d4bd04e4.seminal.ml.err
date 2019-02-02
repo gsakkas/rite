@@ -1,0 +1,3 @@
+File "./20060322-15:37:30-cccd2d578960e5ca742dca45d4bd04e4.seminal.ml", line 52, characters 30-36:
+Error: This expression has type move but an expression was expected of type
+         move list

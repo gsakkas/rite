@@ -1,0 +1,3 @@
+File "./20060302-17:13:10-a8f4767ee6e6a7cde277182e105bfabc.seminal.ml", line 5, characters 12-28:
+Error: This expression has type char but an expression was expected of type
+         string

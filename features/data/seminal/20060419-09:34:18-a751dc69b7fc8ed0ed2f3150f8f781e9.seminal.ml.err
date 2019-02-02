@@ -1,0 +1,3 @@
+File "./20060419-09:34:18-a751dc69b7fc8ed0ed2f3150f8f781e9.seminal.ml", line 241, characters 25-40:
+Error: This expression has type typ but an expression was expected of type
+         string * typ
