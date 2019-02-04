@@ -10,35 +10,35 @@
 module NanoML.Classify where
 
 
-import Control.Monad
-import Control.Monad.Except
-import Control.Monad.State
-import Data.Bifunctor
-import Data.Data
-import Data.Generics.Aliases (mkM, mkT)
-import Data.Generics.Schemes
-import Data.Hashable
-import Data.List
-import qualified Data.Map.Strict as Map
-import Data.Map.Strict (Map)
-import Data.Tuple.Select (sel1, sel2, sel3)
-import Data.Maybe
-import Data.Monoid hiding (Alt)
-import qualified Data.Set as Set
-import Data.Set (Set)
-import GHC.Generics
-import GHC.Stack
+import           Control.Monad
+import           Control.Monad.Except
+import           Control.Monad.State
+import           Data.Bifunctor
+import           Data.Data
+import           Data.Generics.Aliases (mkM, mkT)
+import           Data.Generics.Schemes
+import           Data.Hashable
+import           Data.List
+import qualified Data.Map.Strict       as Map
+import           Data.Map.Strict       (Map)
+import           Data.Tuple.Select     (sel1, sel2, sel3)
+import           Data.Maybe
+import           Data.Monoid           hiding (Alt)
+import qualified Data.Set              as Set
+import           Data.Set              (Set)
+import           GHC.Generics
+import           GHC.Stack
 
-import NanoML.Monad
-import NanoML.Parser
-import NanoML.Pretty
-import NanoML.Prim
-import NanoML.Types
+import           NanoML.Monad
+import           NanoML.Parser
+import           NanoML.Pretty
+import           NanoML.Prim
+import           NanoML.Types
 
-import Debug.Trace
+import           Debug.Trace
 
 
-type Feature = ([String], (TExpr -> TExpr -> [Double]))
+type Feature = ([String], TExpr -> TExpr -> [Double])
 
 preds_thas :: [Feature] -- [TExpr -> Double]
 preds_thas = map (first (take 1) . second (fmap (fmap (take 1))))
@@ -857,6 +857,29 @@ texprInfo = \case
   T_List i _ -> i
   T_Try i _ _ -> i
 
+-- George
+-- ctfoldGeneric :: (ExprGeneric {- parent -} -> ExprGeneric -> a -> a) -> a -> ExprGeneric  -> a
+-- ctfoldGeneric f z r = go r r
+--   where
+--   go p e' = f p e' $ case e' of
+--     VarG -> z
+--     LamG b -> go e' b
+--     AppG es -> Set.foldr Set.union Set.empty $ Set.map (go e') es -- Not sure
+--     BopG e1 e2 -> Set.union (go e' e1) (go e' e2)
+--     UopG e -> go e' e
+--     LitG -> z
+--     LetG _ pes e -> Set.foldr Set.union Set.empty ((Set.map (go e') pes) `Set.union` (Set.singleton (go e' e)))
+--     IteG x y z -> go e' x `Set.union` go e' y `Set.union` go e' z
+--     SeqG e1 e2 -> Set.union (go e' e1) (go e' e2)
+--     CaseG e as -> Set.foldr Set.union Set.empty (Set.insert (go e' e) (Set.map (go e' . snd) as))
+--     TupleG es -> Set.foldr Set.union Set.empty (Set.map (go e') es)
+--     ConAppG me _ -> maybe Set.empty (go e') me
+--     RecordG fes _ -> Set.foldr Set.union Set.empty (Set.fromList $ map (go e' . snd) fes)
+--     FieldG e _ -> go e' e
+--     SetFieldG e1 _ e2 -> Set.union (go e' e1) (go e' e2)
+--     ListG es _ -> go e' es
+--     ArrayG es _ -> Set.foldr Set.union Set.empty (Set.map (go e') es)
+--     TryG e as -> Set.foldr Set.union Set.empty (Set.insert (go e' e) (Set.fromList $ map (go e' . mkGenericTrees. thd3) as))
 
 ctfold :: Monoid a => (TExpr {- parent -} -> TExpr -> a -> a) -> a -> TExpr -> a
 ctfold f z r = go r r
@@ -1433,69 +1456,68 @@ diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   --   End     -> []
 
 -- George
-diffSpansAndExprs :: Diff -> [Expr] -> Set (SrcSpan, Expr)
-diffSpansAndExprs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
+diffSpansAndGenericTrs :: Diff -> [Expr] -> [(SrcSpan, Expr, ExprGeneric)]
+diffSpansAndGenericTrs d' es = reverse $ removeDuplicateSS uniqueSrcSpans alls []
   where
-  go _ [] = []
-  go d' (x:xs) = case d' of
-    Ins e d -> (getSrcSpanMaybe x, e) : go d (x:xs)
-    Del e (Ins e' d) -> (getSrcSpanMaybe e, e') : go d xs
-    Del e d -> go d xs
-    Cpy e d -> go d xs
-    End -> []
-  clean tup = if isNothing (fst tup) then Nothing else Just (fromJust (fst tup), snd tup)
+    go _ [] = []
+    go d' (x:xs) = case d' of
+      Ins e d          -> (getSrcSpanMaybe x, e, mkGenericTrees e) : go d (x:xs)
+      Del e (Ins e' d) -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs
+      Del e d          -> (getSrcSpanMaybe e, Var (getSrcSpanMaybe e) "EMPTY", EmptyG) : go d xs
+      Cpy e d          -> go d xs
+      End              -> []
+    clean tup   = if isNothing (sel1 tup) then Nothing else Just (fromJust (sel1 tup), sel2 tup, sel3 tup)
+    alls        = mapMaybe clean $ go d' (concatMap allSubExprs es)
+    uniqueSrcSpans = Set.toList $ Set.fromList $ map sel1 alls
 
 -- George
-diffSpansAndGenericTrs :: Diff -> [Expr] -> Set (SrcSpan, Expr, ExprGeneric)
-diffSpansAndGenericTrs d' es = Set.fromList . mapMaybe clean  $ go d' (concatMap allSubExprs es)
+-- FIXME: This is a bit of hack because I don't know why multiple SSs have
+-- different expressions (or the sub-expressions of the original one)
+removeDuplicateSS :: [SrcSpan] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
+removeDuplicateSS []        _  acc = acc
+removeDuplicateSS (ss:rest) xs acc = removeDuplicateSS rest xs (biggest:acc)
   where
-  go _ [] = []
-  go d' (x:xs) = case d' of
-    Ins e d -> (getSrcSpanMaybe x, e, mkGenericTrees e) : go d (x:xs)
-    Del e (Ins e' d) -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs
-    -- Del e d -> (getSrcSpanMaybe e, mkGenericTrees e, mkGenericTrees e) : go d xs
-    Del e d -> go d xs
-    Cpy e d -> go d xs
-    End -> []
-  clean tup = if isNothing (sel1 tup) then Nothing else Just (fromJust (sel1 tup), sel2 tup, sel3 tup)
+    dups    = filter ((== ss) . sel1) xs
+    sizes   = map (\e -> sizeOfTree (sel3 e) 0) dups
+    biggest = fst $ maximumBy (\(_, a) (_, b) -> compare a b) (zip dups sizes)
 
 -- George
 mkGenericTrees :: Expr -> ExprGeneric
 mkGenericTrees = \case
-  Var _ _ -> VarG
-  Lam _ _ e _ -> LamG (mkGenericTrees e)
-  App _ _ es -> AppG $ Set.fromList (map mkGenericTrees es)
-  Bop _ _ e1 e2 -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
-  Uop _ _ e -> UopG (mkGenericTrees e)
-  Lit _ _ -> LitG
-  Let _ r pes e -> LetG r (Set.fromList (map (mkGenericTrees . snd) pes)) (mkGenericTrees e)
-  Ite _ e1 e2 e3 -> IteG (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
-  Seq _ e1 e2 -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
-  Case _ e as -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
-  Tuple _ es -> TupleG $ Set.fromList (map mkGenericTrees es)
+  Var _ _          -> VarG
+  Lam _ _ e _      -> LamG (mkGenericTrees e)
+  App _ _ es       -> AppG $ Set.fromList (map mkGenericTrees es)
+  Bop _ _ e1 e2    -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
+  Uop _ _ e        -> UopG (mkGenericTrees e)
+  Lit _ _          -> LitG
+  Let _ r pes e    -> LetG r (Set.fromList (map (mkGenericTrees . snd) pes)) (mkGenericTrees e)
+  Ite _ e1 e2 e3   -> IteG (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
+  Seq _ e1 e2      -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
+  Case _ e as      -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
+  Tuple _ es       -> TupleG $ Set.fromList (map mkGenericTrees es)
   ConApp _ _ me mt -> ConAppG (maybeMkGTs me) mt
-  List _ es mt -> ListG (returnSimplest (map mkGenericTrees es)) mt
-  e -> error ("exprKind: " ++ render (pretty e))
+  List _ es mt     -> ListG (returnSimplest (map mkGenericTrees es)) mt
+  e                -> error ("exprKind: " ++ render (pretty e))
   where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
 
 -- George
 sizeOfTree :: ExprGeneric -> Int -> Int
 sizeOfTree e depth = case e of
-  EmptyG -> depth + 1
-  VarG -> depth + 1
-  LamG e' -> sizeOfTree e' (depth + 1)
-  AppG es -> safeMaximum es depth
-  BopG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  UopG e' -> (sizeOfTree e' (depth + 1))
-  LitG -> depth + 1
+  EmptyG        -> depth + 1
+  VarG          -> depth + 1
+  LamG e'       -> sizeOfTree e' (depth + 1)
+  AppG es       -> safeMaximum es depth
+  BopG e1 e2    -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  UopG e'       -> sizeOfTree e' (depth + 1)
+  LitG          -> depth + 1
   LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
-  IteG e1 e2 e3 -> maximum [(sizeOfTree e1 (depth + 1)), (sizeOfTree e2 (depth + 1)), (sizeOfTree e3 (depth + 1))]
-  SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
-  TupleG es -> safeMaximum es depth
-  ConAppG _ _ -> depth + 1 -- TODO: do something better
-  ListG e' _ -> sizeOfTree e' (depth + 1)
-  _ -> error ("sizeOfTree failed: no such expression " ++ show e)
+  IteG e1 e2 e3 -> maximum [sizeOfTree e1 (depth + 1), sizeOfTree e2 (depth + 1), sizeOfTree e3 (depth + 1)]
+  SeqG e1 e2    -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  CaseG e' as   -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
+  TupleG es     -> safeMaximum es depth
+  ConAppG _ _   -> depth + 1 -- TODO: do something better
+  ListG e' _    -> sizeOfTree e' (depth + 1)
+  _             -> error ("sizeOfTree failed: no such expression " ++ show e)
   where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
 -- George
@@ -1503,34 +1525,112 @@ returnSimplest :: [ExprGeneric] -> ExprGeneric
 returnSimplest [] = EmptyG
 returnSimplest es = fst $ minimumBy (\(_, a) (_, b) -> compare a b) (zip es sizes)
   where
-    sizes = map (\e -> sizeOfTree e 0) es
+    sizes = map (`sizeOfTree` 0) es
+
+-- George
+returnBiggest :: [ExprGeneric] -> ExprGeneric
+returnBiggest [] = EmptyG
+returnBiggest es = fst $ maximumBy (\(_, a) (_, b) -> compare a b) (zip es sizes)
+  where
+    sizes = map (`sizeOfTree` 0) es
 
 allSubExprs e = e : case e of
-  Var {} -> []
-  Lam _ _ x _ -> allSubExprs x
-  App _ x xs -> allSubExprs x ++ concatMap allSubExprs xs
-  Bop _ _ x y -> allSubExprs x ++ allSubExprs y
-  Uop _ _ x -> allSubExprs x
-  Lit {} -> []
-  Let _ _ pes x -> concatMap (allSubExprs.snd) pes ++ allSubExprs x
-  Ite _ x y z -> allSubExprs x ++ allSubExprs y ++ allSubExprs z
-  Seq _ x y -> allSubExprs x ++ allSubExprs y
-  Case _ x alts -> allSubExprs x
-                ++ concatMap (maybe [] allSubExprs . snd3) alts
-                ++ concatMap (allSubExprs.thd3) alts
-  Tuple _ xs -> concatMap allSubExprs xs
+  Var {}          -> []
+  Lam _ _ x _     -> allSubExprs x
+  App _ x xs      -> allSubExprs x ++ concatMap allSubExprs xs
+  Bop _ _ x y     -> allSubExprs x ++ allSubExprs y
+  Uop _ _ x       -> allSubExprs x
+  Lit {}          -> []
+  Let _ _ pes x   -> concatMap (allSubExprs.snd) pes ++ allSubExprs x
+  Ite _ x y z     -> allSubExprs x ++ allSubExprs y ++ allSubExprs z
+  Seq _ x y       -> allSubExprs x ++ allSubExprs y
+  Case _ x alts   -> allSubExprs x
+                    ++ concatMap (maybe [] allSubExprs . snd3) alts
+                    ++ concatMap (allSubExprs.thd3) alts
+  Tuple _ xs      -> concatMap allSubExprs xs
+  List _ xs _     -> concatMap allSubExprs xs
   ConApp _ _ me _ -> case me of
-    Nothing -> []
+    Nothing           -> []
     Just (Tuple _ xs) -> concatMap allSubExprs xs
-    Just x -> allSubExprs x
-  List _ xs _ -> concatMap allSubExprs xs
+    Just x            -> allSubExprs x
 
 progExprs :: Prog -> [Expr]
 progExprs [] = []
 progExprs (d:ds) = case d of
   DFun _ _ pes -> map snd pes ++ progExprs ds
-  DEvl _ e -> e : progExprs ds
-  _ -> progExprs ds
+  DEvl _ e     -> e : progExprs ds
+  _            -> progExprs ds
+
+diff :: Expr -> Expr -> Set SrcSpan
+diff e1 e2 = case (e1, e2) of
+  (Var lx x, Var ly y)
+    | x == y
+      -> mempty
+  (Lam lx px x _, Lam ly py y _)
+    | px == py
+      -> diff x y
+  (App lx fx ax, App ly fy ay)
+    | length ax == length ay
+      -> mconcat $ diff fx fy : zipWith diff ax ay
+  (Bop lx bx x1 x2, Bop ly by y1 y2)
+    | bx == by
+      -> mconcat [diff x1 y1, diff x2 y2]
+  (Uop lx ux x, Uop ly uy y)
+    | ux == uy
+      -> diff x y
+  (Lit lx x, Lit ly y)
+    | x == y
+      -> mempty
+  (Let lx rx xbs x, Let ly ry ybs y)
+    | rx == ry && length xbs == length ybs && map fst xbs == map fst ybs
+      -> mconcat $ diff x y : zipWith diff (map snd xbs) (map snd ybs)
+  (Ite lx bx tx fx, Ite ly by ty fy)
+      -> mconcat [diff bx by, diff tx ty, diff fx fy]
+  (Seq lx x1 x2, Seq ly y1 y2)
+      -> mconcat [diff x1 y1, diff x2 y2]
+  (Case lx x axs, Case ly y ays)
+    | length axs == length ays && map fst3 axs == map fst3 ays && map snd3 axs == map snd3 ays
+      -> mconcat $ diff x y : zipWith diff (map thd3 axs) (map thd3 ays)
+  (Tuple lx xs, Tuple ly ys)
+    | length xs == length ys
+      -> mconcat (zipWith diff xs ys)
+  (List lx xs _, List ly ys _)
+    | length xs == length ys
+      -> mconcat (zipWith diff xs ys)
+  (Array lx xs _, Array ly ys _)
+    | length xs == length ys
+      -> mconcat (zipWith diff xs ys)
+  (ConApp lx cx mx mtx, ConApp ly cy my mty)
+    | cx == cy -> if
+        | Just x <- mx, Just y <- my
+          -> diff x y
+        | Nothing <- mx, Nothing <- my
+          -> mempty
+        | otherwise
+          -> Set.singleton (fromJust lx)
+  (Record lx fxs mtx, Record ly fys mty)
+    | map fst fxs == map fst fys
+      -> mconcat (zipWith diff (map snd fxs) (map snd fys))
+  (Prim1 lx (P1 vx _ _), Prim1 ly (P1 vy _ _))
+    | vx == vy
+      -> mempty
+  (Prim2 lx (P2 vx _ _ _), Prim2 ly (P2 vy _ _ _))
+    | vx == vy
+      -> mempty
+  -- (Val _ x, Val _ y)
+  --   | x == y
+  --     -> Nothing
+  -- (With lx ex x, With ly ey y)
+  --   | lx == ly && envId ex == envId ey
+  --     -> diff x y
+  -- (Replace lx ex x, Replace ly ey y)
+  --   | lx == ly && envId ex == envId ey
+  --     -> diff x y
+  -- (_, Replace _ _ _)
+  --   -> Just (e1, e2)
+  -- (Replace _ env' _, _)
+  --   -> Just (e1, e2)
+  _ -> Set.singleton $ fromJust $ getSrcSpanExprMaybe e1
 
 data DiffT
   = CC Expr Expr Diff DiffT DiffT DiffT
@@ -1541,9 +1641,9 @@ data DiffT
 getDiff :: DiffT -> Diff
 getDiff = \case
   CC _ _ d _ _ _ -> d
-  CN _ d _ -> d
-  NC _ d _ -> d
-  NN d -> d
+  CN _ d _       -> d
+  NC _ d _       -> d
+  NN d           -> d
 
 diffExprsT :: [Expr] -> [Expr] -> DiffT
 diffExprsT [] []
@@ -1640,38 +1740,38 @@ data ExprKind
 
 exprKind :: Expr -> ExprKind
 exprKind = \case
-  Var _ v -> VarK v
-  Lam _ p _ _ -> LamK (killSpanPat p)
-  App {} -> AppK
-  Bop _ b _ _ -> BopK b
-  Uop _ u _ -> UopK u
-  Lit _ l -> LitK l
-  Let _ r pes _ -> LetK r (map (killSpanPat . fst) pes)
-  Ite {} -> IteK
-  Seq {} -> SeqK
-  Case _ _ as -> CaseK (map (killSpanPat . fst3) as)
-  Tuple {} -> TupleK
+  Var _ v        -> VarK v
+  Lam _ p _ _    -> LamK (killSpanPat p)
+  App {}         -> AppK
+  Bop _ b _ _    -> BopK b
+  Uop _ u _      -> UopK u
+  Lit _ l        -> LitK l
+  Let _ r pes _  -> LetK r (map (killSpanPat . fst) pes)
+  Ite {}         -> IteK
+  Seq {}         -> SeqK
+  Case _ _ as    -> CaseK (map (killSpanPat . fst3) as)
+  Tuple {}       -> TupleK
   ConApp _ d _ _ -> ConAppK d
-  List {} -> ListK
-  e -> error ("exprKind: " ++ render (pretty e))
+  List {}        -> ListK
+  e              -> error ("exprKind: " ++ render (pretty e))
 
 subExprs :: Expr -> [Expr]
 subExprs = \case
-  Var {} -> []
-  Lam _ _ e _ -> [e]
-  App _ e es -> e:es
-  Bop _ _ x y -> [x,y]
-  Uop _ _ x -> [x]
-  Lit {} -> []
-  Let _ _ pes e -> map snd pes ++ [e]
-  Ite _ x y z -> [x,y,z]
-  Seq _ x y -> [x,y]
-  Case _ e as -> e : map thd3 as -- FIXME: guards
-  Tuple _ es -> es
+  Var {}          -> []
+  Lam _ _ e _     -> [e]
+  App _ e es      -> e:es
+  Bop _ _ x y     -> [x,y]
+  Uop _ _ x       -> [x]
+  Lit {}          -> []
+  Let _ _ pes e   -> map snd pes ++ [e]
+  Ite _ x y z     -> [x,y,z]
+  Seq _ x y       -> [x,y]
+  Case _ e as     -> e : map thd3 as -- FIXME: guards
+  Tuple _ es      -> es
   ConApp _ _ me _ -> case maybeToList me of
     [Tuple _ es] -> es
-    es -> es
-  List _ es _ -> es
+    es           -> es
+  List _ es _     -> es
 
 exprSize = const 1
 --exprSize = getSum . fold (const (+1)) (0 :: Sum Int)

@@ -31,7 +31,7 @@ import           System.FilePath
 import           System.IO
 import           Text.Printf
 
-import           NanoML.Classify            hiding (sizeOfTree)
+import           NanoML.Classify
 import           NanoML.Lexer
 import           NanoML.Monad
 import           NanoML.Parser
@@ -98,8 +98,6 @@ main = do
     --   -> mkFixFeatures cls (preds_tis_novar ++ preds_tcon_novar_children) jsons
     -- "type-inference+vars"
     --   -> mkFixFeatures cls (preds_tis ++ preds_tcon_children) jsons
-    "spans+exps"
-      -> mkSpansWithExprs JustSlice out cls preds_tis jsons
     "spans+trees"
       -> mkSpansWithTrees JustSlice out cls preds_tis jsons
     "spans+trees+all"
@@ -118,7 +116,7 @@ mkBadFeaturesWithSlice withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffs jsons
   let feats = [ ((h, f'), (ss, bad, fix, c, all, idx))
               | (ss, p, bad, fix, idx) <- uniqs
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss, p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
                 -- a one-constraint core is bogus, this should be impossible
               -- , length f' > 1
@@ -172,143 +170,98 @@ mkBadFeaturesWithSlice withSlice out nm fs jsons = do
 
 
 -- George
-mkSpansWithExprs :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
-mkSpansWithExprs withSlice out nm fs jsons = do
-  let uniqs = concatMap mkDiffsWithExprs jsons
-  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
-              | (ss', p, bad, fix, idx) <- uniqs
-              , let ss = map fst ss'
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
-              , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
-              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
-                                    (concatMap allSubExprs $ progExprs p)
-              ]
-  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
-  let mkMean f xs = sum (map f xs) / genericLength xs
-  let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
-  let mean = mkMean mkFrac feats' :: Double
-  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
-  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = map fst ss
-    let ss_expr = map (\(fi, se) -> show fi ++ "\n" ++ render (pretty se) ++ "\n") ss
-    if
-      | mkFrac f > mean+std -> do
-        printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
-      | null cs -> do
-        putStrLn "NO CORE"
-        putStrLn bad
-      | length (nub cs) == 1 -> do
-        putStrLn "SINGLE CONSTRAINT CORE"
-        putStrLn bad
-        print (head cs)
-      | null ss' -> do
-        putStrLn "NO DIFF"
-        putStrLn bad
-        putStrLn "---------------------------"
-        putStrLn fix
-      | null (ss' `intersect` cs) -> do
-        putStrLn "NO OVERLAP CORE/DIFF"
-        putStrLn bad
-        print cs
-        putStrLn fix
-      | otherwise -> do
-        let fn = printf "%04d" (i :: Int)
-        let path = out </> nm </> fn <.> "csv"
-        createDirectoryIfMissing True (takeDirectory path)
-        LBSC.writeFile path $ encodeByName header features
-        let path = out </> fn <.> "ml"
-        writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
-                                    , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
-  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
-
-
--- George
 mkSpansWithTrees :: WithSlice -> String -> String -> [Feature] -> [String] -> IO ()
 mkSpansWithTrees withSlice out nm fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
-  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
+  let feats = [ ((h, f, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
               , let ss = map fst3 ss'
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss, p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs p)
               ]
-  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
+  let feats'      = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
   let mkMean f xs = sum (map f xs) / genericLength xs
   let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
   let mean = mkMean mkFrac feats' :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   -- Find clusters of fixes to be used as templates
   let ss_fixes
-        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, _, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> return []
-            | null cs -> return []
-            | length (nub cs) == 1 -> return []
-            | null ss' -> return []
+            | mkFrac f > mean+std       -> return []
+            | null cs                   -> return []
+            | length (nub cs) == 1      -> return []
+            | null ss'                  -> return []
             | null (ss' `intersect` cs) -> return []
-            | otherwise -> return $ thd3 $ unzip3 ss)
+            | otherwise                 -> return $ thd3 $ unzip3 ss)
             >>= concat
   let clusters = makeClusters ss_fixes
   let elems
-        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, _, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> return []
-            | null cs -> return []
-            | length (nub cs) == 1 -> return []
-            | null ss' -> return []
+            | mkFrac f > mean+std       -> return []
+            | null cs                   -> return []
+            | length (nub cs) == 1      -> return []
+            | null ss'                  -> return []
             | null (ss' `intersect` cs) -> return []
-            | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
+            | otherwise                 -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
             >>= concat
-  let cls = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
+  let cls          = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
-  let sorted_cls = sortOn (DO.Down . length) cls
+  let sorted_cls   = sortOn (DO.Down . length) cls
   -- Keep only top N clusters as templates for ML labels
-  let top_cls = take 40 $ map snd $ sortOn (DO.Down . \(x, _) -> length x) (zip cls clusters)
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [0..]
+  let top_cls      = take 40 $ map snd $ sortOn (DO.Down . \(x, _) -> length x) (zip cls clusters)
+  let cls_names    = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [1..]
 
-  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = map fst3 ss
+  forM_ feats $ \ f@((header, all_fs, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss'     = map fst3 ss
     let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
         printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
       | null cs -> do
         putStrLn "NO CORE"
-        putStrLn bad
+        -- putStrLn bad
       | length (nub cs) == 1 -> do
         putStrLn "SINGLE CONSTRAINT CORE"
-        putStrLn bad
-        print (head cs)
+        -- putStrLn bad
+        -- print (head cs)
       | null ss' -> do
         putStrLn "NO DIFF"
-        putStrLn bad
-        putStrLn "---------------------------"
-        putStrLn fix
+        -- putStrLn bad
+        -- putStrLn "---------------------------"
+        -- putStrLn fix
       | null (ss' `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
-        putStrLn bad
-        print cs
-        putStrLn fix
+        -- putStrLn bad
+        -- print cs
+        -- putStrLn fix
       | otherwise -> do
-        let fn = printf "%04d" (i :: Int)
+        let fn   = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
-        let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
+        let new_header    = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
         let in_cluster xx = namedRecord $ map (\(cluster, label) -> if xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
-        let labels = map in_cluster $ thd3 $ unzip3 ss
+        let the_ss xx     = namedRecord ["SourceSpan" .= show xx]
+        let labels        = zipWith HashMap.union (map in_cluster $ thd3 $ unzip3 ss) (map (the_ss . fst3) ss)
+        -- putStrLn "++++++++++++++++++++++++++++++++++++"
         -- print $ length labels
-        -- print $ take 1 features
-        let new_features = zipWith HashMap.union labels features
+        -- print $ length ss
+        -- print $ length features
+        let only_good_ss = map (\nr -> BSC.unpack (nr HashMap.! "SourceSpan")) all_fs
+        let only_good_ls = filter (\nr -> BSC.unpack (nr HashMap.! "SourceSpan") `elem` only_good_ss) labels
+        let new_features = map (\nr -> HashMap.union nr $ fromJust $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") all_fs) only_good_ls
+        -- print $ length new_features
         LBSC.writeFile path $ encodeByName new_header new_features
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                     , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
   forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
-    let fn = printf "%04d" (i :: Int)
+    let fn   = printf "%04d" (i :: Int)
     let path = out </> "clusters" </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
     writeFile path $ unlines c
@@ -325,87 +278,93 @@ mkSpansFromClusters :: WithSlice -> String -> String -> String -> [Feature] -> [
 mkSpansFromClusters withSlice out nm clusters_file fs jsons = do
   top_cls <- lines <$> readFile clusters_file
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
-  let feats = [ ((h, f'), (ss', bad, fix, c, all, idx))
+  let feats = [ ((h, f, f'), (ss', bad, fix, c, all, idx))
               | (ss', p, bad, fix, idx) <- uniqs
               , let ss = map fst3 ss'
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss,p)
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss, p)
               , let f' = filter (\r -> withSlice == All || r HashMap.! "F-InSlice" == "1.0") f
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs p)
               ]
-  let feats' = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
+  let feats'      = filter (\(_, (_,_,_,cs,_,_)) -> not (null cs)) feats
   let mkMean f xs = sum (map f xs) / genericLength xs
   let mkFrac (_, (ss, _, _, _, all, _)) = genericLength ss / genericLength all
   let mean = mkMean mkFrac feats' :: Double
   let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   -- Find clusters of fixes to be used as templates
   let ss_fixes
-        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, _, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> return []
-            | null cs -> return []
-            | length (nub cs) == 1 -> return []
-            | null ss' -> return []
+            | mkFrac f > mean+std       -> return []
+            | null cs                   -> return []
+            | length (nub cs) == 1      -> return []
+            | null ss'                  -> return []
             | null (ss' `intersect` cs) -> return []
-            | otherwise -> return $ thd3 $ unzip3 ss)
+            | otherwise                 -> return $ thd3 $ unzip3 ss)
             >>= concat
   let clusters = makeClusters ss_fixes
   let elems
-        = forM feats (\ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
+        = forM feats (\ f@((header, _, features), (ss, bad, fix, cs, allspans, i)) -> do
           let ss' = map fst3 ss
           if
-            | mkFrac f > mean+std -> return []
-            | null cs -> return []
-            | length (nub cs) == 1 -> return []
-            | null ss' -> return []
+            | mkFrac f > mean+std       -> return []
+            | null cs                   -> return []
+            | length (nub cs) == 1      -> return []
+            | null ss'                  -> return []
             | null (ss' `intersect` cs) -> return []
-            | otherwise -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
+            | otherwise                 -> return $ map (\(_, x, y) -> (y, render $ pretty x)) ss)
             >>= concat
-  let cls = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
+  let cls          = map (\c -> show c : map snd (filter (\(x, _) -> x == c) elems)) clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (\c -> length c - 1) cls
-  let sorted_cls = sortOn (DO.Down . length) cls
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [0..]
+  let sorted_cls   = sortOn (DO.Down . length) cls
+  let cls_names    = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate (length top_cls) "L-Cluster") [1..]
 
-  forM_ feats $ \ f@((header, features), (ss, bad, fix, cs, allspans, i)) -> do
-    let ss' = map fst3 ss
+  forM_ feats $ \ f@((header, all_fs, features), (ss, bad, fix, cs, allspans, i)) -> do
+    let ss'     = map fst3 ss
     let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
     if
       | mkFrac f > mean+std -> do
         printf "OUTLIER: %.2f > %.2f\n" (mkFrac f :: Double) (mean+std)
       | null cs -> do
         putStrLn "NO CORE"
-        putStrLn bad
+        -- putStrLn bad
       | length (nub cs) == 1 -> do
         putStrLn "SINGLE CONSTRAINT CORE"
-        putStrLn bad
-        print (head cs)
+        -- putStrLn bad
+        -- print (head cs)
       | null ss' -> do
         putStrLn "NO DIFF"
-        putStrLn bad
-        putStrLn "---------------------------"
-        putStrLn fix
+        -- putStrLn bad
+        -- putStrLn "---------------------------"
+        -- putStrLn fix
       | null (ss' `intersect` cs) -> do
         putStrLn "NO OVERLAP CORE/DIFF"
-        putStrLn bad
-        print cs
-        putStrLn fix
+        -- putStrLn bad
+        -- print cs
+        -- putStrLn fix
       | otherwise -> do
-        let fn = printf "%04d" (i :: Int)
+        let fn   = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
-        let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
+        let new_header    = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header
         let in_cluster xx = namedRecord $ map (\(cluster, label) -> if show xx == cluster then label .= (1::Double) else label .= (0::Double)) $ zip top_cls cls_names
-        let labels = map in_cluster $ thd3 $ unzip3 ss
+        let the_ss xx     = namedRecord ["SourceSpan" .= show xx]
+        let labels        = zipWith HashMap.union (map in_cluster $ thd3 $ unzip3 ss) (map (the_ss . fst3) ss)
+        -- putStrLn "++++++++++++++++++++++++++++++++++++"
         -- print $ length labels
-        -- print $ take 1 features
-        let new_features = zipWith HashMap.union labels features
+        -- print $ length ss
+        -- print $ length features
+        let only_good_ss = map (\nr -> BSC.unpack (nr HashMap.! "SourceSpan")) all_fs
+        let only_good_ls = filter (\nr -> BSC.unpack (nr HashMap.! "SourceSpan") `elem` only_good_ss) labels
+        let new_features = map (\nr -> HashMap.union nr $ fromJust $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") all_fs) only_good_ls
+        -- print $ length new_features
         LBSC.writeFile path $ encodeByName new_header new_features
         let path = out </> fn <.> "ml"
         writeFile path $ unlines $ [ bad, "", "(* fix", fix, "*)", ""
                                     , "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
   forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
-    let fn = printf "%04d" (i :: Int)
+    let fn   = printf "%04d" (i :: Int)
     let path = out </> "known_clusters" </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
     writeFile path $ unlines c
@@ -476,28 +435,6 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
   -- _ -> mempty
   v -> error (show v)
 
--- George
-mkDiffsWithExprs :: String -> [([(SrcSpan, Expr)], Prog, String, String, Int)]
-mkDiffsWithExprs json = case eitherDecode (LBSC.pack json) of
-  Left e -> mempty
-  Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm fix'
-    -> mempty
-  Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm bad'
-    -> mempty
-  Right (MkInSample bad' fix' _)
-    | Right fix <- parseTopForm fix'
-    , Right bad <- parseTopForm bad'
-    , concatMap getDecld bad /= nub (concatMap getDecld bad)
-    -> mempty
-  Right (MkInSample bad' fix' idx)
-    | Right fix <- parseTopForm fix'
-    , Right bad <- parseTopForm bad'
-    , let ss = mkDiffWithExprs bad fix
-    -> [(ss, bad, bad', fix', idx)]
-  v -> error (show v)
-
 
 -- George
 mkDiffsWithGenericTrs :: String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, String, String, Int)]
@@ -545,28 +482,23 @@ mkDiff'' bad fix
   -- | null x
   -- = trace (render $ prettyProg bad) $ trace (render $ prettyProg fix) $ trace "" $ undefined
   -- | otherwise
-  = assert (not (null x)) $ x
+  = assert (not (null x)) x
   where
   -- x = Set.toList (diffSpans (collapseDiff (getDiff $ diffExprsT bs fs)))
-  x = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
+  x  = Set.toList (diffSpans (getDiff $ diffExprsT bs fs) bs)
+  -- x  = mconcat $ map Set.toList $ zipWith diff bs fs
   bs = progExprs bad
   fs = progExprs fix
 
--- George
-mkDiffWithExprs :: Prog -> Prog -> [(SrcSpan, Expr)]
-mkDiffWithExprs bad fix = assert (not (null x)) $ x
-  where
-    x = Set.toList (diffSpansAndExprs (getDiff $ diffExprsT bs fs) bs)
-    bs = progExprs bad
-    fs = progExprs fix
 
 -- George
 mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, Expr, ExprGeneric)]
 mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 x
   where
-    x = Set.toList (diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs)
+    x  = diffSpansAndGenericTrs (getDiff $ diffExprsT bs fs) bs
     bs = progExprs bad
     fs = progExprs fix
+
 
 -- George
 keepBigTrs :: [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
@@ -574,25 +506,6 @@ keepBigTrs = filter bigTrs
   where
     bigTrs (_, _, expr) = sizeOfTree expr 0 >= 2
 
--- George
-sizeOfTree :: ExprGeneric -> Int -> Int
-sizeOfTree e depth = case e of
-  EmptyG -> depth + 1
-  VarG -> depth + 1
-  LamG e' -> sizeOfTree e' (depth + 1)
-  AppG es -> safeMaximum es depth
-  BopG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  UopG e' -> sizeOfTree e' (depth + 1)
-  LitG -> depth + 1
-  LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
-  IteG e1 e2 e3 -> maximum [sizeOfTree e1 (depth + 1), sizeOfTree e2 (depth + 1), sizeOfTree e3 (depth + 1)]
-  SeqG e1 e2 -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  CaseG e' as -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
-  TupleG es -> safeMaximum es depth
-  ConAppG _ _ -> depth + 1 -- TODO: do something better
-  ListG e' _ -> sizeOfTree e' (depth + 1)
-  _ -> error ("sizeOfTree failed: no such expression " ++ show e)
-  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
 -- George
 pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
@@ -602,25 +515,26 @@ pruneTrs maxd = map pruneOneTr
       if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
       where
         depth = sizeOfTree e2 0
-        ne2 = cutSubTrs e2 maxd
+        ne2   = cutSubTrs e2 maxd
         cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
         cutSubTrs e 0 = EmptyG
         cutSubTrs e d = case e of
-          EmptyG -> EmptyG
-          VarG -> VarG
-          LamG e' -> LamG (cutSubTrs e' (d - 1))
-          AppG es -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
-          BopG e1 e2 -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          UopG e' -> UopG (cutSubTrs e' (d - 1))
-          LitG -> LitG
+          EmptyG        -> EmptyG
+          VarG          -> VarG
+          LamG e'       -> LamG (cutSubTrs e' (d - 1))
+          AppG es       -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
+          BopG e1 e2    -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          UopG e'       -> UopG (cutSubTrs e' (d - 1))
+          LitG          -> LitG
           LetG r pes e' -> LetG r (Set.map (\e'' -> cutSubTrs e'' (d - 1)) pes) (cutSubTrs e' (d - 1))
           IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
-          SeqG e1 e2 -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG e' as -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(me, e'') -> (me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
-          TupleG es -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
+          SeqG e1 e2    -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          CaseG e' as   -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(me, e'') -> (me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
+          TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me mt -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1)))) mt
-          ListG e' mt -> ListG (cutSubTrs e' (d - 1)) mt
-          _ -> error ("pruneTrs failed: no such expression " ++ show e)
+          ListG e' mt   -> ListG (cutSubTrs e' (d - 1)) mt
+          _             -> error ("pruneTrs failed: no such expression " ++ show e)
+
 
 runTFeaturesDiff :: [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [NamedRecord], [SrcSpan])
 runTFeaturesDiff fs (ls, bad)
@@ -647,7 +561,7 @@ runTFeaturesDiff fs (ls, bad)
   (tbad, cores, me) = case runEval stdOpts (typeProg bad) of
     Left e -> -- traceShow e
               ([], [], Just e)
-    Right (p, cs) -> (p, mapMaybe constraintSpan $ (Set.toList (mconcat cs)), Nothing)
+    Right (p, cs) -> (p, mapMaybe constraintSpan (Set.toList (mconcat cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
   mkfsD (TDEvl _ e) = mkTypeOut e
