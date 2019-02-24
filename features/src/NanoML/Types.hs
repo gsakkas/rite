@@ -13,7 +13,7 @@
 {-# LANGUAGE RecordWildCards       #-}
 -- {-# LANGUAGE OverlappingInstances  #-}
 {-# LANGUAGE TupleSections         #-}
-{-# LANGUAGE TypeSynonymInstances  #-}
+-- {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE PatternSynonyms       #-}
 module NanoML.Types where
@@ -23,6 +23,7 @@ import           Control.Arrow
 import           Control.DeepSeq
 import           Control.Exception            hiding (TypeError)
 import           Control.Monad
+import           Control.Monad.Fail
 import           Control.Monad.Except
 import           Control.Monad.Random
 import           Control.Monad.Reader
@@ -69,7 +70,9 @@ type MonadEval m = ( MonadError NanoError m
                    , MonadReader NanoOpts m
                    -- , MonadWriter [Doc] m
                    , MonadState EvalState m
-                   , MonadFix m, MonadRandom m
+                   , MonadFix m
+                   , MonadRandom m
+                   , MonadFail m -- George: Added for resolver lts-13.7
                    )
 
 type Var = String
@@ -593,10 +596,11 @@ writeStore i mv = modify' $ \s -> s { stStore = IntMap.insert i mv (stStore s) }
 type Subst = Map TVar Type -- [(TVar, Type)]
 
 subst :: Subst -> Type -> Type
-subst su t = case subst' su t of
+subst su t = subst' su t
+  -- case subst' su t of
   -- t' | t == t'   -> t'
   --    | otherwise -> subst su t'
-  t' -> t'
+  -- t' -> t'
 
 subst' :: Subst -> Type -> Type
 subst' su t = case t of
@@ -628,6 +632,10 @@ instance Eq Env where
 
 instance Ord Env where
   compare e1 e2 = compare (envId e1) (envId e2)
+
+-- George: Added for resolver lts-13.7
+instance Semigroup Env where
+  (<>) = joinEnv
 
 instance Monoid Env where
   mempty  = emptyEnv
@@ -837,6 +845,9 @@ instance Hashable Literal
 data RecFlag = Rec | NonRec deriving (Show, Data, Generic, Eq, Ord)
 data MutFlag = Mut | NonMut deriving (Show, Data, Generic, Eq, Ord)
 
+instance ToJSON RecFlag
+instance FromJSON RecFlag
+
 instance ToJSON MutFlag
 instance FromJSON MutFlag
 
@@ -981,34 +992,27 @@ instance ToJSON Expr where
 data ExprGeneric
   = VarG
   | LamG !ExprGeneric
-  | AppG (Set ExprGeneric)
+  | AppG !(Set ExprGeneric)
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
-  | LetG !RecFlag (Set ExprGeneric) !ExprGeneric
+  | LetG !RecFlag !(Set ExprGeneric) !ExprGeneric
   | IteG !ExprGeneric !ExprGeneric !ExprGeneric
   | SeqG !ExprGeneric !ExprGeneric
-  | CaseG !ExprGeneric (Set (Maybe ExprGeneric, ExprGeneric))
-  | TupleG (Set ExprGeneric)
-  | ConAppG (Maybe ExprGeneric) (Maybe Type)
-  | RecordG [(String, ExprGeneric)] (Maybe Type)
+  | CaseG !ExprGeneric !(Set (Maybe ExprGeneric, ExprGeneric))
+  | TupleG !(Set ExprGeneric)
+  | ConAppG !(Maybe ExprGeneric)
+  | RecordG ![(String, ExprGeneric)]
   | FieldG !ExprGeneric !String
   | SetFieldG !ExprGeneric !String !ExprGeneric
-  | ArrayG (Set ExprGeneric) (Maybe Type)
-  | ListG !ExprGeneric (Maybe Type)
-  | TryG !ExprGeneric [Alt]
-  | Prim1G !Prim1
-  | Prim2G !Prim2
-  | Prim3G !Prim3
-  | PrimNG !PrimN
-  | WithG Env !ExprGeneric
-  | ReplaceG Env !ExprGeneric
-  | HoleG !Ref (Maybe Type)
-  | RefG !Ref
+  | ArrayG !(Set ExprGeneric)
+  | ListG !ExprGeneric
   | EmptyG -- Just an empty expr for easier pruning
   deriving (Show, Generic, Eq, Ord)
 -- instance Hashable ExprGeneric
 
+instance ToJSON ExprGeneric
+instance FromJSON ExprGeneric
 
 data Context
   = Here | Elsewhere
@@ -1360,27 +1364,30 @@ data Type
   | TAll [TVar] !Type
   deriving (Show, Data, Generic, Eq, Ord)
 
-instance ToJSON Type where
-  toJSON t = case t of
-    TVar v -> Aeson.object ["var" .= v]
-    TApp c ts -> Aeson.object ["app" .= Aeson.object ["con" .= c, "args" .= ts]]
-    i :-> o -> Aeson.object ["fun" .= [i, o]]
-    TTup ts -> Aeson.object ["tuple" .= ts]
+instance ToJSON Type
+-- where
+--   toJSON t = case t of
+--     TVar v    -> Aeson.object ["var" .= v]
+--     TApp c ts -> Aeson.object ["app" .= Aeson.object ["con" .= c, "args" .= ts]]
+--     i :-> o   -> Aeson.object ["fun" .= [i, o]]
+--     TTup ts   -> Aeson.object ["tuple" .= ts]
+
+instance FromJSON Type
 
 instance Hashable Type
 
 infixr :->
 
-tINT = "int"
-tFLOAT = "float"
-tCHAR = "char"
+tINT    = "int"
+tFLOAT  = "float"
+tCHAR   = "char"
 tSTRING = "string"
-tBOOL = "bool"
-tLIST = "list"
-tARRAY = "array"
-tUNIT = "unit"
-tEXN = "exn"
-tREF = "ref"
+tBOOL   = "bool"
+tLIST   = "list"
+tARRAY  = "array"
+tUNIT   = "unit"
+tEXN    = "exn"
+tREF    = "ref"
 
 argTys :: Type -> [Type]
 argTys (i :-> o) = i : argTys o
@@ -1392,10 +1399,10 @@ resTy t         = t
 
 freeTyVars :: Type -> [TVar]
 freeTyVars t = case t of
-  TVar v -> [v]
+  TVar v    -> [v]
   TApp _ ts -> nub (concatMap freeTyVars ts)
   ti :-> to -> nub (freeTyVars ti ++ freeTyVars to)
-  TTup ts -> nub (concatMap freeTyVars ts)
+  TTup ts   -> nub (concatMap freeTyVars ts)
   TAll as t -> freeTyVars t \\ as
 
 -- freeTyVarsEnv :: Env -> HashSet TVar

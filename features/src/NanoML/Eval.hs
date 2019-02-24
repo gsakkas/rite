@@ -191,7 +191,7 @@ mycensor f m = pass $ do
   --     case e of
   --       MLException ex -> evalAlts ex alts
   --       _              -> maybeThrow e
---   -- FIXME: 
+--   -- FIXME:
 --   _ -> return expr
   -- Prim1 _ (P1 p f t) e -> do
   --   v <- eval e

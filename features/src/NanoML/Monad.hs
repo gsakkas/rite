@@ -3,10 +3,11 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TupleSections #-}
+-- {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE UndecidableInstances #-}
 module NanoML.Monad where
 
+import Control.Monad.Fail
 import Control.Monad.Except
 import Control.Monad.Random.Strict (RandT, evalRandT, liftRandT, runRandT, MonadRandom)
 import Control.Monad.Reader.Class
@@ -36,6 +37,10 @@ newtype Eval a = EvalM (RandT StdGen (ExceptT NanoError (State NanoState)) a)
 --   throwError = lift . throwError
 --   catchError m f = liftRandT (\g -> runRandT m g `catchError` \e ->
 --                                     runRandT (f e) g)
+
+-- George: Added for resolver lts-13.7
+instance MonadFail Eval where
+  fail = Control.Monad.Fail.fail
 
 instance MonadReader NanoOpts Eval where
   ask = EvalM $ gets nanoReader
@@ -75,7 +80,7 @@ runEval opts x = case runEvalFull opts x of
 runEvalFull :: NanoOpts -> Eval a -> (Either NanoError a, EvalState, [Doc Annot])
 runEvalFull opts (EvalM x) =
   let init = NanoState opts initState mempty
-      stdGen = mkStdGen (seed opts) 
+      stdGen = mkStdGen (seed opts)
   in case runState (runExceptT (evalRandT x stdGen)) init of
       (Left e, st) -> (Left e, nanoState st, toList (nanoWriter st))
       (Right v, st) -> (Right v, nanoState st, toList (nanoWriter st))

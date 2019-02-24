@@ -43,6 +43,7 @@ executable generate-features
                , bytestring
                , cassava
                , containers
+               , deepseq
                , Diff
                , directory
                , filepath

@@ -1,18 +1,18 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE RecordWildCards      #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+-- {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE RankNTypes           #-}
 {-# LANGUAGE ImplicitParams       #-}
 module NanoML.Pretty
   (pretty, prettyRedex, prettyProg, hsep, vsep, vcat, Doc, render, renderSpans, (==>), (=:), nest, text, fillHoles)
   where
 
-import           Control.Arrow                (first, second)
-import qualified Data.IntMap                  as IntMap
-import qualified Data.Map                     as Map
-import           Data.List                    hiding (group)
-import qualified Data.Vector                  as Vector
-import           Prelude                      hiding ((<$>))
+import           Control.Arrow                     (first, second)
+import qualified Data.IntMap                       as IntMap
+import qualified Data.Map                          as Map
+import           Data.List                         hiding (group)
+import qualified Data.Vector                       as Vector
+import           Prelude                           hiding ((<$>), (<>))
 import           Text.PrettyPrint.Annotated.Leijen hiding (Pretty, pretty, list)
 import qualified Text.PrettyPrint.Annotated.Leijen as PP
 
