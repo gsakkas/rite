@@ -963,6 +963,22 @@ children = \case
   T_Try _ e as -> e : map thd3 as
 
 
+-- George
+generaliseT :: Type -> Type
+generaliseT t = sub_types substs t
+  where
+    all_vs = freeTyVars t
+    new_ts = map (\c -> [c]) (['a' .. 'z'] ++ ['A' .. 'Z']) :: [TVar]
+    substs = Map.fromList $ zip all_vs new_ts
+    sub_types subs t' = case t' of
+      TVar v      -> TVar (substs Map.! v)
+      TApp tc ts  -> TApp tc (map (sub_types subs) ts)
+      ti :-> to   -> sub_types subs ti :-> sub_types subs to
+      TTup ts     -> TTup (map (sub_types subs) ts)
+      TAll as t'' -> sub_types (foldl' (flip Map.delete) subs as) t''
+
+getTSrcSpan :: TExpr -> SrcSpan
+getTSrcSpan = infoSpan . texprInfo
 
 getType :: TExpr -> Type
 getType = infoType . texprInfo
@@ -1456,6 +1472,9 @@ diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   --   End     -> []
 
 -- George
+-- TODO: Handle multiple insertions for the same source span
+-- due to the insertion of all sub-expressions.
+-- For now we have the hack removeDuplicateSS
 diffSpansAndGenericTrs :: Diff -> [Expr] -> [(SrcSpan, Expr, ExprGeneric)]
 diffSpansAndGenericTrs d' es = reverse $ removeDuplicateSS uniqueSrcSpans alls []
   where
@@ -1471,8 +1490,8 @@ diffSpansAndGenericTrs d' es = reverse $ removeDuplicateSS uniqueSrcSpans alls [
     uniqueSrcSpans = Set.toList $ Set.fromList $ map sel1 alls
 
 -- George
--- FIXME: This is a bit of hack because I don't know why multiple SSs have
--- different expressions (or the sub-expressions of the original one)
+-- FIXME: This is a bit of hack to get the biggest expressions of an insertion
+-- due to multiple source spans for its sub-expressions
 removeDuplicateSS :: [SrcSpan] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
 removeDuplicateSS []        _  acc = acc
 removeDuplicateSS (ss:rest) xs acc = removeDuplicateSS rest xs (biggest:acc)
@@ -1495,8 +1514,8 @@ mkGenericTrees = \case
   Seq _ e1 e2      -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
   Case _ e as      -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
   Tuple _ es       -> TupleG $ Set.fromList (map mkGenericTrees es)
-  ConApp _ _ me mt -> ConAppG (maybeMkGTs me) mt
-  List _ es mt     -> ListG (returnSimplest (map mkGenericTrees es)) mt
+  ConApp _ _ me _  -> ConAppG (maybeMkGTs me)
+  List _ es _      -> ListG (returnSimplest (map mkGenericTrees es))
   e                -> error ("exprKind: " ++ render (pretty e))
   where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
 
@@ -1515,8 +1534,8 @@ sizeOfTree e depth = case e of
   SeqG e1 e2    -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
   CaseG e' as   -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
   TupleG es     -> safeMaximum es depth
-  ConAppG _ _   -> depth + 1 -- TODO: do something better
-  ListG e' _    -> sizeOfTree e' (depth + 1)
+  ConAppG _     -> depth + 1 -- TODO: do something better
+  ListG e'      -> sizeOfTree e' (depth + 1)
   _             -> error ("sizeOfTree failed: no such expression " ++ show e)
   where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
