@@ -165,3 +165,4 @@ cabal.project.local
 /paper/*/auto/
 .DS_Store
 /.venv/
+/data/*dirty

@@ -4,6 +4,7 @@ import sys
 import sklearn
 from sklearn import tree, neural_network
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.dummy import DummyClassifier
 from sklearn.externals import joblib
 import numpy as np
 import pandas as pd
@@ -11,11 +12,14 @@ import pandas as pd
 import input_old
 
 model = sys.argv[1]
-if model not in ['mlp', 'decision-tree', 'random-forest']:
-    print 'python trees.py [mlp|decision-tree|random-forest] <train> <test>'
+if model not in ['mlp', 'decision-tree', 'random-forest', 'random', 'load']:
+    print 'python trees.py [mlp|decision-tree|random-forest|random|load] <train> <test>'
     sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
+model_file = ''
+if model == 'load':
+    model_file = sys.argv[4]
 
 RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
@@ -53,14 +57,18 @@ print train.shape
 test = pd.concat(test)
 print test.shape
 
+# Maximum number of clusters in files
+max_num_cls = 40
+
 # Number of cluster-labels to use
-num_of_cls = 40
+num_of_cls = 20
+print "Clusters =", num_of_cls
 
 # Remove all -1 from labels
 # The -1s are there because of the type-checking
 # of the label in the relevant program hole
 lbls = {}
-for i in xrange(1, num_of_cls + 1):
+for i in xrange(1, max_num_cls + 1):
     lbls['L-Cluster' + str(i)] = -1.0
 
 train_binary = train.replace(lbls, 0.0)
@@ -83,6 +91,8 @@ test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_span = test.loc[:, 'SourceSpan']
 print test_samps.shape
 
+clf = DummyClassifier(random_state=prng)
+
 if model == 'mlp':
     clf = neural_network.MLPClassifier(
         hidden_layer_sizes=(160, 40),
@@ -93,30 +103,35 @@ if model == 'mlp':
         verbose=True,
         # solver='sgd',
         # early_stopping=True,
-        tol=0.00001,
+        # tol=0.00001,
         random_state=prng,
     )
 elif model == 'random-forest':
     clf = RandomForestClassifier(n_estimators=100,
                                  max_depth=5,
                                  random_state=prng)
-else:
+elif model == 'decision-tree':
     clf = tree.DecisionTreeClassifier(random_state=prng)
+elif model == 'random':
+    clf = DummyClassifier(random_state=prng)
+else:
+    clf = joblib.load(model_file)
 
-clf = clf.fit(train_samps.values, train_labels.values)
+if model != 'load':
+    clf = clf.fit(train_samps.values, train_labels.values)
 
-joblib.dump(
-    clf,
-    os.path.join('models', model + '-' + train_dir.replace('/', '-') + '.pkl'))
+    joblib.dump(
+        clf,
+        os.path.join('models', model + '-' + str(num_of_cls) + '.pkl'))
 
 anses = clf.predict(test_samps.values)
 
 prob_score = clf.predict_proba(test_samps.values)
-print len(prob_score)
-print len(prob_score[0])
+# print len(prob_score)
+# print len(prob_score[0])
 
 prob_error = []
-if model == 'mlp':
+if model == 'mlp' or model == 'load':
     prob_error = [[1.0 - i for i in item] for item in prob_score]
 else:
     prob_error = [[i[1] for i in item] for item in zip(*prob_score)]
@@ -124,31 +139,63 @@ else:
 yay1 = 0
 yay2 = 0
 yay3 = 0
+yay1_2 = 0
+yay2_2 = 0
+yay3_2 = 0
 tots = 0
-tp = 0
+real_tots = 0
+yays1 = [0] * num_of_cls
+yays2 = [0] * num_of_cls
+yays3 = [0] * num_of_cls
+alls = [0] * num_of_cls
 for i, temp in enumerate(test_labels.values):
-    tots = tots + 1
+    real_tots = real_tots + 1
+    pes = np.argsort(prob_error[i]).tolist()
+    not_valid = np.where(temp == -1.0)[0].tolist()
+    for nv in not_valid:
+        pes.remove(nv)
     if 1 in temp.tolist():
+        tots = tots + 1
         idx = temp.tolist().index(1)
-        pes = np.argsort(prob_error[i]).tolist()
-        not_valid = np.where(temp == -1.0)[0].tolist()
-        for nv in not_valid:
-            pes.remove(nv)
+        alls[idx] += 1
         if pes[0] == idx or pes[1] == idx or pes[2] == idx:
             yay3 += 1
+            yays3[idx] += 1
         if pes[0] == idx or pes[1] == idx:
             yay2 += 1
+            yays2[idx] += 1
         if pes[0] == idx:
             yay1 += 1
-    elif 1 not in anses[i].tolist():
-        yay3 += 1
-        yay2 += 1
-        yay1 += 1
+            yays1[idx] += 1
+    else:
+        # Cluster1 too generic, so remove it for now
+        # if 0 in pes:
+        #     pes.remove(0)
+        if len(pes) > 0:
+            yay3_2 += 1
+            yay2_2 += 1
+            yay1_2 += 1
+
+print "accuracy for top 3 per class"
+print "top 1"
+print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)]
+print "top 2"
+print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)]
+print "top 3"
+print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)]
 
 print "accuracy for top 3"
-print 'top 1'
+print "top 1"
 print float(yay1) * 100 / tots
-print 'top 2'
+print "top 2"
 print float(yay2) * 100 / tots
-print 'top 3'
+print "top 3"
 print float(yay3) * 100 / tots
+
+print "accuracy for top 3 (with unclassified)"
+print "top 1"
+print float(yay1 + yay1_2) * 100 / real_tots
+print "top 2"
+print float(yay2 + yay2_2) * 100 / real_tots
+print "top 3"
+print float(yay3 + yay3_2) * 100 / real_tots
