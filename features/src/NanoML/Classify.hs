@@ -977,6 +977,29 @@ generaliseT t = sub_types substs t
       TTup ts     -> TTup (map (sub_types subs) ts)
       TAll as t'' -> sub_types (foldl' (flip Map.delete) subs as) t''
 
+-- George
+generaliseTreverse :: Type -> Type
+generaliseTreverse t = sub_types substs t
+  where
+    all_vs = freeTyVars t
+    new_ts = map (\c -> [c]) (['A' .. 'Z'] ++ ['a' .. 'z']) :: [TVar]
+    substs = Map.fromList $ zip all_vs new_ts
+    sub_types subs t' = case t' of
+      TVar v      -> TVar (substs Map.! v)
+      TApp tc ts  -> TApp tc (map (sub_types subs) ts)
+      ti :-> to   -> sub_types subs ti :-> sub_types subs to
+      TTup ts     -> TTup (map (sub_types subs) ts)
+      TAll as t'' -> sub_types (foldl' (flip Map.delete) subs as) t''
+
+-- George
+unifySubType :: MonadEval m => Type -> Type -> m Bool
+unifySubType to t = do
+  emitCt to t
+  cts <- gets stConstraints
+  solveCts True cts
+  css <- gets stUnsatCores
+  if null css then return True else return False
+
 getTSrcSpan :: TExpr -> SrcSpan
 getTSrcSpan = infoSpan . texprInfo
 
@@ -1089,8 +1112,15 @@ typeExpr' in_e = do
             [ "This operator expects its argument"
             , "to be a `%s' but it appears to be a `%s'."
             ]
-      emitCtWith t (getType te) fmt
-      emitCt to t
+      -- 1st & 2nd case is beacuse sth went wrong with parsing (maybe)
+      case (u, e) of
+        (Neg, Lit _ LD{})    -> emitCtWith to (getType te) fmt
+        (Neg, TypedHole _ _) -> emitCtWith to (getType te) fmt
+        otherwise            -> emitCtWith t (getType te) fmt
+      case (u, e) of
+        (Neg, Lit _ LD{})    -> emitCt to (getType te)
+        (Neg, TypedHole _ _) -> emitCt to (getType te)
+        otherwise            -> emitCt to t
       return (T_Uop (mkInfo ml to) u te)
     Lit ml l -> do
       let t = case l of
@@ -1151,7 +1181,7 @@ typeExpr' in_e = do
               [ "Due to the patterns in this `match', we expect the scrutinee"
               , "to be a `%s' but it appears to be a `%s'."
               ]
-        -- FIXME: this seems backwards, but swapping the types produces the
+        -- TODO: this seems backwards, but swapping the types produces the
         -- wrong message in 'wwhile'..
         emitCtWith (getType te) tp fmt -- tp
         -- emitCtWith tp (getType te) fmt -- tp
@@ -1266,6 +1296,10 @@ typeExpr' in_e = do
       otherError "typeExpr: impossible"
     Ref {} -> do
       otherError "typeExpr: impossible"
+    TypedHole ml v -> do
+      -- t <- TVar <$> freshTVar
+      -- emitCt to t
+      return (T_Var (mkInfo ml to) v)
 
 typePat :: MonadEval m => Pat -> m (Type, [(Var, Type)])
 -- TODO: NEED CTS!!!!
@@ -1438,12 +1472,14 @@ cost = \case
   Cpy e d -> S $ cost d
   End     -> Z
 
--- showDiff :: Diff -> String
--- showDiff = \case
---   Ins e d -> "Ins (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
---   Del e d -> "Del (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
---   Cpy e d -> "Cpy (" ++ show (exprKind e) ++ ") (" ++ showDiff d ++ ")"
---   End     -> "End"
+showDiff :: Diff -> String
+showDiff = \case
+  Ins e d -> "Ins (" ++ show e ++ "\n\n" ++ (render $ pretty e) ++ ")\n" ++ bigSS ++ showDiff d
+  Del e d -> "Del (" ++ show e ++ "\n\n" ++ (render $ pretty e) ++ ")\n" ++ bigSS ++ showDiff d
+  Cpy e d -> "Cpy (" ++ show e ++ "\n\n" ++ (render $ pretty e) ++ ")\n" ++ bigSS ++ showDiff d
+  End     -> "End\n" ++ bigSS ++ bigSS
+  where
+    bigSS = "---------------------------------------------------------------------\n"
 
 diffSpans :: Diff -> [Expr] -> Set SrcSpan
 diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
@@ -1465,79 +1501,339 @@ diffSpans d' es = Set.fromList . catMaybes $ go d' (concatMap allSubExprs es)
   --   Cpy e d -> to d xs
   --   End -> []
 
-  -- go = \case
-  --   Ins e d -> getSrcSpanMaybe e : go d
-  --   Del e d -> getSrcSpanMaybe e : go d
-  --   Cpy e d -> go d -- getSrcSpanMaybe e : go d
-  --   End     -> []
+-- George
+collapseDiff :: Diff -> [Expr] -> [Expr] -> (Diff, [Expr], [Expr])
+collapseDiff d bs fs = collapseCpy df bs' fs'
+  where
+    (df, bs', fs') = collapseInsDel d (concatMap allSubExprs bs ++ [Var (Just $ SrcSpan 0 0 0 0) "END"])
+                                      (concatMap allSubExprs fs ++ [Var (Just $ SrcSpan 0 0 0 0) "END"])
+
+collapseInsDel :: Diff -> [Expr] -> [Expr] -> (Diff, [Expr], [Expr])
+collapseInsDel d bs [] = errorWithoutStackTrace "collapseInsDel: Empty program list"
+collapseInsDel d [] fs = errorWithoutStackTrace "collapseInsDel: Empty program list"
+collapseInsDel d' (b:bs) (f:fs) = case d' of
+  Ins x d -> (Ins x df', bs'', (f:fs''))
+    where (df, bs', fs') = collapseSingle (Ins x End) d (b:bs) fs
+          (df', bs'', fs'') = collapseInsDel df bs' fs'
+  Cpy x d | (isTuple x || isApp x || isConApp x || isLet x || isList x || isIte x)
+          , map exprKind (subExprs x) /= map exprKind (subExprs b)
+          -> collapseInsDel (Ins x (Del b d)) (b:bs) (f:fs)
+  Cpy x d -> (Cpy x df, (b:bs'), (f:fs'))
+    where (df, bs', fs') = collapseInsDel d bs fs
+  Del x d -> (Del x df', (b:bs''), fs'')
+    where (df, bs', fs') = collapseSingle (Del x End) d bs (f:fs)
+          (df', bs'', fs'') = collapseInsDel df bs' fs'
+  End -> (End, b:bs, f:fs)
+  where isTuple = \case Tuple {} -> True
+                        _        -> False
+        isApp = \case App {} -> True
+                      _      -> False
+        isConApp = \case ConApp {} -> True
+                         _         -> False
+        isLet = \case Let {} -> True
+                      _      -> False
+        isList = \case List {} -> True
+                       _       -> False
+        isIte = \case Ite {} -> True
+                      _      -> False
+
+collapseCpy :: Diff -> [Expr] -> [Expr] -> (Diff, [Expr], [Expr])
+collapseCpy d [] fs = errorWithoutStackTrace "collapseCpy: Empty program list"
+collapseCpy d bs [] = errorWithoutStackTrace "collapseCpy: Empty program list"
+collapseCpy d' (b:bs) (f:fs) = case d' of
+  Ins x d -> (Ins x df, bs', (f:fs'))
+    where (df, bs', fs') = collapseCpy d (b:bs) fs
+  Cpy x d -> (Cpy x df', (b:bs''), (f:fs''))
+    where (df, bs', fs') = collapseSingle (Cpy x End) d bs fs
+          (df', bs'', fs'') = collapseCpy df bs' fs'
+  Del x d -> (Del x df, (b:bs'), fs')
+    where (df, bs', fs') = collapseCpy d bs (f:fs)
+  End -> (End, b:bs, f:fs)
+
+collapseSingle :: Diff -> Diff -> [Expr] -> [Expr] -> (Diff, [Expr], [Expr])
+collapseSingle _ d [] fs = errorWithoutStackTrace "collapseSingle: Empty program list"
+collapseSingle _ d bs [] = errorWithoutStackTrace "collapseSingle: Empty program list"
+collapseSingle e@(Ins y d'') d' (b:bs) (f:fs) = case d' of
+  Ins x d | x `isSubExpr` y -> collapseSingle e d (b:bs) fs
+  Ins x d -> ((Ins x df), bs', (f:fs'))
+    where (df, bs', fs') = collapseSingle e d (b:bs) fs
+  Cpy x d | x `isSubExpr` y -> ((Del b df), (b:bs'), fs')
+    where (df, bs', fs') = collapseSingle e d bs fs
+  Cpy x d -> ((Cpy x df), (b:bs'), (f:fs'))
+    where (df, bs', fs') = collapseSingle e d bs fs
+  Del x d -> ((Del x df), (b:bs'), fs')
+    where (df, bs', fs') = collapseSingle e d bs (f:fs)
+  End -> (End, (b:bs), (f:fs))
+collapseSingle e@(Del y d'') d' (b:bs) (f:fs) = case d' of
+  Ins x d -> ((Ins x df), bs', (f:fs'))
+    where (df, bs', fs') = collapseSingle e d (b:bs) fs
+  Cpy x d | b `isSubExpr` y -> ((Ins x df), bs', (f:fs'))
+    where (df, bs', fs') = collapseSingle e d bs fs
+  Cpy x d -> ((Cpy x df), (b:bs'), (f:fs'))
+    where (df, bs', fs') = collapseSingle e d bs fs
+  Del x d | x `isSubExpr` y -> collapseSingle e d bs (f:fs)
+  Del x d -> ((Del x df), (b:bs'), fs')
+    where (df, bs', fs') = collapseSingle e d bs (f:fs)
+  End -> (End, (b:bs), (f:fs))
+collapseSingle e@(Cpy y d'') d' (b:bs) (f:fs) = case d' of
+  -- Ins x d -> ((Ins x d), (b:bs), (f:fs))
+  Ins x d -> ((Ins x df), bs', (f:fs'))
+    where (df, bs', fs') = collapseSingle e d (b:bs) fs
+  Cpy x d | x `isSubExpr` y -> collapseSingle e d bs fs
+  Cpy x d -> ((Cpy x df), (b:bs'), (f:fs'))
+    where (df, bs', fs') = collapseSingle e d bs fs
+  -- Del x d -> ((Del x d), (b:bs), (f:fs))
+  Del x d -> ((Del x df), (b:bs'), fs')
+    where (df, bs', fs') = collapseSingle e d bs (f:fs)
+  End -> (End, b:bs, f:fs)
+
+diffSpansAndGenericTrs :: Diff -> [Expr] -> [Expr] -> [(SrcSpan, Expr, ExprGeneric)]
+diffSpansAndGenericTrs diffs bs fs = {- trace ((showDiff df) ++ "\n\n\n\n\n" ++ (showDiff diffs)) $ -} alls
+{- reverse $ removeSubSS $ reverse $ removeSubSS $ removeSubExprs -}
+-- reverse $ removeDuplicateSS uniqueSrcSpans alls []
+  where
+    go :: Diff -> [Expr] -> [Expr] -> [(MSrcSpan, Expr, ExprGeneric)]
+    go _ [] _ = []
+    go _ _ [] = []
+    go d'' (x:xs) (y:ys) = case d'' of
+      Ins e (Ins e' d) | not (e' `isSubExpr` e)
+        -> es ++ go (Ins e' d') xs' (head ys : ys')
+            where (d', es, xs', ys') = to (Ins e d) (x:xs) (y : tail ys)
+      Ins e (Del e' d) | exprKind e == exprKind e' && (isApp e || isList e || isTuple e) && length (subExprs e) /= length (subExprs e')
+        -> (getSrcSpanMaybe e', e, mkGenericTrees e) : go d xs ys
+      Ins e (Del e' d) | exprKind e == exprKind e' && isApp e && exprKind (head $ subExprs e) /= exprKind (head $ subExprs e')
+        -> (getSrcSpanMaybe e', e, mkGenericTrees e) : go d xs ys
+      Ins e (Del e' d) | exprKind e == exprKind e' && isApp e && map exprKind (tail $ subExprs e) /= map exprKind (tail $ subExprs e')
+        -> actual ++ go d xs ys
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = tail $ subExprs e'
+                  fsubs = tail $ subExprs e
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Ins e (Del e' d) | exprKind e == exprKind e' && (isTuple e || isConApp e || isLet e || isIte e)
+        -> actual ++ go d xs ys
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = subExprs e'
+                  fsubs = subExprs e
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Ins e (Del e' d) | exprKind e == exprKind e'
+        -> actual ++ go d xs ys
+            where (df', bs'', fs'') = collapseDiff (getDiff $ diffExprsT bsubs fsubs) bsubs fsubs
+                  bsubs = subExprs e'
+                  fsubs = subExprs e
+                  actual = go df' bs'' fs''
+      Ins e (Del e' d)
+        -> (getSrcSpanMaybe e', e, mkGenericTrees e) : go d xs ys
+      Ins e d
+        -> (afterThis x, e, mkGenericTrees e) : go d (x:xs) ys
+      Del e (Del e' d) | not (e' `isSubExpr` e)
+        -> es ++ go (Del e' d') (head xs : xs') ys'
+            where (d', es, xs', ys') = to (Del e d) (x : tail xs) (y:ys)
+      Del e (Ins e' d) | exprKind e == exprKind e' && (isApp e || isList e || isTuple e) && length (subExprs e) /= length (subExprs e')
+        -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs ys
+      Del e (Ins e' d) | exprKind e == exprKind e' && isApp e && exprKind (head $ subExprs e) /= exprKind (head $ subExprs e')
+        -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs ys
+      Del e (Ins e' d) | exprKind e == exprKind e' && isApp e && map exprKind (tail $ subExprs e) /= map exprKind (tail $ subExprs e')
+        -> actual ++ go d xs ys
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = tail $ subExprs e
+                  fsubs = tail $ subExprs e'
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Del e (Ins e' d) | exprKind e == exprKind e' && (isTuple e || isConApp e || isLet e || isIte e)
+        -> actual ++ go d xs ys
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = subExprs e
+                  fsubs = subExprs e'
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Del e (Ins e' d) | exprKind e == exprKind e'
+        -> actual ++ go d xs ys
+            where (df', bs'', fs'') = collapseDiff (getDiff $ diffExprsT bsubs fsubs) bsubs fsubs
+                  bsubs = subExprs e
+                  fsubs = subExprs e'
+                  actual = go df' bs'' fs''
+      Del e (Ins e' d)
+        -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs ys
+      Del e d
+        -> (getSrcSpanMaybe e, Var (getSrcSpanMaybe e) "EMPTY", EmptyG) : go d xs (y:ys)
+      Cpy e d
+        -> go d xs ys
+      End
+        -> []
+
+
+    to :: Diff -> [Expr] -> [Expr] -> (Diff, [(MSrcSpan, Expr, ExprGeneric)], [Expr], [Expr])
+    to d [] ys = errorWithoutStackTrace "diffSpans: to failed: Empty program list"
+    to d xs [] = errorWithoutStackTrace "diffSpans: to failed: Empty program list"
+    to d'' (x:xs) (y:ys) = case d'' of
+      Ins e (Ins e' d) | not (e' `isSubExpr` e)
+        -> ((Ins e' d'), es, xs', (head ys) : ys')
+            where (d', es, xs', ys') = to (Ins e d) (x:xs) (y : tail ys)
+      Ins e (Del e' d) | exprKind e == exprKind e' && (isApp e || isList e || isTuple e) && length (subExprs e) /= length (subExprs e')
+        -> (d, [(getSrcSpanMaybe e', e, mkGenericTrees e)], xs, ys)
+      Ins e (Del e' d) | exprKind e == exprKind e' && isApp e && exprKind (head $ subExprs e) /= exprKind (head $ subExprs e')
+        -> (d, [(getSrcSpanMaybe e', e, mkGenericTrees e)], xs, ys)
+      Ins e (Del e' d) | exprKind e == exprKind e' && isApp e && map exprKind (tail $ subExprs e) /= map exprKind (tail $ subExprs e')
+        -> (d, actual, xs, ys)
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = tail $ subExprs e'
+                  fsubs = tail $ subExprs e
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Ins e (Del e' d) | exprKind e == exprKind e' && (isTuple e || isConApp e || isLet e || isIte e)
+        -> (d, actual, xs, ys)
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = subExprs e'
+                  fsubs = subExprs e
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Ins e (Del e' d) | exprKind e == exprKind e'
+        -> (d, actual, xs, ys)
+            where (df', bs'', fs'') = collapseDiff (getDiff $ diffExprsT bsubs fsubs) bsubs fsubs
+                  bsubs = subExprs e'
+                  fsubs = subExprs e
+                  actual = go df' bs'' fs''
+      Ins e (Del e' d)
+        -> (d, [(getSrcSpanMaybe e', e, mkGenericTrees e)], xs, ys)
+      Ins e d
+        -> (d, [(afterThis x, e, mkGenericTrees e)], (x:xs), ys)
+      Del e (Del e' d) | not (e' `isSubExpr` e)
+        -> ((Del e' d'), es, (head xs : xs'), ys')
+            where (d', es, xs', ys') = to (Del e d) (x : tail xs) (y:ys)
+      Del e (Ins e' d) | exprKind e == exprKind e' && (isApp e || isList e || isTuple e) && length (subExprs e) /= length (subExprs e')
+        -> (d, [(getSrcSpanMaybe e, e', mkGenericTrees e')], xs, ys)
+      Del e (Ins e' d) | exprKind e == exprKind e' && isApp e && exprKind (head $ subExprs e) /= exprKind (head $ subExprs e')
+        -> (d, [(getSrcSpanMaybe e, e', mkGenericTrees e')], xs, ys)
+      Del e (Ins e' d) | exprKind e == exprKind e' && isApp e && map exprKind (tail $ subExprs e) /= map exprKind (tail $ subExprs e')
+        -> (d, actual, xs, ys)
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = tail $ subExprs e
+                  fsubs = tail $ subExprs e'
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Del e (Ins e' d) | exprKind e == exprKind e' && (isTuple e || isConApp e || isLet e || isIte e)
+        -> (d, actual, xs, ys)
+            where rest = map (\(bsb, fsb) -> collapseDiff (getDiff $ diffExprsT [bsb] [fsb]) [bsb] [fsb]) $ zip bsubs fsubs
+                  bsubs = subExprs e
+                  fsubs = subExprs e'
+                  actual = concatMap (\(df', bs'', fs'') -> go df' bs'' fs'') rest
+      Del e (Ins e' d) | exprKind e == exprKind e'
+        -> (d, actual, xs, ys)
+            where (df', bs'', fs'') = collapseDiff (getDiff $ diffExprsT bsubs fsubs) bsubs fsubs
+                  bsubs = subExprs e
+                  fsubs = subExprs e'
+                  actual = go df' bs'' fs''
+      Del e (Ins e' d)
+        -> (d, [(getSrcSpanMaybe e, e', mkGenericTrees e')], xs, ys)
+      Del e d
+        -> (d, [(getSrcSpanMaybe e, Var (getSrcSpanMaybe e) "EMPTY", EmptyG)], xs, (y:ys))
+      otherwise
+        -> errorWithoutStackTrace "diffSpans: to failed: wrong case"
+
+    clean tup = if isNothing (sel1 tup) then Nothing else Just (fromJust (sel1 tup), sel2 tup, sel3 tup)
+    alls      = mapMaybe clean $ go df bs' fs'
+    (df, bs', fs') = collapseDiff diffs bs fs
+    isList = \case List {} -> True
+                   _       -> False
+    isTuple = \case Tuple {} -> True
+                    _        -> False
+    isApp = \case App {} -> True
+                  _      -> False
+    isConApp = \case ConApp {} -> True
+                     _         -> False
+    isLet = \case Let {} -> True
+                  _      -> False
+    isIte = \case Ite {} -> True
+                  _      -> False
+
 
 -- George
--- TODO: Handle multiple insertions for the same source span
--- due to the insertion of all sub-expressions.
--- For now we have the hack removeDuplicateSS
-diffSpansAndGenericTrs :: Diff -> [Expr] -> [(SrcSpan, Expr, ExprGeneric)]
-diffSpansAndGenericTrs d' es = reverse $ removeDuplicateSS uniqueSrcSpans alls []
-  where
-    go _ [] = []
-    go d' (x:xs) = case d' of
-      Ins e d          -> (getSrcSpanMaybe x, e, mkGenericTrees e) : go d (x:xs)
-      Del e (Ins e' d) -> (getSrcSpanMaybe e, e', mkGenericTrees e') : go d xs
-      Del e d          -> (getSrcSpanMaybe e, Var (getSrcSpanMaybe e) "EMPTY", EmptyG) : go d xs
-      Cpy e d          -> go d xs
-      End              -> []
-    clean tup   = if isNothing (sel1 tup) then Nothing else Just (fromJust (sel1 tup), sel2 tup, sel3 tup)
-    alls        = mapMaybe clean $ go d' (concatMap allSubExprs es)
-    uniqueSrcSpans = Set.toList $ Set.fromList $ map sel1 alls
+-- removeDuplicateSS :: [SrcSpan] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
+-- removeDuplicateSS []        _  acc = acc
+-- removeDuplicateSS (ss:rest) xs acc = removeDuplicateSS rest xs (biggest:acc)
+--   where
+--     dups    = filter ((== ss) . sel1) xs
+--     sizes   = map (\e -> sizeOfTree (sel3 e) 0) dups
+--     biggest = fst $ maximumBy (\(_, a) (_, b) -> compare a b) (zip dups sizes)
 
 -- George
--- FIXME: This is a bit of hack to get the biggest expressions of an insertion
--- due to multiple source spans for its sub-expressions
-removeDuplicateSS :: [SrcSpan] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
-removeDuplicateSS []        _  acc = acc
-removeDuplicateSS (ss:rest) xs acc = removeDuplicateSS rest xs (biggest:acc)
-  where
-    dups    = filter ((== ss) . sel1) xs
-    sizes   = map (\e -> sizeOfTree (sel3 e) 0) dups
-    biggest = fst $ maximumBy (\(_, a) (_, b) -> compare a b) (zip dups sizes)
+-- removeSubExprs :: [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
+-- removeSubExprs []                 = []
+-- removeSubExprs (x@(ss, e, eg):xs) = x : removeSubExprs (filter (\ (_, y, _) -> not (y `isSubExpr` e)) xs)
+
+-- George
+-- removeSubSS :: [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
+-- removeSubSS []                 = []
+-- removeSubSS (x@(ss, e, eg):xs) = x : removeSubSS (filter (\ (ss', _, _) -> not (ss' `isSubSpanOf` ss)) xs)
 
 -- George
 mkGenericTrees :: Expr -> ExprGeneric
 mkGenericTrees = \case
   Var _ _          -> VarG
-  Lam _ _ e _      -> LamG (mkGenericTrees e)
+  Lam _ p e _      -> LamG (mkGenericPats p) (mkGenericTrees e)
   App _ _ es       -> AppG $ Set.fromList (map mkGenericTrees es)
   Bop _ _ e1 e2    -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
   Uop _ _ e        -> UopG (mkGenericTrees e)
   Lit _ _          -> LitG
-  Let _ r pes e    -> LetG r (Set.fromList (map (mkGenericTrees . snd) pes)) (mkGenericTrees e)
+  Let _ r pes e    -> LetG r (Set.fromList (map (\(p, e') -> (mkGenericPats p, mkGenericTrees e')) pes)) (mkGenericTrees e)
   Ite _ e1 e2 e3   -> IteG (mkGenericTrees e1) (mkGenericTrees e2) (mkGenericTrees e3)
   Seq _ e1 e2      -> SeqG (mkGenericTrees e1) (mkGenericTrees e2)
-  Case _ e as      -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> ((maybeMkGTs y), (mkGenericTrees z))) as)
+  Case _ e as      -> CaseG (mkGenericTrees e) $ Set.fromList (map (\(x, y, z) -> (mkGenericPats x, maybeMkGTs y, mkGenericTrees z)) as)
   Tuple _ es       -> TupleG $ Set.fromList (map mkGenericTrees es)
   ConApp _ _ me _  -> ConAppG (maybeMkGTs me)
   List _ es _      -> ListG (returnSimplest (map mkGenericTrees es))
   e                -> error ("exprKind: " ++ render (pretty e))
   where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
 
+  -- George
+mkGenericPats :: Pat -> PatGeneric
+mkGenericPats = \case
+  VarPat _ _          -> VarPatG
+  LitPat _ _          -> LitPatG
+  IntervalPat _ _ _   -> IntervalPatG
+  ConsPat _ p1 p2     -> ConsPatG (mkGenericPats p1) (mkGenericPats  p2)
+  ConPat _ _ mp       -> ConPatG (maybeMkPs mp)
+  ListPat _ es        -> ListPatG (returnSimpPat (map mkGenericPats es))
+  TuplePat _ es       -> TuplePatG $ Set.fromList (map mkGenericPats es)
+  WildPat _           -> WildPatG
+  OrPat _ p1 p2       -> OrPatG (mkGenericPats p1) (mkGenericPats  p2)
+  AsPat _ p _         -> AsPatG (mkGenericPats p)
+  ConstraintPat _ p t -> ConstrPatG (mkGenericPats p) t
+  where maybeMkPs me = if isJust me then Just (mkGenericPats $ fromJust me) else Nothing
+
 -- George
 sizeOfTree :: ExprGeneric -> Int -> Int
 sizeOfTree e depth = case e of
-  EmptyG        -> depth + 1
-  VarG          -> depth + 1
-  LamG e'       -> sizeOfTree e' (depth + 1)
-  AppG es       -> safeMaximum es depth
-  BopG e1 e2    -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  UopG e'       -> sizeOfTree e' (depth + 1)
-  LitG          -> depth + 1
-  LetG _ pes e' -> max (sizeOfTree e' (depth + 1)) (safeMaximum pes depth)
-  IteG e1 e2 e3 -> maximum [sizeOfTree e1 (depth + 1), sizeOfTree e2 (depth + 1), sizeOfTree e3 (depth + 1)]
-  SeqG e1 e2    -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
-  CaseG e' as   -> max (sizeOfTree e' (depth + 1)) (safeMaximum (Set.map snd as) depth) -- TODO: check 1st arg of as
-  TupleG es     -> safeMaximum es depth
-  ConAppG _     -> depth + 1 -- TODO: do something better
-  ListG e'      -> sizeOfTree e' (depth + 1)
-  _             -> error ("sizeOfTree failed: no such expression " ++ show e)
-  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
+  EmptyG            -> depth + 1
+  VarG              -> depth + 1
+  LamG p e'         -> max (sizeOfPat p (depth + 1)) (sizeOfTree e' (depth + 1))
+  AppG es           -> safeMaximum es depth
+  BopG e1 e2        -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  UopG e'           -> sizeOfTree e' (depth + 1)
+  LitG              -> depth + 1
+  LetG _ pes e'     -> maximum [sizeOfTree e' (depth + 1), Set.findMax (Set.map (\(x, _) -> sizeOfPat x (depth + 1)) pes), safeMaximum (Set.map snd pes) depth]
+  IteG e1 e2 e3     -> maximum [sizeOfTree e1 (depth + 1), sizeOfTree e2 (depth + 1), sizeOfTree e3 (depth + 1)]
+  SeqG e1 e2        -> max (sizeOfTree e1 (depth + 1)) (sizeOfTree e2 (depth + 1))
+  CaseG e' as       -> maximum [sizeOfTree e' (depth + 1), Set.findMax (Set.map (\(x, _, _) -> sizeOfPat x (depth + 1)) as), safeMaximum (Set.map thd3 as) depth]
+  TupleG es         -> safeMaximum es depth
+  ConAppG Nothing   -> depth + 1
+  ConAppG (Just e') -> sizeOfTree e' (depth + 1)
+  ListG e'          -> sizeOfTree e' (depth + 1)
+  _                 -> error ("sizeOfTree failed: no such expression " ++ show e)
+  where safeMaximum li d = if null li then d else Set.findMax $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
+
+-- George
+sizeOfPat :: PatGeneric -> Int -> Int
+sizeOfPat e depth = case e of
+  EmptyPatG        -> depth + 1
+  VarPatG          -> depth + 1
+  LitPatG          -> depth + 1
+  IntervalPatG     -> depth + 1
+  ConsPatG p1 p2   -> max (sizeOfPat p1 (depth + 1)) (sizeOfPat p2 (depth + 1))
+  ConPatG Nothing  -> depth + 1
+  ConPatG (Just p) -> sizeOfPat p (depth + 1)
+  ListPatG p       -> sizeOfPat p (depth + 1)
+  TuplePatG ps     -> safeMaximum ps depth
+  WildPatG         -> depth + 1
+  OrPatG p1 p2     -> max (sizeOfPat p1 (depth + 1)) (sizeOfPat p2 (depth + 1))
+  AsPatG p         -> sizeOfPat p (depth + 1)
+  ConstrPatG p _   -> sizeOfPat p (depth + 1)
+  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> sizeOfPat e' (d + 1)) li
 
 -- George
 returnSimplest :: [ExprGeneric] -> ExprGeneric
@@ -1552,6 +1848,34 @@ returnBiggest [] = EmptyG
 returnBiggest es = fst $ maximumBy (\(_, a) (_, b) -> compare a b) (zip es sizes)
   where
     sizes = map (`sizeOfTree` 0) es
+
+returnSimpPat :: [PatGeneric] -> PatGeneric
+returnSimpPat [] = EmptyPatG
+returnSimpPat es = fst $ minimumBy (\(_, a) (_, b) -> compare a b) (zip es sizes)
+  where
+    sizes = map (`sizeOfPat` 0) es
+
+isSubExpr :: Expr -> Expr -> Bool
+isSubExpr t e
+  | t == e    = True
+  | otherwise = case e of
+      Var {}          -> False
+      Lam _ _ x _     -> t `isSubExpr` x
+      App _ x xs      -> foldr (\x' y -> t `isSubExpr` x' || y) (t `isSubExpr` x) xs
+      Bop _ _ x y     -> t `isSubExpr` x || t `isSubExpr` y
+      Uop _ _ x       -> t `isSubExpr` x
+      Lit {}          -> False
+      Let _ _ pes x   -> foldr (\x' y -> t `isSubExpr` (snd x') || y) (t `isSubExpr` x) pes
+      Ite _ x y z     -> t `isSubExpr` x || t `isSubExpr` y || t `isSubExpr` z
+      Seq _ x y       -> t `isSubExpr` x || t `isSubExpr` y
+      Case _ x alts   -> foldr (\x y -> t `isSubExpr` (thd3 x) || y) (t `isSubExpr` x) alts
+                        || foldr (\x y -> maybe False (isSubExpr t) (snd3 x) || y) False alts
+      Tuple _ xs      -> foldr (\x y -> t `isSubExpr` x || y) False xs
+      List _ xs _     -> foldr (\x y -> t `isSubExpr` x || y) False xs
+      ConApp _ _ me _ -> case me of
+        Nothing           -> False
+        Just (Tuple _ xs) -> foldr (\x y -> t `isSubExpr` x || y) False xs
+        Just x            -> t `isSubExpr` x
 
 allSubExprs e = e : case e of
   Var {}          -> []
@@ -1579,6 +1903,13 @@ progExprs (d:ds) = case d of
   DFun _ _ pes -> map snd pes ++ progExprs ds
   DEvl _ e     -> e : progExprs ds
   _            -> progExprs ds
+
+diffProg :: Prog -> Prog -> Prog
+diffProg [] _ = []
+diffProg (p:ps) p2 = if any isP p2 then p : (diffProg ps p2) else diffProg ps p2
+  where
+    isP :: Decl -> Bool
+    isP d = getDecld d == getDecld p
 
 diff :: Expr -> Expr -> Set SrcSpan
 diff e1 e2 = case (e1, e2) of
@@ -1736,10 +2067,9 @@ bestT :: Expr -> Expr -> DiffT -> DiffT -> DiffT -> Diff
 bestT x y i d c
   | exprKind x == exprKind y
   , length (subExprs x) == length (subExprs y)
-  = cpy x (getDiff c) -- del x (getDiff d) `meet` ins y (getDiff i)
+    = ins y (getDiff i) `meet` del x (getDiff d) `meet` cpy y (getDiff c)
   | otherwise
-  = del x (getDiff d) `meet` ins y (getDiff i)
-    -- `meet`
+    = ins y (getDiff i) `meet` del x (getDiff d)
 
 data ExprKind
   = VarK Var
@@ -1785,7 +2115,7 @@ subExprs = \case
   Let _ _ pes e   -> map snd pes ++ [e]
   Ite _ x y z     -> [x,y,z]
   Seq _ x y       -> [x,y]
-  Case _ e as     -> e : map thd3 as -- FIXME: guards
+  Case _ e as     -> e : mapMaybe snd3 as ++ map thd3 as
   Tuple _ es      -> es
   ConApp _ _ me _ -> case maybeToList me of
     [Tuple _ es] -> es

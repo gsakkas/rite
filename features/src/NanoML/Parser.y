@@ -266,7 +266,7 @@ Expr :: { Expr }
 | "try" SeqExpr "with" MaybePipe AltList    { Try (mergeLocated $1 (thd3 (head $5))) $2 (reverse $5) }
 | ExprCommaList   %prec below_COMMA         { Tuple (mergeLocated (last $1) (head $1)) (reverse $1) }
 | "if" SeqExpr "then" Expr "else" Expr      { Ite (mergeLocated $1 $6) $2 $4 $6 }
-| "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (mergeLocated $1 $4)) }
+| "if" SeqExpr "then" Expr                  { Ite (mergeLocated $1 $4) $2 $4 (VU (afterThat $4)) }
 | Expr "::" Expr                            { mkConApp (mergeLocated $1 $3) "::" [$1, $3] }
 | '(' "::" ')' '(' Expr ',' Expr ')'        { mkConApp (mergeLocated $1 $8) "::" [$5, $7] }
 | '(' Expr TypeConstraint ')'               { mkApps (mergeLocated $1 $4) (mkPrim1Fun (P1 "cast" (\v -> return v) $3)) [$2] }
