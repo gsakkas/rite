@@ -354,6 +354,7 @@ instance Pretty Expr where
     Replace _ env e -> let ?env = env in inReplace (prettyPrec z e)
     Hole _ _r _ -> text "_"  -- NOTE: ignore the index
     Ref r -> text "<ref-" <> pretty r <> text ">"
+    TypedHole _ _ -> annotateRedexes $ parensIf (isInfix "_") $ text "_"
 
 instance Pretty Bop where
   pretty Eq = text "="

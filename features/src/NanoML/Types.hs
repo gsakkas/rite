@@ -48,7 +48,7 @@ import           Data.Sequence                (Seq)
 import qualified Data.Sequence                as Seq
 import           Data.Set                     (Set)
 import qualified Data.Set                     as Set
-import           Data.Typeable (Typeable)
+import           Data.Typeable                (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
 import           GHC.Generics
@@ -282,9 +282,10 @@ minimizeCore cs = do
   st <- get
   minimal <- go [] [] (Set.toList cs)
   put st
-  when (length minimal == 1) $ do
-    traceShowM ("minimizeCore", Set.size cs, length minimal)
-    mapM_ (traceShowM) minimal
+  -- George
+  -- when (length minimal == 1) $ do
+  --   traceShowM ("minimizeCore", Set.size cs, length minimal)
+  --   mapM_ (traceShowM) minimal
   return (Set.fromList minimal)
 
   where
@@ -492,6 +493,8 @@ mkHole = Hole
 {-# NOINLINE mkHole #-}
 mkRef = Ref
 {-# NOINLINE mkRef #-}
+mkTHole ss i = TypedHole (Just ss) ("THole_" ++ show i)
+{-# NOINLINE mkTHole #-}
 
 refreshBind :: MonadEval m => (a, Expr) -> m (a, Expr)
 refreshBind (a,e) = do
@@ -866,8 +869,8 @@ instance NFData SrcSpan
 
 instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
-                             srcSpanStartLine srcSpanStartCol
-                             srcSpanEndLine   srcSpanEndCol
+                             srcSpanStartLine (srcSpanStartCol + 1)
+                             srcSpanEndLine   (srcSpanEndCol + 1)
 
 instance Read SrcSpan where
   readPrec = do
@@ -894,6 +897,12 @@ srcSpanWidth SrcSpan {..}
 
 joinSrcSpan x y = SrcSpan (srcSpanStartLine x) (srcSpanStartCol x)
                           (srcSpanEndLine y)   (srcSpanEndCol y)
+
+nextLine x = SrcSpan (srcSpanEndLine x + 1) 0
+                     (srcSpanEndLine x + 1) 0
+
+flarSrcSpan x = SrcSpan (srcSpanEndLine x) (srcSpanEndCol x)
+                        (srcSpanEndLine x) (srcSpanEndCol x)
 
 type Prog = [Decl]
 
@@ -959,6 +968,7 @@ data Expr
   | Replace !MSrcSpan Env !Expr
   | Hole !MSrcSpan !Ref (Maybe Type)
   | Ref !Ref
+  | TypedHole !MSrcSpan !Var
   deriving (Show, Generic, Eq, Ord)
 instance Hashable Expr
 
@@ -991,15 +1001,15 @@ instance ToJSON Expr where
 -- George
 data ExprGeneric
   = VarG
-  | LamG !ExprGeneric
+  | LamG !PatGeneric !ExprGeneric
   | AppG !(Set ExprGeneric)
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
-  | LetG !RecFlag !(Set ExprGeneric) !ExprGeneric
+  | LetG !RecFlag !(Set (PatGeneric, ExprGeneric)) !ExprGeneric
   | IteG !ExprGeneric !ExprGeneric !ExprGeneric
   | SeqG !ExprGeneric !ExprGeneric
-  | CaseG !ExprGeneric !(Set (Maybe ExprGeneric, ExprGeneric))
+  | CaseG !ExprGeneric !(Set (PatGeneric, Maybe ExprGeneric, ExprGeneric))
   | TupleG !(Set ExprGeneric)
   | ConAppG !(Maybe ExprGeneric)
   | RecordG ![(String, ExprGeneric)]
@@ -1009,7 +1019,6 @@ data ExprGeneric
   | ListG !ExprGeneric
   | EmptyG -- Just an empty expr for easier pruning
   deriving (Show, Generic, Eq, Ord)
--- instance Hashable ExprGeneric
 
 instance ToJSON ExprGeneric
 instance FromJSON ExprGeneric
@@ -1128,6 +1137,7 @@ getSrcSpanExprMaybe expr = case expr of
   Replace ms _ _ -> ms
   Hole ms _ _ -> ms
   Ref _ -> Nothing
+  TypedHole ms _ -> ms
 
 onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
 onSrcSpanExpr f expr = case expr of
@@ -1158,6 +1168,7 @@ onSrcSpanExpr f expr = case expr of
   Replace ms x y -> Replace (f ms) x y
   Hole ms x y -> Hole (f ms) x y
   Ref r -> Ref r
+  TypedHole ms x -> TypedHole (f ms) x
 
 mapExpr :: (Expr -> Expr) -> Expr -> Expr
 mapExpr f expr = case expr of
@@ -1188,6 +1199,7 @@ mapExpr f expr = case expr of
   Replace ms x y -> Replace ms x (mapExpr f y)
   Hole ms x y -> Hole ms x y
   Ref r -> Ref r
+  TypedHole ms x -> TypedHole ms x
 
 freeVars :: Expr -> Env -> [(Var,Value)]
 freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
@@ -1325,6 +1337,24 @@ instance ToJSON Pat where
     AsPat _ x y -> Aeson.object ["as" .= [toJSON x, toJSON y]]
     ConstraintPat _ x y -> Aeson.object ["type" .= [toJSON x, toJSON y]]
 
+-- George
+data PatGeneric
+  = VarPatG
+  | LitPatG
+  | IntervalPatG
+  | ConsPatG !PatGeneric !PatGeneric
+  | ConPatG (Maybe PatGeneric)
+  | ListPatG !PatGeneric
+  | TuplePatG !(Set PatGeneric)
+  | WildPatG
+  | OrPatG !PatGeneric !PatGeneric
+  | AsPatG !PatGeneric
+  | ConstrPatG !PatGeneric !Type
+  | EmptyPatG
+  deriving (Show, Data, Generic, Eq, Ord)
+
+instance ToJSON PatGeneric
+instance FromJSON PatGeneric
 
 bindersOf :: Pat -> [Var]
 bindersOf p = case p of
@@ -1834,6 +1864,9 @@ instance Located Pat where
 
 mergeLocated x y = joinSrcSpan <$> getSrcSpanMaybe x <*> getSrcSpanMaybe y
 
+afterThis x = nextLine <$> getSrcSpanMaybe x
+
+afterThat x = flarSrcSpan <$> getSrcSpanMaybe x
 
 ----------------------------------------------------------------------
 -- traces
