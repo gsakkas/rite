@@ -58,7 +58,7 @@ test = pd.concat(test)
 print test.shape
 
 # Maximum number of clusters in files
-max_num_cls = 40
+max_num_cls = 41
 
 # Number of cluster-labels to use
 num_of_cls = 20
@@ -82,14 +82,14 @@ train_binary = pd.concat(c.sample(num_of_samples, replace=True) for _, c in clas
 
 last_L = 'L-Cluster' + str(num_of_cls)
 
-train_samps = train_binary.loc[:, 'F-Is-Eq':]
+train_samps = train_binary.loc[:, 'F-Expr-Size':]
 print train_samps.shape
 train_labels = train_binary.loc[:, 'L-Cluster1':last_L]
 
-test_samps = test.loc[:, 'F-Is-Eq':]
+test_samps = test.loc[:, 'F-Expr-Size':]
+print test_samps.shape
 test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_span = test.loc[:, 'SourceSpan']
-print test_samps.shape
 
 clf = DummyClassifier(random_state=prng)
 
@@ -149,13 +149,16 @@ yays2 = [0] * num_of_cls
 yays3 = [0] * num_of_cls
 alls = [0] * num_of_cls
 for i, temp in enumerate(test_labels.values):
-    real_tots = real_tots + 1
+    real_tots += 1
     pes = np.argsort(prob_error[i]).tolist()
-    not_valid = np.where(temp == -1.0)[0].tolist()
-    for nv in not_valid:
-        pes.remove(nv)
+    # not_valid = np.where(temp == -1.0)[0].tolist()
+    # for nv in not_valid:
+    #     pes.remove(nv)
+    # print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    # print temp.tolist()
+    # print pes
     if 1 in temp.tolist():
-        tots = tots + 1
+        tots += 1
         idx = temp.tolist().index(1)
         alls[idx] += 1
         if pes[0] == idx or pes[1] == idx or pes[2] == idx:
@@ -168,15 +171,12 @@ for i, temp in enumerate(test_labels.values):
             yay1 += 1
             yays1[idx] += 1
     else:
-        # Cluster1 too generic, so remove it for now
-        # if 0 in pes:
-        #     pes.remove(0)
         if len(pes) > 0:
             yay3_2 += 1
             yay2_2 += 1
             yay1_2 += 1
 
-print "accuracy for top 3 per class"
+print "accuracy for top 3 per class (" + str(num_of_cls) + ")"
 print "top 1"
 print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)]
 print "top 2"

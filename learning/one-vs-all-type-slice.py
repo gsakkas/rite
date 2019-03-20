@@ -65,22 +65,12 @@ max_num_cls = 41
 num_of_cls = 20
 print "Clusters =", num_of_cls
 
-# Remove all -1 from labels
-# The -1s are there because of the type-checking
-# of the label in the relevant program hole
-lbls = {}
-for i in xrange(1, max_num_cls + 1):
-    lbls['L-Cluster' + str(i)] = -1.0
-
-train_binary = train.replace(lbls, 0.0)
-test_binary = test.replace(lbls, 0.0)
-
 # The segment below is supposed to balance each class
 # by adding multiple random samples from the training datset
-classes = list(train_binary.groupby(ls2))
+classes = list(train.groupby(ls2))
 max_samples = max(len(c) for _, c in classes)
-num_of_samples = 10 * train_binary.shape[0] / len(classes) if len(classes) * max_samples > 10 * train_binary.shape[0] else max_samples
-train_binary = pd.concat(c.sample(num_of_samples, replace=True) for _, c in classes)
+num_of_samples = 2 * train.shape[0] / len(classes) if len(classes) * max_samples > 2 * train.shape[0] else max_samples
+train = pd.concat(c.sample(num_of_samples, replace=True) for _, c in classes)
 
 last_L = 'L-Cluster' + str(num_of_cls)
 
@@ -99,14 +89,14 @@ def categorize(labels):
     return labels.apply(idmax, axis=1).astype('int64')
 
 
-train_samps = train_binary.loc[:, 'F-Expr-Size':]
+train_samps = train.loc[:, 'F-Expr-Size':]
 print train_samps.shape
-train_labels = train_binary.loc[:, 'L-Cluster1':last_L]
+train_labels = train.loc[:, 'L-Cluster1':last_L]
 train_labels = categorize(train_labels)
 
-test_samps = test_binary.loc[:, 'F-Expr-Size':]
+test_samps = test.loc[:, 'F-Expr-Size':]
 print test_samps.shape
-test_labels = test_binary.loc[:, 'L-Cluster1':last_L]
+test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_labels = categorize(test_labels)
 test_span = test.loc[:, 'SourceSpan']
 
