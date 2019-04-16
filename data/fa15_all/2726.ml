@@ -55,213 +55,35 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(4,12)-(9,43)
-List.rev
-VarG
-
-(4,12)-(9,43)
-t
-VarG
-
-(4,12)-(9,43)
-List.rev
-VarG
-
-(4,12)-(9,43)
-u
-VarG
-
-(4,12)-(9,43)
-h
-VarG
-
-(4,12)-(9,43)
-h'
-VarG
-
-(4,12)-(9,43)
-addHelper
-VarG
-
-(4,12)-(9,43)
-t
-VarG
-
-(4,12)-(9,43)
-t'
-VarG
-
-(4,12)-(9,43)
-(@)
-VarG
-
-(4,12)-(9,43)
-h'
-VarG
-
-(4,12)-(9,43)
-h
-VarG
-
-(4,12)-(9,43)
-addHelper
-VarG
-
-(4,12)-(9,43)
-t
-VarG
-
-(4,12)-(9,43)
-t'
-VarG
-
-(4,12)-(9,43)
-(@)
-VarG
-
-(4,12)-(9,43)
-h'
-VarG
-
-(4,12)-(9,43)
-h
-VarG
-
-(4,12)-(9,43)
-fun (t , u) ->
-  match List.rev t with
-  | [] -> []
-  | h :: t -> match List.rev u with
-              | [] -> []
-              | h' :: t' -> if (h + h') > 10
-                            then addHelper (t , t') @ [(1 + h') + h]
-                            else addHelper (t , t') @ [h' + h]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(4,12)-(9,43)
-List.rev t
-AppG (fromList [VarG])
-
-(4,12)-(9,43)
-List.rev u
-AppG (fromList [VarG])
-
-(4,12)-(9,43)
-addHelper (t , t')
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(4,12)-(9,43)
-addHelper (t , t') @ [(1 + h') + h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(4,12)-(9,43)
-addHelper (t , t')
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(4,12)-(9,43)
-addHelper (t , t') @ [h' + h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(4,12)-(9,43)
-h + h'
-BopG VarG VarG
-
-(4,12)-(9,43)
-(h + h') > 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(4,12)-(9,43)
-1 + h'
-BopG LitG VarG
-
-(4,12)-(9,43)
-(1 + h') + h
-BopG (BopG EmptyG EmptyG) VarG
-
-(4,12)-(9,43)
-h' + h
-BopG VarG VarG
-
-(4,12)-(9,43)
-10
-LitG
-
-(4,12)-(9,43)
-1
-LitG
-
-(4,12)-(9,43)
-if (h + h') > 10
-then addHelper (t , t') @ [(1 + h') + h]
-else addHelper (t , t') @ [h' + h]
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(4,12)-(9,43)
-match List.rev t with
-| [] -> []
-| h :: t -> match List.rev u with
-            | [] -> []
-            | h' :: t' -> if (h + h') > 10
-                          then addHelper (t , t') @ [(1 + h') + h]
-                          else addHelper (t , t') @ [h' + h]
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
-
-(4,12)-(9,43)
-match List.rev u with
-| [] -> []
-| h' :: t' -> if (h + h') > 10
-              then addHelper (t , t') @ [(1 + h') + h]
-              else addHelper (t , t') @ [h' + h]
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-
-(4,12)-(9,43)
-(t , t')
-TupleG (fromList [VarG])
-
-(4,12)-(9,43)
-(t , t')
-TupleG (fromList [VarG])
-
-(4,12)-(9,43)
-[]
-ListG EmptyG Nothing
-
-(4,12)-(9,43)
-[]
-ListG EmptyG Nothing
-
-(4,12)-(9,43)
-[(1 + h') + h]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(4,12)-(9,43)
-[h' + h]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(18,16)-(18,17)
+(18,17)-(18,22)
 addHelper (a , x)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(18,20)-(18,21)
-addHelper
-VarG
+(19,16)-(19,17)
+[]
+ListG (fromList [])
 
-(18,20)-(18,21)
-(a , x)
-TupleG (fromList [VarG])
+(20,16)-(20,24)
+[]
+ListG (fromList [])
 
-(20,4)-(20,74)
-let base = [] in
-let args = [] in
+(20,28)-(20,75)
 List.fold_left f base args
-LetG NonRec (fromList [ListG EmptyG Nothing]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+AppG (fromList [VarG])
 
-(20,4)-(20,74)
-[]
-ListG EmptyG Nothing
+*)
 
-(20,27)-(20,74)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(14,4)-(14,35)
+(14,7)-(14,33)
+(18,5)-(20,75)
+(18,11)-(18,22)
+(18,17)-(18,22)
+(18,21)-(18,22)
+(19,5)-(20,75)
+(19,16)-(19,17)
+(20,42)-(20,56)
+(20,42)-(20,68)
+(20,57)-(20,58)
+(20,59)-(20,63)
 *)

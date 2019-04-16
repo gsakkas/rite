@@ -184,60 +184,29 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(31,22)-(31,33)
-buildTimes
-VarG
+(31,22)-(31,55)
+buildTimes (build (rand , depth - 1) , buildCosine (build (rand , depth - 1)))
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(31,22)-(31,33)
-build
-VarG
-
-(31,22)-(31,33)
-rand
-VarG
-
-(31,22)-(31,33)
-depth
-VarG
-
-(31,22)-(31,33)
+(35,55)-(35,74)
 build (rand , depth - 1)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(31,22)-(31,33)
-buildCosine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
-(31,22)-(31,33)
-depth - 1
-BopG VarG LitG
-
-(31,22)-(31,33)
-1
-LitG
-
-(31,22)-(31,33)
-(build (rand , depth - 1) , buildCosine (build (rand , depth - 1)))
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(31,22)-(31,33)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(31,34)-(31,53)
-build
-VarG
-
-(31,34)-(31,53)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(35,54)-(35,73)
-build
-VarG
-
-(35,54)-(35,73)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
+(* type error slice
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,21)-(13,29)
+(13,28)-(13,29)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(31,22)-(31,55)
+(31,23)-(31,34)
+(31,35)-(31,54)
+(35,44)-(35,75)
+(35,45)-(35,54)
+(35,55)-(35,74)
 *)

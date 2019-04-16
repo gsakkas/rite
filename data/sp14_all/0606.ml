@@ -48,67 +48,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,6)-(17,62)
-a
-VarG
-
-(16,6)-(17,62)
-((c + x') + x'') / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,6)-(17,62)
+(15,15)-(17,63)
 let (x' , x'') = x in
 let (c , s) = a in
 (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(16,6)-(17,62)
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(17,6)-(17,62)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(17,31)-(17,62)
-x''
-VarG
-
-(17,32)-(17,35)
-x'
-VarG
-
-(17,45)-(17,62)
-c
-VarG
-
-(17,45)-(17,62)
-x'
-VarG
-
-(17,45)-(17,62)
-x''
-VarG
-
-(17,45)-(17,62)
-c + x'
-BopG VarG VarG
-
-(17,46)-(17,49)
-(c + x') + x''
-BopG (BopG EmptyG EmptyG) VarG
-
-(17,54)-(17,56)
-0
-LitG
-
-(17,54)-(17,56)
+(18,16)-(18,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(17,61)-(17,62)
-s
-VarG
+*)
 
+(* type error slice
+(15,5)-(20,52)
+(15,11)-(17,63)
+(15,13)-(17,63)
+(15,15)-(17,63)
+(17,46)-(17,63)
+(17,62)-(17,63)
+(20,19)-(20,33)
+(20,19)-(20,45)
+(20,34)-(20,35)
 *)

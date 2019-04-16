@@ -74,122 +74,48 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(37,8)-(37,20)
-eval
-VarG
+(37,8)-(37,34)
+eval (ex1 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,38)-(37,50)
-eval
-VarG
+(37,38)-(37,64)
+eval (ex2 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(38,23)-(38,41)
-eval (ex1 , x , y) *. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(38,24)-(38,36)
-eval
-VarG
-
-(38,37)-(38,40)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(38,42)-(38,43)
+(37,69)-(37,70)
 2.0
 LitG
 
-(38,45)-(38,48)
-x
-VarG
-
-(38,51)-(38,69)
-y
-VarG
-
-(38,52)-(38,64)
-eval
-VarG
-
-(38,65)-(38,68)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(41,9)-(41,27)
-y
-VarG
-
-(41,9)-(41,27)
-eval (ex1 , x , y) < eval (ex2 , x , y)
+(38,24)-(38,71)
+eval (ex1 , x , y) *. eval (ex2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(41,9)-(41,27)
+(40,7)-(45,82)
 if eval (ex1 , x , y) < eval (ex2 , x , y)
 then eval (ex3 , x , y)
 else eval (ex4 , x , y)
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(41,10)-(41,22)
-eval
-VarG
+*)
 
-(41,23)-(41,26)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(41,28)-(41,29)
-x
-VarG
-
-(43,15)-(43,33)
-y
-VarG
-
-(43,16)-(43,28)
-eval
-VarG
-
-(43,29)-(43,32)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(43,34)-(43,35)
-x
-VarG
-
-(45,21)-(45,39)
-y
-VarG
-
-(45,22)-(45,34)
-eval
-VarG
-
-(45,35)-(45,38)
-(ex3 , x , y)
-TupleG (fromList [VarG])
-
-(45,40)-(45,41)
-x
-VarG
-
-(45,50)-(45,68)
-y
-VarG
-
-(45,51)-(45,63)
-eval
-VarG
-
-(45,64)-(45,67)
-(ex4 , x , y)
-TupleG (fromList [VarG])
-
-(45,69)-(45,70)
-x
-VarG
-
-(45,71)-(45,74)
-x
-VarG
-
+(* type error slice
+(12,3)-(26,82)
+(15,29)-(15,46)
+(15,30)-(15,42)
+(15,43)-(15,45)
+(31,3)-(45,82)
+(34,16)-(34,19)
+(34,16)-(34,45)
+(37,7)-(37,70)
+(37,8)-(37,34)
+(37,9)-(37,21)
+(37,22)-(37,33)
+(37,38)-(37,64)
+(37,39)-(37,51)
+(37,52)-(37,63)
+(37,69)-(37,70)
+(38,24)-(38,71)
+(38,43)-(38,44)
+(40,7)-(45,82)
+(40,11)-(40,12)
 *)

@@ -15,31 +15,18 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(4,4)-(4,67)
+(4,5)-(4,68)
 if a = 0
 then b
 else integers (a / 10)
               ((a mod 10) :: b)
 IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
 
-(4,10)-(4,11)
-a = 0
-BopG VarG LitG
+*)
 
-(4,25)-(4,26)
-0
-LitG
-
-(4,47)-(4,49)
-a / 10
-BopG VarG LitG
-
-(4,50)-(4,67)
-a
-VarG
-
-(4,50)-(4,67)
-10
-LitG
-
+(* type error slice
+(4,5)-(4,68)
+(4,11)-(4,12)
+(4,52)-(4,62)
+(4,53)-(4,54)
 *)

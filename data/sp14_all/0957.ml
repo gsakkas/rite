@@ -17,13 +17,17 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(6,25)-(6,74)
+(6,26)-(6,75)
 append (digitsOfInt (n / 10))
        (n - ((n / 10) * 10))
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(6,32)-(6,43)
-digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+*)
 
+(* type error slice
+(3,41)-(3,60)
+(3,47)-(3,60)
+(3,48)-(3,54)
+(6,26)-(6,32)
+(6,26)-(6,75)
 *)

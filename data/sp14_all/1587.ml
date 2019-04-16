@@ -44,7 +44,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(14,2)-(19,58)
+(14,3)-(19,59)
 match e with
 | VarX -> x
 | VarY -> y
@@ -52,46 +52,17 @@ match e with
 | Cosine e -> pi *. y
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
 
-(19,24)-(19,35)
-eval (e1 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
-(19,25)-(19,27)
-eval
-VarG
-
-(19,25)-(19,27)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(19,39)-(19,50)
-x
-VarG
-
-(19,40)-(19,42)
-y
-VarG
-
-(19,40)-(19,42)
-eval
-VarG
-
-(19,40)-(19,42)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(19,40)-(19,42)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(19,45)-(19,49)
-x
-VarG
-
-(19,55)-(19,58)
-y
-VarG
-
+(* type error slice
+(14,3)-(19,59)
+(19,24)-(19,52)
+(19,25)-(19,36)
+(19,26)-(19,28)
+(19,31)-(19,35)
+(19,40)-(19,51)
+(19,41)-(19,43)
+(19,46)-(19,50)
 *)

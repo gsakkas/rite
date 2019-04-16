@@ -27,24 +27,34 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(3,22)-(4,66)
+(3,23)-(4,67)
 fun accu ->
   if n <= 0
   then accu
   else lastDigit (n / 10)
                  ((n mod 10) :: accu)
-LamG (IteG EmptyG EmptyG EmptyG)
+LamG VarPatG (IteG EmptyG EmptyG EmptyG)
 
-(4,19)-(4,22)
-accu
-VarG
+(9,31)-(12,69)
+match n with
+| 0 -> 0
+| _ -> additivePersistence (sumList (digitsOfInt n))
+CaseG VarG (fromList [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(4,62)-(4,65)
-accu
-VarG
+*)
 
-(11,9)-(11,14)
-0
-LitG
-
+(* type error slice
+(7,58)-(7,75)
+(7,63)-(7,75)
+(7,64)-(7,71)
+(9,4)-(12,71)
+(9,29)-(12,69)
+(9,31)-(12,69)
+(10,3)-(12,69)
+(11,10)-(11,15)
+(12,10)-(12,29)
+(12,10)-(12,69)
+(12,30)-(12,69)
+(12,31)-(12,56)
+(12,32)-(12,39)
 *)

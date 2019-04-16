@@ -1,14 +1,7 @@
-LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-let (b1 , b2) = a in
-match x with
-| (fir , sec) -> if (fir + sec) < 10
-                 then ([] , (fir + sec) :: b2)
-                 else ([] , (fir + sec) :: b2)
-let h :: t = l in
-match l with
-| [] -> []
-| h :: t -> listReverse t
-let h :: t = l in
-match l with
-| [] -> []
-| h :: t -> listReverse t
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LamG VarPatG EmptyG)])
+match fs with
+| h :: t -> f h h
+| [] -> fun x -> x
+match fs with
+| [] -> fun x -> x
+| h :: t -> f (fun x -> x) h

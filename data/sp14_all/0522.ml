@@ -84,12 +84,25 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(37,9)-(37,77)
+(37,10)-(37,78)
 buildECosSin (build (rand , depth - 1) , build (rand , depth - 1))
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,22)-(37,49)
-(build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(16,4)-(16,42)
+(16,19)-(16,40)
+(18,4)-(18,27)
+(18,15)-(18,25)
+(18,19)-(18,25)
+(18,24)-(18,25)
+(27,10)-(27,19)
+(27,10)-(27,47)
+(27,20)-(27,47)
+(27,21)-(27,26)
+(37,10)-(37,22)
+(37,10)-(37,78)
+(37,23)-(37,50)
+(37,24)-(37,29)
 *)

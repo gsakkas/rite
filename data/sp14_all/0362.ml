@@ -52,10 +52,25 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,10)-(20,42)
+(18,11)-(20,43)
 match a with
 | h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
 | _ -> [sum / 10 ; sum mod 10]
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG)),(WildPatG,Nothing,ListG (fromList [EmptyG]))])
 
+(23,5)-(23,52)
+List.fold_left f base args
+AppG (fromList [VarG])
+
+*)
+
+(* type error slice
+(14,5)-(23,52)
+(14,11)-(20,43)
+(18,11)-(20,43)
+(18,18)-(18,19)
+(23,5)-(23,52)
+(23,19)-(23,33)
+(23,19)-(23,45)
+(23,34)-(23,35)
 *)

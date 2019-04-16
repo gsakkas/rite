@@ -132,7 +132,7 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(52,4)-(55,36)
+(52,5)-(55,37)
 match x with
 | (l2digit , templ1) -> (let (l2digit2 , templ12) =
                            a in
@@ -140,43 +140,41 @@ match x with
                            mulByDigit l2digit templ1 in
                          (0 , bigAdd (templ12 @ [0])
                                      multres))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)])
 
-(54,8)-(55,36)
-a
+(56,15)-(56,18)
+0
+LitG
+
+(61,37)-(61,38)
+hd
 VarG
 
-(54,8)-(55,36)
-let (l2digit2 , templ12) =
-  a in
-let multres =
-  mulByDigit l2digit templ1 in
-(0 , bigAdd (templ12 @ [0])
-            multres)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(55,21)-(55,22)
-templ12 @ [0]
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(55,24)-(55,25)
-templ12
-VarG
-
-(55,24)-(55,25)
-(@)
-VarG
-
-(55,24)-(55,25)
-[0]
-ListG LitG Nothing
-
-(61,49)-(61,75)
+(61,40)-(61,42)
 x
 VarG
 
-(61,60)-(61,75)
+(61,51)-(61,52)
+hd
+VarG
+
+(61,54)-(61,56)
 x
 VarG
 
+*)
+
+(* type error slice
+(51,3)-(63,50)
+(51,9)-(55,37)
+(51,11)-(55,37)
+(52,5)-(55,37)
+(54,9)-(55,37)
+(55,9)-(55,37)
+(55,21)-(55,27)
+(55,22)-(55,23)
+(55,25)-(55,26)
+(63,17)-(63,31)
+(63,17)-(63,43)
+(63,32)-(63,33)
 *)

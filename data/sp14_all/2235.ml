@@ -50,7 +50,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(14,2)-(21,14)
+(14,3)-(21,15)
 match e with
 | Thresh (w , t , u , z) -> if eval (w , x , y) < eval (t , x , y)
                             then eval (u , x , y)
@@ -61,150 +61,25 @@ match e with
 | Sine t -> sin (pi *. eval (t , x , y))
 | VarX -> x
 | VarY -> y
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(15,33)-(15,34)
-(w , x , y)
-TupleG (fromList [VarG])
+*)
 
-(15,38)-(15,46)
-x
-VarG
-
-(15,38)-(15,46)
-y
-VarG
-
-(15,44)-(15,45)
-t
-VarG
-
-(15,44)-(15,45)
-(t , x , y)
-TupleG (fromList [VarG])
-
-(15,52)-(15,58)
-y
-VarG
-
-(15,57)-(15,58)
-u
-VarG
-
-(15,57)-(15,58)
-x
-VarG
-
-(15,57)-(15,58)
-(u , x , y)
-TupleG (fromList [VarG])
-
-(15,69)-(15,70)
-(z , x , y)
-TupleG (fromList [VarG])
-
-(16,19)-(16,27)
-y
-VarG
-
-(16,19)-(16,27)
-eval (t , x , y) *. eval (u , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,19)-(16,38)
-x
-VarG
-
-(16,25)-(16,26)
-t
-VarG
-
-(16,25)-(16,26)
-(t , x , y)
-TupleG (fromList [VarG])
-
-(16,30)-(16,38)
-y
-VarG
-
-(16,36)-(16,37)
-u
-VarG
-
-(16,36)-(16,37)
-x
-VarG
-
-(16,36)-(16,37)
-(u , x , y)
-TupleG (fromList [VarG])
-
-(17,21)-(17,42)
-(eval (t , x , y) *. eval (u , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,22)-(17,30)
-eval (t , x , y) *. eval (u , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(17,28)-(17,29)
-t
-VarG
-
-(17,28)-(17,29)
-(t , x , y)
-TupleG (fromList [VarG])
-
-(17,33)-(17,41)
-y
-VarG
-
-(17,39)-(17,40)
-u
-VarG
-
-(17,39)-(17,40)
-x
-VarG
-
-(17,39)-(17,40)
-(u , x , y)
-TupleG (fromList [VarG])
-
-(17,45)-(17,46)
-2.0
-LitG
-
-(18,20)-(18,35)
-pi *. eval (t , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(18,32)-(18,33)
-t
-VarG
-
-(18,32)-(18,33)
-(t , x , y)
-TupleG (fromList [VarG])
-
-(19,14)-(19,33)
-y
-VarG
-
-(19,18)-(19,33)
-pi *. eval (t , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(19,30)-(19,31)
-t
-VarG
-
-(19,30)-(19,31)
-(t , x , y)
-TupleG (fromList [VarG])
-
-(20,13)-(20,14)
-y
-VarG
-
+(* type error slice
+(11,4)-(11,29)
+(11,10)-(11,27)
+(13,4)-(21,17)
+(13,15)-(21,15)
+(14,3)-(21,15)
+(15,28)-(15,36)
+(15,29)-(15,33)
+(15,34)-(15,35)
+(18,17)-(18,20)
+(18,17)-(18,36)
+(18,21)-(18,36)
+(18,22)-(18,24)
+(19,15)-(19,18)
+(19,15)-(19,34)
+(19,19)-(19,34)
+(19,20)-(19,22)
 *)

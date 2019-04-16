@@ -20,42 +20,31 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(7,18)-(7,67)
+(7,5)-(8,20)
 let g =
   fun x ->
     match f x with
     | x -> (x , false)
     | y -> (y , true) in
 (g , b)
-LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
 
-(7,24)-(7,27)
-fun x ->
-  match f x with
-  | x -> (x , false)
-  | y -> (y , true)
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+*)
 
-(7,24)-(7,27)
-match f x with
-| x -> (x , false)
-| y -> (y , true)
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-
-(7,26)-(7,27)
-x
-VarG
-
-(7,41)-(7,42)
-x
-VarG
-
-(7,59)-(7,60)
-y
-VarG
-
-(8,12)-(8,13)
-g
-VarG
-
+(* type error slice
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,33)-(3,39)
+(3,33)-(3,46)
+(3,40)-(3,46)
+(3,41)-(3,42)
+(6,3)-(6,9)
+(6,3)-(8,20)
+(7,5)-(8,20)
+(7,15)-(7,68)
+(7,19)-(7,68)
+(7,41)-(7,51)
+(8,6)-(8,19)
+(8,7)-(8,15)
+(8,8)-(8,12)
 *)

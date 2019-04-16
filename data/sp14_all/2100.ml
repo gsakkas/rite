@@ -92,7 +92,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(36,8)-(40,75)
+(36,9)-(40,76)
 (if depth = 0
  then buildX ()
  else build (rand , depth - 1) , if depth = 0
@@ -100,4 +100,19 @@ let rec build (rand,depth) =
                                  else build (rand , depth - 1))
 TupleG (fromList [IteG EmptyG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(30,17)-(30,77)
+(30,36)-(30,42)
+(30,36)-(30,45)
+(30,51)-(30,56)
+(30,51)-(30,76)
+(36,9)-(40,76)
+(37,15)-(37,21)
+(37,15)-(37,24)
+(39,12)-(40,75)
+(40,14)-(40,74)
+(40,48)-(40,53)
+(40,48)-(40,73)
 *)

@@ -1,4 +1,3 @@
-IteG VarG (AppG (fromList [EmptyG])) VarG
-if trueOrFalse
-then wwhile (f , x)
-else x
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
+match a with
+| (_ , y) -> (0 , bigAdd y x)

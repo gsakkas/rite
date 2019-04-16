@@ -25,12 +25,17 @@ let palindrome w = (explode w) = (listReverse (explode w));;
 *)
 
 (* changed spans
-(10,33)-(10,56)
+(10,34)-(10,57)
 listReverse (explode w)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(10,46)-(10,53)
-explode w
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(8,37)-(8,52)
+(8,37)-(8,58)
+(8,38)-(8,49)
+(8,53)-(8,54)
+(10,34)-(10,57)
+(10,35)-(10,46)
 *)

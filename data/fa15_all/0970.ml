@@ -58,27 +58,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(21,16)-(21,20)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(23,14)-(32,55)
-atan
-VarG
-
-(23,14)-(32,55)
-atan 1.0
-AppG (fromList [LitG])
-
-(23,14)-(32,55)
-4.0
-LitG
-
-(23,14)-(32,55)
-1.0
-LitG
-
-(24,2)-(32,55)
+(24,3)-(32,56)
 match e with
 | buildX -> x
 | buildY -> y
@@ -87,58 +67,12 @@ match e with
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
 | Thresh (a , b , a_less , b_less) -> 0.0
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+CaseG VarG (fromList [(VarPatG,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LitG)])
 
-(26,21)-(26,23)
-x
-VarG
+*)
 
-(27,14)-(27,23)
-sin
-VarG
-
-(27,14)-(27,40)
-y
-VarG
-
-(27,24)-(27,40)
-pi
-VarG
-
-(27,24)-(27,40)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(28,16)-(28,27)
-cos
-VarG
-
-(28,28)-(28,44)
-pi
-VarG
-
-(28,28)-(28,44)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(29,36)-(29,74)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(29,37)-(29,54)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(30,32)-(30,70)
-2.0
-LitG
-
-(30,33)-(30,50)
-eval (e1 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(32,51)-(32,52)
-0.0
-LitG
-
+(* type error slice
+(24,3)-(32,56)
+(26,15)-(26,21)
+(26,15)-(26,24)
 *)

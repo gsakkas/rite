@@ -35,8 +35,16 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(13,7)-(13,22)
+(13,8)-(13,23)
 length2 > length1
 BopG VarG VarG
 
+*)
+
+(* type error slice
+(9,3)-(15,18)
+(9,17)-(9,28)
+(9,17)-(9,31)
+(13,8)-(13,15)
+(13,8)-(13,23)
 *)

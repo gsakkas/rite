@@ -53,7 +53,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(20,2)-(27,68)
+(20,3)-(27,69)
 match e with
 | buildX -> x
 | buildY -> y
@@ -62,46 +62,24 @@ match e with
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
 | Thresh (a , b , a_less , b_less) -> 0.0
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+CaseG VarG (fromList [(VarPatG,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LitG)])
 
-(21,20)-(21,22)
-x
-VarG
+*)
 
-(23,14)-(23,23)
-sin
-VarG
-
-(23,24)-(23,25)
-pi
-VarG
-
-(23,24)-(23,25)
-eval
-VarG
-
-(23,24)-(23,25)
-eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,24)-(23,25)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(23,24)-(23,25)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(24,16)-(24,44)
-x
-VarG
-
-(24,16)-(24,44)
-y
-VarG
-
-(27,61)-(27,67)
-0.0
-LitG
-
+(* type error slice
+(15,4)-(15,23)
+(15,12)-(15,21)
+(15,17)-(15,21)
+(19,4)-(27,71)
+(19,15)-(27,69)
+(20,3)-(27,69)
+(21,14)-(21,20)
+(21,14)-(21,23)
+(24,17)-(24,20)
+(24,17)-(24,45)
+(24,21)-(24,45)
+(24,28)-(24,44)
+(24,29)-(24,33)
+(25,24)-(25,71)
+(26,22)-(26,60)
 *)

@@ -21,8 +21,15 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(7,41)-(7,42)
+(7,42)-(7,43)
 h
 VarG
 
+*)
+
+(* type error slice
+(3,3)-(8,44)
+(7,18)-(7,43)
+(7,33)-(7,36)
+(7,42)-(7,43)
 *)

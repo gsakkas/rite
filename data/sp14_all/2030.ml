@@ -27,13 +27,19 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(11,34)-(11,71)
+(11,35)-(11,72)
 removeZero (List.fold_left f
                            base args)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(11,45)-(11,59)
-List.fold_left f base args
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(3,3)-(3,58)
+(3,9)-(3,10)
+(3,37)-(3,47)
+(3,37)-(3,49)
+(3,57)-(3,58)
+(11,35)-(11,45)
+(11,35)-(11,72)
 *)

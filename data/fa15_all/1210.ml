@@ -10,31 +10,21 @@ let rec wwhile (f,b) =
 *)
 
 (* changed spans
-(2,23)-(2,77)
+(2,24)-(2,78)
 match f b with
 | (b' , c') -> if c' = false
                then b'
                else wwhile (f , b')
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (AppG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(2,52)-(2,53)
-c'
-VarG
+*)
 
-(2,67)-(2,68)
-b'
-VarG
-
-(2,74)-(2,75)
-wwhile
-VarG
-
-(2,74)-(2,75)
-(f , b')
-TupleG (fromList [VarG])
-
-(2,76)-(2,77)
-b'
-VarG
-
+(* type error slice
+(2,24)-(2,78)
+(2,30)-(2,31)
+(2,30)-(2,33)
+(2,50)-(2,78)
+(2,68)-(2,69)
+(2,75)-(2,76)
+(2,75)-(2,78)
 *)

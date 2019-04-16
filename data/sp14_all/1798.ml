@@ -39,7 +39,7 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(9,28)-(15,75)
+(9,29)-(15,76)
 fun absNum ->
   fun persCount ->
     if absNum < 10
@@ -49,22 +49,18 @@ fun absNum ->
           let theSum = sumList xs in
           additivePersAndRoot theSum
                               (persCount + 1))
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(17,44)-(17,65)
+(17,45)-(17,66)
 additivePersAndRoot (abs n) 0
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(17,64)-(17,65)
-abs
-VarG
+*)
 
-(17,64)-(17,65)
-abs n
-AppG (fromList [VarG])
-
-(17,69)-(17,70)
-0
-LitG
-
+(* type error slice
+(15,33)-(15,52)
+(15,33)-(15,75)
+(17,33)-(17,71)
+(17,45)-(17,64)
+(17,45)-(17,66)
 *)

@@ -48,19 +48,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(11,11)-(11,20)
-e
-VarG
-
-(11,11)-(11,20)
-fun e -> Sine e
-LamG (ConAppG (Just VarG) Nothing)
-
-(11,11)-(11,20)
-Sine e
-ConAppG (Just VarG) Nothing
-
-(16,2)-(17,70)
+(17,71)-(17,71)
 let subtreeSize1 =
   if depth = 1
   then 0
@@ -80,6 +68,18 @@ let subtreeeSize4 =
 let x = rand (1 , 5) in
 match x with
 | _ -> buildSine (build (rand , subtreeSize1))
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,IteG EmptyG EmptyG EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
+*)
+
+(* type error slice
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(16,3)-(17,71)
+(17,8)-(17,71)
+(17,31)-(17,71)
+(17,61)-(17,67)
+(17,61)-(17,70)
+(17,71)-(17,71)
 *)

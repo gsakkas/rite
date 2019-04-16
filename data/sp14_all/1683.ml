@@ -73,166 +73,57 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(21,15)-(30,44)
-fun () -> VarX
-LamG (ConAppG Nothing Nothing)
-
-(21,15)-(30,44)
-fun () -> VarY
-LamG (ConAppG Nothing Nothing)
-
-(21,15)-(30,44)
-VarX
-ConAppG Nothing Nothing
-
-(21,15)-(30,44)
-VarY
-ConAppG Nothing Nothing
-
-(22,2)-(30,44)
-build
-VarG
-
-(22,2)-(30,44)
-rand
-VarG
-
-(22,2)-(30,44)
-depth
-VarG
-
-(22,2)-(30,44)
-build
-VarG
-
-(22,2)-(30,44)
-rand
-VarG
-
-(22,2)-(30,44)
-depth
-VarG
-
-(22,2)-(30,44)
-build
-VarG
-
-(22,2)-(30,44)
-rand
-VarG
-
-(22,2)-(30,44)
-depth
-VarG
-
-(22,2)-(30,44)
-rand
-VarG
-
-(22,2)-(30,44)
-buildX
-VarG
-
-(22,2)-(30,44)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(22,2)-(30,44)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(22,2)-(30,44)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(22,2)-(30,44)
-rand (0 , 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(22,2)-(30,44)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(22,2)-(30,44)
-0
-LitG
-
-(22,2)-(30,44)
-1
-LitG
-
-(22,2)-(30,44)
-match rand (0 , 1) with
-| 0 -> buildX ()
-| 1 -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
-
-(22,2)-(30,44)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(22,2)-(30,44)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(22,2)-(30,44)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(22,2)-(30,44)
-(0 , 1)
-TupleG (fromList [LitG])
-
-(28,24)-(28,45)
+(28,25)-(28,46)
 (build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(29,11)-(29,21)
-build
-VarG
-
-(29,11)-(29,21)
-rand
-VarG
-
-(29,11)-(29,21)
-depth
-VarG
-
-(29,11)-(29,21)
-buildTimes (build (rand , depth) , build (rand , depth))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(29,11)-(29,21)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(29,22)-(29,43)
+(29,23)-(29,44)
 (build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(30,11)-(30,22)
-build
-VarG
-
-(30,11)-(30,22)
-rand
-VarG
-
-(30,11)-(30,22)
-depth
-VarG
-
-(30,11)-(30,22)
-buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(30,11)-(30,22)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(30,23)-(30,44)
+(30,24)-(30,45)
 (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
+(30,45)-(30,45)
+match rand (0 , 1) with
+| 0 -> buildX ()
+| 1 -> buildY ()
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+
+*)
+
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,68)
+(19,4)-(19,42)
+(19,17)-(19,40)
+(21,4)-(30,47)
+(21,16)-(30,45)
+(22,3)-(30,45)
+(24,5)-(30,45)
+(25,5)-(30,45)
+(26,12)-(26,21)
+(26,12)-(26,43)
+(26,22)-(26,43)
+(26,23)-(26,28)
+(28,12)-(28,24)
+(28,12)-(28,46)
+(28,25)-(28,46)
+(28,26)-(28,31)
+(29,12)-(29,22)
+(29,12)-(29,44)
+(29,23)-(29,44)
+(29,24)-(29,29)
+(30,12)-(30,23)
+(30,12)-(30,45)
+(30,24)-(30,45)
+(30,25)-(30,30)
+(30,45)-(30,45)
 *)

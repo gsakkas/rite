@@ -1,0 +1,7 @@
+BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+((1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))) *. sin (pi *. eval (e1 , x , y))
+(eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y)
+(eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)
+(eval (v , x , y) +. eval (w , x , y)) *. eval (v , x , y)
+(eval (l , x , y) *. eval (w , x , y)) *. eval (h , x , y)
+(eval (e1 , x , y) *. eval (e1 , x , y)) +. eval (e2 , x , y)

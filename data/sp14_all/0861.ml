@@ -25,13 +25,22 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(7,4)-(9,69)
+(7,5)-(9,70)
 fun n ->
   match n with
   | 0 -> []
   | n -> if n < 0
          then []
          else (n mod 10) :: (digitsOfInt (n / 10))
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG),(LitPatG,Nothing,EmptyG)]))
 
+*)
+
+(* type error slice
+(6,3)-(10,22)
+(7,5)-(9,70)
+(9,12)-(9,70)
+(9,34)-(9,70)
+(10,15)-(10,22)
+(10,16)-(10,19)
 *)

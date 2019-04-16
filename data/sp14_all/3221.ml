@@ -67,23 +67,32 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(31,2)-(45,81)
+(31,3)-(45,82)
 match e with
 | VarX -> x
 | VarY -> y
 | Sine ex -> sin (pi *. eval (ex , x , y))
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
 
-(35,31)-(35,43)
-eval
-VarG
+*)
 
-(35,44)-(35,46)
-(ex , x , y)
-TupleG (fromList [VarG])
-
-(45,71)-(45,74)
-x
-VarG
-
+(* type error slice
+(15,28)-(15,53)
+(15,29)-(15,46)
+(15,30)-(15,42)
+(15,47)-(15,48)
+(31,3)-(45,82)
+(34,16)-(34,19)
+(34,16)-(34,45)
+(34,20)-(34,45)
+(34,27)-(34,44)
+(34,28)-(34,40)
+(35,18)-(35,55)
+(35,28)-(35,29)
+(37,7)-(37,74)
+(37,12)-(37,13)
+(38,24)-(38,71)
+(38,43)-(38,44)
+(40,7)-(45,82)
+(40,11)-(40,12)
 *)

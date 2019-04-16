@@ -46,32 +46,31 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(18,2)-(21,57)
+(18,3)-(21,58)
 match depth with
 | 0 -> if true
        then buildX ()
        else buildY ()
 | n -> buildSine (build (rand , depth - 1))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(20,13)-(20,17)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+*)
 
-(20,22)-(20,23)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(20,22)-(20,23)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(20,27)-(20,28)
-true
-LitG
-
-(20,27)-(20,28)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
+(* type error slice
+(11,4)-(11,27)
+(11,15)-(11,25)
+(11,19)-(11,25)
+(11,24)-(11,25)
+(15,4)-(15,23)
+(15,12)-(15,21)
+(17,4)-(21,60)
+(17,16)-(21,58)
+(18,3)-(21,58)
+(19,10)-(19,12)
+(20,10)-(20,53)
+(20,47)-(20,53)
+(21,21)-(21,30)
+(21,21)-(21,58)
+(21,31)-(21,58)
+(21,32)-(21,37)
 *)

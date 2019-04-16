@@ -1,188 +1,32 @@
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-fun sl ->
-  match sl with
-  | [] -> ""
-  | h :: t -> (let f =
-                 fun a ->
-                   fun x -> a ^ (sep ^ x) in
-               let base = h in
-               let l = t in
-               List.fold_left f base l)
-fun l ->
-  match l with
-  | x :: [] -> []
-  | hd :: tl -> hd :: (removeLast tl)
-  | [] -> []
-fun l ->
-  match l with
-  | x :: [] -> []
-  | hd :: tl -> hd :: (removeLast tl)
-  | [] -> []
-fun y ->
-  match y with
-  | [] -> [x]
-  | h :: t -> h :: (append x t)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | xs -> List.hd xs + sumList (List.tl xs)
-fun n ->
-  match n with
-  | 0 -> []
-  | n -> if n < 0
-         then []
-         else (n mod 10) :: (digitsOfInt (n / 10))
-fun n ->
-  match n with
-  | 0 -> []
-  | n -> if n < 0
-         then []
-         else (n mod 10) :: (digitsOfInt (n / 10))
-fun n ->
-  match n with
-  | 0 -> []
-  | n -> if n < 0
-         then []
-         else (n mod 10) :: (digitsOfInt (n / 10))
-function | y -> y
-fun b ->
-  match a with
-  | [] -> []
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> if h = 0
-              then removeZero t
-              else l
-fun acc ->
-  match x with
-  | [] -> l
-  | h :: t -> helper t l
-                     (h :: acc)
-fun acc ->
-  match x with
-  | [] -> l
-  | h :: t -> helper t l
-                     (h :: acc)
-fun acc ->
-  match x with
-  | [] -> l
-  | h :: t -> helper t l
-                     (h :: acc)
-fun b ->
-  match b with
-  | [] -> [a]
-  | hd :: tl -> [a + hd]
-fun b ->
-  match b with
-  | [] -> [a]
-  | hd :: tl -> [a + hd]
-fun b ->
-  match b with
-  | [] -> [a]
-  | hd :: tl -> [a + hd]
-fun b ->
-  match b with
-  | [] -> [a]
-  | hd :: tl -> [a + hd]
-fun (x , y) ->
-  match x with
-  | [] -> y
-  | h :: t -> reverse (t , h :: y)
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> reverse (l , [])
-fun n ->
-  match l with
-  | [] -> [n]
-  | h :: t -> h :: (myAppend t
-                             n)
-fun n ->
-  match n with
-  | 0 -> []
-  | _ -> myAppend (getDigits (n / 10))
-                  (n mod 10)
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> t
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-function | g -> g
-function | x -> x
-function | g -> g
-function | x -> x
-function | g -> g
-function | x -> x
-function | g -> g
-function | x -> x
-fun l ->
-  match l with
-  | [] -> []
-  | hd :: tl -> helper (hd :: xs)
-                       l
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-fun l ->
-  match l with
-  | [] -> "[]"
-  | x :: xs -> (let g =
-                  fun a ->
-                    fun x -> a ^ ("; " ^ f x) in
-                let base = "[" ^ f x in
-                List.fold_left g base
-                               xs ^ "]")
-fun l ->
-  match l with
-  | [] -> "[]"
-  | x :: xs -> (let g =
-                  fun a ->
-                    fun x -> a ^ ("; " ^ f x) in
-                let base = "[" ^ f x in
-                List.fold_left g base
-                               xs ^ "]")
-fun l ->
-  match l with
-  | [] -> "[]"
-  | x :: xs -> (let g =
-                  fun a ->
-                    fun x -> a ^ ("; " ^ f x) in
-                let base = "[" ^ f x in
-                List.fold_left g base
-                               xs ^ "]")
-fun l ->
-  match l with
-  | [] -> "[]"
-  | x :: xs -> (let g =
-                  fun a ->
-                    fun x -> a ^ ("; " ^ f x) in
-                let base = "[" ^ f x in
-                List.fold_left g base
-                               xs ^ "]")
-fun dest ->
-  match l with
-  | [] -> []
-  | h :: t -> listReverse2 t
-                           (h :: dest)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-  | _ -> (-1)
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+let rec getList =
+  fun a ->
+    fun b ->
+      match a with
+      | [] -> [] in
+getList [] l
+let rec helper =
+  fun x ->
+    fun l ->
+      fun acc ->
+        match x with
+        | [] -> l
+        | h :: t -> helper t l
+                           (h :: acc) in
+helper x l []
+let rec helper =
+  fun acc ->
+    fun v ->
+      if v = 0
+      then acc
+      else helper ((v mod 10) :: acc)
+                  (v / 10) in
+helper [] h
+let rec helper =
+  fun i ->
+    fun acc ->
+      fun l ->
+        if i > 0
+        then helper i (bigAdd acc l) l
+        else acc in
+helper i [] l

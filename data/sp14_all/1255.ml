@@ -63,7 +63,7 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(27,17)-(28,70)
+(27,18)-(28,71)
 fun i ->
   fun l ->
     fun acc ->
@@ -72,57 +72,49 @@ fun i ->
       | 1 -> l
       | _ -> helper (i - 1) l
                     (bigAdd acc l)
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(27,17)-(28,70)
-fun l ->
-  fun acc ->
-    match i with
-    | 0 -> [0]
-    | 1 -> l
-    | _ -> helper (i - 1) l
-                  (bigAdd acc l)
-LamG (LamG EmptyG)
-
-(28,41)-(28,47)
+(29,10)-(29,12)
 i
 VarG
 
-(28,41)-(28,47)
+(29,13)-(29,14)
 l
 VarG
 
-(28,41)-(28,47)
-helper (i - 1) l (bigAdd acc
-                         l)
-AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-
-(28,41)-(28,47)
-0
-LitG
-
-(28,41)-(28,47)
+(29,15)-(29,16)
 [0]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
-(28,41)-(28,70)
-match i with
-| 0 -> [0]
-| 1 -> l
-| _ -> helper (i - 1) l
-              (bigAdd acc l)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+*)
 
-(28,49)-(28,50)
-i
-VarG
-
-(28,56)-(28,70)
-l
-VarG
-
-(28,64)-(28,65)
-acc
-VarG
-
+(* type error slice
+(4,4)-(11,48)
+(4,13)-(11,46)
+(4,16)-(11,46)
+(10,17)-(10,36)
+(10,31)-(10,32)
+(10,33)-(10,35)
+(16,4)-(24,37)
+(16,12)-(24,35)
+(16,15)-(24,35)
+(24,19)-(24,34)
+(24,20)-(24,27)
+(24,31)-(24,33)
+(27,3)-(29,16)
+(27,18)-(28,71)
+(27,22)-(28,71)
+(27,24)-(28,71)
+(28,5)-(28,71)
+(28,25)-(28,28)
+(28,25)-(28,34)
+(28,42)-(28,48)
+(28,42)-(28,71)
+(28,49)-(28,56)
+(28,57)-(28,71)
+(28,58)-(28,64)
+(28,67)-(28,70)
+(29,3)-(29,9)
+(29,3)-(29,16)
+(29,10)-(29,12)
 *)

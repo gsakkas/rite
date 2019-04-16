@@ -62,44 +62,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(23,22)-(23,23)
+(23,17)-(23,74)
 match x with
 | (d1 , d2) -> (d1 + d2 , (d1 + d2) :: (match a with
                                         | (a1 , a2) -> a2))
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
-(23,50)-(23,73)
-x
-VarG
+*)
 
-(23,71)-(23,72)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-ConAppG (Just (TupleG (fromList [BopG VarG VarG,CaseG VarG (fromList [(Nothing,VarG)])]))) Nothing
-
-(24,4)-(26,51)
-d1
-VarG
-
-(24,4)-(26,51)
-d2
-VarG
-
-(24,4)-(26,51)
-a
-VarG
-
-(24,4)-(26,51)
-a2
-VarG
-
-(24,4)-(26,51)
-d1 + d2
-BopG VarG VarG
-
-(24,4)-(26,51)
-match a with
-| (a1 , a2) -> a2
-CaseG VarG (fromList [(Nothing,VarG)])
-
+(* type error slice
+(23,5)-(26,52)
+(23,11)-(23,74)
+(23,13)-(23,74)
+(23,17)-(23,74)
+(23,23)-(23,24)
+(23,51)-(23,74)
+(23,72)-(23,73)
+(25,5)-(26,52)
+(25,16)-(25,24)
+(25,16)-(25,45)
+(25,25)-(25,45)
+(25,26)-(25,38)
+(26,19)-(26,33)
+(26,19)-(26,45)
+(26,34)-(26,35)
+(26,41)-(26,45)
 *)

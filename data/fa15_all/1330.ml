@@ -89,27 +89,19 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(27,22)-(27,23)
+(27,23)-(27,24)
 1
 LitG
 
-(27,37)-(27,43)
+(27,38)-(27,44)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(27,51)-(27,57)
+(27,52)-(27,58)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(27,51)-(27,57)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(29,4)-(41,71)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(29,11)-(29,22)
+(29,5)-(41,72)
 match rand (0 , 7) with
 | 0 -> buildX ()
 | 1 -> buildY ()
@@ -118,34 +110,20 @@ match rand (0 , 7) with
 | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(29,17)-(29,18)
-0
-LitG
+*)
 
-(30,12)-(30,21)
-buildX
-VarG
-
-(30,12)-(30,21)
-buildY
-VarG
-
-(30,12)-(30,21)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(30,12)-(30,21)
-buildSine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(30,12)-(30,21)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(30,12)-(30,21)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
+(* type error slice
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(26,3)-(41,72)
+(27,8)-(27,58)
+(27,38)-(27,44)
+(29,5)-(41,72)
+(30,13)-(30,22)
+(30,13)-(30,50)
 *)

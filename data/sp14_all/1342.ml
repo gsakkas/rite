@@ -19,13 +19,26 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(7,50)-(7,73)
+(7,18)-(7,20)
+sepConcat sep t
+AppG (fromList [VarG])
+
+(7,32)-(7,47)
 t
 VarG
 
-(7,50)-(7,73)
-let l = t in
-List.fold_left f base l
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
+*)
 
+(* type error slice
+(2,4)-(7,76)
+(2,19)-(7,74)
+(2,23)-(7,74)
+(3,3)-(7,74)
+(4,11)-(4,13)
+(7,24)-(7,74)
+(7,32)-(7,41)
+(7,32)-(7,47)
+(7,51)-(7,65)
+(7,51)-(7,74)
+(7,73)-(7,74)
 *)

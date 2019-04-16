@@ -50,39 +50,11 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(11,12)-(11,40)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(11,12)-(11,40)
-10
-LitG
-
-(11,12)-(11,40)
-13
-LitG
-
-(11,12)-(11,40)
-57
-LitG
-
-(11,12)-(11,40)
-4.0
-LitG
-
-(11,12)-(11,40)
+(11,13)-(11,41)
 (10 , 13 , 57)
 TupleG (fromList [LitG])
 
-(11,21)-(11,40)
-atan
-VarG
-
-(13,14)-(19,69)
-1.0
-LitG
-
-(14,2)-(19,69)
+(14,3)-(19,70)
 match e with
 | VarX -> x +. 0.0
 | VarY -> y +. 0.0
@@ -93,26 +65,14 @@ match e with
 | Thresh (h1 , h2 , h3 , h4) -> if eval (h1 , x , y) < eval (h2 , x , y)
                                 then eval (h3 , x , y)
                                 else eval (h4 , x , y)
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,BopG EmptyG EmptyG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(17,19)-(17,36)
-pi
-VarG
+*)
 
-(17,19)-(17,36)
-pi *. eval (s1 , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(18,21)-(18,38)
-pi
-VarG
-
-(18,21)-(18,38)
-pi *. eval (c1 , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(19,23)-(19,69)
-(eval (a1 , x , y) +. eval (a2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
+(* type error slice
+(14,3)-(19,70)
+(15,14)-(15,22)
+(19,24)-(19,64)
+(19,24)-(19,70)
+(19,67)-(19,70)
 *)

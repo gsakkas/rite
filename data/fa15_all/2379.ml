@@ -53,90 +53,45 @@ let palindrome w =
 *)
 
 (* changed spans
-(6,12)-(9,6)
-l
-VarG
-
-(6,12)-(9,6)
-listReverse
-VarG
-
-(6,12)-(9,6)
+(4,38)-(4,40)
 t
 VarG
 
-(6,12)-(9,6)
-(@)
-VarG
+(4,51)-(4,52)
+[]
+ListG (fromList [])
 
-(6,12)-(9,6)
-h
-VarG
-
-(6,12)-(9,6)
+(10,1)-(10,1)
 fun l ->
   match l with
   | [] -> []
   | h :: t -> listReverse t @ [h]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(6,12)-(9,6)
-listReverse t
-AppG (fromList [VarG])
-
-(6,12)-(9,6)
-listReverse t @ [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(6,12)-(9,6)
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-
-(6,12)-(9,6)
-[]
-ListG EmptyG Nothing
-
-(6,12)-(9,6)
-[h]
-ListG VarG Nothing
-
-(14,20)-(20,16)
+(11,21)-(12,58)
 fun x ->
   match x with
   | [] -> true
   | h :: t -> if getHead x = getHead (listReverse x)
               then matchHeads (getTail (listReverse t))
               else false
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(19,11)-(19,21)
-listReverse
-VarG
+(14,21)-(20,17)
+EMPTY
+EmptyG
 
-(19,11)-(19,21)
-x
-VarG
+(25,13)-(25,75)
+matchHeads [["b"]]
+AppG (fromList [ListG (fromList [EmptyG])])
 
-(19,11)-(19,21)
-matchHeads (getTail (listReverse t))
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
-(19,35)-(19,36)
-listReverse t
-AppG (fromList [VarG])
-
-(20,11)-(20,16)
-listReverse
-VarG
-
-(20,11)-(20,16)
-t
-VarG
-
-(25,71)-(25,72)
-matchHeads
-VarG
-
+(* type error slice
+(18,7)-(20,17)
+(19,12)-(19,22)
+(19,12)-(19,39)
+(20,12)-(20,17)
+(25,13)-(25,23)
+(25,13)-(25,75)
 *)

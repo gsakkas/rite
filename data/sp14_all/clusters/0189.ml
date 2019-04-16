@@ -1,3 +1,2 @@
-BopG LitG LitG
-0.0 -. 1.0
-0.0 -. 1.0
+AppG (fromList [LitG,ListG (fromList [])])
+f 0 []

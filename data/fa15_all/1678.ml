@@ -31,26 +31,41 @@ let rec digitalRoot n = if n < 10 then n else helper n;;
 *)
 
 (* changed spans
-(12,7)-(13,41)
-let n = digitsOfInt n in
-sumList n
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
-
-(13,28)-(13,39)
-fun n ->
-  if n < 10 then n else helper n
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(13,40)-(13,41)
+(11,6)-(11,13)
 n < 10
 BopG VarG LitG
 
-(13,40)-(13,41)
-if n < 10 then n else helper n
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+(12,8)-(13,42)
+n
+VarG
 
-(14,7)-(14,8)
-10
-LitG
+(14,8)-(14,9)
+helper n
+AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(6,27)-(6,42)
+(6,27)-(6,48)
+(6,28)-(6,39)
+(6,43)-(6,44)
+(8,22)-(8,71)
+(8,60)-(8,71)
+(8,61)-(8,68)
+(8,69)-(8,70)
+(10,4)-(14,11)
+(10,21)-(14,9)
+(11,6)-(11,7)
+(11,6)-(11,13)
+(11,11)-(11,13)
+(12,8)-(13,42)
+(12,16)-(12,27)
+(12,16)-(12,29)
+(13,16)-(13,23)
+(13,16)-(13,25)
+(13,24)-(13,25)
+(13,29)-(13,40)
+(13,29)-(13,42)
+(13,41)-(13,42)
 *)

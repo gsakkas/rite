@@ -13,12 +13,23 @@ let rec clone x n =
 *)
 
 (* changed spans
-(3,49)-(3,59)
+(3,50)-(3,78)
 helper (x :: acc) (n' - 1)
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
-(3,57)-(3,58)
-x :: acc
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+*)
 
+(* type error slice
+(3,3)-(4,21)
+(3,18)-(3,78)
+(3,22)-(3,78)
+(3,27)-(3,78)
+(3,50)-(3,60)
+(3,50)-(3,78)
+(3,51)-(3,57)
+(3,58)-(3,59)
+(4,3)-(4,9)
+(4,3)-(4,21)
+(4,10)-(4,13)
+(4,11)-(4,12)
 *)

@@ -26,24 +26,19 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(10,42)-(10,47)
+(10,43)-(10,48)
 if v = 0 then [1] else [0]
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ListG EmptyG Nothing)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ListG (fromList [EmptyG]))
 
-(10,51)-(10,63)
-1
-LitG
+*)
 
-(10,51)-(10,63)
-0
-LitG
-
-(10,51)-(10,63)
-[1]
-ListG LitG Nothing
-
-(10,51)-(10,63)
-[0]
-ListG LitG Nothing
-
+(* type error slice
+(6,7)-(10,65)
+(9,16)-(9,18)
+(10,20)-(10,64)
+(10,35)-(10,48)
+(10,39)-(10,48)
+(10,43)-(10,48)
+(10,52)-(10,58)
+(10,52)-(10,64)
 *)

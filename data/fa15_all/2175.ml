@@ -21,12 +21,13 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(8,38)-(8,49)
+(8,39)-(8,50)
 List.length l1
 AppG (fromList [VarG])
 
-(8,59)-(8,61)
-l1
-VarG
+*)
 
+(* type error slice
+(8,19)-(8,51)
+(8,39)-(8,50)
 *)

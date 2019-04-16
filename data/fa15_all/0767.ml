@@ -47,14 +47,20 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,6)-(17,73)
+(17,7)-(17,74)
 (if ((a1 + x1) + x2) >= 10
  then 1
  else 0 , ((a1 + x1) + x2) :: a2)
-TupleG (fromList [IteG EmptyG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+TupleG (fromList [IteG EmptyG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
-(18,20)-(18,21)
-[0]
-ListG LitG Nothing
+(18,16)-(18,24)
+(0 , [0])
+TupleG (fromList [LitG,ListG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(17,7)-(17,74)
+(17,38)-(17,39)
+(17,45)-(17,74)
 *)

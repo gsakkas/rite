@@ -38,12 +38,21 @@ let palindrome w =
 *)
 
 (* changed spans
-(23,46)-(23,66)
+(18,7)-(20,17)
+false
+LitG
+
+(23,47)-(23,67)
 matchHeads (explode w)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(23,57)-(23,64)
-explode w
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(18,7)-(20,17)
+(19,12)-(19,22)
+(19,12)-(19,48)
+(20,12)-(20,17)
+(23,47)-(23,57)
+(23,47)-(23,67)
 *)

@@ -35,43 +35,20 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(12,2)-(15,25)
+(12,3)-(15,26)
 match e with
 | VarX -> "x"
 | VarY -> "y"
 | Sine e -> "sin (pi*" ^ (exprToString e ^ ")")
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
 
-(14,57)-(14,58)
-"x"
-LitG
+*)
 
-(15,8)-(15,24)
-(^)
-VarG
-
-(15,8)-(15,24)
-(^)
-VarG
-
-(15,8)-(15,24)
-"sin (pi*" ^ (exprToString e ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(15,8)-(15,24)
-exprToString e ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(15,8)-(15,24)
-"y"
-LitG
-
-(15,8)-(15,24)
-"sin (pi*"
-LitG
-
-(15,22)-(15,23)
-e
-VarG
-
+(* type error slice
+(11,4)-(15,28)
+(11,22)-(15,26)
+(12,3)-(15,26)
+(14,7)-(15,26)
+(15,9)-(15,25)
+(15,10)-(15,22)
 *)

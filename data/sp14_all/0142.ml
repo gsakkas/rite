@@ -47,10 +47,16 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,6)-(17,60)
+(17,7)-(17,61)
 (if addit >= 10
  then 1
  else 0 , num @ [addit mod 10])
 TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(17,7)-(17,61)
+(17,27)-(17,28)
+(17,34)-(17,61)
 *)

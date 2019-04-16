@@ -15,26 +15,21 @@ let pipe fs =
 *)
 
 (* changed spans
-(4,13)-(4,62)
+(4,14)-(4,63)
 match fs with
 | [] -> fun x -> x
 | h :: t -> f (fun x -> x) h
-CaseG VarG (fromList [(Nothing,LamG EmptyG),(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LamG VarPatG EmptyG)])
 
-(4,37)-(4,38)
-x
-VarG
+*)
 
-(4,37)-(4,38)
-f (fun x -> x) h
-AppG (fromList [VarG,LamG EmptyG])
-
-(4,37)-(4,40)
-fun x -> x
-LamG VarG
-
-(5,2)-(5,26)
-h
-VarG
-
+(* type error slice
+(4,3)-(5,27)
+(4,14)-(4,63)
+(4,38)-(4,39)
+(4,38)-(4,41)
+(5,3)-(5,17)
+(5,3)-(5,27)
+(5,18)-(5,19)
+(5,20)-(5,24)
 *)

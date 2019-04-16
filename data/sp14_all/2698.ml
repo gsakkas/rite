@@ -68,7 +68,7 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(14,2)-(30,64)
+(14,3)-(30,65)
 match e with
 | VarX -> "x"
 | VarY -> "y"
@@ -80,58 +80,12 @@ match e with
 | _ -> "_"
 | Tan a -> "tan(pi*" ^ (exprToString a ^ ")")
 | Sin_Avg (a , b , c) -> "sin(pi*(" ^ (exprToString a ^ ("+" ^ (exprToString b ^ (exprToString c ^ ")/3)"))))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,LitG)])
 
-(30,19)-(30,28)
-"sin(pi*("
-LitG
+*)
 
-(30,49)-(30,55)
-"+" ^ (exprToString b ^ (exprToString c ^ ")/3)"))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(30,50)-(30,51)
-(^)
-VarG
-
-(30,50)-(30,51)
-exprToString
-VarG
-
-(30,50)-(30,51)
-(^)
-VarG
-
-(30,50)-(30,51)
-exprToString b ^ (exprToString c ^ ")/3)")
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(30,50)-(30,51)
-exprToString b
-AppG (fromList [VarG])
-
-(30,50)-(30,51)
-"+"
-LitG
-
-(30,53)-(30,54)
-exprToString
-VarG
-
-(30,53)-(30,54)
-(^)
-VarG
-
-(30,53)-(30,54)
-exprToString c ^ ")/3)"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(30,53)-(30,54)
-exprToString c
-AppG (fromList [VarG])
-
-(30,60)-(30,63)
-")/3)"
-LitG
-
+(* type error slice
+(14,3)-(30,65)
+(30,47)-(30,57)
+(30,48)-(30,49)
 *)

@@ -14,8 +14,17 @@ let rec clone x n =
 *)
 
 (* changed spans
-(3,51)-(3,56)
-clone_RT
-VarG
+(3,52)-(3,76)
+clone_RT (x :: acc) (n - 1)
+AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
+*)
+
+(* type error slice
+(2,4)-(4,18)
+(2,15)-(4,16)
+(3,52)-(3,57)
+(3,52)-(3,76)
+(3,58)-(3,68)
+(3,59)-(3,60)
 *)

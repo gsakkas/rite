@@ -1,11 +1,6 @@
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
-hd :: (removeLast tl)
-hd :: (removeLast tl)
-h :: (append x t)
-h :: (listReverse t)
-h :: (listReverse t)
-h :: (listReverse t)
-h :: (listReverse t)
-h :: (listReverse l)
-n :: (digitsOfInt n)
-n :: (digitsOfInt n)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+let ans = f b in
+match ans with
+| (num , boo) -> if boo = true
+                 then wwhile (f , num)
+                 else num

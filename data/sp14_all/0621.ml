@@ -53,30 +53,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,9)-(18,15)
-c
-VarG
-
-(18,9)-(18,15)
-s
-VarG
-
-(18,9)-(18,15)
-c
-VarG
-
-(18,9)-(18,15)
-(c , s)
-TupleG (fromList [VarG])
-
-(18,9)-(18,15)
-(c , c :: s)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(18,13)-(18,15)
+(18,7)-(20,71)
 match (c , s) with
 | (c , []) -> (c , c :: s)
 | _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-CaseG (TupleG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
 
+*)
+
+(* type error slice
+(16,7)-(20,71)
+(16,22)-(16,23)
+(18,7)-(20,71)
+(18,10)-(18,11)
+(18,10)-(18,16)
+(18,14)-(18,16)
+(19,12)-(19,18)
+(20,12)-(20,71)
 *)

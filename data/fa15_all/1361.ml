@@ -55,27 +55,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(11,14)-(26,81)
-atan
-VarG
-
-(11,14)-(26,81)
-atan 1.0
-AppG (fromList [LitG])
-
-(11,14)-(26,81)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(11,14)-(26,81)
-4.0
-LitG
-
-(11,14)-(26,81)
-1.0
-LitG
-
-(12,2)-(26,81)
+(12,3)-(26,82)
 match e with
 | VarX -> x
 | VarY -> y
@@ -86,72 +66,52 @@ match e with
 | Thresh (th1 , th2 , th3 , th4) -> if eval (th1 , x , y) < eval (th2 , x , y)
                                     then eval (th3 , x , y)
                                     else eval (th4 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(15,21)-(15,32)
-pi
-VarG
+*)
 
-(15,21)-(15,32)
-pi *. eval (sine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(15,27)-(15,31)
-(sine , x , y)
-TupleG (fromList [VarG])
-
-(16,31)-(16,49)
-y
-VarG
-
-(16,32)-(16,36)
-cos
-VarG
-
-(16,32)-(16,36)
-pi
-VarG
-
-(16,32)-(16,36)
-eval (cosine , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(16,32)-(16,36)
-pi *. eval (cosine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(16,38)-(16,41)
-cosine
-VarG
-
-(16,50)-(16,51)
-x
-VarG
-
-(18,14)-(18,31)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(18,32)-(18,33)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(19,21)-(19,38)
-eval (t1 , x , y) *. eval (t2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(19,39)-(19,40)
-2.0
-LitG
-
-(22,9)-(22,27)
-eval (th1 , x , y) < eval (th2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(22,28)-(22,29)
-if eval (th1 , x , y) < eval (th2 , x , y)
-then eval (th3 , x , y)
-else eval (th4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(11,4)-(26,84)
+(11,15)-(26,82)
+(12,3)-(26,82)
+(15,18)-(15,21)
+(15,18)-(15,33)
+(15,22)-(15,33)
+(15,23)-(15,27)
+(15,28)-(15,32)
+(16,19)-(16,57)
+(16,29)-(16,30)
+(16,32)-(16,50)
+(16,33)-(16,37)
+(16,38)-(16,49)
+(18,7)-(18,72)
+(18,12)-(18,13)
+(18,15)-(18,32)
+(18,16)-(18,20)
+(18,21)-(18,31)
+(18,43)-(18,60)
+(18,44)-(18,48)
+(18,49)-(18,59)
+(19,22)-(19,39)
+(19,22)-(19,67)
+(19,23)-(19,27)
+(19,28)-(19,38)
+(19,40)-(19,41)
+(19,49)-(19,66)
+(19,50)-(19,54)
+(19,55)-(19,65)
+(21,7)-(26,82)
+(21,11)-(21,12)
+(22,10)-(22,28)
+(22,11)-(22,15)
+(22,16)-(22,27)
+(24,16)-(24,34)
+(24,17)-(24,21)
+(24,22)-(24,33)
+(26,22)-(26,40)
+(26,23)-(26,27)
+(26,28)-(26,39)
+(26,51)-(26,69)
+(26,52)-(26,56)
+(26,57)-(26,68)
 *)

@@ -1,6 +1,4 @@
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (AppG (fromList [EmptyG]))
-let base =
-  match xs with
-  | [] -> 4
-  | hd :: tl -> f (f 2 hd) tl in
-List.fold_left f base xs
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG])),(TuplePatG (fromList [WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
+match x with
+| (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
+| (_ , _) -> (carry / 10 , (carry mod 10) :: rest)

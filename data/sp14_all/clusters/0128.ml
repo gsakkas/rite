@@ -1,7 +1,4 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-(0 , carry :: rest)
-(0 , carry :: rest)
-(0 , digit :: sum)
-(0 , digit :: sum)
-(0 , digit :: sum)
-(0 , digit :: sum)
+CaseG VarG (fromList [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+match n with
+| 0 -> 0
+| _ -> additivePersistence (sumList (digitsOfInt n))

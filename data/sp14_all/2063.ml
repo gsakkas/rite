@@ -47,44 +47,39 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,19)-(16,59)
+(16,20)-(16,60)
 eval (a , x , y) *. eval (b , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(17,21)-(17,59)
+(17,22)-(17,64)
 (eval (a , x , y) *. eval (b , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(17,22)-(17,26)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(17,22)-(17,26)
-eval (a , x , y) *. eval (b , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(17,37)-(17,43)
-eval (b , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(17,62)-(17,63)
-2.0
-LitG
-
-(18,20)-(18,58)
+(18,21)-(18,59)
 pi ** eval (a , x , y)
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(18,21)-(18,23)
-(**)
-VarG
-
-(19,18)-(19,41)
+(19,19)-(19,42)
 pi ** eval (a , x , y)
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(19,19)-(19,21)
-(**)
-VarG
+*)
 
+(* type error slice
+(16,20)-(16,36)
+(16,20)-(16,60)
+(16,21)-(16,25)
+(16,44)-(16,60)
+(16,45)-(16,49)
+(17,22)-(17,60)
+(17,23)-(17,27)
+(17,45)-(17,49)
+(18,17)-(18,20)
+(18,17)-(18,59)
+(18,21)-(18,59)
+(18,27)-(18,58)
+(18,28)-(18,40)
+(19,15)-(19,18)
+(19,15)-(19,42)
+(19,19)-(19,42)
 *)

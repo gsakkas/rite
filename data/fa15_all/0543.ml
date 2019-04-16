@@ -81,22 +81,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(11,7)-(11,59)
-l1
-VarG
-
-(11,7)-(11,59)
+(11,8)-(11,60)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(12,7)-(12,59)
+(12,8)-(12,60)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,19)-(15,77)
-l2
-VarG
+*)
 
+(* type error slice
+(9,4)-(12,62)
+(9,13)-(12,60)
+(9,16)-(12,60)
+(10,3)-(12,60)
+(12,8)-(12,60)
+(12,56)-(12,57)
+(18,3)-(38,35)
+(18,12)-(37,52)
+(38,14)-(38,35)
+(38,15)-(38,18)
+(38,19)-(38,34)
+(38,20)-(38,27)
 *)

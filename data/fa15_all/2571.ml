@@ -67,12 +67,17 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(31,6)-(31,67)
+(31,7)-(31,68)
 exprToString (Average (Times (ex1 , ex2) , Times (ex2 , ex3)))
-AppG (fromList [ConAppG (Just (TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing])
+AppG (fromList [ConAppG (Just EmptyG)])
 
-(31,27)-(31,67)
-Average (Times (ex1 , ex2) , Times (ex2 , ex3))
-ConAppG (Just (TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing
+*)
 
+(* type error slice
+(17,28)-(17,53)
+(17,29)-(17,46)
+(17,30)-(17,42)
+(17,47)-(17,48)
+(31,7)-(31,19)
+(31,7)-(31,68)
 *)

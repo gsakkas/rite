@@ -31,16 +31,22 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(12,51)-(12,73)
+(12,52)-(12,74)
 helper t1 @ [h1 mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(12,52)-(12,61)
-(@)
-VarG
+*)
 
-(12,63)-(12,72)
-[h1 mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(6,7)-(13,23)
+(9,16)-(9,18)
+(11,12)-(13,22)
+(11,27)-(12,74)
+(12,14)-(12,74)
+(12,52)-(12,74)
+(12,53)-(12,59)
+(12,53)-(12,62)
+(12,64)-(12,73)
+(13,12)-(13,18)
+(13,12)-(13,22)
 *)

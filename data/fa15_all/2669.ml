@@ -27,12 +27,17 @@ let palindrome w =
 *)
 
 (* changed spans
-(11,20)-(11,43)
+(11,21)-(11,44)
 listReverse (explode w)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(11,33)-(11,40)
-explode w
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(8,37)-(8,52)
+(8,37)-(8,58)
+(8,38)-(8,49)
+(8,53)-(8,54)
+(11,21)-(11,44)
+(11,22)-(11,33)
 *)

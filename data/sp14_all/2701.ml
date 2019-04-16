@@ -19,72 +19,29 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(5,28)-(6,77)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(6,23)-(6,25)
-xs
-VarG
-
-(6,36)-(6,37)
-h
-VarG
-
-(6,36)-(6,77)
-0
-LitG
-
-(6,41)-(6,52)
-sumList
-VarG
-
-(6,53)-(6,76)
-t
-VarG
-
-(6,53)-(6,76)
-n
-VarG
-
-(6,53)-(6,76)
-fun n ->
-  if n < 10
-  then 1
-  else 1 + additivePersistence (sumList (digitsOfInt n))
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(6,53)-(6,76)
-n < 10
-BopG VarG LitG
-
-(6,53)-(6,76)
-1 + additivePersistence (sumList (digitsOfInt n))
-BopG LitG (AppG (fromList [EmptyG]))
-
-(6,53)-(6,76)
-10
-LitG
-
-(6,53)-(6,76)
-1
-LitG
-
-(6,53)-(6,76)
-1
-LitG
-
-(6,53)-(6,76)
+(6,3)-(6,78)
 if n < 10
 then 1
 else 1 + additivePersistence (sumList (digitsOfInt n))
 IteG (BopG EmptyG EmptyG) LitG (BopG EmptyG EmptyG)
 
-(6,74)-(6,75)
-sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(3,17)-(3,39)
+(3,17)-(3,52)
+(3,18)-(3,29)
+(3,40)-(3,41)
+(5,4)-(6,80)
+(5,29)-(6,78)
+(6,3)-(6,78)
+(6,9)-(6,10)
+(6,24)-(6,26)
+(6,37)-(6,38)
+(6,37)-(6,78)
+(6,41)-(6,78)
+(6,42)-(6,53)
+(6,54)-(6,77)
+(6,55)-(6,74)
+(6,75)-(6,76)
 *)

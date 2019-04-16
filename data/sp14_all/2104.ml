@@ -101,20 +101,18 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(27,21)-(27,23)
-buildAverage
-VarG
+(27,10)-(27,24)
+buildAverage (VarX , VarY)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(28,9)-(28,18)
-(VarX , VarY)
-TupleG (fromList [ConAppG Nothing Nothing])
+*)
 
-(28,9)-(28,18)
-VarX
-ConAppG Nothing Nothing
-
-(28,9)-(28,18)
-VarY
-ConAppG Nothing Nothing
-
+(* type error slice
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,21)-(13,29)
+(13,28)-(13,29)
+(27,10)-(27,21)
+(27,10)-(27,24)
+(27,22)-(27,24)
 *)

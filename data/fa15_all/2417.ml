@@ -52,59 +52,32 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,27)-(19,34)
+(19,17)-(19,41)
 let (l1x , l2x) = x in
 let (a1 , a2) = a in
 (a1 , (l1x + l2x) :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(19,31)-(19,32)
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(20,4)-(22,51)
-a1
-VarG
-
-(20,4)-(22,51)
-l1x
-VarG
-
-(20,4)-(22,51)
-l2x
-VarG
-
-(20,4)-(22,51)
-a2
-VarG
-
-(20,4)-(22,51)
-l1x + l2x
-BopG VarG VarG
-
-(20,4)-(22,51)
-(a1 , (l1x + l2x) :: a2)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-
-(20,4)-(22,51)
-(l1x + l2x) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(20,15)-(20,17)
+(20,16)-(20,18)
 ([] , [])
-TupleG (fromList [ListG EmptyG Nothing])
+TupleG (fromList [ListG (fromList [])])
 
-(21,4)-(22,51)
-[]
-ListG EmptyG Nothing
+(21,16)-(21,37)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(21,15)-(21,27)
-List.rev
-VarG
+*)
 
-(21,15)-(21,27)
-List.combine l1 l2
-AppG (fromList [VarG])
-
+(* type error slice
+(19,5)-(22,52)
+(19,11)-(19,41)
+(19,17)-(19,41)
+(19,40)-(19,41)
+(21,16)-(21,28)
+(21,16)-(21,37)
+(21,29)-(21,37)
+(22,5)-(22,52)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,34)-(22,35)
 *)

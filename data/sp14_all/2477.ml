@@ -118,78 +118,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(11,16)-(11,28)
-e1
-VarG
-
-(11,16)-(11,28)
-e2
-VarG
-
-(11,16)-(11,28)
-fun (e1 , e2) ->
-  Average (e1 , e2)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(11,16)-(11,28)
-Average (e1 , e2)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(13,11)-(13,20)
-e
-VarG
-
-(13,11)-(13,20)
-a
-VarG
-
-(13,11)-(13,20)
-b
-VarG
-
-(13,11)-(13,20)
-a_less
-VarG
-
-(13,11)-(13,20)
-b_less
-VarG
-
-(13,11)-(13,20)
-e1
-VarG
-
-(13,11)-(13,20)
-e2
-VarG
-
-(13,11)-(13,20)
-fun e -> Sine e
-LamG (ConAppG (Just VarG) Nothing)
-
-(13,11)-(13,20)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(13,11)-(13,20)
-fun (e1 , e2) ->
-  Times (e1 , e2)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(13,11)-(13,20)
-Sine e
-ConAppG (Just VarG) Nothing
-
-(13,11)-(13,20)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(13,11)-(13,20)
-Times (e1 , e2)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(19,4)-(47,45)
+(19,5)-(47,46)
 match num with
 | 0 -> if rand (0 , 1) = 0
        then buildX ()
@@ -239,486 +168,77 @@ match num with
                                                                       expr , buildhelper (depth - 1)
                                                                                          (depth - 1)
                                                                                          expr)
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(23,13)-(23,24)
-buildSine
-VarG
-
-(23,13)-(23,24)
-buildhelper
-VarG
-
-(23,13)-(23,24)
-expr
-VarG
-
-(23,13)-(23,24)
-buildhelper 0 0 expr
-AppG (fromList [VarG,LitG])
-
-(23,13)-(23,24)
-buildCosine (buildhelper 0 0
-                         expr)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(23,13)-(23,24)
-0
-LitG
-
-(23,13)-(23,24)
-0
-LitG
-
-(23,40)-(23,51)
-expr
-VarG
-
-(23,40)-(23,51)
-rand
-VarG
-
-(23,40)-(23,51)
-buildAverage
-VarG
-
-(23,40)-(23,51)
-buildhelper
-VarG
-
-(23,40)-(23,51)
-rand (0 , 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,40)-(23,51)
-buildAverage (buildhelper (depth - 1)
-                          (depth - 1)
-                          expr , buildhelper (depth - 1)
-                                             (depth - 1)
-                                             expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,40)-(23,51)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(23,40)-(23,51)
-rand (0 , 1) = 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(23,40)-(23,51)
-0
-LitG
-
-(23,40)-(23,51)
-0
-LitG
-
-(23,40)-(23,51)
-1
-LitG
-
-(23,40)-(23,51)
-0
-LitG
-
-(23,40)-(23,51)
-if rand (0 , 1) = 0
-then buildAverage (buildhelper (depth - 1)
-                               (depth - 1)
-                               expr , buildhelper (depth - 1)
-                                                  (depth - 1)
-                                                  expr)
-else buildTimes (buildhelper (depth - 1)
-                             (depth - 1)
-                             expr , buildhelper (depth - 1)
-                                                (depth - 1)
-                                                expr)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,40)-(23,51)
-(0 , 1)
-TupleG (fromList [LitG])
-
-(23,40)-(23,51)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1) expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(23,52)-(23,56)
-depth
-VarG
-
-(23,52)-(23,56)
-depth - 1
-BopG VarG LitG
-
-(23,52)-(23,56)
-1
-LitG
-
-(24,13)-(24,17)
-buildhelper
-VarG
-
-(24,13)-(24,17)
-depth
-VarG
-
-(24,13)-(24,17)
-depth
-VarG
-
-(24,13)-(24,17)
-depth - 1
-BopG VarG LitG
-
-(24,13)-(24,17)
-depth - 1
-BopG VarG LitG
-
-(24,13)-(24,17)
-1
-LitG
-
-(24,13)-(24,17)
-1
-LitG
-
-(24,18)-(24,19)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(24,34)-(24,66)
-buildTimes
-VarG
-
-(24,34)-(24,66)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1) expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(24,61)-(24,65)
-depth
-VarG
-
-(24,61)-(24,65)
-depth - 1
-BopG VarG LitG
-
-(24,61)-(24,65)
-1
-LitG
-
-(24,67)-(24,68)
-buildTimes (buildhelper (depth - 1)
-                        (depth - 1)
-                        expr , buildhelper (depth - 1)
-                                           (depth - 1) expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(24,69)-(24,72)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(26,8)-(35,64)
-buildhelper
-VarG
-
-(26,8)-(35,64)
-depth
-VarG
-
-(26,8)-(35,64)
-depth
-VarG
-
-(26,8)-(35,64)
-expr
-VarG
-
-(26,8)-(35,64)
-depth - 1
-BopG VarG LitG
-
-(26,8)-(35,64)
-depth - 1
-BopG VarG LitG
-
-(26,8)-(35,64)
-1
-LitG
-
-(26,8)-(35,64)
-1
-LitG
-
-(30,16)-(30,56)
-buildAverage
-VarG
-
-(30,16)-(30,56)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1) expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(30,30)-(30,33)
-depth
-VarG
-
-(30,57)-(30,58)
-buildAverage (buildhelper (depth - 1)
-                          (depth - 1)
-                          expr , buildhelper (depth - 1)
-                                             (depth - 1)
-                                             expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(31,40)-(31,43)
-depth
-VarG
-
-(33,10)-(33,14)
-buildTimes
-VarG
-
-(33,10)-(33,14)
-buildhelper
-VarG
-
-(33,10)-(33,14)
-depth
-VarG
-
-(33,10)-(33,14)
-depth
-VarG
-
-(33,10)-(33,14)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(33,10)-(33,14)
-depth - 1
-BopG VarG LitG
-
-(33,10)-(33,14)
-depth - 1
-BopG VarG LitG
-
-(33,10)-(33,14)
-1
-LitG
-
-(33,10)-(33,14)
-1
-LitG
-
-(33,10)-(33,14)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1) expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(33,15)-(33,16)
-buildTimes (buildhelper (depth - 1)
-                        (depth - 1)
-                        expr , buildhelper (depth - 1)
-                                           (depth - 1) expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(34,27)-(34,30)
-depth
-VarG
-
-(35,16)-(35,19)
-buildThresh (buildhelper (depth - 1)
-                         (depth - 1)
-                         expr , buildhelper (depth - 1)
-                                            (depth - 1)
-                                            expr , buildhelper (depth - 1)
-                                                               (depth - 1)
-                                                               expr , buildhelper (depth - 1)
-                                                                                  (depth - 1)
-                                                                                  expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(35,22)-(35,62)
-buildThresh
-VarG
-
-(35,22)-(35,62)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1)
-                                expr , buildhelper (depth - 1)
-                                                   (depth - 1)
-                                                   expr , buildhelper (depth - 1)
-                                                                      (depth - 1)
-                                                                      expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(35,36)-(35,39)
-depth
-VarG
-
-(36,11)-(36,15)
-buildhelper
-VarG
-
-(36,11)-(36,15)
-depth
-VarG
-
-(36,11)-(36,15)
-depth
-VarG
-
-(36,11)-(36,15)
-depth - 1
-BopG VarG LitG
-
-(36,11)-(36,15)
-depth - 1
-BopG VarG LitG
-
-(36,11)-(36,15)
-1
-LitG
-
-(36,11)-(36,15)
-1
-LitG
-
-(36,16)-(36,17)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(36,32)-(36,35)
-depth
-VarG
-
-(36,41)-(36,46)
-depth - 1
-BopG VarG LitG
-
-(36,47)-(36,51)
-1
-LitG
-
-(38,8)-(38,12)
-buildhelper
-VarG
-
-(38,8)-(38,12)
-depth
-VarG
-
-(38,8)-(38,12)
-depth
-VarG
-
-(38,8)-(38,12)
-depth - 1
-BopG VarG LitG
-
-(38,8)-(38,12)
-depth - 1
-BopG VarG LitG
-
-(38,8)-(38,12)
-1
-LitG
-
-(38,8)-(38,12)
-1
-LitG
-
-(38,13)-(38,14)
-buildhelper (depth - 1)
-            (depth - 1) expr
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(40,14)-(40,54)
-buildThresh
-VarG
-
-(40,14)-(40,54)
-(buildhelper (depth - 1)
-             (depth - 1)
-             expr , buildhelper (depth - 1)
-                                (depth - 1)
-                                expr , buildhelper (depth - 1)
-                                                   (depth - 1)
-                                                   expr , buildhelper (depth - 1)
-                                                                      (depth - 1)
-                                                                      expr)
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(40,34)-(40,35)
-depth
-VarG
-
-(40,37)-(40,48)
-1
-LitG
-
-(40,55)-(40,56)
-buildThresh (buildhelper (depth - 1)
-                         (depth - 1)
-                         expr , buildhelper (depth - 1)
-                                            (depth - 1)
-                                            expr , buildhelper (depth - 1)
-                                                               (depth - 1)
-                                                               expr , buildhelper (depth - 1)
-                                                                                  (depth - 1)
-                                                                                  expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(42,40)-(42,41)
-depth
-VarG
-
-(42,43)-(42,54)
-1
-LitG
-
-(44,46)-(44,47)
-depth
-VarG
-
-(44,49)-(44,60)
-1
-LitG
-
-(46,52)-(46,53)
-depth
-VarG
-
-(46,55)-(46,66)
-1
-LitG
-
-(48,2)-(48,51)
+(48,3)-(48,52)
 buildhelper (rand (1 , 4))
             depth ""
 AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
 
-(48,12)-(48,23)
-buildhelper
-VarG
+*)
 
+(* type error slice
+(11,4)-(11,31)
+(11,17)-(11,29)
+(11,21)-(11,29)
+(11,28)-(11,29)
+(15,4)-(15,23)
+(15,12)-(15,21)
+(15,17)-(15,21)
+(19,5)-(47,46)
+(20,12)-(20,62)
+(20,53)-(20,59)
+(20,53)-(20,62)
+(22,9)-(24,75)
+(23,14)-(23,25)
+(23,14)-(23,58)
+(23,26)-(23,58)
+(23,27)-(23,38)
+(24,14)-(24,75)
+(24,19)-(24,20)
+(24,34)-(24,74)
+(24,35)-(24,67)
+(24,36)-(24,47)
+(24,68)-(24,69)
+(26,9)-(35,65)
+(30,16)-(31,79)
+(30,17)-(30,57)
+(30,18)-(30,29)
+(30,58)-(30,59)
+(31,26)-(31,77)
+(31,27)-(31,67)
+(31,28)-(31,39)
+(31,68)-(31,69)
+(33,11)-(35,65)
+(33,16)-(33,17)
+(34,13)-(35,65)
+(34,14)-(34,54)
+(34,15)-(34,26)
+(34,55)-(34,56)
+(35,16)-(35,64)
+(35,21)-(35,22)
+(35,23)-(35,63)
+(35,24)-(35,35)
+(36,12)-(36,53)
+(36,17)-(36,18)
+(36,19)-(36,53)
+(36,20)-(36,31)
+(38,9)-(47,46)
+(38,14)-(38,15)
+(40,14)-(47,45)
+(40,15)-(40,55)
+(40,16)-(40,27)
+(40,56)-(40,57)
+(42,20)-(47,43)
+(42,21)-(42,61)
+(42,22)-(42,33)
+(42,62)-(42,63)
+(44,26)-(47,41)
+(44,27)-(44,67)
+(44,28)-(44,39)
+(44,68)-(44,69)
+(46,32)-(47,39)
+(46,33)-(46,73)
+(46,34)-(46,45)
+(46,74)-(46,75)
 *)

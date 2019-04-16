@@ -69,12 +69,23 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,7)-(30,55)
+(29,7)-(31,57)
 (eval (a , sin (pi *. x) , sin (pi *. y)) +. eval (b , sin (pi *. x) , sin (pi *. y))) +. eval (c , sin (pi *. x) , sin (pi *. y))
 BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(29,8)-(29,52)
-eval (a , sin (pi *. x) , sin (pi *. y)) +. eval (b , sin (pi *. x) , sin (pi *. y))
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+*)
 
+(* type error slice
+(21,22)-(21,60)
+(21,23)-(21,39)
+(21,24)-(21,28)
+(29,7)-(31,57)
+(29,7)-(32,15)
+(29,8)-(30,56)
+(29,9)-(29,53)
+(29,10)-(29,14)
+(30,11)-(30,55)
+(30,12)-(30,16)
+(31,12)-(31,56)
+(31,13)-(31,17)
 *)

@@ -41,12 +41,21 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(18,31)-(18,46)
-buildX
-VarG
-
-(18,45)-(18,46)
+(18,32)-(18,47)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
+*)
+
+(* type error slice
+(17,12)-(17,25)
+(17,12)-(17,29)
+(17,13)-(17,17)
+(17,28)-(17,29)
+(18,8)-(18,48)
+(18,17)-(18,21)
+(18,17)-(18,28)
+(18,32)-(18,47)
+(18,46)-(18,47)
+(18,47)-(18,47)
 *)

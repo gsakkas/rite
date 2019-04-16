@@ -65,102 +65,25 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(23,32)-(23,34)
-fst
-VarG
-
-(23,32)-(23,34)
-x
-VarG
-
-(23,32)-(23,34)
-snd
-VarG
-
-(23,32)-(23,34)
-x
-VarG
-
-(23,32)-(23,34)
-snd x
-AppG (fromList [VarG])
-
-(23,32)-(23,34)
-match a with
-| [] -> (sum / 10) :: ((sum mod 10) :: a)
-| h :: t -> (sum / 10) :: ((h + (sum mod 10)) :: t)
-CaseG VarG (fromList [(Nothing,ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG (BopG VarG LitG)]))) Nothing]))) Nothing),(Nothing,ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing)])
-
-(23,49)-(23,63)
-sum
-VarG
-
-(23,49)-(23,63)
-10
-LitG
-
-(23,49)-(23,63)
+(20,7)-(29,21)
 let sum = fst x + snd x in
 match a with
 | [] -> (sum / 10) :: ((sum mod 10) :: a)
 | h :: t -> (sum / 10) :: ((h + (sum mod 10)) :: t)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(23,55)-(23,57)
-fst x
-AppG (fromList [VarG])
-
-(24,26)-(24,35)
-sum
-VarG
-
-(24,26)-(24,35)
-10
-LitG
-
-(24,43)-(24,44)
-sum / 10
-BopG VarG LitG
-
-(24,61)-(24,62)
-sum mod 10
-BopG VarG LitG
-
-(26,10)-(29,20)
-sum
-VarG
-
-(26,10)-(29,20)
-10
-LitG
-
-(27,45)-(27,46)
-sum
-VarG
-
-(27,45)-(27,46)
-10
-LitG
-
-(27,50)-(27,75)
-List.rev l2
-AppG (fromList [VarG])
-
-(28,39)-(28,40)
-List.rev l1
-AppG (fromList [VarG])
-
-(28,49)-(28,50)
-sum / 10
-BopG VarG LitG
-
-(28,73)-(28,74)
-sum mod 10
-BopG VarG LitG
-
-(31,15)-(31,51)
+(31,16)-(31,52)
 List.combine (List.rev l1)
              (List.rev l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+(32,5)-(32,52)
+List.fold_left f base args
+AppG (fromList [VarG])
+
+*)
+
+(* type error slice
+(31,16)-(31,28)
+(31,16)-(31,52)
 *)

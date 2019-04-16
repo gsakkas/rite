@@ -18,27 +18,27 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(6,11)-(6,54)
+(6,12)-(6,55)
 fun b' ->
   if f b' = b'
   then (b' , true)
   else (b' , false)
-LamG (IteG EmptyG EmptyG EmptyG)
+LamG VarPatG (IteG EmptyG EmptyG EmptyG)
 
-(6,22)-(6,23)
-b'
-VarG
+*)
 
-(6,29)-(6,38)
-b'
-VarG
-
-(6,30)-(6,31)
-b'
-VarG
-
-(6,45)-(6,46)
-b'
-VarG
-
+(* type error slice
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,42)-(3,48)
+(3,42)-(3,56)
+(3,49)-(3,56)
+(3,50)-(3,51)
+(6,3)-(6,73)
+(6,12)-(6,55)
+(6,45)-(6,55)
+(6,59)-(6,65)
+(6,59)-(6,73)
+(6,66)-(6,73)
+(6,67)-(6,69)
 *)

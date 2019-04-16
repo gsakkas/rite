@@ -62,85 +62,90 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(15,14)-(15,60)
+(15,15)-(15,61)
 String.concat ""
               ["sin(pi*" ; exprToString s ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [EmptyG])])
 
-(15,28)-(15,60)
-""
-LitG
-
-(16,16)-(16,46)
+(16,17)-(16,53)
 String.concat ""
               ["cos(pi*" ; exprToString s ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [EmptyG])])
 
-(16,17)-(16,26)
-String.concat
-VarG
-
-(16,17)-(16,26)
-""
-LitG
-
-(16,17)-(16,26)
-["cos(pi*" ; exprToString s ; ")"]
-ListG LitG Nothing
-
-(18,8)-(18,33)
+(18,7)-(18,69)
 String.concat ""
               ["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [EmptyG])])
 
-(18,9)-(18,13)
-String.concat
-VarG
-
-(18,9)-(18,13)
-""
-LitG
-
-(18,9)-(18,13)
-["((" ; exprToString s ; "+" ; exprToString p ; ")/2"]
-ListG LitG Nothing
-
-(19,19)-(19,43)
+(19,20)-(19,63)
 String.concat ""
               [exprToString s ; "*" ; exprToString p]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [EmptyG])])
 
-(19,20)-(19,36)
-String.concat
-VarG
-
-(19,20)-(19,36)
-""
-LitG
-
-(19,20)-(19,36)
-[exprToString s ; "*" ; exprToString p]
-ListG LitG Nothing
-
-(21,12)-(21,36)
+(21,7)-(25,14)
 String.concat ""
               ["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [EmptyG])])
 
-(21,13)-(21,16)
-String.concat
-VarG
-
-(21,13)-(21,16)
+(26,10)-(26,11)
 ""
 LitG
 
-(21,13)-(21,16)
-["(" ; exprToString s ; "<" ; exprToString p ; "?" ; exprToString r ; ":" ; exprToString d ; ")"]
-ListG LitG Nothing
+*)
 
-(26,9)-(26,10)
-""
-LitG
-
+(* type error slice
+(12,3)-(26,11)
+(13,14)-(13,17)
+(15,15)-(15,28)
+(15,15)-(15,61)
+(15,29)-(15,61)
+(15,30)-(15,39)
+(15,41)-(15,53)
+(15,41)-(15,55)
+(16,17)-(16,47)
+(16,17)-(16,53)
+(16,18)-(16,27)
+(16,30)-(16,46)
+(16,31)-(16,43)
+(16,50)-(16,53)
+(18,7)-(18,61)
+(18,7)-(18,69)
+(18,8)-(18,41)
+(18,9)-(18,34)
+(18,10)-(18,14)
+(18,17)-(18,33)
+(18,18)-(18,30)
+(18,37)-(18,40)
+(18,44)-(18,60)
+(18,45)-(18,57)
+(18,64)-(18,69)
+(19,20)-(19,44)
+(19,20)-(19,63)
+(19,21)-(19,37)
+(19,22)-(19,34)
+(19,40)-(19,43)
+(19,47)-(19,63)
+(19,48)-(19,60)
+(21,7)-(24,29)
+(21,7)-(25,14)
+(21,8)-(23,17)
+(21,9)-(22,29)
+(21,10)-(21,71)
+(21,11)-(21,64)
+(21,12)-(21,44)
+(21,13)-(21,37)
+(21,14)-(21,17)
+(21,20)-(21,36)
+(21,21)-(21,33)
+(21,40)-(21,43)
+(21,47)-(21,63)
+(21,48)-(21,60)
+(21,67)-(21,70)
+(22,12)-(22,28)
+(22,13)-(22,25)
+(23,13)-(23,16)
+(24,12)-(24,28)
+(24,13)-(24,25)
+(25,11)-(25,14)
+(26,10)-(26,11)
 *)

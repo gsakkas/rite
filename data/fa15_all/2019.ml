@@ -22,26 +22,27 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,20)-(7,35)
+(7,21)-(7,36)
 if List.mem h seen
 then h :: seen
 else seen
-IteG (AppG (fromList [EmptyG])) (ConAppG (Just EmptyG) Nothing) VarG
+IteG (AppG (fromList [EmptyG])) (ConAppG (Just EmptyG)) VarG
 
-(7,39)-(7,77)
-h
-VarG
+*)
 
-(7,39)-(7,77)
-seen
-VarG
-
-(7,39)-(7,77)
-seen
-VarG
-
-(7,39)-(7,77)
-h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
+(* type error slice
+(3,3)-(8,28)
+(3,19)-(7,78)
+(7,9)-(7,78)
+(7,21)-(7,29)
+(7,21)-(7,36)
+(7,32)-(7,36)
+(7,57)-(7,63)
+(7,57)-(7,78)
+(7,64)-(7,78)
+(7,65)-(7,70)
+(8,12)-(8,28)
+(8,13)-(8,19)
+(8,20)-(8,27)
+(8,21)-(8,23)
 *)

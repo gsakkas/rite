@@ -33,16 +33,31 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(11,37)-(11,62)
+(11,38)-(11,63)
 List.append zeroes l2
 AppG (fromList [VarG])
 
-(14,45)-(14,56)
-List.append zeroes l1
-AppG (fromList [VarG])
+(14,33)-(14,62)
+(List.append zeroes l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,46)-(14,52)
-List.append
-VarG
+*)
 
+(* type error slice
+(3,31)-(3,53)
+(3,36)-(3,53)
+(3,37)-(3,42)
+(11,7)-(11,64)
+(11,20)-(11,25)
+(11,20)-(11,29)
+(11,51)-(11,62)
+(11,52)-(11,58)
+(14,7)-(14,62)
+(14,20)-(14,25)
+(14,20)-(14,29)
+(14,33)-(14,44)
+(14,33)-(14,62)
+(14,45)-(14,62)
+(14,46)-(14,57)
+(14,47)-(14,53)
 *)

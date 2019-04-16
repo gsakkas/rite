@@ -13,12 +13,16 @@ let rec assoc (d,k,l) =
 *)
 
 (* changed spans
-(3,65)-(3,77)
+(3,66)-(3,78)
 assoc (d , k , ls)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(3,71)-(3,72)
-(d , k , ls)
-TupleG (fromList [VarG])
+*)
 
+(* type error slice
+(2,4)-(3,80)
+(2,16)-(3,78)
+(3,66)-(3,71)
+(3,66)-(3,78)
+(3,72)-(3,73)
 *)

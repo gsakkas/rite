@@ -1,4 +1,4 @@
-IteG (BopG EmptyG EmptyG) VarG VarG
-if a > b then a else b
-if a < b then b else a
-if a < b then b else a
+CaseG VarG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| b :: [] -> [b]

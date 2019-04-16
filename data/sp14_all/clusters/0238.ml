@@ -1,11 +1,5 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (LetG Rec (fromList [EmptyG]) EmptyG)
-if n = 0
-then [0]
-else (let rec integers =
-        fun a ->
-          fun b ->
-            if a = 0
-            then b
-            else integers (a / 10)
-                          ((a mod 10) :: b) in
-      integers n [])
+CaseG (AppG (fromList [EmptyG])) (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,AppG (fromList [EmptyG])),(ConsPatG WildPatG (ConPatG Nothing),Nothing,ListG (fromList []))])
+match List.rev l with
+| _ :: [] -> []
+| h :: m :: t -> mulByDigit i
+                            (m :: t) @ [((h * i) / 10) + ((m * i) mod 10) ; (h * i) mod 10]

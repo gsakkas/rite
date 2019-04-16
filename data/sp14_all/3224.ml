@@ -39,12 +39,17 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(17,26)-(17,39)
+(17,27)-(17,40)
 eval (ex , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(17,32)-(17,34)
-(ex , x , y)
-TupleG (fromList [VarG])
+*)
 
+(* type error slice
+(13,4)-(17,43)
+(13,15)-(17,41)
+(14,3)-(17,41)
+(17,27)-(17,40)
+(17,28)-(17,32)
+(17,33)-(17,35)
 *)

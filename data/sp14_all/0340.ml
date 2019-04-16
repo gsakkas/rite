@@ -65,52 +65,31 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(28,16)-(28,20)
-cos
-VarG
+(28,8)-(28,34)
+cos (pi *. eval (e1 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(28,16)-(28,20)
-pi
-VarG
+(28,38)-(28,62)
+sin (pi *. eval (e2 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(28,16)-(28,20)
-eval (e1 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(28,16)-(28,20)
-pi *. eval (e1 , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(28,44)-(28,48)
-sin
-VarG
-
-(28,44)-(28,48)
-pi
-VarG
-
-(28,44)-(28,48)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(28,44)-(28,48)
-pi *. eval (e2 , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(30,17)-(30,47)
+(30,18)-(30,48)
 sin ((pi *. eval (e , x , y)) *. 0.5)
 AppG (fromList [BopG EmptyG EmptyG])
 
-(30,22)-(30,47)
-sin
-VarG
+*)
 
-(30,23)-(30,39)
-pi
-VarG
-
-(30,23)-(30,39)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
+(* type error slice
+(19,19)-(19,43)
+(19,26)-(19,42)
+(19,27)-(19,31)
+(28,7)-(28,63)
+(28,8)-(28,34)
+(28,16)-(28,33)
+(28,17)-(28,21)
+(28,38)-(28,62)
+(28,44)-(28,61)
+(28,45)-(28,49)
+(30,18)-(30,48)
+(30,23)-(30,48)
 *)

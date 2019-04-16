@@ -1,3 +1,2 @@
-AppG (fromList [LamG EmptyG])
-x (fun a -> a)
-x (fun a -> a)
+TupleG (fromList [LitG,ListG (fromList [EmptyG])])
+(0 , [0 ; 0 ; 0 ; 0])

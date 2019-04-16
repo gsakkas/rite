@@ -19,8 +19,15 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(6,30)-(6,31)
+(6,31)-(6,32)
 x
 VarG
 
+*)
+
+(* type error slice
+(3,3)-(7,60)
+(6,19)-(6,32)
+(6,29)-(6,30)
+(6,31)-(6,32)
 *)

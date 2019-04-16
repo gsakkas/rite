@@ -1,4 +1,3 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-((o + x1) + x2) :: z
-((o + x1) + x2) :: z
-((o + x1) + x2) :: z
+TupleG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
+(mulByDigit x q , [])
+(List.length l1 , [])

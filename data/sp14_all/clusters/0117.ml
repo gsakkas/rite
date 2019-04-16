@@ -1,8 +1,2 @@
-BopG VarG (ListG EmptyG Nothing)
-carry <> []
-carry <> []
-carry <> []
-carry <> []
-t = []
-t = []
-t = []
+BopG (AppG (fromList [EmptyG])) VarG
+eval (a , x , y) *. pi

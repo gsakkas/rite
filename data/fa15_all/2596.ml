@@ -25,12 +25,17 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(9,11)-(9,56)
+(9,12)-(9,57)
 additivePersistence (sumList (digitsOfInt n))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(9,32)-(9,39)
-sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(7,4)-(10,11)
+(7,29)-(10,9)
+(8,3)-(10,9)
+(9,12)-(9,57)
+(9,13)-(9,32)
+(10,8)-(10,9)
 *)

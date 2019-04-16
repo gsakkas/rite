@@ -58,7 +58,7 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(14,2)-(26,71)
+(14,3)-(26,72)
 match e with
 | VarX -> "x"
 | VarY -> "y"
@@ -68,42 +68,12 @@ match e with
 | Times (a , b) -> exp a ^ ("*" ^ exp b)
 | Thresh (a , b , c , d) -> "(" ^ (exp a ^ ("<" ^ (exp b ^ ("?" ^ (exp c ^ (":" ^ (exp d ^ ")")))))))
 | Hoi (a , b , c) -> "sin(pi*" ^ (exp a ^ (")*cos(pi*" ^ (exp b ^ (")/(" ^ (exp c ^ ")")))))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
 
-(26,37)-(26,46)
-")*cos(pi*"
-LitG
+*)
 
-(26,60)-(26,63)
-")/(" ^ (exp c ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(26,66)-(26,69)
-(^)
-VarG
-
-(26,66)-(26,69)
-exp
-VarG
-
-(26,66)-(26,69)
-c
-VarG
-
-(26,66)-(26,69)
-(^)
-VarG
-
-(26,66)-(26,69)
-exp c ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(26,66)-(26,69)
-exp c
-AppG (fromList [VarG])
-
-(26,66)-(26,69)
-")/("
-LitG
-
+(* type error slice
+(14,3)-(26,72)
+(26,30)-(26,71)
+(26,31)-(26,36)
 *)

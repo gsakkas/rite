@@ -15,54 +15,25 @@ let pipe fs =
 *)
 
 (* changed spans
-(5,16)-(5,17)
-a
-VarG
+(5,13)-(5,20)
+fun g -> f a x
+LamG VarPatG (AppG (fromList [EmptyG]))
 
-(5,16)-(5,19)
-fun a -> a x
-LamG (AppG (fromList [EmptyG]))
-
-(5,18)-(5,19)
+(5,37)-(5,40)
 f
 VarG
 
-(5,18)-(5,19)
-fun fs ->
-  (let f =
-     fun a ->
-       fun x -> fun g -> f a x in
-   let base = fun f -> f in
-   List.fold_left f base fs)
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+*)
 
-(5,18)-(5,19)
-fun a ->
-  fun x -> fun g -> f a x
-LamG (LamG EmptyG)
-
-(5,18)-(5,19)
-fun x -> fun g -> f a x
-LamG (LamG EmptyG)
-
-(5,18)-(5,19)
-fun g -> f a x
-LamG (AppG (fromList [EmptyG]))
-
-(5,18)-(5,19)
-f a x
-AppG (fromList [VarG])
-
-(5,18)-(5,19)
-let f =
-  fun a ->
-    fun x -> fun g -> f a x in
-let base = fun f -> f in
-List.fold_left f base fs
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(5,23)-(5,67)
-x
-VarG
-
+(* type error slice
+(5,3)-(5,68)
+(5,9)-(5,20)
+(5,11)-(5,20)
+(5,13)-(5,20)
+(5,17)-(5,18)
+(5,17)-(5,20)
+(5,19)-(5,20)
+(5,44)-(5,58)
+(5,44)-(5,68)
+(5,59)-(5,60)
 *)

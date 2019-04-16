@@ -45,44 +45,28 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(18,21)-(18,43)
+(18,22)-(18,44)
 pi *. evalhelper p1 x y
 BopG VarG (AppG (fromList [EmptyG]))
 
-(18,27)-(18,42)
-evalhelper p1 x y
-AppG (fromList [VarG])
+(19,20)-(19,33)
+cos (pi *. evalhelper p1 x y)
+AppG (fromList [BopG EmptyG EmptyG])
 
-(19,19)-(19,29)
-cos
-VarG
+*)
 
-(19,19)-(19,29)
-pi
-VarG
-
-(19,19)-(19,29)
-evalhelper p1 x y
-AppG (fromList [VarG])
-
-(19,19)-(19,29)
-pi *. evalhelper p1 x y
-BopG VarG (AppG (fromList [EmptyG]))
-
-(19,19)-(19,32)
-x
-VarG
-
-(19,19)-(19,32)
-y
-VarG
-
-(20,2)-(20,18)
-x
-VarG
-
-(20,2)-(20,18)
-y
-VarG
-
+(* type error slice
+(11,4)-(11,29)
+(11,10)-(11,27)
+(15,5)-(19,33)
+(18,18)-(18,21)
+(18,18)-(18,44)
+(18,22)-(18,44)
+(18,23)-(18,25)
+(18,28)-(18,43)
+(18,29)-(18,39)
+(19,20)-(19,30)
+(19,20)-(19,33)
+(20,3)-(20,13)
+(20,3)-(20,19)
 *)

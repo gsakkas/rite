@@ -15,59 +15,16 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(2,13)-(2,66)
-fun a ->
-  fun b ->
-    if (10 * a) > b
-    then a
-    else helpFac (10 * a) b
-LamG (LamG EmptyG)
+(5,24)-(5,34)
+helpFac n 1
+AppG (fromList [VarG,LitG])
 
-(2,17)-(2,66)
-fun b ->
-  if (10 * a) > b
-  then a
-  else helpFac (10 * a) b
-LamG (IteG EmptyG EmptyG EmptyG)
+*)
 
-(2,32)-(2,33)
-10 * a
-BopG LitG VarG
-
-(2,51)-(2,52)
-a
-VarG
-
-(2,55)-(2,57)
-b
-VarG
-
-(2,55)-(2,57)
-a
-VarG
-
-(2,55)-(2,57)
-helpFac
-VarG
-
-(2,55)-(2,57)
-helpFac (10 * a) b
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(2,55)-(2,57)
-10 * a
-BopG LitG VarG
-
-(2,65)-(2,66)
-a
-VarG
-
-(4,20)-(5,69)
-b
-VarG
-
-(5,24)-(5,28)
-helpFac
-VarG
-
+(* type error slice
+(2,32)-(2,60)
+(2,45)-(2,60)
+(2,46)-(2,50)
+(5,24)-(5,34)
+(5,25)-(5,29)
 *)

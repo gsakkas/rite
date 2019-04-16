@@ -20,63 +20,27 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(6,43)-(6,63)
+(6,30)-(6,65)
 let whilesFun =
   fun f' ->
     fun b' ->
       (let fOfB = f' b' in
        (fOfB , fOfB = b')) in
 whilesFun f
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(6,44)-(6,49)
-fun f' ->
-  fun b' ->
-    (let fOfB = f' b' in
-     (fOfB , fOfB = b'))
-LamG (LamG EmptyG)
+*)
 
-(6,44)-(6,49)
-fun b' ->
-  (let fOfB = f' b' in
-   (fOfB , fOfB = b'))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(6,44)-(6,49)
-let fOfB = f' b' in
-(fOfB , fOfB = b')
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(6,47)-(6,48)
-f'
-VarG
-
-(6,51)-(6,62)
-b'
-VarG
-
-(6,51)-(6,62)
-fOfB
-VarG
-
-(6,51)-(6,62)
-(fOfB , fOfB = b')
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(6,52)-(6,53)
-fOfB
-VarG
-
-(6,56)-(6,61)
-b'
-VarG
-
-(6,59)-(6,60)
-whilesFun
-VarG
-
-(6,66)-(6,67)
-f
-VarG
-
+(* type error slice
+(3,12)-(3,13)
+(3,12)-(3,15)
+(4,53)-(4,59)
+(4,53)-(4,67)
+(4,60)-(4,67)
+(4,61)-(4,62)
+(6,22)-(6,28)
+(6,22)-(6,69)
+(6,29)-(6,69)
+(6,30)-(6,65)
+(6,44)-(6,64)
 *)

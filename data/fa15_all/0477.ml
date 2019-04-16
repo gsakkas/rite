@@ -26,53 +26,27 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(9,28)-(9,69)
-xs
-VarG
+(9,62)-(9,70)
+sumList (digits n)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(9,28)-(9,69)
-h
-VarG
+*)
 
-(9,28)-(9,69)
-sumList
-VarG
-
-(9,28)-(9,69)
-t
-VarG
-
-(9,28)-(9,69)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(9,28)-(9,69)
-sumList t
-AppG (fromList [VarG])
-
-(9,28)-(9,69)
-h + sumList t
-BopG VarG (AppG (fromList [EmptyG]))
-
-(9,28)-(9,69)
-0
-LitG
-
-(9,28)-(9,69)
-match xs with
-| [] -> 0
-| h :: t -> h + sumList t
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
-
-(9,61)-(9,67)
-sumList
-VarG
-
-(9,61)-(9,67)
-digits n
-AppG (fromList [VarG])
-
+(* type error slice
+(2,24)-(2,77)
+(2,64)-(2,77)
+(2,65)-(2,71)
+(2,72)-(2,73)
+(5,26)-(5,32)
+(5,26)-(5,66)
+(5,33)-(5,55)
+(5,34)-(5,45)
+(7,4)-(7,37)
+(7,12)-(7,35)
+(7,16)-(7,27)
+(7,16)-(7,35)
+(9,33)-(9,70)
+(9,55)-(9,56)
+(9,62)-(9,68)
+(9,62)-(9,70)
 *)

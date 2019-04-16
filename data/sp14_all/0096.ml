@@ -50,156 +50,23 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,27)
+(16,17)-(16,28)
 match snd a with
 | [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
 | h :: t -> (0 , [])
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
 
-(17,13)-(17,18)
-snd
-VarG
-
-(17,17)-(17,18)
-a
-VarG
-
-(17,17)-(17,18)
-fst
-VarG
-
-(17,17)-(17,18)
-fst x
-AppG (fromList [VarG])
-
-(17,17)-(17,18)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(17,17)-(17,18)
-(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-TupleG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
-
-(18,4)-(19,51)
-snd
-VarG
-
-(18,4)-(19,51)
-x
-VarG
-
-(18,4)-(19,51)
-fst
-VarG
-
-(18,4)-(19,51)
-x
-VarG
-
-(18,4)-(19,51)
-snd
-VarG
-
-(18,4)-(19,51)
-x
-VarG
-
-(18,4)-(19,51)
-fst
-VarG
-
-(18,4)-(19,51)
-x
-VarG
-
-(18,4)-(19,51)
-snd
-VarG
-
-(18,4)-(19,51)
-x
-VarG
-
-(18,4)-(19,51)
-snd x
-AppG (fromList [VarG])
-
-(18,4)-(19,51)
-fst x
-AppG (fromList [VarG])
-
-(18,4)-(19,51)
-snd x
-AppG (fromList [VarG])
-
-(18,4)-(19,51)
-fst x
-AppG (fromList [VarG])
-
-(18,4)-(19,51)
-snd x
-AppG (fromList [VarG])
-
-(18,4)-(19,51)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(18,4)-(19,51)
-(fst x + snd x) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(18,4)-(19,51)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(18,4)-(19,51)
-(fst x + snd x) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(18,4)-(19,51)
-10
-LitG
-
-(18,4)-(19,51)
-10
-LitG
-
-(18,4)-(19,51)
-0
-LitG
-
-(18,4)-(19,51)
-0
-LitG
-
-(18,4)-(19,51)
-let base = (0 , []) in
-let args =
-  List.combine (List.rev l1)
-               (List.rev l2) in
-let (_ , res) =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [TupleG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(18,4)-(19,51)
+(17,14)-(17,19)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(18,4)-(19,51)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+*)
 
-(18,4)-(19,51)
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(18,4)-(19,51)
-[]
-ListG EmptyG Nothing
-
-(18,4)-(19,51)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(17,5)-(19,52)
+(17,14)-(17,19)
+(19,5)-(19,52)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,36)-(19,40)
 *)

@@ -9,8 +9,15 @@ let rec clone x n = x :: (clone x (n - 1));;
 *)
 
 (* changed spans
-(2,36)-(2,37)
+(2,21)-(2,56)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
+*)
+
+(* type error slice
+(2,21)-(2,56)
+(2,35)-(2,56)
+(2,37)-(2,38)
+(2,56)-(2,56)
 *)

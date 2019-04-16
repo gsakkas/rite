@@ -62,29 +62,33 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(13,27)-(13,43)
-e1
-VarG
+(25,9)-(26,39)
+buildTangent (build (rand , depth - 1) , build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(13,27)-(13,43)
-e2
-VarG
-
-(13,27)-(13,43)
-fun (e1 , e2) ->
-  Tangent (e1 , e2)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(13,27)-(13,43)
-Average (e1 , e2)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(23,6)-(26,38)
+(26,39)-(26,39)
 buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(25,23)-(25,50)
-(build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(13,4)-(13,46)
+(13,19)-(13,44)
+(17,4)-(17,23)
+(17,12)-(17,21)
+(17,17)-(17,21)
+(19,4)-(26,41)
+(19,16)-(26,39)
+(20,3)-(26,39)
+(21,10)-(21,60)
+(21,51)-(21,57)
+(21,51)-(21,60)
+(23,7)-(26,39)
+(25,9)-(26,39)
+(25,10)-(25,52)
+(25,11)-(25,23)
+(25,24)-(25,51)
+(25,25)-(25,30)
+(26,39)-(26,39)
 *)

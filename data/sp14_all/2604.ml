@@ -57,97 +57,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,16)-(19,54)
+(19,17)-(19,55)
 let (b1 , b2) = a in
 match x with
 | (fir , sec) -> if (fir + sec) < 10
                  then ([] , (fir + sec) :: b2)
                  else ([] , (fir + sec) :: b2)
-LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
 
-(19,22)-(19,23)
-a
-VarG
+*)
 
-(19,22)-(19,23)
-match x with
-| (fir , sec) -> if (fir + sec) < 10
-                 then ([] , (fir + sec) :: b2)
-                 else ([] , (fir + sec) :: b2)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(19,40)-(19,47)
-(fir + sec) < 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(19,40)-(19,54)
-if (fir + sec) < 10
-then ([] , (fir + sec) :: b2)
-else ([] , (fir + sec) :: b2)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(19,45)-(19,46)
-fir
-VarG
-
-(19,52)-(19,54)
-sec
-VarG
-
-(20,4)-(22,53)
-fir
-VarG
-
-(20,4)-(22,53)
-sec
-VarG
-
-(20,4)-(22,53)
-b2
-VarG
-
-(20,4)-(22,53)
-fir
-VarG
-
-(20,4)-(22,53)
-sec
-VarG
-
-(20,4)-(22,53)
-b2
-VarG
-
-(20,4)-(22,53)
-fir + sec
-BopG VarG VarG
-
-(20,4)-(22,53)
-fir + sec
-BopG VarG VarG
-
-(20,4)-(22,53)
-([] , (fir + sec) :: b2)
-TupleG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
-
-(20,4)-(22,53)
-([] , (fir + sec) :: b2)
-TupleG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
-
-(20,4)-(22,53)
-(fir + sec) :: b2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(20,4)-(22,53)
-(fir + sec) :: b2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(20,4)-(22,53)
-[]
-ListG EmptyG Nothing
-
-(20,4)-(22,53)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(19,5)-(22,54)
+(19,11)-(19,55)
+(19,13)-(19,55)
+(19,17)-(19,55)
+(19,41)-(19,55)
+(20,5)-(22,54)
+(20,16)-(20,24)
+(22,21)-(22,35)
+(22,21)-(22,47)
+(22,36)-(22,37)
+(22,38)-(22,42)
 *)

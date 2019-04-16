@@ -63,12 +63,13 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,19)-(29,40)
+(29,20)-(29,41)
 log (eval (nlog , x , y))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(29,23)-(29,27)
-eval (nlog , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(29,20)-(29,23)
+(29,20)-(29,41)
 *)

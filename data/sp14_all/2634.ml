@@ -53,64 +53,62 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(18,28)-(18,41)
+(18,29)-(18,42)
 eval (e' , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(18,34)-(18,36)
-(e' , x , y)
-TupleG (fromList [VarG])
-
-(19,24)-(19,37)
+(19,25)-(19,38)
 eval (e1 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(19,30)-(19,32)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(19,41)-(19,54)
+(19,42)-(19,55)
 eval (e2 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(19,47)-(19,49)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(19,59)-(19,60)
+(19,60)-(19,61)
 2.0
 LitG
 
-(20,21)-(20,34)
+(20,22)-(20,35)
 eval (e1 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(20,27)-(20,29)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(20,38)-(20,51)
+(20,39)-(20,52)
 eval (e2 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(20,44)-(20,46)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(22,15)-(22,22)
+(22,16)-(22,23)
 (a , x , y)
 TupleG (fromList [VarG])
 
-(22,32)-(22,39)
+(22,33)-(22,40)
 (b , x , y)
 TupleG (fromList [VarG])
 
-(23,16)-(23,28)
+(23,17)-(23,29)
 (a_less , x , y)
 TupleG (fromList [VarG])
 
-(24,16)-(24,28)
+(24,17)-(24,29)
 (b_less , x , y)
 TupleG (fromList [VarG])
 
+*)
+
+(* type error slice
+(17,20)-(17,45)
+(17,27)-(17,44)
+(17,28)-(17,32)
+(18,29)-(18,42)
+(18,30)-(18,34)
+(19,24)-(19,61)
+(19,25)-(19,38)
+(19,26)-(19,30)
+(19,42)-(19,55)
+(19,43)-(19,47)
+(19,60)-(19,61)
+(20,22)-(20,35)
+(20,23)-(20,27)
+(20,39)-(20,52)
+(20,40)-(20,44)
 *)

@@ -1,10 +1,7 @@
-AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-mulByDigit h1 (rh :: rt)
-helper t l (h :: acc)
-helper t l (h :: acc)
-helper t l (h :: acc)
-padZero asd3 (asd2 :: b)
-padZero asd3 (asd2 :: b)
-mulByDigit i (m :: t)
-mulByDigit i (m :: t)
-listReverse2 t (h :: dest)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (ConAppG (Just EmptyG))
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+if n < 1
+then []
+else x :: (clone x (n - 1))

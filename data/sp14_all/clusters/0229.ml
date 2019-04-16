@@ -1,4 +1,3 @@
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (BopG EmptyG EmptyG)
-let sum =
-  num + additivePersistence num in
-1 + additivePersistence num
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,BopG EmptyG EmptyG)])
+match x with
+| (f , g) -> ((f + g) + carry) mod 10

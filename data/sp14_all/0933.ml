@@ -41,9 +41,24 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,16)-(14,37)
+(14,17)-(14,38)
 match x with
 | (_ , _) -> a
-CaseG VarG (fromList [(Nothing,VarG)])
+CaseG VarG (fromList [(TuplePatG (fromList [WildPatG]),Nothing,VarG)])
 
+*)
+
+(* type error slice
+(14,5)-(17,52)
+(14,11)-(14,38)
+(14,13)-(14,38)
+(14,17)-(14,38)
+(14,23)-(14,24)
+(16,5)-(17,52)
+(16,16)-(16,28)
+(16,16)-(16,34)
+(17,19)-(17,33)
+(17,19)-(17,45)
+(17,34)-(17,35)
+(17,41)-(17,45)
 *)

@@ -19,8 +19,23 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(5,37)-(5,47)
-(n mod 10) :: result
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
+(5,10)-(5,59)
+digitsOfIntHelper (n / 10)
+                  ((n mod 10) :: result)
+AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
+*)
+
+(* type error slice
+(3,3)-(7,25)
+(3,29)-(6,16)
+(3,31)-(6,16)
+(5,10)-(5,49)
+(5,10)-(5,59)
+(5,11)-(5,28)
+(5,38)-(5,48)
+(5,53)-(5,59)
+(7,3)-(7,20)
+(7,3)-(7,25)
+(7,23)-(7,25)
 *)

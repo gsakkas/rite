@@ -48,36 +48,24 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,12)-(17,18)
-y
-VarG
-
-(17,12)-(17,18)
-z
-VarG
-
-(17,12)-(17,18)
-y + z
-BopG VarG VarG
-
-(17,12)-(17,18)
+(17,44)-(17,72)
 (y + z , b @ ([w mod 10] @ [w / 10]))
 TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(17,45)-(17,46)
-(@)
-VarG
+*)
 
-(17,45)-(17,46)
-[w mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(17,47)-(17,71)
-[w mod 10] @ [w / 10]
-AppG (fromList [ListG EmptyG Nothing])
-
-(17,48)-(17,58)
-[w / 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(16,5)-(20,52)
+(16,11)-(17,72)
+(16,13)-(17,72)
+(17,7)-(17,72)
+(17,13)-(17,19)
+(17,14)-(17,15)
+(17,44)-(17,72)
+(17,46)-(17,47)
+(17,48)-(17,72)
+(17,63)-(17,71)
+(20,19)-(20,33)
+(20,19)-(20,45)
+(20,34)-(20,35)
 *)

@@ -1,11 +1,4 @@
-TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
-(if f b = b
- then (fun b'' ->
-         (f b , false))
- else (fun b'' ->
-         (f b , true)) , b)
-(if f b = b
- then (fun b'' ->
-         (f b , false))
- else (fun b'' ->
-         (f b , true)) , b)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
+if n <= 0
+then []
+else [n mod 10] @ digitsOfInt (n / 10)

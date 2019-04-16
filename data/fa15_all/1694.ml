@@ -74,109 +74,56 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,11)-(17,20)
-a
-VarG
-
-(17,11)-(17,20)
-b
-VarG
-
-(17,11)-(17,20)
-a_less
-VarG
-
-(17,11)-(17,20)
-b_less
-VarG
-
-(17,11)-(17,20)
-e1
-VarG
-
-(17,11)-(17,20)
-e2
-VarG
-
-(17,11)-(17,20)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,11)-(17,20)
-fun (e1 , e2) ->
-  Times (e1 , e2)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,11)-(17,20)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(17,11)-(17,20)
-Times (e1 , e2)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(23,9)-(23,20)
-rand (0 , 1) = 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(23,9)-(23,35)
+(23,10)-(23,36)
 if rand (0 , 1) = 0
 then buildX ()
 else buildY ()
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(23,10)-(23,16)
-rand
-VarG
-
-(23,10)-(23,16)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(23,10)-(23,16)
-0
-LitG
-
-(23,10)-(23,16)
-1
-LitG
-
-(23,10)-(23,16)
-0
-LitG
-
-(23,10)-(23,16)
-(0 , 1)
-TupleG (fromList [LitG])
-
-(25,6)-(28,74)
+(25,7)-(28,75)
 match rand (0 , 4) with
 | 0 -> buildSine (build (rand , depth - 1))
 | 1 -> buildCosine (build (rand , depth - 1))
 | 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | _ -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(25,7)-(25,16)
-rand
-VarG
+*)
 
-(25,7)-(25,16)
-buildSine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(25,7)-(25,16)
-0
-LitG
-
-(25,7)-(25,16)
-4
-LitG
-
-(25,7)-(25,16)
-(0 , 4)
-TupleG (fromList [LitG])
-
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(11,28)-(11,44)
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,21)-(13,29)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,23)
+(17,12)-(17,21)
+(17,17)-(17,21)
+(19,4)-(19,23)
+(19,12)-(19,21)
+(19,17)-(19,21)
+(21,4)-(28,77)
+(21,16)-(28,75)
+(22,3)-(28,75)
+(23,10)-(23,21)
+(23,10)-(23,36)
+(23,11)-(23,17)
+(23,25)-(23,36)
+(23,26)-(23,32)
+(25,7)-(25,46)
+(25,7)-(28,75)
+(25,8)-(25,17)
+(25,18)-(25,45)
+(25,19)-(25,24)
+(26,9)-(28,75)
+(26,10)-(26,51)
+(26,11)-(26,22)
+(27,12)-(28,74)
+(27,13)-(27,25)
 *)

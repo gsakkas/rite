@@ -61,64 +61,25 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(27,16)-(27,17)
-eval
-VarG
-
-(27,16)-(27,17)
+(27,17)-(27,18)
 eval (e , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(27,16)-(27,17)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(27,21)-(27,22)
-x
-VarG
-
-(27,21)-(27,22)
-y
-VarG
-
-(27,21)-(27,22)
-eval
-VarG
-
-(27,21)-(27,22)
+(27,22)-(27,23)
 eval (e , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(27,21)-(27,22)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,17)-(28,18)
-eval
-VarG
-
-(28,17)-(28,18)
+(28,18)-(28,19)
 eval (e , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(28,17)-(28,18)
-(e , x , y)
-TupleG (fromList [VarG])
+*)
 
-(28,17)-(28,25)
-x
-VarG
-
-(28,17)-(28,25)
-y
-VarG
-
-(28,22)-(28,25)
-x
-VarG
-
-(28,22)-(28,25)
-y
-VarG
-
+(* type error slice
+(16,3)-(28,26)
+(27,17)-(27,18)
+(27,17)-(27,23)
+(27,22)-(27,23)
+(28,18)-(28,19)
+(28,18)-(28,26)
 *)

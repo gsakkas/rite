@@ -1,4 +1,2 @@
-BopG VarG (BopG EmptyG EmptyG)
-a + (x * x)
-a + (x * x)
-a + (x * x)
+SeqG (AppG (fromList [EmptyG])) (ListG (fromList [EmptyG]))
+listReverse t; [h]

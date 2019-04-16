@@ -59,8 +59,15 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(18,8)-(18,12)
+(18,9)-(18,13)
 depth
 VarG
 
+*)
+
+(* type error slice
+(18,3)-(27,74)
+(18,9)-(18,13)
+(20,19)-(20,23)
+(20,19)-(20,30)
 *)

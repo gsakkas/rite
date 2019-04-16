@@ -51,58 +51,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,16)-(18,17)
-fst
-VarG
-
-(18,16)-(18,17)
-fst a
-AppG (fromList [VarG])
-
-(18,16)-(18,48)
+(18,17)-(18,49)
 let sum =
   fst a + ((fst x + snd x) mod 10) in
 (sum / 10 , sum mod 10)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (TupleG (fromList [EmptyG]))
 
-(19,4)-(21,51)
-sum
-VarG
-
-(19,4)-(21,51)
-sum
-VarG
-
-(19,4)-(21,51)
-sum / 10
-BopG VarG LitG
-
-(19,4)-(21,51)
-sum mod 10
-BopG VarG LitG
-
-(19,4)-(21,51)
-10
-LitG
-
-(19,4)-(21,51)
-10
-LitG
-
-(19,4)-(21,51)
-(sum / 10 , sum mod 10)
-TupleG (fromList [BopG EmptyG EmptyG])
-
-(19,15)-(19,16)
+(19,16)-(19,17)
 (0 , 0)
 TupleG (fromList [LitG])
 
-(20,4)-(21,51)
-0
-LitG
-
-(21,48)-(21,51)
+(21,49)-(21,52)
 [res]
-ListG VarG Nothing
+ListG (fromList [VarG])
 
+*)
+
+(* type error slice
+(18,5)-(21,52)
+(18,11)-(18,49)
+(18,17)-(18,18)
+(18,17)-(18,49)
+(21,5)-(21,52)
+(21,19)-(21,33)
+(21,19)-(21,45)
+(21,34)-(21,35)
 *)

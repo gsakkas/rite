@@ -71,36 +71,36 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,17)-(29,41)
+(29,18)-(29,42)
 eval (e1 , x , y) *. (- 1.0)
 BopG (AppG (fromList [EmptyG])) (UopG EmptyG)
 
-(31,7)-(31,46)
-(- 1.0)
-UopG LitG
-
-(31,8)-(31,25)
-(eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-
-(31,8)-(31,25)
+(31,7)-(33,50)
 ((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
 BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(31,8)-(31,25)
-eval (e1 , x , y) *. eval (e1 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+*)
 
-(31,8)-(31,25)
-1.0
-LitG
-
-(32,9)-(32,48)
-eval (e2 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(33,10)-(33,49)
-eval (e3 , x , y) *. eval (e3 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(20,20)-(20,45)
+(20,27)-(20,44)
+(20,28)-(20,32)
+(29,18)-(29,35)
+(29,18)-(29,42)
+(29,19)-(29,23)
+(31,8)-(31,47)
+(31,9)-(31,26)
+(31,10)-(31,14)
+(31,29)-(31,46)
+(31,30)-(31,34)
+(32,10)-(32,49)
+(32,11)-(32,28)
+(32,12)-(32,16)
+(32,31)-(32,48)
+(32,32)-(32,36)
+(33,11)-(33,50)
+(33,12)-(33,29)
+(33,13)-(33,17)
+(33,32)-(33,49)
+(33,33)-(33,37)
 *)

@@ -25,12 +25,14 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(8,16)-(8,26)
+(8,17)-(8,27)
 List.mem h seen
 AppG (fromList [VarG])
 
-(8,60)-(8,69)
-seen
-VarG
+*)
 
+(* type error slice
+(8,11)-(8,70)
+(8,17)-(8,25)
+(8,17)-(8,27)
 *)

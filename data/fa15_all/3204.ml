@@ -89,91 +89,48 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(34,7)-(34,69)
+(34,8)-(34,70)
 match i with
 | 1 -> l
 | 10 -> l @ [0]
 | _ -> bigAdd l
               (mulByDigit (i - 1) l)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(34,37)-(34,43)
-l
-VarG
-
-(34,37)-(34,43)
-(@)
-VarG
-
-(34,37)-(34,43)
-bigAdd l (mulByDigit (i - 1)
-                     l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(34,37)-(34,43)
-0
-LitG
-
-(34,37)-(34,43)
-[0]
-ListG LitG Nothing
-
-(37,19)-(37,25)
+(37,15)-(37,48)
 let (c , a') = a in
 let m = mulByDigit x l2 in
 let s = bigAdd m a' in
 (c + 1 , s)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(37,26)-(37,43)
-a
-VarG
+*)
 
-(37,26)-(37,43)
-let m = mulByDigit x l2 in
-let s = bigAdd m a' in
-(c + 1 , s)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(37,44)-(37,45)
-let s = bigAdd m a' in
-(c + 1 , s)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(38,2)-(39,66)
-bigAdd
-VarG
-
-(38,2)-(39,66)
-m
-VarG
-
-(38,2)-(39,66)
-a'
-VarG
-
-(38,2)-(39,66)
-c
-VarG
-
-(38,2)-(39,66)
-s
-VarG
-
-(38,2)-(39,66)
-bigAdd m a'
-AppG (fromList [VarG])
-
-(38,2)-(39,66)
-c + 1
-BopG VarG LitG
-
-(38,2)-(39,66)
-1
-LitG
-
-(38,2)-(39,66)
-(c + 1 , s)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
+(* type error slice
+(5,4)-(13,44)
+(5,13)-(13,42)
+(13,11)-(13,37)
+(13,32)-(13,33)
+(13,34)-(13,36)
+(20,4)-(29,37)
+(20,12)-(29,35)
+(29,19)-(29,34)
+(29,20)-(29,27)
+(29,28)-(29,30)
+(34,38)-(34,44)
+(34,38)-(34,69)
+(34,47)-(34,69)
+(34,48)-(34,58)
+(37,3)-(39,67)
+(37,9)-(37,48)
+(37,11)-(37,48)
+(37,15)-(37,48)
+(37,19)-(37,47)
+(37,20)-(37,26)
+(37,27)-(37,44)
+(37,28)-(37,38)
+(37,45)-(37,46)
+(39,34)-(39,48)
+(39,34)-(39,60)
+(39,49)-(39,50)
 *)

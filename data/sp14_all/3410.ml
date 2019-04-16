@@ -54,32 +54,35 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(18,20)-(18,50)
+(18,21)-(19,26)
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: xs'))
        xs
-AppG (fromList [VarG,LitG,ConAppG (Just (TupleG (fromList [BopG (BopG VarG LitG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing])
+AppG (fromList [VarG,LitG,ConAppG (Just EmptyG)])
 
-(18,30)-(18,49)
-((num / 10) mod 10) :: ((num mod 10) :: xs')
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG LitG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
-
-(23,16)-(23,30)
+(23,17)-(23,45)
 helper 0 (num :: accum) xs
-AppG (fromList [VarG,LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+AppG (fromList [VarG,LitG,ConAppG (Just EmptyG)])
 
-(23,26)-(23,29)
-num :: accum
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(24,16)-(24,46)
+(24,17)-(24,77)
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: accum))
        xs
-AppG (fromList [VarG,LitG,ConAppG (Just (TupleG (fromList [BopG (BopG VarG LitG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing])
+AppG (fromList [VarG,LitG,ConAppG (Just EmptyG)])
 
-(24,26)-(24,45)
-((num / 10) mod 10) :: ((num mod 10) :: accum)
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG LitG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
+*)
 
+(* type error slice
+(13,11)-(19,27)
+(17,21)-(17,27)
+(17,21)-(17,45)
+(17,30)-(17,42)
+(18,21)-(18,51)
+(18,21)-(19,26)
+(18,22)-(18,28)
+(18,31)-(18,50)
+(18,55)-(18,67)
+(18,55)-(19,26)
+(19,18)-(19,26)
+(19,19)-(19,22)
 *)

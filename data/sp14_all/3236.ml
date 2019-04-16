@@ -73,228 +73,66 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(28,9)-(28,19)
-((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))
+(28,7)-(32,79)
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))
 BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(28,9)-(28,19)
-(eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+*)
 
-(28,9)-(28,19)
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-
-(28,15)-(28,18)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(28,23)-(28,48)
-x
-VarG
-
-(28,24)-(28,34)
-y
-VarG
-
-(28,24)-(28,34)
-eval (ex1 , x , y) +. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(28,30)-(28,33)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(28,37)-(28,47)
-x
-VarG
-
-(28,37)-(28,47)
-y
-VarG
-
-(28,43)-(28,46)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(29,11)-(29,36)
-x
-VarG
-
-(29,12)-(29,22)
-y
-VarG
-
-(29,12)-(29,22)
-(eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(29,12)-(29,22)
-eval (ex1 , x , y) +. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(29,18)-(29,21)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(29,25)-(29,35)
-x
-VarG
-
-(29,25)-(29,35)
-y
-VarG
-
-(29,31)-(29,34)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(29,39)-(29,49)
-x
-VarG
-
-(29,39)-(29,49)
-y
-VarG
-
-(29,45)-(29,48)
-(ex3 , x , y)
-TupleG (fromList [VarG])
-
-(30,13)-(30,38)
-x
-VarG
-
-(30,14)-(30,24)
-y
-VarG
-
-(30,14)-(30,24)
-((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(30,14)-(30,24)
-(eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(30,14)-(30,24)
-eval (ex1 , x , y) +. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(30,20)-(30,23)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(30,27)-(30,37)
-x
-VarG
-
-(30,27)-(30,37)
-y
-VarG
-
-(30,33)-(30,36)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(30,41)-(30,51)
-x
-VarG
-
-(30,41)-(30,51)
-y
-VarG
-
-(30,47)-(30,50)
-(ex3 , x , y)
-TupleG (fromList [VarG])
-
-(30,55)-(30,65)
-x
-VarG
-
-(30,55)-(30,65)
-y
-VarG
-
-(30,61)-(30,64)
-(ex4 , x , y)
-TupleG (fromList [VarG])
-
-(32,11)-(32,36)
-x
-VarG
-
-(32,12)-(32,22)
-y
-VarG
-
-(32,12)-(32,22)
-(((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(32,12)-(32,22)
-((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(32,12)-(32,22)
-(eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(32,12)-(32,22)
-eval (ex1 , x , y) +. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(32,18)-(32,21)
-(ex1 , x , y)
-TupleG (fromList [VarG])
-
-(32,25)-(32,35)
-x
-VarG
-
-(32,25)-(32,35)
-y
-VarG
-
-(32,31)-(32,34)
-(ex2 , x , y)
-TupleG (fromList [VarG])
-
-(32,39)-(32,49)
-x
-VarG
-
-(32,39)-(32,49)
-y
-VarG
-
-(32,45)-(32,48)
-(ex3 , x , y)
-TupleG (fromList [VarG])
-
-(32,53)-(32,63)
-x
-VarG
-
-(32,53)-(32,63)
-y
-VarG
-
-(32,59)-(32,62)
-(ex4 , x , y)
-TupleG (fromList [VarG])
-
-(32,67)-(32,77)
-x
-VarG
-
-(32,67)-(32,77)
-y
-VarG
-
-(32,73)-(32,76)
-(ex5 , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(16,3)-(32,79)
+(19,16)-(19,19)
+(19,16)-(19,45)
+(19,27)-(19,44)
+(19,28)-(19,32)
+(19,33)-(19,43)
+(28,7)-(32,79)
+(28,8)-(29,52)
+(28,9)-(28,50)
+(28,10)-(28,20)
+(28,11)-(28,15)
+(28,16)-(28,19)
+(28,24)-(28,49)
+(28,25)-(28,35)
+(28,26)-(28,30)
+(28,31)-(28,34)
+(28,38)-(28,48)
+(28,39)-(28,43)
+(28,44)-(28,47)
+(29,13)-(29,23)
+(29,14)-(29,18)
+(29,19)-(29,22)
+(29,26)-(29,36)
+(29,27)-(29,31)
+(29,32)-(29,35)
+(29,40)-(29,50)
+(29,41)-(29,45)
+(29,46)-(29,49)
+(30,15)-(30,25)
+(30,16)-(30,20)
+(30,21)-(30,24)
+(30,28)-(30,38)
+(30,29)-(30,33)
+(30,34)-(30,37)
+(30,42)-(30,52)
+(30,43)-(30,47)
+(30,48)-(30,51)
+(30,56)-(30,66)
+(30,57)-(30,61)
+(30,62)-(30,65)
+(32,13)-(32,23)
+(32,14)-(32,18)
+(32,19)-(32,22)
+(32,26)-(32,36)
+(32,27)-(32,31)
+(32,32)-(32,35)
+(32,40)-(32,50)
+(32,41)-(32,45)
+(32,46)-(32,49)
+(32,54)-(32,64)
+(32,55)-(32,59)
+(32,60)-(32,63)
+(32,68)-(32,78)
+(32,69)-(32,73)
+(32,74)-(32,77)
 *)

@@ -77,12 +77,18 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(34,28)-(34,56)
-int_of_float
-VarG
-
-(34,28)-(34,56)
+(34,29)-(34,57)
 int_of_float (10.0 ** float_of_int pos)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(29,42)-(29,64)
+(29,43)-(29,53)
+(29,54)-(29,61)
+(34,17)-(34,61)
+(34,18)-(34,28)
+(34,29)-(34,57)
+(34,35)-(34,37)
 *)

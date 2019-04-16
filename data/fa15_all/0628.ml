@@ -11,13 +11,14 @@ let rec clone x n =
 *)
 
 (* changed spans
-(3,34)-(3,64)
+(3,35)-(3,65)
 List.append (clone x (n - 1))
             []
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
 
-(3,46)-(3,51)
-clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+*)
 
+(* type error slice
+(3,35)-(3,46)
+(3,35)-(3,65)
 *)

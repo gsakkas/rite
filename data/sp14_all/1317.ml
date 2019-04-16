@@ -62,27 +62,27 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(28,25)-(28,37)
-i
-VarG
-
-(28,25)-(28,37)
-[]
-ListG EmptyG Nothing
-
-(28,25)-(28,62)
+(28,26)-(28,63)
 match i with
 | 0 -> []
 | _ -> bigAdd (bigAdd l l)
               (mulByDigit (i - 1) l)
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(28,33)-(28,34)
-bigAdd
-VarG
+*)
 
-(28,33)-(28,34)
-bigAdd l l
-AppG (fromList [VarG])
-
+(* type error slice
+(11,37)-(11,75)
+(11,51)-(11,61)
+(11,51)-(11,63)
+(11,69)-(11,75)
+(13,4)-(26,37)
+(13,12)-(26,35)
+(13,15)-(26,35)
+(14,3)-(26,35)
+(26,3)-(26,13)
+(26,3)-(26,35)
+(28,26)-(28,38)
+(28,26)-(28,63)
+(28,27)-(28,33)
 *)

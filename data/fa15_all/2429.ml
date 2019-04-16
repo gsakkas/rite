@@ -52,41 +52,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,37)-(19,53)
-a
-VarG
-
-(19,38)-(19,39)
-a1
-VarG
-
-(19,41)-(19,52)
-(l1x + l2x) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(19,54)-(19,55)
+(19,38)-(19,58)
 let (a1 , a2) = a in
 (a1 , (l1x + l2x) :: a2)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(19,56)-(19,57)
-a2
-VarG
+(20,16)-(20,24)
+([] , [])
+TupleG (fromList [ListG (fromList [])])
 
-(20,20)-(20,21)
-[]
-ListG EmptyG Nothing
-
-(21,4)-(22,51)
-[]
-ListG EmptyG Nothing
-
-(21,15)-(21,33)
-List.rev
-VarG
-
-(21,15)-(21,33)
+(21,16)-(21,34)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(19,38)-(19,54)
+(19,38)-(19,58)
+(19,55)-(19,56)
+(20,5)-(22,52)
+(20,16)-(20,24)
+(22,5)-(22,52)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,36)-(22,40)
 *)

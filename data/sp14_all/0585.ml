@@ -46,115 +46,41 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,16)-(15,44)
-x
-VarG
-
-(15,16)-(15,44)
-a
-VarG
-
-(15,16)-(15,44)
-c
-VarG
-
-(15,16)-(15,44)
-x'
-VarG
-
-(15,16)-(15,44)
-x''
-VarG
-
-(15,16)-(15,44)
-c
-VarG
-
-(15,16)-(15,44)
-x'
-VarG
-
-(15,16)-(15,44)
-x''
-VarG
-
-(15,16)-(15,44)
-s
-VarG
-
-(15,16)-(15,44)
-((c + x') + x'') / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(15,16)-(15,44)
-(c + x') + x''
-BopG (BopG EmptyG EmptyG) VarG
-
-(15,16)-(15,44)
-c + x'
-BopG VarG VarG
-
-(15,16)-(15,44)
-((c + x') + x'') mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(15,16)-(15,44)
-(c + x') + x''
-BopG (BopG EmptyG EmptyG) VarG
-
-(15,16)-(15,44)
-c + x'
-BopG VarG VarG
-
-(15,16)-(15,44)
-10
-LitG
-
-(15,16)-(15,44)
-10
-LitG
-
-(15,16)-(15,44)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(15,16)-(15,44)
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(15,16)-(15,44)
-(((c + x') + x'') mod 10) :: s
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(15,25)-(15,44)
+(15,17)-(15,45)
 let (x' , x'') = x in
 let (c , s) = a in
 (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(16,19)-(16,20)
+(16,20)-(16,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(17,15)-(17,43)
-List.combine
-VarG
+(17,16)-(17,44)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(17,15)-(17,43)
-l1
-VarG
+*)
 
-(17,15)-(17,43)
-l2
-VarG
-
-(17,15)-(17,43)
-List.combine l1 l2
-AppG (fromList [VarG])
-
-(17,24)-(17,43)
-List.rev
-VarG
-
+(* type error slice
+(11,3)-(11,70)
+(11,51)-(11,61)
+(11,51)-(11,63)
+(11,62)-(11,63)
+(14,3)-(19,35)
+(14,12)-(18,52)
+(15,5)-(18,52)
+(16,5)-(18,52)
+(16,16)-(16,22)
+(16,20)-(16,21)
+(17,5)-(18,52)
+(18,5)-(18,52)
+(18,19)-(18,33)
+(18,19)-(18,45)
+(18,36)-(18,40)
+(18,49)-(18,52)
+(19,3)-(19,13)
+(19,3)-(19,35)
+(19,14)-(19,35)
+(19,15)-(19,18)
 *)

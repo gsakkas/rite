@@ -21,13 +21,23 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(7,31)-(7,50)
+(7,32)-(7,69)
 helper ((v mod 10) :: acc)
        (v / 10)
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
-(7,39)-(7,49)
-(v mod 10) :: acc
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
+*)
 
+(* type error slice
+(7,9)-(7,69)
+(7,23)-(7,26)
+(7,32)-(7,51)
+(7,32)-(7,69)
+(7,33)-(7,39)
+(7,40)-(7,50)
+(7,55)-(7,69)
+(7,56)-(7,59)
+(8,7)-(8,13)
+(8,7)-(8,18)
+(8,14)-(8,16)
 *)

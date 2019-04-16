@@ -10,16 +10,25 @@ let pipe fs = let f a x a = x a in let base a = a in List.fold_left f base fs;;
 *)
 
 (* changed spans
-(3,12)-(3,19)
+(3,13)-(3,20)
 fun a -> x a
-LamG (AppG (fromList [EmptyG]))
+LamG VarPatG (AppG (fromList [EmptyG]))
 
-(3,37)-(3,39)
+(3,33)-(3,40)
 fun a -> a
-LamG VarG
+LamG VarPatG VarG
 
-(3,43)-(3,67)
-a
-VarG
+*)
 
+(* type error slice
+(3,3)-(3,68)
+(3,9)-(3,20)
+(3,11)-(3,20)
+(3,13)-(3,20)
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,19)-(3,20)
+(3,44)-(3,58)
+(3,44)-(3,68)
+(3,59)-(3,60)
 *)

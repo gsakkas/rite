@@ -19,26 +19,26 @@ let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
 *)
 
 (* changed spans
-(7,10)-(7,15)
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+(7,8)-(7,72)
+getDigits n
+AppG (fromList [VarG])
 
-(7,14)-(7,15)
-[]
-ListG EmptyG Nothing
+*)
 
-(7,31)-(7,42)
-getDigits
-VarG
-
-(7,69)-(7,71)
-fun n ->
-  if n = 0
-  then [0]
-  else getDigits n
-LamG (IteG EmptyG EmptyG EmptyG)
-
+(* type error slice
+(2,24)-(2,78)
+(2,59)-(2,60)
+(2,59)-(2,78)
+(2,64)-(2,78)
+(2,65)-(2,73)
+(2,74)-(2,75)
+(4,4)-(7,74)
+(4,21)-(7,72)
+(5,3)-(7,72)
+(7,8)-(7,72)
+(7,22)-(7,30)
+(7,22)-(7,64)
+(7,31)-(7,53)
+(7,32)-(7,43)
+(7,32)-(7,52)
 *)

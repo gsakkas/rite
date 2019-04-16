@@ -87,20 +87,15 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(29,13)-(29,17)
+(29,14)-(29,18)
 rand (0 , 4)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(30,14)-(30,51)
-0
-LitG
+*)
 
-(30,14)-(30,51)
-4
-LitG
-
-(30,14)-(30,51)
-(0 , 4)
-TupleG (fromList [LitG])
-
+(* type error slice
+(27,13)-(27,26)
+(27,14)-(27,18)
+(29,7)-(41,74)
+(29,14)-(29,18)
 *)

@@ -63,28 +63,32 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(25,26)-(25,33)
-rand
-VarG
+(18,3)-(31,77)
+match depth with
+| 0 -> (let halff =
+          rand (0 , 2) in
+        if halff = 0
+        then buildY ()
+        else buildX ())
+| 1 -> (let halff =
+          rand (0 , 2) in
+        if halff = 0
+        then Cosine (build (rand , depth - 1))
+        else Sine (build (rand , depth - 1)))
+| 2 -> Average (build (rand , depth - 1) , build (rand , depth - 1))
+| 3 -> Times (build (rand , depth - 1) , build (rand , depth - 1))
+CaseG VarG (fromList [(LitPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(LitPatG,Nothing,ConAppG (Just EmptyG))])
 
-(26,24)-(26,31)
-rand
-VarG
+*)
 
-(29,17)-(29,24)
-rand
-VarG
-
-(29,49)-(29,56)
-rand
-VarG
-
-(31,21)-(31,28)
-rand
-VarG
-
-(31,53)-(31,60)
-rand
-VarG
-
+(* type error slice
+(17,4)-(31,79)
+(17,16)-(31,77)
+(18,3)-(31,77)
+(18,17)-(18,21)
+(18,17)-(18,28)
+(25,19)-(25,49)
+(25,20)-(25,25)
+(25,26)-(25,48)
+(25,27)-(25,34)
 *)

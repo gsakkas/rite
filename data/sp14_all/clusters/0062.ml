@@ -1,92 +1,18 @@
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match n with
-| 0 -> [0]
-| _ -> digits n []
-match n with
-| 0 -> [0]
-| _ -> digits n []
-match n with
-| 0 -> [0]
-| _ -> digits n []
-match l with
-| [] -> []
-| a :: b -> listReverse b @ [a]
-match l with
-| [] -> []
-| a :: b -> listReverse b @ [a]
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match n with
-| 0 -> [0]
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> [0]
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| _ -> myAppend (getDigits (n / 10))
-                (n mod 10)
-match n with
-| 0 -> []
-| n -> [x] @ clone x (n - 1)
-match n with
-| 0 -> []
-| _ -> clone x (n - 1) @ [x]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+match x with
+| (x1 , x2) -> match a with
+               | (o , z) -> if ((o + x1) + x2) > 9
+                            then (1 , (((o + x1) + x2) mod 10) :: z)
+                            else (0 , ((o + x1) + x2) :: z)
+match a with
+| (carry , rest) -> match x with
+                    | (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
+match x with
+| (d1 , d2) -> match a with
+               | (carry , result) -> if ((d1 + d2) + carry) > 9
+                                     then (1 , (((d1 + d2) + 1) - 10) :: result)
+                                     else (0 , (d1 + d2) :: result)
+match x with
+| (k , v) -> match a with
+             | (c , d) -> (c , bigAdd d
+                                      (mulByDigit k v))

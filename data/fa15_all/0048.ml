@@ -22,7 +22,7 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(3,2)-(9,39)
+(3,3)-(9,40)
 let rec helper =
   fun acc ->
     fun cin ->
@@ -33,72 +33,22 @@ let rec helper =
                    helper ((sum mod 10) :: acc)
                           (sum / 10)) in
 helper [] 0
-LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(4,4)-(8,70)
-fun acc ->
-  fun cin ->
-    match l with
-    | [] -> cin :: acc
-    | h :: t -> (let sum =
-                   (i * h) + cin in
-                 helper ((sum mod 10) :: acc)
-                        (sum / 10))
-LamG (LamG EmptyG)
+*)
 
-(4,4)-(8,70)
-fun cin ->
-  match l with
-  | [] -> cin :: acc
-  | h :: t -> (let sum =
-                 (i * h) + cin in
-               helper ((sum mod 10) :: acc)
-                      (sum / 10))
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(7,37)-(7,38)
-cin :: acc
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(8,8)-(8,70)
-cin
-VarG
-
-(8,8)-(8,70)
-acc
-VarG
-
-(8,43)-(8,45)
-helper ((sum mod 10) :: acc)
-       (sum / 10)
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(8,48)-(8,69)
-helper
-VarG
-
-(9,5)-(9,9)
-sum / 10
-BopG VarG LitG
-
-(9,12)-(9,13)
-sum
-VarG
-
-(9,12)-(9,13)
-helper
-VarG
-
-(9,12)-(9,13)
-helper [] 0
-AppG (fromList [LitG,ListG EmptyG Nothing])
-
-(9,12)-(9,13)
-10
-LitG
-
-(9,12)-(9,13)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(2,4)-(9,42)
+(2,20)-(9,40)
+(2,22)-(9,40)
+(3,3)-(9,40)
+(4,5)-(8,71)
+(7,9)-(8,71)
+(7,25)-(7,35)
+(7,25)-(7,39)
+(8,9)-(8,71)
+(8,36)-(8,71)
+(8,49)-(8,70)
+(9,3)-(9,40)
+(9,37)-(9,40)
 *)

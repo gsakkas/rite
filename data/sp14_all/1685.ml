@@ -78,116 +78,45 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(32,24)-(32,45)
+(32,25)-(32,46)
 (build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(33,11)-(33,21)
-build
-VarG
-
-(33,11)-(33,21)
-rand
-VarG
-
-(33,11)-(33,21)
-depth
-VarG
-
-(33,11)-(33,21)
-buildTimes (build (rand , depth) , build (rand , depth))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(33,11)-(33,21)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(33,22)-(33,43)
+(33,23)-(33,44)
 (build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(34,11)-(34,22)
-build
-VarG
-
-(34,11)-(34,22)
-rand
-VarG
-
-(34,11)-(34,22)
-depth
-VarG
-
-(34,11)-(34,22)
-buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(34,11)-(34,22)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(34,23)-(34,44)
+(34,24)-(34,45)
 (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(35,7)-(35,65)
-build
-VarG
+*)
 
-(35,7)-(35,65)
-rand
-VarG
-
-(35,7)-(35,65)
-depth
-VarG
-
-(35,7)-(35,65)
-build
-VarG
-
-(35,7)-(35,65)
-rand
-VarG
-
-(35,7)-(35,65)
-depth
-VarG
-
-(35,7)-(35,65)
-build
-VarG
-
-(35,7)-(35,65)
-rand
-VarG
-
-(35,7)-(35,65)
-depth
-VarG
-
-(35,7)-(35,65)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(35,7)-(35,65)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(35,7)-(35,65)
-build (rand , depth)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(35,7)-(35,65)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(35,7)-(35,65)
-(rand , depth)
-TupleG (fromList [VarG])
-
-(35,7)-(35,65)
-(rand , depth)
-TupleG (fromList [VarG])
-
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,68)
+(19,4)-(19,42)
+(19,17)-(19,40)
+(30,12)-(30,21)
+(30,12)-(30,43)
+(30,22)-(30,43)
+(30,23)-(30,28)
+(32,12)-(32,24)
+(32,12)-(32,46)
+(32,25)-(32,46)
+(32,26)-(32,31)
+(33,12)-(33,22)
+(33,12)-(33,44)
+(33,23)-(33,44)
+(33,24)-(33,29)
+(34,12)-(34,23)
+(34,12)-(34,45)
+(34,24)-(34,45)
+(34,25)-(34,30)
 *)

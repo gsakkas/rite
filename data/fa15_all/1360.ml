@@ -57,7 +57,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(14,2)-(28,81)
+(14,3)-(28,82)
 match e with
 | VarX -> x
 | VarY -> y
@@ -68,68 +68,48 @@ match e with
 | Thresh (th1 , th2 , th3 , th4) -> if eval (th1 , x , y) < eval (th2 , x , y)
                                     then eval (th3 , x , y)
                                     else eval (th4 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(17,21)-(17,39)
-pi *. eval (sine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+*)
 
-(17,33)-(17,37)
-(sine , x , y)
-TupleG (fromList [VarG])
-
-(18,31)-(18,49)
-y
-VarG
-
-(18,32)-(18,36)
-cos
-VarG
-
-(18,32)-(18,36)
-pi
-VarG
-
-(18,32)-(18,36)
-eval (cosine , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(18,32)-(18,36)
-pi *. eval (cosine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(18,38)-(18,41)
-cosine
-VarG
-
-(18,50)-(18,51)
-x
-VarG
-
-(20,14)-(20,31)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(20,32)-(20,33)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(21,21)-(21,38)
-eval (t1 , x , y) *. eval (t2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(21,39)-(21,40)
-2.0
-LitG
-
-(24,9)-(24,27)
-eval (th1 , x , y) < eval (th2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(24,28)-(24,29)
-if eval (th1 , x , y) < eval (th2 , x , y)
-then eval (th3 , x , y)
-else eval (th4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(11,4)-(11,29)
+(11,10)-(11,27)
+(14,3)-(28,82)
+(17,18)-(17,21)
+(17,18)-(17,40)
+(17,22)-(17,40)
+(17,23)-(17,25)
+(17,28)-(17,39)
+(17,29)-(17,33)
+(17,34)-(17,38)
+(18,19)-(18,57)
+(18,29)-(18,30)
+(18,32)-(18,50)
+(18,33)-(18,37)
+(18,38)-(18,49)
+(20,15)-(20,32)
+(20,16)-(20,20)
+(20,21)-(20,31)
+(20,43)-(20,60)
+(20,44)-(20,48)
+(20,49)-(20,59)
+(21,22)-(21,39)
+(21,23)-(21,27)
+(21,28)-(21,38)
+(21,49)-(21,66)
+(21,50)-(21,54)
+(21,55)-(21,65)
+(24,10)-(24,28)
+(24,11)-(24,15)
+(24,16)-(24,27)
+(26,16)-(26,34)
+(26,17)-(26,21)
+(26,22)-(26,33)
+(28,22)-(28,40)
+(28,23)-(28,27)
+(28,28)-(28,39)
+(28,51)-(28,69)
+(28,52)-(28,56)
+(28,57)-(28,68)
 *)

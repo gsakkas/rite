@@ -81,43 +81,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(21,15)-(33,67)
-fun () -> VarX
-LamG (ConAppG Nothing Nothing)
-
-(21,15)-(33,67)
-fun () -> VarY
-LamG (ConAppG Nothing Nothing)
-
-(21,15)-(33,67)
-VarX
-ConAppG Nothing Nothing
-
-(21,15)-(33,67)
-VarY
-ConAppG Nothing Nothing
-
-(22,2)-(33,67)
-depth
-VarG
-
-(22,2)-(33,67)
-buildX
-VarG
-
-(22,2)-(33,67)
-buildY
-VarG
-
-(22,2)-(33,67)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(22,2)-(33,67)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(22,2)-(33,67)
+(22,3)-(33,68)
 match depth with
 | 0 -> buildX ()
 | 1 -> buildY ()
@@ -129,18 +93,13 @@ match depth with
         | 3 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
         | 4 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
         | 5 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1)))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
-(22,2)-(33,67)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+*)
 
-(22,2)-(33,67)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(22,17)-(22,18)
-(1 , 6)
-TupleG (fromList [LitG])
-
+(* type error slice
+(22,3)-(33,68)
+(22,11)-(22,24)
+(23,3)-(33,68)
+(23,9)-(23,10)
 *)

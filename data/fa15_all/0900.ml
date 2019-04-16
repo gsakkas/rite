@@ -24,61 +24,30 @@ let palindrome w =
 *)
 
 (* changed spans
-(7,15)-(7,64)
-l
-VarG
-
-(7,15)-(7,64)
-listReverse
-VarG
-
-(7,15)-(7,64)
-xs'
-VarG
-
-(7,15)-(7,64)
-(@)
-VarG
-
-(7,15)-(7,64)
-x
-VarG
-
-(7,15)-(7,64)
-fun l ->
-  match l with
-  | [] -> []
-  | x :: xs' -> listReverse xs' @ [x]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(7,15)-(7,64)
-listReverse xs'
-AppG (fromList [VarG])
-
-(7,15)-(7,64)
-listReverse xs' @ [x]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(7,15)-(7,64)
-match l with
-| [] -> []
-| x :: xs' -> listReverse xs' @ [x]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-
-(7,15)-(7,64)
-[]
-ListG EmptyG Nothing
-
-(7,15)-(7,64)
-[x]
-ListG VarG Nothing
-
-(7,45)-(7,49)
+(7,20)-(7,65)
 let wList = explode w in
 let revList =
   listReverse wList in
 match revList with
 | wList -> true
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
+*)
+
+(* type error slice
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(4,44)-(4,67)
+(4,55)-(4,67)
+(4,56)-(4,58)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(7,20)-(7,65)
+(7,23)-(7,36)
+(7,23)-(7,40)
+(7,39)-(7,40)
+(7,46)-(7,50)
+(7,56)-(7,63)
+(7,56)-(7,65)
 *)

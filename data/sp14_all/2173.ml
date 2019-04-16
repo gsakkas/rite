@@ -25,8 +25,14 @@ let stringOfList f l =
 *)
 
 (* changed spans
-(10,54)-(10,57)
+(10,55)-(10,58)
 ["]"]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
+*)
+
+(* type error slice
+(10,18)-(10,59)
+(10,19)-(10,30)
+(10,55)-(10,58)
 *)

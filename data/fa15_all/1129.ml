@@ -61,27 +61,31 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,6)-(26,48)
+(18,7)-(26,49)
 match a with
 | (c , h :: t) -> if ((fst x + snd x) + c) > 9
                   then (1 , (((fst x + snd x) + c) mod 10) :: t)
                   else (0 , (((fst x + snd x) + c) mod 10) :: t)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(21,19)-(21,53)
-(((fst x + snd x) + c) mod 10) :: t
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) VarG) LitG]))) Nothing
+*)
 
-(22,15)-(22,54)
-t
-VarG
-
-(22,19)-(22,53)
-(((fst x + snd x) + c) mod 10) :: t
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG (AppG (fromList [VarG])) (AppG (fromList [VarG]))) VarG) LitG]))) Nothing
-
-(26,44)-(26,46)
-t
-VarG
-
+(* type error slice
+(17,5)-(29,52)
+(17,11)-(26,49)
+(17,13)-(26,49)
+(18,7)-(26,49)
+(20,11)-(22,55)
+(22,16)-(22,55)
+(22,20)-(22,54)
+(24,11)-(26,49)
+(26,16)-(26,49)
+(26,20)-(26,48)
+(27,5)-(29,52)
+(27,16)-(27,23)
+(27,20)-(27,22)
+(29,19)-(29,33)
+(29,19)-(29,45)
+(29,34)-(29,35)
+(29,36)-(29,40)
 *)

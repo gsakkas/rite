@@ -49,20 +49,31 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,6)-(18,14)
+(16,7)-(18,15)
 match x with
 | (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
 | _ -> a
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,ConAppG (Just EmptyG)),(WildPatG,Nothing,VarG)])
 
-(19,16)-(19,17)
+(19,16)-(19,19)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(21,4)-(21,51)
+(21,5)-(21,52)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(15,5)-(21,52)
+(15,11)-(18,15)
+(17,48)-(17,71)
+(17,70)-(17,71)
+(21,5)-(21,52)
+(21,19)-(21,33)
+(21,19)-(21,45)
+(21,34)-(21,35)
 *)

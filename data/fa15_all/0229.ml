@@ -19,28 +19,34 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(7,39)-(7,40)
+(7,21)-(7,51)
 let ff = f b in (ff , b = ff)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (TupleG (fromList [EmptyG]))
 
-(7,55)-(7,56)
-ff
-VarG
+*)
 
-(7,55)-(7,56)
-b
-VarG
-
-(7,55)-(7,56)
-ff
-VarG
-
-(7,55)-(7,56)
-b = ff
-BopG VarG VarG
-
-(7,55)-(7,56)
-(n , b)
-TupleG (fromList [VarG])
-
+(* type error slice
+(3,3)-(4,72)
+(3,14)-(3,15)
+(3,14)-(3,17)
+(4,3)-(4,72)
+(4,9)-(4,13)
+(4,52)-(4,58)
+(4,52)-(4,65)
+(4,59)-(4,65)
+(4,60)-(4,61)
+(4,63)-(4,64)
+(7,3)-(7,9)
+(7,3)-(7,62)
+(7,10)-(7,62)
+(7,17)-(7,51)
+(7,21)-(7,51)
+(7,35)-(7,51)
+(7,36)-(7,37)
+(7,44)-(7,49)
+(7,45)-(7,46)
+(7,47)-(7,48)
+(7,55)-(7,61)
+(7,56)-(7,57)
+(7,59)-(7,60)
 *)

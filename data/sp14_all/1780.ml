@@ -31,12 +31,14 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(12,49)-(12,60)
-List.length l
-AppG (fromList [VarG])
+(12,48)-(12,69)
+List.length l + 1
+BopG (AppG (fromList [EmptyG])) LitG
 
-(13,2)-(13,49)
-1
-LitG
+*)
 
+(* type error slice
+(12,48)-(12,69)
+(12,49)-(12,66)
+(12,50)-(12,61)
 *)

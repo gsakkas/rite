@@ -68,12 +68,16 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(31,6)-(31,76)
+(31,7)-(31,77)
 (sin (pi *. eval (e , x , y)) -. cos (pi *. eval (e , x , y))) /. 3.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(31,75)-(31,76)
-3.0
-LitG
+*)
 
+(* type error slice
+(16,3)-(31,77)
+(19,15)-(19,18)
+(19,15)-(19,43)
+(31,7)-(31,73)
+(31,7)-(31,77)
 *)

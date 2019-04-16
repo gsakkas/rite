@@ -12,20 +12,14 @@ let sqsum xs =
 *)
 
 (* changed spans
-(3,18)-(3,28)
-int_of_float
-VarG
-
-(3,18)-(3,28)
+(3,19)-(3,29)
 int_of_float (float_of_int x ** 2.0)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(3,19)-(3,20)
-float_of_int
-VarG
+*)
 
-(3,19)-(3,20)
-float_of_int x
-AppG (fromList [VarG])
-
+(* type error slice
+(3,15)-(3,29)
+(3,19)-(3,29)
+(3,22)-(3,24)
 *)

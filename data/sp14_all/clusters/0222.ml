@@ -1,2 +1,5 @@
-AppG (fromList [LetG NonRec (fromList [EmptyG]) EmptyG])
-x (let fn = fun d -> d in fn)
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG)),(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| h1 :: [] -> [h1]
+| h :: t -> h :: (listReverse t)

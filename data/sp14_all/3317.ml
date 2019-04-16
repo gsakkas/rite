@@ -15,8 +15,13 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(5,15)-(5,61)
+(5,16)-(5,62)
 [(h * i) mod 10 ; ((h * i) / 10) + (m * i)]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(5,16)-(5,62)
+(5,36)-(5,62)
 *)

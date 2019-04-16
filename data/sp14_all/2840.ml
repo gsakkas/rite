@@ -30,32 +30,39 @@ let palindrome w =
 *)
 
 (* changed spans
-(8,22)-(8,74)
+(8,23)-(8,75)
 fun l ->
   match l with
   | [] -> []
   | hd :: tl -> helper (hd :: xs)
                        l
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(8,39)-(8,41)
-l
-VarG
-
-(8,54)-(8,74)
-[]
-ListG EmptyG Nothing
-
-(9,2)-(9,8)
+(9,3)-(9,12)
 helper [] l
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [])])
 
-(9,2)-(9,11)
-l
-VarG
+*)
 
-(11,15)-(12,65)
-l
-VarG
-
+(* type error slice
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(4,44)-(4,67)
+(4,55)-(4,67)
+(4,56)-(4,58)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(7,4)-(9,14)
+(7,17)-(9,12)
+(8,3)-(9,12)
+(8,55)-(8,61)
+(8,55)-(8,75)
+(9,3)-(9,9)
+(9,3)-(9,12)
+(12,6)-(12,31)
+(12,6)-(12,45)
+(12,7)-(12,18)
+(12,34)-(12,45)
+(12,35)-(12,42)
 *)

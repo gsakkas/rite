@@ -59,7 +59,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,6)-(21,72)
+(19,7)-(21,73)
 let prevN =
   fun (n1 , n2) -> n1 in
 let prev = prevN a in
@@ -72,173 +72,33 @@ let digit = add x + prev in
 if digit > 10
 then (1 , (digit - 10) :: sum)
 else (0 , digit :: sum)
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(19,12)-(19,13)
-n1
-VarG
-
-(19,12)-(19,13)
-prevN
-VarG
-
-(19,12)-(19,13)
-a
-VarG
-
-(19,12)-(19,13)
-p2
-VarG
-
-(19,12)-(19,13)
-sumlist
-VarG
-
-(19,12)-(19,13)
-a
-VarG
-
-(19,12)-(19,13)
-m
-VarG
-
-(19,12)-(19,13)
-n
-VarG
-
-(19,12)-(19,13)
-add
-VarG
-
-(19,12)-(19,13)
-fun (n1 , n2) -> n1
-LamG VarG
-
-(19,12)-(19,13)
-fun (p1 , p2) -> p2
-LamG VarG
-
-(19,12)-(19,13)
-fun (m , n) -> m + n
-LamG (BopG EmptyG EmptyG)
-
-(19,12)-(19,13)
-prevN a
-AppG (fromList [VarG])
-
-(19,12)-(19,13)
-sumlist a
-AppG (fromList [VarG])
-
-(19,12)-(19,13)
-add x
-AppG (fromList [VarG])
-
-(19,12)-(19,13)
-m + n
-BopG VarG VarG
-
-(19,12)-(19,13)
-add x + prev
-BopG (AppG (fromList [EmptyG])) VarG
-
-(19,12)-(19,13)
-let prev = prevN a in
-let sumlist =
-  fun (p1 , p2) -> p2 in
-let sum = sumlist a in
-let add =
-  fun (m , n) -> m + n in
-let digit = add x + prev in
-if digit > 10
-then (1 , (digit - 10) :: sum)
-else (0 , digit :: sum)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(19,12)-(19,13)
-let sumlist =
-  fun (p1 , p2) -> p2 in
-let sum = sumlist a in
-let add =
-  fun (m , n) -> m + n in
-let digit = add x + prev in
-if digit > 10
-then (1 , (digit - 10) :: sum)
-else (0 , digit :: sum)
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(19,12)-(19,13)
-let sum = sumlist a in
-let add =
-  fun (m , n) -> m + n in
-let digit = add x + prev in
-if digit > 10
-then (1 , (digit - 10) :: sum)
-else (0 , digit :: sum)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(19,12)-(19,13)
-let add =
-  fun (m , n) -> m + n in
-let digit = add x + prev in
-if digit > 10
-then (1 , (digit - 10) :: sum)
-else (0 , digit :: sum)
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(19,12)-(19,13)
-let digit = add x + prev in
-if digit > 10
-then (1 , (digit - 10) :: sum)
-else (0 , digit :: sum)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (IteG EmptyG EmptyG EmptyG)
-
-(21,10)-(21,72)
-prev
-VarG
-
-(21,30)-(21,31)
-10
-LitG
-
-(21,30)-(21,31)
-(1 , (digit - 10) :: sum)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-
-(21,30)-(21,54)
-digit
-VarG
-
-(21,41)-(21,42)
-digit
-VarG
-
-(21,53)-(21,54)
-sum
-VarG
-
-(21,60)-(21,72)
-0
-LitG
-
-(21,60)-(21,72)
-(0 , digit :: sum)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(21,71)-(21,72)
-digit
-VarG
-
-(22,4)-(24,51)
-sum
-VarG
-
-(22,15)-(22,17)
-0
-LitG
-
-(22,15)-(22,17)
+(22,16)-(22,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
+(23,16)-(23,68)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+*)
+
+(* type error slice
+(21,14)-(21,21)
+(21,15)-(21,16)
+(21,36)-(21,55)
+(21,54)-(21,55)
+(21,61)-(21,73)
+(21,72)-(21,73)
+(23,5)-(24,52)
+(23,16)-(23,68)
+(23,22)-(23,30)
+(23,22)-(23,51)
+(23,31)-(23,51)
+(23,32)-(23,44)
+(23,67)-(23,68)
+(24,19)-(24,33)
+(24,19)-(24,45)
+(24,41)-(24,45)
 *)

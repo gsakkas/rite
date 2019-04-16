@@ -80,25 +80,17 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(11,7)-(11,59)
-l1
-VarG
-
-(11,7)-(11,59)
+(11,8)-(11,60)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(12,7)-(12,59)
+(12,8)-(12,60)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,19)-(15,77)
-l2
-VarG
-
-(20,6)-(33,50)
+(20,7)-(33,51)
 match x with
 | (c , d) -> match a with
              | (n , listSum) -> match listSum with
@@ -108,66 +100,21 @@ match x with
                                 | h :: t -> if ((n + c) + d) < 10
                                             then (0 , [0] @ ([(c + d) + h] @ t))
                                             else (n + 1 , [((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(26,24)-(26,40)
-[n] @ [(n + c) + d]
-AppG (fromList [ListG EmptyG Nothing])
+*)
 
-(26,25)-(26,26)
-(@)
-VarG
-
-(26,25)-(26,26)
-[n]
-ListG VarG Nothing
-
-(26,28)-(26,39)
-[(n + c) + d]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(27,30)-(27,59)
-[n + 1] @ [((n + c) + d) mod 10]
-AppG (fromList [ListG EmptyG Nothing])
-
-(27,31)-(27,36)
-(@)
-VarG
-
-(27,31)-(27,36)
-[n + 1]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(27,38)-(27,58)
-[((n + c) + d) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(30,25)-(30,41)
-[0]
-ListG LitG Nothing
-
-(30,29)-(30,40)
-(@)
-VarG
-
-(30,29)-(30,40)
-[(c + d) + h] @ t
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(30,29)-(30,40)
-[(c + d) + h]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(32,27)-(33,48)
-[((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t)
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(32,28)-(32,48)
-(@)
-VarG
-
-(32,28)-(32,48)
-[((h + c) + d) / 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(9,4)-(12,62)
+(9,13)-(12,60)
+(9,16)-(12,60)
+(10,3)-(12,60)
+(12,8)-(12,60)
+(12,56)-(12,57)
+(18,3)-(37,35)
+(18,12)-(36,52)
+(37,14)-(37,35)
+(37,15)-(37,18)
+(37,19)-(37,34)
+(37,20)-(37,27)
 *)

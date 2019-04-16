@@ -45,41 +45,25 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,6)-(15,57)
+(15,7)-(15,58)
 let (carry , sum) = a in
 (((num1 + num2) + carry) / 10 , (((num1 + num2) + carry) mod 10) :: sum)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(15,7)-(15,53)
-a
-VarG
-
-(15,10)-(15,14)
-num1 + num2
-BopG VarG VarG
-
-(15,25)-(15,27)
-carry
-VarG
-
-(15,30)-(15,52)
-(((num1 + num2) + carry) mod 10) :: sum
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(15,32)-(15,36)
-num1 + num2
-BopG VarG VarG
-
-(15,49)-(15,51)
-carry
-VarG
-
-(15,55)-(15,56)
-sum
-VarG
-
-(16,19)-(16,20)
+(16,20)-(16,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(13,5)-(18,52)
+(13,11)-(15,58)
+(13,13)-(15,58)
+(14,7)-(15,58)
+(15,7)-(15,58)
+(15,56)-(15,57)
+(18,19)-(18,33)
+(18,19)-(18,45)
+(18,34)-(18,35)
 *)

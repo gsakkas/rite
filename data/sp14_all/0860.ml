@@ -25,7 +25,7 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(6,2)-(10,20)
+(6,3)-(10,21)
 let xxx =
   fun n ->
     match n with
@@ -34,27 +34,15 @@ let xxx =
            then []
            else (n mod 10) :: (digitsOfInt (n / 10)) in
 listReverse (xxx n)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(7,4)-(9,69)
-fun n ->
-  match n with
-  | 0 -> []
-  | n -> if n < 0
-         then []
-         else (n mod 10) :: (digitsOfInt (n / 10))
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+*)
 
-(10,2)-(10,6)
-listReverse (xxx n)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(10,19)-(10,20)
-xxx
-VarG
-
-(10,19)-(10,20)
-xxx n
-AppG (fromList [VarG])
-
+(* type error slice
+(6,3)-(10,21)
+(7,5)-(9,70)
+(9,12)-(9,70)
+(9,34)-(9,70)
+(10,3)-(10,7)
+(10,3)-(10,21)
 *)

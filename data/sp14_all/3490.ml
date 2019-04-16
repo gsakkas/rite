@@ -18,41 +18,36 @@ let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 *)
 
 (* changed spans
-(5,30)-(5,63)
+(5,31)-(5,64)
 match c' with
 | true -> wwhile (f , b')
 | false -> b'
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(7,28)-(7,46)
-fun x -> fun x -> (0 , true)
-LamG (LamG EmptyG)
-
-(7,28)-(7,46)
-fun x -> (0 , true)
-LamG (TupleG (fromList [EmptyG]))
-
-(7,28)-(7,46)
+(7,29)-(7,47)
 let func =
   fun x ->
     fun x -> (0 , true) in
 (func b , b)
-LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
 
-(7,29)-(7,42)
-0
-LitG
+*)
 
-(7,29)-(7,42)
-true
-LitG
-
-(7,29)-(7,42)
-(func b , b)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(7,30)-(7,39)
-func
-VarG
-
+(* type error slice
+(2,4)-(2,29)
+(2,15)-(2,27)
+(2,17)-(2,27)
+(2,21)-(2,27)
+(5,3)-(5,64)
+(5,9)-(5,10)
+(5,9)-(5,12)
+(5,42)-(5,48)
+(5,42)-(5,56)
+(5,49)-(5,56)
+(5,50)-(5,51)
+(7,22)-(7,28)
+(7,22)-(7,47)
+(7,29)-(7,47)
+(7,30)-(7,43)
+(7,31)-(7,40)
 *)

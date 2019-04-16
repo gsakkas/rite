@@ -11,13 +11,15 @@ let pipe fs =
 *)
 
 (* changed spans
-(3,37)-(3,70)
+(3,38)-(3,71)
 List.fold_left f base
                (List.rev fs)
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(3,59)-(3,67)
-List.rev fs
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(3,38)-(3,52)
+(3,38)-(3,71)
+(3,60)-(3,68)
 *)

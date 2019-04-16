@@ -21,16 +21,23 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(8,44)-(8,54)
-digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
-
-(8,45)-(8,46)
-digitsOfInt
-VarG
-
-(8,45)-(8,46)
+(8,19)-(8,41)
 n / 10
 BopG VarG LitG
 
+(8,45)-(8,55)
+digitsOfInt (n / 10)
+AppG (fromList [BopG EmptyG EmptyG])
+
+*)
+
+(* type error slice
+(2,4)-(8,58)
+(2,21)-(8,56)
+(3,3)-(8,56)
+(6,7)-(8,56)
+(8,19)-(8,41)
+(8,19)-(8,55)
+(8,20)-(8,31)
+(8,45)-(8,55)
 *)

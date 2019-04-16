@@ -21,12 +21,16 @@ let rec digitalRoot n =
 *)
 
 (* changed spans
-(8,36)-(8,53)
+(8,37)-(8,58)
 r_digitalRoot n (-1)
 AppG (fromList [VarG,LitG])
 
-(8,56)-(8,57)
-(-1)
-LitG
+*)
 
+(* type error slice
+(7,30)-(7,43)
+(7,30)-(7,69)
+(8,37)-(8,54)
+(8,37)-(8,58)
+(8,38)-(8,51)
 *)

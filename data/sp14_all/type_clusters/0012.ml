@@ -1,0 +1,4 @@
+int
+float
+bool
+'tNewPart

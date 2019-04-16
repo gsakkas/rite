@@ -13,23 +13,18 @@ let rec wwhile (f,b) =
 *)
 
 (* changed spans
-(4,2)-(4,63)
+(4,3)-(4,64)
 match x with
 | (x , y) -> if y = false
              then x
              else wwhile (f , x)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(4,28)-(4,29)
-y
-VarG
+*)
 
-(4,43)-(4,44)
-x
-VarG
-
-(4,61)-(4,62)
-x
-VarG
-
+(* type error slice
+(4,3)-(4,64)
+(4,29)-(4,30)
+(4,29)-(4,38)
+(4,33)-(4,38)
 *)

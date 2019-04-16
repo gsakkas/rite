@@ -23,12 +23,13 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(9,2)-(9,25)
+(9,3)-(9,26)
 List.rev (helper ([] , l))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(9,11)-(9,17)
-helper ([] , l)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(9,3)-(9,11)
+(9,3)-(9,26)
 *)

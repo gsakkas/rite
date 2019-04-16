@@ -137,46 +137,38 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(52,14)-(52,24)
-a
-VarG
-
-(52,14)-(52,24)
-0
-LitG
-
-(52,14)-(52,24)
+(52,15)-(52,25)
 match a with
 | (_ , z) -> (0 , bigAdd z x)
 | _ -> (0 , [])
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
 
-(52,14)-(52,24)
-(0 , bigAdd z x)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(52,21)-(52,22)
-z
-VarG
-
-(53,2)-(66,49)
-0
-LitG
-
-(53,2)-(66,49)
+(53,14)-(53,16)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(53,2)-(66,49)
-[]
-ListG EmptyG Nothing
+*)
 
-(53,13)-(53,15)
-0
-LitG
-
-(53,13)-(53,15)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
+(* type error slice
+(18,3)-(18,70)
+(18,9)-(18,10)
+(18,37)-(18,70)
+(18,51)-(18,61)
+(18,51)-(18,63)
+(18,69)-(18,70)
+(20,4)-(38,37)
+(20,12)-(38,35)
+(20,15)-(38,35)
+(21,3)-(38,35)
+(38,3)-(38,13)
+(38,3)-(38,35)
+(52,3)-(66,50)
+(52,9)-(52,25)
+(52,11)-(52,25)
+(52,15)-(52,21)
+(52,15)-(52,25)
+(66,3)-(66,50)
+(66,17)-(66,31)
+(66,17)-(66,43)
+(66,32)-(66,33)
 *)

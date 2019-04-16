@@ -65,20 +65,16 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(30,17)-(30,47)
+(30,18)-(30,48)
 sin ((pi *. eval (e , x , y)) *. 0.5)
 AppG (fromList [BopG EmptyG EmptyG])
 
-(30,22)-(30,47)
-sin
-VarG
+*)
 
-(30,23)-(30,39)
-pi
-VarG
-
-(30,23)-(30,39)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
+(* type error slice
+(16,3)-(30,48)
+(19,15)-(19,18)
+(19,15)-(19,43)
+(30,18)-(30,48)
+(30,23)-(30,48)
 *)

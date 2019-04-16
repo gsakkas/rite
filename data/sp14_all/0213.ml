@@ -41,21 +41,31 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(16,2)-(18,56)
+(16,3)-(18,57)
 if depth = 0
 then if rand (0 , 1) = 0
      then buildX ()
      else buildY ()
 else (let y = rand (2 , 6) in
       buildX ())
-IteG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG) (LetG NonRec (fromList [EmptyG]) EmptyG)
+IteG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(16,8)-(16,13)
-depth = 0
-BopG VarG LitG
+*)
 
-(17,9)-(17,59)
-0
-LitG
-
+(* type error slice
+(11,4)-(11,23)
+(11,12)-(11,21)
+(11,17)-(11,21)
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(16,3)-(18,57)
+(17,10)-(17,60)
+(17,51)-(17,57)
+(17,51)-(17,60)
+(18,10)-(18,57)
+(18,33)-(18,57)
+(18,48)-(18,54)
+(18,48)-(18,57)
+(18,57)-(18,57)
 *)

@@ -53,108 +53,33 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,16)-(19,17)
+(19,17)-(19,22)
 let (i , j) = x in
 let (s , t) = a in
 (((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(20,4)-(22,51)
-a
-VarG
-
-(20,4)-(22,51)
-i
-VarG
-
-(20,4)-(22,51)
-j
-VarG
-
-(20,4)-(22,51)
-s
-VarG
-
-(20,4)-(22,51)
-i
-VarG
-
-(20,4)-(22,51)
-j
-VarG
-
-(20,4)-(22,51)
-s
-VarG
-
-(20,4)-(22,51)
-t
-VarG
-
-(20,4)-(22,51)
-((i + j) + s) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(20,4)-(22,51)
-(i + j) + s
-BopG (BopG EmptyG EmptyG) VarG
-
-(20,4)-(22,51)
-i + j
-BopG VarG VarG
-
-(20,4)-(22,51)
-((i + j) + s) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(20,4)-(22,51)
-(i + j) + s
-BopG (BopG EmptyG EmptyG) VarG
-
-(20,4)-(22,51)
-i + j
-BopG VarG VarG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(20,4)-(22,51)
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(20,4)-(22,51)
-(((i + j) + s) mod 10) :: t
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(20,15)-(20,55)
-0
-LitG
-
-(20,15)-(20,55)
-let args =
-  List.combine (List.rev l1)
-               (List.rev l2) in
-let (_ , res) =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,15)-(20,55)
+(20,16)-(20,56)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(20,15)-(20,55)
-[]
-ListG EmptyG Nothing
+(21,16)-(21,31)
+List.combine (List.rev l1)
+             (List.rev l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(19,5)-(22,52)
+(19,11)-(19,22)
+(19,17)-(19,18)
+(19,17)-(19,22)
+(21,16)-(21,26)
+(21,16)-(21,31)
+(21,27)-(21,31)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,34)-(22,35)
+(22,36)-(22,40)
 *)

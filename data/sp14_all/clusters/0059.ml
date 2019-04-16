@@ -1,32 +1,8 @@
-ConAppG Nothing Nothing
-VarX
-VarY
-VarX
-VarX
-VarX
-VarX
-VarY
-VarX
-VarY
-VarX
-VarY
-VarX
-VarY
-VarX
-VarX
-VarX
-VarX
-VarX
-VarX
-VarY
-VarX
-VarY
-VarX
-VarY
-VarX
-VarX
-VarX
-VarX
-VarY
-VarY
-VarY
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
+[0] @ l1
+[0] @ l2
+[1 ; 0] @ acc
+adder i l [0]
+[a + hd] @ tl
+append t [h]
+[h] @ seen

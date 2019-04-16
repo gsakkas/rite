@@ -26,8 +26,14 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(10,36)-(10,77)
+(10,78)-(10,78)
 (l1 , to_append @ l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(10,37)-(10,78)
+(10,56)-(10,78)
+(10,78)-(10,78)
 *)

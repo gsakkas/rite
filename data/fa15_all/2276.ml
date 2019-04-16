@@ -69,33 +69,21 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(31,46)-(31,56)
-bigAdd
-VarG
-
-(31,46)-(31,56)
-l
-VarG
-
-(31,46)-(31,56)
-l
-VarG
-
-(31,46)-(31,56)
-bigAdd l l
-AppG (fromList [VarG])
-
-(31,46)-(31,56)
-mulByDigit (i - 1) l'
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(31,46)-(31,77)
+(31,47)-(31,78)
 let l' = bigAdd l l in
 mulByDigit (i - 1) l'
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
 
-(31,75)-(31,76)
-l'
-VarG
+*)
 
+(* type error slice
+(30,4)-(31,80)
+(30,20)-(31,78)
+(30,22)-(31,78)
+(31,26)-(31,78)
+(31,40)-(31,41)
+(31,47)-(31,57)
+(31,47)-(31,78)
+(31,58)-(31,78)
+(31,59)-(31,66)
 *)

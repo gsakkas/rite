@@ -74,176 +74,43 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,25)-(22,44)
+(22,17)-(22,45)
 match x with
 | (x1 , x2) -> match a with
                | (o , z) -> if ((o + x1) + x2) > 9
                             then (1 , (((o + x1) + x2) mod 10) :: z)
                             else (0 , ((o + x1) + x2) :: z)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(23,4)-(30,51)
-x
-VarG
-
-(23,4)-(30,51)
-a
-VarG
-
-(23,4)-(30,51)
-o
-VarG
-
-(23,4)-(30,51)
-x1
-VarG
-
-(23,4)-(30,51)
-x2
-VarG
-
-(23,4)-(30,51)
-o
-VarG
-
-(23,4)-(30,51)
-x1
-VarG
-
-(23,4)-(30,51)
-x2
-VarG
-
-(23,4)-(30,51)
-z
-VarG
-
-(23,4)-(30,51)
-o
-VarG
-
-(23,4)-(30,51)
-x1
-VarG
-
-(23,4)-(30,51)
-x2
-VarG
-
-(23,4)-(30,51)
-z
-VarG
-
-(23,4)-(30,51)
-(o + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(23,4)-(30,51)
-((o + x1) + x2) > 9
-BopG (BopG EmptyG EmptyG) LitG
-
-(23,4)-(30,51)
-o + x1
-BopG VarG VarG
-
-(23,4)-(30,51)
-((o + x1) + x2) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(23,4)-(30,51)
-(o + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(23,4)-(30,51)
-o + x1
-BopG VarG VarG
-
-(23,4)-(30,51)
-(o + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(23,4)-(30,51)
-o + x1
-BopG VarG VarG
-
-(23,4)-(30,51)
-9
-LitG
-
-(23,4)-(30,51)
-1
-LitG
-
-(23,4)-(30,51)
-10
-LitG
-
-(23,4)-(30,51)
-0
-LitG
-
-(23,4)-(30,51)
-if ((o + x1) + x2) > 9
-then (1 , (((o + x1) + x2) mod 10) :: z)
-else (0 , ((o + x1) + x2) :: z)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(23,4)-(30,51)
-match a with
-| (o , z) -> if ((o + x1) + x2) > 9
-             then (1 , (((o + x1) + x2) mod 10) :: z)
-             else (0 , ((o + x1) + x2) :: z)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(23,4)-(30,51)
-(1 , (((o + x1) + x2) mod 10) :: z)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing])
-
-(23,4)-(30,51)
-(0 , ((o + x1) + x2) :: z)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing])
-
-(23,4)-(30,51)
-(((o + x1) + x2) mod 10) :: z
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(23,4)-(30,51)
-((o + x1) + x2) :: z
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-
-(23,15)-(23,16)
+(23,16)-(23,17)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(24,4)-(30,51)
-[]
-ListG EmptyG Nothing
-
-(26,8)-(28,23)
+(26,9)-(28,24)
 match (List.rev list1 , List.rev list2) with
 | (h1 :: t1 , h2 :: t2) -> (h1 , h2) :: (pair t1
                                               t2)
 | (_ , _) -> []
-CaseG (TupleG (fromList [EmptyG])) (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
+CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG]),Nothing,ConAppG (Just EmptyG)),(TuplePatG (fromList [WildPatG]),Nothing,ListG (fromList []))])
 
-(26,15)-(26,20)
-List.rev
-VarG
+*)
 
-(26,15)-(26,20)
-List.rev list1
-AppG (fromList [VarG])
-
-(26,22)-(26,27)
-List.rev
-VarG
-
-(26,22)-(26,27)
-List.rev list2
-AppG (fromList [VarG])
-
-(27,41)-(27,56)
-pair t1 t2
-AppG (fromList [VarG])
-
+(* type error slice
+(23,5)-(30,52)
+(23,16)-(23,17)
+(25,7)-(29,17)
+(25,20)-(28,24)
+(26,9)-(28,24)
+(26,15)-(26,29)
+(26,16)-(26,21)
+(27,30)-(27,57)
+(27,42)-(27,57)
+(27,43)-(27,47)
+(27,48)-(27,56)
+(29,7)-(29,11)
+(29,7)-(29,17)
+(30,5)-(30,52)
+(30,19)-(30,33)
+(30,19)-(30,45)
+(30,36)-(30,40)
 *)

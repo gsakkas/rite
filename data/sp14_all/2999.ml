@@ -21,12 +21,17 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(8,9)-(8,27)
+(8,10)-(8,28)
 clone 0 (abs diff)
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(8,18)-(8,21)
-abs diff
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(2,49)-(2,66)
+(2,50)-(2,55)
+(2,58)-(2,65)
+(8,10)-(8,28)
+(8,11)-(8,16)
+(8,19)-(8,22)
 *)

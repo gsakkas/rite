@@ -13,16 +13,16 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(5,36)-(5,42)
+(5,37)-(5,61)
 listReverse t @ [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(5,43)-(5,54)
-(@)
-VarG
+*)
 
-(5,43)-(5,54)
-listReverse t
-AppG (fromList [VarG])
-
+(* type error slice
+(2,59)-(2,77)
+(2,64)-(2,77)
+(2,65)-(2,71)
+(5,37)-(5,43)
+(5,37)-(5,61)
 *)

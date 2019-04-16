@@ -1,3 +1,2 @@
-CaseG VarG (fromList [(Nothing,LitG)])
-match xs with
-| [] -> 0
+ListG (fromList [VarG,BopG EmptyG EmptyG])
+[n ; n mod 10]

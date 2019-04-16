@@ -67,72 +67,46 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,9)-(18,15)
+(18,10)-(18,16)
 (List.length acc = List.length l1) || (List.length acc = List.length l2)
 BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(18,13)-(18,15)
-List.length acc
-AppG (fromList [VarG])
-
-(20,8)-(27,42)
-List.length
-VarG
-
-(20,8)-(27,42)
-acc
-VarG
-
-(20,8)-(27,42)
-List.length
-VarG
-
-(20,8)-(27,42)
-l1
-VarG
-
-(20,8)-(27,42)
-List.length
-VarG
-
-(20,8)-(27,42)
-acc
-VarG
-
-(20,8)-(27,42)
-List.length
-VarG
-
-(20,8)-(27,42)
-l2
-VarG
-
-(20,8)-(27,42)
-List.length l1
-AppG (fromList [VarG])
-
-(20,8)-(27,42)
-List.length acc
-AppG (fromList [VarG])
-
-(20,8)-(27,42)
-List.length l2
-AppG (fromList [VarG])
-
-(20,8)-(27,42)
-List.length acc = List.length l2
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,11)-(27,41)
-acc
-VarG
-
-(23,11)-(27,41)
-0
-LitG
-
-(23,11)-(27,41)
+(23,12)-(27,42)
 (0 , acc)
 TupleG (fromList [VarG,LitG])
 
+(27,43)-(27,43)
+let (el1 , el2) = x in
+let new_sum =
+  (rem + el1) + el2 in
+let new_rem =
+  if new_sum > 9
+  then 1
+  else 0 in
+let norm_sum =
+  if new_sum > 9
+  then new_sum - 10
+  else new_sum in
+(new_rem , norm_sum :: acc)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+
+(29,25)-(29,52)
+List.combine l1 l2
+AppG (fromList [VarG])
+
+*)
+
+(* type error slice
+(18,7)-(27,43)
+(18,10)-(18,11)
+(18,10)-(18,16)
+(18,14)-(18,16)
+(20,9)-(27,43)
+(23,12)-(27,42)
+(23,29)-(23,30)
+(24,13)-(27,41)
+(25,13)-(27,41)
+(26,13)-(27,41)
+(27,13)-(27,41)
+(27,43)-(27,43)
 *)

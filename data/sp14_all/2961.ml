@@ -15,12 +15,17 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(5,20)-(5,48)
+(5,21)-(5,49)
 additivePersistence (help n)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(5,41)-(5,45)
-help n
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(4,4)-(5,58)
+(4,29)-(5,56)
+(5,3)-(5,56)
+(5,21)-(5,49)
+(5,22)-(5,41)
+(5,55)-(5,56)
 *)

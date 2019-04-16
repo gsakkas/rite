@@ -13,30 +13,19 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(3,24)-(3,56)
+(3,25)-(3,57)
 match n with
 | 0 -> []
 | _ -> digitsOfInt (n / 10) @ [n mod 10]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(3,25)-(3,45)
-n
-VarG
+*)
 
-(3,25)-(3,45)
-(@)
-VarG
-
-(3,25)-(3,45)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(3,25)-(3,45)
-[]
-ListG EmptyG Nothing
-
-(3,47)-(3,55)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(2,4)-(3,59)
+(2,21)-(3,57)
+(3,3)-(3,57)
+(3,25)-(3,57)
+(3,26)-(3,37)
+(3,26)-(3,46)
 *)

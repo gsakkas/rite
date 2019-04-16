@@ -52,15 +52,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,6)-(19,61)
-a
-VarG
-
-(15,6)-(19,61)
-x
-VarG
-
-(15,6)-(19,61)
+(15,7)-(19,62)
 let carry =
   match a with
   | (x , y) -> x in
@@ -71,19 +63,23 @@ match x with
                   ((carry + d1) + d2) mod 10 in
                 match a with
                 | (x , y) -> (new_carry , digit :: y))
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
 
-(15,6)-(19,61)
-match a with
-| (x , y) -> x
-CaseG VarG (fromList [(Nothing,VarG)])
+*)
 
-(17,28)-(17,29)
-carry
-VarG
-
-(18,24)-(18,25)
-carry
-VarG
-
+(* type error slice
+(14,5)-(22,52)
+(14,11)-(19,62)
+(14,13)-(19,62)
+(15,7)-(19,62)
+(17,11)-(19,62)
+(17,28)-(17,36)
+(17,29)-(17,30)
+(18,11)-(19,62)
+(19,11)-(19,62)
+(19,18)-(19,19)
+(19,36)-(19,61)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,34)-(22,35)
 *)

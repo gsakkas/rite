@@ -29,12 +29,24 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(13,9)-(13,16)
-0
-LitG
+(10,3)-(14,14)
+if n < 10
+then 0
+else 1 + additivePersistence (sumList (digits n))
+IteG (BopG EmptyG EmptyG) LitG (BopG EmptyG EmptyG)
 
-(13,25)-(13,44)
-additivePersistence (sumList (digits n))
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(9,4)-(14,16)
+(9,29)-(14,14)
+(10,3)-(14,14)
+(10,19)-(13,66)
+(11,5)-(13,66)
+(13,10)-(13,17)
+(13,10)-(13,66)
+(13,26)-(13,45)
+(14,3)-(14,10)
+(14,3)-(14,14)
+(14,13)-(14,14)
 *)

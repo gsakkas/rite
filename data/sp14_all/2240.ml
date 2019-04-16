@@ -63,13 +63,14 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(23,8)-(23,73)
+(23,9)-(23,74)
 mod_float (eval (w , x , y) *. eval (t , x , y))
           (eval (u , x , y))
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(23,58)-(23,62)
-eval (u , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(23,9)-(23,74)
+(23,10)-(23,19)
 *)

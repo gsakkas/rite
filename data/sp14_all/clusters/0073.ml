@@ -1,19 +1,4 @@
-BopG LitG (AppG (fromList [EmptyG]))
-1.0 -. exp ((- 1.0) *. eval (a , x , y))
-1.0 -. exp ((- 1.0) *. eval (a , x , y))
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-4.0 *. atan 1.0
-1 + additivePersistence (sumList (digitsOfInt n))
+TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
+(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+(h1 + 1 , (mul / 10) :: ((mul mod 10) :: t2))
+(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)

@@ -1,3 +1,4 @@
-SeqG (AppG (fromList [EmptyG])) (ListG EmptyG Nothing)
-listReverse t; [h]
-listReverse t; [h]
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (BopG EmptyG EmptyG)
+let sum =
+  num + additivePersistence num in
+1 + additivePersistence num

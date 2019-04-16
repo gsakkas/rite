@@ -63,7 +63,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,2)-(30,12)
+(16,3)-(30,13)
 match e with
 | VarX -> x
 | VarY -> y
@@ -76,6 +76,16 @@ match e with
                             else eval (d , x , y)
 | TripMult (a , b , c) -> (eval (a , x , y) *. eval (b , x , y)) *. eval (c , x , y)
 | _ -> 0.0
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,LitG)])
 
+*)
+
+(* type error slice
+(16,3)-(30,13)
+(19,26)-(19,42)
+(19,27)-(19,31)
+(19,32)-(19,41)
+(27,19)-(27,27)
+(27,20)-(27,24)
+(27,25)-(27,26)
 *)

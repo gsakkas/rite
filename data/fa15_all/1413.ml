@@ -23,53 +23,25 @@ let rec digitalRoot n =
 *)
 
 (* changed spans
-(7,20)-(8,64)
-xs
-VarG
-
-(7,20)-(8,64)
-h
-VarG
-
-(7,20)-(8,64)
-sumList
-VarG
-
-(7,20)-(8,64)
-t
-VarG
-
-(7,20)-(8,64)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | h :: t -> h + sumList t
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(7,20)-(8,64)
+(8,63)-(8,64)
 sumList t
 AppG (fromList [VarG])
 
-(7,20)-(8,64)
-h + sumList t
-BopG VarG (AppG (fromList [EmptyG]))
+*)
 
-(7,20)-(8,64)
-0
-LitG
-
-(7,20)-(8,64)
-match xs with
-| [] -> 0
-| h :: t -> h + sumList t
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
-
-(8,62)-(8,63)
-sumList
-VarG
-
-(8,62)-(8,63)
-sumList t
-AppG (fromList [VarG])
-
+(* type error slice
+(5,4)-(5,37)
+(5,12)-(5,35)
+(5,28)-(5,35)
+(5,29)-(5,32)
+(5,33)-(5,34)
+(7,4)-(8,67)
+(7,21)-(8,65)
+(8,3)-(8,65)
+(8,9)-(8,15)
+(8,9)-(8,17)
+(8,16)-(8,17)
+(8,50)-(8,65)
+(8,51)-(8,62)
+(8,63)-(8,64)
 *)

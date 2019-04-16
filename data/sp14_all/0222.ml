@@ -37,52 +37,29 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(11,15)-(14,47)
-fun () -> VarX
-LamG (ConAppG Nothing Nothing)
-
-(11,15)-(14,47)
-fun () -> VarY
-LamG (ConAppG Nothing Nothing)
-
-(11,15)-(14,47)
-VarX
-ConAppG Nothing Nothing
-
-(11,15)-(14,47)
-VarY
-ConAppG Nothing Nothing
-
-(13,44)-(13,48)
+(13,35)-(13,39)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(14,7)-(14,47)
-buildX
-VarG
-
-(14,7)-(14,47)
-buildY
-VarG
-
-(14,7)-(14,47)
+(13,45)-(13,49)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(14,7)-(14,47)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(14,7)-(14,47)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(14,31)-(14,46)
-buildX
-VarG
-
-(14,45)-(14,46)
+(14,32)-(14,47)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
+*)
+
+(* type error slice
+(13,12)-(13,25)
+(13,12)-(13,29)
+(13,13)-(13,17)
+(13,28)-(13,29)
+(14,8)-(14,48)
+(14,17)-(14,21)
+(14,17)-(14,28)
+(14,32)-(14,47)
+(14,46)-(14,47)
+(14,47)-(14,47)
 *)

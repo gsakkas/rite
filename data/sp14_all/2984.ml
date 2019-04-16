@@ -14,12 +14,18 @@ let rec digitsOfInt n = if n >= 10 then app [5] [n mod 10] else app [3] [8];;
 *)
 
 (* changed spans
-(5,18)-(5,43)
+(5,19)-(5,44)
 app [5] [n mod 10]
-AppG (fromList [ListG EmptyG Nothing])
+AppG (fromList [ListG (fromList [EmptyG])])
 
-(5,28)-(5,30)
-5
-LitG
+*)
 
+(* type error slice
+(5,3)-(5,61)
+(5,19)-(5,22)
+(5,19)-(5,44)
+(5,23)-(5,44)
+(5,24)-(5,32)
+(5,50)-(5,53)
+(5,50)-(5,61)
 *)

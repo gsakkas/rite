@@ -1,7 +1,6 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing)])
-match l with
-| [] -> l
-| h :: t -> h :: (listReverse t)
-match l with
-| [] -> l
-| h :: t -> h :: (listReverse t)
+LetG NonRec (fromList [(VarPatG,LitG)]) (SeqG EmptyG EmptyG)
+let x = 1 in
+(x + 1;
+if sumList (digitsOfInt n) > 9
+then additivePersistence (sumList (digitsOfInt n))
+else x)

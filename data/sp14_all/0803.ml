@@ -62,27 +62,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(11,14)-(23,76)
-atan
-VarG
-
-(11,14)-(23,76)
-atan 1.0
-AppG (fromList [LitG])
-
-(11,14)-(23,76)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(11,14)-(23,76)
-4.0
-LitG
-
-(11,14)-(23,76)
-1.0
-LitG
-
-(12,2)-(23,76)
+(12,3)-(23,77)
 match e with
 | VarX -> x
 | VarY -> y
@@ -95,34 +75,14 @@ match e with
                                 else eval (e4 , x , y)
 | Sqrt e -> sqrt (abs_float (eval (e , x , y)))
 | Gauss (e1 , e2 , e3) -> 2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(15,19)-(15,36)
-pi
-VarG
+*)
 
-(15,19)-(15,36)
-pi *. eval (e' , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(16,21)-(16,38)
-pi
-VarG
-
-(16,21)-(16,38)
-pi *. eval (e' , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(17,23)-(17,67)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,66)-(17,67)
-2.0
-LitG
-
-(23,18)-(23,76)
-sqrt
-VarG
-
+(* type error slice
+(12,3)-(23,77)
+(15,16)-(15,19)
+(15,16)-(15,37)
+(17,24)-(17,64)
+(17,24)-(17,68)
 *)

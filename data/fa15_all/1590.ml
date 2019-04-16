@@ -22,69 +22,27 @@ let palindrome w = (explode w) = (listReverse (explode w));;
 *)
 
 (* changed spans
-(7,15)-(7,34)
-l
-VarG
-
-(7,15)-(7,34)
-listReverse
-VarG
-
-(7,15)-(7,34)
-t
-VarG
-
-(7,15)-(7,34)
-(@)
-VarG
-
-(7,15)-(7,34)
-h
-VarG
-
-(7,15)-(7,34)
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> listReverse t @ [h]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(7,15)-(7,34)
-listReverse t
-AppG (fromList [VarG])
-
-(7,15)-(7,34)
-listReverse t @ [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(7,15)-(7,34)
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
-
-(7,15)-(7,34)
-[]
-ListG EmptyG Nothing
-
-(7,15)-(7,34)
-[h]
-ListG VarG Nothing
-
-(7,33)-(7,34)
-listReverse
-VarG
-
-(7,33)-(7,34)
-explode
-VarG
-
-(7,33)-(7,34)
+(7,34)-(7,35)
 listReverse (explode w)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(7,33)-(7,34)
-explode w
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(2,4)-(5,9)
+(2,13)-(5,7)
+(3,3)-(5,7)
+(4,13)-(4,30)
+(4,14)-(4,27)
+(4,28)-(4,29)
+(4,44)-(4,67)
+(4,55)-(4,67)
+(4,56)-(4,58)
+(5,3)-(5,5)
+(5,3)-(5,7)
+(7,20)-(7,31)
+(7,20)-(7,35)
+(7,21)-(7,28)
+(7,29)-(7,30)
+(7,34)-(7,35)
 *)

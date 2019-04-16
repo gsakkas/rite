@@ -20,40 +20,7 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(8,25)-(8,62)
-n
-VarG
-
-(8,25)-(8,62)
-a
-VarG
-
-(8,25)-(8,62)
-fun n ->
-  fun a ->
-    if n = 0
-    then a
-    else loop (n / 10)
-              ((n mod 10) :: a)
-LamG (LamG EmptyG)
-
-(8,25)-(8,62)
-fun a ->
-  if n = 0
-  then a
-  else loop (n / 10)
-            ((n mod 10) :: a)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(8,25)-(8,62)
-n = 0
-BopG VarG LitG
-
-(8,25)-(8,62)
-0
-LitG
-
-(8,25)-(8,62)
+(8,26)-(8,63)
 let rec loop =
   fun n ->
     fun a ->
@@ -64,21 +31,11 @@ let rec loop =
 match n with
 | 0 -> [0]
 | _ -> loop n []
-LetG Rec (fromList [LamG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
-(8,25)-(8,62)
-if n = 0
-then a
-else loop (n / 10)
-          ((n mod 10) :: a)
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+*)
 
-(8,46)-(8,59)
-loop
-VarG
-
-(8,60)-(8,61)
-n / 10
-BopG VarG LitG
-
+(* type error slice
+(8,26)-(8,37)
+(8,26)-(8,63)
 *)

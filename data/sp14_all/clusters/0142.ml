@@ -1,26 +1,5 @@
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
+AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+helper (x - 1) l (bigAdd l
+                         accum)
+helper (i - 1) (bigAdd acc l)
+       l

@@ -1,7 +1,2 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ListG EmptyG Nothing)])
-match l with
-| [] -> []
-| h :: t -> t
-match l with
-| [] -> []
-| h :: m :: t -> t
+LetG NonRec (fromList [(VarPatG,ListG (fromList [EmptyG]))]) VarG
+let c = [a ; b] in c

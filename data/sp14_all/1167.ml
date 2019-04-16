@@ -10,14 +10,19 @@ let rec listReverse l = match l with | [] -> [] | b::[] -> [b];;
 *)
 
 (* changed spans
-(3,2)-(3,56)
+(3,3)-(3,57)
 match l with
 | [] -> []
 | b :: [] -> [b]
-CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
-(3,53)-(3,54)
-b
-VarG
+*)
 
+(* type error slice
+(2,4)-(3,59)
+(2,21)-(3,57)
+(3,3)-(3,57)
+(3,37)-(3,57)
+(3,38)-(3,49)
+(3,38)-(3,51)
 *)

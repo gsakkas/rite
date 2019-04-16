@@ -94,146 +94,52 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(28,19)-(34,66)
-l1
-VarG
+(2,16)-(2,62)
+EMPTY
+EmptyG
 
-(28,19)-(34,66)
-h
-VarG
-
-(28,19)-(34,66)
-l2
-VarG
-
-(28,19)-(34,66)
-helper
-VarG
-
-(28,19)-(34,66)
-t
-VarG
-
-(28,19)-(34,66)
-l2
-VarG
-
-(28,19)-(34,66)
+(35,1)-(35,1)
 fun l1 ->
   fun l2 ->
     match l1 with
     | [] -> []
     | h :: t -> (h , l2) :: (helper t
                                     l2)
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(28,19)-(34,66)
-fun l2 ->
-  match l1 with
-  | [] -> []
-  | h :: t -> (h , l2) :: (helper t
-                                  l2)
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(28,19)-(34,66)
-helper t l2
-AppG (fromList [VarG])
-
-(28,19)-(34,66)
-match l1 with
-| [] -> []
-| h :: t -> (h , l2) :: (helper t
-                                l2)
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-
-(28,19)-(34,66)
-(h , l2)
-TupleG (fromList [VarG])
-
-(28,19)-(34,66)
-(h , l2) :: (helper t l2)
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),TupleG (fromList [VarG])]))) Nothing
-
-(28,19)-(34,66)
-[]
-ListG EmptyG Nothing
-
-(41,4)-(42,75)
-x
-VarG
-
-(41,4)-(42,75)
+(41,5)-(42,76)
 let (x1 , x2) = x in
 let (carry , res) = a in
 (carry @ [0] , bigAdd (mulByDigit x1
                                   x2 @ carry) res)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(42,45)-(42,51)
-carry
-VarG
-
-(42,45)-(42,51)
-(@)
-VarG
-
-(42,45)-(42,51)
-bigAdd (mulByDigit x1
-                   x2 @ carry) res
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(42,45)-(42,51)
-0
-LitG
-
-(42,45)-(42,51)
-[0]
-ListG LitG Nothing
-
-(42,53)-(42,63)
-(@)
-VarG
-
-(42,53)-(42,63)
-mulByDigit x1 x2
-AppG (fromList [VarG])
-
-(42,66)-(42,68)
-x1
-VarG
-
-(42,70)-(42,73)
-x2
-VarG
-
-(42,70)-(42,73)
-carry
-VarG
-
-(44,2)-(45,63)
+(43,15)-(43,16)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(44,13)-(44,23)
-List.rev
-VarG
-
-(44,13)-(44,23)
+(44,14)-(44,24)
 List.rev (helper l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(44,19)-(44,20)
-helper
-VarG
-
-(44,21)-(44,23)
-l1
-VarG
-
-(45,2)-(45,63)
+(45,3)-(45,64)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(40,3)-(45,64)
+(40,9)-(42,76)
+(40,11)-(42,76)
+(41,5)-(42,76)
+(41,23)-(41,24)
+(42,5)-(42,76)
+(42,26)-(42,28)
+(42,39)-(42,76)
+(45,21)-(45,35)
+(45,21)-(45,47)
+(45,36)-(45,37)
 *)

@@ -19,14 +19,23 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(6,28)-(6,77)
+(6,29)-(6,78)
 let d :: [] =
   digitsOfInt (n / 10) in
 [d ; n mod 10]
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (ListG EmptyG Nothing)
+LetG NonRec (fromList [(ConsPatG VarPatG (ConPatG Nothing),AppG (fromList [EmptyG]))]) (ListG (fromList [EmptyG]))
 
-(6,61)-(6,76)
-[d ; n mod 10]
-ListG VarG Nothing
+*)
 
+(* type error slice
+(2,4)-(6,80)
+(2,21)-(6,78)
+(3,3)-(6,78)
+(6,5)-(6,78)
+(6,29)-(6,78)
+(6,38)-(6,49)
+(6,38)-(6,58)
+(6,62)-(6,63)
+(6,62)-(6,77)
+(6,67)-(6,77)
 *)

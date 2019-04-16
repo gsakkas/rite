@@ -33,13 +33,18 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(13,26)-(13,61)
+(13,27)-(13,62)
 aPHelper (sumList (digits n))
          (i + 1)
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(13,35)-(13,42)
-sumList (digits n)
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(12,3)-(14,4)
+(12,20)-(13,62)
+(12,22)-(13,62)
+(13,5)-(13,62)
+(13,27)-(13,35)
+(13,27)-(13,62)
 *)

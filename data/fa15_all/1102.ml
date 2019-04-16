@@ -50,77 +50,39 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,20)-(18,49)
+(16,7)-(19,30)
 let b = fst x + snd x in
 match a with
 | h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
 | _ -> [b / 10 ; b mod 10]
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
-(18,47)-(18,48)
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-
-(18,53)-(19,29)
-a
-VarG
-
-(18,54)-(18,57)
-h + b
-BopG VarG VarG
-
-(18,60)-(18,62)
-h
-VarG
-
-(18,60)-(18,62)
-b
-VarG
-
-(19,13)-(19,16)
-h + b
-BopG VarG VarG
-
-(19,21)-(19,23)
-h
-VarG
-
-(19,21)-(19,23)
-b
-VarG
-
-(20,4)-(22,51)
-b
-VarG
-
-(20,4)-(22,51)
-b
-VarG
-
-(20,4)-(22,51)
-b / 10
-BopG VarG LitG
-
-(20,4)-(22,51)
-b mod 10
-BopG VarG LitG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-[b / 10 ; b mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(20,16)-(20,18)
+(20,16)-(20,20)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+(22,5)-(22,52)
+List.fold_left f base args
+AppG (fromList [VarG])
+
+*)
+
+(* type error slice
+(15,5)-(22,52)
+(15,11)-(19,30)
+(15,13)-(19,30)
+(16,7)-(19,30)
+(16,13)-(16,14)
+(18,11)-(19,30)
+(18,43)-(18,50)
+(18,44)-(18,47)
+(18,48)-(18,49)
+(18,54)-(18,64)
+(18,54)-(19,30)
+(19,13)-(19,25)
+(19,13)-(19,30)
+(19,29)-(19,30)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,34)-(22,35)
 *)

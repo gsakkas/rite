@@ -24,69 +24,21 @@ let rec digitalRoot n = sumList (digitsOfInt n);;
 *)
 
 (* changed spans
-(8,20)-(8,59)
-xs
-VarG
-
-(8,20)-(8,59)
-List.hd
-VarG
-
-(8,20)-(8,59)
-xs
-VarG
-
-(8,20)-(8,59)
-sumList
-VarG
-
-(8,20)-(8,59)
-List.tl
-VarG
-
-(8,20)-(8,59)
-xs
-VarG
-
-(8,20)-(8,59)
-fun xs ->
-  match xs with
-  | [] -> 0
-  | xs -> List.hd xs + sumList (List.tl xs)
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(8,20)-(8,59)
-List.hd xs
-AppG (fromList [VarG])
-
-(8,20)-(8,59)
-sumList (List.tl xs)
+(8,25)-(8,60)
+sumList (digitsOfInt n)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(8,20)-(8,59)
-List.tl xs
-AppG (fromList [VarG])
+*)
 
-(8,20)-(8,59)
-List.hd xs + sumList (List.tl xs)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(8,20)-(8,59)
-0
-LitG
-
-(8,20)-(8,59)
-match xs with
-| [] -> 0
-| xs -> List.hd xs + sumList (List.tl xs)
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
-
-(8,46)-(8,57)
-sumList
-VarG
-
-(8,46)-(8,57)
-digitsOfInt n
-AppG (fromList [VarG])
-
+(* type error slice
+(6,32)-(6,68)
+(6,46)-(6,68)
+(6,47)-(6,58)
+(8,25)-(8,60)
+(8,28)-(8,29)
+(8,28)-(8,34)
+(8,32)-(8,34)
+(8,40)-(8,41)
+(8,47)-(8,58)
+(8,47)-(8,60)
 *)

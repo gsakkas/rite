@@ -23,12 +23,17 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(9,26)-(9,42)
+(9,27)-(9,43)
 notEqual b (f b)
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(9,38)-(9,39)
-f b
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(2,4)-(2,37)
+(2,14)-(2,35)
+(2,16)-(2,35)
+(2,20)-(2,35)
+(9,27)-(9,43)
+(9,28)-(9,36)
 *)

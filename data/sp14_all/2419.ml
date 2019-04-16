@@ -23,21 +23,27 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(4,10)-(4,11)
+(4,11)-(4,12)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(8,28)-(8,60)
+(8,29)-(8,61)
 (prod / 10) :: (mulByDigit i
                            t)
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG LitG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(9,11)-(9,15)
+(9,12)-(9,16)
 prod mod 10
 BopG VarG LitG
 
-(9,19)-(9,20)
-10
-LitG
+*)
 
+(* type error slice
+(3,3)-(9,21)
+(4,11)-(4,12)
+(6,7)-(9,21)
+(7,7)-(9,21)
+(8,12)-(8,61)
+(8,29)-(8,61)
+(9,12)-(9,21)
 *)

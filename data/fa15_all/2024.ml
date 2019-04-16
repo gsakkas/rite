@@ -49,78 +49,28 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,4)-(19,51)
-a
-VarG
-
-(16,4)-(19,51)
+(16,17)-(16,46)
 match a with
 | (w , z) -> match x with
              | (x , y) -> (((x + y) + w) / 10 , (((x + y) + w) mod 10) :: z)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(16,12)-(16,45)
-((x + y) + w) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,12)-(16,45)
-(((x + y) + w) / 10 , (((x + y) + w) mod 10) :: z)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(16,16)-(16,45)
-x + y
-BopG VarG VarG
-
-(16,40)-(16,41)
-0
-LitG
-
-(16,40)-(16,41)
+(17,16)-(17,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(16,40)-(16,45)
-w
-VarG
+*)
 
-(16,40)-(16,45)
-x
-VarG
-
-(16,40)-(16,45)
-y
-VarG
-
-(16,40)-(16,45)
-w
-VarG
-
-(16,40)-(16,45)
-z
-VarG
-
-(16,40)-(16,45)
-((x + y) + w) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,40)-(16,45)
-(x + y) + w
-BopG (BopG EmptyG EmptyG) VarG
-
-(16,40)-(16,45)
-x + y
-BopG VarG VarG
-
-(16,40)-(16,45)
-10
-LitG
-
-(16,40)-(16,45)
-10
-LitG
-
-(16,40)-(16,45)
-(((x + y) + w) mod 10) :: z
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
+(* type error slice
+(16,5)-(19,52)
+(16,11)-(16,46)
+(16,13)-(16,46)
+(16,17)-(16,46)
+(16,41)-(16,46)
+(17,5)-(19,52)
+(17,16)-(17,18)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
+(19,36)-(19,40)
 *)

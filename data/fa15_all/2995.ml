@@ -51,51 +51,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,6)-(20,38)
+(15,7)-(20,39)
 let (l , m) = a in
 if ((j + k) + l) > 9
 then (1 , (((j + k) + l) - 10) :: m)
 else (0 , ((j + k) + l) :: m)
-LetG NonRec (fromList [VarG]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (IteG EmptyG EmptyG EmptyG)
 
-(18,14)-(18,15)
-j + k
-BopG VarG VarG
-
-(18,23)-(18,24)
-l
-VarG
-
-(19,15)-(19,45)
-(1 , (((j + k) + l) - 10) :: m)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing])
-
-(19,37)-(19,39)
-l
-VarG
-
-(20,15)-(20,16)
-(0 , ((j + k) + l) :: m)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing])
-
-(20,15)-(20,38)
-m
-VarG
-
-(20,37)-(20,38)
-l
-VarG
-
-(21,4)-(23,51)
-m
-VarG
-
-(21,15)-(21,18)
+(21,16)-(21,19)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(22,4)-(23,51)
-[]
-ListG EmptyG Nothing
+*)
 
+(* type error slice
+(13,5)-(23,52)
+(13,11)-(20,39)
+(15,7)-(20,39)
+(15,13)-(15,14)
+(23,5)-(23,52)
+(23,19)-(23,33)
+(23,19)-(23,45)
+(23,34)-(23,35)
 *)

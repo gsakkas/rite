@@ -42,23 +42,23 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(16,14)-(16,66)
+(16,15)-(16,67)
 let (a1 , a2) = a in
 (a1 , mulByDigit x
                  l1 @ clone 0 (List.length a1))
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(16,18)-(16,65)
-a1
-VarG
+*)
 
-(16,18)-(16,65)
-(a1 , mulByDigit x
-                 l1 @ clone 0 (List.length a1))
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(16,61)-(16,62)
-a1
-VarG
-
+(* type error slice
+(16,3)-(18,76)
+(16,9)-(16,67)
+(16,11)-(16,67)
+(16,15)-(16,67)
+(16,49)-(16,64)
+(16,50)-(16,61)
+(16,62)-(16,63)
+(18,43)-(18,57)
+(18,43)-(18,69)
+(18,58)-(18,59)
 *)

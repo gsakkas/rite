@@ -21,12 +21,15 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(7,15)-(7,58)
-f (f (f b))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(7,24)-(7,37)
+(7,25)-(7,38)
 f (f (f (f b)))
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(7,25)-(7,26)
+(7,25)-(7,38)
+(7,29)-(7,38)
+(7,30)-(7,31)
 *)

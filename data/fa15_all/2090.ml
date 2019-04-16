@@ -16,38 +16,21 @@ let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
 *)
 
 (* changed spans
-(9,34)-(9,51)
+(9,21)-(9,52)
 if n = 0
 then []
 else x :: (clone x (n - 1))
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (ConAppG (Just EmptyG))
 
-(9,35)-(9,46)
-n
-VarG
+*)
 
-(9,35)-(9,46)
-x
-VarG
-
-(9,35)-(9,46)
-n = 0
-BopG VarG LitG
-
-(9,35)-(9,46)
-0
-LitG
-
-(9,35)-(9,46)
-x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
-
-(9,35)-(9,46)
-[]
-ListG EmptyG Nothing
-
-(9,44)-(9,45)
-n - 1
-BopG VarG LitG
-
+(* type error slice
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(9,21)-(9,30)
+(9,21)-(9,52)
+(9,35)-(9,52)
 *)

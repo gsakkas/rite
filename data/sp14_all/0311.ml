@@ -73,53 +73,28 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,16)-(17,39)
-a
-VarG
-
-(17,16)-(17,39)
-b
-VarG
-
-(17,16)-(17,39)
-a_less
-VarG
-
-(17,16)-(17,39)
-b_less
-VarG
-
-(17,16)-(17,39)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,16)-(17,39)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(25,13)-(25,14)
+(25,14)-(25,15)
 1
 LitG
 
-(27,10)-(27,18)
+(27,11)-(27,19)
 rand (0 , 4)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(27,15)-(27,16)
-(0 , 4)
-TupleG (fromList [LitG])
+(32,12)-(32,35)
+buildThresh (e , e , e , e)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(32,11)-(32,21)
-buildThresh
-VarG
-
-(33,14)-(33,22)
+(33,15)-(33,23)
 rand (0 , 1)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(33,19)-(33,20)
-(0 , 1)
-TupleG (fromList [LitG])
+*)
 
+(* type error slice
+(17,4)-(17,42)
+(17,17)-(17,40)
+(32,12)-(32,22)
+(32,12)-(32,35)
+(32,23)-(32,35)
 *)

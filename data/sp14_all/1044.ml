@@ -13,40 +13,22 @@ let rec assoc (d,k,l) =
 *)
 
 (* changed spans
-(3,2)-(3,73)
+(3,3)-(3,74)
 match l with
 | [] -> d
 | h :: t -> if fst h = k
             then snd h
             else assoc (d , k , t)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
 
-(3,42)-(3,43)
-fst h
-AppG (fromList [VarG])
+*)
 
-(3,46)-(3,47)
-fst
-VarG
-
-(3,46)-(3,47)
-h
-VarG
-
-(3,60)-(3,65)
-snd
-VarG
-
-(3,60)-(3,65)
-h
-VarG
-
-(3,60)-(3,65)
-assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(3,66)-(3,73)
-(d , k , t)
-TupleG (fromList [VarG])
-
+(* type error slice
+(3,3)-(3,74)
+(3,24)-(3,25)
+(3,40)-(3,74)
+(3,54)-(3,55)
+(3,67)-(3,74)
+(3,68)-(3,69)
+(3,72)-(3,73)
 *)

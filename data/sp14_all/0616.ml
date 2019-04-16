@@ -49,12 +49,22 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,31)-(17,33)
-(((c + x') + x'') mod 10) :: s
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
+(17,24)-(18,13)
+(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
-(18,11)-(18,12)
-s
-VarG
+*)
 
+(* type error slice
+(15,5)-(21,52)
+(15,11)-(18,13)
+(15,13)-(18,13)
+(16,7)-(18,13)
+(17,7)-(18,13)
+(17,19)-(17,20)
+(17,24)-(18,13)
+(18,12)-(18,13)
+(21,19)-(21,33)
+(21,19)-(21,45)
+(21,34)-(21,35)
 *)

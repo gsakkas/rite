@@ -64,7 +64,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,2)-(40,69)
+(29,3)-(40,70)
 let pi = 3.142 in
 match e with
 | VarX -> x
@@ -73,44 +73,23 @@ match e with
 | Cosine v -> cos (pi *. eval (v , x , y))
 | Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
 | Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-LetG NonRec (fromList [LitG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,LitG)]) (CaseG EmptyG (fromList [(ConPatG Nothing,Nothing,EmptyG),(ConPatG (Just EmptyPatG),Nothing,EmptyG)]))
 
-(29,8)-(29,9)
-3.142
-LitG
+*)
 
-(29,8)-(29,9)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine v -> sin (pi *. eval (v , x , y))
-| Cosine v -> cos (pi *. eval (v , x , y))
-| Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
-| Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG)])
-
-(32,18)-(32,41)
-pi *. eval (v , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(33,20)-(33,43)
-pi *. eval (v , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(34,21)-(34,58)
-(eval (v , x , y) +. eval (w , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(34,22)-(34,38)
-eval (v , x , y) +. eval (w , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(35,19)-(35,35)
-eval (v , x , y) *. eval (w , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(35,19)-(35,54)
-2.0
-LitG
-
+(* type error slice
+(26,4)-(26,29)
+(26,10)-(26,27)
+(29,3)-(40,70)
+(32,15)-(32,18)
+(32,15)-(32,42)
+(32,19)-(32,42)
+(32,20)-(32,22)
+(33,17)-(33,20)
+(33,17)-(33,44)
+(33,21)-(33,44)
+(33,22)-(33,24)
+(34,22)-(34,63)
+(37,7)-(40,70)
+(37,24)-(37,25)
 *)

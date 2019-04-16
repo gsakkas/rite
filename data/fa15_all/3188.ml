@@ -66,37 +66,25 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(5,12)-(13,41)
-y
-VarG
-
-(5,12)-(13,41)
-fun y -> y
-LamG VarG
-
-(25,6)-(25,65)
-a1
-VarG
-
-(25,6)-(25,65)
+(25,7)-(25,66)
 let c :: c' = a1 in
 ([((x1 + x2) + c) / 10 ; 0] , a2 @ [((x1 + x2) + c) mod 10])
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (TupleG (fromList [EmptyG]))
 
-(25,7)-(25,30)
-[((x1 + x2) + c) / 10 ; 0]
-ListG LitG Nothing
+*)
 
-(25,21)-(25,23)
-c
-VarG
-
-(25,32)-(25,64)
-0
-LitG
-
-(25,52)-(25,54)
-c
-VarG
-
+(* type error slice
+(22,5)-(28,52)
+(22,11)-(25,66)
+(22,13)-(25,66)
+(23,7)-(25,66)
+(24,7)-(25,66)
+(24,21)-(24,22)
+(25,7)-(25,66)
+(25,8)-(25,31)
+(25,9)-(25,25)
+(25,22)-(25,24)
+(28,19)-(28,33)
+(28,19)-(28,45)
+(28,34)-(28,35)
 *)

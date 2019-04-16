@@ -62,60 +62,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(23,16)-(23,49)
+(23,17)-(23,50)
 match x with
 | (d1 , d2) -> (d1 + d2 , (d1 + d2) :: (match a with
                                         | (a1 , a2) -> a2))
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
-(23,44)-(23,45)
-d1 + d2
-BopG VarG VarG
+(25,16)-(25,60)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(23,47)-(23,48)
-d1
-VarG
+*)
 
-(23,47)-(23,48)
-d2
-VarG
-
-(23,47)-(23,48)
-d1
-VarG
-
-(23,47)-(23,48)
-d2
-VarG
-
-(23,47)-(23,48)
-d1 + d2
-BopG VarG VarG
-
-(23,47)-(23,48)
-match a with
-| (a1 , a2) -> a2
-CaseG VarG (fromList [(Nothing,VarG)])
-
-(23,47)-(23,48)
-(d1 + d2) :: (match a with
-              | (a1 , a2) -> a2)
-ConAppG (Just (TupleG (fromList [BopG VarG VarG,CaseG VarG (fromList [(Nothing,VarG)])]))) Nothing
-
-(24,4)-(26,51)
-a2
-VarG
-
-(25,54)-(25,56)
-List.combine
-VarG
-
-(25,54)-(25,56)
-l1
-VarG
-
-(25,54)-(25,56)
-List.combine l1 l2
-AppG (fromList [VarG])
-
+(* type error slice
+(23,5)-(26,52)
+(23,11)-(23,50)
+(23,13)-(23,50)
+(23,17)-(23,50)
+(23,44)-(23,50)
+(23,48)-(23,49)
+(26,19)-(26,33)
+(26,19)-(26,45)
+(26,34)-(26,35)
 *)

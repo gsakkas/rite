@@ -81,94 +81,49 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(11,7)-(11,59)
-l1
-VarG
-
-(11,7)-(11,59)
+(11,8)-(11,60)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(12,7)-(12,59)
+(12,8)-(12,60)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(14,19)-(15,77)
-l2
-VarG
-
-(27,29)-(27,45)
+(27,30)-(27,46)
 [n] @ [(n + c) + d]
-AppG (fromList [ListG EmptyG Nothing])
+AppG (fromList [ListG (fromList [EmptyG])])
 
-(27,30)-(27,31)
-(@)
-VarG
-
-(27,30)-(27,31)
-[n]
-ListG VarG Nothing
-
-(27,33)-(27,44)
-[(n + c) + d]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(28,35)-(28,64)
+(28,36)-(28,65)
 [n + 1] @ [((n + c) + d) mod 10]
-AppG (fromList [ListG EmptyG Nothing])
+AppG (fromList [ListG (fromList [EmptyG])])
 
-(28,36)-(28,41)
-(@)
-VarG
-
-(28,36)-(28,41)
-[n + 1]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(28,43)-(28,63)
-[((n + c) + d) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(31,30)-(31,46)
+(31,31)-(31,47)
 [0]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
-(31,34)-(31,45)
-(@)
-VarG
-
-(31,34)-(31,45)
+(31,50)-(31,51)
 [(c + d) + h] @ t
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
-(31,34)-(31,45)
-[(c + d) + h]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(33,32)-(34,52)
+(33,33)-(34,53)
 [((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t)
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(33,33)-(33,53)
-(@)
-VarG
+*)
 
-(33,33)-(33,53)
-[((h + c) + d) / 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(34,24)-(34,46)
-(@)
-VarG
-
-(34,24)-(34,46)
-[((h + c) + d) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(34,24)-(34,51)
-[((h + c) + d) mod 10] @ t
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
+(* type error slice
+(9,4)-(12,62)
+(9,13)-(12,60)
+(9,16)-(12,60)
+(10,3)-(12,60)
+(12,8)-(12,60)
+(12,56)-(12,57)
+(18,3)-(38,35)
+(18,12)-(37,52)
+(38,14)-(38,35)
+(38,15)-(38,18)
+(38,19)-(38,34)
+(38,20)-(38,27)
 *)

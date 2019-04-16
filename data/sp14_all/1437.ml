@@ -95,33 +95,30 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,16)-(17,39)
-a
-VarG
-
-(17,16)-(17,39)
-b
-VarG
-
-(17,16)-(17,39)
-a_less
-VarG
-
-(17,16)-(17,39)
-b_less
-VarG
-
-(17,16)-(17,39)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,16)-(17,39)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(39,12)-(42,74)
+(42,75)-(42,75)
 buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
 AppG (fromList [TupleG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(17,4)-(17,42)
+(17,17)-(17,40)
+(17,26)-(17,40)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(24,3)-(42,75)
+(25,10)-(25,71)
+(25,33)-(25,71)
+(25,62)-(25,68)
+(25,62)-(25,71)
+(27,7)-(42,75)
+(28,7)-(42,75)
+(31,9)-(42,75)
+(34,11)-(42,75)
+(39,13)-(42,75)
+(41,15)-(41,25)
+(41,15)-(42,75)
+(42,75)-(42,75)
 *)

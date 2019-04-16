@@ -13,16 +13,19 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(3,46)-(3,56)
-List.append
-VarG
+(3,46)-(3,78)
+List.append (mulByDigit i t)
+            [(h * i) mod 10]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(3,46)-(3,56)
-mulByDigit i t
-AppG (fromList [VarG])
+*)
 
-(3,62)-(3,76)
-[(h * i) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(2,4)-(3,80)
+(2,20)-(3,78)
+(2,22)-(3,78)
+(3,3)-(3,78)
+(3,46)-(3,78)
+(3,47)-(3,57)
+(3,47)-(3,61)
 *)

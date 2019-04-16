@@ -1,412 +1,61 @@
-BopG VarG VarG
-h1 + x
-s2 - s1
-s1 - s2
-l1' + l2'
-l1' + l2'
-l1' + l2'
-x * x
-x * x
-xx = b
-xx = b
-y + z
-sum + h
-sum + h
-y + z
-sum + h
-y + z
-sum + h
-xx <> b
-xx <> b
-depth - num
-xx <> b
-xx <> b
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-x1 + x2
-a + x
-a + x
-a > b
-a < b
-a < b
-xx <> x
-xx <> x
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-c + x'
-x * x
-x * x
-x * x
-b = ans
-len2 - len1
-a * a
-a * a
-a * a
-x * x
-a * a
-x * x
-a + x
-a + x
-a + x
-x * x
-x * x
-x +. y
-x +. y
-x +. y
-x +. y
-x +. y
-wList = wReverse
-length1 = length2
-length2 - length1
-length1 = length2
-o + x1
-o + x1
-o + x1
-o + x1
-o + x1
-o + x1
-o + x1
-o + x1
-o + x1
-length2 > length1
-b <> x
-x = b
-w + z
-w + z
-w + z
-w + z
-w + z
-w + z
-w + z
-w + z
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-carry + add1
-add1 + add2
-add1 + add2
-add1 + add2
-add1 + add2
-add1 + add2
-add1 + add2
-pi *. x
-pi *. x
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-a + hd
-a + hd
-a + hd
-a * a
-pi *. x
-pi *. y
-x <> b
-x <> b
-x <> b
-x <> b
-x <> b
-x <> b
-x <> b
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-i + j
-m + n
-m + n
-d1 + d2
-d1 + d2
-d1 + d2
-x * x
-x * x
-x * x
-x * x
-x * x
-x * x
-x * x
-x * x
-y <> x
-y <> x
-b - a
-b - a
-a < b
-b - a
-a < b
-b - a
-b - a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-xx <> b
-y - x
-fir + sec
-fir + sec
-x * x
-x * x
-x * x
-x * x
-x * x
-x * x
-b' = b
-b' = b
-b' = b
-pi *. x
-pi *. y
-pi *. x
-pi *. y
-pi *. x
-pi *. y
-pi *. x
-pi *. y
-pi *. x
-pi *. y
-pi *. x
-pi *. y
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-f + g
-f + g
-a * a
-arg1 + arg2
-arg1 + arg2
-arg1 + arg2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-d1 + d2
-a * a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-carry + addend_a
-h1 + h2
-h1 + h2
-h1 + h2
-h1 + h2
-h1 + h2
-h * i
-h * i
-a * a
-a * a
-a * a
+AppG (fromList [TupleG (fromList [EmptyG])])
+build (rand , y - 1)
+wwhile (f , b')
+rand (0 , 1)
+rand (0 , 6)
+rand (0 , 4)
+buildThresh (e , e , e , e)
+eval (e3 , x , y)
+eval (e1 , x , y)
+eval (e2 , x , y)
+eval (e , x , y)
+eval (a , x , y)
+build (rand , depth - 1)
+buildTimes (build (rand , depth - 1) , buildCosine (build (rand , depth - 1)))
+buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+buildECosSin (build (rand , depth - 1) , build (rand , depth - 1))
+eval (c , x , y)
+eval (b , x , y)
+build (rand , nd)
+eval (expr , x , y)
+eval (expr1 , x , y)
+eval (expr2 , x , y)
+eval (expr3 , x , y)
+wwhile (f , a)
+buildAverage (next , next)
+buildTimes (next , next)
+buildThresh (next , next , next , next)
+buildGauss (next , next , next)
+addHelp (0 , n)
+cloneHelper (x , n , [])
+wwhile (g , b)
+eval (e4 , x , y)
+buildThresh (first_forced , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+eval (e' , x , y)
+eval (Average (e1 , e2) , x , y)
+helper ([] , l)
+rand (0 , 2)
+rand (0 , 5)
+buildAverage (VarX , VarY)
+buildThresh (VarX , VarX , VarX , VarX)
+eval (s1 , x , y)
+assoc (d , k , ls)
+eval (u , x , y)
+rand (0 , 100)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+buildTangent (build (rand , depth - 1) , build (rand , depth - 1))
+eval (ex , x , y)
+eval (ex1 , x , y)
+eval (ex2 , x , y)
+rand (0 , 7)
+helper (h :: seen , t)

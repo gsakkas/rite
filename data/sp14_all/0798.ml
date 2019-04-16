@@ -92,7 +92,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(33,2)-(47,50)
+(33,3)-(47,51)
 match depth with
 | 0 -> match rand (1 , 2) with
        | 1 -> VarX
@@ -107,20 +107,27 @@ match depth with
         | 5 -> buildThresh (next , next , next , next)
         | 6 -> buildSqrt next
         | 7 -> buildGauss (next , next , next))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG),(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(LitPatG,Nothing,CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)])),(WildPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
-(35,6)-(47,50)
-match rand (1 , 2) with
-| 1 -> VarX
-| 2 -> VarY
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,ConAppG Nothing Nothing)])
+*)
 
-(37,14)-(37,20)
-VarX
-ConAppG Nothing Nothing
-
-(39,11)-(47,49)
-VarY
-ConAppG Nothing Nothing
-
+(* type error slice
+(20,4)-(20,27)
+(20,15)-(20,25)
+(20,19)-(20,25)
+(20,24)-(20,25)
+(28,4)-(28,23)
+(28,12)-(28,21)
+(32,4)-(47,53)
+(32,16)-(47,51)
+(33,3)-(47,51)
+(35,7)-(47,51)
+(36,15)-(36,21)
+(39,12)-(47,50)
+(39,23)-(39,28)
+(39,23)-(39,48)
+(40,12)-(47,50)
+(41,20)-(41,29)
+(41,20)-(41,34)
+(41,30)-(41,34)
 *)

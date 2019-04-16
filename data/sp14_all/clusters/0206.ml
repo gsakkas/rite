@@ -1,7 +1,5 @@
-CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,ConAppG (Just EmptyG) Nothing)])
-match n > 9 with
-| false -> n :: (digitsOfInt (n / 10))
-| true -> (n mod 10) :: (digitsOfInt (n / 10))
-match n > 9 with
-| false -> n :: (digitsOfInt (n / 10))
-| true -> (n mod 10) :: (digitsOfInt (n / 10))
+IteG (BopG EmptyG EmptyG) (SeqG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+if sumList (digitsOfInt n) < 9
+then (1 :: x;
+additivePersistence (sumList (digitsOfInt n)))
+else sumList x

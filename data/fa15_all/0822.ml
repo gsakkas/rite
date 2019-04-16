@@ -10,8 +10,17 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(2,58)-(2,76)
+(2,59)-(2,77)
 h :: (listReverse t)
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
+*)
+
+(* type error slice
+(2,4)-(2,79)
+(2,21)-(2,77)
+(2,25)-(2,77)
+(2,59)-(2,77)
+(2,63)-(2,74)
+(2,63)-(2,76)
 *)

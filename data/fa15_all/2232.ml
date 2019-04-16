@@ -53,38 +53,17 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,16)-(18,42)
-(o , x :: l)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(18,31)-(18,42)
+(18,17)-(18,43)
 match a with
 | (o , []) -> (o , [x])
 | (o , l) -> (o , x :: l)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG])),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
 
-(18,37)-(18,38)
-o
-VarG
+*)
 
-(18,40)-(18,41)
-[x]
-ListG VarG Nothing
-
-(19,4)-(23,51)
-o
-VarG
-
-(19,4)-(23,51)
-x
-VarG
-
-(19,4)-(23,51)
-l
-VarG
-
-(19,4)-(23,51)
-x :: l
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
+(* type error slice
+(18,17)-(18,43)
+(18,32)-(18,43)
+(18,37)-(18,43)
+(18,43)-(18,43)
 *)

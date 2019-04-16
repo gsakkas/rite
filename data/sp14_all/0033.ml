@@ -58,9 +58,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(24,6)-(24,76)
+(24,7)-(24,77)
 match a with
 | (h1 :: t1 , _) -> (l1 , [0 ; 0 ; 0 ; 0])
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
+*)
+
+(* type error slice
+(23,5)-(26,69)
+(23,11)-(24,77)
+(23,13)-(24,77)
+(24,7)-(24,77)
+(24,13)-(24,14)
+(24,28)-(24,46)
+(26,36)-(26,50)
+(26,36)-(26,62)
+(26,51)-(26,52)
 *)

@@ -49,66 +49,27 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,16)-(15,74)
-a
-VarG
-
-(15,16)-(15,74)
+(15,17)-(15,75)
 match a with
 | (carry , rest) -> match x with
                     | (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(15,46)-(15,74)
-(((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(15,47)-(15,73)
-add1
-VarG
-
-(15,47)-(15,73)
-add2
-VarG
-
-(15,47)-(15,73)
-carry
-VarG
-
-(15,47)-(15,73)
-((add1 + add2) + carry) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(15,47)-(15,73)
-(add1 + add2) + carry
-BopG (BopG EmptyG EmptyG) VarG
-
-(15,47)-(15,73)
-add1 + add2
-BopG VarG VarG
-
-(15,47)-(15,73)
-10
-LitG
-
-(15,47)-(15,73)
-(((add1 + add2) + carry) mod 10) :: rest
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(15,64)-(15,65)
-carry
-VarG
-
-(16,4)-(18,51)
-rest
-VarG
-
-(16,15)-(16,16)
+(16,16)-(16,17)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(17,4)-(18,51)
-[]
-ListG EmptyG Nothing
+*)
 
+(* type error slice
+(15,5)-(18,52)
+(15,11)-(15,75)
+(15,13)-(15,75)
+(15,17)-(15,75)
+(15,47)-(15,75)
+(15,48)-(15,67)
+(15,65)-(15,66)
+(18,19)-(18,33)
+(18,19)-(18,45)
+(18,34)-(18,35)
 *)

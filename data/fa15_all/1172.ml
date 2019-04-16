@@ -142,64 +142,25 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(63,22)-(63,49)
+(63,23)-(63,50)
 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(65,6)-(67,50)
-build
-VarG
+*)
 
-(65,6)-(67,50)
-rand
-VarG
-
-(65,6)-(67,50)
-depth
-VarG
-
-(65,6)-(67,50)
-build
-VarG
-
-(65,6)-(67,50)
-rand
-VarG
-
-(65,6)-(67,50)
-depth
-VarG
-
-(65,6)-(67,50)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(65,6)-(67,50)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(65,6)-(67,50)
-depth - 1
-BopG VarG LitG
-
-(65,6)-(67,50)
-depth - 1
-BopG VarG LitG
-
-(65,6)-(67,50)
-1
-LitG
-
-(65,6)-(67,50)
-1
-LitG
-
-(65,6)-(67,50)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(65,6)-(67,50)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
+(* type error slice
+(17,4)-(17,43)
+(17,17)-(17,41)
+(21,4)-(21,27)
+(21,15)-(21,25)
+(21,19)-(21,25)
+(21,24)-(21,25)
+(37,12)-(37,21)
+(37,12)-(37,49)
+(37,22)-(37,49)
+(37,23)-(37,28)
+(63,12)-(63,22)
+(63,12)-(63,50)
+(63,23)-(63,50)
+(63,24)-(63,29)
 *)

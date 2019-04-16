@@ -17,12 +17,14 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(4,55)-(4,69)
+(4,56)-(4,70)
 ((h * i) mod 10) :: t
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(5,2)-(6,70)
-t
-VarG
+*)
 
+(* type error slice
+(4,22)-(4,70)
+(4,43)-(4,45)
+(4,56)-(4,70)
 *)

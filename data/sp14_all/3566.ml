@@ -51,7 +51,7 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(22,26)-(22,36)
+(22,26)-(22,57)
 let rec helper =
   fun i ->
     fun acc ->
@@ -60,60 +60,17 @@ let rec helper =
         then helper i (bigAdd acc l) l
         else acc in
 helper i [] l
-LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(22,37)-(22,38)
-fun i ->
-  fun acc ->
-    fun l ->
-      if i > 0
-      then helper i (bigAdd acc l) l
-      else acc
-LamG (LamG EmptyG)
+*)
 
-(22,37)-(22,38)
-fun acc ->
-  fun l ->
-    if i > 0
-    then helper i (bigAdd acc l) l
-    else acc
-LamG (LamG EmptyG)
-
-(22,37)-(22,38)
-fun l ->
-  if i > 0
-  then helper i (bigAdd acc l) l
-  else acc
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(22,37)-(22,38)
-i > 0
-BopG VarG LitG
-
-(22,37)-(22,38)
-if i > 0
-then helper i (bigAdd acc l) l
-else acc
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
-
-(22,42)-(22,56)
-0
-LitG
-
-(22,43)-(22,44)
-helper
-VarG
-
-(22,45)-(22,51)
-i
-VarG
-
-(22,45)-(22,51)
-bigAdd acc l
-AppG (fromList [VarG])
-
-(22,52)-(22,53)
-acc
-VarG
-
+(* type error slice
+(22,4)-(22,59)
+(22,20)-(22,57)
+(22,22)-(22,57)
+(22,26)-(22,40)
+(22,26)-(22,57)
+(22,27)-(22,37)
+(22,43)-(22,57)
+(22,44)-(22,45)
 *)

@@ -21,8 +21,14 @@ let _ = digitsOfInt 3124;;
 *)
 
 (* changed spans
-(7,27)-(7,35)
+(7,28)-(7,36)
 [n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(7,7)-(7,76)
+(7,28)-(7,36)
+(7,42)-(7,76)
 *)

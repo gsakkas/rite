@@ -23,19 +23,24 @@ let stringOfList f l = let fix l x = List.map f l in sepConcat "[" l;;
 *)
 
 (* changed spans
-(9,23)-(9,64)
+(9,24)-(9,65)
 let fix =
   fun l ->
     fun x -> List.map f l in
 sepConcat "[" l
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(9,29)-(9,45)
-fun l -> fun x -> List.map f l
-LamG (LamG EmptyG)
+*)
 
-(9,63)-(9,64)
-l
-VarG
-
+(* type error slice
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(9,24)-(9,65)
+(9,30)-(9,46)
+(9,50)-(9,59)
+(9,50)-(9,65)
+(9,64)-(9,65)
 *)

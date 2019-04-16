@@ -18,7 +18,7 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(5,9)-(5,67)
+(5,10)-(5,68)
 (if f b = b
  then (fun b'' ->
          (f b , false))
@@ -26,12 +26,15 @@ let fixpoint (f,b) =
          (f b , true)) , b)
 TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
 
-(5,28)-(5,42)
-fun b'' -> (f b , false)
-LamG (TupleG (fromList [EmptyG]))
+*)
 
-(5,48)-(5,66)
-fun b'' -> (f b , true)
-LamG (TupleG (fromList [EmptyG]))
-
+(* type error slice
+(5,10)-(5,68)
+(5,29)-(5,43)
+(5,30)-(5,35)
+(5,31)-(5,32)
+(5,49)-(5,67)
+(5,50)-(5,63)
+(5,51)-(5,56)
+(5,52)-(5,53)
 *)

@@ -64,57 +64,36 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(23,22)-(23,23)
-x
-VarG
-
-(24,24)-(24,26)
-a
-VarG
-
-(25,10)-(26,65)
-a1
-VarG
-
-(25,10)-(26,65)
+(20,7)-(27,16)
+let (x1 , x2) = x in
+let (a1 , a2) = a in
 let h :: _ = a1 in
 let tens =
   (x1 + x2) + (h / 10) in
 let ones =
   (x1 + x2) + (h mod 10) in
 (tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(25,34)-(25,36)
-h
-VarG
+(28,16)-(28,24)
+([] , [])
+TupleG (fromList [ListG (fromList [])])
 
-(26,34)-(26,36)
-h
-VarG
+*)
 
-(26,49)-(26,53)
-tens :: a1
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(26,55)-(26,59)
-a1
-VarG
-
-(26,55)-(26,59)
-ones :: a2
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(27,14)-(27,15)
-a2
-VarG
-
-(28,20)-(28,21)
-[]
-ListG EmptyG Nothing
-
-(29,4)-(30,51)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(19,5)-(30,52)
+(19,11)-(27,16)
+(19,13)-(27,16)
+(20,7)-(27,16)
+(20,13)-(20,14)
+(29,5)-(30,52)
+(29,16)-(29,24)
+(29,16)-(29,45)
+(29,25)-(29,45)
+(29,26)-(29,38)
+(30,19)-(30,33)
+(30,19)-(30,45)
+(30,34)-(30,35)
+(30,41)-(30,45)
 *)

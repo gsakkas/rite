@@ -11,16 +11,26 @@ let rec clone x n =
 *)
 
 (* changed spans
-(3,44)-(3,45)
-x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
-
-(3,46)-(3,47)
+(3,31)-(3,32)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(3,58)-(3,59)
-n - 1
-BopG VarG LitG
+(3,45)-(3,66)
+x :: (clone x (n - 1))
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
+*)
+
+(* type error slice
+(2,4)-(3,68)
+(2,15)-(3,66)
+(2,17)-(3,66)
+(3,3)-(3,66)
+(3,31)-(3,32)
+(3,45)-(3,46)
+(3,45)-(3,66)
+(3,47)-(3,48)
+(3,49)-(3,66)
+(3,50)-(3,61)
+(3,51)-(3,56)
 *)

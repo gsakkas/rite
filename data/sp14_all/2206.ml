@@ -64,53 +64,31 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(27,2)-(30,53)
+(27,3)-(30,54)
 if i = 0
 then []
 else if i = 1
      then l
      else bigAdd (bigAdd l l)
                  (mulByDigit (i - 2) l)
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (IteG EmptyG EmptyG EmptyG)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (IteG EmptyG EmptyG EmptyG)
 
-(27,8)-(27,9)
-i = 0
-BopG VarG LitG
+*)
 
-(28,9)-(28,11)
-0
-LitG
-
-(29,9)-(29,10)
-i
-VarG
-
-(29,9)-(29,10)
-i = 1
-BopG VarG LitG
-
-(29,9)-(29,10)
-1
-LitG
-
-(29,9)-(29,10)
-if i = 1
-then l
-else bigAdd (bigAdd l l)
-            (mulByDigit (i - 2) l)
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
-
-(30,9)-(30,53)
-bigAdd (bigAdd l l)
-       (mulByDigit (i - 2) l)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(30,27)-(30,28)
-l
-VarG
-
-(30,30)-(30,52)
-l
-VarG
-
+(* type error slice
+(8,31)-(8,38)
+(8,31)-(8,51)
+(8,39)-(8,48)
+(13,4)-(24,37)
+(13,12)-(24,35)
+(24,19)-(24,34)
+(24,20)-(24,27)
+(24,28)-(24,30)
+(27,3)-(30,54)
+(28,10)-(28,12)
+(30,10)-(30,16)
+(30,10)-(30,54)
+(30,18)-(30,30)
+(30,19)-(30,25)
+(30,26)-(30,27)
 *)

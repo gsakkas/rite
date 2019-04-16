@@ -49,171 +49,30 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,26)
-snd
-VarG
-
-(16,16)-(16,26)
-a
-VarG
-
-(16,16)-(16,26)
-fst
-VarG
-
-(16,16)-(16,26)
-x
-VarG
-
-(16,16)-(16,26)
-snd
-VarG
-
-(16,16)-(16,26)
-x
-VarG
-
-(16,16)-(16,26)
-fst
-VarG
-
-(16,16)-(16,26)
-x
-VarG
-
-(16,16)-(16,26)
-snd
-VarG
-
-(16,16)-(16,26)
-x
-VarG
-
-(16,16)-(16,26)
-snd a
-AppG (fromList [VarG])
-
-(16,16)-(16,26)
-fst x
-AppG (fromList [VarG])
-
-(16,16)-(16,26)
-snd x
-AppG (fromList [VarG])
-
-(16,16)-(16,26)
-fst x
-AppG (fromList [VarG])
-
-(16,16)-(16,26)
-snd x
-AppG (fromList [VarG])
-
-(16,16)-(16,26)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,16)-(16,26)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,16)-(16,26)
-(fst x + snd x) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,16)-(16,26)
-10
-LitG
-
-(16,16)-(16,26)
-(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-TupleG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
-
-(16,16)-(16,26)
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(16,16)-(16,31)
+(16,17)-(16,32)
 match snd a with
 | [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
 | h :: t -> (0 , [])
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
 
-(16,17)-(16,18)
-fst
-VarG
-
-(16,17)-(16,18)
-fst x
-AppG (fromList [VarG])
-
-(16,17)-(16,18)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,23)-(16,25)
-snd
-VarG
-
-(16,23)-(16,25)
-x
-VarG
-
-(16,23)-(16,25)
-snd x
-AppG (fromList [VarG])
-
-(16,30)-(16,31)
+(17,16)-(17,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(17,4)-(18,68)
-0
-LitG
-
-(17,4)-(18,68)
-[]
-ListG EmptyG Nothing
-
-(17,15)-(17,17)
-0
-LitG
-
-(17,15)-(17,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(18,15)-(18,17)
+(18,16)-(18,18)
 List.combine (List.rev l1)
              (List.rev l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(18,21)-(18,68)
-List.combine
-VarG
+*)
 
-(18,21)-(18,68)
-List.rev
-VarG
-
-(18,21)-(18,68)
-l1
-VarG
-
-(18,21)-(18,68)
-List.rev
-VarG
-
-(18,21)-(18,68)
-l2
-VarG
-
-(18,21)-(18,68)
-List.rev l1
-AppG (fromList [VarG])
-
-(18,21)-(18,68)
-List.rev l2
-AppG (fromList [VarG])
-
+(* type error slice
+(16,5)-(18,69)
+(16,11)-(16,32)
+(16,17)-(16,32)
+(16,31)-(16,32)
+(18,22)-(18,69)
+(18,36)-(18,50)
+(18,36)-(18,62)
+(18,51)-(18,52)
 *)

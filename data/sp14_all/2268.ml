@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,2)-(29,38)
+(16,3)-(29,39)
 match e with
 | VarX -> x
 | VarY -> y
@@ -78,14 +78,20 @@ match e with
                                 else eval (e4 , x , y)
 | Timmy1 (e1 , e2 , e3) -> (sin (pi *. eval (e , x , y)) +. cos (pi *. eval (e , x , y))) *. cos (pi *. eval (e , x , y))
 | Timmy2 (e1 , e2) -> sin (pi *. eval (e , x , y)) /. cos (pi *. eval (e , x , y))
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(28,6)-(28,71)
-(sin (pi *. eval (e , x , y)) +. cos (pi *. eval (e , x , y))) *. cos (pi *. eval (e , x , y))
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+*)
 
-(28,7)-(28,37)
-sin (pi *. eval (e , x , y)) +. cos (pi *. eval (e , x , y))
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(16,3)-(29,39)
+(19,15)-(19,18)
+(19,15)-(19,43)
+(28,7)-(28,72)
+(28,7)-(29,39)
+(28,8)-(28,38)
+(28,9)-(28,12)
+(28,41)-(28,71)
+(28,42)-(28,45)
+(29,9)-(29,39)
+(29,10)-(29,13)
 *)

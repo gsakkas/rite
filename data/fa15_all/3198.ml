@@ -66,72 +66,46 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(26,6)-(28,63)
+(26,7)-(28,64)
 let (c , a1 :: a2) = a in
 let v = (x1 + x2) + c in
 (v / 10 , [v / 10] @ ([v mod 10] @ a2))
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(28,32)-(28,46)
-v
-VarG
-
-(28,32)-(28,46)
-v / 10
-BopG VarG LitG
-
-(28,32)-(28,46)
-10
-LitG
-
-(28,43)-(28,44)
-v / 10
-BopG VarG LitG
-
-(28,48)-(28,62)
-v
-VarG
-
-(28,48)-(28,62)
-10
-LitG
-
-(28,59)-(28,60)
-v mod 10
-BopG VarG LitG
-
-(29,4)-(31,60)
-v
-VarG
-
-(29,4)-(31,60)
-a2
-VarG
-
-(29,4)-(31,60)
-10
-LitG
-
-(29,17)-(29,18)
+(29,17)-(29,20)
 0
 LitG
 
-(29,22)-(29,23)
+(29,23)-(29,24)
 0
 LitG
 
-(30,15)-(30,33)
-List.rev
-VarG
-
-(30,15)-(30,33)
+(30,16)-(30,34)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(31,4)-(31,60)
+(31,5)-(31,61)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(20,8)-(20,67)
+(20,45)-(20,55)
+(20,45)-(20,57)
+(20,56)-(20,57)
+(23,3)-(32,35)
+(23,12)-(31,61)
+(24,5)-(31,61)
+(29,5)-(31,61)
+(30,5)-(31,61)
+(31,5)-(31,61)
+(31,51)-(31,61)
+(32,3)-(32,13)
+(32,3)-(32,35)
+(32,14)-(32,35)
+(32,15)-(32,18)
 *)

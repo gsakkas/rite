@@ -103,7 +103,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(30,12)-(36,31)
+(30,13)-(36,32)
 match a with
 | (len , []) -> (len , [sum])
 | (len , x' :: xs') -> if x' = (-1)
@@ -111,131 +111,45 @@ match a with
                             then (len , (-1) :: (0 :: xs'))
                             else (len , (sum + 1) :: xs')
                        else (len , sum :: (x' :: xs'))
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
 
-(31,21)-(31,24)
-len
-VarG
-
-(31,21)-(31,24)
-[sum]
-ListG VarG Nothing
-
-(31,21)-(31,29)
-(len , [sum])
-TupleG (fromList [VarG,ListG EmptyG Nothing])
-
-(35,36)-(35,52)
-len
-VarG
-
-(35,36)-(35,52)
-(len , (-1) :: (0 :: xs'))
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing]))) Nothing])
-
-(35,58)-(35,74)
-len
-VarG
-
-(35,58)-(35,74)
-(len , (sum + 1) :: xs')
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-
-(36,22)-(36,30)
-len
-VarG
-
-(36,22)-(36,30)
-(len , sum :: (x' :: xs'))
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing])
-
-(39,21)-(39,25)
-x'
-VarG
-
-(39,21)-(39,25)
-xs'
-VarG
-
-(39,21)-(39,25)
-a
-VarG
-
-(39,21)-(39,25)
-len
-VarG
-
-(39,21)-(39,25)
+(38,13)-(43,49)
 match a with
 | (len , []) -> (len , [(-1) ; sum mod 10])
 | (len , x' :: xs') -> if x' = (-1)
                        then (len , (-1) :: (((sum mod 10) + 1) :: xs'))
                        else (len , (-1) :: ((sum mod 10) :: (x' :: xs')))
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
 
-(39,21)-(39,25)
-(len , [(-1) ; sum mod 10])
-TupleG (fromList [VarG,ListG EmptyG Nothing])
-
-(39,21)-(39,25)
-[(-1) ; sum mod 10]
-ListG LitG Nothing
-
-(42,22)-(42,47)
-len
-VarG
-
-(42,22)-(42,47)
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG LitG) LitG]))) Nothing]))) Nothing])
-
-(42,30)-(42,42)
-(sum mod 10) + 1
-BopG (BopG EmptyG EmptyG) LitG
-
-(42,46)-(42,47)
-1
-LitG
-
-(43,22)-(43,47)
-xs'
-VarG
-
-(43,22)-(43,47)
-len
-VarG
-
-(43,22)-(43,47)
-(len , (-1) :: ((sum mod 10) :: (x' :: xs')))
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing]))) Nothing])
-
-(43,46)-(43,47)
-x' :: xs'
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(44,4)-(48,51)
-x'
-VarG
-
-(44,4)-(48,51)
-xs'
-VarG
-
-(46,39)-(46,41)
+(44,16)-(44,18)
 (List.length l1 , [])
-TupleG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+TupleG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
 
-(47,8)-(47,50)
-let args =
-  List.combine (List.rev l1)
-               (List.rev l2) in
-let (_ , res) =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+(46,20)-(46,61)
+List.rev l1
+AppG (fromList [VarG])
 
-(47,8)-(47,50)
-[]
-ListG EmptyG Nothing
+(47,9)-(47,51)
+List.rev l2
+AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(24,5)-(48,52)
+(24,11)-(43,49)
+(24,13)-(43,49)
+(25,7)-(43,49)
+(25,13)-(25,14)
+(27,21)-(27,26)
+(27,25)-(27,26)
+(45,5)-(48,52)
+(46,7)-(46,19)
+(46,7)-(47,51)
+(47,9)-(47,51)
+(47,10)-(47,22)
+(48,19)-(48,33)
+(48,19)-(48,45)
+(48,34)-(48,35)
+(48,41)-(48,45)
 *)

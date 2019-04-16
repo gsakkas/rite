@@ -35,12 +35,19 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(15,14)-(15,24)
-(^)
-VarG
-
-(15,14)-(15,43)
+(15,15)-(15,44)
 "sin (pi*" ^ exprToString e
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
+*)
+
+(* type error slice
+(11,4)-(15,46)
+(11,22)-(15,44)
+(12,3)-(15,44)
+(13,14)-(13,17)
+(15,15)-(15,25)
+(15,15)-(15,44)
+(15,28)-(15,44)
+(15,29)-(15,41)
 *)

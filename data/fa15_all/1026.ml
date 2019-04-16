@@ -55,20 +55,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(23,16)-(23,28)
-0
-LitG
+(23,16)-(23,68)
+List.combine (List.rev (0 :: l1))
+             (List.rev (0 :: l2))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(23,16)-(23,28)
-0 :: l1
-ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
+*)
 
-(23,61)-(23,67)
-l2
-VarG
-
-(23,62)-(23,63)
-0 :: l2
-ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
-
+(* type error slice
+(19,5)-(24,52)
+(19,11)-(21,76)
+(19,13)-(21,76)
+(21,7)-(21,76)
+(21,19)-(21,20)
+(23,5)-(24,52)
+(23,16)-(23,58)
+(23,16)-(23,68)
+(23,17)-(23,29)
+(23,62)-(23,68)
+(24,19)-(24,33)
+(24,19)-(24,45)
+(24,34)-(24,35)
+(24,41)-(24,45)
 *)

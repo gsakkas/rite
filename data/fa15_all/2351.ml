@@ -16,47 +16,26 @@ let fixpoint (f,b) = let f' b' = ((f b'), ((f b') != b')) in wwhile (f', b);;
 *)
 
 (* changed spans
-(6,2)-(6,8)
+(6,3)-(6,64)
 let f' =
   fun b' ->
     (f b' , f b' <> b') in
 wwhile (f' , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(6,9)-(6,63)
-fun b' -> (f b' , f b' <> b')
-LamG (TupleG (fromList [EmptyG]))
+*)
 
-(6,27)-(6,58)
-b'
-VarG
-
-(6,30)-(6,31)
-f b'
-AppG (fromList [VarG])
-
-(6,35)-(6,37)
-f
-VarG
-
-(6,53)-(6,58)
-b'
-VarG
-
-(6,61)-(6,62)
-wwhile
-VarG
-
-(6,61)-(6,62)
-f'
-VarG
-
-(6,61)-(6,62)
-wwhile (f' , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(6,61)-(6,62)
-(f' , b)
-TupleG (fromList [VarG])
-
+(* type error slice
+(3,17)-(3,18)
+(3,17)-(3,20)
+(3,51)-(3,57)
+(3,51)-(3,65)
+(3,58)-(3,65)
+(3,59)-(3,60)
+(6,3)-(6,9)
+(6,3)-(6,64)
+(6,10)-(6,64)
+(6,11)-(6,60)
+(6,28)-(6,59)
+(6,54)-(6,59)
 *)

@@ -27,16 +27,17 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(10,13)-(10,28)
+(10,14)-(10,29)
 clone 0 (n * (-1))
 AppG (fromList [BopG EmptyG EmptyG,LitG])
 
-(10,22)-(10,25)
-n * (-1)
-BopG VarG LitG
+*)
 
-(10,31)-(10,33)
-(-1)
-LitG
-
+(* type error slice
+(3,60)-(3,77)
+(3,61)-(3,66)
+(3,69)-(3,76)
+(10,14)-(10,29)
+(10,15)-(10,20)
+(10,23)-(10,26)
 *)

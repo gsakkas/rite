@@ -15,15 +15,19 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(4,4)-(4,65)
+(4,5)-(4,66)
 function
   | [] -> l
   | h :: t -> listReverseHelper (h :: l)
                                 t
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(4,10)-(4,11)
-$x
-VarG
+*)
 
+(* type error slice
+(3,3)-(5,25)
+(3,29)-(4,66)
+(4,5)-(4,66)
+(4,38)-(4,55)
+(4,38)-(4,66)
 *)

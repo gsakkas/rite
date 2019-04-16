@@ -53,12 +53,31 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(24,29)-(24,35)
-(a_less , x , y)
-TupleG (fromList [VarG])
+(24,23)-(24,44)
+eval (a_less , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(24,56)-(24,62)
-(b_less , x , y)
-TupleG (fromList [VarG])
+(24,50)-(24,71)
+eval (b_less , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(14,3)-(24,71)
+(17,15)-(17,18)
+(17,15)-(17,43)
+(17,26)-(17,42)
+(17,27)-(17,31)
+(17,32)-(17,41)
+(22,7)-(24,71)
+(23,7)-(24,71)
+(24,7)-(24,71)
+(24,24)-(24,37)
+(24,25)-(24,29)
+(24,30)-(24,36)
+(24,50)-(24,71)
+(24,51)-(24,64)
+(24,52)-(24,56)
+(24,57)-(24,63)
 *)

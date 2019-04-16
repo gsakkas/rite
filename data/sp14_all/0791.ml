@@ -71,8 +71,16 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,8)-(29,46)
+(29,9)-(29,47)
 tan (pi *. eval (e , x , y)) /. 2.0
 BopG (AppG (fromList [EmptyG])) LitG
 
+*)
+
+(* type error slice
+(28,7)-(29,47)
+(29,9)-(29,47)
+(29,10)-(29,40)
+(29,11)-(29,14)
+(29,43)-(29,46)
 *)

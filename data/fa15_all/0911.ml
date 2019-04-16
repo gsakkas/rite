@@ -50,47 +50,32 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,44)-(16,77)
-a
-VarG
-
-(16,44)-(16,77)
+(16,45)-(16,78)
 match a with
 | (carry , list) -> (let num =
                        (l1e + l2e) + carry in
                      (num mod 9 , [7] @ list))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
-(16,54)-(16,57)
-l1e + l2e
-BopG VarG VarG
-
-(16,67)-(16,77)
-carry
-VarG
-
-(16,68)-(16,71)
-num mod 9
-BopG VarG LitG
-
-(16,73)-(16,76)
-(@)
-VarG
-
-(16,73)-(16,76)
-[7] @ list
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(16,73)-(16,76)
-9
-LitG
-
-(17,4)-(19,51)
-list
-VarG
-
-(20,44)-(20,46)
+(20,19)-(20,65)
 (padZero l1 l2 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(4,4)-(7,62)
+(4,13)-(7,60)
+(6,37)-(6,53)
+(6,38)-(6,49)
+(6,50)-(6,52)
+(20,19)-(20,65)
+(20,20)-(20,48)
+(20,24)-(20,26)
+(20,24)-(20,31)
+(20,29)-(20,31)
+(20,45)-(20,47)
+(20,49)-(20,64)
+(20,50)-(20,57)
+(20,58)-(20,60)
 *)

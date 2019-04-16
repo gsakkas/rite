@@ -1,7 +1,4 @@
-CaseG VarG (fromList [(Nothing,LamG EmptyG),(Nothing,AppG (fromList [EmptyG]))])
-match fs with
-| h :: t -> f h h
-| [] -> fun x -> x
-match fs with
-| [] -> fun x -> x
-| h :: t -> f (fun x -> x) h
+LetG NonRec (fromList [(ConsPatG VarPatG (ConPatG Nothing),AppG (fromList [EmptyG]))]) (ListG (fromList [EmptyG]))
+let y :: [] =
+  loop (input / 10) in
+[y ; input mod 10]

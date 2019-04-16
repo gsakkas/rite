@@ -75,13 +75,19 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(35,2)-(35,31)
+(35,3)-(35,32)
 mulByDigit i (helper i l
                      accum)
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(35,13)-(35,31)
-i
-VarG
+*)
 
+(* type error slice
+(31,4)-(35,34)
+(31,20)-(35,32)
+(31,22)-(35,32)
+(32,3)-(35,32)
+(33,3)-(35,32)
+(35,3)-(35,13)
+(35,3)-(35,32)
 *)

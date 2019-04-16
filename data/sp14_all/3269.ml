@@ -44,82 +44,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,16)-(14,17)
-a
-VarG
-
-(14,16)-(14,17)
-list1
-VarG
-
-(14,16)-(14,17)
+(14,17)-(14,18)
 match a with
 | (list1 , list2) -> match list1 with
                      | [] -> match x with
                              | (h1 , h2) -> ((h1 + h2) :: list1 , list2)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(ConPatG Nothing,Nothing,EmptyG)]))])
 
-(14,16)-(14,17)
-match list1 with
-| [] -> match x with
-        | (h1 , h2) -> ((h1 + h2) :: list1 , list2)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
-
-(14,16)-(14,17)
-match x with
-| (h1 , h2) -> ((h1 + h2) :: list1 , list2)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-
-(15,4)-(16,77)
-h1
-VarG
-
-(15,4)-(16,77)
-h2
-VarG
-
-(15,4)-(16,77)
-list1
-VarG
-
-(15,4)-(16,77)
-list2
-VarG
-
-(15,4)-(16,77)
-h1 + h2
-BopG VarG VarG
-
-(15,4)-(16,77)
-((h1 + h2) :: list1 , list2)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-
-(15,4)-(16,77)
-(h1 + h2) :: list1
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(15,24)-(15,26)
+(15,16)-(15,27)
 ([] , [])
-TupleG (fromList [ListG EmptyG Nothing])
+TupleG (fromList [ListG (fromList [])])
 
-(16,4)-(16,77)
-[]
-ListG EmptyG Nothing
-
-(16,4)-(16,77)
-[]
-ListG EmptyG Nothing
-
-(16,15)-(16,23)
+(16,16)-(16,27)
 List.combine l1 l2
 AppG (fromList [VarG])
 
-(16,24)-(16,26)
-List.combine
-VarG
+*)
 
-(16,24)-(16,26)
-l1
-VarG
-
+(* type error slice
+(15,5)-(16,78)
+(15,16)-(15,24)
+(15,16)-(15,27)
+(16,31)-(16,78)
+(16,45)-(16,59)
+(16,45)-(16,71)
+(16,62)-(16,66)
 *)

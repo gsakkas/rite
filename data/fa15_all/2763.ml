@@ -28,7 +28,7 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(5,2)-(10,46)
+(5,3)-(10,47)
 match i with
 | i -> []
 | _ -> match l with
@@ -37,23 +37,13 @@ match i with
                    then [h * i] @ mulByDigit i t
                    else (remainder i
                                    h) :: (mulByDigit i t)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(VarPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))])
 
-(8,6)-(10,46)
-l
-VarG
+*)
 
-(8,6)-(10,46)
-match l with
-| [] -> []
-| h :: t -> if List.length t = 0
-            then [h * i] @ mulByDigit i t
-            else (remainder i
-                            h) :: (mulByDigit i t)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-
-(8,6)-(10,46)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(5,3)-(10,47)
+(5,9)-(5,10)
+(9,13)-(9,18)
+(9,17)-(9,18)
 *)

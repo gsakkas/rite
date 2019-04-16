@@ -50,151 +50,30 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,38)
-snd
-VarG
-
-(16,16)-(16,38)
-a
-VarG
-
-(16,16)-(16,38)
-snd a
-AppG (fromList [VarG])
-
-(16,16)-(16,43)
+(16,17)-(16,44)
 match snd a with
 | [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
 | h :: t -> (0 , [])
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
 
-(16,17)-(16,25)
-fst
-VarG
-
-(16,17)-(16,25)
-x
-VarG
-
-(16,17)-(16,25)
-snd
-VarG
-
-(16,17)-(16,25)
-x
-VarG
-
-(16,17)-(16,25)
-fst x
-AppG (fromList [VarG])
-
-(16,17)-(16,25)
-snd x
-AppG (fromList [VarG])
-
-(16,17)-(16,25)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,17)-(16,25)
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(16,18)-(16,19)
-fst
-VarG
-
-(16,18)-(16,19)
-fst x
-AppG (fromList [VarG])
-
-(16,18)-(16,19)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,22)-(16,24)
-snd
-VarG
-
-(16,22)-(16,24)
-x
-VarG
-
-(16,22)-(16,24)
-snd x
-AppG (fromList [VarG])
-
-(16,28)-(16,29)
-fst
-VarG
-
-(16,28)-(16,29)
-fst x
-AppG (fromList [VarG])
-
-(16,28)-(16,29)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,34)-(16,36)
-snd
-VarG
-
-(16,34)-(16,36)
-x
-VarG
-
-(16,34)-(16,36)
-snd x
-AppG (fromList [VarG])
-
-(16,42)-(16,43)
+(17,16)-(17,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(17,4)-(19,51)
-0
-LitG
-
-(17,4)-(19,51)
-[]
-ListG EmptyG Nothing
-
-(17,15)-(17,17)
-0
-LitG
-
-(17,15)-(17,17)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(18,15)-(18,43)
-List.combine
-VarG
-
-(18,15)-(18,43)
+(18,16)-(18,44)
 List.combine (List.rev l1)
              (List.rev l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(18,24)-(18,43)
-List.rev
-VarG
+*)
 
-(19,4)-(19,51)
-l1
-VarG
-
-(19,4)-(19,51)
-List.rev
-VarG
-
-(19,4)-(19,51)
-l2
-VarG
-
-(19,4)-(19,51)
-List.rev l2
-AppG (fromList [VarG])
-
+(* type error slice
+(16,5)-(19,52)
+(16,11)-(16,44)
+(16,17)-(16,44)
+(16,43)-(16,44)
+(19,5)-(19,52)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
 *)

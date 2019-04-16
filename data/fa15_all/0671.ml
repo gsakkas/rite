@@ -141,84 +141,57 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(42,23)-(42,40)
+(42,24)-(42,41)
 (buildX () , build (rand , d))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(42,24)-(42,29)
-buildX
-VarG
-
-(42,24)-(42,29)
-build (rand , d)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(42,24)-(42,29)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(43,23)-(43,40)
+(43,24)-(43,41)
 (buildX () , build (rand , d))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(43,24)-(43,29)
-buildX
-VarG
-
-(43,24)-(43,29)
-build (rand , d)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(43,24)-(43,29)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(44,23)-(44,40)
+(44,24)-(44,41)
 (buildX () , build (rand , d))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(44,24)-(44,29)
-buildX
-VarG
-
-(44,24)-(44,29)
-build (rand , d)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(44,24)-(44,29)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(45,23)-(45,40)
+(45,24)-(45,41)
 (buildX () , build (rand , d))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(45,24)-(45,29)
-buildX
-VarG
-
-(45,24)-(45,29)
-build (rand , d)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(45,24)-(45,29)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(46,23)-(46,40)
+(46,24)-(46,41)
 (buildX () , build (rand , d))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(46,24)-(46,29)
-buildX
-VarG
+*)
 
-(46,24)-(46,29)
-build (rand , d)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(46,24)-(46,29)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
+(* type error slice
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(19,4)-(19,42)
+(19,17)-(19,40)
+(31,12)-(31,21)
+(31,12)-(31,39)
+(31,22)-(31,39)
+(31,23)-(31,28)
+(42,13)-(42,23)
+(42,13)-(42,41)
+(42,24)-(42,41)
+(42,25)-(42,30)
+(43,13)-(43,23)
+(43,13)-(43,41)
+(43,24)-(43,41)
+(43,25)-(43,30)
+(44,13)-(44,23)
+(44,13)-(44,41)
+(44,24)-(44,41)
+(44,25)-(44,30)
+(45,13)-(45,23)
+(45,13)-(45,41)
+(45,24)-(45,41)
+(45,25)-(45,30)
+(46,13)-(46,23)
+(46,13)-(46,41)
+(46,24)-(46,41)
+(46,25)-(46,30)
 *)

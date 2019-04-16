@@ -53,12 +53,13 @@ let rec additivePersistence n = if (n / 10) = 0 then 0 else addHelp (n, 0);;
 *)
 
 (* changed spans
-(24,35)-(24,41)
+(24,36)-(24,42)
 (n / 10) = 0
 BopG (BopG EmptyG EmptyG) LitG
 
-(24,54)-(24,68)
-0
-LitG
+*)
 
+(* type error slice
+(24,33)-(24,69)
+(24,36)-(24,42)
 *)

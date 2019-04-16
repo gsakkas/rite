@@ -83,33 +83,37 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(31,14)-(31,24)
-a
-VarG
-
-(31,14)-(31,24)
-0
-LitG
-
-(31,14)-(31,24)
+(31,15)-(31,25)
 match a with
 | (_ , y) -> (0 , bigAdd y x)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
-(31,14)-(31,24)
-(0 , bigAdd y x)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(31,21)-(31,22)
-y
-VarG
-
-(32,13)-(32,15)
-0
-LitG
-
-(32,13)-(32,15)
+(32,14)-(32,16)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
+*)
+
+(* type error slice
+(11,3)-(11,69)
+(11,9)-(11,10)
+(11,36)-(11,69)
+(11,50)-(11,60)
+(11,50)-(11,62)
+(11,68)-(11,69)
+(13,4)-(26,37)
+(13,12)-(26,35)
+(13,15)-(26,35)
+(14,3)-(26,35)
+(26,3)-(26,13)
+(26,3)-(26,35)
+(31,3)-(39,50)
+(31,9)-(31,25)
+(31,11)-(31,25)
+(31,15)-(31,21)
+(31,15)-(31,25)
+(39,3)-(39,50)
+(39,17)-(39,31)
+(39,17)-(39,43)
+(39,32)-(39,33)
 *)

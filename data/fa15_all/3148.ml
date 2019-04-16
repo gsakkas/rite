@@ -59,50 +59,38 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(3,45)-(3,48)
+(3,46)-(3,69)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(24,16)-(24,65)
+(24,17)-(24,66)
 let (x1 , x2) = x in
 ([x1 + x2] , [x2])
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(24,48)-(24,49)
-[x1 + x2]
-ListG (BopG EmptyG EmptyG) Nothing
+(25,16)-(25,24)
+([] , [])
+TupleG (fromList [ListG (fromList [])])
 
-(25,4)-(27,51)
-x1
-VarG
+(26,16)-(26,29)
+List.combine l1 l2
+AppG (fromList [VarG])
 
-(25,15)-(25,23)
-x2
-VarG
+*)
 
-(25,16)-(25,22)
-x2
-VarG
-
-(25,16)-(25,22)
-let base = ([] , []) in
-let args =
-  List.combine l1 l2 in
-let (_ , res) =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [TupleG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(25,20)-(25,21)
-[]
-ListG EmptyG Nothing
-
-(26,4)-(27,51)
-[]
-ListG EmptyG Nothing
-
-(26,15)-(26,22)
-List.combine
-VarG
-
+(* type error slice
+(7,4)-(15,44)
+(7,13)-(15,42)
+(7,16)-(15,42)
+(8,3)-(15,42)
+(9,3)-(15,42)
+(10,3)-(15,42)
+(13,5)-(15,42)
+(15,10)-(15,42)
+(26,5)-(27,52)
+(26,16)-(26,23)
+(26,16)-(26,29)
+(27,19)-(27,33)
+(27,19)-(27,45)
+(27,41)-(27,45)
 *)

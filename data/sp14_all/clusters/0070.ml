@@ -1,62 +1,36 @@
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-match n with
-| 0 -> []
-| _ -> x :: (clone x (n - 1))
-match l with
-| x :: [] -> []
-| hd :: tl -> hd :: (removeLast tl)
-| [] -> []
-match l with
-| x :: [] -> []
-| hd :: tl -> hd :: (removeLast tl)
-| [] -> []
-match y with
-| [] -> [x]
-| h :: t -> h :: (append x t)
-match l with
-| h :: t -> h :: (listReverse t)
-| [] -> []
-match l with
-| h :: t -> h :: (listReverse t)
-| [] -> []
-match l with
-| h :: t -> h :: (listReverse t)
-| [] -> []
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-match l with
-| [] -> []
-| h :: t -> h :: (listReverse t)
-match l with
-| [] -> []
-| _ :: h :: [] -> h :: (listReverse [])
-match l with
-| [] -> []
-| _ :: h :: [] -> h :: (listReverse [])
-match l with
-| [] -> []
-| x :: [] -> [x]
-| head :: tail :: t :: s -> head :: (tail :: (t :: s))
-match l with
-| [] -> []
-| h1 :: [] -> [h1]
-| h :: t -> h :: (listReverse t)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+let (l1' , l2') = x in
+let addit =
+  (l1' + l2') + carry in
+(if addit > 10
+ then addit mod 10
+ else 0 , (addit / 10) :: num)
+let (el1 , el2) = x in
+let new_sum =
+  (rem + el1) + el2 in
+let new_rem =
+  if new_sum > 9
+  then 1
+  else 0 in
+let norm_sum =
+  if new_sum > 9
+  then new_sum - 10
+  else new_sum in
+(new_rem , norm_sum :: acc)
+let (upper_mult , total) =
+  a in
+let newTotal =
+  mulByDigit x upper_mult in
+let updateTotal =
+  bigAdd newTotal total in
+(upper_mult @ [0] , updateTotal)
+let (l2digit2 , templ12) =
+  a in
+let multres =
+  mulByDigit l2digit templ1 in
+(0 , bigAdd (templ12 @ [0])
+            multres)
+let (i , acc) = a in
+let digmul =
+  mulByDigit (i * x) l2 in
+(i * 10 , bigAdd digmul acc)

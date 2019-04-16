@@ -21,22 +21,32 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(7,17)-(7,69)
+(7,18)-(7,70)
 fun b' ->
   (let result = f b' in
    (result , result = b'))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(7,42)-(7,43)
-f
+(8,7)-(8,15)
+helper
 VarG
 
-(7,47)-(7,69)
-b'
-VarG
+*)
 
-(8,6)-(8,14)
-b'
-VarG
-
+(* type error slice
+(3,24)-(3,25)
+(3,24)-(3,27)
+(3,46)-(3,52)
+(3,46)-(3,63)
+(3,53)-(3,63)
+(3,54)-(3,55)
+(6,3)-(6,9)
+(6,3)-(8,20)
+(7,5)-(8,20)
+(7,6)-(8,16)
+(7,18)-(7,70)
+(7,25)-(7,70)
+(7,48)-(7,70)
+(8,7)-(8,13)
+(8,7)-(8,15)
 *)

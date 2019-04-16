@@ -54,92 +54,33 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(20,9)-(20,18)
-a
-VarG
-
-(20,9)-(20,18)
-x
-VarG
-
-(20,9)-(20,18)
-let (x1 , x2) = x in
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,9)-(20,18)
-let val1 = (a1 + x1) + x2 in
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,9)-(20,22)
+(16,7)-(22,35)
 let (a1 , a2) = a in
 let (x1 , x2) = x in
 let val1 = (a1 + x1) + x2 in
 let val2 = (x1 + x2) / 10 in
 (val2 , val1 :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(21,22)-(21,24)
-a1
-VarG
+(23,16)-(23,18)
+(0 , [])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(21,28)-(21,30)
-x1
-VarG
+*)
 
-(21,28)-(21,30)
-x2
-VarG
-
-(21,28)-(21,30)
-x1
-VarG
-
-(21,28)-(21,30)
-x2
-VarG
-
-(21,28)-(21,30)
-x1 + x2
-BopG VarG VarG
-
-(21,28)-(21,30)
-(x1 + x2) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(21,28)-(21,30)
-let val2 = (x1 + x2) / 10 in
-(val2 , val1 :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(21,39)-(21,40)
-(val2 , val1 :: a2)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(22,11)-(22,25)
-val1
-VarG
-
-(22,11)-(22,25)
-a2
-VarG
-
-(22,11)-(22,25)
-let base = (0 , []) in
-let args =
-  List.rev (List.combine l1
-                         l2) in
-let (_ , res) =
-  List.fold_left f base args in
-res
-LetG NonRec (fromList [TupleG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(22,11)-(22,34)
-val2
-VarG
-
+(* type error slice
+(15,5)-(25,52)
+(15,11)-(22,35)
+(15,13)-(22,35)
+(16,7)-(22,35)
+(17,7)-(22,35)
+(18,7)-(22,35)
+(19,7)-(22,35)
+(20,7)-(22,35)
+(21,37)-(21,42)
+(21,38)-(21,39)
+(22,12)-(22,35)
+(25,19)-(25,33)
+(25,19)-(25,45)
+(25,34)-(25,35)
 *)

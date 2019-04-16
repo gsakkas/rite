@@ -15,12 +15,21 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(5,47)-(5,58)
+(5,47)-(5,67)
 let c = [a ; b] in c
-LetG NonRec (fromList [ListG EmptyG Nothing]) VarG
+LetG NonRec (fromList [(VarPatG,ListG (fromList [EmptyG]))]) VarG
 
-(5,59)-(5,60)
-[a ; b]
-ListG VarG Nothing
+*)
 
+(* type error slice
+(2,4)-(5,70)
+(2,21)-(5,68)
+(3,3)-(5,68)
+(5,8)-(5,68)
+(5,27)-(5,67)
+(5,35)-(5,43)
+(5,47)-(5,62)
+(5,47)-(5,67)
+(5,48)-(5,59)
+(5,66)-(5,67)
 *)

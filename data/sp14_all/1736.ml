@@ -13,26 +13,20 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(3,25)-(3,61)
+(3,26)-(3,62)
 let digits =
   digitsOfInt (n / 10) in
 digits @ [n mod 10]
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
 
-(3,51)-(3,61)
-digits
-VarG
+*)
 
-(3,51)-(3,61)
-(@)
-VarG
-
-(3,51)-(3,61)
-digits @ [n mod 10]
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(3,51)-(3,61)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(2,4)-(3,64)
+(2,21)-(3,62)
+(3,3)-(3,62)
+(3,26)-(3,48)
+(3,26)-(3,62)
+(3,27)-(3,38)
+(3,52)-(3,62)
 *)

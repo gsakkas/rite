@@ -27,24 +27,28 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(10,7)-(10,50)
+(10,8)-(10,51)
 (l1 @ clone 0 diff , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(10,12)-(10,50)
-clone 0 diff
-AppG (fromList [VarG,LitG])
-
-(11,24)-(11,52)
-l1
-VarG
-
-(11,24)-(11,52)
+(11,25)-(11,53)
 (l1 , l2 @ clone 0 diff)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(11,29)-(11,52)
-clone 0 diff
-AppG (fromList [VarG,LitG])
+*)
 
+(* type error slice
+(5,4)-(5,63)
+(5,15)-(5,61)
+(5,17)-(5,61)
+(5,21)-(5,61)
+(5,35)-(5,37)
+(10,13)-(10,51)
+(10,14)-(10,19)
+(11,8)-(11,67)
+(11,25)-(11,53)
+(11,28)-(11,29)
+(11,30)-(11,53)
+(11,31)-(11,36)
+(11,59)-(11,67)
 *)

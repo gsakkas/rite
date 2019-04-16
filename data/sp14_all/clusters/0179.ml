@@ -1,4 +1,6 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-(1 , (digit - 10) :: sum)
-(1 , (digit - 10) :: sum)
-(1 , (digit - 10) :: sum)
+TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)

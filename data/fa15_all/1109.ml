@@ -58,85 +58,33 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,15)-(25,62)
+(18,7)-(25,64)
 let b = fst x + snd x in
 match a with
 | h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
 | _ -> [b / 10 ; b mod 10]
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
-(22,22)-(22,23)
-fst
-VarG
-
-(22,22)-(22,23)
-fst x
+(28,5)-(28,52)
+List.fold_left f base args
 AppG (fromList [VarG])
 
-(22,22)-(22,23)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+*)
 
-(24,20)-(25,61)
-snd x
-AppG (fromList [VarG])
-
-(24,21)-(24,50)
-snd
-VarG
-
-(24,21)-(24,50)
-x
-VarG
-
-(24,21)-(24,50)
-a
-VarG
-
-(24,21)-(24,50)
-match a with
-| h :: t -> ((h + b) / 10) :: (((h + b) mod 10) :: t)
-| _ -> [b / 10 ; b mod 10]
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-
-(24,21)-(24,50)
-((h + b) / 10) :: (((h + b) mod 10) :: t)
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing
-
-(24,32)-(24,38)
-h
-VarG
-
-(25,34)-(25,40)
-h
-VarG
-
-(26,4)-(28,51)
-b
-VarG
-
-(26,4)-(28,51)
-b
-VarG
-
-(26,4)-(28,51)
-b / 10
-BopG VarG LitG
-
-(26,4)-(28,51)
-b mod 10
-BopG VarG LitG
-
-(26,4)-(28,51)
-10
-LitG
-
-(26,4)-(28,51)
-10
-LitG
-
-(26,4)-(28,51)
-[b / 10 ; b mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(17,5)-(28,52)
+(17,11)-(25,64)
+(17,13)-(25,64)
+(18,7)-(25,64)
+(18,13)-(18,14)
+(20,11)-(25,64)
+(20,18)-(20,19)
+(22,16)-(25,63)
+(24,21)-(25,62)
+(25,23)-(25,61)
+(25,24)-(25,55)
+(25,59)-(25,60)
+(28,19)-(28,33)
+(28,19)-(28,45)
+(28,34)-(28,35)
 *)

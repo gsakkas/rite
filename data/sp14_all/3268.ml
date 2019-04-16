@@ -27,13 +27,14 @@ let stringOfList f l = let nl = List.map f l in sepConcat "" nl;;
 *)
 
 (* changed spans
-(11,23)-(11,31)
-List.map f l
-AppG (fromList [VarG])
-
-(11,23)-(11,45)
+(11,24)-(11,46)
 let nl = List.map f l in
 sepConcat "" nl
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
 
+*)
+
+(* type error slice
+(11,24)-(11,32)
+(11,24)-(11,46)
 *)

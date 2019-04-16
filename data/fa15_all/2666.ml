@@ -16,49 +16,32 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(5,18)-(5,29)
+(5,18)-(5,38)
 let fb = f b in
 if fb = b
 then (true , fb)
 else (false , fb)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
 
-(5,32)-(5,33)
-if fb = b
-then (true , fb)
-else (false , fb)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(5,34)-(5,35)
-fb
+(5,50)-(5,60)
+helper
 VarG
 
-(5,34)-(5,35)
-fb = b
-BopG VarG VarG
+*)
 
-(5,41)-(5,63)
-fb
-VarG
-
-(5,41)-(5,63)
-fb
-VarG
-
-(5,41)-(5,63)
-true
-LitG
-
-(5,41)-(5,63)
-false
-LitG
-
-(5,41)-(5,63)
-(true , fb)
-TupleG (fromList [VarG,LitG])
-
-(5,41)-(5,63)
-(false , fb)
-TupleG (fromList [VarG,LitG])
-
+(* type error slice
+(2,38)-(2,39)
+(2,38)-(2,41)
+(2,56)-(2,62)
+(2,56)-(2,70)
+(2,63)-(2,70)
+(2,64)-(2,65)
+(5,3)-(5,64)
+(5,14)-(5,38)
+(5,18)-(5,38)
+(5,42)-(5,48)
+(5,42)-(5,64)
+(5,49)-(5,64)
+(5,50)-(5,60)
+(5,51)-(5,57)
 *)

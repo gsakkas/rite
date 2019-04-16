@@ -63,16 +63,22 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(28,6)-(28,67)
+(28,7)-(28,68)
 (eval (circ1 , x , y) ** 2.0) +. (eval (circ2 , x , y) ** 2.0)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(29,19)-(29,40)
+(29,20)-(29,41)
 log (eval (nlog , x , y))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(29,23)-(29,27)
-eval (nlog , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(28,7)-(28,36)
+(28,7)-(28,68)
+(28,29)-(28,31)
+(28,39)-(28,68)
+(28,61)-(28,63)
+(29,20)-(29,23)
+(29,20)-(29,41)
 *)

@@ -27,12 +27,16 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(10,13)-(10,27)
+(10,14)-(10,28)
 reverseInt n 0
 AppG (fromList [VarG,LitG])
 
-(10,32)-(10,34)
-0
-LitG
+*)
 
+(* type error slice
+(3,18)-(3,28)
+(3,18)-(3,62)
+(10,14)-(10,28)
+(10,14)-(10,35)
+(10,15)-(10,25)
 *)

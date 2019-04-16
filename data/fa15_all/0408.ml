@@ -20,60 +20,24 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(7,17)-(7,19)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(7,29)-(7,30)
+(7,3)-(8,24)
 let funt =
   fun b ->
     if f b
     then (b , true)
     else (b , false) in
 wwhile (funt , b)
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(7,68)-(7,69)
-b
-VarG
+*)
 
-(8,2)-(8,8)
-f
-VarG
-
-(8,10)-(8,19)
-(b , false)
-TupleG (fromList [VarG,LitG])
-
-(8,11)-(8,13)
-b
-VarG
-
-(8,11)-(8,13)
-wwhile
-VarG
-
-(8,11)-(8,13)
-funt
-VarG
-
-(8,11)-(8,13)
-b
-VarG
-
-(8,11)-(8,13)
-wwhile (funt , b)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(8,11)-(8,13)
-false
-LitG
-
-(8,11)-(8,13)
-(funt , b)
-TupleG (fromList [VarG])
-
+(* type error slice
+(7,3)-(8,24)
+(7,10)-(7,70)
+(7,18)-(7,20)
+(7,18)-(7,24)
+(7,23)-(7,24)
+(8,11)-(8,20)
+(8,12)-(8,14)
+(8,15)-(8,19)
 *)

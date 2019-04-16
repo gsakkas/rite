@@ -1,21 +1,9 @@
-CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
-match n > 0 with
-| false -> []
-| true -> match n > 9 with
-          | false -> n :: (digitsOfInt n)
-          | true -> digitsOfInt (n mod 10)
-match n > 0 with
-| false -> []
-| true -> match n > 9 with
-          | false -> n :: (digitsOfInt n)
-          | true -> digitsOfInt (n mod 10)
-match n > 0 with
-| false -> []
-| true -> match n > 9 with
-          | false -> n :: (digitsOfInt (n / 10))
-          | true -> (n mod 10) :: (digitsOfInt (n / 10))
-match n > 0 with
-| false -> []
-| true -> match n > 9 with
-          | false -> n :: (digitsOfInt (n / 10))
-          | true -> (n mod 10) :: (digitsOfInt (n / 10))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
+let (x , y) = f b in
+if y = true
+then wwhile (f , x)
+else x
+let (b' , c') = f b in
+if c'
+then wwhile (f , b')
+else b'

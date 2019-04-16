@@ -1,5 +1,2 @@
-AppG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
-List.append ("[" :: (List.map f
-                              l)) ["]"]
-List.append ("[" :: (List.map f
-                              l)) ["]"]
+AppG (fromList [VarG,BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
+helper (f :: acc) f (x - 1)

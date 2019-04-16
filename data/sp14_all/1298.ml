@@ -17,8 +17,17 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(6,46)-(6,47)
+(6,47)-(6,62)
 wwhile (g , b)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(6,3)-(6,62)
+(6,9)-(6,43)
+(6,13)-(6,43)
+(6,29)-(6,43)
+(6,47)-(6,48)
+(6,47)-(6,62)
 *)

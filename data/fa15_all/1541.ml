@@ -17,42 +17,27 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(5,41)-(5,50)
+(5,42)-(5,51)
 if f b = b
 then (b , true)
 else (f b , false)
 IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
 
-(5,54)-(5,56)
-b
-VarG
+*)
 
-(5,54)-(5,56)
-f
-VarG
-
-(5,54)-(5,56)
-b
-VarG
-
-(5,54)-(5,56)
-f b
-AppG (fromList [VarG])
-
-(5,54)-(5,56)
-true
-LitG
-
-(5,54)-(5,56)
-false
-LitG
-
-(5,54)-(5,56)
-(b , true)
-TupleG (fromList [VarG,LitG])
-
-(5,54)-(5,56)
-(f b , false)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
+(* type error slice
+(3,3)-(3,64)
+(3,9)-(3,10)
+(3,9)-(3,12)
+(3,42)-(3,48)
+(3,42)-(3,56)
+(3,49)-(3,56)
+(3,50)-(3,51)
+(5,22)-(5,28)
+(5,22)-(5,62)
+(5,29)-(5,62)
+(5,30)-(5,58)
+(5,38)-(5,51)
+(5,42)-(5,51)
+(5,55)-(5,57)
 *)

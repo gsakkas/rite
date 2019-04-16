@@ -61,33 +61,45 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,32)-(19,60)
+(19,33)-(19,61)
 intlist (x / 10) @ [x mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(19,33)-(19,49)
-(@)
-VarG
-
-(19,51)-(19,59)
-[x mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(22,10)-(24,65)
+(22,11)-(24,66)
 match a with
 | [] -> (let sum = z + y in
          intlist sum)
 | h :: t -> (let sum =
                (h + z) + y in
              intlist sum @ t)
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(ConPatG Nothing,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
-(24,46)-(24,59)
-(@)
-VarG
+*)
 
-(24,46)-(24,64)
-intlist sum @ t
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
+(* type error slice
+(17,5)-(27,48)
+(17,11)-(24,66)
+(18,7)-(24,66)
+(18,23)-(19,61)
+(19,9)-(19,61)
+(19,33)-(19,61)
+(19,34)-(19,41)
+(19,34)-(19,50)
+(22,11)-(24,66)
+(22,18)-(22,19)
+(23,19)-(23,55)
+(23,29)-(23,36)
+(23,30)-(23,31)
+(23,44)-(23,51)
+(23,44)-(23,55)
+(24,22)-(24,65)
+(24,47)-(24,60)
+(24,47)-(24,65)
+(24,48)-(24,55)
+(25,5)-(27,48)
+(25,16)-(25,18)
+(27,15)-(27,29)
+(27,15)-(27,41)
+(27,30)-(27,31)
+(27,32)-(27,36)
 *)

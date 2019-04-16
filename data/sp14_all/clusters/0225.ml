@@ -1,2 +1,4 @@
-BopG (AppG (fromList [EmptyG])) (UopG EmptyG)
-eval (e1 , x , y) *. (- 1.0)
+CaseG VarG (fromList [(ConsPatG (ConsPatG EmptyPatG EmptyPatG) (ConPatG Nothing),Nothing,VarG),(ConPatG Nothing,Nothing,VarG)])
+match l with
+| [] -> l
+| (_ :: tail :: []) :: [] -> l

@@ -16,25 +16,24 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(2,9)-(2,19)
-i
-VarG
-
-(2,9)-(2,19)
-fun i -> i + 1
-LamG (BopG EmptyG EmptyG)
-
-(2,9)-(2,19)
-i + 1
-BopG VarG LitG
-
-(2,9)-(2,19)
-1
-LitG
-
-(4,60)-(4,62)
+(4,55)-(4,63)
 match n with
 | n -> incre n
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
 
+*)
+
+(* type error slice
+(2,4)-(2,22)
+(2,10)-(2,20)
+(2,14)-(2,15)
+(2,14)-(2,20)
+(2,18)-(2,20)
+(4,33)-(4,63)
+(4,36)-(4,40)
+(4,36)-(4,42)
+(4,41)-(4,42)
+(4,48)-(4,49)
+(4,55)-(4,63)
+(4,61)-(4,63)
 *)

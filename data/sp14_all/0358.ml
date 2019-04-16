@@ -46,114 +46,36 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,16)-(14,59)
+(14,17)-(14,60)
 match x with
 | (y , z) -> (let sum =
                 y + z in
               match a with
               | h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
               | _ -> [sum / 10 ; sum mod 10])
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
-(14,40)-(14,59)
-let sum = y + z in
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(14,41)-(14,42)
-y
-VarG
-
-(14,41)-(14,42)
-z
-VarG
-
-(14,41)-(14,42)
-y + z
-BopG VarG VarG
-
-(14,41)-(14,42)
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
-CaseG VarG (fromList [(Nothing,ConAppG (Just EmptyG) Nothing),(Nothing,ListG EmptyG Nothing)])
-
-(14,44)-(14,58)
-sum
-VarG
-
-(14,44)-(14,58)
-h
-VarG
-
-(14,44)-(14,58)
-(sum + h) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,44)-(14,58)
-sum + h
-BopG VarG VarG
-
-(14,44)-(14,58)
-10
-LitG
-
-(14,44)-(14,58)
-((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-ConAppG (Just (TupleG (fromList [BopG (BopG VarG VarG) LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing]))) Nothing
-
-(14,44)-(14,58)
-((sum + h) mod 10) :: t
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing
-
-(14,49)-(14,50)
-sum
-VarG
-
-(14,56)-(14,58)
-h
-VarG
-
-(15,4)-(17,51)
-t
-VarG
-
-(15,4)-(17,51)
-sum
-VarG
-
-(15,4)-(17,51)
-sum
-VarG
-
-(15,4)-(17,51)
-sum / 10
-BopG VarG LitG
-
-(15,4)-(17,51)
-sum mod 10
-BopG VarG LitG
-
-(15,4)-(17,51)
-10
-LitG
-
-(15,4)-(17,51)
-10
-LitG
-
-(15,4)-(17,51)
-[sum / 10 ; sum mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(16,15)-(16,44)
-List.rev
-VarG
-
-(16,15)-(16,44)
+(16,16)-(16,45)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+(17,5)-(17,52)
+List.fold_left f base args
+AppG (fromList [VarG])
+
+*)
+
+(* type error slice
+(14,5)-(17,52)
+(14,11)-(14,60)
+(14,13)-(14,60)
+(14,17)-(14,60)
+(14,41)-(14,60)
+(14,42)-(14,43)
+(16,16)-(16,24)
+(16,16)-(16,45)
+(16,25)-(16,37)
+(17,19)-(17,33)
+(17,19)-(17,45)
+(17,34)-(17,35)
 *)

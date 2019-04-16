@@ -64,34 +64,28 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(25,38)-(25,59)
+(25,32)-(25,61)
 let (_ , asd4) =
   padZero asd3 (asd2 :: b) in
 (asd3 , asd4)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) (TupleG (fromList [EmptyG]))
 
-(25,39)-(25,46)
-padZero asd3 (asd2 :: b)
-AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
+*)
 
-(25,53)-(25,57)
-asd2 :: b
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(26,11)-(26,30)
-b
-VarG
-
-(26,12)-(26,13)
-asd3
-VarG
-
-(26,12)-(26,13)
-asd4
-VarG
-
-(26,12)-(26,13)
-(t , (x + h) :: b)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-
+(* type error slice
+(8,4)-(12,78)
+(8,13)-(12,76)
+(8,16)-(12,76)
+(21,7)-(26,31)
+(23,9)-(25,61)
+(24,9)-(25,61)
+(25,9)-(25,61)
+(25,20)-(25,28)
+(25,32)-(25,61)
+(25,39)-(25,60)
+(25,40)-(25,47)
+(25,48)-(25,59)
+(25,49)-(25,53)
+(26,12)-(26,31)
+(26,16)-(26,30)
 *)

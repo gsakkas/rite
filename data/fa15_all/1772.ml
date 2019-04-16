@@ -33,16 +33,22 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(12,20)-(12,24)
+(12,21)-(12,29)
 h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(13,8)-(13,58)
-seen
-VarG
-
-(13,20)-(13,33)
+(13,21)-(13,34)
 filter t h
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(3,3)-(5,60)
+(5,48)-(5,60)
+(5,49)-(5,55)
+(5,56)-(5,57)
+(13,21)-(13,27)
+(13,21)-(13,34)
+(13,28)-(13,34)
 *)

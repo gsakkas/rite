@@ -11,8 +11,15 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(3,48)-(3,52)
+(3,48)-(3,68)
 digitsOfInt n
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(3,3)-(3,78)
+(3,14)-(3,16)
+(3,48)-(3,68)
+(3,49)-(3,53)
 *)

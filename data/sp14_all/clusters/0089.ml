@@ -1,16 +1,4 @@
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-(t , (x + h) :: b)
-(t , (x + h) :: b)
-(t , (x + h) :: b)
-(t , (x + h) :: b)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-((h1 + h2) :: list1 , list2)
-(b , (d + e) :: c)
-(b , (d + e) :: c)
+AppG (fromList [LitG])
+float_of_int 2
+(+) 0
+print_string "going into then"

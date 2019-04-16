@@ -69,13 +69,20 @@ let rec mulByDigit i l = mulByDigit (i - 1) (bigAdd l l);;
 *)
 
 (* changed spans
-(32,25)-(32,39)
+(32,26)-(32,59)
 mulByDigit (i - 1) (bigAdd l
                            l)
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(32,37)-(32,38)
-i - 1
-BopG VarG LitG
+*)
 
+(* type error slice
+(32,4)-(32,61)
+(32,20)-(32,59)
+(32,22)-(32,59)
+(32,26)-(32,40)
+(32,26)-(32,59)
+(32,27)-(32,37)
+(32,43)-(32,59)
+(32,44)-(32,45)
 *)

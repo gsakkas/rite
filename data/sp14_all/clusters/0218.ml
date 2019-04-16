@@ -1,3 +1,4 @@
-LamG (ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing)
-fun (x , y) ->
-  ((x + y) / 10) :: a
+CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+match n with
+| 0 -> [0]
+| _ -> digitsOfInt (n / 10) @ [n mod 10]

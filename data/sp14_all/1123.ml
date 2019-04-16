@@ -27,12 +27,13 @@ let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 *)
 
 (* changed spans
-(11,57)-(11,69)
+(11,58)-(11,70)
 (x +. y) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(11,68)-(11,69)
-2.0
-LitG
+*)
 
+(* type error slice
+(11,58)-(11,66)
+(11,58)-(11,70)
 *)

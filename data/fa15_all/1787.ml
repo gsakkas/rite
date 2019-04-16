@@ -86,16 +86,29 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(40,15)-(40,37)
+(40,16)-(40,38)
 exprToString e2
 AppG (fromList [VarG])
 
-(40,32)-(40,36)
-(^)
-VarG
+(40,42)-(40,48)
+")/"
+LitG
 
-(40,32)-(40,36)
-")/" ^ ("log(" ^ (exprToString e3 ^ "))"))
+(40,52)-(40,69)
+"log("
+LitG
+
+(40,72)-(40,76)
+exprToString e3 ^ "))"
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
+*)
+
+(* type error slice
+(17,28)-(17,53)
+(17,29)-(17,46)
+(17,30)-(17,42)
+(17,47)-(17,48)
+(40,16)-(40,38)
+(40,17)-(40,29)
 *)

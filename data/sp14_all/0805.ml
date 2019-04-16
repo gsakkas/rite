@@ -67,7 +67,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,2)-(28,76)
+(16,3)-(28,77)
 match e with
 | VarX -> x
 | VarY -> y
@@ -80,34 +80,20 @@ match e with
                                 else eval (e4 , x , y)
 | Sqrt e -> sqrt (abs_float (eval (e , x , y)))
 | Gauss (e1 , e2 , e3) -> 2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(27,20)-(27,23)
-abs_float
-VarG
+*)
 
-(27,30)-(27,31)
-(e , x , y)
-TupleG (fromList [VarG])
-
-(28,9)-(28,76)
-x
-VarG
-
-(28,9)-(28,76)
-y
-VarG
-
-(28,9)-(28,76)
-2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-BopG LitG (AppG (fromList [EmptyG]))
-
-(28,9)-(28,76)
-2.0
-LitG
-
-(28,18)-(28,76)
-exp
-VarG
-
+(* type error slice
+(16,3)-(28,77)
+(19,27)-(19,44)
+(19,28)-(19,32)
+(19,33)-(19,43)
+(27,15)-(27,19)
+(27,15)-(27,34)
+(27,20)-(27,34)
+(27,21)-(27,24)
+(27,25)-(27,33)
+(27,26)-(27,30)
+(27,31)-(27,32)
 *)

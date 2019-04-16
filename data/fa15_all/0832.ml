@@ -41,20 +41,27 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(16,28)-(16,66)
+(16,29)-(16,67)
 let n1 =
   (let x0 = digitsOfInt n in
    sumList x0) in
 additivePersistence n1
-LetG NonRec (fromList [LetG NonRec (fromList [EmptyG]) EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)]) (AppG (fromList [EmptyG]))
 
-(16,37)-(16,50)
-let x0 = digitsOfInt n in
-sumList x0
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+*)
 
-(16,63)-(16,65)
-x0
-VarG
-
+(* type error slice
+(9,4)-(9,22)
+(9,10)-(9,20)
+(9,14)-(9,15)
+(9,14)-(9,20)
+(9,18)-(9,20)
+(14,3)-(16,68)
+(14,6)-(14,10)
+(14,6)-(14,12)
+(14,11)-(14,12)
+(15,8)-(15,9)
+(16,8)-(16,68)
+(16,29)-(16,67)
+(16,55)-(16,67)
 *)

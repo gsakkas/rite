@@ -9,16 +9,14 @@ let rec digitsOfInt n = if n < 0 then [] else digitsOfInt (n / 10);;
 *)
 
 (* changed spans
-(2,46)-(2,47)
-digitsOfInt
-VarG
-
-(2,46)-(2,47)
-n / 10
-BopG VarG LitG
-
-(2,46)-(2,54)
+(2,47)-(2,55)
 digitsOfInt (n / 10)
 AppG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(2,25)-(2,55)
+(2,39)-(2,41)
+(2,47)-(2,55)
 *)

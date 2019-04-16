@@ -1,7 +1,3 @@
-BopG (UopG EmptyG) (AppG (fromList [EmptyG]))
-(- 1.0) *. eval (a , x , y)
-(- 1.0) *. eval (a , x , y)
-(- 1.0) *. eval (e3 , x , y)
-(- 1.0) *. eval (e3 , x , y)
-(- 1.0) *. eval (e3 , x , y)
-(- 1.0) *. eval (e3 , x , y)
+LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (BopG EmptyG EmptyG)
+let x :: t = xs in
+x + sumList t

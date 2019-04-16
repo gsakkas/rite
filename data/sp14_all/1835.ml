@@ -39,23 +39,30 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(15,4)-(17,55)
+(15,5)-(17,56)
 if x < 10
 then count
 else helper (count + 1)
             (sumList (digits n))
 IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
 
-(15,10)-(15,11)
-x < 10
-BopG VarG LitG
-
-(16,12)-(16,17)
-10
-LitG
-
-(18,2)-(18,10)
+(18,3)-(18,11)
 helper 0 n
 AppG (fromList [VarG,LitG])
 
+*)
+
+(* type error slice
+(11,58)-(11,75)
+(11,63)-(11,75)
+(11,64)-(11,71)
+(14,3)-(18,11)
+(14,18)-(17,56)
+(14,24)-(17,56)
+(15,5)-(17,56)
+(15,11)-(15,12)
+(17,17)-(17,23)
+(17,17)-(17,56)
+(17,36)-(17,56)
+(17,37)-(17,44)
 *)

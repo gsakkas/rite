@@ -1,4 +1,4 @@
-IteG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-if n < 10
-then count + 1
-else addHelp (count + 1 , addNum n)
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
+match a with
+| (_ , z) -> (0 , bigAdd z x)
+| _ -> (0 , [])

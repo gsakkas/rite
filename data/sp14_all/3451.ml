@@ -33,13 +33,23 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(13,7)-(13,61)
+(13,8)-(13,62)
 1 :: x;
 additivePersistence (sumList (digitsOfInt n))
-SeqG (ConAppG (Just EmptyG) Nothing) (AppG (fromList [EmptyG]))
+SeqG (ConAppG (Just EmptyG)) (AppG (fromList [EmptyG]))
 
-(13,15)-(13,34)
-additivePersistence (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(8,37)-(8,52)
+(8,41)-(8,52)
+(8,42)-(8,49)
+(11,3)-(14,17)
+(11,11)-(11,14)
+(12,3)-(14,17)
+(13,8)-(13,62)
+(13,13)-(13,62)
+(13,14)-(13,15)
+(14,8)-(14,15)
+(14,8)-(14,17)
 *)

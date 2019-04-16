@@ -69,8 +69,14 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(32,9)-(32,12)
-abs_float
-VarG
+(32,9)-(32,61)
+abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(32,9)-(32,61)
+(32,10)-(32,13)
+(32,14)-(32,60)
 *)

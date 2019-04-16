@@ -133,53 +133,65 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,16)-(17,39)
-a
-VarG
-
-(17,16)-(17,39)
-b
-VarG
-
-(17,16)-(17,39)
-a_less
-VarG
-
-(17,16)-(17,39)
-b_less
-VarG
-
-(17,16)-(17,39)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,16)-(17,39)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(29,57)-(29,58)
+(29,37)-(29,48)
 0
 LitG
 
-(29,60)-(29,64)
+(29,49)-(29,60)
 0
 LitG
 
-(30,25)-(30,69)
+(30,26)-(30,70)
 buildhelper 0 0 expr
 AppG (fromList [VarG,LitG])
 
-(30,61)-(30,62)
-0
-LitG
+(52,9)-(56,56)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(52,8)-(52,18)
-buildThresh
-VarG
+(58,9)-(62,56)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(58,8)-(58,18)
-buildThresh
-VarG
+*)
 
+(* type error slice
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,42)
+(17,17)-(17,40)
+(29,14)-(29,23)
+(29,14)-(29,66)
+(29,24)-(29,66)
+(29,25)-(29,36)
+(30,26)-(30,70)
+(30,27)-(30,38)
+(30,53)-(30,64)
+(52,9)-(52,19)
+(52,9)-(56,56)
+(53,11)-(56,56)
+(58,9)-(58,19)
+(58,9)-(62,56)
+(59,11)-(62,56)
+(63,3)-(63,14)
+(63,3)-(63,37)
+(63,35)-(63,37)
 *)

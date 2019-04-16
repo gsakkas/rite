@@ -25,105 +25,34 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(5,12)-(9,49)
-n
-VarG
-
-(5,12)-(9,49)
-cloneHelper
-VarG
-
-(5,12)-(9,49)
-x
-VarG
-
-(5,12)-(9,49)
-n
-VarG
-
-(5,12)-(9,49)
-fun x ->
-  fun n ->
-    if n < 1
-    then []
-    else cloneHelper x n []
-LamG (LamG EmptyG)
-
-(5,12)-(9,49)
-fun n ->
-  if n < 1
-  then []
-  else cloneHelper x n []
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(5,12)-(9,49)
-cloneHelper x n []
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(5,12)-(9,49)
-n < 1
-BopG VarG LitG
-
-(5,12)-(9,49)
-1
-LitG
-
-(5,12)-(9,49)
-if n < 1
-then []
-else cloneHelper x n []
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (AppG (fromList [EmptyG]))
-
-(5,12)-(9,49)
-[]
-ListG EmptyG Nothing
-
-(5,12)-(9,49)
-[]
-ListG EmptyG Nothing
-
-(8,7)-(8,36)
+(8,8)-(8,37)
 (l1 @ clone 0 diff , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(8,8)-(8,19)
-l1
-VarG
-
-(8,20)-(8,21)
-clone
-VarG
-
-(8,20)-(8,21)
-clone 0 diff
-AppG (fromList [VarG,LitG])
-
-(8,34)-(8,36)
-l2
-VarG
-
-(9,24)-(9,44)
-l2
-VarG
-
-(9,24)-(9,49)
-l1
-VarG
-
-(9,24)-(9,49)
+(9,25)-(9,50)
 (l1 , l2 @ clone 0 diff)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(9,25)-(9,36)
-clone
-VarG
-
-(9,47)-(9,49)
-l1
-VarG
-
-(9,47)-(9,49)
+(9,50)-(9,50)
 (l1 , l2)
 TupleG (fromList [VarG])
 
+*)
+
+(* type error slice
+(3,25)-(3,36)
+(3,25)-(3,55)
+(3,39)-(3,46)
+(7,3)-(9,50)
+(8,8)-(8,32)
+(8,8)-(8,37)
+(8,9)-(8,20)
+(8,23)-(8,26)
+(8,33)-(8,34)
+(9,8)-(9,50)
+(9,25)-(9,45)
+(9,25)-(9,50)
+(9,26)-(9,37)
+(9,46)-(9,47)
+(9,50)-(9,50)
 *)

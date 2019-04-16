@@ -61,13 +61,35 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,10)-(24,64)
+(22,11)-(24,65)
 match a with
 | [] -> (let sum = z + y in
          intlist sum)
 | h :: t -> (let sum =
                (h + z) + y in
              intlist sum @ t)
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(ConPatG Nothing,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
+*)
+
+(* type error slice
+(17,5)-(27,48)
+(17,11)-(24,65)
+(17,13)-(24,65)
+(18,7)-(24,65)
+(19,33)-(19,51)
+(19,33)-(19,64)
+(19,34)-(19,41)
+(19,52)-(19,53)
+(20,7)-(24,65)
+(22,11)-(24,65)
+(22,18)-(22,19)
+(23,19)-(23,55)
+(23,29)-(23,36)
+(23,30)-(23,31)
+(23,44)-(23,51)
+(23,44)-(23,55)
+(27,15)-(27,29)
+(27,15)-(27,41)
+(27,30)-(27,31)
 *)

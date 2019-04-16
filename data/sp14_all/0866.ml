@@ -10,18 +10,16 @@ let rec sumList xs =
 *)
 
 (* changed spans
-(2,21)-(2,69)
+(2,22)-(2,70)
 match xs with
 | [] -> 0
 | xs -> List.hd xs + sumList (List.tl xs)
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+CaseG VarG (fromList [(VarPatG,Nothing,BopG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
 
-(2,43)-(2,45)
-0
-LitG
+*)
 
-(2,68)-(2,69)
-sumList (List.tl xs)
-AppG (fromList [AppG (fromList [EmptyG])])
-
+(* type error slice
+(2,22)-(2,70)
+(2,44)-(2,46)
+(2,54)-(2,70)
 *)

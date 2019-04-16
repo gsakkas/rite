@@ -13,23 +13,23 @@ let rec wwhile (f,b) =
 *)
 
 (* changed spans
-(3,2)-(5,69)
+(3,3)-(5,70)
 let (x , y) = f b in
 match y with
 | false -> x
 | true -> wwhile (f , x)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
 
-(5,43)-(5,44)
-y
-VarG
+*)
 
-(5,56)-(5,69)
-x
-VarG
-
-(5,67)-(5,68)
-x
-VarG
-
+(* type error slice
+(3,3)-(5,70)
+(3,11)-(3,17)
+(3,11)-(3,24)
+(4,3)-(5,70)
+(4,14)-(4,15)
+(5,19)-(5,70)
+(5,44)-(5,45)
+(5,57)-(5,63)
+(5,57)-(5,70)
 *)

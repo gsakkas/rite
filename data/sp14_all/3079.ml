@@ -53,106 +53,51 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(2,10)-(2,11)
-[0 ; 0 ; 9 ; 9]
-ListG LitG Nothing
-
-(4,10)-(7,15)
-List.rev
-VarG
-
-(4,10)-(7,15)
-List.combine
-VarG
-
-(4,10)-(7,15)
-l1
-VarG
-
-(4,10)-(7,15)
-l2
-VarG
-
-(4,10)-(7,15)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(4,10)-(7,15)
-List.combine l1 l2
-AppG (fromList [VarG])
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-9
-LitG
-
-(4,10)-(7,15)
-9
-LitG
-
-(4,10)-(7,15)
-1
-LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-0
-LitG
-
-(4,10)-(7,15)
-2
-LitG
-
-(4,10)-(7,15)
-3
-LitG
-
-(4,10)-(7,15)
-3
-LitG
-
-(4,10)-(7,15)
-(3 , 3)
-TupleG (fromList [LitG])
-
-(4,10)-(7,15)
+(2,7)-(2,12)
 (3 , 3) :: (List.rev (List.combine l1
                                    l2))
-ConAppG (Just (TupleG (fromList [AppG (fromList [AppG (fromList [VarG])]),TupleG (fromList [LitG])]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(4,10)-(7,15)
-[1 ; 0 ; 0 ; 2]
-ListG LitG Nothing
+(19,17)-(19,22)
+x
+VarG
 
-(20,15)-(20,17)
-0
-LitG
-
-(20,15)-(20,17)
+(20,16)-(20,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(21,21)-(21,23)
+(21,18)-(21,20)
 0
 LitG
 
-(21,29)-(21,76)
+(21,22)-(21,24)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(22,2)-(22,44)
+(22,3)-(22,57)
 removeZero (add (padZero l1
                          l2))
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(15,38)-(15,78)
+(15,52)-(15,62)
+(15,52)-(15,65)
+(15,71)-(15,78)
+(19,5)-(21,77)
+(19,11)-(19,22)
+(19,17)-(19,18)
+(19,17)-(19,22)
+(20,5)-(21,77)
+(20,16)-(20,18)
+(21,44)-(21,58)
+(21,44)-(21,70)
+(21,59)-(21,60)
+(21,61)-(21,65)
+(22,3)-(22,45)
+(22,4)-(22,14)
+(22,48)-(22,57)
+(22,49)-(22,50)
 *)

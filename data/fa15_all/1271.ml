@@ -18,20 +18,25 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(6,16)-(6,20)
-[head]
-ListG VarG Nothing
+(3,3)-(7,45)
+match l with
+| [] -> []
+| head :: [] -> [head]
+| head :: tail -> listReverse tail @ [head]
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
-(7,18)-(7,36)
-(@)
-VarG
+*)
 
-(7,18)-(7,44)
-listReverse tail @ [head]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(7,40)-(7,44)
-[head]
-ListG VarG Nothing
-
+(* type error slice
+(2,4)-(7,47)
+(2,21)-(7,45)
+(3,3)-(7,45)
+(4,3)-(7,45)
+(4,9)-(4,10)
+(6,17)-(6,21)
+(7,19)-(7,37)
+(7,19)-(7,45)
+(7,20)-(7,31)
+(7,32)-(7,36)
+(7,41)-(7,45)
 *)

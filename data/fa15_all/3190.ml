@@ -75,16 +75,29 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(28,12)-(28,35)
+(28,13)-(28,36)
 [(x1 + x2) / 10 ; 0]
-ListG LitG Nothing
+ListG (fromList [BopG EmptyG EmptyG,LitG])
 
-(28,37)-(28,55)
+(28,38)-(28,56)
 [(x1 + x2) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
-(31,47)-(31,71)
+(31,48)-(31,72)
 [((x1 + x2) + c) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(27,7)-(31,75)
+(28,12)-(28,57)
+(28,13)-(28,36)
+(28,34)-(28,35)
+(28,38)-(28,56)
+(30,9)-(31,75)
+(31,10)-(31,74)
+(31,42)-(31,73)
+(31,46)-(31,47)
+(31,48)-(31,72)
 *)

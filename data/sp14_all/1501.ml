@@ -27,33 +27,21 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(3,14)-(3,30)
+(3,15)-(3,31)
 fun b ->
   match b with
   | [] -> [a]
   | hd :: tl -> [a + hd]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(3,24)-(3,30)
-b
-VarG
+*)
 
-(3,24)-(3,30)
-a
-VarG
-
-(3,24)-(3,30)
-match b with
-| [] -> [a]
-| hd :: tl -> [a + hd]
-CaseG VarG (fromList [(Nothing,ListG EmptyG Nothing)])
-
-(3,24)-(3,30)
-[a]
-ListG VarG Nothing
-
-(3,24)-(3,30)
-[a + hd]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(3,3)-(11,16)
+(3,12)-(3,31)
+(3,15)-(3,31)
+(3,25)-(3,31)
+(9,14)-(9,74)
+(9,33)-(9,74)
+(9,34)-(9,38)
 *)

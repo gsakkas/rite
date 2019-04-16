@@ -1,17 +1,8 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG]))])
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e1 -> sin (pi *. eval (e1 , x , y))
-| Cosine e1 -> cos (pi *. eval (e1 , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e1 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) when eval (e1 , x , y) < eval (e2 , x , y) -> eval (e3 , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e1 -> sin (pi *. eval (e1 , x , y))
-| Cosine e1 -> cos (pi *. eval (e1 , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e1 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) when eval (e1 , x , y) < eval (e2 , x , y) -> eval (e3 , x , y)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
+let depth = depth - 1 in
+match rand (0 , 4) with
+| 0 -> buildSine (build (rand , depth))
+| 1 -> buildCosine (build (rand , depth))
+| 2 -> buildAverage (build (rand , depth) , build (rand , depth))
+| 3 -> buildTimes (build (rand , depth) , build (rand , depth))
+| 4 -> buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))

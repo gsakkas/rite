@@ -50,12 +50,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,27)-(16,28)
-match a with
-| (x , y) -> x
-CaseG VarG (fromList [(Nothing,VarG)])
-
-(16,27)-(16,35)
+(16,7)-(16,69)
 let carry =
   match a with
   | (x , y) -> x in
@@ -66,125 +61,27 @@ match x with
                       ((carry + add1) + add2) mod 10 in
                     match a with
                     | (x , y) -> (new_carry , digit :: y))
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
 
-(16,33)-(16,35)
-x
-VarG
-
-(16,33)-(16,35)
-x
-VarG
-
-(16,33)-(16,35)
-carry
-VarG
-
-(16,33)-(16,35)
-add1
-VarG
-
-(16,33)-(16,35)
-add2
-VarG
-
-(16,33)-(16,35)
-(carry + add1) + add2
-BopG (BopG EmptyG EmptyG) VarG
-
-(16,33)-(16,35)
-((carry + add1) + add2) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,33)-(16,35)
-carry + add1
-BopG VarG VarG
-
-(16,33)-(16,35)
-let new_carry =
-  ((carry + add1) + add2) / 10 in
-let digit =
-  ((carry + add1) + add2) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(16,33)-(16,35)
-match x with
-| (add1 , add2) -> (let new_carry =
-                      ((carry + add1) + add2) / 10 in
-                    let digit =
-                      ((carry + add1) + add2) mod 10 in
-                    match a with
-                    | (x , y) -> (new_carry , digit :: y))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(16,47)-(16,68)
-let digit =
-  ((carry + add1) + add2) mod 10 in
-match a with
-| (x , y) -> (new_carry , digit :: y)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(16,53)-(16,54)
-carry + add1
-BopG VarG VarG
-
-(16,60)-(16,62)
-carry
-VarG
-
-(16,60)-(16,62)
-add1
-VarG
-
-(16,60)-(16,62)
-add2
-VarG
-
-(16,67)-(16,68)
-match a with
-| (x , y) -> (new_carry , digit :: y)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-
-(17,4)-(19,51)
-a
-VarG
-
-(17,4)-(19,51)
-new_carry
-VarG
-
-(17,4)-(19,51)
-digit
-VarG
-
-(17,4)-(19,51)
-y
-VarG
-
-(17,4)-(19,51)
-(new_carry , digit :: y)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(17,4)-(19,51)
-digit :: y
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(17,15)-(17,17)
-0
-LitG
-
-(17,15)-(17,17)
+(17,16)-(17,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(18,15)-(18,33)
-List.rev
-VarG
-
-(18,15)-(18,33)
+(18,16)-(18,34)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(15,5)-(19,52)
+(15,11)-(16,69)
+(15,13)-(16,69)
+(16,7)-(16,69)
+(16,27)-(16,37)
+(16,28)-(16,29)
+(16,28)-(16,36)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
 *)

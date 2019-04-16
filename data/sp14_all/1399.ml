@@ -19,12 +19,22 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(6,24)-(6,25)
+(6,25)-(6,26)
 a
 VarG
 
-(7,37)-(7,58)
+(7,38)-(7,59)
 List.fold_left f base l
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(3,3)-(7,59)
+(4,11)-(4,13)
+(6,7)-(7,59)
+(7,7)-(7,59)
+(7,24)-(7,59)
+(7,38)-(7,52)
+(7,38)-(7,59)
 *)

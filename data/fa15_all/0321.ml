@@ -80,7 +80,7 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(33,4)-(34,72)
+(33,5)-(34,73)
 let (ll , accumulate) = a in
 let multed =
   mulByDigit x l1 in
@@ -88,70 +88,30 @@ let accumulate =
   List.append accumulate [0] in
 (l1 , bigAdd accumulate
              multed)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(34,4)-(34,72)
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(34,20)-(34,31)
-mulByDigit
-VarG
-
-(34,20)-(34,31)
-x
-VarG
-
-(34,20)-(34,31)
+(35,15)-(35,16)
 l1
 VarG
 
-(34,20)-(34,31)
-List.append accumulate [0]
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(34,20)-(34,31)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
-
-(34,32)-(34,33)
-accumulate
-VarG
-
-(34,34)-(34,35)
+(35,18)-(35,20)
 [0]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
-(34,47)-(34,48)
-l1
-VarG
-
-(34,69)-(34,70)
-accumulate
-VarG
-
-(35,2)-(37,49)
-multed
-VarG
-
-(35,14)-(35,15)
-l1
-VarG
-
-(35,14)-(35,15)
-[0]
-ListG LitG Nothing
-
-(36,34)-(36,36)
+(36,14)-(36,38)
 l2
 VarG
 
+*)
+
+(* type error slice
+(34,21)-(34,32)
+(34,21)-(34,36)
+(34,35)-(34,36)
+(36,3)-(37,50)
+(36,14)-(36,22)
+(36,14)-(36,38)
+(37,17)-(37,31)
+(37,17)-(37,43)
+(37,39)-(37,43)
 *)

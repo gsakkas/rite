@@ -65,44 +65,46 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(25,14)-(25,15)
-a2
-VarG
+(24,7)-(26,42)
+match a2 with
+| [] -> (0 :: a1 , (sum / 10) :: ((sum mod 10) :: a2))
+| h :: t -> ((sum / 10) :: a1 , (sum mod 10) :: a2)
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
 
-(25,29)-(25,39)
-a1
-VarG
+*)
 
-(25,29)-(25,39)
-0
-LitG
-
-(25,29)-(25,39)
-(sum / 10) :: ((sum mod 10) :: a2)
-ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing
-
-(25,29)-(25,55)
-(0 :: a1 , (sum / 10) :: ((sum mod 10) :: a2))
-TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing,ConAppG (Just (TupleG (fromList [BopG VarG LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing]))) Nothing])
-
-(25,52)-(25,54)
-(sum mod 10) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
-
-(26,6)-(26,41)
-a2
-VarG
-
-(26,28)-(26,33)
-sum mod 10
-BopG VarG LitG
-
-(26,37)-(26,39)
-sum
-VarG
-
-(26,37)-(26,39)
-10
-LitG
-
+(* type error slice
+(15,3)-(15,70)
+(15,40)-(15,41)
+(15,40)-(15,45)
+(15,44)-(15,45)
+(15,51)-(15,61)
+(15,51)-(15,63)
+(15,62)-(15,63)
+(18,3)-(30,35)
+(18,12)-(29,52)
+(19,5)-(29,52)
+(19,11)-(26,42)
+(21,7)-(26,42)
+(21,21)-(21,22)
+(24,7)-(26,42)
+(25,9)-(25,77)
+(25,15)-(25,16)
+(25,30)-(25,56)
+(25,44)-(25,56)
+(25,67)-(25,77)
+(26,28)-(26,41)
+(26,29)-(26,34)
+(26,38)-(26,40)
+(27,5)-(29,52)
+(28,5)-(29,52)
+(29,5)-(29,52)
+(29,19)-(29,33)
+(29,19)-(29,45)
+(29,34)-(29,35)
+(29,49)-(29,52)
+(30,3)-(30,13)
+(30,3)-(30,35)
+(30,14)-(30,35)
+(30,15)-(30,18)
 *)

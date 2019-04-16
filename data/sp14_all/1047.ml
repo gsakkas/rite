@@ -82,7 +82,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(26,18)-(37,61)
+(26,3)-(38,71)
 let num =
   if depth < 1
   then rand (0 , 2)
@@ -95,104 +95,21 @@ match num with
 | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,IteG EmptyG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
 
-(27,4)-(37,61)
-depth
-VarG
+*)
 
-(27,4)-(37,61)
-rand
-VarG
-
-(27,4)-(37,61)
-rand
-VarG
-
-(27,4)-(37,61)
-rand (0 , 2)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(27,4)-(37,61)
-rand (2 , 7)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(27,4)-(37,61)
-depth < 1
-BopG VarG LitG
-
-(27,4)-(37,61)
-1
-LitG
-
-(27,4)-(37,61)
-0
-LitG
-
-(27,4)-(37,61)
-2
-LitG
-
-(27,4)-(37,61)
-2
-LitG
-
-(27,4)-(37,61)
-7
-LitG
-
-(27,4)-(37,61)
-if depth < 1
-then rand (0 , 2)
-else rand (2 , 7)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(27,4)-(37,61)
-(0 , 2)
-TupleG (fromList [LitG])
-
-(27,4)-(37,61)
-(2 , 7)
-TupleG (fromList [LitG])
-
-(27,10)-(27,11)
-num
-VarG
-
-(30,36)-(30,37)
-depth
-VarG
-
-(31,38)-(31,39)
-depth
-VarG
-
-(32,40)-(32,41)
-depth
-VarG
-
-(32,65)-(32,66)
-depth
-VarG
-
-(33,38)-(33,39)
-depth
-VarG
-
-(33,63)-(33,64)
-depth
-VarG
-
-(36,26)-(36,27)
-depth
-VarG
-
-(36,51)-(36,52)
-depth
-VarG
-
-(37,27)-(37,28)
-depth
-VarG
-
+(* type error slice
+(21,4)-(21,23)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(26,3)-(38,71)
+(26,19)-(37,62)
+(27,5)-(37,62)
+(28,12)-(28,18)
+(28,12)-(28,21)
+(38,21)-(38,31)
+(38,21)-(38,43)
+(38,49)-(38,59)
+(38,49)-(38,71)
 *)

@@ -10,8 +10,14 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(2,24)-(2,75)
+(2,76)-(2,76)
 [n]
-ListG VarG Nothing
+ListG (fromList [VarG])
 
+*)
+
+(* type error slice
+(2,25)-(2,76)
+(2,40)-(2,76)
+(2,76)-(2,76)
 *)

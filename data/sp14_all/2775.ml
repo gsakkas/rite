@@ -90,15 +90,7 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(23,15)-(43,51)
-fun () -> VarY
-LamG (ConAppG Nothing Nothing)
-
-(23,15)-(43,51)
-VarY
-ConAppG Nothing Nothing
-
-(27,4)-(43,51)
+(27,5)-(43,52)
 match rand (0 , 4) with
 | 0 -> buildSine (build (rand , depth - 1))
 | 1 -> buildCosine (build (rand , depth - 1))
@@ -106,22 +98,20 @@ match rand (0 , 4) with
 | 3 -> buildTimes (build (rand , depth - 2) , build (rand , depth - 2))
 | 4 -> buildThresh (build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
 | _ -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(27,11)-(27,15)
-rand (0 , 4)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
-(28,12)-(28,58)
-0
-LitG
-
-(28,12)-(28,58)
-4
-LitG
-
-(28,12)-(28,58)
-(0 , 4)
-TupleG (fromList [LitG])
-
+(* type error slice
+(23,4)-(43,54)
+(23,16)-(43,52)
+(27,5)-(43,52)
+(27,12)-(27,16)
+(28,23)-(28,59)
+(28,24)-(28,29)
+(28,30)-(28,58)
+(28,31)-(28,44)
+(28,32)-(28,36)
+(43,22)-(43,35)
+(43,23)-(43,27)
 *)

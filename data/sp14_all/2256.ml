@@ -11,12 +11,16 @@ let rec wwhile (f,b) =
 *)
 
 (* changed spans
-(3,46)-(3,57)
+(3,47)-(3,58)
 wwhile (f , b')
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(3,53)-(3,54)
-(f , b')
-TupleG (fromList [VarG])
+*)
 
+(* type error slice
+(2,4)-(3,60)
+(2,17)-(3,58)
+(3,47)-(3,53)
+(3,47)-(3,58)
+(3,54)-(3,55)
 *)

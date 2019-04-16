@@ -136,76 +136,87 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(39,33)-(39,55)
+(39,34)-(39,56)
 exprToString ex2
 AppG (fromList [VarG])
 
-(39,51)-(39,54)
-(^)
-VarG
-
-(39,51)-(39,54)
-"+" ^ (exprToString ex3 ^ (")*(" ^ (exprToString ex1 ^ ("+" ^ (exprToString ex2 ^ ("+" ^ (exprToString ex3 ^ ("+" ^ (exprToString ex4 ^ (")*(" ^ (exprToString ex1 ^ ("+" ^ (exprToString ex2 ^ ("+" ^ (exprToString ex3 ^ ("+" ^ (exprToString ex4 ^ ("+" ^ (exprToString ex5 ^ "))")))))))))))))))))))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(44,48)-(44,70)
-exprToString ex2
-AppG (fromList [VarG])
-
-(45,51)-(45,73)
+(40,37)-(40,55)
 "+"
 LitG
 
-(45,52)-(45,64)
-(^)
-VarG
-
-(45,52)-(45,64)
+(41,40)-(41,45)
 exprToString ex3
 AppG (fromList [VarG])
 
-(45,69)-(45,72)
-(^)
-VarG
+(42,43)-(42,61)
+")*("
+LitG
 
-(45,69)-(45,72)
-"+" ^ (exprToString ex4 ^ (")*(" ^ (exprToString ex1 ^ ("+" ^ (exprToString ex2 ^ ("+" ^ (exprToString ex3 ^ ("+" ^ (exprToString ex4 ^ ("+" ^ (exprToString ex5 ^ "))")))))))))))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+(43,46)-(43,49)
+exprToString ex1
+AppG (fromList [VarG])
 
-(51,66)-(52,76)
+(44,49)-(44,71)
+"+"
+LitG
+
+(45,52)-(45,74)
 exprToString ex2
 AppG (fromList [VarG])
 
-(55,68)-(56,76)
+(46,55)-(46,73)
 "+"
 LitG
 
-(55,69)-(55,81)
-(^)
-VarG
-
-(55,69)-(55,81)
+(47,58)-(47,63)
 exprToString ex3
 AppG (fromList [VarG])
 
-(58,69)-(59,76)
+(48,61)-(48,79)
 "+"
 LitG
 
-(58,70)-(58,82)
-(^)
-VarG
-
-(58,70)-(58,82)
+(50,64)-(50,67)
 exprToString ex4
 AppG (fromList [VarG])
 
-(59,72)-(59,75)
-(^)
+(51,67)-(52,77)
+")*("
+LitG
+
+(55,69)-(56,77)
+exprToString ex1
+AppG (fromList [VarG])
+
+(58,70)-(59,77)
+"+"
+LitG
+
+(62,69)-(62,72)
+ex2
 VarG
 
-(59,72)-(59,75)
-"+" ^ (exprToString ex5 ^ "))")
+(63,69)-(63,73)
+"+" ^ (exprToString ex3 ^ ("+" ^ (exprToString ex4 ^ ("+" ^ (exprToString ex5 ^ "))")))))
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
+*)
+
+(* type error slice
+(17,28)-(17,53)
+(17,29)-(17,46)
+(17,30)-(17,42)
+(17,47)-(17,48)
+(39,34)-(39,56)
+(39,35)-(39,47)
+(44,49)-(44,71)
+(44,50)-(44,62)
+(45,52)-(45,74)
+(45,53)-(45,65)
+(51,67)-(52,77)
+(51,68)-(51,80)
+(55,69)-(56,77)
+(55,70)-(55,82)
+(58,70)-(59,77)
+(58,71)-(58,83)
 *)

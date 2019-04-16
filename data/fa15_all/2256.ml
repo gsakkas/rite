@@ -83,12 +83,22 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(37,39)-(37,75)
+(37,40)-(37,76)
 bigAdd (mulByDigit prod l1) l
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(37,48)-(37,65)
-mulByDigit prod l1
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(31,47)-(31,53)
+(31,47)-(31,78)
+(31,54)-(31,55)
+(31,56)-(31,78)
+(31,57)-(31,67)
+(31,76)-(31,77)
+(37,40)-(37,76)
+(37,41)-(37,47)
+(37,48)-(37,75)
+(37,49)-(37,66)
+(37,50)-(37,60)
 *)

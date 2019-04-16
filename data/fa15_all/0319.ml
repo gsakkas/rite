@@ -47,8 +47,13 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,6)-(18,38)
+(16,7)-(18,39)
 (((x1 + x2) + carry) / 10 , (((x1 + x2) + carry) mod 10) :: accList)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
+TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
 
+*)
+
+(* type error slice
+(16,7)-(18,39)
+(16,10)-(16,34)
 *)

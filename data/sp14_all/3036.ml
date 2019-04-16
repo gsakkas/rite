@@ -20,20 +20,17 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(7,31)-(7,34)
-fun x -> x ^ sep
-LamG (AppG (fromList [EmptyG]))
-
-(7,31)-(7,34)
-x ^ sep
-AppG (fromList [VarG])
-
-(7,31)-(7,38)
+(7,32)-(7,39)
 [fun x -> x ^ sep]
-ListG (LamG EmptyG) Nothing
+ListG (fromList [LamG VarPatG EmptyG])
 
-(7,35)-(7,38)
-x
-VarG
+*)
 
+(* type error slice
+(7,24)-(7,66)
+(7,32)-(7,35)
+(7,32)-(7,39)
+(7,43)-(7,57)
+(7,43)-(7,66)
+(7,65)-(7,66)
 *)

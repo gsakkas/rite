@@ -37,18 +37,24 @@ let rec digitalRoot n =
 *)
 
 (* changed spans
-(15,2)-(15,74)
+(15,3)-(15,75)
 if sumList (digits n) > 9
 then digitalRoot (sumList (digits n))
 else sumList (digits n)
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(15,10)-(15,28)
-sumList (digits n) > 9
-BopG (AppG (fromList [EmptyG])) LitG
+*)
 
-(15,73)-(15,74)
-digits n
-AppG (fromList [VarG])
-
+(* type error slice
+(12,22)-(12,71)
+(12,56)-(12,71)
+(12,60)-(12,71)
+(12,61)-(12,68)
+(12,69)-(12,70)
+(15,3)-(15,75)
+(15,11)-(15,18)
+(15,11)-(15,29)
+(15,66)-(15,73)
+(15,66)-(15,75)
+(15,74)-(15,75)
 *)

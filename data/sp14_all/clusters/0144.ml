@@ -1,6 +1,3 @@
-ConAppG (Just (TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing]))) Nothing
-tens :: (ones :: res)
-tens :: (ones :: res)
-tens :: (ones :: res)
-tens :: (ones :: res)
-v2 :: (h2 :: t2)
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
+listReverse t @ []
+helper [] (h * i) @ []

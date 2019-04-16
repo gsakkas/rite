@@ -30,13 +30,23 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(11,2)-(12,67)
-l1
-VarG
+(12,8)-(12,68)
+(List.append (clone 0
+                    (- diff)) l1 , l2)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(12,20)-(12,60)
-List.append (clone 0 (- diff))
-            l1
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+(12,68)-(12,68)
+(List.append (clone 0 diff)
+             l2 , l1)
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(12,8)-(12,19)
+(12,8)-(12,68)
+(12,20)-(12,68)
+(12,21)-(12,61)
+(12,22)-(12,33)
+(12,34)-(12,60)
 *)

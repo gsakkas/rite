@@ -34,43 +34,26 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(11,15)-(11,16)
+(11,3)-(14,21)
 let x = 1 in
 (x + 1;
 if sumList (digitsOfInt n) > 9
 then additivePersistence (sumList (digitsOfInt n))
 else x)
-LetG NonRec (fromList [LitG]) (SeqG EmptyG EmptyG)
+LetG NonRec (fromList [(VarPatG,LitG)]) (SeqG EmptyG EmptyG)
 
-(12,2)-(14,20)
-x
-VarG
+*)
 
-(12,2)-(14,20)
-x + 1
-BopG VarG LitG
-
-(12,2)-(14,20)
-1
-LitG
-
-(12,2)-(14,20)
-1
-LitG
-
-(12,2)-(14,20)
-x + 1;
-if sumList (digitsOfInt n) > 9
-then additivePersistence (sumList (digitsOfInt n))
-else x
-SeqG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG)
-
-(13,13)-(13,18)
-additivePersistence (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(14,15)-(14,20)
-x
-VarG
-
+(* type error slice
+(8,37)-(8,52)
+(8,41)-(8,52)
+(8,42)-(8,49)
+(11,3)-(14,21)
+(11,15)-(11,18)
+(12,3)-(14,21)
+(13,8)-(13,66)
+(13,13)-(13,66)
+(13,14)-(13,19)
+(14,8)-(14,15)
+(14,8)-(14,21)
 *)

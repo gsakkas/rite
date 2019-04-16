@@ -52,42 +52,34 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(23,28)-(23,52)
-eval (e1 , x , y) < eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,28)-(23,52)
+(23,29)-(23,53)
 if eval (e1 , x , y) < eval (e2 , x , y)
 then eval (e3 , x , y)
 else eval (e4 , x , y)
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(23,40)-(23,52)
-eval
-VarG
+*)
 
-(23,41)-(23,42)
-e1
-VarG
-
-(23,41)-(23,42)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(23,47)-(23,48)
-eval
-VarG
-
-(23,47)-(23,48)
-e2
-VarG
-
-(23,47)-(23,48)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(23,47)-(23,48)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(11,4)-(11,70)
+(11,18)-(11,68)
+(11,39)-(11,68)
+(11,47)-(11,48)
+(15,4)-(23,55)
+(15,15)-(23,53)
+(16,3)-(23,53)
+(17,14)-(17,15)
+(19,15)-(19,18)
+(19,15)-(19,43)
+(19,19)-(19,43)
+(19,26)-(19,42)
+(19,27)-(19,31)
+(20,17)-(20,20)
+(20,17)-(20,45)
+(21,24)-(21,71)
+(22,22)-(22,60)
+(23,29)-(23,40)
+(23,29)-(23,53)
+(23,41)-(23,53)
+(23,42)-(23,43)
 *)

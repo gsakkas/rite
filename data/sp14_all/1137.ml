@@ -72,20 +72,19 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(27,28)-(27,69)
+(27,29)-(27,70)
 abs_float (cos (pi *. eval (e' , x , y)))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(27,39)-(27,42)
-cos (pi *. eval (e' , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
-
-(30,8)-(33,50)
+(30,9)-(33,51)
 abs_float (sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y))))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(30,19)-(30,22)
-sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y)))
-AppG (fromList [BopG EmptyG EmptyG])
+*)
 
+(* type error slice
+(27,29)-(27,70)
+(27,30)-(27,39)
+(30,9)-(33,51)
+(30,10)-(30,19)
 *)

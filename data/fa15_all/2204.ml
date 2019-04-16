@@ -64,28 +64,21 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,16)-(29,74)
+(29,7)-(29,75)
 let comb =
   eval (e1 , x , y) +. eval (e2 , x , y) in
 mod_float comb
           (eval (e3 , x , y))
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(29,58)-(29,62)
-mod_float
-VarG
+*)
 
-(29,58)-(29,62)
-comb
-VarG
-
-(29,58)-(29,62)
-mod_float comb
-          (eval (e3 , x , y))
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(29,58)-(29,62)
-eval (e3 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
+(* type error slice
+(16,3)-(29,75)
+(19,15)-(19,18)
+(19,15)-(19,43)
+(29,7)-(29,16)
+(29,7)-(29,75)
+(29,17)-(29,75)
+(29,18)-(29,58)
 *)

@@ -54,9 +54,16 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(20,8)-(20,70)
+(20,9)-(20,71)
 match x with
 | (f , g) -> ((f + g) + carry) mod 10
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG)])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,BopG EmptyG EmptyG)])
 
+*)
+
+(* type error slice
+(18,9)-(18,71)
+(18,15)-(18,16)
+(20,9)-(20,71)
+(20,15)-(20,16)
 *)

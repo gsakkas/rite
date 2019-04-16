@@ -1,3 +1,6 @@
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-(0 , (d1 + d2) :: result)
-(0 , (arg1 + arg2) :: acc)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+if n < 0
+then []
+else (match n with
+      | 0 -> [0]
+      | _ -> digitsOfInt (n / 10) @ [n mod 10])

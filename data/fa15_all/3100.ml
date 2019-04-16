@@ -68,28 +68,25 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(31,12)-(31,17)
+(31,13)-(31,18)
 (expr1 , x , y)
 TupleG (fromList [VarG])
 
-(31,22)-(31,74)
-x
-VarG
+(31,23)-(31,75)
+abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(31,22)-(31,74)
-y
-VarG
+*)
 
-(31,23)-(31,26)
-abs_float
-VarG
-
-(31,35)-(31,40)
-expr2
-VarG
-
-(31,59)-(31,64)
-expr3
-VarG
-
+(* type error slice
+(16,3)-(31,75)
+(19,29)-(19,48)
+(19,30)-(19,34)
+(19,35)-(19,47)
+(31,7)-(31,19)
+(31,8)-(31,12)
+(31,13)-(31,18)
+(31,23)-(31,75)
+(31,24)-(31,27)
+(31,28)-(31,74)
 *)

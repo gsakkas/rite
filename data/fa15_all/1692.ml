@@ -14,41 +14,26 @@ let rec assoc (d,k,l) =
 *)
 
 (* changed spans
-(3,2)-(5,10)
+(3,3)-(5,11)
 let (h1 , h2) :: t = l in
 match k with
 | h2 -> h1
 | _ -> if l = []
        then d
        else assoc (d , k , t)
-LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,VarG)]) (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
-(3,8)-(3,9)
-l
-VarG
+*)
 
-(3,8)-(3,9)
-match k with
-| h2 -> h1
-| _ -> if l = []
-       then d
-       else assoc (d , k , t)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(4,18)-(4,70)
-h1
-VarG
-
-(4,46)-(4,48)
-l
-VarG
-
-(4,53)-(4,70)
-d
-VarG
-
-(4,53)-(4,70)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(3,3)-(5,11)
+(3,9)-(3,10)
+(4,19)-(4,71)
+(4,22)-(4,23)
+(4,22)-(4,28)
+(4,26)-(4,28)
+(4,34)-(4,36)
+(4,42)-(4,50)
+(4,42)-(4,71)
+(4,43)-(4,45)
 *)

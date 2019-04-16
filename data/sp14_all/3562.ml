@@ -44,65 +44,31 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,6)-(15,71)
+(14,7)-(15,72)
 match (a , x) with
 | ((b , c) , (d , e)) -> (b , (d + e) :: c)
-CaseG (TupleG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [TuplePatG (fromList [EmptyPatG])]),Nothing,TupleG (fromList [EmptyG]))])
 
-(15,37)-(15,71)
-b
-VarG
-
-(15,37)-(15,71)
-(b , (d + e) :: c)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing])
-
-(15,68)-(15,70)
-e
-VarG
-
-(16,4)-(21,51)
-c
-VarG
-
-(20,37)-(20,39)
+(19,23)-(19,52)
 [0 ; 0 ; 9 ; 9]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
-(21,4)-(21,51)
-0
-LitG
-
-(21,4)-(21,51)
-0
-LitG
-
-(21,4)-(21,51)
-9
-LitG
-
-(21,4)-(21,51)
-9
-LitG
-
-(21,4)-(21,51)
-1
-LitG
-
-(21,4)-(21,51)
-0
-LitG
-
-(21,4)-(21,51)
-0
-LitG
-
-(21,4)-(21,51)
-2
-LitG
-
-(21,4)-(21,51)
+(20,12)-(20,41)
 [1 ; 0 ; 0 ; 2]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
+*)
+
+(* type error slice
+(13,5)-(21,52)
+(13,11)-(15,72)
+(13,13)-(15,72)
+(14,7)-(15,72)
+(14,13)-(14,19)
+(14,14)-(14,15)
+(15,38)-(15,72)
+(15,56)-(15,72)
+(21,19)-(21,33)
+(21,19)-(21,45)
+(21,34)-(21,35)
 *)

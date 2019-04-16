@@ -107,142 +107,56 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(39,11)-(50,49)
-int_of_string
-VarG
+(29,20)-(30,56)
+EMPTY
+EmptyG
 
-(39,11)-(50,49)
-sepConcat
-VarG
-
-(39,11)-(50,49)
-List.map
-VarG
-
-(39,11)-(50,49)
-string_of_int
-VarG
-
-(39,11)-(50,49)
-l
-VarG
-
-(39,11)-(50,49)
-i
-VarG
-
-(39,11)-(50,49)
-bigAdd
-VarG
-
-(39,11)-(50,49)
-l
-VarG
-
-(39,11)-(50,49)
-mulByDigit
-VarG
-
-(39,11)-(50,49)
-i
-VarG
-
-(39,11)-(50,49)
-l
-VarG
-
-(39,11)-(50,49)
-fun l ->
-  int_of_string (sepConcat ""
-                           (List.map string_of_int l))
-LamG (AppG (fromList [EmptyG]))
-
-(39,11)-(50,49)
+(51,1)-(51,1)
 fun i ->
   fun l ->
     if i > 0
     then bigAdd l
                 (mulByDigit (i - 1) l)
     else []
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(39,11)-(50,49)
-fun l ->
-  if i > 0
-  then bigAdd l
-              (mulByDigit (i - 1) l)
-  else []
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(39,11)-(50,49)
-int_of_string (sepConcat ""
-                         (List.map string_of_int l))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(39,11)-(50,49)
-sepConcat ""
-          (List.map string_of_int l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(39,11)-(50,49)
-List.map string_of_int l
-AppG (fromList [VarG])
-
-(39,11)-(50,49)
-bigAdd l (mulByDigit (i - 1)
-                     l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(39,11)-(50,49)
-mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(39,11)-(50,49)
-i > 0
-BopG VarG LitG
-
-(39,11)-(50,49)
-i - 1
-BopG VarG LitG
-
-(39,11)-(50,49)
-""
-LitG
-
-(39,11)-(50,49)
-0
-LitG
-
-(39,11)-(50,49)
-1
-LitG
-
-(39,11)-(50,49)
-if i > 0
-then bigAdd l
-            (mulByDigit (i - 1) l)
-else []
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ListG EmptyG Nothing)
-
-(39,11)-(50,49)
-[]
-ListG EmptyG Nothing
-
-(44,18)-(44,64)
-intListToInt
-VarG
-
-(44,18)-(44,64)
+(44,19)-(44,65)
 intListToInt (mulByDigit (intListToInt l1)
                          [s])
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(44,55)-(44,57)
-intListToInt
-VarG
+(49,14)-(49,43)
+List.combine l2 l2
+AppG (fromList [VarG])
 
-(44,63)-(44,64)
-[s]
-ListG VarG Nothing
+*)
 
+(* type error slice
+(4,4)-(10,20)
+(4,13)-(10,18)
+(4,16)-(10,18)
+(9,45)-(9,61)
+(9,46)-(9,57)
+(9,58)-(9,60)
+(15,4)-(27,37)
+(15,12)-(27,35)
+(15,15)-(27,35)
+(27,19)-(27,34)
+(27,20)-(27,27)
+(27,31)-(27,33)
+(30,17)-(30,23)
+(30,17)-(30,48)
+(30,26)-(30,48)
+(30,27)-(30,37)
+(44,9)-(47,44)
+(44,19)-(44,29)
+(44,19)-(44,65)
+(45,12)-(45,21)
+(45,13)-(45,16)
+(46,16)-(46,25)
+(46,17)-(46,20)
+(46,35)-(46,44)
+(46,36)-(46,39)
+(47,20)-(47,29)
+(47,21)-(47,24)
 *)

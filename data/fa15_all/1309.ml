@@ -15,13 +15,15 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(5,2)-(5,34)
-retTuple
-VarG
-
-(5,19)-(5,20)
+(5,3)-(5,35)
 let retTuple = (l1 , l2) in
 retTuple
-LetG NonRec (fromList [TupleG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(VarPatG,TupleG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(5,3)-(5,35)
+(5,27)-(5,35)
+(5,35)-(5,35)
 *)

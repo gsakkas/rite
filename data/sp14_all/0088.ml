@@ -50,128 +50,39 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,22)-(16,23)
+(16,23)-(16,24)
 snd a
 AppG (fromList [VarG])
 
-(16,37)-(16,45)
-snd
-VarG
-
-(16,37)-(16,45)
-a
-VarG
-
-(16,42)-(16,44)
+(16,39)-(16,41)
 fst x + snd x
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(16,56)-(16,64)
-fst
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-snd
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-fst
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-snd
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-fst
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-snd
-VarG
-
-(16,56)-(16,64)
-x
-VarG
-
-(16,56)-(16,64)
-fst x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-snd x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-fst x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-snd x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-fst x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-snd x
-AppG (fromList [VarG])
-
-(16,56)-(16,64)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,56)-(16,64)
-(fst x + snd x) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,56)-(16,64)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,56)-(16,64)
-(fst x + snd x) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,56)-(16,64)
-10
-LitG
-
-(16,56)-(16,64)
-10
-LitG
-
-(16,56)-(16,64)
+(16,43)-(16,45)
 [(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
-(16,57)-(16,59)
+(16,58)-(16,60)
 0
 LitG
 
-(17,16)-(17,18)
+(17,17)-(17,19)
 0
 LitG
 
+*)
+
+(* type error slice
+(16,5)-(19,52)
+(16,11)-(16,65)
+(16,13)-(16,65)
+(16,17)-(16,65)
+(16,23)-(16,24)
+(18,5)-(19,52)
+(18,16)-(18,28)
+(18,16)-(18,56)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
+(19,41)-(19,45)
 *)

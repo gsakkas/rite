@@ -19,50 +19,35 @@ let fixpoint (f,b) = wwhile ((fixpointHelper f b), b);;
 *)
 
 (* changed spans
-(2,20)-(2,70)
+(2,21)-(2,71)
 fun f ->
   fun b ->
     fun b ->
       (f b , if f b = b
              then true
              else false)
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(2,27)-(2,70)
-f
-VarG
-
-(2,27)-(2,70)
-b
-VarG
-
-(2,27)-(2,70)
-fun b ->
-  fun b ->
-    (f b , if f b = b
-           then true
-           else false)
-LamG (LamG EmptyG)
-
-(2,27)-(2,70)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-LamG (TupleG (fromList [EmptyG]))
-
-(2,27)-(2,70)
-f b
-AppG (fromList [VarG])
-
-(2,27)-(2,70)
-(f b , if f b = b
-       then true
-       else false)
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
-
-(7,29)-(7,52)
+(7,30)-(7,53)
 fixpointHelper f b
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(2,4)-(2,73)
+(2,21)-(2,71)
+(2,28)-(2,71)
+(2,61)-(2,71)
+(5,9)-(5,10)
+(5,9)-(5,12)
+(5,47)-(5,53)
+(5,47)-(5,62)
+(5,54)-(5,62)
+(5,55)-(5,56)
+(7,22)-(7,28)
+(7,22)-(7,57)
+(7,29)-(7,57)
+(7,30)-(7,53)
+(7,31)-(7,45)
 *)

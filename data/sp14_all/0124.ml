@@ -52,39 +52,41 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,10)-(22,77)
-a
-VarG
-
-(19,17)-(19,18)
+(14,7)-(22,78)
+let (carry , num) = a in
 let (l1' , l2') = x in
 let addit =
   (l1' + l2') + carry in
 (if addit > 10
  then addit mod 10
  else 0 , (addit / 10) :: num)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(21,52)-(21,54)
-l1'
-VarG
-
-(21,59)-(21,64)
-l2'
-VarG
-
-(22,15)-(22,76)
-(if addit > 10
- then addit mod 10
- else 0 , (addit / 10) :: num)
-TupleG (fromList [IteG EmptyG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(22,73)-(22,74)
-num
-VarG
-
-(23,19)-(23,20)
+(23,20)-(23,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(13,5)-(25,52)
+(13,11)-(22,78)
+(13,13)-(22,78)
+(14,7)-(22,78)
+(14,13)-(14,14)
+(16,11)-(17,57)
+(16,29)-(16,30)
+(17,11)-(17,57)
+(17,12)-(17,13)
+(21,29)-(21,41)
+(21,30)-(21,37)
+(21,38)-(21,40)
+(22,16)-(22,77)
+(22,35)-(22,47)
+(22,53)-(22,77)
+(22,57)-(22,76)
+(22,74)-(22,75)
+(25,19)-(25,33)
+(25,19)-(25,45)
+(25,34)-(25,35)
 *)

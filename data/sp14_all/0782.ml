@@ -81,50 +81,31 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,18)-(17,24)
-e
-VarG
-
-(17,18)-(17,24)
-fun e -> Sine e
-LamG (ConAppG (Just VarG) Nothing)
-
-(17,18)-(17,24)
-Op1 e
-ConAppG (Just VarG) Nothing
-
-(36,72)-(36,73)
-buildCosine
-VarG
-
-(39,14)-(39,25)
-buildSine
-VarG
-
-(39,14)-(42,50)
-randNum3
-VarG
-
-(39,14)-(42,50)
-match randNum3 with
-| 1 -> buildSine (buildOp1 (build (rand , depth - 1)))
-| 2 -> buildCosine (buildOp1 (build (rand , depth - 1)))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
-
-(41,19)-(42,49)
-buildOp1
-VarG
-
-(41,72)-(41,73)
-buildCosine
-VarG
-
-(42,22)-(42,27)
-buildOp1
-VarG
-
-(42,22)-(42,27)
+(29,27)-(29,38)
 build (rand , depth - 1)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
+(30,29)-(30,40)
+build (rand , depth - 1)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(35,17)-(37,51)
+buildOp1 (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(40,17)-(42,51)
+buildOp1 (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+*)
+
+(* type error slice
+(15,4)-(15,56)
+(15,15)-(15,54)
+(35,17)-(37,51)
+(35,18)-(35,26)
+(36,20)-(37,50)
+(40,17)-(42,51)
+(40,18)-(40,26)
+(41,20)-(42,50)
 *)

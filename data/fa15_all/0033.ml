@@ -23,16 +23,17 @@ let _ = digitsOfInt 3124;;
 *)
 
 (* changed spans
-(8,11)-(8,33)
+(8,12)-(8,48)
 digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(8,12)-(8,32)
-(@)
-VarG
+*)
 
-(8,37)-(8,47)
-[n mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(6,7)-(8,48)
+(7,12)-(7,22)
+(7,13)-(7,21)
+(8,12)-(8,34)
+(8,12)-(8,48)
+(8,38)-(8,48)
 *)

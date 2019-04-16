@@ -1,54 +1,32 @@
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-let carry =
-  match a with
-  | (f , g) -> f in
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-let newc =
-  match x with
-  | (f , g) -> if ((f + g) + carry) > 9
-               then 1
-               else 0 in
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+match rand (0 , 1) with
+| 0 -> buildX ()
+| 1 -> buildY ()
+match rand (1 , 7) with
+| 1 -> buildX ()
+| 2 -> buildY ()
+| 3 -> buildSine (if depth = 0
+                  then buildX ()
+                  else build (rand , depth - 1))
+| 4 -> buildCosine (if depth = 0
+                    then buildY ()
+                    else build (rand , depth - 1))
+| 5 -> buildAverage (if depth = 0
+                     then buildX ()
+                     else build (rand , depth - 1) , if depth = 0
+                                                     then buildY ()
+                                                     else build (rand , depth - 1))
+| 6 -> buildTimes (if depth = 0
+                   then buildX ()
+                   else build (rand , depth - 1) , if depth = 0
+                                                   then buildY ()
+                                                   else build (rand , depth - 1))
+| 7 -> buildThresh (if depth = 0
+                    then buildX ()
+                    else build (rand , depth - 1) , if depth = 0
+                                                    then buildY ()
+                                                    else build (rand , depth - 1) , if depth = 0
+                                                                                    then buildX ()
+                                                                                    else build (rand , depth - 1) , if depth = 0
+                                                                                                                    then buildY ()
+                                                                                                                    else build (rand , depth - 1))

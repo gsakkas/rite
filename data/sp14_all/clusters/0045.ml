@@ -1,97 +1,14 @@
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-let (l1 , l2) = x in
-(0 , l1 :: num)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (c , s) = a in
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (s , t) = a in
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
-let (h :: t , _) = a in
-([] , [])
-let (h :: t , _) = a in
-([] , [])
-let (h :: t , _) = a in
-([] , [])
+AppG (fromList [VarG,LitG])
+sepConcat " " l
+min 0.1 l'
+max' 0.1 l'
+r_digitalRoot n (-1)
+f 2 xs
+f 4 xs
+f 0 hd
+b ^ "]"
+helper 0 n
+buildhelper 0 0 expr
+reverseInt n 0
+helpFac n 1
+" " ^ x

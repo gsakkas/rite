@@ -57,36 +57,19 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(21,23)-(21,25)
-evalhelper
-VarG
-
-(21,23)-(21,25)
+(21,24)-(21,26)
 evalhelper p1 x y
 AppG (fromList [VarG])
 
-(21,29)-(21,31)
-x
-VarG
-
-(21,29)-(21,31)
-y
-VarG
-
-(21,29)-(21,31)
-evalhelper
-VarG
-
-(21,29)-(21,31)
+(21,30)-(21,32)
 evalhelper p2 x y
 AppG (fromList [VarG])
 
-(23,8)-(25,30)
-x
-VarG
+*)
 
-(23,8)-(25,30)
-y
-VarG
-
+(* type error slice
+(15,5)-(25,31)
+(21,24)-(21,26)
+(21,24)-(21,32)
+(21,30)-(21,32)
 *)

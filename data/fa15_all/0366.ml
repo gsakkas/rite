@@ -66,40 +66,31 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(2,22)-(2,25)
-fun e -> Sine e
-LamG (ConAppG (Just VarG) Nothing)
-
-(13,11)-(13,20)
-e
-VarG
-
-(13,11)-(13,20)
-Sine e
-ConAppG (Just VarG) Nothing
-
-(33,31)-(33,37)
+(33,32)-(33,38)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(33,43)-(33,49)
+(33,44)-(33,50)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(33,43)-(33,49)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+(36,12)-(36,48)
+buildSine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(35,6)-(37,32)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+*)
 
-(36,16)-(36,47)
-buildSine
-VarG
-
-(36,36)-(36,37)
-depth
-VarG
-
+(* type error slice
+(18,3)-(28,26)
+(20,14)-(20,15)
+(21,15)-(21,18)
+(21,15)-(21,43)
+(21,26)-(21,42)
+(21,27)-(21,31)
+(21,32)-(21,41)
+(21,39)-(21,40)
+(36,12)-(36,16)
+(36,12)-(36,48)
+(36,17)-(36,48)
+(36,46)-(36,47)
 *)

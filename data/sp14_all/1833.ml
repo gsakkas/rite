@@ -16,12 +16,17 @@ let rec listReverse l = match l with | [] -> [] | h::t -> append t [h];;
 *)
 
 (* changed spans
-(6,36)-(6,61)
+(6,37)-(6,62)
 append t [h]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
-(6,59)-(6,60)
-[h]
-ListG VarG Nothing
+*)
 
+(* type error slice
+(3,49)-(3,65)
+(3,50)-(3,56)
+(6,3)-(6,62)
+(6,24)-(6,26)
+(6,37)-(6,43)
+(6,37)-(6,62)
 *)

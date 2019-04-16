@@ -61,8 +61,13 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,65)-(22,66)
+(22,66)-(22,67)
 l
 VarG
 
+*)
+
+(* type error slice
+(22,51)-(22,68)
+(22,66)-(22,67)
 *)

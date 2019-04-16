@@ -9,21 +9,16 @@ let stringOfList f l = "[" ^ ((List.fold_left (^) "" (List.map f l)) ^ "]");;
 *)
 
 (* changed spans
-(2,30)-(2,44)
-List.fold_left
-VarG
-
-(2,30)-(2,44)
-(^)
-VarG
-
-(2,30)-(2,44)
+(2,31)-(2,45)
 List.fold_left (^) ""
                (List.map f l)
 AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
 
-(2,30)-(2,44)
-""
-LitG
+*)
 
+(* type error slice
+(2,30)-(2,52)
+(2,31)-(2,45)
+(2,32)-(2,40)
+(2,46)-(2,47)
 *)

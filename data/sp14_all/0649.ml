@@ -72,31 +72,29 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(31,4)-(32,71)
+(31,5)-(32,72)
 match a with
 | (l1' , a') -> (l1' , bigAdd (mulByDigit x
                                           l1') a')
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
-(32,10)-(32,11)
-l1'
-VarG
+*)
 
-(32,10)-(32,11)
-bigAdd (mulByDigit x l1') a'
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(32,38)-(32,71)
-(l1' , bigAdd (mulByDigit x
-                          l1') a')
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(32,46)-(32,67)
-mulByDigit x l1'
-AppG (fromList [VarG])
-
-(32,59)-(32,60)
-x
-VarG
-
+(* type error slice
+(27,26)-(27,48)
+(27,27)-(27,37)
+(27,38)-(27,45)
+(30,3)-(34,76)
+(30,9)-(32,72)
+(30,11)-(32,72)
+(31,5)-(32,72)
+(31,20)-(31,21)
+(32,5)-(32,72)
+(32,26)-(32,28)
+(32,47)-(32,68)
+(32,48)-(32,58)
+(32,59)-(32,67)
+(34,43)-(34,57)
+(34,43)-(34,69)
+(34,58)-(34,59)
 *)

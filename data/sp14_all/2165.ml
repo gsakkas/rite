@@ -23,28 +23,18 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,20)-(7,46)
+(7,45)-(7,47)
 h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(8,8)-(8,46)
-h
-VarG
-
-(8,8)-(8,46)
-seen
-VarG
-
-(8,8)-(8,46)
-h
-VarG
-
-(8,8)-(8,46)
-seen
-VarG
-
-(8,8)-(8,46)
+(7,47)-(7,47)
 h :: seen
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
+*)
+
+(* type error slice
+(7,21)-(7,47)
+(7,45)-(7,47)
+(7,47)-(7,47)
 *)

@@ -77,20 +77,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(31,36)-(32,52)
+(31,37)-(32,53)
 [((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t)
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(31,37)-(31,57)
-(@)
-VarG
+*)
 
-(32,24)-(32,46)
-(@)
-VarG
-
-(32,24)-(32,51)
-[((h + b) + c) mod 10] @ t
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
+(* type error slice
+(22,16)-(32,55)
+(28,21)-(32,54)
+(28,24)-(28,37)
+(28,35)-(28,36)
+(29,26)-(29,58)
+(29,30)-(29,57)
+(29,31)-(29,34)
+(29,32)-(29,33)
+(29,35)-(29,36)
+(31,23)-(32,54)
+(31,37)-(32,53)
+(31,38)-(31,58)
+(32,25)-(32,47)
+(32,25)-(32,52)
+(32,51)-(32,52)
 *)

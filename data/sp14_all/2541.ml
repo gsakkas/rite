@@ -28,36 +28,25 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(10,13)-(10,14)
-reverseInt n 0
-AppG (fromList [VarG,LitG])
+(9,5)-(12,62)
+let x = reverseInt n 0 / 10
+and y =
+  reverseInt n 0 mod 10 in
+if (x = 0) && (y = 0)
+then []
+else y :: (digitsOfInt x)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (IteG EmptyG EmptyG EmptyG)
 
-(10,17)-(10,19)
-reverseInt
-VarG
+*)
 
-(10,17)-(10,19)
-n
-VarG
-
-(10,17)-(10,19)
-0
-LitG
-
-(11,13)-(11,14)
-reverseInt n 0
-AppG (fromList [VarG,LitG])
-
-(11,19)-(11,21)
-reverseInt
-VarG
-
-(11,19)-(11,21)
-n
-VarG
-
-(11,19)-(11,21)
-0
-LitG
-
+(* type error slice
+(3,18)-(3,28)
+(3,18)-(3,62)
+(9,5)-(12,62)
+(9,14)-(9,24)
+(9,14)-(9,26)
+(10,14)-(10,15)
+(10,14)-(10,20)
+(11,14)-(11,15)
+(11,14)-(11,22)
 *)

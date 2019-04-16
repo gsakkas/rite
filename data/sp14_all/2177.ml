@@ -49,20 +49,19 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(15,14)-(15,32)
+(15,15)-(15,33)
 sin (eval (a , x , y))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(15,18)-(15,22)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(16,16)-(16,34)
+(16,17)-(16,35)
 cos (eval (a , x , y))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(16,20)-(16,24)
-eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(15,15)-(15,18)
+(15,15)-(15,33)
+(16,17)-(16,20)
+(16,17)-(16,35)
 *)

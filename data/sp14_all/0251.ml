@@ -30,8 +30,18 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(12,32)-(12,72)
+(12,71)-(12,73)
 0
 LitG
 
+(12,73)-(12,73)
+1
+LitG
+
+*)
+
+(* type error slice
+(12,33)-(12,73)
+(12,71)-(12,73)
+(12,73)-(12,73)
 *)

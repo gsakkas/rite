@@ -82,52 +82,27 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(50,14)-(50,51)
+(50,15)-(50,71)
 (eval (a , x , y) *. eval (a , x , y)) *. eval (a , x , y)
 BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(50,15)-(50,31)
-eval (a , x , y) *. eval (a , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+*)
 
-(50,16)-(50,28)
-eval
-VarG
-
-(50,29)-(50,30)
-(a , x , y)
-TupleG (fromList [VarG])
-
-(50,34)-(50,50)
-x
-VarG
-
-(50,34)-(50,50)
-y
-VarG
-
-(50,35)-(50,47)
-eval
-VarG
-
-(50,48)-(50,49)
-(a , x , y)
-TupleG (fromList [VarG])
-
-(50,54)-(50,70)
-x
-VarG
-
-(50,54)-(50,70)
-y
-VarG
-
-(50,55)-(50,67)
-eval
-VarG
-
-(50,68)-(50,69)
-(a , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(17,27)-(17,51)
+(17,28)-(17,44)
+(17,29)-(17,41)
+(17,45)-(17,46)
+(39,3)-(50,71)
+(40,14)-(40,15)
+(42,29)-(42,38)
+(42,36)-(42,37)
+(50,15)-(50,52)
+(50,15)-(50,71)
+(50,16)-(50,32)
+(50,17)-(50,29)
+(50,35)-(50,51)
+(50,36)-(50,48)
+(50,55)-(50,71)
+(50,56)-(50,68)
 *)

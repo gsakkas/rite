@@ -17,10 +17,19 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(6,9)-(6,66)
+(6,10)-(6,67)
 (fun input ->
    (let b = f input in
     (b , b <> input)) , b)
-TupleG (fromList [VarG,LamG EmptyG])
+TupleG (fromList [VarG,LamG VarPatG EmptyG])
 
+*)
+
+(* type error slice
+(3,42)-(3,48)
+(3,42)-(3,56)
+(3,49)-(3,56)
+(6,3)-(6,9)
+(6,3)-(6,67)
+(6,10)-(6,67)
 *)

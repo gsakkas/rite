@@ -41,8 +41,18 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,15)-(16,36)
+(14,17)-(14,51)
+a
+VarG
+
+(16,16)-(16,37)
 List.combine l1 l2
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(16,16)-(16,28)
+(16,16)-(16,37)
+(16,29)-(16,37)
 *)

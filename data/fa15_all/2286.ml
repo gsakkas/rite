@@ -110,32 +110,31 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(36,27)-(36,28)
+(36,28)-(36,29)
 4
 LitG
 
-(50,12)-(50,25)
-buildCotangent
-VarG
+(50,13)-(50,46)
+buildCotangent (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(50,26)-(50,45)
-build
-VarG
-
-(50,26)-(50,45)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(51,24)-(51,43)
-build
-VarG
-
-(51,24)-(51,43)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(51,24)-(51,43)
+(51,25)-(51,44)
 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(17,4)-(17,36)
+(17,19)-(17,34)
+(17,23)-(17,34)
+(17,33)-(17,34)
+(25,4)-(25,45)
+(25,18)-(25,43)
+(50,13)-(50,26)
+(50,13)-(50,46)
+(50,27)-(50,46)
+(51,13)-(51,24)
+(51,13)-(51,44)
+(51,25)-(51,44)
 *)

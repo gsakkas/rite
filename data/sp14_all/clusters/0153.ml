@@ -1,13 +1,7 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ConAppG (Just EmptyG) Nothing)
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n < 1
-then []
-else x :: (clone x (n - 1))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (IteG EmptyG EmptyG EmptyG)
+let int =
+  fun list ->
+    fun digInt -> n mod 10 in
+if n > 0
+then digitsOfInt (n / 10)
+else []

@@ -132,21 +132,28 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(54,8)-(55,39)
-a
-VarG
-
-(54,8)-(55,39)
+(54,9)-(55,40)
 let (l2digit2 , templ12) =
   a in
 let multres =
   mulByDigit l2digit templ1 in
 (0 , bigAdd (templ12 @ [0])
             multres)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(55,21)-(55,22)
-templ12
-VarG
+*)
 
+(* type error slice
+(51,3)-(63,50)
+(51,9)-(55,40)
+(51,11)-(55,40)
+(52,5)-(55,40)
+(54,9)-(55,40)
+(55,9)-(55,40)
+(55,21)-(55,30)
+(55,22)-(55,23)
+(55,24)-(55,25)
+(63,17)-(63,31)
+(63,17)-(63,43)
+(63,32)-(63,33)
 *)

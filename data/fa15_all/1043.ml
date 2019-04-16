@@ -78,32 +78,29 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(34,31)-(34,32)
-x
-VarG
+(33,5)-(35,53)
+let r =
+  bigAdd (mulByDigit x
+                     (List.rev l2)) [b] in
+match r with
+| [] -> (0 , 0 :: c)
+| h :: t -> (h , (List.hd t) :: c)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(35,10)-(35,11)
-c
-VarG
+*)
 
-(35,10)-(35,11)
-0
-LitG
-
-(35,10)-(35,11)
-0 :: c
-ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
-
-(35,25)-(35,28)
-(0 , 0 :: c)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing])
-
-(35,39)-(35,52)
-List.hd
-VarG
-
-(35,39)-(35,52)
-List.hd t
-AppG (fromList [VarG])
-
+(* type error slice
+(31,3)-(37,76)
+(31,9)-(35,53)
+(31,11)-(35,53)
+(32,5)-(35,53)
+(32,17)-(32,18)
+(33,5)-(35,53)
+(34,5)-(35,53)
+(35,5)-(35,53)
+(35,26)-(35,29)
+(35,40)-(35,53)
+(37,43)-(37,57)
+(37,43)-(37,69)
+(37,58)-(37,59)
 *)

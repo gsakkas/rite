@@ -1,17 +1,12 @@
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-(d1 + d2) :: result
-(fir + sec) :: b2
-(fir + sec) :: b2
-(arg1 + arg2) :: acc
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
-(h1 + h2) :: list1
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| h :: t -> if h = 0
+            then removeZero t
+            else l
+match y with
+| [] -> []
+| hd :: tl -> if tl = []
+              then [(hd , x)]
+              else (hd , x) :: (argmaker x
+                                         tl)

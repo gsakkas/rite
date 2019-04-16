@@ -1,25 +1,7 @@
-BopG (AppG (fromList [EmptyG])) VarG
-f b = b
-f b = b
-f b = b
-f b = b
-f b' = b'
-f b' = b'
-f b = b
-eval (a , x , y) *. pi
-eval (a , x , y) *. pi
-eval (a , x , y) *. pi
-add x + prev
-add x + prev
-add x + prev
-f b <> b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
-f b = b
+TupleG (fromList [VarG,ConAppG (Just EmptyG)])
+(t1 , (((h1 + x) + rh) mod 10) :: rt)
+(c , c :: s)
+(p1 , (re / 10) :: ((re mod 10) :: b))
+(t , (x + h) :: b)
+(c , d :: t)
+(len , (-1) :: (((sum mod 10) + 1) :: xs'))

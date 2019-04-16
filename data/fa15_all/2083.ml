@@ -11,11 +11,17 @@ let rec sumList xs =
 *)
 
 (* changed spans
-(3,2)-(3,60)
+(3,3)-(3,61)
 match xs with
 | [] -> 0
 | h :: _ -> h
 | h :: t -> h + sumList t
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,BopG EmptyG EmptyG),(ConsPatG VarPatG WildPatG,Nothing,VarG),(ConPatG Nothing,Nothing,LitG)])
 
+*)
+
+(* type error slice
+(3,3)-(3,61)
+(3,25)-(3,26)
+(3,34)-(3,35)
 *)

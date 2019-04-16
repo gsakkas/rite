@@ -11,33 +11,15 @@ let rec sumList xs = sum xs;;
 *)
 
 (* changed spans
-(2,56)-(2,60)
-list
-VarG
+(2,22)-(2,78)
+sum xs
+AppG (fromList [VarG])
 
-(2,56)-(2,60)
-0
-LitG
+*)
 
-(2,56)-(2,60)
-match list with
-| [] -> 0
-| head :: tail -> head
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,LitG)])
-
-(2,56)-(2,77)
-fun list ->
-  match list with
-  | [] -> 0
-  | head :: tail -> head
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(2,63)-(2,77)
-fun xs -> sum xs
-LamG (AppG (fromList [EmptyG]))
-
-(2,72)-(2,76)
-sum
-VarG
-
+(* type error slice
+(2,22)-(2,78)
+(2,28)-(2,35)
+(2,64)-(2,78)
+(2,65)-(2,72)
 *)

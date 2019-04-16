@@ -60,19 +60,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(22,6)-(23,48)
-a1
-VarG
-
-(22,6)-(23,48)
-h
-VarG
-
-(22,6)-(23,48)
-0
-LitG
-
-(22,6)-(23,48)
+(22,7)-(23,49)
 let test =
   match a1 with
   | [] -> 0
@@ -80,16 +68,24 @@ let test =
 let sum =
   (l1x + l2x) + test in
 ((sum / 10) :: a1 , (sum mod 10) :: a2)
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(22,6)-(23,48)
-match a1 with
-| [] -> 0
-| h :: t -> h
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,LitG)])
+*)
 
-(22,30)-(22,32)
-test
-VarG
-
+(* type error slice
+(19,5)-(26,52)
+(19,11)-(23,49)
+(19,13)-(23,49)
+(20,7)-(23,49)
+(21,7)-(23,49)
+(21,21)-(21,22)
+(22,7)-(23,49)
+(22,17)-(22,33)
+(22,31)-(22,33)
+(23,7)-(23,49)
+(23,8)-(23,26)
+(23,23)-(23,25)
+(26,19)-(26,33)
+(26,19)-(26,45)
+(26,34)-(26,35)
 *)

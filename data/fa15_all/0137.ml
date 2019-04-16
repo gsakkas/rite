@@ -74,154 +74,30 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(37,14)-(37,31)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(37,15)-(37,27)
-eval
-VarG
-
-(37,28)-(37,30)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(37,32)-(37,33)
+(37,7)-(37,72)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(37,42)-(37,59)
-y
-VarG
-
-(37,43)-(37,55)
-eval
-VarG
-
-(37,56)-(37,58)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(37,60)-(37,61)
-x
-VarG
-
-(38,21)-(38,38)
-y
-VarG
-
-(38,21)-(38,38)
+(38,22)-(38,67)
 eval (e1 , x , y) *. eval (e2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(38,21)-(38,38)
-2.0
-LitG
-
-(38,22)-(38,34)
-eval
-VarG
-
-(38,35)-(38,37)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(38,39)-(38,40)
-x
-VarG
-
-(38,42)-(38,45)
-x
-VarG
-
-(38,48)-(38,65)
-y
-VarG
-
-(38,49)-(38,61)
-eval
-VarG
-
-(38,62)-(38,64)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(41,9)-(41,26)
-y
-VarG
-
-(41,9)-(41,26)
-eval (e1 , x , y) < eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(41,9)-(41,26)
+(40,7)-(45,80)
 if eval (e1 , x , y) < eval (e2 , x , y)
 then eval (e3 , x , y)
 else eval (e4 , x , y)
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(41,10)-(41,22)
-eval
-VarG
+*)
 
-(41,23)-(41,25)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(41,27)-(41,28)
-x
-VarG
-
-(43,15)-(43,32)
-y
-VarG
-
-(43,16)-(43,28)
-eval
-VarG
-
-(43,29)-(43,31)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(43,33)-(43,34)
-x
-VarG
-
-(45,21)-(45,38)
-y
-VarG
-
-(45,22)-(45,34)
-eval
-VarG
-
-(45,35)-(45,37)
-(e3 , x , y)
-TupleG (fromList [VarG])
-
-(45,39)-(45,40)
-x
-VarG
-
-(45,49)-(45,66)
-y
-VarG
-
-(45,50)-(45,62)
-eval
-VarG
-
-(45,63)-(45,65)
-(e4 , x , y)
-TupleG (fromList [VarG])
-
-(45,67)-(45,68)
-x
-VarG
-
-(45,69)-(45,72)
-x
-VarG
-
+(* type error slice
+(31,3)-(45,80)
+(34,16)-(34,19)
+(34,16)-(34,45)
+(37,7)-(37,72)
+(37,12)-(37,13)
+(38,22)-(38,67)
+(38,40)-(38,41)
+(40,7)-(45,80)
+(40,11)-(40,12)
 *)

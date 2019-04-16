@@ -41,18 +41,27 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,26)
-(@)
-VarG
+(16,15)-(16,67)
+(mulByDigit x l1 @ clone 0
+                         (List.length a)) @ a
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(16,16)-(16,26)
-mulByDigit x l1
-AppG (fromList [VarG])
-
-(18,28)-(18,75)
+(18,29)-(18,76)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(16,3)-(18,76)
+(16,9)-(16,67)
+(16,45)-(16,60)
+(16,46)-(16,57)
+(16,58)-(16,59)
+(18,29)-(18,76)
+(18,43)-(18,57)
+(18,43)-(18,69)
+(18,58)-(18,59)
 *)

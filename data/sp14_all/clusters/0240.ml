@@ -1,2 +1,5 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (ListG EmptyG Nothing)
-if v = 0 then [1] else [0]
+CaseG (AppG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+match f b with
+| (f' , x') -> if x'
+               then wwhile (f , f')
+               else f'

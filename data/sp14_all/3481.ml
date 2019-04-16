@@ -80,72 +80,45 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(32,27)-(32,54)
+(32,28)-(32,55)
 (build (rand , depth - 1) , build (rand , depth - 1))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(33,14)-(33,24)
-build
-VarG
-
-(33,14)-(33,24)
-rand
-VarG
-
-(33,14)-(33,24)
-depth
-VarG
-
-(33,14)-(33,24)
-buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(33,14)-(33,24)
-depth - 1
-BopG VarG LitG
-
-(33,14)-(33,24)
-1
-LitG
-
-(33,14)-(33,24)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(33,25)-(33,52)
+(33,26)-(33,53)
 (build (rand , depth - 1) , build (rand , depth - 1))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
-(34,14)-(34,25)
-build
-VarG
-
-(34,14)-(34,25)
-rand
-VarG
-
-(34,14)-(34,25)
-depth
-VarG
-
-(34,14)-(34,25)
-buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(34,14)-(34,25)
-depth - 1
-BopG VarG LitG
-
-(34,14)-(34,25)
-1
-LitG
-
-(34,14)-(34,25)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(34,26)-(34,53)
+(34,27)-(34,54)
 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
 TupleG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,68)
+(19,4)-(19,42)
+(19,17)-(19,40)
+(30,15)-(30,24)
+(30,15)-(30,52)
+(30,25)-(30,52)
+(30,26)-(30,31)
+(32,15)-(32,27)
+(32,15)-(32,55)
+(32,28)-(32,55)
+(32,29)-(32,34)
+(33,15)-(33,25)
+(33,15)-(33,53)
+(33,26)-(33,53)
+(33,27)-(33,32)
+(34,15)-(34,26)
+(34,15)-(34,54)
+(34,27)-(34,54)
+(34,28)-(34,33)
 *)

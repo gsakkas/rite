@@ -62,7 +62,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(19,2)-(31,60)
+(19,3)-(31,61)
 match e with
 | VarX -> x
 | VarY -> y
@@ -73,6 +73,31 @@ match e with
 | Thresh (a , b , a_less , b_less) -> if eval (a , x , y) < eval (b , x , y)
                                       then eval (a_less , x , y)
                                       else eval (b_less , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
+*)
+
+(* type error slice
+(14,28)-(14,37)
+(14,28)-(14,59)
+(19,3)-(31,61)
+(22,16)-(22,19)
+(22,16)-(22,45)
+(22,27)-(22,44)
+(22,28)-(22,32)
+(22,33)-(22,43)
+(30,21)-(30,30)
+(30,21)-(30,40)
+(30,31)-(30,40)
+(30,32)-(30,36)
+(30,37)-(30,39)
+(31,25)-(31,34)
+(31,26)-(31,30)
+(31,31)-(31,33)
+(31,38)-(31,47)
+(31,39)-(31,43)
+(31,44)-(31,46)
+(31,52)-(31,61)
+(31,53)-(31,57)
+(31,58)-(31,60)
 *)

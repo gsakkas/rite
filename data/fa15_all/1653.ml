@@ -51,66 +51,36 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,9)-(15,37)
-a
-VarG
-
-(15,9)-(15,37)
+(15,10)-(15,38)
 let (carry , ans) = a in
 let (y , z) = x in
 ((y + z) + carry) > 9
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(15,27)-(15,28)
-y + z
-BopG VarG VarG
-
-(15,36)-(15,37)
-carry
-VarG
-
-(16,11)-(16,53)
-a
-VarG
-
-(16,11)-(16,53)
+(16,12)-(16,54)
 let (carry , ans) = a in
 (1 , let (y , z) = x in
      [((y + z) + carry) mod 10] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(16,34)-(16,46)
-((y + z) + carry) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,35)-(16,36)
-y + z
-BopG VarG VarG
-
-(16,44)-(16,46)
-carry
-VarG
-
-(16,50)-(16,51)
-ans
-VarG
-
-(16,50)-(16,51)
+(17,12)-(17,49)
 let (carry , ans) = a in
 (0 , let (y , z) = x in
      [(y + z) + carry] @ ans)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(17,35)-(17,36)
-y + z
-BopG VarG VarG
+*)
 
-(17,44)-(17,45)
-carry
-VarG
-
-(18,4)-(20,51)
-ans
-VarG
-
+(* type error slice
+(14,5)-(20,52)
+(14,11)-(17,49)
+(14,13)-(17,49)
+(15,7)-(17,49)
+(16,34)-(16,52)
+(16,49)-(16,50)
+(16,51)-(16,52)
+(17,12)-(17,49)
+(20,19)-(20,33)
+(20,19)-(20,45)
+(20,34)-(20,35)
 *)

@@ -17,59 +17,24 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(4,29)-(4,46)
+(4,30)-(4,47)
 if f b = b
 then (fun b'' ->
         (f b , false))
 else (fun b'' -> (f b , true))
-IteG (BopG EmptyG EmptyG) (LamG EmptyG) (LamG EmptyG)
+IteG (BopG EmptyG EmptyG) (LamG VarPatG EmptyG) (LamG VarPatG EmptyG)
 
-(4,30)-(4,31)
-f b
-AppG (fromList [VarG])
+*)
 
-(4,30)-(4,31)
-f b = b
-BopG (AppG (fromList [EmptyG])) VarG
-
-(4,33)-(4,45)
-b
-VarG
-
-(4,34)-(4,39)
-b
-VarG
-
-(4,34)-(4,39)
-fun b'' -> (f b , false)
-LamG (TupleG (fromList [EmptyG]))
-
-(4,34)-(4,39)
-(f b , false)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(4,43)-(4,44)
-f
-VarG
-
-(4,43)-(4,44)
-fun b'' -> (f b , true)
-LamG (TupleG (fromList [EmptyG]))
-
-(4,43)-(4,44)
-f b
-AppG (fromList [VarG])
-
-(4,43)-(4,44)
-false
-LitG
-
-(4,43)-(4,44)
-(f b , true)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(4,48)-(4,49)
-true
-LitG
-
+(* type error slice
+(2,38)-(2,39)
+(2,38)-(2,41)
+(2,56)-(2,62)
+(2,56)-(2,70)
+(2,63)-(2,70)
+(2,64)-(2,65)
+(4,22)-(4,28)
+(4,22)-(4,51)
+(4,29)-(4,51)
+(4,30)-(4,47)
 *)

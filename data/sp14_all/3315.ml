@@ -15,16 +15,20 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(5,14)-(5,24)
-List.append
-VarG
+(5,13)-(5,48)
+List.append (mulByDigit i t)
+            [h * i]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(5,14)-(5,24)
-mulByDigit i t
-AppG (fromList [VarG])
+*)
 
-(5,30)-(5,46)
-[h * i]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(2,4)-(5,50)
+(2,20)-(5,48)
+(2,22)-(5,48)
+(3,3)-(5,48)
+(5,13)-(5,48)
+(5,14)-(5,30)
+(5,14)-(5,47)
+(5,15)-(5,25)
 *)

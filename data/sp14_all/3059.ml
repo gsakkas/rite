@@ -57,148 +57,60 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(15,17)-(15,51)
+(15,18)-(15,58)
 "sin (pi*" ^ (exprToString var1 ^ ")")
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(15,18)-(15,28)
-(^)
-VarG
-
-(15,31)-(15,50)
-(^)
-VarG
-
-(15,31)-(15,50)
-exprToString var1 ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(16,19)-(16,53)
+(16,20)-(16,60)
 "cos (pi*" ^ (exprToString var2 ^ ")")
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(16,20)-(16,30)
-(^)
-VarG
-
-(16,33)-(16,52)
-(^)
-VarG
-
-(16,33)-(16,52)
-exprToString var2 ^ ")"
+(18,7)-(18,74)
+"((" ^ (exprToString var3 ^ (" + " ^ (exprToString var4 ^ ")/2)")))
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(18,9)-(18,13)
-(^)
-VarG
-
-(18,14)-(18,26)
-(^)
-VarG
-
-(18,14)-(18,26)
-exprToString var3 ^ (" + " ^ (exprToString var4 ^ ")/2)"))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(18,14)-(18,26)
-exprToString var3
-AppG (fromList [VarG])
-
-(18,35)-(18,40)
-(^)
-VarG
-
-(18,35)-(18,40)
-" + " ^ (exprToString var4 ^ ")/2)")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(18,44)-(18,63)
-(^)
-VarG
-
-(18,44)-(18,63)
-exprToString var4 ^ ")/2)"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(19,25)-(19,54)
+(19,26)-(19,77)
 exprToString var5 ^ (" * " ^ exprToString var6)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(19,26)-(19,45)
-(^)
-VarG
-
-(19,48)-(19,53)
-(^)
-VarG
-
-(19,48)-(19,53)
-" * " ^ exprToString var6
+(21,7)-(25,14)
+"(" ^ (exprToString var7 ^ ("<" ^ (exprToString var8 ^ (" ? " ^ (exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")")))))))
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(21,13)-(21,16)
-(^)
-VarG
+*)
 
-(21,17)-(21,29)
-(^)
-VarG
-
-(21,17)-(21,29)
-exprToString var7 ^ ("<" ^ (exprToString var8 ^ (" ? " ^ (exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")"))))))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(21,17)-(21,29)
-exprToString var7
-AppG (fromList [VarG])
-
-(21,38)-(21,41)
-(^)
-VarG
-
-(21,38)-(21,41)
-"<" ^ (exprToString var8 ^ (" ? " ^ (exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")")))))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(21,45)-(21,64)
-(^)
-VarG
-
-(21,45)-(21,64)
-exprToString var8 ^ (" ? " ^ (exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")"))))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(21,68)-(21,73)
-(^)
-VarG
-
-(21,68)-(21,73)
-" ? " ^ (exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")")))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(22,11)-(22,30)
-(^)
-VarG
-
-(22,11)-(22,30)
-exprToString var9 ^ (" : " ^ (exprToString var0 ^ ")"))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(23,12)-(23,17)
-(^)
-VarG
-
-(23,12)-(23,17)
-" : " ^ (exprToString var0 ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(24,11)-(24,30)
-(^)
-VarG
-
-(24,11)-(24,30)
-exprToString var0 ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
+(* type error slice
+(11,4)-(25,16)
+(11,22)-(25,14)
+(12,3)-(25,14)
+(13,14)-(13,17)
+(15,18)-(15,52)
+(15,18)-(15,58)
+(15,19)-(15,29)
+(15,32)-(15,51)
+(15,33)-(15,45)
+(15,55)-(15,58)
+(16,20)-(16,54)
+(16,20)-(16,60)
+(16,21)-(16,31)
+(16,57)-(16,60)
+(18,7)-(18,74)
+(18,8)-(18,42)
+(18,9)-(18,33)
+(18,10)-(18,14)
+(18,36)-(18,41)
+(18,68)-(18,74)
+(19,26)-(19,55)
+(19,26)-(19,77)
+(19,49)-(19,54)
+(21,7)-(25,14)
+(21,8)-(23,19)
+(21,10)-(21,75)
+(21,12)-(21,43)
+(21,13)-(21,36)
+(21,14)-(21,17)
+(21,39)-(21,42)
+(21,69)-(21,74)
+(23,13)-(23,18)
+(25,11)-(25,14)
 *)

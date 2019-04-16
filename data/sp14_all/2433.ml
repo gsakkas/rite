@@ -15,8 +15,18 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(5,7)-(5,66)
+(5,53)-(5,62)
+l1
+VarG
+
+(5,67)-(5,67)
 (l1 , l2)
 TupleG (fromList [VarG])
 
+*)
+
+(* type error slice
+(5,8)-(5,67)
+(5,52)-(5,67)
+(5,67)-(5,67)
 *)

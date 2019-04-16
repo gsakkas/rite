@@ -56,76 +56,45 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(19,36)-(19,38)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(21,14)-(30,55)
-atan
-VarG
-
-(21,14)-(30,55)
-atan 1.0
-AppG (fromList [LitG])
-
-(21,14)-(30,55)
-4.0
-LitG
-
-(21,14)-(30,55)
-1.0
-LitG
-
-(24,21)-(24,23)
+(23,15)-(23,24)
 x
 VarG
 
-(25,14)-(25,23)
-sin
-VarG
-
-(25,14)-(25,40)
+(24,15)-(24,24)
 y
 VarG
 
-(25,24)-(25,40)
-pi
-VarG
+(25,15)-(25,41)
+sin (pi *. eval (e , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(25,24)-(25,40)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+(26,17)-(26,45)
+cos (pi *. eval (e , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(26,16)-(26,27)
-cos
-VarG
-
-(26,28)-(26,44)
-pi
-VarG
-
-(26,28)-(26,44)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(27,36)-(27,74)
+(27,24)-(27,75)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(27,37)-(27,54)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(28,32)-(28,70)
-2.0
-LitG
-
-(28,33)-(28,50)
+(28,22)-(28,71)
 eval (e1 , x , y) *. eval (e2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(30,51)-(30,52)
+(30,7)-(30,56)
 0.0
 LitG
 
+*)
+
+(* type error slice
+(21,4)-(30,58)
+(21,15)-(30,56)
+(22,3)-(30,56)
+(22,9)-(22,10)
+(23,15)-(23,21)
+(23,15)-(23,24)
+(25,25)-(25,41)
+(25,26)-(25,30)
+(25,31)-(25,40)
+(25,32)-(25,33)
 *)

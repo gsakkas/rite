@@ -58,7 +58,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,6)-(20,74)
+(19,7)-(20,75)
 let (fst , sec) = x in
 let (fst' , sec') =
   if (fst + sec) > 9
@@ -70,175 +70,28 @@ let (carry' , digits') =
   then (1 , digits @ [fst'])
   else (0 , digits @ [fst']) in
 (carry' , digits')
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(20,17)-(20,74)
-let (fst' , sec') =
-  if (fst + sec) > 9
-  then ((fst + sec) - 10 , 1)
-  else (fst + sec , 0) in
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,25)-(20,26)
-fst
-VarG
-
-(20,30)-(20,31)
-sec
-VarG
-
-(20,44)-(20,45)
-fst
-VarG
-
-(20,49)-(20,51)
-sec
-VarG
-
-(20,68)-(20,69)
-fst
-VarG
-
-(20,72)-(20,73)
-sec
-VarG
-
-(21,4)-(23,51)
-a
-VarG
-
-(21,4)-(23,51)
-sec'
-VarG
-
-(21,4)-(23,51)
-digits
-VarG
-
-(21,4)-(23,51)
-(@)
-VarG
-
-(21,4)-(23,51)
-fst'
-VarG
-
-(21,4)-(23,51)
-digits
-VarG
-
-(21,4)-(23,51)
-(@)
-VarG
-
-(21,4)-(23,51)
-fst'
-VarG
-
-(21,4)-(23,51)
-carry'
-VarG
-
-(21,4)-(23,51)
-digits'
-VarG
-
-(21,4)-(23,51)
-digits @ [fst']
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(21,4)-(23,51)
-digits @ [fst']
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(21,4)-(23,51)
-sec' = 1
-BopG VarG LitG
-
-(21,4)-(23,51)
-1
-LitG
-
-(21,4)-(23,51)
-1
-LitG
-
-(21,4)-(23,51)
-0
-LitG
-
-(21,4)-(23,51)
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(21,4)-(23,51)
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(21,4)-(23,51)
-if sec' = 1
-then (1 , digits @ [fst'])
-else (0 , digits @ [fst'])
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(21,4)-(23,51)
-(1 , digits @ [fst'])
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(21,4)-(23,51)
-(0 , digits @ [fst'])
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(21,4)-(23,51)
-(carry' , digits')
-TupleG (fromList [VarG])
-
-(21,4)-(23,51)
-[fst']
-ListG VarG Nothing
-
-(21,4)-(23,51)
-[fst']
-ListG VarG Nothing
-
-(22,15)-(22,44)
-(@)
-VarG
-
-(22,15)-(22,44)
+(22,16)-(22,45)
 List.rev (List.combine l1
                        l2) @ [(0 , 0)]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(23,4)-(23,51)
-0
-LitG
+*)
 
-(23,4)-(23,51)
-0
-LitG
-
-(23,4)-(23,51)
-(0 , 0)
-TupleG (fromList [LitG])
-
-(23,4)-(23,51)
-[(0 , 0)]
-ListG (TupleG (fromList [EmptyG])) Nothing
-
+(* type error slice
+(18,5)-(23,52)
+(18,11)-(20,75)
+(18,13)-(20,75)
+(19,7)-(20,75)
+(20,18)-(20,75)
+(20,63)-(20,75)
+(20,73)-(20,74)
+(21,5)-(23,52)
+(21,16)-(21,23)
+(21,20)-(21,22)
+(23,19)-(23,33)
+(23,19)-(23,45)
+(23,34)-(23,35)
+(23,36)-(23,40)
 *)

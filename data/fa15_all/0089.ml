@@ -34,48 +34,25 @@ let rec digitalRoot n =
 *)
 
 (* changed spans
-(8,16)-(8,70)
-digitsOfInt
-VarG
-
-(8,16)-(8,70)
-abs
-VarG
-
-(8,16)-(8,70)
-n
-VarG
-
-(8,16)-(8,70)
-fun n -> digitsOfInt (abs n)
-LamG (AppG (fromList [EmptyG]))
-
-(8,16)-(8,70)
-digitsOfInt (abs n)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(8,16)-(8,70)
-abs n
-AppG (fromList [VarG])
-
-(11,2)-(15,13)
+(11,3)-(15,14)
 let d = digits n in
 let s = sumList d in
 if (n / 10) <> 0
 then digitalRoot s
 else s
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(11,15)-(11,26)
-digits
-VarG
+*)
 
-(12,18)-(12,24)
-d
-VarG
-
-(15,7)-(15,13)
-s
-VarG
-
+(* type error slice
+(5,8)-(5,63)
+(5,9)-(5,29)
+(10,4)-(15,16)
+(10,21)-(15,14)
+(11,3)-(15,14)
+(12,3)-(15,14)
+(13,3)-(15,14)
+(14,8)-(14,53)
+(14,22)-(14,52)
+(14,41)-(14,52)
 *)

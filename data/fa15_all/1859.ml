@@ -49,13 +49,14 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(21,28)-(21,37)
-count
-VarG
-
-(21,28)-(21,58)
+(21,29)-(21,59)
 count (acc + 1)
       (sumList (digits n))
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(21,29)-(21,38)
+(21,29)-(21,59)
 *)

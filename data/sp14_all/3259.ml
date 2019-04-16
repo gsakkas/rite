@@ -23,12 +23,14 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(8,34)-(8,35)
-(^)
-VarG
-
-(8,34)-(8,40)
+(8,19)-(8,41)
 x ^ a
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(8,19)-(8,41)
+(8,35)-(8,41)
+(8,41)-(8,41)
 *)

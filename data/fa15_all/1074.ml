@@ -13,12 +13,14 @@ let pipe fs =
 *)
 
 (* changed spans
-(5,22)-(5,23)
+(5,19)-(5,26)
 a x
 AppG (fromList [VarG])
 
-(5,29)-(5,71)
-x
-VarG
+*)
 
+(* type error slice
+(5,19)-(5,20)
+(5,19)-(5,26)
+(5,23)-(5,24)
 *)

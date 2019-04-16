@@ -10,23 +10,20 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(2,24)-(2,72)
+(2,25)-(2,73)
 let myList = [] in
 if n <= 0
 then []
 else (n mod 10) :: myList
-LetG NonRec (fromList [ListG EmptyG Nothing]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec (fromList [(VarPatG,ListG (fromList []))]) (IteG EmptyG EmptyG EmptyG)
 
-(2,24)-(2,72)
-[]
-ListG EmptyG Nothing
+*)
 
-(2,47)-(2,72)
-(n mod 10) :: myList
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing
-
-(2,70)-(2,71)
-myList
-VarG
-
+(* type error slice
+(2,4)-(2,75)
+(2,21)-(2,73)
+(2,25)-(2,73)
+(2,48)-(2,73)
+(2,59)-(2,70)
+(2,59)-(2,72)
 *)

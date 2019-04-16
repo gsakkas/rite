@@ -85,28 +85,24 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(37,14)-(37,34)
+(37,15)-(37,35)
 buildTimes (next , next)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,25)-(37,29)
-(next , next)
-TupleG (fromList [VarG])
-
-(38,14)-(38,45)
+(38,15)-(38,46)
 buildThresh (next , next , next , next)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(38,26)-(38,30)
-(next , next , next , next)
-TupleG (fromList [VarG])
-
-(40,14)-(40,39)
+(40,15)-(40,40)
 buildGauss (next , next , next)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(40,25)-(40,29)
-(next , next , next)
-TupleG (fromList [VarG])
+*)
 
+(* type error slice
+(26,4)-(26,42)
+(26,17)-(26,40)
+(26,26)-(26,40)
+(37,15)-(37,25)
+(37,15)-(37,35)
 *)

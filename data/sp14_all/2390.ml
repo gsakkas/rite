@@ -23,58 +23,29 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(5,2)-(10,16)
+(5,3)-(10,17)
 match n > 0 with
 | false -> []
 | true -> match n > 9 with
           | false -> n :: (digitsOfInt n)
           | true -> digitsOfInt (n mod 10)
-CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)])),(Nothing,ListG EmptyG Nothing)])
+CaseG (BopG EmptyG EmptyG) (fromList [(LitPatG,Nothing,CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)])),(LitPatG,Nothing,ListG (fromList []))])
 
-(5,8)-(5,9)
-n > 0
-BopG VarG LitG
+*)
 
-(7,13)-(7,15)
-0
-LitG
-
-(9,13)-(9,45)
-match n > 9 with
-| false -> n :: (digitsOfInt n)
-| true -> digitsOfInt (n mod 10)
-CaseG (BopG EmptyG EmptyG) (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ConAppG (Just EmptyG) Nothing)])
-
-(9,14)-(9,28)
-digitsOfInt
-VarG
-
-(9,14)-(9,30)
-n
-VarG
-
-(9,14)-(9,30)
-n
-VarG
-
-(9,14)-(9,30)
-n > 9
-BopG VarG LitG
-
-(9,14)-(9,30)
-9
-LitG
-
-(9,14)-(9,30)
-n :: (digitsOfInt n)
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG])]))) Nothing
-
-(9,32)-(9,34)
-digitsOfInt (n mod 10)
-AppG (fromList [BopG EmptyG EmptyG])
-
-(9,36)-(9,44)
-digitsOfInt
-VarG
-
+(* type error slice
+(2,4)-(2,73)
+(2,24)-(2,71)
+(2,28)-(2,71)
+(2,34)-(2,35)
+(2,34)-(2,39)
+(2,38)-(2,39)
+(2,56)-(2,57)
+(5,3)-(10,17)
+(5,9)-(5,10)
+(9,14)-(9,46)
+(9,15)-(9,29)
+(9,15)-(9,31)
+(9,30)-(9,31)
+(9,33)-(9,35)
 *)

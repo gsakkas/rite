@@ -9,22 +9,20 @@ let rec clone x n = match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x];;
 *)
 
 (* changed spans
-(2,20)-(2,70)
+(2,21)-(2,71)
 match n with
 | 0 -> []
 | _ -> clone x (n - 1) @ [x]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(2,51)-(2,56)
-(@)
-VarG
+*)
 
-(2,51)-(2,56)
-clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
-
-(2,68)-(2,69)
-[x]
-ListG VarG Nothing
-
+(* type error slice
+(2,4)-(2,73)
+(2,15)-(2,71)
+(2,17)-(2,71)
+(2,21)-(2,71)
+(2,51)-(2,71)
+(2,52)-(2,57)
+(2,52)-(2,67)
 *)

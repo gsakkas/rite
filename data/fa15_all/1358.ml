@@ -57,7 +57,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(14,2)-(28,81)
+(14,3)-(28,82)
 match e with
 | VarX -> x
 | VarY -> y
@@ -68,76 +68,17 @@ match e with
 | Thresh (th1 , th2 , th3 , th4) -> if eval (th1 , x , y) < eval (th2 , x , y)
                                     then eval (th3 , x , y)
                                     else eval (th4 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(17,21)-(17,32)
-pi *. eval (sine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+*)
 
-(18,38)-(18,41)
-sine
-VarG
-
-(18,38)-(18,41)
-x
-VarG
-
-(18,38)-(18,41)
-y
-VarG
-
-(18,38)-(18,41)
-cos (pi *. eval (cosine , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
-
-(18,43)-(18,44)
-pi
-VarG
-
-(18,43)-(18,44)
-eval
-VarG
-
-(18,43)-(18,44)
-cosine
-VarG
-
-(18,43)-(18,44)
-eval (cosine , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(18,43)-(18,44)
-pi *. eval (cosine , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(18,43)-(18,44)
-(cosine , x , y)
-TupleG (fromList [VarG])
-
-(20,14)-(20,31)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(20,32)-(20,33)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(21,21)-(21,38)
-eval (t1 , x , y) *. eval (t2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(21,39)-(21,40)
-2.0
-LitG
-
-(24,9)-(24,27)
-eval (th1 , x , y) < eval (th2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(24,28)-(24,29)
-if eval (th1 , x , y) < eval (th2 , x , y)
-then eval (th3 , x , y)
-else eval (th4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(11,4)-(11,29)
+(11,10)-(11,27)
+(14,3)-(28,82)
+(17,18)-(17,21)
+(17,18)-(17,33)
+(17,22)-(17,33)
+(17,23)-(17,25)
+(17,28)-(17,32)
 *)

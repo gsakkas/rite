@@ -12,7 +12,7 @@ let pipe fs =
 *)
 
 (* changed spans
-(3,14)-(3,23)
+(3,13)-(3,24)
 fun g ->
   fun b ->
     fun y ->
@@ -20,57 +20,23 @@ fun g ->
         match n with
         | [] -> n
         | _ -> y b
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(3,16)-(3,23)
-fun b ->
-  fun y ->
-    fun n ->
-      match n with
-      | [] -> n
-      | _ -> y b
-LamG (LamG EmptyG)
-
-(3,16)-(3,23)
-fun y ->
-  fun n ->
-    match n with
-    | [] -> n
-    | _ -> y b
-LamG (LamG EmptyG)
-
-(3,20)-(3,23)
-n
-VarG
-
-(3,20)-(3,23)
-n
-VarG
-
-(3,20)-(3,23)
-match n with
-| [] -> n
-| _ -> y b
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
-
-(3,22)-(3,23)
-y
-VarG
-
-(3,27)-(3,67)
-b
-VarG
-
-(3,38)-(3,39)
-f
-VarG
-
-(3,38)-(3,39)
+(3,39)-(3,40)
 f 0 []
-AppG (fromList [LitG,ListG EmptyG Nothing])
+AppG (fromList [LitG,ListG (fromList [])])
 
-(3,43)-(3,67)
-[]
-ListG EmptyG Nothing
+*)
 
+(* type error slice
+(3,3)-(3,68)
+(3,9)-(3,24)
+(3,11)-(3,24)
+(3,13)-(3,24)
+(3,28)-(3,68)
+(3,39)-(3,40)
+(3,44)-(3,58)
+(3,44)-(3,68)
+(3,59)-(3,60)
+(3,61)-(3,65)
 *)

@@ -50,7 +50,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(14,2)-(22,56)
+(14,3)-(22,57)
 match e with
 | VarX -> x
 | VarY -> y
@@ -60,114 +60,19 @@ match e with
 | Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
                                 then eval (e3 , x , y)
                                 else eval (e4 , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(18,29)-(18,33)
-(e' , x , y)
-TupleG (fromList [VarG])
+*)
 
-(19,23)-(19,47)
-y
-VarG
-
-(19,23)-(19,47)
-(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(19,23)-(19,51)
-x
-VarG
-
-(19,30)-(19,32)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(19,37)-(19,46)
-x
-VarG
-
-(19,37)-(19,46)
-y
-VarG
-
-(19,43)-(19,45)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(19,50)-(19,51)
-x
-VarG
-
-(20,21)-(20,43)
-y
-VarG
-
-(20,21)-(20,43)
-2.0
-LitG
-
-(20,27)-(20,29)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(20,34)-(20,43)
-x
-VarG
-
-(20,34)-(20,43)
-y
-VarG
-
-(20,40)-(20,42)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(22,6)-(22,56)
-x
-VarG
-
-(22,6)-(22,56)
-y
-VarG
-
-(22,15)-(22,17)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(22,21)-(22,30)
-x
-VarG
-
-(22,21)-(22,30)
-y
-VarG
-
-(22,27)-(22,29)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(22,36)-(22,43)
-x
-VarG
-
-(22,36)-(22,43)
-y
-VarG
-
-(22,41)-(22,43)
-(e3 , x , y)
-TupleG (fromList [VarG])
-
-(22,49)-(22,56)
-x
-VarG
-
-(22,49)-(22,56)
-y
-VarG
-
-(22,54)-(22,56)
-(e4 , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(13,4)-(22,59)
+(13,15)-(22,57)
+(14,3)-(22,57)
+(17,16)-(17,19)
+(17,16)-(17,37)
+(17,27)-(17,36)
+(17,28)-(17,32)
+(17,33)-(17,35)
+(19,24)-(19,48)
+(19,24)-(19,52)
 *)

@@ -1,5 +1,6 @@
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG),(Nothing,LitG),(Just (BopG EmptyG EmptyG),BopG EmptyG EmptyG)])
-match n with
-| 1 -> 1
-| _ when (n mod 2) = 0 -> n / 2
-| _ -> (3 * n) + 1
+TupleG (fromList [IteG EmptyG EmptyG EmptyG])
+(if depth = 0
+ then buildX ()
+ else build (rand , depth - 1) , if depth = 0
+                                 then buildY ()
+                                 else build (rand , depth - 1))

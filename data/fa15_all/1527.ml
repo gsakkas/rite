@@ -70,156 +70,70 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(34,32)-(34,34)
+(34,33)-(34,35)
 (e1 , x , y)
 TupleG (fromList [VarG])
 
-(35,17)-(35,38)
-x
-VarG
-
-(35,17)-(35,38)
-y
-VarG
-
-(35,34)-(35,36)
+(35,35)-(35,37)
 (e1 , x , y)
 TupleG (fromList [VarG])
 
-(36,23)-(36,40)
-x
-VarG
-
-(36,23)-(36,40)
-y
-VarG
-
-(36,24)-(36,26)
-eval
-VarG
-
-(36,24)-(36,26)
+(36,25)-(36,27)
 eval (e1 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(36,24)-(36,26)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(36,30)-(36,32)
-x
-VarG
-
-(36,30)-(36,32)
-y
-VarG
-
-(36,30)-(36,32)
-eval
-VarG
-
-(36,30)-(36,32)
+(36,31)-(36,33)
 eval (e2 , x , y)
 AppG (fromList [TupleG (fromList [EmptyG])])
 
-(36,30)-(36,32)
-(e2 , x , y)
-TupleG (fromList [VarG])
+(37,22)-(37,39)
+eval (e1 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(36,37)-(36,40)
-x
-VarG
+(37,43)-(37,60)
+eval (e2 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(36,37)-(36,40)
-y
-VarG
+(39,10)-(39,27)
+eval (e1 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,22)-(37,34)
-eval
-VarG
+(39,30)-(39,47)
+eval (e2 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,35)-(37,37)
-(e1 , x , y)
-TupleG (fromList [VarG])
+(40,12)-(40,27)
+eval (e3 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,42)-(37,59)
-x
-VarG
+(41,12)-(41,27)
+eval (e4 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(37,42)-(37,59)
-y
-VarG
+*)
 
-(37,43)-(37,55)
-eval
-VarG
-
-(37,56)-(37,58)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(39,6)-(41,26)
-x
-VarG
-
-(39,6)-(41,26)
-y
-VarG
-
-(39,10)-(39,22)
-eval
-VarG
-
-(39,23)-(39,25)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(39,29)-(39,46)
-x
-VarG
-
-(39,29)-(39,46)
-y
-VarG
-
-(39,30)-(39,42)
-eval
-VarG
-
-(39,43)-(39,45)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(40,11)-(40,23)
-eval
-VarG
-
-(40,11)-(40,26)
-x
-VarG
-
-(40,11)-(40,26)
-y
-VarG
-
-(40,24)-(40,26)
-(e3 , x , y)
-TupleG (fromList [VarG])
-
-(41,11)-(41,23)
-eval
-VarG
-
-(41,11)-(41,26)
-x
-VarG
-
-(41,11)-(41,26)
-y
-VarG
-
-(41,24)-(41,26)
-(e4 , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(15,28)-(15,53)
+(15,29)-(15,46)
+(15,30)-(15,42)
+(15,47)-(15,48)
+(30,4)-(41,29)
+(30,15)-(41,27)
+(31,3)-(41,27)
+(34,16)-(34,19)
+(34,16)-(34,37)
+(34,27)-(34,36)
+(34,28)-(34,32)
+(34,33)-(34,35)
+(36,24)-(36,34)
+(36,25)-(36,27)
+(36,31)-(36,33)
+(37,22)-(37,39)
+(37,22)-(37,60)
+(37,23)-(37,35)
+(37,43)-(37,60)
+(37,44)-(37,56)
+(39,7)-(41,27)
+(41,12)-(41,24)
+(41,12)-(41,27)
 *)

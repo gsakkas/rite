@@ -81,72 +81,96 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(30,29)-(30,34)
+(30,30)-(30,35)
 rand
 VarG
 
-(31,11)-(31,49)
+(31,12)-(31,50)
 buildCosine (build (rand , depth - 1))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(31,23)-(31,28)
-build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(31,30)-(31,35)
+(32,32)-(32,37)
 rand
 VarG
 
-(32,31)-(32,36)
-rand
-VarG
-
-(32,53)-(32,59)
+(32,54)-(32,60)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(33,11)-(33,62)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(33,33)-(33,38)
+(33,34)-(33,39)
 rand
 VarG
 
-(33,55)-(33,61)
+(33,56)-(33,62)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(35,8)-(37,41)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,11)-(36,17)
+(36,12)-(36,18)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(36,19)-(36,25)
+(36,20)-(36,26)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(36,19)-(36,25)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,27)-(36,55)
-()
-ConAppG Nothing (Just (TApp "unit" []))
-
-(36,35)-(36,40)
+(36,36)-(36,41)
 rand
 VarG
 
-(37,20)-(37,25)
+(37,21)-(37,26)
 rand
 VarG
 
-(38,7)-(38,13)
+(38,8)-(38,14)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
+*)
+
+(* type error slice
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,21)-(13,29)
+(13,28)-(13,29)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,68)
+(17,39)-(17,68)
+(17,50)-(17,51)
+(19,4)-(19,42)
+(19,17)-(19,40)
+(19,26)-(19,40)
+(19,37)-(19,39)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(23,4)-(23,23)
+(23,12)-(23,21)
+(25,4)-(38,16)
+(25,16)-(38,14)
+(26,3)-(38,14)
+(28,5)-(37,42)
+(28,17)-(28,21)
+(28,17)-(28,28)
+(29,5)-(37,42)
+(29,11)-(29,16)
+(30,12)-(30,21)
+(30,12)-(30,50)
+(30,22)-(30,50)
+(30,23)-(30,28)
+(30,29)-(30,49)
+(30,30)-(30,35)
+(31,12)-(31,23)
+(31,12)-(31,50)
+(31,24)-(31,29)
+(32,12)-(32,22)
+(32,12)-(32,61)
+(32,23)-(32,61)
+(32,54)-(32,60)
+(35,9)-(35,20)
+(35,9)-(37,42)
+(36,11)-(37,42)
+(36,20)-(36,26)
+(38,8)-(38,14)
 *)

@@ -1,38 +1,13 @@
-AppG (fromList [VarG,ListG EmptyG Nothing])
-List.append r [0]
-List.append r [0]
-[0] @ l1
-[0] @ l2
-[1 ; 0] @ acc
-List.append [result mod 10] l
-List.append [result mod 10] l
-digits n []
-digits n []
-digits n []
-upper_mult @ [0]
-integers n []
-integers n []
-getList [] l
-helper x l []
-helper x l []
-helper x l []
-templ12 @ [0]
-templ12 @ [0]
-templ12 @ [0]
-templ12 @ [0]
-templ12 @ [0]
-[a + hd] @ tl
-[a + hd] @ tl
-digits @ [n mod 10]
-digits @ [n mod 10]
-digits @ [n mod 10]
-t @ [h]
-append t [h]
-append t [h]
-append t [h]
-append t [h]
-helper [] l
-helper [] h
-helper [] h
-helper [] h
-helper [] h
+TupleG (fromList [VarG,LamG VarPatG EmptyG])
+(fun xx ->
+   (xx , f xx = xx) , b)
+(fun x ->
+   (f x , not (f x = x)) , b)
+(fun x ->
+   (let b = f x in
+    (b , b <> x)) , b)
+(fun b -> (f b , f b = b) , b)
+(fun b ->
+   (f b , b <> f b) , b)
+(fun a ->
+   (f a , f a <> a) , b)

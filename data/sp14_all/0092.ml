@@ -50,138 +50,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,44)
+(16,17)-(16,45)
 match snd a with
 | [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
 | h :: t -> (0 , [])
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
 
-(16,22)-(16,23)
-snd
-VarG
-
-(16,22)-(16,23)
-snd a
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-fst
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-snd
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-fst
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-snd
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-fst
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-snd
-VarG
-
-(16,42)-(16,44)
-x
-VarG
-
-(16,42)-(16,44)
-fst x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-snd x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-fst x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-snd x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-fst x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-snd x
-AppG (fromList [VarG])
-
-(16,42)-(16,44)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,42)-(16,44)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,42)-(16,44)
-(fst x + snd x) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,42)-(16,44)
-fst x + snd x
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(16,42)-(16,44)
-(fst x + snd x) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,42)-(16,44)
-10
-LitG
-
-(16,42)-(16,44)
-10
-LitG
-
-(16,42)-(16,44)
+(17,17)-(17,19)
 0
 LitG
 
-(16,42)-(16,44)
-(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-TupleG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
+*)
 
-(16,42)-(16,44)
-(0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
-
-(16,42)-(16,44)
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(17,16)-(17,18)
-0
-LitG
-
+(* type error slice
+(16,5)-(19,52)
+(16,11)-(16,45)
+(16,13)-(16,45)
+(16,17)-(16,45)
+(16,23)-(16,24)
+(16,43)-(16,45)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
 *)

@@ -1,7 +1,15 @@
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,IteG EmptyG EmptyG EmptyG)])
-match n with
-| _ -> listReverse ns
-| 0 -> ns
-| n -> if n < 0
-       then []
-       else (n mod 10) :: (digitsOfInt (n / 10))
+CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(TuplePatG (fromList [VarPatG,LitPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+match (rand , depth) with
+| (r , 0) -> if r (0 , 1) = 0
+             then buildX ()
+             else buildY ()
+| (r , depth) -> (let r =
+                    rand (0 , 7) in
+                  match r with
+                  | 0 -> buildX ()
+                  | 1 -> buildY ()
+                  | 2 -> buildSine (build (rand , depth - 1))
+                  | 3 -> buildCosine (build (rand , depth - 1))
+                  | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+                  | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+                  | _ -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1)))

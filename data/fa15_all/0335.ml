@@ -20,57 +20,35 @@ let fixpoint (f,b) = wwhile ((fixpointHelper f b), b);;
 *)
 
 (* changed spans
-(3,2)-(3,73)
+(3,3)-(3,74)
 fun b ->
   fun b ->
     (f b , if f b = b
            then true
            else false)
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(3,8)-(3,9)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-LamG (TupleG (fromList [EmptyG]))
-
-(3,8)-(3,9)
-f b
-AppG (fromList [VarG])
-
-(3,8)-(3,9)
-(f b , if f b = b
-       then true
-       else false)
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
-
-(3,31)-(3,73)
-b
-VarG
-
-(3,45)-(3,48)
-f b = b
-BopG (AppG (fromList [EmptyG])) VarG
-
-(3,50)-(3,54)
-f
-VarG
-
-(3,50)-(3,54)
-b
-VarG
-
-(3,50)-(3,54)
-b
-VarG
-
-(3,50)-(3,54)
-f b
-AppG (fromList [VarG])
-
-(8,29)-(8,47)
+(8,30)-(8,48)
 fixpointHelper f b
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(2,4)-(3,76)
+(2,20)-(3,74)
+(3,3)-(3,74)
+(3,32)-(3,74)
+(3,62)-(3,74)
+(6,9)-(6,10)
+(6,9)-(6,12)
+(6,47)-(6,53)
+(6,47)-(6,62)
+(6,54)-(6,62)
+(6,55)-(6,56)
+(8,22)-(8,28)
+(8,22)-(8,52)
+(8,29)-(8,52)
+(8,30)-(8,48)
+(8,31)-(8,45)
 *)

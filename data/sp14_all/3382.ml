@@ -81,15 +81,28 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(37,6)-(38,18)
+(37,7)-(38,19)
 bigAdd (mulByDigit i
                    (List.rev (List.map (fun x ->
                                           x * 10) t)))
        (helper [] (h * i))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(37,71)-(37,77)
-helper [] (h * i)
-AppG (fromList [BopG EmptyG EmptyG,ListG EmptyG Nothing])
+*)
 
+(* type error slice
+(10,3)-(10,70)
+(10,9)-(10,10)
+(10,37)-(10,70)
+(10,51)-(10,61)
+(10,51)-(10,63)
+(10,69)-(10,70)
+(12,4)-(29,37)
+(12,12)-(29,35)
+(12,15)-(29,35)
+(13,3)-(29,35)
+(29,3)-(29,13)
+(29,3)-(29,35)
+(37,7)-(37,13)
+(37,7)-(38,19)
 *)

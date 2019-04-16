@@ -17,53 +17,25 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(3,2)-(5,67)
+(3,3)-(5,68)
 match l with
 | [] -> []
 | x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
                                                                             [x'] @ x''))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
-(5,13)-(5,67)
-[]
-ListG EmptyG Nothing
+*)
 
-(5,14)-(5,28)
-(@)
-VarG
-
-(5,14)-(5,28)
-[(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                        [x'] @ x''))
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(5,30)-(5,66)
-(@)
-VarG
-
-(5,30)-(5,66)
-[((x * i) mod 10) + x'] @ (mulByDigit i
-                                      [x'] @ x'')
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(5,30)-(5,66)
-[((x * i) mod 10) + x']
-ListG (BopG EmptyG EmptyG) Nothing
-
-(5,49)-(5,66)
-x'
-VarG
-
-(5,50)-(5,60)
-(@)
-VarG
-
-(5,50)-(5,60)
-mulByDigit i [x']
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(5,63)-(5,65)
-[x']
-ListG VarG Nothing
-
+(* type error slice
+(2,4)-(5,70)
+(2,20)-(5,68)
+(2,22)-(5,68)
+(3,3)-(5,68)
+(4,11)-(4,14)
+(4,12)-(4,13)
+(5,14)-(5,68)
+(5,15)-(5,29)
+(5,31)-(5,67)
+(5,50)-(5,67)
+(5,51)-(5,61)
 *)

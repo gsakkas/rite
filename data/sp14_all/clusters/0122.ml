@@ -1,7 +1,24 @@
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
-eval (f , x , y) +. (eval (g , x , y) *. eval (h , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
-eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))
+LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+let carry =
+  match a with
+  | (f , g) -> f in
+let newc =
+  match x with
+  | (f , g) -> if ((f + g) + carry) > 9
+               then 1
+               else 0 in
+let digit =
+  match x with
+  | (f , g) -> (f + g) + (carry mod 10) in
+match a with
+| (o , p) -> (newc , digit :: p)
+let newc =
+  match x with
+  | (f , g) -> if ((f + g) + carry) > 9
+               then 1
+               else 0 in
+let digit =
+  match x with
+  | (f , g) -> (f + g) + (carry mod 10) in
+match a with
+| (o , p) -> (newc , digit :: p)

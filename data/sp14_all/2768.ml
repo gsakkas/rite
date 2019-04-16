@@ -86,28 +86,15 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(19,11)-(19,20)
-e1
-VarG
-
-(19,11)-(19,20)
-e2
-VarG
-
-(19,11)-(19,20)
-fun (e1 , e2) ->
-  Times (e1 , e2)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(19,11)-(19,20)
-Times (e1 , e2)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(24,5)-(24,14)
+(24,6)-(24,15)
 depth <= 0
 BopG VarG LitG
 
-(25,48)-(25,57)
+(25,8)-(25,59)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(27,5)-(39,77)
 match rand (0 , 4) with
 | 0 -> buildSine (build (rand , depth - 1))
 | 1 -> buildCosine (build (rand , depth - 1))
@@ -115,178 +102,51 @@ match rand (0 , 4) with
 | 3 -> buildTimes (build (rand , depth - 2) , build (rand , depth - 2))
 | 4 -> buildThresh (build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
 | _ -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(27,17)-(27,18)
-(0 , 4)
-TupleG (fromList [LitG])
+*)
 
-(28,9)-(28,46)
-4
-LitG
-
-(33,11)-(33,23)
-buildAverage (build (rand , depth - 2) , build (rand , depth - 2))
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(33,12)-(33,16)
-buildAverage
-VarG
-
-(33,12)-(33,16)
-build
-VarG
-
-(33,12)-(33,16)
-build (rand , depth - 2)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(33,12)-(33,16)
-(build (rand , depth - 2) , build (rand , depth - 2))
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(33,12)-(33,16)
-(rand , depth - 2)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(33,21)-(33,22)
-depth - 2
-BopG VarG LitG
-
-(33,26)-(33,27)
-depth
-VarG
-
-(34,13)-(34,25)
-build
-VarG
-
-(34,26)-(34,53)
-rand
-VarG
-
-(34,26)-(34,53)
-depth
-VarG
-
-(34,26)-(34,53)
-depth - 2
-BopG VarG LitG
-
-(34,26)-(34,53)
-2
-LitG
-
-(34,26)-(34,53)
-(rand , depth - 2)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(34,27)-(34,32)
-buildTimes
-VarG
-
-(34,27)-(34,32)
-build (rand , depth - 2)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(34,27)-(34,32)
-(build (rand , depth - 2) , build (rand , depth - 2))
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(36,13)-(36,25)
-2
-LitG
-
-(36,14)-(36,18)
-build
-VarG
-
-(36,14)-(36,18)
-build (rand , depth - 2)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(36,14)-(36,18)
-(rand , depth - 2)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(36,28)-(36,29)
-depth - 2
-BopG VarG LitG
-
-(37,15)-(37,27)
-buildThresh
-VarG
-
-(37,15)-(37,55)
-depth
-VarG
-
-(37,15)-(37,55)
-2
-LitG
-
-(37,28)-(37,55)
-(build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
-TupleG (fromList [AppG (fromList [EmptyG])])
-
-(39,12)-(39,76)
-buildY
-VarG
-
-(39,12)-(39,76)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(39,15)-(39,27)
-4
-LitG
-
-(39,16)-(39,20)
-build
-VarG
-
-(39,16)-(39,20)
-build (rand , depth - 4)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(39,16)-(39,20)
-(rand , depth - 4)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(39,25)-(39,26)
-depth - 4
-BopG VarG LitG
-
-(39,30)-(39,31)
-depth
-VarG
-
-(39,37)-(39,48)
-build
-VarG
-
-(39,49)-(39,76)
-rand
-VarG
-
-(39,49)-(39,76)
-depth
-VarG
-
-(39,49)-(39,76)
-depth - 4
-BopG VarG LitG
-
-(39,49)-(39,76)
-4
-LitG
-
-(39,49)-(39,76)
-(rand , depth - 4)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
-(39,72)-(39,73)
-4
-LitG
-
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(13,4)-(13,31)
+(13,17)-(13,29)
+(13,21)-(13,29)
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(17,4)-(17,70)
+(17,18)-(17,68)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(24,3)-(39,77)
+(25,8)-(25,59)
+(25,49)-(25,55)
+(25,49)-(25,58)
+(27,5)-(39,77)
+(28,10)-(28,19)
+(28,10)-(28,47)
+(28,20)-(28,47)
+(28,21)-(28,26)
+(30,7)-(39,77)
+(31,12)-(31,23)
+(31,12)-(31,51)
+(33,9)-(39,77)
+(34,14)-(34,26)
+(34,14)-(34,54)
+(34,27)-(34,54)
+(34,28)-(34,33)
+(36,11)-(39,77)
+(37,16)-(37,28)
+(37,16)-(37,56)
+(37,29)-(37,56)
+(37,30)-(37,35)
+(39,13)-(39,77)
+(39,38)-(39,49)
+(39,38)-(39,77)
+(39,50)-(39,77)
+(39,51)-(39,56)
+(39,77)-(39,77)
 *)

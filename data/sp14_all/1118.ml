@@ -28,21 +28,16 @@ let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 *)
 
 (* changed spans
-(12,2)-(12,75)
+(12,3)-(12,76)
 match e with
 | Average (x' , y') -> (x +. y) /. 2.0
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
 
-(12,26)-(12,27)
-x +. y
-BopG VarG VarG
+*)
 
-(12,26)-(12,27)
-(x +. y) /. 2.0
-BopG (BopG EmptyG EmptyG) LitG
-
-(12,74)-(12,75)
-2.0
-LitG
-
+(* type error slice
+(12,3)-(12,76)
+(12,63)-(12,72)
+(12,64)-(12,66)
+(12,69)-(12,71)
 *)

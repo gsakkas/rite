@@ -49,28 +49,25 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,16)-(19,23)
-[x + 1]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(19,16)-(19,28)
+(19,17)-(19,29)
 ([x + 1] , [x + 1])
-TupleG (fromList [ListG EmptyG Nothing])
+TupleG (fromList [ListG (fromList [EmptyG])])
 
-(19,21)-(19,22)
-x + 1
-BopG VarG LitG
+(21,16)-(21,26)
+l1
+VarG
 
-(19,21)-(19,22)
-1
-LitG
+*)
 
-(19,21)-(19,22)
-[x + 1]
-ListG (BopG EmptyG EmptyG) Nothing
-
-(19,27)-(19,28)
-1
-LitG
-
+(* type error slice
+(19,5)-(21,77)
+(19,11)-(19,29)
+(19,17)-(19,29)
+(19,28)-(19,29)
+(20,5)-(21,77)
+(20,16)-(20,24)
+(21,44)-(21,58)
+(21,44)-(21,70)
+(21,59)-(21,60)
+(21,61)-(21,65)
 *)

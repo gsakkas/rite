@@ -1,0 +1,6 @@
+(int list * int list)
+(int * int list)
+(expr * expr * expr * expr)
+('a * bool)
+('a list * int list)
+(int -> (int * bool) * int)

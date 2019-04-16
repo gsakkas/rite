@@ -13,12 +13,19 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(4,22)-(4,23)
+(4,23)-(4,24)
 0 :: ns
-ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(4,31)-(4,67)
-ns
-VarG
+*)
 
+(* type error slice
+(2,4)-(4,70)
+(2,21)-(4,68)
+(3,3)-(4,68)
+(4,3)-(4,68)
+(4,23)-(4,24)
+(4,32)-(4,68)
+(4,46)-(4,68)
+(4,47)-(4,58)
 *)

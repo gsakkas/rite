@@ -11,12 +11,14 @@ let sqsum xs =
 *)
 
 (* changed spans
-(3,21)-(3,23)
+(3,19)-(3,28)
 x * x
 BopG VarG VarG
 
-(3,24)-(3,26)
-x
-VarG
+*)
 
+(* type error slice
+(3,15)-(3,28)
+(3,19)-(3,28)
+(3,22)-(3,24)
 *)

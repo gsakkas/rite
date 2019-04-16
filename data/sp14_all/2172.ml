@@ -24,17 +24,32 @@ let stringOfList f l =
 *)
 
 (* changed spans
-(9,39)-(9,44)
+(9,39)-(9,67)
 List.append ("[" :: (List.map f
                               l)) ["]"]
-AppG (fromList [ConAppG (Just EmptyG) Nothing,ListG EmptyG Nothing])
+AppG (fromList [ConAppG (Just EmptyG),ListG (fromList [EmptyG])])
 
-(9,40)-(9,43)
-List.append
-VarG
+*)
 
-(9,40)-(9,43)
-"[" :: (List.map f l)
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing
-
+(* type error slice
+(2,4)-(7,61)
+(2,19)-(7,59)
+(2,23)-(7,59)
+(3,3)-(7,59)
+(3,9)-(3,11)
+(6,7)-(7,59)
+(6,13)-(6,32)
+(6,19)-(6,20)
+(6,19)-(6,32)
+(6,21)-(6,22)
+(7,7)-(7,59)
+(7,18)-(7,19)
+(7,36)-(7,50)
+(7,36)-(7,59)
+(7,51)-(7,52)
+(7,53)-(7,57)
+(9,24)-(9,33)
+(9,24)-(9,67)
+(9,39)-(9,67)
+(9,40)-(9,45)
 *)

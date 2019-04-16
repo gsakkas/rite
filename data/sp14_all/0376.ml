@@ -69,8 +69,19 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(27,28)-(27,29)
+(27,19)-(27,35)
 norm_sum :: acc
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
+*)
+
+(* type error slice
+(19,7)-(28,40)
+(19,21)-(19,38)
+(21,7)-(28,40)
+(21,22)-(21,67)
+(21,60)-(21,67)
+(27,19)-(27,35)
+(27,20)-(27,28)
+(27,29)-(27,30)
 *)

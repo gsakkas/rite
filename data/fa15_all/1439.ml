@@ -58,96 +58,49 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(25,31)-(25,32)
+(25,32)-(25,33)
 (e , x , y)
 TupleG (fromList [VarG])
 
-(26,16)-(26,27)
-cos
-VarG
+(26,17)-(26,45)
+cos (pi *. eval (e , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
 
-(26,16)-(26,44)
-x
-VarG
-
-(26,16)-(26,44)
-y
-VarG
-
-(26,28)-(26,44)
-pi
-VarG
-
-(26,28)-(26,44)
-pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
-
-(27,23)-(27,42)
-eval (e1 , x , y) +. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(27,23)-(27,42)
+(27,24)-(27,43)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(27,36)-(27,42)
-eval
-VarG
-
-(27,37)-(27,38)
-e1
-VarG
-
-(27,37)-(27,38)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(28,32)-(28,38)
-eval
-VarG
-
-(28,33)-(28,34)
-e2
-VarG
-
-(28,33)-(28,34)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
-(29,28)-(29,52)
+(28,22)-(28,39)
 eval (e1 , x , y) *. eval (e2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(29,28)-(29,52)
-2.0
-LitG
+(29,29)-(29,53)
+if eval (e1 , x , y) < eval (e2 , x , y)
+then eval (e3 , x , y)
+else eval (e4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(29,40)-(29,52)
-eval
-VarG
+*)
 
-(29,41)-(29,42)
-e1
-VarG
-
-(29,41)-(29,42)
-(e1 , x , y)
-TupleG (fromList [VarG])
-
-(29,47)-(29,48)
-eval
-VarG
-
-(29,47)-(29,48)
-e2
-VarG
-
-(29,47)-(29,48)
-eval (e2 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(29,47)-(29,48)
-(e2 , x , y)
-TupleG (fromList [VarG])
-
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(11,28)-(11,44)
+(11,37)-(11,39)
+(21,4)-(29,55)
+(21,15)-(29,53)
+(22,3)-(29,53)
+(23,14)-(23,15)
+(25,15)-(25,18)
+(25,15)-(25,35)
+(25,26)-(25,34)
+(25,27)-(25,31)
+(25,32)-(25,33)
+(26,29)-(26,45)
+(26,30)-(26,34)
+(26,35)-(26,44)
+(27,24)-(27,36)
+(27,24)-(27,43)
+(27,37)-(27,43)
+(27,38)-(27,39)
 *)

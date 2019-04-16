@@ -23,12 +23,13 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,23)-(7,39)
+(7,24)-(7,40)
 not (List.mem h l)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(7,27)-(7,35)
-List.mem h l
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(7,24)-(7,27)
+(7,24)-(7,40)
 *)

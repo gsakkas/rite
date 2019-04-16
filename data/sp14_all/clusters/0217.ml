@@ -1,6 +1,15 @@
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG),(Just EmptyG,EmptyG)]))
-fun n ->
-  match n with
-  | 1 -> 1
-  | _ when (n mod 2) = 0 -> n / 2
-  | _ -> (3 * n) + 1
+CaseG VarG (fromList [(LitPatG,Nothing,CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)])),(WildPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+match depth with
+| 0 -> match rand (1 , 2) with
+       | 1 -> VarX
+       | 2 -> VarY
+| _ -> (let next =
+          build (rand , depth - 1) in
+        match rand (1 , 7) with
+        | 1 -> buildSine next
+        | 2 -> buildCosine next
+        | 3 -> buildAverage (next , next)
+        | 4 -> buildTimes (next , next)
+        | 5 -> buildThresh (next , next , next , next)
+        | 6 -> buildSqrt next
+        | 7 -> buildGauss (next , next , next))

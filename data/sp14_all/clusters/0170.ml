@@ -1,19 +1,5 @@
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (IteG EmptyG EmptyG EmptyG)
-if i = 0
-then []
-else if i = 1
-     then l
-     else bigAdd (bigAdd l l)
-                 (mulByDigit (i - 2) l)
-if i = 0
-then []
-else if i = 1
-     then l
-     else bigAdd (bigAdd l l)
-                 (mulByDigit (i - 2) l)
-if i = 0
-then []
-else if i = 1
-     then l
-     else bigAdd (bigAdd l l)
-                 (mulByDigit (i - 2) l)
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
+match e with
+| VarX -> "x"
+| VarY -> "y"
+| Sine e -> "sin (pi*" ^ (exprToString e ^ ")")

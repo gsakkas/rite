@@ -67,28 +67,30 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(28,8)-(28,9)
+(28,7)-(30,42)
 ((1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))) *. sin (pi *. eval (e1 , x , y))
 BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(28,12)-(28,43)
-(1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
-
-(28,12)-(28,43)
+(31,18)-(31,53)
 1.0 /. sin (pi *. eval (e1 , x , y))
 BopG LitG (AppG (fromList [EmptyG]))
 
-(28,12)-(28,43)
-1.0
-LitG
+*)
 
-(31,17)-(31,18)
-1.0 /. sin (pi *. eval (e1 , x , y))
-BopG LitG (AppG (fromList [EmptyG]))
-
-(31,21)-(31,52)
-1.0
-LitG
-
+(* type error slice
+(16,3)-(31,53)
+(19,16)-(19,19)
+(19,16)-(19,45)
+(28,7)-(29,42)
+(28,7)-(30,42)
+(28,8)-(28,45)
+(28,13)-(28,44)
+(28,14)-(28,17)
+(29,10)-(29,41)
+(29,11)-(29,14)
+(30,11)-(30,42)
+(30,12)-(30,15)
+(31,18)-(31,53)
+(31,22)-(31,53)
+(31,23)-(31,26)
 *)

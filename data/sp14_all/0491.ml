@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,16)-(19,17)
+(19,17)-(19,18)
 let (x1 , x2) = x in
 let (a1 , a2) = a in
 let h :: _ = a1 in
@@ -65,139 +65,37 @@ let tens =
 let ones =
   (x1 + x2) + (h mod 10) in
 (tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(20,4)-(22,51)
-a
-VarG
-
-(20,4)-(22,51)
-a1
-VarG
-
-(20,4)-(22,51)
-x1
-VarG
-
-(20,4)-(22,51)
-x2
-VarG
-
-(20,4)-(22,51)
-h
-VarG
-
-(20,4)-(22,51)
-x1
-VarG
-
-(20,4)-(22,51)
-x2
-VarG
-
-(20,4)-(22,51)
-h
-VarG
-
-(20,4)-(22,51)
-tens
-VarG
-
-(20,4)-(22,51)
-a1
-VarG
-
-(20,4)-(22,51)
-ones
-VarG
-
-(20,4)-(22,51)
-a2
-VarG
-
-(20,4)-(22,51)
-x1 + x2
-BopG VarG VarG
-
-(20,4)-(22,51)
-(x1 + x2) + (h / 10)
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-
-(20,4)-(22,51)
-h / 10
-BopG VarG LitG
-
-(20,4)-(22,51)
-x1 + x2
-BopG VarG VarG
-
-(20,4)-(22,51)
-(x1 + x2) + (h mod 10)
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-
-(20,4)-(22,51)
-h mod 10
-BopG VarG LitG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-10
-LitG
-
-(20,4)-(22,51)
-let (a1 , a2) = a in
-let h :: _ = a1 in
-let tens =
-  (x1 + x2) + (h / 10) in
-let ones =
-  (x1 + x2) + (h mod 10) in
-(tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,4)-(22,51)
-let h :: _ = a1 in
-let tens =
-  (x1 + x2) + (h / 10) in
-let ones =
-  (x1 + x2) + (h mod 10) in
-(tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,4)-(22,51)
-let tens =
-  (x1 + x2) + (h / 10) in
-let ones =
-  (x1 + x2) + (h mod 10) in
-(tens :: a1 , ones :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(20,4)-(22,51)
-let ones =
-  (x1 + x2) + (h mod 10) in
-(tens :: a1 , ones :: a2)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(20,4)-(22,51)
-(tens :: a1 , ones :: a2)
-TupleG (fromList [ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(20,4)-(22,51)
-tens :: a1
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(20,4)-(22,51)
-ones :: a2
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(20,19)-(20,20)
+(20,17)-(20,18)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(21,4)-(22,51)
+(20,20)-(20,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(12,3)-(15,47)
+(15,35)-(15,45)
+(15,35)-(15,47)
+(15,46)-(15,47)
+(18,3)-(23,35)
+(18,12)-(22,52)
+(19,5)-(22,52)
+(20,5)-(22,52)
+(20,16)-(20,22)
+(20,20)-(20,21)
+(21,5)-(22,52)
+(22,5)-(22,52)
+(22,19)-(22,33)
+(22,19)-(22,45)
+(22,36)-(22,40)
+(22,49)-(22,52)
+(23,3)-(23,13)
+(23,3)-(23,35)
+(23,14)-(23,35)
+(23,15)-(23,18)
 *)

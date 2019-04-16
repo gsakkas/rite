@@ -32,16 +32,21 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(11,8)-(13,23)
-List.hd
-VarG
-
-(11,8)-(13,23)
+(11,9)-(13,24)
 List.hd [List.fold_left f base
                         (mulByDigit i
                                     (List.rev (List.map (fun x ->
                                                            x * 10)
                                                         t)) @ [h * i])]
-AppG (fromList [ListG EmptyG Nothing])
+AppG (fromList [ListG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(9,32)-(9,38)
+(9,32)-(9,67)
+(9,59)-(9,67)
+(10,7)-(10,13)
+(10,7)-(13,24)
+(11,9)-(13,24)
 *)

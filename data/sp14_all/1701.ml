@@ -49,32 +49,15 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(13,14)-(21,25)
-atan
-VarG
-
-(13,14)-(21,25)
-atan 1.0
-AppG (fromList [LitG])
-
-(13,14)-(21,25)
-4.0 *. atan 1.0
-BopG LitG (AppG (fromList [EmptyG]))
-
-(13,14)-(21,25)
-4.0
-LitG
-
-(13,14)-(21,25)
-1.0
-LitG
-
-(17,18)-(17,41)
+(17,19)-(17,42)
 eval (a , x , y) *. pi
 BopG (AppG (fromList [EmptyG])) VarG
 
-(17,38)-(17,40)
-pi
-VarG
+*)
 
+(* type error slice
+(17,15)-(17,18)
+(17,15)-(17,42)
+(17,19)-(17,42)
+(17,39)-(17,41)
 *)

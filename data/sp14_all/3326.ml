@@ -16,46 +16,23 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(5,15)-(5,25)
-(@)
-VarG
-
-(5,15)-(5,25)
+(5,13)-(5,55)
 mulByDigit i
            (List.rev (List.map (fun x ->
-                                  x * 10) t))
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+                                  x * 10) t)) @ [h * i]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(5,38)-(5,39)
-List.map (fun x -> x * 10) t
-AppG (fromList [VarG,LamG EmptyG])
+*)
 
-(5,44)-(5,46)
-List.map
-VarG
-
-(5,44)-(5,46)
-x
-VarG
-
-(5,44)-(5,46)
-fun x -> x * 10
-LamG (BopG EmptyG EmptyG)
-
-(5,44)-(5,46)
-x * 10
-BopG VarG LitG
-
-(5,48)-(5,49)
-t
-VarG
-
-(5,48)-(5,49)
-h * i
-BopG VarG VarG
-
-(5,48)-(5,49)
-[h * i]
-ListG (BopG EmptyG EmptyG) Nothing
-
+(* type error slice
+(2,4)-(5,57)
+(2,20)-(5,55)
+(2,22)-(5,55)
+(3,3)-(5,55)
+(4,11)-(4,13)
+(5,13)-(5,51)
+(5,13)-(5,55)
+(5,14)-(5,48)
+(5,15)-(5,42)
+(5,16)-(5,26)
 *)

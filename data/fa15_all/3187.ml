@@ -67,28 +67,30 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(27,14)-(27,23)
+(27,15)-(27,24)
 a1 @ [3]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
-(27,15)-(27,17)
-(@)
-VarG
-
-(27,21)-(27,22)
-[3]
-ListG LitG Nothing
-
-(27,25)-(27,34)
+(27,26)-(27,35)
 a2 @ [5]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
-(27,26)-(27,28)
-(@)
-VarG
+*)
 
-(27,32)-(27,33)
-[5]
-ListG LitG Nothing
-
+(* type error slice
+(25,7)-(27,36)
+(26,15)-(26,67)
+(26,16)-(26,41)
+(26,20)-(26,21)
+(26,22)-(26,40)
+(26,23)-(26,39)
+(26,43)-(26,66)
+(26,44)-(26,46)
+(26,47)-(26,48)
+(27,14)-(27,36)
+(27,15)-(27,24)
+(27,16)-(27,18)
+(27,22)-(27,23)
+(27,26)-(27,35)
+(27,33)-(27,34)
 *)

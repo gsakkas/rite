@@ -19,44 +19,22 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(6,18)-(6,47)
-a ^ (x ^ sep)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(6,21)-(6,32)
-List.length t
-AppG (fromList [VarG])
-
-(6,21)-(6,36)
+(6,22)-(6,37)
 List.length t < 2
 BopG (AppG (fromList [EmptyG])) LitG
 
-(6,35)-(6,36)
-t
-VarG
+(6,48)-(6,48)
+a ^ (x ^ sep)
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(7,6)-(7,60)
-a
-VarG
+*)
 
-(7,6)-(7,60)
-(^)
-VarG
-
-(7,6)-(7,60)
-x
-VarG
-
-(7,6)-(7,60)
-(^)
-VarG
-
-(7,6)-(7,60)
-sep
-VarG
-
-(7,6)-(7,60)
-x ^ sep
-AppG (fromList [VarG])
-
+(* type error slice
+(6,19)-(6,48)
+(6,22)-(6,33)
+(6,22)-(6,37)
+(6,36)-(6,37)
+(6,43)-(6,48)
+(6,45)-(6,46)
+(6,48)-(6,48)
 *)

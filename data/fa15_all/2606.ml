@@ -48,133 +48,28 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(14,16)-(14,54)
+(14,17)-(14,55)
 match x with
 | (i , j) -> match a with
              | (m , n) -> if ((i + j) + m) >= 10
                           then (1 , (((i + j) + m) - 10) :: n)
                           else (0 , ((i + j) + m) :: n)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(14,40)-(14,54)
-match a with
-| (m , n) -> if ((i + j) + m) >= 10
-             then (1 , (((i + j) + m) - 10) :: n)
-             else (0 , ((i + j) + m) :: n)
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
-(14,41)-(14,53)
-a
-VarG
-
-(14,41)-(14,53)
-i
-VarG
-
-(14,41)-(14,53)
-j
-VarG
-
-(14,41)-(14,53)
-m
-VarG
-
-(14,41)-(14,53)
-(i + j) + m
-BopG (BopG EmptyG EmptyG) VarG
-
-(14,41)-(14,53)
-((i + j) + m) >= 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,41)-(14,53)
-i + j
-BopG VarG VarG
-
-(14,41)-(14,53)
-10
-LitG
-
-(14,41)-(14,53)
-if ((i + j) + m) >= 10
-then (1 , (((i + j) + m) - 10) :: n)
-else (0 , ((i + j) + m) :: n)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(14,42)-(14,43)
-i
-VarG
-
-(14,42)-(14,43)
-j
-VarG
-
-(14,42)-(14,43)
-m
-VarG
-
-(14,42)-(14,43)
-n
-VarG
-
-(14,42)-(14,43)
-((i + j) + m) - 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(14,42)-(14,43)
-(i + j) + m
-BopG (BopG EmptyG EmptyG) VarG
-
-(14,42)-(14,43)
-i + j
-BopG VarG VarG
-
-(14,42)-(14,43)
-1
-LitG
-
-(14,42)-(14,43)
-10
-LitG
-
-(14,42)-(14,43)
-(0 , ((i + j) + m) :: n)
-TupleG (fromList [LitG,ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing])
-
-(14,42)-(14,43)
-(((i + j) + m) - 10) :: n
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(14,45)-(14,52)
-((i + j) + m) :: n
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) VarG]))) Nothing
-
-(14,50)-(14,51)
-i + j
-BopG VarG VarG
-
-(15,4)-(17,51)
-i
-VarG
-
-(15,4)-(17,51)
-j
-VarG
-
-(15,4)-(17,51)
-m
-VarG
-
-(15,4)-(17,51)
-n
-VarG
-
-(15,15)-(15,17)
-0
-LitG
-
-(15,15)-(15,17)
+(15,16)-(15,18)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
+*)
+
+(* type error slice
+(14,5)-(17,52)
+(14,11)-(14,55)
+(14,13)-(14,55)
+(14,17)-(14,55)
+(14,41)-(14,55)
+(17,5)-(17,52)
+(17,19)-(17,33)
+(17,19)-(17,45)
+(17,34)-(17,35)
 *)

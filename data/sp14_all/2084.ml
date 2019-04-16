@@ -68,55 +68,23 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,23)-(16,51)
-l
-VarG
-
-(16,23)-(16,51)
-h
-VarG
-
-(16,23)-(16,51)
-h = 0
-BopG VarG LitG
-
-(16,23)-(16,51)
-0
-LitG
-
-(16,23)-(16,51)
-if h = 0
-then removeZero t
-else l
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
-
-(16,23)-(16,51)
+(16,24)-(16,52)
 match l with
 | [] -> []
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
-(16,23)-(16,51)
-[]
-ListG EmptyG Nothing
-
-(16,32)-(16,51)
-removeZero
-VarG
-
-(18,11)-(31,34)
-t
-VarG
-
-(18,11)-(31,34)
-l
-VarG
-
-(29,15)-(29,58)
+(29,16)-(29,59)
 List.combine (List.rev l1)
              (List.rev l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(29,16)-(29,28)
+(29,16)-(29,59)
+(29,29)-(29,59)
 *)

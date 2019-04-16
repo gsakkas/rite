@@ -23,50 +23,21 @@ let rec clone x n = cloneHelper x n;;
 *)
 
 (* changed spans
-(10,16)-(10,17)
-x <= 0
-BopG VarG LitG
-
-(10,16)-(10,23)
-if x <= 0
-then []
-else cloneHelper x (n - 1)
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (AppG (fromList [EmptyG]))
-
-(12,41)-(12,45)
-0
-LitG
-
-(12,46)-(12,60)
-[]
-ListG EmptyG Nothing
-
-(12,64)-(12,67)
-cloneHelper
-VarG
-
-(14,14)-(14,41)
-x
-VarG
-
-(14,14)-(14,41)
-n
-VarG
-
-(14,14)-(14,41)
-n - 1
-BopG VarG LitG
-
-(14,14)-(14,41)
-1
-LitG
-
-(14,25)-(14,37)
+(14,21)-(14,42)
 cloneHelper x n
 AppG (fromList [VarG])
 
-(14,38)-(14,39)
-cloneHelper
-VarG
+*)
 
+(* type error slice
+(9,4)-(10,72)
+(9,10)-(10,70)
+(10,46)-(10,60)
+(10,46)-(10,70)
+(10,68)-(10,70)
+(12,4)-(12,71)
+(12,18)-(12,69)
+(14,21)-(14,25)
+(14,21)-(14,42)
+(14,26)-(14,38)
 *)

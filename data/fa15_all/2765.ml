@@ -30,47 +30,32 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(12,15)-(12,47)
-t
-VarG
-
-(12,17)-(12,27)
-remainder
-VarG
-
-(12,44)-(12,45)
-[h' * i] @ mulByDigit i t'
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(12,48)-(12,49)
+(12,16)-(12,66)
 match t with
 | [] -> [remainder i h]
 | h' :: t' -> [h' * i] @ mulByDigit i
                                     t'
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList [EmptyG]))])
 
-(12,50)-(12,65)
-(@)
-VarG
+*)
 
-(12,51)-(12,60)
-mulByDigit
-VarG
-
-(12,51)-(12,64)
-h'
-VarG
-
-(12,51)-(12,64)
-i
-VarG
-
-(12,51)-(12,64)
-h' * i
-BopG VarG VarG
-
-(12,63)-(12,64)
-t'
-VarG
-
+(* type error slice
+(4,4)-(4,65)
+(4,15)-(4,63)
+(4,17)-(4,63)
+(4,24)-(4,31)
+(4,29)-(4,30)
+(6,4)-(12,69)
+(6,20)-(12,67)
+(6,22)-(12,67)
+(7,3)-(12,67)
+(10,5)-(12,67)
+(12,16)-(12,66)
+(12,17)-(12,33)
+(12,17)-(12,47)
+(12,18)-(12,28)
+(12,49)-(12,50)
+(12,52)-(12,61)
+(12,52)-(12,65)
+(12,64)-(12,65)
 *)

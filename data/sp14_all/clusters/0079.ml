@@ -1,18 +1,3 @@
-ConAppG (Just (TupleG (fromList [VarG,LitG]))) Nothing
-0 :: ns
-0 :: l2
-0 :: l2
-0 :: l1
-0 :: l2
-0 :: l2
-0 :: l1
-0 :: l2
-0 :: l1
-0 :: l1
-0 :: l2
-0 :: l1
-0 :: l2
-0 :: l2
-0 :: l2
-0 :: l2
-0 :: l2
+BopG (UopG EmptyG) (AppG (fromList [EmptyG]))
+(- 1.0) *. eval (a , x , y)
+(- 1.0) *. eval (e3 , x , y)

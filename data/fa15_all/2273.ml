@@ -67,12 +67,24 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(31,33)-(31,43)
-List.rev
-VarG
+(31,18)-(31,28)
+List.rev (mulByDigit (i - 1)
+                     l)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(31,33)-(31,43)
-mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+(31,34)-(31,56)
+bigAdd l l
+AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(30,4)-(31,58)
+(30,20)-(31,56)
+(30,22)-(31,56)
+(31,3)-(31,56)
+(31,34)-(31,44)
+(31,34)-(31,56)
+(31,45)-(31,56)
+(31,46)-(31,53)
 *)

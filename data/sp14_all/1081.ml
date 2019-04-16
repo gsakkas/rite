@@ -12,40 +12,19 @@ let rec clone x n =
 *)
 
 (* changed spans
-(2,20)-(2,57)
-fun (x , n , acc) ->
-  if n < 0
-  then acc
-  else cloneHelper (x , n - 1 , x :: acc)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(2,20)-(2,57)
+(2,21)-(2,58)
 let rec cloneHelper =
   fun (x , n , acc) ->
     if n < 0
     then acc
     else cloneHelper (x , n - 1 , x :: acc) in
 cloneHelper (x , n , [])
-LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG Rec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (AppG (fromList [EmptyG]))
 
-(2,43)-(2,48)
-acc
-VarG
+*)
 
-(2,49)-(2,50)
-cloneHelper
-VarG
-
-(2,49)-(2,50)
-cloneHelper (x , n - 1 , x :: acc)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(2,49)-(2,50)
-(x , n - 1 , x :: acc)
-TupleG (fromList [VarG,BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(2,51)-(2,52)
-n - 1
-BopG VarG LitG
-
+(* type error slice
+(2,21)-(2,58)
+(2,35)-(2,37)
+(2,43)-(2,58)
 *)

@@ -81,12 +81,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(34,51)-(34,59)
+(34,52)-(34,60)
 [(h1 , h2)]
-ListG (TupleG (fromList [EmptyG])) Nothing
+ListG (fromList [TupleG (fromList [EmptyG])])
 
-(35,35)-(35,41)
+(35,36)-(35,42)
 [(0 , 0)]
-ListG (TupleG (fromList [EmptyG])) Nothing
+ListG (fromList [TupleG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(34,35)-(34,61)
+(34,36)-(34,47)
+(34,52)-(34,60)
+(35,20)-(35,31)
+(35,20)-(35,42)
+(35,36)-(35,42)
 *)

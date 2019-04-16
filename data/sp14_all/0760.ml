@@ -23,12 +23,18 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,20)-(7,63)
+(7,64)-(7,64)
 seen
 VarG
 
-(8,29)-(8,44)
+(8,21)-(8,45)
 t
 VarG
 
+*)
+
+(* type error slice
+(7,21)-(7,64)
+(7,55)-(7,64)
+(7,64)-(7,64)
 *)

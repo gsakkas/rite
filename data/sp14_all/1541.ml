@@ -14,30 +14,24 @@ let sqsum xs =
 *)
 
 (* changed spans
-(3,59)-(3,61)
-x
-VarG
+(3,15)-(3,63)
+a + (x * x)
+BopG VarG (BopG EmptyG EmptyG)
 
-(4,2)-(4,47)
-x
-VarG
-
-(4,13)-(4,19)
-xs
-VarG
-
-(4,13)-(4,19)
-0
-LitG
-
-(4,13)-(4,19)
+(4,14)-(4,20)
 match xs with
 | [] -> 0
 | hd :: tl -> f 0 hd
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LitG)])
 
-(4,17)-(4,19)
-hd
-VarG
+*)
 
+(* type error slice
+(4,14)-(4,15)
+(4,14)-(4,20)
+(4,18)-(4,20)
+(4,24)-(4,38)
+(4,24)-(4,48)
+(4,39)-(4,40)
+(4,46)-(4,48)
 *)

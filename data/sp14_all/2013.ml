@@ -50,43 +50,34 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,12)-(19,28)
+(19,13)-(19,29)
 fun (x , y) ->
   ((x + y) / 10) :: a
-LamG (ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing)
+LamG (TuplePatG (fromList [VarPatG])) (ConAppG (Just EmptyG))
 
-(19,16)-(19,28)
-((x + y) / 10) :: a
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG VarG VarG) LitG]))) Nothing
-
-(19,26)-(19,28)
-y
-VarG
-
-(20,4)-(21,68)
-a
-VarG
-
-(20,15)-(20,16)
+(20,16)-(20,17)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(21,15)-(21,17)
-List.combine
-VarG
-
-(21,15)-(21,17)
-l1
-VarG
-
-(21,15)-(21,17)
+(21,16)-(21,18)
 List.combine l1 l2
 AppG (fromList [VarG])
 
-(21,21)-(21,68)
+(21,22)-(21,69)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(19,5)-(21,69)
+(19,11)-(19,29)
+(19,17)-(19,24)
+(19,18)-(19,19)
+(21,22)-(21,69)
+(21,36)-(21,50)
+(21,36)-(21,62)
+(21,51)-(21,52)
 *)

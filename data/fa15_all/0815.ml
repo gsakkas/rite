@@ -31,25 +31,30 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(11,26)-(11,76)
+(11,27)-(11,77)
 loop (sumList (digitsOfInt x))
      (sumList (digitsOfInt x) + y)
 AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
-(11,33)-(11,44)
-sumList
-VarG
+*)
 
-(11,33)-(11,44)
-digitsOfInt x
-AppG (fromList [VarG])
-
-(11,45)-(11,70)
-x
-VarG
-
-(11,45)-(11,70)
-sumList (digitsOfInt x) + y
-BopG (AppG (fromList [EmptyG])) VarG
-
+(* type error slice
+(2,4)-(5,47)
+(2,21)-(5,45)
+(3,3)-(5,45)
+(5,3)-(5,45)
+(5,23)-(5,26)
+(10,3)-(12,42)
+(10,16)-(11,77)
+(10,18)-(11,77)
+(11,5)-(11,77)
+(11,20)-(11,21)
+(11,27)-(11,31)
+(11,27)-(11,77)
+(11,32)-(11,77)
+(11,33)-(11,72)
+(11,34)-(11,45)
+(11,75)-(11,76)
+(12,33)-(12,37)
+(12,33)-(12,42)
 *)

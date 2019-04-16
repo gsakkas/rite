@@ -22,15 +22,11 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(9,29)-(9,46)
-fun x ->
-  (let y = f x in
-   if y = x
-   then (y , false)
-   else (y , true))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
+(7,29)-(7,37)
+b'
+VarG
 
-(9,29)-(9,46)
+(9,30)-(9,47)
 let helper =
   fun x ->
     (let y = f x in
@@ -38,63 +34,14 @@ let helper =
      then (y , false)
      else (y , true)) in
 helper
-LetG NonRec (fromList [LamG EmptyG]) VarG
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
 
-(9,29)-(9,46)
-let y = f x in
-if y = x
-then (y , false)
-else (y , true)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (IteG EmptyG EmptyG EmptyG)
+*)
 
-(9,43)-(9,44)
-x
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-x
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-y
-VarG
-
-(9,48)-(9,49)
-helper
-VarG
-
-(9,48)-(9,49)
-y = x
-BopG VarG VarG
-
-(9,48)-(9,49)
-false
-LitG
-
-(9,48)-(9,49)
-true
-LitG
-
-(9,48)-(9,49)
-if y = x
-then (y , false)
-else (y , true)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(9,48)-(9,49)
-(y , false)
-TupleG (fromList [VarG,LitG])
-
-(9,48)-(9,49)
-(y , true)
-TupleG (fromList [VarG,LitG])
-
+(* type error slice
+(2,4)-(3,68)
+(2,15)-(3,66)
+(9,30)-(9,47)
+(9,31)-(9,39)
+(9,40)-(9,46)
 *)

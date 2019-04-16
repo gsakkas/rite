@@ -65,60 +65,34 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,9)-(18,15)
+(18,10)-(18,16)
 (List.length acc = List.length l1) || (List.length acc = List.length l2)
 BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
-(18,13)-(18,15)
-List.length acc
+(27,25)-(27,52)
+List.combine l1 l2
 AppG (fromList [VarG])
 
-(19,11)-(19,58)
-List.length
-VarG
+*)
 
-(19,11)-(19,58)
-acc
-VarG
-
-(19,11)-(19,58)
-List.length
-VarG
-
-(19,11)-(19,58)
-l1
-VarG
-
-(19,11)-(19,58)
-List.length
-VarG
-
-(19,11)-(19,58)
-acc
-VarG
-
-(19,11)-(19,58)
-List.length
-VarG
-
-(19,11)-(19,58)
-l2
-VarG
-
-(19,11)-(19,58)
-List.length l1
-AppG (fromList [VarG])
-
-(19,11)-(19,58)
-List.length acc
-AppG (fromList [VarG])
-
-(19,11)-(19,58)
-List.length l2
-AppG (fromList [VarG])
-
-(19,11)-(19,58)
-List.length acc = List.length l2
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
+(* type error slice
+(16,5)-(28,52)
+(16,11)-(25,39)
+(16,13)-(25,39)
+(18,10)-(18,11)
+(18,10)-(18,16)
+(18,14)-(18,16)
+(21,9)-(25,39)
+(21,26)-(21,27)
+(27,5)-(28,52)
+(27,16)-(27,24)
+(27,16)-(27,52)
+(27,25)-(27,52)
+(27,29)-(27,30)
+(27,31)-(27,51)
+(27,32)-(27,44)
+(28,19)-(28,33)
+(28,19)-(28,45)
+(28,34)-(28,35)
+(28,41)-(28,45)
 *)

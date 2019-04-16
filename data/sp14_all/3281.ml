@@ -47,45 +47,32 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(15,6)-(16,71)
-a
-VarG
-
-(15,6)-(16,71)
-list1
-VarG
-
-(15,6)-(16,71)
+(15,7)-(16,72)
 match a with
 | (list1 , list2) -> match list1 with
                      | [] -> match x with
                              | (h1 , h2) -> ((h1 + h2) :: list1 , list2)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(ConPatG Nothing,Nothing,EmptyG)]))])
 
-(15,6)-(16,71)
-match list1 with
-| [] -> match x with
-        | (h1 , h2) -> ((h1 + h2) :: list1 , list2)
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
-
-(16,48)-(16,57)
-(h1 + h2) :: list1
-ConAppG (Just (TupleG (fromList [VarG,BopG VarG VarG]))) Nothing
-
-(17,4)-(19,51)
-list1
-VarG
-
-(17,4)-(19,51)
-list2
-VarG
-
-(17,19)-(17,20)
+(17,17)-(17,18)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
-(18,4)-(19,51)
+(17,20)-(17,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(14,5)-(19,52)
+(14,11)-(16,72)
+(14,13)-(16,72)
+(15,7)-(16,72)
+(16,20)-(16,72)
+(16,27)-(16,28)
+(16,47)-(16,71)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
 *)

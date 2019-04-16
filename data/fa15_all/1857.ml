@@ -49,8 +49,15 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(21,7)-(21,42)
+(21,8)-(21,43)
 (sumList (digits n) mod 10) <> 0
 BopG (BopG EmptyG EmptyG) LitG
 
+*)
+
+(* type error slice
+(21,5)-(21,65)
+(21,8)-(21,43)
+(21,33)-(21,43)
+(21,34)-(21,36)
 *)

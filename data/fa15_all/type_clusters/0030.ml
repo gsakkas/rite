@@ -1,0 +1,4 @@
+'a
+int
+string
+bool

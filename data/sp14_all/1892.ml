@@ -17,29 +17,24 @@ let fixpoint (f,b) = wwhile ((g f), b);;
 *)
 
 (* changed spans
-(2,7)-(2,48)
+(2,8)-(2,49)
 fun h ->
   fun x ->
     (let xx = h x in
      (xx , xx = h x))
-LamG (LamG EmptyG)
+LamG VarPatG (LamG VarPatG EmptyG)
 
-(2,14)-(2,48)
-fun x ->
-  (let xx = h x in
-   (xx , xx = h x))
-LamG (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(2,23)-(2,24)
-h
-VarG
-
-(2,42)-(2,43)
-h
-VarG
-
-(6,29)-(6,36)
+(6,30)-(6,37)
 g f
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(2,4)-(2,51)
+(2,8)-(2,49)
+(2,15)-(2,49)
+(2,31)-(2,49)
+(6,30)-(6,37)
+(6,31)-(6,32)
 *)

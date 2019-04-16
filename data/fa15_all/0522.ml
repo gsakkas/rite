@@ -13,14 +13,18 @@ let rec assoc (d,k,l) =
 *)
 
 (* changed spans
-(3,56)-(3,65)
+(3,57)-(3,68)
 match x with
 | k -> y
 | _ -> assoc (d , k , l')
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(VarPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(3,66)-(3,67)
-x
-VarG
+*)
 
+(* type error slice
+(3,3)-(3,68)
+(3,24)-(3,28)
+(3,40)-(3,68)
+(3,57)-(3,66)
+(3,57)-(3,68)
 *)

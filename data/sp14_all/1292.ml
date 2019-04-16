@@ -89,42 +89,34 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(17,16)-(17,39)
-a
-VarG
-
-(17,16)-(17,39)
-b
-VarG
-
-(17,16)-(17,39)
-a_less
-VarG
-
-(17,16)-(17,39)
-b_less
-VarG
-
-(17,16)-(17,39)
-fun (a , b , a_less , b_less) ->
-  Thresh (a , b , a_less , b_less)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
-
-(17,16)-(17,39)
-Thresh (a , b , a_less , b_less)
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(28,8)-(28,13)
+(28,6)-(42,74)
 match x with
 | 0 -> buildSine (build (rand , depth - 1))
 | 1 -> buildCosine (build (rand , depth - 1))
 | 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 4 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(39,11)-(42,73)
-buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(17,4)-(17,42)
+(17,17)-(17,40)
+(17,26)-(17,40)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(24,3)-(42,75)
+(25,8)-(25,60)
+(25,50)-(25,56)
+(25,50)-(25,59)
+(27,5)-(42,75)
+(28,6)-(42,74)
+(31,8)-(42,74)
+(34,10)-(42,74)
+(39,12)-(42,74)
+(41,14)-(41,24)
+(41,14)-(42,74)
+(42,74)-(42,74)
 *)

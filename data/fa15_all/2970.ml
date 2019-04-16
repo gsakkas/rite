@@ -22,64 +22,38 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(7,32)-(7,35)
+(6,19)-(6,22)
+a
+VarG
+
+(7,18)-(7,39)
 if List.length t <> 0
 then ""
 else sep
 IteG (BopG EmptyG EmptyG) LitG VarG
 
-(7,36)-(7,37)
-List.length
-VarG
-
-(7,36)-(7,37)
-List.length t
-AppG (fromList [VarG])
-
-(7,36)-(7,37)
-List.length t <> 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(8,6)-(8,42)
-sep
-VarG
-
-(8,6)-(8,42)
-0
-LitG
-
-(8,6)-(8,42)
-""
-LitG
-
-(8,14)-(8,15)
-List.length
-VarG
-
-(8,14)-(8,15)
-List.length t
-AppG (fromList [VarG])
-
-(8,14)-(8,15)
-List.length t <> 0
-BopG (AppG (fromList [EmptyG])) LitG
-
-(8,14)-(8,15)
+(8,15)-(8,16)
 if List.length t <> 0
 then t
 else []
-IteG (BopG EmptyG EmptyG) VarG (ListG EmptyG Nothing)
+IteG (BopG EmptyG EmptyG) VarG (ListG (fromList []))
 
-(8,19)-(8,42)
-t
-VarG
+*)
 
-(8,19)-(8,42)
-0
-LitG
-
-(8,19)-(8,42)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(3,3)-(8,43)
+(6,7)-(8,43)
+(6,13)-(6,22)
+(6,15)-(6,22)
+(6,19)-(6,20)
+(6,19)-(6,22)
+(7,18)-(7,19)
+(7,18)-(7,39)
+(7,20)-(7,21)
+(8,7)-(8,43)
+(8,15)-(8,16)
+(8,20)-(8,34)
+(8,20)-(8,43)
+(8,35)-(8,36)
+(8,42)-(8,43)
 *)

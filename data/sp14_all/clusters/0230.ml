@@ -1,11 +1,5 @@
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-let sum =
-  if carry = 1
-  then getTail (getSum a)
-  else getSum a in
-let add =
-  fun (m , n) -> m + n in
-let digit = add x + carry in
-if digit > 9
-then (1 , 1 :: ((digit - 10) :: sum))
-else (0 , digit :: sum)
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+match res with
+| (b' , c') -> if c'
+               then acc b'
+               else b'

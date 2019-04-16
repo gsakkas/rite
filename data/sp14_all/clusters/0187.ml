@@ -1,4 +1,7 @@
-AppG (fromList [ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),LitG]))) Nothing])
-List.combine (0 :: (List.rev l1))
-             (0 :: (List.rev l2))
-List.rev (0 :: (List.rev a))
+LamG VarPatG (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG),(LitPatG,Nothing,EmptyG)]))
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))

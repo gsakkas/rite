@@ -35,14 +35,22 @@ let rec additivePersistence n =
 *)
 
 (* changed spans
-(11,7)-(11,9)
+(11,8)-(11,10)
 0
 LitG
 
-(14,33)-(14,64)
+(14,34)-(14,65)
 let sum =
   num + additivePersistence num in
 1 + additivePersistence num
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (BopG EmptyG EmptyG)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (BopG EmptyG EmptyG)
 
+*)
+
+(* type error slice
+(10,3)-(14,66)
+(11,8)-(11,10)
+(13,5)-(14,66)
+(14,6)-(14,65)
+(14,34)-(14,65)
 *)

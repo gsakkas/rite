@@ -1,3 +1,2 @@
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [BopG VarG LitG])]))) Nothing
-n :: (digitsOfInt (n / 10))
-n :: (digitsOfInt (n / 10))
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ListG (fromList [EmptyG]))
+if v = 0 then [1] else [0]

@@ -9,14 +9,16 @@ let rec mulByDigit i l = match l with | [] -> [] | h::m::t -> t;;
 *)
 
 (* changed spans
-(2,25)-(2,64)
+(2,26)-(2,65)
 match l with
 | [] -> []
 | h :: m :: t -> t
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,ListG EmptyG Nothing)])
+CaseG VarG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,VarG),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
-(2,63)-(2,64)
-t
-VarG
+*)
 
+(* type error slice
+(2,26)-(2,65)
+(2,47)-(2,49)
+(2,60)-(2,65)
 *)

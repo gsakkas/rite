@@ -23,16 +23,18 @@ let removeDuplicates l =
 *)
 
 (* changed spans
-(7,54)-(7,58)
-(@)
-VarG
-
-(7,54)-(7,63)
+(7,55)-(7,64)
 seen @ [h]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
-(7,62)-(7,63)
-[h]
-ListG VarG Nothing
+*)
 
+(* type error slice
+(7,24)-(7,32)
+(7,24)-(7,39)
+(7,33)-(7,34)
+(7,35)-(7,39)
+(7,55)-(7,59)
+(7,55)-(7,64)
+(7,63)-(7,64)
 *)

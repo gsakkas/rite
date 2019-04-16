@@ -61,37 +61,37 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(3,45)-(3,48)
+(3,46)-(3,69)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [VarG,AppG (fromList [VarG,BopG VarG LitG])]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(25,6)-(26,64)
+(25,7)-(26,65)
 let (x1 , x2) = x in
 ([x1 + x2] , [x2])
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(26,51)-(26,58)
-x2
-VarG
-
-(26,59)-(26,60)
-x1
-VarG
-
-(26,61)-(26,62)
-x2
-VarG
-
-(27,15)-(27,17)
+(27,16)-(27,18)
 ([] , [])
-TupleG (fromList [ListG EmptyG Nothing])
+TupleG (fromList [ListG (fromList [])])
 
-(28,4)-(29,51)
-[]
-ListG EmptyG Nothing
+(28,16)-(28,29)
+List.combine l1 l2
+AppG (fromList [VarG])
 
-(28,15)-(28,22)
-List.combine
-VarG
+*)
 
+(* type error slice
+(24,5)-(29,52)
+(24,11)-(26,65)
+(24,13)-(26,65)
+(25,7)-(26,65)
+(26,7)-(26,65)
+(26,24)-(26,65)
+(26,41)-(26,65)
+(26,51)-(26,64)
+(26,60)-(26,61)
+(26,62)-(26,63)
+(29,19)-(29,33)
+(29,19)-(29,45)
+(29,34)-(29,35)
 *)

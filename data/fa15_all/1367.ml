@@ -56,26 +56,36 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(19,23)-(19,67)
+(19,24)-(19,68)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(20,21)-(20,38)
+(20,22)-(20,67)
 eval (t1 , x , y) *. eval (t2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(20,39)-(20,40)
-2.0
-LitG
-
-(23,9)-(23,27)
-eval (th1 , x , y) < eval (th2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(23,28)-(23,29)
+(22,7)-(27,82)
 if eval (th1 , x , y) < eval (th2 , x , y)
 then eval (th3 , x , y)
 else eval (th4 , x , y)
 IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
+*)
+
+(* type error slice
+(17,22)-(17,49)
+(17,29)-(17,48)
+(17,30)-(17,34)
+(19,24)-(19,68)
+(19,45)-(19,68)
+(19,46)-(19,63)
+(19,47)-(19,51)
+(20,42)-(20,67)
+(20,47)-(20,48)
+(20,49)-(20,66)
+(20,50)-(20,54)
+(27,50)-(27,76)
+(27,51)-(27,69)
+(27,52)-(27,56)
+(27,70)-(27,71)
 *)

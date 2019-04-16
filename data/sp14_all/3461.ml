@@ -9,8 +9,14 @@ let rec digitsOfInt n = let myList = [] in if n <= 0 then [] else [];;
 *)
 
 (* changed spans
-(2,43)-(2,60)
+(2,61)-(2,61)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(2,44)-(2,61)
+(2,59)-(2,61)
+(2,61)-(2,61)
 *)

@@ -19,16 +19,30 @@ let fixpoint (f,b) = let funt x = (2, ((f b) = b)) in wwhile (funt, b);;
 *)
 
 (* changed spans
-(7,2)-(8,22)
-2
-LitG
-
-(7,2)-(8,22)
-(2 , f b = b)
-TupleG (fromList [BopG EmptyG EmptyG,LitG])
-
-(7,16)-(7,55)
+(7,12)-(7,56)
 fun x -> (2 , f b = b)
-LamG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG (fromList [EmptyG]))
 
+(8,11)-(8,19)
+funt
+VarG
+
+*)
+
+(* type error slice
+(3,13)-(3,14)
+(3,13)-(3,16)
+(4,43)-(4,49)
+(4,43)-(4,56)
+(4,50)-(4,56)
+(4,51)-(4,52)
+(7,3)-(8,23)
+(7,12)-(7,56)
+(7,17)-(7,56)
+(7,49)-(7,56)
+(8,3)-(8,9)
+(8,3)-(8,23)
+(8,10)-(8,23)
+(8,11)-(8,19)
+(8,12)-(8,16)
 *)

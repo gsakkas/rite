@@ -24,101 +24,41 @@ let padZero l1 l2 =
 *)
 
 (* changed spans
-(5,5)-(5,40)
+(5,6)-(5,41)
 List.length l1 = List.length l2
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(6,16)-(6,27)
+(6,8)-(6,64)
 (l1 , l2)
 TupleG (fromList [VarG])
 
-(6,28)-(6,30)
+(8,21)-(8,23)
 l1
 VarG
 
-(6,34)-(6,50)
-List.length l1 < List.length l2
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(6,34)-(6,50)
-if List.length l1 < List.length l2
-then (clone 0
-            (List.length l2 - List.length l1) @ l1 , l2)
-else (l1 , clone 0
-                 (List.length l1 - List.length l2) @ l2)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-
-(6,54)-(6,59)
-(@)
-VarG
-
-(6,54)-(6,59)
-clone 0
-      (List.length l2 - List.length l1)
-AppG (fromList [BopG EmptyG EmptyG,LitG])
-
-(6,54)-(6,63)
-List.length
-VarG
-
-(6,54)-(6,63)
+(8,40)-(8,42)
 l2
 VarG
 
-(6,54)-(6,63)
-List.length l2
-AppG (fromList [VarG])
-
-(6,54)-(6,63)
+(9,10)-(9,68)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(8,4)-(9,67)
-l2
-VarG
-
-(8,7)-(8,42)
-List.length l2 - List.length l1
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(9,9)-(9,67)
-l1
-VarG
-
-(9,18)-(9,53)
-l2
-VarG
-
-(9,18)-(9,53)
-l1
-VarG
-
-(9,18)-(9,53)
-clone
-VarG
-
-(9,18)-(9,53)
-(@)
-VarG
-
-(9,18)-(9,53)
-clone 0
-      (List.length l1 - List.length l2) @ l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(9,18)-(9,53)
-clone 0
-      (List.length l1 - List.length l2)
-AppG (fromList [BopG EmptyG EmptyG,LitG])
-
-(9,18)-(9,53)
-0
-LitG
-
-(9,18)-(9,53)
+(9,68)-(9,68)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(2,44)-(2,66)
+(2,49)-(2,66)
+(2,50)-(2,55)
+(8,5)-(9,68)
+(9,10)-(9,68)
+(9,58)-(9,63)
+(9,58)-(9,67)
+(9,68)-(9,68)
 *)

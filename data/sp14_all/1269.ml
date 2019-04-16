@@ -19,13 +19,17 @@ let rec listReverse l =
 *)
 
 (* changed spans
-(6,42)-(6,76)
+(6,43)-(6,77)
 append_new (listReverse tail)
            [head]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(6,53)-(6,64)
-listReverse tail
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(3,46)-(3,75)
+(3,54)-(3,75)
+(3,55)-(3,65)
+(6,43)-(6,53)
+(6,43)-(6,77)
 *)

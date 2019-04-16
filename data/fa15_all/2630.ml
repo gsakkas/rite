@@ -50,95 +50,41 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,4)-(20,51)
-x
-VarG
-
-(17,4)-(20,51)
-a
-VarG
-
-(17,4)-(20,51)
-x1
-VarG
-
-(17,4)-(20,51)
-x2
-VarG
-
-(17,4)-(20,51)
-a1
-VarG
-
-(17,4)-(20,51)
-x1
-VarG
-
-(17,4)-(20,51)
-x2
-VarG
-
-(17,4)-(20,51)
-a2
-VarG
-
-(17,4)-(20,51)
-(x1 + x2) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,4)-(20,51)
-x1 + x2
-BopG VarG VarG
-
-(17,4)-(20,51)
-((a1 + x1) + x2) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(17,4)-(20,51)
-(a1 + x1) + x2
-BopG (BopG EmptyG EmptyG) VarG
-
-(17,4)-(20,51)
-a1 + x1
-BopG VarG VarG
-
-(17,4)-(20,51)
-10
-LitG
-
-(17,4)-(20,51)
-10
-LitG
-
-(17,4)-(20,51)
-let (a1 , a2) = a in
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(17,4)-(20,51)
-((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(17,4)-(20,51)
-(((a1 + x1) + x2) mod 10) :: a2
-ConAppG (Just (TupleG (fromList [VarG,BopG (BopG (BopG VarG VarG) VarG) LitG]))) Nothing
-
-(17,25)-(17,44)
-List.rev
-VarG
-
-(17,25)-(17,44)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(17,25)-(17,44)
+(17,17)-(17,45)
 let (x1 , x2) = x in
 let (a1 , a2) = a in
 ((x1 + x2) / 10 , (((a1 + x1) + x2) mod 10) :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(18,19)-(18,20)
+(18,20)-(18,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+(19,16)-(19,34)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+*)
+
+(* type error slice
+(13,3)-(13,70)
+(13,51)-(13,61)
+(13,51)-(13,63)
+(13,62)-(13,63)
+(16,3)-(21,35)
+(16,12)-(20,52)
+(17,5)-(20,52)
+(18,5)-(20,52)
+(18,16)-(18,22)
+(18,20)-(18,21)
+(19,5)-(20,52)
+(20,5)-(20,52)
+(20,19)-(20,33)
+(20,19)-(20,45)
+(20,36)-(20,40)
+(20,49)-(20,52)
+(21,3)-(21,13)
+(21,3)-(21,35)
+(21,14)-(21,35)
+(21,15)-(21,18)
 *)

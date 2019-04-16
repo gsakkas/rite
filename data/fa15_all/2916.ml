@@ -75,7 +75,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,2)-(34,25)
+(16,3)-(34,26)
 match e with
 | VarX -> x
 | VarY -> y
@@ -94,134 +94,20 @@ match e with
 | Flip (a , b , c) -> if eval (a , x , y) > eval (b , x , y)
                       then eval (c , x , y) *. (- 1.0)
                       else eval (c , x , y)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG),(Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
 
-(28,6)-(30,25)
-let diff =
-  if (eval (p , x , y) -. eval (q , x , y)) < 0.0
-  then eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-  else eval (p , x , y) -. eval (q , x , y) in
-diff /. 2.0
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (BopG EmptyG EmptyG)
+*)
 
-(28,9)-(28,25)
-eval (p , x , y) -. eval (q , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(28,16)-(28,17)
-p
-VarG
-
-(28,28)-(28,31)
-eval
-VarG
-
-(28,28)-(28,31)
-q
-VarG
-
-(28,28)-(28,31)
-x
-VarG
-
-(28,28)-(28,31)
-y
-VarG
-
-(28,28)-(28,31)
-eval (q , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(28,28)-(28,31)
-(q , x , y)
-TupleG (fromList [VarG])
-
-(29,11)-(29,37)
-eval
-VarG
-
-(29,11)-(29,37)
-p
-VarG
-
-(29,11)-(29,37)
-x
-VarG
-
-(29,11)-(29,37)
-y
-VarG
-
-(29,11)-(29,37)
-eval (p , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(29,11)-(29,37)
-eval (p , x , y) -. (eval (q , x , y) *. (- 1.0))
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-
-(29,11)-(29,37)
-(p , x , y)
-TupleG (fromList [VarG])
-
-(29,18)-(29,19)
-q
-VarG
-
-(30,11)-(30,25)
-eval (p , x , y) -. eval (q , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(30,17)-(30,18)
-p
-VarG
-
-(32,6)-(34,25)
-eval
-VarG
-
-(32,6)-(34,25)
-q
-VarG
-
-(32,6)-(34,25)
-x
-VarG
-
-(32,6)-(34,25)
-y
-VarG
-
-(32,6)-(34,25)
-diff
-VarG
-
-(32,6)-(34,25)
-eval (q , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(32,6)-(34,25)
-diff /. 2.0
-BopG VarG LitG
-
-(32,6)-(34,25)
-2.0
-LitG
-
-(32,6)-(34,25)
-(q , x , y)
-TupleG (fromList [VarG])
-
-(33,11)-(33,35)
-eval (c , x , y) *. (- 1.0)
-BopG (AppG (fromList [EmptyG])) (UopG EmptyG)
-
-(34,11)-(34,25)
-(- 1.0)
-UopG LitG
-
-(34,11)-(34,25)
-1.0
-LitG
-
+(* type error slice
+(16,3)-(34,26)
+(19,26)-(19,42)
+(19,27)-(19,31)
+(19,32)-(19,41)
+(19,33)-(19,34)
+(33,12)-(33,16)
+(33,12)-(33,36)
+(33,17)-(33,36)
+(33,18)-(33,29)
+(33,19)-(33,20)
+(33,24)-(33,28)
 *)

@@ -69,13 +69,18 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(30,20)-(30,52)
+(30,21)-(30,53)
 factorial (eval (e' , x , y))
           1.0
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(30,50)-(30,51)
-1.0
-LitG
+*)
 
+(* type error slice
+(14,28)-(14,37)
+(14,28)-(14,59)
+(14,38)-(14,48)
+(30,21)-(30,30)
+(30,21)-(30,53)
+(30,31)-(30,53)
 *)

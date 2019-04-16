@@ -29,16 +29,16 @@ let rec digitalRoot n =
 *)
 
 (* changed spans
-(12,24)-(12,57)
+(12,25)-(12,58)
 digitalRoot (sumList (digitsOfInt n))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(12,36)-(12,43)
-sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
-(12,44)-(12,55)
-digitsOfInt n
-AppG (fromList [VarG])
-
+(* type error slice
+(11,4)-(12,60)
+(11,21)-(12,58)
+(12,3)-(12,58)
+(12,25)-(12,36)
+(12,25)-(12,58)
 *)

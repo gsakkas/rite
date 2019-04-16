@@ -47,36 +47,36 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(19,28)-(19,30)
-exprToString
-VarG
-
-(19,28)-(19,30)
+(19,29)-(19,31)
 exprToString e1
 AppG (fromList [VarG])
 
-(19,41)-(19,43)
-exprToString
-VarG
-
-(19,41)-(19,43)
+(19,42)-(19,44)
 exprToString e2
 AppG (fromList [VarG])
 
-(19,54)-(19,56)
-exprToString
-VarG
-
-(19,54)-(19,56)
+(19,55)-(19,57)
 exprToString e3
 AppG (fromList [VarG])
 
-(19,66)-(19,68)
-exprToString
-VarG
-
-(19,66)-(19,68)
+(19,67)-(19,69)
 exprToString e4
 AppG (fromList [VarG])
 
+*)
+
+(* type error slice
+(12,3)-(19,74)
+(19,29)-(19,31)
+(19,29)-(19,74)
+(19,32)-(19,33)
+(19,41)-(19,73)
+(19,42)-(19,44)
+(19,45)-(19,46)
+(19,54)-(19,71)
+(19,55)-(19,57)
+(19,58)-(19,59)
+(19,60)-(19,70)
+(19,65)-(19,66)
+(19,67)-(19,69)
 *)

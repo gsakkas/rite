@@ -51,12 +51,17 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(17,51)-(17,63)
-(^)
-VarG
+(17,51)-(17,73)
+exprToString e2 ^ "/2"
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(17,51)-(17,63)
-exprToString e2
-AppG (fromList [VarG])
+*)
 
+(* type error slice
+(15,16)-(15,45)
+(15,26)-(15,27)
+(15,28)-(15,45)
+(15,29)-(15,41)
+(17,51)-(17,73)
+(17,52)-(17,64)
 *)

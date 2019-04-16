@@ -63,7 +63,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(20,6)-(26,15)
+(20,7)-(26,16)
 let (x1 , x2) = x in
 let (a1 , a2) = a in
 let h :: _ = a1 in
@@ -72,55 +72,27 @@ let tens =
 let ones =
   (x1 + x2) + (h mod 10) in
 (tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(23,24)-(23,26)
-a
-VarG
+(27,16)-(27,24)
+([] , [])
+TupleG (fromList [ListG (fromList [])])
 
-(24,10)-(25,66)
-a1
-VarG
+*)
 
-(24,10)-(25,66)
-let h :: _ = a1 in
-let tens =
-  (x1 + x2) + (h / 10) in
-let ones =
-  (x1 + x2) + (h mod 10) in
-(tens :: a1 , ones :: a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(24,34)-(24,36)
-h
-VarG
-
-(25,34)-(25,36)
-h
-VarG
-
-(25,54)-(25,58)
-tens :: a1
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(25,60)-(25,64)
-a1
-VarG
-
-(25,60)-(25,64)
-ones :: a2
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(26,14)-(26,15)
-a2
-VarG
-
-(27,20)-(27,21)
-[]
-ListG EmptyG Nothing
-
-(28,4)-(29,51)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(19,5)-(29,52)
+(19,11)-(26,16)
+(19,13)-(26,16)
+(20,7)-(26,16)
+(20,13)-(20,14)
+(28,5)-(29,52)
+(28,16)-(28,24)
+(28,16)-(28,45)
+(28,25)-(28,45)
+(28,26)-(28,38)
+(29,19)-(29,33)
+(29,19)-(29,45)
+(29,34)-(29,35)
+(29,41)-(29,45)
 *)

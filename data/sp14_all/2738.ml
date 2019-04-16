@@ -13,38 +13,23 @@ let pipe fs =
 *)
 
 (* changed spans
-(3,16)-(3,17)
+(3,15)-(3,18)
 function | g -> g
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG)]))
 
-(4,2)-(4,69)
-$x
-VarG
-
-(4,2)-(4,69)
-g
-VarG
-
-(4,2)-(4,69)
-match $x with
-| g -> g
-CaseG VarG (fromList [(Nothing,VarG)])
-
-(4,22)-(4,41)
+(4,14)-(4,42)
 function | x -> x
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG)]))
 
-(4,45)-(4,69)
-$x
-VarG
+*)
 
-(4,45)-(4,69)
-x
-VarG
-
-(4,45)-(4,69)
-match $x with
-| x -> x
-CaseG VarG (fromList [(Nothing,VarG)])
-
+(* type error slice
+(3,3)-(4,70)
+(3,9)-(3,18)
+(3,11)-(3,18)
+(3,15)-(3,16)
+(3,15)-(3,18)
+(4,46)-(4,60)
+(4,46)-(4,70)
+(4,61)-(4,62)
 *)

@@ -50,54 +50,26 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(15,15)-(20,50)
-fun () -> VarX
-LamG (ConAppG Nothing Nothing)
-
-(15,15)-(20,50)
-fun () -> VarY
-LamG (ConAppG Nothing Nothing)
-
-(15,15)-(20,50)
-VarX
-ConAppG Nothing Nothing
-
-(15,15)-(20,50)
-VarY
-ConAppG Nothing Nothing
-
-(16,2)-(20,50)
-rand
-VarG
-
-(16,2)-(20,50)
-buildX
-VarG
-
-(16,2)-(20,50)
-rand (0 , 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
-(16,2)-(20,50)
-buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
-
-(16,2)-(20,50)
-0
-LitG
-
-(16,2)-(20,50)
-1
-LitG
-
-(16,2)-(20,50)
+(20,51)-(20,51)
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(16,2)-(20,50)
-(0 , 1)
-TupleG (fromList [LitG])
+*)
 
+(* type error slice
+(13,4)-(13,27)
+(13,15)-(13,25)
+(13,19)-(13,25)
+(13,24)-(13,25)
+(15,4)-(20,53)
+(15,16)-(20,51)
+(16,3)-(20,51)
+(18,5)-(20,51)
+(19,12)-(19,21)
+(19,12)-(19,49)
+(19,22)-(19,49)
+(19,23)-(19,28)
+(20,51)-(20,51)
 *)

@@ -161,8 +161,15 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(78,47)-(78,58)
+(78,48)-(78,59)
 depth - num
 BopG VarG VarG
 
+*)
+
+(* type error slice
+(29,36)-(29,47)
+(29,37)-(29,42)
+(78,48)-(78,59)
+(78,49)-(78,54)
 *)

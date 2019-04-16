@@ -48,89 +48,53 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,16)-(16,56)
+(16,17)-(16,57)
 let (x1 , x2) = x in
 let (carry , sum) = a in
 ((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(16,42)-(16,51)
-((x1 + x2) + carry) mod 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,42)-(16,56)
-a
-VarG
-
-(16,42)-(16,56)
-x1
-VarG
-
-(16,42)-(16,56)
-x2
-VarG
-
-(16,42)-(16,56)
-(x1 + x2) / 10
-BopG (BopG EmptyG EmptyG) LitG
-
-(16,42)-(16,56)
-x1 + x2
-BopG VarG VarG
-
-(16,42)-(16,56)
-10
-LitG
-
-(16,42)-(16,56)
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
-
-(16,42)-(16,56)
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG) Nothing])
-
-(16,43)-(16,45)
-x1 + x2
-BopG VarG VarG
-
-(16,55)-(16,56)
-carry
-VarG
-
-(17,4)-(19,51)
-sum
-VarG
-
-(17,4)-(19,51)
-10
-LitG
-
-(17,16)-(17,18)
+(17,17)-(17,19)
 0
 LitG
 
-(18,15)-(18,43)
+(18,16)-(18,44)
 let (l1' , l2') =
   padZero l1 l2 in
 List.combine l1' l2'
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
 
-(19,4)-(19,51)
-List.combine
-VarG
+*)
 
-(19,4)-(19,51)
-l1'
-VarG
-
-(19,4)-(19,51)
-l2'
-VarG
-
-(19,4)-(19,51)
-List.combine l1' l2'
-AppG (fromList [VarG])
-
+(* type error slice
+(4,4)-(9,46)
+(4,13)-(9,44)
+(4,16)-(9,44)
+(5,3)-(9,44)
+(6,3)-(9,44)
+(7,3)-(9,44)
+(9,8)-(9,44)
+(9,9)-(9,39)
+(9,34)-(9,35)
+(15,3)-(20,35)
+(15,12)-(19,52)
+(16,5)-(19,52)
+(16,11)-(16,57)
+(16,43)-(16,57)
+(16,56)-(16,57)
+(17,5)-(19,52)
+(17,16)-(17,24)
+(18,16)-(18,28)
+(18,16)-(18,44)
+(18,29)-(18,36)
+(18,37)-(18,44)
+(18,38)-(18,40)
+(19,19)-(19,33)
+(19,19)-(19,45)
+(19,34)-(19,35)
+(19,36)-(19,40)
+(20,14)-(20,35)
+(20,15)-(20,18)
+(20,19)-(20,34)
+(20,20)-(20,27)
 *)

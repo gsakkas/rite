@@ -80,37 +80,25 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(35,33)-(35,44)
+(35,34)-(35,45)
 place * 10
 BopG VarG LitG
 
-(35,46)-(35,70)
-10
-LitG
-
-(35,47)-(35,53)
+(35,47)-(35,71)
 bigAdd (mulByDigit (place * 10)
                    l1) l
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(35,54)-(35,64)
-mulByDigit (place * 10) l1
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+*)
 
-(35,65)-(35,66)
-place * 10
-BopG VarG LitG
-
-(35,67)-(35,69)
-place
-VarG
-
-(35,67)-(35,69)
-10
-LitG
-
-(36,2)-(37,75)
-l
-VarG
-
+(* type error slice
+(31,46)-(31,52)
+(31,46)-(31,77)
+(31,53)-(31,54)
+(31,55)-(31,77)
+(31,56)-(31,66)
+(31,75)-(31,76)
+(35,47)-(35,71)
+(35,48)-(35,54)
+(35,55)-(35,65)
 *)

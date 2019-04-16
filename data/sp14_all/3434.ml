@@ -10,17 +10,21 @@ let rec sumList xs = let x::t = xs in x + (sumList t);;
 *)
 
 (* changed spans
-(3,2)-(3,65)
-t
-VarG
-
-(3,6)-(3,17)
+(3,3)-(3,66)
 let x :: t = xs in
 x + sumList t
-LetG NonRec (fromList [VarG]) (BopG EmptyG EmptyG)
+LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (BopG EmptyG EmptyG)
 
-(3,37)-(3,38)
-x
-VarG
+*)
 
+(* type error slice
+(3,3)-(3,66)
+(3,6)-(3,22)
+(3,7)-(3,18)
+(3,19)-(3,21)
+(3,33)-(3,41)
+(3,33)-(3,66)
+(3,34)-(3,36)
+(3,34)-(3,40)
+(3,66)-(3,66)
 *)

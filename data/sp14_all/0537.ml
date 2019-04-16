@@ -79,57 +79,26 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(31,8)-(37,26)
+(30,7)-(37,27)
 let max' =
   fun a ->
     fun b ->
       if a < b then b else a in
 max' 1.0 (min 1.0
               ((2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0))
-LetG NonRec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(31,9)-(31,12)
-a
-VarG
+*)
 
-(31,9)-(31,12)
-b
-VarG
-
-(31,9)-(31,12)
-b
-VarG
-
-(31,9)-(31,12)
-a
-VarG
-
-(31,9)-(31,12)
-max'
-VarG
-
-(31,9)-(31,12)
-fun a ->
-  fun b ->
-    if a < b then b else a
-LamG (LamG EmptyG)
-
-(31,9)-(31,12)
-fun b ->
-  if a < b then b else a
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(31,9)-(31,12)
-max' 1.0 (min 1.0
-              ((2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(31,9)-(31,12)
-a < b
-BopG VarG VarG
-
-(31,9)-(31,12)
-if a < b then b else a
-IteG (BopG EmptyG EmptyG) VarG VarG
-
+(* type error slice
+(13,4)-(13,18)
+(13,11)-(13,14)
+(13,11)-(13,16)
+(18,3)-(38,28)
+(21,15)-(21,18)
+(21,15)-(21,43)
+(30,7)-(30,10)
+(30,7)-(37,27)
+(31,9)-(37,27)
+(31,10)-(31,13)
 *)

@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,6)-(23,11)
+(17,7)-(23,12)
 let newc =
   match x with
   | (f , g) -> if ((f + g) + carry) > 9
@@ -67,48 +67,26 @@ let digit =
   | (f , g) -> (f + g) + (carry mod 10) in
 match a with
 | (o , p) -> (newc , digit :: p)
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(22,21)-(22,47)
-x
-VarG
+*)
 
-(22,21)-(22,47)
-let digit =
-  match x with
-  | (f , g) -> (f + g) + (carry mod 10) in
-match a with
-| (o , p) -> (newc , digit :: p)
-LetG NonRec (fromList [CaseG EmptyG (fromList [(Nothing,EmptyG)])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(22,21)-(22,47)
-match x with
-| (f , g) -> (f + g) + (carry mod 10)
-CaseG VarG (fromList [(Nothing,BopG EmptyG EmptyG)])
-
-(23,6)-(23,11)
-a
-VarG
-
-(23,6)-(23,11)
-newc
-VarG
-
-(23,6)-(23,11)
-match a with
-| (o , p) -> (newc , digit :: p)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
-
-(23,6)-(23,11)
-(newc , digit :: p)
-TupleG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(23,6)-(23,11)
-digit :: p
-ConAppG (Just (TupleG (fromList [VarG]))) Nothing
-
-(24,4)-(26,51)
-p
-VarG
-
+(* type error slice
+(15,5)-(26,52)
+(15,11)-(23,12)
+(15,13)-(23,12)
+(16,7)-(23,12)
+(17,7)-(23,12)
+(18,9)-(22,49)
+(20,13)-(22,49)
+(22,18)-(22,49)
+(22,22)-(22,48)
+(23,7)-(23,12)
+(24,5)-(26,52)
+(24,16)-(24,23)
+(24,20)-(24,22)
+(26,19)-(26,33)
+(26,19)-(26,45)
+(26,34)-(26,35)
+(26,36)-(26,40)
 *)

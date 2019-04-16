@@ -51,7 +51,7 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(18,2)-(25,68)
+(18,3)-(25,69)
 match e with
 | buildX -> x
 | buildY -> y
@@ -60,14 +60,26 @@ match e with
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
 | Thresh (a , b , a_less , b_less) -> 0.0
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG])),(Nothing,BopG EmptyG EmptyG),(Nothing,LitG)])
+CaseG VarG (fromList [(VarPatG,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LitG)])
 
-(19,20)-(19,22)
-x
-VarG
+*)
 
-(25,61)-(25,67)
-0.0
-LitG
-
+(* type error slice
+(13,4)-(13,23)
+(13,12)-(13,21)
+(13,17)-(13,21)
+(17,4)-(25,71)
+(17,15)-(25,69)
+(18,3)-(25,69)
+(19,14)-(19,20)
+(19,14)-(19,23)
+(21,15)-(21,18)
+(21,15)-(21,43)
+(21,19)-(21,43)
+(21,26)-(21,42)
+(21,27)-(21,31)
+(22,17)-(22,20)
+(22,17)-(22,45)
+(23,24)-(23,71)
+(24,22)-(24,60)
 *)

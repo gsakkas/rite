@@ -63,16 +63,20 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(27,28)-(27,36)
-List.append
-VarG
+(27,16)-(27,66)
+List.append (List.rev (List.combine l1
+                                    l2)) [(0 , 0)]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(27,28)-(27,36)
-List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
-(27,58)-(27,64)
-[(0 , 0)]
-ListG (TupleG (fromList [EmptyG])) Nothing
-
+(* type error slice
+(27,5)-(28,52)
+(27,16)-(27,27)
+(27,16)-(27,66)
+(27,28)-(27,66)
+(27,29)-(27,37)
+(28,19)-(28,33)
+(28,19)-(28,45)
+(28,41)-(28,45)
 *)

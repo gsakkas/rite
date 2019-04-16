@@ -47,8 +47,14 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,28)-(17,42)
+(17,29)-(17,43)
 [addit mod 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(17,22)-(17,44)
+(17,27)-(17,28)
+(17,29)-(17,43)
 *)

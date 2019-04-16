@@ -78,88 +78,26 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,11)-(35,21)
-l
-VarG
-
-(17,11)-(35,21)
-h
-VarG
-
-(17,11)-(35,21)
-removeZero
-VarG
-
-(17,11)-(35,21)
-t
-VarG
-
-(17,11)-(35,21)
-l
-VarG
-
-(17,11)-(35,21)
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> if h = 0
-              then removeZero t
-              else l
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(17,11)-(35,21)
-removeZero t
-AppG (fromList [VarG])
-
-(17,11)-(35,21)
-h = 0
-BopG VarG LitG
-
-(17,11)-(35,21)
-0
-LitG
-
-(17,11)-(35,21)
-if h = 0
-then removeZero t
-else l
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
-
-(17,11)-(35,21)
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG),(Nothing,ListG EmptyG Nothing)])
-
-(17,11)-(35,21)
-[]
-ListG EmptyG Nothing
-
-(33,6)-(33,34)
+(33,7)-(33,35)
 pair (List.rev l1)
      (List.rev l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(33,11)-(33,19)
-List.rev l1
-AppG (fromList [VarG])
-
-(33,23)-(33,31)
-List.rev l2
-AppG (fromList [VarG])
-
-(34,48)-(34,52)
+(34,49)-(34,53)
 res
 VarG
 
-(35,2)-(35,5)
-removeZero
-VarG
-
-(35,2)-(35,5)
-add (padZero l1 l2)
+(35,3)-(35,22)
+removeZero (add (padZero l1
+                         l2))
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(31,30)-(31,54)
+(31,42)-(31,54)
+(31,43)-(31,47)
+(33,7)-(33,11)
+(33,7)-(33,35)
 *)

@@ -19,16 +19,20 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(6,16)-(6,17)
-(@)
-VarG
-
-(7,15)-(7,16)
-[digit]
-ListG VarG Nothing
-
-(7,20)-(7,44)
+(7,21)-(7,45)
 digitsOfInt r @ [digit]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(2,4)-(7,47)
+(2,21)-(7,45)
+(3,3)-(7,45)
+(3,15)-(3,23)
+(5,3)-(7,45)
+(7,21)-(7,36)
+(7,21)-(7,45)
+(7,22)-(7,33)
+(7,40)-(7,45)
 *)

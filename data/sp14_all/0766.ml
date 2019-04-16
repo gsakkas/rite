@@ -11,35 +11,20 @@ let rec wwhile (f,b) =
 *)
 
 (* changed spans
-(2,23)-(2,71)
+(2,24)-(2,72)
 let ans = f b in
 match ans with
 | (num , boo) -> if boo = true
                  then wwhile (f , num)
                  else num
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
 
-(2,29)-(2,30)
-f
-VarG
+*)
 
-(2,29)-(2,30)
-f b
-AppG (fromList [VarG])
-
-(2,49)-(2,71)
-ans
-VarG
-
-(2,49)-(2,71)
-wwhile
-VarG
-
-(2,49)-(2,71)
-match ans with
-| (num , boo) -> if boo = true
-                 then wwhile (f , num)
-                 else num
-CaseG VarG (fromList [(Nothing,IteG EmptyG EmptyG EmptyG)])
-
+(* type error slice
+(2,24)-(2,72)
+(2,30)-(2,31)
+(2,69)-(2,70)
+(2,69)-(2,72)
+(2,71)-(2,72)
 *)

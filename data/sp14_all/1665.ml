@@ -27,8 +27,14 @@ let palindrome w =
 *)
 
 (* changed spans
-(11,37)-(11,65)
+(11,66)-(11,66)
 false
 LitG
 
+*)
+
+(* type error slice
+(11,38)-(11,66)
+(11,62)-(11,66)
+(11,66)-(11,66)
 *)

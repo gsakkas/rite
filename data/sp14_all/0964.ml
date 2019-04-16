@@ -61,14 +61,15 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(24,8)-(24,65)
+(24,9)-(24,66)
 List.append [result / 10]
             (List.append [result mod 10]
                          l)
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
-(24,35)-(24,46)
-List.append [result mod 10] l
-AppG (fromList [VarG,ListG EmptyG Nothing])
+*)
 
+(* type error slice
+(24,9)-(24,66)
+(24,10)-(24,21)
 *)

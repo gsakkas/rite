@@ -75,8 +75,15 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(30,35)-(30,55)
+(30,36)-(30,56)
 [new_carry ; digit]
-ListG VarG Nothing
+ListG (fromList [VarG])
 
+*)
+
+(* type error slice
+(28,11)-(31,73)
+(28,23)-(28,65)
+(30,36)-(30,56)
+(30,50)-(30,55)
 *)

@@ -87,12 +87,30 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(32,11)-(32,17)
-buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+(27,3)-(43,70)
+match case with
+| 0 -> buildX ()
+| 1 -> buildY ()
+| 2 -> buildSine (build (rand , depth - 1))
+| 3 -> buildCosine (build (rand , depth - 1))
+| 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+| 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+| 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
-(33,11)-(33,48)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+*)
 
+(* type error slice
+(21,4)-(21,23)
+(21,12)-(21,21)
+(21,17)-(21,21)
+(23,4)-(23,23)
+(23,12)-(23,21)
+(27,3)-(43,70)
+(29,5)-(43,70)
+(30,5)-(43,70)
+(31,12)-(31,18)
+(31,12)-(31,21)
+(32,12)-(32,18)
+(43,70)-(43,70)
 *)

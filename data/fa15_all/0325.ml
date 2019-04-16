@@ -82,7 +82,7 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(33,4)-(34,74)
+(33,5)-(34,75)
 let (ll , accumulate) = a in
 let multed =
   mulByDigit x l1 in
@@ -90,58 +90,55 @@ let accumulate =
   List.append accumulate [0] in
 (l1 , bigAdd accumulate
              multed)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(34,4)-(34,74)
-let multed =
-  mulByDigit x l1 in
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(34,20)-(34,31)
-mulByDigit
-VarG
-
-(34,20)-(34,31)
-x
-VarG
-
-(34,20)-(34,31)
+(35,15)-(35,16)
 l1
 VarG
 
-(34,20)-(34,31)
-List.append accumulate [0]
-AppG (fromList [VarG,ListG EmptyG Nothing])
+(35,18)-(35,20)
+[0]
+ListG (fromList [LitG])
 
-(34,20)-(34,31)
-let accumulate =
-  List.append accumulate [0] in
-(l1 , bigAdd accumulate
-             multed)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+(36,3)-(39,50)
+let args = l2 in
+let (_ , res) =
+  List.fold_left f base args in
+res
+LetG NonRec (fromList [(VarPatG,VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(34,32)-(34,33)
-accumulate
-VarG
+*)
 
-(34,49)-(34,50)
-l1
-VarG
-
-(34,71)-(34,72)
-accumulate
-VarG
-
-(35,2)-(39,49)
-multed
-VarG
-
-(37,15)-(37,17)
-0
-LitG
-
+(* type error slice
+(9,37)-(9,75)
+(9,40)-(9,41)
+(9,40)-(9,45)
+(9,44)-(9,45)
+(9,51)-(9,61)
+(9,51)-(9,63)
+(9,69)-(9,70)
+(9,69)-(9,75)
+(23,4)-(29,66)
+(23,20)-(29,64)
+(23,22)-(29,64)
+(24,3)-(29,64)
+(27,3)-(29,64)
+(28,3)-(29,64)
+(29,3)-(29,64)
+(29,50)-(29,60)
+(29,50)-(29,64)
+(36,3)-(39,50)
+(36,10)-(36,51)
+(36,18)-(36,29)
+(36,18)-(36,51)
+(36,30)-(36,32)
+(36,33)-(36,51)
+(36,34)-(36,44)
+(37,3)-(39,50)
+(37,15)-(37,19)
+(37,16)-(37,18)
+(38,14)-(38,28)
+(38,14)-(38,40)
+(38,29)-(38,31)
+(38,32)-(38,37)
 *)

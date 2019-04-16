@@ -50,105 +50,35 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(16,25)-(16,44)
+(16,17)-(16,45)
 match x with
 | (l1e , l2e) -> match a with
                  | (carry , list) -> (let num =
                                         (l1e + l2e) + carry in
                                       (num mod 9 , [7] @ list))
-CaseG VarG (fromList [(Nothing,CaseG EmptyG (fromList [(Nothing,EmptyG)]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
-(17,4)-(19,51)
-x
-VarG
-
-(17,4)-(19,51)
-a
-VarG
-
-(17,4)-(19,51)
-l1e
-VarG
-
-(17,4)-(19,51)
-l2e
-VarG
-
-(17,4)-(19,51)
-carry
-VarG
-
-(17,4)-(19,51)
-num
-VarG
-
-(17,4)-(19,51)
-(@)
-VarG
-
-(17,4)-(19,51)
-list
-VarG
-
-(17,4)-(19,51)
-[7] @ list
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(17,4)-(19,51)
-l1e + l2e
-BopG VarG VarG
-
-(17,4)-(19,51)
-(l1e + l2e) + carry
-BopG (BopG EmptyG EmptyG) VarG
-
-(17,4)-(19,51)
-num mod 9
-BopG VarG LitG
-
-(17,4)-(19,51)
-9
-LitG
-
-(17,4)-(19,51)
-7
-LitG
-
-(17,4)-(19,51)
-let num =
-  (l1e + l2e) + carry in
-(num mod 9 , [7] @ list)
-LetG NonRec (fromList [BopG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(17,4)-(19,51)
-match a with
-| (carry , list) -> (let num =
-                       (l1e + l2e) + carry in
-                     (num mod 9 , [7] @ list))
-CaseG VarG (fromList [(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(17,4)-(19,51)
-(num mod 9 , [7] @ list)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-
-(17,4)-(19,51)
-[7]
-ListG LitG Nothing
-
-(17,24)-(17,43)
+(17,16)-(17,44)
 (0 , [])
-TupleG (fromList [LitG,ListG EmptyG Nothing])
+TupleG (fromList [LitG,ListG (fromList [])])
 
-(18,4)-(19,51)
-0
-LitG
-
-(18,4)-(19,51)
-[]
-ListG EmptyG Nothing
-
-(20,18)-(20,33)
+(20,19)-(20,34)
 (padZero l1 l2 , l2)
 TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(4,4)-(7,62)
+(4,13)-(7,60)
+(4,16)-(7,60)
+(5,3)-(7,60)
+(7,8)-(7,60)
+(7,56)-(7,57)
+(15,3)-(20,35)
+(15,12)-(19,52)
+(20,14)-(20,35)
+(20,15)-(20,18)
+(20,19)-(20,34)
+(20,20)-(20,27)
 *)

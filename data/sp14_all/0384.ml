@@ -9,24 +9,18 @@ let rec digitsOfInt n = (n mod 10) :: (digitsOfInt (n / 10));;
 *)
 
 (* changed spans
-(2,26)-(2,37)
+(2,25)-(2,60)
 (n mod 10) :: (digitsOfInt (n / 10))
-ConAppG (Just (TupleG (fromList [AppG (fromList [BopG VarG LitG]),BopG VarG LitG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(2,38)-(2,39)
-n mod 10
-BopG VarG LitG
+*)
 
-(2,50)-(2,51)
-digitsOfInt
-VarG
-
-(2,50)-(2,51)
-n / 10
-BopG VarG LitG
-
-(2,50)-(2,58)
-digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
-
+(* type error slice
+(2,4)-(2,62)
+(2,21)-(2,60)
+(2,25)-(2,60)
+(2,26)-(2,41)
+(2,26)-(2,46)
+(2,27)-(2,38)
+(2,48)-(2,49)
 *)

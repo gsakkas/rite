@@ -51,85 +51,76 @@ let palindrome w =
 *)
 
 (* changed spans
-(6,12)-(9,6)
-l
-VarG
-
-(6,12)-(9,6)
-listReverse
-VarG
-
-(6,12)-(9,6)
+(4,38)-(4,40)
 t
 VarG
 
-(6,12)-(9,6)
-(@)
-VarG
+(4,51)-(4,52)
+[]
+ListG (fromList [])
 
-(6,12)-(9,6)
-h
-VarG
-
-(6,12)-(9,6)
+(10,1)-(10,1)
 fun l ->
   match l with
   | [] -> []
   | h :: t -> listReverse t @ [h]
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
-(6,12)-(9,6)
-listReverse t
-AppG (fromList [VarG])
+(11,21)-(12,58)
+EMPTY
+EmptyG
 
-(6,12)-(9,6)
-listReverse t @ [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
+(14,22)-(18,76)
+match x with
+| [] -> true
+| h :: t -> if getHead x = getHead (listReverse x)
+            then matchHeads (getTail (listReverse t))
+            else false
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
 
-(6,12)-(9,6)
-match l with
-| [] -> []
-| h :: t -> listReverse t @ [h]
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,ListG EmptyG Nothing)])
+(23,13)-(23,75)
+matchHeads [["b"]]
+AppG (fromList [ListG (fromList [EmptyG])])
 
-(6,12)-(9,6)
-[]
-ListG EmptyG Nothing
+*)
 
-(6,12)-(9,6)
-[h]
-ListG VarG Nothing
-
-(18,40)-(18,50)
-listReverse
-VarG
-
-(18,40)-(18,50)
-x
-VarG
-
-(18,40)-(18,50)
-matchHeads (getTail (listReverse t))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(18,40)-(18,64)
-listReverse x
-AppG (fromList [VarG])
-
-(18,62)-(18,63)
-listReverse t
-AppG (fromList [VarG])
-
-(18,70)-(18,75)
-listReverse
-VarG
-
-(18,70)-(18,75)
-t
-VarG
-
-(23,71)-(23,72)
-matchHeads
-VarG
-
+(* type error slice
+(2,4)-(2,54)
+(2,13)-(2,52)
+(2,17)-(2,52)
+(2,23)-(2,24)
+(2,38)-(2,40)
+(2,51)-(2,52)
+(6,4)-(9,9)
+(6,13)-(9,7)
+(7,3)-(9,7)
+(8,44)-(8,51)
+(8,44)-(8,67)
+(8,45)-(8,50)
+(8,55)-(8,67)
+(8,56)-(8,58)
+(9,3)-(9,5)
+(9,3)-(9,7)
+(12,3)-(12,58)
+(12,37)-(12,52)
+(12,37)-(12,58)
+(12,38)-(12,49)
+(12,50)-(12,51)
+(12,53)-(12,54)
+(12,55)-(12,58)
+(12,56)-(12,57)
+(15,3)-(18,76)
+(15,9)-(15,10)
+(18,10)-(18,21)
+(18,11)-(18,18)
+(18,19)-(18,20)
+(18,41)-(18,51)
+(18,41)-(18,65)
+(18,52)-(18,53)
+(23,13)-(23,23)
+(23,13)-(23,75)
+(23,24)-(23,49)
+(23,25)-(23,36)
+(23,37)-(23,48)
+(23,38)-(23,45)
 *)

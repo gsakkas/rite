@@ -49,17 +49,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,36)-(19,59)
+(19,17)-(19,60)
 let (h :: t , _) = a in
 ([] , [])
-LetG NonRec (fromList [VarG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG,WildPatG]),VarG)]) (TupleG (fromList [EmptyG]))
 
-(19,56)-(19,57)
-[]
-ListG EmptyG Nothing
+*)
 
-(20,4)-(21,68)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(19,5)-(21,69)
+(19,11)-(19,60)
+(19,13)-(19,60)
+(19,17)-(19,60)
+(19,32)-(19,33)
+(19,37)-(19,60)
+(21,36)-(21,50)
+(21,36)-(21,62)
+(21,51)-(21,52)
 *)

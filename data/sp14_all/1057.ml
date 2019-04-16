@@ -67,8 +67,18 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(28,43)-(28,46)
-abs_float
-VarG
+(28,43)-(28,66)
+abs_float (eval (e2 , x , y))
+AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(19,20)-(19,45)
+(19,27)-(19,44)
+(19,28)-(19,32)
+(28,43)-(28,66)
+(28,44)-(28,47)
+(28,48)-(28,65)
+(28,49)-(28,53)
 *)

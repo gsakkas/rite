@@ -86,11 +86,7 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(37,4)-(38,75)
-a
-VarG
-
-(37,4)-(38,75)
+(37,5)-(38,76)
 let (a1 , a2) = a in
 let test =
   match a1 with
@@ -99,18 +95,20 @@ let test =
 let multi =
   mulByDigit (test * x) l1 in
 (test :: a1 , bigAdd multi a2)
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(37,21)-(37,22)
-a1
-VarG
+*)
 
-(38,54)-(38,55)
-a1
-VarG
-
-(38,72)-(38,73)
-a2
-VarG
-
+(* type error slice
+(36,3)-(40,76)
+(36,9)-(38,76)
+(36,11)-(38,76)
+(37,5)-(38,76)
+(37,16)-(37,55)
+(37,22)-(37,23)
+(38,5)-(38,76)
+(38,45)-(38,76)
+(40,43)-(40,57)
+(40,43)-(40,69)
+(40,58)-(40,59)
 *)

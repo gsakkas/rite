@@ -26,26 +26,26 @@ let palindrome w =
 *)
 
 (* changed spans
-(10,19)-(10,42)
-explode w = listReverse (explode w)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-
-(10,19)-(10,42)
+(10,20)-(10,43)
 if explode w = listReverse (explode w)
 then true
 else false
 IteG (BopG EmptyG EmptyG) LitG LitG
 
-(10,27)-(10,42)
-w
-VarG
+*)
 
-(10,40)-(10,41)
-explode
-VarG
-
-(10,40)-(10,41)
-explode w
-AppG (fromList [VarG])
-
+(* type error slice
+(2,4)-(5,9)
+(2,13)-(5,7)
+(4,13)-(4,30)
+(4,14)-(4,27)
+(4,28)-(4,29)
+(8,40)-(8,58)
+(8,40)-(8,64)
+(8,41)-(8,52)
+(8,59)-(8,60)
+(10,20)-(10,27)
+(10,20)-(10,43)
+(10,28)-(10,43)
+(10,29)-(10,40)
 *)

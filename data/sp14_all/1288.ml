@@ -89,48 +89,35 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(27,34)-(27,40)
+(27,35)-(27,41)
 buildX ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(27,46)-(27,52)
+(27,47)-(27,53)
 buildY ()
-AppG (fromList [ConAppG Nothing (Just (TApp "unit" []))])
+AppG (fromList [ConAppG Nothing])
 
-(27,46)-(27,52)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+(31,23)-(31,29)
+build (rand , depth - 1)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
-(29,4)-(42,71)
-()
-ConAppG Nothing (Just (TApp "unit" []))
+*)
 
-(32,12)-(32,23)
-build
-VarG
-
-(32,12)-(32,23)
-rand
-VarG
-
-(32,12)-(32,23)
-depth
-VarG
-
-(32,12)-(32,23)
-buildCosine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(32,12)-(32,23)
-depth - 1
-BopG VarG LitG
-
-(32,12)-(32,23)
-1
-LitG
-
-(32,12)-(32,23)
-(rand , depth - 1)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
-
+(* type error slice
+(15,4)-(15,27)
+(15,15)-(15,25)
+(15,19)-(15,25)
+(15,24)-(15,25)
+(21,4)-(21,23)
+(21,12)-(21,21)
+(23,4)-(23,23)
+(23,12)-(23,21)
+(26,3)-(42,72)
+(27,8)-(27,54)
+(27,47)-(27,53)
+(29,5)-(42,72)
+(30,6)-(42,71)
+(31,13)-(31,22)
+(31,13)-(31,29)
+(31,23)-(31,29)
 *)

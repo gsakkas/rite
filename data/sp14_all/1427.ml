@@ -18,34 +18,7 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(2,17)-(2,58)
-fun x ->
-  fun l ->
-    fun acc ->
-      match x with
-      | [] -> l
-      | h :: t -> helper t l
-                         (h :: acc)
-LamG (LamG EmptyG)
-
-(2,17)-(2,58)
-fun l ->
-  fun acc ->
-    match x with
-    | [] -> l
-    | h :: t -> helper t l
-                       (h :: acc)
-LamG (LamG EmptyG)
-
-(2,17)-(2,58)
-fun acc ->
-  match x with
-  | [] -> l
-  | h :: t -> helper t l
-                     (h :: acc)
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(2,17)-(2,58)
+(2,18)-(2,59)
 let rec helper =
   fun x ->
     fun l ->
@@ -55,46 +28,26 @@ let rec helper =
         | h :: t -> helper t l
                            (h :: acc) in
 helper x l []
-LetG Rec (fromList [LamG EmptyG]) (AppG (fromList [EmptyG]))
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
 
-(2,52)-(2,53)
-h
-VarG
+*)
 
-(2,52)-(2,53)
-acc
-VarG
-
-(2,52)-(2,53)
-helper
-VarG
-
-(2,52)-(2,53)
-helper x l []
-AppG (fromList [VarG,ListG EmptyG Nothing])
-
-(2,52)-(2,58)
-l
-VarG
-
-(2,52)-(2,58)
-helper
-VarG
-
-(2,52)-(2,58)
-t
-VarG
-
-(2,52)-(2,58)
-l
-VarG
-
-(2,52)-(2,58)
-helper t l (h :: acc)
-AppG (fromList [VarG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-
-(4,20)-(5,65)
-[]
-ListG EmptyG Nothing
-
+(* type error slice
+(2,4)-(2,61)
+(2,12)-(2,59)
+(2,14)-(2,59)
+(2,18)-(2,59)
+(2,39)-(2,42)
+(2,53)-(2,54)
+(2,53)-(2,59)
+(2,58)-(2,59)
+(4,4)-(5,68)
+(4,21)-(5,66)
+(5,3)-(5,66)
+(5,26)-(5,32)
+(5,26)-(5,66)
+(5,33)-(5,55)
+(5,34)-(5,45)
+(5,56)-(5,66)
+(5,57)-(5,65)
 *)

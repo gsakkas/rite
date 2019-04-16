@@ -1,11 +1,7 @@
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
-List.fold_left (^) ""
-               (List.map f l)
-buildhelper (rand (1 , 4))
-            depth ""
-buildhelper (rand (1 , 4))
-            depth ""
-buildhelper (rand (1 , 4))
-            depth ""
-buildhelper (rand (1 , 4))
-            depth ""
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG)),(ConPatG Nothing,Nothing,VarG)])
+match l with
+| [] -> l
+| h :: t -> h :: (listReverse t)
+match l with
+| [] -> l'
+| h :: t -> (List.hd l) :: (listReverse (List.tl l))

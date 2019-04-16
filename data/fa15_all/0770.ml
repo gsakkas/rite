@@ -51,12 +51,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(18,21)-(18,44)
+(18,22)-(18,45)
 [((a1 + x1) + x2) - 10]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
-(19,21)-(19,37)
+(19,22)-(19,38)
 [(a1 + x1) + x2]
-ListG (BopG EmptyG EmptyG) Nothing
+ListG (fromList [BopG EmptyG EmptyG])
 
+*)
+
+(* type error slice
+(18,16)-(18,46)
+(18,20)-(18,21)
+(18,22)-(18,45)
+(19,16)-(19,39)
+(19,20)-(19,21)
+(19,22)-(19,38)
 *)

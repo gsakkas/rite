@@ -55,17 +55,20 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(20,6)-(22,20)
+(20,7)-(22,21)
 match a with
 | (w , y) -> ((w + z) / 10 , ((w + z) mod 10) :: y)
-CaseG VarG (fromList [(Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
-(22,18)-(22,19)
-y
-VarG
-
-(23,19)-(23,20)
+(23,20)-(23,21)
 []
-ListG EmptyG Nothing
+ListG (fromList [])
 
+*)
+
+(* type error slice
+(20,7)-(22,21)
+(21,44)-(21,73)
+(21,45)-(21,67)
+(21,71)-(21,72)
 *)

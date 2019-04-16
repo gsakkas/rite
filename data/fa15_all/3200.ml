@@ -62,128 +62,53 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(17,11)-(28,21)
-l
-VarG
-
-(17,11)-(28,21)
-l
-VarG
-
-(17,11)-(28,21)
-h
-VarG
-
-(17,11)-(28,21)
-removeZero
-VarG
-
-(17,11)-(28,21)
-t
-VarG
-
-(17,11)-(28,21)
-l
-VarG
-
-(17,11)-(28,21)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(17,11)-(28,21)
-removeZero t
-AppG (fromList [VarG])
-
-(17,11)-(28,21)
-l = []
-BopG VarG (ListG EmptyG Nothing)
-
-(17,11)-(28,21)
-let h :: t = l in
-match h with
-| 0 -> removeZero t
-| _ -> l
-LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(17,11)-(28,21)
-if l = []
-then []
-else (let h :: t = l in
-      match h with
-      | 0 -> removeZero t
-      | _ -> l)
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(17,11)-(28,21)
-match h with
-| 0 -> removeZero t
-| _ -> l
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
-
-(17,11)-(28,21)
-[]
-ListG EmptyG Nothing
-
-(17,11)-(28,21)
-[]
-ListG EmptyG Nothing
-
-(21,6)-(24,72)
+(21,7)-(24,73)
 let (c , a1 :: a2) = a in
 let v = (x1 + x2) + c in
 (v / 10 , [v / 10] @ ([v mod 10] @ a2))
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(24,26)-(24,28)
-c
-VarG
-
-(24,33)-(24,53)
-v
-VarG
-
-(24,33)-(24,53)
-v / 10
-BopG VarG LitG
-
-(24,33)-(24,53)
-10
-LitG
-
-(25,4)-(27,60)
-a2
-VarG
-
-(25,25)-(25,26)
+(25,17)-(25,23)
 0
 LitG
 
-(26,15)-(26,33)
-List.rev
-VarG
+(25,26)-(25,27)
+0
+LitG
 
-(26,15)-(26,33)
+(26,16)-(26,34)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(27,4)-(27,60)
+(27,5)-(27,61)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
 
-(28,2)-(28,5)
-removeZero
-VarG
-
-(28,2)-(28,5)
-add (padZero l1 l2)
+(28,3)-(28,22)
+removeZero (add (padZero l1
+                         l2))
 AppG (fromList [AppG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(19,5)-(27,61)
+(19,11)-(24,73)
+(19,13)-(24,73)
+(20,7)-(24,73)
+(21,7)-(24,73)
+(21,21)-(21,22)
+(22,7)-(24,73)
+(23,7)-(24,73)
+(23,19)-(23,21)
+(24,7)-(24,73)
+(24,33)-(24,73)
+(24,56)-(24,72)
+(24,57)-(24,58)
+(24,59)-(24,60)
+(27,21)-(27,35)
+(27,21)-(27,47)
+(27,36)-(27,37)
 *)

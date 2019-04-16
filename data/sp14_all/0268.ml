@@ -15,30 +15,20 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(4,38)-(4,48)
+(4,26)-(4,72)
 if n < 10
 then [n]
 else digitsOfInt (n / 10) @ [n mod 10]
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(4,39)-(4,40)
-n < 10
-BopG VarG LitG
+*)
 
-(4,50)-(4,70)
-n
-VarG
-
-(4,50)-(4,70)
-(@)
-VarG
-
-(4,50)-(4,70)
-digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG EmptyG Nothing])
-
-(4,50)-(4,70)
-[n]
-ListG VarG Nothing
-
+(* type error slice
+(2,4)-(4,74)
+(2,21)-(4,72)
+(3,3)-(4,72)
+(4,3)-(4,72)
+(4,26)-(4,72)
+(4,51)-(4,62)
+(4,51)-(4,71)
 *)

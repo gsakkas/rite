@@ -21,28 +21,21 @@ let fixpoint (f,b) =
 *)
 
 (* changed spans
-(8,4)-(9,72)
+(8,5)-(9,73)
 let y =
   fun x ->
     (let xx = f x in
      (xx , xx <> x)) in
 (y , b)
-LetG NonRec (fromList [LamG EmptyG]) (TupleG (fromList [EmptyG]))
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
 
-(9,17)-(9,71)
-let xx = f x in (xx , xx <> x)
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) (TupleG (fromList [EmptyG]))
+*)
 
-(9,47)-(9,48)
-xx
-VarG
-
-(9,47)-(9,48)
-xx
-VarG
-
-(9,47)-(9,48)
-xx <> x
-BopG VarG VarG
-
+(* type error slice
+(4,19)-(4,25)
+(4,19)-(4,37)
+(4,26)-(4,37)
+(7,3)-(7,9)
+(7,3)-(9,73)
+(8,5)-(9,73)
 *)

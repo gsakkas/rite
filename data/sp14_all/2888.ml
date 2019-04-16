@@ -65,12 +65,22 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(29,6)-(29,63)
+(29,7)-(30,35)
 ((eval (e1 , x , y) ** 2.0) +. (eval (e2 , x , y) ** 2.0)) +. (eval (e3 , x , y) ** 2.0)
 BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 
-(29,7)-(29,33)
-(eval (e1 , x , y) ** 2.0) +. (eval (e2 , x , y) ** 2.0)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+*)
 
+(* type error slice
+(16,3)-(30,35)
+(19,16)-(19,19)
+(19,16)-(19,45)
+(29,7)-(29,64)
+(29,7)-(30,35)
+(29,8)-(29,34)
+(29,27)-(29,29)
+(29,37)-(29,63)
+(29,56)-(29,58)
+(30,9)-(30,35)
+(30,28)-(30,30)
 *)

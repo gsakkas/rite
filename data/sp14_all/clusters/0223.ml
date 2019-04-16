@@ -1,2 +1,4 @@
-AppG (fromList [ConAppG (Just (TupleG (fromList [VarG,BopG VarG LitG]))) Nothing])
-List.hd ((n mod 10) :: ns)
+CaseG VarG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,VarG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| h :: m :: t -> t

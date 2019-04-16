@@ -21,16 +21,22 @@ let rec sepConcat sep sl =
 *)
 
 (* changed spans
-(7,20)-(7,21)
+(7,21)-(7,22)
 t = []
-BopG VarG (ListG EmptyG Nothing)
+BopG VarG (ListG (fromList []))
 
-(7,27)-(7,29)
+(7,28)-(7,30)
 "A"
 LitG
 
-(7,27)-(7,29)
-[]
-ListG EmptyG Nothing
+(7,36)-(7,39)
+""
+LitG
 
+*)
+
+(* type error slice
+(3,3)-(8,44)
+(7,18)-(7,39)
+(7,21)-(7,22)
 *)

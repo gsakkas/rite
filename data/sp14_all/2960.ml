@@ -51,12 +51,16 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(18,23)-(18,67)
+(18,24)-(18,68)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 BopG (BopG EmptyG EmptyG) LitG
 
-(18,66)-(18,67)
-2.0
-LitG
+*)
 
+(* type error slice
+(14,3)-(23,27)
+(17,16)-(17,19)
+(17,16)-(17,45)
+(18,24)-(18,64)
+(18,24)-(18,68)
 *)

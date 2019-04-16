@@ -11,34 +11,28 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
-(2,24)-(2,34)
-fun list ->
-  fun digInt -> n mod 10
-LamG (LamG EmptyG)
-
-(2,24)-(2,34)
-fun digInt -> n mod 10
-LamG (BopG EmptyG EmptyG)
-
-(2,24)-(2,76)
+(2,25)-(2,77)
 let int =
   fun list ->
     fun digInt -> n mod 10 in
 if n > 0
 then digitsOfInt (n / 10)
 else []
-LetG NonRec (fromList [LamG EmptyG]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (IteG EmptyG EmptyG EmptyG)
 
-(2,39)-(2,75)
-[]
-ListG EmptyG Nothing
+*)
 
-(2,42)-(2,49)
-n > 0
-BopG VarG LitG
-
-(2,47)-(2,49)
-0
-LitG
-
+(* type error slice
+(2,4)-(2,79)
+(2,21)-(2,77)
+(2,25)-(2,35)
+(2,25)-(2,77)
+(2,26)-(2,27)
+(2,39)-(2,77)
+(2,43)-(2,44)
+(2,43)-(2,50)
+(2,48)-(2,50)
+(2,56)-(2,67)
+(2,56)-(2,76)
+(2,76)-(2,76)
 *)

@@ -55,7 +55,7 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(12,2)-(22,75)
+(12,3)-(22,76)
 match e with
 | VarX -> "x"
 | VarY -> "y"
@@ -64,78 +64,22 @@ match e with
 | Average (expr0 , expr1) -> "(" ^ (exprToString expr0 ^ ("+" ^ (exprToString expr1 ^ ")/2)")))
 | Times (expr0 , expr1) -> "(" ^ (exprToString expr0 ^ ("*" ^ (exprToString expr1 ^ ")")))
 | Thresh (expr0 , expr1 , expr2 , expr3) -> "(" ^ (exprToString expr0 ^ ("<" ^ (exprToString expr1 ^ ("?" ^ (exprToString expr2 ^ (":" ^ (exprToString expr3 ^ ")")))))))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG])),(Nothing,LitG)])
+CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
 
-(15,41)-(15,45)
-expr0
-VarG
+*)
 
-(16,43)-(16,47)
-expr0
-VarG
-
-(18,27)-(18,31)
-expr0
-VarG
-
-(18,57)-(18,61)
-expr1
-VarG
-
-(20,27)-(20,31)
-expr0
-VarG
-
-(20,57)-(20,61)
-expr1
-VarG
-
-(22,13)-(22,17)
-exprToString expr0
-AppG (fromList [VarG])
-
-(22,20)-(22,74)
-exprToString
-VarG
-
-(22,20)-(22,74)
-expr0
-VarG
-
-(22,28)-(22,32)
-exprToString expr1
-AppG (fromList [VarG])
-
-(22,35)-(22,72)
-exprToString
-VarG
-
-(22,35)-(22,72)
-expr1
-VarG
-
-(22,43)-(22,47)
-exprToString expr2
-AppG (fromList [VarG])
-
-(22,50)-(22,70)
-exprToString
-VarG
-
-(22,50)-(22,70)
-expr2
-VarG
-
-(22,58)-(22,62)
-exprToString expr3
-AppG (fromList [VarG])
-
-(22,65)-(22,68)
-exprToString
-VarG
-
-(22,65)-(22,68)
-expr3
-VarG
-
+(* type error slice
+(12,3)-(22,76)
+(22,13)-(22,76)
+(22,14)-(22,18)
+(22,19)-(22,20)
+(22,28)-(22,74)
+(22,29)-(22,33)
+(22,34)-(22,35)
+(22,43)-(22,72)
+(22,44)-(22,48)
+(22,49)-(22,50)
+(22,58)-(22,70)
+(22,59)-(22,63)
+(22,64)-(22,65)
 *)

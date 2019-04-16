@@ -57,10 +57,21 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(25,4)-(25,51)
+(25,5)-(25,52)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
 
+*)
+
+(* type error slice
+(19,5)-(25,52)
+(19,11)-(22,51)
+(21,15)-(21,27)
+(21,26)-(21,27)
+(25,5)-(25,52)
+(25,19)-(25,33)
+(25,19)-(25,45)
+(25,34)-(25,35)
 *)

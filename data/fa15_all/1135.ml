@@ -100,189 +100,36 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(29,19)-(30,55)
-sl
-VarG
-
-(29,19)-(30,55)
-a
-VarG
-
-(29,19)-(30,55)
-(^)
-VarG
-
-(29,19)-(30,55)
-sep
-VarG
-
-(29,19)-(30,55)
-(^)
-VarG
-
-(29,19)-(30,55)
-x
-VarG
-
-(29,19)-(30,55)
-h
-VarG
-
-(29,19)-(30,55)
-t
-VarG
-
-(29,19)-(30,55)
-List.fold_left
-VarG
-
-(29,19)-(30,55)
-f
-VarG
-
-(29,19)-(30,55)
-base
-VarG
-
-(29,19)-(30,55)
-l
-VarG
-
-(29,19)-(30,55)
-int_of_string
-VarG
-
-(29,19)-(30,55)
-sepConcat
-VarG
-
-(29,19)-(30,55)
-List.map
-VarG
-
-(29,19)-(30,55)
-string_of_int
-VarG
-
-(29,19)-(30,55)
-l
-VarG
-
-(29,19)-(30,55)
-fun sep ->
-  fun sl ->
-    match sl with
-    | [] -> ""
-    | h :: t -> (let f =
-                   fun a ->
-                     fun x -> a ^ (sep ^ x) in
-                 let base = h in
-                 let l = t in
-                 List.fold_left f base l)
-LamG (LamG EmptyG)
-
-(29,19)-(30,55)
-fun sl ->
-  match sl with
-  | [] -> ""
-  | h :: t -> (let f =
-                 fun a ->
-                   fun x -> a ^ (sep ^ x) in
-               let base = h in
-               let l = t in
-               List.fold_left f base l)
-LamG (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(29,19)-(30,55)
-fun a ->
-  fun x -> a ^ (sep ^ x)
-LamG (LamG EmptyG)
-
-(29,19)-(30,55)
-fun x -> a ^ (sep ^ x)
-LamG (AppG (fromList [EmptyG]))
-
-(29,19)-(30,55)
-fun l ->
-  int_of_string (sepConcat ""
-                           (List.map string_of_int l))
-LamG (AppG (fromList [EmptyG]))
-
-(29,19)-(30,55)
-a ^ (sep ^ x)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-
-(29,19)-(30,55)
-sep ^ x
-AppG (fromList [VarG])
-
-(29,19)-(30,55)
-List.fold_left f base l
-AppG (fromList [VarG])
-
-(29,19)-(30,55)
-int_of_string (sepConcat ""
-                         (List.map string_of_int l))
+(37,19)-(37,66)
+intListToInt (mulByDigit (intListToInt l1)
+                         [s])
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(29,19)-(30,55)
-sepConcat ""
-          (List.map string_of_int l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(29,19)-(30,55)
-List.map string_of_int l
+(42,14)-(42,43)
+List.combine l2 l2
 AppG (fromList [VarG])
 
-(29,19)-(30,55)
-""
-LitG
+*)
 
-(29,19)-(30,55)
-""
-LitG
-
-(29,19)-(30,55)
-let f =
-  fun a ->
-    fun x -> a ^ (sep ^ x) in
-let base = h in
-let l = t in
-List.fold_left f base l
-LetG NonRec (fromList [LamG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(29,19)-(30,55)
-let base = h in
-let l = t in
-List.fold_left f base l
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(29,19)-(30,55)
-let l = t in
-List.fold_left f base l
-LetG NonRec (fromList [VarG]) (AppG (fromList [EmptyG]))
-
-(29,19)-(30,55)
-match sl with
-| [] -> ""
-| h :: t -> (let f =
-               fun a ->
-                 fun x -> a ^ (sep ^ x) in
-             let base = h in
-             let l = t in
-             List.fold_left f base l)
-CaseG VarG (fromList [(Nothing,LitG),(Nothing,LetG NonRec (fromList [EmptyG]) EmptyG)])
-
-(37,18)-(37,31)
-intListToInt
-VarG
-
-(37,45)-(37,58)
-intListToInt
-VarG
-
-(37,63)-(37,64)
-[s]
-ListG VarG Nothing
-
+(* type error slice
+(4,4)-(10,20)
+(4,13)-(10,18)
+(4,16)-(10,18)
+(9,45)-(9,61)
+(9,46)-(9,57)
+(9,58)-(9,60)
+(15,4)-(27,37)
+(15,12)-(27,35)
+(15,15)-(27,35)
+(27,19)-(27,34)
+(27,20)-(27,27)
+(27,31)-(27,33)
+(30,17)-(30,23)
+(30,17)-(30,48)
+(30,26)-(30,48)
+(30,27)-(30,37)
+(37,19)-(37,32)
+(37,19)-(37,66)
+(37,33)-(37,66)
+(37,34)-(37,44)
 *)

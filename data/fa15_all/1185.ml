@@ -52,124 +52,29 @@ let rec exprToString e =
 *)
 
 (* changed spans
-(18,40)-(18,66)
+(18,41)-(18,67)
 exprToString d ^ ")/2)"
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(18,41)-(18,53)
-(^)
-VarG
-
-(18,41)-(18,53)
-exprToString d
-AppG (fromList [VarG])
-
-(19,19)-(19,31)
-(^)
-VarG
-
-(19,19)-(19,31)
-exprToString e
-AppG (fromList [VarG])
-
-(19,19)-(19,31)
+(19,20)-(19,53)
 exprToString e ^ ("*" ^ exprToString f)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(19,19)-(19,52)
-")/2)"
-LitG
-
-(19,34)-(19,37)
-(^)
-VarG
-
-(19,34)-(19,37)
-"*" ^ exprToString f
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(19,38)-(19,50)
-exprToString f
-AppG (fromList [VarG])
-
-(21,6)-(21,9)
-(^)
-VarG
-
-(21,6)-(22,26)
+(21,7)-(22,27)
 "(" ^ (exprToString g ^ ("<" ^ (exprToString h ^ ("?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")")))))))
 AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
-(21,10)-(21,22)
-(^)
-VarG
+*)
 
-(21,10)-(21,22)
-exprToString g ^ ("<" ^ (exprToString h ^ ("?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")"))))))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(21,10)-(21,22)
-exprToString g
-AppG (fromList [VarG])
-
-(21,25)-(21,28)
-(^)
-VarG
-
-(21,25)-(21,28)
-"<" ^ (exprToString h ^ ("?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")")))))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(21,29)-(21,41)
-(^)
-VarG
-
-(21,29)-(21,41)
-exprToString h ^ ("?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")"))))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(21,29)-(21,41)
-exprToString h
-AppG (fromList [VarG])
-
-(21,44)-(21,47)
-(^)
-VarG
-
-(21,44)-(21,47)
-"?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")")))
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(21,48)-(21,60)
-(^)
-VarG
-
-(21,48)-(21,60)
-exprToString i ^ (":" ^ (exprToString j ^ ")"))
-AppG (fromList [AppG (fromList [EmptyG])])
-
-(21,48)-(21,60)
-exprToString i
-AppG (fromList [VarG])
-
-(21,63)-(21,66)
-(^)
-VarG
-
-(21,63)-(21,66)
-":" ^ (exprToString j ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(22,8)-(22,20)
-(^)
-VarG
-
-(22,8)-(22,20)
-exprToString j ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
-
-(22,8)-(22,20)
-exprToString j
-AppG (fromList [VarG])
-
+(* type error slice
+(15,24)-(15,48)
+(15,25)-(15,41)
+(15,26)-(15,38)
+(15,42)-(15,43)
+(18,41)-(18,67)
+(18,42)-(18,54)
+(19,20)-(19,32)
+(19,20)-(19,53)
+(21,7)-(21,10)
+(21,7)-(22,27)
 *)

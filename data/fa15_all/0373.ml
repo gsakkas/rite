@@ -97,11 +97,22 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(35,10)-(46,21)
+(35,11)-(46,22)
 match r with
 | 3 -> buildAverage (build (rand , d - 1) , build (rand , d - 1))
 | 4 -> buildTimes (build (rand , d - 1) , build (rand , d - 1))
 | 5 -> buildThresh (build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1))
-CaseG VarG (fromList [(Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
+*)
+
+(* type error slice
+(11,4)-(11,46)
+(11,19)-(11,44)
+(11,28)-(11,44)
+(35,11)-(46,22)
+(37,16)-(37,28)
+(37,16)-(38,68)
+(45,19)-(45,21)
+(46,19)-(46,21)
 *)

@@ -85,13 +85,21 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(40,32)-(40,67)
+(40,33)-(40,68)
 bigAdd (mulByDigit (i - 1) l)
        l
 AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
-(40,40)-(40,64)
-mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+*)
 
+(* type error slice
+(14,4)-(37,37)
+(14,12)-(37,35)
+(14,15)-(37,35)
+(40,3)-(40,68)
+(40,23)-(40,25)
+(40,33)-(40,39)
+(40,33)-(40,68)
+(40,53)-(40,64)
+(40,54)-(40,61)
 *)

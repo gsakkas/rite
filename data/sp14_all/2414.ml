@@ -21,25 +21,14 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(7,41)-(7,52)
+(7,42)-(7,53)
 (prod / 10) :: (mulByDigit i
                            t)
-ConAppG (Just (TupleG (fromList [AppG (fromList [VarG]),BopG VarG LitG]))) Nothing
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
-(7,58)-(7,67)
-mulByDigit
-VarG
+*)
 
-(7,58)-(7,67)
-i
-VarG
-
-(7,58)-(7,67)
-t
-VarG
-
-(7,58)-(7,67)
-mulByDigit i t
-AppG (fromList [VarG])
-
+(* type error slice
+(7,25)-(7,53)
+(7,42)-(7,53)
 *)

@@ -61,12 +61,19 @@ let rec eval (e,x,y) = float_of_string (exprToString e);;
 *)
 
 (* changed spans
-(28,23)-(28,38)
-float_of_string
-VarG
+(28,24)-(28,59)
+float_of_string (exprToString e)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(28,53)-(28,57)
-e
-VarG
+*)
 
+(* type error slice
+(15,27)-(15,51)
+(15,28)-(15,44)
+(15,29)-(15,41)
+(15,45)-(15,46)
+(28,24)-(28,39)
+(28,24)-(28,59)
+(28,40)-(28,59)
+(28,41)-(28,53)
 *)

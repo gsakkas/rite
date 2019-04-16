@@ -1,4 +1,4 @@
-AppG (fromList [VarG,LitG,ConAppG (Just (TupleG (fromList [VarG]))) Nothing])
-helper 0 (num :: xs') xs
-helper 0 (num :: accum) xs
-helper 0 (num :: accum) xs
+IteG (BopG EmptyG EmptyG) LitG (BopG EmptyG EmptyG)
+if n < 10
+then 1
+else 1 + additivePersistence (sumList (digitsOfInt n))

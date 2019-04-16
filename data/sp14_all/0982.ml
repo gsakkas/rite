@@ -67,14 +67,14 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(31,2)-(31,43)
+(31,3)-(31,44)
 List.rev (removeZero (add (padZero l1
                                    l2)))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(31,11)-(31,21)
-removeZero (add (padZero l1
-                         l2))
-AppG (fromList [AppG (fromList [EmptyG])])
+*)
 
+(* type error slice
+(31,3)-(31,11)
+(31,3)-(31,44)
 *)

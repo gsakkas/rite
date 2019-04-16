@@ -115,9 +115,17 @@ let rec build (rand,depth) =
 *)
 
 (* changed spans
-(25,16)-(25,49)
+(25,17)-(25,50)
 fun (e1 , e2 , e3) ->
   Weird (e1 , e2 , e3)
-LamG (ConAppG (Just (TupleG (fromList [VarG]))) Nothing)
+LamG (TuplePatG (fromList [VarPatG])) (ConAppG (Just EmptyG))
 
+*)
+
+(* type error slice
+(25,4)-(25,52)
+(25,17)-(25,50)
+(52,10)-(52,20)
+(52,10)-(54,42)
+(53,12)-(54,42)
 *)

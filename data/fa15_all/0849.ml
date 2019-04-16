@@ -65,7 +65,7 @@ let bigAdd l1 l2 =
 *)
 
 (* changed spans
-(19,13)-(19,14)
+(19,7)-(27,42)
 let (fst , sec) = x in
 let (fst' , sec') =
   if (fst + sec) > 9
@@ -77,84 +77,36 @@ let (carry' , digits') =
   then (1 , digits @ [fst'])
   else (0 , digits @ [fst']) in
 (carry' , digits')
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
 
-(21,10)-(23,31)
-let (fst' , sec') =
-  if (fst + sec) > 9
-  then ((fst + sec) - 10 , 1)
-  else (fst + sec , 0) in
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+(29,16)-(29,24)
+List.rev (List.combine l1 l2)
+AppG (fromList [AppG (fromList [EmptyG])])
 
-(25,10)-(27,41)
-a
-VarG
-
-(25,10)-(27,41)
-let (carry , digits) = a in
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(25,10)-(27,41)
-let (carry' , digits') =
-  if sec' = 1
-  then (1 , digits @ [fst'])
-  else (0 , digits @ [fst']) in
-(carry' , digits')
-LetG NonRec (fromList [IteG EmptyG EmptyG EmptyG]) (TupleG (fromList [EmptyG]))
-
-(25,13)-(25,16)
-sec'
-VarG
-
-(26,35)-(26,38)
-[fst']
-ListG VarG Nothing
-
-(27,15)-(27,41)
-fst'
-VarG
-
-(27,29)-(27,39)
-fst'
-VarG
-
-(27,29)-(27,39)
-[fst']
-ListG VarG Nothing
-
-(27,35)-(27,38)
-carry'
-VarG
-
-(28,4)-(30,51)
-digits'
-VarG
-
-(30,4)-(30,51)
-0
-LitG
-
-(30,4)-(30,51)
-0
-LitG
-
-(30,4)-(30,51)
-(0 , 0)
-TupleG (fromList [LitG])
-
-(30,4)-(30,51)
+(29,27)-(29,58)
 [(0 , 0)]
-ListG (TupleG (fromList [EmptyG])) Nothing
+ListG (fromList [TupleG (fromList [EmptyG])])
 
+*)
+
+(* type error slice
+(18,5)-(30,52)
+(18,11)-(27,42)
+(18,13)-(27,42)
+(19,7)-(27,42)
+(19,13)-(19,19)
+(19,14)-(19,15)
+(21,11)-(23,32)
+(23,16)-(23,32)
+(23,30)-(23,31)
+(26,20)-(26,41)
+(26,28)-(26,29)
+(26,30)-(26,40)
+(27,20)-(27,41)
+(27,21)-(27,27)
+(27,28)-(27,29)
+(27,30)-(27,40)
+(30,19)-(30,33)
+(30,19)-(30,45)
+(30,34)-(30,35)
 *)

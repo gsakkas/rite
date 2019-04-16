@@ -71,156 +71,61 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(17,11)-(29,21)
-l
-VarG
-
-(17,11)-(29,21)
-l
-VarG
-
-(17,11)-(29,21)
-h
-VarG
-
-(17,11)-(29,21)
-removeZero
-VarG
-
-(17,11)-(29,21)
-t
-VarG
-
-(17,11)-(29,21)
-l
-VarG
-
-(17,11)-(29,21)
-fun l ->
-  if l = []
-  then []
-  else (let h :: t = l in
-        match h with
-        | 0 -> removeZero t
-        | _ -> l)
-LamG (IteG EmptyG EmptyG EmptyG)
-
-(17,11)-(29,21)
-removeZero t
-AppG (fromList [VarG])
-
-(17,11)-(29,21)
-l = []
-BopG VarG (ListG EmptyG Nothing)
-
-(17,11)-(29,21)
-let h :: t = l in
-match h with
-| 0 -> removeZero t
-| _ -> l
-LetG NonRec (fromList [VarG]) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
-
-(17,11)-(29,21)
-if l = []
-then []
-else (let h :: t = l in
-      match h with
-      | 0 -> removeZero t
-      | _ -> l)
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (LetG NonRec (fromList [EmptyG]) EmptyG)
-
-(17,11)-(29,21)
-match h with
-| 0 -> removeZero t
-| _ -> l
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
-
-(17,11)-(29,21)
-[]
-ListG EmptyG Nothing
-
-(17,11)-(29,21)
-[]
-ListG EmptyG Nothing
-
-(21,6)-(25,60)
+(21,7)-(25,61)
 let (c , a1 :: a2) = a in
 let v = (x1 + x2) + c in
 (v / 10 , [v / 10] @ ([v mod 10] @ a2))
-LetG NonRec (fromList [VarG]) (LetG NonRec (fromList [EmptyG]) EmptyG)
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
 
-(24,26)-(24,28)
-c
-VarG
-
-(25,7)-(25,27)
-v
-VarG
-
-(25,7)-(25,27)
-v / 10
-BopG VarG LitG
-
-(25,7)-(25,27)
-10
-LitG
-
-(26,4)-(28,60)
-a2
-VarG
-
-(26,25)-(26,26)
+(26,17)-(26,23)
 0
 LitG
 
-(27,15)-(27,33)
-List.rev
-VarG
+(26,26)-(26,27)
+0
+LitG
 
-(27,15)-(27,33)
+(27,16)-(27,34)
 List.rev (List.combine l1 l2)
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(28,4)-(28,60)
+(28,5)-(28,61)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [AppG (fromList [EmptyG])]) VarG
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
 
-(29,2)-(29,5)
-removeZero
-VarG
-
-(29,2)-(29,5)
-add (padZero l1 l2)
+(29,3)-(29,22)
+removeZero (add (padZero l1
+                         l2))
 AppG (fromList [AppG (fromList [EmptyG])])
 
-(32,2)-(32,72)
+(32,3)-(32,73)
 if i < 1
 then []
 else (match i with
       | 1 -> l
       | _ -> bigAdd l
                     (mulByDigit (i - 1) l))
-IteG (BopG EmptyG EmptyG) (ListG EmptyG Nothing) (CaseG EmptyG (fromList [(Nothing,EmptyG)]))
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
-(32,8)-(32,9)
-i < 1
-BopG VarG LitG
+*)
 
-(32,22)-(32,24)
-1
-LitG
-
-(32,32)-(32,33)
-i
-VarG
-
-(32,32)-(32,33)
-match i with
-| 1 -> l
-| _ -> bigAdd l
-              (mulByDigit (i - 1) l)
-CaseG VarG (fromList [(Nothing,VarG),(Nothing,AppG (fromList [EmptyG]))])
-
+(* type error slice
+(17,4)-(29,24)
+(17,12)-(29,22)
+(17,15)-(29,22)
+(18,3)-(29,22)
+(18,12)-(28,61)
+(19,5)-(28,61)
+(26,5)-(28,61)
+(27,5)-(28,61)
+(28,5)-(28,61)
+(28,51)-(28,61)
+(29,3)-(29,6)
+(29,3)-(29,22)
+(32,3)-(32,73)
+(32,23)-(32,25)
+(32,42)-(32,48)
+(32,42)-(32,73)
 *)

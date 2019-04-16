@@ -13,8 +13,14 @@ let bigMul l1 l2 =
 *)
 
 (* changed spans
-(3,18)-(3,19)
+(3,19)-(3,20)
 [0]
-ListG LitG Nothing
+ListG (fromList [LitG])
 
+*)
+
+(* type error slice
+(3,15)-(3,20)
+(3,17)-(3,18)
+(3,19)-(3,20)
 *)

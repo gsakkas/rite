@@ -1,16 +1,4 @@
-LetG NonRec (fromList [LitG]) (SeqG EmptyG EmptyG)
-let x = 1 in
-(x + 1;
-if sumList (digitsOfInt n) > 9
-then additivePersistence (sumList (digitsOfInt n))
-else x)
-let x = 1 in
-(x + 1;
-if sumList (digitsOfInt n) > 9
-then additivePersistence (sumList (digitsOfInt n))
-else x)
-let x = 1 in
-(x + 1;
-if sumList (digitsOfInt n) > 9
-then additivePersistence (sumList (digitsOfInt n))
-else x)
+CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| a :: b -> listReverse b @ [a]
