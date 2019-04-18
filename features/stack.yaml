@@ -6,4 +6,4 @@ extra-deps:
 - dotgen-0.4.2
 - fgl-visualize-0.1.0.1
 # - grenade-0.1.0
-resolver: lts-13.12
+resolver: lts-13.17

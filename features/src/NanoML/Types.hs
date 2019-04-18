@@ -1009,14 +1009,14 @@ data ExprGeneric
   | LetG !RecFlag !(Set (PatGeneric, ExprGeneric)) !ExprGeneric
   | IteG !ExprGeneric !ExprGeneric !ExprGeneric
   | SeqG !ExprGeneric !ExprGeneric
-  | CaseG !ExprGeneric !(Set (PatGeneric, Maybe ExprGeneric, ExprGeneric))
+  | CaseG !(Set (PatGeneric, Maybe ExprGeneric, ExprGeneric))
   | TupleG !(Set ExprGeneric)
   | ConAppG !(Maybe ExprGeneric)
   | RecordG ![(String, ExprGeneric)]
   | FieldG !ExprGeneric !String
   | SetFieldG !ExprGeneric !String !ExprGeneric
   | ArrayG !(Set ExprGeneric)
-  | ListG !ExprGeneric
+  | ListG !(Set ExprGeneric)
   | EmptyG -- Just an empty expr for easier pruning
   deriving (Show, Generic, Eq, Ord)
 
@@ -1344,7 +1344,7 @@ data PatGeneric
   | IntervalPatG
   | ConsPatG !PatGeneric !PatGeneric
   | ConPatG (Maybe PatGeneric)
-  | ListPatG !PatGeneric
+  | ListPatG !(Set PatGeneric)
   | TuplePatG !(Set PatGeneric)
   | WildPatG
   | OrPatG !PatGeneric !PatGeneric

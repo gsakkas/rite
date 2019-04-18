@@ -2,7 +2,7 @@
 {-# LANGUAGE MultiWayIf        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE BangPatterns      #-}
-{-# LANGUAGE LambdaCase        #-}
+-- {-# LANGUAGE LambdaCase        #-}
 -- {-# LANGUAGE TupleSections     #-}
 
 module Main where
@@ -369,11 +369,12 @@ mkClusters forTestSet out nm known_cls fs jsons = do
             >>= concat
   let cls = map (\c -> (show c, map (\tup -> (snd3 tup, thd3 tup)) (filter (\(x, _, _) -> x == c) elems))) clusters
   -- Keep only top N clusters as templates for ML labels or read them from the training set
-  let !actual_cls = take 41 $ map (\tup -> (snd tup, nub $ map snd $ snd (fst tup))) $ sortOn (DO.Down . \(x, _) -> length (snd x)) (zip cls clusters)
+  let !actual_cls = take 50 $ map (\tup -> (snd tup, nub $ map snd $ snd (fst tup))) $ sortOn (DO.Down . \(x, _) -> length (snd x)) (zip cls clusters)
   let top_cls =
         if forTestSet then known_cls
         else actual_cls
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate 41 "L-Cluster") [1..41]
+  let mn = min (length top_cls) 50
+  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate mn "L-Cluster") [1..mn]
 
   forM_ fts $ \ f@((header, features), (ss, bad, fix, badStr, fixStr, cs, allspans, i)) -> do
     let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
@@ -573,10 +574,6 @@ mkDiffs json = case eitherDecode (LBSC.pack json) of
 mkDiffsWithGenericTrs :: String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, Prog, String, String, Int)]
 mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
   Left e -> mempty
-  --TODO: delete this
-  -- Right (MkInSample _ _ idx)
-  --   | idx `elem` [639, 757, 2771]
-  --   -> mempty
   Right (MkInSample bad' fix' _)
     | Left e <- parseTopForm fix'
     -> mempty
@@ -672,11 +669,11 @@ pruneTrs maxd = map pruneOneTr
           LetG r pes e' -> LetG r (Set.map (\(p, e'') -> (cutSubPs p (max 1 d), cutSubTrs e'' (d - 1))) pes) (cutSubTrs e' (d - 1))
           IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
           SeqG e1 e2    -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG e' as   -> CaseG (cutSubTrs e' (d - 1)) (Set.map (\(p, me, e'')
+          CaseG as      -> CaseG (Set.map (\(p, me, e'')
                             -> (cutSubPs p (max 1 d), me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
           TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
-          ListG e'      -> ListG (cutSubTrs e' (d - 1))
+          ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           _             -> error ("pruneTrs failed: no such expression " ++ show e)
 
         cutSubPs :: PatGeneric -> Int -> PatGeneric
@@ -689,7 +686,7 @@ pruneTrs maxd = map pruneOneTr
           ConsPatG p1 p2   -> ConsPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
           ConPatG Nothing  -> ConPatG Nothing
           ConPatG (Just p) -> ConPatG (Just $ cutSubPs p (d - 1))
-          ListPatG p       -> ListPatG (cutSubPs p (d - 1))
+          ListPatG ps      -> ListPatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
           TuplePatG ps     -> TuplePatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
           WildPatG         -> WildPatG
           OrPatG p1 p2     -> OrPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
