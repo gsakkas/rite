@@ -12,7 +12,7 @@ let rec digitsOfInt n =
 (* changed spans
 (2,61)-(2,61)
 (n mod 10) :: myList
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
 *)
 

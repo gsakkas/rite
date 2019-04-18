@@ -63,7 +63,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (24,15)-(24,47)
 valueToAddToArray :: currentSum
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG])
 
 (26,16)-(26,43)
 List.rev (List.combine l1 l2)

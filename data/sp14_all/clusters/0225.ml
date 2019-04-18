@@ -1,4 +1,4 @@
-CaseG VarG (fromList [(ConsPatG (ConsPatG EmptyPatG EmptyPatG) (ConPatG Nothing),Nothing,VarG),(ConPatG Nothing,Nothing,VarG)])
-match l with
-| [] -> l
-| (_ :: tail :: []) :: [] -> l
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG])),(TuplePatG (fromList [WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
+match x with
+| (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
+| (_ , _) -> (carry / 10 , (carry mod 10) :: rest)

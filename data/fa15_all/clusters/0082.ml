@@ -1,4 +1,3 @@
-AppG (fromList [LitG])
-digitsOfInt 1
-")" ^ ")"
-")" ^ "^2"
+ListG (fromList [AppG (fromList [EmptyG])])
+[cout (hd , i)]
+[remainder i h]

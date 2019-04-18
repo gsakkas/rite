@@ -1,3 +1,7 @@
-LetG NonRec (fromList [(VarPatG,VarG)]) (AppG (fromList [EmptyG]))
-let rest' = t in
-helper (seen' , rest')
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+let r =
+  bigAdd (mulByDigit x
+                     (List.rev l2)) [b] in
+match r with
+| [] -> (0 , 0 :: c)
+| h :: t -> (h , (List.hd t) :: c)

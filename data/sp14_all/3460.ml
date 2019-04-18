@@ -13,7 +13,7 @@ let rec digitsOfInt n =
 (* changed spans
 (3,45)-(3,64)
 (n mod 10) :: myList
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
 *)
 

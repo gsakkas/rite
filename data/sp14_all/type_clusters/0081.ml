@@ -1,1 +1,2 @@
-'a list
+(int * int)
+(int * int * int)

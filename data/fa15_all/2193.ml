@@ -109,7 +109,11 @@ match (rand (2 , 8) , depth) with
 | (6 , _) -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
 | (7 , _) -> buildMirana (build (rand , depth - 1))
 | (8 , _) -> buildDarius (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG,LitPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [LitPatG,WildPatG]),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG,LitPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [LitPatG,WildPatG]),Nothing,AppG (fromList [EmptyG]))])
+
+(28,20)-(28,21)
+8
+LitG
 
 *)
 

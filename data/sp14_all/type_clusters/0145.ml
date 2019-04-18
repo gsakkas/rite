@@ -1,1 +1,1 @@
-int list
+('a * bool)

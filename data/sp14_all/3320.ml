@@ -21,7 +21,7 @@ let rec mulByDigit i l =
 (* changed spans
 (6,7)-(6,30)
 mulByDigit i (m :: t)
-AppG (fromList [VarG,ConAppG (Just EmptyG)])
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

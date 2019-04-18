@@ -1,86 +1,33 @@
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e' -> sin (pi *. eval (e' , x , y))
-| Cosine e' -> cos (pi *. eval (e' , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
-                                then eval (e3 , x , y)
-                                else eval (e4 , x , y)
-| Sqrt e -> sqrt (abs_float (eval (e , x , y)))
-| Gauss (e1 , e2 , e3) -> 2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-match e with
-| Thresh (w , t , u , z) -> if eval (w , x , y) < eval (t , x , y)
-                            then eval (u , x , y)
-                            else eval (z , x , y)
-| Times (t , u) -> eval (t , x , y) *. eval (u , x , y)
-| Average (t , u) -> (eval (t , x , y) *. eval (u , x , y)) /. 2.0
-| Cosine t -> cos (pi *. eval (t , x , y))
-| Sine t -> sin (pi *. eval (t , x , y))
-| VarX -> x
-| VarY -> y
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> sin (pi *. eval (e , x , y))
-| Cosine e -> cos (pi *. eval (e , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
-                                then eval (e3 , x , y)
-                                else eval (e4 , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> sin (pi *. eval (e , x , y))
-| Cosine e -> cos (pi *. eval (e , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
-                                then eval (e3 , x , y)
-                                else eval (e4 , x , y)
-| Timmy1 (e1 , e2 , e3) -> (sin (pi *. eval (e , x , y)) +. cos (pi *. eval (e , x , y))) *. cos (pi *. eval (e , x , y))
-| Timmy2 (e1 , e2) -> sin (pi *. eval (e , x , y)) /. cos (pi *. eval (e , x , y))
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e' -> sin (pi *. eval (e' , x , y))
-| Cosine e' -> cos (pi *. eval (e' , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (a , b , a_less , b_less) -> if eval (a , x , y) < eval (b , x , y)
-                                      then eval (a_less , x , y)
-                                      else eval (b_less , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine a -> eval (a , sin (pi *. x) , sin (pi *. y))
-| Cosine a -> eval (a , cos (pi *. x) , cos (pi *. y))
-| Average (a , b) -> (eval (a , x , y) +. eval (b , x , y)) /. 2.0
-| Times (a , b) -> eval (a , x , y) *. eval (b , x , y)
-| Thresh (a , b , c , d) -> if eval (a , x , y) < eval (b , x , y)
-                            then eval (c , x , y)
-                            else eval (d , x , y)
-| Tan a -> eval (a , tan (pi *. x) , tan (pi *. y))
-| Sine_Avg (a , b , c) -> ((eval (a , sin (pi *. x) , sin (pi *. y)) +. eval (b , sin (pi *. x) , sin (pi *. y))) +. eval (c , sin (pi *. x) , sin (pi *. y))) /. 3.0
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e0 -> sin (pi *. eval (e0 , x , y))
-| Cosine e1 -> cos (pi *. eval (e1 , x , y))
-| Average (e2 , e3) -> (eval (e2 , x , y) +. eval (e3 , x , y)) /. 2.0
-| Times (e4 , e5) -> eval (e4 , x , y) *. eval (e5 , x , y)
-| Thresh (e6 , e7 , e8 , e9) -> if eval (e6 , x , y) < eval (e7 , x , y)
-                                then eval (e8 , x , y)
-                                else eval (e9 , x , y)
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e' -> sin (pi *. eval (e' , x , y))
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-| Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
-                                then eval (e3 , x , y)
-                                else eval (e4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+if rand (0 , 1) = 0
+then buildX ()
+else buildY ()
+if sumList (digits n) < 10
+then numdigits (digits n)
+else additivePersistence (sumList (digits n))
+if r (0 , 1) = 0
+then buildX ()
+else buildY ()
+if eval (x1 , x , y) < eval (x2 , x , y)
+then eval (x3 , x , y)
+else eval (x4 , x , y)
+if eval (e1 , x , y) < eval (e2 , x , y)
+then eval (e3 , x , y)
+else eval (e4 , x , y)
+if rand (0 , 1) = 0
+then buildAverage (buildhelper (depth - 1)
+                               (depth - 1)
+                               expr , buildhelper (depth - 1)
+                                                  (depth - 1)
+                                                  expr)
+else buildTimes (buildhelper (depth - 1)
+                             (depth - 1)
+                             expr , buildhelper (depth - 1)
+                                                (depth - 1)
+                                                expr)
+if sumList (digits n) > 9
+then digitalRoot (sumList (digits n))
+else sumList (digits n)
+if eval (ex1 , x , y) < eval (ex2 , x , y)
+then eval (ex3 , x , y)
+else eval (ex4 , x , y)

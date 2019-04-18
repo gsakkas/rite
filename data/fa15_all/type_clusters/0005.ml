@@ -1,2 +1,3 @@
-(int list * int list)
-(expr * 'a * 'a)
+string
+int list
+float

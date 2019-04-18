@@ -1,8 +1,7 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
-let (x , y) = f b in
-match y with
-| false -> x
-| true -> wwhile (f , x)
-let (b' , c') = f b in
-match c' with
-| false -> b'
+IteG (AppG (fromList [EmptyG])) VarG (AppG (fromList [EmptyG]))
+if List.mem h seen
+then seen
+else h :: seen
+if List.mem h seen
+then seen
+else seen @ [h]

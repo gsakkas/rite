@@ -55,7 +55,19 @@ match e with
 | Average (e1 , e2) -> exprToString e1 ^ exprToString e2
 | Times (e1 , e2) -> exprToString e1 ^ exprToString e2
 | Thresh (e1 , e2 , e3 , e4) -> exprToString e1 ^ (exprToString e2 ^ (exprToString e3 ^ exprToString e4))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+
+(13,14)-(13,16)
+""
+LitG
+
+(14,14)-(14,16)
+""
+LitG
+
+(20,48)-(20,65)
+exprToString e3 ^ exprToString e4
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

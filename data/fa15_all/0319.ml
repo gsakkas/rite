@@ -49,7 +49,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (16,7)-(18,39)
 (((x1 + x2) + carry) / 10 , (((x1 + x2) + carry) mod 10) :: accList)
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
+TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 *)
 

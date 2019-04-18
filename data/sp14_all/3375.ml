@@ -56,7 +56,11 @@ let rec mulByDigit i l = match l with | [] -> [];;
 (34,3)-(46,27)
 match l with
 | [] -> []
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConPatG Nothing,Nothing,ListG (fromList []))])
+
+(34,9)-(34,19)
+l
+VarG
 
 *)
 

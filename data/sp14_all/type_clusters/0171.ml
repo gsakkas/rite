@@ -1,1 +1,1 @@
-'a list
+('a -> ('a * bool) * 'a)

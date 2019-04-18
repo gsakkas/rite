@@ -4,8 +4,8 @@ bool
 int
 'a
 expr
-char list
 int list
+char list
 float
 (int * int list) list
 'a list

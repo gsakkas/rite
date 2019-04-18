@@ -1,3 +1,2 @@
-string
-int list
-float
+(int list * int list)
+(expr * 'a * 'a)

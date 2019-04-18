@@ -1,2 +1,3 @@
-float
 int
+float
+bool

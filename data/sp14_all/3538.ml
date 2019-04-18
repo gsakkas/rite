@@ -79,7 +79,27 @@ match rdm with
 | 4 -> Average (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> Times (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> Thresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,ConAppG (Just EmptyG))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,ConAppG (Just EmptyG))])
+
+(21,7)-(21,76)
+buildY ()
+AppG (fromList [ConAppG Nothing])
+
+(23,7)-(26,44)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(27,10)-(27,76)
+Cosine (build (rand , depth - 1))
+ConAppG (Just (AppG (fromList [EmptyG])))
+
+(28,10)-(28,74)
+Sine (build (rand , depth - 1))
+ConAppG (Just (AppG (fromList [EmptyG])))
+
+(30,7)-(32,68)
+Average (build (rand , depth - 1) , build (rand , depth - 1))
+ConAppG (Just (TupleG (fromList [EmptyG])))
 
 *)
 

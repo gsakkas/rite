@@ -1,5 +1,6 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
 match l with
-| [] -> []
-| hd :: tl -> mulByDigit i
-                         tl @ [hd * i]
+| [] -> l
+| h :: t -> if h = 0
+            then removeZero t
+            else l

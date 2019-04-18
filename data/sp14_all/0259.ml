@@ -12,7 +12,7 @@ let rec digitsOfInt n = match n with | _ when n < 0 -> [];;
 (2,25)-(2,75)
 match n with
 | _ when n < 0 -> []
-CaseG VarG (fromList [(WildPatG,Just (BopG VarG LitG),ListG (fromList []))])
+CaseG (fromList [(WildPatG,Just (BopG VarG LitG),ListG (fromList []))])
 
 *)
 

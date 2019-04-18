@@ -1,4 +1,7 @@
-LetG NonRec (fromList [(ConsPatG VarPatG (ConPatG Nothing),AppG (fromList [EmptyG]))]) (ListG (fromList [EmptyG]))
-let d :: [] =
-  digitsOfInt (n / 10) in
-[d ; n mod 10]
+IteG (BopG EmptyG EmptyG) VarG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+if i < 2
+then l
+else (let total =
+        bigAdd l l in
+      bigAdd total
+             (mulByDigit (i - 1) l))

@@ -1,3 +1,3 @@
-CaseG VarG (fromList [(WildPatG,Just (BopG VarG LitG),ListG (fromList []))])
-match n with
-| _ when n < 0 -> []
+ConAppG (Just (AppG (fromList [EmptyG])))
+Cosine (build (rand , depth - 1))
+Sine (build (rand , depth - 1))

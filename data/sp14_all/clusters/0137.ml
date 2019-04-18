@@ -1,4 +1,7 @@
-TupleG (fromList [VarG,ListG (fromList [EmptyG])])
-(l1 , [0 ; 0 ; 0 ; 0])
-(t1 , [(h1 + x) mod 10])
-(p1 , [res / 10 ; res mod 10])
+AppG (fromList [IteG EmptyG EmptyG EmptyG])
+buildSine (if depth = 0
+           then buildX ()
+           else build (rand , depth - 1))
+buildCosine (if depth = 0
+             then buildY ()
+             else build (rand , depth - 1))

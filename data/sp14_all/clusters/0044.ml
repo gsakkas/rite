@@ -1,22 +1,10 @@
-LamG VarPatG (IteG EmptyG EmptyG EmptyG)
-fun accu ->
-  if n <= 0
-  then accu
-  else lastDigit (n / 10)
-                 ((n mod 10) :: accu)
-fun b' ->
-  if f b' = b'
-  then (b' , true)
-  else (b' , false)
-fun f' ->
-  if f b = b
-  then (b , true)
-  else (b , false)
-fun f' ->
-  if f b = b
-  then (b , false)
-  else (f b , true)
-fun a ->
-  if b = f b
-  then (b , false)
-  else (f b , true)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(List.length acc = List.length l1) || (List.length acc = List.length l2)
+(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
+((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
+(a * a) + (x * x)
+((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
+((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)) -. ((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y))
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))

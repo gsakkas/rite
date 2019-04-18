@@ -1,6 +1,6 @@
 expr
 'a
 int
-'tNewPart
 float
+int list
 'a list

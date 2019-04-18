@@ -1,6 +1,5 @@
-LetG NonRec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (AppG (fromList [EmptyG]))
-let combine =
-  fun (a , b) -> a + b in
-List.map combine
-         (List.rev (List.combine l1
-                                 l2))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG),(TuplePatG (fromList [EmptyPatG]),Just EmptyG,EmptyG)]))
+let res = f b in
+match res with
+| (x , y) when y = true -> wwhile (f , x)
+| (x , y) -> x

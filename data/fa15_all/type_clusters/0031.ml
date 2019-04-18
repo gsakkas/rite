@@ -1,2 +1,4 @@
-float
-expr
+'a
+int
+string
+bool

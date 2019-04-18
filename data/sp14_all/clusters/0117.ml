@@ -1,2 +1,4 @@
-BopG (AppG (fromList [EmptyG])) VarG
-eval (a , x , y) *. pi
+IteG (AppG (fromList [EmptyG])) VarG (AppG (fromList [EmptyG]))
+if List.mem h seen
+then seen
+else h :: seen

@@ -80,7 +80,19 @@ match e with
 | _ -> "_"
 | Tan a -> "tan(pi*" ^ (exprToString a ^ ")")
 | Sin_Avg (a , b , c) -> "sin(pi*(" ^ (exprToString a ^ ("+" ^ (exprToString b ^ (exprToString c ^ ")/3)"))))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,LitG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,LitG)])
+
+(30,20)-(30,29)
+"sin(pi*("
+LitG
+
+(30,47)-(30,57)
+a
+VarG
+
+(30,61)-(30,64)
+"+" ^ (exprToString b ^ (exprToString c ^ ")/3)"))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
 

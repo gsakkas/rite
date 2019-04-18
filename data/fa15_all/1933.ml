@@ -69,7 +69,7 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else h :: t
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
 (16,17)-(16,45)
 let (x1 , x2) = x in

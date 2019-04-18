@@ -17,7 +17,7 @@ let _ = digitsOfInt 3124;;
 (* changed spans
 (3,46)-(3,70)
 (n mod 10) :: (digitsOfInt (n / 10))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 *)
 

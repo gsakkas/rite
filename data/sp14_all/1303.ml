@@ -52,7 +52,7 @@ let bigAdd l1 l2 =
 match x with
 | (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
 | _ -> a
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,ConAppG (Just EmptyG)),(WildPatG,Nothing,VarG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,VarG)])
 
 (19,16)-(19,19)
 []

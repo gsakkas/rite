@@ -1,1 +1,1 @@
-bool
+int

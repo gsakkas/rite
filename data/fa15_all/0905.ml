@@ -56,7 +56,7 @@ match x with
                  | (carry , list) -> (let num =
                                         (l1e + l2e) + carry in
                                       (num mod 9 , [7] @ list))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 (17,16)-(17,44)
 (0 , [])

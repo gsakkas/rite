@@ -35,7 +35,7 @@ let removeDuplicates l =
 (* changed spans
 (12,21)-(12,29)
 h :: seen
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG])
 
 (13,21)-(13,34)
 filter t h

@@ -1,5 +1,4 @@
-BopG LitG (AppG (fromList [EmptyG]))
-1.0 /. sin (pi *. eval (e1 , x , y))
-1 + additivePersistence (sumList (digits n))
-1.0 *. eval (e1 , x , y)
-1.0 /. eval (e , x , y)
+AppG (fromList [LitG])
+digitsOfInt 1
+")" ^ ")"
+")" ^ "^2"

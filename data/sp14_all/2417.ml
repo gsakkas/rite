@@ -26,7 +26,7 @@ let rec mulByDigit i l =
 (8,29)-(8,61)
 (prod / 10) :: (mulByDigit i
                            t)
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 (9,12)-(9,16)
 prod mod 10

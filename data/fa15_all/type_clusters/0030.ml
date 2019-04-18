@@ -1,4 +1,3 @@
-'a
 int
-string
 bool
+float

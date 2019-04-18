@@ -1,1 +1,2 @@
-string -> bool
+'a list list
+'a list

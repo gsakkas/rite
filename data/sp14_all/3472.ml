@@ -17,7 +17,7 @@ let rec listReverse l = match l with | [] -> [];;
 (7,25)-(7,55)
 match l with
 | [] -> []
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConPatG Nothing,Nothing,ListG (fromList []))])
 
 *)
 

@@ -1,6 +1,5 @@
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
-digitsOfIntHelper (n / 10)
-                  ((n mod 10) :: result)
-clone_RT (x :: acc) (n - 1)
-helper ((v mod 10) :: acc)
-       (v / 10)
+CaseG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
+match $x with
+| v -> x (a v)
+match n with
+| n -> [] @ [n mod 10]

@@ -1,2 +1,3 @@
-AppG (fromList [LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
-x (let fn = fun d -> d in fn)
+LetG NonRec (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG,WildPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+let (h :: t , _) = a in
+([] , [])

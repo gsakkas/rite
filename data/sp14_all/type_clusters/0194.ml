@@ -1,1 +1,1 @@
-float
+(int list * int list)

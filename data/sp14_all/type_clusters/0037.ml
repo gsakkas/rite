@@ -1,2 +1,2 @@
-int list
-'a list
+'a -> ('a * bool)
+int -> (int * bool)

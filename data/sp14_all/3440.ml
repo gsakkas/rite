@@ -28,7 +28,11 @@ let rec additivePersistence n =
 match digitsOfInt n with
 | [] -> 0
 | _ -> sumList (digitsOfInt n)
-CaseG (AppG (fromList [EmptyG])) (fromList [(ConPatG Nothing,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(8,48)-(8,53)
+sumList (digitsOfInt n)
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

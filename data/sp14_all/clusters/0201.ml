@@ -1,4 +1,6 @@
-LetG NonRec (fromList [(ConsPatG VarPatG (ConPatG Nothing),AppG (fromList [EmptyG]))]) (ListG (fromList [EmptyG]))
-let y :: [] =
-  loop (input / 10) in
-[y ; input mod 10]
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+if n < 0
+then []
+else (match n with
+      | 0 -> [0]
+      | _ -> digitsOfInt (n / 10) @ [n mod 10])

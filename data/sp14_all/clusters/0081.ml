@@ -1,4 +1,5 @@
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,ConAppG (Just EmptyG))])
-match n with
-| 0 -> []
-| _ -> x :: (clone x (n - 1))
+TupleG (fromList [LitG])
+(0 , 4)
+(0 , 1)
+(0 , 0)
+(10 , 13 , 57)

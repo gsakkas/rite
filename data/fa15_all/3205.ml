@@ -95,7 +95,11 @@ match i with
 | 10 -> l @ [0]
 | _ -> bigAdd l
               (mulByDigit (i - 1) l)
-CaseG VarG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(34,38)-(34,69)
+l @ [0]
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
 
 (37,15)-(37,41)
 let (c , a') = a in

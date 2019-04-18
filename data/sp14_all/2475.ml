@@ -170,7 +170,77 @@ match num with
                                                                       expr , buildhelper (depth - 1)
                                                                                          (depth - 1)
                                                                                          expr)
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(31,24)-(31,51)
+buildhelper 0 0 expr
+AppG (fromList [VarG,LitG])
+
+(32,26)-(32,53)
+buildhelper 0 0 expr
+AppG (fromList [VarG,LitG])
+
+(37,28)-(37,31)
+depth
+VarG
+
+(38,29)-(38,32)
+depth
+VarG
+
+(41,28)-(41,31)
+depth
+VarG
+
+(42,29)-(42,32)
+depth
+VarG
+
+(43,12)-(43,44)
+if rand (0 , 1) = 0
+then buildAverage (buildhelper (depth - 1)
+                               (depth - 1)
+                               expr , buildhelper (depth - 1)
+                                                  (depth - 1)
+                                                  expr)
+else buildTimes (buildhelper (depth - 1)
+                             (depth - 1)
+                             expr , buildhelper (depth - 1)
+                                                (depth - 1)
+                                                expr)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(46,26)-(46,29)
+depth
+VarG
+
+(46,32)-(46,33)
+1
+LitG
+
+(47,27)-(47,30)
+depth
+VarG
+
+(47,33)-(47,34)
+1
+LitG
+
+(48,27)-(48,30)
+depth
+VarG
+
+(48,33)-(48,34)
+1
+LitG
+
+(49,27)-(49,30)
+depth
+VarG
+
+(49,33)-(49,34)
+1
+LitG
 
 (50,3)-(50,35)
 buildhelper (rand (1 , 4))

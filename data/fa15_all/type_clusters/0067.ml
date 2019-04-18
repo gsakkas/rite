@@ -1,2 +1,1 @@
 int list
-bool

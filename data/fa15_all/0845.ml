@@ -53,7 +53,7 @@ match List.length l1 - List.length l2 with
        then (clone 0
                    (n * (-1)) @ l1 , l2)
        else (clone 0 n @ l2 , l1)
-CaseG (BopG EmptyG EmptyG) (fromList [(VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(LitPatG,Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(LitPatG,Nothing,TupleG (fromList [EmptyG]))])
 
 (4,24)-(4,52)
 match l with
@@ -61,7 +61,7 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
 
 (8,17)-(8,45)
 let (fst , sec) = x in

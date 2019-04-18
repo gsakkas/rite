@@ -1,4 +1,8 @@
-TupleG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
-(((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-(h1 + 1 , (mul / 10) :: ((mul mod 10) :: t2))
-(((i + j) + s) / 10 , (((i + j) + s) mod 10) :: t)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+if n < 10
+then [n]
+else digitsOfInt (n / 10) @ [n mod 10]
+if tl = []
+then [(hd , x)]
+else (hd , x) :: (argmaker x
+                           tl)

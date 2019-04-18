@@ -1,5 +1,6 @@
-CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
-match $x with
-| v -> x (a v)
-match n with
-| n -> [] @ [n mod 10]
+AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+helper (x - 1) l (bigAdd l
+                         accum)
+helper (f :: acc) f (x - 1)
+helper (i - 1) (bigAdd acc l)
+       l

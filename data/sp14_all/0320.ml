@@ -49,13 +49,33 @@ let rec eval (e,x,y) =
 *)
 
 (* changed spans
-(16,1)-(16,1)
+(15,14)-(15,15)
 eval (e1 , x , y) < eval (e2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
+(16,14)-(16,15)
+x
+VarG
+
+(17,16)-(17,45)
+y
+VarG
+
+(18,18)-(18,47)
+sin (pi *. eval (e1 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
+
+(19,24)-(19,71)
+cos (pi *. eval (e1 , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
+
+(20,22)-(20,60)
+(eval (e1 , x , y) +. eval (e1 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
 (22,7)-(22,68)
-eval (e3 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+eval (e1 , x , y) *. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)
 

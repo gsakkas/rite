@@ -1,2 +1,1 @@
-float
-int
+int list

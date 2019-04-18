@@ -1,2 +1,2 @@
-LamG VarPatG LitG
-fun f -> 0
+TupleG (fromList [LitG,ListG (fromList [EmptyG])])
+(0 , [0])

@@ -1,2 +1,4 @@
-AppG (fromList [VarG,BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
-helper (f :: acc) f (x - 1)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (BopG EmptyG EmptyG)
+let sum =
+  num + additivePersistence num in
+1 + additivePersistence num

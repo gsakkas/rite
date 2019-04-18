@@ -1,11 +1,8 @@
-TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
-(let g =
-   fun b ->
-     (let t = f b in
-      if b = t
-      then (b , false)
-      else (t , true)) in
- g , b)
-(let f' =
-   fun b -> (f b , b = f b) in
- f' , b)
+AppG (fromList [VarG,LitG])
+itt y' 0
+0 :: l1
+0 :: l2
+sepConcat "; " l
+0 :: a2
+0 :: a1
+sepConcat " " l

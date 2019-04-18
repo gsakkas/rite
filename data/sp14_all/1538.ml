@@ -18,7 +18,11 @@ let sqsum xs =
 (4,14)-(4,65)
 match xs with
 | hd :: tl -> f (f hd hd) tl
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(4,36)-(4,38)
+f (f hd hd) tl
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

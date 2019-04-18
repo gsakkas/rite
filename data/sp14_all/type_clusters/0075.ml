@@ -1,3 +1,3 @@
-int list
-(int * int) list
-'a list
+float
+int -> int
+unit

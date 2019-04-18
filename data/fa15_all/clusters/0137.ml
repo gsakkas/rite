@@ -1,8 +1,7 @@
-LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-let test =
-  match a1 with
-  | [] -> 0
-  | h :: t -> h in
-let sum =
-  (l1x + l2x) + test in
-((sum / 10) :: a1 , (sum mod 10) :: a2)
+LetG NonRec (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,VarG)]) (CaseG (fromList [(VarPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+let (h1 , h2) :: t = l in
+match k with
+| h2 -> h1
+| _ -> if l = []
+       then d
+       else assoc (d , k , t)

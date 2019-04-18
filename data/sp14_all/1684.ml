@@ -81,13 +81,13 @@ match rand (0 , 4) with
 | 2 -> buildAverage (build (rand , depth) , build (rand , depth))
 | 3 -> buildTimes (build (rand , depth) , build (rand , depth))
 | 4 -> buildThresh (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG (fromList [(LitPatG,Nothing,EmptyG)]))
 
 (30,45)-(30,45)
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

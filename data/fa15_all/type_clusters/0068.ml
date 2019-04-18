@@ -1,3 +1,2 @@
-float
-int
+int list
 bool

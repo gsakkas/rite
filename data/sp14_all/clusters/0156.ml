@@ -1,5 +1,7 @@
-LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
-let h :: t = l in
-match l with
-| [] -> []
-| h :: t -> listReverse t
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LamG VarPatG EmptyG)])
+match fs with
+| h :: t -> f h h
+| [] -> fun x -> x
+match fs with
+| [] -> fun x -> x
+| h :: t -> f (fun x -> x) h

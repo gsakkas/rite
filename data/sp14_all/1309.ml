@@ -55,7 +55,7 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (17,77)-(17,78)
 ((h1 + h2) mod 10) :: a
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
 *)
 

@@ -1,9 +1,3 @@
-AppG (fromList [VarG,LitG,ConAppG (Just EmptyG)])
-helper 0 (num :: xs') xs
-helper 1
-       (((num / 10) mod 10) :: ((num mod 10) :: xs'))
-       xs
-helper 0 (num :: accum) xs
-helper 1
-       (((num / 10) mod 10) :: ((num mod 10) :: accum))
-       xs
+AppG (fromList [AppG (fromList [EmptyG]),TupleG (fromList [EmptyG])])
+(3 , 3) :: (List.rev (List.combine l1
+                                   l2))

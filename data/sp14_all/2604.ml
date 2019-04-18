@@ -63,7 +63,7 @@ match x with
 | (fir , sec) -> if (fir + sec) < 10
                  then ([] , (fir + sec) :: b2)
                  else ([] , (fir + sec) :: b2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
 
 *)
 

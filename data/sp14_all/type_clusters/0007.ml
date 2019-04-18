@@ -1,1 +1,5 @@
-(int * int list)
+string
+int
+(int * int)
+float
+int list

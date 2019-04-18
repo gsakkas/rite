@@ -1,2 +1,1 @@
-'a
-(int * int list)
+('a list * 'b list)

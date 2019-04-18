@@ -1,11 +1,13 @@
-AppG (fromList [ListG (fromList [EmptyG])])
-append [h] [h]
-listReverse [a]
-listReverse [n mod 10]
-app [5] [n mod 10]
-app [3] [8]
-List.hd [List.fold_left f base
-                        (mulByDigit i
-                                    (List.rev (List.map (fun x ->
-                                                           x * 10)
-                                                        t)) @ [h * i])]
+TupleG (fromList [VarG,LamG VarPatG EmptyG])
+(fun xx ->
+   (xx , f xx = xx) , b)
+(fun x ->
+   (f x , not (f x = x)) , b)
+(fun x ->
+   (let b = f x in
+    (b , b <> x)) , b)
+(fun b -> (f b , f b = b) , b)
+(fun b ->
+   (f b , b <> f b) , b)
+(fun a ->
+   (f a , f a <> a) , b)

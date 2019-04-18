@@ -1,2 +1,2 @@
-TupleG (fromList [VarG,ListG (fromList [])])
-(l1 , [])
+AppG (fromList [VarG,LamG VarPatG EmptyG])
+f (fun x -> x) h

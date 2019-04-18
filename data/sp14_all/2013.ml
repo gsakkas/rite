@@ -53,7 +53,7 @@ let bigAdd l1 l2 =
 (19,13)-(19,29)
 fun (x , y) ->
   ((x + y) / 10) :: a
-LamG (TuplePatG (fromList [VarPatG])) (ConAppG (Just EmptyG))
+LamG (TuplePatG (fromList [VarPatG])) (AppG (fromList [EmptyG]))
 
 (20,16)-(20,17)
 []

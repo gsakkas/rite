@@ -68,7 +68,17 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+
+(17,27)-(17,61)
+[]
+ListG (fromList [])
+
+(17,70)-(17,72)
+if h = 0
+then removeZero t
+else l
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
 
 (21,17)-(21,31)
 match x with
@@ -76,7 +86,7 @@ match x with
                | (carry , result) -> if ((d1 + d2) + carry) > 9
                                      then (1 , (((d1 + d2) + 1) - 10) :: result)
                                      else (0 , (d1 + d2) :: result)
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 (22,16)-(22,18)
 (0 , [])

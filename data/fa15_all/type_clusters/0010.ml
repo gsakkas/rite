@@ -1,4 +1,5 @@
-int list
-'a list
-'a list list
-(int * int) list
+'a -> 'a
+('a -> 'b) -> 'a -> 'b
+('a -> ('a -> 'b) -> 'b) -> 'a -> ('a -> 'b) -> 'b
+'a -> 'b -> 'c -> ('c -> 'd) -> 'd
+('a -> 'a) -> 'a -> 'a

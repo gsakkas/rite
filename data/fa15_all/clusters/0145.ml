@@ -1,5 +1,3 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| head :: [] -> [head]
-| head :: tail -> listReverse tail @ [head]
+TupleG (fromList [LitG,LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG])
+(1 , let (y , z) = x in
+     [((y + z) + carry) mod 10] @ ans)

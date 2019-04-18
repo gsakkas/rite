@@ -75,7 +75,23 @@ match e with
                                 else eval (e4 , x , y)
 | Sqrt e -> sqrt (abs_float (eval (e , x , y)))
 | Gauss (e1 , e2 , e3) -> 2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(15,20)-(15,37)
+pi *. eval (e' , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(16,22)-(16,39)
+pi *. eval (e' , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(17,24)-(17,68)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
+(23,10)-(23,77)
+sqrt (abs_float (eval (e , x , y)))
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

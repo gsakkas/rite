@@ -1,1 +1,2 @@
-(int * int)
+(int * int) list
+('a * 'b) list

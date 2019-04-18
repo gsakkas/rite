@@ -87,7 +87,7 @@ match rand (0 , 4) with
 | 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | _ -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

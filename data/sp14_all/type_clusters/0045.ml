@@ -1,4 +1,2 @@
-string
-float
-int
-expr
+int list -> int list
+'a -> ('a * bool)

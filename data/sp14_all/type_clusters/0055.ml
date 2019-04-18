@@ -1,3 +1,1 @@
-'a list
-int list
-int
+('a -> ('a * bool) * 'a)

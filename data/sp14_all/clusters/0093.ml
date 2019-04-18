@@ -1,5 +1,2 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ConAppG (Just EmptyG))
-if tl = []
-then [(hd , x)]
-else (hd , x) :: (argmaker x
-                           tl)
+TupleG (fromList [BopG EmptyG EmptyG,ListG (fromList [EmptyG])])
+(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])

@@ -129,7 +129,55 @@ match rand (1 , 7) with
                                                                                     else build (rand , depth - 1) , if depth = 0
                                                                                                                     then buildY ()
                                                                                                                     else build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(27,10)-(27,21)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(28,10)-(28,19)
+buildY ()
+AppG (fromList [ConAppG Nothing])
+
+(29,10)-(29,19)
+buildSine (if depth = 0
+           then buildX ()
+           else build (rand , depth - 1))
+AppG (fromList [IteG EmptyG EmptyG EmptyG])
+
+(31,7)-(31,77)
+buildCosine (if depth = 0
+             then buildY ()
+             else build (rand , depth - 1))
+AppG (fromList [IteG EmptyG EmptyG EmptyG])
+
+(33,7)-(34,69)
+buildAverage (if depth = 0
+              then buildX ()
+              else build (rand , depth - 1) , if depth = 0
+                                              then buildY ()
+                                              else build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(36,7)-(38,72)
+buildTimes (if depth = 0
+            then buildX ()
+            else build (rand , depth - 1) , if depth = 0
+                                            then buildY ()
+                                            else build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(40,7)-(42,72)
+buildThresh (if depth = 0
+             then buildX ()
+             else build (rand , depth - 1) , if depth = 0
+                                             then buildY ()
+                                             else build (rand , depth - 1) , if depth = 0
+                                                                             then buildX ()
+                                                                             else build (rand , depth - 1) , if depth = 0
+                                                                                                             then buildY ()
+                                                                                                             else build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)
 

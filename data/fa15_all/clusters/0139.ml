@@ -1,7 +1,7 @@
-LetG NonRec (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,VarG)]) (CaseG EmptyG (fromList [(VarPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
-let (h1 , h2) :: t = l in
-match k with
-| h2 -> h1
-| _ -> if l = []
-       then d
-       else assoc (d , k , t)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+if n < 10
+then [n]
+else digitsOfInt (n / 10)
+if i = 0
+then [0]
+else bigAdd l l

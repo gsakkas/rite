@@ -19,9 +19,17 @@ let rec digitsOfInt n =
 *)
 
 (* changed spans
+(4,11)-(4,14)
+xs1
+VarG
+
+(4,28)-(4,31)
+xs2
+VarG
+
 (4,44)-(4,65)
 hd :: (append tl xs2)
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

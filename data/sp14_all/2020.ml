@@ -69,7 +69,15 @@ match a with
 | [] -> mulByDigit x l2
 | _ -> bigAdd a (mulByDigit x
                             l2)
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(16,13)-(16,35)
+mulByDigit x l2
+AppG (fromList [VarG])
+
+(17,15)-(17,59)
+bigAdd a (mulByDigit x l2)
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 (19,29)-(19,76)
 let res =

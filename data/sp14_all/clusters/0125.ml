@@ -1,4 +1,5 @@
-IteG (AppG (fromList [EmptyG])) VarG (ConAppG (Just EmptyG))
-if List.mem h seen
-then seen
-else h :: seen
+CaseG (fromList [(ConPatG Nothing,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+match a with
+| [] -> mulByDigit x l2
+| _ -> bigAdd a (mulByDigit x
+                            l2)

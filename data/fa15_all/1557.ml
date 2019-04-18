@@ -16,7 +16,7 @@ match f b with
 | (h1 , h2) -> if h2
                then wwhile (f , h1)
                else h1
-CaseG (AppG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)
 

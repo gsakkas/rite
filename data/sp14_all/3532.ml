@@ -77,7 +77,7 @@ match depth with
         else Sine (build (rand , depth - 1)))
 | 2 -> Average (build (rand , depth - 1) , build (rand , depth - 1))
 | 3 -> Times (build (rand , depth - 1) , build (rand , depth - 1))
-CaseG VarG (fromList [(LitPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(LitPatG,Nothing,ConAppG (Just EmptyG))])
+CaseG (fromList [(LitPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(LitPatG,Nothing,ConAppG (Just EmptyG))])
 
 *)
 

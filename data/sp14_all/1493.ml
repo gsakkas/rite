@@ -17,7 +17,7 @@ ListG (fromList [])
 
 (3,45)-(3,66)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

@@ -1,7 +1,5 @@
-TupleG (fromList [VarG,ConAppG (Just EmptyG)])
-(t1 , (((h1 + x) + rh) mod 10) :: rt)
-(c , c :: s)
-(p1 , (re / 10) :: ((re mod 10) :: b))
-(t , (x + h) :: b)
-(c , d :: t)
-(len , (-1) :: (((sum mod 10) + 1) :: xs'))
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(ConPatG Nothing,Nothing,EmptyG)]))])
+match a with
+| (list1 , list2) -> match list1 with
+                     | [] -> match x with
+                             | (h1 , h2) -> ((h1 + h2) :: list1 , list2)

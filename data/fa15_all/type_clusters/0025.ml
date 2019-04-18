@@ -1,6 +1,3 @@
-int list
-'a list
+float
 int
-string
-(int * int) list
 bool

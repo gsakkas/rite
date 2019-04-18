@@ -1,31 +1,20 @@
-LetG NonRec (fromList [(VarPatG,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
-let carry =
-  match a with
-  | (x , y) -> x in
-match x with
-| (add1 , add2) -> (let new_carry =
-                      ((carry + add1) + add2) / 10 in
-                    let digit =
-                      ((carry + add1) + add2) mod 10 in
-                    match a with
-                    | (x , y) -> (new_carry , digit :: y))
-let carry =
-  match a with
-  | (x , y) -> x in
-match x with
-| (addend_a , addend_b) -> (let new_carry =
-                              ((carry + addend_a) + addend_b) / 10 in
-                            let digit =
-                              ((carry + addend_a) + addend_b) mod 10 in
-                            match a with
-                            | (x , y) -> (new_carry , digit :: y))
-let carry =
-  match a with
-  | (x , y) -> x in
-match x with
-| (d1 , d2) -> (let new_carry =
-                  ((carry + d1) + d2) / 10 in
-                let digit =
-                  ((carry + d1) + d2) mod 10 in
-                match a with
-                | (x , y) -> (new_carry , digit :: y))
+BopG VarG (AppG (fromList [EmptyG]))
+pi *. eval (a , x , y)
+pi *. eval (e , x , y)
+pi *. eval (e1 , x , y)
+a + int_of_float (float_of_int x ** 2.0)
+pi *. eval (i , x , y)
+pi *. eval (e' , x , y)
+pi *. eval (v , x , y)
+num + additivePersistence num
+b = f b
+pi *. eval (s1 , x , y)
+pi *. eval (c1 , x , y)
+pi *. eval (x1 , x , y)
+pi *. eval (t , x , y)
+pi *. evalhelper p1 x y
+pi *. eval (e0 , x , y)
+pi *. eval (e , 0.0 , 0.0)
+pi *. eval (var1 , x , y)
+pi *. eval (var2 , x , y)
+pi *. eval (ex , x , y)

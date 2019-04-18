@@ -1,3 +1,2 @@
-'a -> 'a
-(int -> int) -> 'a -> 'a
-'a -> 'b
+(int * int list)
+(int list * int list)

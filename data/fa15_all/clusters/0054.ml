@@ -1,34 +1,16 @@
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
-let rec helper =
-  fun acc ->
-    fun cin ->
-      match l with
-      | [] -> cin :: acc
-      | h :: t -> (let sum =
-                     (i * h) + cin in
-                   helper ((sum mod 10) :: acc)
-                          (sum / 10)) in
-helper [] 0
-let rec recurse =
-  fun original ->
-    fun reverse ->
-      match original with
-      | [] -> reverse
-      | front :: back -> recurse back
-                                 (front :: reverse) in
-recurse l []
-let rec g =
-  fun x ->
-    if f x = b
-    then x
-    else g (x + 1) in
-g 0
-let rec helper =
-  fun curList ->
-    fun lt1 ->
-      fun lt2 ->
-        match lt1 with
-        | [] -> curList
-        | h :: t -> helper ((h , List.hd lt2) :: curList)
-                           t (List.tl lt2) in
-helper [] l1 l2
+TupleG (fromList [VarG,LamG VarPatG EmptyG])
+(fun x -> (x , f x = x) , b)
+(fun x -> (b , f b = b) , b)
+(fun b ->
+   (f b , f b <> b) , b)
+(fun x -> (f b , 3 < 4) , b)
+(fun x ->
+   (f b , not (b = f b)) , b)
+(fun x ->
+   (f x , x <> f x) , b)
+(fun input ->
+   (let b = f input in
+    (b , b <> input)) , b)
+(fun x ->
+   (let b = f x in
+    (b , b <> x)) , b)

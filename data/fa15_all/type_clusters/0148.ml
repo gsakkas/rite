@@ -1,1 +1,1 @@
-(int * int list)
+(expr * expr * expr * expr) -> expr

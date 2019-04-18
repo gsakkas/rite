@@ -1,9 +1,10 @@
+int list
 string
 bool
+'a list list
 'a
-(int * int) list
 'a list
-int list
+(int * int) list
 'a -> 'a
 'a -> ('a * bool)
 int

@@ -1,5 +1,4 @@
-ListG (fromList [TupleG (fromList [EmptyG])])
-[(0 , 0)]
-[(h1 , h2)]
-[(0 , [])]
-[(h , l2)]
+CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+match c' with
+| true -> wwhile (f , b')
+| false -> b'

@@ -67,7 +67,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (25,16)-(25,17)
 0 :: a1
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,LitG])
 
 *)
 

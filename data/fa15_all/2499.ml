@@ -59,7 +59,23 @@ match e with
 | Average (e1 , e2) -> "((" ^ (exprToString e1 ^ (") + " ^ (exprToString e2 ^ "/2)")))
 | Times (e1 , e2) -> exprToString e1 ^ (" * " ^ exprToString e2)
 | Thresh (e1 , e2 , e3 , e4) -> "(" ^ (exprToString e1 ^ ("<" ^ (exprToString e2 ^ (" ? " ^ (exprToString e3 ^ (" : " ^ (exprToString e4 ^ ")")))))))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+
+(15,16)-(15,44)
+"x"
+LitG
+
+(16,18)-(16,39)
+"y"
+LitG
+
+(18,7)-(18,67)
+"sin (pi * " ^ (exprToString e1 ^ ")")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
+
+(19,22)-(19,60)
+"cos (pi * " ^ (exprToString e1 ^ ")")
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
 

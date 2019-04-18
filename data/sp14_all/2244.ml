@@ -20,7 +20,7 @@ let fixpoint (f,b) =
 match c' with
 | false -> b'
 | _ -> wwhile (f , b')
-CaseG VarG (fromList [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
 (5,30)-(5,60)
 fun f' ->

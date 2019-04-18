@@ -1,1 +1,1 @@
-bool
+(int list * int list)

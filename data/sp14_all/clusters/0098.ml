@@ -1,5 +1,6 @@
-LamG (TuplePatG (fromList [VarPatG])) (IteG EmptyG EmptyG EmptyG)
-fun (x , n , acc) ->
-  if n < 0
-  then acc
-  else cloneHelper (x , n - 1 , x :: acc)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+let ans = f b in
+match ans with
+| (num , boo) -> if boo = true
+                 then wwhile (f , num)
+                 else num

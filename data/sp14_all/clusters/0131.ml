@@ -1,7 +1,8 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG)),(ConPatG Nothing,Nothing,VarG)])
-match l with
-| [] -> l
-| h :: t -> h :: (listReverse t)
-match l with
-| [] -> l'
-| h :: t -> (List.hd l) :: (listReverse (List.tl l))
+ListG (fromList [AppG (fromList [EmptyG])])
+[List.hd l]
+[sqsum (mulByDigit i
+                   (List.rev (List.map (fun x ->
+                                          x * 10)
+                                       t)) @ [h * i])]
+[List.fold_left f base
+                (h :: t)]

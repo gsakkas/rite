@@ -1,1 +1,2 @@
-('a list * int list) list
+int list
+'a

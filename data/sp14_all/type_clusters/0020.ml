@@ -1,1 +1,3 @@
-(int * int list)
+float
+int
+bool

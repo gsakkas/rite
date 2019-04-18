@@ -53,7 +53,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,26)-(19,62)
 (((x1 + x2) + carry) mod 10) :: sum
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,BopG EmptyG EmptyG])
 
 *)
 

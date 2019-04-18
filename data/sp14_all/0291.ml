@@ -12,7 +12,7 @@ let rec listReverse l = match l with | [] -> l | h::t -> listReverse (h :: l);;
 (* changed spans
 (3,36)-(3,58)
 listReverse (h :: l)
-AppG (fromList [ConAppG (Just EmptyG)])
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

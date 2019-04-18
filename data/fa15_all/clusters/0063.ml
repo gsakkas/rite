@@ -1,15 +1,18 @@
-LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> listReverse t @ [h]
-fun x ->
-  match x with
-  | [] -> true
-  | h :: t -> if getHead x = getHead (listReverse x)
-              then matchHeads (getTail (listReverse t))
-              else false
-function
-  | [] -> l
-  | h :: t -> listReverseHelper (h :: l)
-                                t
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
+let absNumZeros =
+  abs numZeros in
+if numZeros = 0
+then (l1 , l2)
+else (let listZeros =
+        clone 0 absNumZeros in
+      if numZeros > 0
+      then (l1 , listZeros @ l2)
+      else (listZeros @ l1 , l2))
+let fb = f b in
+if fb = b
+then (true , fb)
+else (false , fb)
+let x' = abs n in
+if x' > 0
+then [x] @ clone x (n - 1)
+else []

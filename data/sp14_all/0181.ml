@@ -22,7 +22,7 @@ let padZero l1 l2 =
 if n > 0
 then x :: (clone x (n - 1))
 else []
-IteG (BopG EmptyG EmptyG) (ConAppG (Just EmptyG)) (ListG (fromList []))
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ListG (fromList []))
 
 (6,78)-(6,78)
 (List.append (clone 0

@@ -83,7 +83,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (34,30)-(34,60)
 pair ((h1 , h2) :: acc) t1 t2
-AppG (fromList [VarG,ConAppG (Just EmptyG)])
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

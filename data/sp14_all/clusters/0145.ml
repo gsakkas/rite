@@ -1,3 +1,2 @@
-AppG (fromList [UopG EmptyG,LitG])
-clone 0 (- diff)
-clone 0 (- lendiff)
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (TupleG (fromList [EmptyG]))
+let xx = f x in (xx , xx <> b)

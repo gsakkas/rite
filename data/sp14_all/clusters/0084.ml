@@ -1,5 +1,17 @@
-TupleG (fromList [LitG])
-(0 , 4)
-(0 , 1)
-(0 , 0)
-(10 , 13 , 57)
+LetG NonRec (fromList [(VarPatG,ListG (fromList []))]) (IteG EmptyG EmptyG EmptyG)
+let myList = [] in
+if n <= 0
+then []
+else if n < 10
+     then [n]
+     else digitsOfInt (n / 10) @ [n mod 10]
+let accum = [] in
+if n < 1
+then []
+else clone x n
+let l = [] in
+if n < 0 then l else l
+let myList = [] in
+if n <= 0
+then []
+else (n mod 10) :: myList

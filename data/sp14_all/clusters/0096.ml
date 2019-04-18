@@ -1,4 +1,2 @@
-CaseG VarG (fromList [(ConsPatG WildPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| _ :: tl -> listReverse tl
+BopG (UopG EmptyG) VarG
+(- 1.0) *. res3

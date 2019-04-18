@@ -21,7 +21,11 @@ match l with
                     then vi
                     else assoc (d , k , t)
 | [] -> d
-CaseG VarG (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
+CaseG (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
+
+(3,9)-(3,18)
+l
+VarG
 
 *)
 

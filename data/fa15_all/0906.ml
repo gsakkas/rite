@@ -57,7 +57,7 @@ match a with
 | (carry , list) -> (let num =
                        (l1e + l2e) + carry in
                      (num mod 9 , [7] @ list))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
 (22,19)-(22,65)
 (padZero l1 l2 , l2)

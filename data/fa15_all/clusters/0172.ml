@@ -1,4 +1,4 @@
-IteG (BopG EmptyG EmptyG) LitG VarG
-if List.length t <> 0
-then ""
-else sep
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ListG (fromList []))
+if n > 0
+then [n mod 10]
+else []

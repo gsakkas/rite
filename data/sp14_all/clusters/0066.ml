@@ -1,15 +1,19 @@
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
-match x with
-| 0 -> buildSine (build (rand , depth - 1))
-| 1 -> buildCosine (build (rand , depth - 1))
-| 2 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
-| 3 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
-| 4 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-match case with
-| 0 -> buildX ()
-| 1 -> buildY ()
-| 2 -> buildSine (build (rand , depth - 1))
-| 3 -> buildCosine (build (rand , depth - 1))
-| 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
-| 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
-| 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+(let d =
+   fun x ->
+     (let xx = f b in
+      (xx , xx = b)) in
+ d , b)
+(let f =
+   fun x ->
+     (let xx = (x * x) * x in
+      (xx , xx < 100)) in
+ f , b)
+(let g =
+   fun x ->
+     (let xx = f x in
+      (xx , xx <> b)) in
+ g , b)
+(let helper =
+   fun x -> (f x , f x = f b) in
+ helper , b)

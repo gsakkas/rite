@@ -60,7 +60,25 @@ match e with
 | Thresh (e1 , e2 , e3 , e4) -> if eval (e1 , x , y) < eval (e2 , x , y)
                                 then eval (e3 , x , y)
                                 else eval (e4 , x , y)
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(17,27)-(17,40)
+eval (e' , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(18,18)-(18,43)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
+(19,24)-(19,60)
+eval (e1 , x , y) *. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(20,22)-(20,52)
+if eval (e1 , x , y) < eval (e2 , x , y)
+then eval (e3 , x , y)
+else eval (e4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)
 

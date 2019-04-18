@@ -29,11 +29,11 @@ AppG (fromList [VarG])
 
 (7,44)-(7,48)
 [] :: seen
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,ListG (fromList [])])
 
 (7,54)-(7,59)
 h :: seen
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG])
 
 (8,21)-(8,45)
 t

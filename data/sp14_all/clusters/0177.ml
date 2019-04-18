@@ -1,3 +1,2 @@
-CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [TuplePatG (fromList [EmptyPatG])]),Nothing,TupleG (fromList [EmptyG]))])
-match (a , x) with
-| ((b , c) , (d , e)) -> (b , (d + e) :: c)
+LamG VarPatG (BopG EmptyG EmptyG)
+fun x -> x * 1

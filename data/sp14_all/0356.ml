@@ -61,7 +61,7 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
 (13,17)-(13,45)
 match x with
@@ -70,7 +70,7 @@ match x with
               match a with
               | h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
               | _ -> [sum / 10 ; sum mod 10])
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
 (14,16)-(14,44)
 []

@@ -1,1 +1,1 @@
-float
+(expr * expr * expr) -> expr

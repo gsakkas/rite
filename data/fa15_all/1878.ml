@@ -52,7 +52,17 @@ match depth with
        then buildX ()
        else buildY ()
 | n -> buildSine (build (rand , depth - 1))
-CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(21,12)-(21,17)
+if true
+then buildX ()
+else buildY ()
+IteG LitG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(19,10)-(19,12)
+buildSine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

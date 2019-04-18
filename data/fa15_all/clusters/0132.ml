@@ -1,4 +1,3 @@
-LetG NonRec (fromList [(VarPatG,VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-let seen' = seen in
-let rest' = t in
-helper (seen' , rest')
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (BopG EmptyG EmptyG)
+let x = myHelper n in
+1 + additivePersistence x

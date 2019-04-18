@@ -51,7 +51,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,37)-(19,49)
 (t , (x + h) :: b)
-TupleG (fromList [VarG,ConAppG (Just EmptyG)])
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

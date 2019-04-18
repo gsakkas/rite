@@ -86,7 +86,7 @@ match x with
                                 | h :: t -> if ((x1 + x2) + h) < 10
                                             then (0 , [0] @ ([(x1 + x2) + h] @ t))
                                             else (car + 1 , [(carry h + x1) + x2] @ ([(remain h + x1) + x2] @ t))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 (28,16)-(28,18)
 (0 , [])

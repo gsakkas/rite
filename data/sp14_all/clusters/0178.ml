@@ -1,3 +1,7 @@
-TupleG (fromList [VarG,LitG])
-(0 , acc)
-(e , 0.0 , 0.0)
+LamG VarPatG (CaseG (fromList [(VarPatG,Nothing,EmptyG),(LitPatG,Nothing,EmptyG)]))
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))

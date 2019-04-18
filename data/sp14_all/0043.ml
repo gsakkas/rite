@@ -103,7 +103,7 @@ match a with
                                              (List.append r
                                                           [0]))
                                  r)
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
 (45,15)-(45,28)
 l1

@@ -24,7 +24,7 @@ let rec mulByDigit i l =
 (7,42)-(7,53)
 (prod / 10) :: (mulByDigit i
                            t)
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 *)
 

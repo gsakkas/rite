@@ -76,7 +76,15 @@ match e with
                             else eval (d , x , y)
 | TripMult (a , b , c) -> (eval (a , x , y) *. eval (b , x , y)) *. eval (c , x , y)
 | _ -> 0.0
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,LitG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,LitG)])
+
+(27,15)-(27,27)
+(eval (a , x , y) *. eval (b , x , y)) *. eval (c , x , y)
+BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+
+(29,7)-(29,65)
+0.0
+LitG
 
 *)
 

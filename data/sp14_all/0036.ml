@@ -83,7 +83,7 @@ TupleG (fromList [VarG,ListG (fromList [EmptyG])])
 
 (33,16)-(33,46)
 (t1 , (((h1 + x) + rh) mod 10) :: rt)
-TupleG (fromList [VarG,ConAppG (Just EmptyG)])
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

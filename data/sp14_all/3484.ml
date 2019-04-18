@@ -64,7 +64,47 @@ match e with
 | Average (expr0 , expr1) -> "(" ^ (exprToString expr0 ^ ("+" ^ (exprToString expr1 ^ ")/2)")))
 | Times (expr0 , expr1) -> "(" ^ (exprToString expr0 ^ ("*" ^ (exprToString expr1 ^ ")")))
 | Thresh (expr0 , expr1 , expr2 , expr3) -> "(" ^ (exprToString expr0 ^ ("<" ^ (exprToString expr1 ^ ("?" ^ (exprToString expr2 ^ (":" ^ (exprToString expr3 ^ ")")))))))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,AppG (fromList [EmptyG]))])
+
+(15,42)-(15,46)
+expr0
+VarG
+
+(16,44)-(16,48)
+expr0
+VarG
+
+(18,28)-(18,32)
+expr0
+VarG
+
+(18,58)-(18,62)
+expr1
+VarG
+
+(20,28)-(20,32)
+expr0
+VarG
+
+(20,58)-(20,62)
+expr1
+VarG
+
+(22,14)-(22,18)
+exprToString expr0
+AppG (fromList [VarG])
+
+(22,29)-(22,33)
+exprToString expr1
+AppG (fromList [VarG])
+
+(22,44)-(22,48)
+exprToString expr2
+AppG (fromList [VarG])
+
+(22,59)-(22,63)
+exprToString expr3
+AppG (fromList [VarG])
 
 *)
 

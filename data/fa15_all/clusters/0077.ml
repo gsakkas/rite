@@ -1,7 +1,8 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
-if n > 0
-then []
-else digitsOfInt (n / 10) @ [n mod 10]
-if n < 0
-then []
-else digitsOfInt (n / 10) @ [n mod 10]
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+let digits = digitsOfInt n in
+sumList digits
+let d =
+  digitsOfInt (n / 10) in
+(n mod 10) :: d
+let l' = bigAdd l l in
+mulByDigit (i - 1) l'

@@ -1,1 +1,1 @@
-('a list * 'b list)
+float

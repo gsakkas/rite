@@ -1,2 +1,1 @@
-'a list
-'a
+float

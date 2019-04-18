@@ -48,7 +48,7 @@ let bigAdd l1 l2 =
 (14,43)-(14,65)
 match a with
 | (h1 :: t1 , h2 :: t2) -> (v1 :: (h1 :: t1) , v2 :: (h2 :: t2))
-CaseG VarG (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
 *)
 

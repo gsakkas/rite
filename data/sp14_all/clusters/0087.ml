@@ -1,5 +1,2 @@
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
-List.fold_left (^) ""
-               (List.map f l)
-buildhelper (rand (1 , 4))
-            depth ""
+ListG (fromList [TupleG (fromList [ListG (fromList [])])])
+[([] , [])]

@@ -34,7 +34,11 @@ let rec eval (e,x,y) = match e with | Average (x',y') -> (x +. y) /. 2.0;;
 (12,3)-(15,55)
 match e with
 | Average (x' , y') -> (x +. y) /. 2.0
-CaseG VarG (fromList [(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
+
+(13,14)-(13,15)
+(x +. y) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
 *)
 

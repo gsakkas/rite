@@ -75,7 +75,7 @@ VarG
 
 (23,21)-(23,34)
 (0 , carry :: rest)
-TupleG (fromList [LitG,ConAppG (Just EmptyG)])
+TupleG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
 

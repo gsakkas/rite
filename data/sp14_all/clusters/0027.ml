@@ -1,28 +1,29 @@
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-(g , b)
-let g =
-  fun x ->
-    (let bb = f b in
-     (bb , bb = b)) in
-(g , b)
-let y =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> x)) in
-(y , b)
-let h =
-  fun x -> (f x , false) in
-(h , b)
-let func =
-  fun x ->
-    fun x -> (0 , true) in
-(func b , b)
-let func =
-  fun x ->
-    fun x ->
-      (f b , not (f b = b)) in
-(func b , b)
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(n mod 10) :: (digitsOfInt (n / 10))
+mulByDigit (i - 1) (bigAdd l
+                           l)
+max' (0.0 -. 1.0) (min 1.0
+                       ((2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0))
+(n - ((n / 10) * 10)) :: (digitsOfInt (n / 10))
+append (digitsOfInt (n / 10))
+       (n - ((n / 10) * 10))
+(n mod 10) :: (digitsOfInt n)
+aPHelper (sumList (digits n))
+         (i + 1)
+((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
+(n mod 10) :: (helper (n / 10))
+clone (List.hd l1)
+      (List.length l1 - List.length l2)
+clone (List.hd l2)
+      (List.length l2 - List.length l1)
+mod_float (eval (w , x , y) *. eval (t , x , y))
+          (eval (u , x , y))
+digitsOfIntHelper (n / 10)
+                  ((n mod 10) :: result)
+(prod / 10) :: (mulByDigit i
+                           t)
+(prod mod 10) :: ((prod / 10) :: (mulByDigit i
+                                             t))
+clone_RT (x :: acc) (n - 1)
+helper ((v mod 10) :: acc)
+       (v / 10)

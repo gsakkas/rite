@@ -1,4 +1,5 @@
-IteG (AppG (fromList [EmptyG])) VarG (ConAppG (Just EmptyG))
-if List.mem h seen
-then seen
-else h :: seen
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
+if i > 0
+then mulByDigit (i - 1)
+                (bigAdd l l)
+else l

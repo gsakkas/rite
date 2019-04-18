@@ -1,3 +1,1 @@
-float
-bool
-int
+'a -> 'a

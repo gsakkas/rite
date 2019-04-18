@@ -1,9 +1,12 @@
-ListG (fromList [LitG])
-[0]
-[7]
-[8]
-[(-1)]
-[0 ; 0]
-["[" ; "]"]
-[3]
-[5]
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+(n mod 10) :: (digitsOfInt (n / 10))
+helper (x :: acc) (n' - 1)
+add (digitsOfInt (n / 10))
+    (n mod 10)
+mulByDigit (i - 1) (bigAdd l
+                           l)
+loop (sumList (digitsOfInt x))
+     (sumList (digitsOfInt x) + y)
+(n' mod 10) :: (digitsOfInt (n / 10))
+count (acc + 1)
+      (sumList (digits n))

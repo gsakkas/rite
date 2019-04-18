@@ -16,7 +16,7 @@ let pipe fs =
 (3,15)-(3,40)
 match $x with
 | v -> x (a v)
-CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

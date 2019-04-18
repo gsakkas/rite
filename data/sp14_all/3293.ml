@@ -49,7 +49,7 @@ let bigAdd l1 l2 =
 (16,20)-(16,70)
 match a with
 | (list1 , list2) -> (v1 :: list1 , v2 :: list2)
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
 *)
 

@@ -1,6 +1,15 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
-if n < 0
-then []
-else (match n with
-      | 0 -> [0]
-      | _ -> digitsOfInt (n / 10) @ [n mod 10])
+CaseG (fromList [(LitPatG,Nothing,CaseG (fromList [(LitPatG,Nothing,EmptyG)])),(WildPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+match depth with
+| 0 -> match rand (1 , 2) with
+       | 1 -> VarX
+       | 2 -> VarY
+| _ -> (let next =
+          build (rand , depth - 1) in
+        match rand (1 , 7) with
+        | 1 -> buildSine next
+        | 2 -> buildCosine next
+        | 3 -> buildAverage (next , next)
+        | 4 -> buildTimes (next , next)
+        | 5 -> buildThresh (next , next , next , next)
+        | 6 -> buildSqrt next
+        | 7 -> buildGauss (next , next , next))

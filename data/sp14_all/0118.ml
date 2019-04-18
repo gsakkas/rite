@@ -32,7 +32,7 @@ match helper with
 | f -> if f = b
        then (f , false)
        else (f , true)
-CaseG VarG (fromList [(VarPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(VarPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)
 

@@ -1,31 +1,44 @@
-LamG VarPatG (LamG VarPatG EmptyG)
-fun r -> fun a -> fun x -> a x
-fun a -> fun x -> x a
-fun x -> fun a -> x a
-fun b ->
+LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+let f =
   fun b ->
-    (f b , if f b = b
-           then true
-           else false)
-fun f ->
+    (let x = f b in
+     (x , x <> b)) in
+f
+let g =
   fun b ->
-    fun b ->
-      (f b , if f b = b
-             then true
-             else false)
-fun a -> fun x -> x
-fun i ->
-  fun l ->
-    if i > 0
-    then bigAdd l
-                (mulByDigit (i - 1) l)
-    else []
-fun l1 ->
-  fun l2 ->
-    match l1 with
-    | [] -> []
-    | h :: t -> (h , l2) :: (helper t
-                                    l2)
-fun a -> fun x -> a + (x * x)
-fun f -> fun x -> x
-fun x -> fun a -> a
+    (let t = f b in
+     if b = t
+     then (b , false)
+     else (t , true)) in
+g
+let f' =
+  fun b ->
+    if f b = b
+    then (b , true)
+    else (f b , false) in
+f'
+let helper =
+  fun x ->
+    (let y = f x in
+     if y = x
+     then (y , false)
+     else (y , true)) in
+helper
+let f' =
+  fun b -> (f b , b = f b) in
+f'
+let g =
+  fun b ->
+    (let xx = f b in
+     if b = xx
+     then (xx , false)
+     else (xx , true)) in
+g
+let func = fun y -> x (a y) in
+func
+let func = fun y -> y in func
+let f' =
+  fun x -> (f x , f x = x) in
+f'
+let c = fun y -> x (a y) in c
+let g = fun y -> y in g

@@ -89,13 +89,37 @@ match rand (1 , 5) with
 | 3 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 4 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(24,20)-(24,21)
+5
+LitG
+
+(25,12)-(25,16)
+buildSine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(26,12)-(26,16)
+buildCosine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(27,12)-(27,49)
+buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(28,12)-(28,51)
+buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(30,9)-(31,69)
+buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 (37,41)-(37,41)
 match rand (1 , 2) with
 | 1 -> buildX ()
 | 2 -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

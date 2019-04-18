@@ -1,6 +1,7 @@
 AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 digitsOfInt (n / 10) @ [n mod 10]
 listReverse tl @ [h]
+mulByDigit i tl @ [hd * i]
 [cout (hd , i)] @ mulByDigit i
                              tl
 append (digitsOfInt n2) [n2]
@@ -25,3 +26,7 @@ digitsOfInt (n / 10) @ [x]
 [h * i] @ mulByDigit i t
 digitsOfInt ((n - (n mod 10)) / 10) @ [n mod 10]
 [s + c] @ (s' @ [((x1 + x2) + c) mod 10])
+[(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
+                                                        [x'] @ x''))
+[((x * i) mod 10) + x'] @ (mulByDigit i
+                                      [x'] @ x'')

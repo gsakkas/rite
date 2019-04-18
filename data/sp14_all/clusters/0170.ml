@@ -1,5 +1,3 @@
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
-match e with
-| VarX -> "x"
-| VarY -> "y"
-| Sine e -> "sin (pi*" ^ (exprToString e ^ ")")
+TupleG (fromList [VarG,LitG])
+(0 , acc)
+(e , 0.0 , 0.0)

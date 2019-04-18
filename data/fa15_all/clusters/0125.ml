@@ -1,4 +1,6 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,TupleG (fromList [EmptyG])),(ConPatG Nothing,Nothing,TupleG (fromList [EmptyG]))])
-match a2 with
-| [] -> (0 :: a1 , (sum / 10) :: ((sum mod 10) :: a2))
-| h :: t -> ((sum / 10) :: a1 , (sum mod 10) :: a2)
+CaseG (fromList [(ConsPatG (TuplePatG (fromList [EmptyPatG])) VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,VarG)])
+match l with
+| (ki , vi) :: t -> if k = ki
+                    then vi
+                    else assoc (d , k , t)
+| [] -> d

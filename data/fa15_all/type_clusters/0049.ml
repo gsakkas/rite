@@ -1,3 +1,1 @@
-'a -> ('a * bool)
-'a -> 'a
-bool -> (bool * bool)
+'a -> int

@@ -1,5 +1,8 @@
-CaseG VarG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
+TupleG (fromList [AppG (fromList [EmptyG]),LitG])
+(0 , mulByDigit x l1)
+(f b , false)
+(false , f b)
+(true , f2 x)
+(0 , List.fold_left f base
+                    args)
+(f b , true)

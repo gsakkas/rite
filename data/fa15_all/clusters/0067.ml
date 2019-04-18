@@ -1,4 +1,5 @@
-AppG (fromList [ListG (fromList [EmptyG])])
-[n] @ [(n + c) + d]
-[n + 1] @ [((n + c) + d) mod 10]
-matchHeads [["b"]]
+AppG (fromList [BopG EmptyG EmptyG,LitG])
+clone 0 (ll1 - ll2)
+clone 0 (ll2 - ll1)
+clone 0 (n * (-1))
+clone 0 ((-1) * len)

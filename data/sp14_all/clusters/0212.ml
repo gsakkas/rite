@@ -1,3 +1,3 @@
-SeqG (ConAppG (Just EmptyG)) (AppG (fromList [EmptyG]))
-1 :: x;
-additivePersistence (sumList (digitsOfInt n))
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,VarG)])
+match x with
+| x' :: xs -> x'

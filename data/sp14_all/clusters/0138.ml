@@ -1,2 +1,4 @@
-TupleG (fromList [BopG EmptyG EmptyG])
-(x * x , x < 100)
+BopG VarG (IteG EmptyG EmptyG EmptyG)
+x + (if t = []
+     then 0
+     else sumList t)

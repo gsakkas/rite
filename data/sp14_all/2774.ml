@@ -82,7 +82,19 @@ match rand (0 , 4) with
 | 3 -> buildTimes (build (rand , depth - 2) , build (rand , depth - 2))
 | 4 -> buildThresh (build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
 | _ -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(21,12)-(21,16)
+rand (0 , 4)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(22,31)-(22,44)
+rand
+VarG
+
+(23,33)-(23,46)
+rand
+VarG
 
 *)
 

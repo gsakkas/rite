@@ -93,7 +93,15 @@ let rec build (rand,depth) =
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(27,38)-(27,44)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(27,52)-(27,58)
+buildY ()
+AppG (fromList [ConAppG Nothing])
 
 (29,5)-(41,72)
 match rand (0 , 7) with
@@ -104,7 +112,31 @@ match rand (0 , 7) with
 | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(29,18)-(29,19)
+0
+LitG
+
+(30,13)-(30,50)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(31,13)-(31,52)
+buildY ()
+AppG (fromList [ConAppG Nothing])
+
+(33,10)-(34,70)
+buildSine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(36,10)-(37,70)
+buildCosine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(39,10)-(41,71)
+buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)
 

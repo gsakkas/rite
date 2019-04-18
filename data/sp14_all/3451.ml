@@ -36,7 +36,7 @@ let rec additivePersistence n =
 (13,8)-(13,62)
 1 :: x;
 additivePersistence (sumList (digitsOfInt n))
-SeqG (ConAppG (Just EmptyG)) (AppG (fromList [EmptyG]))
+SeqG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)
 

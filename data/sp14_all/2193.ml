@@ -74,7 +74,7 @@ TupleG (fromList [VarG,ListG (fromList [EmptyG])])
 
 (27,45)-(27,74)
 (p1 , (re / 10) :: ((re mod 10) :: b))
-TupleG (fromList [VarG,ConAppG (Just EmptyG)])
+TupleG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

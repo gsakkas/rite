@@ -1,5 +1,7 @@
-IteG (BopG EmptyG EmptyG) (LamG VarPatG EmptyG) (LamG VarPatG EmptyG)
-if f b = b
-then (fun b'' ->
-        (f b , false))
-else (fun b'' -> (f b , true))
+IteG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+if depth = 0
+then if rand (0 , 1) = 0
+     then buildX ()
+     else buildY ()
+else (let y = rand (2 , 6) in
+      buildX ())

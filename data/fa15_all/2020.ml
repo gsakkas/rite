@@ -18,7 +18,7 @@ let rec wwhile (f,b) = let (b',c') = f b in match c' with | false  -> b';;
 let (b' , c') = f b in
 match c' with
 | false -> b'
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
+LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (CaseG (fromList [(LitPatG,Nothing,EmptyG)]))
 
 *)
 

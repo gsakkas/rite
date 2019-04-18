@@ -13,7 +13,7 @@ let rec listReverse l = match l with | [] -> l | (_::tail::[])::[] -> l;;
 match l with
 | [] -> l
 | (_ :: tail :: []) :: [] -> l
-CaseG VarG (fromList [(ConsPatG (ConsPatG EmptyPatG EmptyPatG) (ConPatG Nothing),Nothing,VarG),(ConPatG Nothing,Nothing,VarG)])
+CaseG (fromList [(ConsPatG (ConsPatG EmptyPatG EmptyPatG) (ConPatG Nothing),Nothing,VarG),(ConPatG Nothing,Nothing,VarG)])
 
 *)
 

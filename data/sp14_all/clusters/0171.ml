@@ -1,3 +1,6 @@
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
+TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
+(if f b = b
+ then (fun b'' ->
+         (f b , false))
+ else (fun b'' ->
+         (f b , true)) , b)

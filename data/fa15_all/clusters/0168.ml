@@ -1,4 +1,4 @@
-IteG (AppG (fromList [EmptyG])) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-if f b
-then (b , true)
-else (b , false)
+IteG (BopG EmptyG EmptyG) LitG VarG
+if List.length t <> 0
+then ""
+else sep

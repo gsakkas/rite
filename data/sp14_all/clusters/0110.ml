@@ -1,7 +1,2 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG)),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| h :: t -> h :: (listReverse t)
-| [] -> []
-match l with
-| [] -> []
-| h :: t -> h :: (listReverse t)
+BopG (AppG (fromList [EmptyG])) VarG
+eval (a , x , y) *. pi

@@ -1,3 +1,2 @@
-TupleG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
-(mulByDigit x q , [])
-(List.length l1 , [])
+AppG (fromList [ListG (fromList []),ListG (fromList [EmptyG])])
+[] @ [n mod 10]

@@ -1,12 +1,13 @@
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
-match r with
-| 3 -> buildAverage (build (rand , d - 1) , build (rand , d - 1))
-| 4 -> buildTimes (build (rand , d - 1) , build (rand , d - 1))
-| 5 -> buildThresh (build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1))
-match r with
-| 0 -> buildSine (build (rand , depth - 1))
-| 1 -> buildCosine (build (rand , depth - 1))
-| 2 -> buildAverage (build (rand , depth - 1) , buildY ())
-| 3 -> buildTimes (build (rand , depth - 1) , buildX ())
-| 4 -> buildThresh (build (rand , depth - 1) , buildX () , buildY () , buildX ())
-| 5 -> buildSinCos (build (rand , depth - 1))
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,LitG)])
+match e with
+| VarX -> x
+| VarY -> y
+| Sine b -> sin (pi *. eval (b , x , y))
+| Cosine b -> cos (pi *. eval (b , x , y))
+| Average (a , b) -> (eval (a , x , y) +. eval (b , x , y)) /. 2.0
+| Times (a , b) -> eval (a , x , y) *. eval (b , x , y)
+| Thresh (a , b , c , d) -> if eval (a , x , y) < eval (b , x , y)
+                            then eval (c , x , y)
+                            else eval (d , x , y)
+| TripMult (a , b , c) -> (eval (a , x , y) *. eval (b , x , y)) *. eval (c , x , y)
+| _ -> 0.0

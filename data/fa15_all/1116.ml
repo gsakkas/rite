@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 (18,7)-(22,58)
 match a with
 | hd :: tl -> (((fst x + snd x) + hd) / 10) :: ((((fst x + snd x) + hd) mod 10) :: tl)
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG]))])
 
 (24,16)-(24,45)
 List.combine l1 l2

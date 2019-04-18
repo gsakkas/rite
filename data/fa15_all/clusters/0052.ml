@@ -1,17 +1,34 @@
-LamG VarPatG (IteG EmptyG EmptyG EmptyG)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun x ->
-  if f x = b
-  then (b , true)
-  else (f x , false)
-fun b' ->
-  if f b' = b'
-  then (f b' , false)
-  else (f b' , true)
+LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+let rec helper =
+  fun acc ->
+    fun cin ->
+      match l with
+      | [] -> cin :: acc
+      | h :: t -> (let sum =
+                     (i * h) + cin in
+                   helper ((sum mod 10) :: acc)
+                          (sum / 10)) in
+helper [] 0
+let rec recurse =
+  fun original ->
+    fun reverse ->
+      match original with
+      | [] -> reverse
+      | front :: back -> recurse back
+                                 (front :: reverse) in
+recurse l []
+let rec g =
+  fun x ->
+    if f x = b
+    then x
+    else g (x + 1) in
+g 0
+let rec helper =
+  fun curList ->
+    fun lt1 ->
+      fun lt2 ->
+        match lt1 with
+        | [] -> curList
+        | h :: t -> helper ((h , List.hd lt2) :: curList)
+                           t (List.tl lt2) in
+helper [] l1 l2

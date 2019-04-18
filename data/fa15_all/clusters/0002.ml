@@ -1,7 +1,9 @@
 AppG (fromList [VarG])
+valueToAddToArray :: currentSum
 exprToString e2
 exprToString e1
 List.mem h t
+h :: seen
 f b
 f x
 List.combine l1 l2
@@ -18,6 +20,7 @@ List.mem h seen
 digitsOfInt n2
 List.rev l1
 List.rev l2
+List.fold_left f base xs
 List.map f l
 exprToString e3
 digitsOfInt x
@@ -25,11 +28,11 @@ itt x' i
 padZero l1 l2
 sep ^ x
 List.fold_left f base l
-List.fold_left f base xs
 f t
 f a
 a x
 x a
+List.hd xs
 List.fold_left f base args
 List.combine l2 l2
 List.length l'
@@ -54,6 +57,7 @@ ex ex1
 ex ex2
 ex ex3
 ex ex4
+sumList y
 ex y
 a b
 exprToString x
@@ -63,6 +67,7 @@ List.length l1
 bigAdd l l
 a x'
 x x'
+h :: t
 matchHeads w
 (fun x -> x) a
 exprToString i

@@ -63,7 +63,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (3,46)-(3,69)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 (25,7)-(26,65)
 let (x1 , x2) = x in

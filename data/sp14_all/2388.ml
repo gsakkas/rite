@@ -22,7 +22,7 @@ let rec digitsOfInt n =
 (5,10)-(5,59)
 digitsOfIntHelper (n / 10)
                   ((n mod 10) :: result)
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 *)
 

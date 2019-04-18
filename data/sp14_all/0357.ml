@@ -53,7 +53,7 @@ match x with
               match a with
               | h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
               | _ -> [sum / 10 ; sum mod 10])
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
 
 (16,16)-(16,43)
 List.rev (List.combine l1 l2)

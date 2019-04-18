@@ -66,7 +66,7 @@ let bigAdd l1 l2 =
 (25,7)-(25,74)
 match a with
 | (x , y) -> (carry2 , dig :: y)
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
 
 *)
 

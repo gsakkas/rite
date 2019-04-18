@@ -1,3 +1,5 @@
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList []))])
-match n with
-| 0 -> []
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,BopG EmptyG EmptyG),(ConsPatG VarPatG WildPatG,Nothing,VarG),(ConPatG Nothing,Nothing,LitG)])
+match xs with
+| [] -> 0
+| h :: _ -> h
+| h :: t -> h + sumList t

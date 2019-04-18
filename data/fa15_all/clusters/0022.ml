@@ -1,9 +1,14 @@
-TupleG (fromList [VarG])
-(e1 , x , y)
-(l1 , l2)
-(e , x , y)
-(f , b')
-(e2 , x , y)
-(d , k , t)
-(expr1 , x , y)
-(e3 , x , y)
+ListG (fromList [VarG])
+[h]
+[c]
+[n]
+[fst']
+[num]
+[x]
+[sum]
+[hd]
+[digit]
+[w]
+[t]
+[x2]
+[x']

@@ -15,7 +15,7 @@ let rec digitsOfInt n = if n < 0 then [] else (match n with | 0 -> []);;
 (5,8)-(5,63)
 match n with
 | 0 -> []
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList []))])
+CaseG (fromList [(LitPatG,Nothing,ListG (fromList []))])
 
 *)
 

@@ -1,9 +1,4 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
-let (x , y) = f b in
-if y = true
-then wwhile (f , x)
-else x
-let (b' , c') = f b in
-if c'
-then wwhile (f , b')
-else b'
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LitG)])
+match xs with
+| [] -> 0
+| hd :: tl -> f 0 hd

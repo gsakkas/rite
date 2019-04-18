@@ -52,8 +52,8 @@ else buildY ()
 IteG LitG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 (19,10)-(19,53)
-EMPTY
-EmptyG
+buildSine (build (rand , depth - 1))
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

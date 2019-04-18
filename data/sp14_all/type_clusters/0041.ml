@@ -1,3 +1,1 @@
-bool
 float
-int

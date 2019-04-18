@@ -111,7 +111,7 @@ match a with
                             then (len , (-1) :: (0 :: xs'))
                             else (len , (sum + 1) :: xs')
                        else (len , sum :: (x' :: xs'))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
 
 (38,13)-(43,49)
 match a with
@@ -119,7 +119,7 @@ match a with
 | (len , x' :: xs') -> if x' = (-1)
                        then (len , (-1) :: (((sum mod 10) + 1) :: xs'))
                        else (len , (-1) :: ((sum mod 10) :: (x' :: xs')))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
 
 (44,16)-(44,18)
 (List.length l1 , [])

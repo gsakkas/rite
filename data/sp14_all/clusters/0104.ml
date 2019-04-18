@@ -1,6 +1,10 @@
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
-let ans = f b in
-match ans with
-| (num , boo) -> if boo = true
-                 then wwhile (f , num)
-                 else num
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
+match e with
+| VarX -> "x"
+| VarY -> "y"
+| Sine e -> exprToString e
+| Cosine e -> exprToString e
+match e with
+| VarX -> "x"
+| VarY -> "y"
+| Sine e -> "sin (pi*" ^ (exprToString e ^ ")")

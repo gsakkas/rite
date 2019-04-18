@@ -1,2 +1,0 @@
-EmptyG
-EMPTY

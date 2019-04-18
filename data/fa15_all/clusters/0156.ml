@@ -1,10 +1,6 @@
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-let rec generatePadding =
-  fun numZeros ->
-    if numZeros <= 0
-    then []
-    else 0 :: (generatePadding (numZeros - 1)) in
-let toSum =
-  intermediateSum @ generatePadding padCount in
-(padCount + 1 , bigAdd currList
-                       toSum)
+LetG NonRec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (AppG (fromList [EmptyG]))
+let combine =
+  fun (a , b) -> a + b in
+List.map combine
+         (List.rev (List.combine l1
+                                 l2))

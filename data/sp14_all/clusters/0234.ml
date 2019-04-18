@@ -1,3 +1,2 @@
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
-match a with
-| (_ , y) -> (0 , bigAdd y x)
+ConAppG (Just (TupleG (fromList [EmptyG])))
+Average (build (rand , depth - 1) , build (rand , depth - 1))

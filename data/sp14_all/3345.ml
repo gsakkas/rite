@@ -24,7 +24,7 @@ let rec mulByDigit i l =
 (7,32)-(7,69)
 helper ((v mod 10) :: acc)
        (v / 10)
-AppG (fromList [BopG EmptyG EmptyG,ConAppG (Just EmptyG)])
+AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
 
 *)
 

@@ -68,7 +68,7 @@ let bigAdd l1 l2 =
 (28,25)-(28,59)
 List.combine (0 :: l1)
              (0 :: l2)
-AppG (fromList [ConAppG (Just EmptyG)])
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

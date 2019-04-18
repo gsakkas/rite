@@ -1,2 +1,2 @@
+'a -> 'a
 int list
-'a list

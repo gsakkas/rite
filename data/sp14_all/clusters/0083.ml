@@ -1,8 +1,4 @@
-CaseG (AppG (fromList [EmptyG])) (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
-match rand (0 , 4) with
-| 0 -> buildSine (build (rand , depth - 1))
-| 1 -> buildCosine (build (rand , depth - 1))
-| 2 -> buildAverage (build (rand , depth - 2) , build (rand , depth - 2))
-| 3 -> buildTimes (build (rand , depth - 2) , build (rand , depth - 2))
-| 4 -> buildThresh (build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4) , build (rand , depth - 4))
-| _ -> buildY ()
+BopG LitG (AppG (fromList [EmptyG]))
+1.0 -. exp ((- 1.0) *. eval (a , x , y))
+2.0 *. exp (-. (((eval (e1 , x , y) -. eval (e2 , x , y)) ** 2.0) /. eval (e3 , x , y)))
+1 + additivePersistence num

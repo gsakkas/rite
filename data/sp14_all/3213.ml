@@ -96,7 +96,7 @@ match case with
 | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

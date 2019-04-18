@@ -1,2 +1,2 @@
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-(f x , f x = x)
+AppG (fromList [LitG,ListG (fromList [])])
+f 0 []

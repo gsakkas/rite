@@ -1,2 +1,2 @@
-AppG (fromList [VarG,LamG VarPatG EmptyG])
-List.map (fun t -> f t) l
+AppG (fromList [ConAppG (Just EmptyG)])
+exprToString (Average (Times (ex1 , ex2) , Times (ex2 , ex3)))

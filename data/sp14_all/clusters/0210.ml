@@ -1,2 +1,4 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (ListG (fromList []))
-if n < 0 then [] else []
+CaseG (fromList [(LitPatG,Nothing,ConAppG Nothing)])
+match rand (1 , 2) with
+| 1 -> VarX
+| 2 -> VarY

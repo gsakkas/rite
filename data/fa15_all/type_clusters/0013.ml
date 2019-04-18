@@ -1,3 +1,4 @@
-float
-int
-bool
+'a -> 'a
+'a -> int
+('a -> ('a -> 'b) -> 'b) -> 'a -> ('a -> 'b) -> 'b
+'a -> 'b -> 'b

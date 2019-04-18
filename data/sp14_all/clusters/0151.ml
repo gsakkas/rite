@@ -1,19 +1,9 @@
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (LetG Rec (fromList [(VarPatG,EmptyG)]) EmptyG)
-let comb =
-  fun a ->
-    fun b ->
-      match b with
-      | [] -> [a]
-      | hd :: tl -> [a + hd] in
-let rec mBDhelper =
-  fun i ->
-    fun x ->
-      match x with
-      | [] -> []
-      | hd :: tl -> if ((hd * i) - 9) <> 0
-                    then ((hd * i) / 10) :: (comb ((hd * i) mod 10)
-                                                  (mBDhelper i
-                                                             tl))
-                    else (hd * i) :: (mBDhelper i
-                                                tl) in
-mBDhelper i l
+IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+if a = 0
+then b
+else integers (a / 10)
+              ((a mod 10) :: b)
+if x < 10
+then count
+else helper (count + 1)
+            (sumList (digits n))

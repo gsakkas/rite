@@ -1,7 +1,10 @@
-IteG (BopG EmptyG EmptyG) (IteG EmptyG EmptyG EmptyG) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-if depth = 0
-then if rand (0 , 1) = 0
-     then buildX ()
-     else buildY ()
-else (let y = rand (2 , 6) in
-      buildX ())
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
+if n <= 0
+then []
+else (n mod 10) :: (digitsOfInt (n / 10))
+if n <= 0
+then []
+else [n mod 10] @ digitsOfInt (n / 10)
+if n < 1
+then []
+else x :: (clone x (n - 1))

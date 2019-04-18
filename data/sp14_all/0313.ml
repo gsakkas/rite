@@ -77,10 +77,6 @@ BopG (BopG EmptyG EmptyG) LitG
 eval (e1 , x , y) *. eval (e2 , x , y)
 BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
-(1,1)-(1,1)
-eval (e3 , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
-
 *)
 
 (* type error slice

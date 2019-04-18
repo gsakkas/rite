@@ -1,8 +1,12 @@
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> pi *. x
-| Cosine e -> pi *. y
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (TupleG (fromList [EmptyG]))
+let sum =
+  fst a + ((fst x + snd x) mod 10) in
+(sum / 10 , sum mod 10)
+let l1G =
+  List.length l1 - List.length l2 in
+(l1 , List.append (clone 0
+                         l1G) l2)
+let l2G =
+  List.length l2 - List.length l1 in
+(List.append (clone 0 l2G)
+             l1 , l2)

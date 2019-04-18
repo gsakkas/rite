@@ -65,7 +65,19 @@ match e with
 | Thresh (h1 , h2 , h3 , h4) -> if eval (h1 , x , y) < eval (h2 , x , y)
                                 then eval (h3 , x , y)
                                 else eval (h4 , x , y)
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,BopG EmptyG EmptyG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,BopG EmptyG EmptyG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(17,20)-(17,37)
+pi *. eval (s1 , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(18,22)-(18,39)
+pi *. eval (c1 , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(19,24)-(19,70)
+(eval (a1 , x , y) +. eval (a2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
 
 *)
 

@@ -1,4 +1,3 @@
-CaseG VarG (fromList [(VarPatG,Nothing,BopG EmptyG EmptyG),(LitPatG,Nothing,VarG)])
-match x with
-| 0 -> a
-| x -> x * x
+CaseG (fromList [(LitPatG,Nothing,ListG (fromList []))])
+match n with
+| 0 -> []

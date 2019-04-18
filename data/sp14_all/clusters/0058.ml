@@ -1,11 +1,13 @@
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> clone x (n - 1) @ [x]
+AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+List.fold_left (^) ""
+               (List.map f l)
+buildhelper (rand (1 , 4))
+            depth ""
+helper 0 (num :: xs') xs
+helper 1
+       (((num / 10) mod 10) :: ((num mod 10) :: xs'))
+       xs
+helper 0 (num :: accum) xs
+helper 1
+       (((num / 10) mod 10) :: ((num mod 10) :: accum))
+       xs

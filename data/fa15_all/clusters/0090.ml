@@ -1,9 +1,3 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (IteG EmptyG EmptyG EmptyG)
-let (b' , c') = temp in
-if c' = true
-then wwhile (f , b')
-else b'
-let (l , m) = a in
-if ((j + k) + l) > 9
-then (1 , (((j + k) + l) - 10) :: m)
-else (0 , ((j + k) + l) :: m)
+LetG NonRec (fromList [(VarPatG,TupleG (fromList [EmptyG]))]) VarG
+let retTuple = (l1 , l2) in
+retTuple

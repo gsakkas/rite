@@ -141,7 +141,7 @@ let bigMul l1 l2 =
 match a with
 | (_ , z) -> (0 , bigAdd z x)
 | _ -> (0 , [])
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
 
 (53,14)-(53,16)
 (0 , [])

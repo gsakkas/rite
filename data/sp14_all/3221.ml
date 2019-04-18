@@ -72,7 +72,11 @@ match e with
 | VarX -> x
 | VarY -> y
 | Sine ex -> sin (pi *. eval (ex , x , y))
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG]))])
+
+(34,27)-(34,44)
+eval (ex , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)
 

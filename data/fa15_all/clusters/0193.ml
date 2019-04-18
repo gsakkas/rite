@@ -1,3 +1,4 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,ConAppG (Just EmptyG))])
-match a with
-| hd :: tl -> (((fst x + snd x) + hd) / 10) :: ((((fst x + snd x) + hd) mod 10) :: tl)
+TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
+(if ((a1 + x1) + x2) >= 10
+ then 1
+ else 0 , ((a1 + x1) + x2) :: a2)

@@ -22,7 +22,7 @@ then []
 else (match n with
       | 0 -> [0]
       | _ -> digitsOfInt (n / 10) @ [n mod 10])
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (CaseG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
 *)
 

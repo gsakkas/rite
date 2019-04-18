@@ -1,14 +1,22 @@
-AppG (fromList [VarG,LitG])
-sepConcat " " l
-min 0.1 l'
-max' 0.1 l'
-r_digitalRoot n (-1)
-f 2 xs
-f 4 xs
-f 0 hd
-b ^ "]"
-helper 0 n
-buildhelper 0 0 expr
-reverseInt n 0
-helpFac n 1
-" " ^ x
+LamG VarPatG (IteG EmptyG EmptyG EmptyG)
+fun accu ->
+  if n <= 0
+  then accu
+  else lastDigit (n / 10)
+                 ((n mod 10) :: accu)
+fun b' ->
+  if f b' = b'
+  then (b' , true)
+  else (b' , false)
+fun f' ->
+  if f b = b
+  then (b , true)
+  else (b , false)
+fun f' ->
+  if f b = b
+  then (b , false)
+  else (f b , true)
+fun a ->
+  if b = f b
+  then (b , false)
+  else (f b , true)

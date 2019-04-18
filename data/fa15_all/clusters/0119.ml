@@ -1,8 +1,18 @@
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
-if f b = b
-then (b , true)
-else (f b , false)
-if List.length l1 > List.length l2
-then (l1 , clone 0
-                 (List.length l1 - List.length l2) @ l2)
-else (l1 , l2)
+IteG (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+if (let (carry , ans) = a in
+    let (y , z) = x in
+    ((y + z) + carry) > 9)
+then (let (carry , ans) = a in
+      (1 , let (y , z) = x in
+           [((y + z) + carry) mod 10] @ ans))
+else (let (carry , ans) = a in
+      (0 , let (y , z) = x in
+           [(y + z) + carry] @ ans))
+if (let (carry , ans) = a in
+    let (y , z) = x in
+    ((y + z) + carry) = 10)
+then (let (carry , ans) = a in
+      (1 , [9] @ ans))
+else (let (carry , ans) = a in
+      (0 , let (y , z) = x in
+           [(y + z) + carry] @ ans))

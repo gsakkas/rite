@@ -1,4 +1,4 @@
-IteG (AppG (fromList [EmptyG])) VarG (AppG (fromList [EmptyG]))
-if List.mem h seen
-then seen
-else seen @ [h]
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ConAppG Nothing)
+if f b = (b , true)
+then wwhile (f , b)
+else ()

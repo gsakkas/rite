@@ -1,5 +1,4 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| x :: [] -> [x]
-| head :: tail -> listReverse tail @ [head]
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+match digitsOfInt n with
+| [] -> 0
+| _ -> sumList (digitsOfInt n)

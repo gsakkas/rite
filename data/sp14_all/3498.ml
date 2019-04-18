@@ -21,7 +21,7 @@ let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 match c' with
 | true -> wwhile (f , b')
 | false -> b'
-CaseG VarG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
 (6,10)-(6,62)
 let func =

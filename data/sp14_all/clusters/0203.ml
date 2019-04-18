@@ -1,5 +1,2 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (IteG EmptyG EmptyG EmptyG)
-let (a , b) = h in
-if a = k
-then b
-else assoc (d , k , t)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ListG (fromList [EmptyG]))
+if v = 0 then [1] else [0]

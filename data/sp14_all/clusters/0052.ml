@@ -1,4 +1,4 @@
-CaseG VarG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
-match c' with
-| true -> wwhile (f , b')
-| false -> b'
+CaseG (fromList [(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)

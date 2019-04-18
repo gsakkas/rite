@@ -1,1 +1,1 @@
-(int * int) list
+string -> string list

@@ -1,5 +1,6 @@
-'a -> 'a
-('a -> 'b) -> 'a -> 'b
-('a -> ('a -> 'b) -> 'b) -> 'a -> ('a -> 'b) -> 'b
-'a -> 'b -> 'c -> ('c -> 'd) -> 'd
-('a -> 'a) -> 'a -> 'a
+int list
+'a list
+int
+string
+(int * int) list
+bool

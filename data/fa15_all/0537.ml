@@ -102,7 +102,7 @@ match x with
                                 | h :: t -> if ((n + c) + d) < 10
                                             then (0 , [0] @ ([(c + d) + h] @ t))
                                             else (n + 1 , [((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 *)
 

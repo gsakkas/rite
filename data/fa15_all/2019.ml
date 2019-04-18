@@ -26,7 +26,7 @@ let removeDuplicates l =
 if List.mem h seen
 then h :: seen
 else seen
-IteG (AppG (fromList [EmptyG])) (ConAppG (Just EmptyG)) VarG
+IteG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG])) VarG
 
 *)
 

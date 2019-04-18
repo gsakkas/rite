@@ -13,7 +13,7 @@ let rec sumList xs = match xs with | [] -> 0 | x::y -> x + (sumList y);;
 match xs with
 | [] -> 0
 | x :: y -> x + sumList y
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,BopG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,BopG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
 
 *)
 

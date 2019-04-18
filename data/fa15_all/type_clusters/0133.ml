@@ -1,2 +1,2 @@
-int
-string
+'a
+int list

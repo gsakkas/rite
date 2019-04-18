@@ -1,7 +1,4 @@
-BopG (AppG (fromList [EmptyG])) LitG
-eval (t , x , y) /. 30.0
-sqrt (abs_float (eval (n , x , y))) /. 1000.0
-recCounter (sumList (digitsOfInt n))
-           count + 1
-additivePersistence (sumList (digitsOfInt n)) + 1
-List.mem h seen = false
+AppG (fromList [ListG (fromList [EmptyG])])
+[n] @ [(n + c) + d]
+[n + 1] @ [((n + c) + d) mod 10]
+matchHeads [["b"]]

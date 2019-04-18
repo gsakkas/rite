@@ -15,7 +15,7 @@ let rec digitsOfInt n =
 (* changed spans
 (4,23)-(4,24)
 0 :: ns
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,LitG])
 
 *)
 

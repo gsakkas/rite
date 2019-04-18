@@ -1,12 +1,8 @@
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
-let temp = f b in
-let (b' , c') = temp in
-if c' = true
-then wwhile (f , b')
-else b'
-let args =
-  List.rev (List.combine l1
-                         l2) in
-let (_ , res) =
-  List.fold_left f base args in
-res
+LetG NonRec (fromList [(VarPatG,CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+let test =
+  match a1 with
+  | [] -> 0
+  | h :: t -> h in
+let sum =
+  (l1x + l2x) + test in
+((sum / 10) :: a1 , (sum mod 10) :: a2)

@@ -62,7 +62,7 @@ let bigAdd l1 l2 =
 (23,17)-(23,42)
 match x with
 | x' :: xs -> x'
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,VarG)])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,VarG)])
 
 (25,41)-(25,48)
 [(h , l2)]

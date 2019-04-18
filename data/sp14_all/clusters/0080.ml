@@ -1,4 +1,7 @@
-CaseG VarG (fromList [(VarPatG,Nothing,BopG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
-match xs with
-| [] -> 0
-| xs -> List.hd xs + sumList (List.tl xs)
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,VarG)])
+match a with
+| (x , y) -> x
+match a with
+| (f , g) -> f
+match a with
+| (a1 , a2) -> a2

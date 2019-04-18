@@ -29,7 +29,17 @@ match n > 0 with
 | true -> match n > 9 with
           | false -> n :: (digitsOfInt n)
           | true -> digitsOfInt (n mod 10)
-CaseG (BopG EmptyG EmptyG) (fromList [(LitPatG,Nothing,CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)])),(LitPatG,Nothing,ListG (fromList []))])
+CaseG (fromList [(LitPatG,Nothing,CaseG (fromList [(LitPatG,Nothing,EmptyG)])),(LitPatG,Nothing,ListG (fromList []))])
+
+(5,9)-(5,10)
+n > 0
+BopG VarG LitG
+
+(7,14)-(7,16)
+match n > 9 with
+| false -> n :: (digitsOfInt n)
+| true -> digitsOfInt (n mod 10)
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

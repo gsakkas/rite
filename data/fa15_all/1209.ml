@@ -15,7 +15,7 @@ match f b with
 | (b' , c') -> if c' = false
                then b'
                else wwhile (f , b')
-CaseG (AppG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
 
 *)
 

@@ -1,9 +1,4 @@
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-add (digitsOfInt (n / 10))
-    (n mod 10)
-mulByDigit (i - 1) (bigAdd l
-                           l)
-loop (sumList (digitsOfInt x))
-     (sumList (digitsOfInt x) + y)
-count (acc + 1)
-      (sumList (digits n))
+TupleG (fromList [ListG (fromList [EmptyG])])
+([x1 + x2] , [x2])
+([(x1 + x2) mod 10] , [(x1 + x2) / 10])
+([(x1 + x2) / 10] , [(x1 + x2) mod 10])

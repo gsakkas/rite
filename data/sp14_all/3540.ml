@@ -77,7 +77,7 @@ match rdm with
 | 4 -> Average (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> Times (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> Thresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG (fromList [(LitPatG,Nothing,EmptyG)]))
 
 *)
 

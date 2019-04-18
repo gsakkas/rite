@@ -1,4 +1,5 @@
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-(eval (e1 , x , y) +. eval (e2 , x , y)) +. (eval (e3 , x , y) /. pi)
-(a * a) + (x * x)
-((eval (m , x , y) *. eval (n , x , y)) *. eval (o , x , y)) /. ((eval (m , x , y) +. eval (n , x , y)) +. eval (o , x , y))
+CaseG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+match l with
+| [] -> []
+| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
+                                                                            [x'] @ x''))

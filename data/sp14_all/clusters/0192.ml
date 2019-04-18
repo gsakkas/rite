@@ -1,2 +1,2 @@
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-eval (f , x , y) +. (eval (g , x , y) *. eval (h , x , y))
+LetG NonRec (fromList [(VarPatG,ListG (fromList [EmptyG]))]) VarG
+let c = [a ; b] in c

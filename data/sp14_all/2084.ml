@@ -74,7 +74,7 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
 
 (29,16)-(29,59)
 List.combine (List.rev l1)

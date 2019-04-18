@@ -39,7 +39,7 @@ LamG VarPatG (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)])
 
 (11,14)-(11,31)
 0 :: (List.rev l)
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
 

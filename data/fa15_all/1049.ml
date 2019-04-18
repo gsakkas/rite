@@ -11,7 +11,7 @@ let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
 (* changed spans
 (2,51)-(2,71)
 x :: (clone x (n - 1))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG,AppG (fromList [EmptyG])])
 
 *)
 

@@ -36,7 +36,7 @@ fun l ->
   | [] -> []
   | hd :: tl -> helper (hd :: xs)
                        l
-LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
 (9,3)-(9,12)
 helper [] l

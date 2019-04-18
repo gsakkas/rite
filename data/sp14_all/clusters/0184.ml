@@ -1,2 +1,2 @@
-TupleG (fromList [LitG,ListG (fromList [EmptyG])])
-(0 , [0 ; 0 ; 0 ; 0])
+BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
+eval (f , x , y) +. (eval (g , x , y) *. eval (h , x , y))

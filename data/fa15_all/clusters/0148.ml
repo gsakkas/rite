@@ -1,3 +1,3 @@
-TupleG (fromList [LitG,LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG])
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
+LamG (TuplePatG (fromList [VarPatG])) (ConAppG (Just EmptyG))
+fun (a , b , a_less , b_less) ->
+  Thresh (a , b , a_less , b_less)

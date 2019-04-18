@@ -1,3 +1,3 @@
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConPatG Nothing,Nothing,LitG)])
 match xs with
-| hd :: tl -> f (f hd hd) tl
+| [] -> 0

@@ -22,7 +22,7 @@ BopG VarG (BopG EmptyG EmptyG)
 match xs with
 | [] -> 0
 | hd :: tl -> f 0 hd
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LitG)])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LitG)])
 
 *)
 

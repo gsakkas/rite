@@ -66,7 +66,29 @@ match e with
 | Thresh (th1 , th2 , th3 , th4) -> if eval (th1 , x , y) < eval (th2 , x , y)
                                     then eval (th3 , x , y)
                                     else eval (th4 , x , y)
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(15,22)-(15,26)
+pi *. eval (sine , x , y)
+BopG VarG (AppG (fromList [EmptyG]))
+
+(16,19)-(16,57)
+cos (pi *. eval (cosine , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
+
+(18,7)-(18,72)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
+(19,22)-(19,67)
+eval (t1 , x , y) *. eval (t2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(21,7)-(26,82)
+if eval (th1 , x , y) < eval (th2 , x , y)
+then eval (th3 , x , y)
+else eval (th4 , x , y)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
 
 *)
 

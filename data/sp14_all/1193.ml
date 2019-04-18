@@ -80,7 +80,7 @@ match x with
                | (o , z) -> if ((o + x1) + x2) > 9
                             then (1 , (((o + x1) + x2) mod 10) :: z)
                             else (0 , ((o + x1) + x2) :: z)
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 (23,16)-(23,17)
 (0 , [])
@@ -91,7 +91,19 @@ match (List.rev list1 , List.rev list2) with
 | (h1 :: t1 , h2 :: t2) -> (h1 , h2) :: (pair t1
                                               t2)
 | (_ , _) -> []
-CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG]),Nothing,ConAppG (Just EmptyG)),(TuplePatG (fromList [WildPatG]),Nothing,ListG (fromList []))])
+CaseG (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG]),Nothing,AppG (fromList [EmptyG])),(TuplePatG (fromList [WildPatG]),Nothing,ListG (fromList []))])
+
+(26,16)-(26,21)
+List.rev list1
+AppG (fromList [VarG])
+
+(26,23)-(26,28)
+List.rev list2
+AppG (fromList [VarG])
+
+(27,42)-(27,57)
+pair t1 t2
+AppG (fromList [VarG])
 
 *)
 

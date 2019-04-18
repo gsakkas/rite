@@ -1,2 +1,50 @@
-BopG (UopG EmptyG) VarG
-(- 1.0) *. res3
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+match num with
+| 0 -> if rand (0 , 1) = 0
+       then buildX ()
+       else buildY ()
+| 1 -> if rand (0 , 1) = 0
+       then buildSine (buildhelper 0
+                                   0 expr)
+       else buildCosine (buildhelper 0
+                                     0 expr)
+| 2 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 3 -> if rand (0 , 1) = 0
+       then buildAverage (buildhelper (depth - 1)
+                                      (depth - 1)
+                                      expr , buildhelper (depth - 1)
+                                                         (depth - 1)
+                                                         expr)
+       else buildTimes (buildhelper (depth - 1)
+                                    (depth - 1)
+                                    expr , buildhelper (depth - 1)
+                                                       (depth - 1)
+                                                       expr)
+| 4 -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)
+| _ -> buildThresh (buildhelper (depth - 1)
+                                (depth - 1)
+                                expr , buildhelper (depth - 1)
+                                                   (depth - 1)
+                                                   expr , buildhelper (depth - 1)
+                                                                      (depth - 1)
+                                                                      expr , buildhelper (depth - 1)
+                                                                                         (depth - 1)
+                                                                                         expr)

@@ -1,3 +1,3 @@
-int list
-(int * int) list
-string
+float
+int
+bool

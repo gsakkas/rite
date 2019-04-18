@@ -1,5 +1,2 @@
-AppG (fromList [BopG EmptyG EmptyG,LitG])
-clone 0 (ll1 - ll2)
-clone 0 (ll2 - ll1)
-clone 0 (n * (-1))
-clone 0 ((-1) * len)
+LamG VarPatG (BopG EmptyG EmptyG)
+fun s -> (f s - s) < 0

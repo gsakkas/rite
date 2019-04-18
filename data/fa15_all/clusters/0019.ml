@@ -1,14 +1,12 @@
-ListG (fromList [VarG])
-[h]
-[c]
-[n]
-[fst']
-[num]
-[x]
-[sum]
-[hd]
-[digit]
-[w]
-[t]
-[x2]
-[x']
+TupleG (fromList [VarG])
+(e , x , y)
+(e1 , x , y)
+(e2 , x , y)
+(l1 , l2)
+(e1less , x , y)
+(e2less , x , y)
+(f , b')
+(e3 , x , y)
+(e4 , x , y)
+(d , k , t)
+(expr1 , x , y)

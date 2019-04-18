@@ -153,7 +153,66 @@ match num with
                                                                       expr , buildhelper (depth - 1)
                                                                                          (depth - 1)
                                                                                          expr)
-CaseG VarG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(5,38)-(5,51)
+buildX ()
+AppG (fromList [ConAppG Nothing])
+
+(5,57)-(5,70)
+buildY ()
+AppG (fromList [ConAppG Nothing])
+
+(8,14)-(8,73)
+buildSine (buildhelper 0 0
+                       expr)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(9,14)-(9,75)
+buildCosine (buildhelper 0 0
+                         expr)
+AppG (fromList [AppG (fromList [EmptyG])])
+
+(13,11)-(16,80)
+buildAverage (buildhelper (depth - 1)
+                          (depth - 1)
+                          expr , buildhelper (depth - 1)
+                                             (depth - 1)
+                                             expr)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(18,11)-(20,65)
+buildTimes (buildhelper (depth - 1)
+                        (depth - 1)
+                        expr , buildhelper (depth - 1)
+                                           (depth - 1) expr)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(21,12)-(21,53)
+if rand (0 , 1) = 0
+then buildAverage (buildhelper (depth - 1)
+                               (depth - 1)
+                               expr , buildhelper (depth - 1)
+                                                  (depth - 1)
+                                                  expr)
+else buildTimes (buildhelper (depth - 1)
+                             (depth - 1)
+                             expr , buildhelper (depth - 1)
+                                                (depth - 1)
+                                                expr)
+IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(23,9)-(32,46)
+buildThresh (buildhelper (depth - 1)
+                         (depth - 1)
+                         expr , buildhelper (depth - 1)
+                                            (depth - 1)
+                                            expr , buildhelper (depth - 1)
+                                                               (depth - 1)
+                                                               expr , buildhelper (depth - 1)
+                                                                                  (depth - 1)
+                                                                                  expr)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 (33,3)-(33,35)
 buildhelper (rand (1 , 4))

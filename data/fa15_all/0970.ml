@@ -67,7 +67,35 @@ match e with
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
 | Thresh (a , b , a_less , b_less) -> 0.0
-CaseG VarG (fromList [(VarPatG,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LitG)])
+CaseG (fromList [(VarPatG,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,LitG)])
+
+(25,14)-(25,23)
+x
+VarG
+
+(26,15)-(26,24)
+y
+VarG
+
+(27,15)-(27,41)
+sin (pi *. eval (e , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
+
+(28,17)-(28,45)
+cos (pi *. eval (e , x , y))
+AppG (fromList [BopG EmptyG EmptyG])
+
+(29,24)-(29,75)
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+BopG (BopG EmptyG EmptyG) LitG
+
+(30,22)-(30,71)
+eval (e1 , x , y) *. eval (e2 , x , y)
+BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+
+(32,7)-(32,56)
+0.0
+LitG
 
 *)
 

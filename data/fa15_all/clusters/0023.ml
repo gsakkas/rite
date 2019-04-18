@@ -1,12 +1,16 @@
-AppG (fromList [BopG EmptyG EmptyG])
-digitsOfInt (n / 10)
-cos (pi *. eval (e1 , x , y))
-cos (eval (e1 , x , y) *. pi)
-digitsOfInt (n * (-1))
-sin (pi *. eval (e , x , y))
-cos (pi *. eval (e , x , y))
-print_int (n / 10)
-not (List.mem = h)
-not (b = f b)
-not (f x = x)
-abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
+AppG (fromList [VarG,ListG (fromList [EmptyG])])
+[(c + d) + h] @ t
+seen @ [h]
+a2 @ [((a1 + x1) + x2) - 10]
+a2 @ [(a1 + x1) + x2]
+r @ [h]
+[0] @ l1
+res @ [carry]
+l @ [x]
+l @ [x mod 10]
+[((h + b) + c) mod 10] @ t
+a @ [0]
+a1 @ [3]
+a2 @ [5]
+a2 @ [((x1 + x2) + c) mod 10]
+l @ [0]

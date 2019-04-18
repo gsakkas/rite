@@ -95,7 +95,7 @@ match num with
 | 4 -> buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
 | 5 -> buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
 | 6 -> buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-LetG NonRec (fromList [(VarPatG,IteG EmptyG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(LitPatG,Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,IteG EmptyG EmptyG EmptyG)]) (CaseG (fromList [(LitPatG,Nothing,EmptyG)]))
 
 *)
 

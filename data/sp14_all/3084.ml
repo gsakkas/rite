@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 (2,7)-(2,12)
 (3 , 3) :: (List.rev (List.combine l1
                                    l2))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),TupleG (fromList [EmptyG])])
 
 (19,17)-(19,22)
 x

@@ -37,7 +37,7 @@ fun l ->
   match l with
   | [] -> []
   | h :: t -> listReverse t @ [h]
-LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
 (7,21)-(8,58)
 EMPTY

@@ -1,5 +1,1 @@
-(expr * expr)
-(expr * expr * expr)
-('a * bool)
-(expr * expr * expr * expr)
 (int list * int list)

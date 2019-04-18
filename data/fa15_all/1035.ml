@@ -31,7 +31,7 @@ LitG
 
 (8,47)-(8,49)
 0 :: (0 :: (0 :: l1))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 (9,18)-(9,32)
 0
@@ -39,7 +39,7 @@ LitG
 
 (9,36)-(9,38)
 0 :: (0 :: (0 :: l2))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),LitG])
 
 *)
 

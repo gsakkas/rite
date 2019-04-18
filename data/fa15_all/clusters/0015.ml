@@ -11,6 +11,7 @@ eval (a , x , y) +. eval (b , x , y)
 (eval (a , x , y) ** 2.0) +. (eval (b , x , y) ** 2.0)
 eval (m , x , y) *. eval (n , x , y)
 List.length l1 = List.length l2
+eval (v , x , y) *. eval (w , x , y)
 eval (v , x , y) /. eval (w , x , y)
 eval (e , x , y) *. eval (f , x , y)
 eval (x5 , x , y) *. eval (x6 , x , y)

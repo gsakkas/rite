@@ -64,14 +64,14 @@ match l with
             then removeZero t
             else l
 | _ -> []
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,ListG (fromList []))])
 
 (13,17)-(13,45)
 let sum = fst x + snd x in
 match a with
 | h :: t -> ((h + sum) / 10) :: (((h + sum) mod 10) :: t)
 | _ -> [sum / 10 ; sum mod 10]
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
 
 (14,16)-(14,44)
 []

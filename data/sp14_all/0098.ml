@@ -13,7 +13,7 @@ let rec clone x n = match n with | 0 -> [] | _ -> x :: (clone x (n - 1));;
 match n with
 | 0 -> []
 | _ -> x :: (clone x (n - 1))
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,ConAppG (Just EmptyG))])
+CaseG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

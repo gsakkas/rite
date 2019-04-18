@@ -16,7 +16,11 @@ let rec listReverse l = match l with | [] -> [] | _::tl -> listReverse tl;;
 match l with
 | [] -> []
 | _ :: tl -> listReverse tl
-CaseG VarG (fromList [(ConsPatG WildPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG WildPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+
+(5,15)-(5,62)
+listReverse tl
+AppG (fromList [VarG])
 
 *)
 

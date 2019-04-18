@@ -33,7 +33,7 @@ VarG
 
 (7,63)-(7,67)
 h :: seen
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [VarG])
 
 *)
 

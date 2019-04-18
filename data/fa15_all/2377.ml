@@ -64,7 +64,7 @@ fun l ->
   match l with
   | [] -> []
   | h :: t -> listReverse t @ [h]
-LamG VarPatG (CaseG EmptyG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
 
 (11,21)-(12,58)
 EMPTY
@@ -76,7 +76,7 @@ match x with
 | h :: t -> if getHead x = getHead (listReverse x)
             then matchHeads (getTail (listReverse t))
             else false
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
 
 (23,13)-(23,65)
 matchHeads [["b"]]

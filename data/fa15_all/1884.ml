@@ -78,7 +78,15 @@ match (rand (243 , 98723) , depth) with
 | (x , n) when (n > 0) && ((x mod 5) = 2) -> buildAverage (build (rand , n - 1) , build (rand , n - 1))
 | (x , n) when (n > 0) && ((x mod 5) = 3) -> buildTimes (build (rand , n - 1) , build (rand , n - 1))
 | (x , n) when (n > 0) && ((x mod 5) = 4) -> buildThresh (build (rand , n - 1) , build (rand , n - 1) , build (rand , n - 1) , build (rand , n - 1))
-CaseG (TupleG (fromList [EmptyG])) (fromList [(TuplePatG (fromList [VarPatG]),Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG])),(TuplePatG (fromList [VarPatG,LitPatG]),Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG])),(TuplePatG (fromList [VarPatG,LitPatG]),Just (BopG EmptyG EmptyG),AppG (fromList [EmptyG]))])
+
+(23,16)-(23,29)
+(n > 0) && ((x mod 5) = 0)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+
+(24,16)-(24,29)
+(n > 0) && ((x mod 5) = 1)
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
 *)
 

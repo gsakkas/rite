@@ -19,7 +19,7 @@ let stringOfList f l = match l with | x::[] -> "[" ^ (x ^ "]");;
 (9,24)-(9,57)
 match l with
 | x :: [] -> "[" ^ (x ^ "]")
-CaseG VarG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,AppG (fromList [EmptyG]))])
 
 *)
 

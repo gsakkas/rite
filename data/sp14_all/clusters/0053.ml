@@ -1,13 +1,4 @@
-TupleG (fromList [VarG,LamG VarPatG EmptyG])
-(fun xx ->
-   (xx , f xx = xx) , b)
-(fun x ->
-   (f x , not (f x = x)) , b)
-(fun x ->
-   (let b = f x in
-    (b , b <> x)) , b)
-(fun b -> (f b , f b = b) , b)
-(fun b ->
-   (f b , b <> f b) , b)
-(fun a ->
-   (f a , f a <> a) , b)
+LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+let z = fst x + snd x in
+match a with
+| (w , y) -> ((w + z) / 10 , ((w + z) mod 10) :: y)

@@ -24,7 +24,7 @@ let rec sepConcat sep sl =
 match a with
 | "" -> x
 | _ -> a ^ (sep ^ x)
-CaseG VarG (fromList [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
 
 (7,18)-(7,43)
 ""

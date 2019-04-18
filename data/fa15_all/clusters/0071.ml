@@ -1,4 +1,10 @@
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG])),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
-match a with
-| (o , []) -> (o , [x])
-| (o , l) -> (o , x :: l)
+IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
+if n > 0
+then []
+else digitsOfInt (n / 10) @ [n mod 10]
+if n < 0
+then []
+else digitsOfInt (n / 10) @ [n mod 10]
+if n = 0
+then []
+else x :: (clone x (n - 1))

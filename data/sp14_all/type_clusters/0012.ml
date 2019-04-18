@@ -1,4 +1,2 @@
-int
 float
-bool
-'tNewPart
+int

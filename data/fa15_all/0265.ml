@@ -16,7 +16,11 @@ match l with
 | [] -> []
 | hd :: tl -> mulByDigit i
                          tl @ [hd * i]
-CaseG VarG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
+
+(3,34)-(3,36)
+mulByDigit i tl @ [hd * i]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
 *)
 

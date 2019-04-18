@@ -1,6 +1,3 @@
-TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
-(if f b = b
- then (fun b'' ->
-         (f b , false))
- else (fun b'' ->
-         (f b , true)) , b)
+LamG (TuplePatG (fromList [VarPatG])) (AppG (fromList [EmptyG]))
+fun (x , y) ->
+  ((x + y) / 10) :: a

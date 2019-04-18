@@ -9,12 +9,14 @@ snd a
 a ^ sep
 List.map f l
 List.combine l1 l2
+listReverse tl
 exprToString b
 digits n
 digitsOfInt n
 listReverse t
 exprToString e
 List.fold_left f base args
+norm_sum :: acc
 explode w
 List.rev l2
 a x
@@ -22,6 +24,7 @@ x a
 buildAbs next
 List.rev list1
 List.rev list2
+pair t1 t2
 List.rev l1
 sepConcat sep t
 sep ^ x
@@ -41,10 +44,12 @@ g f
 exprToString e1
 exprToString e4
 f x
+h :: seen
 h ^ sep
 x ^ a
 getDigits n
 List.rev res
+mulByDigit x l2
 exprToString m
 exprToString n
 List.hd l1
@@ -58,6 +63,7 @@ evalhelper p2 x y
 listReverse tail
 x @ acc
 List.mem h t
+exprToString a
 x g
 a g
 List.length t
@@ -71,11 +77,16 @@ exprToString var8
 exprToString var9
 help n
 cat l h
+sumList t
+d :: t
 padZero l1 l2
 exprToString ex1
 exprToString ex2
 exprToString ex3
 exprToString ex4
+v1 :: list1
+v2 :: list2
+x' :: xs'
 listReverse l
 sumList count
 exprToString expr0
@@ -83,4 +94,3 @@ exprToString expr1
 exprToString expr2
 exprToString expr3
 func b
-listReverse tl

@@ -13,7 +13,11 @@ let rec clone x n = match n with | 0 -> [] | _ -> (clone x (n - 1)) @ [x];;
 match n with
 | 0 -> []
 | _ -> clone x (n - 1) @ [x]
-CaseG VarG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+
+(2,51)-(2,71)
+clone x (n - 1) @ [x]
+AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
 
 *)
 

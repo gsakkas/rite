@@ -1,4 +1,3 @@
-CaseG VarG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,ListG (fromList []))])
-match n with
-| 0 -> []
-| n -> [x] @ clone x (n - 1)
+CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG]))])
+match xs with
+| hd :: tl -> f (f hd hd) tl

@@ -79,7 +79,7 @@ match x with
                                 | h :: t -> if ((b + c) + h) < 10
                                             then (0 , [0] @ ([(b + c) + h] @ t))
                                             else (carry + 1 , [((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t))
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG EmptyG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
 
 (24,16)-(24,70)
 List.rev (List.combine l1 l2)

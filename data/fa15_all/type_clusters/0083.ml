@@ -1,2 +1,2 @@
-float
-int
+'a list
+string

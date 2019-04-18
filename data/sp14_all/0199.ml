@@ -17,7 +17,7 @@ let rec listReverse l = (last l) :: (listReverse (removeLast l));;
 (* changed spans
 (3,3)-(3,63)
 (last l) :: (listReverse (removeLast l))
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG])])
 
 *)
 

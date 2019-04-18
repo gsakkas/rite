@@ -1,2 +1,1 @@
-int list
-'a -> 'a
+int

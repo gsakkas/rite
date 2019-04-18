@@ -57,7 +57,7 @@ let bigAdd l1 l2 =
 (23,16)-(23,70)
 (0 , 0) :: (List.combine l1
                          l2)
-ConAppG (Just (TupleG (fromList [EmptyG])))
+AppG (fromList [AppG (fromList [EmptyG]),TupleG (fromList [EmptyG])])
 
 *)
 

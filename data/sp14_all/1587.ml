@@ -52,7 +52,15 @@ match e with
 | Cosine e -> pi *. y
 | Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
 | Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
-CaseG VarG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
+CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
+
+(19,25)-(19,36)
+eval (e1 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
+
+(19,40)-(19,51)
+eval (e2 , x , y)
+AppG (fromList [TupleG (fromList [EmptyG])])
 
 *)
 

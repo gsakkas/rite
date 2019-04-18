@@ -73,7 +73,35 @@ match a with
 | _ -> if (fst x + snd x) > 9
        then (1 , [(fst x + snd x) mod 10])
        else (0 , [(fst x + snd x) mod 10])
-CaseG VarG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+
+(20,37)-(20,38)
+a
+VarG
+
+(21,45)-(21,46)
+a
+VarG
+
+(21,59)-(21,60)
+b
+VarG
+
+(22,45)-(22,46)
+a
+VarG
+
+(22,59)-(22,60)
+b
+VarG
+
+(25,20)-(25,48)
+[(fst x + snd x) mod 10]
+ListG (fromList [BopG EmptyG EmptyG])
+
+(26,20)-(26,48)
+[(fst x + snd x) mod 10]
+ListG (fromList [BopG EmptyG EmptyG])
 
 *)
 

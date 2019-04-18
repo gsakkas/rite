@@ -17,5 +17,6 @@ string list
 ('a * bool)
 ('a * 'b) list
 int -> int
+(int * int) -> int
 string -> 'a -> string
 ('a -> 'b) -> 'a -> 'b

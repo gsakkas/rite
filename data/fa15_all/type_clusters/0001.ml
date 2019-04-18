@@ -1,8 +1,8 @@
 int list
 'a -> 'a
+bool
 'a list
 'a list list
-bool
 'a
 ('a * 'b) list
 expr
