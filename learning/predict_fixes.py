@@ -107,7 +107,7 @@ clf = DummyClassifier(random_state=prng)
 
 if model == 'mlp':
     clf = neural_network.MLPClassifier(
-        hidden_layer_sizes=(120, 20),
+        hidden_layer_sizes=(256, 64),
         learning_rate='adaptive',
         learning_rate_init=0.001,
         alpha=0.001,
@@ -132,10 +132,10 @@ else:
     clf = joblib.load(model_file)
 
 # Type of model training to use
-clf_type = 'ova' # "ova" of "multiclass"
+clf_type = 'multiclass' # "ova" of "multiclass"
 
 if model != 'load':
-    if clf_type == 'ova':
+    if clf_type == 'ova' or clf_type == 'big-ova':
         clf = OneVsRestClassifier(clf, n_jobs=10).fit(train_samps.values, train_labels.values)
     else:
         clf = clf.fit(train_samps.values, train_labels.values)
@@ -196,7 +196,7 @@ for labelind in list(set(test_labels.index)):
     c3_whole += yay3 / total
     c5_whole += yay5 / total
 
-    if model != 'uniform' and model != 'stratified':
+    if model != 'load' and model != 'uniform' and model != 'stratified':
         filenm = test_file.loc[[labelind]].values[0].split('.')
         res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type)
         if not os.path.exists(res_dir):
