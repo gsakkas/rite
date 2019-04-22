@@ -13,8 +13,8 @@ import pandas as pd
 import input_old
 
 model = sys.argv[1]
-if model not in ['mlp', 'decision-tree', 'random-forest', 'random', 'load']:
-    print 'python one-vs-all-type-slice.py [mlp|decision-tree|random-forest|random|load] <train> <test>'
+if model not in ['mlp', 'decision-tree', 'random-forest', 'uniform', 'stratified', 'load']:
+    print 'python predict_fixes.py [mlp|decision-tree|random-forest|uniform|stratified|load] <train> <test> <load-model>'
     sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
@@ -51,6 +51,7 @@ for csv in test_csvs:
         continue
     if df2.shape[0] == 0:
         continue
+    df2['SOURCE_FILE'] = csv
     test.append(df2)
 
 train = pd.concat(train)
@@ -95,10 +96,12 @@ train_labels = train.loc[:, 'L-Cluster1':last_L]
 train_labels = categorize(train_labels)
 
 test_samps = test.loc[:, 'F-Expr-Size':]
+del test_samps['SOURCE_FILE']
 print test_samps.shape
 test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_labels = categorize(test_labels)
 test_span = test.loc[:, 'SourceSpan']
+test_file = test.loc[:, 'SOURCE_FILE']
 
 clf = DummyClassifier(random_state=prng)
 
@@ -121,18 +124,28 @@ elif model == 'random-forest':
                                  random_state=prng)
 elif model == 'decision-tree':
     clf = tree.DecisionTreeClassifier(random_state=prng)
-elif model == 'random':
+elif model == 'stratified':
     clf = DummyClassifier(random_state=prng)
+elif model == 'uniform':
+    clf = DummyClassifier(strategy='uniform', random_state=prng)
 else:
     clf = joblib.load(model_file)
 
-if model != 'load':
-    clf = clf.fit(train_samps.values, train_labels.values)
-    # clf = OneVsRestClassifier(clf, n_jobs=-1).fit(train_samps.values, train_labels.values)
+# Type of model training to use
+clf_type = 'ova' # "ova" of "multiclass"
 
-    joblib.dump(
-        clf,
-        os.path.join('models', model + '-' + str(num_of_cls) + '-multiclass.pkl'))
+if model != 'load':
+    if clf_type == 'ova':
+        clf = OneVsRestClassifier(clf, n_jobs=10).fit(train_samps.values, train_labels.values)
+    else:
+        clf = clf.fit(train_samps.values, train_labels.values)
+
+    if model != 'uniform' and model != 'stratified':
+        joblib.dump(
+            clf,
+            os.path.join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '.pkl'))
+else:
+    model = 'mlp'
 
 anses = clf.predict(test_samps.values)
 
@@ -142,30 +155,80 @@ prob_score = clf.predict_proba(test_samps.values)
 
 prob_error = []
 prob_error = [[1.0 - i for i in item] for item in prob_score]
+prob_error = [np.argsort(pe).tolist() for pe in prob_error]
 # print len(prob_error)
 # print len(prob_error[0])
+
+pes_top5 = [pe[:5] for pe in prob_error]
+pes1, pes2, pes3, pes4, pes5 = map(list, zip(*pes_top5))
+ll = zip(test_span, pes1, pes2, pes3, pes4, pes5, test_labels.values)
+
+score = pd.DataFrame(data=ll, index=test_labels.index, columns=['SourceSpan', 'P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'Actual'])
+
+all_programs = 0
+c1 = 0
+c3 = 0
+c5 = 0
+c1_whole = 0
+c3_whole = 0
+c5_whole = 0
+for labelind in list(set(test_labels.index)):
+    all_programs += 1
+    temp_sc = score.loc[[labelind]]
+    yay1 = 0
+    yay3 = 0
+    yay5 = 0
+    total = 0
+    for sc in temp_sc.values:
+        act = sc[6]
+        total += 1
+        if sc[1] == act or sc[2] == act or sc[3] == act or sc[4] == act or sc[5] == act:
+            yay5 += 1
+        if sc[1] == act or sc[2] == act or sc[3] == act:
+            yay3 += 1
+        if sc[1] == act:
+            yay1 += 1
+    c1 += float(yay1) * 100 / total
+    c3 += float(yay3) * 100 / total
+    c5 += float(yay5) * 100 / total
+
+    c1_whole += yay1 / total
+    c3_whole += yay3 / total
+    c5_whole += yay5 / total
+
+    if model != 'uniform' and model != 'stratified':
+        filenm = test_file.loc[[labelind]].values[0].split('.')
+        res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type)
+        if not os.path.exists(res_dir):
+            os.mkdir(res_dir)
+        temp_sc.to_csv(res_dir + '/' + filenm[0] + '.csv', index=False)
 
 yay1 = 0
 yay2 = 0
 yay3 = 0
+yay5 = 0
 yay_all = 0
 yay1_2 = 0
 yay2_2 = 0
 yay3_2 = 0
+yay5_2 = 0
 tots = 0
 real_tots = 0
 yays1 = [0] * num_of_cls
 yays2 = [0] * num_of_cls
 yays3 = [0] * num_of_cls
+yays5 = [0] * num_of_cls
 alls = [0] * num_of_cls
 for i, idx in enumerate(test_labels.values):
     real_tots += 1
-    pes = np.argsort(prob_error[i]).tolist()
+    pes = prob_error[i]
     # print pes
     # print idx
     if pes[0] != anses[i]:
         print 'NOT OK'
 
+    if pes[0] == idx or pes[1] == idx or pes[2] == idx or pes[3] == idx or pes[4] == idx:
+        yay5_2 += 1
     if pes[0] == idx or pes[1] == idx or pes[2] == idx:
         yay3_2 += 1
     if pes[0] == idx or pes[1] == idx:
@@ -178,6 +241,9 @@ for i, idx in enumerate(test_labels.values):
         alls[idx - 1] += 1
         # 0 is for unclassified
         pes.remove(0)
+        if pes[0] == idx or pes[1] == idx or pes[2] == idx or pes[3] == idx or pes[4] == idx:
+            yay5 += 1
+            yays5[idx - 1] += 1
         if pes[0] == idx or pes[1] == idx or pes[2] == idx:
             yay3 += 1
             yays3[idx - 1] += 1
@@ -188,26 +254,48 @@ for i, idx in enumerate(test_labels.values):
             yay1 += 1
             yays1[idx - 1] += 1
 
-print "accuracy for top 3 per class (" + str(num_of_cls) + ")"
+print "accuracy for top 5 per class (" + str(num_of_cls) + ")"
 print "top 1"
 print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)]
 print "top 2"
 print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)]
 print "top 3"
 print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)]
+print "top 5"
+print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)]
 
-print "accuracy for top 3"
+print "accuracy for top 5"
 print "top 1"
 print float(yay1) * 100 / tots
 print "top 2"
 print float(yay2) * 100 / tots
 print "top 3"
 print float(yay3) * 100 / tots
+print "top 5"
+print float(yay5) * 100 / tots
 
-print "accuracy for top 3 (with unclassified)"
+print "accuracy for top 5 (with unclassified)"
 print "top 1"
 print float(yay1_2) * 100 / real_tots
 print "top 2"
 print float(yay2_2) * 100 / real_tots
 print "top 3"
 print float(yay3_2) * 100 / real_tots
+print "top 5"
+print float(yay5_2) * 100 / real_tots
+
+print "accuracy for top 5 (average acc. per program)"
+print "top 1"
+print float(c1) / all_programs
+print "top 3"
+print float(c3) / all_programs
+print "top 5"
+print float(c5) / all_programs
+
+print "accuracy for top 5 (acc. per program)"
+print "top 1"
+print float(c1_whole) * 100 / all_programs
+print "top 3"
+print float(c3_whole) * 100 / all_programs
+print "top 5"
+print float(c5_whole) * 100 / all_programs

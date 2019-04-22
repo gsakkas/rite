@@ -12,8 +12,8 @@ import input_old
 
 model = sys.argv[1]
 if model not in ['mlp', 'decision-tree', 'random-forest']:
-        print 'python trees.py [decision-tree|random-forest] <train> <test>'
-        sys.exit(1)
+	print 'python trees.py [decision-tree|random-forest] <train> <test>'
+	sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
 
@@ -48,7 +48,7 @@ for csv in test_csvs:
 	if df2.shape[0] == 0:
 		continue
 
-        df2['SOURCE_FILE'] = csv
+	df2['SOURCE_FILE'] = csv
 	test.append(df2)
 
 # print len(test)
@@ -178,26 +178,26 @@ for labelind in list(set(test_labels.index)):
 	# if len(temp) < 3:
 	# 	continue
 	tots = tots+1
-        # this complicated thing takes the *most likely bad* things
-        # followed by the *least likely good* things, in case we have
-        # fewer than 3 "bad" predictions
-        # print temp
-        bad = temp[np.argsort(temp[:,0])][::-1]
-        # print bad
-        # print bad[bad[:,1] == 1]
-        good = temp[np.argsort(temp[:,0])]
-        # print good
-        # print good[good[:,1] == 0]
-        topn = np.concatenate((bad[bad[:,1] == 1], good[good[:,1] == 0]))[:3]
-                # temp[np.argsort(temp[:,0])],
-                # temp[np.argsort(temp[temp[:,1] == 0][:,0])[::-1]]))[:3]
+	# this complicated thing takes the *most likely bad* things
+	# followed by the *least likely good* things, in case we have
+	# fewer than 3 "bad" predictions
+	# print temp
+	bad = temp[np.argsort(temp[:,0])][::-1]
+	# print bad
+	# print bad[bad[:,1] == 1]
+	good = temp[np.argsort(temp[:,0])]
+	# print good
+	# print good[good[:,1] == 0]
+	topn = np.concatenate((bad[bad[:,1] == 1], good[good[:,1] == 0]))[:3]
+		# temp[np.argsort(temp[:,0])],
+		# temp[np.argsort(temp[temp[:,1] == 0][:,0])[::-1]]))[:3]
 	# filenm = str(labelind).split('.')
-        # print topn
-        # raise 'he'
+	# print topn
+	# raise 'he'
 	filenm = test_file.loc[labelind].values[0].split('.')
-        dir = os.path.join(test_dir, model)
-        if not os.path.exists(dir):
-                os.mkdir(dir)
+	dir = os.path.join(test_dir, model)
+	if not os.path.exists(dir):
+			os.mkdir(dir)
 	f = open(dir + '/' + filenm[0] + '.ml.out', "w+")
 	for preds in topn:
 		#if preds[1] == 1:
