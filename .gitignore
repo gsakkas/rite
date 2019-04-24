@@ -166,3 +166,4 @@ cabal.project.local
 .DS_Store
 /.venv/
 /data/*dirty
+/data/fa15_all/known+clusters+all
