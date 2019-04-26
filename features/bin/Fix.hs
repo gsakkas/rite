@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE MultiWayIf        #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE BangPatterns      #-}
 
 module Main where
 
@@ -34,6 +33,7 @@ import           System.FilePath
 import           System.IO
 import           Text.Printf
 
+import           NanoML.Instantiate
 import           NanoML.Classify
 import           NanoML.Lexer
 import           NanoML.Monad
@@ -80,112 +80,25 @@ main = do
 data WithSlice = JustSlice | All deriving Eq
 
 mkFixes :: Bool -> String -> String -> [(ExprGeneric, [Type])] -> [Feature] -> [(String, LBSC.ByteString)] -> [String] -> IO ()
-mkFixes forTestSet out nm known_cls fs all_preds jsons = do
+mkFixes forTestSet out nm top_cls fs all_preds jsons = do
   let preds = map readPreds all_preds
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
-  let feats = [ ((h, f'), (ss', bad, fix, badStr, fixStr, c, all, idx))
-              | (ss', bad, fix, badStr, fixStr, idx) <- uniqs
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (map fst3 ss', bad)
-              , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f -- Remove this for all spans
-              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
-                                    (concatMap allSubExprs $ progExprs bad)
+  let feats = [ (ss, bad, fix, badStr, fixStr, pds, idx)
+              | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
+              , (idx', pds) <- preds
+              , idx == idx'
               ]
-  let feats'      = filter (\(_, (ss,_,fix,_,_,cs,_,_)) -> not (null (getAllTypedExprs fix)) && not (null (map fst3 ss `intersect` cs))) feats
-  let mkMean f xs = sum (map f xs) / genericLength xs
-  let mkFrac (_, (ss, _, _, _, _, _, all, _)) = genericLength ss / genericLength all
-  let mean = mkMean mkFrac feats' :: Double
-  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
-  usefulls <- forM feats $ \ f@((_, _), (ss, _, fix, badStr, fixStr, cs, _, i)) -> do
-    let ss' = map fst3 ss
-    if
-      | mkFrac f > mean + 2 * std -> do
-        printf (show i ++ ". OUTLIER: %.2f > %.2f\n") (mkFrac f :: Double) (mean + 2 * std)
-        return mempty
-      | null ss' -> do
-        putStrLn (show i ++ ". NO DIFF")
-        -- putStrLn badStr
-        -- putStrLn "---------------------------"
-        -- putStrLn fixStr
-        return mempty
-      | null (getAllTypedExprs fix) -> do
-        putStrLn (show i ++ ". CAN'T TYPE-CHECK THE FIXED PROGRAM")
-        -- putStrLn fixStr
-        return mempty
-      | null (map fst3 ss `intersect` cs) -> do
-        putStrLn (show i ++ ". NO OVERLAP CORE/DIFF")
-        -- putStrLn bad
-        -- print cs
-        -- putStrLn fix
-        return mempty
-      | otherwise -> do
-        return [f]
-  let fts = concat usefulls
-  -- Find clusters of fixes to be used as templates
-  let ss_fixes = concatMap (\ f@((_, _), (ss, _, _, _, _, _, _, _)) -> map thd3 ss) fts
-  let clusters = makeClusters ss_fixes
-  let elems
-        = forM fts (\ f@((_, _), (ss, _, fix, _, _, cs, allspans, _)) -> do
-          let typed_es = nub $ getAllTypedExprs fix
-          let typed_ss = mapMaybe (\(ss', e, eg) -> getEgMtype (ss', e, eg) allspans typed_es >>= \tt -> return (e, eg, tt)) ss
-          return $ map (\(x, y, tt) -> (y, render $ pretty x, tt)) typed_ss)
-            >>= concat
-  let cls = map (\c -> (show c, map (\tup -> (snd3 tup, thd3 tup)) (filter (\(x, _, _) -> x == c) elems))) clusters
-  -- Keep only top N clusters as templates for ML labels or read them from the training set
-  let !actual_cls = take 50 $ map (\tup -> (snd tup, nub $ map snd $ snd (fst tup))) $ sortOn (DO.Down . \(x, _) -> length (snd x)) (zip cls clusters)
-  let top_cls =
-        if forTestSet then known_cls
-        else actual_cls
-  let mn = min (length top_cls) 50
-  let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate mn "L-Cluster") [1..mn]
-
-  forM_ fts $ \ f@((header, features), (ss, bad, fix, badStr, fixStr, cs, allspans, i)) -> do
+  forM_ feats $ \ f@(ss, bad, fix, badStr, fixStr, pds, i) -> do
     let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
 
     let fn   = printf "%04d" (i :: Int)
-    let path = out </> nm </> fn <.> "csv"
-    createDirectoryIfMissing True (takeDirectory path)
-    let type_cls = map (\(l1, l2) -> (l1, map generaliseT l2)) top_cls
-    let give_labels xx cl lbl
-          | thd3 xx == fst cl = lbl .= (1::Double)
-          | otherwise         = lbl .= (0::Double)
-    let in_cluster xx = namedRecord $ zipWith (give_labels xx) type_cls cls_names
-    let the_ss xx     = namedRecord ["SourceSpan" .= show xx]
-    let labels        = zipWith HashMap.union (map in_cluster ss) (map (the_ss . fst3) ss)
-
-    let getTypeFs ss' = runTFeaturesDiff preds_tcon_ctx (map fst3 ss, replaceSSWithExpr bad (mkTHole ss' 1))
-    let rtfd = mapMaybe (\ss' -> getTypeFs ss' >>= \(h, nr, _) -> Just (h, filter (\r -> BSC.unpack (r HashMap.! "SourceSpan") == show ss') nr)) cs
-    let all_fs' = concatMap snd rtfd
-    let header' = fst $ head rtfd
-    let features' = map (\ff -> HashMap.union ff (namedRecord $ map (\lbl -> lbl .= (0::Double)) cls_names)) features
-
-    let fs' = map (\nr -> HashMap.union (fromJust $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") features') nr) all_fs'
-    let new_features = map (\nr -> HashMap.union (fromMaybe nr $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") labels) nr) fs'
-    -- print $ length new_features
-    let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header V.++ V.drop 4 header'
-    LBSC.writeFile path $ encodeByName new_header new_features
     let path = out </> fn <.> "ml"
-    writeFile path $ unlines $ [ badStr, "", "(* fix", fixStr, "*)"]
+    createDirectoryIfMissing True (takeDirectory path)
+    writeFile path $ unlines $ [ badStr ]
+                            ++ [ "", "(* bad", badStr, "*)" ]
+                            ++ [ "", "(* student fix", fixStr, "*)" ]
                             ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
-                            ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
-
-  let sorted_cls = sortOn (DO.Down . length . snd) cls
-  forM_ (zip [1..] sorted_cls) $ \(i, c) -> do
-    let fn   = printf "%04d" (i :: Int)
-    let path = out </> "clusters" </> fn <.> "ml"
-    createDirectoryIfMissing True (takeDirectory path)
-    let string_cls = fst c : map fst (snd c)
-    writeFile path $ unlines $ nub string_cls -- TODO: Maybe count as well instead of nub
-    let path = out </> "type_clusters" </> fn <.> "ml"
-    createDirectoryIfMissing True (takeDirectory path)
-    let string_tcls = map (render . pretty) $ nub $ map snd (snd c)
-    writeFile path $ unlines $ nub string_tcls
-  let clu_path = out </> "clusters" </> "top_clusters" <.> "json"
-  LBSC.writeFile clu_path $ LBSC.unlines $ map (Aeson.encode . mkClsWithTs) top_cls
-  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
-  print $ length ss_fixes
-  print $ length clusters
-  let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (length . snd) cls
-  print cluster_lens
+                            -- ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
 
 
 -- George
@@ -246,16 +159,6 @@ mkFixes' forTestSet fs badStr' fixStr' = do
         putStrLn "Finished!"
 
 
--- George
-readFile' :: FilePath -> IO String
-readFile' fn = do
-    h <- openFile fn ReadMode
-    s <- hGetContents h
-    evaluate (rnf s)
-    hClose h
-    return s
-
--- George
 readJSONLFile :: String -> (ExprGeneric, [Type])
 readJSONLFile f = case eitherDecode (LBSC.pack f) of
   Left err                  -> error ("readClusterFile failed: " ++ err)
@@ -268,9 +171,6 @@ instance FromJSON ClsWithTs
 
 mkClsWithTs :: (ExprGeneric, [Type]) -> ClsWithTs
 mkClsWithTs (eg, ts) = MkClsWithTs eg ts
-
-makeClusters :: [ExprGeneric] -> [ExprGeneric]
-makeClusters = Set.toList . Set.fromList
 
 type Preds = (String, Int, Int, Int, Int, Int, Int)
 
@@ -351,7 +251,7 @@ pruneTrs maxd = map pruneOneTr
           TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
           ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          _             -> error ("pruneTrs failed: no such expression " ++ show e)
+          -- _             -> error ("pruneTrs failed: no such expression " ++ show e)
 
         cutSubPs :: PatGeneric -> Int -> PatGeneric
         cutSubPs e 0 = EmptyPatG

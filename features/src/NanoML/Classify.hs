@@ -1868,7 +1868,7 @@ sizeOfTree e depth = case e of
   ConAppG Nothing   -> depth + 1
   ConAppG (Just e') -> sizeOfTree e' (depth + 1)
   ListG es          -> safeMaximum es depth
-  _                 -> error ("sizeOfTree failed: no such expression " ++ show e)
+  -- _                 -> error ("sizeOfTree failed: no such expression " ++ show e)
   where safeMaximum li d = if null li then d else Set.findMax $ Set.map (\e' -> sizeOfTree e' (d + 1)) li
 
 -- George

@@ -1012,10 +1012,6 @@ data ExprGeneric
   | CaseG !(Set (PatGeneric, Maybe ExprGeneric, ExprGeneric))
   | TupleG !(Set ExprGeneric)
   | ConAppG !(Maybe ExprGeneric)
-  | RecordG ![(String, ExprGeneric)]
-  | FieldG !ExprGeneric !String
-  | SetFieldG !ExprGeneric !String !ExprGeneric
-  | ArrayG !(Set ExprGeneric)
   | ListG !(Set ExprGeneric)
   | EmptyG -- Just an empty expr for easier pruning
   deriving (Show, Generic, Eq, Ord)

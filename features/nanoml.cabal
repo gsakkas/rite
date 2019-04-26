@@ -99,6 +99,7 @@ executable nano-check
 
 library
   exposed-modules:     NanoML
+                     , NanoML.Instantiate
                      , NanoML.Classify
                      , NanoML.Eval
                      , NanoML.Explore

@@ -321,9 +321,9 @@ mkBadFeaturesWithSlice withSlice out nm fs jsons = do
 mkClusters :: Bool -> String -> String -> [(ExprGeneric, [Type])] -> [Feature] -> [String] -> IO ()
 mkClusters forTestSet out nm known_cls fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
-  let feats = [ ((h, f'), (ss', bad, fix, badStr, fixStr, c, all, idx))
-              | (ss', bad, fix, badStr, fixStr, idx) <- uniqs
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (map fst3 ss', bad)
+  let feats = [ ((h, f'), (ss, bad, fix, badStr, fixStr, c, all, idx))
+              | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
+              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (map fst3 ss, bad)
               , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f -- Remove this for all spans
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs bad)
@@ -402,7 +402,7 @@ mkClusters forTestSet out nm known_cls fs jsons = do
     let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header V.++ V.drop 4 header'
     LBSC.writeFile path $ encodeByName new_header new_features
     let path = out </> fn <.> "ml"
-    writeFile path $ unlines $ [ badStr, "", "(* fix", fixStr, "*)"]
+    writeFile path $ unlines $ [ badStr, "", "(* fix", fixStr, "*)" ]
                             ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
                             ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
 
@@ -674,7 +674,7 @@ pruneTrs maxd = map pruneOneTr
           TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
           ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
           ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          _             -> error ("pruneTrs failed: no such expression " ++ show e)
+          -- _             -> error ("pruneTrs failed: no such expression " ++ show e)
 
         cutSubPs :: PatGeneric -> Int -> PatGeneric
         cutSubPs e 0 = EmptyPatG
