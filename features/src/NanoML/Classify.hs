@@ -810,7 +810,7 @@ data Info = MkInfo
 instance Hashable Info
 
 mkInfo :: MSrcSpan -> Type -> Info
-mkInfo ml t = MkInfo (fromJust ml) t
+mkInfo ml t = MkInfo (fromMaybe (SrcSpan 0 42 0 42) ml) t
 
 data TExpr
   = T_Var !Info !Var
@@ -856,30 +856,6 @@ texprInfo = \case
   T_Array i _ -> i
   T_List i _ -> i
   T_Try i _ _ -> i
-
--- George
--- ctfoldGeneric :: (ExprGeneric {- parent -} -> ExprGeneric -> a -> a) -> a -> ExprGeneric  -> a
--- ctfoldGeneric f z r = go r r
---   where
---   go p e' = f p e' $ case e' of
---     VarG -> z
---     LamG b -> go e' b
---     AppG es -> Set.foldr Set.union Set.empty $ Set.map (go e') es -- Not sure
---     BopG e1 e2 -> Set.union (go e' e1) (go e' e2)
---     UopG e -> go e' e
---     LitG -> z
---     LetG _ pes e -> Set.foldr Set.union Set.empty ((Set.map (go e') pes) `Set.union` (Set.singleton (go e' e)))
---     IteG x y z -> go e' x `Set.union` go e' y `Set.union` go e' z
---     SeqG e1 e2 -> Set.union (go e' e1) (go e' e2)
---     CaseG e as -> Set.foldr Set.union Set.empty (Set.insert (go e' e) (Set.map (go e' . snd) as))
---     TupleG es -> Set.foldr Set.union Set.empty (Set.map (go e') es)
---     ConAppG me _ -> maybe Set.empty (go e') me
---     RecordG fes _ -> Set.foldr Set.union Set.empty (Set.fromList $ map (go e' . snd) fes)
---     FieldG e _ -> go e' e
---     SetFieldG e1 _ e2 -> Set.union (go e' e1) (go e' e2)
---     ListG es _ -> go e' es
---     ArrayG es _ -> Set.foldr Set.union Set.empty (Set.map (go e') es)
---     TryG e as -> Set.foldr Set.union Set.empty (Set.insert (go e' e) (Set.fromList $ map (go e' . mkGenericTrees. thd3) as))
 
 ctfold :: Monoid a => (TExpr {- parent -} -> TExpr -> a -> a) -> a -> TExpr -> a
 ctfold f z r = go r r
@@ -1058,20 +1034,26 @@ typeExpr' in_e = do
       return (T_Lam (mkInfo ml to) p te)
     App ml f es -> do
       -- t1 <- TVar <$> freshTVar
-      tf <- typeExpr f
-      -- traceShowM tf
-      tes <- mapM typeExpr es
-      emitCt (foldr (:->) to (map getType tes)) (getType tf)
-      -- zipWithM_ emitCt ts (map getType tes)
-      -- tis <- replicateM (length es) (TVar <$> freshTVar)
-      -- zipWithM tryUnify tis (map getType tes)
-      -- traceM "APP"
-      -- traceShowM . pretty =<< substM (getType tf)
-      -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
-      -- tryUnify (getType tf) (foldr (:->) to (map getType tes))
-      -- traceShowM . pretty =<< substM (getType tf)
-      -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
-      return (T_App (mkInfo ml to) tf tes)
+      case f of
+        TypedHole ml' v -> do
+          t <- TVar <$> freshTVar
+          tes <- mapM typeExpr es
+          return (T_App (mkInfo ml to) (T_Var (mkInfo ml' t) v) tes)
+        _ -> do
+          tf <- typeExpr f
+          -- traceShowM tf
+          tes <- mapM typeExpr es
+          emitCt (foldr (:->) to (map getType tes)) (getType tf)
+          -- zipWithM_ emitCt ts (map getType tes)
+          -- tis <- replicateM (length es) (TVar <$> freshTVar)
+          -- zipWithM tryUnify tis (map getType tes)
+          -- traceM "APP"
+          -- traceShowM . pretty =<< substM (getType tf)
+          -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
+          -- tryUnify (getType tf) (foldr (:->) to (map getType tes))
+          -- traceShowM . pretty =<< substM (getType tf)
+          -- traceShowM . pretty =<< substM (foldr (:->) t (map getType tes))
+          return (T_App (mkInfo ml to) tf tes)
     Bop ml b e1 e2 -> do
       (t1, t2, t) <- if
         | b `elem` [Eq .. Ge]
@@ -1082,6 +1064,8 @@ typeExpr' in_e = do
           -> return (tCon tINT, tCon tINT, tCon tINT)
         | b `elem` [FPlus .. FExp]
           -> return (tCon tFLOAT, tCon tFLOAT, tCon tFLOAT)
+        | b == BB
+          -> do { t <- TVar <$> freshTVar; return (t, t, t) }
       te1 <- typeExpr e1
       te2 <- typeExpr e2
       -- t1 <- makeType t1
@@ -1116,10 +1100,12 @@ typeExpr' in_e = do
       case (u, e) of
         (Neg, Lit _ LD{})    -> emitCtWith to (getType te) fmt
         (Neg, TypedHole _ _) -> emitCtWith to (getType te) fmt
+        (Neg, TypedVar _ _) -> emitCtWith to (getType te) fmt
         otherwise            -> emitCtWith t (getType te) fmt
       case (u, e) of
         (Neg, Lit _ LD{})    -> emitCt to (getType te)
         (Neg, TypedHole _ _) -> emitCt to (getType te)
+        (Neg, TypedVar _ _) -> emitCt to (getType te)
         otherwise            -> emitCt to t
       return (T_Uop (mkInfo ml to) u te)
     Lit ml l -> do
@@ -1129,6 +1115,7 @@ typeExpr' in_e = do
                 LB {} -> tCon tBOOL
                 LC {} -> tCon tCHAR
                 LS {} -> tCon tSTRING
+                LL {} -> to
       -- tryUnify to t
       emitCt to t
       return (T_Lit (mkInfo ml to) l)
@@ -1300,6 +1287,8 @@ typeExpr' in_e = do
       -- t <- TVar <$> freshTVar
       -- emitCt to t
       return (T_Var (mkInfo ml to) v)
+    TypedVar ml v -> do
+      return (T_Var (mkInfo ml to) v)
 
 typePat :: MonadEval m => Pat -> m (Type, [(Var, Type)])
 -- TODO: NEED CTS!!!!
@@ -1308,11 +1297,17 @@ typePat = \case
     t <- TVar <$> freshTVar
     return (t, [(v,t)])
   LitPat _ l -> do
-    t <- makeType $ typeOfLit l
+    t <- case l of
+           LL {} -> TVar <$> freshTVar
+           otherwise -> makeType $ typeOfLit l
     return (t, [])
   IntervalPat _ l1 l2 -> do
-    t1 <- makeType $ typeOfLit l1
-    t2 <- makeType $ typeOfLit l2
+    t1 <- case l1 of
+            LL {} -> TVar <$> freshTVar
+            otherwise -> makeType $ typeOfLit l1
+    t2 <- case l2 of
+            LL {} -> TVar <$> freshTVar
+            otherwise -> makeType $ typeOfLit l2
     -- tryUnify t1 t2
     emitCt t1 t2
     return (t1, [])
@@ -1371,6 +1366,9 @@ typePat = \case
     -- tryUnify tp t
     emitCt t tp
     return (tp, bnds)
+  TypedPat _ v -> do
+    t <- TVar <$> freshTVar
+    return (t, [(v,t)])
 
 typeAlt :: MonadEval m => Alt -> Type -> m (Type, TAlt)
 typeAlt (p, mg, e) t = do
@@ -1831,10 +1829,12 @@ mkGenericTrees = \case
                   -> AppG $ Set.fromList (map mkGenericTrees ht)
   ConApp _ _ me _ -> ConAppG (maybeMkGTs me)
   List _ es _     -> ListG $ Set.fromList (map mkGenericTrees es)
+  TypedHole _ _   -> EmptyG
+  TypedVar _ _    -> EmptyG
   e               -> error ("exprKind: " ++ render (pretty e))
-  where maybeMkGTs me = if isJust me then Just (mkGenericTrees $ fromJust me) else Nothing
+  where maybeMkGTs me = fmap mkGenericTrees me
 
-  -- George
+-- George
 mkGenericPats :: Pat -> PatGeneric
 mkGenericPats = \case
   VarPat _ _          -> VarPatG
@@ -1848,7 +1848,54 @@ mkGenericPats = \case
   OrPat _ p1 p2       -> OrPatG (mkGenericPats p1) (mkGenericPats  p2)
   AsPat _ p _         -> AsPatG (mkGenericPats p)
   ConstraintPat _ p t -> ConstrPatG (mkGenericPats p) t
-  where maybeMkPs me = if isJust me then Just (mkGenericPats $ fromJust me) else Nothing
+  TypedPat _ _        -> EmptyPatG
+  where maybeMkPs mp = fmap mkGenericPats mp
+
+-- George
+pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
+pruneTrs maxd = map pruneOneTr
+  where
+    pruneOneTr (ss, e1, e2) =
+      if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
+      where
+        depth = sizeOfTree e2 0
+        ne2   = cutSubTrs e2 maxd
+        cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
+        cutSubTrs e 0 = EmptyG
+        cutSubTrs e d = case e of
+          EmptyG        -> EmptyG
+          VarG          -> VarG
+          LamG p e'     -> LamG (cutSubPs p (max 1 d)) (cutSubTrs e' (d - 1))
+          AppG es       -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
+          BopG e1 e2    -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          UopG e'       -> UopG (cutSubTrs e' (d - 1))
+          LitG          -> LitG
+          LetG r pes e' -> LetG r (Set.map (\(p, e'') -> (cutSubPs p (max 1 d), cutSubTrs e'' (d - 1))) pes) (cutSubTrs e' (d - 1))
+          IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
+          SeqG e1 e2    -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
+          CaseG as      -> CaseG (Set.map (\(p, me, e'')
+                            -> (cutSubPs p (max 1 d), me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
+          TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
+          ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
+          ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
+          -- _             -> error ("pruneTrs failed: no such expression " ++ show e)
+
+        cutSubPs :: PatGeneric -> Int -> PatGeneric
+        cutSubPs e 0 = EmptyPatG
+        cutSubPs e d = case e of
+          EmptyPatG        -> EmptyPatG
+          VarPatG          -> VarPatG
+          LitPatG          -> LitPatG
+          IntervalPatG     -> IntervalPatG
+          ConsPatG p1 p2   -> ConsPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
+          ConPatG Nothing  -> ConPatG Nothing
+          ConPatG (Just p) -> ConPatG (Just $ cutSubPs p (d - 1))
+          ListPatG ps      -> ListPatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
+          TuplePatG ps     -> TuplePatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
+          WildPatG         -> WildPatG
+          OrPatG p1 p2     -> OrPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
+          AsPatG p         -> AsPatG (cutSubPs p (d - 1))
+          ConstrPatG p t   -> ConstrPatG (cutSubPs p (d - 1)) t
 
 -- George
 sizeOfTree :: ExprGeneric -> Int -> Int
@@ -2156,6 +2203,8 @@ exprKind = \case
   Tuple {}       -> TupleK
   ConApp _ d _ _ -> ConAppK d
   List {}        -> ListK
+  TypedHole _ v  -> VarK v
+  TypedVar _ v   -> VarK v
   e              -> error ("exprKind: " ++ render (pretty e))
 
 subExprs :: Expr -> [Expr]
@@ -2175,6 +2224,8 @@ subExprs = \case
     [Tuple _ es] -> es
     es           -> es
   List _ es _     -> es
+  TypedHole {}    -> []
+  TypedVar {}     -> []
 
 exprSize = const 1
 --exprSize = getSum . fold (const (+1)) (0 :: Sum Int)
@@ -2212,6 +2263,7 @@ killSpanPat = go
     OrPat _ x y -> OrPat Nothing (go x) (go y)
     AsPat _ p v -> AsPat Nothing (go p) v
     ConstraintPat _ p t -> ConstraintPat Nothing (go p) t
+    TypedPat _ v -> TypedPat Nothing v
 
 zipWith3M_ :: Monad m => (a -> b -> c -> m d) -> [a] -> [b] -> [c] -> m [d]
 zipWith3M_ f []     _      _      = return []

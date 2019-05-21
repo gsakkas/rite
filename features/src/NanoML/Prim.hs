@@ -6,7 +6,8 @@ module NanoML.Prim
   , tB, tL, tU, pand, por, getField, setField
   , maybeThrow
   , primVars, primVarTypes
-  , mkPrim1Fun
+  , mkPrim1Fun, mkPrim2Fun
+  , pappend
   ) where
 
 import Control.Arrow

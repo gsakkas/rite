@@ -6,7 +6,6 @@ module Main where
 
 import           Control.Exception          (assert, evaluate)
 import           Control.Monad
-import           Control.DeepSeq
 import           Control.Arrow              (second)
 import           Data.Aeson                 (ToJSON(..), FromJSON(..), eitherDecode)
 import qualified Data.Aeson                 as Aeson
@@ -15,23 +14,20 @@ import qualified Data.ByteString.Char8      as BSC
 import qualified Data.ByteString.Lazy.Char8 as LBSC
 import           Data.Ord                   as DO
 import           Data.Csv
-import           Data.Either
-import           Data.Function
 import           Data.List
-import qualified Data.Map.Strict            as Map
 import           Data.Maybe
-import qualified Data.HashMap.Strict        as HashMap
-import qualified Data.HashSet               as HashSet
-import           Data.HashSet               (HashSet)
 import qualified Data.Set                   as Set
 import qualified Data.Vector                as V
+import           Data.Containers.ListUtils (nubOrd)
 import           GHC.Generics
 import           Options.Generic            hiding (All(..))
 import           System.Directory
 import           System.Environment
 import           System.FilePath
 import           System.IO
+import qualified System.Timeout             as Timeout
 import           Text.Printf
+import           Text.EditDistance
 
 import           NanoML.Instantiate
 import           NanoML.Classify
@@ -50,55 +46,95 @@ data Fixes = Fixes
   , predictions :: FilePath
   , out         :: FilePath
   , clusters    :: Maybe String
+  , file        :: Maybe Int
   }
   deriving (Generic, Show)
 instance ParseRecord Fixes
 
 main :: IO ()
 main = do
-  Fixes {source=src, mode=md, predictions=preds, out=out, clusters=cls} <-
+  Fixes {source=src, mode=md, predictions=preds, out=out, clusters=cls, file=fl} <-
     getRecord "make-fixes"
   jsons <- lines <$> readFile src
   let cfile = fromMaybe "data/sp14_all/clusters/top_clusters.json" cls
   pred_files <- sort <$> listDirectory preds
-  raw_preds <- mapM LBSC.readFile pred_files
+  raw_preds <- mapM (\ff -> LBSC.readFile (preds </> ff)) pred_files
   let predf_ids = map takeBaseName pred_files
+  let all_preds = zipWith readPreds predf_ids raw_preds
+  ff <- lines <$> readFile cfile
+  let top_cls = map readJSONLFile ff
   case md of
     "tiny"
       -> do
-        bd <- readFile "data/bad.ml"
-        fx <- readFile "data/fix.ml"
-        mkFixes' False preds_tis bd fx
+        let input = if isNothing fl then Just 42 else fl
+        let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds
+        res <- timeout 5 $ mkFixes out top_cls all_preds' jsons
+        print res
     "synthesis"
       -> do
-        ff <- lines <$> readFile cfile
-        let top_cls = map readJSONLFile ff
-        mkFixes True out preds top_cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) (zip predf_ids raw_preds) jsons
+        res <- mkFixes out top_cls all_preds jsons
+        print res
+    "timed-synth"
+      -> do
+        res <- forM all_preds $ \pr -> timeout 10 $ mkFixes out top_cls [pr] jsons
+        let pur = catMaybes res
+        print $ genericLength pur * 100 / genericLength res
+        print $ sum (map fst pur) / genericLength pur
+        print $ sum (map snd pur) / genericLength pur
     _ -> errorWithoutStackTrace "main failed: No such parameter for --mode"
 
 
-data WithSlice = JustSlice | All deriving Eq
-
-mkFixes :: Bool -> String -> String -> [(ExprGeneric, [Type])] -> [Feature] -> [(String, LBSC.ByteString)] -> [String] -> IO ()
-mkFixes forTestSet out nm top_cls fs all_preds jsons = do
-  let preds = map readPreds all_preds
+mkFixes :: String -> [(ExprGeneric, [Type])] -> [(Int, [Preds])] -> [String] -> IO (Double, Double)
+mkFixes out top_cls all_preds jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ (ss, bad, fix, badStr, fixStr, pds, idx)
               | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
-              , (idx', pds) <- preds
+              , (idx', pds) <- all_preds
               , idx == idx'
               ]
-  forM_ feats $ \ f@(ss, bad, fix, badStr, fixStr, pds, i) -> do
-    let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
+  xx <- forM feats $ \ f@(ss, bad, fix, badStr, fixStr, pds, i) -> do
+    print i
+    -- print $ typeCheck bad
+    -- print $ typeCheck fix
+    let ss_expr   = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
+    let all_exprs = concatMap allSubExprs $ progExprs bad
+    let alls      = mapMaybe (\e -> getSrcSpanExprMaybe e >>= \ss' -> Just (ss', e)) all_exprs
 
+    let goods      = filter (\pd -> getCorrectTmpl pd > 0) pds
+    let old_parts  = map (\pd -> snd $ fromJust $ find (\(ss'', e) -> getPredSrcSpan pd == show ss'') alls) goods
+    let templates  = map (\pd -> fst (top_cls !! (getCorrectTmpl pd - 1))) goods
+    let results    = nubOrd $ allCombos $ map (\(tmpl, bd) -> synthesize bad bd tmpl) $ zip templates old_parts
+    let pretty_bad = render (prettyProg bad)
+    let edit_dist  = levenshteinDistance defaultEditCosts pretty_bad . render . prettyProg
+    let replaced   = take 3 $ sortOn edit_dist $ filter typeCheck $ map (foldl replaceSSWithExpr bad) results
+
+    let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
+    -- let ree = map show $ take 3 $ filter (typeCheck . foldl replaceSSWithExpr bad) results
+    -- forM_ results $ \r -> do
+    --   print $ typeCheck r
+    let reps = replaced
+    -- print $ null goods || not (null replaced)
+
+    let brk  = "\n\n(* -------------------------------------- *)\n"
+    let printable = map (\p -> render (prettyProg p) ++ brk) replaced
+    -- let printable = map (\p -> render (prettyProg p) ++ brk) results
     let fn   = printf "%04d" (i :: Int)
     let path = out </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
-    writeFile path $ unlines $ [ badStr ]
+    writeFile path $ unlines $ printable
                             ++ [ "", "(* bad", badStr, "*)" ]
                             ++ [ "", "(* student fix", fixStr, "*)" ]
-                            ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+                            ++ [ "", "(* changed spans", "" ] ++ ss_expr ++ [ "*)" ]
+                            -- ++ [ "", "(* changed exprs", "" ] ++ ree ++ [ "*)" ]
+                            -- ++ [ "", "(* variables in scope for changed spans", "" ] ++ vscopes ++ [ "*)" ]
                             -- ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+    return (null goods || not (null replaced), elem (map exprKind $ concatMap allSubExprs $ progExprs fix) $ map (map exprKind . concatMap allSubExprs . progExprs) replaced)
+  return (genericLength (filter fst xx) * 100.0 / genericLength xx, genericLength (filter snd xx) * 100.0 / genericLength xx)
+
+
+-- | Like 'Timeout.timeout', but in seconds.
+timeout :: Int -> IO a -> IO (Maybe a)
+timeout sec = Timeout.timeout (sec * 10^6)
 
 
 -- George
@@ -107,56 +143,6 @@ getEgMtype (ss, e, eg) alls tes
   | eg == EmptyG      = return (TVar "tEMPTY")
   | ss `notElem` alls = return (TVar "tNewPart")
   | otherwise         = generaliseT . getType <$> find (\te -> return (getTSrcSpan te) == getSrcSpanExprMaybe e) tes
-
--- George
-mkFixes' :: Bool -> [Feature] -> String -> String -> IO ()
-mkFixes' forTestSet fs badStr' fixStr' = do
-  let uniqs = mkDiffsString badStr' fixStr'
-  let feats = [ ((h, f, f'), (ss', bad, fix, badStr, fixStr, c, all, idx))
-              | (ss', bad, fix, badStr, fixStr, idx) <- uniqs
-              , let ss = map fst3 ss'
-              , (h, f, c) <- maybeToList $ runTFeaturesDiff fs (ss, bad)
-              , let f' = filter (\r -> r HashMap.! "F-InSlice" == "1.0") f -- Remove this for all spans
-              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
-                                    (concatMap allSubExprs $ progExprs bad)
-              ]
-
-  forM_ feats $ \ f@((header, all_fs, features), (ss, bad, fix, badStr, fixStr, cs, allspans, i)) -> do
-    let ss' = map fst3 ss
-    if
-      | null ss' -> do
-        putStrLn "NO DIFF"
-        -- putStrLn badStr
-        -- putStrLn "---------------------------"
-        -- putStrLn fixStr
-      | null (getAllTypedExprs fix) -> do
-        putStrLn $ "CAN'T TYPE-CHECK THE FIXED PROGRAM " ++ show i
-        -- putStrLn fixStr
-      | otherwise -> do
-        let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show td ++ "\n") ss
-        let typed_es = nub $ getAllTypedExprs fix
-        let fixed_ss = mapMaybe (\(ss', e, eg) -> if eg == EmptyG then Nothing else getSrcSpanExprMaybe e) ss
-        let typed_ss = mapMaybe (\ss' -> find (\te -> getTSrcSpan te == ss') typed_es) fixed_ss
-        let fn       = printf "%04d" (i :: Int)
-        let fixed_ss_bad = mapMaybe (\(ss', e, eg) -> if eg == EmptyG then Nothing else Just ss') ss
-        let typed_es_bad = nub $ getAllTypedExprs $ replaceAll bad fixed_ss_bad
-        let typed_ss_bad = mapMaybe (\ss' -> find (\te -> getTSrcSpan te == ss') typed_es_bad) fixed_ss_bad
-        -- let typed_ss_bad = mapMaybe (\ss' -> find (\te -> getTSrcSpan te == ss') (nub $ getAllTypedExprs $ replaceSSWithExpr bad (mkTHole ss' 1))) fixed_ss_bad
-        let path = "data" </> fn <.> "ml"
-        writeFile path $ unlines $ [ badStr, "", "(* fix", fixStr, "*)"]
-                                ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
-                                -- ++ [ "", "(* changed spans" ] ++ map show (concatMap allSubExprs $ progExprs fix) ++ [ "*)" ]
-                                ++ [ "", "(* typed spans" ] ++ map show fixed_ss ++ [ "*)" ]
-                                ++ [ "", "(* correct types" ] ++ map (render . pretty . generaliseT . getType) typed_ss ++ [ "*)" ]
-                                ++ [ "", "(* correct types" ] ++ map (show . generaliseT . getType) typed_ss ++ [ "*)" ]
-                                ++ [ "", "(* bad types" ] ++ map (render . pretty . generaliseT . getType) typed_ss_bad ++ [ "*)" ]
-                                ++ [ "", "(* bad types" ] ++ map (show . generaliseT . getType) typed_ss_bad ++ [ "*)" ]
-                                ++ [ "", "(* isSubType" ] ++ map show (zipWith isSubType (map (generaliseT . getType) typed_ss) (map (generaliseTreverse . getType) typed_ss_bad)) ++ [ "*)" ]
-                                -- ++ [ "", "(* Diff" ] ++ map show (filter (\case
-                                --                                             Diff.Both _ _ -> False
-                                --                                             _ -> True) (Diff.getDiffBy (\e1 e2 -> exprKind e1 == exprKind e2) (concatMap allSubExprs $ progExprs bad) (concatMap allSubExprs $ progExprs fix))) ++ [ "*)" ]
-        unless (length typed_ss == length typed_ss_bad) (putStrLn $ "i = " ++ show i)
-        putStrLn "Finished!"
 
 
 readJSONLFile :: String -> (ExprGeneric, [Type])
@@ -174,8 +160,14 @@ mkClsWithTs (eg, ts) = MkClsWithTs eg ts
 
 type Preds = (String, Int, Int, Int, Int, Int, Int)
 
-readPreds :: (String, LBSC.ByteString) -> (Int, [Preds])
-readPreds (idx, predf) =
+getPredSrcSpan :: Preds -> String
+getPredSrcSpan (ss, _, _, _, _, _, _) = ss
+
+getCorrectTmpl :: Preds -> Int
+getCorrectTmpl (_, _, _, _, _, _, i) = i
+
+readPreds :: String -> LBSC.ByteString -> (Int, [Preds])
+readPreds idx predf =
   case decode HasHeader predf :: Either String (V.Vector Preds) of
     Left e -> errorWithoutStackTrace ("readPreds: " ++ e)
     Right v -> (read idx :: Int, V.toList v)
@@ -222,85 +214,6 @@ mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 x
     fix' = diffProg fix bad
     bs = progExprs bad'
     fs = progExprs fix'
-
-
--- George
-pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
-pruneTrs maxd = map pruneOneTr
-  where
-    pruneOneTr (ss, e1, e2) =
-      if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
-      where
-        depth = sizeOfTree e2 0
-        ne2   = cutSubTrs e2 maxd
-        cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
-        cutSubTrs e 0 = EmptyG
-        cutSubTrs e d = case e of
-          EmptyG        -> EmptyG
-          VarG          -> VarG
-          LamG p e'     -> LamG (cutSubPs p (max 1 d)) (cutSubTrs e' (d - 1))
-          AppG es       -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
-          BopG e1 e2    -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          UopG e'       -> UopG (cutSubTrs e' (d - 1))
-          LitG          -> LitG
-          LetG r pes e' -> LetG r (Set.map (\(p, e'') -> (cutSubPs p (max 1 d), cutSubTrs e'' (d - 1))) pes) (cutSubTrs e' (d - 1))
-          IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
-          SeqG e1 e2    -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG as      -> CaseG (Set.map (\(p, me, e'')
-                            -> (cutSubPs p (max 1 d), me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
-          TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
-          ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          -- _             -> error ("pruneTrs failed: no such expression " ++ show e)
-
-        cutSubPs :: PatGeneric -> Int -> PatGeneric
-        cutSubPs e 0 = EmptyPatG
-        cutSubPs e d = case e of
-          EmptyPatG        -> EmptyPatG
-          VarPatG          -> VarPatG
-          LitPatG          -> LitPatG
-          IntervalPatG     -> IntervalPatG
-          ConsPatG p1 p2   -> ConsPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
-          ConPatG Nothing  -> ConPatG Nothing
-          ConPatG (Just p) -> ConPatG (Just $ cutSubPs p (d - 1))
-          ListPatG ps      -> ListPatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
-          TuplePatG ps     -> TuplePatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
-          WildPatG         -> WildPatG
-          OrPatG p1 p2     -> OrPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
-          AsPatG p         -> AsPatG (cutSubPs p (d - 1))
-          ConstrPatG p t   -> ConstrPatG (cutSubPs p (d - 1)) t
-
--- George
-replaceSSWithExpr :: Prog -> Expr -> Prog
-replaceSSWithExpr prog expr = map (go expr) prog
-  where
-    go e p = case p of
-      DFun ss' rc pes -> DFun ss' rc (map (\(pt, ex) -> (pt, replaceExpr e ex)) pes)
-      DEvl ss' ee     -> DEvl ss' (replaceExpr ee e)
-      _               -> p
-
-    replaceExpr e' ex =
-      if getSrcSpanExprMaybe ex == getSrcSpanExprMaybe e'
-        then e'
-        else case ex of
-            Lam ms x y e      -> Lam ms x (replaceExpr e' y) e
-            App ms x y        -> App ms (replaceExpr e' x) (map (replaceExpr e') y)
-            Bop ms x y z      -> Bop ms x (replaceExpr e' y) (replaceExpr e' z)
-            Uop ms x y        -> Uop ms x (replaceExpr e' y)
-            Let ms x y z      -> Let ms x (map (second (replaceExpr e')) y) (replaceExpr e' z)
-            Ite ms x y z      -> Ite ms (replaceExpr e' x) (replaceExpr e' y) (replaceExpr e' z)
-            Seq ms x y        -> Seq ms (replaceExpr e' x) (replaceExpr e' y)
-            Case ms x y       -> Case ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
-            Tuple ms x        -> Tuple ms (map (replaceExpr e') x)
-            ConApp ms x y mt  -> ConApp ms x (fmap (replaceExpr e') y) mt
-            Record ms x mt    -> Record ms (map (second (replaceExpr e')) x) mt
-            Field ms x y      -> Field ms (replaceExpr e' x) y
-            SetField ms x y z -> SetField ms (replaceExpr e' x) y (replaceExpr e' z)
-            Array ms x mt     -> Array ms (map (replaceExpr e') x) mt
-            List ms x mt      -> List ms (map (replaceExpr e') x) mt
-            Try ms x y        -> Try ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
-            TypedHole ms x    -> TypedHole ms x
-            _                 -> ex
 
 -- George
 replaceAll :: Prog -> [SrcSpan] -> Prog

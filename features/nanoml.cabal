@@ -69,6 +69,7 @@ executable make-fixes
                , optparse-generic
                , unordered-containers
                , vector
+               , edit-distance
 
 executable nanoml-server
   main-is: Main.hs

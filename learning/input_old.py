@@ -26,11 +26,11 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
     feature_names = [c for c in df.columns if c[0] == 'F']
 
     if filter_no_labels:
-        # print df.shape
+        # print(df.shape)
         # filter out vectors with no predictions
         criteria = (df[l] == 1.0 for l in label_names)
         df = df[reduce(lambda x, acc: x | acc, criteria)]
-        # print df.shape
+        # print(df.shape)
 
     if only_slice:
         if len(df[df['L-DidChange'] == 1]) == 0:
@@ -41,15 +41,15 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
             df = None
             return (df, feature_names, label_names)
         if len(df[df['L-DidChange'] == 1]) == 0:
-            print path
+            print(path)
             df = None
 
     # if balance_labels:
-    #     print df.shape
+    #     print(df.shape)
     #     classes = df.groupby(label_names)
     #     max_samples = max(len(c) for _, c in classes)
-    #     print max_samples
+    #     print(max_samples)
     #     df = pd.concat(c.sample(max_samples, replace=True) for _, c in classes)
-    #     print df.shape
+    #     print(df.shape)
 
     return (df, feature_names, label_names)

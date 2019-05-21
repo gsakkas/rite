@@ -328,17 +328,20 @@ mkClusters forTestSet out nm known_cls fs jsons = do
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs bad)
               ]
-  let feats'      = filter (\(_, (ss,_,fix,_,_,cs,_,_)) -> not (null (getAllTypedExprs fix)) && not (null (map fst3 ss `intersect` cs))) feats
-  let mkMean f xs = sum (map f xs) / genericLength xs
-  let mkFrac (_, (ss, _, _, _, _, _, all, _)) = genericLength ss / genericLength all
-  let mean = mkMean mkFrac feats' :: Double
-  let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
+  -- let feats'      = filter (\(_, (ss,_,fix,_,_,cs,_,_)) -> not (null (getAllTypedExprs fix)) && not (null (map fst3 ss `intersect` cs))) feats
+  -- let mkMean f xs = sum (map f xs) / genericLength xs
+  -- let mkFrac (_, (ss, _, _, _, _, _, all, _)) = genericLength ss / genericLength all
+  -- let mean = mkMean mkFrac feats' :: Double
+  -- let std  = sqrt $ mkMean (\x -> (mkFrac x - mean) ^ 2) feats'
   usefulls <- forM feats $ \ f@((_, _), (ss, _, fix, badStr, fixStr, cs, _, i)) -> do
     let ss' = map fst3 ss
     if
-      | mkFrac f > mean + 2 * std -> do
-        printf (show i ++ ". OUTLIER: %.2f > %.2f\n") (mkFrac f :: Double) (mean + 2 * std)
+      | length ss' > 3 -> do
+        putStrLn (show i ++ ". TOO MANY CHANGES")
         return mempty
+      -- | mkFrac f > mean + 2 * std -> do
+      --   printf (show i ++ ". OUTLIER: %.2f > %.2f\n") (mkFrac f :: Double) (mean + 2 * std)
+      --   return mempty
       | null ss' -> do
         putStrLn (show i ++ ". NO DIFF")
         -- putStrLn badStr
@@ -419,7 +422,7 @@ mkClusters forTestSet out nm known_cls fs jsons = do
     writeFile path $ unlines $ nub string_tcls
   let clu_path = out </> "clusters" </> "top_clusters" <.> "json"
   LBSC.writeFile clu_path $ LBSC.unlines $ map (Aeson.encode . mkClsWithTs) top_cls
-  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+  -- printf "MEAN / STD frac: %.3f / %.3f\n" mean std
   print $ length ss_fixes
   print $ length clusters
   let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map (length . snd) cls
@@ -509,7 +512,7 @@ mkClsWithTs (eg, ts) = MkClsWithTs eg ts
 
 
 makeClusters :: [ExprGeneric] -> [ExprGeneric]
-makeClusters = Set.toList . Set.fromList
+makeClusters es = {- Set.toList . Set.fromList -} nub $ sortOn (`sizeOfTree` 0) es
 
 
 mkFixFeatures :: String -> [Feature] -> [String] -> IO ()
@@ -524,7 +527,7 @@ traceStats :: [[NamedRecord]] -> IO ()
 traceStats outss = do
   let fracs = [ fromIntegral (length (filter (\out -> out HashMap.! "L-DidChange" == "1.0") outs)) / fromIntegral (length outs)
               | outs <- outss
-              , length outs > 0
+              , not (null outs)
               ] :: [Double]
   hPrintf stderr "%s\n" (show fracs)
   hPrintf stderr "Min: %f\n" (minimum fracs)
@@ -646,84 +649,6 @@ mkDiffWithGenericTrs bad fix = assert (not (null x)) $ pruneTrs 2 x
     bs = progExprs bad'
     fs = progExprs fix'
 
-
--- George
-pruneTrs :: Int -> [(SrcSpan, Expr, ExprGeneric)] -> [(SrcSpan, Expr, ExprGeneric)]
-pruneTrs maxd = map pruneOneTr
-  where
-    pruneOneTr (ss, e1, e2) =
-      if depth <= maxd then (ss, e1, e2) else (ss, e1, ne2)
-      where
-        depth = sizeOfTree e2 0
-        ne2   = cutSubTrs e2 maxd
-        cutSubTrs :: ExprGeneric -> Int -> ExprGeneric
-        cutSubTrs e 0 = EmptyG
-        cutSubTrs e d = case e of
-          EmptyG        -> EmptyG
-          VarG          -> VarG
-          LamG p e'     -> LamG (cutSubPs p (max 1 d)) (cutSubTrs e' (d - 1))
-          AppG es       -> AppG (Set.map (\e'' -> cutSubTrs e'' (d - 1)) es)
-          BopG e1 e2    -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          UopG e'       -> UopG (cutSubTrs e' (d - 1))
-          LitG          -> LitG
-          LetG r pes e' -> LetG r (Set.map (\(p, e'') -> (cutSubPs p (max 1 d), cutSubTrs e'' (d - 1))) pes) (cutSubTrs e' (d - 1))
-          IteG e1 e2 e3 -> IteG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1)) (cutSubTrs e3  (d - 1))
-          SeqG e1 e2    -> SeqG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
-          CaseG as      -> CaseG (Set.map (\(p, me, e'')
-                            -> (cutSubPs p (max 1 d), me >>= (\ e'' -> Just (cutSubTrs e'' (d - 1))), cutSubTrs e'' (d - 1))) as)
-          TupleG es     -> TupleG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          ConAppG me    -> ConAppG (me >>= (\e' -> Just (cutSubTrs e' (d - 1))))
-          ListG es      -> ListG (Set.map (\e' -> cutSubTrs e' (d - 1)) es)
-          -- _             -> error ("pruneTrs failed: no such expression " ++ show e)
-
-        cutSubPs :: PatGeneric -> Int -> PatGeneric
-        cutSubPs e 0 = EmptyPatG
-        cutSubPs e d = case e of
-          EmptyPatG        -> EmptyPatG
-          VarPatG          -> VarPatG
-          LitPatG          -> LitPatG
-          IntervalPatG     -> IntervalPatG
-          ConsPatG p1 p2   -> ConsPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
-          ConPatG Nothing  -> ConPatG Nothing
-          ConPatG (Just p) -> ConPatG (Just $ cutSubPs p (d - 1))
-          ListPatG ps      -> ListPatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
-          TuplePatG ps     -> TuplePatG (Set.map (\p' -> cutSubPs p' (d - 1)) ps)
-          WildPatG         -> WildPatG
-          OrPatG p1 p2     -> OrPatG (cutSubPs p1 (d - 1)) (cutSubPs p2 (d - 1))
-          AsPatG p         -> AsPatG (cutSubPs p (d - 1))
-          ConstrPatG p t   -> ConstrPatG (cutSubPs p (d - 1)) t
-
--- George
-replaceSSWithExpr :: Prog -> Expr -> Prog
-replaceSSWithExpr prog expr = map (go expr) prog
-  where
-    go e p = case p of
-      DFun ss' rc pes -> DFun ss' rc (map (\(pt, ex) -> (pt, replaceExpr e ex)) pes)
-      DEvl ss' ee     -> DEvl ss' (replaceExpr ee e)
-      _               -> p
-
-    replaceExpr e' ex =
-      if getSrcSpanExprMaybe ex == getSrcSpanExprMaybe e'
-        then e'
-        else case ex of
-            Lam ms x y e      -> Lam ms x (replaceExpr e' y) e
-            App ms x y        -> App ms (replaceExpr e' x) (map (replaceExpr e') y)
-            Bop ms x y z      -> Bop ms x (replaceExpr e' y) (replaceExpr e' z)
-            Uop ms x y        -> Uop ms x (replaceExpr e' y)
-            Let ms x y z      -> Let ms x (map (second (replaceExpr e')) y) (replaceExpr e' z)
-            Ite ms x y z      -> Ite ms (replaceExpr e' x) (replaceExpr e' y) (replaceExpr e' z)
-            Seq ms x y        -> Seq ms (replaceExpr e' x) (replaceExpr e' y)
-            Case ms x y       -> Case ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
-            Tuple ms x        -> Tuple ms (map (replaceExpr e') x)
-            ConApp ms x y mt  -> ConApp ms x (fmap (replaceExpr e') y) mt
-            Record ms x mt    -> Record ms (map (second (replaceExpr e')) x) mt
-            Field ms x y      -> Field ms (replaceExpr e' x) y
-            SetField ms x y z -> SetField ms (replaceExpr e' x) y (replaceExpr e' z)
-            Array ms x mt     -> Array ms (map (replaceExpr e') x) mt
-            List ms x mt      -> List ms (map (replaceExpr e') x) mt
-            Try ms x y        -> Try ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
-            TypedHole ms x    -> TypedHole ms x
-            _                 -> ex
 
 -- George
 replaceAll :: Prog -> [SrcSpan] -> Prog

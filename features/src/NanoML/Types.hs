@@ -775,8 +775,8 @@ isValue' expr = case expr of
   PrimN {} -> True
   _ -> False
 
-isVar (Var {}) = True
-isVar _        = False
+isVar Var {} = True
+isVar _      = False
 
 pattern VI ms x <- Lit ms (LI x) where
   VI ms x = Lit ms (LI x)
@@ -833,6 +833,7 @@ data Literal
   | LB Bool
   | LC Char
   | LS String
+  | LL String
   deriving (Show, Data, Generic, Eq, Ord)
 
 instance ToJSON Literal where
@@ -869,15 +870,15 @@ instance NFData SrcSpan
 
 instance Show SrcSpan where
   show SrcSpan {..} = printf "(%d,%d)-(%d,%d)"
-                             srcSpanStartLine (srcSpanStartCol + 1)
-                             srcSpanEndLine   (srcSpanEndCol + 1)
+                             srcSpanStartLine (srcSpanStartCol + 1) -- George: +1 to match IDE :P
+                             srcSpanEndLine   (srcSpanEndCol + 1) -- George
 
 instance Read SrcSpan where
   readPrec = do
     (l1, c1) <- Read.readPrec :: Read.ReadPrec (Int,Int)
     Read.lift (Read.char '-')
     (l2, c2) <- Read.readPrec :: Read.ReadPrec (Int,Int)
-    return $! SrcSpan l1 c1 l2 c2
+    return $! SrcSpan l1 (c1 - 1) l2 (c2 - 1)
 
 instance ToJSON SrcSpan where
   toJSON = toJSON . show
@@ -969,6 +970,7 @@ data Expr
   | Hole !MSrcSpan !Ref (Maybe Type)
   | Ref !Ref
   | TypedHole !MSrcSpan !Var
+  | TypedVar !MSrcSpan !Var
   deriving (Show, Generic, Eq, Ord)
 instance Hashable Expr
 
@@ -1014,10 +1016,31 @@ data ExprGeneric
   | ConAppG !(Maybe ExprGeneric)
   | ListG !(Set ExprGeneric)
   | EmptyG -- Just an empty expr for easier pruning
-  deriving (Show, Generic, Eq, Ord)
+  deriving (Show, Generic, Ord)
 
 instance ToJSON ExprGeneric
 instance FromJSON ExprGeneric
+
+instance Eq ExprGeneric where
+  VarG            == VarG            = True
+  LamG p1 e1      == LamG p2 e2      = p1 == p2 && e1 == e2
+  AppG se1        == AppG se2        = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
+  BopG el1 er1    == BopG el2 er2    = el1 == el2 && er1 == er2
+  UopG e1         == UopG e2         = e1 == e2
+  LitG            == LitG            = True
+  LetG r1 spe1 e1 == LetG r2 spe2 e2 = r1 == r2 && (spe1 `Set.isSubsetOf` spe2 || spe2 `Set.isSubsetOf` spe1) && e1 == e2
+  IteG c1 et1 ef1 == IteG c2 et2 ef2 = c1 == c2 && et1 == et2 && ef1 == ef2
+  SeqG ef1 es1    == SeqG ef2 es2    = ef1 == ef2 && es1 == es2
+  CaseG spmee1    == CaseG spmee2    = spmee1 `Set.isSubsetOf` spmee2 || spmee2 `Set.isSubsetOf` spmee1
+  TupleG se1      == TupleG se2      = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
+  ConAppG me1     == ConAppG me2     = me1 == me2
+  ListG se1       == ListG se2       = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
+  EmptyG          == expr            = True
+  expr            == EmptyG          = True
+  expr1           == expr2           = False
+
+delE = Set.delete EmptyG
+subOf = Set.isSubsetOf
 
 data Context
   = Here | Elsewhere
@@ -1134,6 +1157,7 @@ getSrcSpanExprMaybe expr = case expr of
   Hole ms _ _ -> ms
   Ref _ -> Nothing
   TypedHole ms _ -> ms
+  TypedVar ms _ -> ms
 
 onSrcSpanExpr :: (MSrcSpan -> MSrcSpan) -> Expr -> Expr
 onSrcSpanExpr f expr = case expr of
@@ -1165,6 +1189,7 @@ onSrcSpanExpr f expr = case expr of
   Hole ms x y -> Hole (f ms) x y
   Ref r -> Ref r
   TypedHole ms x -> TypedHole (f ms) x
+  TypedVar ms x -> TypedVar (f ms) x
 
 mapExpr :: (Expr -> Expr) -> Expr -> Expr
 mapExpr f expr = case expr of
@@ -1196,6 +1221,40 @@ mapExpr f expr = case expr of
   Hole ms x y -> Hole ms x y
   Ref r -> Ref r
   TypedHole ms x -> TypedHole ms x
+  TypedVar ms x -> TypedVar ms x
+
+
+replaceSSWithExpr :: Prog -> Expr -> Prog
+replaceSSWithExpr prog expr = map (go expr) prog
+  where
+    go e p = case p of
+      DFun ss' rc pes -> DFun ss' rc (map (\(pt, ex) -> (pt, replaceExpr e ex)) pes)
+      DEvl ss' ee     -> DEvl ss' (replaceExpr ee e)
+      _               -> p
+
+    replaceExpr e' ex =
+      if getSrcSpanExprMaybe ex == getSrcSpanExprMaybe e'
+        then e'
+        else case ex of
+            Lam ms x y e      -> Lam ms x (replaceExpr e' y) e
+            App ms x y        -> App ms (replaceExpr e' x) (map (replaceExpr e') y)
+            Bop ms x y z      -> Bop ms x (replaceExpr e' y) (replaceExpr e' z)
+            Uop ms x y        -> Uop ms x (replaceExpr e' y)
+            Let ms x y z      -> Let ms x (map (second (replaceExpr e')) y) (replaceExpr e' z)
+            Ite ms x y z      -> Ite ms (replaceExpr e' x) (replaceExpr e' y) (replaceExpr e' z)
+            Seq ms x y        -> Seq ms (replaceExpr e' x) (replaceExpr e' y)
+            Case ms x y       -> Case ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
+            Tuple ms x        -> Tuple ms (map (replaceExpr e') x)
+            ConApp ms x y mt  -> ConApp ms x (fmap (replaceExpr e') y) mt
+            Record ms x mt    -> Record ms (map (second (replaceExpr e')) x) mt
+            Field ms x y      -> Field ms (replaceExpr e' x) y
+            SetField ms x y z -> SetField ms (replaceExpr e' x) y (replaceExpr e' z)
+            Array ms x mt     -> Array ms (map (replaceExpr e') x) mt
+            List ms x mt      -> List ms (map (replaceExpr e') x) mt
+            Try ms x y        -> Try ms (replaceExpr e' x) (map (\(p,g,e) -> (p, fmap (replaceExpr e') g, replaceExpr e' e)) y)
+            TypedHole ms x    -> TypedHole ms x
+            TypedVar ms x     -> TypedVar ms x
+            _                 -> ex
 
 freeVars :: Expr -> Env -> [(Var,Value)]
 freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
@@ -1205,17 +1264,17 @@ freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
       -- ignore primitives when displaying environment
       maybe [] -- (error $ "freeVars unknown: " ++ x)
             (\v -> [(x,v)])
-            (lookup x $ concat $ map envEnv $ toListEnv $ noBaseEnv env)
+            (lookup x $ concatMap envEnv $ toListEnv $ noBaseEnv env)
     Lam _ p e menv -> filter (`notBound` bindersOf p) $ freeVars e (fromMaybe env menv)
     App _ x y -> go x ++ concatMap go y
     Bop _ _ x y -> go x ++ go y
     Uop _ _ x -> go x
     Let _ Rec b e -> filter (`notBound` bindersOfBinds b) $ concatMap go (e : map snd b)
-    Let _ NonRec b e -> concatMap go (map snd b)
+    Let _ NonRec b e -> concatMap (go . snd) b
                      ++ filter (`notBound` bindersOfBinds b) (go e)
     Ite _ x y z -> go x ++ go y ++ go z
     Seq _ x y -> go x ++ go y
-    Case _ e alts -> go e ++ concatMap (flip freeVarsAlts env) alts
+    Case _ e alts -> go e ++ concatMap (`freeVarsAlts` env) alts
     Tuple _ xs -> concatMap go xs
     ConApp _ _ (Just x) _ -> go x
     Record _ xs _ -> concatMap (go.snd) xs
@@ -1223,14 +1282,14 @@ freeVars x env = {- traceShow ("freeVars", x, env) $ -} go x
     SetField _ x _ v -> go x ++ go v
     Array _ xs _ -> concatMap go xs
     List _ xs _ -> concatMap go xs
-    Try _ e alts -> go e ++ concatMap (flip freeVarsAlts env) alts
+    Try _ e alts -> go e ++ concatMap (`freeVarsAlts` env) alts
     With _ e x -> freeVars x e
     Replace _ e x -> freeVars x e
     _ -> []
 
 freeVarsAlts :: Alt -> Env -> [(Var,Value)]
 freeVarsAlts (p,g,e) env =
-  let gvs = maybe [] (flip freeVars env) g
+  let gvs = maybe [] (`freeVars` env) g
       evs = freeVars e env
   in filter (`notBound` bindersOf p) (gvs ++ evs)
 
@@ -1292,6 +1351,7 @@ data Bop
   | And | Or
   | Plus  | Minus  | Times  | Div  | Mod
   | FPlus | FMinus | FTimes | FDiv | FExp
+  | BB
   deriving (Show, Eq, Ord, Data, Generic, Enum)
 
 instance ToJSON Bop
@@ -1315,6 +1375,7 @@ data Pat
   | OrPat !MSrcSpan !Pat !Pat
   | AsPat !MSrcSpan !Pat !Var
   | ConstraintPat !MSrcSpan !Pat !Type
+  | TypedPat !MSrcSpan !Var
   deriving (Show, Data, Generic, Eq, Ord)
 
 instance Hashable Pat
@@ -1521,12 +1582,12 @@ unify' (xi :-> xo) (yi :-> yo)
   = unify' xi yi >> unify' xo yo
 unify' (TTup xs) (TTup ys)
   | length xs == length ys
-  = void $ zipWithM unify' xs ys
+  = zipWithM_ unify' xs ys
   | otherwise
   = typeError (TTup xs) (TTup ys)
 unify' x@(TApp xc xts) y@(TApp yc yts)
   | xc == yc
-  = void $ zipWithM unify' xts yts
+  = zipWithM_ unify' xts yts
   | otherwise
   = do xt <- lookupType xc
        yt <- lookupType yc
@@ -1801,7 +1862,7 @@ cmpVal (VL _ x _) (VL _ y _) = do
 cmpVal (VT _ x) (VT _ y)
   | length x == length y
   = cmpAnd <$> zipWithM cmpVal x y
-cmpVal (Lam {}) (Lam {}) = otherError "cannot compare functions"
+cmpVal Lam {} Lam {} = otherError "cannot compare functions"
 cmpVal x@(VA _ c1 v1 _) y@(VA _ c2 v2 _) = do
   dd1 <- lookupDataCon c2
   dd2 <- lookupDataCon c2
@@ -2118,7 +2179,7 @@ exprDiff env e1 e2 = case (e1, e2) of
   (Replace lx ex x, Replace ly ey y)
     | lx == ly && envId ex == envId ey
       -> exprDiff ex x y
-  (_, Replace _ _ _)
+  (_, Replace {})
     -> Just (env, e1, e2, Call)
   (Replace _ env' _, _)
     -> Just (env', e1, e2, Return)
@@ -2147,4 +2208,4 @@ instance Hashable StepKind
 
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-concatMapM f xs = liftM concat (mapM f xs)
+concatMapM f xs = fmap concat (mapM f xs)

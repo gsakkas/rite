@@ -1,9 +1,9 @@
-flags: {}
-extra-package-dbs: []
+resolver: lts-13.19
 packages:
-- '.'
+- ./features
 extra-deps:
 - dotgen-0.4.2
 - fgl-visualize-0.1.0.1
-# - grenade-0.1.0
-resolver: lts-13.17
+flags: {}
+extra-package-dbs: []
+# compiler-check: newer-minor

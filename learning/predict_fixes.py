@@ -14,7 +14,7 @@ import input_old
 
 model = sys.argv[1]
 if model not in ['mlp', 'decision-tree', 'random-forest', 'uniform', 'stratified', 'load']:
-    print 'python predict_fixes.py [mlp|decision-tree|random-forest|uniform|stratified|load] <train> <test> <load-model>'
+    print('python predict_fixes.py [mlp|decision-tree|random-forest|uniform|stratified|load] <train> <test> <load-model>')
     sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
@@ -55,22 +55,22 @@ for csv in test_csvs:
     test.append(df2)
 
 train = pd.concat(train)
-print train.shape
+print(train.shape)
 test = pd.concat(test)
-print test.shape
+print(test.shape)
 
 # Maximum number of clusters in files
 max_num_cls = 50
 
 # Number of cluster-labels to use
 num_of_cls = 20
-print "Clusters =", num_of_cls
+print("Clusters =", num_of_cls)
 
 # The segment below is supposed to balance each class
 # by adding multiple random samples from the training datset
 classes = list(train.groupby(ls2))
 max_samples = max(len(c) for _, c in classes)
-num_of_samples = 2 * train.shape[0] / len(classes) if len(classes) * max_samples > 2 * train.shape[0] else max_samples
+num_of_samples = int(2 * train.shape[0] / len(classes)) if len(classes) * max_samples > 2 * train.shape[0] else max_samples
 train = pd.concat(c.sample(num_of_samples, replace=True) for _, c in classes)
 
 last_L = 'L-Cluster' + str(num_of_cls)
@@ -91,13 +91,13 @@ def categorize(labels):
 
 
 train_samps = train.loc[:, 'F-Expr-Size':]
-print train_samps.shape
+print(train_samps.shape)
 train_labels = train.loc[:, 'L-Cluster1':last_L]
 train_labels = categorize(train_labels)
 
 test_samps = test.loc[:, 'F-Expr-Size':]
 del test_samps['SOURCE_FILE']
-print test_samps.shape
+print(test_samps.shape)
 test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_labels = categorize(test_labels)
 test_span = test.loc[:, 'SourceSpan']
@@ -150,18 +150,18 @@ else:
 anses = clf.predict(test_samps.values)
 
 prob_score = clf.predict_proba(test_samps.values)
-# print len(prob_score)
-# print len(prob_score[0])
+# print(len(prob_score))
+# print(len(prob_score[0]))
 
 prob_error = []
 prob_error = [[1.0 - i for i in item] for item in prob_score]
 prob_error = [np.argsort(pe).tolist() for pe in prob_error]
-# print len(prob_error)
-# print len(prob_error[0])
+# print(len(prob_error))
+# print(len(prob_error[0]))
 
 pes_top5 = [pe[:5] for pe in prob_error]
 pes1, pes2, pes3, pes4, pes5 = map(list, zip(*pes_top5))
-ll = zip(test_span, pes1, pes2, pes3, pes4, pes5, test_labels.values)
+ll = list(zip(test_span, pes1, pes2, pes3, pes4, pes5, test_labels.values))
 
 score = pd.DataFrame(data=ll, index=test_labels.index, columns=['SourceSpan', 'P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'Actual'])
 
@@ -222,10 +222,10 @@ alls = [0] * num_of_cls
 for i, idx in enumerate(test_labels.values):
     real_tots += 1
     pes = prob_error[i]
-    # print pes
-    # print idx
+    # print(pes)
+    # print(idx)
     if pes[0] != anses[i]:
-        print 'NOT OK'
+        print('NOT OK')
 
     if pes[0] == idx or pes[1] == idx or pes[2] == idx or pes[3] == idx or pes[4] == idx:
         yay5_2 += 1
@@ -254,48 +254,48 @@ for i, idx in enumerate(test_labels.values):
             yay1 += 1
             yays1[idx - 1] += 1
 
-print "accuracy for top 5 per class (" + str(num_of_cls) + ")"
-print "top 1"
-print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)]
-print "top 2"
-print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)]
-print "top 3"
-print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)]
-print "top 5"
-print [float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)]
+print("accuracy for top 5 per class (" + str(num_of_cls) + ")")
+print("top 1")
+print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
+print("top 2")
+print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)])
+print("top 3")
+print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)])
+print("top 5")
+print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
 
-print "accuracy for top 5"
-print "top 1"
-print float(yay1) * 100 / tots
-print "top 2"
-print float(yay2) * 100 / tots
-print "top 3"
-print float(yay3) * 100 / tots
-print "top 5"
-print float(yay5) * 100 / tots
+print("accuracy for top 5")
+print("top 1")
+print(float(yay1) * 100 / tots)
+print("top 2")
+print(float(yay2) * 100 / tots)
+print("top 3")
+print(float(yay3) * 100 / tots)
+print("top 5")
+print(float(yay5) * 100 / tots)
 
-print "accuracy for top 5 (with unclassified)"
-print "top 1"
-print float(yay1_2) * 100 / real_tots
-print "top 2"
-print float(yay2_2) * 100 / real_tots
-print "top 3"
-print float(yay3_2) * 100 / real_tots
-print "top 5"
-print float(yay5_2) * 100 / real_tots
+print("accuracy for top 5 (with unclassified)")
+print("top 1")
+print(float(yay1_2) * 100 / real_tots)
+print("top 2")
+print(float(yay2_2) * 100 / real_tots)
+print("top 3")
+print(float(yay3_2) * 100 / real_tots)
+print("top 5")
+print(float(yay5_2) * 100 / real_tots)
 
-print "accuracy for top 5 (average acc. per program)"
-print "top 1"
-print float(c1) / all_programs
-print "top 3"
-print float(c3) / all_programs
-print "top 5"
-print float(c5) / all_programs
+print("accuracy for top 5 (average acc. per program)")
+print("top 1")
+print(float(c1) / all_programs)
+print("top 3")
+print(float(c3) / all_programs)
+print("top 5")
+print(float(c5) / all_programs)
 
-print "accuracy for top 5 (acc. per program)"
-print "top 1"
-print float(c1_whole) * 100 / all_programs
-print "top 3"
-print float(c3_whole) * 100 / all_programs
-print "top 5"
-print float(c5_whole) * 100 / all_programs
+print("accuracy for top 5 (acc. per program)")
+print("top 1")
+print(float(c1_whole) * 100 / all_programs)
+print("top 3")
+print(float(c3_whole) * 100 / all_programs)
+print("top 5")
+print(float(c5_whole) * 100 / all_programs)

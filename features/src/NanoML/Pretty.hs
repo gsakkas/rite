@@ -104,7 +104,8 @@ instance Pretty Literal where
     LC c -> pretty c
     LS s -> text $ show s
     LB b -> text (if b then "true" else "false")
---    LU   -> text "()"
+    LL s -> text $ show s
+    --    LU   -> text "()"
 
 annotateIf b a d
   | b         = annotate a $ noAnnotate d
@@ -354,7 +355,8 @@ instance Pretty Expr where
     Replace _ env e -> let ?env = env in inReplace (prettyPrec z e)
     Hole _ _r _ -> text "_"  -- NOTE: ignore the index
     Ref r -> text "<ref-" <> pretty r <> text ">"
-    TypedHole _ _ -> annotateRedexes $ parensIf (isInfix "_") $ text "_"
+    TypedHole _ v -> annotateRedexes $ parensIf (isInfix v) $ text v
+    TypedVar _ v -> annotateRedexes $ parensIf (isInfix v) $ text v
 
 instance Pretty Bop where
   pretty Eq = text "="
@@ -375,6 +377,7 @@ instance Pretty Bop where
   pretty FTimes = text "*."
   pretty FDiv = text "/."
   pretty FExp = text "exp"
+  pretty BB = text "(#)"
 
 instance Pretty Uop where
   pretty Neg = text "-"
@@ -409,6 +412,7 @@ instance Pretty Pat where
     OrPat _ p1 p2 -> pretty p1 <+> text "|" <+> pretty p2
     AsPat _ p v -> pretty p <+> text "as" <+> text v
     ConstraintPat _ p t -> parens $ pretty p <+> char ':' <+> pretty t
+    TypedPat _ v -> text v
 
 instance Pretty (Doc Annot) where
   prettyPrec _ = id
@@ -469,7 +473,7 @@ instance Pretty DataDecl where
     ts  -> text dCon <+> text "of" <+> hsep (intersperse (text "*") $ map pretty ts)
 
 prettyProg :: Prog -> Doc Annot
-prettyProg = vsep . map pretty
+prettyProg = vsep . map (\d -> pretty d <$> text "")
 
 instance Pretty TVar where
   pretty = text
