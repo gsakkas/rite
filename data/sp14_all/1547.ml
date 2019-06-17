@@ -25,7 +25,7 @@ let rec digitalRoot n =
 (* changed spans
 (5,66)-(5,67)
 digitsOfInt n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

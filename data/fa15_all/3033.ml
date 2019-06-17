@@ -40,15 +40,15 @@ let bigMul l1 l2 =
 (* changed spans
 (27,15)-(27,50)
 a @ [0]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 (28,14)-(28,21)
 []
-ListG (fromList [])
+ListG []
 
 (29,20)-(29,67)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

@@ -71,7 +71,7 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (26,53)-(26,75)
 [s + c] @ (s' @ [((x1 + x2) + c) mod 10])
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],AppG [EmptyG,EmptyG]]
 
 (27,17)-(27,20)
 0

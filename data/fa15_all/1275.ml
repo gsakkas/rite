@@ -19,7 +19,7 @@ let rec listReverse l =
 (* changed spans
 (6,19)-(6,45)
 listReverse tail @ [head]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

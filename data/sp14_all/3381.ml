@@ -23,7 +23,7 @@ let rec mulByDigit i l =
 (* changed spans
 (8,7)-(8,15)
 helper [] h
-AppG (fromList [VarG,ListG (fromList [])])
+AppG [ListG [],VarG]
 
 *)
 

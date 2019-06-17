@@ -61,15 +61,15 @@ let (a1 , a2) = a in
 if (x1 + x2) > 10
 then (1 , (((x1 + x2) + a1) - 10) :: a2)
 else (0 , ((x1 + x2) + a1) :: a2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (23,20)-(23,21)
 []
-ListG (fromList [])
+ListG []
 
 (24,16)-(24,56)
 List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

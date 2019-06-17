@@ -34,7 +34,7 @@ let rec exprToString e =
 (* changed spans
 (12,59)-(12,78)
 "sin" ^ exprToString ex
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG]]
 
 *)
 

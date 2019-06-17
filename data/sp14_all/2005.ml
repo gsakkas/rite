@@ -80,12 +80,12 @@ BopG VarG LitG
 
 (34,40)-(34,69)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 (34,69)-(34,69)
 bigAdd (mulByDigit (i - 1) l)
        [0]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],ListG [EmptyG]]
 
 *)
 

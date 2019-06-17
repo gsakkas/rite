@@ -71,7 +71,7 @@ VarG
 
 (25,36)-(25,42)
 [fst']
-ListG (fromList [VarG])
+ListG [VarG]
 
 (26,19)-(26,33)
 digits
@@ -79,7 +79,7 @@ VarG
 
 (26,36)-(26,42)
 [fst']
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

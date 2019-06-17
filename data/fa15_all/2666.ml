@@ -21,7 +21,7 @@ let fb = f b in
 if fb = b
 then (true , fb)
 else (false , fb)
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (IteG EmptyG EmptyG EmptyG)
 
 (5,50)-(5,60)
 helper

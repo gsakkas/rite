@@ -33,7 +33,7 @@ let rec additivePersistence n =
 (* changed spans
 (13,17)-(13,62)
 additivePersistence (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

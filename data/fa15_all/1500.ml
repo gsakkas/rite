@@ -70,16 +70,16 @@ let sum = fst x + snd x in
 match a with
 | [] -> (sum / 10) :: ((sum mod 10) :: a)
 | h :: t -> (sum / 10) :: ((h + (sum mod 10)) :: t)
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG)] (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 (31,16)-(31,52)
 List.combine (List.rev l1)
              (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 (32,5)-(32,52)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

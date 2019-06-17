@@ -23,7 +23,7 @@ let fixpoint (f,b) = let g b = (b, (f b)) in wwhile (g, b);;
 (8,3)-(8,63)
 let g = fun b -> (b , f b) in
 wwhile (g , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

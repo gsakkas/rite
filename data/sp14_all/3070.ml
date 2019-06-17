@@ -16,7 +16,7 @@ let rec listReverse l =
 (* changed spans
 (4,59)-(4,73)
 listReverse (cat l h)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

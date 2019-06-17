@@ -40,13 +40,11 @@ let s = sumList d in
 if (n / 10) <> 0
 then digitalRoot s
 else s
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 
 (* type error slice
-(5,8)-(5,63)
-(5,9)-(5,29)
 (10,4)-(15,16)
 (10,21)-(15,14)
 (11,3)-(15,14)

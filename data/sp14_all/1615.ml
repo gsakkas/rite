@@ -29,7 +29,7 @@ VarG
 
 (7,61)-(7,65)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (7,65)-(7,65)
 seen

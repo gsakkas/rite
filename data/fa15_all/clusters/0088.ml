@@ -1,5 +1,5 @@
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (AppG (fromList [EmptyG]))
-let comb =
-  eval (e1 , x , y) +. eval (e2 , x , y) in
-mod_float comb
-          (eval (e3 , x , y))
+IteG LitG (AppG [EmptyG]) (AppG [EmptyG])
+EMPTY
+if true
+then buildX ()
+else buildY ()

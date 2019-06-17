@@ -1,2 +1,3 @@
-ListG (fromList [TupleG (fromList [ListG (fromList [])])])
-[([] , [])]
+AppG [AppG [EmptyG],ListG []]
+listReverse t @ []
+helper [] (h * i) @ []

@@ -28,7 +28,7 @@ let removeDuplicates l =
 let seen' = seen in
 let rest' = t in
 helper (seen' , rest')
-LetG NonRec (fromList [(VarPatG,VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

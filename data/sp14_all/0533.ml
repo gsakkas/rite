@@ -89,11 +89,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (37,31)-(37,41)
 min 0.1 l'
-AppG (fromList [VarG,LitG])
+AppG [LitG,VarG]
 
 (37,45)-(37,65)
 log l /. log 10.0
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

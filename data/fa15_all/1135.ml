@@ -103,11 +103,11 @@ let bigMul l1 l2 =
 (37,19)-(37,66)
 intListToInt (mulByDigit (intListToInt l1)
                          [s])
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (42,14)-(42,43)
 List.combine l2 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

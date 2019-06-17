@@ -15,11 +15,11 @@ let fixpoint (f,b) = wwhile (let h x = ((f x), ((f x) != x)) in (h, b));;
 (* changed spans
 (4,41)-(4,42)
 f x
-AppG (fromList [VarG])
+AppG [VarG]
 
 (4,44)-(4,55)
 f x <> x
-BopG (AppG (fromList [EmptyG])) VarG
+BopG (AppG [EmptyG]) VarG
 
 *)
 

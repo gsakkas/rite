@@ -1,3 +1,5 @@
-CaseG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,AppG (fromList [EmptyG]))])
-match l with
-| x :: [] -> "[" ^ (x ^ "]")
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG)]
+match e with
+| VarX -> x
+| VarY -> y
+EMPTY

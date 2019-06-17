@@ -75,21 +75,21 @@ let rec build (rand,depth) =
 (* changed spans
 (28,25)-(28,46)
 (build (rand , depth) , build (rand , depth))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG]]
 
 (29,23)-(29,44)
 (build (rand , depth) , build (rand , depth))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG]]
 
 (30,24)-(30,45)
 (build (rand , depth) , build (rand , depth) , build (rand , depth) , build (rand , depth))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG],AppG [EmptyG],AppG [EmptyG]]
 
 (30,45)-(30,45)
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 *)
 

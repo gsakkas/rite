@@ -41,7 +41,7 @@ if sumList (digitsOfInt n) < 9
 then (1 :: x;
 additivePersistence (sumList (digitsOfInt n)))
 else sumList x
-IteG (BopG EmptyG EmptyG) (SeqG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (SeqG EmptyG EmptyG) (AppG [EmptyG])
 
 *)
 
@@ -54,7 +54,6 @@ IteG (BopG EmptyG EmptyG) (SeqG EmptyG EmptyG) (AppG (fromList [EmptyG]))
 (13,3)-(15,14)
 (13,3)-(16,12)
 (14,8)-(14,63)
-(14,9)-(14,15)
 (14,17)-(14,36)
 (14,17)-(14,62)
 (15,8)-(15,14)

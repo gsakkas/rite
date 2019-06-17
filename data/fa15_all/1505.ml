@@ -62,11 +62,11 @@ let bigAdd l1 l2 =
 (25,16)-(25,52)
 List.combine (List.rev l1)
              (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 (26,5)-(26,52)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

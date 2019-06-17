@@ -1,2 +1,3 @@
-AppG (fromList [LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
-x (let fn = fun d -> d in fn)
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,VarG)]
+match x with
+| x' :: xs -> x'

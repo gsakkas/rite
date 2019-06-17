@@ -62,11 +62,11 @@ let z = (o + p) + m in
 if z > 9
 then (1 , (z - 10) :: n)
 else (0 , z :: n)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (18,16)-(18,17)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (19,16)-(19,24)
 let rec helper =
@@ -78,7 +78,7 @@ let rec helper =
         | h :: t -> helper ((h , List.hd lt2) :: curList)
                            t (List.tl lt2) in
 helper [] l1 l2
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG,EmptyG,EmptyG])
 
 *)
 

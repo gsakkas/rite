@@ -61,7 +61,7 @@ let rec exprToString e =
 (* changed spans
 (20,41)-(20,62)
 exprToString e2 ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

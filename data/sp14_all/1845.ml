@@ -29,7 +29,7 @@ VarG
 
 (4,44)-(4,65)
 hd :: (append tl xs2)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

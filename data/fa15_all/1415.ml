@@ -25,11 +25,11 @@ let rec digitalRoot n =
 (* changed spans
 (8,9)-(8,10)
 digits n
-AppG (fromList [VarG])
+AppG [VarG]
 
 (8,56)-(8,66)
 sumList t
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

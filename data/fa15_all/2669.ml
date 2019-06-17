@@ -29,7 +29,7 @@ let palindrome w =
 (* changed spans
 (11,21)-(11,44)
 listReverse (explode w)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

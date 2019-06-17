@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (29,17)-(29,61)
 sqrt (abs_float (eval (n , x , y))) /. 1000.0
-BopG (AppG (fromList [EmptyG])) LitG
+BopG (AppG [EmptyG]) LitG
 
 *)
 

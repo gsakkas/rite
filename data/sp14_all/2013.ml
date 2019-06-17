@@ -53,21 +53,21 @@ let bigAdd l1 l2 =
 (19,13)-(19,29)
 fun (x , y) ->
   ((x + y) / 10) :: a
-LamG (TuplePatG (fromList [VarPatG])) (AppG (fromList [EmptyG]))
+LamG (TuplePatG (fromList [EmptyPatG])) (AppG [EmptyG,EmptyG])
 
 (20,16)-(20,17)
 []
-ListG (fromList [])
+ListG []
 
 (21,16)-(21,18)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (21,22)-(21,69)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

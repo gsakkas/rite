@@ -17,7 +17,7 @@ let rec listReverse l =
 (* changed spans
 (5,41)-(5,42)
 listReverse t
-AppG (fromList [VarG])
+AppG [VarG]
 
 (5,43)-(5,60)
 h

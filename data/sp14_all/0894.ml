@@ -41,7 +41,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (15,16)-(15,18)
 ([] , [])
-TupleG (fromList [ListG (fromList [])])
+TupleG [ListG [],ListG []]
 
 *)
 

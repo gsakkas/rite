@@ -35,7 +35,7 @@ and y =
 if (x = 0) && (y = 0)
 then []
 else y :: (digitsOfInt x)
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG),(VarPatG,BopG EmptyG EmptyG)] (IteG EmptyG EmptyG EmptyG)
 
 *)
 

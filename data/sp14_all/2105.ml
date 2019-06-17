@@ -103,7 +103,7 @@ let rec build (rand,depth) =
 (* changed spans
 (27,10)-(27,25)
 buildThresh (VarX , VarX , VarX , VarX)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 *)
 

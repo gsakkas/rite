@@ -1,7 +1,5 @@
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,BopG EmptyG EmptyG),(ConPatG Nothing,Nothing,LitG)])
-match xs with
-| [] -> 0
-| xf :: xb -> xf + sumList xb
-match xs with
-| [] -> 0
-| h :: t -> h + sumList t
+LetG NonRec [(ConsPatG EmptyPatG EmptyPatG,AppG [EmptyG])] (ListG [EmptyG,EmptyG])
+let d :: [] =
+  digitsOfInt (n / 10) in
+[d ; n mod 10]
+EMPTY

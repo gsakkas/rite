@@ -57,15 +57,15 @@ let bigAdd l1 l2 =
 let (m , n) = x in
 let (y , z) = a in
 (addition (m , n) / 10 , [addition (m , n) mod 10])
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (19,16)-(19,44)
 (0 , [0])
-TupleG (fromList [LitG,ListG (fromList [EmptyG])])
+TupleG [LitG,ListG [EmptyG]]
 
 (20,16)-(20,44)
 List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

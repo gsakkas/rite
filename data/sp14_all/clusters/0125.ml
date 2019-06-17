@@ -1,5 +1,5 @@
-CaseG (fromList [(ConPatG Nothing,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
-match a with
-| [] -> mulByDigit x l2
-| _ -> bigAdd a (mulByDigit x
-                            l2)
+IteG (BopG EmptyG EmptyG) (SeqG EmptyG EmptyG) (AppG [EmptyG])
+if sumList (digitsOfInt n) < 9
+then (1 :: x;
+additivePersistence (sumList (digitsOfInt n)))
+else sumList x

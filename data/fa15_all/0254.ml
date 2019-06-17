@@ -73,7 +73,7 @@ let bigMul l1 l2 = mulByDigit 9 (bigAdd l1 l2);;
 (* changed spans
 (33,20)-(33,45)
 mulByDigit 9 (bigAdd l1 l2)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

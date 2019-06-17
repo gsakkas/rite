@@ -18,7 +18,7 @@ let padZero l1 l2 =
 (5,3)-(5,35)
 let retTuple = (l1 , l2) in
 retTuple
-LetG NonRec (fromList [(VarPatG,TupleG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,TupleG [EmptyG,EmptyG])] VarG
 
 *)
 

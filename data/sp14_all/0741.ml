@@ -23,7 +23,7 @@ let fixpoint (f,b) = wwhile (h, b);;
 (* changed spans
 (4,7)-(4,20)
 fun x -> (x * x , x < 100)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 (9,30)-(9,39)
 h

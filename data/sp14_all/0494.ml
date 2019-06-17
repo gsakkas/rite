@@ -69,15 +69,15 @@ let tens =
 let ones =
   (x1 + x2) + (h mod 10) in
 (tens :: a1 , ones :: a2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(ConsPatG EmptyPatG EmptyPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (25,17)-(25,18)
 []
-ListG (fromList [])
+ListG []
 
 (25,20)-(25,21)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

@@ -6,6 +6,7 @@ c'
 return
 h
 t
+xs
 y
 l
 e
@@ -16,7 +17,6 @@ z
 l1
 l2
 sep
-depth
 b
 funt
 gs
@@ -27,16 +27,13 @@ e2
 lr1
 lr2
 e1
-rand'
-rand
 f'
 r
 digits
 fst'
-xs
 aNum
+EMPTY
 sl
-c
 tail
 carry
 retTuple

@@ -1,8 +1,6 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-if n < 10
-then [n]
-else digitsOfInt (n / 10) @ [n mod 10]
-if tl = []
-then [(hd , x)]
-else (hd , x) :: (argmaker x
-                           tl)
+AppG [BopG EmptyG EmptyG,VarG,AppG [EmptyG,EmptyG]]
+helper (x - 1) l (bigAdd l
+                         accum)
+helper (f :: acc) f (x - 1)
+helper (i - 1) (bigAdd acc l)
+       l

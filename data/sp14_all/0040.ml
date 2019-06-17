@@ -98,7 +98,7 @@ let bigMul l1 l2 =
 (43,31)-(43,65)
 bigAdd (mulByDigit h1
                    (rh :: rt)) rt
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

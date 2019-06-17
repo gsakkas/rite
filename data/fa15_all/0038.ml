@@ -52,7 +52,7 @@ let bigAdd l1 l2 =
 let (cin , res) = a
 and (d1 , d2) = x in
 (((cin + d1) + d2) mod 10 , ((cin + d1) + d2) :: res)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG),(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

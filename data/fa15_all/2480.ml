@@ -30,7 +30,7 @@ let padZero l1 l2 =
 (11,7)-(12,64)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

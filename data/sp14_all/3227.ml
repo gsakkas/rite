@@ -80,13 +80,13 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (38,24)-(38,71)
 eval (ex1 , x , y) *. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 (40,7)-(45,82)
 if eval (ex1 , x , y) < eval (ex2 , x , y)
 then eval (ex3 , x , y)
 else eval (ex4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

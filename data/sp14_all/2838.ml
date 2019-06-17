@@ -41,7 +41,7 @@ let rec digitalRoot n =
 if sumList (digits n) > 9
 then digitalRoot (sumList (digits n))
 else sumList (digits n)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

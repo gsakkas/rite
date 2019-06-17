@@ -55,19 +55,19 @@ let rec eval (e,x,y) =
 (* changed spans
 (22,16)-(22,23)
 (a , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (22,33)-(22,40)
 (b , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (23,17)-(23,29)
 (a_less , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (24,17)-(24,29)
 (b_less , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 *)
 

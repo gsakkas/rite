@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (29,21)-(29,58)
 eval (m4 , x , y) *. (1.0 +. sqrt 5.0)
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
+BopG (AppG [EmptyG]) (BopG EmptyG EmptyG)
 
 *)
 

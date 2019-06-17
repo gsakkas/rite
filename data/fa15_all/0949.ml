@@ -13,7 +13,7 @@ let sqsum xs =
 (* changed spans
 (3,46)-(3,71)
 List.fold_left f base xs
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

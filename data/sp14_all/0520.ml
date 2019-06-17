@@ -74,15 +74,15 @@ let rec build (rand,depth) =
 (* changed spans
 (26,10)-(26,78)
 buildAverage (build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (27,10)-(27,76)
 buildTimes (build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (29,7)-(30,64)
 buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 *)
 

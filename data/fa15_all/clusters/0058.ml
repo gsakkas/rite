@@ -1,6 +1,10 @@
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-(eval (e1 , x , y) +. eval (e2 , x , y)) +. (eval (e3 , x , y) /. pi)
-(a * a) + (x * x)
-(n > 0) && ((x mod 5) = 0)
-(n > 0) && ((x mod 5) = 1)
-((eval (m , x , y) *. eval (n , x , y)) *. eval (o , x , y)) /. ((eval (m , x , y) +. eval (n , x , y)) +. eval (o , x , y))
+CaseG VarG [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
+EMPTY
+match a with
+| "" -> x
+| _ -> a ^ (sep ^ x)
+match i with
+| 1 -> l
+| 10 -> l @ [0]
+| _ -> bigAdd l
+              (mulByDigit (i - 1) l)

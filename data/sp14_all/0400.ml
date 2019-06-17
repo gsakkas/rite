@@ -22,7 +22,7 @@ let f =
     (let xx = f b in
      (xx , xx <> b)) in
 wwhile (f , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

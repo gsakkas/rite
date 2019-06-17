@@ -87,7 +87,7 @@ let r =
 match r with
 | [] -> (0 , 0 :: c)
 | h :: t -> (h , (List.hd t) :: c)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (38,23)-(38,25)
 l1

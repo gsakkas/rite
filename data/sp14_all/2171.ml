@@ -27,7 +27,7 @@ let stringOfList f l =
 (9,39)-(9,63)
 List.append ("[" :: (List.map f
                               l)) ["]"]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],ListG [EmptyG]]
 
 *)
 

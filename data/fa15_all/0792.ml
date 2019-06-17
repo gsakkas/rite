@@ -16,11 +16,11 @@ let rec digitsOfInt n =
 (* changed spans
 (4,56)-(4,67)
 digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 (4,68)-(4,76)
 [n mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 *)
 

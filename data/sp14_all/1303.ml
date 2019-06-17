@@ -52,21 +52,21 @@ let bigAdd l1 l2 =
 match x with
 | (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
 | _ -> a
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,VarG)])
+CaseG VarG [(WildPatG,Nothing,VarG),(TuplePatG (fromList [EmptyPatG]),Nothing,AppG [EmptyG,EmptyG])]
 
 (19,16)-(19,19)
 []
-ListG (fromList [])
+ListG []
 
 (20,16)-(20,24)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (20,28)-(20,75)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

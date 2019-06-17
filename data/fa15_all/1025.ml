@@ -57,12 +57,12 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,16)-(23,58)
 (0 , 0)
-TupleG (fromList [LitG])
+TupleG [LitG,LitG]
 
 (23,62)-(23,68)
 List.combine (List.rev l1)
              (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

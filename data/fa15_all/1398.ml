@@ -26,7 +26,7 @@ let removeDuplicates l =
 (* changed spans
 (8,11)-(8,70)
 if true then [] else [h]
-IteG LitG (ListG (fromList [])) (ListG (fromList [EmptyG]))
+IteG LitG (ListG []) (ListG [EmptyG])
 
 *)
 

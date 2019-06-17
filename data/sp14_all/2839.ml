@@ -26,7 +26,7 @@ let rec loop =
 match n with
 | 0 -> [0]
 | _ -> loop n []
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (CaseG (fromList [(LitPatG,Nothing,EmptyG),(WildPatG,Nothing,EmptyG)]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

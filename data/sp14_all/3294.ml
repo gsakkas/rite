@@ -51,11 +51,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,17)-(19,39)
 v1 :: list1
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (19,41)-(19,63)
 v2 :: list2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

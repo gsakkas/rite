@@ -27,7 +27,7 @@ BopG VarG LitG
 
 (5,23)-(5,24)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 (5,30)-(5,62)
 if n > 10
@@ -35,7 +35,7 @@ then digitsOfInt (n mod 10)
 else (let a = n mod 10 in
       let b = n / 10 in
       if b = 0 then [n] else [a])
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

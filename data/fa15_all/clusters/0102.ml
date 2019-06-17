@@ -1,8 +1,8 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (CaseG (fromList [(LitPatG,Nothing,EmptyG)]))
-let (x , y) = f b in
-match y with
-| false -> x
-| true -> wwhile (f , x)
-let (b' , c') = f b in
-match c' with
-| false -> b'
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
+EMPTY
+match l with
+| [] -> []
+| h :: t -> if List.length t = 0
+            then [h * i] @ mulByDigit i t
+            else (remainder i
+                            h) :: (mulByDigit i t)

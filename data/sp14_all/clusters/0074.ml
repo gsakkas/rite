@@ -1,3 +1,2 @@
-AppG (fromList [AppG (fromList [EmptyG]),TupleG (fromList [EmptyG])])
-(3 , 3) :: (List.rev (List.combine l1
-                                   l2))
+AppG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG]
+x (let fn = fun d -> d in fn)

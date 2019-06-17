@@ -14,7 +14,7 @@ let stringOfList f l =
 (* changed spans
 (3,16)-(3,69)
 a ^ b
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (4,14)-(4,18)
 ""

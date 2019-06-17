@@ -14,7 +14,7 @@ let rec digitsOfInt n = if n < 0 then [] else [] @ [n mod 10];;
 (* changed spans
 (5,8)-(5,62)
 [] @ [n mod 10]
-AppG (fromList [ListG (fromList []),ListG (fromList [EmptyG])])
+AppG [ListG [],ListG [EmptyG]]
 
 *)
 

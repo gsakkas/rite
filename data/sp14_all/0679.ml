@@ -13,7 +13,7 @@ let pipe fs =
 (* changed spans
 (3,15)-(3,31)
 fun x -> fun a -> x a
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 *)
 

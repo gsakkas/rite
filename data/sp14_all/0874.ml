@@ -117,7 +117,7 @@ VarG
 
 (48,38)-(48,40)
 List.rev l2
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

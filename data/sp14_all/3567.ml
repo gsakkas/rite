@@ -60,7 +60,7 @@ let rec helper =
         then helper i (bigAdd acc l) l
         else acc in
 helper i [] l
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG,EmptyG,EmptyG])
 
 *)
 

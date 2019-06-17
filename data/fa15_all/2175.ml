@@ -23,7 +23,7 @@ let padZero l1 l2 =
 (* changed spans
 (8,39)-(8,50)
 List.length l1
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

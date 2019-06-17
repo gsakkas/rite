@@ -27,7 +27,7 @@ let palindrome w = (explode w) = (listReverse (explode w));;
 (* changed spans
 (10,47)-(10,48)
 explode w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

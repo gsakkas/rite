@@ -79,7 +79,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (31,37)-(32,53)
 [((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t)
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

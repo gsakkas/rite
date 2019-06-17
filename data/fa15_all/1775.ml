@@ -17,7 +17,7 @@ LitG
 
 (3,43)-(3,54)
 wwhile (f , b')
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

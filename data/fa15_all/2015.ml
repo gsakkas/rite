@@ -20,7 +20,7 @@ let rec g =
     then x
     else g (x + 1) in
 g 0
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

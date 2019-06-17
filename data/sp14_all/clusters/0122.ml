@@ -1,9 +1,6 @@
-CaseG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,ListG (fromList [EmptyG])),(ConsPatG VarPatG (ConPatG Nothing),Nothing,ListG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| x :: [] -> [x]
-| head :: tail :: third -> [head ; tail]
-match l with
-| [] -> []
-| x :: [] -> [x]
-| head :: tail :: third :: fourth :: fifth -> [fourth ; third ; tail ; head]
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),TupleG [EmptyG,EmptyG])] (IteG EmptyG EmptyG EmptyG)
+let (x , y) =
+  (n mod 10 , n / 10) in
+if x < 10
+then [x]
+else x :: (digitsOfInt y)

@@ -28,16 +28,16 @@ let padZero l1 l2 =
 (6,8)-(6,70)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 (9,10)-(9,69)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 (10,10)-(10,12)
 (l1 , l2)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

@@ -74,11 +74,11 @@ LitG
 
 (31,13)-(31,18)
 (expr1 , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (31,23)-(31,75)
 abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

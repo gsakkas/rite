@@ -52,11 +52,11 @@ let bigAdd l1 l2 =
 let (x' , x'') = x in
 let (c , s) = a in
 (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (18,16)-(18,21)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

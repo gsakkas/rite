@@ -68,7 +68,7 @@ let subtreeeSize4 =
 let x = rand (1 , 5) in
 match x with
 | _ -> buildSine (build (rand , subtreeSize1))
-LetG NonRec (fromList [(VarPatG,IteG EmptyG EmptyG EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,IteG EmptyG EmptyG EmptyG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

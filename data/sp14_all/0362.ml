@@ -56,11 +56,11 @@ let bigAdd l1 l2 =
 match a with
 | h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
 | _ -> [sum / 10 ; sum mod 10]
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,ListG (fromList [EmptyG]))])
+CaseG VarG [(WildPatG,Nothing,ListG [EmptyG,EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 (23,5)-(23,52)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

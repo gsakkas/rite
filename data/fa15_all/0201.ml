@@ -56,7 +56,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (22,22)-(22,46)
 pi *. eval (e1 , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 (23,24)-(23,67)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
@@ -64,13 +64,13 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (24,22)-(24,55)
 eval (e1 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 (25,29)-(25,57)
 if eval (e1 , x , y) < eval (e2 , x , y)
 then eval (e3 , x , y)
 else eval (e4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

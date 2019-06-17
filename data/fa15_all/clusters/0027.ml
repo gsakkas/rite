@@ -1,44 +1,16 @@
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
-let f =
-  fun b ->
-    (let x = f b in
-     (x , x <> b)) in
-f
-let g =
-  fun b ->
-    (let t = f b in
-     if b = t
-     then (b , false)
-     else (t , true)) in
-g
-let f' =
-  fun b ->
-    if f b = b
-    then (b , true)
-    else (f b , false) in
-f'
-let helper =
-  fun x ->
-    (let y = f x in
-     if y = x
-     then (y , false)
-     else (y , true)) in
-helper
-let f' =
-  fun b -> (f b , b = f b) in
-f'
-let g =
-  fun b ->
-    (let xx = f b in
-     if b = xx
-     then (xx , false)
-     else (xx , true)) in
-g
-let func = fun y -> x (a y) in
-func
-let func = fun y -> y in func
-let f' =
-  fun x -> (f x , f x = x) in
-f'
-let c = fun y -> x (a y) in c
-let g = fun y -> y in g
+LamG VarPatG (TupleG [EmptyG,EmptyG])
+fun x -> (x , f x = x)
+fun b ->
+  (f b , if f b = b
+         then true
+         else false)
+fun x -> (2 , f b = b)
+EMPTY
+fun bt -> (bt , f bt = bt)
+fun x -> (f b , 3 < 4)
+fun input ->
+  (f input , f input = b)
+fun b ->
+  (f b , (b = f b) = false)
+fun y -> (f b , b = f b)
+fun x -> (f x , x <> f x)

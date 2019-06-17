@@ -20,11 +20,11 @@ let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 (* changed spans
 (7,22)-(7,43)
 fun x -> (0 , true)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 (7,48)-(7,58)
 func b
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

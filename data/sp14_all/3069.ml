@@ -22,7 +22,7 @@ let rec digitsOfInt n = if n = 0 then [0] else help n;;
 (* changed spans
 (8,5)-(9,79)
 help n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

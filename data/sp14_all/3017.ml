@@ -34,7 +34,7 @@ let padZero l1 l2 =
 (12,9)-(12,49)
 List.append (clone 0 (- diff))
             l1
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 (12,51)-(12,55)
 l2
@@ -42,7 +42,7 @@ VarG
 
 (13,9)-(13,45)
 List.append (clone 0 diff) l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 (13,47)-(13,51)
 l1

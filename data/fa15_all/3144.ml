@@ -25,7 +25,7 @@ let removeDuplicates l =
 (* changed spans
 (7,71)-(7,72)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

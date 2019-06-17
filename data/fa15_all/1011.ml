@@ -35,7 +35,7 @@ let removeDuplicates l =
 (* changed spans
 (11,24)-(11,33)
 append (seen , [h])
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

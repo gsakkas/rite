@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (29,20)-(29,41)
 log (eval (nlog , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

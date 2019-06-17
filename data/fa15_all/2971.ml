@@ -37,7 +37,7 @@ VarG
 
 (8,52)-(8,55)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

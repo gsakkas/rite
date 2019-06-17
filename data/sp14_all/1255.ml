@@ -72,7 +72,7 @@ fun i ->
       | 1 -> l
       | _ -> helper (i - 1) l
                     (bigAdd acc l)
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (29,10)-(29,12)
 i
@@ -84,7 +84,7 @@ VarG
 
 (29,15)-(29,16)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

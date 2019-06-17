@@ -60,11 +60,11 @@ let (y , z) = a in
 let (r , s) = x in
 let m = (r + s) + y in
 (m / 10 , (m mod 10) :: z)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (22,16)-(22,17)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

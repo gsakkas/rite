@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (27,15)-(27,36)
 1.0 *. eval (e1 , x , y)
-BopG LitG (AppG (fromList [EmptyG]))
+BopG LitG (AppG [EmptyG])
 
 *)
 

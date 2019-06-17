@@ -25,7 +25,7 @@ let removeDuplicates l =
 (* changed spans
 (7,24)-(7,39)
 not (List.mem = h)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

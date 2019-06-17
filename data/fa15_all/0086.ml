@@ -28,13 +28,11 @@ let rec additivePersistence n = let digits = digitsOfInt n in sumList digits;;
 (10,33)-(10,54)
 let digits = digitsOfInt n in
 sumList digits
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG])] (AppG [EmptyG])
 
 *)
 
 (* type error slice
-(5,8)-(5,63)
-(5,9)-(5,29)
 (8,56)-(8,71)
 (8,60)-(8,71)
 (8,61)-(8,68)

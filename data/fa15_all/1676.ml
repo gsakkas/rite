@@ -37,7 +37,7 @@ LitG
 (8,62)-(8,62)
 let x = myHelper n in
 1 + additivePersistence x
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (BopG EmptyG EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (BopG EmptyG EmptyG)
 
 *)
 

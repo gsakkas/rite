@@ -1,3 +1,4 @@
-LetG NonRec (fromList [(VarPatG,TupleG (fromList [EmptyG]))]) VarG
-let retTuple = (l1 , l2) in
-retTuple
+AppG [TupleG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
+EMPTY
+(0 , 0) :: (List.combine l1
+                         l2)

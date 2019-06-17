@@ -22,7 +22,7 @@ let rec digitsOfInt n =
 let digits =
   digitsOfInt (n / 10) in
 digits @ [n mod 10]
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG])] (AppG [EmptyG,EmptyG])
 
 *)
 

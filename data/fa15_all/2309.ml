@@ -53,7 +53,7 @@ VarG
 
 (19,20)-(19,53)
 exprToString x ^ ("*" ^ exprToString y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

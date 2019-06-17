@@ -22,7 +22,7 @@ let fixpoint (f,b) =
 (7,17)-(7,47)
 fun b ->
   (f b , (b = f b) = false)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 *)
 

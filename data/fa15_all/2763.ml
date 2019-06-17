@@ -37,7 +37,7 @@ match i with
                    then [h * i] @ mulByDigit i t
                    else (remainder i
                                    h) :: (mulByDigit i t)
-CaseG (fromList [(VarPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))])
+CaseG VarG [(VarPatG,Nothing,ListG []),(WildPatG,Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])]
 
 (8,7)-(10,47)
 match l with
@@ -46,7 +46,7 @@ match l with
             then [h * i] @ mulByDigit i t
             else (remainder i
                             h) :: (mulByDigit i t)
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
 
 *)
 

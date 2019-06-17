@@ -25,7 +25,7 @@ let helper =
     then (x , false)
     else (f x , true) in
 wwhile (helper , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

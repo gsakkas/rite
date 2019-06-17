@@ -29,7 +29,7 @@ VarG
 
 (9,31)-(9,61)
 sepConcat ";" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

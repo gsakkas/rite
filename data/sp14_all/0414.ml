@@ -21,7 +21,7 @@ let w =
     (let fb = f b' in
      (fb , fb = b')) in
 wwhile (w , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

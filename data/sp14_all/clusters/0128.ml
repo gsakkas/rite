@@ -1,4 +1,7 @@
-TupleG (fromList [VarG,ListG (fromList [EmptyG])])
-(l1 , [0 ; 0 ; 0 ; 0])
-(t1 , [(h1 + x) mod 10])
-(p1 , [res / 10 ; res mod 10])
+CaseG VarG [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG]),(VarPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
+match n with
+| _ -> listReverse ns
+| 0 -> ns
+| n -> if n < 0
+       then []
+       else (n mod 10) :: (digitsOfInt (n / 10))

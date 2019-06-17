@@ -52,17 +52,17 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,21)-(19,39)
 ((x + y) / 10) :: a
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 (20,16)-(20,17)
 []
-ListG (fromList [])
+ListG []
 
 (21,38)-(21,64)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

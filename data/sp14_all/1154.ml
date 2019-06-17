@@ -30,7 +30,7 @@ VarG
 
 (7,78)-(7,78)
 digitsOfInt (a / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

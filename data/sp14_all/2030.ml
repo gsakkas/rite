@@ -30,7 +30,7 @@ let rec mulByDigit i l =
 (11,35)-(11,72)
 removeZero (List.fold_left f
                            base args)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

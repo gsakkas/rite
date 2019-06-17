@@ -85,21 +85,21 @@ match x with
                                 | h :: t -> if ((x1 + x2) + h) < 10
                                             then (0 , [0] @ ([(x1 + x2) + h] @ t))
                                             else (car + 1 , [(carry h + x1) + x2] @ ([(remain h + x1) + x2] @ t))
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])]
 
 (28,16)-(28,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (28,33)-(28,38)
 List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (28,42)-(28,68)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

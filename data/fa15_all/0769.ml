@@ -53,11 +53,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (18,16)-(18,47)
 a2 @ [((a1 + x1) + x2) - 10]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 (19,16)-(19,40)
 a2 @ [(a1 + x1) + x2]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 *)
 

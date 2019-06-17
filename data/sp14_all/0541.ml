@@ -97,7 +97,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (40,46)-(40,66)
 log l /. log 10.0
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

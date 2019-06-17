@@ -69,15 +69,15 @@ let rec eval (e,x,y) =
 (* changed spans
 (30,11)-(30,33)
 abs_float (eval (u , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (30,37)-(30,59)
 abs_float (eval (v , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (31,12)-(31,34)
 abs_float (eval (w , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

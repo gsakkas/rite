@@ -65,7 +65,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (29,34)-(29,64)
 (buildThresh (x7 , x8 , x9 , x0) , x , y)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],VarG,VarG]
 
 *)
 

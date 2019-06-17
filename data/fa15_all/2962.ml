@@ -63,7 +63,7 @@ VarG
 
 (26,36)-(26,60)
 mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

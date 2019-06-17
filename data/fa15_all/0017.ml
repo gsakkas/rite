@@ -30,7 +30,7 @@ else (let listZeros =
       if numZeros > 0
       then (l1 , listZeros @ l2)
       else (listZeros @ l1 , l2))
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (IteG EmptyG EmptyG EmptyG)
 
 *)
 

@@ -24,7 +24,7 @@ let d =
     (let xx = f b in
      (xx , xx = b)) in
 d
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

@@ -22,7 +22,7 @@ let f =
     (let xx = (x * x) * x in
      (xx , xx < 100)) in
 f
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

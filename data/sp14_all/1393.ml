@@ -13,7 +13,7 @@ let pipe fs =
 (* changed spans
 (3,13)-(3,26)
 fun z -> x (a z)
-LamG VarPatG (AppG (fromList [EmptyG]))
+LamG VarPatG (AppG [EmptyG])
 
 *)
 

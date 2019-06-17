@@ -29,7 +29,7 @@ BopG VarG LitG
 
 (8,65)-(8,66)
 mulByDigit i t
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

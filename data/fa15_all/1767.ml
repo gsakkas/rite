@@ -21,15 +21,15 @@ let fixpoint (f,b) = wwhile ((helper f), b);;
 (* changed spans
 (2,36)-(2,40)
 (true , b)
-TupleG (fromList [VarG,LitG])
+TupleG [LitG,VarG]
 
 (2,46)-(2,51)
 (false , f b)
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
+TupleG [LitG,AppG [EmptyG]]
 
 (7,30)-(7,42)
 helper f
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

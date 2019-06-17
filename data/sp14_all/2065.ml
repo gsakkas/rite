@@ -53,11 +53,11 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (18,21)-(18,59)
 pi ** eval (a , x , y)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 (19,19)-(19,42)
 pi ** eval (a , x , y)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

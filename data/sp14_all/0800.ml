@@ -105,7 +105,7 @@ let rec build (rand,depth) =
 (* changed spans
 (48,15)-(48,23)
 buildAbs next
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

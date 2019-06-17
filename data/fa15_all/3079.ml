@@ -20,7 +20,7 @@ function
   | [] -> l
   | h :: t -> listReverseHelper (h :: l)
                                 t
-LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

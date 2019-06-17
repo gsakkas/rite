@@ -53,11 +53,11 @@ let bigAdd l1 l2 =
 match a with
 | (w , []) -> (w , [z / 10 ; z mod 10])
 | (w , h :: t) -> ((w + z) / 10 , ((w + z) mod 10) :: t)
-CaseG (fromList [(TuplePatG (fromList [VarPatG,ConsPatG EmptyPatG EmptyPatG]),Nothing,TupleG (fromList [EmptyG])),(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG]),(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 (18,16)-(18,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

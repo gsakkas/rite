@@ -1,21 +1,10 @@
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
-let d =
-  fun x ->
-    (let xx = f b in
-     (xx , xx = b)) in
-d
-let a =
-  fun x ->
-    (let xx = f x in
-     (xx , x <> b)) in
-a
-let f =
-  fun x ->
-    (let xx = (x * x) * x in
-     (xx , xx < 100)) in
-f
-let g =
-  fun x ->
-    (let xx = f x in
-     (xx , xx <> b)) in
-g
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(List.length acc = List.length l1) || (List.length acc = List.length l2)
+(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
+((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
+(a * a) + (x * x)
+((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
+((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)) -. ((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y))
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))

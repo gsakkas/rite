@@ -71,7 +71,7 @@ match e with
 | Cosine v -> cos (pi *. eval (v , x , y))
 | Average (v , w) -> (eval (v , x , y) +. eval (w , x , y)) /. 2.0
 | Times (v , w) -> eval (v , x , y) *. eval (w , x , y)
-CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG)])
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,AppG [EmptyG]),(ConPatG (Just EmptyPatG),Nothing,AppG [EmptyG]),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG)]
 
 (33,64)-(33,65)
 2.0

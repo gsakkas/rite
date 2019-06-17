@@ -1,4 +1,3 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
-let (_ , res) =
-  List.fold_left f base args in
-res
+LamG VarPatG LitG
+fun f -> 0
+EMPTY

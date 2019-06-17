@@ -72,7 +72,7 @@ let rec mulByDigit i l =
 (31,47)-(31,76)
 let l' = bigAdd l l in
 mulByDigit (i - 1) l'
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG])] (AppG [EmptyG,EmptyG])
 
 *)
 

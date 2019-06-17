@@ -75,7 +75,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (29,16)-(29,43)
 List.combine (List.rev l1) l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],VarG]
 
 *)
 

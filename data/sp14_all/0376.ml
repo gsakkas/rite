@@ -71,7 +71,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (27,19)-(27,35)
 norm_sum :: acc
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

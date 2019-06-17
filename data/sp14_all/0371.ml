@@ -73,7 +73,7 @@ BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
 (23,12)-(27,42)
 (0 , acc)
-TupleG (fromList [VarG,LitG])
+TupleG [LitG,VarG]
 
 (27,43)-(27,43)
 let (el1 , el2) = x in
@@ -88,11 +88,11 @@ let norm_sum =
   then new_sum - 10
   else new_sum in
 (new_rem , norm_sum :: acc)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (29,25)-(29,52)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

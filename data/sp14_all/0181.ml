@@ -22,13 +22,13 @@ let padZero l1 l2 =
 if n > 0
 then x :: (clone x (n - 1))
 else []
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ListG (fromList []))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) (ListG [])
 
 (6,78)-(6,78)
 (List.append (clone 0
                     (List.length l2 - List.length l1))
              l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

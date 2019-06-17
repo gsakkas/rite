@@ -25,7 +25,7 @@ let fixpoint (f,b) = let f x = ((f x), ((f b) = b)) in wwhile (f, b);;
 (* changed spans
 (11,33)-(11,34)
 f x
-AppG (fromList [VarG])
+AppG [VarG]
 
 (11,63)-(11,64)
 b

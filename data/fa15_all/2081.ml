@@ -41,7 +41,7 @@ let reversed =
 if separated = reversed
 then true
 else false
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

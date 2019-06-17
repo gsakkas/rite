@@ -22,7 +22,7 @@ fun b ->
    if fb = b
    then (true , fb)
    else (false , fb))
-LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (5,52)-(5,64)
 helper

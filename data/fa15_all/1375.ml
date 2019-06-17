@@ -65,11 +65,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (28,7)-(28,66)
 (eval (circ1 , x , y) ** 2.0) +. (eval (circ2 , x , y) ** 2.0)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG,EmptyG]) (AppG [EmptyG,EmptyG])
 
 (29,20)-(29,41)
 log (eval (nlog , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

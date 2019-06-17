@@ -51,7 +51,7 @@ let rec additivePersistence n =
 (* changed spans
 (21,58)-(21,77)
 count (acc + 1) n
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

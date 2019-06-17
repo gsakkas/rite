@@ -143,7 +143,7 @@ buildThresh (buildhelper (depth - 1)
                                                                expr , buildhelper (depth - 1)
                                                                                   (depth - 1)
                                                                                   expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 (58,9)-(62,56)
 buildThresh (buildhelper (depth - 1)
@@ -155,7 +155,7 @@ buildThresh (buildhelper (depth - 1)
                                                                expr , buildhelper (depth - 1)
                                                                                   (depth - 1)
                                                                                   expr)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 *)
 

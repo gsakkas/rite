@@ -51,11 +51,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (15,15)-(15,33)
 sin (eval (a , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (16,17)-(16,35)
 cos (eval (a , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

@@ -1,3 +1,4 @@
-LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (BopG EmptyG EmptyG)
-let x :: t = xs in
-x + sumList t
+CaseG (AppG [EmptyG]) [(ConPatG Nothing,Nothing,LitG),(WildPatG,Nothing,AppG [EmptyG])]
+match digitsOfInt n with
+| [] -> 0
+| _ -> sumList (digitsOfInt n)

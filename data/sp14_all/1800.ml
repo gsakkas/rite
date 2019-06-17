@@ -40,7 +40,7 @@ let rec additivePersistence n =
 (* changed spans
 (16,45)-(16,72)
 additivePersAndRoot (abs n) 0
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

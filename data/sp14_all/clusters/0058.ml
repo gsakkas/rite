@@ -1,13 +1,12 @@
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
-List.fold_left (^) ""
-               (List.map f l)
-buildhelper (rand (1 , 4))
-            depth ""
-helper 0 (num :: xs') xs
-helper 1
-       (((num / 10) mod 10) :: ((num mod 10) :: xs'))
-       xs
-helper 0 (num :: accum) xs
-helper 1
-       (((num / 10) mod 10) :: ((num mod 10) :: accum))
-       xs
+CaseG VarG [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG])]
+match i with
+| 1 -> l
+| _ -> bigAdd (mulByDigit (i - 1)
+                          l) l
+match c' with
+| false -> b'
+| _ -> wwhile (f , b')
+match i with
+| 0 -> l
+| _ -> bigAdd l
+              (mulByDigit (i - 1) l)

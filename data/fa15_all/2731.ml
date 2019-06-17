@@ -59,19 +59,19 @@ let bigAdd l1 l2 =
 (* changed spans
 (17,7)-(19,71)
 addHelper (a , x)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (20,16)-(20,24)
 []
-ListG (fromList [])
+ListG []
 
 (21,16)-(21,44)
 []
-ListG (fromList [])
+ListG []
 
 (22,5)-(22,52)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

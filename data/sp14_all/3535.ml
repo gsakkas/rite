@@ -64,7 +64,7 @@ VarG
 
 (19,22)-(19,26)
 rand (0 , 2)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

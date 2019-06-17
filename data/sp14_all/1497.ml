@@ -21,7 +21,7 @@ let rec clone x n =
 (* changed spans
 (7,3)-(7,22)
 clonehelper x (abs n)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

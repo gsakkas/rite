@@ -79,12 +79,12 @@ let rec mulByDigit i l =
 (* changed spans
 (36,17)-(36,18)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 (36,45)-(36,76)
 bigAdd l (mulByDigit (i - 1)
                      l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

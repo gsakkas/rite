@@ -47,19 +47,14 @@ let rec additivePersistence n =
 (* changed spans
 (15,6)-(15,59)
 print_string "going into then"
-AppG (fromList [LitG])
+AppG [LitG]
 
 *)
 
 (* type error slice
-(15,5)-(19,52)
 (15,6)-(15,38)
 (15,6)-(15,59)
 (15,7)-(15,19)
 (15,41)-(15,59)
 (15,42)-(15,55)
-(16,6)-(18,7)
-(16,6)-(19,51)
-(20,8)-(20,27)
-(20,9)-(20,15)
 *)

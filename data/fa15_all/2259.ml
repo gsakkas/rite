@@ -87,7 +87,7 @@ BopG VarG LitG
 (35,47)-(35,73)
 bigAdd (mulByDigit (place * 10)
                    l1) l
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

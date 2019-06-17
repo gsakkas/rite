@@ -69,7 +69,7 @@ let bigAdd l1 l2 =
 (25,7)-(25,66)
 let c :: c' = a1 in
 ([((x1 + x2) + c) / 10 ; 0] , a2 @ [((x1 + x2) + c) mod 10])
-LetG NonRec (fromList [(ConsPatG VarPatG VarPatG,VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(ConsPatG EmptyPatG EmptyPatG,VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

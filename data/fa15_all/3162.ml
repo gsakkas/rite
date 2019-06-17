@@ -62,20 +62,20 @@ let bigAdd l1 l2 =
 (* changed spans
 (3,46)-(3,69)
 x :: (clone x (n - 1))
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 (25,7)-(25,69)
 let (x1 , x2) = x in
 ([x1 + x2] , [x2])
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 (26,16)-(26,18)
 ([] , [])
-TupleG (fromList [ListG (fromList [])])
+TupleG [ListG [],ListG []]
 
 (27,16)-(27,28)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

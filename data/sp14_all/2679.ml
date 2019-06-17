@@ -25,7 +25,7 @@ let removeDuplicates l =
 (* changed spans
 (8,21)-(8,22)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

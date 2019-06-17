@@ -36,7 +36,7 @@ IteG (BopG EmptyG EmptyG) LitG VarG
 if List.length t <> 0
 then t
 else []
-IteG (BopG EmptyG EmptyG) VarG (ListG (fromList []))
+IteG (BopG EmptyG EmptyG) VarG (ListG [])
 
 *)
 

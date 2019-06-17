@@ -65,7 +65,7 @@ let bigAdd l1 l2 =
 List.append [result / 10]
             (List.append [result mod 10]
                          l)
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

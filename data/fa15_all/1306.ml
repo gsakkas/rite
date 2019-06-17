@@ -20,7 +20,7 @@ let padZero l1 l2 =
 (7,3)-(7,44)
 let retTuple = (l1 , l2) in
 retTuple
-LetG NonRec (fromList [(VarPatG,TupleG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,TupleG [EmptyG,EmptyG])] VarG
 
 *)
 

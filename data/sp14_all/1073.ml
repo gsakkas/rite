@@ -55,15 +55,15 @@ let bigAdd l1 l2 =
 let sum =
   fst a + ((fst x + snd x) mod 10) in
 (sum / 10 , sum mod 10)
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 (19,16)-(19,17)
 (0 , 0)
-TupleG (fromList [LitG])
+TupleG [LitG,LitG]
 
 (21,49)-(21,52)
 [res]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

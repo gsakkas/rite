@@ -23,14 +23,14 @@ let padZero l1 l2 =
 (3,69)-(3,71)
 (List.append (clone 0 (b - a))
              l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 (3,71)-(3,71)
 if b < a
 then (l1 , List.append (clone 0
                               (a - b)) l2)
 else (l1 , l2)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
 
 *)
 

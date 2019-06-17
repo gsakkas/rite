@@ -87,7 +87,7 @@ match x with
                            mulByDigit l2digit templ1 in
                          (0 , bigAdd (templ12 @ [0])
                                      multres))
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
 
 (7,7)-(8,74)
 match y with
@@ -96,11 +96,11 @@ match y with
               then [(hd , x)]
               else (hd , x) :: (argmaker x
                                          tl)
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
 
 (8,19)-(8,74)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

@@ -61,7 +61,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,48)-(23,49)
 d :: t
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

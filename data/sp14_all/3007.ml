@@ -59,15 +59,15 @@ LitG
 
 (20,23)-(20,26)
 []
-ListG (fromList [])
+ListG []
 
 (21,20)-(21,21)
 []
-ListG (fromList [])
+ListG []
 
 (22,16)-(22,45)
 clone 0 (List.length l1)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG]]
 
 *)
 

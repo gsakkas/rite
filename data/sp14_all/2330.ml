@@ -11,7 +11,7 @@ let rec clone x n = let accum = [] in if n < 1 then [] else clone x n;;
 (* changed spans
 (2,61)-(2,76)
 clone x n
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

@@ -28,7 +28,7 @@ let removeDuplicates l =
 if List.mem h seen
 then seen
 else h :: seen
-IteG (AppG (fromList [EmptyG])) VarG (AppG (fromList [EmptyG]))
+IteG (AppG [EmptyG,EmptyG]) VarG (AppG [EmptyG,EmptyG])
 
 (8,21)-(8,73)
 t

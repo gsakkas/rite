@@ -86,11 +86,11 @@ let bigMul l1 l2 =
 (31,15)-(31,25)
 match a with
 | (_ , y) -> (0 , bigAdd y x)
-CaseG (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 (32,14)-(32,16)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

@@ -1,5 +1,5 @@
-BopG (AppG (fromList [EmptyG])) (BopG EmptyG EmptyG)
-eval (a , x , y) +. (eval (b , x , y) /. 2.0)
-eval (m4 , x , y) *. (1.0 +. sqrt 5.0)
-eval (e1 , x , y) +. (eval (e2 , x , y) /. 2.0)
-eval (e1 , x , y) /. (eval (e1 , x , y) *. eval (e1 , x , y))
+IteG (BopG EmptyG EmptyG) LitG LitG
+EMPTY
+if explode w = listReverse (explode w)
+then true
+else false

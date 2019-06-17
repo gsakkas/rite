@@ -28,7 +28,7 @@ let fix =
   fun l ->
     fun x -> List.map f l in
 sepConcat "[" l
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG,EmptyG])
 
 *)
 

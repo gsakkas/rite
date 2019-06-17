@@ -17,7 +17,7 @@ let rec assoc (d,k,l) =
 (* changed spans
 (5,51)-(5,62)
 assoc (d , k , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

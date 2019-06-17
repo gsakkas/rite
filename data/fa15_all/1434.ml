@@ -61,13 +61,13 @@ let rec build (rand,depth) =
 match rand (0 , 4) with
 | 0 -> buildSine (build (rand , depth - 1))
 | 1 -> buildCosine (build (rand , depth - 1))
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 (27,8)-(27,10)
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 *)
 

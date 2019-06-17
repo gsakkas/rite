@@ -72,7 +72,7 @@ let bigAdd l1 l2 =
 (30,16)-(30,63)
 [(0 , 0)] @ List.combine (List.rev l1)
                          (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

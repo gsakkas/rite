@@ -1,2 +1,7 @@
-TupleG (fromList [BopG EmptyG EmptyG,ListG (fromList [EmptyG])])
-(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
+ListG [AppG [EmptyG,EmptyG,EmptyG]]
+[sqsum (mulByDigit i
+                   (List.rev (List.map (fun x ->
+                                          x * 10)
+                                       t)) @ [h * i])]
+[List.fold_left f base
+                (h :: t)]

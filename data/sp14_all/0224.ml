@@ -42,7 +42,7 @@ let rec build (rand,depth) =
 (16,73)-(16,73)
 let y = rand (2 , 6) in
 buildX ()
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG])] (AppG [EmptyG])
 
 *)
 

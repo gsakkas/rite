@@ -13,7 +13,7 @@ let pipe fs = let f a x a x = x in let base x = x in List.fold_left f base fs;;
 (* changed spans
 (3,15)-(3,64)
 fun a -> fun x -> x
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 *)
 

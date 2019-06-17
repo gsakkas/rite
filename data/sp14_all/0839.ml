@@ -17,7 +17,7 @@ let rec digitalRoot n = if n > 10 then digitalRoot (sumDigits n) else n;;
 (* changed spans
 (5,40)-(5,63)
 digitalRoot (sumDigits n)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

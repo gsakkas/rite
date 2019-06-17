@@ -30,7 +30,7 @@ let stringOfList f l =
 (10,42)-(10,76)
 sepConcat ";" (List.map f
                         l) ^ "]"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG,EmptyG],LitG]
 
 *)
 

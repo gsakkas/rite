@@ -43,11 +43,11 @@ LitG
 
 (15,33)-(15,41)
 itt x' i
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (16,33)-(16,39)
 itt y' 0
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 *)
 

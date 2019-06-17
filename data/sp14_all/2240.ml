@@ -66,7 +66,7 @@ let rec eval (e,x,y) =
 (23,9)-(23,74)
 mod_float (eval (w , x , y) *. eval (t , x , y))
           (eval (u , x , y))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG]]
 
 *)
 

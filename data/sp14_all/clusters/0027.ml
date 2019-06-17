@@ -1,29 +1,25 @@
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-(n mod 10) :: (digitsOfInt (n / 10))
-mulByDigit (i - 1) (bigAdd l
-                           l)
-max' (0.0 -. 1.0) (min 1.0
-                       ((2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0))
-(n - ((n / 10) * 10)) :: (digitsOfInt (n / 10))
-append (digitsOfInt (n / 10))
-       (n - ((n / 10) * 10))
-(n mod 10) :: (digitsOfInt n)
-aPHelper (sumList (digits n))
-         (i + 1)
-((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
-(n mod 10) :: (helper (n / 10))
-clone (List.hd l1)
-      (List.length l1 - List.length l2)
-clone (List.hd l2)
-      (List.length l2 - List.length l1)
-mod_float (eval (w , x , y) *. eval (t , x , y))
-          (eval (u , x , y))
-digitsOfIntHelper (n / 10)
-                  ((n mod 10) :: result)
-(prod / 10) :: (mulByDigit i
-                           t)
-(prod mod 10) :: ((prod / 10) :: (mulByDigit i
-                                             t))
-clone_RT (x :: acc) (n - 1)
-helper ((v mod 10) :: acc)
-       (v / 10)
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
+let y = rand (2 , 6) in
+buildX ()
+let x = List.map f l in
+sepConcat ";" x
+let res =
+  List.fold_left f base args in
+res
+let digit =
+  digitsOfInt (n / 10) in
+digit @ [n mod 10]
+let digits =
+  digitsOfInt (n / 10) in
+digits @ [n mod 10]
+let ll1 = List.length l1 in
+let ll2 = List.length l2 in
+(clone 0
+       (ll2 - ll1) @ l1 , clone 0
+                                (ll1 - ll2) @ l2)
+let seen' = h :: seen in
+let rest' = t in
+helper (seen' , rest')
+let xx = f x in (xx , xx <> b)
+let nl = List.map f l in
+sepConcat "" nl

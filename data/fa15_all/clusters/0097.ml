@@ -1,7 +1,5 @@
-LamG (TuplePatG (fromList [VarPatG])) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-fun (f , b) ->
-  (let f =
-     fun b ->
-       (let x = f b in
-        (x , x <> b)) in
-   f)
+IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (AppG [EmptyG])
+EMPTY
+if n < 10
+then [n]
+else digitsOfInt (n / 10)

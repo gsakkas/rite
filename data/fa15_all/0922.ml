@@ -72,11 +72,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,26)-(23,29)
 [num]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (24,55)-(24,55)
 (num / 10 , [num mod 10] @ list)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

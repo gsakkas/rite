@@ -29,7 +29,7 @@ LitG
 
 (10,10)-(10,42)
 (l1 , 0 :: l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

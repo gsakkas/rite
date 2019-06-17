@@ -62,7 +62,7 @@ let rec mulByDigit i l =
 (27,43)-(27,72)
 bigAdd l (mulByDigit (i - 1)
                      l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

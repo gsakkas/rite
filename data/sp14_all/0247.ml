@@ -23,7 +23,7 @@ let rec digitsOfInt n =
 (* changed spans
 (7,30)-(7,49)
 append x (digitsOfInt y)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

@@ -13,7 +13,7 @@ let rec listReverse l =
 (* changed spans
 (3,40)-(3,64)
 listReverse tail @ [hd]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

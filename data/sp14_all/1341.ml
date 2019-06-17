@@ -12,7 +12,7 @@ let pipe fs =
 (* changed spans
 (2,27)-(2,32)
 x (a y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

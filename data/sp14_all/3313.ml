@@ -16,7 +16,7 @@ let rec mulByDigit i l =
 (3,46)-(3,78)
 List.append (mulByDigit i t)
             [(h * i) mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],ListG [EmptyG]]
 
 *)
 

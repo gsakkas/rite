@@ -32,7 +32,7 @@ let rec additivePersistence n =
 (11,10)-(11,60)
 recCounter (sumList (digitsOfInt n))
            count + 1
-BopG (AppG (fromList [EmptyG])) LitG
+BopG (AppG [EmptyG,EmptyG]) LitG
 
 *)
 

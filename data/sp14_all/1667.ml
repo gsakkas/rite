@@ -118,7 +118,7 @@ let rec build (rand,depth) =
 (25,17)-(25,50)
 fun (e1 , e2 , e3) ->
   Weird (e1 , e2 , e3)
-LamG (TuplePatG (fromList [VarPatG])) (ConAppG (Just EmptyG))
+LamG (TuplePatG (fromList [EmptyPatG])) (ConAppG (Just EmptyG))
 
 (35,21)-(35,22)
 10

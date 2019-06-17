@@ -47,11 +47,11 @@ VarG
 
 (15,20)-(15,21)
 []
-ListG (fromList [])
+ListG []
 
 (16,16)-(16,41)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

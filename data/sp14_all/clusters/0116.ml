@@ -1,3 +1,3 @@
-LetG NonRec (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG,WildPatG]),VarG)]) (TupleG (fromList [EmptyG]))
-let (h :: t , _) = a in
-([] , [])
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
+match xs with
+| hd :: tl -> f (f hd hd) tl

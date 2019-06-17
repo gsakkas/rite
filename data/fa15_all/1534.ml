@@ -21,7 +21,7 @@ let fixpoint (f,b) =
 if f b = b
 then (b , true)
 else (f b , false)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
 
 (5,55)-(5,59)
 f'

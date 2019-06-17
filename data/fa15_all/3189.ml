@@ -77,15 +77,15 @@ let bigAdd l1 l2 =
 (* changed spans
 (28,13)-(28,37)
 [(x1 + x2) / 10 ; 0]
-ListG (fromList [BopG EmptyG EmptyG,LitG])
+ListG [BopG EmptyG EmptyG,LitG]
 
 (28,39)-(28,57)
 [(x1 + x2) mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 (31,42)-(31,66)
 a2 @ [((x1 + x2) + c) mod 10]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 *)
 

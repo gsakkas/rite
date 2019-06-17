@@ -58,7 +58,7 @@ let rec mulByDigit i l =
 (24,19)-(24,52)
 helper (i - 1) (bigAdd acc l)
        l
-AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG],VarG]
 
 *)
 

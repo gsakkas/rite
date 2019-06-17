@@ -17,7 +17,7 @@ let rec listReverse l =
 (3,37)-(3,72)
 helperAppend (listReverse t)
              [h]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

@@ -86,18 +86,18 @@ let rec mulByDigit i l =
 (* changed spans
 (33,11)-(33,14)
 []
-ListG (fromList [])
+ListG []
 
 (37,46)-(37,49)
 []
-ListG (fromList [])
+ListG []
 
 (38,7)-(40,39)
 mulByDigit i
            (List.rev (List.map (fun x ->
                                   x * 10) t)) @ (helper []
                                                         (h * i) @ [])
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

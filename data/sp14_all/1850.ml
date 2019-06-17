@@ -27,7 +27,7 @@ let ll2 = List.length l2 in
 (clone 0
        (ll2 - ll1) @ l1 , clone 0
                                 (ll1 - ll2) @ l2)
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,AppG [EmptyG])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

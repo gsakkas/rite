@@ -59,11 +59,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (22,37)-(22,55)
 [(x1 + x2) mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 (23,16)-(23,18)
 ([] , [])
-TupleG (fromList [ListG (fromList [])])
+TupleG [ListG [],ListG []]
 
 *)
 

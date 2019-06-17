@@ -1,3 +1,3 @@
-BopG LitG LitG
-3 > 0
-1.0 /. 3.0
+LamG VarPatG (ConAppG (Just EmptyG))
+EMPTY
+fun c1 -> Circ c1

@@ -20,7 +20,7 @@ if a = 0
 then b
 else integers (a / 10)
               ((a mod 10) :: b)
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) VarG (AppG [EmptyG,EmptyG])
 
 *)
 

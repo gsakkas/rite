@@ -43,7 +43,7 @@ let bigAdd l1 l2 =
 let (carry , num) = a in
 let (l1 , l2) = x in
 (0 , l1 :: num)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

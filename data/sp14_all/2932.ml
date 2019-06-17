@@ -60,11 +60,11 @@ match x with
                               ((carry + addend_a) + addend_b) mod 10 in
                             match a with
                             | (x , y) -> (new_carry , digit :: y))
-LetG NonRec (fromList [(VarPatG,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])] (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
 
 (16,16)-(16,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

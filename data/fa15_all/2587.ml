@@ -16,7 +16,7 @@ let fixpoint (f,b) = wwhile ((fun x  -> ((f b), (not (b = (f b))))), b);;
 (4,29)-(4,72)
 (fun x ->
    (f b , not (b = f b)) , b)
-TupleG (fromList [VarG,LamG VarPatG EmptyG])
+TupleG [LamG EmptyPatG EmptyG,VarG]
 
 *)
 

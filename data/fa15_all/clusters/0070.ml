@@ -1,4 +1,9 @@
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
-let res =
-  List.fold_left f base args in
-res
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) VarG
+EMPTY
+if n < 10
+then n
+else digitalRoot (sumList (digits n))
+if i > 0
+then mulByDigit (i - 1)
+                (bigAdd l l)
+else l

@@ -28,7 +28,7 @@ let rec helper =
         | h :: t -> helper t l
                            (h :: acc) in
 helper x l []
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG,EmptyG,EmptyG])
 
 *)
 

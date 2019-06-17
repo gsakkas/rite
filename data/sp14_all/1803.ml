@@ -39,7 +39,7 @@ let rec digitalRoot n = let (l,r) = additivePersAndRoot (abs n) 0 in r;;
 (* changed spans
 (16,37)-(16,64)
 additivePersAndRoot (abs n) 0
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

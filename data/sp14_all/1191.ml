@@ -36,7 +36,7 @@ let rec additivePersistence n =
 (13,27)-(13,62)
 aPHelper (sumList (digits n))
          (i + 1)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 *)
 

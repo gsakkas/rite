@@ -1,5 +1,5 @@
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
-match a with
-| (carry , list) -> (let num =
-                       (l1e + l2e) + carry in
-                     (num mod 9 , [7] @ list))
+IteG (BopG EmptyG EmptyG) (ListG []) (AppG [EmptyG,EmptyG])
+EMPTY
+if n = 0
+then []
+else x :: (clone x (n - 1))

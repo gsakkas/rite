@@ -1,5 +1,2 @@
-TupleG (fromList [LitG])
-(0 , 4)
-(0 , 1)
-(0 , 0)
-(10 , 13 , 57)
+UopG VarG
+(-. pi)

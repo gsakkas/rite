@@ -80,11 +80,11 @@ match i with
 | 1 -> l
 | _ -> bigAdd (mulByDigit (i - 1)
                           l) l
-CaseG (fromList [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 (35,39)-(35,59)
 mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

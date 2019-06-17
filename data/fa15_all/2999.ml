@@ -56,11 +56,11 @@ let (l , m) = a in
 if ((j + k) + l) > 9
 then (1 , (((j + k) + l) - 10) :: m)
 else (0 , ((j + k) + l) :: m)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (IteG EmptyG EmptyG EmptyG)
 
 (21,16)-(21,19)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (23,41)-(23,57)
 args

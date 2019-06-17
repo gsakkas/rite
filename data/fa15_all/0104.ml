@@ -13,7 +13,7 @@ let rec digitsOfInt n =
 (* changed spans
 (3,48)-(3,63)
 digitsOfInt 1
-AppG (fromList [LitG])
+AppG [LitG]
 
 *)
 

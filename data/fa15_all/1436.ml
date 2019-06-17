@@ -54,7 +54,7 @@ let rec build (rand,depth) =
 match rand (0 , 1) with
 | 0 -> buildX ()
 | 1 -> buildY ()
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 *)
 

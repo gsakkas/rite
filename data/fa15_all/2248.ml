@@ -81,7 +81,7 @@ let bigMul l1 l2 =
 (34,39)-(34,65)
 (10 * o , bigAdd (mulByDigit o
                              l1) l)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

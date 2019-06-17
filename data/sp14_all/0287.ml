@@ -13,7 +13,7 @@ let rec listReverse l =
 (* changed spans
 (3,42)-(3,59)
 listReverse t
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

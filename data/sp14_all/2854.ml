@@ -99,7 +99,7 @@ let rec build (rand,depth) =
 (* changed spans
 (42,23)-(42,76)
 (buildCosine (buildSine (build (rand , depth - 1))) , buildSine (build (rand , depth - 1)))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

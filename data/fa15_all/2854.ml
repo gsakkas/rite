@@ -30,7 +30,7 @@ LitG
 (9,60)-(9,63)
 sepConcat " " (List.map f
                         l) ^ "]"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG,EmptyG],LitG]
 
 *)
 

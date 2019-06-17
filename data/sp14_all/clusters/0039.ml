@@ -1,33 +1,22 @@
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
-if rand (0 , 1) = 0
-then buildX ()
-else buildY ()
-if sumList (digits n) < 10
-then numdigits (digits n)
-else additivePersistence (sumList (digits n))
-if r (0 , 1) = 0
-then buildX ()
-else buildY ()
-if eval (x1 , x , y) < eval (x2 , x , y)
-then eval (x3 , x , y)
-else eval (x4 , x , y)
-if eval (e1 , x , y) < eval (e2 , x , y)
-then eval (e3 , x , y)
-else eval (e4 , x , y)
-if rand (0 , 1) = 0
-then buildAverage (buildhelper (depth - 1)
-                               (depth - 1)
-                               expr , buildhelper (depth - 1)
-                                                  (depth - 1)
-                                                  expr)
-else buildTimes (buildhelper (depth - 1)
-                             (depth - 1)
-                             expr , buildhelper (depth - 1)
-                                                (depth - 1)
-                                                expr)
-if sumList (digits n) > 9
-then digitalRoot (sumList (digits n))
-else sumList (digits n)
-if eval (ex1 , x , y) < eval (ex2 , x , y)
-then eval (ex3 , x , y)
-else eval (ex4 , x , y)
+LamG VarPatG (IteG EmptyG EmptyG EmptyG)
+fun accu ->
+  if n <= 0
+  then accu
+  else lastDigit (n / 10)
+                 ((n mod 10) :: accu)
+fun b' ->
+  if f b' = b'
+  then (b' , true)
+  else (b' , false)
+fun f' ->
+  if f b = b
+  then (b , true)
+  else (b , false)
+fun f' ->
+  if f b = b
+  then (b , false)
+  else (f b , true)
+fun a ->
+  if b = f b
+  then (b , false)
+  else (f b , true)

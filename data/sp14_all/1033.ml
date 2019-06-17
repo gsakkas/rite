@@ -21,7 +21,7 @@ let rec sepConcat sep sl =
 (* changed spans
 (6,19)-(6,24)
 a ^ sep
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (7,31)-(7,33)
 t

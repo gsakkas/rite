@@ -58,11 +58,11 @@ then (let (carry , ans) = a in
 else (let (carry , ans) = a in
       (0 , let (y , z) = x in
            [(y + z) + carry] @ ans))
-IteG (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+IteG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (15,16)-(15,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

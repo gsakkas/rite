@@ -18,7 +18,7 @@ let rec digitsOfInt n =
 (5,27)-(5,65)
 append (digitsOfInt (n / 10))
        [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

@@ -28,7 +28,7 @@ VarG
 
 (9,31)-(9,76)
 digitalRoot (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

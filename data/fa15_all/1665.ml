@@ -65,7 +65,7 @@ LitG
 (18,9)-(18,73)
 (1 , let (y , z) = x in
      [((y + z) + carry) mod 10] @ ans)
-TupleG (fromList [LitG,LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG])
+TupleG [LitG,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG]
 
 (20,9)-(21,58)
 if (let (carry , ans) = a in
@@ -76,7 +76,7 @@ then (let (carry , ans) = a in
 else (let (carry , ans) = a in
       (0 , let (y , z) = x in
            [(y + z) + carry] @ ans))
-IteG (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+IteG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

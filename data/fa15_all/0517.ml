@@ -16,7 +16,7 @@ BopG VarG (BopG EmptyG EmptyG)
 
 (2,53)-(2,78)
 List.fold_left f base xs
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

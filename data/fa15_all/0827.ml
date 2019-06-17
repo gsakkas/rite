@@ -19,7 +19,7 @@ let rec additivePersistence n =
 (4,55)-(4,63)
 match n with
 | n -> incre n
-CaseG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(VarPatG,Nothing,AppG [EmptyG])]
 
 *)
 

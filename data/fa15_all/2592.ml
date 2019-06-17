@@ -15,11 +15,11 @@ let fixpoint (f,b) = wwhile ((fun x  -> ((f b), (not (b = (f b))))), b);;
 (* changed spans
 (4,42)-(4,43)
 f b
-AppG (fromList [VarG])
+AppG [VarG]
 
 (4,45)-(4,56)
 not (b = f b)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

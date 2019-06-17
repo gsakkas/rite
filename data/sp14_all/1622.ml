@@ -25,7 +25,7 @@ let removeDuplicates l =
 (* changed spans
 (7,24)-(7,39)
 List.mem h seen = false
-BopG (AppG (fromList [EmptyG])) LitG
+BopG (AppG [EmptyG,EmptyG]) LitG
 
 (7,55)-(7,55)
 seen

@@ -13,11 +13,11 @@ let pipe fs =
 (* changed spans
 (2,25)-(2,32)
 let c = fun y -> x (a y) in c
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 (2,45)-(2,50)
 let g = fun y -> y in g
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

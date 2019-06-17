@@ -30,7 +30,7 @@ let rec mulByDigit i l =
                    (List.rev (List.map (fun x ->
                                           x * 10)
                                        t)) @ [h * i])]
-ListG (fromList [AppG (fromList [EmptyG])])
+ListG [AppG [EmptyG]]
 
 *)
 

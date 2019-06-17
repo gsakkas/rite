@@ -35,11 +35,11 @@ let removeDuplicates l =
 (* changed spans
 (12,21)-(12,29)
 h :: seen
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (13,21)-(13,34)
 filter t h
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

@@ -61,11 +61,11 @@ let rec build (rand,depth) =
 (* changed spans
 (25,22)-(25,46)
 build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (26,24)-(26,48)
 build (rand , depth - 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

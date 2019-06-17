@@ -63,7 +63,7 @@ LitG
 
 (24,21)-(24,23)
 [0 ; 0 ; 0 ; 0]
-ListG (fromList [LitG])
+ListG [LitG,LitG,LitG,LitG]
 
 *)
 

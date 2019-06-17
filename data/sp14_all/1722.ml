@@ -19,11 +19,11 @@ let rec digitsOfInt n =
 (* changed spans
 (6,26)-(6,36)
 listReverse [n mod 10]
-AppG (fromList [ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG]]
 
 (6,39)-(6,73)
 digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

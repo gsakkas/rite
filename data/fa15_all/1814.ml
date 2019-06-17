@@ -28,7 +28,7 @@ let removeDuplicates l =
 (9,9)-(10,77)
 let rest' = t in
 helper (seen' , rest')
-LetG NonRec (fromList [(VarPatG,VarG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,VarG)] (AppG [EmptyG])
 
 *)
 

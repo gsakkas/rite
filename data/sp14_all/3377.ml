@@ -32,7 +32,7 @@ let rec mulByDigit i l =
 (12,28)-(12,58)
 [List.fold_left f base
                 (h :: t)]
-ListG (fromList [AppG (fromList [EmptyG])])
+ListG [AppG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

@@ -11,7 +11,7 @@ let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
 (* changed spans
 (2,43)-(2,58)
 x :: (clone x (n - 1))
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

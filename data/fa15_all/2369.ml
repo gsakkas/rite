@@ -23,7 +23,7 @@ let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
 (* changed spans
 (7,64)-(7,73)
 matchHeads w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

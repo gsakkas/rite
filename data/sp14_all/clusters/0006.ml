@@ -1,38 +1,44 @@
-TupleG (fromList [VarG])
-(a , x , y)
-(b , x , y)
-(c , x , y)
-(f , value)
-(f , b')
-(c , s)
-(h , b)
-(next , next)
-(d , k , t)
-(l1 , l2)
-(e' , x , y)
-(rand , depth)
-(s , x , y)
-(t , x , y)
-(u , x , y)
-(v , x , y)
-(e1 , x , y)
-(e2 , x , y)
-(e3 , x , y)
-(e4 , x , y)
-(e , x , y)
-(m , x , y)
-(x1 , x , y)
-(x2 , x , y)
-(w , x , y)
-(z , x , y)
-(a_less , x , y)
-(b_less , x , y)
-(d , k , l)
-(e6 , x , y)
-(e7 , x , y)
-(e8 , x , y)
-(e9 , x , y)
-(e0 , x , y)
-(c , d)
-(ex , x , y)
-(list1 , list2)
+AppG [AppG [EmptyG],LitG]
+sepConcat "" (List.map f l)
+exprToString c ^ ")"
+"sin (pi*" ^ exprToString e
+exprToString e3 ^ ")"
+"*" ^ exprToString expr2
+exprToString expr4 ^ ")"
+"sin" ^ exprToString ex
+exprToString e4 ^ ")/2)"
+sepConcat "; " (List.map f l)
+sepConcat "; " (List.map f
+                         l) ^ "]"
+exprToString expr3 ^ ")"
+exprToString ds4 ^ "))"
+exprToString tm3 ^ ")"
+exprToString t2 ^ ")"
+sepConcat ";" (List.map f l)
+sepConcat "[" (List.map f l)
+"[" ^ (sepConcat "; "
+                 (List.map f l) ^ "]")
+lengthOfList (digitsOfInt n) 0
+exprToString c ^ ")^0"
+exprToString y ^ ")/2)"
+"[" ^ (sepConcat ";"
+                 (List.map f l) ^ "]")
+":" ^ exprToString d
+exprToString e1 ^ ")"
+exprToString y ^ ")"
+exprToString w ^ ")"
+additivePersAndRoot (abs n) 0
+exprToString b ^ ")/20"
+expr a ^ ")"
+exprToString e3 ^ "))"
+sepConcat "," (List.map f l)
+factorial (eval (e' , x , y))
+          1.0
+exprToString a ^ ")"
+exprToString b ^ ")"
+"pi* " ^ exprToString s
+exprToString s ^ ")"
+"?" ^ exprToString e4
+clone 0 (abs diff)
+clone 0 (List.length l1)
+exprToString ex3 ^ "))"

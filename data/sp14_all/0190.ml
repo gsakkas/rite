@@ -18,7 +18,7 @@ let rec listReverse l =
 (* changed spans
 (8,15)-(8,55)
 listReverse (hd :: l)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

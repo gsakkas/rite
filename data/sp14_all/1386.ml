@@ -31,7 +31,7 @@ let rec mulByDigit i l =
 (11,39)-(11,63)
 List.fold_left f base
                (List.rev l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,VarG,AppG [EmptyG]]
 
 *)
 

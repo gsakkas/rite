@@ -25,7 +25,7 @@ let stringOfList f l = sepConcat "; " l;;
 (* changed spans
 (9,24)-(9,55)
 sepConcat "; " l
-AppG (fromList [VarG,LitG])
+AppG [LitG,VarG]
 
 *)
 

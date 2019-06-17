@@ -14,7 +14,7 @@ let sqsum xs =
 (* changed spans
 (3,59)-(3,60)
 fun a -> fun x -> a + (x * x)
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (3,61)-(3,65)
 0

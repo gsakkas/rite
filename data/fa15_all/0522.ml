@@ -17,7 +17,7 @@ let rec assoc (d,k,l) =
 match x with
 | k -> y
 | _ -> assoc (d , k , l')
-CaseG (fromList [(VarPatG,Nothing,VarG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(VarPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG])]
 
 *)
 

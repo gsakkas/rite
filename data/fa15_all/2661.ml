@@ -71,7 +71,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (27,18)-(27,38)
 atan (eval (e1 , x , y))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

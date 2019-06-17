@@ -59,11 +59,11 @@ let bigAdd l1 l2 =
 (18,11)-(22,62)
 match x with
 | (add1 , add2) -> (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 (19,20)-(19,33)
 (((add1 + add2) + carry) / 10 , (((add1 + add2) + carry) mod 10) :: rest)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

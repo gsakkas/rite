@@ -55,7 +55,7 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (17,71)-(17,72)
 ((h1 + h2) mod 10) :: a
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

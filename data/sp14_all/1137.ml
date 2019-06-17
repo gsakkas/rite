@@ -74,11 +74,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (27,29)-(27,70)
 abs_float (cos (pi *. eval (e' , x , y)))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (30,9)-(33,51)
 abs_float (sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y))))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

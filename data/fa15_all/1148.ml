@@ -125,11 +125,11 @@ let bigMul l1 l2 =
 (* changed spans
 (38,59)-(38,59)
 []
-ListG (fromList [])
+ListG []
 
 (59,9)-(59,42)
 helper (List.length l2 * 2) x
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

@@ -32,7 +32,7 @@ fun b ->
   match b with
   | [] -> [a]
   | hd :: tl -> [a + hd]
-LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

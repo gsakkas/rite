@@ -13,7 +13,7 @@ let rec sumList xs =
 (* changed spans
 (3,47)-(3,67)
 sumList (List.tl xs)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

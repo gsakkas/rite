@@ -57,7 +57,7 @@ let bigAdd l1 l2 =
 (20,9)-(20,71)
 match x with
 | (f , g) -> ((f + g) + carry) mod 10
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,BopG EmptyG EmptyG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,BopG EmptyG EmptyG)]
 
 *)
 

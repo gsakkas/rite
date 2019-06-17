@@ -29,7 +29,7 @@ let bigMul l1 l2 =
 (* changed spans
 (3,40)-(3,41)
 [k]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

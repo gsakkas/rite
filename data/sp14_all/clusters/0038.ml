@@ -1,16 +1,7 @@
-AppG (fromList [VarG,LitG])
-sepConcat " " l
-min 0.1 l'
-max' 0.1 l'
-0 :: ns
-r_digitalRoot n (-1)
-f 2 xs
-f 4 xs
-f 0 hd
-b ^ "]"
-helper 0 n
-0 :: l2
-buildhelper 0 0 expr
-reverseInt n 0
-helpFac n 1
-" " ^ x
+CaseG VarG [(WildPatG,Nothing,TupleG [EmptyG,EmptyG]),(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
+match (c , s) with
+| (c , []) -> (c , c :: s)
+| _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
+match a with
+| (_ , z) -> (0 , bigAdd z x)
+| _ -> (0 , [])

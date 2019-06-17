@@ -20,11 +20,11 @@ let rec sepConcat sep sl =
 (* changed spans
 (6,23)-(6,24)
 sep ^ x
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (6,57)-(6,78)
 List.fold_left f base l
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

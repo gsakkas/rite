@@ -53,7 +53,7 @@ let palindrome w =
 (* changed spans
 (23,58)-(23,69)
 [["b"]]
-ListG (fromList [ListG (fromList [EmptyG])])
+ListG [ListG [EmptyG]]
 
 *)
 

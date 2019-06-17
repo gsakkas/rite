@@ -22,7 +22,7 @@ let fixpoint (f,b) =
 (* changed spans
 (7,41)-(7,51)
 let xx = f x in (xx , xx <> b)
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG])] (TupleG [EmptyG,EmptyG])
 
 (7,55)-(7,58)
 g

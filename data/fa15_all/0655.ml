@@ -19,12 +19,12 @@ let rec digitsOfInt n =
 (* changed spans
 (3,54)-(3,75)
 front :: (add back next)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 (6,26)-(6,61)
 add (digitsOfInt (n / 10))
     (n mod 10)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 *)
 

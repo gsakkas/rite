@@ -1,8 +1,12 @@
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
-[0] @ l1
-[0] @ l2
-[1 ; 0] @ acc
-adder i l [0]
-[a + hd] @ tl
-append t [h]
-[h] @ seen
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
+match y with
+| [] -> []
+| hd :: tl -> if tl = []
+              then [(hd , x)]
+              else (hd , x) :: (argmaker x
+                                         tl)
+match l with
+| [] -> []
+| h :: t -> if h = 0
+            then removeZero t
+            else l

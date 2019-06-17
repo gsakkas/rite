@@ -94,11 +94,11 @@ match r with
 | 3 -> buildTimes (build (rand , depth - 1) , buildX ())
 | 4 -> buildThresh (build (rand , depth - 1) , buildX () , buildY () , buildX ())
 | 5 -> buildSinCos (build (rand , depth - 1))
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 (37,10)-(39,24)
 buildThresh (build (rand , depth - 1) , buildX () , buildY () , buildX ())
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 *)
 

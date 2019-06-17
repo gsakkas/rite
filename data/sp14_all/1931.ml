@@ -23,17 +23,17 @@ let fixpoint (f,b) =
 (* changed spans
 (8,6)-(8,16)
 b = f b
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 (8,22)-(8,60)
 f b
-AppG (fromList [VarG])
+AppG [VarG]
 
 (8,66)-(8,67)
 let g =
   fun b -> (f b , true) in
 wwhile (g , f b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

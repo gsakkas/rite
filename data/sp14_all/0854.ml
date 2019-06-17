@@ -21,7 +21,7 @@ BopG VarG LitG
 
 (6,36)-(6,52)
 digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

@@ -40,7 +40,7 @@ let rec additivePersistence n =
 (* changed spans
 (16,65)-(16,68)
 abs n
-AppG (fromList [VarG])
+AppG [VarG]
 
 (16,69)-(16,70)
 0

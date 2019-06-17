@@ -52,7 +52,7 @@ let rec additivePersistence n =
 (21,29)-(21,59)
 count (acc + 1)
       (sumList (digits n))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG]]
 
 *)
 

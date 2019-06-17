@@ -25,7 +25,7 @@ let rec digitalRoot n = match digits n with | x::[] -> x;;
 (10,3)-(10,78)
 match digits n with
 | x :: [] -> x
-CaseG (fromList [(ConsPatG VarPatG (ConPatG Nothing),Nothing,VarG)])
+CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,VarG)]
 
 *)
 

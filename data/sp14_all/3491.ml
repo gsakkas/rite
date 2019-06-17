@@ -20,14 +20,14 @@ let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 match c' with
 | true -> wwhile (f , b')
 | false -> b'
-CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG [EmptyG])]
 
 (5,29)-(5,57)
 let func =
   fun x ->
     fun x -> (0 , true) in
 (func b , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

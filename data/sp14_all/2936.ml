@@ -59,7 +59,7 @@ let bigAdd l1 l2 =
 (16,19)-(16,48)
 match a with
 | (f , g) -> f
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,VarG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,VarG)]
 
 (17,7)-(23,12)
 let newc =
@@ -72,7 +72,7 @@ let digit =
   | (f , g) -> (f + g) + (carry mod 10) in
 match a with
 | (o , p) -> (newc , digit :: p)
-LetG NonRec (fromList [(VarPatG,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

@@ -77,7 +77,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (28,15)-(28,51)
 eval (n , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 (29,10)-(29,35)
 d > 1.0
@@ -85,11 +85,11 @@ BopG VarG LitG
 
 (29,41)-(29,44)
 eval (m , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 (29,44)-(29,44)
 eval (m , x , y) ** eval (n , x , y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

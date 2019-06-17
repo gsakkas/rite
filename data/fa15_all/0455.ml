@@ -26,11 +26,11 @@ LamG VarPatG (BopG EmptyG EmptyG)
 
 (7,51)-(7,52)
 f x
-AppG (fromList [VarG])
+AppG [VarG]
 
 (7,54)-(7,59)
 isFPoint x
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

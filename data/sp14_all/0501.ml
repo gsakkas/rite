@@ -77,15 +77,15 @@ else (let tens =
         (x1 + x2) / 10 in
       let ones = (x1 + x2) mod 10 in
       ([tens] , tens :: (ones :: res)))
-IteG (BopG EmptyG EmptyG) (LetG NonRec (fromList [(ConsPatG EmptyPatG EmptyPatG,EmptyG)]) EmptyG) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+IteG (BopG EmptyG EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (24,17)-(24,20)
 []
-ListG (fromList [])
+ListG []
 
 (24,22)-(24,25)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

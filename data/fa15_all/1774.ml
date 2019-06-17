@@ -17,7 +17,7 @@ LitG
 
 (3,50)-(3,56)
 (f , b')
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

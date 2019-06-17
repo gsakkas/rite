@@ -119,7 +119,7 @@ let newTotal =
 let updateTotal =
   bigAdd newTotal total in
 (upper_mult @ [0] , updateTotal)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

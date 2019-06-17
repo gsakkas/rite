@@ -82,12 +82,12 @@ let bigAdd l1 l2 =
 (11,8)-(11,60)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 (12,8)-(12,60)
 (clone 0
        (List.length l2 - List.length l1) @ l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 (20,7)-(32,79)
 match x with
@@ -99,7 +99,7 @@ match x with
                                 | h :: t -> if ((n + c) + d) < 10
                                             then (0 , [0] @ ([(c + d) + h] @ t))
                                             else (n + 1 , [((h + c) + d) / 10] @ ([((h + c) + d) mod 10] @ t))
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])]
 
 *)
 

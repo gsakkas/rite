@@ -21,7 +21,7 @@ let rec digitsOfInt n = if n = 0 then [0] else getDigits n;;
 (* changed spans
 (7,8)-(7,72)
 getDigits n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

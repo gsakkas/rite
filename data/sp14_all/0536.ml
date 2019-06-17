@@ -91,7 +91,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (38,31)-(38,41)
 max' 0.1 l'
-AppG (fromList [VarG,LitG])
+AppG [LitG,VarG]
 
 *)
 

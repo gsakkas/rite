@@ -58,7 +58,7 @@ LitG
 
 (20,20)-(20,53)
 exprToString x ^ ("*" ^ exprToString y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

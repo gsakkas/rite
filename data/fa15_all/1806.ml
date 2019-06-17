@@ -26,7 +26,7 @@ let removeDuplicates l =
 (* changed spans
 (7,21)-(7,23)
 h :: seen
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (8,21)-(8,31)
 t
@@ -34,7 +34,7 @@ VarG
 
 (9,9)-(11,63)
 helper (seen' , rest')
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

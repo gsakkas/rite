@@ -92,7 +92,7 @@ let bigMul l1 l2 =
 (40,12)-(40,65)
 bigAdd (List.rev (0 :: (List.rev a)))
        (mulByDigit x l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

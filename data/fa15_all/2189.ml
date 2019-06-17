@@ -25,7 +25,7 @@ let fixpoint (f,b) =
 fun b' ->
   (let result = f b' in
    (result , result = b'))
-LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (8,7)-(8,15)
 helper

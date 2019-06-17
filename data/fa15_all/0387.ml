@@ -63,7 +63,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (27,7)-(27,72)
 sin (pi *. eval (r , x , y)) *. tan (pi *. eval (s , x , y))
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

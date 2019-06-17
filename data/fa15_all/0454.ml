@@ -26,7 +26,7 @@ LamG VarPatG (BopG EmptyG EmptyG)
 
 (7,50)-(7,53)
 (f x , isFPoint x)
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

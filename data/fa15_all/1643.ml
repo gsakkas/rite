@@ -34,7 +34,7 @@ let helper =
      then (y , false)
      else (y , true)) in
 helper
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

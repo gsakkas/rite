@@ -27,7 +27,7 @@ let removeDuplicates l =
 (* changed spans
 (8,17)-(8,27)
 List.mem h seen
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

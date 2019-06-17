@@ -1,10 +1,4 @@
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
-if n <= 0
-then []
-else (n mod 10) :: (digitsOfInt (n / 10))
-if n <= 0
-then []
-else [n mod 10] @ digitsOfInt (n / 10)
-if n < 1
-then []
-else x :: (clone x (n - 1))
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
+bigAdd (List.rev (0 :: (List.rev a)))
+       (mulByDigit x l2)
+exprToString e3 ^ ("?" ^ exprToString e4)

@@ -63,7 +63,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,33)-(19,61)
 intlist (x / 10) @ [x mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 (22,11)-(24,66)
 match a with
@@ -72,7 +72,7 @@ match a with
 | h :: t -> (let sum =
                (h + z) + y in
              intlist sum @ t)
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(ConPatG Nothing,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG VarG [(ConPatG Nothing,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG),(ConsPatG EmptyPatG EmptyPatG,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
 
 (23,29)-(23,36)
 z
@@ -80,7 +80,7 @@ VarG
 
 (24,47)-(24,65)
 intlist sum @ t
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],VarG]
 
 *)
 

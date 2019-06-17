@@ -32,7 +32,7 @@ VarG
 
 (7,68)-(7,68)
 helper (h :: seen , t)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

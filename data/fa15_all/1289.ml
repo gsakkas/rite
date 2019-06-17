@@ -11,7 +11,7 @@ let rec sumList xs = match xs with | [] -> 0 | h::t -> h + (sumList t);;
 (* changed spans
 (2,56)-(2,72)
 h + sumList t
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 *)
 

@@ -20,11 +20,11 @@ let fixpoint (f,b) =
 (* changed spans
 (5,30)-(5,51)
 fun b'' -> (f b , false)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 (5,57)-(5,71)
 fun b'' -> (f b , true)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 *)
 

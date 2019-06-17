@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (24,5)-(24,52)
 List.fold_left f base args
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

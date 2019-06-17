@@ -17,7 +17,7 @@ let rec digitsOfInt n =
 (* changed spans
 (5,31)-(5,56)
 digitsOfInt 0 @ return
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],VarG]
 
 *)
 
@@ -26,8 +26,6 @@ AppG (fromList [VarG,AppG (fromList [EmptyG])])
 (2,21)-(6,14)
 (3,3)-(6,14)
 (4,3)-(6,14)
-(5,8)-(5,57)
-(5,9)-(5,29)
 (5,31)-(5,46)
 (5,31)-(5,56)
 (5,32)-(5,43)

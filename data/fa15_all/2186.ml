@@ -22,7 +22,7 @@ let fixpoint (f,b) =
 fun func ->
   (let result = f b in
    (result , result = b))
-LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

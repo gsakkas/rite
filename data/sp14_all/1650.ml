@@ -61,11 +61,11 @@ LitG
 
 (25,43)-(25,46)
 exprToString c
-AppG (fromList [VarG])
+AppG [VarG]
 
 (25,49)-(25,65)
 ":" ^ exprToString d
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG]]
 
 *)
 

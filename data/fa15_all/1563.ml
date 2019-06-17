@@ -35,7 +35,7 @@ let rec additivePersistence n = sumList (digitsOfInt n);;
 (* changed spans
 (14,33)-(14,54)
 sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

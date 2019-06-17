@@ -32,7 +32,7 @@ fun n ->
   | n -> if n < 0
          then []
          else (n mod 10) :: (digitsOfInt (n / 10))
-LamG VarPatG (CaseG (fromList [(VarPatG,Nothing,EmptyG),(LitPatG,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

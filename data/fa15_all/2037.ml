@@ -13,7 +13,7 @@ let rec clone x n =
 (* changed spans
 (3,52)-(3,69)
 clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [VarG,BopG EmptyG EmptyG]
 
 *)
 

@@ -13,7 +13,7 @@ let pipe fs =
 (* changed spans
 (3,13)-(3,22)
 let an = a in x
-LetG NonRec (fromList [(VarPatG,VarG)]) VarG
+LetG NonRec [(VarPatG,VarG)] VarG
 
 *)
 

@@ -34,7 +34,7 @@ let rec digitalRoot n = digitalRoot (sumList (digits n));;
 (* changed spans
 (4,46)-(4,47)
 digits n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

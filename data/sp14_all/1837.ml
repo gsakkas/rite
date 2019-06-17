@@ -37,7 +37,7 @@ let rec digitalRoot n =
 (* changed spans
 (14,51)-(14,69)
 sumList (digits x)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

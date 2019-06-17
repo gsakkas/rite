@@ -74,12 +74,12 @@ match l with
 | h :: t -> if h = 0
             then removeZero t
             else l
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
 
 (29,16)-(29,54)
 List.combine (List.rev l1)
              (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

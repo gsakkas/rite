@@ -34,7 +34,7 @@ let xxx =
            then []
            else (n mod 10) :: (digitsOfInt (n / 10)) in
 listReverse (xxx n)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

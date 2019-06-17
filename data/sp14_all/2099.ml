@@ -73,7 +73,7 @@ let rec build (rand,depth) =
 (* changed spans
 (29,20)-(29,22)
 buildX ()
-AppG (fromList [ConAppG Nothing])
+AppG [ConAppG Nothing]
 
 *)
 

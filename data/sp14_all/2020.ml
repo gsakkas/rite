@@ -69,21 +69,21 @@ match a with
 | [] -> mulByDigit x l2
 | _ -> bigAdd a (mulByDigit x
                             l2)
-CaseG (fromList [(ConPatG Nothing,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(ConPatG Nothing,Nothing,AppG [EmptyG,EmptyG]),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 (16,13)-(16,35)
 mulByDigit x l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (17,15)-(17,59)
 bigAdd a (mulByDigit x l2)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 (19,29)-(19,76)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

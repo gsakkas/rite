@@ -25,7 +25,7 @@ VarG
 
 (7,18)-(7,21)
 h ^ sep
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

@@ -16,7 +16,7 @@ VarG
 
 (3,33)-(3,39)
 f 2 xs
-AppG (fromList [VarG,LitG])
+AppG [LitG,VarG]
 
 *)
 

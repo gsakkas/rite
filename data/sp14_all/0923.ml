@@ -52,7 +52,7 @@ VarG
 
 (21,16)-(21,41)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

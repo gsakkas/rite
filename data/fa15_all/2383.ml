@@ -44,7 +44,7 @@ LitG
 
 (23,58)-(23,66)
 explode w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

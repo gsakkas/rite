@@ -25,7 +25,7 @@ let fixpoint (f,b) =
 (* changed spans
 (9,27)-(9,43)
 notEqual b (f b)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

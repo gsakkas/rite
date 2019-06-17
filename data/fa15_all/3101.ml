@@ -71,7 +71,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (32,9)-(32,61)
 abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

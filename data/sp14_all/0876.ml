@@ -38,7 +38,7 @@ VarG
 (10,63)-(10,63)
 (clone 0
        (len2 - len1) @ l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

@@ -34,7 +34,7 @@ BopG VarG LitG
 
 (11,26)-(11,62)
 sumList (digitsOfInt x) + y
-BopG (AppG (fromList [EmptyG])) VarG
+BopG (AppG [EmptyG]) VarG
 
 *)
 

@@ -12,7 +12,7 @@ let rec digitsOfInt n =
 (* changed spans
 (2,76)-(2,76)
 [n]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

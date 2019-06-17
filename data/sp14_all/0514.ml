@@ -14,7 +14,7 @@ let sqsum xs =
 (* changed spans
 (3,15)-(3,30)
 a + int_of_float (float_of_int x ** 2.0)
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 *)
 

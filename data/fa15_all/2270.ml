@@ -74,11 +74,11 @@ BopG VarG LitG
 (31,17)-(31,20)
 List.rev (mulByDigit (i - 1)
                      l)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (31,26)-(31,59)
 bigAdd l l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

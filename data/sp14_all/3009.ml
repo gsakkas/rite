@@ -55,7 +55,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (22,16)-(22,45)
 clone 0 (List.length l1)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG]]
 
 *)
 

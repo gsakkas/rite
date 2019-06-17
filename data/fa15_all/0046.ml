@@ -15,7 +15,7 @@ let rec clone x n =
 (* changed spans
 (3,50)-(3,78)
 helper (x :: acc) (n' - 1)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG,EmptyG],BopG EmptyG EmptyG]
 
 *)
 

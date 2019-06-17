@@ -33,7 +33,7 @@ let rec additivePersistence n =
 (* changed spans
 (9,11)-(9,22)
 digitsOfInt n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

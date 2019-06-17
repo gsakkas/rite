@@ -105,7 +105,7 @@ let rec mulByDigit i l = helper [0] i l;;
 (* changed spans
 (49,33)-(49,34)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

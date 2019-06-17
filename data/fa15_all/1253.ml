@@ -26,7 +26,7 @@ VarG
 (6,8)-(6,66)
 (l1 , clone 0
             (List.length l1 - List.length l2) @ l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 (7,17)-(7,18)
 0

@@ -25,13 +25,13 @@ let rec digitsOfInt n =
 (* changed spans
 (6,26)-(6,31)
 [input]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (6,37)-(6,70)
 let y :: [] =
   loop (input / 10) in
 [y ; input mod 10]
-LetG NonRec (fromList [(ConsPatG VarPatG (ConPatG Nothing),AppG (fromList [EmptyG]))]) (ListG (fromList [EmptyG]))
+LetG NonRec [(ConsPatG EmptyPatG EmptyPatG,AppG [EmptyG])] (ListG [EmptyG,EmptyG])
 
 *)
 

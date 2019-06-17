@@ -47,7 +47,7 @@ LitG
 
 (19,36)-(19,59)
 buildY ()
-AppG (fromList [ConAppG Nothing])
+AppG [ConAppG Nothing]
 
 *)
 

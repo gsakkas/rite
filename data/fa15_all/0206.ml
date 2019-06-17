@@ -69,11 +69,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (28,7)-(30,42)
 ((1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))) *. sin (pi *. eval (e1 , x , y))
-BopG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG]))
+BopG (BopG EmptyG EmptyG) (AppG [EmptyG])
 
 (31,18)-(31,53)
 1.0 /. sin (pi *. eval (e1 , x , y))
-BopG LitG (AppG (fromList [EmptyG]))
+BopG LitG (AppG [EmptyG])
 
 *)
 

@@ -55,15 +55,15 @@ let bigAdd l1 l2 =
 let z = fst x + snd x in
 match a with
 | (w , y) -> ((w + z) / 10 , ((w + z) mod 10) :: y)
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG)] (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
 
 (19,16)-(19,30)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (20,25)-(20,57)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

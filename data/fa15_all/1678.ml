@@ -41,7 +41,7 @@ VarG
 
 (14,8)-(14,9)
 helper n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

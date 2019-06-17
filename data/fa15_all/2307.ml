@@ -49,11 +49,11 @@ VarG
 
 (18,41)-(18,73)
 exprToString y ^ ")/2)"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 (19,20)-(19,53)
 exprToString x ^ ("*" ^ exprToString y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

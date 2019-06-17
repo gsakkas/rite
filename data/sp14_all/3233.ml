@@ -77,7 +77,7 @@ let rec eval (e,x,y) =
 if eval (ex1 , x , y) < eval (ex2 , x , y)
 then eval (ex3 , x , y)
 else eval (ex4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

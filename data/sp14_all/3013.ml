@@ -55,7 +55,7 @@ let (i , acc) = a in
 let digmul =
   mulByDigit (i * x) l2 in
 (i * 10 , bigAdd digmul acc)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (4,15)-(4,16)
 1

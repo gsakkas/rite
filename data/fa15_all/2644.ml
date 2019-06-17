@@ -85,7 +85,7 @@ let bigMul l1 l2 =
 (* changed spans
 (37,18)-(37,54)
 bigAdd total (mulByDigit x l2)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

@@ -49,11 +49,11 @@ let rec build (rand,depth) =
 if true
 then buildX ()
 else buildY ()
-IteG LitG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG LitG (AppG [EmptyG]) (AppG [EmptyG])
 
 (19,10)-(19,53)
 buildSine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

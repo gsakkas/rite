@@ -79,15 +79,15 @@ LitG
 
 (27,11)-(27,19)
 rand (0 , 4)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (32,12)-(32,35)
 buildThresh (e , e , e , e)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 (33,15)-(33,23)
 rand (0 , 1)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

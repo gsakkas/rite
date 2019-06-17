@@ -57,15 +57,15 @@ let bigAdd l1 l2 =
 match (c , s) with
 | (c , []) -> (c , c :: s)
 | _ -> (((c + x') + x'') / 10 , (((c + x') + x'') mod 10) :: s)
-CaseG (fromList [(TuplePatG (fromList [VarPatG,ConPatG Nothing]),Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
+CaseG (TupleG [EmptyG,EmptyG]) [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG]),(WildPatG,Nothing,TupleG [EmptyG,EmptyG])]
 
 (18,13)-(18,14)
 (c , s)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 (19,15)-(19,27)
 (c , c :: s)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

@@ -83,11 +83,11 @@ let rec build (rand,depth) =
 (* changed spans
 (35,17)-(37,51)
 buildOp1 (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (40,17)-(42,51)
 buildOp1 (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

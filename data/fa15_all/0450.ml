@@ -29,7 +29,7 @@ let gs =
        fun x -> (f x - x) < 0 in
      (x , isFPoint x)) in
 wwhile (gs , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

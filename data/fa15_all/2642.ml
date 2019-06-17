@@ -83,7 +83,7 @@ let bigMul l1 l2 =
 (34,17)-(34,60)
 bigAdd total (mulByDigit x
                          l2) @ listZeros pow
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],AppG [EmptyG]]
 
 *)
 

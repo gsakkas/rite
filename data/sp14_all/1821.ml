@@ -43,7 +43,7 @@ LitG
 let sum =
   num + additivePersistence num in
 1 + additivePersistence num
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (BopG EmptyG EmptyG)
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG)] (BopG EmptyG EmptyG)
 
 *)
 

@@ -38,7 +38,7 @@ let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
 fun x ->
   match explode x with
   | h :: t -> false
-LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
 
 (20,58)-(20,69)
 w

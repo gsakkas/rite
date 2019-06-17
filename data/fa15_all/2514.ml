@@ -85,7 +85,7 @@ LitG
 
 (37,35)-(37,40)
 exprToString e1
-AppG (fromList [VarG])
+AppG [VarG]
 
 (37,44)-(37,61)
 " * "
@@ -93,7 +93,7 @@ LitG
 
 (37,64)-(37,71)
 exprToString e2 ^ ") /6)"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

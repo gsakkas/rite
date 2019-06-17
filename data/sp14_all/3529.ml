@@ -12,7 +12,7 @@ let rec listReverse l = match l with | [] -> [] | _::tl -> listReverse tl;;
 (* changed spans
 (3,38)-(3,59)
 listReverse tl
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

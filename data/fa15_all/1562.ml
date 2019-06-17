@@ -37,7 +37,7 @@ let rec additivePersistence n = aPHelper n;;
 (* changed spans
 (14,33)-(14,72)
 aPHelper n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

@@ -20,11 +20,11 @@ fun g ->
         match n with
         | [] -> n
         | _ -> y b
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (3,39)-(3,40)
 f 0 []
-AppG (fromList [LitG,ListG (fromList [])])
+AppG [LitG,ListG []]
 
 *)
 

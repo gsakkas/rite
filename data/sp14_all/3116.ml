@@ -63,7 +63,7 @@ VarG
 
 (24,20)-(24,24)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

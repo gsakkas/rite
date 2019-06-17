@@ -14,7 +14,7 @@ let pipe fs =
 fun f ->
   fun x ->
     fun f -> fun a -> f a x
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (2,45)-(2,47)
 fun y -> y

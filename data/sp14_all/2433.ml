@@ -21,7 +21,7 @@ VarG
 
 (5,67)-(5,67)
 (l1 , l2)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

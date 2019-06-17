@@ -13,7 +13,7 @@ let rec clone x n =
 (* changed spans
 (3,39)-(3,49)
 x @ acc
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

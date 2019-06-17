@@ -89,7 +89,7 @@ let bigMul l1 l2 =
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

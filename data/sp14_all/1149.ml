@@ -17,11 +17,11 @@ let rec digitsOfInt n =
 (* changed spans
 (5,23)-(5,24)
 [n]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (5,30)-(5,62)
 (n mod 10) :: (digitsOfInt (n / 10))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG]]
 
 *)
 

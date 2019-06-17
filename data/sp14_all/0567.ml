@@ -25,7 +25,7 @@ let y =
     (let xx = f x in
      (xx , xx <> x)) in
 (y , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

@@ -1,14 +1,3 @@
-ListG (fromList [BopG EmptyG EmptyG])
-[(fst x + snd x) / 10 ; (fst x + snd x) mod 10]
-[addit mod 10]
-[n mod 10]
-[sum / 10 ; sum mod 10]
-[z mod 10]
-[a + hd]
-[n / 10 ; n mod 10]
-[(h1 + h2) / 10]
-[(h1 + h2) mod 10]
-[(h * i) mod 10]
-[(h * i) mod 10 ; ((h * i) / 10) + h]
-[(h * i) mod 10 ; ((h * i) / 10) + (m * i)]
-[v mod 10]
+AppG [ConAppG Nothing]
+buildX ()
+buildY ()

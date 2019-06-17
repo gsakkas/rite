@@ -28,7 +28,7 @@ let rec mulByDigit i l =
 (* changed spans
 (10,43)-(10,48)
 if v = 0 then [1] else [0]
-IteG (BopG EmptyG EmptyG) (ListG (fromList [EmptyG])) (ListG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (ListG [EmptyG])
 
 *)
 

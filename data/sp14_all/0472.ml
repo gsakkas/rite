@@ -22,7 +22,7 @@ let g =
     (let bb = f b in
      (bb , bb = b)) in
 (g , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

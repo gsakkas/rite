@@ -12,7 +12,7 @@ let rec digitsOfInt n = if n > 0 then [n; n mod 10] else [];;
 (* changed spans
 (3,17)-(3,52)
 [n ; n mod 10]
-ListG (fromList [VarG,BopG EmptyG EmptyG])
+ListG [VarG,BopG EmptyG EmptyG]
 
 *)
 

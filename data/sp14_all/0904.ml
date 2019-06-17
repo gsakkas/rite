@@ -45,7 +45,7 @@ VarG
 
 (16,16)-(16,19)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

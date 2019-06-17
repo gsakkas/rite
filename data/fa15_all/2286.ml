@@ -116,11 +116,11 @@ LitG
 
 (50,13)-(50,46)
 buildCotangent (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 (51,25)-(51,44)
 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

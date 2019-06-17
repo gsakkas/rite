@@ -56,19 +56,19 @@ let bigAdd l1 l2 =
 let (l1x , l2x) = x in
 let (a1 , a2) = a in
 (a1 , (l1x + l2x) :: a2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (20,17)-(20,18)
 []
-ListG (fromList [])
+ListG []
 
 (20,20)-(20,21)
 []
-ListG (fromList [])
+ListG []
 
 (21,16)-(21,34)
 List.rev (List.combine l1 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

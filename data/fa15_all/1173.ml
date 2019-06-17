@@ -70,7 +70,7 @@ match e with
 | Thresh (g , h , i , j) -> if eval (g , x , y) < eval (h , x , y)
                             then eval (i , x , y)
                             else eval (j , x , y)
-CaseG (fromList [(ConPatG Nothing,Nothing,VarG),(ConPatG (Just VarPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,BopG EmptyG EmptyG),(ConPatG (Just (TuplePatG (fromList [EmptyPatG]))),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,AppG [EmptyG]),(ConPatG (Just EmptyPatG),Nothing,AppG [EmptyG]),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,IteG EmptyG EmptyG EmptyG)]
 
 *)
 

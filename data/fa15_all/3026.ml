@@ -47,11 +47,11 @@ let bigAdd l1 l2 =
 (14,30)-(14,78)
 let (carry , sum) = a in
 (((num1 + num2) + carry) / 10 , (((num1 + num2) + carry) mod 10) :: sum)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 (15,20)-(15,21)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

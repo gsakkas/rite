@@ -24,7 +24,7 @@ let fixpoint (f,b) =
 (7,25)-(7,73)
 let result = f b in
 (result , result = b)
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG])] (TupleG [EmptyG,EmptyG])
 
 *)
 

@@ -13,7 +13,7 @@ let rec wwhile (f,b) =
 (* changed spans
 (3,15)-(3,18)
 f b
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

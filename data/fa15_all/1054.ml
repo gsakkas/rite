@@ -63,7 +63,7 @@ let rec mulByDigit i l =
 (* changed spans
 (28,23)-(28,24)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

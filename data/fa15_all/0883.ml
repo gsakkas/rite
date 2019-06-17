@@ -23,7 +23,7 @@ let stringOfList f l =
 (* changed spans
 (3,63)-(3,78)
 sepConcat "" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

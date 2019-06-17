@@ -15,7 +15,7 @@ let bigMul l1 l2 =
 (* changed spans
 (3,19)-(3,20)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

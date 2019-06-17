@@ -29,7 +29,7 @@ LitG
 
 (9,49)-(9,50)
 List.map f l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

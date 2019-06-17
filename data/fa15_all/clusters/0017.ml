@@ -1,29 +1,16 @@
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
-let (cin , res) = a
-and (d1 , d2) = x in
-(((cin + d1) + d2) mod 10 , ((cin + d1) + d2) :: res)
-let (carry , sum) = a in
-((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-let (a1 , a2) = a in
-(if ((a1 + x1) + x2) >= 10
- then 1
- else 0 , ((a1 + x1) + x2) :: a2)
-let (carry , ans) = a in
-(1 , let (y , z) = x in
-     [((y + z) + carry) mod 10] @ ans)
-let (carry , ans) = a in
-(0 , let (y , z) = x in
-     [(y + z) + carry] @ ans)
-let (carry , ans) = a in
-(1 , [9] @ ans)
-let (carry , res) = a in
-(((x1 + x2) + carry) / 10 , (((x1 + x2) + carry) mod 10) :: res)
-let (a1 , a2) = a in
-(a1 , (l1x + l2x) :: a2)
-let (a1 , a2) = a in
-(a1 , mulByDigit x
-                 l1 @ clone 0 (List.length a1))
-let (carry , sum) = a in
-(((num1 + num2) + carry) / 10 , (((num1 + num2) + carry) mod 10) :: sum)
-let (x1 , x2) = x in
-([x1 + x2] , [x2])
+AppG [VarG,ListG [EmptyG]]
+seen @ [h]
+a2 @ [((a1 + x1) + x2) - 10]
+a2 @ [(a1 + x1) + x2]
+r @ [h]
+[0] @ l1
+EMPTY
+res @ [carry]
+l @ [x]
+l @ [x mod 10]
+[((h + b) + c) mod 10] @ t
+a @ [0]
+a1 @ [3]
+a2 @ [5]
+a2 @ [((x1 + x2) + c) mod 10]
+l @ [0]

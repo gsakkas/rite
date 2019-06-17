@@ -29,7 +29,7 @@ VarG
 
 (7,42)-(7,44)
 h :: seen
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (7,44)-(7,44)
 seen

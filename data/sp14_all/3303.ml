@@ -30,7 +30,7 @@ let bigMul l1 l2 =
 (3,15)-(3,25)
 match x with
 | (k , v) -> ([k] , v)
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 *)
 

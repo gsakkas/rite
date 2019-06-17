@@ -52,7 +52,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (18,26)-(18,42)
 ((h1 + h2) / 10) :: list1
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

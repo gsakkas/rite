@@ -97,7 +97,7 @@ let toSum =
   intermediateSum @ generatePadding padCount in
 (padCount + 1 , bigAdd currList
                        toSum)
-LetG Rec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

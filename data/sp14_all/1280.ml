@@ -14,7 +14,7 @@ let rec digitsOfInt n =
 (3,26)-(3,75)
 match n with
 | n -> [] @ [n mod 10]
-CaseG (fromList [(VarPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(VarPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 *)
 

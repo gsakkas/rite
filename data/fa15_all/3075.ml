@@ -17,7 +17,7 @@ VarG
 
 (3,62)-(3,66)
 digitsOfInt n
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

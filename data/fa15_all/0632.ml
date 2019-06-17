@@ -35,7 +35,7 @@ fun x ->
    if val1 > 9
    then (val1 / 10 , (val1 mod 10) :: a2)
    else (0 , val1 :: a2))
-LamG VarPatG (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

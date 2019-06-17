@@ -37,7 +37,7 @@ VarG
 
 (12,25)-(12,54)
 additivePersistence (sumList (digitsOfInt n))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

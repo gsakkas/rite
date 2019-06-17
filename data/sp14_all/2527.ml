@@ -25,7 +25,7 @@ let fixpoint (f,b) =
 (let helper =
    fun x -> (f x , f x = f b) in
  helper , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+TupleG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG,VarG]
 
 *)
 

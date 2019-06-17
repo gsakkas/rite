@@ -59,7 +59,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (26,5)-(27,65)
 add (padZero l1 l2 , l2)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

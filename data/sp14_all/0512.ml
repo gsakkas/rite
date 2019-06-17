@@ -14,7 +14,7 @@ let sqsum xs =
 (* changed spans
 (3,19)-(3,27)
 int_of_float (float_of_int x ** 2.0)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

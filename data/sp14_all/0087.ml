@@ -52,19 +52,19 @@ let bigAdd l1 l2 =
 (* changed spans
 (16,23)-(16,24)
 snd a
-AppG (fromList [VarG])
+AppG [VarG]
 
 (16,38)-(16,40)
 (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-TupleG (fromList [BopG EmptyG EmptyG,ListG (fromList [EmptyG])])
+TupleG [BopG EmptyG EmptyG,ListG [EmptyG,EmptyG]]
 
 (16,51)-(16,53)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (17,16)-(17,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

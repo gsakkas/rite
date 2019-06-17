@@ -18,7 +18,7 @@ let rec listReverse l = match l with | [] -> [] | h::t -> append t [h];;
 (* changed spans
 (6,37)-(6,62)
 append t [h]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 *)
 

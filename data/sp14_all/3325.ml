@@ -17,7 +17,7 @@ let rec mulByDigit i l =
 (* changed spans
 (5,13)-(5,47)
 mulByDigit i (List.rev t)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

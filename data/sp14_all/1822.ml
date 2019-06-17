@@ -41,7 +41,7 @@ let rec additivePersistence n =
 (* changed spans
 (18,6)-(18,47)
 1 + additivePersistence num
-BopG LitG (AppG (fromList [EmptyG]))
+BopG LitG (AppG [EmptyG])
 
 *)
 

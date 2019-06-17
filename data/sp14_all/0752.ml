@@ -12,7 +12,7 @@ let rec wwhile (f,b) =
 (* changed spans
 (2,71)-(2,74)
 wwhile (f , a)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

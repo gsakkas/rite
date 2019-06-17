@@ -1,3 +1,0 @@
-int
-bool
-'a list

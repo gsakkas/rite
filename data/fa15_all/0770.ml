@@ -53,11 +53,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (18,22)-(18,45)
 [((a1 + x1) + x2) - 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 (19,22)-(19,38)
 [(a1 + x1) + x2]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 *)
 

@@ -1,4 +1,11 @@
-TupleG (fromList [ListG (fromList [EmptyG])])
-([x1 + x2] , [x2])
-([(x1 + x2) mod 10] , [(x1 + x2) / 10])
-([(x1 + x2) / 10] , [(x1 + x2) mod 10])
+IteG (AppG [EmptyG,EmptyG]) VarG (AppG [EmptyG,EmptyG])
+if List.mem h seen
+then seen
+else h :: seen
+EMPTY
+if List.mem h seen
+then seen
+else seen @ [h]
+if List.mem h seen
+then h :: seen
+else seen

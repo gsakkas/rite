@@ -85,7 +85,7 @@ bigAdd (mulByDigit i
                    (List.rev (List.map (fun x ->
                                           x * 10) t)))
        (helper [] (h * i))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

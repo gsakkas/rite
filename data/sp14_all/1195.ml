@@ -80,19 +80,19 @@ match x with
                | (o , z) -> if ((o + x1) + x2) > 9
                             then (1 , (((o + x1) + x2) mod 10) :: z)
                             else (0 , ((o + x1) + x2) :: z)
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])]
 
 (23,16)-(23,17)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (26,16)-(26,21)
 List.rev list1
-AppG (fromList [VarG])
+AppG [VarG]
 
 (26,23)-(26,28)
 List.rev list2
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

@@ -50,7 +50,7 @@ let rec eval (e,x,y) =
 (20,26)-(20,69)
 evalhelper p1 x
            y *. evalhelper p2 x y
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG,EmptyG,EmptyG]) (AppG [EmptyG,EmptyG,EmptyG])
 
 *)
 

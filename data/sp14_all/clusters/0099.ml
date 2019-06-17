@@ -1,12 +1,6 @@
-IteG (BopG EmptyG EmptyG) (LetG NonRec (fromList [(ConsPatG EmptyPatG EmptyPatG,EmptyG)]) EmptyG) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
-if carry <> []
-then (let ch :: _ = carry in
-      let tens =
-        ((x1 + x2) + ch) / 10 in
-      let ones =
-        ((x1 + x2) + ch) mod 10 in
-      ([tens] , tens :: (ones :: res)))
-else (let tens =
-        (x1 + x2) / 10 in
-      let ones = (x1 + x2) mod 10 in
-      ([tens] , tens :: (ones :: res)))
+CaseG (BopG EmptyG EmptyG) [(LitPatG,Nothing,ListG []),(LitPatG,Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])]
+match n > 0 with
+| false -> []
+| true -> match n > 9 with
+          | false -> n :: (digitsOfInt n)
+          | true -> digitsOfInt (n mod 10)

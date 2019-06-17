@@ -79,7 +79,7 @@ VarG
 
 (30,64)-(30,65)
 snd a
-AppG (fromList [VarG])
+AppG [VarG]
 
 (31,15)-(31,17)
 0

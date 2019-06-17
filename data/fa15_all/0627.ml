@@ -13,7 +13,7 @@ let rec clone x n =
 (2,53)-(2,70)
 List.append (clone x (n - 1))
             []
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
+AppG [AppG [EmptyG,EmptyG],ListG []]
 
 *)
 

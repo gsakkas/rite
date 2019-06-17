@@ -50,19 +50,19 @@ let rec build (rand,depth) =
 (* changed spans
 (16,16)-(16,26)
 (0 , depth)
-TupleG (fromList [VarG,LitG])
+TupleG [LitG,VarG]
 
 (18,32)-(18,38)
 buildX ()
-AppG (fromList [ConAppG Nothing])
+AppG [ConAppG Nothing]
 
 (18,44)-(18,50)
 buildY ()
-AppG (fromList [ConAppG Nothing])
+AppG [ConAppG Nothing]
 
 (19,24)-(19,45)
 buildSine (build (rand , depth - 1))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

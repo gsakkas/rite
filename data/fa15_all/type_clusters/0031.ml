@@ -1,4 +1,0 @@
-'a
-int
-string
-bool

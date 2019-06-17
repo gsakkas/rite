@@ -11,7 +11,7 @@ let rec digitsOfInt n = if n > 0 then [n mod 100; n mod 10] else [];;
 (* changed spans
 (2,39)-(2,63)
 [n mod 100 ; n mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG,BopG EmptyG EmptyG]
 
 *)
 

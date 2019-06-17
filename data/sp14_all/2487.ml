@@ -55,11 +55,11 @@ VarG
 
 (18,29)-(18,44)
 evalhelper p1 x y
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 (19,31)-(19,46)
 evalhelper p1 x y
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

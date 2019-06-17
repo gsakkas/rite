@@ -22,7 +22,7 @@ let rec digitsOfInt n =
 (6,35)-(6,70)
 append (helper (m / 10))
        [m mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

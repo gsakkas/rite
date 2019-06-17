@@ -103,7 +103,7 @@ let rec build (rand,depth) =
 (* changed spans
 (27,10)-(27,24)
 buildAverage (VarX , VarY)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

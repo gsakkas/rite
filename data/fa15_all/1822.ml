@@ -55,11 +55,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (17,19)-(17,27)
 pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 (18,21)-(18,44)
 pi *. eval (e , x , y)
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 (19,24)-(19,67)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
@@ -67,7 +67,7 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (20,22)-(20,59)
 eval (e1 , x , y) *. eval (e2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

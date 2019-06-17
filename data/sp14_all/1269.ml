@@ -22,7 +22,7 @@ let rec listReverse l =
 (6,43)-(6,77)
 append_new (listReverse tail)
            [head]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

@@ -40,7 +40,7 @@ let x = 1 in
 if sumList (digitsOfInt n) > 9
 then additivePersistence (sumList (digitsOfInt n))
 else x)
-LetG NonRec (fromList [(VarPatG,LitG)]) (SeqG EmptyG EmptyG)
+LetG NonRec [(VarPatG,LitG)] (SeqG EmptyG EmptyG)
 
 *)
 

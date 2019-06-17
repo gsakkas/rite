@@ -81,7 +81,7 @@ let bigAdd l1 l2 =
 (33,7)-(33,35)
 pair (List.rev l1)
      (List.rev l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],AppG [EmptyG]]
 
 (34,49)-(34,53)
 res
@@ -90,7 +90,7 @@ VarG
 (35,3)-(35,22)
 removeZero (add (padZero l1
                          l2))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

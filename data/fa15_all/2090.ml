@@ -20,7 +20,7 @@ let rec clone x n = if n = 0 then [] else x :: (clone x (n - 1));;
 if n = 0
 then []
 else x :: (clone x (n - 1))
-IteG (BopG EmptyG EmptyG) (ListG (fromList [])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (ListG []) (AppG [EmptyG,EmptyG])
 
 *)
 

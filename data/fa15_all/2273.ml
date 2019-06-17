@@ -70,11 +70,11 @@ let rec mulByDigit i l =
 (31,18)-(31,28)
 List.rev (mulByDigit (i - 1)
                      l)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (31,34)-(31,56)
 bigAdd l l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

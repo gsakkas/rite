@@ -67,7 +67,7 @@ let bigAdd l1 l2 =
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

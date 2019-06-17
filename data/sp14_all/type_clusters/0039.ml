@@ -1,3 +1,0 @@
-expr
-int
-float

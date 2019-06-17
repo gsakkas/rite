@@ -1,14 +1,9 @@
-CaseG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
-match n with
-| 0 -> []
-| _ -> x :: (clone x (n - 1))
-match i with
-| 0 -> []
-| _ -> bigAdd (bigAdd l l)
-              (mulByDigit (i - 1) l)
-match n with
-| 0 -> []
-| _ -> digitsOfInt (n / 10) @ [n mod 10]
-match n with
-| 0 -> []
-| _ -> clone x (n - 1) @ [x]
+IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
+if diff > 0
+then (l1 , List.append (clone 0
+                              diff) l2)
+else (l1 , l2)
+if b < a
+then (l1 , List.append (clone 0
+                              (a - b)) l2)
+else (l1 , l2)

@@ -1,16 +1,12 @@
-BopG VarG LitG
-n mod 10
-n / 10
-n mod 100
-x < 10
-n_ mod 10
-i <= 1
-x mod 10
-x / 1
-sum + 1
-n < 10
-n <= 0
-pi *. 1.0
-d > 1.0
-place * 10
-i >= 0
+BopG VarG (AppG [EmptyG])
+pi *. eval (e1 , x , y)
+sumList (digitsOfInt x) + y
+EMPTY
+h + sumList t
+f b <> b
+f x <> x
+pi *. eval (e , x , y)
+pi *. eval (a , x , y)
+b = f b
+pi *. eval (x1 , x , y)
+pi *. eval (x2 , x , y)

@@ -116,11 +116,11 @@ let bigMul l1 l2 =
 (* changed spans
 (47,62)-(47,63)
 [x]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (50,67)-(50,68)
 [x]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (54,14)-(54,40)
 l2

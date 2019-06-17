@@ -24,7 +24,7 @@ let rec helper =
      then b'
      else helper (f , b')) in
 helper (f , b)
-LetG Rec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (AppG (fromList [EmptyG]))
+LetG Rec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

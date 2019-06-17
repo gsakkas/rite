@@ -61,7 +61,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,7)-(24,40)
 ((sum mod 10) :: a2 , (sum / 10) :: a1)
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

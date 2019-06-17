@@ -58,17 +58,17 @@ let rec mulByDigit i l =
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: xs'))
        xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 (23,17)-(23,45)
 helper 0 (num :: accum) xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 (24,17)-(24,77)
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: accum))
        xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 *)
 

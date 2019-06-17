@@ -55,15 +55,15 @@ let sum = fst x + snd x in
 if sum > 9
 then (1 , ((sum - 10) + fst a) :: (snd a))
 else (0 , (sum + fst a) :: (snd a))
-LetG NonRec (fromList [(VarPatG,BopG EmptyG EmptyG)]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(VarPatG,BopG EmptyG EmptyG)] (IteG EmptyG EmptyG EmptyG)
 
 (18,16)-(18,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (19,16)-(19,18)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

@@ -14,7 +14,7 @@ let pipe fs =
 (* changed spans
 (3,15)-(3,22)
 x (let fn = fun d -> d in fn)
-AppG (fromList [LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+AppG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG]
 
 *)
 

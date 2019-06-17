@@ -71,7 +71,7 @@ BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
 
 (27,25)-(27,52)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

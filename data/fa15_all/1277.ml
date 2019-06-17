@@ -37,7 +37,7 @@ LitG
 
 (12,8)-(12,74)
 1 + additivePersistence (sumList (digits n))
-BopG LitG (AppG (fromList [EmptyG]))
+BopG LitG (AppG [EmptyG])
 
 *)
 

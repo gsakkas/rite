@@ -28,7 +28,7 @@ let palindrome w =
 (* changed spans
 (10,23)-(10,24)
 explode w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

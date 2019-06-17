@@ -29,7 +29,7 @@ VarG
 
 (9,20)-(9,23)
 (d , k , l)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 *)
 

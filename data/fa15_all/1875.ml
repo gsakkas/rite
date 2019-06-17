@@ -11,7 +11,7 @@ let rec sumList xs = match xs with | [] -> 0 | x::y -> x + (sumList y);;
 (* changed spans
 (2,60)-(2,67)
 sumList y
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

@@ -25,7 +25,7 @@ LitG
 
 (6,41)-(6,44)
 b ^ "]"
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 *)
 

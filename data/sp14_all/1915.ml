@@ -49,19 +49,19 @@ let rec exprToString e =
 (* changed spans
 (19,29)-(19,31)
 exprToString e1
-AppG (fromList [VarG])
+AppG [VarG]
 
 (19,42)-(19,44)
 exprToString e2
-AppG (fromList [VarG])
+AppG [VarG]
 
 (19,55)-(19,57)
 exprToString e3
-AppG (fromList [VarG])
+AppG [VarG]
 
 (19,67)-(19,69)
 exprToString e4
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

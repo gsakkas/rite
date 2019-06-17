@@ -17,7 +17,7 @@ let fixpoint (f,b) = wwhile (let h x = ((f x), ((f x) = x)) in (h, b));;
 let h =
   fun x -> (f x , f x = x) in
 (h , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

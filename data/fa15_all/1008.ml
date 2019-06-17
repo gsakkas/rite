@@ -30,7 +30,7 @@ let removeDuplicates l =
 (* changed spans
 (10,34)-(10,35)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

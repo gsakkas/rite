@@ -118,7 +118,7 @@ let bigMul l1 l2 =
 (50,15)-(50,36)
 intListToInt (carryFunc (mulByDigit (intListToInt l1)
                                     [s]))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

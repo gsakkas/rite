@@ -1,12 +1,9 @@
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
-(n mod 10) :: (digitsOfInt (n / 10))
-helper (x :: acc) (n' - 1)
-add (digitsOfInt (n / 10))
-    (n mod 10)
-mulByDigit (i - 1) (bigAdd l
-                           l)
-loop (sumList (digitsOfInt x))
-     (sumList (digitsOfInt x) + y)
-(n' mod 10) :: (digitsOfInt (n / 10))
-count (acc + 1)
-      (sumList (digits n))
+AppG [VarG,LitG]
+itt y' 0
+0 :: l1
+0 :: l2
+EMPTY
+sepConcat "; " l
+0 :: a2
+0 :: a1
+sepConcat " " l

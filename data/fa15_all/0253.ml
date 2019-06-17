@@ -29,7 +29,7 @@ let bigMul l1 l2 =
 (* changed spans
 (8,5)-(8,67)
 ((mult (m , n) + y) / 10 , [(mult (m , n) + y) mod 10] @ z)
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

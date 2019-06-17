@@ -29,7 +29,7 @@ let padZero l1 l2 =
 List.append (clone 0
                    (List.length l1 - List.length l2))
             l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

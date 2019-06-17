@@ -95,7 +95,7 @@ let test =
 let multi =
   mulByDigit (test * x) l1 in
 (test :: a1 , bigAdd multi a2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

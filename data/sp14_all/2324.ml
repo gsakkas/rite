@@ -87,7 +87,7 @@ let bigMul l1 l2 =
 (* changed spans
 (38,32)-(38,46)
 (mulByDigit x q , [])
-TupleG (fromList [AppG (fromList [EmptyG]),ListG (fromList [])])
+TupleG [AppG [EmptyG,EmptyG],ListG []]
 
 *)
 

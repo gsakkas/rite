@@ -16,7 +16,7 @@ BopG VarG VarG
 
 (2,48)-(2,49)
 List.hd xs
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

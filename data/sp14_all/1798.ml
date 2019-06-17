@@ -49,11 +49,11 @@ fun absNum ->
           let theSum = sumList xs in
           additivePersAndRoot theSum
                               (persCount + 1))
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (17,45)-(17,66)
 additivePersAndRoot (abs n) 0
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

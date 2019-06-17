@@ -53,7 +53,7 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (18,20)-(18,21)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

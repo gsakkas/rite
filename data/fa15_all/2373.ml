@@ -27,7 +27,7 @@ LitG
 
 (7,62)-(7,68)
 matchHeads w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

@@ -23,7 +23,7 @@ let rec sepConcat sep sl =
 (* changed spans
 (7,25)-(7,28)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

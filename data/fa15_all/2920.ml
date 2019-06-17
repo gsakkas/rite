@@ -19,7 +19,7 @@ let fixpoint (f,b) = wwhile ((fun x  -> ((f x), (x != (f x)))), b);;
 (* changed spans
 (6,30)-(6,40)
 fun x -> (f x , x <> f x)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 *)
 

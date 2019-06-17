@@ -56,11 +56,11 @@ let palindrome w =
 (* changed spans
 (14,61)-(14,62)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (23,68)-(23,69)
 explode w
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

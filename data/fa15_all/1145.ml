@@ -122,14 +122,14 @@ let bigMul l1 l2 =
 (* changed spans
 (55,23)-(55,74)
 List.combine l2 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (56,3)-(56,50)
 let (x , res) =
   List.fold_left f base args in
 res @ helper (List.length l2 * 2)
              x
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] (AppG [EmptyG,EmptyG])
 
 *)
 

@@ -15,7 +15,7 @@ VarG
 
 (2,45)-(2,46)
 fun f -> fun x -> x
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 *)
 

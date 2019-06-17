@@ -63,7 +63,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (24,47)-(24,65)
 intlist sum @ t
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG],VarG]
 
 *)
 

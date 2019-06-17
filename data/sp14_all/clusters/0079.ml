@@ -1,12 +1,7 @@
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,IteG EmptyG EmptyG EmptyG),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| h :: t -> if h = 0
-            then removeZero t
-            else l
-match y with
-| [] -> []
-| hd :: tl -> if tl = []
-              then [(hd , x)]
-              else (hd , x) :: (argmaker x
-                                         tl)
+IteG (BopG EmptyG EmptyG) (ListG []) (IteG EmptyG EmptyG EmptyG)
+if i = 0
+then []
+else if i = 1
+     then l
+     else bigAdd (bigAdd l l)
+                 (mulByDigit (i - 2) l)

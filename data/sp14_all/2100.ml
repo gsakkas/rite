@@ -98,7 +98,7 @@ let rec build (rand,depth) =
  else build (rand , depth - 1) , if depth = 0
                                  then buildY ()
                                  else build (rand , depth - 1))
-TupleG (fromList [IteG EmptyG EmptyG EmptyG])
+TupleG [IteG EmptyG EmptyG EmptyG,IteG EmptyG EmptyG EmptyG]
 
 *)
 

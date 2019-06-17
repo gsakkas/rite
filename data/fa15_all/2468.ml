@@ -25,7 +25,7 @@ let stringOfList f l = sepConcat (sepConcat ";" (List.map f l)) ["["; "]"];;
 (* changed spans
 (9,65)-(9,77)
 ["[" ; "]"]
-ListG (fromList [LitG])
+ListG [LitG,LitG]
 
 *)
 

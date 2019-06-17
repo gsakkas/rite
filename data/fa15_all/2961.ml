@@ -11,7 +11,7 @@ let rec clone x n = if n = 1 then [x] else List.append [x] (clone x (n - 1));;
 (* changed spans
 (2,60)-(2,77)
 clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [VarG,BopG EmptyG EmptyG]
 
 *)
 

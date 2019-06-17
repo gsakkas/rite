@@ -27,7 +27,7 @@ fun b ->
    if result = b
    then (result , false)
    else (result , true))
-LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

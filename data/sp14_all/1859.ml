@@ -89,7 +89,7 @@ let rec build (rand,depth) =
 (* changed spans
 (40,12)-(41,42)
 (first_forced , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG],AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

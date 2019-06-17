@@ -59,7 +59,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (26,27)-(26,50)
 cos (pi *. eval (e' , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

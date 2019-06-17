@@ -25,7 +25,7 @@ fun b ->
   (f b , if f b = b
          then true
          else false)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 *)
 

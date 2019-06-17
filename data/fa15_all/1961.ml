@@ -61,17 +61,17 @@ let bigMul l1 l2 =
 (6,57)-(6,68)
 (carry @ [0] , bigAdd (mulByDigit x1
                                   x2 @ carry) res)
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 (7,14)-(7,16)
 ([] , [])
-TupleG (fromList [ListG (fromList [])])
+TupleG [ListG [],ListG []]
 
 (9,3)-(9,54)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

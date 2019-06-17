@@ -49,7 +49,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (17,29)-(17,43)
 [addit mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 *)
 

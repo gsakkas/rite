@@ -12,7 +12,7 @@ let stringOfList f l = "[" ^ ((List.fold_left (^) "" (List.map f l)) ^ "]");;
 (2,31)-(2,45)
 List.fold_left (^) ""
                (List.map f l)
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [VarG,LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

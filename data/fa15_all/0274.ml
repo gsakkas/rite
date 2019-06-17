@@ -19,7 +19,7 @@ let rec mulByDigit i l =
 (* changed spans
 (4,56)-(4,70)
 ((h * i) mod 10) :: t
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

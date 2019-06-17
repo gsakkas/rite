@@ -45,7 +45,7 @@ let palindrome w =
 (* changed spans
 (18,18)-(18,19)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

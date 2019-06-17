@@ -15,7 +15,7 @@ let rec digitsOfInt n =
 (* changed spans
 (5,8)-(5,63)
 (n mod 10) :: (digitsOfInt (n / 10))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG]]
 
 *)
 

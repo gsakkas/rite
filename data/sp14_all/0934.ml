@@ -44,7 +44,7 @@ let bigAdd l1 l2 =
 (14,17)-(14,40)
 match x with
 | (_ , _) -> a
-CaseG (fromList [(TuplePatG (fromList [WildPatG]),Nothing,VarG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,VarG)]
 
 *)
 

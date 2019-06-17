@@ -75,13 +75,13 @@ let rec eval (e,x,y) =
 (* changed spans
 (37,24)-(37,63)
 eval (ex1 , x , y) *. eval (ex2 , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 (39,7)-(44,82)
 if eval (ex1 , x , y) < eval (ex2 , x , y)
 then eval (ex3 , x , y)
 else eval (ex4 , x , y)
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

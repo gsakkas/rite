@@ -23,7 +23,7 @@ let padZero l1 l2 =
 (* changed spans
 (8,10)-(8,28)
 clone 0 (abs diff)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG]]
 
 *)
 

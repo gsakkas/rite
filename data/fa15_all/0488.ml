@@ -53,7 +53,7 @@ let bigAdd l1 l2 =
 let (x1 , x2) = x in
 let (carry , sum) = a in
 ((x1 + x2) / 10 , (((x1 + x2) + carry) mod 10) :: sum)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (17,17)-(17,19)
 0
@@ -63,7 +63,7 @@ LitG
 let (l1' , l2') =
   padZero l1 l2 in
 List.combine l1' l2'
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG])] (AppG [EmptyG,EmptyG])
 
 *)
 

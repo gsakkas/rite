@@ -63,7 +63,7 @@ let rec eval (e,x,y) = float_of_string (exprToString e);;
 (* changed spans
 (28,40)-(28,68)
 exprToString e
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

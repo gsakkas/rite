@@ -11,7 +11,7 @@ let pipe fs = let f a x x = a x in let base x = x in List.fold_left f base fs;;
 (* changed spans
 (2,25)-(2,32)
 fun x -> a x
-LamG VarPatG (AppG (fromList [EmptyG]))
+LamG VarPatG (AppG [EmptyG])
 
 *)
 

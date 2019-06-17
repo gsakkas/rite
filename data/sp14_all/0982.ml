@@ -70,7 +70,7 @@ let bigAdd l1 l2 =
 (31,3)-(31,44)
 List.rev (removeZero (add (padZero l1
                                    l2)))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

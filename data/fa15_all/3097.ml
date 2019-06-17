@@ -73,11 +73,11 @@ BopG (BopG EmptyG EmptyG) LitG
 
 (30,13)-(30,18)
 (expr1 , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (30,23)-(30,59)
 abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

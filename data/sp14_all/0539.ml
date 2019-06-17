@@ -81,7 +81,7 @@ let rec eval (e,x,y) =
 (29,7)-(36,27)
 max' (0.0 -. 1.0) (min 1.0
                        ((2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

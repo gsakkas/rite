@@ -90,7 +90,7 @@ VarG
 (37,25)-(37,62)
 bigAdd l (mulByDigit (i - 1)
                      l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

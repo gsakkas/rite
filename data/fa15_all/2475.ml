@@ -81,19 +81,19 @@ let bigAdd l1 l2 =
 (* changed spans
 (25,30)-(25,58)
 [carry ; (carry + b) + c]
-ListG (fromList [VarG,BopG EmptyG EmptyG])
+ListG [VarG,BopG EmptyG EmptyG]
 
 (27,37)-(28,52)
 [carry + 1 ; ((carry + b) + c) mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG,BopG EmptyG EmptyG]
 
 (34,26)-(34,74)
 [((h + b) + c) / 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 (34,77)-(34,78)
 [((h + b) + c) mod 10] @ t
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],VarG]
 
 *)
 

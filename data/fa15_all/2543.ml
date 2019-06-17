@@ -76,7 +76,7 @@ let bigMul l1 l2 =
 (a1 + 1 , bigAdd a2
                  (appZero a1 (mulByDigit x
                                          l2)))
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

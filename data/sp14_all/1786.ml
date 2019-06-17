@@ -19,7 +19,7 @@ let pipe fs =
 match fs with
 | h :: t -> f h h
 | [] -> fun x -> x
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,LamG VarPatG EmptyG)])
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG]),(ConPatG Nothing,Nothing,LamG EmptyPatG EmptyG)]
 
 (4,44)-(4,45)
 h

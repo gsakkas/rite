@@ -44,13 +44,13 @@ let bigMul l1 l2 =
 (16,15)-(16,67)
 (mulByDigit x l1 @ clone 0
                          (List.length a)) @ a
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 (18,29)-(18,76)
 let res =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

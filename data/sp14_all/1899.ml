@@ -55,11 +55,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (17,26)-(17,27)
 eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 (18,28)-(18,29)
 eval (e , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

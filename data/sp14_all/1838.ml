@@ -17,7 +17,7 @@ let rec digitsOfInt n =
 (* changed spans
 (4,35)-(4,65)
 (n mod 10) :: (helper (n / 10))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG]]
 
 *)
 

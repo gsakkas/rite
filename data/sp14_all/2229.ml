@@ -19,7 +19,7 @@ VarG
 
 (3,66)-(3,78)
 assoc (d , k , ls)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

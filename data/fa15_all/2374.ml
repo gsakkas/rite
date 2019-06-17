@@ -26,7 +26,7 @@ let palindrome w = match explode w with | [] -> true | h::t -> matchHeads w;;
 (7,24)-(7,25)
 match explode x with
 | h :: t -> false
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,LitG)])
+CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,LitG)]
 
 (9,49)-(9,51)
 true

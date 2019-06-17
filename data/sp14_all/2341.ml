@@ -34,14 +34,14 @@ BopG VarG VarG
 (10,13)-(10,39)
 (List.append (clone 0 (b - a))
              l1 , l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],VarG]
 
 (10,39)-(10,39)
 if b < a
 then (l1 , List.append (clone 0
                               (a - b)) l2)
 else (l1 , l2)
-IteG (BopG EmptyG EmptyG) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
 
 *)
 

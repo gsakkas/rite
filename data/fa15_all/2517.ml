@@ -20,7 +20,7 @@ let fixpoint (f,b) =
 (6,21)-(6,60)
 fun input ->
   (f input , f input = b)
-LamG VarPatG (TupleG (fromList [EmptyG]))
+LamG VarPatG (TupleG [EmptyG,EmptyG])
 
 (6,64)-(6,70)
 func

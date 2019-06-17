@@ -29,7 +29,7 @@ VarG
 
 (7,68)-(7,72)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

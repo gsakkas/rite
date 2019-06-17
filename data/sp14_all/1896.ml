@@ -28,7 +28,7 @@ let padZero l1 l2 =
                     (lenl1 - lenl2))
              l1 , List.append (clone 0
                                      (lenl1 - lenl2)) l2)
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

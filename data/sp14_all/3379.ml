@@ -35,7 +35,7 @@ let rec mulByDigit i l =
 (9,32)-(9,69)
 helper ((v mod 10) :: acc)
        (v / 10)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG,EmptyG],BopG EmptyG EmptyG]
 
 (11,9)-(13,24)
 List.hd [List.fold_left f base
@@ -43,7 +43,7 @@ List.hd [List.fold_left f base
                                     (List.rev (List.map (fun x ->
                                                            x * 10)
                                                         t)) @ [h * i])]
-AppG (fromList [ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG]]
 
 *)
 

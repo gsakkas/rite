@@ -107,13 +107,13 @@ match depth with
         | 5 -> buildThresh (next , next , next , next)
         | 6 -> buildSqrt next
         | 7 -> buildGauss (next , next , next))
-CaseG (fromList [(LitPatG,Nothing,CaseG (fromList [(LitPatG,Nothing,EmptyG)])),(WildPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG VarG [(LitPatG,Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)]),(WildPatG,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
 
 (35,7)-(47,51)
 match rand (1 , 2) with
 | 1 -> VarX
 | 2 -> VarY
-CaseG (fromList [(LitPatG,Nothing,ConAppG Nothing)])
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,ConAppG Nothing),(LitPatG,Nothing,ConAppG Nothing)]
 
 (36,15)-(36,21)
 VarX

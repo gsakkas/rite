@@ -14,7 +14,7 @@ let rec wwhile (f,b) =
 if f b = (b , true)
 then wwhile (f , b)
 else ()
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (ConAppG Nothing)
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (ConAppG Nothing)
 
 *)
 

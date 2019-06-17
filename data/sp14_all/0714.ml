@@ -48,6 +48,10 @@ let palindrome w =
 
 (* changed spans
 (16,10)-(16,23)
+List.tl lst
+AppG [VarG]
+
+(16,26)-(16,39)
 lst
 VarG
 

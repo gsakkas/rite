@@ -21,8 +21,12 @@ let rec mulByDigit i l =
 *)
 
 (* changed spans
-(8,21)-(8,22)
+(8,17)-(8,18)
 i
+VarG
+
+(8,21)-(8,22)
+x
 VarG
 
 *)

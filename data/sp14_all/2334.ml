@@ -78,12 +78,12 @@ let rec mulByDigit i l =
 (34,20)-(34,55)
 helper (x - 1) l (bigAdd l
                          accum)
-AppG (fromList [VarG,AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG,AppG [EmptyG,EmptyG]]
 
 (35,3)-(35,32)
 mulByDigit i (helper i l
                      accum)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

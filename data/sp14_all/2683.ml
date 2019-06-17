@@ -11,7 +11,7 @@ let rec wwhile (f,b) = let (b',c') = f b in if c' then wwhile (f, b') else b';;
 (* changed spans
 (2,63)-(2,69)
 (f , b')
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

@@ -60,7 +60,7 @@ let rec mulByDigit i l = if i > 0 then mulByDigit (i - 1) (bigAdd l l) else l;;
 (26,40)-(26,69)
 mulByDigit (i - 1) (bigAdd l
                            l)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

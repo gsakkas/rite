@@ -41,7 +41,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (16,16)-(16,17)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

@@ -70,7 +70,7 @@ let bigMul l1 l2 =
 (29,15)-(29,36)
 let (0 , res) = a in
 (0 , mulByDigit x res)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,LitPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

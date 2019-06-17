@@ -1,6 +1,10 @@
-CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(VarPatG,Nothing,ListG []),(WildPatG,Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])]
+EMPTY
 match i with
-| 1 -> l
-| 10 -> l @ [0]
-| _ -> bigAdd l
-              (mulByDigit (i - 1) l)
+| i -> []
+| _ -> match l with
+       | [] -> []
+       | h :: t -> if List.length t = 0
+                   then [h * i] @ mulByDigit i t
+                   else (remainder i
+                                   h) :: (mulByDigit i t)

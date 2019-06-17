@@ -56,7 +56,7 @@ let bigAdd l1 l2 =
 (21,7)-(22,69)
 let (one , two) = a in
 (x :: one , y :: two)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

@@ -26,7 +26,7 @@ let rec mulByDigit i l =
 (7,30)-(7,64)
 [cout (hd , i)] @ mulByDigit i
                              tl
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

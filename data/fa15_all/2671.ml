@@ -56,7 +56,7 @@ let rec mulByDigit i l = if i = 0 then l else bigAdd l (mulByDigit (i - 1) l);;
 (* changed spans
 (25,33)-(25,57)
 mulByDigit (i - 1) l
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

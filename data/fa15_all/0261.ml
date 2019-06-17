@@ -22,7 +22,7 @@ let rec clone x n = cloneHelper x n;;
 (* changed spans
 (11,21)-(11,50)
 cloneHelper x n
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

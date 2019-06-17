@@ -1,33 +1,17 @@
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
-x :: (clone x (n - 1))
-bigAdd l (mulByDigit (i - 1)
-                     l)
-digitsOfInt 0 @ return
-t @ listReverse [h]
-h :: (listReverse t)
-List.nth l1 (List.length l1)
-List.nth l2 (List.length l2)
-front :: (add back next)
-bigAdd (mulByDigit (i - 1) l)
-       l
-a ^ (sep ^ x)
-List.combine (List.rev l1) l2
-clone 0 difference2 @ l1
-clone 0 difference1 @ l2
-List.append (clone 0
-                   (List.length l1 - List.length l2))
-            l2
-clone 0
-      (List.length l1 - List.length l2) @ l2
-bigAdd (mulByDigit prod l1) l
-bigAdd (mulByDigit (place * 10)
-                   l1) l
-(mulByDigit x l1 @ clone 0
-                         (List.length a)) @ a
-bigAdd total (mulByDigit x l2)
-bigAdd total
-       (mulByDigit (i - 1) l)
-notEqual b (f b)
-clone 0 (y - x) @ l1
-clone 0 (x - y) @ l2
-mulByDigit i [x'] @ x''
+ListG [BopG EmptyG EmptyG]
+[n mod 10]
+[n mod 100 ; n mod 10]
+[hd * i]
+[((a1 + x1) + x2) - 10]
+[(a1 + x1) + x2]
+[(fst x + snd x) mod 10]
+EMPTY
+[x mod 10]
+[carry + 1 ; ((carry + b) + c) mod 10]
+[((h + b) + c) / 10]
+[i * h]
+[h * i]
+[h' * i]
+[x1 + x2]
+[(x1 + x2) mod 10]
+[((x1 + x2) + c) mod 10]

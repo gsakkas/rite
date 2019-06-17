@@ -26,11 +26,11 @@ fun b ->
     (f b , if f b = b
            then true
            else false)
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (8,30)-(8,48)
 fixpointHelper f b
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

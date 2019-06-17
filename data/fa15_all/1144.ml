@@ -119,7 +119,7 @@ let bigMul l1 l2 =
 (* changed spans
 (55,14)-(55,66)
 List.rev (List.combine l2 l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

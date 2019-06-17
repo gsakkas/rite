@@ -46,11 +46,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (15,53)-(15,77)
 (((c + x1) + x2) mod 10) :: ds
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 (16,20)-(16,21)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

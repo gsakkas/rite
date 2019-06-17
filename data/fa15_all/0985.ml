@@ -26,7 +26,7 @@ fun (f , b) ->
        (let x = f b in
         (x , x <> b)) in
    f)
-LamG (TuplePatG (fromList [VarPatG])) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG (TuplePatG (fromList [EmptyPatG])) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

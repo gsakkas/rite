@@ -55,11 +55,11 @@ fun x ->
   | h :: t -> if getHead x = getHead (listReverse x)
               then matchHeads (getTail (listReverse t))
               else false
-LamG VarPatG (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 (20,58)-(20,69)
 [["b"]]
-ListG (fromList [ListG (fromList [EmptyG])])
+ListG [ListG [EmptyG]]
 
 *)
 

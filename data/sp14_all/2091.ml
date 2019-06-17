@@ -36,12 +36,12 @@ let padZero l1 l2 =
 (10,16)-(10,70)
 clone (List.hd l1)
       (List.length l1 - List.length l2)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 (13,16)-(13,70)
 clone (List.hd l2)
       (List.length l2 - List.length l1)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 *)
 

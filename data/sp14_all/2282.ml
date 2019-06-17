@@ -91,7 +91,7 @@ LitG
 
 (38,57)-(38,61)
 exprToString e3 ^ "))"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

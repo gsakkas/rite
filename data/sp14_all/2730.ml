@@ -105,13 +105,13 @@ let bigMul l1 l2 =
 (* changed spans
 (48,19)-(48,20)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 (49,20)-(49,63)
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG,WildPatG]),AppG (fromList [EmptyG]))]) VarG
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] VarG
 
 *)
 

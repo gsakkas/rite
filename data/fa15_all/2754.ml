@@ -28,7 +28,7 @@ let rec mulByDigit i l =
 (10,15)-(10,68)
 (remainder h
            i) :: (mulByDigit i t)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

@@ -64,7 +64,7 @@ let bigAdd l1 l2 =
 (21,14)-(21,20)
 let (carry , ans) = a in
 (1 , [9] @ ans)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

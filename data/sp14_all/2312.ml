@@ -52,7 +52,7 @@ let bigAdd l1 l2 =
 (19,17)-(19,60)
 let (h :: t , _) = a in
 ([] , [])
-LetG NonRec (fromList [(TuplePatG (fromList [ConsPatG EmptyPatG EmptyPatG,WildPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

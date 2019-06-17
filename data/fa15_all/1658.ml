@@ -55,19 +55,19 @@ let bigAdd l1 l2 =
 let (carry , ans) = a in
 let (y , z) = x in
 ((y + z) + carry) > 9
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (16,12)-(16,58)
 let (carry , ans) = a in
 (1 , let (y , z) = x in
      [((y + z) + carry) mod 10] @ ans)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 (17,12)-(17,47)
 let (carry , ans) = a in
 (0 , let (y , z) = x in
      [(y + z) + carry] @ ans)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

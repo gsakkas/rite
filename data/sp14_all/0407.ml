@@ -63,7 +63,7 @@ LitG
 
 (20,23)-(20,46)
 1.0 -. exp ((- 1.0) *. eval (a , x , y))
-BopG LitG (AppG (fromList [EmptyG]))
+BopG LitG (AppG [EmptyG])
 
 *)
 

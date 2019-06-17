@@ -89,7 +89,7 @@ let bigMul l1 l2 =
 (* changed spans
 (37,47)-(37,70)
 mulByTen (List.length y)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

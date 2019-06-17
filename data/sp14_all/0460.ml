@@ -16,7 +16,7 @@ let rec digitsOfInt n = if n < 0 then [] else helperDigits (n, []);;
 (* changed spans
 (2,41)-(2,41)
 helperDigits (n , [])
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

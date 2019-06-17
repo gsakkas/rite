@@ -19,7 +19,7 @@ let rec digitsOfInt n =
 (* changed spans
 (6,40)-(6,74)
 listReverse (digitsOfInt (n / 10))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

@@ -34,7 +34,7 @@ VarG
 
 (10,32)-(10,33)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

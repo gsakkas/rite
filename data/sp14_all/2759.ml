@@ -30,7 +30,7 @@ VarG
 
 (10,38)-(10,64)
 List.map f l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

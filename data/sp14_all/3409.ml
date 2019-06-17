@@ -56,23 +56,23 @@ let rec mulByDigit i l =
 (* changed spans
 (17,21)-(17,47)
 helper 0 (num :: xs') xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 (18,21)-(19,26)
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: xs'))
        xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 (23,17)-(23,45)
 helper 0 (num :: accum) xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 (24,17)-(24,77)
 helper 1
        (((num / 10) mod 10) :: ((num mod 10) :: accum))
        xs
-AppG (fromList [VarG,AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG],VarG]
 
 *)
 

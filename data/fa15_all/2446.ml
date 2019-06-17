@@ -68,7 +68,7 @@ let test =
 let sum =
   (l1x + l2x) + test in
 ((sum / 10) :: a1 , (sum mod 10) :: a2)
-LetG NonRec (fromList [(VarPatG,CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

@@ -14,7 +14,7 @@ let pipe fs =
 (3,38)-(3,71)
 List.fold_left f base
                (List.rev fs)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,VarG,AppG [EmptyG]]
 
 *)
 

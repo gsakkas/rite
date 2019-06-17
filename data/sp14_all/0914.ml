@@ -51,7 +51,7 @@ LitG
 
 (16,16)-(16,37)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

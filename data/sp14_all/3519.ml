@@ -19,7 +19,7 @@ let fixpoint (f,b) = wwhile (let func x x = (0, true) in ((func b), b));;
 (* changed spans
 (6,59)-(6,69)
 func b
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

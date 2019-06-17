@@ -22,7 +22,7 @@ match res with
 | (b' , c') -> if c'
                then acc b'
                else b'
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG)]
 
 *)
 

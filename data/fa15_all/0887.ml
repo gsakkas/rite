@@ -37,7 +37,7 @@ LitG
 
 (13,24)-(13,41)
 List.map f l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

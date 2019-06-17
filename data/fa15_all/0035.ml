@@ -23,7 +23,7 @@ let _ = digitsOfInt 3124;;
 (* changed spans
 (6,44)-(6,76)
 digitsOfInt (n / 10) @ [n mod 10]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG],ListG [EmptyG]]
 
 *)
 

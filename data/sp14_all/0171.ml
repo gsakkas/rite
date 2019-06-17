@@ -19,7 +19,7 @@ let pipe fs =
 (* changed spans
 (4,49)-(4,57)
 fun x -> h (acc x)
-LamG VarPatG (AppG (fromList [EmptyG]))
+LamG VarPatG (AppG [EmptyG])
 
 (5,8)-(5,21)
 id

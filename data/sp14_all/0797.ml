@@ -87,15 +87,15 @@ let rec build (rand,depth) =
 (* changed spans
 (37,15)-(37,35)
 buildTimes (next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 (38,15)-(38,46)
 buildThresh (next , next , next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG,EmptyG]]
 
 (40,15)-(40,40)
 buildGauss (next , next , next)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

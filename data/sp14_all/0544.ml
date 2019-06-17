@@ -22,7 +22,7 @@ if f b = b
 then (fun b'' ->
         (f b , false))
 else (fun b'' -> (f b , true))
-IteG (BopG EmptyG EmptyG) (LamG VarPatG EmptyG) (LamG VarPatG EmptyG)
+IteG (BopG EmptyG EmptyG) (LamG EmptyPatG EmptyG) (LamG EmptyPatG EmptyG)
 
 *)
 

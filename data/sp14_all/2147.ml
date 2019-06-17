@@ -22,7 +22,7 @@ let fixpoint (f,b) =
      (let xx = (x * x) * x in
       (xx , xx < 100)) in
  f , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+TupleG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG,VarG]
 
 *)
 

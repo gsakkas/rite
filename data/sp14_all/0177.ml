@@ -19,7 +19,7 @@ let stringOfList f l =
 (* changed spans
 (4,64)-(4,66)
 List.map f l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 (5,9)-(5,23)
 ""

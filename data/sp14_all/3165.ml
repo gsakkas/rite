@@ -72,7 +72,7 @@ let rec mulByDigit i l = mulByDigit (i - 1) (bigAdd l l);;
 (32,26)-(32,59)
 mulByDigit (i - 1) (bigAdd l
                            l)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

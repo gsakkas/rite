@@ -47,11 +47,11 @@ let rec additivePersistence n =
 (* changed spans
 (19,18)-(19,19)
 digits n
-AppG (fromList [VarG])
+AppG [VarG]
 
 (20,8)-(20,37)
 additivePersistence (sumList (digits n))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

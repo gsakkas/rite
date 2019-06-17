@@ -44,7 +44,7 @@ LitG
 
 (23,47)-(23,67)
 matchHeads (explode w)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

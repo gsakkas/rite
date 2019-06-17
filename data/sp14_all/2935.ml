@@ -67,7 +67,7 @@ let digit =
   | (f , g) -> (f + g) + (carry mod 10) in
 match a with
 | (o , p) -> (newc , digit :: p)
-LetG NonRec (fromList [(VarPatG,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

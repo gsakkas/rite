@@ -47,7 +47,7 @@ LitG
 
 (18,60)-(18,66)
 exprToString e4 ^ ")/2)"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

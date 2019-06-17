@@ -21,7 +21,7 @@ let fixpoint (f,b) =
 (fun input ->
    (let b = f input in
     (b , b <> input)) , b)
-TupleG (fromList [VarG,LamG VarPatG EmptyG])
+TupleG [LamG EmptyPatG EmptyG,VarG]
 
 *)
 

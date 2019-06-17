@@ -51,11 +51,11 @@ let bigAdd l1 l2 =
 (if ((a1 + x1) + x2) >= 10
  then 1
  else 0 , ((a1 + x1) + x2) :: a2)
-TupleG (fromList [AppG (fromList [EmptyG]),IteG EmptyG EmptyG EmptyG])
+TupleG [IteG EmptyG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 (18,16)-(18,24)
 (0 , [0])
-TupleG (fromList [LitG,ListG (fromList [EmptyG])])
+TupleG [LitG,ListG [EmptyG]]
 
 *)
 

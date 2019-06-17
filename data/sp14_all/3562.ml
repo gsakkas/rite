@@ -47,15 +47,15 @@ let bigAdd l1 l2 =
 (14,7)-(15,72)
 match (a , x) with
 | ((b , c) , (d , e)) -> (b , (d + e) :: c)
-CaseG (fromList [(TuplePatG (fromList [TuplePatG (fromList [EmptyPatG])]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG (TupleG [EmptyG,EmptyG]) [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 (19,23)-(19,52)
 [0 ; 0 ; 9 ; 9]
-ListG (fromList [LitG])
+ListG [LitG,LitG,LitG,LitG]
 
 (20,12)-(20,41)
 [1 ; 0 ; 0 ; 2]
-ListG (fromList [LitG])
+ListG [LitG,LitG,LitG,LitG]
 
 *)
 

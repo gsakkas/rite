@@ -44,11 +44,11 @@ if x < 10
 then count
 else helper (count + 1)
             (sumList (digits n))
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) VarG (AppG [EmptyG,EmptyG])
 
 (18,3)-(18,11)
 helper 0 n
-AppG (fromList [VarG,LitG])
+AppG [LitG,VarG]
 
 *)
 

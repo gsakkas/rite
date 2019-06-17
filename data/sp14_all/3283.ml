@@ -43,7 +43,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (14,49)-(14,54)
 (list1 , list2)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

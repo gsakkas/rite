@@ -27,7 +27,7 @@ let padZero l1 l2 =
 (* changed spans
 (10,10)-(10,12)
 (l1 , l2)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG]
 
 *)
 

@@ -30,7 +30,7 @@ VarG
 
 (10,24)-(10,65)
 sepConcat ";" (List.map f l)
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

@@ -37,7 +37,7 @@ let rec eval (e,x,y) = match e with | VarX  -> x | VarY  -> y;;
 match e with
 | VarX -> x
 | VarY -> y
-CaseG (fromList [(ConPatG Nothing,Nothing,VarG)])
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG)]
 
 *)
 

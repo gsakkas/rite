@@ -57,7 +57,7 @@ VarG
 
 (17,39)-(17,43)
 matchHeads (loseTail t)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

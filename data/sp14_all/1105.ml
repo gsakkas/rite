@@ -11,7 +11,7 @@ let rec digitsOfInt n = match n <= 0 with | true  -> [] | false  -> [];;
 (* changed spans
 (2,69)-(2,70)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

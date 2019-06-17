@@ -70,7 +70,7 @@ VarG
 
 (22,36)-(22,64)
 (((i + j) + s) mod 10) :: t
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

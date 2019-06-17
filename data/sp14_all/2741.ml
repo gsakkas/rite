@@ -15,11 +15,11 @@ let pipe fs =
 (* changed spans
 (3,15)-(3,18)
 function | g -> g
-LamG VarPatG (CaseG (fromList [(VarPatG,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
 
 (4,14)-(4,46)
 function | x -> x
-LamG VarPatG (CaseG (fromList [(VarPatG,Nothing,EmptyG)]))
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

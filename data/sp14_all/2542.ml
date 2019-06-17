@@ -29,11 +29,11 @@ let rec digitsOfInt n =
 (* changed spans
 (9,14)-(9,28)
 reverseInt n 0
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 (10,14)-(10,28)
 reverseInt n 0
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 *)
 

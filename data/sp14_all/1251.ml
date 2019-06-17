@@ -49,7 +49,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,25)-(19,61)
 List.combine l1 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

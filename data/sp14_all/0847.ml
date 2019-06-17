@@ -26,7 +26,7 @@ let rec digitalRoot n = sumList (digitsOfInt n);;
 (* changed spans
 (8,25)-(8,60)
 sumList (digitsOfInt n)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

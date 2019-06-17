@@ -45,11 +45,11 @@ VarG
 
 (15,16)-(15,17)
 ([] , [])
-TupleG (fromList [ListG (fromList [])])
+TupleG [ListG [],ListG []]
 
 (16,16)-(16,19)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

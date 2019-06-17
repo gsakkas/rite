@@ -1,5 +1,4 @@
-ListG (fromList [TupleG (fromList [EmptyG])])
-[(0 , 0)]
-[(h1 , h2)]
-[(0 , [])]
-[(h , l2)]
+BopG (UopG EmptyG) (AppG [EmptyG])
+(- 1.0) *. eval (a , x , y)
+eval (e1 , x , y) *. (- 1.0)
+(- 1.0) *. eval (e3 , x , y)

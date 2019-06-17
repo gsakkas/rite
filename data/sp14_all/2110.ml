@@ -37,7 +37,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (15,24)-(15,31)
 eval (VarX , x , y) +. eval (VarY , x , y)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

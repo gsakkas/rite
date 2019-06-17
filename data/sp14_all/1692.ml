@@ -59,7 +59,7 @@ LitG
 
 (24,66)-(24,69)
 exprToString y ^ ")"
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 

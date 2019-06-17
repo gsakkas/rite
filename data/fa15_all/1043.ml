@@ -85,7 +85,7 @@ let r =
 match r with
 | [] -> (0 , 0 :: c)
 | h :: t -> (h , (List.hd t) :: c)
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (CaseG (fromList [(ConsPatG EmptyPatG EmptyPatG,Nothing,EmptyG),(ConPatG Nothing,Nothing,EmptyG)]))
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG])] (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])
 
 *)
 

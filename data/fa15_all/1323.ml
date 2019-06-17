@@ -17,7 +17,7 @@ let sqsum xs =
 match x with
 | 0 -> a
 | x -> x * x
-CaseG (fromList [(VarPatG,Nothing,BopG EmptyG EmptyG),(LitPatG,Nothing,VarG)])
+CaseG VarG [(LitPatG,Nothing,VarG),(VarPatG,Nothing,BopG EmptyG EmptyG)]
 
 (4,14)-(4,16)
 0

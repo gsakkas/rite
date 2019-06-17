@@ -17,7 +17,7 @@ let rec listReverse l =
 (* changed spans
 (5,49)-(5,65)
 cat l h
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

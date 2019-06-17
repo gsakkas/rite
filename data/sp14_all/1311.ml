@@ -33,7 +33,7 @@ let bigMul l1 l2 =
 (* changed spans
 (8,49)-(9,34)
 (h1 + 1 , (mul / 10) :: ((mul mod 10) :: t2))
-TupleG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,AppG [EmptyG,EmptyG]]
 
 *)
 

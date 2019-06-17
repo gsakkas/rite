@@ -26,7 +26,7 @@ let g =
      then (xx , false)
      else (xx , true)) in
 g
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

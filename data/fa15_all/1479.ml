@@ -27,7 +27,7 @@ let fixpoint (f,b) =
       then (b , false)
       else (t , true)) in
  g , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+TupleG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG,VarG]
 
 *)
 

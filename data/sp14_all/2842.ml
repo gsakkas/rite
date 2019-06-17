@@ -15,7 +15,7 @@ let rec sumList xs = sum xs;;
 (* changed spans
 (4,22)-(4,47)
 sum xs
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

@@ -11,7 +11,7 @@ let pipe fs = let f a x = x in let base y = y in List.fold_left f base fs;;
 (* changed spans
 (2,50)-(2,75)
 List.fold_left f base fs
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

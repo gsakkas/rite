@@ -139,15 +139,15 @@ match recurse with
 | _ -> if recurse > 2
        then buildCosine (build (rand , depth - 1))
        else buildSine (build (rand , depth - 1))
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,IteG EmptyG EmptyG EmptyG)])
+CaseG VarG [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(WildPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
 
 (54,12)-(54,70)
 (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG],AppG [EmptyG]]
 
 (56,10)-(58,52)
 buildSpecial2 (build (rand , depth - 1) , build (rand , depth - 1))
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

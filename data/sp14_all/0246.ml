@@ -16,7 +16,7 @@ let rec digitsOfInt n =
 (* changed spans
 (2,39)-(2,64)
 []
-ListG (fromList [])
+ListG []
 
 (2,64)-(2,64)
 let (x , y) =
@@ -24,7 +24,7 @@ let (x , y) =
 if x < 10
 then [x]
 else x :: (digitsOfInt y)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),TupleG (fromList [EmptyG]))]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),TupleG [EmptyG,EmptyG])] (IteG EmptyG EmptyG EmptyG)
 
 *)
 

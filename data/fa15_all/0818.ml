@@ -39,7 +39,7 @@ let rec additivePersistence n =
 (* changed spans
 (16,33)-(16,39)
 itt y' 0
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 *)
 

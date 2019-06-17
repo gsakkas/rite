@@ -26,7 +26,7 @@ let fixpoint (f,b) =
 (* changed spans
 (9,5)-(10,70)
 (f x , isFPoint x)
-TupleG (fromList [AppG (fromList [EmptyG])])
+TupleG [AppG [EmptyG],AppG [EmptyG]]
 
 *)
 

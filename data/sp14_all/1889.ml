@@ -22,11 +22,11 @@ fun h ->
   fun x ->
     (let xx = h x in
      (xx , xx = h x))
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (6,30)-(6,31)
 g f
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

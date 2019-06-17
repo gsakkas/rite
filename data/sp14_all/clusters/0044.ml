@@ -1,10 +1,8 @@
-BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
-(List.length acc = List.length l1) || (List.length acc = List.length l2)
-(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
-((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
-(a * a) + (x * x)
-((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
-((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)) -. ((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y))
-(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
-(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
-(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))
+BopG (AppG [EmptyG]) LitG
+1.0 -. exp ((- 1.0) *. eval (a , x , y))
+(2.71 ** ((sin (pi *. eval (a , x , y)) +. cos (pi *. eval (b , x , y))) -. 1.0)) -. 1.0
+tan (pi *. eval (e , x , y)) /. 2.0
+List.mem h seen = false
+List.length l + 1
+1 + additivePersistence num
+List.length t < 2

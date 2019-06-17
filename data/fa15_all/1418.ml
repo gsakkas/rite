@@ -27,7 +27,7 @@ let rec digitalRoot n =
 if n < 10
 then n
 else digitalRoot (sumList (digits n))
-IteG (BopG EmptyG EmptyG) VarG (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) VarG (AppG [EmptyG])
 
 *)
 

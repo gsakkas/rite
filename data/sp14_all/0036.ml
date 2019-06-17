@@ -79,11 +79,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (28,16)-(28,33)
 (t1 , [(h1 + x) mod 10])
-TupleG (fromList [VarG,ListG (fromList [EmptyG])])
+TupleG [VarG,ListG [EmptyG]]
 
 (33,16)-(33,46)
 (t1 , (((h1 + x) + rh) mod 10) :: rt)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

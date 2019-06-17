@@ -54,11 +54,11 @@ match x with
              | (m , n) -> if ((i + j) + m) >= 10
                           then (1 , (((i + j) + m) - 10) :: n)
                           else (0 , ((i + j) + m) :: n)
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,CaseG (fromList [(TuplePatG (fromList [EmptyPatG]),Nothing,EmptyG)]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])]
 
 (15,16)-(15,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

@@ -24,7 +24,7 @@ let fixpoint (f,b) =
 (* changed spans
 (9,5)-(9,69)
 (xx , xx = x)
-TupleG (fromList [VarG,BopG EmptyG EmptyG])
+TupleG [VarG,BopG EmptyG EmptyG]
 
 *)
 

@@ -77,7 +77,7 @@ let bigMul l1 l2 =
 (* changed spans
 (32,24)-(32,49)
 mulByDigit x res
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

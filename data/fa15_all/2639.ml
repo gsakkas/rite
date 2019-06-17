@@ -46,7 +46,7 @@ let bigMul l1 l2 =
 let (a1 , a2) = a in
 (a1 , mulByDigit x
                  l1 @ clone 0 (List.length a1))
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

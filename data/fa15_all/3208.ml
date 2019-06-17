@@ -79,7 +79,7 @@ let (c , a') = a in
 let m = mulByDigit x l2 in
 let s = bigAdd m a' in
 (c + 1 , s)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (22,5)-(23,36)
 l1

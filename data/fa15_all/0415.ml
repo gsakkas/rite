@@ -22,7 +22,7 @@ let fixpoint (f,b) =
 if f b
 then (b , true)
 else (b , false)
-IteG (AppG (fromList [EmptyG])) (TupleG (fromList [EmptyG])) (TupleG (fromList [EmptyG]))
+IteG (AppG [EmptyG]) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
 
 *)
 

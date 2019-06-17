@@ -19,7 +19,7 @@ let padZero l1 l2 =
 (* changed spans
 (6,53)-(6,76)
 (l1 , clone 0 d @ l2)
-TupleG (fromList [VarG,AppG (fromList [EmptyG])])
+TupleG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

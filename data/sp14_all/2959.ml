@@ -53,7 +53,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (17,33)-(17,48)
 (e' , x , y)
-TupleG (fromList [VarG])
+TupleG [VarG,VarG,VarG]
 
 (18,24)-(18,68)
 (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0

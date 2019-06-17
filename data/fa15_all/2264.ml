@@ -68,7 +68,7 @@ let rec mulByDigit i l = if i = 0 then [0] else bigAdd l l;;
 (* changed spans
 (31,26)-(31,57)
 bigAdd l l
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

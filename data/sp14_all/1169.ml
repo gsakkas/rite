@@ -11,7 +11,7 @@ let rec listReverse l = match l with | [] -> [] | a::b -> listReverse [a];;
 (* changed spans
 (2,59)-(2,76)
 listReverse [a]
-AppG (fromList [ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG]]
 
 *)
 

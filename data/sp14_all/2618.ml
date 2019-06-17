@@ -15,7 +15,7 @@ VarG
 
 (2,47)-(2,49)
 (+) 0
-AppG (fromList [LitG])
+AppG [LitG]
 
 *)
 

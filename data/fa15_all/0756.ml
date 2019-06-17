@@ -50,11 +50,11 @@ let (a1 , a2) = a in
 (if ((a1 + x1) + x2) >= 10
  then 1
  else 0 , ((a1 + x1) + x2) :: a2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(TuplePatG (fromList [EmptyPatG]),EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (15,16)-(15,18)
 (0 , [0])
-TupleG (fromList [LitG,ListG (fromList [EmptyG])])
+TupleG [LitG,ListG [EmptyG]]
 
 *)
 

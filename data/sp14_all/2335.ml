@@ -78,7 +78,7 @@ let rec mulByDigit i l =
 (35,3)-(35,32)
 mulByDigit i (helper i l
                      accum)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

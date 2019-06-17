@@ -1,4 +1,4 @@
-BopG (BopG EmptyG EmptyG) VarG
-(a * a) + x
-((fir + sec) / 10) + b1
-(x * x) + a
+CaseG VarG [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG [EmptyG])]
+match n with
+| 0 -> 0
+| _ -> additivePersistence (sumList (digitsOfInt n))

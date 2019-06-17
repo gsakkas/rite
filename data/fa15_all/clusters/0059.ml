@@ -1,5 +1,6 @@
-CaseG (fromList [(ConsPatG VarPatG (ConsPatG EmptyPatG EmptyPatG),Nothing,AppG (fromList [EmptyG])),(ConPatG Nothing,Nothing,ListG (fromList []))])
-match l with
-| [] -> []
-| x :: x' :: x'' -> [(x * i) / 10] @ ([((x * i) mod 10) + x'] @ (mulByDigit i
-                                                                            [x'] @ x''))
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,IteG EmptyG EmptyG EmptyG)]
+match a with
+| (c , h :: t) -> if ((fst x + snd x) + c) > 9
+                  then (1 , (((fst x + snd x) + c) mod 10) :: t)
+                  else (0 , (((fst x + snd x) + c) mod 10) :: t)
+EMPTY

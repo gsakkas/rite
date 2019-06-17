@@ -24,7 +24,7 @@ let f' =
     then (b , true)
     else (f b , false) in
 f'
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

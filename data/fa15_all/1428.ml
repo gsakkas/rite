@@ -11,7 +11,7 @@ let rec listReverse l = match l with | h::t -> listReverse [h] | [] -> [];;
 (* changed spans
 (2,60)-(2,61)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

@@ -53,11 +53,11 @@ let bigMul l1 l2 =
 (33,5)-(37,76)
 let (pos , total) = a in
 (pos , l2)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (TupleG [EmptyG,EmptyG])
 
 (39,14)-(39,44)
 List.rev l1
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

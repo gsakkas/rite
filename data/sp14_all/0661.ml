@@ -78,11 +78,11 @@ let bigMul l1 l2 =
 match a with
 | (l1' , a') -> (l1' , bigAdd (mulByDigit x
                                           l1') a')
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
 
 (35,19)-(35,20)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

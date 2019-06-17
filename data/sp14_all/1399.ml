@@ -25,7 +25,7 @@ VarG
 
 (7,38)-(7,59)
 List.fold_left f base l
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 *)
 

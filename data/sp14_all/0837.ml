@@ -30,7 +30,7 @@ let rec additivePersistence n = addHelp (0, n);;
 (* changed spans
 (8,3)-(11,75)
 addHelp (0 , n)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

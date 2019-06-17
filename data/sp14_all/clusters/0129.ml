@@ -1,3 +1,5 @@
-TupleG (fromList [AppG (fromList [EmptyG]),LitG])
-(0 , carry :: rest)
-(0 :: (List.rev l1) , 0)
+CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,ListG [EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,ListG [EmptyG,EmptyG,EmptyG,EmptyG])]
+match l with
+| [] -> []
+| x :: [] -> [x]
+| head :: tail :: third :: fourth :: fifth -> [fourth ; third ; tail ; head]

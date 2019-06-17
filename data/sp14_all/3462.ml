@@ -12,11 +12,11 @@ let rec digitsOfInt n = let myList = [] in if n <= 0 then [] else [];;
 (* changed spans
 (3,37)-(3,58)
 []
-ListG (fromList [])
+ListG []
 
 (3,58)-(3,58)
 []
-ListG (fromList [])
+ListG []
 
 *)
 

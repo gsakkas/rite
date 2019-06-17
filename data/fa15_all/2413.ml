@@ -27,7 +27,7 @@ let g =
     | x -> (x , false)
     | y -> (y , true) in
 (g , b)
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (TupleG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (TupleG [EmptyG,EmptyG])
 
 *)
 

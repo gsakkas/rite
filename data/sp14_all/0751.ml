@@ -25,7 +25,7 @@ let removeDuplicates l =
 (* changed spans
 (9,3)-(9,26)
 List.rev (helper ([] , l))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

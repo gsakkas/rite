@@ -15,7 +15,7 @@ VarG
 
 (2,51)-(2,68)
 clone x (n - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [VarG,BopG EmptyG EmptyG]
 
 *)
 

@@ -11,7 +11,7 @@ let rec digitsOfInt n = if n <= 0 then [] else [1];;
 (* changed spans
 (2,48)-(2,49)
 [1]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

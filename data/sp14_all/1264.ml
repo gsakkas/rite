@@ -37,6 +37,14 @@ VarG
 l2
 VarG
 
+(11,22)-(11,23)
+b
+VarG
+
+(11,26)-(11,27)
+a
+VarG
+
 *)
 
 (* type error slice

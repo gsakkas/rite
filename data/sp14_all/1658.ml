@@ -25,7 +25,7 @@ let fixpoint (f,b) =
 (* changed spans
 (9,7)-(9,25)
 whilesFun f
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

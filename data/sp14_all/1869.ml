@@ -67,7 +67,7 @@ let rec eval (e,x,y) =
 (* changed spans
 (30,25)-(30,41)
 eval (Average (e1 , e2) , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

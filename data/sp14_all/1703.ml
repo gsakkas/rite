@@ -93,7 +93,7 @@ LitG
 
 (34,26)-(34,35)
 eval (a , x , y)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG,EmptyG]]
 
 *)
 

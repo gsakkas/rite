@@ -26,7 +26,7 @@ let fixpoint (f,b) =
      (let xx = f x in
       (xx , xx <> b)) in
  g , b)
-TupleG (fromList [VarG,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG])
+TupleG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG,VarG]
 
 *)
 

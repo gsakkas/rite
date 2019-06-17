@@ -1,11 +1,19 @@
-AppG (fromList [ListG (fromList [EmptyG])])
-append [h] [h]
-listReverse [a]
-listReverse [n mod 10]
-app [5] [n mod 10]
-app [3] [8]
-List.hd [List.fold_left f base
-                        (mulByDigit i
-                                    (List.rev (List.map (fun x ->
-                                                           x * 10)
-                                                        t)) @ [h * i])]
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
+fun b ->
+  (let self = f b in
+   match b with
+   | self -> (self , false)
+   | _ -> (self , true))
+fun x ->
+  (let bb = f x in
+   (bb , bb = x))
+fun x ->
+  (let xi = f x in
+   (xi , (f xi <> xi) || f (f xi)))
+fun b' ->
+  (let fOfB = f' b' in
+   (fOfB , fOfB = b'))
+fun z ->
+  (let b = f z in (b , b <> z))
+fun x ->
+  (let y = f x in (y , y <> x))

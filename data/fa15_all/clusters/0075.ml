@@ -1,2 +1,3 @@
-BopG VarG (BopG EmptyG EmptyG)
-a + (x * x)
+ListG [ListG [EmptyG]]
+EMPTY
+[["b"]]

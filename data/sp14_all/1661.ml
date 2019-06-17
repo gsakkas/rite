@@ -27,7 +27,7 @@ let whilesFun =
       (let fOfB = f' b' in
        (fOfB , fOfB = b')) in
 whilesFun f
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (AppG [EmptyG])
 
 *)
 

@@ -49,7 +49,7 @@ let args =
 let (_ , res) =
   List.fold_left f base args in
 res
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

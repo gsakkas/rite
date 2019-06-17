@@ -102,7 +102,7 @@ match r with
 | 3 -> buildAverage (build (rand , d - 1) , build (rand , d - 1))
 | 4 -> buildTimes (build (rand , d - 1) , build (rand , d - 1))
 | 5 -> buildThresh (build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1) , build (rand , d - 1))
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
 
 *)
 

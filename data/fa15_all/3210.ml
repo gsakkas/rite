@@ -97,7 +97,7 @@ let bigMul l1 l2 =
 (* changed spans
 (43,40)-(43,53)
 bigAdd m a'
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

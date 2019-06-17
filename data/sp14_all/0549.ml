@@ -24,7 +24,7 @@ let fixpoint (f,b) =
          (f b , false))
  else (fun b'' ->
          (f b , true)) , b)
-TupleG (fromList [VarG,IteG EmptyG EmptyG EmptyG])
+TupleG [IteG EmptyG EmptyG EmptyG,VarG]
 
 *)
 

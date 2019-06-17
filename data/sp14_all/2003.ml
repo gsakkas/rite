@@ -69,11 +69,11 @@ let digit = add x + prev in
 if digit > 10
 then (1 , (digit - 10) :: sum)
 else (0 , digit :: sum)
-LetG NonRec (fromList [(VarPatG,LamG (TuplePatG (fromList [EmptyPatG])) EmptyG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (19,16)-(19,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

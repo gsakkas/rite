@@ -21,11 +21,11 @@ let padZero l1 l2 =
 (* changed spans
 (6,18)-(6,41)
 clone 0 ((-1) * l) @ l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 (6,57)-(6,69)
 clone 0 l @ l2
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],VarG]
 
 *)
 

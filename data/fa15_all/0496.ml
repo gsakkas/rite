@@ -53,7 +53,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (19,51)-(19,63)
 (sum mod 10) :: acc
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG,VarG]
 
 *)
 

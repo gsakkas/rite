@@ -54,7 +54,7 @@ let bigAdd l1 l2 =
 (15,19)-(15,36)
 match a with
 | (x , y) -> x
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,VarG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,VarG)]
 
 (16,7)-(18,40)
 match x with
@@ -64,7 +64,7 @@ match x with
                               ((carry + addend_a) + addend_b) mod 10 in
                             match a with
                             | (x , y) -> (new_carry , digit :: y))
-CaseG (fromList [(TuplePatG (fromList [VarPatG]),Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
 
 *)
 

@@ -139,7 +139,7 @@ let bigMul l1 l2 =
 (* changed spans
 (53,14)-(53,16)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

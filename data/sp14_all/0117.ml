@@ -33,7 +33,7 @@ fun b ->
    match b with
    | self -> (self , false)
    | _ -> (self , true))
-LamG VarPatG (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LamG VarPatG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

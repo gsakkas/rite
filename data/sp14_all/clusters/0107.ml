@@ -1,3 +1,2 @@
-CaseG (fromList [(TuplePatG (fromList [WildPatG]),Nothing,VarG)])
-match x with
-| (_ , _) -> a
+ListG [VarG,BopG EmptyG EmptyG]
+[n ; n mod 10]

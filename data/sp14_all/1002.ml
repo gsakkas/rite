@@ -13,7 +13,7 @@ let pipe fs =
 (* changed spans
 (3,19)-(3,22)
 a x
-AppG (fromList [VarG])
+AppG [VarG]
 
 *)
 

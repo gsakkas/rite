@@ -57,7 +57,7 @@ fun x ->
      (if addit > 10
       then 1
       else 0 , (addit mod 10) :: num))
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 *)
 

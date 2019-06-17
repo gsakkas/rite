@@ -39,7 +39,7 @@ LamG VarPatG (IteG EmptyG EmptyG EmptyG)
 match n with
 | 0 -> 0
 | _ -> additivePersistence (sumList (digitsOfInt n))
-CaseG (fromList [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG [EmptyG])]
 
 *)
 

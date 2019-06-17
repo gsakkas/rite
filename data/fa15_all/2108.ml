@@ -14,11 +14,11 @@ let pipe fs =
 (2,27)-(2,30)
 let func = fun y -> x (a y) in
 func
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 (2,45)-(2,47)
 let func = fun y -> y in func
-LetG NonRec (fromList [(VarPatG,LamG VarPatG EmptyG)]) VarG
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
 
 *)
 

@@ -35,7 +35,7 @@ let rec mulByDigit i l =
 (* changed spans
 (7,12)-(7,14)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 *)
 

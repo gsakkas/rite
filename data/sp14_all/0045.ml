@@ -35,7 +35,7 @@ let padZero l1 l2 =
 (* changed spans
 (14,34)-(14,54)
 List.append zeroes l1
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

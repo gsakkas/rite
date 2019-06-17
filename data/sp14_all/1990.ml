@@ -39,7 +39,7 @@ let palindrome w = (explode w) = (listReverse (explode w));;
 (* changed spans
 (20,20)-(20,69)
 explode w = listReverse (explode w)
-BopG (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+BopG (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

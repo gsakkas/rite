@@ -13,7 +13,7 @@ let rec clone x n = match n with | 0 -> [] | _ -> helper (x, (clone x n));;
 (* changed spans
 (2,51)-(2,73)
 helper (x , clone x n)
-AppG (fromList [TupleG (fromList [EmptyG])])
+AppG [TupleG [EmptyG,EmptyG]]
 
 *)
 

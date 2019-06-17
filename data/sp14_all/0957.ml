@@ -20,7 +20,7 @@ let rec digitsOfInt n =
 (6,26)-(6,75)
 append (digitsOfInt (n / 10))
        (n - ((n / 10) * 10))
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 *)
 

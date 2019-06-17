@@ -65,7 +65,7 @@ VarG
 mulByDigit i
            (List.rev (List.map (fun x ->
                                   x * 10) t)) @ [h * i]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],ListG [EmptyG]]
 
 *)
 

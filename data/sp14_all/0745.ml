@@ -21,7 +21,7 @@ let fixpoint (f,b) = wwhile (h, b);;
 (* changed spans
 (2,9)-(2,31)
 (x * x , x < 100)
-TupleG (fromList [BopG EmptyG EmptyG])
+TupleG [BopG EmptyG EmptyG,BopG EmptyG EmptyG]
 
 (7,30)-(7,37)
 h

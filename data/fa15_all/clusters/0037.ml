@@ -1,15 +1,8 @@
-LamG VarPatG (TupleG (fromList [EmptyG]))
-fun x -> (x , f x = x)
-fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-fun x -> (2 , f b = b)
-fun bt -> (bt , f bt = bt)
-fun x -> (f b , 3 < 4)
-fun input ->
-  (f input , f input = b)
-fun b ->
-  (f b , (b = f b) = false)
-fun y -> (f b , b = f b)
-fun x -> (f x , x <> f x)
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
+exprToString expr ^ ("^2-" ^ (exprToString expr ^ "-1)"))
+EMPTY
+exprToString e ^ ("*" ^ exprToString f)
+exprToString e ^ ("*" ^ exprToString e)
+exprToString x ^ ("*" ^ exprToString y)
+bigAdd total (mulByDigit x
+                         l2) @ listZeros pow

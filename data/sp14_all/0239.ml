@@ -36,7 +36,7 @@ let rec additivePersistence n =
 if sumList (digits n) < 10
 then numdigits (digits n)
 else additivePersistence (sumList (digits n))
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) (AppG (fromList [EmptyG]))
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
 
 *)
 

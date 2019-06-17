@@ -27,7 +27,7 @@ BopG VarG LitG
 
 (8,45)-(8,55)
 digitsOfInt (n / 10)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

@@ -67,7 +67,7 @@ match i with
 | 0 -> []
 | _ -> bigAdd (bigAdd l l)
               (mulByDigit (i - 1) l)
-CaseG (fromList [(LitPatG,Nothing,ListG (fromList [])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,ListG []),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 *)
 

@@ -16,7 +16,7 @@ let (b' , c') = temp in
 if c' = true
 then wwhile (f , b')
 else b'
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (IteG EmptyG EmptyG EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (IteG EmptyG EmptyG EmptyG)
 
 *)
 

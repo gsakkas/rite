@@ -27,12 +27,12 @@ let rec mulByDigit i l =
 (* changed spans
 (9,15)-(9,20)
 [i * h]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 (10,15)-(10,68)
 (remainder h
            i) :: (mulByDigit i t)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 
 *)
 

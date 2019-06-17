@@ -27,7 +27,7 @@ let stringOfList f l =
 (* changed spans
 (10,55)-(10,58)
 ["]"]
-ListG (fromList [LitG])
+ListG [LitG]
 
 *)
 

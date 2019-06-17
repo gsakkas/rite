@@ -69,11 +69,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (20,38)-(20,39)
 [x]
-ListG (fromList [VarG])
+ListG [VarG]
 
 (20,50)-(20,60)
 [x mod 10]
-ListG (fromList [BopG EmptyG EmptyG])
+ListG [BopG EmptyG EmptyG]
 
 *)
 

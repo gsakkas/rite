@@ -1,2 +1,0 @@
-char list
-int list

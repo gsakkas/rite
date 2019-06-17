@@ -17,7 +17,7 @@ let rec digitsOfInt n =
 (* changed spans
 (5,47)-(5,67)
 let c = [a ; b] in c
-LetG NonRec (fromList [(VarPatG,ListG (fromList [EmptyG]))]) VarG
+LetG NonRec [(VarPatG,ListG [EmptyG,EmptyG])] VarG
 
 *)
 

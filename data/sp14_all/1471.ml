@@ -77,7 +77,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (30,36)-(30,56)
 [new_carry ; digit]
-ListG (fromList [VarG])
+ListG [VarG,VarG]
 
 *)
 

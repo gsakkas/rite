@@ -30,7 +30,7 @@ let rec additivePersistence n =
 (* changed spans
 (11,27)-(11,63)
 sumList (digitsOfInt x) + y
-BopG (AppG (fromList [EmptyG])) VarG
+BopG (AppG [EmptyG]) VarG
 
 *)
 

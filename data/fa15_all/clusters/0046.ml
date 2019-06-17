@@ -1,6 +1,5 @@
-TupleG (fromList [VarG,LitG])
-(0 , depth)
-(b , true)
-(b , false)
-(true , b)
-(false , x)
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG]),(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
+EMPTY
+match a with
+| (o , []) -> (o , [x])
+| (o , l) -> (o , x :: l)

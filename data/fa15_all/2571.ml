@@ -69,7 +69,7 @@ let rec exprToString e =
 (* changed spans
 (31,7)-(31,68)
 exprToString (Average (Times (ex1 , ex2) , Times (ex2 , ex3)))
-AppG (fromList [ConAppG (Just EmptyG)])
+AppG [ConAppG (Just EmptyG)]
 
 *)
 

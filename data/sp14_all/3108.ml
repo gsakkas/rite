@@ -63,11 +63,11 @@ VarG
 
 (24,16)-(24,18)
 (0 , [])
-TupleG (fromList [LitG,ListG (fromList [])])
+TupleG [LitG,ListG []]
 
 (25,16)-(25,24)
 [(0 , [])]
-ListG (fromList [TupleG (fromList [EmptyG])])
+ListG [TupleG [EmptyG,EmptyG]]
 
 *)
 

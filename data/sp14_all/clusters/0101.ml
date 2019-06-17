@@ -1,50 +1,8 @@
-CaseG (fromList [(LitPatG,Nothing,AppG (fromList [EmptyG])),(LitPatG,Nothing,IteG EmptyG EmptyG EmptyG),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
-match num with
-| 0 -> if rand (0 , 1) = 0
-       then buildX ()
-       else buildY ()
-| 1 -> if rand (0 , 1) = 0
-       then buildSine (buildhelper 0
-                                   0 expr)
-       else buildCosine (buildhelper 0
-                                     0 expr)
-| 2 -> if rand (0 , 1) = 0
-       then buildAverage (buildhelper (depth - 1)
-                                      (depth - 1)
-                                      expr , buildhelper (depth - 1)
-                                                         (depth - 1)
-                                                         expr)
-       else buildTimes (buildhelper (depth - 1)
-                                    (depth - 1)
-                                    expr , buildhelper (depth - 1)
-                                                       (depth - 1)
-                                                       expr)
-| 3 -> if rand (0 , 1) = 0
-       then buildAverage (buildhelper (depth - 1)
-                                      (depth - 1)
-                                      expr , buildhelper (depth - 1)
-                                                         (depth - 1)
-                                                         expr)
-       else buildTimes (buildhelper (depth - 1)
-                                    (depth - 1)
-                                    expr , buildhelper (depth - 1)
-                                                       (depth - 1)
-                                                       expr)
-| 4 -> buildThresh (buildhelper (depth - 1)
-                                (depth - 1)
-                                expr , buildhelper (depth - 1)
-                                                   (depth - 1)
-                                                   expr , buildhelper (depth - 1)
-                                                                      (depth - 1)
-                                                                      expr , buildhelper (depth - 1)
-                                                                                         (depth - 1)
-                                                                                         expr)
-| _ -> buildThresh (buildhelper (depth - 1)
-                                (depth - 1)
-                                expr , buildhelper (depth - 1)
-                                                   (depth - 1)
-                                                   expr , buildhelper (depth - 1)
-                                                                      (depth - 1)
-                                                                      expr , buildhelper (depth - 1)
-                                                                                         (depth - 1)
-                                                                                         expr)
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG)]
+match e with
+| VarX -> x
+| VarY -> y
+| Sine e -> pi *. x
+| Cosine e -> pi *. y
+| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)

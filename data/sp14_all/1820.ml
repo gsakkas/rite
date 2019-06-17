@@ -43,7 +43,7 @@ LitG
 
 (17,6)-(18,65)
 num + additivePersistence num
-BopG VarG (AppG (fromList [EmptyG]))
+BopG VarG (AppG [EmptyG])
 
 *)
 

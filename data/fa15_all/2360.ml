@@ -27,7 +27,7 @@ let rec additivePersistence n =
 (* changed spans
 (10,52)-(10,53)
 h :: t
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

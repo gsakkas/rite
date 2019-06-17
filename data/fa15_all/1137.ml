@@ -118,16 +118,16 @@ fun i ->
     then bigAdd l
                 (mulByDigit (i - 1) l)
     else []
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (44,19)-(44,65)
 intListToInt (mulByDigit (intListToInt l1)
                          [s])
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (49,14)-(49,43)
 List.combine l2 l2
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

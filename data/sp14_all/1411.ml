@@ -23,7 +23,7 @@ let rec digitalRoot n =
 (* changed spans
 (8,37)-(8,58)
 r_digitalRoot n (-1)
-AppG (fromList [VarG,LitG])
+AppG [VarG,LitG]
 
 *)
 

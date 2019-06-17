@@ -19,11 +19,11 @@ let rec clone x n =
 (* changed spans
 (4,55)-(4,74)
 clonehelper tx (tn - 1)
-AppG (fromList [VarG,BopG EmptyG EmptyG])
+AppG [VarG,BopG EmptyG EmptyG]
 
 (5,3)-(5,22)
 clonehelper x (abs n)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG]]
 
 *)
 

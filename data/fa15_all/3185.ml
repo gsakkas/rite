@@ -77,7 +77,7 @@ let bigAdd l1 l2 =
 match c with
 | 0 -> (a1 @ [(x1 + x2) / 10] , a2 @ [(x1 + x2) mod 10])
 | _ -> (a1 @ [((x1 + x2) + c) / 10] , a2 @ [((x1 + x2) + c) mod 10])
-CaseG (fromList [(LitPatG,Nothing,TupleG (fromList [EmptyG])),(WildPatG,Nothing,TupleG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,TupleG [EmptyG,EmptyG]),(WildPatG,Nothing,TupleG [EmptyG,EmptyG])]
 
 *)
 

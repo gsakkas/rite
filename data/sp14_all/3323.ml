@@ -18,7 +18,7 @@ let rec mulByDigit i l =
 (5,13)-(5,47)
 mulByDigit i
            (List.rev t) @ [0]
-AppG (fromList [AppG (fromList [EmptyG]),ListG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG],ListG [EmptyG]]
 
 *)
 

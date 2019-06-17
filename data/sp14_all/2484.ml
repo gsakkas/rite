@@ -47,11 +47,11 @@ let rec eval (e,x,y) =
 (* changed spans
 (18,29)-(18,44)
 evalhelper p1 x y
-AppG (fromList [VarG])
+AppG [VarG,VarG,VarG]
 
 (19,20)-(19,33)
 cos (pi *. evalhelper p1 x y)
-AppG (fromList [BopG EmptyG EmptyG])
+AppG [BopG EmptyG EmptyG]
 
 *)
 

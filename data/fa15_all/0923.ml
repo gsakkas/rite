@@ -75,7 +75,7 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,33)-(23,36)
 [num]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

@@ -33,7 +33,7 @@ VarG
 
 (9,3)-(9,17)
 List.rev (helper ([] , l))
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

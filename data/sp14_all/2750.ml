@@ -21,11 +21,11 @@ let rec sepConcat sep sl =
 (* changed spans
 (6,22)-(6,33)
 List.length t
-AppG (fromList [VarG])
+AppG [VarG]
 
 (6,48)-(6,48)
 a ^ (x ^ sep)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

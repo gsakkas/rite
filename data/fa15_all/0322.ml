@@ -88,7 +88,7 @@ let accumulate =
   List.append accumulate [0] in
 (l1 , bigAdd accumulate
              multed)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 (35,15)-(35,16)
 l1
@@ -96,7 +96,7 @@ VarG
 
 (35,18)-(35,20)
 [0]
-ListG (fromList [LitG])
+ListG [LitG]
 
 (36,14)-(36,38)
 l2

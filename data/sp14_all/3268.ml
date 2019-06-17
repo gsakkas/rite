@@ -30,7 +30,7 @@ let stringOfList f l = let nl = List.map f l in sepConcat "" nl;;
 (11,24)-(11,46)
 let nl = List.map f l in
 sepConcat "" nl
-LetG NonRec (fromList [(VarPatG,AppG (fromList [EmptyG]))]) (AppG (fromList [EmptyG]))
+LetG NonRec [(VarPatG,AppG [EmptyG,EmptyG])] (AppG [EmptyG,EmptyG])
 
 *)
 

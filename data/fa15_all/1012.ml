@@ -39,7 +39,7 @@ let removeDuplicates l =
 (* changed spans
 (14,38)-(14,39)
 [h]
-ListG (fromList [VarG])
+ListG [VarG]
 
 *)
 

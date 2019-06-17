@@ -95,18 +95,18 @@ match i with
 | 10 -> l @ [0]
 | _ -> bigAdd l
               (mulByDigit (i - 1) l)
-CaseG (fromList [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG (fromList [EmptyG])),(WildPatG,Nothing,AppG (fromList [EmptyG]))])
+CaseG VarG [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG [EmptyG,EmptyG]),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
 
 (34,38)-(34,69)
 l @ [0]
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [VarG,ListG [EmptyG]]
 
 (37,15)-(37,50)
 let (c , a') = a in
 let m = mulByDigit x l2 in
 let s = bigAdd m a' in
 (c + 1 , s)
-LetG NonRec (fromList [(TuplePatG (fromList [VarPatG]),VarG)]) (LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),VarG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 
 *)
 

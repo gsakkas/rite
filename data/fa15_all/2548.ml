@@ -64,7 +64,7 @@ if i > 0
 then mulByDigit (i - 1)
                 (bigAdd l l)
 else l
-IteG (BopG EmptyG EmptyG) (AppG (fromList [EmptyG])) VarG
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) VarG
 
 *)
 

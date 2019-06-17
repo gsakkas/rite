@@ -68,7 +68,7 @@ match a with
 | h :: t -> (let sum =
                (h + z) + y in
              intlist sum @ t)
-CaseG (fromList [(ConsPatG VarPatG VarPatG,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG),(ConPatG Nothing,Nothing,LetG NonRec (fromList [(VarPatG,EmptyG)]) EmptyG)])
+CaseG VarG [(ConPatG Nothing,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG),(ConsPatG EmptyPatG EmptyPatG,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
 
 (23,29)-(23,36)
 z

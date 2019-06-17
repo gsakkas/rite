@@ -1,97 +1,89 @@
-AppG (fromList [AppG (fromList [EmptyG])])
-List.rev (List.tl (List.rev (h1 :: t1)))
-List.rev (h1 :: t1)
-List.combine (List.rev l1)
-             (List.rev l2)
-x (a b)
-listReverse (hd :: l)
-(last l) :: (listReverse (removeLast l))
-additivePersistence (sumList (digits n))
-digitsOfInt (sumList (digitsOfInt n))
-additivePersistence (sumList (digitsOfInt n))
-listReverse (digitsOfInt (n / 10))
-listReverse (h :: l)
-listReverse (explode w)
-List.rev (List.combine l1 l2)
-buildSine (build (rand , depth - 1))
-exprToString e3 ^ exprToString e4
-int_of_float (float_of_int x ** 2.0)
-abs_float (eval (a' , x , y))
-abs_float (eval (b' , x , y))
-x (a x')
-sumList (digits n)
-List.rev (helper ([] , l))
-buildSine (buildX ())
-buildOp1 (build (rand , depth - 1))
-float_of_string (exprToString e)
-sqrt (abs_float (eval (e , x , y)))
-abs_float (eval (e , x , y))
-digitalRoot (sumDigits n)
-sumList (digitsOfInt n)
-sumList (List.tl xs)
-List.rev (removeZero (add (padZero l1
-                                   l2)))
-x (a l)
-abs_float (eval (e2 , x , y))
-padZero (0 :: l1) (0 :: l2)
-additivePersistence (digitSum (digits n))
-abs_float (cos (pi *. eval (e' , x , y)))
-abs_float (sin ((cos (pi *. eval (e1 , x , y)) *. cos (pi *. eval (e2 , x , y))) *. cos (pi *. eval (e3 , x , y))))
-pair (List.rev l1)
-     (List.rev l2)
-removeZero (add (padZero l1
-                         l2))
-not (List.mem h seen)
-mulByTen (List.length y)
-int_of_float (10.0 ** float_of_int pos)
-x (a y)
-x (a k)
-abs_float (eval (u , x , y))
-abs_float (eval (v , x , y))
-abs_float (eval (w , x , y))
-exprToString x ^ ("*" ^ exprToString y)
-List.rev (0 :: l1)
-List.rev (0 :: l2)
-listReverse (append t [h])
-helper (sumList (digits x))
-sumList (digits x)
-x (a g)
-mulHelper (List.rev (0 :: l))
-mulHelper (0 :: (List.rev l))
-bigAdd (List.rev (0 :: (List.rev a)))
-       (mulByDigit x l2)
-removeZero (List.fold_left f
-                           base args)
-cos (pi ** eval (a , x , y))
-sin (eval (a , x , y))
-cos (eval (a , x , y))
-x (a j)
-bigAdd (bigAdd l l)
-       (mulByDigit (i - 2) l)
-buildCosine (build (rand , depth - 1))
-List.combine (0 :: l1)
-             (0 :: l2)
-buildSine (buildhelper 0 0
-                       expr)
-buildCosine (buildhelper 0 0
-                         expr)
-digitalRoot (sumList (digitsOfInt n))
-a (x g)
-buildSine (build (rand , depth - (depth - 1)))
-exprToString e3 ^ ("?" ^ exprToString e4)
-additivePersistence (help n)
-exprToString var5 ^ (" * " ^ exprToString var6)
-listReverse (cat l h)
-mulByDigit i
-           (List.rev (List.map (fun x ->
-                                  x * 10) t)) @ (helper []
-                                                        (h * i) @ [])
-mulByDigit i
-           (List.rev (List.map (fun x ->
-                                  x * 10) t)) @ helper []
-                                                       (h * i)
-bigAdd (mulByDigit i
-                   (List.rev (List.map (fun x ->
-                                          x * 10) t)))
-       (helper [] (h * i))
-List.rev (digitsOfInt (n / 10))
+AppG [VarG]
+List.append zeroes l1
+List.append zeroes l2
+y z
+x c
+snd a
+(fun a -> x) a
+(fun a -> x) x
+a ^ sep
+List.map f l
+List.combine l1 l2
+listReverse tl
+sumList xs'
+exprToString b
+digits n
+digitsOfInt n
+listReverse t
+exprToString e
+List.fold_left f base args
+norm_sum :: acc
+explode w
+List.rev l2
+a x
+x a
+List.tl lst
+buildAbs next
+List.rev list1
+List.rev list2
+List.rev l1
+sepConcat sep t
+sep ^ x
+List.fold_left f base l
+f b
+a k
+f hd hd
+List.mem h seen
+exprToString c
+exprToString x
+whilesFun f
+listReverse l
+abs n
+g f
+exprToString e1
+exprToString e2
+exprToString e3
+exprToString e4
+f x
+h :: seen
+h ^ sep
+x ^ a
+getDigits n
+List.rev res
+mulByDigit x l2
+exprToString m
+exprToString n
+List.hd l1
+List.hd l2
+exprToString x1
+clone x n
+digOfIntHelper n
+mulByDigit i t
+evalhelper p1 x y
+evalhelper p2 x y
+listReverse tail
+x @ acc
+List.mem h t
+x g
+a g
+List.length t
+sum xs
+x y
+a ^ x
+a z
+help n
+cat l h
+sumList t
+d :: t
+padZero l1 l2
+exprToString ex1
+exprToString ex2
+v1 :: list1
+v2 :: list2
+x' :: xs'
+sumList count
+exprToString expr0
+exprToString expr1
+exprToString expr2
+exprToString expr3
+func b

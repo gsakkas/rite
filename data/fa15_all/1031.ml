@@ -57,11 +57,11 @@ let bigAdd l1 l2 =
 (* changed spans
 (23,29)-(23,49)
 List.rev (0 :: l1)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 (23,50)-(23,70)
 List.rev (0 :: l2)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG,EmptyG]]
 
 *)
 

@@ -17,7 +17,7 @@ let sqsum xs =
 (* changed spans
 (4,55)-(4,57)
 f hd hd
-AppG (fromList [VarG])
+AppG [VarG,VarG]
 
 *)
 

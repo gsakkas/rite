@@ -73,7 +73,7 @@ let rec exprToString e =
 (* changed spans
 (31,10)-(31,31)
 exprToString e1
-AppG (fromList [VarG])
+AppG [VarG]
 
 (32,13)-(32,34)
 "*"
@@ -85,7 +85,7 @@ VarG
 
 (32,58)-(32,61)
 "*" ^ (exprToString e3 ^ ")")
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [LitG,AppG [EmptyG,EmptyG]]
 
 *)
 

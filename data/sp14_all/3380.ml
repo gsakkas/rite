@@ -38,7 +38,7 @@ List.hd [List.fold_left f base
                                     (List.rev (List.map (fun x ->
                                                            x * 10)
                                                         t)) @ [h * i])]
-AppG (fromList [ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG]]
 
 *)
 

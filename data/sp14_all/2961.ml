@@ -17,7 +17,7 @@ let rec additivePersistence n =
 (* changed spans
 (5,21)-(5,49)
 additivePersistence (help n)
-AppG (fromList [AppG (fromList [EmptyG])])
+AppG [AppG [EmptyG]]
 
 *)
 

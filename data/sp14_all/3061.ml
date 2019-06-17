@@ -28,7 +28,7 @@ let removeDuplicates l =
 (* changed spans
 (10,55)-(10,72)
 [h] @ seen
-AppG (fromList [VarG,ListG (fromList [EmptyG])])
+AppG [ListG [EmptyG],VarG]
 
 *)
 

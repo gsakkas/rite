@@ -1,3 +1,3 @@
-BopG LitG VarG
-1.0 *. x
-1.0 *. y
+ListG [BopG EmptyG EmptyG,LitG]
+EMPTY
+[(x1 + x2) / 10 ; 0]

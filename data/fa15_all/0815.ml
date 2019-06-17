@@ -34,7 +34,7 @@ let rec additivePersistence n =
 (11,27)-(11,77)
 loop (sumList (digitsOfInt x))
      (sumList (digitsOfInt x) + y)
-AppG (fromList [AppG (fromList [EmptyG]),BopG EmptyG EmptyG])
+AppG [AppG [EmptyG],BopG EmptyG EmptyG]
 
 *)
 

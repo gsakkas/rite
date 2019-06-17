@@ -34,11 +34,11 @@ fun f ->
                   let base = "[" ^ f x in
                   List.fold_left g base
                                  xs ^ "]")
-LamG VarPatG (LamG VarPatG EmptyG)
+LamG VarPatG (LamG EmptyPatG EmptyG)
 
 (9,31)-(9,60)
 stringOfList f (List.map f l)
-AppG (fromList [VarG,AppG (fromList [EmptyG])])
+AppG [VarG,AppG [EmptyG,EmptyG]]
 
 *)
 

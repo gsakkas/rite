@@ -72,7 +72,7 @@ let rec eval (e,x,y) =
 (30,21)-(30,53)
 factorial (eval (e' , x , y))
           1.0
-AppG (fromList [AppG (fromList [EmptyG]),LitG])
+AppG [AppG [EmptyG],LitG]
 
 *)
 
