@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from functools import reduce
 
 def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False, no_slice=False):
     '''Load feature vectors from a csv file.
@@ -30,16 +31,16 @@ def load_csv(path, filter_no_labels=False, balance_labels=True, only_slice=False
 
     if only_slice:
         if len(df[df['L-DidChange'] == 1]) == 0:
-            print 'no changes', path
+            print('no changes', path)
             df = None
             return (df, feature_names, label_names)
         df = df[df['F-InSlice'] == 1].reset_index(drop=True)
         if len(df) == 1:
-            print '1 sliced', path
+            print('1 sliced', path)
             df = None
             return (df, feature_names, label_names)
         if len(df[df['L-DidChange'] == 1]) == 0:
-            print 'no overlap', path
+            print('no overlap', path)
             df = None
 
     if no_slice or only_slice:

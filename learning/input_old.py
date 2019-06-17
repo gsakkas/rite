@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from functools import reduce
 import ntpath
 
 

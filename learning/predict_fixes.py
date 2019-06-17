@@ -6,7 +6,9 @@ from sklearn import tree, neural_network
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.dummy import DummyClassifier
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.externals import joblib
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler
+import joblib
 import numpy as np
 import pandas as pd
 
@@ -63,7 +65,7 @@ print(test.shape)
 max_num_cls = 50
 
 # Number of cluster-labels to use
-num_of_cls = 20
+num_of_cls = 50
 print("Clusters =", num_of_cls)
 
 # The segment below is supposed to balance each class
@@ -107,13 +109,13 @@ clf = DummyClassifier(random_state=prng)
 
 if model == 'mlp':
     clf = neural_network.MLPClassifier(
-        hidden_layer_sizes=(256, 64),
+        hidden_layer_sizes=(128, 128),
         learning_rate='adaptive',
         learning_rate_init=0.001,
         alpha=0.001,
         max_iter=500,
         verbose=True,
-        # solver='sgd',
+        # solver='lbfgs',
         # early_stopping=True,
         # tol=0.00001,
         random_state=prng,
@@ -131,25 +133,39 @@ elif model == 'uniform':
 else:
     clf = joblib.load(model_file)
 
+
+parameters = {'hidden_layer_sizes': ((256, 128), (128, 128), (128, 64)),
+              'alpha': [0.001, 0.0001],
+              'verbose': [False]}
+
+#Standarize the data
+# scaler = StandardScaler()
+# train_stds = scaler.fit_transform(train_samps.values)
+train_stds = train_samps.values
+
 # Type of model training to use
 clf_type = 'multiclass' # "ova" of "multiclass"
 
 if model != 'load':
     if clf_type == 'ova' or clf_type == 'big-ova':
-        clf = OneVsRestClassifier(clf, n_jobs=10).fit(train_samps.values, train_labels.values)
+        clf = OneVsRestClassifier(clf, n_jobs=-1).fit(train_stds, train_labels.values)
     else:
-        clf = clf.fit(train_samps.values, train_labels.values)
+        clf = GridSearchCV(clf, parameters, scoring='f1_weighted', cv=5, verbose=2, n_jobs=-1)
+        clf = clf.fit(train_stds, train_labels.values)
+        print(clf.best_params_)
 
     if model != 'uniform' and model != 'stratified':
         joblib.dump(
             clf,
-            os.path.join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '.pkl'))
+            os.path.join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '_final.pkl'))
 else:
     model = 'mlp'
 
-anses = clf.predict(test_samps.values)
+# test_stds = scaler.transform(test_samps.values)
+test_stds = test_samps.values
+anses = clf.predict(test_stds)
 
-prob_score = clf.predict_proba(test_samps.values)
+prob_score = clf.predict_proba(test_stds)
 # print(len(prob_score))
 # print(len(prob_score[0]))
 
@@ -198,7 +214,7 @@ for labelind in list(set(test_labels.index)):
 
     if model != 'load' and model != 'uniform' and model != 'stratified':
         filenm = test_file.loc[[labelind]].values[0].split('.')
-        res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type)
+        res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type + '-lbfgs')
         if not os.path.exists(res_dir):
             os.mkdir(res_dir)
         temp_sc.to_csv(res_dir + '/' + filenm[0] + '.csv', index=False)
@@ -226,6 +242,7 @@ for i, idx in enumerate(test_labels.values):
     # print(idx)
     if pes[0] != anses[i]:
         print('NOT OK')
+    # print(pes[:5])
 
     if pes[0] == idx or pes[1] == idx or pes[2] == idx or pes[3] == idx or pes[4] == idx:
         yay5_2 += 1
