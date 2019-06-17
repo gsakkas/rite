@@ -47,7 +47,7 @@ rankExprs net fs p = second getThing <$!> rank net samples
   -- inSlice s = any (\c -> getSpan s == fromJust (constraintSpan c)) cores
 
   -- mkTypeOut :: TExpr -> [Sample ()]
-  mkTypeOut te = ctfold f [] te
+  mkTypeOut te = actfold f [] te
     where
     f p e acc = (:acc) $ MkSample
                 { getThing = infoSpan (texprInfo e)

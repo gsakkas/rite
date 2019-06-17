@@ -51,6 +51,7 @@ import qualified Data.Set                     as Set
 import           Data.Typeable                (Typeable)
 import           Data.Vector                  (Vector)
 import qualified Data.Vector                  as Vector
+import           Data.Containers.ListUtils    (nubOrd)
 import           GHC.Generics
 import           System.IO.Unsafe
 import           Text.PrettyPrint.Annotated.Leijen (Doc)
@@ -902,7 +903,7 @@ joinSrcSpan x y = SrcSpan (srcSpanStartLine x) (srcSpanStartCol x)
 nextLine x = SrcSpan (srcSpanEndLine x + 1) 0
                      (srcSpanEndLine x + 1) 0
 
-flarSrcSpan x = SrcSpan (srcSpanEndLine x) (srcSpanEndCol x)
+flatSrcSpan x = SrcSpan (srcSpanEndLine x) (srcSpanEndCol x)
                         (srcSpanEndLine x) (srcSpanEndCol x)
 
 type Prog = [Decl]
@@ -1004,43 +1005,135 @@ instance ToJSON Expr where
 data ExprGeneric
   = VarG
   | LamG !PatGeneric !ExprGeneric
-  | AppG !(Set ExprGeneric)
+  | AppG ![ExprGeneric]
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
-  | LetG !RecFlag !(Set (PatGeneric, ExprGeneric)) !ExprGeneric
+  | LetG !RecFlag ![(PatGeneric, ExprGeneric)] !ExprGeneric
   | IteG !ExprGeneric !ExprGeneric !ExprGeneric
   | SeqG !ExprGeneric !ExprGeneric
-  | CaseG !(Set (PatGeneric, Maybe ExprGeneric, ExprGeneric))
-  | TupleG !(Set ExprGeneric)
+  | CaseG !ExprGeneric ![(PatGeneric, Maybe ExprGeneric, ExprGeneric)]
+  | TupleG ![ExprGeneric]
   | ConAppG !(Maybe ExprGeneric)
-  | ListG !(Set ExprGeneric)
+  | ListG ![ExprGeneric]
   | EmptyG -- Just an empty expr for easier pruning
-  deriving (Show, Generic, Ord)
+  deriving (Show, Generic, Eq, Ord)
 
 instance ToJSON ExprGeneric
 instance FromJSON ExprGeneric
 
-instance Eq ExprGeneric where
-  VarG            == VarG            = True
-  LamG p1 e1      == LamG p2 e2      = p1 == p2 && e1 == e2
-  AppG se1        == AppG se2        = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
-  BopG el1 er1    == BopG el2 er2    = el1 == el2 && er1 == er2
-  UopG e1         == UopG e2         = e1 == e2
-  LitG            == LitG            = True
-  LetG r1 spe1 e1 == LetG r2 spe2 e2 = r1 == r2 && (spe1 `Set.isSubsetOf` spe2 || spe2 `Set.isSubsetOf` spe1) && e1 == e2
-  IteG c1 et1 ef1 == IteG c2 et2 ef2 = c1 == c2 && et1 == et2 && ef1 == ef2
-  SeqG ef1 es1    == SeqG ef2 es2    = ef1 == ef2 && es1 == es2
-  CaseG spmee1    == CaseG spmee2    = spmee1 `Set.isSubsetOf` spmee2 || spmee2 `Set.isSubsetOf` spmee1
-  TupleG se1      == TupleG se2      = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
-  ConAppG me1     == ConAppG me2     = me1 == me2
-  ListG se1       == ListG se2       = delE se1 `subOf` delE se2 || delE se2 `subOf` delE se1
-  EmptyG          == expr            = True
-  expr            == EmptyG          = True
-  expr1           == expr2           = False
+eq :: ExprGeneric -> ExprGeneric -> Bool
+VarG            `eq` VarG            = True
+LamG p1 e1      `eq` LamG p2 e2      = p1 `eqP` p2 && e1 `eq` e2
+AppG se1        `eq` AppG se2        = se1' `sameSet` se2' -- || se2' `subOf` se1'
+  where
+    se1' = nubOrd se1
+    -- se1' = Set.toList $ Set.fromList se1
+    se2' = nubOrd se2
+    -- se2' = Set.toList $ Set.fromList se2
+BopG el1 er1    `eq` BopG el2 er2    = (el1 `eq` el2 && er1 `eq` er2) || (el1 `eq` er2 && er1 `eq` el2)
+UopG e1         `eq` UopG e2         = e1 `eq` e2
+LitG            `eq` LitG            = True
+LetG r1 spe1 e1 `eq` LetG r2 spe2 e2 = r1 == r2 && spe1' `subOfSpe` spe2' -- && e1 `eq` e2 -- || spe2' `subOfSpe` spe1')
+  where
+    spe1' = nubOrd spe1
+    spe2' = nubOrd spe2
+IteG c1 et1 ef1 `eq` IteG c2 et2 ef2 = c1 `eq` c2 && ((et1 `eq` et2 && ef1 `eq` ef2) || (et1 `eq` ef2 && ef1 `eq` et2))
+SeqG ef1 es1    `eq` SeqG ef2 es2    = ef1 `eq` ef2 && es1 `eq` es2
+CaseG e1 spmee1 `eq` CaseG e2 spmee2 = spmee1' `subOfSpmee` spmee2' -- || spmee2' `subOfSpmee` spmee1' {- && e1 `eq` e2 -}
+  where
+    spmee1' = nubOrd spmee1
+    spmee2' = nubOrd spmee2
+TupleG se1      `eq` TupleG se2      = se1' `subOf` se2' || se2' `subOf` se1'
+  where
+    se1' = Set.toList $ Set.fromList se1
+    se2' = Set.toList $ Set.fromList se2
+ConAppG me1     `eq` ConAppG me2     = fromMaybe True $ liftA2 eq me1 me2
+ListG se1       `eq` ListG se2       = se1' `sameSet` se2' -- || se2' `subOf` se1'
+  where
+    se1' = Set.toList $ Set.fromList se1
+    se2' = Set.toList $ Set.fromList se2
+EmptyG          `eq` expr            = True
+expr            `eq` EmptyG          = True
+expr1           `eq` expr2           = False
 
-delE = Set.delete EmptyG
-subOf = Set.isSubsetOf
+-- delE :: Set ExprGeneric -> Set ExprGeneric
+-- delE = Set.delete EmptyG
+
+sameSet :: [ExprGeneric] -> [ExprGeneric] -> Bool
+sameSet a b = length a == length b && any (\a' -> any (and . zipWith eq a') bs) as
+  where
+    as = permutations a
+    bs = permutations b
+
+sameSetP :: [PatGeneric] -> [PatGeneric] -> Bool
+sameSetP a b = length a == length b && any (\a' -> any (and . zipWith eqP a') bs) as
+  where
+    as = permutations a
+    bs = permutations b
+
+subOf :: [ExprGeneric] -> [ExprGeneric] -> Bool
+subOf a b = all (\aa -> any (eq aa) b) a
+
+subOfSpe :: [(PatGeneric, ExprGeneric)] -> [(PatGeneric, ExprGeneric)] -> Bool
+subOfSpe a b = sameSetP pats1 pats2 && sameSet es1 es2 -- all (\aa -> any (eqSpe aa) b) a
+  where
+    pats1 = nubOrd $ map fst a
+    pats2 = nubOrd $ map fst b
+    es1 = nubOrd $ map snd a
+    es2 = nubOrd $ map snd b
+    -- eqSpe (p, e) (p', e') = p `eqP` p' && e `eq` e'
+
+subOfSpmee :: [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> Bool
+subOfSpmee a b = sameSetP pats1 pats2 && sameSet es1 es2 -- all (\aa -> any (eqSpmee aa) b) a
+  where
+    pats1 = nubOrd $ map fst3 a
+    pats2 = nubOrd $ map fst3 b
+    es1 = nubOrd $ map thd3 a
+    es2 = nubOrd $ map thd3 b
+    -- eqSpmee (p, me, e) (p', me', e') = p `eqP` p' && fromMaybe True (liftA2 eq me me') && e `eq` e'
+
+-- George
+depthOfTree :: ExprGeneric -> Int -> Int
+depthOfTree e depth = case e of
+  EmptyG            -> depth + 1
+  VarG              -> depth + 1
+  LamG p e'         -> max (depthOfPat p (depth + 1)) (depthOfTree e' (depth + 1))
+  AppG es           -> safeMaximum es depth
+  BopG e1 e2        -> max (depthOfTree e1 (depth + 1)) (depthOfTree e2 (depth + 1))
+  UopG e'           -> depthOfTree e' (depth + 1)
+  LitG              -> depth + 1
+  LetG _ pes e'     -> maximum [depthOfTree e' (depth + 1), maximum (map ((`depthOfPat` (depth + 1)) . fst) pes), safeMaximum (map snd pes) depth]
+  IteG e1 e2 e3     -> maximum [depthOfTree e1 (depth + 1), depthOfTree e2 (depth + 1), depthOfTree e3 (depth + 1)]
+  SeqG e1 e2        -> max (depthOfTree e1 (depth + 1)) (depthOfTree e2 (depth + 1))
+  CaseG e as        -> maximum $ depthOfTree e (depth + 1) : safeMaximum (map thd3 as) depth : map ((`depthOfPat` (depth + 1)) . fst3) as
+  TupleG es         -> safeMaximum es depth
+  ConAppG Nothing   -> depth + 1
+  ConAppG (Just e') -> depthOfTree e' (depth + 1)
+  ListG es          -> safeMaximum es depth
+  -- _                 -> error ("depthOfTree failed: no such expression " ++ show e)
+  where safeMaximum li d = if null li then d else maximum $ map (\e' -> depthOfTree e' (d + 1)) li
+
+-- George
+sizeOfTree :: ExprGeneric -> Int
+sizeOfTree e = case e of
+  EmptyG            -> 0
+  VarG              -> 1
+  LamG p e'         -> 1 + sizeOfPat p + sizeOfTree e'
+  AppG es           -> 1 + sum (map sizeOfTree es)
+  BopG e1 e2        -> 1 + sizeOfTree e1 + sizeOfTree e2
+  UopG e'           -> 1 + sizeOfTree e'
+  LitG              -> 1
+  LetG _ pes e'     -> 1 + sizeOfTree e' + sum (map (sizeOfPat . fst) pes) + sum (map (sizeOfTree . snd) pes)
+  IteG e1 e2 e3     -> 1 + sizeOfTree e1 + sizeOfTree e2 + sizeOfTree e3
+  SeqG e1 e2        -> 1 + sizeOfTree e1 + sizeOfTree e2
+  CaseG e as        -> 1 + sizeOfTree e + sum (map (sizeOfPat . fst3) as) + sum (map sizeOfTree (mapMaybe snd3 as)) + sum (map (sizeOfTree . thd3) as)
+  TupleG es         -> 1 + sum (map sizeOfTree es)
+  ConAppG Nothing   -> 1
+  ConAppG (Just e') -> 1 + sizeOfTree e'
+  ListG es          -> 1 + sum (map sizeOfTree es)
+  -- _                 -> error ("sizeOfTree failed: no such expression " ++ show e)
+
 
 data Context
   = Here | Elsewhere
@@ -1192,7 +1285,7 @@ onSrcSpanExpr f expr = case expr of
   TypedVar ms x -> TypedVar (f ms) x
 
 mapExpr :: (Expr -> Expr) -> Expr -> Expr
-mapExpr f expr = case expr of
+mapExpr f expr = f $ case expr of
   Var ms x -> Var ms x
   Lam ms x y e -> Lam ms x (mapExpr f y) e
   App ms x y -> App ms (mapExpr f x) (map (mapExpr f) y)
@@ -1394,25 +1487,6 @@ instance ToJSON Pat where
     AsPat _ x y -> Aeson.object ["as" .= [toJSON x, toJSON y]]
     ConstraintPat _ x y -> Aeson.object ["type" .= [toJSON x, toJSON y]]
 
--- George
-data PatGeneric
-  = VarPatG
-  | LitPatG
-  | IntervalPatG
-  | ConsPatG !PatGeneric !PatGeneric
-  | ConPatG (Maybe PatGeneric)
-  | ListPatG !(Set PatGeneric)
-  | TuplePatG !(Set PatGeneric)
-  | WildPatG
-  | OrPatG !PatGeneric !PatGeneric
-  | AsPatG !PatGeneric
-  | ConstrPatG !PatGeneric !Type
-  | EmptyPatG
-  deriving (Show, Data, Generic, Eq, Ord)
-
-instance ToJSON PatGeneric
-instance FromJSON PatGeneric
-
 bindersOf :: Pat -> [Var]
 bindersOf p = case p of
   VarPat _ v -> [v]
@@ -1441,6 +1515,81 @@ getSrcSpanPatMaybe pat = case pat of
   OrPat ms _ _ -> ms
   AsPat ms _ _ -> ms
   ConstraintPat ms _ _ -> ms
+
+
+-- George
+data PatGeneric
+  = VarPatG
+  | LitPatG
+  | IntervalPatG
+  | ConsPatG !PatGeneric !PatGeneric
+  | ConPatG (Maybe PatGeneric)
+  | ListPatG !(Set PatGeneric)
+  | TuplePatG !(Set PatGeneric)
+  | WildPatG
+  | OrPatG !PatGeneric !PatGeneric
+  | AsPatG !PatGeneric
+  | ConstrPatG !PatGeneric !Type
+  | EmptyPatG
+  deriving (Show, Data, Generic, Eq, Ord)
+
+instance ToJSON PatGeneric
+instance FromJSON PatGeneric
+
+eqP :: PatGeneric -> PatGeneric -> Bool
+VarPatG          `eqP` VarPatG          = True
+LitPatG          `eqP` LitPatG          = True
+IntervalPatG     `eqP` IntervalPatG     = True
+ConsPatG x1 y1   `eqP` ConsPatG x2 y2   = x1 `eqP` x2 && y1 `eqP` y2
+ConPatG mp1      `eqP` ConPatG mp2      = fromMaybe True $ liftA2 eqP mp1 mp2
+ListPatG sp1     `eqP` ListPatG sp2     = Set.toList sp1 `subOfP` Set.toList sp2 || Set.toList sp2 `subOfP` Set.toList sp1
+TuplePatG sp1    `eqP` TuplePatG sp2    = Set.toList sp1 `subOfP` Set.toList sp2 || Set.toList sp2 `subOfP` Set.toList sp1
+WildPatG         `eqP` WildPatG         = True
+OrPatG x1 y1     `eqP` OrPatG x2 y2     = x1 `eqP` x2 && y1 `eqP` y2
+AsPatG p1        `eqP` AsPatG p2        = p1 `eqP` p2
+ConstrPatG p1 t1 `eqP` ConstrPatG p2 t2 = p1 `eqP` p2 && t1 == t2
+EmptyPatG        `eqP` pat              = True
+pat              `eqP` EmptyPatG        = True
+pat1             `eqP` pat2             = False
+
+subOfP :: [PatGeneric] -> [PatGeneric] -> Bool
+subOfP a b = all (\aa -> any (eqP aa) b) a
+
+-- George
+depthOfPat :: PatGeneric -> Int -> Int
+depthOfPat e depth = case e of
+  EmptyPatG        -> depth + 1
+  VarPatG          -> depth + 1
+  LitPatG          -> depth + 1
+  IntervalPatG     -> depth + 1
+  ConsPatG p1 p2   -> max (depthOfPat p1 (depth + 1)) (depthOfPat p2 (depth + 1))
+  ConPatG Nothing  -> depth + 1
+  ConPatG (Just p) -> depthOfPat p (depth + 1)
+  ListPatG ps      -> safeMaximum ps depth
+  TuplePatG ps     -> safeMaximum ps depth
+  WildPatG         -> depth + 1
+  OrPatG p1 p2     -> max (depthOfPat p1 (depth + 1)) (depthOfPat p2 (depth + 1))
+  AsPatG p         -> depthOfPat p (depth + 1)
+  ConstrPatG p _   -> depthOfPat p (depth + 1)
+  where safeMaximum li d = if null li then d else maximum $ Set.map (\e' -> depthOfPat e' (d + 1)) li
+
+-- George
+sizeOfPat :: PatGeneric -> Int
+sizeOfPat e = case e of
+  EmptyPatG        -> 0
+  VarPatG          -> 1
+  LitPatG          -> 1
+  IntervalPatG     -> 1
+  ConsPatG p1 p2   -> 1 + sizeOfPat p1 + sizeOfPat p2
+  ConPatG Nothing  -> 1
+  ConPatG (Just p) -> 1 + sizeOfPat p
+  ListPatG ps      -> 1 + sum (map sizeOfPat (Set.toList ps))
+  TuplePatG ps     -> 1 + sum (map sizeOfPat (Set.toList ps))
+  WildPatG         -> 1
+  OrPatG p1 p2     -> 1 + sizeOfPat p1 + sizeOfPat p2
+  AsPatG p         -> 1 + sizeOfPat p
+  ConstrPatG p _   -> 1 + sizeOfPat p
+
 
 data Type
   = TVar !TVar
@@ -1923,7 +2072,7 @@ mergeLocated x y = joinSrcSpan <$> getSrcSpanMaybe x <*> getSrcSpanMaybe y
 
 afterThis x = nextLine <$> getSrcSpanMaybe x
 
-afterThat x = flarSrcSpan <$> getSrcSpanMaybe x
+afterThat x = flatSrcSpan <$> getSrcSpanMaybe x
 
 ----------------------------------------------------------------------
 -- traces
