@@ -76,6 +76,10 @@ main = do
       -> do
         res <- mkFixes out top_cls funs dcons all_preds jsons
         print res
+    "progs"
+      -> do
+        res <- getProgrms all_preds jsons
+        print res
     "timed-synth"
       -> do
         res <- forM all_preds $ \pr -> timeout 30 $ mkFixes out top_cls funs dcons [pr] jsons
@@ -147,6 +151,34 @@ mkFixes out top_cls funs dcons all_preds jsons = do
     -- return (null goods || and (zipWith (\bs t -> isNothing t || bs !! fromJust t) replaced ts), (genericLength (filter id (zipWith (\bs t -> isNothing t || bs !! fromJust t) replaced ts)), genericLength ts), null goods || repla)
   return (genericLength (filter fst xx) * 100.0 / genericLength xx, genericLength (filter snd xx) * 100.0 / genericLength xx)
   -- return (genericLength (filter fst3 xx) * 100.0 / genericLength xx, sum (map (fst.snd3) xx) * 100.0 / sum (map (snd.snd3) xx), genericLength (filter thd3 xx) * 100.0 / genericLength xx)
+
+
+getProgrms :: [(Int, [Preds])] -> [String] -> IO [(Int, [Int])]
+getProgrms all_preds jsons = do
+  let uniqs = concatMap mkDiffsWithGenericTrs jsons
+  let feats = [ (ss, bad, fix, badStr, fixStr, pds, idx)
+              | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
+              , (idx', pds) <- all_preds
+              , idx == idx'
+              ]
+  prog_ids <- forM feats $ \ f@(ss, bad, fix, badStr, fixStr, pds, i) -> do
+    let ss_exprs = map thd3 ss
+    let templates = sort $ nub $ map getCorrectTmpl pds
+    if
+      | length ss_exprs > 2 -> do
+        putStrLn (show i ++ ". MORE THAN 2 CHANGES")
+        return []
+      | any (\e -> sizeOfTree e > 16) ss_exprs -> do
+        putStrLn (show i ++ ". BIGGER THAN 16 NODES")
+        return []
+      | any (\e -> depthOfTree e 0 > 3) ss_exprs -> do
+        putStrLn (show i ++ ". DEEPER THAN 3 LEVELS")
+        return []
+      | otherwise -> do
+        return [(i, templates)]
+  let ids = concat prog_ids
+  let for_eval = map (\i -> (i, map fst $ take 5 $ filter (elem i . snd) ids)) [1..30]
+  return for_eval
 
 
 getTemplate :: (Int, [Preds]) -> [Int]
