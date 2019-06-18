@@ -21,7 +21,6 @@ import qualified Data.Vector as Vector
 import Text.Printf
 import Text.Read
 
-import NanoML.Gen
 import NanoML.Types
 
 baseTypeEnv = Map.fromList $ map (\td -> (tyCon td, td))
