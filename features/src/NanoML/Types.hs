@@ -1025,40 +1025,23 @@ instance FromJSON ExprGeneric
 eq :: ExprGeneric -> ExprGeneric -> Bool
 VarG            `eq` VarG            = True
 LamG p1 e1      `eq` LamG p2 e2      = p1 `eqP` p2 && e1 `eq` e2
-AppG se1        `eq` AppG se2        = se1' `sameSet` se2' -- || se2' `subOf` se1'
-  where
-    se1' = nubOrd se1
-    -- se1' = Set.toList $ Set.fromList se1
-    se2' = nubOrd se2
-    -- se2' = Set.toList $ Set.fromList se2
-BopG el1 er1    `eq` BopG el2 er2    = (el1 `eq` el2 && er1 `eq` er2) || (el1 `eq` er2 && er1 `eq` el2)
+AppG se1        `eq` AppG se2        = cleanEg se1 `sameSet` cleanEg se2
+BopG el1 er1    `eq` BopG el2 er2    = cleanEg [el1, er1] `sameSet` cleanEg [el2, er2]
 UopG e1         `eq` UopG e2         = e1 `eq` e2
 LitG            `eq` LitG            = True
-LetG r1 spe1 e1 `eq` LetG r2 spe2 e2 = r1 == r2 && spe1' `subOfSpe` spe2' -- && e1 `eq` e2 -- || spe2' `subOfSpe` spe1')
-  where
-    spe1' = nubOrd spe1
-    spe2' = nubOrd spe2
-IteG c1 et1 ef1 `eq` IteG c2 et2 ef2 = c1 `eq` c2 && ((et1 `eq` et2 && ef1 `eq` ef2) || (et1 `eq` ef2 && ef1 `eq` et2))
+LetG r1 spe1 e1 `eq` LetG r2 spe2 e2 = nubOrd spe1 `sameSetPE` nubOrd spe2
+IteG c1 et1 ef1 `eq` IteG c2 et2 ef2 = c1 `eq` c2 && cleanEg [et1, ef1] `sameSet` cleanEg [et2, ef2]
 SeqG ef1 es1    `eq` SeqG ef2 es2    = ef1 `eq` ef2 && es1 `eq` es2
-CaseG e1 spmee1 `eq` CaseG e2 spmee2 = spmee1' `subOfSpmee` spmee2' -- || spmee2' `subOfSpmee` spmee1' {- && e1 `eq` e2 -}
-  where
-    spmee1' = nubOrd spmee1
-    spmee2' = nubOrd spmee2
-TupleG se1      `eq` TupleG se2      = se1' `subOf` se2' || se2' `subOf` se1'
-  where
-    se1' = Set.toList $ Set.fromList se1
-    se2' = Set.toList $ Set.fromList se2
+CaseG e1 spmee1 `eq` CaseG e2 spmee2 = nubOrd spmee1 `sameSetPMeE` nubOrd spmee2
+TupleG se1      `eq` TupleG se2      = cleanEg se1 `sameSet` cleanEg se2
 ConAppG me1     `eq` ConAppG me2     = fromMaybe True $ liftA2 eq me1 me2
-ListG se1       `eq` ListG se2       = se1' `sameSet` se2' -- || se2' `subOf` se1'
-  where
-    se1' = Set.toList $ Set.fromList se1
-    se2' = Set.toList $ Set.fromList se2
+ListG se1       `eq` ListG se2       = cleanEg se1 `sameSet` cleanEg se2
 EmptyG          `eq` expr            = True
 expr            `eq` EmptyG          = True
 expr1           `eq` expr2           = False
 
--- delE :: Set ExprGeneric -> Set ExprGeneric
--- delE = Set.delete EmptyG
+cleanEg :: [ExprGeneric] -> [ExprGeneric]
+cleanEg = delete EmptyG . nubOrd
 
 sameSet :: [ExprGeneric] -> [ExprGeneric] -> Bool
 sameSet a b = length a == length b && any (\a' -> any (and . zipWith eq a') bs) as
@@ -1066,32 +1049,21 @@ sameSet a b = length a == length b && any (\a' -> any (and . zipWith eq a') bs) 
     as = permutations a
     bs = permutations b
 
-sameSetP :: [PatGeneric] -> [PatGeneric] -> Bool
-sameSetP a b = length a == length b && any (\a' -> any (and . zipWith eqP a') bs) as
+sameSetPE :: [(PatGeneric, ExprGeneric)] -> [(PatGeneric, ExprGeneric)] -> Bool
+sameSetPE a b = sameSetP pats1 pats2 && sameSet es1 es2
   where
-    as = permutations a
-    bs = permutations b
+    pats1 = cleanP $ nubOrd $ map fst a
+    pats2 = cleanP $ nubOrd $ map fst b
+    es1 = cleanEg $ map snd a
+    es2 = cleanEg $ map snd b
 
-subOf :: [ExprGeneric] -> [ExprGeneric] -> Bool
-subOf a b = all (\aa -> any (eq aa) b) a
-
-subOfSpe :: [(PatGeneric, ExprGeneric)] -> [(PatGeneric, ExprGeneric)] -> Bool
-subOfSpe a b = sameSetP pats1 pats2 && sameSet es1 es2 -- all (\aa -> any (eqSpe aa) b) a
+sameSetPMeE :: [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> Bool
+sameSetPMeE a b = sameSetP pats1 pats2 && sameSet es1 es2
   where
-    pats1 = nubOrd $ map fst a
-    pats2 = nubOrd $ map fst b
-    es1 = nubOrd $ map snd a
-    es2 = nubOrd $ map snd b
-    -- eqSpe (p, e) (p', e') = p `eqP` p' && e `eq` e'
-
-subOfSpmee :: [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> [(PatGeneric, Maybe ExprGeneric, ExprGeneric)] -> Bool
-subOfSpmee a b = sameSetP pats1 pats2 && sameSet es1 es2 -- all (\aa -> any (eqSpmee aa) b) a
-  where
-    pats1 = nubOrd $ map fst3 a
-    pats2 = nubOrd $ map fst3 b
-    es1 = nubOrd $ map thd3 a
-    es2 = nubOrd $ map thd3 b
-    -- eqSpmee (p, me, e) (p', me', e') = p `eqP` p' && fromMaybe True (liftA2 eq me me') && e `eq` e'
+    pats1 = cleanP $ nubOrd $ map fst3 a
+    pats2 = cleanP $ nubOrd $ map fst3 b
+    es1 = cleanEg $ map thd3 a
+    es2 = cleanEg $ map thd3 b
 
 -- George
 depthOfTree :: ExprGeneric -> Int -> Int
@@ -1542,18 +1514,24 @@ LitPatG          `eqP` LitPatG          = True
 IntervalPatG     `eqP` IntervalPatG     = True
 ConsPatG x1 y1   `eqP` ConsPatG x2 y2   = x1 `eqP` x2 && y1 `eqP` y2
 ConPatG mp1      `eqP` ConPatG mp2      = fromMaybe True $ liftA2 eqP mp1 mp2
-ListPatG sp1     `eqP` ListPatG sp2     = Set.toList sp1 `subOfP` Set.toList sp2 || Set.toList sp2 `subOfP` Set.toList sp1
-TuplePatG sp1    `eqP` TuplePatG sp2    = Set.toList sp1 `subOfP` Set.toList sp2 || Set.toList sp2 `subOfP` Set.toList sp1
+ListPatG sp1     `eqP` ListPatG sp2     = cleanP (Set.toList sp1) `sameSetP` cleanP (Set.toList sp2)
+TuplePatG sp1    `eqP` TuplePatG sp2    = cleanP (Set.toList sp1) `sameSetP` cleanP (Set.toList sp2)
 WildPatG         `eqP` WildPatG         = True
-OrPatG x1 y1     `eqP` OrPatG x2 y2     = x1 `eqP` x2 && y1 `eqP` y2
+OrPatG x1 y1     `eqP` OrPatG x2 y2     = cleanP (nubOrd [x1, y1]) `sameSetP` cleanP (nubOrd [x2, y2])
 AsPatG p1        `eqP` AsPatG p2        = p1 `eqP` p2
 ConstrPatG p1 t1 `eqP` ConstrPatG p2 t2 = p1 `eqP` p2 && t1 == t2
 EmptyPatG        `eqP` pat              = True
 pat              `eqP` EmptyPatG        = True
 pat1             `eqP` pat2             = False
 
-subOfP :: [PatGeneric] -> [PatGeneric] -> Bool
-subOfP a b = all (\aa -> any (eqP aa) b) a
+cleanP :: [PatGeneric] -> [PatGeneric]
+cleanP = delete EmptyPatG
+
+sameSetP :: [PatGeneric] -> [PatGeneric] -> Bool
+sameSetP a b = length a == length b && any (\a' -> any (and . zipWith eqP a') bs) as
+  where
+    as = permutations a
+    bs = permutations b
 
 -- George
 depthOfPat :: PatGeneric -> Int -> Int
