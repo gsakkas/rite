@@ -1,5 +1,4 @@
-CaseG VarG [(LitPatG,Nothing,VarG),(VarPatG,Nothing,BopG EmptyG EmptyG)]
+TupleG [LitG,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG]
 EMPTY
-match x with
-| 0 -> a
-| x -> x * x
+(1 , let (y , z) = x in
+     [((y + z) + carry) mod 10] @ ans)

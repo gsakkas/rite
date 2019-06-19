@@ -1,3 +1,3 @@
-AppG [LitG,UopG EmptyG]
-clone 0 (- n)
+ListG [BopG EmptyG EmptyG,LitG]
 EMPTY
+[(x1 + x2) / 10 ; 0]

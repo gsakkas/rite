@@ -1,16 +1,27 @@
-LamG VarPatG (TupleG [EmptyG,EmptyG])
-fun x -> (x , f x = x)
+LamG VarPatG (LamG EmptyPatG EmptyG)
+fun r -> fun a -> fun x -> a x
+fun a -> fun x -> x a
+fun x -> fun a -> x a
 fun b ->
-  (f b , if f b = b
-         then true
-         else false)
-fun x -> (2 , f b = b)
+  fun b ->
+    (f b , if f b = b
+           then true
+           else false)
+fun f ->
+  fun b ->
+    fun b ->
+      (f b , if f b = b
+             then true
+             else false)
+fun a -> fun x -> x
 EMPTY
-fun bt -> (bt , f bt = bt)
-fun x -> (f b , 3 < 4)
-fun input ->
-  (f input , f input = b)
-fun b ->
-  (f b , (b = f b) = false)
-fun y -> (f b , b = f b)
-fun x -> (f x , x <> f x)
+fun i ->
+  fun l ->
+    if i > 0
+    then bigAdd l
+                (mulByDigit (i - 1) l)
+    else []
+fun a -> fun x -> a + (x * x)
+fun a -> fun x -> a + x
+fun f -> fun x -> x
+fun x -> fun a -> a

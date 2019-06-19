@@ -1,32 +1,20 @@
-AppG [AppG [EmptyG],VarG]
-x :: (clone x (n - 1))
-bigAdd l (mulByDigit (i - 1)
-                     l)
-digitsOfInt 0 @ return
-t @ listReverse [h]
-h :: (listReverse t)
-List.nth l1 (List.length l1)
-List.nth l2 (List.length l2)
-front :: (add back next)
-bigAdd (mulByDigit (i - 1) l)
-       l
-a ^ (sep ^ x)
-List.combine (List.rev l1) l2
+BopG (BopG EmptyG EmptyG) LitG
+(eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
+(addition (m , n) + y) / 10
+((x1 + x2) + carry) mod 10
 EMPTY
-clone 0 difference2 @ l1
-clone 0 difference1 @ l2
-List.append (clone 0
-                   (List.length l1 - List.length l2))
-            l2
-bigAdd (mulByDigit prod l1) l
-bigAdd (mulByDigit (place * 10)
-                   l1) l
-(mulByDigit x l1 @ clone 0
-                         (List.length a)) @ a
-bigAdd total (mulByDigit x l2)
-bigAdd total
-       (mulByDigit (i - 1) l)
-notEqual b (f b)
-clone 0 (y - x) @ l1
-clone 0 (x - y) @ l2
-mulByDigit i [x'] @ x''
+(eval (a , x , y) +. eval (b , x , y)) /. 2.0
+(sumList (digits n) mod 10) <> 0
+(eval (v , x , y) +. eval (w , x , y)) /. 2.0
+(eval (e , x , y) +. eval (f , x , y)) /. 2.0
+((eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (b , x , y))) /. 2.0
+((eval (a , x , y) *. eval (b , x , y)) *. eval (c , x , y)) /. 2.0
+(n / 10) = 0
+(x1 + x2) / 10
+(eval (i1 , x , y) +. eval (i2 , x , y)) /. 2.0
+((h + x1) + x2) / 10
+((h + x1) + x2) mod 10
+((num1 + num2) + carry) mod 10
+(eval (x3 , x , y) +. eval (x4 , x , y)) /. 2.0
+(eval (expr , x , y) *. (eval (expr , x , y) +. 1.0)) /. 2.0
+((x1 + x2) + c) / 10

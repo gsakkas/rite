@@ -1,4 +1,2 @@
-IteG (BopG EmptyG EmptyG) LitG (BopG EmptyG EmptyG)
-if n < 10
-then 1
-else 1 + additivePersistence (sumList (digitsOfInt n))
+IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (ListG [EmptyG])
+if v = 0 then [1] else [0]

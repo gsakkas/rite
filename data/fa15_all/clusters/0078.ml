@@ -1,6 +1,8 @@
-LetG NonRec [(VarPatG,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)] (AppG [EmptyG])
-let n1 =
-  (let x0 = digitsOfInt n in
-   sumList x0) in
-additivePersistence n1
+IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (AppG [EmptyG])
 EMPTY
+if n < 10
+then [n]
+else digitsOfInt (n / 10)
+if n = 0
+then []
+else x :: (clone x (n - 1))

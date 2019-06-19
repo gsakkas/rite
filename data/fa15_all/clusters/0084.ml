@@ -1,4 +1,3 @@
-CaseG VarG [(LitPatG,Nothing,ListG [])]
+ListG [ListG [EmptyG]]
 EMPTY
-match n with
-| 0 -> []
+[["b"]]

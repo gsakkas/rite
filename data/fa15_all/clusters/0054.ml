@@ -1,6 +1,10 @@
-CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
-match a with
-| (carry , list) -> (let num =
-                       (l1e + l2e) + carry in
-                     (num mod 9 , [7] @ list))
+BopG (AppG [EmptyG]) (BopG EmptyG EmptyG)
+((1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))) *. sin (pi *. eval (e1 , x , y))
 EMPTY
+eval (m4 , x , y) *. (1.0 +. sqrt 5.0)
+(eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y)
+(eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)
+(eval (v , x , y) +. eval (w , x , y)) *. eval (v , x , y)
+(eval (l , x , y) *. eval (w , x , y)) *. eval (h , x , y)
+(eval (e1 , x , y) *. eval (e1 , x , y)) +. eval (e2 , x , y)
+eval (e1 , x , y) /. (eval (e1 , x , y) *. eval (e1 , x , y))

@@ -1,6 +1,2 @@
-AppG [BopG EmptyG EmptyG,VarG,AppG [EmptyG,EmptyG]]
-helper (x - 1) l (bigAdd l
-                         accum)
-helper (f :: acc) f (x - 1)
-helper (i - 1) (bigAdd acc l)
-       l
+TupleG [BopG EmptyG EmptyG,ListG [EmptyG,EmptyG]]
+(fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])

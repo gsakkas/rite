@@ -1,5 +1,5 @@
-IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (AppG [EmptyG])
+IteG LitG (AppG [EmptyG]) (AppG [EmptyG])
 EMPTY
-if n < 10
-then [n]
-else digitsOfInt (n / 10)
+if true
+then buildX ()
+else buildY ()

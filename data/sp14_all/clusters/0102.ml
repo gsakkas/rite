@@ -1,2 +1,2 @@
-AppG [LitG,ListG []]
-f 0 []
+ListG [LamG EmptyPatG EmptyG]
+[fun x -> x ^ sep]

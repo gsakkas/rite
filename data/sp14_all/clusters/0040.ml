@@ -1,4 +1,10 @@
-CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,TupleG [EmptyG,EmptyG]),(ConPatG Nothing,Nothing,TupleG [EmptyG,EmptyG])]
-match snd a with
-| [] -> (fst x + snd x , [(fst x + snd x) / 10 ; (fst x + snd x) mod 10])
-| h :: t -> (0 , [])
+BopG (BopG EmptyG EmptyG) (BopG EmptyG EmptyG)
+(List.length acc = List.length l1) || (List.length acc = List.length l2)
+(eval (e1 , x , y) /. 2.0) +. (eval (e2 , x , y) /. 2.0)
+((eval (e1 , x , y) *. eval (e1 , x , y)) +. (eval (e2 , x , y) *. eval (e2 , x , y))) +. (eval (e3 , x , y) *. eval (e3 , x , y))
+(a * a) + (x * x)
+((1.0 /. eval (e1 , x , y)) +. (1.0 /. eval (e2 , x , y))) +. (1.0 /. eval (e3 , x , y))
+((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)) -. ((eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y))
+(((atan res1 +. atan res2) -. atan res3) *. 2.0) /. (3.0 *. pi)
+(eval (a , x , y) *. eval (a , x , y)) +. (eval (b , x , y) *. eval (c , x , y))
+(((eval (ex1 , x , y) *. (eval (ex1 , x , y) +. eval (ex2 , x , y))) *. ((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y))) *. (((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y))) *. ((((eval (ex1 , x , y) +. eval (ex2 , x , y)) +. eval (ex3 , x , y)) +. eval (ex4 , x , y)) +. eval (ex5 , x , y))

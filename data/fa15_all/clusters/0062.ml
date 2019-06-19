@@ -1,8 +1,6 @@
-LamG (TuplePatG (fromList [EmptyPatG])) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
-fun (f , b) ->
-  (let f =
-     fun b ->
-       (let x = f b in
-        (x , x <> b)) in
-   f)
+CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
+match a with
+| (carry , list) -> (let num =
+                       (l1e + l2e) + carry in
+                     (num mod 9 , [7] @ list))
 EMPTY

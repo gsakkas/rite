@@ -1,7 +1,11 @@
-LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG,EmptyG])] VarG
-let (_ , asd4) =
-  padZero asd3 (asd2 :: b) in
-(asd3 , asd4)
-let (_ , res) =
-  List.fold_left f base args in
-res
+IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (AppG [EmptyG,EmptyG])
+if n > 0
+then x :: (clone x (n - 1))
+else []
+if n < 10
+then [n]
+else digitsOfInt (n / 10) @ [n mod 10]
+if tl = []
+then [(hd , x)]
+else (hd , x) :: (argmaker x
+                           tl)

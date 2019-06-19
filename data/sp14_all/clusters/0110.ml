@@ -1,2 +1,6 @@
-IteG (BopG EmptyG EmptyG) (ListG [EmptyG]) (ListG [EmptyG])
-if v = 0 then [1] else [0]
+CaseG (BopG EmptyG EmptyG) [(LitPatG,Nothing,ListG []),(LitPatG,Nothing,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])]
+match n > 0 with
+| false -> []
+| true -> match n > 9 with
+          | false -> n :: (digitsOfInt n)
+          | true -> digitsOfInt (n mod 10)

@@ -1,10 +1,8 @@
-BopG (AppG [EmptyG]) (BopG EmptyG EmptyG)
-((1.0 /. sin (pi *. eval (e1 , x , y))) *. cos (pi *. eval (e1 , x , y))) *. sin (pi *. eval (e1 , x , y))
+AppG [AppG [EmptyG],AppG [EmptyG,EmptyG]]
+exprToString expr ^ ("^2-" ^ (exprToString expr ^ "-1)"))
 EMPTY
-eval (m4 , x , y) *. (1.0 +. sqrt 5.0)
-(eval (e1 , x , y) +. eval (e2 , x , y)) +. eval (e3 , x , y)
-(eval (a , x , y) +. eval (b , x , y)) +. eval (c , x , y)
-(eval (v , x , y) +. eval (w , x , y)) *. eval (v , x , y)
-(eval (l , x , y) *. eval (w , x , y)) *. eval (h , x , y)
-(eval (e1 , x , y) *. eval (e1 , x , y)) +. eval (e2 , x , y)
-eval (e1 , x , y) /. (eval (e1 , x , y) *. eval (e1 , x , y))
+exprToString e ^ ("*" ^ exprToString f)
+exprToString e ^ ("*" ^ exprToString e)
+exprToString x ^ ("*" ^ exprToString y)
+bigAdd total (mulByDigit x
+                         l2) @ listZeros pow

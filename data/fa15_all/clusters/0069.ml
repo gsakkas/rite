@@ -1,4 +1,3 @@
-ListG [VarG,BopG EmptyG EmptyG]
-[a ; ((fst x + snd x) + a) mod 10]
+TupleG [LitG,LitG]
+(0 , 0)
 EMPTY
-[carry ; (carry + b) + c]

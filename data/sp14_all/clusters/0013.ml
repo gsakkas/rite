@@ -1,6 +1,7 @@
-AppG [AppG [EmptyG],ListG [EmptyG]]
+AppG [AppG [EmptyG],ListG []]
 listReverse tl @ [hd]
 digitsOfInt (n / 10) @ [n mod 10]
+listReverse t @ []
 listReverse t @ [h]
 List.append [result / 10]
             (List.append [result mod 10]
@@ -49,3 +50,4 @@ mulByDigit i
            (List.rev (List.map (fun x ->
                                   x * 10) t)) @ [h * i]
 helper t1 @ [h1 mod 10]
+helper [] (h * i) @ []

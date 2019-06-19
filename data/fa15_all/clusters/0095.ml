@@ -1,5 +1,3 @@
-IteG (BopG EmptyG EmptyG) LitG VarG
+LamG VarPatG (ConAppG (Just EmptyG))
 EMPTY
-if List.length t <> 0
-then ""
-else sep
+fun c1 -> Circ c1

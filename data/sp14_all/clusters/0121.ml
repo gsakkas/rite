@@ -1,4 +1,2 @@
-IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) (ListG [])
-if n > 0
-then x :: (clone x (n - 1))
-else []
+LetG NonRec [(VarPatG,ListG [EmptyG,EmptyG])] VarG
+let c = [a ; b] in c

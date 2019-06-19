@@ -1,2 +1,4 @@
-LetG NonRec [(VarPatG,ListG [EmptyG,EmptyG])] VarG
-let c = [a ; b] in c
+CaseG (BopG EmptyG EmptyG) [(LitPatG,Nothing,AppG [EmptyG,EmptyG]),(LitPatG,Nothing,AppG [EmptyG])]
+match n > 9 with
+| false -> n :: (digitsOfInt n)
+| true -> digitsOfInt (n mod 10)

@@ -1,19 +1,54 @@
-BopG (AppG [EmptyG]) (AppG [EmptyG])
-eval (a , x , y) +. eval (b , x , y)
-eval (e1 , x , y) /. eval (e2 , x , y)
-eval (e1 , x , y) *. eval (e2 , x , y)
-eval (a , x , y) *. eval (b , x , y)
-log l /. log 10.0
-eval (e1 , x , y) +. eval (e2 , x , y)
-eval (expr , x , y) +. eval (expr1 , x , y)
-eval (v , x , y) *. eval (v , x , y)
-explode w = listReverse (explode w)
-eval (VarX , x , y) +. eval (VarY , x , y)
-eval (t , x , y) *. eval (u , x , y)
-sin (pi *. eval (e , x , y)) /. cos (pi *. eval (e , x , y))
-sin (pi *. eval (e , x , y)) *. cos (pi *. eval (e , x , y))
-evalhelper p1 x
-           y *. evalhelper p2 x y
-eval (e4 , x , y) *. eval (e5 , x , y)
-eval (var5 , x , y) *. eval (var6 , x , y)
-eval (ex1 , x , y) *. eval (ex2 , x , y)
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
+let carry =
+  match a with
+  | (x , y) -> x in
+match x with
+| (add1 , add2) -> (let new_carry =
+                      ((carry + add1) + add2) / 10 in
+                    let digit =
+                      ((carry + add1) + add2) mod 10 in
+                    match a with
+                    | (x , y) -> (new_carry , digit :: y))
+let carry =
+  match a with
+  | (x , y) -> x in
+match x with
+| (addend_a , addend_b) -> (let new_carry =
+                              ((carry + addend_a) + addend_b) / 10 in
+                            let digit =
+                              ((carry + addend_a) + addend_b) mod 10 in
+                            match a with
+                            | (x , y) -> (new_carry , digit :: y))
+let carry =
+  match a with
+  | (x , y) -> x in
+match x with
+| (d1 , d2) -> (let new_carry =
+                  ((carry + d1) + d2) / 10 in
+                let digit =
+                  ((carry + d1) + d2) mod 10 in
+                match a with
+                | (x , y) -> (new_carry , digit :: y))
+let carry =
+  match a with
+  | (f , g) -> f in
+let newc =
+  match x with
+  | (f , g) -> if ((f + g) + carry) > 9
+               then 1
+               else 0 in
+let digit =
+  match x with
+  | (f , g) -> (f + g) + (carry mod 10) in
+match a with
+| (o , p) -> (newc , digit :: p)
+let newc =
+  match x with
+  | (f , g) -> if ((f + g) + carry) > 9
+               then 1
+               else 0 in
+let digit =
+  match x with
+  | (f , g) -> (f + g) + (carry mod 10) in
+match a with
+| (o , p) -> (newc , digit :: p)

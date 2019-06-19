@@ -1,5 +1,3 @@
-CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,ListG [EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,ListG [EmptyG,EmptyG,EmptyG,EmptyG])]
-match l with
-| [] -> []
-| x :: [] -> [x]
-| head :: tail :: third :: fourth :: fifth -> [fourth ; third ; tail ; head]
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
+match xs with
+| hd :: tl -> f (f hd hd) tl

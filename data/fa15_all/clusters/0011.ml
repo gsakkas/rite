@@ -1,32 +1,17 @@
-AppG [TupleG [EmptyG,EmptyG]]
-wwhile (f , b')
-eval (e1 , x , y)
-wwhile (f , x)
-assoc (d , k , t)
-mul (i , l)
-buildThresh (build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1) , build (rand , depth - 1))
-wwhile (f , b)
-add (padZero l1 l2 , l2)
-helper (f , b)
-append (seen , [h])
-helper (x , clone x n)
+LamG VarPatG (AppG [EmptyG])
+fun p_pre -> x (a p_pre)
+fun n -> x n
+fun n -> x (a n)
+fun a -> x a
+fun g -> x (a g)
+fun d -> x (a d)
+fun y -> x (a y)
+fun q -> x q
+fun x -> a x
 EMPTY
-build (rand , depth - 1)
-eval (nlog , x , y)
-rand (0 , 1)
-rand (0 , 4)
-eval (b_less , x , y)
-eval (a_less , x , y)
-assoc (d , k , l')
-rand (0 , 6)
-buildThresh (build (rand , depth - 1) , buildX () , buildY () , buildX ())
-helper (seen' , rest')
-eval (e , x , y)
-eval (a , x , y)
-eval (b , x , y)
-func (f , b)
-eval (n , x , y)
-eval (m , x , y)
-eval (ex , x , y)
-build (rand , d)
-addHelper (a , x)
+fun x' -> x (a x')
+fun b -> x (a b)
+fun z -> x (a z)
+fun b -> x b
+fun c -> x (a c)
+fun g -> f a x

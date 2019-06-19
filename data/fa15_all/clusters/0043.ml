@@ -1,6 +1,7 @@
-CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
-match l with
-| x :: [] -> "[" ^ (x ^ "]")
-match a with
-| hd :: tl -> (((fst x + snd x) + hd) / 10) :: ((((fst x + snd x) + hd) mod 10) :: tl)
+TupleG [LitG,VarG]
+(0 , depth)
+(b , true)
+(b , false)
 EMPTY
+(true , b)
+(false , x)

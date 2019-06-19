@@ -1,4 +1,5 @@
-CaseG VarG [(WildPatG,Nothing,VarG),(TuplePatG (fromList [EmptyPatG]),Nothing,AppG [EmptyG,EmptyG])]
-match x with
-| (h1 , h2) -> ((h1 + h2) / 10) :: (((h1 + h2) mod 10) :: a)
-| _ -> a
+CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG),(ConPatG (Just EmptyPatG),Nothing,AppG [EmptyG])]
+match e with
+| VarX -> x
+| VarY -> y
+| Sine ex -> sin (pi *. eval (ex , x , y))

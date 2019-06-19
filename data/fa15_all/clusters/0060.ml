@@ -1,4 +1,11 @@
-BopG LitG LitG
+LetG NonRec [(VarPatG,VarG)] (AppG [EmptyG])
+let args = l2 in
+let (_ , res) =
+  List.fold_left f base args in
+res
 EMPTY
-3 > 0
-1.0 /. 3.0
+let rest' = t in
+helper (seen' , rest')
+let seen' = seen in
+let rest' = t in
+helper (seen' , rest')

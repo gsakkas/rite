@@ -1,5 +1,4 @@
-CaseG VarG [(VarPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG])]
-match x with
-| k -> y
-| _ -> assoc (d , k , l')
+ListG [VarG,BopG EmptyG EmptyG]
+[a ; ((fst x + snd x) + a) mod 10]
 EMPTY
+[carry ; (carry + b) + c]

@@ -1,5 +1,18 @@
-CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG]),(TuplePatG (fromList [EmptyPatG]),Nothing,TupleG [EmptyG,EmptyG])]
+LamG VarPatG (IteG EmptyG EmptyG EmptyG)
+fun b ->
+  if f b
+  then (b , true)
+  else (b , false)
 EMPTY
-match a with
-| (o , []) -> (o , [x])
-| (o , l) -> (o , x :: l)
+fun b ->
+  if f b = b
+  then (b , true)
+  else (f b , false)
+fun x ->
+  if f x = b
+  then (b , true)
+  else (f x , false)
+fun b' ->
+  if f b' = b'
+  then (f b' , false)
+  else (f b' , true)

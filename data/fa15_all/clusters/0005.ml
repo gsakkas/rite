@@ -1,38 +1,51 @@
-LitG
-0
-""
-2.0
-1
-1.0
-"List.map f l"
-30.0
-"x"
-"y"
-"sin"
-"+"
-"*"
-8
-false
-0.0
+AppG [AppG [EmptyG]]
+List.rev (List.combine l1 l2)
+not (List.mem h seen)
+sumList (digits n)
+sumList (digitsOfInt n)
+x (a n)
+buildSine (build (rand , depth - 1))
+f (f (f (f b)))
+List.rev (0 :: l)
+List.combine (0 :: l1)
+             (0 :: l2)
+listReverse (explode w)
+digitalRoot (sumList (digitsOfInt n))
+sumList (digitsOfInt x)
+List.rev ([0] @ l1)
+List.combine (List.rev l1)
+             (List.rev l2)
+List.combine (List.rev (0 :: l1))
+             (List.rev (0 :: l2))
+List.rev (0 :: l1)
+List.rev (0 :: l2)
+bigAdd (bigAdd l l)
+       (mulByDigit (i - 1) l)
+intListToInt (mulByDigit (intListToInt l1)
+                         [s])
 EMPTY
-10.0
-")/2)"
-"; "
-5.0
-4.0
-true
-"VarX"
-10
-3.0
-")/"
-"log("
-" + "
-"]"
-4
-"(("
-2
-'u'
-6.0
-" * "
-" "
-"["
+intListToInt (carryFunc (mulByDigit (intListToInt l1)
+                                    [s]))
+List.rev (List.combine l2 l2)
+x (a b)
+additivePersistence (sumList x)
+additivePersistence (sumList (digits n))
+x (a f')
+log (eval (nlog , x , y))
+x (a y)
+additivePersistence (sumList (digitsOfInt n))
+eval (m , x , y) ** eval (n , x , y)
+List.rev (List.combine (0 :: l1)
+                       (0 :: l2))
+List.rev (helper ([] , l))
+not (List.mem h l)
+List.rev (mulByDigit (i - 1)
+                     l)
+x (a x')
+buildCotangent (build (rand , depth - 1))
+matchHeads (loseTail t)
+matchHeads (explode w)
+atan (eval (e1 , x , y))
+(remainder h
+           i) :: (mulByDigit i t)
+x (x a)

@@ -1,18 +1,12 @@
-BopG VarG LitG
-n mod 10
-n / 10
-n mod 100
-x < 10
-n_ mod 10
-i <= 1
+AppG [BopG EmptyG EmptyG]
+digitsOfInt (n / 10)
+cos (pi *. eval (e1 , x , y))
+cos (eval (e1 , x , y) *. pi)
+digitsOfInt (n * (-1))
 EMPTY
-x mod 10
-x / 1
-n < 10
-pi *. 1.0
-n <= 0
-1.0 *. x
-1.0 *. y
-d > 1.0
-place * 10
-i >= 0
+cos (pi *. eval (e , x , y))
+print_int (n / 10)
+not (List.mem = h)
+not (b = f b)
+not (f x = x)
+abs_float (eval (expr2 , x , y) +. eval (expr3 , x , y))

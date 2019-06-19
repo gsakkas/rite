@@ -1,9 +1,4 @@
-IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) VarG
+BopG LitG LitG
 EMPTY
-if n < 10
-then n
-else digitalRoot (sumList (digits n))
-if i > 0
-then mulByDigit (i - 1)
-                (bigAdd l l)
-else l
+3 > 0
+1.0 /. 3.0

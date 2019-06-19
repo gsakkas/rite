@@ -1,7 +1,4 @@
-CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConsPatG EmptyPatG EmptyPatG,Nothing,LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)]
-match rest with
-| [] -> seen
-| hd :: tl -> (let seen' =
-                 hd :: seen in
-               let rest' = tl in
-               helper (seen' , rest'))
+CaseG (AppG [EmptyG]) [(LitPatG,Nothing,ConAppG Nothing),(LitPatG,Nothing,ConAppG Nothing)]
+match rand (1 , 2) with
+| 1 -> VarX
+| 2 -> VarY

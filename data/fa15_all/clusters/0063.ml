@@ -1,4 +1,5 @@
-AppG [ListG [],VarG]
-[] :: seen
+AppG [LitG]
+digitsOfInt 1
 EMPTY
-helper i [] l
+")" ^ "^2"
+print_int 0

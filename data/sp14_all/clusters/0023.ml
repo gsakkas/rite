@@ -1,67 +1,19 @@
-LamG VarPatG (LamG EmptyPatG EmptyG)
-fun g ->
-  fun b ->
-    fun y ->
-      fun n ->
-        match n with
-        | [] -> n
-        | _ -> y b
-fun x ->
-  fun a ->
-    (let (carry , num) = a in
-     let (l1' , l2') = x in
-     let addit =
-       (l1' + l2') + carry in
-     (if addit > 10
-      then 1
-      else 0 , (addit mod 10) :: num))
-fun x -> fun a -> a
-fun x -> fun a -> x a
-fun a -> fun x -> a x
-fun i ->
-  fun l ->
-    fun acc ->
-      match i with
-      | 0 -> [0]
-      | 1 -> l
-      | _ -> helper (i - 1) l
-                    (bigAdd acc l)
-fun f ->
-  fun x ->
-    fun f -> fun a -> f a x
-fun f -> fun a -> f a x
-fun absNum ->
-  fun persCount ->
-    if absNum < 10
-    then (persCount , absNum)
-    else (let xs =
-            digits absNum in
-          let theSum = sumList xs in
-          additivePersAndRoot theSum
-                              (persCount + 1))
-fun list1 ->
-  fun list2 ->
-    match list1 with
-    | [] -> list2
-    | h :: t -> list1 :: list2
-fun list1 ->
-  fun list2 ->
-    match list1 with
-    | [] -> list2
-    | h :: t -> h :: (append t
-                             list2)
-fun h ->
-  fun x ->
-    (let xx = h x in
-     (xx , xx = h x))
-fun f ->
-  fun l ->
-    match l with
-    | [] -> "[]"
-    | x :: xs -> (let g =
-                    fun a ->
-                      fun x -> a ^ ("; " ^ f x) in
-                  let base = "[" ^ f x in
-                  List.fold_left g base
-                                 xs ^ "]")
-fun a -> fun x -> x
+BopG (AppG [EmptyG]) (AppG [EmptyG])
+eval (a , x , y) +. eval (b , x , y)
+eval (e1 , x , y) /. eval (e2 , x , y)
+eval (e1 , x , y) *. eval (e2 , x , y)
+eval (a , x , y) *. eval (b , x , y)
+log l /. log 10.0
+eval (e1 , x , y) +. eval (e2 , x , y)
+eval (expr , x , y) +. eval (expr1 , x , y)
+eval (v , x , y) *. eval (v , x , y)
+explode w = listReverse (explode w)
+eval (VarX , x , y) +. eval (VarY , x , y)
+eval (t , x , y) *. eval (u , x , y)
+sin (pi *. eval (e , x , y)) /. cos (pi *. eval (e , x , y))
+sin (pi *. eval (e , x , y)) *. cos (pi *. eval (e , x , y))
+evalhelper p1 x
+           y *. evalhelper p2 x y
+eval (e4 , x , y) *. eval (e5 , x , y)
+eval (var5 , x , y) *. eval (var6 , x , y)
+eval (ex1 , x , y) *. eval (ex2 , x , y)

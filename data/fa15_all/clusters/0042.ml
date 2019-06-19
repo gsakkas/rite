@@ -1,5 +1,8 @@
-BopG VarG (BopG EmptyG EmptyG)
-a + (x * x)
-(eval (e' , x , y) *. x) *. y
+BopG VarG VarG
+x * x
+l = lr
+a * a
+a + x
 EMPTY
-(x * x) + a
+sum + r
+d *. d

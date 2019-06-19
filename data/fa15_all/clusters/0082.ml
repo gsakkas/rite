@@ -1,9 +1,19 @@
-LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
+IteG (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG) (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 EMPTY
-let test =
-  match a1 with
-  | [] -> 0
-  | h :: t -> h in
-let sum =
-  (l1x + l2x) + test in
-((sum / 10) :: a1 , (sum mod 10) :: a2)
+if (let (carry , ans) = a in
+    let (y , z) = x in
+    ((y + z) + carry) > 9)
+then (let (carry , ans) = a in
+      (1 , let (y , z) = x in
+           [((y + z) + carry) mod 10] @ ans))
+else (let (carry , ans) = a in
+      (0 , let (y , z) = x in
+           [(y + z) + carry] @ ans))
+if (let (carry , ans) = a in
+    let (y , z) = x in
+    ((y + z) + carry) = 10)
+then (let (carry , ans) = a in
+      (1 , [9] @ ans))
+else (let (carry , ans) = a in
+      (0 , let (y , z) = x in
+           [(y + z) + carry] @ ans))

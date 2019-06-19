@@ -1,2 +1,3 @@
-AppG [LamG EmptyPatG EmptyG,VarG]
-f (fun x -> x) h
+LamG (TuplePatG (fromList [EmptyPatG])) (ConAppG (Just EmptyG))
+fun (e1 , e2 , e3) ->
+  Weird (e1 , e2 , e3)

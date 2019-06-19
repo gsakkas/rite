@@ -1,2 +1,4 @@
-LetG NonRec [(VarPatG,VarG)] VarG
-let an = a in x
+IteG (AppG [EmptyG,EmptyG]) VarG (AppG [EmptyG,EmptyG])
+if List.mem h seen
+then seen
+else h :: seen

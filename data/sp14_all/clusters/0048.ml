@@ -1,9 +1,11 @@
-CaseG VarG [(TuplePatG (fromList [EmptyPatG]),Nothing,VarG)]
-match x with
-| (_ , _) -> a
-match a with
-| (x , y) -> x
-match a with
-| (f , g) -> f
-match a with
-| (a1 , a2) -> a2
+AppG [ListG [EmptyG]]
+append [h] [h]
+listReverse [a]
+listReverse [n mod 10]
+app [5] [n mod 10]
+app [3] [8]
+List.hd [List.fold_left f base
+                        (mulByDigit i
+                                    (List.rev (List.map (fun x ->
+                                                           x * 10)
+                                                        t)) @ [h * i])]

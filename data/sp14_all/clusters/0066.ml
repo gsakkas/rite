@@ -1,2 +1,4 @@
-BopG (UopG EmptyG) VarG
-(- 1.0) *. res3
+CaseG VarG [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG [EmptyG])]
+match c' with
+| true -> wwhile (f , b')
+| false -> b'

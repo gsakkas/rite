@@ -1,6 +1,4 @@
-CaseG VarG [(ConPatG Nothing,Nothing,ListG [EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
+CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,LitG)]
 EMPTY
-match t with
-| [] -> [remainder i h]
-| h' :: t' -> [h' * i] @ mulByDigit i
-                                    t'
+match explode x with
+| h :: t -> false

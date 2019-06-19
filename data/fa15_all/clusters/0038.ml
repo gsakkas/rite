@@ -1,18 +1,15 @@
-LamG VarPatG (IteG EmptyG EmptyG EmptyG)
-fun b ->
-  if f b
-  then (b , true)
-  else (b , false)
+LetG NonRec [(TuplePatG (fromList [EmptyPatG]),AppG [EmptyG,EmptyG])] (AppG [EmptyG,EmptyG])
+let (l1' , l2') =
+  padZero l1 l2 in
+List.combine l1' l2'
+let (_ , res) =
+  List.fold_left f base args in
+res
+let (x , y) =
+  makeTuple l1 l2 in
+List.combine x y
 EMPTY
-fun b ->
-  if f b = b
-  then (b , true)
-  else (f b , false)
-fun x ->
-  if f x = b
-  then (b , true)
-  else (f x , false)
-fun b' ->
-  if f b' = b'
-  then (f b' , false)
-  else (f b' , true)
+let (x , res) =
+  List.fold_left f base args in
+res @ helper (List.length l2 * 2)
+             x

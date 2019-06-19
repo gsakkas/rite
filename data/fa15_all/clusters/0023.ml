@@ -1,11 +1,5 @@
-ListG [LitG]
-[1]
-[0]
-[7]
+AppG [ConAppG Nothing]
+buildX ()
+buildY ()
 EMPTY
-[8]
-[(-1)]
-[0 ; 0]
-["[" ; "]"]
-[3]
-[5]
+exprToString (Average (Times (ex1 , ex2) , Times (ex2 , ex3)))

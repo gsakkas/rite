@@ -1,4 +1,9 @@
-AppG [TupleG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
+LetG NonRec [(VarPatG,CaseG EmptyG [(EmptyPatG,Nothing,EmptyG),(EmptyPatG,Nothing,EmptyG)])] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
 EMPTY
-(0 , 0) :: (List.combine l1
-                         l2)
+let test =
+  match a1 with
+  | [] -> 0
+  | h :: t -> h in
+let sum =
+  (l1x + l2x) + test in
+((sum / 10) :: a1 , (sum mod 10) :: a2)

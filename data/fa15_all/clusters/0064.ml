@@ -1,5 +1,4 @@
-CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG)]
-match e with
-| VarX -> x
-| VarY -> y
+TupleG [VarG,BopG EmptyG EmptyG]
+(b , f b = b)
+(xx , xx = x)
 EMPTY

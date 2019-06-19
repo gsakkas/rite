@@ -1,9 +1,19 @@
-IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
-if diff > 0
-then (l1 , List.append (clone 0
-                              diff) l2)
-else (l1 , l2)
-if b < a
-then (l1 , List.append (clone 0
-                              (a - b)) l2)
-else (l1 , l2)
+LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
+fun n ->
+  match n with
+  | 0 -> []
+  | n -> if n < 0
+         then []
+         else (n mod 10) :: (digitsOfInt (n / 10))
+function | y -> y
+fun b ->
+  match b with
+  | [] -> [a]
+  | hd :: tl -> [a + hd]
+function | g -> g
+function | x -> x
+fun l ->
+  match l with
+  | [] -> []
+  | hd :: tl -> helper (hd :: xs)
+                       l

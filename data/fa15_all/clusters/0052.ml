@@ -1,19 +1,6 @@
-LamG VarPatG (CaseG EmptyG [(EmptyPatG,Nothing,EmptyG)])
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
+match l with
+| x :: [] -> "[" ^ (x ^ "]")
+match a with
+| hd :: tl -> (((fst x + snd x) + hd) / 10) :: ((((fst x + snd x) + hd) mod 10) :: tl)
 EMPTY
-fun x ->
-  match explode x with
-  | h :: t -> false
-fun x ->
-  match x with
-  | [] -> true
-  | h :: t -> if getHead x = getHead (listReverse x)
-              then matchHeads (getTail (listReverse t))
-              else false
-fun l ->
-  match l with
-  | [] -> []
-  | h :: t -> listReverse t @ [h]
-function
-  | [] -> l
-  | h :: t -> listReverseHelper (h :: l)
-                                t

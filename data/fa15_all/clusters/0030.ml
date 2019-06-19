@@ -1,12 +1,16 @@
-BopG VarG (AppG [EmptyG])
-pi *. eval (e1 , x , y)
-sumList (digitsOfInt x) + y
+LamG VarPatG (TupleG [EmptyG,EmptyG])
+fun x -> (x , f x = x)
+fun b ->
+  (f b , if f b = b
+         then true
+         else false)
+fun x -> (2 , f b = b)
 EMPTY
-h + sumList t
-f b <> b
-f x <> x
-pi *. eval (e , x , y)
-pi *. eval (a , x , y)
-b = f b
-pi *. eval (x1 , x , y)
-pi *. eval (x2 , x , y)
+fun bt -> (bt , f bt = bt)
+fun x -> (f b , 3 < 4)
+fun input ->
+  (f input , f input = b)
+fun b ->
+  (f b , (b = f b) = false)
+fun y -> (f b , b = f b)
+fun x -> (f x , x <> f x)

@@ -1,41 +1,154 @@
-AppG [AppG [EmptyG],LitG]
-sepConcat "; " (List.map f l)
-exprToString e4 ^ ")"
-"/3*" ^ (exprToString e3 ^ "/4)")
-exprToString e3 ^ "/4)"
-exprToString e2 ^ "/2"
-mulByDigit 9 (bigAdd l1 l2)
-"sin(" ^ (exprToString x ^ ")")
-exprToString d ^ ")"
-exprToString e2 ^ ")/2)"
-"*" ^ (exprToString e3 ^ ")")
-sepConcat ";" (List.map f
-                        l) ^ "]"
-"((" ^ (exp a ^ ("*" ^ (exp a ^ ")/2)")))
-"*" ^ exprToString e2
-sepConcat "" (List.map f l)
-sepConcat ";" (List.map f l)
-0 :: (0 :: (0 :: l1))
-0 :: (0 :: (0 :: l2))
+LetG NonRec [(VarPatG,LamG EmptyPatG EmptyG)] VarG
+let rec generatePadding =
+  fun numZeros ->
+    if numZeros <= 0
+    then []
+    else 0 :: (generatePadding (numZeros - 1)) in
+let toSum =
+  intermediateSum @ generatePadding padCount in
+(padCount + 1 , bigAdd currList
+                       toSum)
+let foo =
+  fun b ->
+    (let result = f b in
+     if result = b
+     then (result , false)
+     else (result , true)) in
+wwhile (foo , b)
+let g =
+  fun b ->
+    (f b , if f b = b
+           then false
+           else true) in
+(g , b)
+let n =
+  fun x ->
+    (let ff = f b in
+     (ff , b = ff)) in
+(n , b)
+let funt =
+  fun b ->
+    if f b
+    then (b , true)
+    else (b , false) in
+wwhile (funt , b)
+let funt =
+  fun x -> (f b , f b = b) in
+wwhile (funt , b)
+let fs =
+  fun x -> (f b , f b = b) in
+wwhile (fs , b)
+let gs =
+  fun x ->
+    (let isFPoint =
+       fun x -> (f x - x) < 0 in
+     (x , isFPoint x)) in
+wwhile (gs , b)
+let f =
+  fun b ->
+    (let x = f b in
+     (x , x <> b)) in
+f
 EMPTY
-"+" ^ (exprToString d ^ ")/2)")
-"(" ^ (exprToString g ^ ("<" ^ (exprToString h ^ ("?" ^ (exprToString i ^ (":" ^ (exprToString j ^ ")")))))))
-exprToString d ^ ")/2)"
-"[" ^ (sepConcat ";"
-                 (List.map f l) ^ "]")
-exprToString e3 ^ "))"
-exprToString ex3 ^ ")"
-"**" ^ exprToString y
-exprToString z ^ ")"
-"+" ^ (exprToString y ^ ")/2)")
-exprToString y ^ ")/2)"
-"*" ^ exprToString z
-eval (e' , x , y) ** 3.0
-exprToString e2 ^ ") /6)"
-exprToString i2 ^ ")/2)"
-sepConcat " " (List.map f l)
-sepConcat " " (List.map f
-                        l) ^ "]"
-"[" ^ (sepConcat "; "
-                 (List.map f l) ^ "]")
-exprToString e2 ^ ")"
+let fix =
+  fun l ->
+    fun x -> List.map f l in
+sepConcat "[" l
+let g =
+  fun b ->
+    (let t = f b in
+     if b = t
+     then (b , false)
+     else (t , true)) in
+g
+let f' =
+  fun b ->
+    if f b = b
+    then (b , true)
+    else (f b , false) in
+f'
+let helper =
+  fun x ->
+    (let y = f x in
+     if y = x
+     then (y , false)
+     else (y , true)) in
+helper
+let f' =
+  fun b -> (f b , b = f b) in
+f'
+let h =
+  fun x -> (f x , f x = x) in
+(h , b)
+let g =
+  fun b ->
+    (let xx = f b in
+     if b = xx
+     then (xx , false)
+     else (xx , true)) in
+g
+let rec g =
+  fun x ->
+    if f x = b
+    then x
+    else g (x + 1) in
+g 0
+let g =
+  fun x ->
+    (let n = f x in
+     (n , n = x)) in
+wwhile (g , b)
+let func = fun y -> x (a y) in
+func
+let func = fun y -> y in func
+let combine =
+  fun (a , b) -> a + b in
+List.map combine
+         (List.rev (List.combine l1
+                                 l2))
+let f' =
+  fun b' ->
+    (f b' , f b' <> b') in
+wwhile (f' , b)
+let g =
+  fun x ->
+    match f x with
+    | x -> (x , false)
+    | y -> (y , true) in
+(g , b)
+let helper =
+  fun b ->
+    if f b = b
+    then (true , f b)
+    else (false , f b) in
+wwhile (helper , b)
+let g =
+  fun x ->
+    (let calcfx = f x in
+     (calcfx , calcfx = x)) in
+(g , b)
+let g =
+  fun x ->
+    (let calcx = f x in
+     (calcx , calcx = x)) in
+(g , b)
+let rec helper =
+  fun curList ->
+    fun lt1 ->
+      fun lt2 ->
+        match lt1 with
+        | [] -> curList
+        | h :: t -> helper ((h , List.hd lt2) :: curList)
+                           t (List.tl lt2) in
+helper [] l1 l2
+let f' =
+  fun x -> (f x , f x = x) in
+f'
+let helper =
+  fun b ->
+    if f b = b
+    then (b , false)
+    else (f b , true) in
+wwhile (helper , b)
+let c = fun y -> x (a y) in c
+let g = fun y -> y in g

@@ -1,4 +1,5 @@
-IteG (AppG [EmptyG,EmptyG]) VarG (AppG [EmptyG,EmptyG])
-if List.mem h seen
-then seen
-else h :: seen
+IteG (BopG EmptyG EmptyG) (LamG EmptyPatG EmptyG) (LamG EmptyPatG EmptyG)
+if f b = b
+then (fun b'' ->
+        (f b , false))
+else (fun b'' -> (f b , true))

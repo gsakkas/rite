@@ -1,21 +1,6 @@
-LetG NonRec [(VarPatG,IteG EmptyG EmptyG EmptyG)] (LetG NonRec [(EmptyPatG,EmptyG)] EmptyG)
+CaseG VarG [(ConPatG Nothing,Nothing,ListG [EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
 EMPTY
-let subtreeSize1 =
-  if depth = 1
-  then 0
-  else rand (1 , depth - 1) in
-let subtreeSize2 =
-  if depth = 1
-  then 0
-  else rand (1 , depth - 1) in
-let subtreeSize3 =
-  if depth = 1
-  then 0
-  else rand (1 , depth - 1) in
-let subtreeeSize4 =
-  if depth = 1
-  then 0
-  else rand (1 , depth - 1) in
-let x = rand (1 , 5) in
-match x with
-| _ -> buildSine (build (rand , subtreeSize1))
+match t with
+| [] -> [remainder i h]
+| h' :: t' -> [h' * i] @ mulByDigit i
+                                    t'

@@ -1,8 +1,7 @@
-CaseG VarG [(ConPatG Nothing,Nothing,VarG),(ConPatG Nothing,Nothing,VarG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG),(ConPatG (Just EmptyPatG),Nothing,BopG EmptyG EmptyG)]
-match e with
-| VarX -> x
-| VarY -> y
-| Sine e -> pi *. x
-| Cosine e -> pi *. y
-| Average (e1 , e2) -> (eval (e1 , x , y) +. eval (e2 , x , y)) /. 2.0
-| Times (e1 , e2) -> eval (e1 , x , y) *. eval (e2 , x , y)
+CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG]),(ConPatG Nothing,Nothing,LamG EmptyPatG EmptyG)]
+match fs with
+| h :: t -> f h h
+| [] -> fun x -> x
+match fs with
+| [] -> fun x -> x
+| h :: t -> f (fun x -> x) h

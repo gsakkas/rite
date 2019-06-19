@@ -1,9 +1,5 @@
-AppG [VarG,LitG]
-itt y' 0
-0 :: l1
-0 :: l2
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (AppG [EmptyG])
+if eval (e1 , x , y) < eval (e2 , x , y)
+then eval (e3 , x , y)
+else eval (e4 , x , y)
 EMPTY
-sepConcat "; " l
-0 :: a2
-0 :: a1
-sepConcat " " l

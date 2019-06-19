@@ -1,4 +1,19 @@
-AppG [LitG]
-float_of_int 2
-(+) 0
-print_string "going into then"
+TupleG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG,VarG]
+(let d =
+   fun x ->
+     (let xx = f b in
+      (xx , xx = b)) in
+ d , b)
+(let f =
+   fun x ->
+     (let xx = (x * x) * x in
+      (xx , xx < 100)) in
+ f , b)
+(let g =
+   fun x ->
+     (let xx = f x in
+      (xx , xx <> b)) in
+ g , b)
+(let helper =
+   fun x -> (f x , f x = f b) in
+ helper , b)

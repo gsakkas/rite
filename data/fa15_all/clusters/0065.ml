@@ -1,3 +1,4 @@
-BopG (UopG EmptyG) LitG
+LetG NonRec [(VarPatG,TupleG [EmptyG,EmptyG])] VarG
 EMPTY
-(- 1.0) /. 3.0
+let retTuple = (l1 , l2) in
+retTuple

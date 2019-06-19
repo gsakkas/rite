@@ -1,5 +1,4 @@
-IteG (BopG EmptyG EmptyG) LitG LitG
+AppG [TupleG [EmptyG,EmptyG],AppG [EmptyG,EmptyG]]
 EMPTY
-if explode w = listReverse (explode w)
-then true
-else false
+(0 , 0) :: (List.combine l1
+                         l2)

@@ -1,4 +1,5 @@
-CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,VarG)]
+LetG NonRec [(ConsPatG EmptyPatG EmptyPatG,AppG [EmptyG])] (ListG [EmptyG,EmptyG])
+let d :: [] =
+  digitsOfInt (n / 10) in
+[d ; n mod 10]
 EMPTY
-match digits n with
-| x :: [] -> x

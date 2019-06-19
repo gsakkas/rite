@@ -1,8 +1,13 @@
-AppG [ListG [EmptyG],VarG]
-[0] @ l1
-[0] @ l2
-[1 ; 0] @ acc
-adder i l [0]
-[a + hd] @ tl
-append t [h]
-[h] @ seen
+TupleG [LamG EmptyPatG EmptyG,VarG]
+(fun xx ->
+   (xx , f xx = xx) , b)
+(fun x ->
+   (f x , not (f x = x)) , b)
+(fun x ->
+   (let b = f x in
+    (b , b <> x)) , b)
+(fun b -> (f b , f b = b) , b)
+(fun b ->
+   (f b , b <> f b) , b)
+(fun a ->
+   (f a , f a <> a) , b)

@@ -1,2 +1,2 @@
-AppG [LamG EmptyPatG EmptyG]
-x (fun a -> a)
+AppG [LetG NonRec [(EmptyPatG,EmptyG)] EmptyG]
+x (let fn = fun d -> d in fn)

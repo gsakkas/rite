@@ -1,7 +1,7 @@
-CaseG VarG [(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG]),(ConPatG Nothing,Nothing,LamG EmptyPatG EmptyG)]
-match fs with
-| h :: t -> f h h
-| [] -> fun x -> x
-match fs with
-| [] -> fun x -> x
-| h :: t -> f (fun x -> x) h
+IteG (BopG EmptyG EmptyG) (ListG []) (IteG EmptyG EmptyG EmptyG)
+if i = 0
+then []
+else if i = 1
+     then l
+     else bigAdd (bigAdd l l)
+                 (mulByDigit (i - 2) l)

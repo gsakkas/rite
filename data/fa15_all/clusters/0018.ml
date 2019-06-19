@@ -1,17 +1,18 @@
-AppG [VarG,BopG EmptyG EmptyG]
-clone x (n - 1)
-(n mod 10) :: return
-((h * i) mod 10) :: t
-(((x1 + x2) + carry) mod 10) :: sum
-(sum mod 10) :: acc
-mulByDigit (i - 1) l
-((fst x + snd x) mod 10) :: a
-(((fst x + snd x) + a) mod 10) :: t
+AppG [ListG [],VarG]
+[] :: seen
+seen @ [h]
+a2 @ [((a1 + x1) + x2) - 10]
+a2 @ [(a1 + x1) + x2]
+r @ [h]
+[0] @ l1
 EMPTY
-helper (List.length l2 * 2) x
-count (acc + 1) n
-mulByDigit (o * x) l1
-(((x1 + x2) + a1) - 10) :: a2
-((x1 + x2) + a1) :: a2
-(((j + k) + l) - 10) :: m
-((j + k) + l) :: m
+helper i [] l
+res @ [carry]
+l @ [x]
+l @ [x mod 10]
+[((h + b) + c) mod 10] @ t
+a @ [0]
+a1 @ [3]
+a2 @ [5]
+a2 @ [((x1 + x2) + c) mod 10]
+l @ [0]

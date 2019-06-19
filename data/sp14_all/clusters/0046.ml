@@ -1,6 +1,5 @@
-CaseG VarG [(ConPatG Nothing,Nothing,VarG)]
-match e with
-| VarX -> x
-match e with
-| VarX -> x
-| VarY -> y
+BopG VarG (BopG EmptyG EmptyG)
+a + (x * x)
+(a * a) + x
+((fir + sec) / 10) + b1
+(x * x) + a

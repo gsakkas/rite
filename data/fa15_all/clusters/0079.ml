@@ -1,5 +1,9 @@
-IteG (BopG EmptyG EmptyG) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG,EmptyG]) VarG
 EMPTY
-if f b = b
-then (b , true)
-else (f b , false)
+if n < 10
+then n
+else digitalRoot (sumList (digits n))
+if i > 0
+then mulByDigit (i - 1)
+                (bigAdd l l)
+else l

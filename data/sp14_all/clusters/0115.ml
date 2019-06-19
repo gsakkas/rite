@@ -1,4 +1,2 @@
-CaseG (AppG [EmptyG]) [(ConPatG Nothing,Nothing,LitG),(WildPatG,Nothing,AppG [EmptyG])]
-match digitsOfInt n with
-| [] -> 0
-| _ -> sumList (digitsOfInt n)
+BopG LitG LitG
+0.0 -. 1.0

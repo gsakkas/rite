@@ -1,5 +1,3 @@
-IteG (BopG EmptyG EmptyG) VarG (ListG [])
+IteG LitG (ListG []) (ListG [EmptyG])
 EMPTY
-if List.length t <> 0
-then t
-else []
+if true then [] else [h]

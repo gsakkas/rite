@@ -1,4 +1,6 @@
-CaseG VarG [(WildPatG,Nothing,ListG [EmptyG,EmptyG]),(ConsPatG EmptyPatG EmptyPatG,Nothing,AppG [EmptyG,EmptyG])]
-match a with
-| h :: t -> ((sum + h) / 10) :: (((sum + h) mod 10) :: t)
-| _ -> [sum / 10 ; sum mod 10]
+AppG [LitG,BopG EmptyG EmptyG]
+clone 0 (s1 - s2)
+clone 0 (lenl1 - lenl2)
+clone 0 (lenl2 - lenl1)
+clone 0 (leng1 - leng2)
+clone 0 (leng2 - leng1)

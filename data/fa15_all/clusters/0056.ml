@@ -1,4 +1,3 @@
-LetG NonRec [(VarPatG,TupleG [EmptyG,EmptyG])] VarG
+LamG VarPatG (BopG EmptyG EmptyG)
+fun s -> (f s - s) < 0
 EMPTY
-let retTuple = (l1 , l2) in
-retTuple

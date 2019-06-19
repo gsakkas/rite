@@ -1,4 +1,5 @@
-CaseG VarG [(LitPatG,Nothing,LitG),(WildPatG,Nothing,AppG [EmptyG])]
+CaseG VarG [(VarPatG,Nothing,AppG [EmptyG])]
+match $x with
+| v -> x (a v)
 match n with
-| 0 -> 0
-| _ -> additivePersistence (sumList (digitsOfInt n))
+| n -> [] @ [n mod 10]

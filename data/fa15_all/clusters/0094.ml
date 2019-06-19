@@ -1,3 +1,3 @@
-AppG [LamG EmptyPatG EmptyG,VarG]
-List.map (fun t -> f t) l
+AppG [LitG,UopG EmptyG]
+clone 0 (- n)
 EMPTY

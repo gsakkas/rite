@@ -1,25 +1,17 @@
-AppG [AppG [EmptyG],ListG [EmptyG]]
-digitsOfInt (n / 10) @ [n mod 10]
-listReverse tl @ [h]
-[cout (hd , i)] @ mulByDigit i
-                             tl
-append (digitsOfInt n2) [n2]
-[x] @ clone x (n - 1)
-append (digitsOfInt (n / 10))
-       [n mod 10]
-listReverse t @ [h]
-digitsOfInt (n / 10) @ [modulus n']
-List.rev (List.combine l1
-                       l2) @ [(0 , 0)]
+AppG [VarG,BopG EmptyG EmptyG]
+clone x (n - 1)
+(n mod 10) :: return
+((h * i) mod 10) :: t
+(((x1 + x2) + carry) mod 10) :: sum
+(sum mod 10) :: acc
+mulByDigit (i - 1) l
+((fst x + snd x) mod 10) :: a
+(((fst x + snd x) + a) mod 10) :: t
 EMPTY
-listReverse tail @ [head]
-listReverse tail @ [hd]
-listReverse l @ [h]
-digitsOfInt n @ [x]
-listReverse y @ [x]
-digitsOfInt r @ [digit]
-digitsOfInt (n / 10) @ [x]
-[n mod 10] @ digitsOfInt (n / 10)
-[((h + b) + c) / 10] @ ([((h + b) + c) mod 10] @ t)
-[h * i] @ mulByDigit i t
-[s + c] @ (s' @ [((x1 + x2) + c) mod 10])
+helper (List.length l2 * 2) x
+count (acc + 1) n
+mulByDigit (o * x) l1
+(((x1 + x2) + a1) - 10) :: a2
+((x1 + x2) + a1) :: a2
+(((j + k) + l) - 10) :: m
+((j + k) + l) :: m

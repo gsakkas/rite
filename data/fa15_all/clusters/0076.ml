@@ -1,3 +1,3 @@
-ListG [BopG EmptyG EmptyG,LitG]
+AppG [ListG [],ListG [EmptyG]]
 EMPTY
-[(x1 + x2) / 10 ; 0]
+[] @ [n mod 10]

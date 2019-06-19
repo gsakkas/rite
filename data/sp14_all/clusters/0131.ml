@@ -1,6 +1,3 @@
-LetG NonRec [(VarPatG,LitG)] (SeqG EmptyG EmptyG)
-let x = 1 in
-(x + 1;
-if sumList (digitsOfInt n) > 9
-then additivePersistence (sumList (digitsOfInt n))
-else x)
+SeqG (AppG [EmptyG,EmptyG]) (AppG [EmptyG])
+1 :: x;
+additivePersistence (sumList (digitsOfInt n))

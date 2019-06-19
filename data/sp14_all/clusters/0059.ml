@@ -1,4 +1,11 @@
-CaseG VarG [(LitPatG,Nothing,VarG),(LitPatG,Nothing,AppG [EmptyG])]
-match c' with
-| true -> wwhile (f , b')
-| false -> b'
+AppG [VarG,LitG,AppG [EmptyG,EmptyG]]
+List.fold_left (^) ""
+               (List.map f l)
+helper 0 (num :: xs') xs
+helper 1
+       (((num / 10) mod 10) :: ((num mod 10) :: xs'))
+       xs
+helper 0 (num :: accum) xs
+helper 1
+       (((num / 10) mod 10) :: ((num mod 10) :: accum))
+       xs

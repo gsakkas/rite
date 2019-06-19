@@ -1,5 +1,4 @@
-IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (ConAppG Nothing)
+CaseG (AppG [EmptyG]) [(ConsPatG EmptyPatG EmptyPatG,Nothing,VarG)]
 EMPTY
-if f b = (b , true)
-then wwhile (f , b)
-else ()
+match digits n with
+| x :: [] -> x

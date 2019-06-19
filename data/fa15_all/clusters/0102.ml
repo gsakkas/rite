@@ -1,8 +1,5 @@
-CaseG VarG [(ConPatG Nothing,Nothing,ListG []),(ConsPatG EmptyPatG EmptyPatG,Nothing,IteG EmptyG EmptyG EmptyG)]
+IteG (AppG [EmptyG]) (TupleG [EmptyG,EmptyG]) (TupleG [EmptyG,EmptyG])
+if f b
+then (b , true)
+else (b , false)
 EMPTY
-match l with
-| [] -> []
-| h :: t -> if List.length t = 0
-            then [h * i] @ mulByDigit i t
-            else (remainder i
-                            h) :: (mulByDigit i t)

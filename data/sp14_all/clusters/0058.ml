@@ -1,12 +1,8 @@
-CaseG VarG [(LitPatG,Nothing,VarG),(WildPatG,Nothing,AppG [EmptyG])]
+CaseG VarG [(LitPatG,Nothing,ListG []),(WildPatG,Nothing,AppG [EmptyG,EmptyG])]
 match i with
-| 1 -> l
-| _ -> bigAdd (mulByDigit (i - 1)
-                          l) l
-match c' with
-| false -> b'
-| _ -> wwhile (f , b')
-match i with
-| 0 -> l
-| _ -> bigAdd l
+| 0 -> []
+| _ -> bigAdd (bigAdd l l)
               (mulByDigit (i - 1) l)
+match n with
+| 0 -> []
+| _ -> digitsOfInt (n / 10) @ [n mod 10]

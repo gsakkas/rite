@@ -1,4 +1,5 @@
-LetG NonRec [(ConsPatG EmptyPatG EmptyPatG,VarG)] (TupleG [EmptyG,EmptyG])
+IteG (BopG EmptyG EmptyG) (AppG [EmptyG]) (ConAppG Nothing)
 EMPTY
-let c :: c' = a1 in
-([((x1 + x2) + c) / 10 ; 0] , a2 @ [((x1 + x2) + c) mod 10])
+if f b = (b , true)
+then wwhile (f , b)
+else ()
