@@ -670,11 +670,11 @@ tis_seq e = case e of
   _ -> 0
 
 mkContextLabels :: String -> [String]
-mkContextLabels l = [l, l++"-GP", l++"-P", l++"-C1", l++"-C2", l++"-C3", l++"-C4"]
+mkContextLabels l = [l, l++"-GGP", l++"-GP", l++"-P", l++"-C1", l++"-C2", l++"-C3", l++"-C4"]
 
 mkContextFeatures :: (TExpr -> Double) -> [TExpr] -> TExpr -> [Double]
 mkContextFeatures mkF ps e =
-  mkF e : reverse (take 2 (map mkF ps ++ repeat 0)) ++ take 4 (map mkF (children e) ++ repeat 0)
+  mkF e : reverse (take 3 (map mkF ps ++ repeat 0)) ++ take 4 (map mkF (children e) ++ repeat 0)
 
 
 tis_op_ctx :: Bop -> Feature -- TExpr -> TExpr -> [Double]

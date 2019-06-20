@@ -261,8 +261,8 @@ mkClusters forTestSet out nm known_cls fs jsons = do
   -- Find all functions and print them ranked based on # of appearances
   let el_es = map (\(x, _, _, _) -> x) elems
   let el_ps = concatMap (\(_, x, _, _) -> x) elems
-  let f_vars = filter (`elem` rankedPrimVars) $ concatMap getFuns el_es
-  let p_vars = filter (`elem` rankedPrimVars) $ concatMap getFuns el_ps
+  let f_vars = filter (`elem` rankedPrimVars) $ concatMap (getFuns . allSubExprs) el_es
+  let p_vars = filter (`elem` rankedPrimVars) $ concatMap (getFuns . allSubExprs) el_ps
   let vars = rankEs f_vars p_vars
   let vpaths = out </> "clusters" </> "ranked_funs" <.> "json"
   LBSC.writeFile vpaths $ Aeson.encode vars
@@ -402,7 +402,7 @@ rankEs es ps = map fst $ sortOn (DO.Down . snd) $ zip alls $ zip un_es un_ps
   where
     alls  = nubOrd (es ++ ps)
     un_es = map (\v -> length $ filter (==v) es) alls
-    un_ps = map (\v -> length $ filter (==v) es) alls
+    un_ps = map (\v -> length $ filter (==v) ps) alls
 
 makeClusters :: [ExprGeneric] -> Int -> [([ExprGeneric], [ExprGeneric])]
 makeClusters es depth = assert (Set.fromList (concatMap fst cls) == Set.fromList (delete EmptyG es)) ret
