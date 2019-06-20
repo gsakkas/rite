@@ -70,7 +70,7 @@ main = do
       -> do
         let input = if isNothing fl then Just 42 else fl
         let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds
-        res <- timeout 20 $ mkFixes out top_cls funs dcons all_preds' jsons
+        res <- timeout 30 $ mkFixes out top_cls funs dcons all_preds' jsons
         print res
     "synthesis"
       -> do
@@ -177,7 +177,7 @@ getProgrms all_preds jsons = do
       | otherwise -> do
         return [(i, templates)]
   let ids = concat prog_ids
-  let for_eval = map (\i -> (i, map fst $ take 5 $ filter (elem i . snd) ids)) [1..30]
+  let for_eval = map (\i -> (i, map fst $ take 10 $ filter (elem i . snd) ids)) [1..30]
   return for_eval
 
 
@@ -215,16 +215,16 @@ readClusterFile f = case eitherDecode (LBSC.pack f) of
   Right (MkClsWithTs egs pruned) -> (egs, pruned)
 
 
-type Preds = (String, Int, Int, Int, Int, Int, Int)
+type Preds = (String, Double, Int, Int, Int, Int, Int, Int, Int)
 
 getPredSrcSpan :: Preds -> String
-getPredSrcSpan (ss, _, _, _, _, _, _) = ss
+getPredSrcSpan (ss, _, _, _, _, _, _, _, _) = ss
 
 getRankedPreds :: Preds -> [Int]
-getRankedPreds (_, p1, p2, p3, p4, p5, _) = [p1, p2, p3, p4, p5]
+getRankedPreds (_, _, p1, p2, p3, p4, p5, p6, _) = [p1, p2, p3, p4, p5, p6]
 
 getCorrectTmpl :: Preds -> Int
-getCorrectTmpl (_, _, _, _, _, _, i) = i
+getCorrectTmpl (_, _, _, _, _, _, _, _, i) = i
 
 readPreds :: String -> LBSC.ByteString -> (Int, [Preds])
 readPreds idx predf =

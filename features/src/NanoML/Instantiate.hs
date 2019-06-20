@@ -98,13 +98,13 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t ++ synthesize pr bd ts 
         basic  = onSrcSpanExpr (const bad_ss) inst
         subs   = sortOn (sizeOfTree . mkGenericTrees) $ nub $ map killSpans $ allSubExprs bad
         prims  = sortOn (\(v, _) -> fromMaybe 1000 $ elemIndex v funs) $ getPrimFuns p
-        rfuns  = nubOrd $ getFunsInScope p ++ prims
+        rfuns  = localFunsFirst subs (nubOrd (getFunsInScope p ++ prims))
         vars   = nubOrd (getVarsInScope p pbadss ++ ["min_float", "max_float"])
         lits   = nubOrd (getLits $ concatMap allSubExprs $ progExprs p ++ someLits)
         rdcons = sortOn (\d -> fromMaybe 1000 $ elemIndex d dcons) $ delete "::" $ concatMap getDCons (concatMap allSubExprs (progExprs p))
         check ss e = ss `notElem` errorSlice (replaceSSWithExpr (replaceSSWithExpr p basic) e)
         res    = map (onSrcSpanExpr (const bad_ss)) $ synth (killSpans basic) check subs vars rfuns lits rdcons
-        ok_res = take 40 $ filter (check pbadss) res
+        ok_res = take 5 $ filter (check pbadss) res
 
 
 synth :: Expr -> (SrcSpan -> Expr -> Bool) -> [Expr] -> [Var] -> [(Var, Int)] -> [Expr] -> [DCon] -> [Expr]
@@ -123,7 +123,7 @@ synth tmpl check subs vars funs lits dcons = results ++ [tmpl]
           -- check_funs = filter (check qss . \(f, n) -> if f == "::"
           --                                     then ConApp ms "::" (Just (Tuple Nothing es)) Nothing
           --                                     else App ms (Var Nothing f) es) funs
-          insts = allCombos (map (\e' -> synth e' check subs vars funs lits dcons) es)
+          insts = allCombos (map (\e' -> synth e' check subs vars funs lits dcons) (nubOrd es))
           all_cs = concatMap (\(f, n) -> map (f,) $ concatMap (`perms` n) insts) funs
       Bop ms v x y     -> map (\(b, x', y') -> Bop ms b x' y') insts
         where
@@ -358,19 +358,27 @@ getPrimFuns p = mapMaybe (\f -> find ((==f) . fst) allPrimFuns) funs
   where
     es = concatMap allSubExprs $ progExprs p
     go e = case e of
-      App _ (Var _ f) _ -> Just f
+      Var _ f -> Just f
       ConApp _ "::" (Just (Tuple _ _)) _ -> Just "::"
       _ -> Nothing
     funs = nubOrd $ mapMaybe go es
 
 
-getFuns :: Expr -> [Var]
-getFuns = mapMaybe go . allSubExprs
+getFuns :: [Expr] -> [Var]
+getFuns = mapMaybe go
   where
     go = \case
-      App _ (Var _ f) _ -> Just f
+      Var _ f -> Just f
       ConApp _ "::" (Just (Tuple _ _)) _ -> Just "::"
       _ -> Nothing
+
+
+localFunsFirst :: [Expr] -> [(Var, Int)] -> [(Var, Int)]
+localFunsFirst ls funs = nubOrd $ local_funs ++ funs
+  where
+    local_maybe_funs = getFuns ls
+    local_funs = mapMaybe (\f -> find ((==f) . fst) funs) local_maybe_funs
+
 
 
 getVarsInScope :: Prog -> SrcSpan -> [Var]
