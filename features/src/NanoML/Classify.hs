@@ -1856,7 +1856,7 @@ mkGenericTrees = \case
   ConApp _ _ me _ -> ConAppG (maybeMkGTs me)
   List _ es _     -> ListG $ map mkGenericTrees es
   TypedHole _ _   -> EmptyG
-  TypedVar _ _    -> EmptyG
+  TypedVar _ _    -> VarG
   e               -> error ("exprKind: " ++ render (pretty e))
   where maybeMkGTs me = fmap mkGenericTrees me
 
@@ -1983,6 +1983,8 @@ allSubExprs e = e : case e of
     Nothing           -> []
     Just (Tuple _ xs) -> concatMap allSubExprs xs
     Just x            -> allSubExprs x
+  TypedVar {}     -> []
+  TypedHole {}    -> []
 
 progExprs :: Prog -> [Expr]
 progExprs [] = []

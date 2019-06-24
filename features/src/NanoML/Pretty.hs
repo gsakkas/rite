@@ -1,6 +1,5 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE RecordWildCards      #-}
--- {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE RankNTypes           #-}
 {-# LANGUAGE ImplicitParams       #-}
 module NanoML.Pretty
@@ -104,7 +103,7 @@ instance Pretty Literal where
     LC c -> pretty c
     LS s -> text $ show s
     LB b -> text (if b then "true" else "false")
-    LL s -> text $ show s
+    LL s -> text "__lit__"
     --    LU   -> text "()"
 
 annotateIf b a d
@@ -247,47 +246,55 @@ instance Pretty Expr where
     Lam _ (VarPat _ "$x") (Case _ (Var _ "$x") alts) _ ->
       annotateRedexes $ noAnnotate $ -- redexes can't occur under a lambda
       group $ parensIf (z > zl) $ hang 2 $
-      text "function" <$> vsep (map (prettyAlt (zl)) alts)
+      text "function" <$> vsep (map (prettyAlt zl) alts)
       where zl = 5
+    -- Lam _ p e@(Lam {}) _ ->
+    --   annotateRedexes $ noAnnotate $ -- redexes can't occur under a lambda
+    --   group $ parensIf (z > zl) $ {- hang 2 $ -}
+    --   -- text "fun" <+> pretty p <+> text "->" <$> prettyPrec zl e
+    --   pretty p <+> prettyPrec zl e
+    --   where zl = 5
     Lam _ p e _ ->
       annotateRedexes $ noAnnotate $ -- redexes can't occur under a lambda
+      -- group $ parensIf (z > zl) $
       group $ parensIf (z > zl) $ hang 2 $
-      text "fun" <+> pretty p <+> text "->" <$> prettyPrec (zl) e
+      text "fun" <+> pretty p <+> text "->" <$> prettyPrec zl e
+      -- pretty p <+> text "=" <$> prettyPrec zl e
       where zl = 5
     App _ (Var _ f) [x, y]
       | isInfix f ->
         annotateRedexes $
         parensIf (z > zf) $
-        inAppXs 0 (prettyPrec (zf+1) x) <+>
+        inAppXs 0 (prettyPrec (zf + 1) x) <+>
         text f <+>
-        inAppXs 1 (prettyPrec (zf+1) y)
+        inAppXs 1 (prettyPrec (zf + 1) y)
       where zf = opPrec f
     App _ f xs ->
       annotateRedexes $
       parensIf (z > za) $
       inAppF (prettyPrec za f) <+>
-      align (foldr1 (</>) (splitContext inAppXs (prettyPrec (za+1)) xs))
+      align (foldr1 (</>) (splitContext inAppXs (prettyPrec (za + 1)) xs))
       where za = 26
     Lit _ l -> pretty l
     Let _ r bnds body ->
       annotateRedexes $
       group $ parensIf (z > zl) $
       let (bs, es) = unzip bnds
-          ds = splitContext inLet (prettyPrec (zl+1)) es in
-      align $ text "let" <> pretty r <+> prettyBinds (zl) (zip bs ds)
-          <+> text "in" <$> noAnnotate (prettyPrec (zl) body)
+          ds = splitContext inLet (prettyPrec (zl + 1)) es in
+      align $ text "let" <> pretty r <+> prettyBinds zl (zip bs ds)
+          <+> text "in" <$> noAnnotate (prettyPrec zl body)
       where zl = 4
     Ite _ b t f ->
       annotateRedexes $
       group $ parensIf (z > zi) $ align $
-      text "if"   <+> inIte (prettyPrec (zi) b) <$>
-      text "then" <+> noAnnotate (prettyPrec (zi) t) <$>
-      text "else" <+> noAnnotate (prettyPrec (zi) f)
+      text "if"   <+> inIte (prettyPrec zi b) <$>
+      text "then" <+> noAnnotate (prettyPrec zi t) <$>
+      text "else" <+> noAnnotate (prettyPrec zi f)
       where zi = 7
     Seq _ x y ->
       annotateRedexes $
       parensIf (z > zs) $
-      inSeq (prettyPrec (zs) x) <> semi </> noAnnotate (prettyPrec (zs) y)
+      inSeq (prettyPrec zs x) <> semi </> noAnnotate (prettyPrec zs y)
       where zs = 3
     Case _ e alts
       --  isValueOrFunVar e ->
@@ -302,8 +309,8 @@ instance Pretty Expr where
       ->
       annotateRedexes $
       parensIf (z > zc) $ align $
-      text "match" <+> inCase (prettyPrec (zc) e) <+> text "with"
-        <$> vsep (map (noAnnotate . prettyAlt (zc)) alts)
+      text "match" <+> inCase (prettyPrec zc e) <+> text "with"
+        <$> vsep (map (noAnnotate . prettyAlt zc) alts)
       where zc = 5
     Tuple _ xs -> tuple xs
     ConApp _ c Nothing _ -> annotateRedexes $ text c
@@ -311,14 +318,14 @@ instance Pretty Expr where
       annotateRedexes $
       parensIf (z > zc) $
       inConApp $
-      inTuple 0 (prettyPrec (zc+1) hd) <+>
+      inTuple 0 (prettyPrec (zc + 1) hd) <+>
       text "::" <+>
-      inTuple 1 (prettyPrec (zc+1) tl)
+      inTuple 1 (prettyPrec (zc + 1) tl)
       where zc = 26
     ConApp _ c (Just e) _ ->
       annotateRedexes $
       parensIf (z > zc) $
-      text c <+> inConApp (prettyPrec (zc+1) e)
+      text c <+> inConApp (prettyPrec (zc + 1) e)
       where zc = 26
     Record _ flds _ -> record flds
     Field _ e f ->
@@ -334,7 +341,7 @@ instance Pretty Expr where
       annotateRedexes $
       parensIf (z > zt) $ align $
       text "try" <+> inTry (prettyPrec zt e) <+> text "with"
-        <$> vsep (map (noAnnotate . prettyAlt (zt)) ps)
+        <$> vsep (map (noAnnotate . prettyAlt zt) ps)
       where zt = 5
     Prim1 _ p -> text (show p)
     Prim2 _ p -> text (show p)
@@ -344,12 +351,12 @@ instance Pretty Expr where
     Bop _ bop x y ->
       annotateRedexes $
       parensIf (z > zb) $
-      inBopL (prettyPrec (zb+1) x) <+> pretty bop <+> inBopR (prettyPrec (zb+1) y)
+      inBopL (prettyPrec (zb + 1) x) <+> pretty bop <+> inBopR (prettyPrec (zb + 1) y)
       where zb = opPrec (error "prettyExpr.Bop")
     Uop _ uop x ->
       annotateRedexes $
       parens $
-      pretty uop <+> inUop (prettyPrec (zb+1) x)
+      pretty uop <+> inUop (prettyPrec (zb + 1) x)
       where zb = opPrec (error "prettyExpr.Uop")
     With _ env e -> let ?env = env in inWith (prettyPrec z e)
     Replace _ env e -> let ?env = env in inReplace (prettyPrec z e)
@@ -377,7 +384,7 @@ instance Pretty Bop where
   pretty FTimes = text "*."
   pretty FDiv = text "/."
   pretty FExp = text "exp"
-  pretty BB = text "(#)"
+  pretty BB = text "<+>"
 
 instance Pretty Uop where
   pretty Neg = text "-"
@@ -402,7 +409,7 @@ instance Pretty Pat where
     VarPat _ v -> text v
     LitPat _ l -> pretty l
     IntervalPat _ l h -> pretty l <+> text ".." <+> pretty h
-    ConsPat _ x xs -> parensIf (z > zc) $ prettyPrec (zc+1) x <+> text "::" <+> prettyPrec zc xs
+    ConsPat _ x xs -> parensIf (z > zc) $ prettyPrec (zc + 1) x <+> text "::" <+> prettyPrec zc xs
                       where zc = 6
     ConPat _ c Nothing -> text c
     ConPat _ c (Just p) -> text c <+> pretty p
@@ -429,6 +436,7 @@ prettyTypeArgs [] = empty
 prettyTypeArgs as = prettyTuple 0 as <+> empty
 
 prettyBind z (p, e) = group $ nest 2 $ pretty p <+> text "=" <$> prettyPrec z e
+-- prettyBind z (p, e) = group $ nest 2 $ pretty p <+> text "=" <+> prettyPrec z e
 
 prettyBinds z [b] = prettyBind z b
 prettyBinds z (b:bs) = prettyBind z b <$> text "and" <+> prettyBinds z bs
@@ -516,7 +524,7 @@ instance Pretty Type where
     TApp t ts -> prettyTypeArgs ts <> pretty t
     TTup ts -> parens $ hsep $ intersperse (text "*") $ map pretty ts
     ti :-> to -> parensIf (z > zf) $
-                 prettyPrec (zf+1) ti <+> text "->" <+> prettyPrec zf to
+                 prettyPrec (zf + 1) ti <+> text "->" <+> prettyPrec zf to
       where zf = 5
 
 instance Pretty NanoError where
