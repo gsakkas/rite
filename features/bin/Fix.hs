@@ -19,7 +19,9 @@ import           Data.List
 import           Data.Maybe
 import qualified Data.Set                   as Set
 import qualified Data.Vector                as V
-import           Data.Containers.ListUtils (nubOrd, nubOrdOn)
+import           Data.Containers.ListUtils  (nubOrd, nubOrdOn)
+import           Data.Map                   (Map)
+import qualified Data.Map.Strict            as Map
 import           GHC.Generics
 import           Options.Generic            hiding (All(..))
 import           System.Directory
@@ -94,7 +96,7 @@ main = do
         print $ map (\us -> (head us, length us)) $ group $ sort unfinished
     "timed-synth-total"
       -> do
-        res <- forM all_preds $ \pr -> timeout 30 $ mkAllFixes out top_cls funs dcons [pr] jsons
+        res <- forM all_preds $ \pr -> timeout 60 $ mkAllFixes out top_cls funs dcons [pr] jsons
         let pur = catMaybes res
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
@@ -183,13 +185,14 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     let alls      = mapMaybe (\e -> getSrcSpanExprMaybe e >>= \ss' -> Just (ss', e)) all_exprs
 
     let ranked_pds = sortOn (DO.Down . getConf) $ removeLessThan pds 0.01
-    let results    = concatMap (getSolutions bad alls (map snd top_cls)) $ getAllPredCombs ranked_pds
+    let sols_map   = Map.empty
+    let results    = mapAccumL (getSolutions bad alls (map snd top_cls)) sols_map $ take 10 $ getAllPredCombs ranked_pds
     let pretty_bad = render (prettyProg bad)
     let edit_dist  = levenshteinDistance defaultEditCosts pretty_bad . render . prettyProg
     let dist pp = length $ filter (\case
                                     Diff.Both _ _ -> False
                                     _ -> True) $ Diff.getDiffBy (\e1 e2 -> exprKind e1 == exprKind e2) all_exprs (concatMap allSubExprs $ progExprs pp)
-    let checked    = filter typeCheck $ take 1600 $ map (foldl replaceSSWithExpr bad) results
+    let checked    = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
     let replaced   = take 3 $ sortOn (\p -> (dist p, edit_dist p)) checked
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
@@ -207,12 +210,17 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     return (not (null replaced), elem (map exprKind $ concatMap allSubExprs $ progExprs fix) $ map (map exprKind . concatMap allSubExprs . progExprs) replaced)
   return (genericLength (filter fst xx) * 100.0 / genericLength xx, genericLength (filter snd xx) * 100.0 / genericLength xx)
   where
-    getSolutions :: Prog -> [(SrcSpan, Expr)] -> [[ExprGeneric]] -> [Preds] -> [[Expr]]
-    getSolutions bad alls top_cls pds = nubOrdOn (map killSpans) $ allCombos results
+    getSolutions :: Prog -> [(SrcSpan, Expr)] -> [[ExprGeneric]] -> Map String [Expr] -> [Preds] -> (Map String [Expr], [[Expr]])
+    getSolutions bad alls top_cls mp pds = (fst results, nubOrdOn (map killSpans) $ allCombos $ snd results)
       where
         old_parts  = map (\pd -> snd $ fromJust $ find (\(ss'', e) -> getPredSrcSpan pd == show ss'') alls) pds
         templates  = map (map (top_cls !!) . getRankedPreds) pds
-        results    = map (\(tmpls, bd) -> take 400 $ concatMap (\tmpl -> synthesize bad bd tmpl funs dcons) tmpls) $ zip templates old_parts
+        sss        = map getPredSrcSpan pds
+        results    = mapAccumL (\mp' (ss, tmpls, bd) -> insertIfNot mp ss (concatMap (\tmpl -> synthesize bad bd tmpl funs dcons) tmpls)) mp $ zip3 sss templates old_parts
+    insertIfNot :: Map String [Expr] -> String -> [Expr] -> (Map String [Expr], [Expr])
+    insertIfNot mp ss def = if Map.member ss mp then (mp, fromJust $ Map.lookup ss mp) else (new_mp, def)
+      where
+        new_mp = Map.insert ss def mp
 
 
 getProgrms :: [(Int, [Preds])] -> [String] -> IO [(Int, [Int])]
@@ -322,7 +330,7 @@ mkDiffsWithGenericTrs :: Int -> String -> [([(SrcSpan, Expr, ExprGeneric)], Prog
 mkDiffsWithGenericTrs inp json = case eitherDecode (LBSC.pack json) of
   Left e -> mempty
   Right (MkInSample _ _ idx)
-    | idx /= inp
+    | inp > 0 && idx /= inp
     -> mempty
   Right (MkInSample bad' fix' _)
     | Left e <- parseTopForm fix'

@@ -65,23 +65,23 @@ instantiateExpr e ss = evalState (instantiateExpr' e) (ExprState 0 0 (ss : getAl
 
 instantiatePat' :: PatGeneric -> State ExprState Pat
 instantiatePat' = \case
-  EmptyPatG        -> TypedPat <$> pure Nothing <*> var
-  VarPatG          -> TypedPat <$> pure Nothing <*> var
-  LitPatG          -> LitPat <$> pure Nothing <*> pure (LL "LitPat")
-  IntervalPatG     -> IntervalPat <$> pure Nothing <*> pure (LL "x") <*> pure (LL "y")
-  ConsPatG p1 p2   -> ConsPat <$> pure Nothing <*> instantiatePat' p1 <*> instantiatePat' p2
-  ConPatG Nothing  -> ConPat <$> pure Nothing <*> pure "con" <*> pure Nothing
-  ConPatG (Just p) -> ConPat <$> pure Nothing <*> pure "con" <*> (Just <$> instantiatePat' p)
-  ListPatG ps      -> ListPat <$> pure Nothing <*> mapM instantiatePat' (Set.toList ps)
-  TuplePatG ps     -> TuplePat <$> pure Nothing <*> mapM instantiatePat' ps'
+  EmptyPatG        -> TypedPat <$> nss <*> var
+  VarPatG          -> TypedPat <$> nss <*> var
+  LitPatG          -> LitPat <$> nss <*> pure (LL "LitPat")
+  IntervalPatG     -> IntervalPat <$> nss <*> pure (LL "x") <*> pure (LL "y")
+  ConsPatG p1 p2   -> ConsPat <$> nss <*> instantiatePat' p1 <*> instantiatePat' p2
+  ConPatG Nothing  -> ConPat <$> nss <*> pure "con" <*> pure Nothing
+  ConPatG (Just p) -> ConPat <$> nss <*> pure "con" <*> (Just <$> instantiatePat' p)
+  ListPatG ps      -> ListPat <$> nss <*> mapM instantiatePat' (Set.toList ps)
+  TuplePatG ps     -> TuplePat <$> nss <*> mapM instantiatePat' ps'
     where
       ps' = case Set.toList ps of
               [EmptyPatG] -> [EmptyPatG, EmptyPatG]
               ps''        -> ps''
-  WildPatG         -> WildPat <$> pure Nothing
-  OrPatG p1 p2     -> OrPat <$> pure Nothing <*> instantiatePat' p1 <*> instantiatePat' p2
-  AsPatG p         -> AsPat <$> pure Nothing <*> instantiatePat' p <*> var
-  ConstrPatG p t   -> ConstraintPat <$> pure Nothing <*> instantiatePat' p <*> pure t
+  WildPatG         -> WildPat <$> nss
+  OrPatG p1 p2     -> OrPat <$> nss <*> instantiatePat' p1 <*> instantiatePat' p2
+  AsPatG p         -> AsPat <$> nss <*> instantiatePat' p <*> var
+  ConstrPatG p t   -> ConstraintPat <$> nss <*> instantiatePat' p <*> pure t
 
 
 getAllSrcSpans :: [SrcSpan]
@@ -109,10 +109,10 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
         lits   = nubOrdOn mkGenericTrees (getLits $ concatMap allSubExprs $ progExprs p ++ someLits)
         rdcons = sortOn (\d -> fromMaybe 1000 $ elemIndex d dcons) $ delete "::" $ concatMap getDCons (concatMap allSubExprs (progExprs p))
         res    = map (onSrcSpanExpr (const bad_ss)) $ concatMap (synth vars . killSpans) valid
-        ok_res = take 80 $ filter (check pbadss p) $ take 600 res
+        ok_res = take 40 $ filter (check pbadss p) $ take 400 res
 
         synth :: [Var] -> Expr -> [Expr]
-        synth vrs tmpl = results ++ [tmpl]
+        synth vrs tmpl = (take 100 results) ++ [tmpl]
           where
             results = case tmpl of
               Var ms _         -> map (Var ms) vrs
@@ -130,12 +130,12 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
                           else App ms (Var vss f) es
                   check_funs = filter vld rfuns
                   insts = map (synth vrs) (nubOrdOn mkGenericTrees es)
-                  all_cs = concatMap (\(f, n) -> map (f,) $ concatMap allCombos (perms insts n)) check_funs
+                  all_cs = concatMap (\(f, n) -> take 100 $ map (f,) $ concatMap allCombos (perms insts n)) check_funs
               Bop ms v x y     -> map (\(b, x', y') -> Bop ms b x' y') insts
                 where
                   x_insts = synth vrs x
                   y_insts = if x == y then x_insts else synth vrs y
-                  bops = nubOrd (getBops subs ++ allBops)
+                  bops = nubOrd (getBops all_subs ++ allBops)
                   insts = ((,,) <$> bops <*> x_insts <*> y_insts) ++ ((,,) <$> getBopsRev bops <*> x_insts <*> y_insts)
               Uop ms v x       -> map (\(b, x') -> Uop ms b x') insts
                 where
@@ -160,15 +160,15 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
                   es = nubOrdOn mkGenericTrees $ map thd3 as
                   slen = min (length as) (length pats)
                   blen = max (length as) (length pats) + 1
-                  inst = map (\p -> map (p, Nothing,) $ concatMap (synth (getVarsP p ++ vrs)) es)
+                  inst = map (\p -> take 100 $ map (p, Nothing,) $ concatMap (synth (getVarsP p ++ vrs)) es)
                   alls = concatMap (concatMap (allCombos . inst) . perms pats) [slen..blen]
                   insts = (,) <$> synth vrs e <*> alls
               Tuple ms es      -> map (Tuple ms) insts
                 where
-                  insts = concatMap allCombos $ perms (map (synth vrs) (nubOrdOn mkGenericTrees es)) $ length es
+                  insts = concatMap allCombos $ perms (take 100 $ map (synth vrs) (nubOrdOn mkGenericTrees es)) $ length es
               ConApp ms c me s -> map (\(c', me') -> ConApp ms c' me' s) insts
                 where
-                  insts = (,) <$> rdcons <*> mapM (synth vrs) me
+                  insts = (,) <$> rdcons <*> take 100 (mapM (synth vrs) me)
               List ms es mt    -> map (\es' -> List ms es' mt) $ if null es
                                                                  then es : all_combos [TypedHole (Just $ SrcSpan (-42) (-42) (-42) (-42)) "_list_"]
                                                                  else all_combos es
@@ -177,7 +177,7 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
 
             -- All instantiations for all possible parameter combinations
             all_combos :: [Expr] -> [[Expr]]
-            all_combos es' = concatMap (concatMap allCombos . perms insts) [slen..blen]
+            all_combos es' = concatMap (take 100 . concatMap allCombos . perms insts) [slen..blen]
               where
                 es = nubOrdOn mkGenericTrees es'
                 insts = map (synth vrs) es
@@ -254,9 +254,9 @@ numOfArgs n l = \case
 
 
 rankedPrimVars :: [Var]
-rankedPrimVars = [ "List.rev"
+rankedPrimVars = [  "::"
+                  , "List.rev"
                   , "@"
-                  , "::"
                   , "List.append"
                   , "List.combine"
                   , "List.length"
@@ -359,8 +359,8 @@ getBopsRev :: [Bop] -> [Bop]
 getBopsRev = filter (`elem` [Minus, Div, Mod, FMinus, FDiv, Gt, Ge, Lt, Le])
 
 someLits :: [Expr]
-someLits = map (Lit Nothing) [LI 0, LI 1, LI 2, LI 3, LI 10,
-                              LD 0.0, LD 1.0, LD 2.0, LD 3.0, LD 10.0,
+someLits = map (Lit Nothing) [LI 0, LI 1, LI 2, LI 10,
+                              LD 0.0, LD 1.0, LD 2.0, LD 10.0,
                               LB True, LB False,
                               LC 'c',
                               LS "", LS "[]", LS "someString",
@@ -408,7 +408,7 @@ localFunsFirst ls funs = nubOrd $ if "::" `elem` local_fs || "@" `elem` local_fs
     local_maybe_funs = getFuns ls
     local_funs = mapMaybe (\f -> find ((==f) . fst) funs) local_maybe_funs
     local_fs = map fst local_funs
-    cons = mapMaybe (\f -> find ((==f) . fst) (local_funs ++ funs)) ["::", "@"]
+    cons = mapMaybe (\f -> find ((==f) . fst) allPrimFuns) ["::", "@"]
 
 
 getVarsInScope :: Prog -> SrcSpan -> [Var]
