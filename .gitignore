@@ -162,7 +162,7 @@ cabal.project.local
 *.synctex.gz(busy)
 *.pdfsync
 
-/paper/oopsla17-submission/comment.cut
+/paper/acmart-master
 /paper/*/auto/
 .DS_Store
 /.venv/

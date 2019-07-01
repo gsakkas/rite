@@ -109,10 +109,10 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
         lits   = nubOrdOn mkGenericTrees (getLits $ concatMap allSubExprs $ progExprs p ++ someLits)
         rdcons = sortOn (\d -> fromMaybe 1000 $ elemIndex d dcons) $ delete "::" $ concatMap getDCons (concatMap allSubExprs (progExprs p))
         res    = map (onSrcSpanExpr (const bad_ss)) $ concatMap (synth vars . killSpans) valid
-        ok_res = take 40 $ filter (check pbadss p) $ take 400 res
+        ok_res = take 50 $ filter (check pbadss p) $ take 400 res
 
         synth :: [Var] -> Expr -> [Expr]
-        synth vrs tmpl = (take 100 results) ++ [tmpl]
+        synth vrs tmpl = take 150 results {- ++ filter (\e -> mkGenericTrees e `eq` mkGenericTrees tmpl) subs -} ++ [tmpl]
           where
             results = case tmpl of
               Var ms _         -> map (Var ms) vrs

@@ -192,8 +192,13 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     let dist pp = length $ filter (\case
                                     Diff.Both _ _ -> False
                                     _ -> True) $ Diff.getDiffBy (\e1 e2 -> exprKind e1 == exprKind e2) all_exprs (concatMap allSubExprs $ progExprs pp)
-    let checked    = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
-    let replaced   = take 3 $ sortOn (\p -> (dist p, edit_dist p)) checked
+    let tffuns = getTypedFuns fix
+    let tfvars = map fst tffuns
+    let good_type pp = sum $ map (\(v, typ) -> if v `elem` tfvars
+                                               then (if typ == snd (fromJust (find ((== v).fst) tffuns)) then 0 else 1)
+                                               else 2) $ getTypedFuns pp
+    let checked    = take 120 $ concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
     print $ not (null replaced)
@@ -325,6 +330,21 @@ readPreds idx predf =
     Left e -> errorWithoutStackTrace ("readPreds: " ++ e)
     Right v -> (read idx :: Int, V.toList v)
 
+getTypedFuns :: Prog -> [(Var, Type)]
+getTypedFuns fix = progTFuns tfix
+  where
+    tfix = case runEval stdOpts (typeProg fix) of
+      Left e       -> []
+      Right (p, _) -> p
+
+    progTFuns []     = []
+    progTFuns (d:ds) = case d of
+      TDFun _ _ pes -> (takeVarPat $ fst $ head pes, generaliseT $ getType $ snd $ head pes) : progTFuns ds
+      _             -> progTFuns ds
+
+    takeVarPat p = case p of
+      VarPat _ v -> v
+      _          -> errorWithoutStackTrace "progFuns"
 
 mkDiffsWithGenericTrs :: Int -> String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, Prog, String, String, Int)]
 mkDiffsWithGenericTrs inp json = case eitherDecode (LBSC.pack json) of
