@@ -40,21 +40,32 @@
 \citestyle{acmauthoryear}   %% For author/year citations
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Note: Authors migrating a paper from PACMPL format to traditional
-%% SIGPLAN proceedings format must update the '\documentclass' and
-%% topmatter commands above; see 'acmart-sigplanproc-template.tex'.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Other packages
+\usepackage{xspace}
+\usepackage{listings}
+\lstnewenvironment{ecode}{
+\lstset{
+  language=Caml,
+  basicstyle=\ttfamily,
+  keywordstyle=\ttfamily\bfseries,
+  numbers=left,
+  frame=leftline,
+  xleftmargin=7.5mm,
+  moredelim=[is][\bfseries]{==}{==},
+  moredelim=[is][\underbar]{__}{__},
+  moredelim=[is][\bfseries\underbar]{_=}{=_},
+  escapeinside={(*@}{@*)},
+}}
+{}
 
+%% Our commands
+\usepackage{commands}
 
 %% Some recommended packages.
 \usepackage{booktabs}   %% For formal tables:
                         %% http://ctan.org/pkg/booktabs
 \usepackage{subcaption} %% For complex figures with subfigures/subcaptions
                         %% http://ctan.org/pkg/subcaption
-
-
-\usepackage{commands}
 
 
 \begin{document}
@@ -195,13 +206,13 @@ Text of paper \ldots
 
 
 %% Bibliography
-%\bibliography{bibfile}
+\bibliography{main}
 
 
 %% Appendix
-\appendix
-\section{Appendix}
+% \appendix
+% \section{Appendix}
 
-Text of appendix \ldots
+% Text of appendix \ldots
 
 \end{document}
