@@ -1,0 +1,169 @@
+\usepackage{xcolor}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,0,1}
+\definecolor{orange}{rgb}{1,0.5,0}
+\definecolor{dvcolor}{rgb}{1,0.5,0.5}
+\def\mynote#1{{\sf $\clubsuit$ #1$\clubsuit$}}
+
+\def\mysection#1{\section{\textbf{#1}}}
+\def\mysubsection#1{\subsection{\textbf{#1}}}
+\def\mysubsubsection#1{\subsubsection{\textbf{#1}}}
+
+\def\mypara#1{\paragraph{\textbf{#1}}}
+% \def\mypara#1{\medskip\noindent{\emph{\textbf{#1.}}}}
+
+\def\RJ#1{\textcolor{red}{\sf RJ:$\clubsuit$ #1$\clubsuit$}}
+\def\ES#1{\textcolor{blue}{\sf ES:$\clubsuit$ #1$\clubsuit$}}
+
+\newcommand\etc{\textit{etc.}\xspace}
+\newcommand\eg{\textit{e.g.}\xspace}
+\newcommand\ie{\textit{i.e.}\xspace}
+\newcommand\ala{\textit{a la}\xspace}
+\newcommand\resp{\textit{resp.}\xspace}
+\newcommand\etal{et al.\xspace}
+
+\def\emphbf#1{\textbf{\emph{#1}}}
+\def\spmid{\ \mid\ }
+
+\renewcommand{\C}{\textsc{C}\xspace}
+
+\newcommand{\lang}{\ensuremath{\lambda^{ML}}\xspace}
+\newcommand{\ocaml}{\textsc{OCaml}\xspace}
+\newcommand{\sherrloc}{\textsc{SHErrLoc}\xspace}
+\newcommand{\haskell}{\textsc{Haskell}\xspace}
+\newcommand\mycroft{\textsc{Mycroft}\xspace}
+\newcommand\baseline{\textsc{Baseline}\xspace}
+\newcommand\random{\textsc{Random}\xspace}
+\newcommand\linear{\textsc{Logistic}\xspace}
+\newcommand\dectree{\textsc{Tree}\xspace}
+\newcommand\forest{\textsc{Forest}\xspace}
+\newcommand\hiddenT{\textsc{MLP-10}\xspace}
+\newcommand\hiddenTF{\textsc{MLP-25}\xspace}
+\newcommand\hiddenF{\textsc{MLP-50}\xspace}
+\newcommand\hiddenH{\textsc{MLP-100}\xspace}
+\newcommand\hiddenTHF{\textsc{MLP-250}\xspace}
+\newcommand\hiddenFH{\textsc{MLP-500}\xspace}
+\newcommand{\java}{\textsc{Java}\xspace}
+\newcommand{\ruby}{\textsc{Ruby}\xspace}
+\newcommand{\uwbench}{\textsc{UW}\xspace}
+
+\newcommand{\ucsdbench}{\textsc{UCSD}\xspace}
+% \newcommand{\ucsdbench}{\textsc{AUTHORS}\xspace}
+
+\newcommand{\uwsize}{284\xspace}
+\newcommand{\ucsdsize}{4,407\xspace}
+
+\newcommand\efun[2]{\ensuremath{\lambda #1. #2}\xspace}
+\newcommand\eapp[2]{\ensuremath{#1\ #2}\xspace}
+\newcommand\eplus[2]{\ensuremath{#1 + #2}\xspace}
+% \newcommand\edapp[2]{\ensuremath{#1 \ \overline{#2}}}
+\newcommand\eif[3]{\ensuremath{\mathtt{if}\ #1\ \mathtt{then}\ #2\ \mathtt{else}\ #3}\xspace}
+\newcommand\elet[3]{\ensuremath{\mathtt{let}\ #1 = #2\ \mathtt{in}\ #3}\xspace}
+\newcommand\econs[2]{\ensuremath{#1 :: #2}\xspace}
+\newcommand\enil{\ensuremath{\mathtt{[]}}\xspace}
+\newcommand\ecase[5]{\ensuremath{\mathtt{match}\ #1\ \mathtt{with} \begin{cases} \enil \to #2\\ \econs{#3}{#4} \to #5 \end{cases}}\xspace}
+\newcommand\thole{\ensuremath{\alpha}\xspace}
+\newcommand\epair[2]{\ensuremath{\langle #1, #2 \rangle}\xspace}
+\newcommand\epcase[4]{\ensuremath{\mathtt{match}\ #1\ \mathtt{with}\ \epair{#2}{#3} \to #4}\xspace}
+
+% \newcommand\erec[3]{\ensuremath{\mu #1.\lambda #2. #3}}
+% \newcommand\etabs[2]{\ensuremath{\left[\Lambda #1\right] #2}}
+% \newcommand\etapp[2]{\ensuremath{#1 \left[ #2 \right]}}
+\newcommand\etrue{\ensuremath{\mathtt{true}}\xspace}
+\newcommand\efalse{\ensuremath{\mathtt{false}}\xspace}
+
+
+%\newcommand\resolve[2]{\ensuremath{\mathsf{resolve}(#1, #2)}\xspace}
+\newcommand\resolve[2]{\subst{#2}{#1}\xspace}
+
+% Types
+\newcommand\tbool{\ensuremath{\mathtt{bool}}\xspace}
+\newcommand\tint{\ensuremath{\mathtt{int}}\xspace}
+% \newcommand\tref[4]{\ensuremath{\{ \tbind{#1}{#2^{#3}} \mid #4 \}}}
+% \newcommand\tttref[4]{\ensuremath{{\{ \ttbind{#1}{#2^{#3}} \mid \mathtt{#4} \}}}}
+\newcommand\tfun[2]{\ensuremath{#1 \to #2}\xspace}
+\newcommand\tlist[1]{\ensuremath{[#1]}\xspace}
+\newcommand\tprod[2]{\ensuremath{#1 \times #2}\xspace}
+% \newcommand\tfun[3]{\ensuremath{\tbind{#1}{#2} \rightarrow #3}}
+% \newcommand\tabs[2]{\ensuremath{\forall #1 . #2}}
+\newcommand\hastype[2]{\ensuremath{\typeof{#1} = {#2}}}
+\newcommand\unifysym{\ensuremath{\mathsf{unify}}\xspace}
+\newcommand\unify[2]{\ensuremath{\unifysym(#1,#2)}\xspace}
+\newcommand\tsub[2]{\ensuremath{{#1} \preceq {#2}}}
+\newcommand\tnsub[2]{\ensuremath{{#1} \npreceq {#2}}}
+\newcommand\tcompat[2]{\ensuremath{#1 \sim #2}}
+\newcommand\vcompat[2]{\tcompat{#1}{#2}}
+\newcommand\vsub[2]{\tsub{#1}{#2}}
+\newcommand\vnsub[2]{\tnsub{#1}{#2}}
+\newcommand\tincompat[2]{\ensuremath{#1 \nsim #2}}
+\newcommand\vincompat[2]{\tincompat{#1}{#2}}
+
+\newcommand\typeofsym{\ensuremath{\mathsf{typeof}}\xspace}
+\newcommand\typeof[1]{\ensuremath{\typeofsym(#1)}\xspace}
+\newcommand\ptype[2]{\ensuremath{\rho_{#1}(#2)}\xspace}
+
+
+\newcommand{\relDescription}[1]{\ensuremath{\textrm{\textbf{#1}}}}
+\newcommand{\judgementHead}[2]{\ensuremath{\relDescription{#1}\hfill\fbox{#2}}}
+\newcommand{\defeq}{\doteq}
+
+
+\newcommand\nanomaly{\textsc{NanoMaLy}\xspace}
+
+%\newcommand\toolname{\nanomaly}
+\newcommand\toolname{\textsc{Rite}\xspace}
+
+\newcommand\mc[1]{\ensuremath{\mathsf{#1}}}
+
+
+\newcommand\IsNil{\textsc{Is-[]}\xspace}
+\newcommand\IsCaseListP{\textsc{Is-Match-List-P}\xspace}
+% \newcommand\CountVarP{Count-Var-P\xspace}
+\newcommand\ExprSize{\textsc{Expr-Size}\xspace}
+\newcommand\HasTypeIntCOne{\textsc{Type-Int-C1}\xspace}
+\newcommand\HasTypeList{\textsc{Type-List}\xspace}
+\newcommand\InSlice{\textsc{In-Slice}\xspace}
+
+\newcommand\SPRING{\textsc{SP14}\xspace}
+\newcommand\FALL{\textsc{FA15}\xspace}
+
+\newcommand\HiddenFhTopOne{72}
+\newcommand\HiddenFhTopTwo{85}
+\newcommand\HiddenFhTopThree{91}
+\newcommand\OcamlTopOne{44}
+\newcommand\MycroftTopOne{40}
+\newcommand\SherrlocTopOne{56}
+\newcommand\SherrlocTopThree{84}
+\newcommand\LinearTopOne{61}
+\newcommand\LinearTopThree{86}
+\newcommand\BaselineTopOne{30}
+\newcommand\BaselineTopTwo{47}
+\newcommand\BaselineTopThree{58}
+\newcommand\ToolnameWinOcaml{28\xspace}
+\newcommand\ToolnameWinSherrloc{16\xspace}
+\newcommand\LinearWinSherrloc{5\xspace}
+\newcommand\SlicingWinOcaml{10\xspace}
+
+\newcommand\labelsym{\mathsf{label}}
+\newcommand\featuresym{\mathsf{features}}
+\newcommand\extractsym{\mathsf{extract}}
+\newcommand\trainsym{\mathsf{train}}
+\newcommand\evalsym{\mathsf{eval}}
+\newcommand\blamesym{\mathsf{blame}}
+\newcommand\Model{\mathsf{Model}}
+\newcommand\V{\mathcal{V}}
+\newcommand\R{\mathcal{R}}
+%\newcommand\Runit{\R_0^1}
+\newcommand\Runit{\mathcal{C}}
+\newcommand\B{\mathcal{B}}
+\newcommand\List[1]{[#1]}
+
+
+\makeatletter
+\newcommand\resetstackedplots{
+\makeatletter
+\pgfplots@stacked@isfirstplottrue
+\makeatother
+}
+\makeatother
