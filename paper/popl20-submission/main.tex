@@ -41,8 +41,23 @@
 
 
 %% Other packages
+% \usepackage{amsmath}
+% \usepackage{amssymb}
 \usepackage{xspace}
 \usepackage{listings}
+\lstset{
+  language=Caml,
+  basicstyle=\ttfamily,
+  keywordstyle=\ttfamily,
+}
+\lstnewenvironment{code}{
+\lstset{
+  language=Caml,
+  basicstyle=\ttfamily,
+  keywordstyle=\ttfamily,
+}}
+{}
+
 \lstnewenvironment{ecode}{
 \lstset{
   language=Caml,
@@ -57,6 +72,8 @@
   escapeinside={(*@}{@*)},
 }}
 {}
+
+\lstMakeShortInline{|}
 
 %% Our commands
 \usepackage{commands}
