@@ -1,0 +1,251 @@
+%%%
+%%%  FIXME: This entire section is copy-pasted from NATE! Change it a lot!
+%%%
+
+\section{Learning to Localize Errors}
+\label{sec:localization}
+In this section, we describe our approach to localizing type errors, in the context of \lang (\autoref{fig:syntax}), a
+simple lambda calculus with integers, booleans, pairs, and lists.
+%
+Our goal is to instantiate the $\blamesym$ function of \autoref{fig:api}, which takes as input a $\Model$ of type errors
+and an ill-typed program $e$, and returns an ordered list of subexpressions from $e$ paired with the confidence score
+$\Runit$ that they should be blamed.
+
+A $\Model$ is produced by $\trainsym$, which performs supervised learning on a training set of feature vectors $\V$ and
+(boolean) labels $\B$.
+%
+Once trained, we can $\evalsym$uate a $\Model$ on a new input, producing the confidence $\Runit$ that the blame label
+should be applied.
+%
+We describe multiple $\Model$s and their instantiations of $\trainsym$ and $\evalsym$ (\autoref{sec:models}).
+
+Of course, the $\Model$ expects feature vectors $\V$ and blame labels $\B$, but we are given program pairs.
+%
+So our first step must be to define a suitable translation from program pairs to feature vectors and labels, \ie we must
+define the $\extractsym$ function in \autoref{fig:api}.
+%
+We model features as real-valued functions of terms, and extract a feature vector for each \emph{subterm} of the
+ill-typed program (\autoref{sec:features}).
+%
+Then we define the blame labels for the training set to be the subexpressions that changed between the ill-typed program
+and its subsequent fix, and model $\blamesym$ as a function from a program pair to the set of expressions that changed
+(\autoref{sec:labels}).
+%
+The $\extractsym$ function, then, extracts $\featuresym$ from each subexpression and computes the blamed expressions
+according to $\labelsym$.
+
+\input{syntax}
+
+
+\subsection{Features}
+\label{sec:features}
+The first issue we must tackle is formulating our learning task in machine learning terms.
+%
+We are given programs over \lang, but learning algorithms expect to work with \emph{feature vectors} $\V$ --- vectors of
+real numbers, where each column describes a particular aspect of the input.
+%
+Thus, our first task is to convert programs to feature vectors.
+
+We choose to model a program as a \emph{set} of feature vectors, where each element corresponds an expression in the
+program.
+%
+Thus, given the |sumList| program in \autoref{fig:sumList} we would first split it into its constituent sub-expressions
+and then transform each sub-expression into a single feature vector.
+%
+We group the features into five categories, using \autoref{tab:sumList} as a running example of the feature extraction
+process.
+
+\mypara{Local syntactic features}
+These features describe the syntactic category of each expression $e$.
+%
+In other words, for each production of $e$ in \autoref{fig:syntax} we introduce a feature that is enabled (set to $1$)
+if the expression was built with that production, and disabled (set to $0$) otherwise.
+%
+For example, the \IsNil feature in \autoref{tab:sumList} describes whether an expression is the empty list $\enil$.
+
+We distinguish between matching on a list vs.\ on a pair, as this affects the typing derivation.
+%
+We also assume that all pattern matches are well-formed --- \ie all patterns must match on the same type.
+%
+Ill-formed match expressions would lead to a type error; however, they are already effectively localized to the match
+expression itself.
+%
+We note that this is not a \emph{fundamental} limitation, and one could easily add features that specify whether a match
+\emph{contains} a particular pattern, and thus have a match expression that enables multiple
+features.
+
+\mypara{Contextual syntactic features}
+These are similar to local syntactic features, but lifted to describe the parent and children of an expression.
+%
+For example, the \IsCaseListP feature in \autoref{tab:sumList} describes whether an expression's \emph{parent} matches
+on a list.
+%
+If a particular $e$ does not have children (\eg a variable $x$) or a parent (\ie the root expression), we leave the
+corresponding features
+disabled.
+%
+This gives us a notion of the \emph{context} in which an expression occurs, similar to the \emph{n-grams} used in
+linguistic models \citep{Hindle2012-hf,Gabel2010-el}.
+
+\mypara{Expression size}
+We also propose a feature representing the \emph{size} of each expression, \ie how many sub-expressions does it contain?
+%
+For example, the \ExprSize feature in \autoref{tab:sumList} is set to three for the expression |sumList tl| as it
+contains three expressions: the two variables and the application itself.
+%
+This allows the model to learn that, \eg, expressions closer to the leaves are more likely to be blamed than expressions
+closer to the root.
+
+\mypara{Typing features}
+A natural way of summarizing the context in which an expression occurs is with \emph{types}.
+%
+Of course, the programs we are given are \emph{untypeable}, but we can still extract a \emph{partial} typing derivation
+from the type checker and use it to provide more information to the model.
+
+A difficulty that arises here is that, due to the parametric type constructors $\tfun{\cdot}{\cdot}$,
+$\tprod{\cdot}{\cdot}$, and $\tlist{\cdot}$, there is an \emph{infinite} set of possible types --- but we must have a
+\emph{finite} set of features.
+%
+Thus, we abstract the type of an expression to the set of type constructors it \emph{mentions}, and add features for
+each type constructor that describe whether a given type mentions the type constructor.
+%
+For example, the type $\tint$ would only enable the $\tint$ feature, while the type $\tfun{\tint}{\tbool}$ would enable
+the $\tfun{\cdot}{\cdot}$, $\tint$, and $\tbool$ features.
+
+We add these features for parent and child expressions to summarize the context, but also for the current expression, as
+the type of an expression is not always clear \emph{syntactically}.
+%
+For example, the expressions |tl| and |sumList tl| in \autoref{tab:sumList} both enable \HasTypeList, as they are both
+inferred to have a type that mentions $\tlist{\cdot}$.
+%constructor.
+
+Note that our use of typing features in an ill-typed program subjects us to \emph{traversal bias} \citep{McAdam1998-ub}.
+For example, the |sumList tl| expression might alternatively be assigned the type $\tint$.
+%
+Our models will have to learn good localizations in spite this bias (see \autoref{sec:evaluation}).
+
+\mypara{Type error slice}
+Finally, we wish to distinguish between changes that could fix the error, and changes that \emph{cannot possibly} fix
+the error.
+%
+Thus, we compute a minimal type error \emph{slice} for the program (\ie the set of expressions that contribute to the
+error), and add a feature that is enabled for expressions that are part of the slice.
+%
+The \InSlice feature in \autoref{tab:sumList} indicates whether an expression is part of such a minimal slice, and is
+enabled for all of the sampled expressions except for |tl|, which does not affect the type error.
+%
+If the program contains multiple type errors, we compute a minimal slice for each error.
+
+In practice, we have found that \InSlice is a particularly important feature, and thus include a post-processing step
+that discards all expressions where it is disabled.
+%
+As a result, the |tl| expression would never actually be shown to the classifier.
+%
+We will demonstrate the importance of \InSlice empirically in \autoref{sec:feature-utility}.
+
+
+\subsection{Labels}
+\label{sec:labels}
+Recall that we make predictions in two stages.
+%
+First, we use $\evalsym$ to predict for each subexpression whether it should be blamed, and extract a confidence score
+$\Runit$ from the $\Model$.
+%
+Thus, we define the output of the $\Model$ to be a boolean label, where ``false'' means the expression \emph{should not}
+change and ``true'' means the expression \emph{should} change.
+%
+This allows us to predict whether any individual expression should change, but we would actually like to predict the
+\emph{most likely} expressions to change.
+%
+Second, we \emph{rank} each subexpression by the confidence $\Runit$ that it should be blamed, and return to the user
+the top $k$ most likely blame assignments (in practice $k=3$).
+
+
+We identify the fixes for each ill-typed program with an expression-level diff~\citep{Lempsink2009-xf}.
+%
+We consider two sources of changes.
+%
+First, if an expression has been removed wholesale, \eg if $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, we will mark the
+expression $f$ as changed, as it has been replaced by $g$.
+%
+Second, if a new expression has been inserted \emph{around} an existing expression, \eg if $\eapp{f}{x}$ is rewritten to
+$\eplus{\eapp{f}{x}}{1}$, we will mark the application expression $\eapp{f}{x}$ (but not $f$ or $x$) as changed, as the
+$+$ operator now occupies the original location of the application.
+
+
+\subsection{Learning Algorithm}
+\label{sec:models}
+\lstDeleteShortInline{|} % sigh...
+
+Recall that we formulate type error detection at a single expression as a supervised classification problem.
+%
+This means that we are given a training data set
+%$S = \{ \langle v_i, b_i \rangle \}_{i=1}^n$
+$S : \List{\V \times \B}$ of labeled examples, and our goal is to use it to build a \emph{classifier}, \ie a rule that
+can predict a label $b$ for an input $v$.
+%
+Since we apply the classifier on each expression in the program to determine those that are the most likely to be type
+errors, we also require the classifier to output a \emph{confidence score} that measures how sure the classifier is
+about its prediction.
+
+
+There are many learning algorithms to choose from, existing on a spectrum that balances expressiveness with ease of
+training (and of interpreting the learned model).
+%
+In this section we consider a standard learning algorithm: \emph{neural networks}.
+%
+A thorough introduction to these techniques can be found in introductory machine learning textbooks
+\citep[\eg][]{Hastie2009-bn}.
+% \ES{TODO: huma/kamalika?}).
+%
+
+Below we briefly introduce each technique by describing the rules it learns, and summarize its advantages and
+disadvantages.
+%
+For our application, we are particularly interested in three properties -- expressiveness, interpretability and ease of
+generalization.
+%
+Expressiveness measures how complex prediction rules are allowed to be, and interpretability measures how easy it is to
+explain the cause of prediction to a human.
+%
+Finally ease of generalization measures how easily the rule generalizes to examples that are not in the training set; a
+rule that is not easily generalizable might perform poorly on an unseen test set even when its training performance is
+high.
+
+
+\mypara{Neural Networks}
+%
+The last (and most complex) model we use is a type of neural network called a \emph{multi-layer perceptron} (see
+\citealt{Nielsen2015-pu} for an introduction to neural networks).
+%
+A multi-layer perceptron can be represented as a directed acyclic graph whose nodes are arranged in layers that are
+fully connected by weighted edges.
+%
+The first layer corresponds to the input features, and the final to the output.
+%
+%The output of a node $v$ in an internal layer is given by:
+The output of an internal node $v$ is
+%
+\[ h_v = g(\sum_{j \in N(v)} W_{jv} h_j ) \]
+%
+where $N(v)$ is the set of nodes in the previous layer that are adjacent to $v$, $W_{jv}$ is the weight of the $(j, v)$
+edge and $h_j$ is the output of node $j$ in the previous layer.
+%
+Finally $g$ is a non-linear function, called the activation function, which in recent work is commonly chosen to be the
+\emph{rectified linear unit} (ReLU), defined as $g(x) = \mathsf{max}(0,x)$ \citep{Nair2010-xg}.
+%
+The number of layers, the number of neurons per layer, and the connections between layers constitute the
+\emph{architecture} of a neural network.
+%
+In this work, we use relatively simple neural networks which have an input layer, a single hidden layer and an output
+layer.
+
+A major advantage of neural networks is their ability to discover interesting combinations of features through
+non-linearity, which significantly reduces the need for manual feature engineering, and allows high expressivity.
+%
+On the other hand, this makes the networks particularly difficult to interpret and also difficult to generalize unless
+vast amounts of training data are available.
+
+
+% ES: keep this at the bottom... sigh
+\lstMakeShortInline{|}
