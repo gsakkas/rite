@@ -1,6 +1,11 @@
 \section{Overview}
 \label{sec:overview}
 
+
+We begin with an overview of our approach to suggesting fixes for various faulty
+programs by collectively learning from the processes novice programmers take to
+fix errors in their programs.
+
 \begin{figure}[ht]
     \begin{ecode}
       let rec mulByDigit i l =
@@ -10,111 +15,145 @@
     \end{ecode}
 
     \begin{ecode}
-        let rec mulByDigit i l =
+      let rec mulByDigit i l =
         match l with
         | []     -> []
         | hd::tl -> [hd * i] @ (mulByDigit i tl)
     \end{ecode}
-    \caption{(top) An ill-typed \ocaml program that should multiply the elements of a list with a integer digit.
-    (bottom) The fixed version by the student.}
+    \caption{(top) An ill-typed \ocaml program that should multiply each element
+    of a list with an integer. (bottom) The fixed version by the student.}
     \label{fig:mulByDigit}
 \end{figure}
 
 
-Let’s start with an overview of our approach to suggesting fixes for various faulty programs by collectively learning
-from the process novice programmers take to fix errors in their programs.
+\mypara{The Problem.} Consider the \texttt{mulByDigit} program in
+\autoref{fig:mulByDigit} written by a student in an undergraduate Programming
+Languages course. The program is meant to multiply all the numbers in a list
+with an integer digit, but the student accidentally misuses the list append
+operator (\texttt{@}), applying it to a number and a list rather than two lists.
+Novice programmers may not find the compiler's resulting type checking error
+message informative.  In this particular instance, the student chose the
+approach shown in \autoref{fig:mulByDigit}, but multiple solutions are possible,
+including using the \texttt{::} operator to prepend a single element onto a
+list. We desire an automated technique to guide novice programmers by suggesting
+candidate solutions.
 
-\mypara{The Problem.} Consider the \texttt{mulByDigit} program in \autoref{fig:mulByDigit} written by a student in an
-undergraduate Programming Languages course. The program is meant to multiply all the numbers in a list with an integer
-digit, but the student accidentally appends a number in the second case, rather than a list with that number. A
-not-very-experienced programmer may be baffled by the compiler showing a type error there. They might confuse the
-operator \texttt{@} (list append) that takes two lists as inputs with the \texttt{::}, which would be a solution as well
-here. But the user decided to fix the error as shown in \autoref{fig:mulByDigit}. So, how do we propose the above
-solution or something that would help the programmer arrive to such a solution?
-
-\mypara{Solution. Suggesting Repairs via Supervised Classification and Program Synthesis.} Our approach is to view the
-process of \emph{fixing} an erroneous program as a \emph{supervised multi-class classification problem}, whose results
-are then fed to a \emph{program synthesizer}. A classification problem entails learning a function that maps inputs to a
-discrete set of output labels (in contrast to regression, where the output is typically a real number). A supervised
-learning problem is one where we are given a training set where the inputs and labels are known, and the task is to
-learn a function that accurately maps the inputs to output labels and generalizes to new, yet-unseen inputs. To realize
-the above approach for suggesting good possible repairs as a practical tool, we have to solve five sub-problems.
+\mypara{Solution. Suggesting Repairs via Supervised Classification and Program
+Synthesis.} Our approach is to view the process of \emph{fixing} an erroneous
+program as a \emph{supervised multi-class classification problem}, whose results
+are then fed to a \emph{program synthesizer}. A classification problem entails
+learning a function that maps inputs to a discrete set of output labels (in
+contrast to techniques such as regression, where the output is typically a real
+number). A supervised learning problem is one in with an available training set
+where the inputs and labels are known, and the task is to learn a function that
+accurately maps the inputs to output labels and generalizes to future inputs. To
+realize the above approach for suggesting good possible repairs as a practical
+tool, we structure our solution into five sub-problems:
 
 \begin{enumerate}
-  \item How can we acquire a training set of blame-labeled ill-typed programs with the respective user-defined fixes?
-  \item How can we represent possible solutions to an error?
-  \item What are the appropriate models to train for our case?
+  \item How can we acquire a training set of labeled ill-typed programs with
+  their respective user-provided fixes?
+  \item How can we represent possible solutions to a defect?
+  \item What are the appropriate models to represent this problem?
   \item How can we use predictive models to repair faulty programs?
-  \item How can we use predictive models and synthesized repairs to give localized feedback to the programmer?
+  \item How can we use predictive models and synthesized repairs to give
+  localized feedback to the programmer?
 \end{enumerate}
 
+In the remainder of this section, we consider each sub-problem in turn.
 
 %%% FIXME: Taken mostly from Nate, needs many changes...
 \subsection{Step 1: Acquiring a Blame-Labeled Training Set}
 \label{subsec:step1}
 
-The first step is to gather a training set of ill-typed programs, where each erroneous sub-term is explicitly labeled.
-Prior work has often enlisted expert users to curate a set of ill-typed programs and then \emph{manually} determine the
-correct fix~\citep[\eg][]{Lerner2007-dt, Loncaric2016-uk}. This method is suitable for evaluating the quality of a
-localization (or repair) algorithm on a small number (e.g. 10s–100s) of programs. However, in general it requires a
-great deal of effort for the expert to divine the original programmer’s intentions. Consequently, is difficult to scale
-the expert-labeling to yield a dataset large enough (e.g. 1000s of programs) to facilitate machine learning. More
-importantly, this approach fails to capture the frequency with which errors occur in practice.
+The first step is to gather a training set of ill-typed programs, where each
+erroneous sub-term is explicitly labeled. Prior work has often enlisted expert
+users to curate a set of ill-typed programs and then \emph{manually} determine
+the correct fix~\citep[\eg][]{Lerner2007-dt, Loncaric2016-uk}. This method is
+suitable for evaluating the quality of a localization (or repair) algorithm on a
+small number (e.g. 10s--100s) of programs. However, in general it requires a
+great deal of effort for the expert to divine the original programmer's
+intentions. Consequently, is difficult to scale the expert-labeling to yield a
+dataset large enough (e.g. 1000s of programs) to facilitate machine learning.
+More importantly, this approach fails to capture the frequency with which errors
+occur in practice.
 
-\mypara{Interaction Traces.} We solve both the scale and frequency problems by instead extracting blame-labeled data
-sets from \emph{interaction traces}. Software development is an iterative process. Programmers, perhaps after a lengthy
-(and sometimes frustrating) back-and-forth with the type checker, eventually end up fixing their own programs. Previous
-work has used an instrumented \ocaml compiler to record this conversation, i.e. record the sequence of programs
-submitted by each programmer and whether or not it was deemed type-correct. For each ill-typed program in a particular
-programmer’s trace, they find the first subsequent program in the trace that type checks and declare it to be the fixed
-version. In our case, we used an existing extracted dataset~\citep[][]{yunounderstand, Seidel:2017} of ill-typed
-programs and their fixes. From these pairs, we can extract a \emph{diff} of the abstract syntax trees (ASTs), and then
-assign the blame labels to the \emph{smallest} sub-tree in the diff.
+\mypara{Interaction Traces.} We solve both the scale and frequency problems by
+instead extracting blame-labeled data sets from \emph{interaction traces}.
+Software development is an iterative process. Programmers, perhaps after a
+lengthy (and sometimes frustrating) back-and-forth with the type checker,
+eventually end up fixing their own programs. Previous work has used an
+instrumented \ocaml compiler to record this conversation, i.e. record the
+sequence of programs submitted by each programmer and whether or not it was
+deemed type-correct. For each ill-typed program in a particular programmer's
+trace, they find the first subsequent program in the trace that type checks and
+declare it to be the fixed version. In our case, we used an existing extracted
+dataset~\citep[][]{yunounderstand, Seidel:2017} of ill-typed programs and their
+fixes. From these pairs, we can extract a \emph{diff} of the abstract syntax
+trees (ASTs), and then assign the blame labels to the \emph{smallest} sub-tree
+in the diff.
 
-\mypara{Example.} Suppose our student fixed the \texttt{mulByDigit} program as shown above by adding a \texttt{[]}
-around the result of the multiplication, the diff would include the list expression. Thus we would determine that the
-list expression is the repair we have to blame.
+\mypara{Example.} Suppose our student fixed the \texttt{mulByDigit} program as
+shown above by adding a \texttt{[]} around the result of the multiplication, the
+diff would include the list expression. Thus we would determine that the list
+expression is the repair we have to blame.
 
-\mypara{Bags-of-Abstracted-Terms.} Our representation of programs is parameterized by a set of feature abstraction
-functions, (abbreviated to feature abstractions) $f_1, \ldots, f_n$ , that map terms to a numeric value (or just $\{0,
-1\}$ to encode a boolean property). Given a set of feature abstractions, we can represent a single program’s AST as a
-\emph{bag-of-abstracted-terms} (BOAT) by:
+\mypara{Bags-of-Abstracted-Terms.} Our representation of programs is
+parameterized by a set of feature abstraction functions, (abbreviated to feature
+abstractions) $f_1, \ldots, f_n$ , that map terms to a numeric value (or just
+$\{0, 1\}$ to encode a boolean property). Given a set of feature abstractions,
+we can represent a single program's AST as a \emph{bag-of-abstracted-terms}
+(BOAT) by:
 %
-(1) decomposing the AST (term) $t$ into a bag of its constituent sub-trees (terms) $\{t_1, \ldots, t_m\}$; and then
+(1) decomposing the AST (term) $t$ into a bag of its constituent sub-trees
+(terms) $\{t_1, \ldots, t_m\}$; and then
 %
-(2) representing each sub-term $t_i$ with the $n$-dimensional vector $[f_1(t_i), \ldots, f_n(t_i)]$. Working with ASTs
-is a natural choice as type-checkers operate on the same representation.
+(2) representing each sub-term $t_i$ with the $n$-dimensional vector $[f_1(t_i),
+\ldots, f_n(t_i)]$. Working with ASTs is a natural choice as type-checkers
+operate on the same representation.
 
-\mypara{Modeling Contexts.} Each expression occurs in some surrounding \emph{context}, and we would like the classifier
-to be able make decisions based on the context as well. The context is particularly important for our task as each
-expression imposes typing constraints on its neighbors. For example, a |@| operator tells the type checker that both
-children must have type |'a list| and that the parent must accept an |'a list|. The BOAT representation makes it easy to
-incorporate contexts: we simply \emph{concatenate} each term’s feature vector with the \emph{contextual features} of its
-parent and children.
+\mypara{Modeling Contexts.} Each expression occurs in some surrounding
+\emph{context}, and we would like the classifier to be able make decisions based
+on the context as well. The context is particularly important for our task as
+each expression imposes typing constraints on its neighbors. For example, a |@|
+operator tells the type checker that both children must have type |'a list| and
+that the parent must accept an |'a list|. The BOAT representation makes it easy
+to incorporate contexts: we simply \emph{concatenate} each term’s feature vector
+with the \emph{contextual features} of its parent and children.
 
-\mypara{Type features.} Another way to summarize the context in which an expression occurs is with types. Of course, the
-programs we are given are untypeable, but we can still extract a partial typing derivation from the type checker and use
-it to provide more information to the model. However, to help later our classifier give better predictions of the
-possible fixes, we want those types to be as close as possible to the types that correct program would have or at least
-be a super-type of them. To achieve that, we replace each time one location of the program with a typed hole and extend
-the type checker to infer the type of that hole from the context of the program. This procedure would give more accurate
-super-types than getting partial typing derivation from the untypeable original program.
+\mypara{Type features.} Another way to summarize the context in which an
+expression occurs is with types. Of course, the programs we are given are
+untypeable, but we can still extract a partial typing derivation from the type
+checker and use it to provide more information to the model. However, to help
+later our classifier give better predictions of the possible fixes, we want
+those types to be as close as possible to the types that correct program would
+have or at least be a super-type of them. To achieve that, we replace each time
+one location of the program with a typed hole and extend the type checker to
+infer the type of that hole from the context of the program. This procedure
+would give more accurate super-types than getting partial typing derivation from
+the untypeable original program.
 
 
 
 \subsection{Step 2: Representing fixes as labels}
 \label{subsec:step2}
 
-Next, we must find a way to represent different fixes as a limited number of templates that would be easy for
-programmers to understand and then proceed to fix their code. For that, we will use the abstract syntax trees of the
-programs again.
+Next, we represent different fixes via a limited number of templates. We focus
+on AST-level templates templates that are easy for novices to understand.
 
-\mypara{Clustering the Fixes.} Our dataset has now the erroneous programs and the fixes the users gave for the
-respective programs. But those fixes can be arbitrary replacements of code, with different lengths, variable names,
-functions etc. One thing is to do, of course is to remove outliers, i.e. programs that changed too much. But still, we
-end up with a huge number of fixes all different from each other. Those, solutions must be put into a small number of
-groups before they can be useful for any fix suggestion. Therefore, a simple clustering algorithm must be utilized that
-will divide the fixes into groups of \emph{equivalent} fixes. But for that a notion of “similar” fixes must be defined.
+\mypara{Clustering the Fixes.} Our dataset contains erroneous programs and the
+corresponding user-written fixes. Those fixes can be arbitrary code
+modifications with different lengths, variable names, functions, and so on. We
+propose to automatically cluster such fixes into abstract fix schema. This
+clustering serves two purposes. First, it enables the subsequent use of discrete
+classification algorithms to choose. Second, it allows for the principled
+removal of outliers. Outliers are a relevant problem because student datasets
+often contain non-standard or idiosyncratic solutions. We propose to use a
+simple clustering algorithm applied atop a similarity metric for fixes.
+%
+FIXME: The original text had \emph{equivalent} here. Do you actually mean
+that? If so, be more precise. The text also talked about outlier removal,
+so I made that more formal --- but is it something we're actually doing?
 
 \mypara{Generic Abstract Syntax Trees (GASTs).} The ASTs of the fixes is a good start, but those still contain too much
 information. See our running example. |[hd * i]| is a list that includes a multiplication of the variables |hd| and |i|.
