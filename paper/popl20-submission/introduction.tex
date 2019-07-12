@@ -1,0 +1,83 @@
+\section{Introduction}
+\label{sec:intro}
+
+% Motivation and the problem
+The increasing number of computer science related
+jobs~\citep[][]{compsci-demand} in the recent years has resulted in an
+unprecedented demand for computer science education. Colleges and universities
+have more students than ever~\citep[][]{compsci-classes} enrolled to their
+computer science classes and their numbers will only increase in the foreseeable
+future. Other students wanting to join this growth of technology and computing,
+have turned to Massive Open Online Courses (MOOCs)~\citep[][]{moocs} to get the
+appropriate knowledge in order to pursue their dream in the technology job
+market. While computer science education has become much more accessible with
+these larger classrooms over the years, one may ask if its \emph{quality} has
+remained the same as of the more traditional smaller classrooms, and
+specifically the feedback that students get for homework and exams.
+
+% Good properties of a solution
+Recent research has focused on providing \emph{fully automated feedback} to
+students for the programming assignments that these classes usually include. In
+this paper we propose such a solution, that can be used to give personalized
+feedback to students for introductory programming exercises without requiring
+any instructor effort. Previous work has exploited the advances in \emph{program
+repair} research to generate such feedback.
+% TODO: Cite clara, autoproof, sarfgen, ... here
+
+By repairing an incorrect student attempt on a programming assignment and
+producing a \emph{minimal} repair \wrt some edit-distance metric, so it can be
+as close as possible to the original one, we can generate \emph{high-quality}
+feedback for that attempt. Furthermore, the repair algorithm we propose must be
+able to \emph{generalize} over different programming assignments and to not be
+specific to existing ones only. In this paper we focus on generating such
+repairs that will enable better feedback generation and leave the latter part as
+future work.
+
+
+
+
+% 1. ``We identify an important problem in the world.'' Be more specific than
+% just ``bugs''. Are we focusing on novices and students or are we focusing
+% on general software defects? Are we focusing on strongly-typed functional
+% languages or are we proposing something generic? What ``news article'' or
+% ``survey paper'' citations can you list here to convince me that this is a
+% big deal?
+
+% 2. ``Here are the properties that a good solution must have.'' Pick three.
+% Here are some examples: must be applicable to students; must produce
+% answers quickly; must produce answers that are very close to what humans
+% would do; must apply to programs from a wide range of application domains.
+
+% 3. ``Here is the current state of the art. Note that each of these fails to
+% obtain at least one of the properties above.'' Candidates: manual debugging
+% (bad because of X and Y); using something like genprog (bad because of X
+% and Z); using pure fault localization (bad because of A and B); using delta
+% debugging or git/svn blame (bad because of P and Q); using something like
+% Nate or Sherrloc (bad because of Q and R).
+
+% 4. ``Here are our two or three insights. These insights are the
+% underpinning of our solution.'' What are the most important ones?
+% Candidates: blame-labeled training sets are available; student repairs fall
+% into a reasonable number of categories (admitting a classification
+% technique); program repair can be viewed as a synthesis problem;
+% generalized ASTs can handle typed and untyped program manipulations.
+
+% 5. ``We combine those insights into TECHNIQUE. It works by steps A, B and
+% C, which allow it to obtain the properties P1, P2, and P3 of a good
+% solution.'' Briefly condense the steps from Section 2 here.
+
+% 6. ``We evaluate our technique. For Property P1, we use metric M1 and must
+% be at least as good as S1 to be successful. For Property P2, we use metric
+% M2 and must be at least as good as S2 to be successful. We obtain property
+% P3 by construction.'' Fill in the blanks. In addition, for every benchmark
+% set or human study used, indicate why you are sampling correctly --- why
+% those results are likely to generalize.
+
+% The contributions of this paper are as follows:
+% \begin{itemize}
+%   \item The algorithm. FIXME.
+%   \item The dataset. FIXME --- is this a contribution?
+%   \item The empirical evaluation. FIXME.
+%   \item The human study. FIXME.
+% \end{itemize}
+
