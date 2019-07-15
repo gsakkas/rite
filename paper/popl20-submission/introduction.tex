@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-% Motivation and the problem
+%%% Motivation and the problem
 The increasing number of computer science related
 jobs~\citep[][]{compsci-demand} in the recent years has resulted in an
 unprecedented demand for computer science education. Colleges and universities
@@ -15,7 +15,7 @@ these larger classrooms over the years, one may ask if its \emph{quality} has
 remained the same as of the more traditional smaller classrooms, and
 specifically the feedback that students get for homework and exams.
 
-% Good properties of a solution
+%%% Good properties of a solution
 Recent research has focused on providing \emph{fully automated feedback} to
 students for the programming assignments that these classes usually include. In
 this paper we propose such a solution, that can be used to give personalized
@@ -33,7 +33,44 @@ specific to existing ones only. In this paper we focus on generating such
 repairs that will enable better feedback generation and leave the latter part as
 future work.
 
+%%% Current state of the art
+% Failing test cases
+Presenting students with \emph{failing test cases} still remains one of the most
+common approaches for providing feedback on erroneous programming assignments
+attempts. These test cases can be carefully selected by the instructor to guide
+their students in debugging their code. However, for students that are not yet
+so experienced in programming, such feedback may not be sufficient. More
+targeted feedback is needed in this case, that will highlight possible program
+locations that are responsible for the program errors, and may give possible
+suggestions that will lead the student to a correct solution.
 
+% Fault localization FIXME: make this better
+Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
+\emph{fault localization} for more guided feedback. Fault localization is the
+task of identifying possible program elements (\eg lines, expressions \etc) that
+are the cause of the program error at hand. While these techniques can pinpoint
+with high accuracy the precise location in the student's code that cause the
+error and needs to be fixed, inexperienced programmers can still be confused by
+such feedback. However, fault localization combined with \emph{program repair}
+can provide the appropriate feedback for those novice programmers.
+
+% Program repair
+Recent automated systems for providing feedback via \emph{program repair}, like
+AutoGrader [TODO: cite] demand a lot of manual effort from the instructor and
+their understanding of the system details. AutoGrader requires a reference
+solution per programming assignment and a custom error model that will help
+repair incorrect student attempts, thus the instructor has to spent extra time
+for each assignment, while the algorithm finding the repairs is still very
+expensive due to constraint-solving. Systems like CLARA [TODO: cite] require
+much less manual effort from the instructor by using clustering and machine
+learning techniques on previous student attempts on the programming assignments.
+While the repairs are generated relatively quickly, their program matching
+between previous correct attempts and the new incorrect ones, can often lead to
+imprecise and not minimal repairs. Moreover, their use of Integer Linear
+Programming (ILP) for variable alignment between possible local repairs can hurt
+its scalability. [TODO: Section N] provides a detailed survey of related work.
+% TODO: Add Seminal(it's the one on our human study) here?
+% TODO: Maybe add another tool?
 
 
 % 1. ``We identify an important problem in the world.'' Be more specific than
