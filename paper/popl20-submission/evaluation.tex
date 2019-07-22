@@ -1,0 +1,115 @@
+\section{Evaluation}
+\label{sec:eval}
+
+We have implemented our technique for repairing type errors for a purely
+functional subset of \ocaml with polymorphic types and functions. We seek to the
+following \emph{Research Questions}.
+
+\begin{itemize}
+    \item \textbf{RQ1}: What is the \emph{quality} of \toolname's repairs?
+    \item \textbf{RQ2}: Does \toolname \emph{localize} correctly errors?
+    \item \textbf{RQ3}: Do our ML models \emph{generalize} well for error
+    localization and template prediction?
+    \item \textbf{RQ4}: Are \toolname's repairs actually useful for feedback
+    generation to novice programmers?
+\end{itemize}
+
+We first present our experimental methodology (\autoref{subsec:gen_method}) and
+then we will try to answer each of the above questions, drawing from our results
+from a human study and our manual evaluation.
+
+
+\subsection{General Methodology}
+\label{subsec:gen_method}
+To answer our questions, we will use an \ocaml dataset gathered from an
+undergraduate Programming Languages course at UNKNOWN UNIVERSITY, previously
+used in related work [FIXME: cite later]. This dataset consists of ill-typed
+programs and their subsequent fixes, drawn from two different years of that
+class, The first part of the dataset comes from the Spring 2014 class (\SPRING),
+with a cohort of 46 students and the second comes from the Fall 2015 class
+(\FALL), with a cohort of 56 students. There were totally 23 distinct programs
+that the students worked on this homework. While the extracted programs are
+relatively small, they demonstrate a range of functional programming idioms, \eg
+higher-order functions and (polymorphic) algebraic data types.
+
+\mypara{Feature Extraction}
+We extract 416 features from each sub-expression in a
+program, including:
+%
+\begin{enumerate}
+  \item 45 local syntactic features.
+  \item 315 contextual syntactic features. For each sub-expression we
+    additionally extract the local syntactic features of its first, second,
+    third and fourth (left-to-right) children. In addition, we extract those
+    features for its ancestors, starting from its parent and going up to two
+    more parent nodes. If an expression does not have a ancestor or children,
+    these features will simply be disabled. If an expression has more than four
+    children, the classifiers will receive no information about the additional
+    children.
+  \item 88 typing features. We support |int|s, |float|s, |char|s, |string|s, and
+    the user-defined |expr|. These features are extracted for each
+    sub-expression and its context.
+  \item 1 feature denoting the size of each sub-expression.
+\end{enumerate}
+
+\mypara{Dataset ``cleaning''}
+We automatically extract a blame oracle for each ill-typed program from the
+(AST) diff between it and the student's eventual fix. A disadvantage of using
+diffs in this manner is that students may have made many, potentially unrelated,
+changes between compilations; at some point the ``fix'' becomes a ``rewrite''.
+We do not wish to consider the ``rewrites'' in our evaluation, so we discard
+outliers where the fraction of expressions that have changed is more than one
+standard deviation above the mean, establishing a diff threshold of 40\%. We
+also discard programs that changed in 5 or more locations, since such changes
+can be small in expression size, they can still be considered a ``rewrite''. It
+is also highly unlikely that such ``fixes'' can reproduced by \toolname or any
+related work [FIXME: cite something relevant]. All these discarded outliers
+account for roughly 32\% of each dataset, leaving us with 2,475 program pairs
+for \SPRING and 2,177 pairs for \FALL. For all of our tests, we use \SPRING as a
+training set and \FALL as a test set.
+
+\mypara{Accuracy Metrics}
+A recent study of fault localization techniques \citep[][]{Kochhar2016-oc} shows
+that most developers will not consider more than around five potential error
+locations before falling back to manual debugging. We evaluate \toolname on
+whether a changed expression occurred in its top one, top three or top six
+predictions, but our automatic method of producing fixes may consider more than
+that. We also extend such intuition, that a user won't consider more than five
+``suggestions'' as feedback, to possible fixes, and thus we evaluate \toolname's
+top five template predictions on whether they include the correct template. We
+also include the confusion matrix of the top one predictions for all locations,
+in order to present what templates our models usually mix together.
+
+\mypara{Repair Quality}
+Finally, for a more qualitative evaluation of \toolname in order to evaluate the
+synthesized solutions based on the above results, we ran a human study at
+UNKNOWN UNIVERSITY. Each participant was asked to evaluate the quality of the
+program fixes and their locations against \seminal's repairs
+\citep[][]{Lerner2006-pj, Lerner2007-dt}. For each program, beside the two
+repairs, the participants were given the original ill-typed program, along with
+the standard \ocaml compiler's error message and a short description of what the
+original author of the program intended it to do.
+
+\subsection{Quantitative Evaluation}
+\label{subsec:quan_eval}
+
+\subsubsection{Error Localization Accuracy}
+\label{subsubsec:error_loc_acc}
+
+\subsubsection{Template Prediction Accuracy}
+\label{subsubsec:templ_acc}
+
+\subsubsection{Empirical Repair Quality Evaluation}
+\label{subsubsec:man_rep_qual_eval}
+
+
+
+\subsection{Qualitative Evaluation}
+\label{subsec:quan_eval}
+
+\subsubsection{Human Study Setup}
+\label{subsubsec:study_setup}
+
+
+\subsubsection{Human Study Results}
+\label{subsubsec:study_res}
