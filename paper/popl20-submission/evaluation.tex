@@ -93,11 +93,74 @@ original author of the program intended it to do.
 \subsection{Quantitative Evaluation}
 \label{subsec:quan_eval}
 
+First, we evaluate the accuracy of our predictions for both type error localization and template prediction.
+
 \subsubsection{Error Localization Accuracy}
 \label{subsubsec:error_loc_acc}
 
+
+
 \subsubsection{Template Prediction Accuracy}
 \label{subsubsec:templ_acc}
+
+\mypara{Baselines}
+We provide two baselines for the comparison: a random choice of template and a
+prediction based on popularity.
+
+\mypara{Our Classifiers}
+We evaluate our classifiers, each trained on the \SPRING quarter and evaluated
+on the \FALL quarter.
+
+These include:
+%Our classifiers are:
+%
+\begin{description}
+  \item[\random] A dummy classifier that \emph{uniformly} selects each time a
+    template to return. There is no training necessary with this classifier.
+  \item[\popular] This classifier returns always the most popular template from
+    the training set. As a second prediction returns the second most popular
+    template and so on. The training phase of this classifier includes just
+    learning the popularity of each cluster-template on the training set.
+  \item[\textsc{Deep Neural Network} (\dnn)] A multi-layer perceptron neural
+    network, trained with $\eta = 0.001$, $\lambda = 0.001$, and a mini-batch
+    size of 256. Our network utilizes three fully-connected hidden layers of 512
+    neurons The neurons use rectified linear units (ReLU) as their activation
+    function, a common practice in modern neural networks.
+\end{description}
+
+All classifiers were trained using the \emph{early stopping} approach, where the
+training of a neural network is stopped when the accuracy on a distinct small
+part of the training set is not improved after a certain amount of epochs. We
+set that amount to 5 and the maximum number of epochs to 200. The \textsc{Adam}
+optimizer \citep{Kingma2014-ng}, a variant of stochastic gradient descent that
+has been found to converge faster, was used to train our \dnn.
+
+\input{evaluation-accuracy-graph}
+
+\mypara{Results}
+\autoref{fig:accuracy-results} shows the accuracy results of our template
+prediction experiments. The naive baseline of selecting templates at random
+achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
+\popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
+(\PopularTopSix\% Top-6). Our \dnn classifier of course outperforms those naive
+classifiers, ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6
+accuracy. Interestingly, with only \dnn's first prediction, one outperforms top
+6 predictions of both \random and \popular.
+
+The \random classifier selects \emph{randomly} a template, out of the 50 learned
+ones from the \SPRING training dataset, for each location it is presented. It
+was expected, therefore, to achieve such low accuracy, even for Top-6.
+Surprisingly, the \popular accuracy results are not that low. This mainly
+happens because of the nature of our dataset. Some homework assignments were
+shared between \SPRING and \FALL quarters and, while different groups of
+students solved these problems for each quarter, the novice mistakes that they
+made seem to have a \emph{pattern}. Thus, the most \emph{popular ``fixes''} (and
+therefore the relevant templates) that were applied to \SPRING, are also popular
+in \FALL. However, the almost \emph{2x higher} accuracy of our \dnn classifier,
+shows that we can learn a \emph{better pattern} from these datasets and that our
+\dnn model is able to \emph{generalize} between different solutions of the
+problems.
+
 
 \subsubsection{Empirical Repair Quality Evaluation}
 \label{subsubsec:man_rep_qual_eval}

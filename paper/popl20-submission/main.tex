@@ -41,6 +41,12 @@
 
 
 %% Other packages
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.12}
+\usepackage{pgfplotstable}
+
 % \usepackage{amsmath}
 % \usepackage{amssymb}
 \usepackage{xspace}
@@ -74,6 +80,7 @@
 {}
 
 \lstMakeShortInline{|}
+
 
 %% Our commands
 \usepackage{commands}
@@ -201,7 +208,7 @@ Text of abstract \ldots.
 %% environment and commands, and keywords command.
 \maketitle
 
-\input{introduction.tex}
+\input{introduction}
 \input{overview}
 \input{localization}
 \input{evaluation}

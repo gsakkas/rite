@@ -15,7 +15,7 @@ from sklearn.svm import SVC
 from keras.models import Model
 from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Input, Dropout
 from keras.callbacks import EarlyStopping
-from tensorflow import set_random_seed
+import tensorflow as tf
 
 import input_old
 
@@ -33,7 +33,7 @@ if model == 'load' or model == 'load-cnn':
 RANDOM_SEED = 42
 environ['PYTHONHASHSEED'] = str(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
-set_random_seed(RANDOM_SEED)
+tf.compat.v1.random.set_random_seed(RANDOM_SEED)
 prng = np.random.RandomState(RANDOM_SEED)
 rn.seed(RANDOM_SEED)
 
@@ -243,17 +243,17 @@ clf_type = 'multiclass'
 
 if model == 'dnn' or model == 'cnn':
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
-    if isfile(join('models', 'dnn-location-final.h5')):
-        clf_all.load_weights(join('models', 'dnn-location-final.h5'))
+    if isfile(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5')):
+        clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
     else:
         es_all = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10)
         clf_all.fit(train_stds_all, ready_train_labels_all, batch_size=512, epochs=200, verbose=1, validation_split=0.2, callbacks=[es_all])
-        clf_all.save_weights(join('models', 'dnn-location-final.h5'))
+        clf_all.save_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
     clf.fit(train_stds, ready_train_labels, batch_size=256, epochs=200, verbose=1, validation_split=0.1, callbacks=[es])
     clf.save_weights(join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '-final.h5'))
 elif model == 'load' or model == 'load-cnn':
     clf.load_weights(model_file)
-    clf_all.load_weights(join('models', 'dnn-location-final.h5'))
+    clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
     model = 'dnn'
 elif model != 'popular' and model != 'random':
     clf = clf.fit(train_stds, categorize(train_labels).values)
@@ -278,11 +278,13 @@ if model == 'dnn' or model == 'cnn' or model == 'load' or model == 'load-cnn':
 prob_error = []
 anses = []
 if model == 'popular':
-    prob_error = [[0, 1, 2, 3, 4, 5, 6] for _ in range(test_stds.shape[0])]
-    anses = [1 for _ in range(test_stds.shape[0])]
+    prob_error = [[0, 1, 2, 3, 4, 5, 6] for _ in range(test_stds_all.shape[0])]
+    anses = [1 for _ in range(test_stds_all.shape[0])]
+    loc_conf = [np.random.rand() * 100 for _ in range(test_stds_all.shape[0])]
 elif model == 'random':
-    prob_error = [np.random.permutation(num_of_cls) for _ in range(test_stds.shape[0])]
+    prob_error = [np.random.permutation(num_of_cls) for _ in range(test_stds_all.shape[0])]
     anses = [x[0] + 1 for x in prob_error]
+    loc_conf = [np.random.rand() * 100 for _ in range(test_stds_all.shape[0])]
 elif model == 'svm':
     anses = clf.predict(test_stds).tolist()
     prob_score = clf.predict_proba(test_stds)
