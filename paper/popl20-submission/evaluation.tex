@@ -6,6 +6,7 @@ functional subset of \ocaml with polymorphic types and functions. We seek to the
 following \emph{Research Questions}.
 
 \begin{itemize}
+    %%% FIXME: only some initial thoughts
     \item \textbf{RQ1}: What is the \emph{quality} of \toolname's repairs?
     \item \textbf{RQ2}: Does \toolname \emph{localize} correctly errors?
     \item \textbf{RQ3}: Do our ML models \emph{generalize} well for error
@@ -14,9 +15,9 @@ following \emph{Research Questions}.
     generation to novice programmers?
 \end{itemize}
 
-We first present our experimental methodology (\autoref{subsec:gen_method}) and
-then we will try to answer each of the above questions, drawing from our results
-from a human study and our manual evaluation.
+We first present our experimental methodology and then we will try to answer
+each of the above questions, drawing from our results from a human study and our
+manual evaluation.
 
 
 \subsection{General Methodology}
@@ -71,33 +72,32 @@ training set and \FALL as a test set.
 \mypara{Accuracy Metrics}
 A recent study of fault localization techniques \citep[][]{Kochhar2016-oc} shows
 that most developers will not consider more than around five potential error
-locations before falling back to manual debugging. We evaluate \toolname on
-whether a changed expression occurred in its top one, top three or top six
-predictions, but our automatic method of producing fixes may consider more than
-that. We also extend such intuition, that a user won't consider more than five
-``suggestions'' as feedback, to possible fixes, and thus we evaluate \toolname's
-top five template predictions on whether they include the correct template. We
-also include the confusion matrix of the top one predictions for all locations,
-in order to present what templates our models usually mix together.
+locations before falling back to manual debugging. We evaluate \toolname's
+location predictions of possible errors, considering if the user's changes
+occurred in our top three or top five predictions, but our automatic method of
+producing fixes may consider more than that. We also extend such intuition, that
+a user won't consider more than five ``suggestions'' as feedback, to possible
+fixes, and thus we evaluate \toolname's top six template predictions on whether
+they include the correct template, that matches the user's change. We also
+include the confusion matrix of the top one predictions for all locations, in
+order to present what templates our models usually mix together and see if they
+generalize well between different groups of solutions.
 
 \mypara{Repair Quality}
-Finally, for a more qualitative evaluation of \toolname in order to evaluate the
-synthesized solutions based on the above results, we ran a human study at
-UNKNOWN UNIVERSITY. Each participant was asked to evaluate the quality of the
-program fixes and their locations against \seminal's repairs
-\citep[][]{Lerner2006-pj, Lerner2007-dt}. For each program, beside the two
-repairs, the participants were given the original ill-typed program, along with
-the standard \ocaml compiler's error message and a short description of what the
-original author of the program intended it to do.
+Finally, for a more qualitative evaluation of \toolname's synthesized solutions
+based on the above results, we ran a human study at UNKNOWN UNIVERSITIES. Each
+participant was asked to evaluate the quality of the program fixes and their
+locations against \seminal's repairs \citep[][]{Lerner2006-pj, Lerner2007-dt}.
+For each program, beside the two repairs, the participants were given the
+original ill-typed program, along with the standard \ocaml compiler's error
+message and a short description of what the original author of the program
+intended it to do.
 
 \subsection{Quantitative Evaluation}
 \label{subsec:quan_eval}
 
-First, we evaluate the accuracy of our predictions for both type error localization and template prediction.
-
-\subsubsection{Error Localization Accuracy}
-\label{subsubsec:error_loc_acc}
-
+First, we evaluate the accuracy of our predictions for both type error
+localization and template prediction.
 
 
 \subsubsection{Template Prediction Accuracy}
@@ -109,11 +109,7 @@ prediction based on popularity.
 
 \mypara{Our Classifiers}
 We evaluate our classifiers, each trained on the \SPRING quarter and evaluated
-on the \FALL quarter.
-
-These include:
-%Our classifiers are:
-%
+on the \FALL quarter. These include:
 \begin{description}
   \item[\random] A dummy classifier that \emph{uniformly} selects each time a
     template to return. There is no training necessary with this classifier.
@@ -124,7 +120,7 @@ These include:
   \item[\textsc{Deep Neural Network} (\dnn)] A multi-layer perceptron neural
     network, trained with $\eta = 0.001$, $\lambda = 0.001$, and a mini-batch
     size of 256. Our network utilizes three fully-connected hidden layers of 512
-    neurons The neurons use rectified linear units (ReLU) as their activation
+    neurons. The neurons use rectified linear units (ReLU) as their activation
     function, a common practice in modern neural networks.
 \end{description}
 
@@ -136,6 +132,15 @@ optimizer \citep{Kingma2014-ng}, a variant of stochastic gradient descent that
 has been found to converge faster, was used to train our \dnn.
 
 \input{evaluation-accuracy-graph}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[trim={10 10 100 70},clip,width=0.9\textwidth]{evaluation-conf-matrix.pdf}
+  \caption{The confusion matrix of the \emph{top 30} templates. Bolder parts of
+  the heatmap show templates that are often mis-predicted with another template.
+  The bolder the diagonal values are, the more correct predictions we have.}
+  \label{fig:conf-matrix}
+\end{figure}
 
 \mypara{Results}
 \autoref{fig:accuracy-results} shows the accuracy results of our template
@@ -161,11 +166,70 @@ shows that we can learn a \emph{better pattern} from these datasets and that our
 \dnn model is able to \emph{generalize} between different solutions of the
 problems.
 
+\autoref{fig:conf-matrix} further proves that our \dnn generalizes well. This
+Figure includes the confusion matrix of the top 30 templates that were acquired
+from the training set and were tested on the same \FALL dataset as before. We
+observe that most of the templates are predicted correctly and only a few of
+them are often mis-predicted for another template. For example, we see that
+programs that would require template 20 to be fixed, almost always are
+mis-predicted with template 11. [TODO: show those two templates, both ``let''s
+with some ``tuple'' in their ASTs]
+
+\subsubsection{Error Localization Accuracy}
+\label{subsubsec:error_loc_acc}
+
+\mypara{Method}
+For our error localization task, we again train a multi-layer perceptron neural
+network, with the same hyper-parameters as in \ref{subsubsec:error_loc_acc}. Our
+network firstly uses two fully-connected hidden layers of 1024 neurons and one
+of 512 neurons before the output layer. The neurons again use rectified linear
+units (ReLU) as their activation function and are trained using the \emph{early
+stopping} approach and the \textsc{Adam} optimizer.
+
+Previous work \citep[][]{Seidel:2017} has used more shallow neural networks, but
+also less features per node. In our implementation, we added more contextual
+features following recent research direction, which has shown them to be the
+most important ones \citep[TODO: add the lstm paper][]{Seidel:2017}. Thus, we
+chose deeper neural network architectures for our error localization models as
+well.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l|rr}
+    Classifier & Top-3  & Top-5 \\
+    \hline
+    \random   & 39.70\% & 58.73\% \\
+    \toolname & 79.71\% & 88.83\% \\
+  \end{tabular}
+  \caption{Experimental results of \toolname's error localization accuracy.}
+  \label{tab:err_loc_acc}
+\end{table}
 
 \subsubsection{Empirical Repair Quality Evaluation}
 \label{subsubsec:man_rep_qual_eval}
 
+\mypara{Synthesis Algorithm}
+We guide our synthesis algorithm, using the above predictions for finding the
+proper locations to fix and what template to use. Every program has a timeout of
+\emph{30s} to be repaired by the synthesis algorithm. We observe that
+\textbf{12.54\%} of our testing dataset's programs fail to be repaired within
+that amount of time. The main reason is of course the combined failure of our
+models to give high confidence to the correct locations and templates, thus
+making the search very expensive. However, for the 87.46\% of the programs that
+actually finish synthesizing, around \textbf{96.32\%} return a solution that
+type-check. The small amount of programs that couldn't find a well-typed
+solution but still finished, usually required some bigger changes (\ie
+expressions whose ASTs were deeper than 4 levels) that our algorithm didn't
+explore in this version.
 
+Finally, all these solutions that did not timeout, had an average time of
+synthesis of \textbf{9.26s}. From the well-typed solutions that we got, almost
+\textbf{11\%} of them give the exact same repair as the user did, in any of the
+suggested top 3 repairs. While that amount seems small, it is a considerable
+amount in the correct direction meaning that our models can learn novice's
+intents in bug fixing.
+
+%%% TODO: Maybe self-evaluate 50-100 synthesized programs?
 
 \subsection{Qualitative Evaluation}
 \label{subsec:quan_eval}

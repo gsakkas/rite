@@ -72,6 +72,19 @@ its scalability. [TODO: Section N] provides a detailed survey of related work.
 % TODO: Add Seminal(it's the one on our human study) here?
 % TODO: Maybe add another tool?
 
+% FIXME: help here!!
+%%% Our technique
+\mypara{Data-Driven Program Repair}
+In this paper, we introduce \toolname, a \emph{data-driven} approach to
+repairing novice attempts on programming assignments based on supervised
+learning. \toolname uses a large dataset with pairs of ill-typed programs and
+their subsequent fixes, to \emph{automatically learn models} that localize
+errors, suggest template fixes, and uses \emph{program synthesis} to fill those
+templates. Given a new ill-typed program, \toolname generates a list of
+potential solutions ranked by likelihood and a \emph{edit-distance} metric. We
+evaluate \toolname by comparing its accuracy on a set of over 5,000 ill-typed
+\ocaml programs drawn from two instances of an introductory programming course.
+
 
 % 1. ``We identify an important problem in the world.'' Be more specific than
 % just ``bugs''. Are we focusing on novices and students or are we focusing
