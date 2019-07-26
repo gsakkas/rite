@@ -52,7 +52,7 @@ test = []
 max_num_cls = 50
 
 # Number of cluster-labels to use
-num_of_cls = 50
+num_of_cls = 30
 
 label_names = ['L-Cluster' + str(i) for i in range(1, num_of_cls + 1)]
 train_file = join(dirname(train_dir), "train_" + str(num_of_cls) + "_tmpls.csv")
@@ -305,25 +305,28 @@ all_labels = categorize(test_all.loc[:, 'L-Cluster1':last_L])
 ll = list(zip(test_span, loc_conf, pes1, pes2, pes3, pes4, pes5, pes6, all_labels.values))
 
 # Show confusion matrix...
-# cm = confusion_matrix(categorize(test_labels).values, pes1)
-# cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+all_ls, ps = tuple(map(list, zip(*[(x, y) for x, y in zip(all_labels.values, pes1) if x > 0])))
+cm = confusion_matrix(all_ls, ps)
+cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-# lbls = ['Tmpl-' + str(i) for i in range(1, num_of_cls + 1)]
+lbls = ['Tmpl-' + str(i) for i in range(1, num_of_cls + 1)]
+print(cm.shape[1], cm.shape[0])
+plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
+fig, ax = plt.subplots()
+im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+ax.figure.colorbar(im, ax=ax)
+ax.set(xticks=np.arange(cm.shape[1]),
+       yticks=np.arange(cm.shape[0]),
+       xticklabels=lbls, yticklabels=lbls,
+       title='Normalized Confusion Matrix for Templates',
+       ylabel='True Label',
+       xlabel='Predicted Label')
 
-# fig, ax = plt.subplots()
-# im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-# ax.figure.colorbar(im, ax=ax)
-# ax.set(xticks=np.arange(cm.shape[1]),
-#        yticks=np.arange(cm.shape[0]),
-#        xticklabels=lbls, yticklabels=lbls,
-#        title='Normalized confusion matrix for templates',
-#        ylabel='True label',
-#        xlabel='Predicted label')
+plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+         rotation_mode="anchor")
 
-# plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-#          rotation_mode="anchor")
-
-# plt.show()
+plt.show()
 # ... until here
 score = pd.DataFrame(data=ll, index=all_labels.index, columns=['SourceSpan', 'Loc-Conf', 'P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'P-6', 'Actual'])
 
