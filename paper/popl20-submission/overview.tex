@@ -6,22 +6,22 @@ programs by collectively learning from the processes novice programmers take to
 fix errors in their programs.
 
 \begin{figure}[ht]
-    \begin{ecode}
-      let rec mulByDigit i l =
-        match l with
-        | []     -> []
-        | hd::tl -> (hd * i) @ (mulByDigit i tl)
-    \end{ecode}
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> (hd * i) @ (mulByDigit i tl)
+\end{ecode}
 
-    \begin{ecode}
-      let rec mulByDigit i l =
-        match l with
-        | []     -> []
-        | hd::tl -> [hd * i] @ (mulByDigit i tl)
-    \end{ecode}
-    \caption{(top) An ill-typed \ocaml program that should multiply each element
-    of a list with an integer. (bottom) The fixed version by the student.}
-    \label{fig:mulByDigit}
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> [hd * i] @ (mulByDigit i tl)
+\end{ecode}
+\caption{(top) An ill-typed \ocaml program that should multiply each element
+of a list with an integer. (bottom) The fixed version by the student.}
+\label{fig:mulByDigit}
 \end{figure}
 
 
@@ -192,14 +192,14 @@ the type-error that a faulty program raises.
 % we can complete the template with program synthesis.
 
 \begin{figure}[ht]
-  \begin{ecode}
-    let rec mulByDigit i l =
-      match l with
-      | []     -> []
-      | hd::tl -> [_ # _] @ (mulByDigit i tl)
-  \end{ecode}
-  \caption{A possible template for the \texttt{mulByDigit} program.}
-  \label{fig:suggestion}
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> [_ # _] @ (mulByDigit i tl)
+\end{ecode}
+\caption{A possible template for the \texttt{mulByDigit} program.}
+\label{fig:suggestion}
 \end{figure}
 
 
@@ -299,12 +299,12 @@ our synthesizer suggested two different variables should be used to fill those
 template holes.
 
 \begin{figure}[ht]
-  \begin{ecode}
-    let rec mulByDigit i l =
-      match l with
-      | []     -> []
-      | hd::tl -> [_var1_ * _var2_] @ (mulByDigit i tl)
-  \end{ecode}
-  \caption{A candidate repair for the \texttt{mulByDigit} program.}
-  \label{fig:repair}
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> [_var1_ * _var2_] @ (mulByDigit i tl)
+\end{ecode}
+\caption{A candidate repair for the \texttt{mulByDigit} program.}
+\label{fig:repair}
 \end{figure}
