@@ -4,13 +4,13 @@
 In this section, we extend our API from \autoref{sec:localization}, so we are
 able to predict repair templates $\T$ for a given location of the program. Our
 goal is to define the $\evalsym$ function in \autoref{fig:api}, in terms of the
-simple language \repairLang (\autoref{fig:syntax}), which takes a $\Model$ and a
-feature vector $\V$ of a specific subexpression as an input and produces a
+simple language \repairLang (\autoref{fig:syntax}), which takes a $\ModelT$ and
+a feature vector $\V$ of a specific subexpression as an input and produces a
 confidence score $\C$ for each of the chosen templates $\T$. Any given template
 $\T$ is an expression $e$ of the \repairLang, which a simple lambda calculus
 with integers, booleans, pairs, and lists.
 
-Fistly, a $\Model$ is produced by $\trainTsym$, which performs supervised
+Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
 learning on a training set of feature vectors $\V$ and a fixed-length of
 (boolean) labels $\B$, that each represent a template $\T$. In our case, only
 one template can be applied to a given location, so we define here our problem
@@ -18,20 +18,18 @@ as a \emph{multi-class classification} problem. Once trained, we can make
 predictions on new inputs, producing template confidences $\Runit$ for each
 template $\T$.
 
-Similarly to \autoref{sec:localization}, our $\Model$s expect feature vectors $\V$ and boolean labels $\B$, both of a fixed length for each specific location. Therefore, we define similarly to $\extractsym$, the function $\extractTsym$ in \autoref{fig:api}.
+Similarly to \autoref{sec:localization}, our $\ModelT$s expect feature vectors
+$\V$ and boolean labels $\B$, both of a fixed length for each specific location.
+Therefore, we define similarly to $\extractsym$, the function $\extractTsym$ in
+\autoref{fig:api}. We use again $\diffsym$ to get the set of changed expressions
+of a given program pair. Those are then used by the function $\clustersym$ to
+get the repair templates by grouping different expressions together based on
+some similarity metric and thus reducing their number and making them more
+concrete. The $\extractTsym$ function, then, extracts $\featuresym$ from each
+subexpression, acquired by $\diffsym$ but limited to the type-error slice (TODO:
+ref) and assigns the boolean labels based on the templates $\T$ according to
+$\clustersym$, with only one being $\etrue$ at a time
 
-Of course, the $\Model$ expects feature vectors $\V$ and blame labels $\B$, but
-we are given program pairs. So our first step must be to define a suitable
-translation from program pairs to feature vectors and labels, \ie we must define
-the $\extractsym$ function in \autoref{fig:api}. We model features as
-real-valued functions of terms, and extract a feature vector for each
-\emph{subterm} of the ill-typed program (\autoref{sec:features}). Then we define
-the blame labels for the training set to be the subexpressions that changed
-between the ill-typed program and its subsequent fix, and model $\blamesym$ as a
-function from a program pair to the set of expressions that changed
-(\autoref{sec:labels}). The $\extractsym$ function, then, extracts $\featuresym$
-from each subexpression and computes the blamed expressions according to
-$\labelsym$.
 
 \subsection{RTL: Repair Template Language}
 \label{subsec:lang}
