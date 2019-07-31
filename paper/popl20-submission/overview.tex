@@ -159,14 +159,14 @@ Fixes in our dataset are represented as the ASTs of the expressions that changed
 in the ill-typed programs and transformed the program to the correct solution.
 To enable \emph{similar fixes} in different ill-typed programs to be clustered
 together and thus get a smaller number of clusters of better quality, we propose
-a further simplification of the changed ASTs: the Generic Abstract Trees
-(GASTs). GASTs are taken from their respective ASTs, with all the specific
-variable, function, operator and etc. names removed from them. These trees keep
-information only about the \emph{structure} of the fix rather than the specific
-changes in variables and functions. We also prune these GASTs at a certain depth
-$d$ to keep only the top-level changes of the fix. Pruned sub-trees are replaced
-with \emph{holes}, which represent that \emph{any expression} is possible to
-fill them.
+a further simplification of the changed ASTs: the \emph{Generic Abstract Syntax
+Trees} (GASTs). GASTs are taken from their respective ASTs, with all the
+specific variable, function, operator and etc. names removed from them. These
+trees keep information only about the \emph{structure} of the fix rather than
+the specific changes in variables and functions. We also prune these GASTs at a
+certain depth $d$ to keep only the top-level changes of the fix. Pruned
+sub-trees are replaced with \emph{holes}, which represent that \emph{any
+expression} is possible to fill them.
 
 % TODO: Make figure of GAST for running example.
 % The ASTs of the fixes is a good start, but those still contain too much
@@ -196,7 +196,7 @@ the type-error that a faulty program raises.
 let rec mulByDigit i l =
   match l with
   | []     -> []
-  | hd::tl -> [_ # _] @ (mulByDigit i tl)
+  | hd::tl -> [_ (*@$\oplus$@*) _] @ (mulByDigit i tl)
 \end{ecode}
 \caption{A possible template for the \texttt{mulByDigit} program.}
 \label{fig:suggestion}
@@ -303,7 +303,7 @@ template holes.
 let rec mulByDigit i l =
   match l with
   | []     -> []
-  | hd::tl -> [_var1_ * _var2_] @ (mulByDigit i tl)
+  | hd::tl -> [(*@$v_1$@*) * (*@$v_2$@*)] @ (mulByDigit i tl)
 \end{ecode}
 \caption{A candidate repair for the \texttt{mulByDigit} program.}
 \label{fig:repair}

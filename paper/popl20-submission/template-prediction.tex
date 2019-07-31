@@ -34,19 +34,60 @@ $\clustersym$, with only one being $\etrue$ at a time
 \subsection{RTL: Repair Template Language}
 \label{subsec:lang}
 
+In this section, we define the language we are going to use to represent
+templates and how we can acquire those templates from our dataset.
+
 \mypara{Syntax of RTL}
+We define here our Repair Template Language (RTL) as a simple lambda calculus
+(\repairLang in \autoref{fig:syntax}) with integers, booleans, pairs, and lists.
+This language will be used to abstract and define repair templates $\T$. Our RTL
+contains all the expressions that \lang included, but with four significant
+changes.
+
+\begin{enumerate}
+    \item Variable names $x$ used for functions, variables and patterns are left
+    \emph{unspecified}. That means that $x$ denotes that that place of the code
+    has a variable name, but it is unknown at that point.
+    \item Literal values $n$ can be any integer or floating point number,
+    boolean values or character and string. Same as variables, these are left
+    unspecified.
+    \item Operators $\oplus$ are also left unspecified.
+    \item A \emph{wildcard} expression $\_$ is added, which is used to denote
+    that \emph{any} possible expression from \repairLang can be used to replace
+    it.
+\end{enumerate}
+
 \input{syntax.tex}
+
+\mypara{Generic ASTs (GASTs)}
+Using our RTL, we can now define \emph{Generic ASTs}. GASTs are abstract syntax
+trees that represent expressions that can have unspecified details, like
+variable names or numerical values. Therefore, GASTs can represent templates
+$\T$, defined as expressions in \repairLang. GASTs are used here to capture the
+high-level \emph{structure} of an expression, as a more appropriate means to
+define templates. GASTs are extracted from the original ASTs representing
+programs in \lang, by removing all the necessary information so \repairLang can
+be used. Then these trees can be further \emph{pruned} at a depth $d$ to keep
+only the higher level expressions and formulate the templates.
 
 
 \mypara{Extracting Templates from Dataset Repairs}
+Templates $\T$ are extracted by the function $\templatesym$ from our program
+pair dataset. Using the $\diffsym$ function first, we acquire the changed
+expressions of the dataset. These changes are potentially the templates we are
+going to use. However, they contain a lot of \emph{local} information to the
+specific program that they were extracted from. So $\templatesym$ takes the
+changed expressions defined in \lang and \emph{transforms} them into expressions
+in \repairLang, essentially making them into templates $\T$. Those templates are
+represented as GASTs and are pruned at a pre-defined depth $d$. The value of $d$
+can be as low as 1, but to capture more structure to our templates, slightly
+bigger values would work better. We then see in \autoref{subsec:clustering} how we can group together all these templates.
 
 \mypara{Example}
-
+TODO: give an example
 
 \subsection{Clustering the Templates}
 \label{subsec:clustering}
-
-\mypara{Creating GASTs from RTL Templates} (Generic ASTs.)
 
 \mypara{GAST Similarity Metric}
 
