@@ -81,7 +81,8 @@ changed expressions defined in \lang and \emph{transforms} them into expressions
 in \repairLang, essentially making them into templates $\T$. Those templates are
 represented as GASTs and are pruned at a pre-defined depth $d$. The value of $d$
 can be as low as 1, but to capture more structure to our templates, slightly
-bigger values would work better. We then see in \autoref{subsec:clustering} how we can group together all these templates.
+bigger values would work better. We then see in \autoref{subsec:clustering} how
+we can group together all these templates.
 
 \mypara{Example}
 TODO: give an example
@@ -89,16 +90,85 @@ TODO: give an example
 \subsection{Clustering the Templates}
 \label{subsec:clustering}
 
+% TODO: Should we give a better name than "similarity metric"
 \mypara{GAST Similarity Metric}
+Having programs written over \repairLang, forces similar changes, \ie changing a
+variable name, to have the same GAST. This is really helpful when we try to
+group different changes together into some templates $\T$. We want to extend and
+generalize this ``similarity'' of program changes, in order to get a small but
+generally applicable number of repair templates.
+
+Therefore, two expressions over \repairLang are considered \emph{similar} when
+the following simple rules hold:
+\begin{enumerate}
+    \item Their pruned GASTs (at a pre-defined depth $d$) are exactly the same.
+    \item A wildcard expression is considered similar with any possible
+    expression over \repairLang.
+    \item Two applications, operators, cases, lists or tuples are considered
+    similar when there is a total bijective relation between their children
+    expressions, such that the related expressions are themselves similar.
+    % TODO: maybe explain better and separate apps, and include ifs and lets
+\end{enumerate}
+
 
 \mypara{Clustering}
+The main goal of $\clustersym$ing is to eliminate the possibility of equivalent
+expressions to be considered as different templates and thus making our
+$\ModelT$s more scalable and applicable to more programs. We define
+$\clustersym$ing as the task of grouping together similar expressions over
+\repairLang that each group can later be used as a template $\T$ to produce
+repairs for ill-typed programs. Each group can consist of several
+\emph{member-expressions} and each one of them can be used as the cluster
+\emph{representative}.
+
+The $\clustersym$ function uses the templates produced by $\templatesym$ and
+groups together the templates that are similar based on our ealrier definition
+of expression similarity. It then returns the Top-$N$ based on their popularity
+on their training set. $N$ is considered a parameter of algorithm that can be
+defined prior the training and clustering process, and is usually around 30 to
+50 [TODO: cite similar template papers].
 
 \mypara{Example}
+TODO: give an example
 
 
 \subsection{Multi-class Classification}
 \label{subsec:multi-class}
+Our goal is to train a \emph{classifier} given a training set $S : \List{\V
+\times \List{\B}}$ of labeled examples, to predict a boolean array $b$ of
+templates $\T$ given a input of features $v$. Essentially, though, we require
+that the classifier outputs a \emph{confidence score} $\Runit$ for each of the
+Top-$N$ templates chosen for each location of the type-error slice.
 
 \mypara{Assigning Templates as Labels}
+The first step is to assign the correct labels to each input vector $v$ for the
+training and testing process. These labels must represent the repair template
+$\T$ that was used to fix the specific program input at that location. If that
+location was not changed, all boolean labels are set to $\efalse$. For all other
+case, only one label at most can be set to $\etrue$. The label that corresponds
+to the repair template, whose respective repair belong to that cluster.
+Therefore, for the purpose of template prediction we have $N$-length vector as
+labels for each location in the type-error slice, that at most one slot can set
+to $\etrue$, leading to a \emph{multi-class classification} problem. Next, we
+extend our models from \autoref{sec:localization} to tackle this problem.
 
 \mypara{Multi-class \dnn{}s}
+As in \autoref{sec:localization} for error localization, we again use a deep
+neural network for our template prediction $\ModelT$s. The outputhere is a
+$N$-length vector, thus the output layer has $N$ nodes. For multi-class
+classification problems solved with neural network techniques, usually a
+\emph{softmax} function is used for the output layer
+\citep[][]{Goodfellow-et-al-2016, Bishop-book-2006}. Softmax assigns decimal
+probabilities to each class that must add up to 1.0. This additional constraint
+helps training converge more quickly than it otherwise would.
+
+For an output vector $y = (y_1, \dots, y_N) \in \R^{N}$, the standard softmax
+function is defined as:
+\[ \sigma(y)_i = \frac{e^{y_i}}{\sum_{j=1}^{N} e^{y_j}},\ for\ i = 1, \dots, N \]
+
+The number of layers and the number of neurons per layer are again
+hyper-parameters of the model, but we choose again a deep architecture with
+three layers, and with each layer having more neurons than the respective
+error-localization models, with the exact number needing some tuning.
+
+% TODO: it feels like something is missing (beside the examples)
