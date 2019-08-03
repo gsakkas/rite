@@ -5,8 +5,40 @@
 \label{subsec:location-rank}
 
 \mypara{Error Location Confidence}
+Recall from \autoref{sec:localization} that for a given program location, our
+$\Model$ generates a confidence score $\Runit$ of that location containing an
+error that need to be fixed. Each location in the type-error slice is assigned
+with a confidence score $\Runit$ from out $\Model$. Furthermore, for each
+location we also generate the repair templates' confidence scores with our
+$\ModelT$.
+
+Our synthesis algorithm, firstly ranks all the locations based on their
+confidence score $\Runit$ and tries to repair them using the ranked templates,
+which are also based on their scores. If the algorithm fails to synthesize a
+program that type-checks using that location and repair templates, the next
+location is considered, until it succeeds.
 
 \mypara{Multiple Error Locations}
+However, in practice, it is very often that more that one location may need to
+be repaired. Therefore, our previous approach will fail to generate a solution
+in many cases. So we modify our simple algorithm to synthesize programs with
+multiple error locations.
+
+Let's assume that we have gained a confidence score $\Runit$ for all locations
+in the type error slice from our error localization model $\Model$. Let them be
+$(l_1, c_1), \dots, (l_k, c_k)$, where $l_i$ is a location in the type-error
+slice and $c_i$ its confidence score. We can assume without loss of generality
+that each location $l_i$ can be fixed independently from any other location
+$l_j$. With that assumption, the probability that both locations $l_i$ and $l_j$
+need to be fixed is $c_i \cdot c_j$. The same holds for more that two locations.
+
+Therefore, we extend our simple algorithm of fixing one location $l$ at a time,
+which only considers the confidence scores of single locations, by adding all
+the combined scores of tuples, triples, etc. of the type-error slice locations.
+In practice we only consider up to \emph{five} locations to be fixed
+simultaneously, with any more than that being too slow and has a small
+possibility to lead to an actual good solution.
+%% TODO: maybe show how many changes happened to our dataset and how big is type-error slice on average.
 
 
 \subsection{Local Synthesis from Templates}
