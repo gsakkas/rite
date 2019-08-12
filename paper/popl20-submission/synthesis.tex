@@ -1,5 +1,13 @@
 \section{Repair Synthesis from Templates}
 \label{sec:synthesis}
+\toolname uses a \emph{enumerative} program synthesis algorithm to fully repair
+a program using the predicted templates and locations of our neural network
+models. In \autoref{subsec:location-rank}, we show how the predicted error
+locations are used if \emph{multiple} of them have to be fixed and in
+\autoref{subsec:local-synthesis}, we present our synthesis algorithm for
+producing \emph{local repairs} for a given location of the input program.
+Finally, we briefly show in \autoref{subsec:repair} how we use the
+aforementioned techniques to \emph{fully repair} an ill-typed program.
 
 \subsection{Ranking Error Locations}
 \label{subsec:location-rank}
@@ -7,10 +15,9 @@
 \mypara{Error Location Confidence}
 Recall from \autoref{sec:localization} that for a given program location, our
 $\Model$ generates a confidence score $\Runit$ of that location containing an
-error that need to be fixed. Each location in the type-error slice is assigned
-with a confidence score $\Runit$ from out $\Model$. Furthermore, for each
-location we also generate the repair templates' confidence scores with our
-$\ModelT$.
+error that needs to be fixed. Each location in the type-error slice is assigned
+a confidence score $\Runit$ from our $\Model$. Furthermore, for each location we
+also generate the repair templates' confidence scores with our $\ModelT$.
 
 Our synthesis algorithm, firstly ranks all the locations based on their
 confidence score $\Runit$ and tries to repair them using the ranked templates,
@@ -33,11 +40,11 @@ $l_j$. With that assumption, the probability that both locations $l_i$ and $l_j$
 need to be fixed is $c_i \cdot c_j$. The same holds for more that two locations.
 
 Therefore, we extend our simple algorithm of fixing one location $l$ at a time,
-which only considers the confidence scores of single locations, by adding all
-the combined scores of tuples, triples, etc. of the type-error slice locations.
-In practice we only consider up to \emph{five} locations to be fixed
-simultaneously, with any more than that being too slow and has a small
-possibility to lead to an actual good solution.
+which only considers the confidence scores of single locations, by adding the
+combined scores of tuples, triples, etc. of type-error slice locations. In
+practice we only consider up to \emph{five} locations to be fixed
+simultaneously, with any more than that taking too much time to generate and
+having a small possibility to lead to an actual good solution.
 %% TODO: maybe show how many changes happened to our dataset and how big is type-error slice on average.
 
 
@@ -45,10 +52,46 @@ possibility to lead to an actual good solution.
 \label{subsec:local-synthesis}
 
 \mypara{Enumerative Program Synthesis}
+Our synthesis algorithm is a classic \emph{enumerative} program synthesis method
+guided by an input template. Enumerative synthesis searches all possible
+expressions over a language, starting from an empty program, until a high-level
+specification is reached. In our case, we only try to synthesize a part of the
+program that already captures the intent of the user and therefore our only
+specification is if the repaired program is type-safe. However, we can also
+extend this specification by allowing our algorithm to search for programs that
+type-check but have the user's desired type signature for the specific program.
 
-\mypara{Using Templates for Synthesis}
+Given a location $l$ and a template $t$, our algorithm searches over all
+possible expressions over \lang that will satisfy those goals by generating a
+\emph{local repair} that expands the $t$'s GAST. One advantage of this technique
+is that we can exploit the expression $e$ at location $l$ to further guide our
+synthesis, since subexpressions used by the programmer at $l$ are usually reused
+for their final repair.
 
-\mypara{Generating Local Repairs}
+\input{local-repair.tex}
+
+\mypara{Generating Local Repairs with Templates}
+Using our \textsc{Enumerate} method, we lazily generate local repairs $R$ for
+each subset of locations that is highest in confidence score. The
+\textsc{Enumerate} method starts to fill in a template $T$ for location $L$ of
+the program $P$ based on the context-free grammar $\lang$. It starts from the
+parent node at the first level of the template $T$ and incrementally moves on
+down the tree. When a hole is found in the tree, the algorithm tries to expand
+the tree one more level using $\lang$'s production rules $R$. The production
+rules are considered in an ranked order based on the subexpressions that already
+appear in $P$'s location $L$ and the template $T$. It then applies it to the
+template $T$. If the node $\tilde{\alpha}$ was not a hole, terminals from the
+the program $P$, the expression $\alpha$ at the location $L$ and the grammar
+$\lang$ are used to fill that node, depending on what terminals where used from
+$\repairLang$. For example, $\repairLang$'s operator $\oplus$ can be replaced
+with $+,\:-,\:\etc$
+
+After the template $T$ had some changes applied to it, we get an
+\emph{instantiated} template $\tilde{T}$, which then replaces the expression at
+location $L$. If the new program $\tilde{P}$ type-checks, it is inserted into
+the list of generated solutions $R$. The list of candidate solutions $R$ is
+generated lazily in practice and the top-N can be requested from the user
+depending on the level of feedback that is needed.
 
 
 \subsection{Program Repair}

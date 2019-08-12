@@ -1,0 +1,57 @@
+\begin{figure}
+\small
+\centering
+\begin{minipage}[c]{.4\textwidth}
+\[
+\boxed{
+\begin{array}{rcl}
+e & ::=    & x \spmid \efun{x}{e} \spmid \eapp{e}{e} \spmid \elet{x}{e}{e} \\
+  & \spmid & n \spmid \eplus{e}{e}\\
+  & \spmid & b \spmid \eif{e}{e}{e} \\
+  & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
+  & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
+
+n & ::= &  0, 1, -1, \ldots \\[0.05in]
+
+b & ::= &  \etrue \spmid \efalse \\[0.05in]
+
+t & ::= & \alpha \spmid \tbool \spmid \tint \spmid \tfun{t}{t} \spmid \tprod{t}{t} \spmid \tlist{t} \\[0.05in]
+\end{array}
+}
+\]
+\captionof{figure}{Syntax of \lang}
+\label{fig:syntax}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{.45\textwidth}
+\lstDeleteShortInline{|} % sigh...
+\[
+\boxed{
+\begin{array}{lcl}
+  \V          & \defeq & \List{\R}\\
+  \Runit      & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\ % [0,1]\\
+  \featuresym & : & \List{e \to \R} \\
+  \labelsym   & : & e \times e \to \List{e} \\
+  \extractsym & : & \List{e \to \R} \to e \times e \to \List{\V \times \B} \\
+  \trainsym   & : & \List{\V \times \B} \to \Model \\
+  \evalsym    & : & \Model \to \V \to \Runit \\
+  \midrule
+  \blamesym   & : & \Model \to e \to \List{e \times \Runit}
+\end{array}
+}
+\]
+\lstMakeShortInline{|}
+\captionof{figure}{
+  %
+  A high-level API for converting program pairs to
+  feature vectors and labels.
+  % %
+  % A feature function is a function from expressions $e$ to real numbers
+  % $\R$.
+  % %
+  % A feature vector $\V$ is a list of real numbers,
+  % %
+}
+\label{fig:api}
+\end{minipage}
+\end{figure}
