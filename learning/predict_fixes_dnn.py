@@ -454,6 +454,7 @@ for i, tmpl in enumerate(all_labels.values):
             yay1 += 1
             yays1[tmpl - 1] += 1
 
+# All template accuracies for top N template-classes
 print("accuracy for top 6 per class (" + str(num_of_cls) + ")")
 print("top 1")
 print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
@@ -464,6 +465,7 @@ print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
 print("top 6")
 print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays6, alls)])
 
+# Total accuracy for all program locations together
 print("accuracy for top 6")
 print("top 1")
 print(float(yay1) * 100 / tots)
@@ -474,6 +476,8 @@ print(float(yay5) * 100 / tots)
 print("top 6")
 print(float(yay6) * 100 / tots)
 
+# Total accuracy for all program locations together, with each template predictions counted
+# only if it was in the top 5 error localization predictions for that location
 print("accuracy for top 6 per class (" + str(num_of_cls) + ") for best 5 locations")
 print("top 1")
 print(float(yay1_2) * 100 / tots)
@@ -484,6 +488,8 @@ print(float(yay5_2) * 100 / tots)
 print("top 6")
 print(float(yay6_2) * 100 / tots)
 
+# Average of each program's accuracy of template prediction
+# Only for the locations that changed in the dataset (that have a correct template)
 print("accuracy for top 6 (average template acc. per program)")
 print("top 1")
 print(float(c1) / all_programs)
@@ -494,6 +500,7 @@ print(float(c5) / all_programs)
 print("top 6")
 print(float(c6) / all_programs)
 
+# How many programs are predicted 100% correct for all their locations
 print("accuracy for top 6 (acc. per 100% correct program)")
 print("top 1")
 print(float(c1_whole) * 100 / all_programs)
@@ -504,6 +511,7 @@ print(float(c5_whole) * 100 / all_programs)
 print("top 6")
 print(float(c6_whole) * 100 / all_programs)
 
+# Error localization results
 print("accuracy for top 3 locations")
 print("average acc. per program")
 print(float(locs3) * 100 / all_programs)
