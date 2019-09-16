@@ -2,8 +2,8 @@
 \label{sec:overview}
 
 We begin with an overview of our approach to suggesting fixes for various faulty
-programs by collectively learning from the processes novice programmers take to
-fix errors in their programs.
+programs by collectively learning from the processes novice programmers follow
+to fix errors in their programs.
 
 \begin{figure}[ht]
 \begin{ecode}
@@ -25,17 +25,18 @@ of a list with an integer. (bottom) The fixed version by the student.}
 \end{figure}
 
 
-\mypara{The Problem.} Consider the \texttt{mulByDigit} program in
+\mypara{The Problem.} Consider the top \texttt{mulByDigit} program in
 \autoref{fig:mulByDigit} written by a student in an undergraduate Programming
 Languages course. The program is meant to multiply all the numbers in a list
 with an integer digit, but the student accidentally misuses the list append
 operator (\texttt{@}), applying it to a number and a list rather than two lists.
-Novice programmers may not find the compiler's resulting type checking error
-message informative.  In this particular instance, the student chose the
-approach shown in \autoref{fig:mulByDigit}, but multiple solutions are possible,
-including using the \texttt{::} operator to prepend a single element onto a
-list. We desire an automated technique to guide novice programmers by suggesting
-candidate solutions.
+While most programmers may find the compiler's type-checking error message
+enough, less experienced ones may not find it equally informative. In this
+particular instance, the student chose the approach shown in the bottom of
+\autoref{fig:mulByDigit} to fix his program, although multiple solutions are
+possible, including using the \texttt{::} operator to prepend a single element
+onto a list. We desire an automated technique to guide novice programmers by
+suggesting candidate solutions like the ones mentioned above.
 
 \mypara{Solution. Suggesting Repairs via Supervised Classification and Program
 Synthesis.} Our approach is to view the process of \emph{fixing} an erroneous
@@ -72,8 +73,8 @@ the correct fix~\citep[\eg][]{Lerner2007-dt, Loncaric2016-uk}. This method is
 suitable for evaluating the quality of a localization (or repair) algorithm on a
 small number (e.g. 10s--100s) of programs. However, in general it requires a
 great deal of effort for the expert to divine the original programmer's
-intentions. Consequently, is difficult to scale the expert-labeling to yield a
-dataset large enough (e.g. 1000s of programs) to facilitate machine learning.
+intentions. Consequently, it is difficult to scale the expert-labeling to yield
+a dataset large enough (e.g. 1000s of programs) to facilitate machine learning.
 More importantly, this approach fails to capture the frequency with which errors
 occur in practice.
 
@@ -85,17 +86,18 @@ eventually end up fixing their own programs. Previous work has used an
 instrumented \ocaml compiler to record this conversation, i.e. record the
 sequence of programs submitted by each programmer and whether or not it was
 deemed type-correct. For each ill-typed program in a particular programmer's
-trace, they find the first subsequent program in the trace that type checks and
-declare it to be the fixed version. In our case, we used an existing extracted
+trace, they found the first subsequent program in the trace that type-checks and
+declare it to be the fixed version. In our case, we used an existing
 dataset~\citep[][]{yunounderstand, Seidel:2017} of ill-typed programs and their
-fixes. From these pairs, we can extract a \emph{diff} of the abstract syntax
-trees (ASTs), and then assign the blame labels to the \emph{smallest} sub-tree
-in the diff.
+fixes, that was extracted using that method. From these pairs, we can produce a
+\emph{diff} of the abstract syntax trees (ASTs), and then assign the blame
+labels to the \emph{smallest} sub-tree in the diff.
 
-\mypara{Example.} Suppose our student fixed the \texttt{mulByDigit} program as
-shown above by adding a \texttt{[]} around the result of the multiplication, the
-diff would include the list expression. Thus we would determine that the list
-expression is the repair we have to blame.
+\mypara{Example.} Suppose our student fixed the |mulByDigit| program as shown
+above by adding a |[]| around the result of the multiplication. For this
+example, the produced diff would include the new list expression |[hd * i]|.
+Thus, we determine that this expression is the repair we have to blame for
+``fixing'' the program.
 
 \mypara{Bags-of-Abstracted-Terms.} Our representation of programs is
 parameterized by a set of feature abstraction functions, (abbreviated to feature
@@ -134,11 +136,12 @@ the untypeable original program.
 
 
 
-\subsection{Step 2: Representing fixes as labels}
+\subsection{Step 2: Representing Program Fixes}
 \label{subsec:step2}
 
-Next, we represent different fixes via a limited number of templates. We focus
-on AST-level templates that are easy for novices to understand.
+Next, we represent different fixes - \ie common repair strategies - via a
+limited number of templates. We focus on AST-level templates that are easy for
+novices to understand.
 
 \mypara{Clustering the Fixes.} Our dataset contains erroneous programs and the
 corresponding user-written fixes. Those fixes can be arbitrary code
@@ -162,11 +165,11 @@ together and thus get a smaller number of clusters of better quality, we propose
 a further simplification of the changed ASTs: the \emph{Generic Abstract Syntax
 Trees} (GASTs). GASTs are taken from their respective ASTs, with all the
 specific variable, function, operator and etc. names removed from them. These
-trees keep information only about the \emph{structure} of the fix rather than
-the specific changes in variables and functions. We also prune these GASTs at a
+trees keep information only about the \emph{fix's structure} rather than the
+specific changes in variables and functions. We also prune these GASTs at a
 certain depth $d$ to keep only the top-level changes of the fix. Pruned
 sub-trees are replaced with \emph{holes}, which represent that \emph{any
-expression} is possible to fill them.
+possible expression} in our language.
 
 % TODO: Make figure of GAST for running example.
 % The ASTs of the fixes is a good start, but those still contain too much
@@ -207,59 +210,57 @@ let rec mulByDigit i l =
 \subsection{Step 3: Training Predictive Models}
 \label{subsec:step3}
 
-Now we have a minimal set of fix templates that we want to predict from. We
-enumerate our templates, starting from 1, and update the dataset to have as
-labels the number of the template that \emph{fixes} that location of the
-program. We can now train a classifier that predicts fix templates given a
-ill-typed program. Because we still have multiple templates (\emph{classes}) to
-choose from, we have a multi-class problem in our hands, as opposed to the more
-common binary classification. We will treat error localization as binary
-classification problem.
+Next, we need to train models that can predict correctly the error location and
+the template that will be used to repair that location of a given erroneous
+program. Our dataset's labels can be updated with the corresponding template
+that fixes each location, drawn from a minimal set of fix templates that were
+acquired through our clustering method. Therefore, error localization and
+template prediction can be summed to \emph{binary} and \emph{multi-class
+classification} problems respectively.
 
 \mypara{Error Localization.} Previous work has shown to give excellent accuracy
-on localizing type-errors using program analytics techniques. In order to reduce
-the complexity of predicting the correct template and the location that it
-should be applied from our multi-class classifier, we separate those two
-problems. We use a second DNN classifier to associate locations with their
-probability to be fixed. Then, starting from the locations with the highest
-probabilities to be fixed, we try to repair them using the template predictions
-for those particular locations.
+on localizing type-errors using \emph{machine learning} techniques. In order to
+reduce the complexity of predicting the correct fix and the location that it
+should be applied, we separate those two problems. We train a \emph{Deep Neural
+Network (DNN)} classifier to associate locations with their probability to be
+fixed. Then, in a descending order of probabilities, we try to repair them using
+template predictions for those locations.
 
 \mypara{Multi-class Classification.} We choose models that can handle multiple
-classes as labels. Such models are Deep Neural Networks (DNNs). But those models
-produce not only a predicted template-class, but they also associate a metric
-that can be interpreted as the classifier’s confidence in its prediction. We use
-deep and dense architectures to give a better confidence to each template, with
-more accuracy.
+classes as labels. Such models are DNNs, but they not only predict a
+template-class, but also associate a metric that can be interpreted as the
+classifier’s confidence in its prediction. We use deep and dense architectures
+to give a better confidence to each template, aiming for a higher accuracy for
+template predictions.
 
 
 
 \subsection{Step 4: Program Repair}
 \label{subsec:step4}
 
-After making template predictions and error localization for ill-typed programs,
-we exploit existing program synthesis techniques to fill holes and generic
-expressions that our templates have and return programs that type-check. This
-way, we can also eliminate templates that wouldn’t actually work for a
-particular location.
+Next, we want to exploit existing program synthesis techniques to \emph{generate
+repairs}. Template predictions and the ordered set of possible error locations
+that fixes can be applied to, can be used to to guide program synthesis and have
+more efficient algorithms.
 
 \mypara{Program Synthesis.} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of synthesis, meaning that we
 try to generate code that would match the template’s GAST and make the program
-type-check. For each location, we enumerate all possible expressions, until we
-find a small set that makes the program to type-check. We try to use existing
-code in our synthesis algorithm, by considering subexpressions of the
-expressions we try to replace.
+type-check. For each location, we enumerate all possible expressions that match
+a given template, until we find a small set that makes the program to
+type-check. We also try to use existing code in our synthesis algorithm to
+further prune the search space, by considering subexpressions of the erroneous
+expressions we try to repair.
 
 \mypara{Synthesis for Multiple Locations.} Using our error localization
 predictions, we get a confidence for each location in the type-error slice.
 Previous work has shown that just the top 3 locations from this set can solve up
-to 90\% of type-errors. But there are cases where more than one location needs
-to be fixed. Therefore, we rank the confidence of the powerset of all locations.
-The confidence for a subset of locations can be acquired by the product of each
-location’s confidence in the subset. This holds because we consider each
-location’s probability to be the correct location to be fixed independent from
-other locations.
+to 90\% of type-errors. But it is often the case, that more than one location
+needs to be fixed. Therefore, in practice we don't only consider the ordered set
+of single error locations, but rather its powerset. The confidence for a subset
+of locations can be acquired by the product of each location’s confidence in the
+subset. This holds because we consider each location’s probability that needs to
+be fixed, as independent from other locations.
 
 
 
@@ -268,13 +269,13 @@ other locations.
 
 Finally, having generated automatic repairs for a given ill-typed program using
 our predictive models and program synthesis, we want to use that to help users
-completely fix their programs and understand what the problem was in the
-original program. To do so, we want to provide \emph{minimal} repairs to
-students, meaning repairs that are as close to their original program but also
-catch the programmers intent for that piece of code. Since we have multiple fix
-templates to choose from and many candidate locations to fix in a program, maybe
-the user would find it most useful to get more than one suggestion, and those
-suggestions to be ranked according to some metric.
+repair their programs and understand what the program error was. To do so, we
+want to provide \emph{minimal} repairs to students, meaning repairs that are as
+close to their original program but also catch the programmers intent for that
+piece of code. Since we have multiple fix templates to choose from and many
+candidate locations to fix in a program, users would find it most useful to get
+more than one suggestion, and those suggestions to be ranked according to some
+metric.
 
 \mypara{Ranking Fixes.} We rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
