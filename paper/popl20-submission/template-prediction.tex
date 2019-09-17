@@ -7,14 +7,17 @@ goal is to define the $\evalsym$ function in \autoref{fig:api}, in terms of the
 simple language \repairLang (\autoref{fig:syntax}), which takes a $\ModelT$ and
 a feature vector $\V$ of a specific subexpression as an input and produces a
 confidence score $\C$ for each of the chosen templates $\T$. Any given template
-$\T$ is an expression $e$ of the \repairLang, which a simple lambda calculus
+$\T$ is an expression $e$ in the \repairLang, which is a simple lambda calculus
 with integers, booleans, pairs, and lists.
 
 Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
-learning on a training set of feature vectors $\V$ and a fixed-length of
-(boolean) labels $\B$, that each represent a template $\T$. In our case, only
-one template can be applied to a given location, so we define here our problem
-as a \emph{multi-class classification} problem. Once trained, we can make
+learning on a training set of feature vectors $\V$, each assigned a vector of
+(boolean) labels $\B$ that represent the template $\T$ that ``repairs'' the
+location that the feature vector represents. In our case, only one template can
+be used to repair a given location in a program, thus, at most, only one slot of
+the label vector $\B$ can be $\etrue$. This is equivalent to the
+\emph{multi-class classification} problem, where the predictor models have to
+learn to distinguish between several classes. Once trained, we can make
 predictions on new inputs, producing template confidences $\Runit$ for each
 template $\T$.
 
@@ -49,12 +52,11 @@ changes.
     \emph{unspecified}. That means that $x$ denotes that that place of the code
     has a variable name, but it is unknown at that point.
     \item Literal values $n$ can be any integer or floating point number,
-    boolean values or character and string. Same as variables, these are left
+    boolean value or character and string. Same as variables, these are left
     unspecified.
     \item Operators $\oplus$ are also left unspecified.
     \item A \emph{wildcard} expression $\_$ is added, which is used to denote
-    that \emph{any} possible expression from \repairLang can be used to replace
-    it.
+    that \emph{any} expression in \repairLang can be used to replace it.
 \end{enumerate}
 
 \input{syntax.tex}
@@ -143,14 +145,12 @@ Top-$N$ templates chosen for each location of the type-error slice.
 \mypara{Assigning Templates as Labels}
 The first step is to assign the correct labels to each input vector $v$ for the
 training and testing process. These labels must represent the repair template
-$\T$ that was used to fix the specific program input at that location. If that
-location was not changed, all boolean labels are set to $\efalse$. For all other
-case, only one label at most can be set to $\etrue$. The label that corresponds
-to the repair template, whose respective repair belong to that cluster.
-Therefore, for the purpose of template prediction we have $N$-length vector as
-labels for each location in the type-error slice, that at most one slot can set
-to $\etrue$, leading to a \emph{multi-class classification} problem. Next, we
-extend our models from \autoref{sec:localization} to tackle this problem.
+$\T$ that was used to fix the input program at a location $l$. If that location
+was not changed, all boolean labels are set to $\efalse$. Therefore, for the
+purpose of template prediction we have $N$-length vectors as labels for each
+location $l$ in the type-error slice, that at most one slot can set to $\etrue$,
+leading to a \emph{multi-class classification} problem. Next, we extend our
+models from \autoref{sec:localization} to tackle this problem.
 
 \mypara{Multi-class \dnn{}s}
 As in \autoref{sec:localization} for error localization, we again use a deep
