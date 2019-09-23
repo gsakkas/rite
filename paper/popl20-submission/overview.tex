@@ -41,29 +41,36 @@ suggesting candidate solutions like the ones mentioned above.
 \mypara{Solution. Suggesting Repairs via Supervised Classification and Program
 Synthesis.} Our approach is to view the process of \emph{fixing} an erroneous
 program as a \emph{supervised multi-class classification problem}, whose results
-are then fed to a \emph{program synthesizer}. A classification problem entails
-learning a function that maps inputs to a discrete set of output labels (in
-contrast to techniques such as regression, where the output is typically a real
-number). A supervised learning problem is one in with an available training set
-where the inputs and labels are known, and the task is to learn a function that
-accurately maps the inputs to output labels and generalizes to future inputs. To
-realize the above approach for suggesting good possible repairs as a practical
-tool, we structure our solution into five sub-problems:
+are then fed to a \emph{program synthesizer}. A multi-class classification
+problem entails learning a function that maps inputs to a discrete set of
+usually more than two output labels. A supervised learning problem is one in
+with an available training set where the inputs and labels are known, and the
+task is to learn a function that accurately maps the inputs to output labels and
+generalizes to future inputs. Finally, program synthesis is a problem where,
+given a input high-level specification, a new program over some language is
+requested as output.
 
+The above problems, combined appropriately, can be translated to our final
+\emph{program repair} problem, which will help to realize our approach for
+suggesting good possible repairs as a practical tool. We structure our solution
+into five sub-problems:
 \begin{enumerate}
   \item How can we acquire a training set of labeled ill-typed programs with
   their respective user-provided fixes?
   \item How can we represent possible solutions to a defect?
-  \item What are the appropriate models to represent this problem?
-  \item How can we use predictive models to repair faulty programs?
+  \item How can we find a minimal set of fix schemas?
+  \item What are the appropriate models to predict those fix schemas?
+  % \item How can we use predictive models to repair faulty programs?
   \item How can we use predictive models and synthesized repairs to give
   localized feedback to the programmer?
 \end{enumerate}
 
 In the remainder of this section, we consider each sub-problem in turn.
 
+
+
 %%% FIXME: Taken mostly from Nate, needs many changes...
-\subsection{Step 1: Acquiring a Blame-Labeled Training Set}
+\subsection{Acquiring a Blame-Labeled Training Set}
 \label{subsec:step1}
 
 The first step is to gather a training set of ill-typed programs, where each
@@ -99,63 +106,50 @@ example, the produced diff would include the new list expression |[hd * i]|.
 Thus, we determine that this expression is the repair we have to blame for
 ``fixing'' the program.
 
-\mypara{Bags-of-Abstracted-Terms.} Our representation of programs is
-parameterized by a set of feature abstraction functions, (abbreviated to feature
-abstractions) $f_1, \ldots, f_n$ , that map terms to a numeric value (or just
-$\{0, 1\}$ to encode a boolean property). Given a set of feature abstractions,
-we can represent a single program's AST as a \emph{bag-of-abstracted-terms}
-(BOAT) by:
-%
-(1) decomposing the AST (term) $t$ into a bag of its constituent sub-trees
-(terms) $\{t_1, \ldots, t_m\}$; and then
-%
-(2) representing each sub-term $t_i$ with the $n$-dimensional vector $[f_1(t_i),
-\ldots, f_n(t_i)]$. Working with ASTs is a natural choice as type-checkers
-operate on the same representation.
+% \mypara{Bags-of-Abstracted-Terms.} Our representation of programs is
+% parameterized by a set of feature abstraction functions, (abbreviated to feature
+% abstractions) $f_1, \ldots, f_n$ , that map terms to a numeric value (or just
+% $\{0, 1\}$ to encode a boolean property). Given a set of feature abstractions,
+% we can represent a single program's AST as a \emph{bag-of-abstracted-terms}
+% (BOAT) by:
+% %
+% (1) decomposing the AST (term) $t$ into a bag of its constituent sub-trees
+% (terms) $\{t_1, \ldots, t_m\}$; and then
+% %
+% (2) representing each sub-term $t_i$ with the $n$-dimensional vector $[f_1(t_i),
+% \ldots, f_n(t_i)]$. Working with ASTs is a natural choice as type-checkers
+% operate on the same representation.
 
-\mypara{Modeling Contexts.} Each expression occurs in some surrounding
-\emph{context}, and we would like the classifier to be able make decisions based
-on the context as well. The context is particularly important for our task as
-each expression imposes typing constraints on its neighbors. For example, a |@|
-operator tells the type checker that both children must have type |'a list| and
-that the parent must accept an |'a list|. The BOAT representation makes it easy
-to incorporate contexts: we simply \emph{concatenate} each term’s feature vector
-with the \emph{contextual features} of its parent and children.
+% \mypara{Modeling Contexts.} Each expression occurs in some surrounding
+% \emph{context}, and we would like the classifier to be able make decisions based
+% on the context as well. The context is particularly important for our task as
+% each expression imposes typing constraints on its neighbors. For example, a |@|
+% operator tells the type checker that both children must have type |'a list| and
+% that the parent must accept an |'a list|. The BOAT representation makes it easy
+% to incorporate contexts: we simply \emph{concatenate} each term’s feature vector
+% with the \emph{contextual features} of its parent and children.
 
-\mypara{Type features.} Another way to summarize the context in which an
-expression occurs is with types. Of course, the programs we are given are
-untypeable, but we can still extract a partial typing derivation from the type
-checker and use it to provide more information to the model. However, to help
-later our classifier give better predictions of the possible fixes, we want
-those types to be as close as possible to the types that correct program would
-have or at least be a super-type of them. To achieve that, we replace each time
-one location of the program with a typed hole and extend the type checker to
-infer the type of that hole from the context of the program. This procedure
-would give more accurate super-types than getting partial typing derivation from
-the untypeable original program.
+% \mypara{Type features.} Another way to summarize the context in which an
+% expression occurs is with types. Of course, the programs we are given are
+% untypeable, but we can still extract a partial typing derivation from the type
+% checker and use it to provide more information to the model. However, to help
+% later our classifier give better predictions of the possible fixes, we want
+% those types to be as close as possible to the types that correct program would
+% have or at least be a super-type of them. To achieve that, we replace each time
+% one location of the program with a typed hole and extend the type checker to
+% infer the type of that hole from the context of the program. This procedure
+% would give more accurate super-types than getting partial typing derivation from
+% the untypeable original program.
 
 
 
-\subsection{Step 2: Representing Program Fixes}
+\subsection{Representing Program Fixes}
 \label{subsec:step2}
 
-Next, we represent different fixes - \ie common repair strategies - via a
-limited number of templates. We focus on AST-level templates that are easy for
-novices to understand.
-
-\mypara{Clustering the Fixes.} Our dataset contains erroneous programs and the
-corresponding user-written fixes. Those fixes can be arbitrary code
-modifications with different lengths, variable names, functions, and so on. We
-propose to automatically cluster such fixes into abstract fix schema. This
-clustering serves two purposes. First, it enables the subsequent use of discrete
-classification algorithms to choose. Second, it allows for the principled
-removal of outliers. Outliers are a relevant problem because student datasets
-often contain non-standard or idiosyncratic solutions. We propose to use a
-simple clustering algorithm applied atop a similarity metric for fixes.
-%
-% FIXME: The original text had \emph{equivalent} here. Do you actually mean
-% that? If so, be more precise. The text also talked about outlier removal,
-% so I made that more formal --- but is it something we're actually doing?
+Next, we represent different fixes --- \ie common repair strategies found in our
+dataset --- via an abstract fix schema, that we refer to as \emph{fix
+templates}. We focus on AST-level templates that are easy for novices to
+understand.
 
 \mypara{Generic Abstract Syntax Trees.}
 Fixes in our dataset are represented as the ASTs of the expressions that changed
@@ -168,7 +162,7 @@ specific variable, function, operator and etc. names removed from them. These
 trees keep information only about the \emph{fix's structure} rather than the
 specific changes in variables and functions. We also prune these GASTs at a
 certain depth $d$ to keep only the top-level changes of the fix. Pruned
-sub-trees are replaced with \emph{holes}, which represent that \emph{any
+sub-trees are replaced with \emph{holes}, which can represent that \emph{any
 possible expression} in our language.
 
 % TODO: Make figure of GAST for running example.
@@ -183,8 +177,8 @@ that can be used to repair an erroneous program. Those templates are usually
 picked manually by inspecting a large corpus of buggy programs and their fixes.
 However, we show that such fix templates can be \emph{learned} from those
 datasets using the clusters of fixes' GASTs. A GAST representative of a cluster
-can be used as a fix template in order to produce a fix or provide feedback for
-the type-error that a faulty program raises.
+can be used as a fix template in order to produce a program repair or provide
+feedback for the type-error that a faulty program raises.
 
 % TODO: Show template for running example.
 % For our example, the GAST would be a list with a binary operator as a child,
@@ -207,16 +201,40 @@ let rec mulByDigit i l =
 
 
 
-\subsection{Step 3: Training Predictive Models}
+\subsection{Extracting Frequent Fix Schemas}
 \label{subsec:step3}
 
+Abstract fix schemas gathered from a dataset of ill-typed programs and their
+respective fixed version can introduce a large set of fix templates, which can
+be inappropriate for predicting the correct one to be used for the final program
+repair. Therefore, the next step in our approach is finding a \emph{small set}
+of fix templates, that will be more suitable for predicting and synthesizing
+those repairs, but still cover most of the fixes that users facilitate to repair
+their faulty programs.
+
+\mypara{Clustering the Fixes.} Our dataset contains erroneous programs and the
+corresponding user-written fixes. Those fixes can be arbitrary code
+modifications with different lengths, variable names, functions, and so on. We
+propose to automatically cluster the extracted fix templates to a small set of
+more abstract fix schemas. This clustering serves two purposes. First, it
+enables the subsequent use of discrete classification algorithms to find the
+most common fix schema. Second, it allows for the principled removal of
+outliers. Outliers are a relevant problem because student datasets often contain
+non-standard or idiosyncratic solutions. We propose to use a simple clustering
+algorithm applied atop a similarity metric for fixes.
+
+
+
+\subsection{Training Predictive Models}
+\label{subsec:step4}
+
 Next, we need to train models that can predict correctly the error location and
-the template that will be used to repair that location of a given erroneous
-program. Our dataset's labels can be updated with the corresponding template
-that fixes each location, drawn from a minimal set of fix templates that were
-acquired through our clustering method. Therefore, error localization and
-template prediction can be summed to \emph{binary} and \emph{multi-class
-classification} problems respectively.
+the template that will be used to repair that location of a given program. Our
+dataset's labels can be updated with the corresponding template that fixes each
+location, drawn from a minimal set of fix templates that were acquired through
+our clustering method. Therefore, error localization and template prediction can
+be summed to \emph{binary} and \emph{multi-class classification} problems
+respectively.
 
 \mypara{Error Localization.} Previous work has shown to give excellent accuracy
 on localizing type-errors using \emph{machine learning} techniques. In order to
@@ -235,13 +253,14 @@ template predictions.
 
 
 
-\subsection{Step 4: Program Repair}
-\label{subsec:step4}
+\subsection{Generating Feedback via Program Synthesis}
+\label{subsec:step5}
 
 Next, we want to exploit existing program synthesis techniques to \emph{generate
-repairs}. Template predictions and the ordered set of possible error locations
-that fixes can be applied to, can be used to to guide program synthesis and have
-more efficient algorithms.
+repairs} that will be used to provide feedback to users. Our approach exploits
+template predictions and a set of possible error locations to guide program
+synthesis for a more efficient algorithm. We then want to provide a small set of
+\emph{minimal} repairs back to users as feedback.
 
 \mypara{Program Synthesis.} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of synthesis, meaning that we
@@ -262,42 +281,37 @@ of locations can be acquired by the product of each location’s confidence in t
 subset. This holds because we consider each location’s probability that needs to
 be fixed, as independent from other locations.
 
+% Finally, having generated automatic repairs for a given ill-typed program using
+% our predictive models and program synthesis, we want to use that to help users
+% repair their programs and understand what the program error was. To do so, we
+% want to provide \emph{minimal} repairs to students, meaning repairs that are as
+% close to their original program but also catch the programmers intent for that
+% piece of code. Since we have multiple fix templates to choose from and many
+% candidate locations to fix in a program, users would find it most useful to get
+% more than one suggestion, and those suggestions to be ranked according to some
+% metric.
 
-
-\subsection{Step 5: Generating Feedback}
-\label{subsec:step5}
-
-Finally, having generated automatic repairs for a given ill-typed program using
-our predictive models and program synthesis, we want to use that to help users
-repair their programs and understand what the program error was. To do so, we
-want to provide \emph{minimal} repairs to students, meaning repairs that are as
-close to their original program but also catch the programmers intent for that
-piece of code. Since we have multiple fix templates to choose from and many
-candidate locations to fix in a program, users would find it most useful to get
-more than one suggestion, and those suggestions to be ranked according to some
-metric.
-
-\mypara{Ranking Fixes.} We rank each solution by two metrics, the
+\mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
 used those metrics to consider minimal changes, i.e. changes that are as close
 as possible to the original programs, so novice programmers can better
-understand feedback. However, different metrics may give betters fixes as we
+understand feedback. However, different metrics may give better fixes as we
 discuss later. Programmers usually have in mind what the \emph{type signature}
 the functions that they write are supposed to have. So, it is reasonable to
-provide the option to the user to give the intended type for the program's
+provide the user with the option to give the intended type for the program's
 functions we are trying to repair. In our case, we acquire the intended types
 from the fixed versions of the dataset.
 
 \mypara{Example.} In \autoref{fig:repair} we can see a minimal repair that our
 method could return, using the template and error location discussed in
 \autoref{subsec:step2} to synthesize this solution. However, this solution is
-not the top one that are implementation would give (that would be identical to
-the solution the programmer gave), we use this repair to demonstrate different
-aspects of the synthesizer. We can see that this solution is very close to the
-one that the programmer finally came up with, but still has some holes. This
-time, however, there are some indications as to what these holes should be. Here
-our synthesizer suggested two different variables should be used to fill those
-template holes.
+not the highest-ranked that our implementation would return (that would be
+identical to the solution the programmer gave) and we use this repair to
+demonstrate different aspects of the synthesizer. We can see that this solution
+is very close to the one that the programmer finally came up with, but still has
+some holes. However, there are some indications as to what these holes should
+be. Here our synthesizer suggests that two different variables, $v_1$ and $v_2$,
+should be used to fill those expression holes.
 
 \begin{figure}[ht]
 \begin{ecode}
