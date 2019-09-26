@@ -1,14 +1,12 @@
-\section{Predicting Repair Templates}
+\section{Predicting Fix Templates}
 \label{sec:templ-pred}
 
-In this section, we extend our API from \autoref{sec:localization}, so we are
-able to predict repair templates $\T$ for a given location of the program. Our
-goal is to define the $\evalsym$ function in \autoref{fig:api}, in terms of the
-simple language \repairLang (\autoref{fig:syntax}), which takes a $\ModelT$ and
-a feature vector $\V$ of a specific subexpression as an input and produces a
-confidence score $\C$ for each of the chosen templates $\T$. Any given template
-$\T$ is an expression $e$ in the \repairLang, which is a simple lambda calculus
-with integers, booleans, pairs, and lists.
+In this section, we introduce our high-level approach to predicting repair
+templates $\T$ for a given location of the program. Our goal is to define the
+$\evalsym$ function in \autoref{fig:api}, in terms of the simple language
+\repairLang (\autoref{fig:syntax}), which takes a $\ModelT$ and a feature vector
+$\V$ of a specific subexpression as an input and produces a confidence score
+$\C$ for each of the chosen templates $\T$.
 
 Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
 learning on a training set of feature vectors $\V$, each assigned a vector of
@@ -21,126 +19,195 @@ learn to distinguish between several classes. Once trained, we can make
 predictions on new inputs, producing template confidences $\Runit$ for each
 template $\T$.
 
-Similarly to \autoref{sec:localization}, our $\ModelT$s expect feature vectors
-$\V$ and boolean labels $\B$, both of a fixed length for each specific location.
-Therefore, we define similarly to $\extractsym$, the function $\extractTsym$ in
-\autoref{fig:api}. We use again $\diffsym$ to get the set of changed expressions
-of a given program pair. Those are then used by the function $\clustersym$ to
-get the repair templates by grouping different expressions together based on
-some similarity metric and thus reducing their number and making them more
-concrete. The $\extractTsym$ function, then, extracts $\featuresym$ from each
-subexpression, acquired by $\diffsym$ but limited to the type-error slice (TODO:
-ref) and assigns the boolean labels based on the templates $\T$ according to
-$\clustersym$, with only one being $\etrue$ at a time
-
-
-\subsection{RTL: Repair Template Language}
-\label{subsec:lang}
-
-In this section, we define the language we are going to use to represent
-templates and how we can acquire those templates from our dataset.
-
-\mypara{Syntax of RTL}
-We define here our Repair Template Language (RTL) as a simple lambda calculus
-(\repairLang in \autoref{fig:syntax}) with integers, booleans, pairs, and lists.
-This language will be used to abstract and define repair templates $\T$. Our RTL
-contains all the expressions that \lang included, but with four significant
-changes.
-
-\begin{enumerate}
-    \item Variable names $x$ used for functions, variables and patterns are left
-    \emph{unspecified}. That means that $x$ denotes that that place of the code
-    has a variable name, but it is unknown at that point.
-    \item Literal values $n$ can be any integer or floating point number,
-    boolean value or character and string. Same as variables, these are left
-    unspecified.
-    \item Operators $\oplus$ are also left unspecified.
-    \item A \emph{wildcard} expression $\_$ is added, which is used to denote
-    that \emph{any} expression in \repairLang can be used to replace it.
-\end{enumerate}
+Our $\ModelT$s expect feature vectors $\V$ and boolean labels $\B$, both of a
+fixed length for each specific location. Therefore, we define similarly to
+$\extractsym$, the function $\extractTsym$ in \autoref{fig:api}. We use again
+$\diffsym$ to get the set of changed expressions of a given program pair. Those
+are then used by the function $\clustersym$ to get the repair templates by
+grouping different expressions together based on some similarity metric and thus
+reducing their number and making them more concrete. The $\extractTsym$
+function, then, extracts $\featuresym$ from each subexpression, acquired by
+$\diffsym$ but limited to the type-error slice (TODO: ref) and assigns the
+boolean labels based on the templates $\T$ according to $\clustersym$, with only
+one being $\etrue$ at a time
 
 \input{syntax.tex}
 
-\mypara{Generic ASTs (GASTs)}
-Using our RTL, we can now define \emph{Generic ASTs}. GASTs are abstract syntax
-trees that represent expressions that can have unspecified details, like
-variable names or numerical values. Therefore, GASTs can represent templates
-$\T$, defined as expressions in \repairLang. GASTs are used here to capture the
-high-level \emph{structure} of an expression, as a more appropriate means to
-define templates. GASTs are extracted from the original ASTs representing
-programs in \lang, by removing all the necessary information so \repairLang can
-be used. Then these trees can be further \emph{pruned} at a depth $d$ to keep
-only the higher level expressions and formulate the templates.
+% \subsection{Features}
+% \label{sec:features}
+% The first issue we must tackle is formulating our learning task in machine
+% learning terms. We are given programs over \lang, but learning algorithms expect
+% to work with \emph{feature vectors} $\V$ --- vectors of real numbers, where each
+% column describes a particular aspect of the input. Thus, our first task is to
+% convert programs to feature vectors.
+
+% We choose to model a program as a \emph{set} of feature vectors, where each
+% element corresponds an expression in the program. Thus, given the |sumList|
+% program in \autoref{fig:sumList} we would first split it into its constituent
+% sub-expressions and then transform each sub-expression into a single feature
+% vector. We group the features into five categories, using \autoref{tab:sumList}
+% as a running example of the feature extraction process.
+
+% \mypara{Local syntactic features}
+% These features describe the syntactic category of each expression $e$. In other
+% words, for each production of $e$ in \autoref{fig:syntax} we introduce a feature
+% that is enabled (set to $1$) if the expression was built with that production,
+% and disabled (set to $0$) otherwise. For example, the \IsNil feature in
+% \autoref{tab:sumList} describes whether an expression is the empty list $\enil$.
+
+% We distinguish between matching on a list vs.\ on a pair, as this affects the
+% typing derivation. We also assume that all pattern matches are well-formed ---
+% \ie all patterns must match on the same type. Ill-formed match expressions would
+% lead to a type error; however, they are already effectively localized to the
+% match expression itself. We note that this is not a \emph{fundamental}
+% limitation, and one could easily add features that specify whether a match
+% \emph{contains} a particular pattern, and thus have a match expression that
+% enables multiple features.
+
+% \mypara{Contextual syntactic features}
+% These are similar to local syntactic features, but lifted to describe the parent
+% and children of an expression. For example, the \IsCaseListP feature in
+% \autoref{tab:sumList} describes whether an expression's \emph{parent} matches on
+% a list. If a particular $e$ does not have children (\eg a variable $x$) or a
+% parent (\ie the root expression), we leave the corresponding features disabled.
+% This gives us a notion of the \emph{context} in which an expression occurs,
+% similar to the \emph{n-grams} used in linguistic models
+% \citep{Hindle2012-hf,Gabel2010-el}.
+
+% \mypara{Expression size}
+% We also propose a feature representing the \emph{size} of each expression, \ie
+% how many sub-expressions does it contain? For example, the \ExprSize feature in
+% \autoref{tab:sumList} is set to three for the expression |sumList tl| as it
+% contains three expressions: the two variables and the application itself. This
+% allows the model to learn that, \eg, expressions closer to the leaves are more
+% likely to be blamed than expressions closer to the root.
+
+% \mypara{Typing features}
+% A natural way of summarizing the context in which an expression occurs is with
+% \emph{types}. Of course, the programs we are given are \emph{untypeable}, but we
+% can still extract a \emph{partial} typing derivation from the type checker and
+% use it to provide more information to the model.
+
+% A difficulty that arises here is that, due to the parametric type constructors
+% $\tfun{\cdot}{\cdot}$, $\tprod{\cdot}{\cdot}$, and $\tlist{\cdot}$, there is an
+% \emph{infinite} set of possible types --- but we must have a \emph{finite} set
+% of features. Thus, we abstract the type of an expression to the set of type
+% constructors it \emph{mentions}, and add features for each type constructor that
+% describe whether a given type mentions the type constructor. For example, the
+% type $\tint$ would only enable the $\tint$ feature, while the type
+% $\tfun{\tint}{\tbool}$ would enable the $\tfun{\cdot}{\cdot}$, $\tint$, and
+% $\tbool$ features.
+
+% We add these features for parent and child expressions to summarize the context,
+% but also for the current expression, as the type of an expression is not always
+% clear \emph{syntactically}. For example, the expressions |tl| and |sumList tl|
+% in \autoref{tab:sumList} both enable \HasTypeList, as they are both inferred to
+% have a type that mentions $\tlist{\cdot}$.
+% %constructor.
+
+% Note that our use of typing features in an ill-typed program subjects us to
+% \emph{traversal bias} \citep{McAdam1998-ub}. For example, the |sumList tl|
+% expression might alternatively be assigned the type $\tint$. Our models will
+% have to learn good localizations in spite this bias (see
+% \autoref{sec:evaluation}).
+
+% \mypara{Type error slice}
+% Finally, we wish to distinguish between changes that could fix the error, and
+% changes that \emph{cannot possibly} fix the error. Thus, we compute a minimal
+% type error \emph{slice} for the program (\ie the set of expressions that
+% contribute to the error), and add a feature that is enabled for expressions that
+% are part of the slice. The \InSlice feature in \autoref{tab:sumList} indicates
+% whether an expression is part of such a minimal slice, and is enabled for all of
+% the sampled expressions except for |tl|, which does not affect the type error.
+% If the program contains multiple type errors, we compute a minimal slice for
+% each error.
+
+% In practice, we have found that \InSlice is a particularly important feature,
+% and thus include a post-processing step that discards all expressions where it
+% is disabled. As a result, the |tl| expression would never actually be shown to
+% the classifier. We will demonstrate the importance of \InSlice empirically in
+% \autoref{sec:feature-utility}.
 
 
-\mypara{Extracting Templates from Dataset Repairs}
-Templates $\T$ are extracted by the function $\templatesym$ from our program
-pair dataset. Using the $\diffsym$ function first, we acquire the changed
-expressions of the dataset. These changes are potentially the templates we are
-going to use. However, they contain a lot of \emph{local} information to the
-specific program that they were extracted from. So $\templatesym$ takes the
-changed expressions defined in \lang and \emph{transforms} them into expressions
-in \repairLang, essentially making them into templates $\T$. Those templates are
-represented as GASTs and are pruned at a pre-defined depth $d$. The value of $d$
-can be as low as 1, but to capture more structure to our templates, slightly
-bigger values would work better. We then see in \autoref{subsec:clustering} how
-we can group together all these templates.
-
-\mypara{Example}
-TODO: give an example
-
-\subsection{Clustering the Templates}
-\label{subsec:clustering}
-
-% TODO: Should we give a better name than "similarity metric"
-\mypara{GAST Similarity Metric}
-Having programs written over \repairLang, forces similar changes, \ie changing a
-variable name, to have the same GAST. This is really helpful when we try to
-group different changes together into some templates $\T$. We want to extend and
-generalize this ``similarity'' of program changes, in order to get a small but
-generally applicable number of repair templates.
-
-Therefore, two expressions over \repairLang are considered \emph{similar} when
-the following simple rules hold:
-\begin{enumerate}
-    \item Their pruned GASTs (at a pre-defined depth $d$) are exactly the same.
-    \item A wildcard expression is considered similar with any possible
-    expression over \repairLang.
-    \item Two applications, operators, cases, lists or tuples are considered
-    similar when there is a total bijective relation between their children
-    expressions, such that the related expressions are themselves similar.
-    % TODO: maybe explain better and separate apps, and include ifs and lets
-\end{enumerate}
+% \subsection{Labels}
+% \label{sec:labels}
+% Recall that we make predictions in two stages. First, we use $\evalsym$ to
+% predict for each subexpression whether it should be blamed, and extract a
+% confidence score $\Runit$ from the $\Model$. Thus, we define the output of the
+% $\Model$ to be a boolean label, where ``false'' means the expression
+% \emph{should not} change and ``true'' means the expression \emph{should} change.
+% This allows us to predict whether any individual expression should change, but
+% we would actually like to predict the \emph{most likely} expressions to change.
+% Second, we \emph{rank} each subexpression by the confidence $\Runit$ that it
+% should be blamed, and return to the user the top $k$ most likely blame
+% assignments (in practice $k=3$).
 
 
-\mypara{Clustering}
-The main goal of $\clustersym$ing is to eliminate the possibility of equivalent
-expressions to be considered as different templates and thus making our
-$\ModelT$s more scalable and applicable to more programs. We define
-$\clustersym$ing as the task of grouping together similar expressions over
-\repairLang that each group can later be used as a template $\T$ to produce
-repairs for ill-typed programs. Each group can consist of several
-\emph{member-expressions} and each one of them can be used as the cluster
-\emph{representative}.
-
-The $\clustersym$ function uses the templates produced by $\templatesym$ and
-groups together the templates that are similar based on our ealrier definition
-of expression similarity. It then returns the Top-$N$ based on their popularity
-on their training set. $N$ is considered a parameter of algorithm that can be
-defined prior the training and clustering process, and is usually around 30 to
-50 [TODO: cite similar template papers].
-
-\mypara{Example}
-TODO: give an example
+% We identify the fixes for each ill-typed program with an expression-level
+% diff~\citep{Lempsink2009-xf}. We consider two sources of changes. First, if an
+% expression has been removed wholesale, \eg if $\eapp{f}{x}$ is rewritten to
+% $\eapp{g}{x}$, we will mark the expression $f$ as changed, as it has been
+% replaced by $g$. Second, if a new expression has been inserted \emph{around} an
+% existing expression, \eg if $\eapp{f}{x}$ is rewritten to
+% $\eplus{\eapp{f}{x}}{1}$, we will mark the application expression $\eapp{f}{x}$
+% (but not $f$ or $x$) as changed, as the $+$ operator now occupies the original
+% location of the application.
 
 
-\subsection{Multi-class Classification}
-\label{subsec:multi-class}
+\subsection{Learning Algorithm}
+\label{sec:models}
+\lstDeleteShortInline{|} % sigh...
+
 Our goal is to train a \emph{classifier} given a training set $S : \List{\V
 \times \List{\B}}$ of labeled examples, to predict a boolean array $b$ of
 templates $\T$ given a input of features $v$. Essentially, though, we require
 that the classifier outputs a \emph{confidence score} $\Runit$ for each of the
 Top-$N$ templates chosen for each location of the type-error slice.
+
+There are many learning algorithms to choose from, existing on a spectrum that
+balances expressiveness with ease of training (and of interpreting the learned
+model). In this section we consider a standard learning algorithm: \emph{neural
+networks}. A thorough introduction to these techniques can be found in
+introductory machine learning textbooks \citep[\eg][]{Hastie2009-bn}.
+
+% Below we briefly introduce each technique by describing the rules it learns, and
+% summarize its advantages and disadvantages. For our application, we are
+% particularly interested in three properties -- expressiveness, interpretability
+% and ease of generalization. Expressiveness measures how complex prediction rules
+% are allowed to be, and interpretability measures how easy it is to explain the
+% cause of prediction to a human. Finally ease of generalization measures how
+% easily the rule generalizes to examples that are not in the training set; a rule
+% that is not easily generalizable might perform poorly on an unseen test set even
+% when its training performance is high.
+
+
+\mypara{Neural Networks}
+The model that we use is a type of neural network called a \emph{multi-layer
+perceptron} (see \citealt{Nielsen2015-pu} for an introduction to neural
+networks). A multi-layer perceptron can be represented as a directed acyclic
+graph whose nodes are arranged in layers that are fully connected by weighted
+edges. The first layer corresponds to the input features, and the final to the
+output. The output of an internal node $v$ is
+\[ h_v = g\,(\sum_{j \in N(v)}\!W_{jv} h_j ) \] where $N(v)$ is the set of nodes
+in the previous layer that are adjacent to $v$, $W_{jv}$ is the weight of the
+$(j, v)$ edge and $h_j$ is the output of node $j$ in the previous layer. Finally
+$g$ is a non-linear function, called the activation function, which in recent
+work is commonly chosen to be the \emph{rectified linear unit} (ReLU), defined
+as $g(x) = \mathsf{max}(0,x)$ \citep{Nair2010-xg}. The number of layers, the
+number of neurons per layer, and the connections between layers constitute the
+\emph{architecture} of a neural network. In this work, we use relatively simple
+neural networks which have an input layer, a single hidden layer and an output
+layer.
+
+A major advantage of neural networks is their ability to discover interesting
+combinations of features through non-linearity, which significantly reduces the
+need for manual feature engineering, and allows high expressivity. On the other
+hand, this makes the networks particularly difficult to interpret and also
+difficult to generalize unless vast amounts of training data are available.
+
+
+\subsection{Multi-class Classification}
+\label{subsec:multi-class}
 
 \mypara{Assigning Templates as Labels}
 The first step is to assign the correct labels to each input vector $v$ for the
