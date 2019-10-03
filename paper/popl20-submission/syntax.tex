@@ -21,17 +21,23 @@
   \boxed{
   \begin{array}{lcl}
     \V           & \defeq & \List{\R}\\
-    \Runit       & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\ % [0,1]\\
-    \T           & \defeq & e\\
-    \featuresym  & : & \List{e \to \R} \\
-    \diffsym     & : & e \times e \to \List{e} \\
-    \templatesym & : & \List{e} \to \List{\T}\\
-    \clustersym  & : & \List{\T} \to \List{\T}\\
-    \extractTsym & : & \featuresym \to e \times e \to \List{\V \times \List{\B}} \\
-    \trainTsym   & : & \List{\V \times \List{\B}} \to \ModelT \\
-    \predictTsym & : & \ModelT \to \V \to \List{\Runit} \\
+    \Runit       & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\
+    \T           & \defeq & e \\
+    \Dataset     & \defeq & \List{e \times e} \\
+    \Emap{a}     & \defeq & e \to a \\
+    \Tmap{a}     & \defeq & \T \to a \\
     \midrule
-    \repairsym   & : & \ModelT \to e \to \List{e \times \Runit \times \List{\Runit}}
+    \featuresym  & : & \List{\Emap{\R}} \\
+    \diffsym     & : & e \times e \to \List{e} \\
+    % \templatesym & : & \List{e} \to \List{\T}\\
+    % \clustersym  & : & \List{\T} \to \List{\T}\\
+    \extractTsym & : & \featuresym \to \List{\T} \to e \times e \\
+                 &   & \quad \to \Emap{(\V \times \B \times \Tmap{\B})} \\
+    \trainTsym   & : & \List{\V \times \B \times \Tmap{\B}} \to \Model \times \ModelT \\
+    \predictTsym & : & \Model \times \ModelT \to \V \to \Runit \times \Tmap{\Runit} \\
+    \midrule
+    \repairsym   & : & \featuresym \to \Dataset \to \List{\T} \to e \\
+                 &   & \quad \to \Emap{(\Runit \times \Tmap{\Runit})}
   \end{array}
   }
   \]
