@@ -63,21 +63,26 @@ Second, \emph{predict}, from an erroneous program, the correct repair template \
 %
 Third, \emph{synthesize} candidate repairs from the predicted template.
 
-
 In the remainder of this section, we give a high-level overview of our approach 
 by describing how to:
 
 \begin{enumerate}
 
-  \item Represent repairs abstractly via \emph{repair templates} (\autoref{sec:overview:templates}), 
+  \item Represent repairs abstractly via \emph{repair templates} 
+        (\autoref{sec:overview:templates}), 
 
-  \item Acquire a \emph{training set} of labeled ill-typed programs and fixes (\autoref{sec:overview:data}),
+  \item Acquire a \emph{training set} of labeled ill-typed programs and fixes 
+        (\autoref{sec:overview:data}),
 
-  \item Learn a small set of candidate repair templates by \emph{clustering} the training set (\autoref{sec:overview:learn}),
+  \item Learn a small set of candidate repair templates by \emph{clustering} 
+        the training set (\autoref{sec:overview:learn}),
 
-  \item Predict the appropriate template to apply by training a \emph{multi-class classifier} from the data set (\autoref{sec:overview:predict}), and  
+  \item Predict the appropriate template to apply by training a \emph{multi-class classifier} 
+        from the data set (\autoref{sec:overview:predict}), and  
 
-  \item Synthesize repairs by enumerating-and-checking terms from the predicted templates to give the programmer localized feedback (\autoref{sec:overview:synthesis}).
+  \item Synthesize repairs by enumerating-and-checking terms from the 
+        predicted templates to give the programmer localized feedback 
+        (\autoref{sec:overview:synthesis}).
 
 \end{enumerate}
 
@@ -93,44 +98,54 @@ given a input high-level specification, a new program over some language is
 requested as output.
 \end{comment}
 
-%% RJ: HEREHEREHEREHEREHEREHEREHERE
-
-\subsection{Representing Program Fixes}
+\subsection{Representing Repairs}
 \label{sec:overview:templates} 
 
-Next, we represent different fixes --- \ie common repair strategies found in our
-dataset --- via an abstract fix schema, that we refer to as \emph{fix
-templates}. We focus on AST-level templates that are easy for novices to
-understand.
+We represent different fixes --- \ie common repair 
+strategies found in our dataset --- via an abstract 
+fix schema, that we refer to as \emph{fix templates}. 
+We focus on AST-level templates that are easy for 
+novices to understand.
+
+\mynote{WHAT IS A REPAIR?}
+
+\mynote{WHAT IS A REPAIR TEMPLATE?}
 
 \mypara{Generic Abstract Syntax Trees.}
-Fixes in our dataset are represented as the ASTs of the expressions that changed
-in the ill-typed programs and transformed the program to the correct solution.
-To enable \emph{similar fixes} in different ill-typed programs to be clustered
-together and thus get a smaller number of clusters of better quality, we propose
-a further simplification of the changed ASTs: the \emph{Generic Abstract Syntax
-Trees} (GASTs). GASTs are taken from their respective ASTs, with all the
-specific variable, function, operator and etc. names removed from them. These
-trees keep information only about the \emph{fix's structure} rather than the
-specific changes in variables and functions. We also prune these GASTs at a
-certain depth $d$ to keep only the top-level changes of the fix. Pruned
-sub-trees are replaced with \emph{holes}, which can represent that \emph{any
-possible expression} in our language.
+%
+Fixes in our dataset are represented as the ASTs of 
+the expressions that changed in the ill-typed programs 
+and transformed the program to the correct solution.
+%
+To enable \emph{similar fixes} in different ill-typed 
+programs to be clustered together and thus get a smaller 
+number of clusters of better quality, we propose a 
+further simplification of the changed ASTs: the 
+\emph{Generic Abstract Syntax Trees} (GASTs). 
+%
+GASTs are obtained from concrete ASTs in two steps.
+%
+First, we abstract all concrete variable, function, 
+and operator names. 
+%
+Next, we prune these GASTs at a certain depth $d$ 
+to keep only the top-level changes of the fix. 
+Pruned sub-trees are replaced with \emph{holes}, 
+which can represent that \emph{any} possible 
+expression in our language.
+%
+Together, these steps ensure that GASTs only contain 
+information about the \emph{fix's structure} rather 
+than the specific changes in variables and functions. 
 
-% TODO: Make figure of GAST for running example.
+
+\mynote{TODO: Make figure of GAST for running example.}
+
 % The ASTs of the fixes is a good start, but those still contain too much
 % information. See our running example. |[hd * i]| is a list that includes a
 % multiplication of the variables |hd| and |i|. While we care about the list and
 % the binary operator, all the rest information is not that important. T
 
-\mypara{Fix Templates.} Previous work~\citep[][]{martinez2013automatically,
-martinez2015mining} has used \emph{fix templates} to generate \emph{patches}
-that can be used to repair an erroneous program. Those templates are usually
-picked manually by inspecting a large corpus of buggy programs and their fixes.
-However, we show that such fix templates can be \emph{learned} from those
-datasets using the clusters of fixes' GASTs. A GAST representative of a cluster
-can be used as a fix template in order to produce a program repair or provide
-feedback for the type-error that a faulty program raises.
 
 % TODO: Show template for running example.
 % For our example, the GAST would be a list with a binary operator as a child,
@@ -139,6 +154,8 @@ feedback for the type-error that a faulty program raises.
 % template of the form |[_ # _]|. We see in \autoref{fig:suggestion} how that
 % template would work to provide feedback to programmers, but we discuss later how
 % we can complete the template with program synthesis.
+
+\mynote{is the below \autoref{fig:suggestion} the TEMPLATE? It looks like PROGRAM + TEMPLATE}
 
 \begin{figure}[ht]
 \begin{ecode}
@@ -151,42 +168,47 @@ let rec mulByDigit i l =
 \label{fig:suggestion}
 \end{figure}
 
-
-\subsection{Acquiring a Blame-Labeled Training Set}
+\subsection{Acquiring a Repair-Labeled Training Set}
 \label{sec:overview:data}
 
-The first step is to gather a training set of ill-typed programs, where each
-erroneous sub-term is explicitly labeled. Prior work has often enlisted expert
-users to curate a set of ill-typed programs and then \emph{manually} determine
-the correct fix~\citep[\eg][]{Lerner2007-dt, Loncaric2016-uk}. This method is
-suitable for evaluating the quality of a localization (or repair) algorithm on a
-small number (e.g. 10s--100s) of programs. However, in general it requires a
-great deal of effort for the expert to divine the original programmer's
-intentions. Consequently, it is difficult to scale the expert-labeling to yield
-a dataset large enough (e.g. 1000s of programs) to facilitate machine learning.
-More importantly, this approach fails to capture the frequency with which errors
-occur in practice.
+Previous work has used experts to create a set of ill-typed programs 
+and their fixed versions~\citep[][]{Lerner2007-dt, Loncaric2016-uk},
+or to manually create \emph{fix templates} that can yield 
+\emph{repair patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
+%
+This approach is hard to scale upto yield data sets suitable for 
+machine learning. Worse, manual inspection misses the \emph{frequency} 
+of particular classes of novice mistakes and their fixes.
+%
+In contrast, we show that such fix templates can be 
+\emph{learned} from a labeled data set comprising pairs 
+of ill-typed and fixed programs, from a large, automatically 
+constructed training set of ill-typed programs labeled with repairs.
 
-\mypara{Interaction Traces.} We solve both the scale and frequency problems by
-instead extracting blame-labeled data sets from \emph{interaction traces}.
-Software development is an iterative process. Programmers, perhaps after a
-lengthy (and sometimes frustrating) back-and-forth with the type checker,
-eventually end up fixing their own programs. Previous work has used an
-instrumented \ocaml compiler to record this conversation, i.e. record the
-sequence of programs submitted by each programmer and whether or not it was
-deemed type-correct. For each ill-typed program in a particular programmer's
-trace, they found the first subsequent program in the trace that type-checks and
-declare it to be the fixed version. In our case, we used an existing
-dataset~\citep[][]{yunounderstand, Seidel:2017} of ill-typed programs and their
-fixes, that was extracted using that method. From these pairs, we can produce a
-\emph{diff} of the abstract syntax trees (ASTs), and then assign the blame
-labels to the \emph{smallest} sub-tree in the diff.
+
+\mypara{Interaction Traces.} 
+%
+Following \citep{Seidel:2017} we XXX \mynote{you CANNOT plagiarize text please rewrite para}.
+%
+%% We solve both the scale and frequency problems by
+%% instead extracting blame-labeled data sets from \emph{interaction traces}.
+%% Software development is an iterative process. Programmers, perhaps after a
+%% lengthy (and sometimes frustrating) back-and-forth with the type checker,
+%% eventually end up fixing their own programs. Previous work has used an
+%% instrumented \ocaml compiler to record this conversation, i.e. record the
+%% sequence of programs submitted by each programmer and whether or not it was
+%% deemed type-correct. For each ill-typed program in a particular programmer's
+%% trace, they found the first subsequent program in the trace that type-checks and
+%% declare it to be the fixed version. In our case, we used an existing
+%% dataset~\citep[][]{yunounderstand, Seidel:2017} of ill-typed programs and their
+%% fixes, that was extracted using that method. From these pairs, we can produce a
+%% \emph{diff} of the abstract syntax trees (ASTs), and then assign the blame
+%% labels to the \emph{smallest} sub-tree in the diff.
 
 \mypara{Example.} Suppose our student fixed the |mulByDigit| program as shown
 above by adding a |[]| around the result of the multiplication. For this
 example, the produced diff would include the new list expression |[hd * i]|.
-Thus, we determine that this expression is the repair we have to blame for
-``fixing'' the program.
+Thus, we determine that this expression is the repair that ``fixes'' the program.
 
 % \mypara{Bags-of-Abstracted-Terms.} Our representation of programs is
 % parameterized by a set of feature abstraction functions, (abbreviated to feature
@@ -224,16 +246,28 @@ Thus, we determine that this expression is the repair we have to blame for
 % the untypeable original program.
 
 
-\subsection{Extracting Frequent Fix Schemas}
+\subsection{Learning Candidate Repair Templates}
 \label{sec:overview:learn}
 
-Abstract fix schemas gathered from a dataset of ill-typed programs and their
-respective fixed version can introduce a large set of fix templates, which can
-be inappropriate for predicting the correct one to be used for the final program
-repair. Therefore, the next step in our approach is finding a \emph{small set}
-of fix templates, that will be more suitable for predicting and synthesizing
-those repairs, but still cover most of the fixes that users facilitate to repair
-their faulty programs.
+\mynote{dumped here}
+A GAST representative of a cluster can be used as 
+a fix template in order to produce a program repair 
+or provide feedback for the type-error that a faulty 
+program raises.
+
+Abstract fix schemas gathered from a dataset of ill-typed 
+programs and their respective fixed version can introduce 
+a huge set of fix templates, which can be inappropriate 
+for predicting the correct one to be used for the final 
+program repair. 
+
+Therefore, the next step in our approach is to learn 
+a set of fix templates, that is \emph{small enough} to 
+permit automatically predicting which template to apply 
+to a given erroneous program, but nevertheless \emph{covers}
+most of the fixes that arise in practice.
+
+\mynote{HEREHEREHEREHERE}
 
 \mypara{Clustering the Fixes.} Our dataset contains erroneous programs and the
 corresponding user-written fixes. Those fixes can be arbitrary code
