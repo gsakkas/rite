@@ -25,22 +25,64 @@ of a list with an integer. (bottom) The fixed version by the student.}
 \end{figure}
 
 
-\mypara{The Problem.} Consider the top \texttt{mulByDigit} program in
-\autoref{fig:mulByDigit} written by a student in an undergraduate Programming
-Languages course. The program is meant to multiply all the numbers in a list
-with an integer digit, but the student accidentally misuses the list append
+\mypara{The Problem.} Consider the program \texttt{mulByDigit} shown at 
+the top of \autoref{fig:mulByDigit}, written by a student in an undergraduate 
+Programming course. The program is meant to multiply all the numbers in a list
+with an integer digit. The student accidentally misuses the list append
 operator (\texttt{@}), applying it to a number and a list rather than two lists.
-While most programmers may find the compiler's type-checking error message
-enough, less experienced ones may not find it equally informative. In this
-particular instance, the student chose the approach shown in the bottom of
-\autoref{fig:mulByDigit} to fix his program, although multiple solutions are
-possible, including using the \texttt{::} operator to prepend a single element
-onto a list. We desire an automated technique to guide novice programmers by
-suggesting candidate solutions like the ones mentioned above.
+%
+Novice students who are still building a mental model of how the type checker
+works, are often perplexed by the compiler's error message \cite{fixme}. 
+Hence a novice will often take a long time to arrive at a suitable fix 
+such as the one shown at the bottom of \autoref{fig:mulByDigit}, where 
+the append operator is still used, but now, with a singleton list 
+containing the multiplication of the head \texttt{hd} and \texttt{i}.
+%
+Our goal is to use historical data of how previous programmers have fixed
+similar errors in their programs to automatically and rapidly guide the novice
+to can candidate solutions like the one above.
 
-\mypara{Solution. Suggesting Repairs via Supervised Classification and Program
-Synthesis.} Our approach is to view the process of \emph{fixing} an erroneous
-program as a \emph{supervised multi-class classification problem}, whose results
+\mypara{Solution: Analytic Program Synthesis.}
+%
+One approach is to view the search for candidate repairs as a 
+synthesis problem: synthesize (some small set of edits) to the 
+program that yields a good one \cite{rishabh2013,fixme}.
+%
+Of course, to ensure that synthesis is tractable, the search must be 
+carefully restricted to a relatively small, manually constructed 
+``repair model'' that may not include the ``right'' fixes for an
+erroneous program.
+%
+In this work, we present a novel strategy called 
+\emph{Analytic Program Synthesis} which breaks the 
+problem into three parts: 
+%
+First, \emph{learn} a set of widely used \emph{repair templates}.
+%
+Second, \emph{predict}, from an erroneous program, the correct repair template \emph{to apply}.
+%
+Third, \emph{synthesize} candidate repairs from the predicted template.
+
+
+In the remainder of this section, we give a high-level overview of our approach 
+by describing how to:
+
+\begin{enumerate}
+
+  \item Represent repairs abstractly via \emph{repair templates} (\autoref{sec:overview:templates}), 
+
+  \item Acquire a \emph{training set} of labeled ill-typed programs and fixes (\autoref{sec:overview:data}),
+
+  \item Learn a small set of candidate repair templates by \emph{clustering} the training set (\autoref{sec:overview:learn}),
+
+  \item Predict the appropriate template to apply by training a \emph{multi-class classifier} from the data set (\autoref{sec:overview:predict}), and  
+
+  \item Synthesize repairs by enumerating-and-checking terms from the predicted templates to give the programmer localized feedback (\autoref{sec:overview:synthesis}).
+
+\end{enumerate}
+
+\begin{comment}
+\emph{fixing} an erroneous program as a \emph{supervised multi-class classification problem}, whose results
 are then fed to a \emph{program synthesizer}. A multi-class classification
 problem entails learning a function that maps inputs to a discrete set of
 usually more than two output labels. A supervised learning problem is one in
@@ -49,29 +91,69 @@ task is to learn a function that accurately maps the inputs to output labels and
 generalizes to future inputs. Finally, program synthesis is a problem where,
 given a input high-level specification, a new program over some language is
 requested as output.
+\end{comment}
 
-The above problems, combined appropriately, can be translated to our final
-\emph{program repair} problem, which will help to realize our approach for
-suggesting good possible repairs as a practical tool. We structure our solution
-into five sub-problems:
-\begin{enumerate}
-  \item How can we acquire a training set of labeled ill-typed programs with
-  their respective user-provided fixes?
-  \item How can we represent possible solutions to a defect?
-  \item How can we find a minimal set of fix schemas?
-  \item What are the appropriate models to predict those fix schemas?
-  % \item How can we use predictive models to repair faulty programs?
-  \item How can we use predictive models and synthesized repairs to give
-  localized feedback to the programmer?
-\end{enumerate}
+%% RJ: HEREHEREHEREHEREHEREHEREHERE
 
-In the remainder of this section, we consider each sub-problem in turn.
+\subsection{Representing Program Fixes}
+\label{sec:overview:templates} 
+
+Next, we represent different fixes --- \ie common repair strategies found in our
+dataset --- via an abstract fix schema, that we refer to as \emph{fix
+templates}. We focus on AST-level templates that are easy for novices to
+understand.
+
+\mypara{Generic Abstract Syntax Trees.}
+Fixes in our dataset are represented as the ASTs of the expressions that changed
+in the ill-typed programs and transformed the program to the correct solution.
+To enable \emph{similar fixes} in different ill-typed programs to be clustered
+together and thus get a smaller number of clusters of better quality, we propose
+a further simplification of the changed ASTs: the \emph{Generic Abstract Syntax
+Trees} (GASTs). GASTs are taken from their respective ASTs, with all the
+specific variable, function, operator and etc. names removed from them. These
+trees keep information only about the \emph{fix's structure} rather than the
+specific changes in variables and functions. We also prune these GASTs at a
+certain depth $d$ to keep only the top-level changes of the fix. Pruned
+sub-trees are replaced with \emph{holes}, which can represent that \emph{any
+possible expression} in our language.
+
+% TODO: Make figure of GAST for running example.
+% The ASTs of the fixes is a good start, but those still contain too much
+% information. See our running example. |[hd * i]| is a list that includes a
+% multiplication of the variables |hd| and |i|. While we care about the list and
+% the binary operator, all the rest information is not that important. T
+
+\mypara{Fix Templates.} Previous work~\citep[][]{martinez2013automatically,
+martinez2015mining} has used \emph{fix templates} to generate \emph{patches}
+that can be used to repair an erroneous program. Those templates are usually
+picked manually by inspecting a large corpus of buggy programs and their fixes.
+However, we show that such fix templates can be \emph{learned} from those
+datasets using the clusters of fixes' GASTs. A GAST representative of a cluster
+can be used as a fix template in order to produce a program repair or provide
+feedback for the type-error that a faulty program raises.
+
+% TODO: Show template for running example.
+% For our example, the GAST would be a list with a binary operator as a child,
+% whose children in return would be holes, if we were to prune GASTs at a depth $d
+% = 2$. The binary operator would also be unknown at this point, thus creating a
+% template of the form |[_ # _]|. We see in \autoref{fig:suggestion} how that
+% template would work to provide feedback to programmers, but we discuss later how
+% we can complete the template with program synthesis.
+
+\begin{figure}[ht]
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> [_ (*@$\oplus$@*) _] @ (mulByDigit i tl)
+\end{ecode}
+\caption{A possible template for the \texttt{mulByDigit} program.}
+\label{fig:suggestion}
+\end{figure}
 
 
-
-%%% FIXME: Taken mostly from Nate, needs many changes...
 \subsection{Acquiring a Blame-Labeled Training Set}
-\label{subsec:step1}
+\label{sec:overview:data}
 
 The first step is to gather a training set of ill-typed programs, where each
 erroneous sub-term is explicitly labeled. Prior work has often enlisted expert
@@ -142,67 +224,8 @@ Thus, we determine that this expression is the repair we have to blame for
 % the untypeable original program.
 
 
-
-\subsection{Representing Program Fixes}
-\label{subsec:step2}
-
-Next, we represent different fixes --- \ie common repair strategies found in our
-dataset --- via an abstract fix schema, that we refer to as \emph{fix
-templates}. We focus on AST-level templates that are easy for novices to
-understand.
-
-\mypara{Generic Abstract Syntax Trees.}
-Fixes in our dataset are represented as the ASTs of the expressions that changed
-in the ill-typed programs and transformed the program to the correct solution.
-To enable \emph{similar fixes} in different ill-typed programs to be clustered
-together and thus get a smaller number of clusters of better quality, we propose
-a further simplification of the changed ASTs: the \emph{Generic Abstract Syntax
-Trees} (GASTs). GASTs are taken from their respective ASTs, with all the
-specific variable, function, operator and etc. names removed from them. These
-trees keep information only about the \emph{fix's structure} rather than the
-specific changes in variables and functions. We also prune these GASTs at a
-certain depth $d$ to keep only the top-level changes of the fix. Pruned
-sub-trees are replaced with \emph{holes}, which can represent that \emph{any
-possible expression} in our language.
-
-% TODO: Make figure of GAST for running example.
-% The ASTs of the fixes is a good start, but those still contain too much
-% information. See our running example. |[hd * i]| is a list that includes a
-% multiplication of the variables |hd| and |i|. While we care about the list and
-% the binary operator, all the rest information is not that important. T
-
-\mypara{Fix Templates.} Previous work~\citep[][]{martinez2013automatically,
-martinez2015mining} has used \emph{fix templates} to generate \emph{patches}
-that can be used to repair an erroneous program. Those templates are usually
-picked manually by inspecting a large corpus of buggy programs and their fixes.
-However, we show that such fix templates can be \emph{learned} from those
-datasets using the clusters of fixes' GASTs. A GAST representative of a cluster
-can be used as a fix template in order to produce a program repair or provide
-feedback for the type-error that a faulty program raises.
-
-% TODO: Show template for running example.
-% For our example, the GAST would be a list with a binary operator as a child,
-% whose children in return would be holes, if we were to prune GASTs at a depth $d
-% = 2$. The binary operator would also be unknown at this point, thus creating a
-% template of the form |[_ # _]|. We see in \autoref{fig:suggestion} how that
-% template would work to provide feedback to programmers, but we discuss later how
-% we can complete the template with program synthesis.
-
-\begin{figure}[ht]
-\begin{ecode}
-let rec mulByDigit i l =
-  match l with
-  | []     -> []
-  | hd::tl -> [_ (*@$\oplus$@*) _] @ (mulByDigit i tl)
-\end{ecode}
-\caption{A possible template for the \texttt{mulByDigit} program.}
-\label{fig:suggestion}
-\end{figure}
-
-
-
 \subsection{Extracting Frequent Fix Schemas}
-\label{subsec:step3}
+\label{sec:overview:learn}
 
 Abstract fix schemas gathered from a dataset of ill-typed programs and their
 respective fixed version can introduce a large set of fix templates, which can
@@ -223,10 +246,8 @@ outliers. Outliers are a relevant problem because student datasets often contain
 non-standard or idiosyncratic solutions. We propose to use a simple clustering
 algorithm applied atop a similarity metric for fixes.
 
-
-
 \subsection{Training Predictive Models}
-\label{subsec:step4}
+\label{sec:overview:predict}
 
 Next, we need to train models that can predict correctly the error location and
 the template that will be used to repair that location of a given program. Our
@@ -251,10 +272,8 @@ classifier’s confidence in its prediction. We use deep and dense architectures
 to give a better confidence to each template, aiming for a higher accuracy for
 template predictions.
 
-
-
-\subsection{Generating Feedback via Program Synthesis}
-\label{subsec:step5}
+\subsection{Synthesizing Feedback from Predicted Templates}
+\label{sec:overview:synthesis}
 
 Next, we want to exploit existing program synthesis techniques to \emph{generate
 repairs} that will be used to provide feedback to users. Our approach exploits
