@@ -4,7 +4,7 @@
 In this section, we introduce our approach to extracting useful fix schemas ---
 or \emph{fix templates} --- from a given dataset of already fixed programs. We
 represent those templates in terms of a simple language \repairLang
-(\autoref{fig:syntax}). \repairLang is a simple lambda calculus with integers,
+(\autoref{fig:rtl-syntax}). \repairLang is a simple lambda calculus with integers,
 booleans, pairs, and lists, but also with some abstractions that allow us to
 represent more general abstract fix schemas, that simultaneously capture the
 core structure of various fix patterns that novices use.
@@ -23,6 +23,7 @@ changing different arguments of a function application should be represented by
 the same fix template. We achieve that by \emph{clustering} the existing
 extracted fix templates into a smaller set, using that similarity metric.
 
+\input{syntax-loc.tex}
 
 \subsection{RTL: Repair Template Language}
 \label{subsec:lang}
@@ -32,7 +33,7 @@ templates and how we can acquire those templates from our dataset.
 
 \mypara{Syntax of RTL}
 We define here our Repair Template Language (RTL) as a simple lambda calculus
-(\repairLang in \autoref{fig:syntax}) with integers, booleans, pairs, and lists.
+(\repairLang in \autoref{fig:rtl-syntax}) with integers, booleans, pairs, and lists.
 This language will be used to abstract and define repair templates $\T$. Our RTL
 contains all the expressions that \lang included, but with four significant
 changes.
@@ -62,6 +63,7 @@ only the higher level expressions and formulate the templates.
 
 
 \mypara{Extracting Templates from Dataset Repairs}
+% TODO: Needs rewriting
 Templates $\T$ are extracted by the function $\templatesym$ from our program
 pair dataset. Using the $\diffsym$ function first, we acquire the changed
 expressions of the dataset. These changes are potentially the templates we are

@@ -4,7 +4,7 @@
 In this section, we introduce our high-level approach to predicting repair
 templates $\T$ for a given location of the program. More formally, our goal is
 to define the $\repairsym$ function in \autoref{fig:api}, in terms of the simple
-language \repairLang (\autoref{fig:syntax}), that produces an error location
+language \repairLang (\autoref{fig:rtl-syntax}), that produces an error location
 confidence score and confidence scores for some predefined templates for each
 subexpression in a program $e$. The $\repairsym$ function takes some feature
 extraction functions $\featuresym$, a dataset $\Dataset$ of program pairs $e
@@ -13,10 +13,10 @@ three more major functions.
 
 Firstly, the $\extractTsym$ function does the feature extraction from the
 program pair dataset and maps each subexpression of the original erroneous
-program to a boolean vector. The first bit refers to the error locations that
+program to a boolean vector. The first entry refers to the error locations that
 the user fixed, \ie whether a subexpression changed in a program pair. Those
 locations are acquired through the $\diffsym$ function. The rest of the boolean
-vector has at most one $\etrue$ value, at corresponds to the fix template $\T$
+vector has at most one $\etrue$ value, and corresponds to the fix template $\T$
 that used to repair that subexpression.
 
 The $\extractTsym$ function is applied to all the dataset program pairs and all
@@ -30,10 +30,10 @@ $\Runit$ and confidence scores $\Tmap{\Runit}$ for each of the selected fix
 templates for a specific subexpression in a new program $e$ that we want to
 finally repair. The $\predictTsym$ function expects as input the two generated
 predictive models and a new feature vector $\V$, that corresponds to a
-subexpression's feature vector acquired by $\extractTsym$ again. It is then
+subexpression's feature vector acquired again by $\extractTsym$. It is then
 applied to each subexpression in $e$'s type-error slice (TODO: ref) and
-generates a mapping between subexpressions and confidence scores $\Emap{(\Runit
-\times \Tmap{\Runit})}$ for the top-level function $\repairsym$.
+generates a mapping from program expressions to confidence scores $\Emap{(\Runit
+\times \Tmap{\Runit})}$ as output of the top-level function $\repairsym$.
 
 % Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
 % learning on a training set of feature vectors $\V$, each assigned a vector of
@@ -78,7 +78,7 @@ feature extraction process.
 
 \mypara{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
-words, for each production of $e$ in \autoref{fig:syntax} we introduce a feature
+words, for each production of $e$ in \autoref{fig:ml-syntax} we introduce a feature
 that is enabled (set to $1$) if the expression was built with that production,
 and disabled (set to $0$) otherwise. For example, the \IsNil feature describes
 whether an expression is the empty list $\enil$.
@@ -154,10 +154,10 @@ $\Model$ to be a boolean label, where ``false'' means the expression
 We also want to assign the correct labels for $\ModelT$. These labels must
 represent the repair template $\T$ that was used to fix the input program at a
 location $l$. If that location was not changed, all boolean labels are set to
-$\efalse$. Therefore, for the purpose of template prediction, we have a
+``false''. Therefore, for the purpose of template prediction, we have a
 fixed-length boolean vector that represents the fix template used for repairing
 a subexpression at a location $l$. This vector has at most one slot set to
-$\etrue$.
+``true''.
 
 \subsection{Training Predictive Models}
 \label{subsec:train}
@@ -207,7 +207,7 @@ work is commonly chosen to be the \emph{rectified linear unit} (ReLU), defined
 as $g(x) = \mathsf{max}(0,x)$ \citep{Nair2010-xg}. The number of layers, the
 number of neurons per layer, and the connections between layers constitute the
 \emph{architecture} of a neural network. In this work, we use relatively
-\emph{deep neural networks}(\dnn) which have an input layer, three hidden layers and
+\emph{deep neural networks} (\dnn) which have an input layer, three hidden layers and
 an output layer.
 
 % A major advantage of neural networks is their ability to discover interesting
@@ -244,8 +244,31 @@ number needing some tuning.
 
 Our ultimate goal is to be able to pinpoint what parts of an erroneous program
 should be repaired and what fix templates should be utilized for that purpose.
-Therefore, the $\predictTsym$ function uses $\Model$ and $\ModelT$ to predict a
-subexpression's confidence score $\Runit$ to be the error location and
-confidence scores $\Tmap{\Runit}$ for each of the selected fix templates for
-that subexpression, in case we find that it has to be finally repaired.
+Therefore, the $\repairsym$ function uses $\predictTsym$ to predict all
+subexpressions' confidence scores $\Runit$ to be an error location and
+confidence scores $\Tmap{\Runit}$ for each of the selected fix templates. In
+this section we show how all the functions in our high-level API in
+\autoref{fig:api} are combined to produce a final list of confidence scores for
+a new program $P$.
 
+\mypara{The Prediction Algorithm}
+Our algorithm firstly extracts the machine learning appropriate dataset $D_{ML}$
+from the program pairs dataset $D$. For each program pair in $D$, the
+$\extractTsym$ function returns a mapping from the erroneous program's
+expression to a feature and label vector. The function
+$\textsc{GetSubEsInTESlice}$ only keeps the expressions in the the type-error
+slice and returns a list of the respective feature and label vectors, which is
+then added in the $D_{ML}$ dataset. The $D_{ML}$ dataset is used by the
+$\trainTsym$ function to generate our predictive $Models$. At this point we have
+to perform again the feature extraction for a new program $P$, not included
+before in our dataset $D$. Thus we use again $\extractTsym$, by providing
+program $P$ twice, since in the case we don't have a program as we are trying to
+produce the final repair. After acquiring again only the expression that we find
+in the type-error slice and therefore ignoring the label vectors, we apply the
+$\predictTsym$ function in each feature vector $v$, that corresponds to an
+expression in the type-error slice of $P$. The predicted confidence scores are
+then accumulated into the $EMap$ mapping, which is used by our synthesis
+algorithm in \autoref{sec:synthesis} to correlate expressions in $P$ with their
+confidence scores.
+
+\input{predict-algo.tex}
