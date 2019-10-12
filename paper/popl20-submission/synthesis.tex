@@ -6,8 +6,8 @@ models. In \autoref{subsec:location-rank}, we show how the predicted error
 locations are used if \emph{multiple} of them have to be fixed and in
 \autoref{subsec:local-synthesis}, we present our synthesis algorithm for
 producing \emph{local repairs} for a given location of the input program.
-Finally, we briefly show in \autoref{subsec:repair} how we use the
-aforementioned techniques to \emph{fully repair} an ill-typed program.
+% Finally, we briefly show in \autoref{subsec:repair} how we use the
+% aforementioned techniques to \emph{fully repair} an ill-typed program.
 
 \subsection{Ranking Error Locations}
 \label{subsec:location-rank}
@@ -26,7 +26,7 @@ program that type-checks using that location and repair templates, the next
 location is considered, until it succeeds.
 
 \mypara{Multiple Error Locations}
-However, in practice, it is very often that more that one location may need to
+In practice, however, it is very often that more that one location may need to
 be repaired. Therefore, our previous approach will fail to generate a solution
 in many cases. So we modify our simple algorithm to synthesize programs with
 multiple error locations.
@@ -94,7 +94,7 @@ generated lazily in practice and the top-N can be requested from the user
 depending on the level of feedback that is needed.
 
 
-\subsection{Program Repair}
-\label{subsec:repair}
+% \subsection{Program Repair}
+% \label{subsec:repair}
 
-\mypara{Combining Error Localization and Local Repairs}
+% \mypara{Combining Error Localization and Local Repairs}

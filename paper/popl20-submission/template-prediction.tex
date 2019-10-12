@@ -78,37 +78,37 @@ feature extraction process.
 
 \mypara{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
-words, for each production of $e$ in \autoref{fig:ml-syntax} we introduce a feature
-that is enabled (set to $1$) if the expression was built with that production,
-and disabled (set to $0$) otherwise. For example, the \IsNil feature describes
-whether an expression is the empty list $\enil$.
+words, for each production of $e$ in \autoref{fig:ml-syntax} we introduce a
+feature that is enabled (set to $1$) if the expression was built with that
+production, and disabled (set to $0$) otherwise. For example, the \IsNil feature
+describes whether an expression is the empty list $\enil$.
 
-We distinguish between matching on a list vs.\ on a pair, as this affects the
-typing derivation. We also assume that all pattern matches are well-formed ---
-\ie all patterns must match on the same type. Ill-formed match expressions would
-lead to a type-error; however, they are already effectively localized to the
-match expression itself. We note that this is not a \emph{fundamental}
-limitation, and one could easily add features that specify whether a match
-\emph{contains} a particular pattern, and thus have a match expression that
-enables multiple features.
+% We distinguish between matching on a list vs.\ on a pair, as this affects the
+% typing derivation. We also assume that all pattern matches are well-formed ---
+% \ie all patterns must match on the same type. Ill-formed match expressions would
+% lead to a type-error; however, they are already effectively localized to the
+% match expression itself. We note that this is not a \emph{fundamental}
+% limitation, and one could easily add features that specify whether a match
+% \emph{contains} a particular pattern, and thus have a match expression that
+% enables multiple features.
 
 \mypara{Contextual syntactic features}
 These are similar to local syntactic features, but lifted to describe the parent
-and children of an expression. For example, the \IsCaseListP feature in
-\autoref{fig:mulByDigit} describes whether an expression's \emph{parent} matches on
-a list. If a particular $e$ does not have children (\eg a variable $x$) or a
-parent (\ie the root expression), we leave the corresponding features disabled.
-This gives us a notion of the \emph{context} in which an expression occurs,
-similar to the \emph{n-grams} used in linguistic models
-\citep{Hindle2012-hf,Gabel2010-el}.
+and children of an expression. For example, the \IsCaseListP feature would
+describe whether an expression's \emph{parent} matches on a list. If a
+particular $e$ does not have children (\eg a variable $x$) or a parent (\ie the
+root expression), we leave the corresponding features disabled. This gives us a
+notion of the \emph{context} in which an expression occurs, similar to the
+\emph{n-grams} used in linguistic models \citep{Hindle2012-hf,Gabel2010-el}.
 
 \mypara{Expression size}
 We also propose a feature representing the \emph{size} of each expression, \ie
-how many sub-expressions does it contain? For example, the \ExprSize feature in
-\autoref{fig:mulByDigit} is set to four for the expression |mulByDigit i tl| as it
-contains four expressions: the three variables and the application itself. This
-allows the model to learn that, \eg, expressions closer to the leaves are more
-likely to be blamed than expressions closer to the root.
+how many sub-expressions does it contain?
+% For example, the \ExprSize feature in \autoref{fig:mulByDigit} is set to four
+% for the expression |mulByDigit i tl| as it contains four expressions: the three
+% variables and the application itself.
+This allows the model to learn that, \eg, expressions closer to the leaves are
+more likely to be fixed than expressions closer to the root.
 
 \mypara{Typing features}
 A natural way of summarizing the context in which an expression occurs is with
@@ -132,10 +132,10 @@ clear \emph{syntactically}. For example, the expressions |tl| and
 |mulByDigit i tl| in \autoref{fig:mulByDigit} both enable \HasTypeList, as they
 are both inferred to have a type that mentions $\tlist{\cdot}$.
 
-Note that our use of typing features in an ill-typed program subjects us to
-\emph{traversal bias} \citep{McAdam1998-ub}. For example, the |mulByDigit i tl|
-expression might alternatively be assigned the type $\tint$. Our models will
-have to learn good localizations in spite this bias.
+% Note that our use of typing features in an ill-typed program subjects us to
+% \emph{traversal bias} \citep{McAdam1998-ub}. For example, the |mulByDigit i tl|
+% expression might alternatively be assigned the type $\tint$. Our models will
+% have to learn good localizations in spite this bias.
 
 \mypara{Type error slice}
 Finally, we wish to distinguish between changes that could fix the error, and

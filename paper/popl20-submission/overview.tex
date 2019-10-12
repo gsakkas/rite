@@ -156,19 +156,6 @@ pair, we then produce a \emph{diff} of the abstract syntax trees (ASTs), and
 assign as the dataset's fix labels, the \emph{smallest} sub-tree that changed
 between the correct and ill-typed attempt of the program.
 
-\mypara{Feature Extraction.} The machine learning models that we will use in
-\autoref{sec:overview:predict} expect datasets of labeled \emph{fixed-length
-vectors} as inputs. Therefore, we define a transformation of repair-labeled
-programs to fixed-length vectors. Similarly to previous work
-~\citep{Seidel:2017}, we define a set of feature extraction functions $f_1,
-\ldots, f_n$, that map program subexpressions to a numeric value (or just $\{0,
-1\}$ to encode a boolean property). Given a set of feature extraction functions,
-we can represent a single program's AST as a list of fixed-length vectors by
-decomposing a program AST $e$ into a list of its constituent subexpressions
-$\{e_1, \ldots, e_m\}$ and then representing each $e_i$ with the $n$-dimensional
-vector $[f_1(e_i), \ldots, f_n(e_i)]$. This method is known as a
-\emph{bag-of-abstracted-terms} (BOAT) representation in previous work.
-
 
 \subsection{Learning Candidate Fix Templates}
 \label{sec:overview:learn}
@@ -218,16 +205,29 @@ given a labeled training set, the task is to learn a function that accurately
 maps the inputs to output labels and generalizes to future inputs. In a
 \emph{classification} problem, the function we are trying to learn, maps inputs
 to a discrete set of usually two or more output labels, called \emph{classes}.
-Therefore, learning a function tha will map subexpressions of ill-typed programs
-to a small set of fix templates entails a \emph{multi-class} classification
-(MCC) problem.
+Therefore, learning a function that will map subexpressions of ill-typed
+programs to a small set of fix templates entails a \emph{multi-class}
+classification (MCC) problem.
+
+\mypara{Feature Extraction.} The machine learning models that we will train to
+solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
+inputs. Therefore, we define a transformation of fix-labeled programs to
+fixed-length vectors. Similarly to previous work ~\citep{Seidel:2017}, we define
+a set of feature extraction functions $f_1, \ldots, f_n$, that map program
+subexpressions to a numeric value (or just $\{0, 1\}$ to encode a boolean
+property). Given a set of feature extraction functions, we can represent a
+single program's AST as a set of fixed-length vectors by decomposing a program
+AST $e$ into a set of its constituent subexpressions $\{e_1, \ldots, e_m\}$ and
+then representing each $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots,
+f_n(e_i)]$. This method is known as a \emph{bag-of-abstracted-terms} (BOAT)
+representation in previous work.
 
 \mypara{Predicting Templates via MCC}
 Our fix-labeled data set can be updated so the labels represent the
 corresponding template that fixes each location, drawn from the minimal set of
-fix templates that were acquired through our clustering method. We then train a
-\emph{Deep Neural Network (DNN)} classifier on the updated template-labeled data
-set, a popular choice for classification problems.
+fix templates that were acquired through clustering. We then train a \emph{Deep
+Neural Network (DNN)} classifier on the updated template-labeled data set, a
+popular choice for classification problems.
 
 Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of

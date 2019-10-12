@@ -24,13 +24,13 @@ manual evaluation.
 \label{subsec:gen_method}
 To answer our questions, we will use an \ocaml dataset gathered from an
 undergraduate Programming Languages course at UNKNOWN UNIVERSITY, previously
-used in related work [FIXME: cite later]. This dataset consists of ill-typed
-programs and their subsequent fixes, drawn from two different years of that
-class, The first part of the dataset comes from the Spring 2014 class (\SPRING),
-with a cohort of 46 students and the second comes from the Fall 2015 class
-(\FALL), with a cohort of 56 students. There were totally 23 distinct programs
-that the students worked on this homework. While the extracted programs are
-relatively small, they demonstrate a range of functional programming idioms, \eg
+used in related work [FIXME: cite]. This dataset consists of ill-typed programs
+and their subsequent fixes, drawn from two different years of that class, The
+first part of the dataset comes from the Spring 2014 class (\SPRING), with a
+cohort of 46 students and the second comes from the Fall 2015 class (\FALL),
+with a cohort of 56 students. There were totally 23 distinct programs that the
+students worked on this homework. While the extracted programs are relatively
+small, they demonstrate a range of functional programming idioms, \eg
 higher-order functions and (polymorphic) algebraic data types.
 
 \mypara{Feature Extraction}
@@ -64,10 +64,10 @@ standard deviation above the mean, establishing a diff threshold of 40\%. We
 also discard programs that changed in 5 or more locations, since such changes
 can be small in expression size, they can still be considered a ``rewrite''. It
 is also highly unlikely that such ``fixes'' can reproduced by \toolname or any
-related work [FIXME: cite something relevant]. All these discarded outliers
-account for roughly 32\% of each dataset, leaving us with 2,475 program pairs
-for \SPRING and 2,177 pairs for \FALL. For all of our tests, we use \SPRING as a
-training set and \FALL as a test set.
+related work [FIXME: cite relevant]. All these discarded outliers account for
+roughly 32\% of each dataset, leaving us with 2,475 program pairs for \SPRING
+and 2,177 pairs for \FALL. For all of our tests, we use \SPRING as a training
+set and \FALL as a test set.
 
 \mypara{Accuracy Metrics}
 A recent study of fault localization techniques \citep[][]{Kochhar2016-oc} shows
@@ -87,11 +87,10 @@ generalize well between different groups of solutions.
 Finally, for a more qualitative evaluation of \toolname's synthesized solutions
 based on the above results, we ran a human study at UNKNOWN UNIVERSITIES. Each
 participant was asked to evaluate the quality of the program fixes and their
-locations against \seminal's repairs \citep[][]{Lerner2006-pj, Lerner2007-dt}.
-For each program, beside the two repairs, the participants were given the
-original ill-typed program, along with the standard \ocaml compiler's error
-message and a short description of what the original author of the program
-intended it to do.
+locations against \seminal's repairs \citep{Lerner2006-pj, Lerner2007-dt}. For
+each program, beside the two repairs, the participants were given the original
+ill-typed program, along with the standard \ocaml compiler's error message and a
+short description of what the original author of the program intended it to do.
 
 \subsection{Quantitative Evaluation}
 \label{subsec:quan_eval}
@@ -234,38 +233,40 @@ intents in bug fixing.
 \subsection{Qualitative Evaluation}
 \label{subsec:quan_eval}
 
-To assess the quality of \toolname's repairs, we conducted an IRB-approved
-human study with 28 participants. From this study, we found that both the
-edit locations and final repairs produced by \toolname were better than those
-produced by \seminal (FIXME cite), a state of the art Ocmal repair tool, 
-in a statistically significant manner. Subsection~\ref{subsubsec:study_setup} 
-describes our experimental design, and subsection~\ref{subsubsec:study_res} 
+To assess the quality of \toolname's repairs, we conducted an IRB-approved human
+study with 28 participants. From this study, we found that both the edit
+locations and final repairs produced by \toolname were better than those
+produced by \seminal (FIXME cite), a state of the art Ocmal repair tool, in a
+statistically significant manner. Subsection~\ref{subsubsec:study_setup}
+describes our experimental design, and subsection~\ref{subsubsec:study_res}
 presents our detailed findings.
 
 \subsubsection{Human Study Setup}
 \label{subsubsec:study_setup}
 
-FIXME? Add some intro sentence here?
+% FIXME? Add some intro sentence here?
 
-For our human study, participants were recruited from \emph{two 
-public research institutes removed for blind review}. The study was also 
-advertised on twitter. To be included for analysis, participants 
-had to assess the quality and give comprehensible bug descriptions of at 
-least 5 / 10 stimuli. In total, there were 28 valid participants, and 
-the study took around 25 minutes to complete. For compensation, participant 
-had the option to enter a drawing for an Amazon echo voice assistant.
+For our human study, participants were recruited from \emph{two public research
+institutes removed for blind review}. The study was also advertised on twitter.
+To be included for analysis, participants had to assess the quality and give
+comprehensible bug descriptions of at least 5 / 10 stimuli. In total, there were
+28 valid participants, and the study took around 25 minutes to complete. For
+compensation, participant had the option to enter a drawing for an Amazon echo
+voice assistant.
 
-To create the stumuli, a corpus of 21 buggy programs were randomly selected from FIXME.
-From this corpus, each participant was then shown 10 randomly selected programs. 
-Along with each buggy program, participants were also shown two candidate repairs: 
-one generated by \toolname and one by \seminal. The participant was 
-always unaware which tool generated which candidate patch. Participants were then asked to assess 
-the quality of each candidate repair on a Likert scale of 1 to 5. They were further asked 
-for a binary assessment of the quality of each repair's edit location. An example 
-stimulus can be found in Figure~\ref{fig:stimulus}.
+To create the stimuli, a corpus of 21 buggy programs were randomly selected from
+1834 type-correct synthesized programs. From this corpus, each participant was
+then shown 10 randomly selected programs. Along with each buggy program,
+participants were also shown two candidate repairs: one generated by \toolname
+and one by \seminal. For both, we used the highest-ranked solution that they
+returned. The participant was always unaware which tool generated which
+candidate patch. Participants were then asked to assess the quality of each
+candidate repair on a Likert scale of 1 to 5. They were further asked for a
+binary assessment of the quality of each repair's edit location. An example
+stimulus can be found in \autoref{fig:stimulus}.
 
-In our study, we also collected self-reported estimates of both programming 
-and Ocaml-specific experience as well as qualitative data assessing factors 
+In our study, we also collected self-reported estimates of both programming and
+\ocaml-specific experience as well as qualitative data assessing factors
 influencing each participant's subjective judgment of repair quality.
 
 \begin{figure}
@@ -277,26 +278,27 @@ influencing each participant's subjective judgment of repair quality.
 \subsubsection{Human Study Results}
 \label{subsubsec:study_res}
 
-FIXME: Intro sentence here.
+% FIXME: Intro sentence here.
 
-From the 28 participants, we collected 534 patch quality assessments, 267 each for
-\toolname and \seminal generated repairs. Overall, we found that
-\toolname's repairs are 115.3\% the quality of \seminal's repairs ($p=0.022$).
-Specifically, \toolname's repairs achieved an average quality rating of 2.41/5 while
-\seminal's repairs had an average rating of only 2.09/5. All tests for statistical significance 
-used the Wilcoxon signed-rank test.
+From the 28 participants, we collected 534 patch quality assessments, 267 each
+for \toolname and \seminal generated repairs. Overall, we found that \toolname's
+repairs are 115.3\% the quality of \seminal's repairs ($p=0.022$). Specifically,
+\toolname's repairs achieved an average quality rating of 2.41/5 while
+\seminal's repairs had an average rating of only 2.09/5. All tests for
+statistical significance used the Wilcoxon signed-rank test.
 
-To tease apart this quality assessment, we also asked participants to assess just the
-quality of the repair's edit location rather than the final repair. From this data, we found
-that \toolname identified a viable edit location 81.3\% of the time while
-\seminal only found a good edit location 73.0\% of the time. Our participants, therefore,
-perceived \toolname's fault localization accuracy as 10\% better than \seminal's. 
-This difference was statistically significant ($p=0.018$).
+To tease apart this quality assessment, we also asked participants to assess
+just the quality of the repair's edit location rather than the final repair.
+From this data, we found that \toolname identified a viable edit location 81.3\%
+of the time while \seminal only found a good edit location 73.0\% of the time.
+Our participants, therefore, perceived \toolname's fault localization accuracy
+as 10\% better than \seminal's. This difference was statistically significant
+($p=0.018$).
 
-FIXME: Maybe add a paragraph here on qualitative results
+% FIXME: Maybe add a paragraph here on qualitative results
 
-Together, these two results demonstrate that humans perceive \toolname's 
-repair quality to be significantly better than the current state of the art, both in 
+Together, these two results demonstrate that humans perceive \toolname's repair
+quality to be significantly better than the current state of the art, both in
 terms of edit location accuracy and the quality of the overall repair.
 
 
