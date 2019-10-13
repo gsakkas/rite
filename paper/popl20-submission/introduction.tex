@@ -5,30 +5,30 @@
 The increasing number of computer science related jobs
 ~\citep[][]{compsci-demand} in the recent years has resulted in an unprecedented
 demand for computer science education. Colleges and universities have more
-students than ever~\citep[][]{compsci-classes} enrolled to their computer
+students than ever~\citep[][]{compsci-classes} enrolled in their computer
 science classes and their numbers will only increase in the foreseeable future.
-Other students wanting to join this growth of technology and computing, have
-turned to Massive Open Online Courses (MOOCs)~\citep[][]{moocs} to get the
-appropriate knowledge in order to pursue their dream in the technology job
+Other students have
+turned to Massive Open Online Courses (MOOCs)~\citep[][]{moocs}
+to pursue their dream in the technology job
 market. While computer science education has become much more accessible with
-these larger classrooms over the years, one may ask if its \emph{quality} has
-remained the same as of the more traditional smaller classrooms, and
-specifically the feedback that students get for homework and exams.
+these larger classrooms, one may ask if its \emph{quality} has
+remained the same as that of the more traditional smaller classrooms,
+especially the feedback that students get for homework and exams.
 
 %%% Good properties of a solution
 Recent research has focused on providing \emph{fully automated feedback} to
-students for the programming assignments that these classes usually include. In
-this paper we propose such a solution, that can be used to give personalized
-feedback to students for introductory programming exercises without requiring
+students for classroom programming assignments. In
+this paper we propose such a method to give personalized
+feedback for introductory programming exercises without requiring
 any instructor effort. Previous work has exploited the advances in \emph{program
 repair} research to generate such feedback.
 % TODO: Cite clara, autoproof, sarfgen, ... here
 
 By repairing an incorrect student attempt on a programming assignment and
-producing a \emph{minimal} repair \wrt some edit-distance metric, so it can be
-as close as possible to the original one, we can generate \emph{high-quality}
+producing a \emph{minimal} repair \wrt some edit-distance metric,
+we can generate \emph{high-quality}
 feedback for that attempt. Furthermore, the repair algorithm we propose must be
-able to \emph{generalize} over different programming assignments and to not be
+able to \emph{generalize} over different programming assignments and not be
 specific to existing ones only. In this paper we focus on generating such
 repairs that will enable better feedback generation and leave the latter part as
 future work.
@@ -36,7 +36,7 @@ future work.
 %%% Current state of the art
 % Failing test cases
 Presenting students with \emph{failing test cases} still remains one of the most
-common approaches for providing feedback on erroneous programming assignments
+common approaches for providing feedback on erroneous programming assignment
 attempts. These test cases can be carefully selected by the instructor to guide
 their students in debugging their code. However, for students that are not yet
 so experienced in programming, such feedback may not be sufficient. More
@@ -49,10 +49,10 @@ Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
 \emph{fault localization} for more guided feedback. Fault localization is the
 task of identifying possible program elements (\eg lines, expressions \etc) that
 are the cause of the program error at hand. While these techniques can pinpoint
-with high accuracy the precise location in the student's code that cause the
+with high accuracy the precise location in the student's code that causes the
 error and needs to be fixed, inexperienced programmers can still be confused by
 such feedback. However, fault localization combined with \emph{program repair}
-can provide the appropriate feedback for those novice programmers.
+can provide the appropriate feedback for these novice programmers.
 
 % Program repair
 Recent automated systems for providing feedback via \emph{program repair}, like
@@ -60,13 +60,13 @@ AutoGrader [TODO: cite] demand a lot of manual effort from the instructor and
 their understanding of the system details. AutoGrader requires a reference
 solution per programming assignment and a custom error model that will help
 repair incorrect student attempts, thus the instructor has to spent extra time
-for each assignment, while the algorithm finding the repairs is still very
+for each assignment, and the algorithm finding the repairs is very
 expensive due to constraint-solving. Systems like CLARA [TODO: cite] require
 much less manual effort from the instructor by using clustering and machine
 learning techniques on previous student attempts on the programming assignments.
 While the repairs are generated relatively quickly, their program matching
-between previous correct attempts and the new incorrect ones, can often lead to
-imprecise and not minimal repairs. Moreover, their use of Integer Linear
+between previous correct attempts and the new incorrect ones can often lead to
+imprecise and non-minimal repairs. Moreover, their use of Integer Linear
 Programming (ILP) for variable alignment between possible local repairs can hurt
 its scalability. [TODO: Section N] provides a detailed survey of related work.
 % TODO: Add Seminal(it's the one on our human study) here?
@@ -77,9 +77,9 @@ its scalability. [TODO: Section N] provides a detailed survey of related work.
 \mypara{Data-Driven Program Repair}
 In this paper, we introduce \toolname, a \emph{data-driven} approach to
 repairing novice attempts on programming assignments based on supervised
-learning. \toolname uses a large dataset with pairs of ill-typed programs and
-their subsequent fixes, to \emph{automatically learn models} that localize
-errors, suggest template fixes, and uses \emph{program synthesis} to turn those
+learning. \toolname uses a large dataset containing pairs of ill-typed programs and
+their subsequent fixes to \emph{automatically learn models} that localize
+errors and suggest template fixes, and uses \emph{program synthesis} to turn those
 templates into \emph{program repairs}. Given a new ill-typed program, \toolname
 generates a list of potential solutions ranked by likelihood and an
 \emph{edit-distance} metric. We evaluate \toolname by comparing its accuracy on
@@ -131,4 +131,3 @@ introductory programming course.
 %   \item The empirical evaluation. FIXME.
 %   \item The human study. FIXME.
 % \end{itemize}
-
