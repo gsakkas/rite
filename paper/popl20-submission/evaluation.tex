@@ -2,17 +2,17 @@
 \label{sec:eval}
 
 We have implemented our technique for repairing type errors for a purely
-functional subset of \ocaml with polymorphic types and functions. We seek to the
-following \emph{Research Questions}.
+functional subset of \ocaml with polymorphic types and functions. We seek to
+answer the following Research Questions:
 
 \begin{itemize}
     %%% FIXME: only some initial thoughts
     \item \textbf{RQ1}: What is the \emph{quality} of \toolname's repairs?
-    \item \textbf{RQ2}: Does \toolname \emph{localize} correctly errors?
+    \item \textbf{RQ2}: Does \toolname correctly \emph{localize} errors?
     \item \textbf{RQ3}: Do our ML models \emph{generalize} well for error
     localization and template prediction?
-    \item \textbf{RQ4}: Are \toolname's repairs actually useful for feedback
-    generation to novice programmers?
+    \item \textbf{RQ4}: Are \toolname's repairs actually useful to novice programmers
+    for feedback generation?
 \end{itemize}
 
 We first present our experimental methodology and then we will try to answer
@@ -22,14 +22,14 @@ manual evaluation.
 
 \subsection{General Methodology}
 \label{subsec:gen_method}
-To answer our questions, we will use an \ocaml dataset gathered from an
+To answer our questions, we use an \ocaml dataset gathered from an
 undergraduate Programming Languages course at UNKNOWN UNIVERSITY, previously
 used in related work [FIXME: cite]. This dataset consists of ill-typed programs
 and their subsequent fixes, drawn from two different years of that class, The
 first part of the dataset comes from the Spring 2014 class (\SPRING), with a
 cohort of 46 students and the second comes from the Fall 2015 class (\FALL),
-with a cohort of 56 students. There were totally 23 distinct programs that the
-students worked on this homework. While the extracted programs are relatively
+with a cohort of 56 students. This homework require students to write 23
+distinct programs. While the extracted programs are relatively
 small, they demonstrate a range of functional programming idioms, \eg
 higher-order functions and (polymorphic) algebraic data types.
 
@@ -61,8 +61,8 @@ changes between compilations; at some point the ``fix'' becomes a ``rewrite''.
 We do not wish to consider the ``rewrites'' in our evaluation, so we discard
 outliers where the fraction of expressions that have changed is more than one
 standard deviation above the mean, establishing a diff threshold of 40\%. We
-also discard programs that changed in 5 or more locations, since such changes
-can be small in expression size, they can still be considered a ``rewrite''. It
+also discard programs that changed in 5 or more locations, since we consider
+these to also be ``rewrites''. It
 is also highly unlikely that such ``fixes'' can reproduced by \toolname or any
 related work [FIXME: cite relevant]. All these discarded outliers account for
 roughly 32\% of each dataset, leaving us with 2,475 program pairs for \SPRING
@@ -78,8 +78,8 @@ occurred in our top three or top five predictions, but our automatic method of
 producing fixes may consider more than that. We also extend such intuition, that
 a user won't consider more than five ``suggestions'' as feedback, to possible
 fixes, and thus we evaluate \toolname's top six template predictions on whether
-they include the correct template, that matches the user's change. We also
-include the confusion matrix of the top one predictions for all locations, in
+they include the correct template, \ie the one that matches the user's change. We also
+include the confusion matrix of the top-one predictions for all locations, in
 order to present what templates our models usually mix together and see if they
 generalize well between different groups of solutions.
 
@@ -146,7 +146,7 @@ has been found to converge faster, was used to train our \dnn.
 prediction experiments. The naive baseline of selecting templates at random
 achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
 \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
-(\PopularTopSix\% Top-6). Our \dnn classifier of course outperforms those naive
+(\PopularTopSix\% Top-6). Our \dnn classifier significantly outperforms those naive
 classifiers, ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6
 accuracy. Interestingly, with only \dnn's first prediction, one outperforms top
 6 predictions of both \random and \popular.
@@ -170,7 +170,7 @@ Figure includes the confusion matrix of the top 30 templates that were acquired
 from the training set and were tested on the same \FALL dataset as before. We
 observe that most of the templates are predicted correctly and only a few of
 them are often mis-predicted for another template. For example, we see that
-programs that would require template 20 to be fixed, almost always are
+programs that would require template 20 to be fixed almost always are
 mis-predicted with template 11. [TODO: show those two templates, both ``let''s
 with some ``tuple'' in their ASTs]
 
@@ -186,9 +186,9 @@ units (ReLU) as their activation function and are trained using the \emph{early
 stopping} approach and the \textsc{Adam} optimizer.
 
 Previous work \citep[][]{Seidel:2017} has used more shallow neural networks, but
-also less features per node. In our implementation, we added more contextual
+also fewer features per node. In our implementation, we added more contextual
 features following recent research direction, which has shown them to be the
-most important ones \citep[TODO: add the lstm paper][]{Seidel:2017}. Thus, we
+most important \citep[TODO: add the lstm paper][]{Seidel:2017}. Thus, we
 chose deeper neural network architectures for our error localization models as
 well.
 
@@ -212,11 +212,11 @@ We guide our synthesis algorithm, using the above predictions for finding the
 proper locations to fix and what template to use. Every program has a timeout of
 \emph{30s} to be repaired by the synthesis algorithm. We observe that
 \textbf{12.54\%} of our testing dataset's programs fail to be repaired within
-that amount of time. The main reason is of course the combined failure of our
+that amount of time. The main reason is the combined failure of our
 models to give high confidence to the correct locations and templates, thus
 making the search very expensive. However, for the 87.46\% of the programs that
 actually finish synthesizing, around \textbf{96.32\%} return a solution that
-type-check. The small amount of programs that couldn't find a well-typed
+type-checks. The small amount of programs that couldn't find a well-typed
 solution but still finished, usually required some bigger changes (\ie
 expressions whose ASTs were deeper than 4 levels) that our algorithm didn't
 explore in this version.
@@ -251,7 +251,7 @@ institutes removed for blind review}. The study was also advertised on twitter.
 To be included for analysis, participants had to assess the quality and give
 comprehensible bug descriptions of at least 5 / 10 stimuli. In total, there were
 28 valid participants, and the study took around 25 minutes to complete. For
-compensation, participant had the option to enter a drawing for an Amazon echo
+compensation, participants had the option to enter a drawing for an Amazon Echo
 voice assistant.
 
 To create the stimuli, a corpus of 21 buggy programs were randomly selected from
@@ -300,5 +300,3 @@ as 10\% better than \seminal's. This difference was statistically significant
 Together, these two results demonstrate that humans perceive \toolname's repair
 quality to be significantly better than the current state of the art, both in
 terms of edit location accuracy and the quality of the overall repair.
-
-

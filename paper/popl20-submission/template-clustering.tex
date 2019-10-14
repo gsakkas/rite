@@ -1,7 +1,7 @@
 \section{Learning Fix Templates}
 \label{sec:templ-cluster}
 
-In this section, we introduce our approach to extracting useful fix schemas ---
+In this section, we introduce our approach for extracting useful fix schemas ---
 or \emph{fix templates} --- from a given dataset of already fixed programs. We
 represent those templates in terms of a simple language \repairLang
 (\autoref{fig:rtl-syntax}). \repairLang is a simple lambda calculus with integers,
@@ -13,7 +13,7 @@ A template over \repairLang is a \emph{Generic Abstract Syntax Tree (GAST)}.
 Those GASTs will then be used to predict and generate possible repairs for new
 erroneous programs, as described in the next two sections. However, having a
 single fix template for each program pair that appears in the dataset can lead
-in large number of templates, rendering it impossible to train predictive models
+to a large number of templates, rendering it impossible to train predictive models
 that will choose from so many options.
 
 Therefore, we define a \emph{GAST similarity metric} that will enable us
@@ -28,7 +28,7 @@ extracted fix templates into a smaller set, using that similarity metric.
 \subsection{RTL: Repair Template Language}
 \label{subsec:lang}
 
-In this section, we define the language we are going to use to represent
+In this section, we define the language we use to represent
 templates and how we can acquire those templates from our dataset.
 
 \mypara{Syntax of RTL}
@@ -43,7 +43,7 @@ changes.
     \emph{unspecified}. That means that $x$ denotes that that place of the code
     has a variable name, but it is unknown at that point.
     \item Literal values $n$ can be any integer or floating point number,
-    boolean value or character and string. Same as variables, these are left
+    boolean value or character and string. Like variables, these are left
     unspecified.
     \item Operators $\oplus$ are also left unspecified.
     \item A \emph{wildcard} expression $\_$ is added, which is used to denote
@@ -95,8 +95,8 @@ location of the application.
 
 % TODO: Should we give a better name than "similarity metric"
 \mypara{GAST Similarity Metric}
-Having programs written over \repairLang, forces similar changes, \ie changing a
-variable name, to have the same GAST. This is really helpful when we try to
+Having programs written over \repairLang forces similar changes, \ie changing a
+variable name, to have identical GASTs. This is really helpful when we try to
 group different changes together into some templates $\T$. We want to extend and
 generalize this ``similarity'' of program changes, in order to get a small but
 generally applicable number of repair templates.
@@ -115,11 +115,11 @@ the following simple rules hold:
 
 
 \mypara{Clustering}
-The main goal of clustering is to eliminate the possibility of equivalent
-expressions to be considered as different templates and thus making our
-predictive models more scalable and applicable to more programs. We define
+The main goal of clustering is to make our predictive models more scalable
+and applicable to more programs by avoiding assigning different templates
+to equivalent expressions. We define
 clustering as the task of grouping together similar expressions over \repairLang
-that each group can then be used as a fix template to produce repairs for
+such that each group can then be used as a fix template to produce repairs for
 ill-typed programs. Each group can consist of several \emph{member-expressions}
 and each one of them can be used as the cluster \emph{representative}.
 

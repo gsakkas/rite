@@ -19,10 +19,11 @@ error that needs to be fixed. Each location in the type-error slice is assigned
 a confidence score $\Runit$ from our $\Model$. Furthermore, for each location we
 also generate the repair templates' confidence scores with our $\ModelT$.
 
-Our synthesis algorithm, firstly ranks all the locations based on their
-confidence score $\Runit$ and tries to repair them using the ranked templates,
-which are also based on their scores. If the algorithm fails to synthesize a
-program that type-checks using that location and repair templates, the next
+Our synthesis algorithm ranks all the locations based on their
+confidence scores $\Runit$. For each location, it runs through the list
+of templates (also sorted by score) and tries to repair that location using that
+template. If the algorithm fails to synthesize a
+program that type-checks, the next
 location is considered, until it succeeds.
 
 \mypara{Multiple Error Locations}
@@ -31,20 +32,20 @@ be repaired. Therefore, our previous approach will fail to generate a solution
 in many cases. So we modify our simple algorithm to synthesize programs with
 multiple error locations.
 
-Let's assume that we have gained a confidence score $\Runit$ for all locations
-in the type error slice from our error localization model $\Model$. Let them be
+Let the confidence scores $\Runit$ for all locations
+in the type error slice from our error localization model $\Model$ be
 $(l_1, c_1), \dots, (l_k, c_k)$, where $l_i$ is a location in the type-error
-slice and $c_i$ its confidence score. We can assume without loss of generality
-that each location $l_i$ can be fixed independently from any other location
-$l_j$. With that assumption, the probability that both locations $l_i$ and $l_j$
+slice and $c_i$ its confidence score. We assume for simplicity
+that the probabilities $c_i$ are independent.
+With that assumption, the probability that both locations $l_i$ and $l_j$
 need to be fixed is $c_i \cdot c_j$. The same holds for more that two locations.
 
 Therefore, we extend our simple algorithm of fixing one location $l$ at a time,
 which only considers the confidence scores of single locations, by adding the
 combined scores of tuples, triples, etc. of type-error slice locations. In
 practice we only consider up to \emph{five} locations to be fixed
-simultaneously, with any more than that taking too much time to generate and
-having a small possibility to lead to an actual good solution.
+simultaneously; any more than that takes too much time to generate and
+has too small a chance of leading to an actual good solution.
 %% TODO: maybe show how many changes happened to our dataset and how big is type-error slice on average.
 
 
@@ -75,7 +76,7 @@ Using our \textsc{Enumerate} method, we lazily generate local repairs $R$ for
 each subset of locations that is highest in confidence score. The
 \textsc{Enumerate} method starts to fill in a template $T$ for location $L$ of
 the program $P$ based on the context-free grammar $\lang$. It starts from the
-parent node at the first level of the template $T$ and incrementally moves on
+parent node at the first level of the template $T$ and incrementally moves
 down the tree. When a hole is found in the tree, the algorithm tries to expand
 the tree one more level using $\lang$'s production rules $R$. The production
 rules are considered in an ranked order based on the subexpressions that already
