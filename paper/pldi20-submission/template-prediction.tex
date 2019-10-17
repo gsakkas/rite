@@ -62,26 +62,25 @@ generates a mapping from program expressions to confidence scores $\Emap{(\Runit
 
 \subsection{Feature and Label Extraction}
 \label{subsec:extract}
-The first issue we must tackle is formulating our learning task in machine
-learning terms. We are given programs over \repairLang, but learning algorithms
-expect to work with \emph{feature vectors} $\V$ --- vectors of real numbers,
-where each column describes a particular aspect of the input. Thus, our first
-task is to convert programs to feature vectors with the $\extractTsym$ function.
+The machine learning algorithms that we will use for predicting fix templates
+and error locations, expect fixed-length \emph{feature vectors} $\V$ as their
+input. However, our end goal is make predictions for repair variable-sized
+programs over \lang. Thus, our first task is to convert programs to feature
+vectors with the $\extractTsym$ function.
 
 Similarly to previous work \citep{Seidel:2017}, we choose to model a program as
 a \emph{set} of feature vectors, where each element corresponds an expression in
 the program. Thus, given the |mulByDigit| program in \autoref{fig:mulByDigit} we
-would first split it into its constituent sub-expressions and then transform
-each sub-expression into a single feature vector. We group the features into
-five categories, using \autoref{fig:mulByDigit} as a running example of the
-feature extraction process.
+would first split it into its constituent subexpressions and then transform each
+subexpression into a single feature vector. We show here the five major feature
+categories used.
 
 \mypara{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
-words, for each production of $e$ in \autoref{fig:ml-syntax} we introduce a
+words, for each production rule of $e$ in \autoref{fig:ml-syntax} we introduce a
 feature that is enabled (set to $1$) if the expression was built with that
-production, and disabled (set to $0$) otherwise. For example, the \IsNil feature
-describes whether an expression is the empty list $\enil$.
+production, and disabled (set to $0$) otherwise. For example, a \IsNil feature
+would describe whether an expression is the empty list $\enil$.
 
 % We distinguish between matching on a list vs.\ on a pair, as this affects the
 % typing derivation. We also assume that all pattern matches are well-formed ---
@@ -93,16 +92,19 @@ describes whether an expression is the empty list $\enil$.
 % enables multiple features.
 
 \mypara{Contextual syntactic features}
-These are similar to local syntactic features, but lifted to describe the parent
-and children of an expression. For example, the \IsCaseListP feature would
-describe whether an expression's \emph{parent} matches on a list. If a
-particular $e$ does not have children (\eg a variable $x$) or a parent (\ie the
-root expression), we leave the corresponding features disabled. This gives us a
-notion of the \emph{context} in which an expression occurs, similar to the
-\emph{n-grams} used in linguistic models \citep{Hindle2012-hf,Gabel2010-el}.
+The \emph{context} in which an expression occurs can be critical for predicting
+correctly fix templates and determining if they are the source of an error.
+Therefore, we include these features, which are similar to the local syntactic
+features but they describe the parent and children of an expression. For
+example, the \IsCaseListP feature would describe whether an expression's
+\emph{parent} matches on a list. If a particular $e$ does not have children (\eg
+a variable $x$) or a parent (\ie the root expression), we leave the
+corresponding features disabled. This gives us a notion of the \emph{context} in
+which an expression occurs, similar to the \emph{n-grams} used in linguistic
+models \citep{Hindle2012-hf,Gabel2010-el}.
 
 \mypara{Expression size}
-We also propose a feature representing the \emph{size} of each expression, \ie
+We also include a feature representing the \emph{size} of each expression, \ie
 how many sub-expressions does it contain?
 % For example, the \ExprSize feature in \autoref{fig:mulByDigit} is set to four
 % for the expression |mulByDigit i tl| as it contains four expressions: the three
@@ -111,10 +113,10 @@ This allows the model to learn that, \eg, expressions closer to the leaves are
 more likely to be fixed than expressions closer to the root.
 
 \mypara{Typing features}
-A natural way of summarizing the context in which an expression occurs is with
-\emph{types}. Of course, the programs we are given are \emph{untypeable}, but we
-can still extract a \emph{partial} typing derivation from the type checker and
-use it to provide more information to the model.
+The programs we are trying to repair are \emph{untypeable}, but a \emph{partial
+typing} derivation from the type checker could still provide useful information
+to the model. Therefore, we include \emph{typing} features in our
+representation.
 
 A difficulty that arises here is that, due to the parametric type constructors
 $\tfun{\cdot}{\cdot}$, $\tprod{\cdot}{\cdot}$, and $\tlist{\cdot}$, there is an
@@ -129,8 +131,8 @@ $\tbool$ features.
 We add these features for parent and child expressions to summarize the context,
 but also for the current expression, as the type of an expression is not always
 clear \emph{syntactically}. For example, the expressions |tl| and
-|mulByDigit i tl| in \autoref{fig:mulByDigit} both enable \HasTypeList, as they
-are both inferred to have a type that mentions $\tlist{\cdot}$.
+|mulByDigit i tl| in \autoref{fig:mulByDigit} both enable the \emph{list} type
+feature, as they are both inferred to have a type that mentions $\tlist{\cdot}$.
 
 % Note that our use of typing features in an ill-typed program subjects us to
 % \emph{traversal bias} \citep{McAdam1998-ub}. For example, the |mulByDigit i tl|
@@ -207,8 +209,8 @@ work is commonly chosen to be the \emph{rectified linear unit} (ReLU), defined
 as $g(x) = \mathsf{max}(0,x)$ \citep{Nair2010-xg}. The number of layers, the
 number of neurons per layer, and the connections between layers constitute the
 \emph{architecture} of a neural network. In this work, we use relatively
-\emph{deep neural networks} (\dnn) which have an input layer, three hidden layers and
-an output layer.
+\emph{deep neural networks} (\dnn) which have an input layer, three hidden
+layers and an output layer.
 
 % A major advantage of neural networks is their ability to discover interesting
 % combinations of features through non-linearity, which significantly reduces the
@@ -255,7 +257,7 @@ a new program $P$.
 Our algorithm firstly extracts the machine-learning-amenable dataset $D_{ML}$
 from the program pairs dataset $D$. For each program pair in $D$, the
 $\extractTsym$ function returns a mapping from the erroneous program's
-expression to a feature and label vector. The function
+expression to a feature and label vector. The function \\
 $\textsc{GetSubEsInTESlice}$ only keeps the expressions in the the type-error
 slice and returns a list of the respective feature and label vectors, which is
 then added to the $D_{ML}$ dataset. The $D_{ML}$ dataset is used by the
