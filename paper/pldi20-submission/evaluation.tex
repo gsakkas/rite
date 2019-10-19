@@ -23,12 +23,12 @@ manual evaluation.
 \subsection{General Methodology}
 \label{subsec:gen_method}
 To answer our questions, we use an \ocaml dataset gathered from an
-undergraduate Programming Languages course at UNKNOWN UNIVERSITY, previously
+undergraduate Programming Languages university course, previously
 used in related work [FIXME: cite]. This dataset consists of ill-typed programs
 and their subsequent fixes, drawn from two different years of that class, The
 first part of the dataset comes from the Spring 2014 class (\SPRING), with a
 cohort of 46 students and the second comes from the Fall 2015 class (\FALL),
-with a cohort of 56 students. This homework require students to write 23
+with a cohort of 56 students. This homework required students to write 23
 distinct programs. While the extracted programs are relatively
 small, they demonstrate a range of functional programming idioms, \eg
 higher-order functions and (polymorphic) algebraic data types.
@@ -48,7 +48,8 @@ program, including:
     children, the classifiers will receive no information about the additional
     children.
   \item 88 typing features. We support |int|s, |float|s, |char|s, |string|s, and
-    the user-defined |expr|. These features are extracted for each
+    the user-defined |expr| (FIXME: these don't render correctly). These
+    features are extracted for each
     sub-expression and its context.
   \item 1 feature denoting the size of each sub-expression.
 \end{enumerate}
@@ -58,15 +59,16 @@ We automatically extract a blame oracle for each ill-typed program from the
 (AST) diff between it and the student's eventual fix. A disadvantage of using
 diffs in this manner is that students may have made many, potentially unrelated,
 changes between compilations; at some point the ``fix'' becomes a ``rewrite''.
-We do not wish to consider the ``rewrites'' in our evaluation, so we discard
+We do not wish to consider ``rewrites'' in our evaluation, so we discard
 outliers where the fraction of expressions that have changed is more than one
 standard deviation above the mean, establishing a diff threshold of 40\%. We
 also discard programs that changed in 5 or more locations, since we consider
 these to also be ``rewrites''. It
 is also highly unlikely that such ``fixes'' can reproduced by \toolname or any
-related work [FIXME: cite relevant]. All these discarded outliers account for
-roughly 32\% of each dataset, leaving us with 2,475 program pairs for \SPRING
-and 2,177 pairs for \FALL. For all of our tests, we use \SPRING as a training
+other current repair algorithm [FIXME: cite relevant]. 
+These discarded outliers account for
+roughly 32\% of each dataset, leaving 2,475 program pairs for \SPRING
+and 2,177 pairs for \FALL. In all evaluations, we use \SPRING as a training
 set and \FALL as a test set.
 
 \mypara{Accuracy Metrics}
@@ -79,16 +81,18 @@ producing fixes may consider more than that. We also extend such intuition, that
 a user won't consider more than five ``suggestions'' as feedback, to possible
 fixes, and thus we evaluate \toolname's top six template predictions on whether
 they include the correct template, \ie the one that matches the user's change. We also
-include the confusion matrix of the top-one predictions for all locations, in
-order to present what templates our models usually mix together and see if they
+include the confusion matrix of the top-one predictions for all locations, 
+to present what templates our models usually mix together and see if they
 generalize well between different groups of solutions.
 
 \mypara{Repair Quality}
 Finally, for a more qualitative evaluation of \toolname's synthesized solutions
-based on the above results, we ran a human study at UNKNOWN UNIVERSITIES. Each
+based on the above results, we carried out a human study at \emph{university 
+elided for blind review}. Each
 participant was asked to evaluate the quality of the program fixes and their
-locations against \seminal's repairs \citep{Lerner2006-pj, Lerner2007-dt}. For
-each program, beside the two repairs, the participants were given the original
+locations against a state-of-the-art
+baseline (the \seminal's repair algorithm~\citep{Lerner2006-pj, Lerner2007-dt}). 
+For each program, beyond the two repairs, participants were presented with the original
 ill-typed program, along with the standard \ocaml compiler's error message and a
 short description of what the original author of the program intended it to do.
 
@@ -107,10 +111,10 @@ We provide two baselines for the comparison: a random choice of template and a
 prediction based on popularity.
 
 \mypara{Our Classifiers}
-We evaluate our classifiers, each trained on the \SPRING quarter and evaluated
+We evaluate multiple classifiers, each trained on the \SPRING quarter and evaluated
 on the \FALL quarter. These include:
 \begin{description}
-  \item[\random] A dummy classifier that \emph{uniformly} selects each time a
+  \item[\random] A baseline classifier that \emph{uniformly} selects each time a
     template to return. There is no training necessary with this classifier.
   \item[\popular] This classifier returns always the most popular template from
     the training set. As a second prediction returns the second most popular
@@ -123,7 +127,8 @@ on the \FALL quarter. These include:
     function, a common practice in modern neural networks.
 \end{description}
 
-All classifiers were trained using the \emph{early stopping} approach, where the
+All classifiers were trained using the \emph{early stopping} approach~\cite{FIXME}, 
+where the
 training of a neural network is stopped when the accuracy on a distinct small
 part of the training set is not improved after a certain amount of epochs. We
 set that amount to 5 and the maximum number of epochs to 200. The \textsc{Adam}
@@ -145,6 +150,7 @@ has been found to converge faster, was used to train our \dnn.
 \autoref{fig:accuracy-results} shows the accuracy results of our template
 prediction experiments. The naive baseline of selecting templates at random
 achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
+(WRW notes: FIXME: just a few paragraphs ago we said top five!) 
 \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
 (\PopularTopSix\% Top-6). Our \dnn classifier significantly outperforms those naive
 classifiers, ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6
@@ -152,20 +158,20 @@ accuracy. Interestingly, with only \dnn's first prediction, one outperforms top
 6 predictions of both \random and \popular.
 
 The \random classifier selects \emph{randomly} a template, out of the 50 learned
-ones from the \SPRING training dataset, for each location it is presented. It
-was expected, therefore, to achieve such low accuracy, even for Top-6.
-Surprisingly, the \popular accuracy results are not that low. This mainly
-happens because of the nature of our dataset. Some homework assignments were
+ones from the \SPRING training dataset, for each location it is presented. Its
+low performance is as expected. 
+\popular performs better on our dataset: 
+some homework assignments were
 shared between \SPRING and \FALL quarters and, while different groups of
 students solved these problems for each quarter, the novice mistakes that they
 made seem to have a \emph{pattern}. Thus, the most \emph{popular ``fixes''} (and
 therefore the relevant templates) that were applied to \SPRING, are also popular
-in \FALL. However, the almost \emph{2x higher} accuracy of our \dnn classifier,
-shows that we can learn a \emph{better pattern} from these datasets and that our
+in \FALL. However, the almost \emph{2x higher} accuracy of our \dnn classifier
+shows that we can learn \emph{better patterns} from these datasets and that our
 \dnn model is able to \emph{generalize} between different solutions of the
 problems.
 
-\autoref{fig:conf-matrix} further proves that our \dnn generalizes well. This
+\autoref{fig:conf-matrix} further demonstrates that our \dnn generalizes well. This
 Figure includes the confusion matrix of the top 30 templates that were acquired
 from the training set and were tested on the same \FALL dataset as before. We
 observe that most of the templates are predicted correctly and only a few of
@@ -184,6 +190,8 @@ network firstly uses two fully-connected hidden layers of 1024 neurons and one
 of 512 neurons before the output layer. The neurons again use rectified linear
 units (ReLU) as their activation function and are trained using the \emph{early
 stopping} approach and the \textsc{Adam} optimizer.
+(WRW notes: this paragraph feels repetitive: didn't we just say this a few
+paragaphs ago? Search for Adam.) 
 
 Previous work \citep[][]{Seidel:2017} has used more shallow neural networks, but
 also fewer features per node. In our implementation, we added more contextual
@@ -200,33 +208,46 @@ well.
     \random   & 39.70\% & 58.73\% \\
     \toolname & 79.71\% & 88.83\% \\
   \end{tabular}
-  \caption{Experimental results of \toolname's error localization accuracy.}
+  \caption{Experimental results of \toolname's error localization accuracy.
+  FIXME: We had Top-1, Top-3 and Top-6 in the last subsection. Why are we suddenly
+  Top-3 and Top-5 now? If we have the data available, can we be more
+  consistent?
+  }
   \label{tab:err_loc_acc}
 \end{table}
+
+FIXME: It looks like we don't have any text yet that references
+tab:err\_loc\_acc. We need text that references the table: we cannot just
+have the table floating free. Walk the reader through the result. 
 
 \subsubsection{Empirical Repair Quality Evaluation}
 \label{subsubsec:man_rep_qual_eval}
 
 \mypara{Synthesis Algorithm}
 We guide our synthesis algorithm, using the above predictions for finding the
-proper locations to fix and what template to use. Every program has a timeout of
-\emph{30s} to be repaired by the synthesis algorithm. We observe that
-\textbf{12.54\%} of our testing dataset's programs fail to be repaired within
+proper locations to fix and what template to use. Every program is given a timeout of
+\emph{30s} to be repaired by the synthesis algorithm because
+FIXME (explain why this is relevant for education)~\cite{FIXME}. We observe that
+12.54\% of our testing dataset's programs fail to be repaired within
 that amount of time. The main reason is the combined failure of our
 models to give high confidence to the correct locations and templates, thus
 making the search very expensive. However, for the 87.46\% of the programs that
-actually finish synthesizing, around \textbf{96.32\%} return a solution that
-type-checks. The small amount of programs that couldn't find a well-typed
-solution but still finished, usually required some bigger changes (\ie
-expressions whose ASTs were deeper than 4 levels) that our algorithm didn't
-explore in this version.
+finish synthesizing, around \textbf{96.32\%} return a solution that
+type-checks. The remaining 3.78\% for which no well-typed solution is
+produced usually required larger changes (\ie expressions whose ASTs were
+deeper than 4 levels). 
 
-Finally, all these solutions that did not timeout, had an average time of
-synthesis of \textbf{9.26s}. From the well-typed solutions that we got, almost
-\textbf{11\%} of them give the exact same repair as the user did, in any of the
-suggested top 3 repairs. While that amount seems small, it is a considerable
-amount in the correct direction meaning that our models can learn novice's
-intents in bug fixing.
+The average solution production time 
+was \textbf{9.26s}. Of the well-typed solutions scenarios, almost
+\textbf{11\%} produced a repair identical to the historical human one
+within the top 3 repairs. This is considerable, because even non-identical
+repair suggestions can be quite helpful~\cite{FIXME}, and identical 
+repair suggestions reduce novice effort~\cite{FIXME}. 
+Our models can learn and capture novice intent in bug fixing.
+
+FIXME: WRW thinks this subsection is quite weak. We seem to be spending all
+of the time talking about what we fail or timeout at or giving excuses for
+why our numbers are small. We're burying the lead. 
 
 %%% TODO: Maybe self-evaluate 50-100 synthesized programs?
 
@@ -247,19 +268,20 @@ presents our detailed findings.
 % FIXME? Add some intro sentence here?
 
 For our human study, participants were recruited from \emph{two public research
-institutes removed for blind review}. The study was also advertised on twitter.
-To be included for analysis, participants had to assess the quality and give
-comprehensible bug descriptions of at least 5 / 10 stimuli. In total, there were
-28 valid participants, and the study took around 25 minutes to complete. For
+institutes removed for blind review}. The study was also advertised on Twitter.
+To be included for analysis, participants had to assess the quality of, and give
+comprehensible bug descriptions for, at least 5 / 10 stimuli. In total, there were
+28 valid participants, and the study required around 25 minutes to complete. For
 compensation, participants had the option to enter a drawing for an Amazon Echo
 voice assistant.
 
 To create the stimuli, a corpus of 21 buggy programs were randomly selected from
-1834 type-correct synthesized programs. From this corpus, each participant was
-then shown 10 randomly selected programs. Along with each buggy program,
+1834 type-correct synthesized programs in our dataset. 
+From this corpus, each participant was
+then shown 10 randomly-selected programs. Along with each buggy program,
 participants were also shown two candidate repairs: one generated by \toolname
-and one by \seminal. For both, we used the highest-ranked solution that they
-returned. The participant was always unaware which tool generated which
+and one by \seminal. For both algorithms, we used the highest-ranked solution 
+returned. Participant were always unaware which tool generated which
 candidate patch. Participants were then asked to assess the quality of each
 candidate repair on a Likert scale of 1 to 5. They were further asked for a
 binary assessment of the quality of each repair's edit location. An example
@@ -285,15 +307,25 @@ for \toolname and \seminal generated repairs. Overall, we found that \toolname's
 repairs are 115.3\% the quality of \seminal's repairs ($p=0.022$). Specifically,
 \toolname's repairs achieved an average quality rating of 2.41/5 while
 \seminal's repairs had an average rating of only 2.09/5. All tests for
-statistical significance used the Wilcoxon signed-rank test.
+statistical significance used the Wilcoxon signed-rank test. FIXME: say
+more here: Spend more time talking about this success. Draw the conclusion
+for the reader that you are doing better than previous work ina
+statistically-significant manner. Indicate that 15\% better is still very
+useful for students, perhaps by citing something.
 
 To tease apart this quality assessment, we also asked participants to assess
-just the quality of the repair's edit location rather than the final repair.
-From this data, we found that \toolname identified a viable edit location 81.3\%
-of the time while \seminal only found a good edit location 73.0\% of the time.
-Our participants, therefore, perceived \toolname's fault localization accuracy
+the quality of the repair's edit \emph{location} only, 
+rather than the final repair content.
+Humans agreed with \toolname-identified edit locations 81.3\%
+of the time but agreed with those of \seminal 73.0\% of the time.
+Our participants perceived \toolname's fault localization accuracy
 as 10\% better than \seminal's. This difference was statistically significant
-($p=0.018$).
+($p=0.018$). FIXME: You should explain why this matters. Also, consider
+reordering these: first, show that we find the best location. Then, show
+that our content is better as well. Then, since the content improvement is
+better than the location improvement, you can argue that we're winning not
+just because of better fault localization, but because of the heart of your
+algorithm.
 
 % FIXME: Maybe add a paragraph here on qualitative results
 
