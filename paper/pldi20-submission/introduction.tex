@@ -2,73 +2,84 @@
 \label{sec:intro}
 
 %%% Motivation and the problem
-The increasing number of computer science related jobs
-~\citep[][]{compsci-demand} in the recent years has resulted in an unprecedented
-demand for computer science education. Colleges and universities have more
-students than ever~\citep[][]{compsci-classes} enrolled in their computer
-science classes and their numbers will only increase in the foreseeable future.
-Other students have
-turned to Massive Open Online Courses (MOOCs)~\citep[][]{moocs}
-to pursue their dream in the technology job
-market. While computer science education has become much more accessible with
-these larger classrooms, one may ask if its \emph{quality} has
-remained the same as that of the more traditional smaller classrooms,
-especially the feedback that students get for homework and exams.
+The increasing number of computing-related jobs~\citep[][]{compsci-demand} 
+in recent years has resulted in an unprecedented
+demand for computer science education.  Computing enrollment at colleges
+and universities is high~\citep[][]{compsci-classes} and is only projected
+to increase in the foreseeable future. Students are augmenting traditional
+education with Massive Open Online Courses (MOOCs)~\citep[][]{moocs}.
+While these larger classrooms have lead to computer science education 
+becoming more accessible, its \emph{quality} has been
+questioned~\cite{FIXME}, especially with regard to the feedback that
+students receive~\cite{FIXME}. 
 
 %%% Good properties of a solution
 Recent research has focused on providing \emph{fully automated feedback} to
-students for classroom programming assignments. In
-this paper we propose such a method to give personalized
+students for classroom programming assignments (e.g.,~\cite{FIXME,FIXME}). In
+this paper we propose a method to provide personalized
 feedback for introductory programming exercises without requiring
-any instructor effort. Previous work has exploited the advances in \emph{program
-repair} research to generate such feedback.
+additional instructor effort. We build upon insights from advances in
+\emph{program repair} research to generate such feedback
+(e.g.,~\cite{FIXME,FIXME}). 
 % TODO: Cite clara, autoproof, sarfgen, ... here
 
 By repairing an incorrect student attempt on a programming assignment and
 producing a \emph{minimal} repair \wrt some edit-distance metric,
 we can generate \emph{high-quality}
-feedback for that attempt. Furthermore, the repair algorithm we propose must be
-able to \emph{generalize} over different programming assignments and not be
-specific to existing ones only. In this paper we focus on generating such
-repairs that will enable better feedback generation and leave the latter part as
-future work.
+feedback for that attempt. As a result, any repair algorithm we propose must be
+able to \emph{generalize} over different programming assignments. 
+In this paper we focus on generating 
+repairs to enable better feedback generation.
+% FIXME: WRW cannot tlel what "the latter part" refers to. 
+% and leave the latter part as future work.
 
 %%% Current state of the art
 % Failing test cases
 Presenting students with \emph{failing test cases} still remains one of the most
 common approaches for providing feedback on erroneous programming assignment
-attempts. These test cases can be carefully selected by the instructor to guide
+attempts~\cite{FIXME,FIXME}. These test cases can be carefully selected by instructors to guide
 their students in debugging their code. However, for students that are not yet
-so experienced in programming, such feedback may not be sufficient. More
-targeted feedback is needed in this case, that will highlight possible program
-locations that are responsible for the program errors, and may give possible
+experienced in programming, such feedback may not be
+sufficient~\cite{FIXME}. We propose to provide 
+more targeted feedback highlighting both possible program
+locations that are responsible for the program errors as well as possible
 suggestions that will lead the student to a correct solution.
 
 % Fault localization FIXME: make this better
 Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
-\emph{fault localization} for more guided feedback. Fault localization is the
+\emph{fault localization} for more guided student feedback. Fault localization is the
 task of identifying possible program elements (\eg lines, expressions \etc) that
-are the cause of the program error at hand. While these techniques can pinpoint
-with high accuracy the precise location in the student's code that causes the
+are the cause of the program error at hand. While these techniques can pinpoint,
+with high accuracy, the precise location in the student's code that causes the
 error and needs to be fixed, inexperienced programmers can still be confused by
-such feedback. However, fault localization combined with \emph{program repair}
+such feedback~\cite{FIXME}. We hypothesize that fault localization combined with
+\emph{program repair}
 can provide the appropriate feedback for these novice programmers.
 
 % Program repair
-Recent automated systems for providing feedback via \emph{program repair}, like
-AutoGrader [TODO: cite] demand a lot of manual effort from the instructor and
-their understanding of the system details. AutoGrader requires a reference
-solution per programming assignment and a custom error model that will help
-repair incorrect student attempts, thus the instructor has to spent extra time
-for each assignment, and the algorithm finding the repairs is very
-expensive due to constraint-solving. Systems like CLARA [TODO: cite] require
-much less manual effort from the instructor by using clustering and machine
-learning techniques on previous student attempts on the programming assignments.
-While the repairs are generated relatively quickly, their program matching
-between previous correct attempts and the new incorrect ones can often lead to
-imprecise and non-minimal repairs. Moreover, their use of Integer Linear
+Recent automated systems for providing student feedback via program repair
+demand significant manual effort from the instructor to be
+effective~\cite{FIXME}. For example, the AutoGrader system requires a
+reference solution per programming assignment and a custom error model that
+will help
+repair incorrect student attempts. The custom error model represents a
+significant annotation burden for the instructor, and the repair generation
+itself can be time-consuming due to constraint solving, which can hamper
+the effectiveness of online feedback~\cite{FIXME}. 
+As a second example, systems like CLARA [TODO: cite] use
+clustering and machine learning to avoid much instructor annotation effort
+and produce repairs relatively quickly, but can 
+% WRW: do we care about this CLARA detail in our introduction? I think no: 
+% their program matching between previous correct attempts and the new
+% incorrect ones can often 
+lead to
+imprecise and non-minimal repairs~\cite{FIXME}. 
+Moreover, their use of Integer Linear
 Programming (ILP) for variable alignment between possible local repairs can hurt
-its scalability. [TODO: Section N] provides a detailed survey of related work.
+its scalability (WRW notes: you just said CLARA can produce repairs
+``relatively quickly'' one sentence ago: we cannot claim that CLARA is both
+quick and also non-scalable). 
+% [TODO: Section N] provides a detailed survey of related work.
 % TODO: Add Seminal(it's the one on our human study) here?
 % TODO: Maybe add another tool?
 
@@ -77,14 +88,21 @@ its scalability. [TODO: Section N] provides a detailed survey of related work.
 \mypara{Data-Driven Program Repair}
 In this paper, we introduce \toolname, a \emph{data-driven} approach to
 repairing novice attempts on programming assignments based on supervised
-learning. \toolname uses a large dataset containing pairs of ill-typed programs and
+learning. \toolname uses a large dataset containing pairs of ill-typed
+programs (WRW notes: ill-typed is first used here --- are we only doing
+type errors?) and
 their subsequent fixes to \emph{automatically learn models} that localize
-errors and suggest template fixes, and uses \emph{program synthesis} to turn those
-templates into \emph{program repairs}. Given a new ill-typed program, \toolname
-generates a list of potential solutions ranked by likelihood and an
-\emph{edit-distance} metric. We evaluate \toolname by comparing its accuracy on
-a set of over 4,500 ill-typed \ocaml programs drawn from two instances of an
-introductory programming course.
+errors and suggest template fixes (WRW notes: we should be talking about
+the data-driven solution and form of these models much earlier when we list
+our insights), and uses
+\emph{program synthesis} to turn those
+templates into \emph{program repairs} (WRW notes: we should hint at this
+earlier). Given a new ill-typed program, \toolname generates a list of
+potential solutions ranked by likelihood and an \emph{edit-distance}
+metric. We evaluate \toolname by comparing its accuracy on a set of over
+4,500 ill-typed \ocaml programs drawn from two instances of an introductory
+programming course (WRW notes: this is an amazing evaluation! we should be
+mentioning it earlier and in a little more detail).
 
 
 % 1. ``We identify an important problem in the world.'' Be more specific than
