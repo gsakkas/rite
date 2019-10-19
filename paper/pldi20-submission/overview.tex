@@ -33,9 +33,9 @@ integer digit. The student accidentally misuses the list append operator
 %
 Novice students who are still building a mental model of how the type checker
 works are often perplexed by the compiler's error message \cite{fixme}. Hence a
-novice will often take a long time to arrive at a suitable fix such as the one
+novice will often take a long time to arrive at a suitable fix, such as the one
 shown at the bottom of \autoref{fig:mulByDigit}, where the append operator is
-still used, but now, with a singleton list containing the multiplication of the
+used with a singleton list containing the multiplication of the
 head \texttt{hd} and \texttt{i}.
 %
 Our goal is to use historical data of how previous programmers have fixed
@@ -46,8 +46,8 @@ to come up with candidate solutions like the one above.
 \mypara{Solution: Analytic Program Repair.}
 %
 One approach is to view the search for candidate repairs as a synthesis problem:
-synthesize a (small) set of edits to the program that yields a good one
-\cite{singh2013, fixme}.
+synthesize a (small) set of edits to the program that yields a good 
+one~\cite{singh2013, fixme}.
 %
 To ensure that synthesis is tractable, the search must be carefully restricted
 to a relatively small, manually constructed ``repair model'' that may not
@@ -118,7 +118,9 @@ Together, these steps ensure that GASTs only contain information about a fix's
 For example, the candidate expression |[hd * i]| in the \mbd example would be
 represented by the GAST of the expression |[_ $\oplus$ _]|, where variables |hd|
 and |i| are abstracted into holes (e.g. by pruning the GAST at a depth $d=2$)
-and |*| is represented by an abstract binary operator.
+and |*| is represented by an abstract binary operator. Our GAST approach
+is somewhat similar to the template approach of FIXME, but we FIXME instead
+of FIXME~\cite{FIXME}. 
 
 
 \subsection{Acquiring a Fix-Labeled Training Set}
@@ -150,7 +152,14 @@ such sequences (or \emph{traces}) of student programs. The first type-correct
 solution in this sequence of program attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
 the dataset. In our case, we used an existing dataset
-~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs and their
+~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs 
+(WRW notes: this is the first thing you've written that has limited you to 
+OCaml only --- everything before this was generic) 
+(WRW notes: why are you now talking about datasets in the algorithm
+overview section? shouldn't this be more like ``we require a dataset that
+has properties X, Y and Z'' and then later we can say ``for our evaluation,
+we trained on this ocaml dataset''?) 
+and their
 fixes that were extracted using the aforementioned method. For each program
 pair, we then produce a \emph{diff} of the abstract syntax trees (ASTs), and
 assign as the dataset's fix labels, the \emph{smallest} sub-tree that changed
@@ -186,6 +195,8 @@ to apply to a new program.
 Second, it allows for the principled removal of outliers that arise because
 student submissions often contain non-standard or idiosyncratic solutions that
 we do not wish to use for suggesting fixes.
+Unlike previous repair approaches that have used clustering to make fix
+templates (e.g.,~\cite{FIXME}), we do FIXME. 
 
 
 \subsection{Predicting Templates via Multi-class Classification}
@@ -200,14 +211,15 @@ classification} problems, exploiting recent advances in machine learning.
 
 \mypara{Supervised Multi-Class Classification}
 We propose using a \emph{supervised multi-class classification} problem for
-predicting fix templates. A \emph{supervised} learning problem is one where
+predicting fix templates. A \emph{supervised} learning problem is one
+where,
 given a labeled training set, the task is to learn a function that accurately
 maps the inputs to output labels and generalizes to future inputs. In a
 \emph{classification} problem, the function we are trying to learn maps inputs
 to a discrete set of two or more output labels, called \emph{classes}.
 Therefore, learning a function that will map subexpressions of ill-typed
 programs to a small set of fix templates entails a \emph{multi-class}
-classification (MCC) problem.
+classification (MCC) problem~\cite{FIXME}.
 
 \mypara{Feature Extraction.} The machine learning models that we will train to
 solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
@@ -234,7 +246,10 @@ Neural networks have the advantage of associating each class with a
 each class being correct for a given input. This confidence score can be
 used to rank fix-template predictions for new programs and use them in that
 order to synthesize repairs until our high-level goal is reached. Finally, we
-used deep and dense architectures to give a better confidence to each template,
+used deep and dense architectures~\cite{FIXME} to give a better confidence
+to each template
+(WRW notes: do these D\&D architectures give us better precision on
+the confidence value reported, or give us higher confidence overall?),
 aiming for a higher accuracy for template predictions.
 
 \mypara{Error Localization.} We view the problem of finding error locations in a
@@ -245,7 +260,8 @@ Therefore, this problem is a equivalent to a MCC with only two classes and thus,
 we use similar deep architectures of neural networks. With the learned models, we
 obtain a confidence score for each program expression to be an error location
 that need to be fixed. We exploit those scores to synthesize candidate
-expressions for each location in descending order of confidence.
+expressions for each location in descending order of confidence. We use
+this approach, rather than standard fault localization, because FIXME. 
 
 \subsection{Synthesizing Feedback from Predicted Templates}
 \label{sec:overview:synthesis}
@@ -267,23 +283,31 @@ to further prune the search space of candidate expressions.
 
 \mypara{Synthesis for Multiple Locations.} Previous work has shown that just the
 top 3 location predictions account for up to 90\% of the type-errors that occur
-in a set of programs. But it is also often the case, that more than one location
-needs to be fixed. Therefore, in practice we don't only consider the ordered set
+in a set of programs~\cite{FIXME}. 
+But it is also often the case that more than one location
+needs to be fixed. Therefore, in practice we do not only consider the ordered set
 of single error locations for synthesis, but rather its power set.
 For simplicity we treat the probabilities that different locations need to be fixed
 as independent; the probability we assign that a set of locations needs to be fixed
-is thus the product their individual confidence scores.
+is thus the product their individual confidence scores. This is unlike
+recent approaches to multi-hunk program repair, such as
+Hercules~\cite{FIXME}, in that we FIXME. 
 
 \mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
 used those metrics to consider minimal changes, i.e. changes that are as close
 as possible to the original programs, so novice programmers can better
-understand feedback. However, different metrics may give better fixes as we
-discuss later. Programmers usually have in mind what \emph{type signature}
-the functions that they write are supposed to have. So, it is reasonable to
+understand feedback~\cite{FIXME}. 
+However, different metrics may yield better fixes, as we
+discuss later in Section FIXME. 
+Programmers usually have in mind what \emph{type signature}
+the functions that they write are supposed to have
+(WRW notes: is this true? didn't we just say at the beginning of this
+section that novice do \emph{not} yet have a good mental model for
+type systems and checkers?). We thus 
 provide the user with the option to give the intended type for the program's
-functions we are trying to repair. In our case, we acquire the intended types
-from the fixed versions of the dataset.
+functions we are trying to repair. In our evaluation, we acquire the
+intended types from the fixed versions of the dataset (see Section FIXME).
 
 \begin{figure}[ht]
   \begin{ecode}
@@ -298,13 +322,19 @@ from the fixed versions of the dataset.
 
 \mypara{Example.} In \autoref{fig:repair} we can see a minimal repair that our
 method could return (|[$v_1$ * $v_2$]|), using the template discussed in
-\autoref{sec:overview:learn} to synthesize this solution. However, this solution
-is not the highest-ranked that our implementation would return (that would be
-identical to the solution the programmer gave) and we use this repair to
-demonstrate different aspects of the synthesizer. We can see that this solution
-is very close to the one that the programmer finally came up with, but still has
-some holes. However, there are some indications as to what these holes should
-be. Here our synthesizer suggests that two different variables, $v_1$ and $v_2$,
-should be used to fill those expression holes. However, we can see that even the
-second solution that our synthesizer suggests can give valuable feedback to the
-user.
+\autoref{sec:overview:learn} to synthesize this solution. While this solution
+is not the highest-ranked that our implementation returns (which would be
+identical to the human solution), it demonstrates 
+relevant aspects of the synthesizer. In particular, this solution
+is very close to the human solution, but it still has 
+some abstracted holes (WRW notes: can you call out the lines that have the
+holes or otherwise specify them more precisely? I can't find them in the
+program. I'd guess they are $v_1$ and $v_2$, but in just a sentence you'll
+say that's what we use to fill the holes, so those can't be the holes
+themselves.). 
+% However, there are some indications as to what these holes should be. 
+Our algorithm suggests that two different variables, $v_1$ and $v_2$,
+should be used to fill those expression holes. We hypothesize that 
+such solutions produced by our algorithm can provide 
+valuable feedback to novices, and we investigate that claim empirically
+in Section FIXME.
