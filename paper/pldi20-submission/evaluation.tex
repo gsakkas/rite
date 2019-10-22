@@ -65,7 +65,7 @@ standard deviation above the mean, establishing a diff threshold of 40\%. We
 also discard programs that changed in 5 or more locations, since we consider
 these to also be ``rewrites''. It
 is also highly unlikely that such ``fixes'' can reproduced by \toolname or any
-other current repair algorithm [FIXME: cite relevant]. 
+other current repair algorithm [FIXME: cite relevant].
 These discarded outliers account for
 roughly 32\% of each dataset, leaving 2,475 program pairs for \SPRING
 and 2,177 pairs for \FALL. In all evaluations, we use \SPRING as a training
@@ -81,18 +81,17 @@ producing fixes may consider more than that. We also extend such intuition, that
 a user won't consider more than five ``suggestions'' as feedback, to possible
 fixes, and thus we evaluate \toolname's top six template predictions on whether
 they include the correct template, \ie the one that matches the user's change. We also
-include the confusion matrix of the top-one predictions for all locations, 
+include the confusion matrix of the top-one predictions for all locations,
 to present what templates our models usually mix together and see if they
 generalize well between different groups of solutions.
 
 \mypara{Repair Quality}
 Finally, for a more qualitative evaluation of \toolname's synthesized solutions
-based on the above results, we carried out a human study at \emph{university 
-elided for blind review}. Each
-participant was asked to evaluate the quality of the program fixes and their
-locations against a state-of-the-art
-baseline (the \seminal's repair algorithm~\citep{Lerner2006-pj, Lerner2007-dt}). 
-For each program, beyond the two repairs, participants were presented with the original
+based on the above results, we carried out a human study at \emph{university
+elided for blind review}. Each participant was asked to evaluate the quality of
+the program fixes and their locations against a state-of-the-art baseline (the
+\seminal's repair algorithm~\citep{Lerner2006-pj, Lerner2007-dt}). For each
+program, beyond the two repairs, participants were presented with the original
 ill-typed program, along with the standard \ocaml compiler's error message and a
 short description of what the original author of the program intended it to do.
 
@@ -127,7 +126,7 @@ on the \FALL quarter. These include:
     function, a common practice in modern neural networks.
 \end{description}
 
-All classifiers were trained using the \emph{early stopping} approach~\cite{FIXME}, 
+All classifiers were trained using the \emph{early stopping} approach~\cite{FIXME},
 where the
 training of a neural network is stopped when the accuracy on a distinct small
 part of the training set is not improved after a certain amount of epochs. We
@@ -150,17 +149,17 @@ has been found to converge faster, was used to train our \dnn.
 \autoref{fig:accuracy-results} shows the accuracy results of our template
 prediction experiments. The naive baseline of selecting templates at random
 achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
-(WRW notes: FIXME: just a few paragraphs ago we said top five!) 
-\popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
-(\PopularTopSix\% Top-6). Our \dnn classifier significantly outperforms those naive
-classifiers, ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6
-accuracy. Interestingly, with only \dnn's first prediction, one outperforms top
-6 predictions of both \random and \popular.
+\WRW{notes: FIXME: just a few paragraphs ago we said top five!} \popular
+classifier achieves a Top-1 accuracy of \PopularTopOne\% (\PopularTopSix\%
+Top-6). Our \dnn classifier significantly outperforms those naive classifiers,
+ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6 accuracy.
+Interestingly, with only \dnn's first prediction, one outperforms top 6
+predictions of both \random and \popular.
 
 The \random classifier selects \emph{randomly} a template, out of the 50 learned
 ones from the \SPRING training dataset, for each location it is presented. Its
-low performance is as expected. 
-\popular performs better on our dataset: 
+low performance is as expected.
+\popular performs better on our dataset:
 some homework assignments were
 shared between \SPRING and \FALL quarters and, while different groups of
 students solved these problems for each quarter, the novice mistakes that they
@@ -190,8 +189,8 @@ network firstly uses two fully-connected hidden layers of 1024 neurons and one
 of 512 neurons before the output layer. The neurons again use rectified linear
 units (ReLU) as their activation function and are trained using the \emph{early
 stopping} approach and the \textsc{Adam} optimizer.
-(WRW notes: this paragraph feels repetitive: didn't we just say this a few
-paragaphs ago? Search for Adam.) 
+\WRW{notes: this paragraph feels repetitive: didn't we just say this a few
+paragaphs ago? Search for Adam.}
 
 Previous work \citep[][]{Seidel:2017} has used more shallow neural networks, but
 also fewer features per node. In our implementation, we added more contextual
@@ -218,7 +217,7 @@ well.
 
 FIXME: It looks like we don't have any text yet that references
 tab:err\_loc\_acc. We need text that references the table: we cannot just
-have the table floating free. Walk the reader through the result. 
+have the table floating free. Walk the reader through the result.
 
 \subsubsection{Empirical Repair Quality Evaluation}
 \label{subsubsec:man_rep_qual_eval}
@@ -235,19 +234,19 @@ making the search very expensive. However, for the 87.46\% of the programs that
 finish synthesizing, around \textbf{96.32\%} return a solution that
 type-checks. The remaining 3.78\% for which no well-typed solution is
 produced usually required larger changes (\ie expressions whose ASTs were
-deeper than 4 levels). 
+deeper than 4 levels).
 
-The average solution production time 
+The average solution production time
 was \textbf{9.26s}. Of the well-typed solutions scenarios, almost
 \textbf{11\%} produced a repair identical to the historical human one
 within the top 3 repairs. This is considerable, because even non-identical
-repair suggestions can be quite helpful~\cite{FIXME}, and identical 
-repair suggestions reduce novice effort~\cite{FIXME}. 
+repair suggestions can be quite helpful~\cite{FIXME}, and identical
+repair suggestions reduce novice effort~\cite{FIXME}.
 Our models can learn and capture novice intent in bug fixing.
 
-FIXME: WRW thinks this subsection is quite weak. We seem to be spending all
+FIXME: \WRW{thinks this subsection is quite weak. We seem to be spending all
 of the time talking about what we fail or timeout at or giving excuses for
-why our numbers are small. We're burying the lead. 
+why our numbers are small. We're burying the lead.}
 
 %%% TODO: Maybe self-evaluate 50-100 synthesized programs?
 
@@ -276,11 +275,11 @@ compensation, participants had the option to enter a drawing for an Amazon Echo
 voice assistant.
 
 To create the stimuli, a corpus of 21 buggy programs were randomly selected from
-1834 type-correct synthesized programs in our dataset. 
+1834 type-correct synthesized programs in our dataset.
 From this corpus, each participant was
 then shown 10 randomly-selected programs. Along with each buggy program,
 participants were also shown two candidate repairs: one generated by \toolname
-and one by \seminal. For both algorithms, we used the highest-ranked solution 
+and one by \seminal. For both algorithms, we used the highest-ranked solution
 returned. Participant were always unaware which tool generated which
 candidate patch. Participants were then asked to assess the quality of each
 candidate repair on a Likert scale of 1 to 5. They were further asked for a
@@ -314,7 +313,7 @@ statistically-significant manner. Indicate that 15\% better is still very
 useful for students, perhaps by citing something.
 
 To tease apart this quality assessment, we also asked participants to assess
-the quality of the repair's edit \emph{location} only, 
+the quality of the repair's edit \emph{location} only,
 rather than the final repair content.
 Humans agreed with \toolname-identified edit locations 81.3\%
 of the time but agreed with those of \seminal 73.0\% of the time.

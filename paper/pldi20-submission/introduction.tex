@@ -2,16 +2,16 @@
 \label{sec:intro}
 
 %%% Motivation and the problem
-The increasing number of computing-related jobs~\citep[][]{compsci-demand} 
+The increasing number of computing-related jobs~\citep[][]{compsci-demand}
 in recent years has resulted in an unprecedented
 demand for computer science education.  Computing enrollment at colleges
 and universities is high~\citep[][]{compsci-classes} and is only projected
 to increase in the foreseeable future. Students are augmenting traditional
 education with Massive Open Online Courses (MOOCs)~\citep[][]{moocs}.
-While these larger classrooms have lead to computer science education 
+While these larger classrooms have lead to computer science education
 becoming more accessible, its \emph{quality} has been
 questioned~\cite{FIXME}, especially with regard to the feedback that
-students receive~\cite{FIXME}. 
+students receive~\cite{FIXME}.
 
 %%% Good properties of a solution
 Recent research has focused on providing \emph{fully automated feedback} to
@@ -20,18 +20,18 @@ this paper we propose a method to provide personalized
 feedback for introductory programming exercises without requiring
 additional instructor effort. We build upon insights from advances in
 \emph{program repair} research to generate such feedback
-(e.g.,~\cite{FIXME,FIXME}). 
+(e.g.,~\cite{FIXME,FIXME}).
 % TODO: Cite clara, autoproof, sarfgen, ... here
 
 By repairing an incorrect student attempt on a programming assignment and
 producing a \emph{minimal} repair \wrt some edit-distance metric,
 we can generate \emph{high-quality}
 feedback for that attempt. As a result, any repair algorithm we propose must be
-able to \emph{generalize} over different programming assignments. 
-In this paper we focus on generating 
+able to \emph{generalize} over different programming assignments.
+In this paper we focus on generating
 repairs to enable better feedback generation.
-% FIXME: WRW cannot tlel what "the latter part" refers to. 
-% and leave the latter part as future work.
+\WRW{FIXME: WRW cannot tlel what "the latter part" refers to.
+and leave the latter part as future work.}
 
 %%% Current state of the art
 % Failing test cases
@@ -40,7 +40,7 @@ common approaches for providing feedback on erroneous programming assignment
 attempts~\cite{FIXME,FIXME}. These test cases can be carefully selected by instructors to guide
 their students in debugging their code. However, for students that are not yet
 experienced in programming, such feedback may not be
-sufficient~\cite{FIXME}. We propose to provide 
+sufficient~\cite{FIXME}. We propose to provide
 more targeted feedback highlighting both possible program
 locations that are responsible for the program errors as well as possible
 suggestions that will lead the student to a correct solution.
@@ -65,20 +65,20 @@ will help
 repair incorrect student attempts. The custom error model represents a
 significant annotation burden for the instructor, and the repair generation
 itself can be time-consuming due to constraint solving, which can hamper
-the effectiveness of online feedback~\cite{FIXME}. 
+the effectiveness of online feedback~\cite{FIXME}.
 As a second example, systems like CLARA [TODO: cite] use
 clustering and machine learning to avoid much instructor annotation effort
-and produce repairs relatively quickly, but can 
-% WRW: do we care about this CLARA detail in our introduction? I think no: 
-% their program matching between previous correct attempts and the new
-% incorrect ones can often 
+and produce repairs relatively quickly, but can
+\WRW{do we care about this CLARA detail in our introduction? I think no:
+their program matching between previous correct attempts and the new
+incorrect ones can often}
 lead to
-imprecise and non-minimal repairs~\cite{FIXME}. 
+imprecise and non-minimal repairs~\cite{FIXME}.
 Moreover, their use of Integer Linear
 Programming (ILP) for variable alignment between possible local repairs can hurt
-its scalability (WRW notes: you just said CLARA can produce repairs
+its scalability \WRW{notes: you just said CLARA can produce repairs
 ``relatively quickly'' one sentence ago: we cannot claim that CLARA is both
-quick and also non-scalable). 
+quick and also non-scalable}.
 % [TODO: Section N] provides a detailed survey of related work.
 % TODO: Add Seminal(it's the one on our human study) here?
 % TODO: Maybe add another tool?
@@ -89,21 +89,21 @@ quick and also non-scalable).
 In this paper, we introduce \toolname, a \emph{data-driven} approach to
 repairing novice attempts on programming assignments based on supervised
 learning. \toolname uses a large dataset containing pairs of ill-typed
-programs (WRW notes: ill-typed is first used here --- are we only doing
-type errors?) and
+programs \WRW{notes: ill-typed is first used here --- are we only doing
+type errors?} and
 their subsequent fixes to \emph{automatically learn models} that localize
-errors and suggest template fixes (WRW notes: we should be talking about
+errors and suggest template fixes \WRW{notes: we should be talking about
 the data-driven solution and form of these models much earlier when we list
 our insights --- also, let's talk about your dynamic solution of using
-interaction traces), and uses
+interaction traces}, and uses
 \emph{program synthesis} to turn those
-templates into \emph{program repairs} (WRW notes: we should hint at this
-earlier). Given a new ill-typed program, \toolname generates a list of
+templates into \emph{program repairs} \WRW{notes: we should hint at this
+earlier}. Given a new ill-typed program, \toolname generates a list of
 potential solutions ranked by likelihood and an \emph{edit-distance}
 metric. We evaluate \toolname by comparing its accuracy on a set of over
 4,500 ill-typed \ocaml programs drawn from two instances of an introductory
-programming course (WRW notes: this is an amazing evaluation! we should be
-mentioning it earlier and in a little more detail).
+programming course \WRW{notes: this is an amazing evaluation! we should be
+mentioning it earlier and in a little more detail}.
 
 
 % 1. ``We identify an important problem in the world.'' Be more specific than

@@ -32,11 +32,11 @@ integer digit. The student accidentally misuses the list append operator
 (\texttt{@}), applying it to a number and a list rather than two lists.
 %
 Novice students who are still building a mental model of how the type checker
-works are often perplexed by the compiler's error message \cite{fixme}. Hence a
+works are often perplexed by the compiler's error message \cite{}. Hence a
 novice will often take a long time to arrive at a suitable fix, such as the one
 shown at the bottom of \autoref{fig:mulByDigit}, where the append operator is
-used with a singleton list containing the multiplication of the
-head \texttt{hd} and \texttt{i}.
+used with a singleton list containing the multiplication of the head \texttt{hd}
+and \texttt{i}.
 %
 Our goal is to use historical data of how previous programmers have fixed
 similar errors in their programs to automatically and rapidly guide the novice
@@ -46,15 +46,15 @@ to come up with candidate solutions like the one above.
 \mypara{Solution: Analytic Program Repair.}
 %
 One approach is to view the search for candidate repairs as a synthesis problem:
-synthesize a (small) set of edits to the program that yields a good 
-one~\cite{singh2013, fixme}.
+synthesize a (small) set of edits to the program that yields a good
+one~\cite{singh2013}. %FIXME
 %
 To ensure that synthesis is tractable, the search must be carefully restricted
 to a relatively small, manually constructed ``repair model'' that may not
 include the ``right'' fixes for an erroneous program.
 %
-In this work, we present a novel strategy called \emph{Analytic Program
-Repair} which breaks the problem into three parts:
+In this work, we present a novel strategy called \emph{Analytic Program Repair}
+which breaks the problem into three parts:
 %
 First, \emph{learn} a set of widely used \emph{fix templates}.
 %
@@ -120,7 +120,7 @@ represented by the GAST of the expression |[_ $\oplus$ _]|, where variables |hd|
 and |i| are abstracted into holes (e.g. by pruning the GAST at a depth $d=2$)
 and |*| is represented by an abstract binary operator. Our GAST approach
 is somewhat similar to the template approach of FIXME, but we FIXME instead
-of FIXME~\cite{FIXME}. 
+of FIXME~\cite{FIXME}.
 
 
 \subsection{Acquiring a Fix-Labeled Training Set}
@@ -152,13 +152,13 @@ such sequences (or \emph{traces}) of student programs. The first type-correct
 solution in this sequence of program attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
 the dataset. In our case, we used an existing dataset
-~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs 
-(WRW notes: this is the first thing you've written that has limited you to 
-OCaml only --- everything before this was generic) 
-(WRW notes: why are you now talking about datasets in the algorithm
+~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs
+\WRW{notes: this is the first thing you've written that has limited you to
+OCaml only --- everything before this was generic}
+\WRW{notes: why are you now talking about datasets in the algorithm
 overview section? shouldn't this be more like ``we require a dataset that
 has properties X, Y and Z'' and then later we can say ``for our evaluation,
-we trained on this ocaml dataset''?) 
+we trained on this ocaml dataset''?}
 and their
 fixes that were extracted using the aforementioned method. For each program
 pair, we then produce a \emph{diff} of the abstract syntax trees (ASTs), and
@@ -196,7 +196,7 @@ Second, it allows for the principled removal of outliers that arise because
 student submissions often contain non-standard or idiosyncratic solutions that
 we do not wish to use for suggesting fixes.
 Unlike previous repair approaches that have used clustering to make fix
-templates (e.g.,~\cite{FIXME}), we do FIXME. 
+templates (e.g.,~\cite{FIXME}), we do FIXME.
 
 
 \subsection{Predicting Templates via Multi-class Classification}
@@ -248,8 +248,8 @@ used to rank fix-template predictions for new programs and use them in that
 order to synthesize repairs until our high-level goal is reached. Finally, we
 used deep and dense architectures~\cite{FIXME} to give a better confidence
 to each template
-(WRW notes: do these D\&D architectures give us better precision on
-the confidence value reported, or give us higher confidence overall?),
+\WRW{notes: do these D\&D architectures give us better precision on
+the confidence value reported, or give us higher confidence overall?},
 aiming for a higher accuracy for template predictions.
 
 \mypara{Error Localization.} We view the problem of finding error locations in a
@@ -261,7 +261,7 @@ we use similar deep architectures of neural networks. With the learned models, w
 obtain a confidence score for each program expression to be an error location
 that need to be fixed. We exploit those scores to synthesize candidate
 expressions for each location in descending order of confidence. We use
-this approach, rather than standard fault localization, because FIXME. 
+this approach, rather than standard fault localization, because FIXME.
 
 \subsection{Synthesizing Feedback from Predicted Templates}
 \label{sec:overview:synthesis}
@@ -283,7 +283,7 @@ to further prune the search space of candidate expressions.
 
 \mypara{Synthesis for Multiple Locations.} Previous work has shown that just the
 top 3 location predictions account for up to 90\% of the type-errors that occur
-in a set of programs~\cite{FIXME}. 
+in a set of programs~\cite{FIXME}.
 But it is also often the case that more than one location
 needs to be fixed. Therefore, in practice we do not only consider the ordered set
 of single error locations for synthesis, but rather its power set.
@@ -291,20 +291,20 @@ For simplicity we treat the probabilities that different locations need to be fi
 as independent; the probability we assign that a set of locations needs to be fixed
 is thus the product their individual confidence scores. This is unlike
 recent approaches to multi-hunk program repair, such as
-Hercules~\cite{FIXME}, in that we FIXME. 
+Hercules~\cite{FIXME}, in that we FIXME.
 
 \mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
 used those metrics to consider minimal changes, i.e. changes that are as close
 as possible to the original programs, so novice programmers can better
-understand feedback~\cite{FIXME}. 
+understand feedback~\cite{FIXME}.
 However, different metrics may yield better fixes, as we
-discuss later in Section FIXME. 
+discuss later in Section FIXME.
 Programmers usually have in mind what \emph{type signature}
 the functions that they write are supposed to have
-(WRW notes: is this true? didn't we just say at the beginning of this
+\WRW{notes: is this true? didn't we just say at the beginning of this
 section that novice do \emph{not} yet have a good mental model for
-type systems and checkers?). We thus 
+type systems and checkers?}. We thus
 provide the user with the option to give the intended type for the program's
 functions we are trying to repair. In our evaluation, we acquire the
 intended types from the fixed versions of the dataset (see Section FIXME).
@@ -324,17 +324,17 @@ intended types from the fixed versions of the dataset (see Section FIXME).
 method could return (|[$v_1$ * $v_2$]|), using the template discussed in
 \autoref{sec:overview:learn} to synthesize this solution. While this solution
 is not the highest-ranked that our implementation returns (which would be
-identical to the human solution), it demonstrates 
+identical to the human solution), it demonstrates
 relevant aspects of the synthesizer. In particular, this solution
-is very close to the human solution, but it still has 
-some abstracted holes (WRW notes: can you call out the lines that have the
+is very close to the human solution, but it still has
+some abstracted holes \WRW{notes: can you call out the lines that have the
 holes or otherwise specify them more precisely? I can't find them in the
 program. I'd guess they are $v_1$ and $v_2$, but in just a sentence you'll
 say that's what we use to fill the holes, so those can't be the holes
-themselves.). 
-% However, there are some indications as to what these holes should be. 
+themselves.}.
+% However, there are some indications as to what these holes should be.
 Our algorithm suggests that two different variables, $v_1$ and $v_2$,
-should be used to fill those expression holes. We hypothesize that 
-such solutions produced by our algorithm can provide 
+should be used to fill those expression holes. We hypothesize that
+such solutions produced by our algorithm can provide
 valuable feedback to novices, and we investigate that claim empirically
 in Section FIXME.
