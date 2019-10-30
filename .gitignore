@@ -162,7 +162,7 @@ cabal.project.local
 *.synctex.gz(busy)
 *.pdfsync
 
-/paper/acmart-master
+/paper/acmart-sigplanproc
 /paper/*/auto/
 .DS_Store
 /.venv/
