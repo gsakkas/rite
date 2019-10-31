@@ -169,11 +169,11 @@ gathered fixes into a small but generally applicable number of fix templates.
 Therefore, two expressions over \repairLang are \emph{similar} when at least one
 of the following rules hold \GS{Look code in \autoref{fig:haskell}}:
 \begin{enumerate}
-    \item Two non-terminal expressions over \repairLang are similar when the
-    top-level non-terminal is the same and there is a \emph{total} bijective
-    relation between their children expressions, such that \emph{all} the
-    related expressions are themselves similar, \eg two binary operator
-    expressions are the same if their operands are similar.
+    \item Two expressions over \repairLang are similar when the top-level
+    non-terminal is the same and there is a \emph{total} bijective relation
+    between their children expressions, such that \emph{all} the related
+    expressions are themselves similar, \eg two binary operator expressions are
+    the same if their operands are similar.
     \item A wildcard expression is similar with any possible expression over
     \repairLang.
     \item A terminal expression over \repairLang is similar only with another
@@ -181,19 +181,28 @@ of the following rules hold \GS{Look code in \autoref{fig:haskell}}:
 \end{enumerate}
 
 \paragraph{Clustering.}
-The main goal of clustering is to make our predictive models more scalable
-and applicable to more programs by avoiding assigning different templates
-to equivalent expressions. We define
-clustering as the task of grouping together similar expressions over \repairLang
-such that each group can then be used as a fix template to produce repairs for
-ill-typed programs. Each group can consist of several \emph{member-expressions}
-and each one of them can be used as the cluster \emph{representative}.
+The main goal of \emph{clustering} is to make our predictive models scalable and
+applicable to more programs by avoiding assigning different templates to
+equivalent expressions. We define clustering as the task of grouping together
+similar expressions over \repairLang such that each group can then be used as a
+fix template to produce repairs for ill-typed programs. Each group can consist
+of several \emph{member-expressions} and one of them is the cluster
+\emph{representative}.
 
 The clustering algorithm uses the extracted fix templates and groups together
 the templates that are similar based on our ealrier definition of expression
-similarity. It then returns the Top-$N$ based on their popularity on their
-training set. $N$ is considered a parameter of algorithm that can be defined
-prior the training and clustering process, and is usually around 30 to 50 [TODO:
-cite similar template papers].
+similarity. The most generic expression, \ie the expression whose GAST has the
+smallest size (which in this context means the one with least number of nodes),
+is the cluster representative. Holes $\_$ have a size of $0$, thus they don't
+add up to the total size of a GAST.
 
-TODO: give an example
+For example, the following expressions: $\hat{x} \oplus \_$, $\_ \oplus \hat{x}$
+and $\_ \oplus \_$ are all similar to one another and therefore will be placed
+in the same cluster. However, $\_ \oplus \_$ is the smallest in size and thus
+will be the cluster representative.
+
+Finally, our clustering algorithm actually returns the top $N$ clusters based on
+their member-expressions frequency in the dataset. $N$ is a parameter of the
+algorithm that is chosen in a manner that the top $N$ clusters will
+representative a large percentage of the dataset. We discuss more of its value
+in \autoref{sec:eval}.
