@@ -1,36 +1,39 @@
 \begin{figure}
 \small
-\begin{minipage}[c]{\linewidth}
-  \lstDeleteShortInline{|}
+\centering
+  \begin{minipage}[c]{\linewidth}
   \[
   \boxed{
-  \begin{array}{lcl}
-    \V           & \defeq & \List{\R}\\
-    \Runit       & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\
-    \T           & \defeq & e \\
-    \Dataset     & \defeq & \List{e \times e} \\
-    \Emap{a}     & \defeq & e \to a \\
-    \Tmap{a}     & \defeq & \T \to a \\
-    \midrule
-    \featuresym  & : & \List{\Emap{\R}} \\
-    \diffsym     & : & e \times e \to \List{e} \\
-    % \templatesym & : & \List{e} \to \List{\T}\\
-    % \clustersym  & : & \List{\T} \to \List{\T}\\
-    \extractTsym & : & \featuresym \to \List{\T} \to e \times e \\
-                 &   & \quad \to \Emap{(\V \times \B \times \Tmap{\B})} \\
-    \trainTsym   & : & \List{\V \times \B \times \Tmap{\B}} \to \Model \times \ModelT \\
-    \predictTsym & : & \Model \times \ModelT \to \V \to \Runit \times \Tmap{\Runit} \\
-    \midrule
-    \repairsym   & : & \featuresym \to \Dataset \to \List{\T} \to e \\
-                 &   & \quad \to \Emap{(\Runit \times \Tmap{\Runit})}
+  \begin{array}{rcl}
+  e & ::=    & x \spmid \efun{x}{e} \spmid \eapp{e}{e} \spmid \elet{x}{e}{e} \\
+    & \spmid & n \spmid \eplus{e}{e}\\
+    & \spmid & b \spmid \eif{e}{e}{e} \\
+    & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
+    & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
+
+  n & ::= &  0, 1, -1, \ldots \\[0.05in]
+
+  b & ::= &  \etrue \spmid \efalse \\[0.05in]
+
+  t & ::= & \alpha \spmid \tbool \spmid \tint \spmid \tfun{t}{t} \spmid \tprod{t}{t} \spmid \tlist{t} \\[0.05in]
   \end{array}
   }
   \]
-  \lstMakeShortInline[mathescape=true]{|}
-  \captionof{figure}{
-    A high-level API for converting program pairs to
-    feature vectors and template labels.
-  }
-  \label{fig:api}
-\end{minipage}
+  \captionof{figure}{Syntax of \lang}
+  \label{fig:ml-syntax}
+  \end{minipage}
+  \begin{minipage}[c]{\linewidth}
+    \[
+    \boxed{
+    \begin{array}{rcl}
+    e & ::=    & x \spmid \_  \spmid \efun{x}{e} \spmid \eapp{e}{e} \spmid \elet{x}{e}{e} \\
+      & \spmid & n \spmid \ebop{e}{e} \spmid \eif{e}{e}{e} \\
+      & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
+      & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
+    \end{array}
+    }
+    \]
+    \captionof{figure}{Syntax of \repairLang}
+    \label{fig:rtl-syntax}
+  \end{minipage}
 \end{figure}
