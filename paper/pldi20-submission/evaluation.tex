@@ -33,7 +33,7 @@ distinct programs. While the extracted programs are relatively
 small, they demonstrate a range of functional programming idioms, \eg
 higher-order functions and (polymorphic) algebraic data types.
 
-\mypara{Feature Extraction}
+\paragraph{Feature Extraction}
 We extract 416 features from each sub-expression in a
 program, including:
 %
@@ -54,7 +54,7 @@ program, including:
   \item 1 feature denoting the size of each sub-expression.
 \end{enumerate}
 
-\mypara{Dataset ``cleaning''}
+\paragraph{Dataset ``cleaning''}
 We automatically extract a blame oracle for each ill-typed program from the
 (AST) diff between it and the student's eventual fix. A disadvantage of using
 diffs in this manner is that students may have made many, potentially unrelated,
@@ -71,7 +71,7 @@ roughly 32\% of each dataset, leaving 2,475 program pairs for \SPRING
 and 2,177 pairs for \FALL. In all evaluations, we use \SPRING as a training
 set and \FALL as a test set.
 
-\mypara{Accuracy Metrics}
+\paragraph{Accuracy Metrics}
 A recent study of fault localization techniques \citep[][]{Kochhar2016-oc} shows
 that most developers will not consider more than around five potential error
 locations before falling back to manual debugging. We evaluate \toolname's
@@ -85,7 +85,7 @@ include the confusion matrix of the top-one predictions for all locations,
 to present what templates our models usually mix together and see if they
 generalize well between different groups of solutions.
 
-\mypara{Repair Quality}
+\paragraph{Repair Quality}
 Finally, for a more qualitative evaluation of \toolname's synthesized solutions
 based on the above results, we carried out a human study at \emph{university
 elided for blind review}. Each participant was asked to evaluate the quality of
@@ -105,11 +105,11 @@ localization and template prediction.
 \subsubsection{Template Prediction Accuracy}
 \label{subsubsec:templ_acc}
 
-\mypara{Baselines}
+\paragraph{Baselines}
 We provide two baselines for the comparison: a random choice of template and a
 prediction based on popularity.
 
-\mypara{Our Classifiers}
+\paragraph{Our Classifiers}
 We evaluate multiple classifiers, each trained on the \SPRING quarter and evaluated
 on the \FALL quarter. These include:
 \begin{description}
@@ -145,7 +145,7 @@ has been found to converge faster, was used to train our \dnn.
   \label{fig:conf-matrix}
 \end{figure}
 
-\mypara{Results}
+\paragraph{Results}
 \autoref{fig:accuracy-results} shows the accuracy results of our template
 prediction experiments. The naive baseline of selecting templates at random
 achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
@@ -182,7 +182,7 @@ with some ``tuple'' in their ASTs]
 \subsubsection{Error Localization Accuracy}
 \label{subsubsec:error_loc_acc}
 
-\mypara{Method}
+\paragraph{Method}
 For our error localization task, we again train a multi-layer perceptron neural
 network, with the same hyper-parameters as in \ref{subsubsec:error_loc_acc}. Our
 network firstly uses two fully-connected hidden layers of 1024 neurons and one
@@ -222,7 +222,7 @@ have the table floating free. Walk the reader through the result.
 \subsubsection{Empirical Repair Quality Evaluation}
 \label{subsubsec:man_rep_qual_eval}
 
-\mypara{Synthesis Algorithm}
+\paragraph{Synthesis Algorithm}
 We guide our synthesis algorithm, using the above predictions for finding the
 proper locations to fix and what template to use. Every program is given a timeout of
 \emph{30s} to be repaired by the synthesis algorithm because

@@ -12,7 +12,7 @@ producing \emph{local repairs} for a given location of the input program.
 \subsection{Ranking Error Locations}
 \label{subsec:location-rank}
 
-\mypara{Error Location Confidence}
+\paragraph{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for a given program location, our
 $\Model$ generates a confidence score $\Runit$ of that location containing an
 error that needs to be fixed. Each location in the type-error slice is assigned
@@ -26,7 +26,7 @@ template. If the algorithm fails to synthesize a
 program that type-checks, the next
 location is considered, until it succeeds.
 
-\mypara{Multiple Error Locations}
+\paragraph{Multiple Error Locations}
 In practice, however, it is very often that more that one location may need to
 be repaired. Therefore, our previous approach will fail to generate a solution
 in many cases. So we modify our simple algorithm to synthesize programs with
@@ -52,7 +52,7 @@ has too small a chance of leading to an actual good solution.
 \subsection{Local Synthesis from Templates}
 \label{subsec:local-synthesis}
 
-\mypara{Enumerative Program Synthesis}
+\paragraph{Enumerative Program Synthesis}
 Our synthesis algorithm is a classic \emph{enumerative} program synthesis method
 guided by an input template. Enumerative synthesis searches all possible
 expressions over a language, starting from an empty program, until a high-level
@@ -71,7 +71,7 @@ for their final repair.
 
 \input{local-repair.tex}
 
-\mypara{Generating Local Repairs with Templates}
+\paragraph{Generating Local Repairs with Templates}
 Using our \textsc{Enumerate} method, we lazily generate local repairs $R$ for
 each subset of locations that is highest in confidence score. The
 \textsc{Enumerate} method starts to fill in a template $T$ for location $L$ of
@@ -98,4 +98,4 @@ depending on the level of feedback that is needed.
 % \subsection{Program Repair}
 % \label{subsec:repair}
 
-% \mypara{Combining Error Localization and Local Repairs}
+% \paragraph{Combining Error Localization and Local Repairs}

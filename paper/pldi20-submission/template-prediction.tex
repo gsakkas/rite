@@ -58,7 +58,7 @@ generates a mapping from program expressions to confidence scores $\Emap{(\Runit
 % boolean labels based on the templates $\T$ according to $\clustersym$, with only
 % one being $\etrue$ at a time
 
-\input{syntax.tex}
+\input{api.tex}
 
 \subsection{Feature and Label Extraction}
 \label{subsec:extract}
@@ -75,7 +75,7 @@ would first split it into its constituent subexpressions and then transform each
 subexpression into a single feature vector. We show here the five major feature
 categories used.
 
-\mypara{Local syntactic features}
+\paragraph{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
 words, for each production rule of $e$ in \autoref{fig:ml-syntax} we introduce a
 feature that is enabled (set to $1$) if the expression was built with that
@@ -91,7 +91,7 @@ would describe whether an expression is the empty list $\enil$.
 % \emph{contains} a particular pattern, and thus have a match expression that
 % enables multiple features.
 
-\mypara{Contextual syntactic features}
+\paragraph{Contextual syntactic features}
 The \emph{context} in which an expression occurs can be critical for predicting
 correctly fix templates and determining if they are the source of an error.
 Therefore, we include these features, which are similar to the local syntactic
@@ -103,7 +103,7 @@ corresponding features disabled. This gives us a notion of the \emph{context} in
 which an expression occurs, similar to the \emph{n-grams} used in linguistic
 models \citep{Hindle2012-hf,Gabel2010-el}.
 
-\mypara{Expression size}
+\paragraph{Expression size}
 We also include a feature representing the \emph{size} of each expression, \ie
 how many sub-expressions does it contain?
 % For example, the \ExprSize feature in \autoref{fig:mulByDigit} is set to four
@@ -112,7 +112,7 @@ how many sub-expressions does it contain?
 This allows the model to learn that, \eg, expressions closer to the leaves are
 more likely to be fixed than expressions closer to the root.
 
-\mypara{Typing features}
+\paragraph{Typing features}
 The programs we are trying to repair are \emph{untypeable}, but a \emph{partial
 typing} derivation from the type checker could still provide useful information
 to the model. Therefore, we include \emph{typing} features in our
@@ -139,7 +139,7 @@ feature, as they are both inferred to have a type that mentions $\tlist{\cdot}$.
 % expression might alternatively be assigned the type $\tint$. Our models will
 % have to learn good localizations in spite this bias.
 
-\mypara{Type error slice}
+\paragraph{Type error slice}
 Finally, we wish to distinguish between changes that could fix the error, and
 changes that \emph{cannot possibly} fix the error. Thus, we compute a minimal
 type-error \emph{slice} for the program (\ie the set of expressions that
@@ -148,7 +148,7 @@ compute a minimal slice for each error. We then have a post-processing step that
 discards all expressions that are not included in those slices.
 
 
-\mypara{Labels}
+\paragraph{Labels}
 Recall that we use two predictive models, $\Model$ for error localization and
 $\ModelT$ for predicting fix templates. Thus, we define the output of the
 $\Model$ to be a boolean label, where ``false'' means the expression
@@ -194,7 +194,7 @@ introductory machine learning textbooks \citep[\eg][]{Hastie2009-bn}.
 % when its training performance is high.
 
 
-\mypara{Neural Networks}
+\paragraph{Neural Networks}
 The model that we use is a type of neural network called a \emph{multi-layer
 perceptron} (see \citep{Nielsen2015-pu} for an introduction to neural networks).
 A multi-layer perceptron can be represented as a directed acyclic graph whose
@@ -218,7 +218,7 @@ layers and an output layer.
 % hand, this makes the networks particularly difficult to interpret and also
 % difficult to generalize unless vast amounts of training data are available.
 
-\mypara{Multi-class \dnn{}s}
+\paragraph{Multi-class \dnn{}s}
 While the above model is enough for error localization (since we have to select
 from a binary option), some adjustments on the output layer must be applied. We
 again use a deep neural networks for our template prediction $\ModelT$s, but the
@@ -253,7 +253,7 @@ this section we show how all the functions in our high-level API in
 \autoref{fig:api} are combined to produce a final list of confidence scores for
 a new program $P$.
 
-\mypara{The Prediction Algorithm}
+\paragraph{The Prediction Algorithm}
 Our algorithm firstly extracts the machine-learning-amenable dataset $D_{ML}$
 from the program pairs dataset $D$. For each program pair in $D$, the
 $\extractTsym$ function returns a mapping from the erroneous program's

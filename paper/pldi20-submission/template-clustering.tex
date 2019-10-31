@@ -4,117 +4,183 @@
 In this section, we introduce our approach for extracting useful fix schemas ---
 or \emph{fix templates} --- from a given dataset of already fixed programs. We
 represent those templates in terms of a simple language \repairLang
-(\autoref{fig:rtl-syntax}). \repairLang is a simple lambda calculus with integers,
-booleans, pairs, and lists, but also with some abstractions that allow us to
-represent more general abstract fix schemas, that simultaneously capture the
-core structure of various fix patterns that novices use.
+(\autoref{fig:rtl-syntax}), a lambda calculus with integers, booleans, pairs,
+and lists, but also with some abstractions that allow us to represent more
+general abstract fix schemas, that simultaneously capture the core structure of
+various fix patterns that novices use.
 
-A template over \repairLang is a \emph{Generic Abstract Syntax Tree (GAST)}.
-Those GASTs will then be used to predict and generate possible repairs for new
-erroneous programs, as described in the next two sections. However, having a
-single fix template for each program pair that appears in the dataset can lead
-to a large number of templates, rendering it impossible to train predictive models
-that will choose from so many options.
+% A template over \repairLang is a \emph{Generic Abstract Syntax Tree (GAST)}.
+% Those GASTs will then be used to predict and generate possible repairs for new
+% erroneous programs, as described in the next two sections. However,
+Having a single fix template for each program pair that appears in the dataset
+can lead to a large number of templates. Therefore, we define  a
+\emph{similarity relation} between fix templates, that will enable us to
+\emph{cluster} the existing extracted fix templates into a smaller set, making
+it possible to train predictive models that can precisely suggest fixes.
+% Therefore, we define a \emph{GAST similarity metric} that will enable us
+% classify fix patterns that don't have the exact same syntax tree but appear to
+% be of the same nature, to be represented by the same fix template. For example,
+% changing different arguments of a function application should be represented by
+% the same fix template.
 
-Therefore, we define a \emph{GAST similarity metric} that will enable us
-classify fix patterns that don't have the exact same syntax tree but appear to
-be of the same nature, to be represented by the same fix template. For example,
-changing different arguments of a function application should be represented by
-the same fix template. We achieve that by \emph{clustering} the existing
-extracted fix templates into a smaller set, using that similarity metric.
+\input{syntax.tex}
 
-\input{syntax-loc.tex}
 
-\subsection{RTL: Repair Template Language}
-\label{subsec:lang}
 
-In this section, we define the language we use to represent
-templates and how we can acquire those templates from our dataset.
+\subsection{Representing User Fixes}
+\label{sec:templ-cluster:lang}
+Here, we define \repairLang and we describe how we can use it to represent fixes
+from a dataset of program pairs.
 
-\mypara{Syntax of RTL}
+\paragraph{Repair Template Language.}
 We define here our Repair Template Language (RTL) as a simple lambda calculus
-(\repairLang in \autoref{fig:rtl-syntax}) with integers, booleans, pairs, and lists.
-This language will be used to abstract and define repair templates $\T$. Our RTL
-contains all the expressions that \lang included, but with four significant
-changes.
+(\repairLang syntax in \autoref{fig:rtl-syntax}) with integers, booleans, pairs,
+and lists. Our RTL contains all the expressions that a core ML language \lang
+(syntax in \autoref{fig:ml-syntax}) would include, but with four key
+differences.
 
 \begin{enumerate}
-    \item Variable names $x$ used for functions, variables and patterns are left
-    \emph{unspecified}. That means that $x$ denotes that that place of the code
-    has a variable name, but it is unknown at that point.
-    \item Literal values $n$ can be any integer or floating point number,
-    boolean value or character and string. Like variables, these are left
-    unspecified.
+    \item Variable names $\hat{x}$ used for functions, variables and patterns
+    are left \emph{unspecified}. That means that $\hat{x}$ denotes a unknown
+    variable name in \repairLang.
+    \item Literal values $\hat{n}$ can represent any integer or floating point
+    number, boolean value or character and string. Like variables, these are
+    left unspecified.
     \item Operators $\oplus$ are also left unspecified.
-    \item A \emph{wildcard} expression $\_$ is added, which is used to denote
-    that \emph{any} expression in \repairLang can be used to replace it.
+    \item A \emph{wildcard} expression $\_$ is added, which is used to represent
+    \emph{any} expression in \repairLang, \ie a program \emph{hole}.
 \end{enumerate}
 
-\mypara{Generic ASTs (GASTs)}
-Using our RTL, we can now define \emph{Generic ASTs}. GASTs are abstract syntax
-trees that represent expressions that can have unspecified details, like
-variable names or numerical values. Therefore, GASTs can represent templates
-$\T$, defined as expressions in \repairLang. GASTs are used here to capture the
-high-level \emph{structure} of an expression, as a more appropriate means to
-define templates. GASTs are extracted from the original ASTs representing
-programs in \lang, by removing all the necessary information so \repairLang can
-be used. Then these trees can be further \emph{pruned} at a depth $d$ to keep
-only the higher level expressions and formulate the templates.
+Recall from \autoref{sec:overview:templates} that we define fixes as
+replacements of expressions with new candidate expressions at specific program
+locations. Therefore, a fix template $\T$ will represent such candidate
+expressions over \repairLang.
+
+\paragraph{Generic ASTs.}
+We now define \emph{Generic ASTs} (GASTs), \ie abstract syntax trees
+representing expressions over \repairLang which have some abstracted details,
+like variable names or numerical values. GASTs are extracted from regular ASTs
+over the core language \lang using the $\abstrsym$ function. The $\abstrsym$
+function takes as input an expression $e^{ML}$ over \lang and a depth $d$ and
+returns an expression $e^{RTL}$ over \repairLang, \ie a GAST with all variables,
+literals and operators of $e^{ML}$ abstracted and all subexpressions starting at
+depth greater than $d$ pruned and replaced with holes $\_$.
+\input{gast-example.tex}
+
+Recall our example program \mbd at \autoref{fig:mulByDigit}. The expression
+|[hd * i]| replaces |(hd * i)| in line 4, thus it is the user's fix. Its AST
+is given in \autoref{fig:fix_ast}. The output of $\abstrsym$, given this AST and
+a depth $d = 1$ as input, would be the GAST in \autoref{fig:templ_gast}. This
+can also be a potential fix template for \mbd. We discuss more about fix
+templates next.
 
 
-\mypara{Extracting Templates from Dataset Repairs}
-% TODO: Needs rewriting
-Templates $\T$ are extracted by the function $\templatesym$ from our program
-pair dataset. Using the $\diffsym$ function first, we acquire the changed
-expressions of the dataset. These changes are potentially the templates we are
-going to use. However, they contain a lot of \emph{local} information to the
-specific program that they were extracted from. So $\templatesym$ takes the
-changed expressions defined in \lang and \emph{transforms} them into expressions
-in \repairLang, essentially making them into templates $\T$. Those templates are
-represented as GASTs and are pruned at a pre-defined depth $d$. The value of $d$
-can be as low as 1, but to capture more structure to our templates, slightly
-bigger values would work better. We then see in \autoref{subsec:clustering} how
-we can group together all these templates.
 
-We identify the fixes for each ill-typed program with an expression-level
-$\diffsym$~\citep{Lempsink2009-xf}. We consider two sources of changes. First,
-if an expression has been removed wholesale, \eg if $\eapp{f}{x}$ is rewritten
-to $\eapp{g}{x}$, we will mark the expression $f$ as changed, as it has been
-replaced by $g$. Second, if a new expression has been inserted \emph{around} an
-existing expression, \eg if $\eapp{f}{x}$ is rewritten to
-$\eplus{\eapp{f}{x}}{1}$, we will mark the application expression $\eapp{f}{x}$
-(but not $f$ or $x$) as changed, as the $+$ operator now occupies the original
-location of the application.
+\subsection{Extracting Fix Templates from a Dataset}
+\label{sec:templ-cluster:templates}
+We now show how we acquire fix templates from a dataset of program pairs.
 
-% \mypara{Example}
-% TODO: give an example
+\paragraph{Extracting Templates.}
+At least one fix template is extracted from each program pair in the dataset.
+For each program pair $(\pbad, \pfix)$ in the dataset, we extract a unique fix
+for each location in $\pbad$ that changed in $\pfix$. We achieve that with an
+expression-level $\diffsym$~\citep{Lempsink2009-xf} function, which extracts all
+changes between a program pair $(\pbad, \pfix)$. Recall again that we consider
+fixes to be replacements of expressions, and therefore we use the extracted
+changes as our fix templates.
+
+Let $\econtext{}$ be the \emph{context} that an expression $e$ appears in a
+program $p$, \ie the program $p$ with expression $e$ replaced with a hole $\_$.
+We write that $p = \context{}{e}$, meaning that if we fill the hole with the
+original expression $e$ we get the original program $p$. In this fashion, $\diffsym$ finds
+a \emph{minimal} (in number of nodes) expression replacement $\efix$ for an
+expression $\ebad$ in $\pbad$, such that $\pbad = \context{\pbad}{\ebad}$ and
+$\context{\pbad}{\efix} = \pfix$. Obviously, there may be several such
+expressions in a program, and $\diffsym$ returns all such changes between the
+erroneous program $\pbad$ and its fixed counterpart $\pfix$.
+
+For example, if an expression has been replaced wholesale with another
+expression, \eg if $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, we will have
+that the context is $\econtext{} = \eapp{\_}{x}$, where $\_$ represents the
+hole, and then the fix will be $g$, since $\context{}{g} = \eapp{g}{x}$. In
+another example, if a new expression has been inserted \emph{around} an existing
+expression, \eg if $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
+context will be more general where $\econtext{} = \_$, since we consider the
+application expression $\eapp{f}{x}$ (but not $f$ or $x$) to be replaced with
+the $+$ operator, and therefore the fix will be the whole expression, thus
+$\context{}{\eplus{(\eapp{f}{x})}{1}} = \eplus{(\eapp{f}{x})}{1}$.
+% TODO: maybe talk about the drawback of the last choice
+
+% Using the $\diffsym$ function first, we acquire the changed expressions of the
+% dataset. These changes are potentially the templates we are going to use.
+% However, they contain a lot of \emph{local} information to the specific program
+% that they were extracted from. So $\templatesym$ takes the changed expressions
+% defined in \lang and \emph{transforms} them into expressions in \repairLang,
+% essentially making them into templates $\T$. Those templates are represented as
+% GASTs and are pruned at a pre-defined depth $d$. The value of $d$ can be as low
+% as 1, but to capture more structure to our templates, slightly bigger values
+% would work better. We then see in \autoref{subsec:clustering} how we can group
+% together all these templates.
+
+% We identify the fixes for each ill-typed program with an expression-level
+% $\diffsym$~\citep{Lempsink2009-xf}. We consider two sources of changes.
 
 
 \subsection{Clustering the Templates}
+We here show how we cluster the possibly vast number of fix templates acquired
+from each program pair in a dataset using a \emph{similarity relation} between
+the fix templates' GASTs.
 \label{subsec:clustering}
+\begin{figure*}
+    \begin{minipage}{\textwidth}
+        \begin{lstlisting}[language=haskell, frame=single]
+        data Expr
+            = Var
+            | App Expr [Expr]
+            | Bop Op Expr Expr
+            | ...
+            | Hole
 
-% TODO: Should we give a better name than "similarity metric"
-\mypara{GAST Similarity Metric}
-Having programs written over \repairLang forces similar changes, \ie changing a
-variable name, to have identical GASTs. This is really helpful when we try to
-group different changes together into some templates $\T$. We want to extend and
-generalize this ``similarity'' of program changes, in order to get a small but
-generally applicable number of repair templates.
+        similar :: Expr -> Expr -> Bool
+        similar (Var v1) (Var v2) = v1 == v2
+        similar (App e1 es1) (App e2 es2)
+            = and $ zipWith similar (e1 ++ es1) (e2 ++ es2)
+        similar (Bop b1 e11 e12) (Bop b2 e21 e22)
+            = b1 == b2 && similar e11 e21 && similar e12 e22
+        similar ...
+        similar Hole e = True
+        similar e Hole = True
+        similar Hole Hole = True
+        similar _ _ = False
 
-Therefore, two expressions over \repairLang are considered \emph{similar} when
-the following simple rules hold:
+        \end{lstlisting}
+    \end{minipage}
+    \caption{\GS{Just for refence for similarity relation. It is a relation but not transitive. For example, $x + \_$ and $(x + y) + \_$ are both similar to $\_ + \_$, but they are not similar to each other. However, $\_ + \_$ will be chosen as the cluster representative (fix template) and all three will be in the same cluster.}}
+    \label{fig:haskell}
+\end{figure*}
+
+% TODO: Should we give a better name than "similarity relation"
+\paragraph{GAST Similarity Relation.}
+Having programs written over \repairLang forces similar fixes, \ie changing a
+variable name, to have identical GASTs. We want to extend and generalize this
+``similarity'' of program fixes, that will in turn enable us to cluster all the
+gathered fixes into a small but generally applicable number of fix templates.
+
+Therefore, two expressions over \repairLang are \emph{similar} when at least one
+of the following rules hold \GS{Look code in \autoref{fig:haskell}}:
 \begin{enumerate}
-    \item Their pruned GASTs (at a pre-defined depth $d$) are exactly the same.
-    \item A wildcard expression is considered similar with any possible
-    expression over \repairLang.
-    \item Two applications, operators, cases, lists or tuples are considered
-    similar when there is a total bijective relation between their children
-    expressions, such that the related expressions are themselves similar.
-    % TODO: maybe explain better and separate apps, and include ifs and lets
+    \item Two non-terminal expressions over \repairLang are similar when the
+    top-level non-terminal is the same and there is a \emph{total} bijective
+    relation between their children expressions, such that \emph{all} the
+    related expressions are themselves similar, \eg two binary operator
+    expressions are the same if their operands are similar.
+    \item A wildcard expression is similar with any possible expression over
+    \repairLang.
+    \item A terminal expression over \repairLang is similar only with another
+    terminal expression of the same kind, \eg two variables are similar.
 \end{enumerate}
 
-
-\mypara{Clustering}
+\paragraph{Clustering.}
 The main goal of clustering is to make our predictive models more scalable
 and applicable to more programs by avoiding assigning different templates
 to equivalent expressions. We define
@@ -130,5 +196,4 @@ training set. $N$ is considered a parameter of algorithm that can be defined
 prior the training and clustering process, and is usually around 30 to 50 [TODO:
 cite similar template papers].
 
-\mypara{Example}
 TODO: give an example

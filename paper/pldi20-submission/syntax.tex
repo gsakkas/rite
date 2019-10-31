@@ -6,7 +6,7 @@
   \boxed{
   \begin{array}{rcl}
   e & ::=    & x \spmid \efun{x}{e} \spmid \eapp{e}{e} \spmid \elet{x}{e}{e} \\
-    & \spmid & n \spmid \eplus{e}{e}\\
+    & \spmid & n \spmid \eplus{e}{e} \spmid \ldots \\
     & \spmid & b \spmid \eif{e}{e}{e} \\
     & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
     & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
@@ -26,10 +26,10 @@
     \[
     \boxed{
     \begin{array}{rcl}
-    e & ::=    & x \spmid \_  \spmid \efun{x}{e} \spmid \eapp{e}{e} \spmid \elet{x}{e}{e} \\
-      & \spmid & n \spmid \ebop{e}{e} \spmid \eif{e}{e}{e} \\
-      & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
-      & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
+    e & ::=    & \hat{x} \spmid \_  \spmid \efun{\hat{x}}{e} \spmid \eapp{e}{e} \spmid \elet{\hat{x}}{e}{e} \\
+      & \spmid & \hat{n} \spmid \ebop{e}{e} \spmid \eif{e}{e}{e} \\
+      & \spmid & \epair{e}{e} \spmid \epcase{e}{\hat{x}}{\hat{x}}{e} \\
+      & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{\hat{x}}{\hat{x}}{e} \\[0.05in]
     \end{array}
     }
     \]

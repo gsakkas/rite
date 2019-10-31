@@ -13,9 +13,9 @@
 \def\mypara#1{\paragraph{\textbf{#1}}}
 % \def\mypara#1{\medskip\noindent{\emph{\textbf{#1.}}}}
 
-\def\RJ#1{\textcolor{red}{\sf RJ:$\clubsuit$ #1$\clubsuit$}}
-\def\GS#1{\textcolor{blue}{\sf GS:$\clubsuit$ #1$\clubsuit$}}
-\def\WRW#1{\textcolor{red}{\sf WRW:$\diamondsuit$ #1$\diamondsuit$}}
+\def\RJ#1{\textcolor{red}{\sf $\clubsuit$RJ: #1$\clubsuit$}}
+\def\GS#1{\textcolor{blue}{\sf $\clubsuit$GS: #1$\clubsuit$}}
+\def\WRW#1{\textcolor{red}{\sf $\clubsuit$WRW: #1$\clubsuit$}}
 
 \newcommand\etc{\textit{etc.}\xspace}
 \newcommand\eg{\textit{e.g.}\xspace}
@@ -139,22 +139,20 @@
 \newcommand\pfix{\ensuremath{p_{fix}}\xspace}
 \newcommand\ebad{\ensuremath{e_{err}}\xspace}
 \newcommand\efix{\ensuremath{e_{fix}}\xspace}
+\newcommand\econtext[1]{\mathbf{C}_{#1}}
 \newcommand\context[2]{\mathbf{C}_{#1}[#2]}
 
 
-\newcommand\labelsym{\mathsf{label}}
-\newcommand\diffsym{\mathsf{diff}}
+\newcommand\diffsym{\bm{\mathsf{diff}}}
+\newcommand\abstrsym{\bm{\mathsf{abstract}}}
 \newcommand\featuresym{\mathsf{feats}}
-\newcommand\extractsym{\mathsf{extract}}
-\newcommand\extractTsym{\mathsf{extractT}}
-\newcommand\trainsym{\mathsf{train}}
-\newcommand\trainTsym{\mathsf{trainT}}
-\newcommand\evalsym{\mathsf{eval}}
-\newcommand\clustersym{\mathsf{cluster}}
-\newcommand\templatesym{\mathsf{template}}
-\newcommand\predictTsym{\mathsf{predictT}}
-\newcommand\blamesym{\mathsf{blame}}
-\newcommand\repairsym{\mathsf{repair}}
+\newcommand\extractsym{\bm{\mathsf{extract}}}
+\newcommand\extractTsym{\bm{\mathsf{extractT}}}
+\newcommand\trainsym{\bm{\mathsf{train}}}
+\newcommand\trainTsym{\bm{\mathsf{trainT}}}
+\newcommand\predictTsym{\bm{\mathsf{predictT}}}
+\newcommand\blamesym{\bm{\mathsf{blame}}}
+\newcommand\repairsym{\bm{\mathsf{repair}}}
 \newcommand\Model{\mathsf{LModel}}
 \newcommand\ModelT{\mathsf{TModel}}
 \newcommand\V{\mathcal{V}}

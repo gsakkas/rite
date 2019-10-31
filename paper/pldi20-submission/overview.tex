@@ -25,7 +25,7 @@ of a list with an integer. (bottom) The fixed version by the student.}
 \end{figure}
 
 
-\mypara{The Problem.} Consider the program \mbd shown at the top of
+\paragraph{The Problem.} Consider the program \mbd shown at the top of
 \autoref{fig:mulByDigit}, written by a student in an undergraduate Programming
 course. The program is meant to multiply all the numbers in a list with an
 integer digit. The student accidentally misuses the list append operator
@@ -43,7 +43,7 @@ similar errors in their programs to automatically and rapidly guide the novice
 to come up with candidate solutions like the one above.
 
 
-\mypara{Solution: Analytic Program Repair.}
+\paragraph{Solution: Analytic Program Repair.}
 %
 One approach is to view the search for candidate repairs as a synthesis problem:
 synthesize a (small) set of edits to the program that yields a good
@@ -97,7 +97,7 @@ easy for novices to understand them and they are expressive enough to represent 
 templates.
 
 
-\mypara{Generic Abstract Syntax Trees.}
+\paragraph{Generic Abstract Syntax Trees.}
 %
 We represent the different possible candidate expressions via abstract fix
 templates called \emph{Generic Abstract Syntax Trees} (GAST) which correspond to
@@ -143,7 +143,7 @@ Fixes in our dataset are represented as the ASTs of the expressions that changed
 in the ill-typed programs and transformed the program to the correct solution
 and can be acquired via \emph{interaction traces}.
 
-\mypara{Interaction Traces.}
+\paragraph{Interaction Traces.}
 Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
 and their fixed versions from \emph{interaction traces}. Usually students write
 several versions of their programs until they reach the correct solution for a
@@ -182,7 +182,7 @@ that is \emph{small enough} to automatically predict which template to apply to
 a given erroneous program, but nevertheless \emph{covers} most of the fixes that
 arise in practice.
 
-\mypara{Clustering the Fixes.} We learn a suitable small set of fix templates by
+\paragraph{Clustering the Fixes.} We learn a suitable small set of fix templates by
 \emph{clustering} all the templates obtained from our data set, and then
 selecting a single GAST to represent the fix templates from each cluster.
 %
@@ -209,7 +209,7 @@ complexity of predicting the correct fix templates and error locations, we
 separate these problems and encode them into two distinct \emph{supervised
 classification} problems, exploiting recent advances in machine learning.
 
-\mypara{Supervised Multi-Class Classification}
+\paragraph{Supervised Multi-Class Classification.}
 We propose using a \emph{supervised multi-class classification} problem for
 predicting fix templates. A \emph{supervised} learning problem is one
 where,
@@ -221,7 +221,7 @@ Therefore, learning a function that will map subexpressions of ill-typed
 programs to a small set of fix templates entails a \emph{multi-class}
 classification (MCC) problem~\cite{FIXME}.
 
-\mypara{Feature Extraction.} The machine learning models that we will train to
+\paragraph{Feature Extraction.} The machine learning models that we will train to
 solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
 inputs. Therefore, we define a transformation of fix-labeled programs to
 fixed-length vectors. Similarly to previous work ~\citep{Seidel:2017}, we define
@@ -234,7 +234,7 @@ then representing each $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots,
 f_n(e_i)]$. This method is known as a \emph{bag-of-abstracted-terms} (BOAT)
 representation in previous work.
 
-\mypara{Predicting Templates via MCC}
+\paragraph{Predicting Templates via MCC.}
 Our fix-labeled data set can be updated so the labels represent the
 corresponding template that fixes each location, drawn from the minimal set of
 fix templates that were acquired through clustering. We then train a \emph{Deep
@@ -252,7 +252,7 @@ to each template
 the confidence value reported, or give us higher confidence overall?},
 aiming for a higher accuracy for template predictions.
 
-\mypara{Error Localization.} We view the problem of finding error locations in a
+\paragraph{Error Localization.} We view the problem of finding error locations in a
 new program as a \emph{binary} classification problem. In contrast with the
 template prediction problem, we want to learn a function that maps a program's
 subexpressions to a binary output representing the presence of an error or not.
@@ -272,7 +272,7 @@ approach exploits the fix template predictions and a set of possible error
 locations to guide program synthesis. We then
 return a small set of \emph{minimal} repairs to users as feedback.
 
-\mypara{Program Synthesis.} Given a set of locations and candidate templates for
+\paragraph{Program Synthesis.} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of \emph{program synthesis},
 \ie we try to generate code that would match the template's GAST and make the
 program type-check. For each program location, we search over all possible
@@ -281,7 +281,7 @@ expressions that match the fix template and make the program type-check.
 Expressions from the ill-typed program are also used in our synthesis algorithm
 to further prune the search space of candidate expressions.
 
-\mypara{Synthesis for Multiple Locations.} Previous work has shown that just the
+\paragraph{Synthesis for Multiple Locations.} Previous work has shown that just the
 top 3 location predictions account for up to 90\% of the type-errors that occur
 in a set of programs~\cite{FIXME}.
 But it is also often the case that more than one location
@@ -293,7 +293,7 @@ is thus the product their individual confidence scores. This is unlike
 recent approaches to multi-hunk program repair, such as
 Hercules~\cite{FIXME}, in that we FIXME.
 
-\mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
+\paragraph{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
 used those metrics to consider minimal changes, i.e. changes that are as close
 as possible to the original programs, so novice programmers can better
@@ -320,7 +320,7 @@ intended types from the fixed versions of the dataset (see Section FIXME).
   \label{fig:repair}
   \end{figure}
 
-\mypara{Example.} In \autoref{fig:repair} we can see a minimal repair that our
+\paragraph{Example.} In \autoref{fig:repair} we can see a minimal repair that our
 method could return (|[$v_1$ * $v_2$]|), using the template discussed in
 \autoref{sec:overview:learn} to synthesize this solution. While this solution
 is not the highest-ranked that our implementation returns (which would be
