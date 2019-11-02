@@ -1,18 +1,87 @@
 \section{Predicting Fix Templates}
 \label{sec:templ-pred}
 
-In this section, we introduce our high-level approach to predicting repair
-templates $\T$ for a given location of the program. More formally, our goal is
-to define the $\repairsym$ function in \autoref{fig:api}, in terms of the simple
-language \repairLang (\autoref{fig:rtl-syntax}), that produces an error location
-confidence score and confidence scores for some predefined templates for each
-subexpression in a program $e$. The $\repairsym$ function takes some feature
-extraction functions $\featuresym$, a dataset $\Dataset$ of program pairs $e
-\times e$, a finite list of fix templates $\T$ as inputs and uses internally
-three more major functions.
+Given a candidate set of templates, our next task is to \emph{train} 
+a model that, when given an (erroneous) program, can predict which 
+template to for each location in that program.
+%
+We do so by defining the $\repairsym$ function
+which takes as input 
+%
 
-Firstly, the $\extractTsym$ function does the feature extraction from the
-program pair dataset and maps each subexpression of the original erroneous
+(1)~a feature extraction function $\featuresym$, 
+%
+(2) a dataset $\Dataset$ of program pairs $(\pbad, \pfix)$,
+%
+(3)~a list of fix templates $\T$,
+%
+and returns as output a \emph{fix-template-predictor} that, given 
+an erroneous program, returns the locations of likely fixes, and 
+the templates to be applied at those locations. 
+
+We build $\repairsym$ using three helper functions that carry out 
+each of the high-level steps.
+%
+First, the $\extractTsym$ function extracts \emph{features} 
+from the program pair dataset. Next, these feature vectors 
+are grouped and fed into $\trainTsym$ which produces two models 
+$\Model$ and $\ModelT$ that are respectively used for error 
+localization and predicting fix templates.
+%
+Finally, $\predictTsym$ takes the features for 
+a new (erroneous) program and queries the trained 
+models to return the likely fix locations and 
+corresponding fix-templates.
+
+Next, we describe the key data-types, our implementations 
+of the three key steps, and how they are combined to yield 
+the $\repairsym$ algorithm.
+
+\paragraph{Confidences, Data and Labels}
+\RJ{TODO: describe the types}
+
+\paragraph{Features and Predictors}
+\RJ{TODO: describe the types}
+
+\paragraph{Architecture}
+\RJ{TODO: describe type sigs of extract, train, predict}
+
+\RJ{TODO: keep 4.1, 4.2, 4.3 as is, but refactor Algo 1 to have type in new API below.} 
+
+\begin{verbatim}
+-- RJ: THE API should look like the below.
+    
+-- Para: Confidences, Data, Labels
+C       = {r in R | 0 <= r <= 1}        -- Confidence between 0, 1
+B       = {b in R | b = 0 \/ b = 1}     -- Confidence but 0 or 1 
+EMap a  = e :-> a                       
+TVec a  = T :-> a
+Data      = [C]                         -- vector of features
+Label     = (C, TMap C)                 -- fix, template-id 
+
+-- Para: Features and Predictors
+Features  = e -> EMap Data              -- map sub-exprs to Data
+Predictor = e -> EMap Label             -- map sub-exprs to Label
+
+
+-- Extract labeled-data from training set
+extract  : Features -> [T] -> (perr, pfix) -> EMap (Data, Label) 
+
+-- Train models using labeled-data
+train    : [(Data, Label)] -> (LModel, TModel) 
+
+-- Predict label using models
+predict  : LModel -> TModel -> Data -> Label 
+
+-- Overall repair algorithm
+repair   : Features -> [T] -> [(perr, pfix)] -> Predictor
+\end{verbatim}
+
+\input{api.tex}
+
+\begin{comment}
+to be used 
+and maps each subexpression of the original erroneous
 program to a boolean vector. The first entry refers to the error locations that
 the user fixed, \ie whether a subexpression changed in a program pair. Those
 locations are acquired through the $\diffsym$ function. The rest of the boolean
@@ -34,6 +103,8 @@ subexpression's feature vector acquired again by $\extractTsym$. It is then
 applied to each subexpression in $e$'s type-error slice (TODO: ref) and
 generates a mapping from program expressions to confidence scores $\Emap{(\Runit
 \times \Tmap{\Runit})}$ as output of the top-level function $\repairsym$.
+\end{comment}
+
 
 % Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
 % learning on a training set of feature vectors $\V$, each assigned a vector of
@@ -58,7 +129,6 @@ generates a mapping from program expressions to confidence scores $\Emap{(\Runit
 % boolean labels based on the templates $\T$ according to $\clustersym$, with only
 % one being $\etrue$ at a time
 
-\input{api.tex}
 
 \subsection{Feature and Label Extraction}
 \label{subsec:extract}
