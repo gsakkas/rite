@@ -14,11 +14,11 @@ lambda calculus with integers, booleans, pairs, and lists. For our error
 localization algorithm, we aim to instantiate the $\blamesym$ function of
 \autoref{fig:api}, which takes as input a $\Model$ of type errors and an
 ill-typed program $e$, and returns an ordered list of subexpressions from $e$
-paired with the confidence score $\Runit$ that they should be blamed.
+paired with the confidence score $\Conf$ that they should be blamed.
 
 A $\Model$ is produced by $\trainsym$, which performs supervised learning on a
 training set of feature vectors $\V$ and (boolean) labels $\B$. Once trained, we
-can $\evalsym$uate a $\Model$ on a new input, producing the confidence $\Runit$
+can $\evalsym$uate a $\Model$ on a new input, producing the confidence $\Conf$
 that the blame label should be applied. We describe multiple $\Model$s and their
 instantiations of $\trainsym$ and $\evalsym$ (\autoref{sec:models}).
 
@@ -138,12 +138,12 @@ the classifier. We will demonstrate the importance of \InSlice empirically in
 \label{sec:labels}
 Recall that we make predictions in two stages. First, we use $\evalsym$ to
 predict for each subexpression whether it should be blamed, and extract a
-confidence score $\Runit$ from the $\Model$. Thus, we define the output of the
+confidence score $\Conf$ from the $\Model$. Thus, we define the output of the
 $\Model$ to be a boolean label, where ``false'' means the expression
 \emph{should not} change and ``true'' means the expression \emph{should} change.
 This allows us to predict whether any individual expression should change, but
 we would actually like to predict the \emph{most likely} expressions to change.
-Second, we \emph{rank} each subexpression by the confidence $\Runit$ that it
+Second, we \emph{rank} each subexpression by the confidence $\Conf$ that it
 should be blamed, and return to the user the top $k$ most likely blame
 assignments (in practice $k=3$).
 

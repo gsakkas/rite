@@ -1,86 +1,85 @@
 \section{Predicting Fix Templates}
 \label{sec:templ-pred}
 
-Given a candidate set of templates, our next task is to \emph{train} 
-a model that, when given an (erroneous) program, can predict which 
-template to for each location in that program.
+Given a candidate set of templates, our next task is to \emph{train} a model
+that, when given an (erroneous) program, can predict which template to use for
+each location in that program.
 %
-We do so by defining the $\repairsym$ function
-which takes as input 
+We do so by defining the $\repairsym$ function which takes as input
 %
-
-(1)~a feature extraction function $\featuresym$, 
+(1)~a feature extraction function $\featuresym$,
 %
-(2) a dataset $\Dataset$ of program pairs $(\pbad, \pfix)$,
+(2) a dataset $\datasetsym$ of program pairs $(\pbad,\ \pfix)$,
 %
 (3)~a list of fix templates $\T$,
 %
-and returns as output a \emph{fix-template-predictor} that, given 
-an erroneous program, returns the locations of likely fixes, and 
-the templates to be applied at those locations. 
+and returns as output a \emph{fix-template-predictor} that, given an erroneous
+program, returns the locations of likely fixes, and the templates to be applied
+at those locations.
 
-We build $\repairsym$ using three helper functions that carry out 
-each of the high-level steps.
+We build $\repairsym$ using three helper functions that carry out each of the
+high-level steps.
 %
-First, the $\extractTsym$ function extracts \emph{features} 
-from the program pair dataset. Next, these feature vectors 
-are grouped and fed into $\trainTsym$ which produces two models 
-$\Model$ and $\ModelT$ that are respectively used for error 
-localization and predicting fix templates.
+First, the $\extractsym$ function extracts \emph{features} and \emph{labels}
+from the program pair dataset. Next, these feature vectors are grouped and fed
+into $\trainsym$ which produces two models $\Model$ and $\ModelT$ that are
+respectively used for error localization and predicting fix templates.
 %
-Finally, $\predictTsym$ takes the features for 
-a new (erroneous) program and queries the trained 
-models to return the likely fix locations and 
-corresponding fix-templates.
+Finally, $\predictsym$ takes the features for a new (erroneous) program and
+queries the trained models to return the likely fix locations and corresponding
+fix-templates.
 
-Next, we describe the key data-types, our implementations 
-of the three key steps, and how they are combined to yield 
-the $\repairsym$ algorithm.
+Next, we describe the key data-types, our implementations of the three key
+steps, and how they are combined to yield the $\repairsym$ algorithm.
 
 \paragraph{Confidences, Data and Labels}
-\RJ{TODO: describe the types}
+We define $\Conf$ as real numbers between $0$ and $1$, which are used for
+(normalized) input feature vectors and output confidence scores. $\ConfBin$ are
+their boolean counterparts and are used for labelling the dataset. $\Emap{a}$
+represents a mapping from expressions $e$ to values of type $a$, while
+$\Tmap{a}$ represents a mapping from templates $\T$ to such values. For example,
+$\Tmap{\Conf}$ is a mapping from templates $\T$ to their confidence scores
+$\Conf$.
+
+Additionally, $\datasym$ represents feature vectors used to train our predict
+models, while $\labelsym{\ConfBin}$ are the dataset labels for training and
+$\labelsym{\Conf}$ are the output confidence scores. Finally, $\pairsym$ are
+program pairs of the nature $(\pbad,\ \pfix)$, containing the erroneous program
+$\pbad$ and its fix $\pfix$.
 
 \paragraph{Features and Predictors}
-\RJ{TODO: describe the types}
+We define here $\featuresym$ as a function that generates the feature vectors
+$\datasym$ for each subexpression from a input program $e$. Those feature
+vectors are given in the form of a map $\Emap{\datasym}$, which maps all
+subexpressions of the input program $e$ to its feature vector $\datasym$.
+
+$\predictorsym$s are learned fix-template-predictors returned from our algorithm
+that are used to generate confidence scores mappings for input programs $e$.
+Specifically, they return a map $\Emap{(\labelsym{\Conf})}$ that associates each
+subexpression of the input program $e$ with a confidence score
+$\labelsym{\Conf}$.
 
 \paragraph{Architecture}
-\RJ{TODO: describe type sigs of extract, train, predict}
-
-\RJ{TODO: keep 4.1, 4.2, 4.3 as is, but refactor Algo 1 to have type in new API below.} 
-
-\begin{verbatim}
--- RJ: THE API should look like the below.
-    
--- Para: Confidences, Data, Labels
-C       = {r in R | 0 <= r <= 1}        -- Confidence between 0, 1
-B       = {b in R | b = 0 \/ b = 1}     -- Confidence but 0 or 1 
-EMap a  = e :-> a                       
-TVec a  = T :-> a
-Data      = [C]                         -- vector of features
-Label     = (C, TMap C)                 -- fix, template-id 
-
--- Para: Features and Predictors
-Features  = e -> EMap Data              -- map sub-exprs to Data
-Predictor = e -> EMap Label             -- map sub-exprs to Label
-
-
--- Extract labeled-data from training set
-extract  : Features -> [T] -> (perr, pfix) -> EMap (Data, Label) 
-
--- Train models using labeled-data
-train    : [(Data, Label)] -> (LModel, TModel) 
-
--- Predict label using models
-predict  : LModel -> TModel -> Data -> Label 
-
--- Overall repair algorithm
-repair   : Features -> [T] -> [(perr, pfix)] -> Predictor
-\end{verbatim}
+First, the $\extractsym$ function takes as input the feature extraction
+functions $\featuresym$, a list of templates $\List{\T}$ and a single program
+pair $\pairsym$ and generates a map $\Emap{(\datasym \times
+\labelsym{\ConfBin})}$ of feature vectors and boolean labels for all
+subexpressions of the erroneous input program from $\pairsym$.
+%
+All feature vectors $\datasym$ and labels $\labelsym{\ConfBin}$ are then
+accumulated into one list, which is given as input to $\trainsym$ and are used
+as a training dataset for two separate models $\Model$ and $\ModelT$ that are
+respectively used for predicting error locations and fix templates.
+%
+Next, the two trained models $\Model$ and $\ModelT$, along with feature vectors
+$\datasym$ from a new and previously unseen program, can be fed into
+$\predictsym$ in order to acquire a $\predictorsym$, which can be used to map
+subexpression of the new program to possible error locations and fix templates.
 
 \input{api.tex}
 
 \begin{comment}
-to be used 
+to be used
 and maps each subexpression of the original erroneous
 program to a boolean vector. The first entry refers to the error locations that
 the user fixed, \ie whether a subexpression changed in a program pair. Those
@@ -88,62 +87,38 @@ locations are acquired through the $\diffsym$ function. The rest of the boolean
 vector has at most one $\etrue$ value, and corresponds to the fix template $\T$
 that was used to repair that subexpression.
 
-The $\extractTsym$ function is applied to all the dataset program pairs, and all
+The $\extractsym$ function is applied to all the dataset program pairs, and all
 subexpression feature and label vectors are then grouped together into one
-larger \emph{training} dataset. The training dataset is used by the $\trainTsym$
+larger \emph{training} dataset. The training dataset is used by the $\trainsym$
 function to produce two predictive models, $\Model$ and $\ModelT$. $\Model$ is
 used for error localization and $\ModelT$ for predicting fix templates.
 
-Finally, the $\predictTsym$ function produces an error location confidence score
-$\Runit$ and confidence scores $\Tmap{\Runit}$ for each of the selected fix
+Finally, the $\predictsym$ function produces an error location confidence score
+$\Conf$ and confidence scores $\Tmap{\Conf}$ for each of the selected fix
 templates for a specific subexpression in a new program $e$ that we want to
-repair. The $\predictTsym$ function expects as input the two generated
+repair. The $\predictsym$ function expects as input the two generated
 predictive models and a new feature vector $\V$, that corresponds to a
-subexpression's feature vector acquired again by $\extractTsym$. It is then
+subexpression's feature vector acquired again by $\extractsym$. It is then
 applied to each subexpression in $e$'s type-error slice (TODO: ref) and
-generates a mapping from program expressions to confidence scores $\Emap{(\Runit
-\times \Tmap{\Runit})}$ as output of the top-level function $\repairsym$.
+generates a mapping from program expressions to confidence scores $\Emap{(\Conf
+\times \Tmap{\Conf})}$ as output of the top-level function $\repairsym$.
 \end{comment}
-
-
-% Firstly, a $\ModelT$ is produced by $\trainTsym$, which performs supervised
-% learning on a training set of feature vectors $\V$, each assigned a vector of
-% (boolean) labels $\B$ that represent the template $\T$ that ``repairs'' the
-% location that the feature vector represents. In our case, only one template can
-% be used to repair a given location in a program, thus, at most, only one slot of
-% the label vector $\B$ can be $\etrue$. This is equivalent to the
-% \emph{multi-class classification} problem, where the predictor models have to
-% learn to distinguish between several classes. Once trained, we can make
-% predictions on new inputs, producing template confidences $\Runit$ for each
-% template $\T$.
-
-% Our $\ModelT$s expect feature vectors $\V$ and boolean labels $\B$, both of a
-% fixed length for each specific location. Therefore, we define similarly to
-% $\extractsym$, the function $\extractTsym$ in \autoref{fig:api}. We use again
-% $\diffsym$ to get the set of changed expressions of a given program pair. Those
-% are then used by the function $\clustersym$ to get the repair templates by
-% grouping different expressions together based on some similarity metric and thus
-% reducing their number and making them more concrete. The $\extractTsym$
-% function, then, extracts $\featuresym$ from each subexpression, acquired by
-% $\diffsym$ but limited to the type-error slice (TODO: ref) and assigns the
-% boolean labels based on the templates $\T$ according to $\clustersym$, with only
-% one being $\etrue$ at a time
 
 
 \subsection{Feature and Label Extraction}
 \label{subsec:extract}
-The machine learning algorithms that we will use for predicting fix templates
-and error locations, expect fixed-length \emph{feature vectors} $\V$ as their
-input. However, our end goal is make predictions for repair variable-sized
-programs over \lang. Thus, our first task is to convert programs to feature
-vectors with the $\extractTsym$ function.
+The machine learning algorithms that we use for predicting fix templates and
+error locations, expect fixed-length \emph{feature vectors} $\datasym$ as their
+input. However, we want to repair variable-sized programs over \lang. Thus, our
+first task is to convert programs to feature vectors with the $\extractsym$
+function.
 
-Similarly to previous work \citep{Seidel:2017}, we choose to model a program as
-a \emph{set} of feature vectors, where each element corresponds an expression in
-the program. Thus, given the |mulByDigit| program in \autoref{fig:mulByDigit} we
-would first split it into its constituent subexpressions and then transform each
-subexpression into a single feature vector. We show here the five major feature
-categories used.
+Following \citep{Seidel:2017}, we choose to model a program as a \emph{set} of
+feature vectors, where each element corresponds to a subexpression in the
+program. Thus, given an erroneous program $\pbad$ we would first split it into
+its constituent subexpressions and then transform each subexpression into a
+single feature vector, \ie $\featuresym\ \pbad \mapsto \Emap{\datasym}$. We show
+here the five major feature categories used.
 
 \paragraph{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
@@ -210,9 +185,9 @@ feature, as they are both inferred to have a type that mentions $\tlist{\cdot}$.
 % have to learn good localizations in spite this bias.
 
 \paragraph{Type error slice}
-Finally, we wish to distinguish between changes that could fix the error, and
-changes that \emph{cannot possibly} fix the error. Thus, we compute a minimal
-type-error \emph{slice} for the program (\ie the set of expressions that
+Furthermore, we wish to distinguish between changes that could fix the error,
+and changes that \emph{cannot possibly} fix the error. Thus, we compute a
+minimal type-error \emph{slice} for the program (\ie the set of expressions that
 contribute to the error) and if the program contains multiple type-errors, we
 compute a minimal slice for each error. We then have a post-processing step that
 discards all expressions that are not included in those slices.
@@ -220,37 +195,42 @@ discards all expressions that are not included in those slices.
 
 \paragraph{Labels}
 Recall that we use two predictive models, $\Model$ for error localization and
-$\ModelT$ for predicting fix templates. Thus, we define the output of the
-$\Model$ to be a boolean label, where ``false'' means the expression
-\emph{should not} change and ``true'' means the expression \emph{should} change.
-We also want to assign the correct labels for $\ModelT$. These labels must
-represent the repair template $\T$ that was used to fix the input program at a
-location $l$. If that location was not changed, all boolean labels are set to
-``false''. Therefore, for the purpose of template prediction, we have a
-fixed-length boolean vector that represents the fix template used for repairing
-a subexpression at a location $l$. This vector has at most one slot set to
-``true''.
+$\ModelT$ for predicting fix templates, thus we require two sets of
+\emph{labels} associated with each feature vector that are given by
+$\labelsym{\ConfBin}$. $\Model$ is trained using the set $\List{\datasym \times
+\ConfBin}$, while $\ModelT$ using the set $\List{\datasym \times
+\Tmap{\ConfBin}}$. A ``true'' boolean label used for $\Model$ means the
+associated expression \emph{should} change, where ``false'' means that it
+\emph{should not}. We also want to assign the correct labels for $\ModelT$. A
+label $\Tmap{\ConfBin}$ must map a subexpression of $\pbad$ to the repair
+template $\T$ that was used to fix it. If a subexpression was not changed, then
+it maps to $null$. $\Tmap{\ConfBin}$ associates all subexpressions with a fixed
+number of templates $\List{\T}$ given as input to $\extractsym$. Therefore, for
+the purpose of template prediction, $\Tmap{\ConfBin}$ can be a fixed-length
+boolean vector that represents the fix templates used to repair each
+subexpression. This vector has at most one slot set to ``true'', representing
+the template that used to fix $\pbad$. These labels are extracted using
+$\diffsym$ and $\abstrsym$, similarly to the way that templates were extracted
+in \autoref{sec:templ-cluster:templates}.
 
 \subsection{Training Predictive Models}
 \label{subsec:train}
 \lstDeleteShortInline{|} % sigh...
 
-Our goal with the $\trainTsym$ function is to train two separate
-\emph{classifiers} given a training set $S : \List{\V \times \B \times
-\Tmap{\B}}$ of labeled examples, one used to predict error locations $\Model$
-and the other to predict fix templates $\ModelT$ for a new input program $p$.
-Critically, we require that the error localization classifier outputs a
-\emph{confidence score} $\Runit$ that represents the probability that the
-subexpression in program $p$ it was applied to is the error that needs to be
-fixed. We also require that the fix template classifier outputs a confidence
-score $\Runit$ for each of the selected fix templates that measures how sure the
-classifier is that a given template can be used to repair the associated
-location of the input program $p$.
+Our goal with the $\trainsym$ function is to train two separate
+\emph{classifiers} given a training set $\List{\V \times \labelsym{\ConfBin}}$
+of labeled examples, one used to predict error locations $\Model$ and the other
+to predict fix templates $\ModelT$ for a new input program $\pbad$. Critically,
+we require that the error localization classifier outputs a \emph{confidence
+score} $\Conf$ that represents the probability that the subexpression in program
+$p$ it was applied to is the error that needs to be fixed. We also require that
+the fix template classifier outputs a confidence score $\Conf$ for each of the
+selected fix templates that measures how sure the classifier is that a given
+template can be used to repair the associated location of the input program
+$\pbad$.
 
-There are many learning algorithms to choose from, existing on a spectrum that
-balances expressiveness with ease of training (and of interpreting the learned
-model). In this section we consider a standard learning algorithm: \emph{neural
-networks}. A thorough introduction to these techniques can be found in
+We consider a standard learning algorithm to generate our models: \emph{neural
+networks}. A thorough introduction to neural networks can be found in
 introductory machine learning textbooks \citep[\eg][]{Hastie2009-bn}.
 
 % Below we briefly introduce each technique by describing the rules it learns, and
@@ -316,31 +296,38 @@ number needing some tuning.
 
 Our ultimate goal is to be able to pinpoint what parts of an erroneous program
 should be repaired and what fix templates should be utilized for that purpose.
-Therefore, the $\repairsym$ function uses $\predictTsym$ to predict all
-subexpressions' confidence scores $\Runit$ to be an error location and
-confidence scores $\Tmap{\Runit}$ for each of the selected fix templates. In
-this section we show how all the functions in our high-level API in
-\autoref{fig:api} are combined to produce a final list of confidence scores for
-a new program $P$.
+Therefore, the $\repairsym$ function uses $\predictsym$ to predict all
+subexpressions' confidence scores $\Conf$ to be an error location and confidence
+scores $\Tmap{\Conf}$ for each of the selected fix templates. In this section we
+show how all the functions in our high-level API in \autoref{fig:api} are
+combined to produce a final list of confidence scores for a new program $p$.
+\autoref{algo:predict-algo} shows a high-level algorithm for $\repairsym$.
 
 \paragraph{The Prediction Algorithm}
 Our algorithm firstly extracts the machine-learning-amenable dataset $D_{ML}$
-from the program pairs dataset $D$. For each program pair in $D$, the
-$\extractTsym$ function returns a mapping from the erroneous program's
-expression to a feature and label vector. The function \\
-$\textsc{GetSubEsInTESlice}$ only keeps the expressions in the the type-error
-slice and returns a list of the respective feature and label vectors, which is
-then added to the $D_{ML}$ dataset. The $D_{ML}$ dataset is used by the
-$\trainTsym$ function to generate our predictive $Models$. At this point we have
-to perform again the feature extraction for a new program $P$, not included
-before in our dataset $D$. Thus we use again $\extractTsym$, by providing
-program $P$ twice, since in the case we don't have a program as we are trying to
-produce the final repair. After acquiring again only the expression that we find
-in the type-error slice and therefore ignoring the label vectors, we apply the
-$\predictTsym$ function in each feature vector $v$, that corresponds to an
-expression in the type-error slice of $P$. The predicted confidence scores are
-then accumulated into the $EMap$ mapping, which is used by our synthesis
-algorithm in \autoref{sec:synthesis} to correlate expressions in $P$ with their
-confidence scores.
+from the program pairs dataset $D$. For each program pair in $D$, $\extractsym$
+returns a mapping from the erroneous program's subexpressions to features and
+labels. Then, $\textsc{SubesInSlice}$ keeps only the expressions in the the
+type-error slice and returns a list of the respective feature and label vectors,
+which is then added to the $D_{ML}$ dataset. The $D_{ML}$ dataset is used by the
+$\trainsym$ function to generate our predictive $Models$, \ie $\Model$ and
+$\ModelT$.
+
+At this point we have to perform again the feature extraction for a new
+(unknown) program $p$, not included before in our dataset $D$. Thus we use again
+$\extractsym$, by providing program $p$ twice, since in this case we don't have
+the fixed program, as we are trying to produce it. We also acquire only the
+expressions in $p$'s type-error slice with $\textsc{SubesInSlice}$, which is
+given by $Data(p)$.
+
+We then apply $\predictsym$ to all subexpressions produced by $Data(p)$ with
+$\textsc{Map}$, a function that will generate a map of type
+$\Emap{(\labelsym{\Conf})}$ associating expressions with confidence scores.
+$\predictsym$ is applied to each feature vector that corresponds to an
+expression in the type-error slice of $p$. These vectors are the first element
+of $\tilde{p} \in Data(p)$, which are of type $\datasym \times
+\labelsym{\ConfBin}$. Finally, the $\predictorsym\ Pr$ is returned, which is used
+by our synthesis algorithm in \autoref{sec:synthesis} to correlate
+subexpressions in $p$ with their confidence scores.
 
 \input{predict-algo.tex}

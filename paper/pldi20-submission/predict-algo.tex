@@ -1,42 +1,21 @@
 \begin{algorithm}[t]
     \caption{Predicting Templates Algorithm}
-    \label{predict-algo}
+    \label{algo:predict-algo}
     \renewcommand{\algorithmicrequire}{\textbf{Input:}}
     \renewcommand{\algorithmicensure}{\textbf{Output:}}
     \begin{algorithmic}[1]
-    \Require{Feature Extraction Functions $F$, Program Pair Dataset $D$, Fix Templates $\List{T}$, Program $P$}
-    \Ensure{Confince Score Mapping $EMap$}
-    \Procedure{Repair}{$F, D, T, P$}
+    \Require{Feature Extraction Functions $F$, Fix Templates $Ts$, Program Pair Dataset $D$}
+    \Ensure{Predictor $Pr$}
+    \Procedure{Repair}{$F,\ Ts,\ D$}
     \State $D_{ML} \gets \emptyset$
-    \ForAll{$p \times p' \in D$}
-      \State $d \gets$ \Call{ExtractT}{$F, \List{T}, p \times p'$}
-      \State $D_{ML} \gets D_{ML} \cup$ \Call{GetSubEsInTESlice}{$p \times p', d$}
-      % \ForAll{$\alpha \in$ \Call{RankNonTerminals}{$\tilde{\alpha}, P, L$}}
-      %   \If{\Call{IsHole}{$\tilde{\alpha}$}}
-      %     \State $R \gets$ \Call{GrammarRules}{$\lang$}
-      %     \State $\tilde{\beta} \gets \{\beta\:|\:(\alpha, \beta) \in R\}$
-      %     \ForAll{$\beta \in$ \Call{RankRules}{$\tilde{\beta}, T$}}
-      %       \State $\hat{T} \gets$ \Call{ApplyRule}{$T, (\alpha, \beta)$}
-      %     \EndFor
-      %   \Else
-      %     \ForAll{$\sigma \in$ \Call{GetTerminals}{$P, \alpha, \lang$}}
-      %       \State $\hat{T} \gets$ \Call{ReplaceNode}{$T, \alpha, \sigma$}
-      %     \EndFor
-      %   \EndIf
-      %   \State $\hat{P} \gets$ \Call{ReplaceExprAt}{$P, L, \hat{T}$}
-      %   \If{\Call{TypeCheck}{$\hat{P}$}}
-      %     \State $R \gets R \cup \{\hat{P}\}$
-      %   \EndIf
-      % \EndFor
+    \ForAll{$\pbad \times \pfix \in D$}
+      \State $d \gets$ \Call{Extract}{$F,\ Ts,\ \pbad \times \pfix$}
+      \State $D_{ML} \gets D_{ML}\ \cup$ \Call{SubesInSlice}{$\pbad,\ d$}
     \EndFor
-    \State $Models \gets$ \Call{TrainT}{$D_{ML}$}
-    \State $d \gets$ \Call{ExtractT}{$F, \List{T}, P \times P$}
-    \State $\tilde{P} \gets$ \Call{GetSubEsInTESlice}{$P \times P, d$}
-    \State $EMap \gets \emptyset$
-    \ForAll{$v \times \_ \times \_ \in \tilde{P}$}
-      \State $EMap \gets EMap \cup$ \Call{PredictT}{$Models, v$}
-    \EndFor
-    \State \Return{$EMap$}
+    \State $Models \gets$ \Call{Train}{$D_{ML}$}
+    \State $Data \gets \lambda p.$ \Call{SubesInSlice}{$p,$ \Call{Extract}{$F,\ Ts,\ p \times p$}}
+    \State $Pr \gets \lambda p.$ \Call{Map}{$\lambda \tilde{p}.$ \Call{Predict}{$Models,\ \tilde{p}[0]$}, $Data(p)$}
+    \State \Return{$Pr$}
     \EndProcedure
     \end{algorithmic}
 \end{algorithm}

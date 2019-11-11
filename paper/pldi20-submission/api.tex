@@ -5,25 +5,28 @@
   \[
   \boxed{
   \begin{array}{lcl}
-    \V           & \defeq & \List{\R}\\
-    \Runit       & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\
-    \T           & \defeq & e^{RTL} \\
-    \Dataset     & \defeq & \List{e \times e} \\
-    \Emap{a}     & \defeq & e \to a \\
-    \Tmap{a}     & \defeq & \T \to a \\
-    \featuresym  & \defeq & \List{\Emap{\R}} \\
+    \Conf         & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\
+    \ConfBin      & \defeq & \{b \in \R\ |\ b = 0 \vee b = 1\} \\
+    \T            & \defeq & e^{RTL} \\
+    \Emap{a}      & \defeq & e \to a \\
+    \Tmap{a}      & \defeq & \T \to a \\
+    \datasym      & \defeq & \List{\Conf} \\
+    \labelsym{a}  & \defeq & a \times \Tmap{a} \\
+    \pairsym      & \defeq & e \times e \\
+    \datasetsym   & \defeq & \List{\pairsym} \\
     \midrule
-    \abstrsym    & : & e \to \T \\
-    \diffsym     & : & e \times e \to \List{e} \\
-    % \templatesym & : & \List{e} \to \List{\T}\\
-    % \clustersym  & : & \List{\T} \to \List{\T}\\
-    \extractTsym & : & \featuresym \to \List{\T} \to e \times e \\
-                 &   & \quad \to \Emap{(\V \times \B \times \Tmap{\B})} \\
-    \trainTsym   & : & \List{\V \times \B \times \Tmap{\B}} \to \Model \times \ModelT \\
-    \predictTsym & : & \Model \times \ModelT \to \V \to \Runit \times \Tmap{\Runit} \\
+    \featuresym   & \defeq & e \to \Emap{\datasym} \\
+    \predictorsym & \defeq & e \to \Emap{(\labelsym{\Conf})} \\
     \midrule
-    \repairsym   & : & \featuresym \to \Dataset \to \List{\T} \to e \\
-                 &   & \quad \to \Emap{(\Runit \times \Tmap{\Runit})}
+    \abstrsym   & : & e \to \T \\
+    \diffsym    & : & \pairsym \to \List{e} \\
+    \midrule
+    \extractsym & : & \featuresym \to \List{\T} \to \pairsym \\
+                &   & \quad \to \Emap{(\datasym \times \labelsym{\ConfBin})} \\
+    \trainsym   & : & \List{\datasym \times \labelsym{\ConfBin}} \to \Model \times \ModelT \\
+    \predictsym & : & \Model \to \ModelT \to \datasym \to \labelsym{\Conf} \\
+    \midrule
+    \repairsym  & : & \featuresym \to \List{\T} \to \datasetsym \to \predictorsym \\
   \end{array}
   }
   \]

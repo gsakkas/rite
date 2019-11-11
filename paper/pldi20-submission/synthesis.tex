@@ -14,13 +14,13 @@ producing \emph{local repairs} for a given location of the input program.
 
 \paragraph{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for a given program location, our
-$\Model$ generates a confidence score $\Runit$ of that location containing an
+$\Model$ generates a confidence score $\Conf$ of that location containing an
 error that needs to be fixed. Each location in the type-error slice is assigned
-a confidence score $\Runit$ from our $\Model$. Furthermore, for each location we
+a confidence score $\Conf$ from our $\Model$. Furthermore, for each location we
 also generate the repair templates' confidence scores with our $\ModelT$.
 
 Our synthesis algorithm ranks all the locations based on their
-confidence scores $\Runit$. For each location, it runs through the list
+confidence scores $\Conf$. For each location, it runs through the list
 of templates (also sorted by score) and tries to repair that location using that
 template. If the algorithm fails to synthesize a
 program that type-checks, the next
@@ -32,7 +32,7 @@ be repaired. Therefore, our previous approach will fail to generate a solution
 in many cases. So we modify our simple algorithm to synthesize programs with
 multiple error locations.
 
-Let the confidence scores $\Runit$ for all locations
+Let the confidence scores $\Conf$ for all locations
 in the type error slice from our error localization model $\Model$ be
 $(l_1, c_1), \dots, (l_k, c_k)$, where $l_i$ is a location in the type-error
 slice and $c_i$ its confidence score. We assume for simplicity
