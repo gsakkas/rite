@@ -1,6 +1,9 @@
 \section{Evaluation}
 \label{sec:eval}
 
+\lstMakeShortInline[mathescape=true]{|}
+
+
 We have implemented our technique for repairing type errors for a purely
 functional subset of \ocaml with polymorphic types and functions. We seek to
 answer the following Research Questions:
@@ -39,17 +42,15 @@ program, including:
 %
 \begin{enumerate}
   \item 45 local syntactic features.
-  \item 315 contextual syntactic features. For each sub-expression we
-    additionally extract the local syntactic features of its first, second,
-    third and fourth (left-to-right) children. In addition, we extract those
-    features for its ancestors, starting from its parent and going up to two
-    more parent nodes. If an expression does not have a ancestor or children,
-    these features will simply be disabled. If an expression has more than four
-    children, the classifiers will receive no information about the additional
-    children.
+  \item 315 contextual syntactic features. For each subexpression we
+    additionally extract the local syntactic features of its first 4
+    (left-to-right) children. In addition, we extract those features for its
+    ancestors, starting from its parent and going up to two more parent nodes.
+    If an expression does not have a ancestor or children, these features will
+    simply be disabled. If an expression has more than four children, the
+    classifiers will receive no information about the additional children.
   \item 88 typing features. We support |int|s, |float|s, |char|s, |string|s, and
-    the user-defined |expr| (FIXME: these don't render correctly). These
-    features are extracted for each
+    the user-defined |expr|. These features are extracted for each
     sub-expression and its context.
   \item 1 feature denoting the size of each sub-expression.
 \end{enumerate}
@@ -118,12 +119,12 @@ on the \FALL quarter. These include:
   \item[\popular] This classifier returns always the most popular template from
     the training set. As a second prediction returns the second most popular
     template and so on. The training phase of this classifier includes just
-    learning the popularity of each cluster-template on the training set.
+    learning the popularity of each equivalence-class-template on the training
+    set.
   \item[\textsc{Deep Neural Network} (\dnn)] A multi-layer perceptron neural
-    network, trained with $\eta = 0.001$, $\lambda = 0.001$, and a mini-batch
-    size of 256. Our network utilizes three fully-connected hidden layers of 512
-    neurons. The neurons use rectified linear units (ReLU) as their activation
-    function, a common practice in modern neural networks.
+    network, that utilizes three fully-connected hidden layers of 512 neurons.
+    The neurons use rectified linear units (ReLU) as their activation function,
+    a common practice in modern neural networks.
 \end{description}
 
 All classifiers were trained using the \emph{early stopping} approach~\cite{FIXME},

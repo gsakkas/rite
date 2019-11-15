@@ -10,11 +10,11 @@
     \State $D_{ML} \gets \emptyset$
     \ForAll{$\pbad \times \pfix \in D$}
       \State $d \gets$ \Call{Extract}{$F,\ Ts,\ \pbad \times \pfix$}
-      \State $D_{ML} \gets D_{ML}\ \cup$ \Call{SubesInSlice}{$\pbad,\ d$}
+      \State $D_{ML} \gets D_{ML}\ \cup$ \Call{InSlice}{$\pbad,\ d$}
     \EndFor
     \State $Models \gets$ \Call{Train}{$D_{ML}$}
-    \State $Data \gets \lambda p.$ \Call{SubesInSlice}{$p,$ \Call{Extract}{$F,\ Ts,\ p \times p$}}
-    \State $Pr \gets \lambda p.$ \Call{Map}{$\lambda \tilde{p}.$ \Call{Predict}{$Models,\ \tilde{p}[0]$}, $Data(p)$}
+    \State $Data \gets \lambda p.$ \Call{InSlice}{$p,$ \Call{Extract}{$F,\ Ts,\ p \times p$}}
+    \State $Pr \gets \lambda p.$ \Call{Map}{$\lambda \tilde{p}.$ \Call{Predict}{$Models, \tilde{p}[0]$}, $Data(p)$}
     \State \Return{$Pr$}
     \EndProcedure
     \end{algorithmic}

@@ -67,11 +67,13 @@
 \usepackage{amssymb}
 \usepackage{xspace}
 \usepackage{listings}
+
 \lstset{
   language=Caml,
   basicstyle=\ttfamily,
   keywordstyle=\ttfamily,
 }
+
 \lstnewenvironment{code}{
 \lstset{
   language=Caml,
@@ -87,6 +89,18 @@
   keywordstyle=\ttfamily\bfseries,
   numbers=left,
   xleftmargin=5.5mm,
+  moredelim=[is][\bfseries]{==}{==},
+  moredelim=[is][\underbar]{__}{__},
+  moredelim=[is][\bfseries\underbar]{_=}{=_},
+  escapeinside={(*@}{@*)}
+}}
+{}
+
+\lstnewenvironment{haskellcode}{
+\lstset{
+  language=haskell,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\ttfamily\bfseries,
   moredelim=[is][\bfseries]{==}{==},
   moredelim=[is][\underbar]{__}{__},
   moredelim=[is][\bfseries\underbar]{_=}{=_},
@@ -225,11 +239,12 @@ Text of abstract \ldots.
 
 \input{introduction}
 \input{overview}
-\input{template-clustering}
+\input{template-partition}
 \input{template-prediction}
 \input{synthesis}
 \input{evaluation}
 \input{related-work}
+\input{conclusion}
 
 
 %% Acknowledgments

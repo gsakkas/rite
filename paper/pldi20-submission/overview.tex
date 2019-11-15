@@ -74,7 +74,7 @@ by describing how to:
   \item Acquire a \emph{training set} of labeled ill-typed programs and fixes
         (\autoref{sec:overview:data}),
 
-  \item Learn a small set of candidate fix templates by \emph{clustering}
+  \item Learn a small set of candidate fix templates by \emph{partitioning}
         the training set (\autoref{sec:overview:learn}),
 
   \item Predict the appropriate template to apply by training a
@@ -151,19 +151,19 @@ programming assignment. Previous work has used instrumented compilers to capture
 such sequences (or \emph{traces}) of student programs. The first type-correct
 solution in this sequence of program attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
-the dataset. In our case, we used an existing dataset
-~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs
-\WRW{notes: this is the first thing you've written that has limited you to
-OCaml only --- everything before this was generic}
-\WRW{notes: why are you now talking about datasets in the algorithm
-overview section? shouldn't this be more like ``we require a dataset that
-has properties X, Y and Z'' and then later we can say ``for our evaluation,
-we trained on this ocaml dataset''?}
-and their
-fixes that were extracted using the aforementioned method. For each program
-pair, we then produce a \emph{diff} of the abstract syntax trees (ASTs), and
-assign as the dataset's fix labels, the \emph{smallest} sub-tree that changed
-between the correct and ill-typed attempt of the program.
+the dataset.
+% In our case, we used an existing dataset
+% ~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs
+% \WRW{notes: this is the first thing you've written that has limited you to
+% OCaml only --- everything before this was generic}
+% \WRW{notes: why are you now talking about datasets in the algorithm
+% overview section? shouldn't this be more like ``we require a dataset that
+% has properties X, Y and Z'' and then later we can say ``for our evaluation,
+% we trained on this ocaml dataset''?}
+% and their fixes that were extracted using the aforementioned method.
+For each program pair, we then produce a \emph{diff} of the abstract syntax
+trees (ASTs), and assign as the dataset's fix labels, the \emph{smallest}
+sub-tree that changed between the correct and ill-typed attempt of the program.
 
 
 \subsection{Learning Candidate Fix Templates}
@@ -182,11 +182,12 @@ that is \emph{small enough} to automatically predict which template to apply to
 a given erroneous program, but nevertheless \emph{covers} most of the fixes that
 arise in practice.
 
-\paragraph{Clustering the Fixes.} We learn a suitable small set of fix templates by
-\emph{clustering} all the templates obtained from our data set, and then
-selecting a single GAST to represent the fix templates from each cluster.
+\paragraph{Partitioning the Fixes.} We learn a suitable small set of fix
+templates by \emph{partitioning} all the templates obtained from our data set,
+and then selecting a single GAST to represent the fix templates from each fix
+template set.
 %
-This clustering serves two purposes.
+The partitioning serves two purposes.
 %
 First, it identifies a small set of the most common fix templates which then
 enables the use of discrete classification algorithms to predict which template
@@ -195,8 +196,10 @@ to apply to a new program.
 Second, it allows for the principled removal of outliers that arise because
 student submissions often contain non-standard or idiosyncratic solutions that
 we do not wish to use for suggesting fixes.
+
 Unlike previous repair approaches that have used clustering to make fix
-templates (e.g.,~\cite{FIXME}), we do FIXME.
+templates (e.g.,~\cite{FIXME}), we partition our set of fix templates into their
+\emph{equivalence classes} based on a fix templates similarity relation.
 
 
 \subsection{Predicting Templates via Multi-class Classification}
@@ -237,9 +240,9 @@ representation in previous work.
 \paragraph{Predicting Templates via MCC.}
 Our fix-labeled data set can be updated so the labels represent the
 corresponding template that fixes each location, drawn from the minimal set of
-fix templates that were acquired through clustering. We then train a \emph{Deep
-Neural Network (DNN)} classifier on the updated template-labeled data set, a
-popular choice for classification problems.
+fix templates that were acquired through partitioning. We then train a
+\emph{Deep Neural Network (DNN)} classifier on the updated template-labeled data
+set, a popular choice for classification problems.
 
 Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of
@@ -297,17 +300,12 @@ Hercules~\cite{FIXME}, in that we FIXME.
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
 used those metrics to consider minimal changes, i.e. changes that are as close
 as possible to the original programs, so novice programmers can better
-understand feedback~\cite{FIXME}.
-However, different metrics may yield better fixes, as we
-discuss later in Section FIXME.
-Programmers usually have in mind what \emph{type signature}
-the functions that they write are supposed to have
-\WRW{notes: is this true? didn't we just say at the beginning of this
-section that novice do \emph{not} yet have a good mental model for
-type systems and checkers?}. We thus
+understand feedback~\cite{FIXME}. However, different metrics may yield better
+fixes, as we discuss later in Section FIXME. Some more experienced programmers
+might have in mind what \emph{type} they want their functions to be. We thus
 provide the user with the option to give the intended type for the program's
-functions we are trying to repair. In our evaluation, we acquire the
-intended types from the fixed versions of the dataset (see Section FIXME).
+functions we are trying to repair. In our evaluation, we acquire the intended
+types from the fixed versions of the dataset (see Section FIXME).
 
 \begin{figure}[ht]
   \begin{ecode}
@@ -320,21 +318,15 @@ intended types from the fixed versions of the dataset (see Section FIXME).
   \label{fig:repair}
   \end{figure}
 
-\paragraph{Example.} In \autoref{fig:repair} we can see a minimal repair that our
-method could return (|[$v_1$ * $v_2$]|), using the template discussed in
-\autoref{sec:overview:learn} to synthesize this solution. While this solution
-is not the highest-ranked that our implementation returns (which would be
-identical to the human solution), it demonstrates
-relevant aspects of the synthesizer. In particular, this solution
-is very close to the human solution, but it still has
-some abstracted holes \WRW{notes: can you call out the lines that have the
-holes or otherwise specify them more precisely? I can't find them in the
-program. I'd guess they are $v_1$ and $v_2$, but in just a sentence you'll
-say that's what we use to fill the holes, so those can't be the holes
-themselves.}.
-% However, there are some indications as to what these holes should be.
-Our algorithm suggests that two different variables, $v_1$ and $v_2$,
-should be used to fill those expression holes. We hypothesize that
-such solutions produced by our algorithm can provide
-valuable feedback to novices, and we investigate that claim empirically
-in Section FIXME.
+\paragraph{Example.} In \autoref{fig:repair} we can see a minimal repair that
+our method could return (|[$v_1$ * $v_2$]| in line 4), using the template
+discussed in \autoref{sec:overview:learn} to synthesize this solution. While
+this solution is not the highest-ranked that our implementation returns (which
+would be identical to the human solution), it demonstrates relevant aspects of
+the synthesizer. In particular, this solution is very close to the human
+solution, but it still has some abstracted variables, $v_1$ and $v_2$. Our
+algorithm suggests to the user that they can replace the two abstracted
+variables with two different variables in order to acquire the correct program.
+We hypothesize that such solutions produced by our algorithm can provide
+valuable feedback to novices, and we investigate that claim empirically in
+Section FIXME.
