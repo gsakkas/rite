@@ -25,6 +25,8 @@
 \newcommand\etal{et al.\xspace}
 \newcommand\wrt{\textit{w.r.t.}\xspace}
 \newcommand\st{\textit{s.t.}\xspace}
+\newcommand{\specialcell}[2][l]{% Splits on \\
+  \begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
 
 \def\emphbf#1{\textbf{\emph{#1}}}
 \def\spmid{\ \mid\ }
@@ -167,7 +169,7 @@
 \newcommand\pairsym{\mathsf{Pair}}
 \newcommand\Emap[1]{\mathsf{EMap}\ #1}
 \newcommand\Tmap[1]{\mathsf{TMap}\ #1}
-
+\newcommand{\rulesep}{\unskip\ \vrule\ }
 
 \makeatletter
 \newcommand\resetstackedplots{

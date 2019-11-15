@@ -96,6 +96,19 @@
 }}
 {}
 
+\lstnewenvironment{compactcode}{
+\lstset{
+  language=Caml,
+  basicstyle=\small\ttfamily,
+  keywordstyle=\ttfamily\bfseries,
+  xleftmargin=0mm,
+  moredelim=[is][\bfseries]{==}{==},
+  moredelim=[is][\underbar]{__}{__},
+  moredelim=[is][\bfseries\underbar]{_=}{=_},
+  escapeinside={(*@}{@*)}
+}}
+{}
+
 \lstnewenvironment{haskellcode}{
 \lstset{
   language=haskell,
