@@ -264,9 +264,10 @@ new program as a \emph{binary} classification problem. In contrast with the
 template prediction problem, we want to learn a function that maps a program's
 subexpressions to a binary output representing the presence of an error or not.
 Therefore, this problem is a equivalent to a MCC with only two classes and thus,
-we use similar deep architectures of neural networks. With the learned models, we
-obtain a confidence score for each program expression to be an error location
-that need to be fixed. We exploit those scores to synthesize candidate
+we use similar deep architectures of neural networks. For each expression in a
+given program, the learned model outputs
+a confidence score representing how likely it is an error location
+that needs to be fixed. We exploit those scores to synthesize candidate
 expressions for each location in descending order of confidence. We use
 this approach, rather than standard fault localization, because FIXME.
 
@@ -277,22 +278,19 @@ Next, we utilize existing program synthesis techniques to \emph{synthesize}
 candidate expressions that will be used to provide feedback to users. For efficiency, our
 approach exploits the fix template predictions and a set of possible error
 locations to guide program synthesis. We then
-return a small set of \emph{minimal} repairs to users as feedback.
+return a ranked list of \emph{minimal} repairs to users as feedback.
 
 \paragraph{Program Synthesis.} Given a set of locations and candidate templates for
-those locations, we are trying to solve a problem of \emph{program synthesis},
-\ie we try to generate code that would match the template's GAST and make the
-program type-check. For each program location, we search over all possible
+those locations, we are trying to solve a problem of \emph{program synthesis}.
+For each program location, we search over all possible
 expressions in the language's grammar for a small set of candidate
 expressions that match the fix template and make the program type-check.
 Expressions from the ill-typed program are also used in our synthesis algorithm
 to further prune the search space of candidate expressions.
 
-\paragraph{Synthesis for Multiple Locations.} Previous work has shown that just the
-top 3 location predictions account for up to 90\% of the type-errors that occur
-in a set of programs~\cite{FIXME}.
-But it is also often the case that more than one location
-needs to be fixed. Therefore, in practice we do not only consider the ordered set
+\paragraph{Synthesis for Multiple Locations.}
+It is often the case that more than one location
+needs to be fixed. Therefore, we do not only consider the ordered set
 of single error locations for synthesis, but rather its power set.
 For simplicity we treat the probabilities that different locations need to be fixed
 as independent; the probability we assign that a set of locations needs to be fixed
@@ -330,7 +328,7 @@ would be identical to the human solution), it demonstrates relevant aspects of
 the synthesizer. In particular, this solution is very close to the human
 solution, but it still has some abstracted variables, $v_1$ and $v_2$. Our
 algorithm suggests to the user that they can replace the two abstracted
-variables with two different variables in order to acquire the correct program.
+variables with two different variables in order to obtain the correct program.
 We hypothesize that such solutions produced by our algorithm can provide
 valuable feedback to novices, and we investigate that claim empirically in
 Section FIXME.
