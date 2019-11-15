@@ -20,7 +20,7 @@ let rec mulByDigit i l =
   | hd::tl -> [hd * i] @ mulByDigit i tl
 \end{ecode}
 \caption{(top) An ill-typed \ocaml program that should multiply each element
-of a list with an integer. (bottom) The fixed version by the student.}
+of a list by an integer. (bottom) The fixed version by the student.}
 \label{fig:mulByDigit}
 \end{figure}
 
@@ -32,7 +32,7 @@ integer digit. The student accidentally misuses the list append operator
 (\texttt{@}), applying it to a number and a list rather than two lists.
 %
 Novice students who are still building a mental model of how the type checker
-works are often perplexed by the compiler's error message \cite{}. Hence a
+works are often perplexed by the compiler's error message \cite{FIXME}. Hence a
 novice will often take a long time to arrive at a suitable fix, such as the one
 shown at the bottom of \autoref{fig:mulByDigit}, where the append operator is
 used with a singleton list containing the multiplication of the head \texttt{hd}
@@ -47,7 +47,7 @@ to come up with candidate solutions like the one above.
 %
 One approach is to view the search for candidate repairs as a synthesis problem:
 synthesize a (small) set of edits to the program that yields a good
-one~\cite{singh2013}. %FIXME
+one~\cite{singh2013}. \BC{what makes a program `good'?}%FIXME
 %
 To ensure that synthesis is tractable, the search must be carefully restricted
 to a relatively small, manually constructed ``repair model'' that may not
@@ -81,7 +81,7 @@ by describing how to:
         \emph{multi-class classifier} from the training set
         (\autoref{sec:overview:predict}), and
 
-  \item Synthesize fixes by enumerating-and-checking terms from the
+  \item Synthesize fixes by enumerating and checking terms from the
         predicted templates to give the programmer localized feedback
         (\autoref{sec:overview:synthesis}).
 \end{enumerate}
@@ -94,13 +94,14 @@ with a new \emph{candidate} expression at a specific program location. For
 example, the \mbd program is fixed by replacing |(hd * i)| with the candidate
 expression |[hd * i]| on line 4. We focus on AST-level replacements as it is
 easy for novices to understand them and they are expressive enough to represent fix
-templates.
+templates. \BC{are they expressive enough to represent *fixes*? I ultimately
+don't care about templates}
 
 
 \paragraph{Generic Abstract Syntax Trees.}
 %
 We represent the different possible candidate expressions via abstract fix
-templates called \emph{Generic Abstract Syntax Trees} (GAST) which correspond to
+templates called \emph{Generic Abstract Syntax Trees} (GAST) which each correspond to
 many possible candidate expressions.
 %
 GASTs are obtained from concrete ASTs in two steps.
@@ -133,22 +134,25 @@ patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
 %
 This approach is hard to scale up to yield data sets suitable for machine
 learning. Worse, manual inspection misses the \emph{frequency} of particular
-classes of novice mistakes and their fixes.
+classes of novice mistakes and their fixes. \BC{why? if I'm manually inspecting
+anyway I can totally count how often things happen}
 %
 In contrast, we show that such fix templates can be \emph{learned} from a large,
 automatically constructed training set of ill-typed programs labeled with their
 repairs.
 %
 Fixes in our dataset are represented as the ASTs of the expressions that changed
-in the ill-typed programs and transformed the program to the correct solution
-and can be acquired via \emph{interaction traces}.
+in the ill-typed programs and transformed the program to the correct solution.
+% and can be acquired via \emph{interaction traces}.
 
 \paragraph{Interaction Traces.}
 Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
 and their fixed versions from \emph{interaction traces}. Usually students write
 several versions of their programs until they reach the correct solution for a
 programming assignment. Previous work has used instrumented compilers to capture
-such sequences (or \emph{traces}) of student programs. The first type-correct
+such sequences (or \emph{traces}) of student programs. \BC{This sentence about
+previous work is confusing - is it what you are doing as well, or is it in contrast?}
+The first type-correct
 solution in this sequence of program attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
 the dataset.
@@ -198,8 +202,8 @@ student submissions often contain non-standard or idiosyncratic solutions that
 we do not wish to use for suggesting fixes.
 
 Unlike previous repair approaches that have used clustering to make fix
-templates (e.g.,~\cite{FIXME}), we partition our set of fix templates into their
-\emph{equivalence classes} based on a fix templates similarity relation.
+templates (e.g.,~\cite{FIXME}), we partition our set of fix templates into
+\emph{equivalence classes} based on a similarity relation over fix templates.
 
 
 \subsection{Predicting Templates via Multi-class Classification}

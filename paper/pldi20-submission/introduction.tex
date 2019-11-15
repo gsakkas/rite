@@ -30,7 +30,7 @@ feedback for that attempt. As a result, any repair algorithm we propose must be
 able to \emph{generalize} over different programming assignments.
 In this paper we focus on generating
 repairs to enable better feedback generation.
-\WRW{FIXME: WRW cannot tlel what "the latter part" refers to.
+\WRW{FIXME: WRW cannot tell what "the latter part" refers to.
 and leave the latter part as future work.}
 
 %%% Current state of the art
@@ -43,7 +43,7 @@ experienced in programming, such feedback may not be
 sufficient~\cite{FIXME}. We propose to provide
 more targeted feedback highlighting both possible program
 locations that are responsible for the program errors as well as possible
-suggestions that will lead the student to a correct solution.
+repairs that will lead the student to a correct solution.
 
 % Fault localization FIXME: make this better
 Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
@@ -51,7 +51,7 @@ Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
 task of identifying possible program elements (\eg lines, expressions \etc) that
 are the cause of the program error at hand. While these techniques can pinpoint,
 with high accuracy, the precise location in the student's code that causes the
-error and needs to be fixed, inexperienced programmers can still be confused by
+error and needs to be fixed, inexperienced programmers may not know how to act on
 such feedback~\cite{FIXME}. We hypothesize that fault localization combined with
 \emph{program repair}
 can provide the appropriate feedback for these novice programmers.
@@ -69,9 +69,6 @@ the effectiveness of online feedback~\cite{FIXME}.
 As a second example, systems like CLARA [TODO: cite] use
 partitioning and machine learning to avoid much instructor annotation effort
 and produce repairs relatively quickly, but can
-\WRW{do we care about this CLARA detail in our introduction? I think no:
-their program matching between previous correct attempts and the new
-incorrect ones can often}
 lead to
 imprecise and non-minimal repairs~\cite{FIXME}.
 Moreover, their use of Integer Linear
