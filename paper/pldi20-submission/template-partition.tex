@@ -2,9 +2,9 @@
 \label{sec:templ-partition}
 
 We start by introducing our approach for extracting useful \emph{fix templates}
-from a training dataset comprising of erroneous-and-fixed programs.
+from a training dataset comprised of paired erroneous and fixed programs.
 %
-We express those templates in terms of a language that allow us to succinctly
+We express those templates in terms of a language that allows us to succinctly
 represent fixes in a way that captures the essential structure of various fix
 patterns that novices use in practice.
 %
@@ -44,7 +44,7 @@ syntactic abstraction forms:
 Recall from \autoref{sec:overview:templates} that we define fixes as
 replacements of expressions with new candidate expressions at specific program
 locations. Therefore, we express candidate expressions over \repairLang as means
-to represent our fix templates $\T$.
+to represent our fix templates. \BC{what does this mean?}
 
 \paragraph{Generalizing ASTs.}
 A \emph{Generic Abstract Syntax Tree} (GAST) is a term from \repairLang that
@@ -82,8 +82,8 @@ for each location in $\pbad$ that changed in $\pfix$.
 %
 We do so with an expression-level $\diffsym$~\citep{Lempsink2009-xf} function.
 %
-Recall again that we consider fixes to be replacements of expressions, and
-therefore we use the extracted changes as our fix templates.
+Recall that we consider fixes to be replacements of expressions, and
+therefore we abstract these extracted changes as our fix templates.
 
 \paragraph{Contextual Repairs.}
 %
@@ -101,18 +101,17 @@ $\pbad = \context{\pbad}{\ebad}$ and $\context{\pbad}{\efix} = \pfix$.
 There may be several such expressions in a program, and $\diffsym$ returns all
 such changes.
 
-\paragraph{Example.}
-If a new expression has been inserted \emph{around} an existing expression, \eg
-if $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, we will have that the context is
-$\econtext{} = \eapp{\_}{x}$, where $\_$ represents the hole, and then the fix
-will be $g$, since $\context{}{g} = \eapp{g}{x}$.
+\paragraph{Examples.} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
+$\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} = \eapp{g}{x}$.
 
-If instead, an expression has been replaced wholesale with another expression,
-\eg if $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
-\emph{context} will be the more general $\econtext{} = \_$, since we consider
-the application expression $\eapp{f}{x}$ (but not $f$ or $x$) to be replaced
-with the $+$ operator, and therefore the fix will be the whole expression, thus
+If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
+context is $\econtext{} = \_$, and the fix
+is the whole expression $\eplus{(\eapp{f}{x})}{1}$, thus
 $\context{}{\eplus{(\eapp{f}{x})}{1}} = \eplus{(\eapp{f}{x})}{1}$.
+(Even though the expression $\eapp{f}{x}$ appears in both the original and fixed programs,
+we consider
+the application expression $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced
+with the $+$ operator.)
 % TODO: maybe talk about the drawback of the last choice
 
 \subsection{Partitioning the Templates}
@@ -124,61 +123,50 @@ applicable set of fix templates. This small set is used to train a repair
 predictor.
 
 \label{subsec:partitioning}
-\begin{figure*}
-\begin{minipage}{\textwidth}
-\begin{haskellcode}
-==data Expr== = Var | Bop Expr Expr | App [Expr] | Hole | ..
+% \begin{figure*}
+% \begin{minipage}{\textwidth}
+% \begin{haskellcode}
+% ==data Expr== = Var | Bop Expr Expr | App [Expr] | ...
 
-==sim :: Expr -> Expr -> Bool==
-sim e           Hole        = True
-sim Var         Var         = True
-sim (Bop x1 y1) (Bop x2 y2) = sim [x1, x2] [y1, y2] ==||== sim [y1, y2] [x1, x2]
-sim (App xs)    (App ys)    = any (\ys' -> any (\xs' -> sim xs' ys') xss) yss
-    where
-        xss = permutations xs
-        yss = permutations ys
-sim _           _           = False
+% ==sim :: Expr -> Expr -> Bool==
+% sim Var         Var         = True
+% sim (Bop x1 y1) (Bop x2 y2) = sim [x1, y1] [x2, y2] ==||== sim [x1, y1] [y2, x2]
+% sim (App xs)    (App ys)    = any (\ys' -> any (\xs' -> sim xs' ys') xss) yss
+%     where
+%         xss = permutations xs
+%         yss = permutations ys
+% sim _           _           = False
 
-==sim :: [Expr] -> [Expr] -> Bool==
-sim (x:xs) (y:ys) = sim x y && sim xs ys
-\end{haskellcode}
-\end{minipage}
-\caption{$\simil{e_1}{e_2}$ denotes when the GAST $e_1$ is similar to $e_2$.}
-\label{fig:similar}
-\end{figure*}
+% ==sim :: [Expr] -> [Expr] -> Bool==
+% sim (x:xs) (y:ys) = sim x y && sim xs ys
+% \end{haskellcode}
+% \end{minipage}
+% \caption{$\simil{e_1}{e_2}$ denotes when the GAST $e_1$ is similar to $e_2$.}
+% \label{fig:similar}
+% \end{figure*}
 
 \paragraph{GAST Similarity.}
-%
-\autoref{fig:similar} formalizes a relation that states when
-an expression $e_1$ is \emph{similar to} $e_2$  (written \simil{e_1}{e_2}).
-%
-Intuitively, $e_1$ is similar to $e_2$ when at least one of the following rules
-hold
-\begin{enumerate}
-    \item every expression is similar to a wildcard $\_$;
-
-    \item the top-level non-terminal is the same and there is a total bijective
-        relation between their sub-expressions \st they are all pair-wise
-        similar, \eg two binary operator expressions are the same if their
-        operands are similar;
+% %
+% \autoref{fig:similar} formalizes a relation that states when
+% an expression $e_1$ is \emph{similar to} $e_2$  (written \simil{e_1}{e_2}).
+% %
+Two GASTs are \emph{similar} when
+the root nodes are the same and their child subtrees (if any) can be ordered
+such that they are pairwise similar. For example, $x + 3$ and $7 - y$ yield
+\emph{similar} GASTs where the root nodes are both abstract binary operators,
+one child is an abstract literal, and one child is an abstract variable.
         % \eg $e_{11} \oplus e_{12}$ and $e_{21} \oplus e_{22}$ are
         % similar \textit{iff} $(e_{11}, e_{21})$ and $(e_{12}, e_{22})$ or
         % $(e_{11}, e_{22})$ and $(e_{12}, e_{21})$ are pair-wise similar.
 
-    \item a terminal expression is similar to another, only when they are the
-    same, \eg two variables are similar.
-\end{enumerate}
-%
-
-
 % TODO: partition is novel? compare to previous work
 \paragraph{Partitioning.}
-The GAST similarity we defined is both symmetric and transitive and thus is an
+The GAST similarity relation is reflexive, symmetric, and transitive and thus is an
 \emph{equivalence} relation. We can now define \emph{partitioning} as the
 computation of all possible \emph{equivalence classes} of our extracted fix
-templates \wrt our GAST similarity relation. Each class can consist of several
-member-expressions and each one of them can be viewed as the class
-\emph{representative}. Each equivalence class representative can then be used as
+templates \wrt GAST similarity. Each class can consist of several
+member-expressions and any one of them can be viewed as the class
+\emph{representative}. Each representative can then be used as
 a fix template to produce repairs for ill-typed programs.
 
 For example, expressions $\hat{x} \oplus (\hat{y} \oplus \hat{z})$ and $(\hat{x}
