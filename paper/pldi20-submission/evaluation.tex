@@ -267,9 +267,7 @@ and subsection~\ref{subsubsec:study_res} presents our detailed findings.
 \subsubsection{User Study Setup}
 \label{subsubsec:qual_study_setup}
 
-% FIXME? Add some intro sentence here?
-
-For our human study, participants were recruited from \emph{two public research
+Study participants were recruited from \emph{two public research
 institutes removed for blind review}. The study was also advertised on Twitter.
 To be included for analysis, participants had to assess the quality of, and give
 comprehensible bug descriptions for, at least 5 / 10 stimuli. The study took around 
@@ -301,38 +299,25 @@ for \toolname and \seminal generated repairs.
 \subsubsection{Human Study Results}
 \label{subsubsec:study_res}
 
-% FIXME: Intro sentence here.
-In general, we find that humans perceive that
+In a statistically significant manner, humans perceive that
 \toolname's fault localization and final repairs are both of higher quality
-than those produced by \seminal in a statistically-significant manner ($p=0.030$
-and $p=0.024$ respectively). All tests for
-statistical significance used the Wilcoxon signed-rank test.
+than those produced by \seminal ($p=0.030$ and $p=0.024$ 
+respectively)~\footnote{All tests for statistical significance used the 
+Wilcoxon signed-rank test.}. 
 
-Regarding fault localization, we found that humans agreed with \toolname-identified 
-edit locations 81.6\% of the time but agreed with those of \seminal only 74.0\% 
+Regarding fault localization, we find that humans agreed with \toolname-identified 
+edit locations 81.6\% of the time but only agreed with those of \seminal 74.0\% 
 of the time. This 10\% increase is important because 
-FIXME: You should explain why this matters. Also, consider
-reordering these: first, show that we find the best location. Then, show
-that our content is better as well. 
+FIXME: You should explain why this matters.  
 
-As for the synthesized repairs, humans also generally prefer \toolname's patches
+As for the final repair, humans also prefer \toolname's patches
 to those produced by \seminal. Specifically, \toolname's repairs achieved an 
 average quality rating of 2.41/5 while \seminal's repairs had an average rating 
-of only 2.11/5, an increase of 14\% ($p=0.030$). As the inc 
+of only 2.11/5, 14\% increase ($p=0.030$).
 FIXME: Spend more time talking about this success. Draw the conclusion
 for the reader that you are doing better than previous work ina
 statistically-significant manner. Indicate that 15\% better is still very
-useful for students, perhaps by citing something. Furthermore, this result
-indicates that humans perceive \toolname's repairs to be better not only due to
-better fault localization, but also due to the substitutive content of the
-generated code.
-
-Together, these two results demonstrate that humans perceive \toolname's repair
-quality to be significantly better than the current state of the art, both in
-terms of edit location accuracy and the quality of the overall repair.
-To tease apart this quality assessment, we consider three case studies with 
-statistically-significant differences between \toolname's and \seminal's
-repairs. Figures~\ref{fig:riteBetterOne} and  
+useful for students, perhaps by citing something.
 
 \begin{figure*}
 \begin{subfigure}[t]{.38\textwidth}
@@ -368,40 +353,7 @@ then wwhile __(f b')__ else b';;
 better than \seminal ($p=0.002$): With 12 responses, \toolname's
 repair had a mean score of 4.5/5 compared to \seminal's
 score of 1.1/5.}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.1\textwidth}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.28\textwidth}
-\begin{center}
-\textbf{Programming Task:}
-\end{center} 
-\texttt{sqsum [x1;...;xn]} should return the 
-integer $\texttt{x1}^2 + ... + \texttt{xn}^2$.
-\begin{center}
-\textbf{Buggy Student Solution:}
-\end{center}
-\begin{compactcode}
-let sqsum xs =
-let f a x = a + __(x ** 2)__ in
-let base = 0 in
-List.fold_left f base xs;;
-\end{compactcode}
-\begin{center}
-\textbf{\toolname Repair:}
-\end{center}
-\begin{compactcode}
-       ...__(x * x)__...
-\end{compactcode}
-\begin{center}
-\textbf{\seminal Repair:}
-\end{center}
-\begin{compactcode}
-      ...__(x + 2)__...
-\end{compactcode}
-\caption{Humans perceived \toolname's repair to be
-better than \seminal ($p=0.0003$): With 17 responses, \toolname's
-repair had a mean score of 4.8/5 compared to \seminal's
-score of 1.2/5.}
+\label{subfig:good1}
 \end{subfigure}\hfill
 \begin{subfigure}[t]{.1\textwidth}
 \end{subfigure}\hfill
@@ -435,21 +387,69 @@ else x :: __(clone (n - 1))__;;
 worse than \seminal ($p=0.0002$): With 18 responses, \toolname's
 repair had a mean score of 1.5/5 compared to \seminal's
 score of 4.1/5.}
+\label{subfig:bad}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{.1\textwidth}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{.28\textwidth}
+\begin{center}
+\textbf{Programming Task:}
+\end{center} 
+\texttt{sqsum [x1;...;xn]} should return the 
+integer $\texttt{x1}^2 + ... + \texttt{xn}^2$.
+\begin{center}
+\textbf{Buggy Student Solution:}
+\end{center}
+\begin{compactcode}
+let sqsum xs = 
+let f a x = a + __(x ** 2)__ in
+let base = 0 in
+List.fold_left f base xs;;
+\end{compactcode}
+\begin{center}
+\textbf{\toolname Repair:}
+\end{center}
+\begin{compactcode}
+       ...__(x * x)__...
+\end{compactcode}
+\begin{center}
+\textbf{\seminal Repair:}
+\end{center}
+\begin{compactcode}
+      ...__(x + 2)__...
+\end{compactcode}
+\caption{Humans perceived \toolname's repair to be
+better than \seminal ($p=0.0003$): With 17 responses, \toolname's
+repair had a mean score of 4.8/5 compared to \seminal's
+score of 1.2/5.}
+\label{subfig:good2}
 \end{subfigure}
-\caption{For each buggy student program, the underlined location indicates
-the line modified for both patches.}
-\label{fig:grammars}
+\caption{\ref{subfig:good1} and~\ref{subfig:good2} are programs where
+humans perceived \toolname's repair to be better than \seminal's while~\ref{subfig:bad}
+is an example where humans perceived \seminal's repair to be better than \toolname's.}
+\label{fig:examples}
 \end{figure*}
 
-\begin{figure}
-  
-  \caption{Example where humans found \toolname's repair of higher 
-  quality than \seminal's repair (4.5 vs 1.0, $p=0.002$).
-  repair by 1.4 ($p=0.028$). The goal of this program was to write
-  some fun
-  }
-  \label{fig:riteBetterOne}
-\end{figure}
+To tease apart this nuanced quality assessment, we consider several case studies where
+there were statistically-significant differences between the human ratings for 
+\toolname's and \seminal's repairs. In the programs in subfigures~\ref{subfig:good1} 
+and~\ref{subfig:good2}, humans rated \toolname's repair better than \seminal's. 
+In both cases, \toolname's found a solution which both typechecks and 
+conforms to the problem's semantic specification. \seminal, however, found a 
+repair that was either incomplete (\ref{subfig:good1}) or semantically incorrect
+(\ref{subfig:good2}). FIXME: Add what good thing about \toolname caused this. 
+On the other hand, in ~\ref{subfig:bad}, humans rated \seminal's repair higher 
+than \toolname's. This is likely because... FIXME: Add what limitation of \toolname
+does this.
+\vspace{3mm}
+\begin{framed}
+\noindent Humans perceive both \toolname's edit locations and final
+ repair quality to be better than those produced by \seminal, a state-of-the-art 
+  OCaml repair tool in a statistically-significant manner.
+\end{framed}
+
+
+
 
 % FIXME: Maybe add a paragraph here on qualitative results
 
