@@ -1,149 +1,84 @@
 \section{Introduction}
 \label{sec:intro}
 
-%%% Motivation and the problem
-The increasing number of computing-related jobs~\citep[][]{compsci-demand}
-in recent years has resulted in an unprecedented
-demand for computer science education.  Computing enrollment at colleges
-and universities is high~\citep[][]{compsci-classes} and is only projected
-to increase in the foreseeable future. Students are augmenting traditional
-education with Massive Open Online Courses (MOOCs)~\citep[][]{moocs}.
-While these larger classrooms have lead to computer science education
-becoming more accessible, its \emph{quality} has been
-questioned~\cite{FIXME}, especially with regard to the feedback that
-students receive~\cite{FIXME}.
+% The problem
+%
+Languages with Hindley-Milner style, unification based inference 
+offer the benefits of static typing with minimal annotation overhead.
+The catch, however, is that programmers must first ascend the steep 
+learning curve associated with understanding the \emph{error messages} 
+produced by the compiler. 
+%
+While \emph{experts} can, usually, readily decipher the errors, and 
+view them as invaluable aids to program development and refactoring,
+\emph{novices} are typically left quite befuddled and frustrated, 
+without a clear idea of \emph{what} the problem is~\cite{Wand1986-nw}.
+%
+Owing to the importance of the problem, several authors 
+have proposed methods to help debug type errors, typically, 
+by \emph{slicing} down the program to the problematic locations~\cite{Haack2003-vc, Rahli2015-tt}, 
+by \emph{enumerating} possible causes \cite{Lerner2007-dt, Chen2014-gd},
+or \emph{ranking} the possible locations using MAX-SAT 
+\cite{Pavlinovic2014-mr}, Bayesian~\cite{Zhang2014-lv} 
+or statistical analysis~\cite{Seidel:2017}.
+%
+While valuable, these approaches at best help localize 
+the problem but the student is still left in the dark 
+about how to \emph{fix} their code.
 
-%%% Good properties of a solution
-Recent research has focused on providing \emph{fully automated feedback} to
-students for classroom programming assignments (e.g.,~\cite{FIXME,FIXME}). In
-this paper we propose a method to provide personalized
-feedback for introductory programming exercises without requiring
-additional instructor effort. We build upon insights from advances in
-\emph{program repair} research to generate such feedback
-(e.g.,~\cite{FIXME,FIXME}).
-% TODO: Cite clara, autoproof, sarfgen, ... here
+% Why is this hard
 
-By repairing an incorrect student attempt on a programming assignment and
-producing a \emph{minimal} repair \wrt some edit-distance metric,
-we can generate \emph{high-quality}
-feedback for that attempt. As a result, any repair algorithm we propose must be
-able to \emph{generalize} over different programming assignments.
-In this paper we focus on generating
-repairs to enable better feedback generation.
-\WRW{FIXME: WRW cannot tell what "the latter part" refers to.
-and leave the latter part as future work.}
+In this paper ... new approach based on REPAIR.
 
-%%% Current state of the art
-% Failing test cases
-Presenting students with \emph{failing test cases} still remains one of the most
-common approaches for providing feedback on erroneous programming assignment
-attempts~\cite{FIXME,FIXME}. These test cases can be carefully selected by instructors to guide
-their students in debugging their code. However, for students that are not yet
-experienced in programming, such feedback may not be
-sufficient~\cite{FIXME}. We propose to provide
-more targeted feedback highlighting both possible program
-locations that are responsible for the program errors as well as possible
-repairs that will lead the student to a correct solution.
+Several recent papers have proposed using techniques from synthesis 
+to provide feedback in the form of \emph{repairs} that the student 
+can apply to improve their code. These repairs are found either by 
+symbolically searching a space of candidate programs circumscribed 
+by an expert-defined repair model, or by calculating ``diffs'' from 
+the given solution and a \emph{correct} program that is the ``closest'' 
+to the student's solution.
 
-% Fault localization FIXME: make this better
-Recent research~\citep[][]{Seidel:2017, Zhang2014-lv} has proposed the use of
-\emph{fault localization} for more guided student feedback. Fault localization is the
-task of identifying possible program elements (\eg lines, expressions \etc) that
-are the cause of the program error at hand. While these techniques can pinpoint,
-with high accuracy, the precise location in the student's code that causes the
-error and needs to be fixed, inexperienced programmers may not know how to act on
-such feedback~\cite{FIXME}. We hypothesize that fault localization combined with
-\emph{program repair}
-can provide the appropriate feedback for these novice programmers.
+- unfortunately doesn't apply in our domain: type errors
+    - no repair model
+    - no traces (to use to match)
+    - no programs to cluster with
+        (don't want to restrict to MOOC/classes)
 
-% Program repair
-Recent automated systems for providing student feedback via program repair
-demand significant manual effort from the instructor to be
-effective~\cite{FIXME}. For example, the AutoGrader system requires a
-reference solution per programming assignment and a custom error model that
-will help
-repair incorrect student attempts. The custom error model represents a
-significant annotation burden for the instructor, and the repair generation
-itself can be time-consuming due to constraint solving, which can hamper
-the effectiveness of online feedback~\cite{FIXME}.
-As a second example, systems like CLARA [TODO: cite] use
-partitioning and machine learning to avoid much instructor annotation effort
-and produce repairs relatively quickly, but can
-lead to
-imprecise and non-minimal repairs~\cite{FIXME}.
-Moreover, their use of Integer Linear
-Programming (ILP) for variable alignment between possible local repairs can hurt
-its scalability \WRW{notes: you just said CLARA can produce repairs
-``relatively quickly'' one sentence ago: we cannot claim that CLARA is both
-quick and also non-scalable}.
-% [TODO: Section N] provides a detailed survey of related work.
-% TODO: Add Seminal(it's the one on our human study) here?
-% TODO: Maybe add another tool?
+- Key insight: similar errors have similar repairs.
+    - what are repairs? 
+    - how to know what error is similar to? 
 
-% FIXME: help here!!
-%%% Our technique
-\paragraph{Data-Driven Program Repair.}
-In this paper, we introduce \toolname, a \emph{data-driven} approach to
-repairing novice attempts on programming assignments based on supervised
-learning. \toolname uses a large dataset containing pairs of ill-typed
-programs \WRW{notes: ill-typed is first used here --- are we only doing
-type errors?} and
-their subsequent fixes to \emph{automatically learn models} that localize
-errors and suggest template fixes \WRW{notes: we should be talking about
-the data-driven solution and form of these models much earlier when we list
-our insights --- also, let's talk about your dynamic solution of using
-interaction traces}, and uses
-\emph{program synthesis} to turn those
-templates into \emph{program repairs} \WRW{notes: we should hint at this
-earlier}. Given a new ill-typed program, \toolname generates a list of
-potential solutions ranked by likelihood and an \emph{edit-distance}
-metric. We evaluate \toolname by comparing its accuracy on a set of over
-4,500 ill-typed \ocaml programs drawn from two instances of an introductory
-programming course \WRW{notes: this is an amazing evaluation! we should be
-mentioning it earlier and in a little more detail}.
+- RITE:
+    1. repairs? learn family of repair-templates from student data set (generalizable, fine-grained edits, not whole program)
+    2. similar? train multi-labeled classifiers on BOAT; given new program predict location+template
+    3. message? enumerative synthesis to fill in template at location using type-checker as oracle. 
+
+- We have implemented and evaluated RITE in several ways.
+    1. accuracy
+    2. user-study comparison vs. seminal
+    3. XXX
 
 
-% 1. ``We identify an important problem in the world.'' Be more specific than
-% just ``bugs''. Are we focusing on novices and students or are we focusing
-% on general software defects? Are we focusing on strongly-typed functional
-% languages or are we proposing something generic? What ``news article'' or
-% ``survey paper'' citations can you list here to convince me that this is a
-% big deal?
 
-% 2. ``Here are the properties that a good solution must have.'' Pick three.
-% Here are some examples: must be applicable to students; must produce
-% answers quickly; must produce answers that are very close to what humans
-% would do; must apply to programs from a wide range of application domains.
 
-% 3. ``Here is the current state of the art. Note that each of these fails to
-% obtain at least one of the properties above.'' Candidates: manual debugging
-% (bad because of X and Y); using something like genprog (bad because of X
-% and Z); using pure fault localization (bad because of A and B); using delta
-% debugging or git/svn blame (bad because of P and Q); using something like
-% Nate or Sherrloc (bad because of Q and R).
 
-% 4. ``Here are our two or three insights. These insights are the
-% underpinning of our solution.'' What are the most important ones?
-% Candidates: blame-labeled training sets are available; student repairs fall
-% into a reasonable number of categories (admitting a classification
-% technique); program repair can be viewed as a synthesis problem;
-% generalized ASTs can handle typed and untyped program manipulations.
 
-% 5. ``We combine those insights into TECHNIQUE. It works by steps A, B and
-% C, which allow it to obtain the properties P1, P2, and P3 of a good
-% solution.'' Briefly condense the steps from Section 2 here.
 
-% 6. ``We evaluate our technique. For Property P1, we use metric M1 and must
-% be at least as good as S1 to be successful. For Property P2, we use metric
-% M2 and must be at least as good as S2 to be successful. We obtain property
-% P3 by construction.'' Fill in the blanks. In addition, for every benchmark
-% set or human study used, indicate why you are sampling correctly --- why
-% those results are likely to generalize.
 
-% The contributions of this paper are as follows:
-% \begin{itemize}
-%   \item The algorithm. FIXME.
-%   \item The dataset. FIXME --- is this a contribution?
-%   \item The empirical evaluation. FIXME.
-%   \item The human study. FIXME.
-% \end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
