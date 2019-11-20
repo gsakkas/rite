@@ -145,7 +145,7 @@
 
 %% Title information
 % \title[\toolname]{\toolname: Repairing Incorrect \\ Programming Assignment Solutions}
-\title[\toolname]{Error Feedback via Analytic Program Repair}
+\title[\toolname]{Type Error Feedback via Analytic Program Repair}
 % \titlenote{with title note}             %% \titlenote is optional;
 %                                         %% can be repeated if necessary;
 %                                         %% contents suppressed with 'anonymous'
@@ -209,11 +209,36 @@
 \email{first2.last2@inst2b.org}         %% \email is recommended
 
 
-%% Abstract
-%% Note: \begin{abstract}...\end{abstract} environment must come
-%% before \maketitle command
 \begin{abstract}
-Text of abstract \ldots.
+We introduce Analytic Program Repair, a data-driven 
+strategy for providing feedback for type-errors via 
+repairs for the erroneous program. 
+%
+Our strategy is based on 
+insight that similar errors have similar repairs.
+Thus, we show how to use a training dataset of
+pairs of ill-typed programs  and their fixed versions to: 
+%
+(1)~\emph{learn} a collection of candidate repair templates 
+    by abstracting and partitioning the edits made in the 
+    training set into a representative set of templates;
+%
+(2)~\emph{predict} the appropriate template from a given error, 
+    by training multi-class classifiers on the repairs templates 
+    used in the training set; 
+%
+(3)~\emph{synthesize} a concrete repair from the template 
+   by enumerating and ranking correct (\eg well-typed) 
+   terms matching the predicted template.
+%
+We have implemented our approach in \toolname: a type error reporting 
+tool for \ocaml programs, and we present an evaluation of the 
+\emph{accuracy} and \emph{efficiency} of \toolname on a corpus
+of 4,500 ill-typed \ocaml programs drawn from two instances of an 
+introductory programming course, and a user-study of the \emph{quality}
+of the generated error messages that shows the locations and 
+final repair quality to be better than the state-of-the-art tool 
+in a statistically-significant manner.
 \end{abstract}
 
 
@@ -241,7 +266,7 @@ Text of abstract \ldots.
 
 %% Keywords
 %% comma separated list
-\keywords{keyword1, keyword2, keyword3}  %% \keywords are mandatory in final camera-ready submission
+% \keywords{keyword1, keyword2, keyword3}  %% \keywords are mandatory in final camera-ready submission
 
 
 %% \maketitle

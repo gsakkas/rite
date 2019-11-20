@@ -36,12 +36,12 @@ can apply to improve their code.
 %
 These repairs are found either by symbolically searching a space 
 of candidate programs circumscribed by an expert-defined repair 
-model \cite{singh2013,glassman}, or via the observation that 
-\emph{similar programs have similar repairs}, \ie by calculating 
+model \cite{singh2013,HeadGSSFDH17}, or via the observation that 
+\emph{similar programs} have similar repairs, \ie by calculating 
 ``diffs'' from the given solution and a \emph{correct} program 
-that is the ``closest'' to the student's solution ~\cite{PLDI18a,PLDI18b}
+that is the ``closest'' to the student's solution ~\cite{Gulwani_2018,Wang_2018}
 
-While this approach are compelling for generating feedback in large
+While this approach is compelling for generating feedback in large
 classes, it has several crucial requirements that render it inapplicable 
 for type error messages.
 %
@@ -64,13 +64,14 @@ program.
 
 \mypara{Analytic Program Repair}
 %
-In this work, we present a novel strategy called 
-\emph{Analytic Program Repair} that uses supervised 
-learning instead of manually-crafted repair models 
-or matching against a corpus of correct code.
+In this work, we present a novel error repair 
+strategy called \emph{Analytic Program Repair} 
+that uses supervised learning instead of manually 
+crafted repair models or matching against a corpus 
+of correct code.
 %
 Our strategy is based on the key insight that 
-\emph{similar errors have similar repairs}.
+\emph{similar errors} have similar repairs.
 %
 Our strategy realizes the above insight by using 
 a training dataset of pairs of ill-typed programs 
@@ -108,18 +109,22 @@ tool for \ocaml programs. We train (and evaluate) \toolname on a set of
 over 4,500 ill-typed \ocaml programs drawn from two instances of an 
 introductory programming course.
 %
-Given a new ill-typed program, \toolname generates a list of
-potential solutions ranked by likelihood and an \emph{edit-distance}
-metric. 
+Given a new ill-typed program, \toolname generates a list of potential 
+solutions ranked by likelihood and an \emph{edit-distance} metric. 
+We train \toolname on programs from one year and evaluate in several 
+ways.
 %
-We train \toolname on programs from one year and evaluate it on code 
-from the next.
-
-in tsewhich 
-    1. accuracy
-    2. user-study comparison vs. seminal
-    3. XXX
-
+First, we measure its \emph{accuracy}: we show that \toolname correctly 
+predicts the right repair template {FIXME} times.
+%
+Second, we measure its \emph{efficiency}: we show that \toolname is able 
+to synthesize a concrete repair {FIXME} of the time in XXX seconds.
+%
+Finally, we measure the \emph{quality} of the generated messages with 
+a user study with 29 participants and show that humans and show that 
+humans perceive both \toolname's edit locations and final repair quality 
+to be better than those produced by \seminal, a state-of-the-art OCaml 
+repair tool \cite{Lerner2007} in a statistically-significant manner.
 
 % First, what is a repair and when are two repairs similar?
 % Second, what is an error and when are two errors similar?
