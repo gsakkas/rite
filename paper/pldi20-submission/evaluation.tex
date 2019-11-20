@@ -52,18 +52,18 @@ We extract 416 features from each sub-expression in a program, including:
 \end{enumerate}
 
 \paragraph{Dataset cleaning}
-We extract fixes as expressions replacements over a program pair using \diffsym.
-A disadvantage of using \diffsym s with this dataset is that students may have
+We extract fixes as expression replacements over a program pair using \diffsym.
+A disadvantage of using \diffsym s with this dataset is that some students
 made many, potentially unrelated, changes between compilations; at some point
-the ``fix'' becomes a ``rewrite''. These ``rewrites'' can potentially lead to
+the ``fix'' becomes a ``rewrite''. These rewrites can lead to
 meaningless fix templates and error locations. We discard such outliers when the
 fraction of subexpressions that have changed in a program is more than one
 standard deviation above the mean, establishing a diff threshold of 40\%. We
-also discard programs that have changes in 5 or more locations. Even
-state-of-the-art multi-location repair techniques can't reproduce such ``fixes''
-\citep{Saha_2019}. The discarded changes account for roughly 32\% of each
-dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL. In
-all our evaluation, we use \SPRING as a training set and \FALL as a test set.
+also discard programs that have changes in 5 or more locations; even
+state-of-the-art multi-location repair techniques can't reproduce such fixes
+\citep{Saha_2019}. The discarded pairs account for roughly 32\% of each
+dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL. Throughout
+our evaluation, we use \SPRING as a training set and \FALL as a test set.
 
 \paragraph{Accuracy Metrics}
 Most developers will consider around five (or slightly more) suggestions before
@@ -71,15 +71,15 @@ falling back to manual debugging \citep{Kochhar2016-oc}. Therefore, we consider
 \toolname's accuracy up to the \emph{top six} fix template prediction, \ie
 predicted fix templates that represent the user's actual fix. We also include
 the \emph{confusion matrix} of the each location's first prediction, to present
-what templates our models usually mix together and see if they generalize well
+which templates our models usually mix together and see if they generalize well
 between different groups of solutions.
 
 \paragraph{Repair Quality}
 Finally, for a more qualitative evaluation of \toolname's synthesized solutions
 based on the above results, we carried out a human study at \emph{university
 elided for blind review}. Each participant was asked to evaluate the quality of
-the program fixes and their locations against a state-of-the-art baseline (the
-\seminal's repair algorithm \citep{Lerner2007-dt}). For each program, beyond the
+the program fixes and their locations against a state-of-the-art baseline
+(\seminal's repair algorithm \citep{Lerner2007-dt}). For each program, beyond the
 two repairs, participants were presented with the original ill-typed program,
 along with the standard \ocaml compiler's error message and a short description
 of what the original author of the program intended it to do. For a more
@@ -108,15 +108,15 @@ popularity. Specifically:
     training set.
   \item[\textsc{Deep Neural Network} (\dnn)] A multi-layer neural network, that
     utilizes three fully-connected hidden layers of 512 neurons. The neurons use
-    rectified linear units (ReLU) as their activation function.
+    rectified linear units (ReLU) as their activation function \citep{Nair2010-xg}.
 \end{description}
 
-A \dnn was trained using \emph{early stopping} \cite{Hastie2009-bn}, where the
-training of a neural network is stopped when the accuracy on a distinct small
+A \dnn was trained using \emph{early stopping} \cite{Hastie2009-bn}:
+training is stopped when the accuracy on a distinct small
 part of the training set is not improved after a certain amount of epochs. We
-set that amount to 5 and the maximum number of epochs to 200. The \textsc{Adam}
+set that amount to 5 and the maximum number of epochs to 200. We used the \textsc{Adam}
 optimizer \citep{Kingma2014-ng}, a variant of stochastic gradient descent that
-has been found to converge faster, was used to train our \dnn.
+converges faster.
 
 \input{evaluation-accuracy-graph}
 
@@ -134,7 +134,7 @@ has been found to converge faster, was used to train our \dnn.
 prediction experiments. The naive baseline of selecting templates at random
 achieves \RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while the
 \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
-(\PopularTopSix\% Top-6). Our \dnn classifier significantly outperforms those
+(\PopularTopSix\% Top-6). Our \dnn classifier significantly outperforms these
 naive classifiers, ranging from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\%
 Top-6 accuracy. Interestingly, with only \dnn's first prediction, one
 outperforms top 6 predictions of both \random and \popular.
@@ -152,9 +152,9 @@ patterns} from these datasets and that our \dnn model is able to
 \emph{generalize} between different solutions of the problems.
 
 \autoref{fig:conf-matrix} further demonstrates that our \dnn generalizes well.
-This Figure includes the confusion matrix of the top 30 templates that were
-acquired from the training set and were tested on the same \FALL dataset as
-before. We observe that most of the templates are predicted correctly and only a
+This Figure is the confusion matrix of the top 30 templates that were
+acquired from the \SPRING training set and were tested on the \FALL dataset.
+We observe that most of the templates are predicted correctly and only a
 few of them are often mis-predicted for another template. For example, we see
 that programs that would require template 20 to be fixed almost always are
 mis-predicted with template 11.
@@ -205,23 +205,23 @@ mis-predicted with template 11.
 \label{subsec:eval:man_rep_qual_eval}
 
 \paragraph{Synthesis Algorithm}
-We guide our synthesis algorithm, using fix template and location predictions.
+We guide our synthesis algorithm using fix template and location predictions.
 Every program is given a timeout of \emph{60s} to be repaired by the synthesis
-algorithm. Any program that takes more than that to synthesize can't have any
+algorithm. Any program that takes longer than that to synthesize can't have any
 practical use for novices~\cite{FIXME}. In \autoref{tab:rite_naive}, we show two
 instances of \toolname. \toolname refers to the implementation we have described
 so far in this paper. The \naive implementation ignores the predicted fix
 templates and only uses the predicted error locations to synthesize repairs.
-This equivalent to \toolname where the fix templates are given just as program
+This is equivalent to \toolname where the fix templates are given just as program
 holes $\_$.
 
 The first column of \autoref{tab:rite_naive} shows how many programs were
-completed on the time limit, while the second column how many returned a
+completed within the time limit, and the second column how many returned a
 type-correct solution. We observe that using fix templates for synthesis
-actually allows more programs to return type-correct solutions. We also observe
+allows more programs to return type-correct solutions. We also observe
 that for the programs that are completed within the time limit, \toolname needs
-an average of $8.81$ seconds to repair am erroneous program, while \naive takes
-11.72seconds, a \textbf{33\%} increase.
+an average of $8.81$ seconds to repair an erroneous program, while \naive takes
+11.72 seconds, a \textbf{33\%} increase.
 
 The 11.85\% of the programs that fail to be repaired within that amount of time
 fall in the case of the combined failure of our predictive models to give high
@@ -458,5 +458,3 @@ does this.
 
 
 % FIXME: Maybe add a paragraph here on qualitative results
-
-
