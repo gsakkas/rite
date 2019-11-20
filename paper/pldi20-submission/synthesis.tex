@@ -3,7 +3,7 @@
 We use a \emph{enumerative} program synthesis algorithm to fully repair a
 program using the predicted templates and locations of our neural network
 models. In \autoref{subsec:location-rank}, we show how the predicted error
-locations are used if \emph{multiple} of them have to be fixed and in
+locations are used if \emph{multiple} of them have to be fixed, and in
 \autoref{subsec:local-synthesis}, we present our synthesis algorithm for
 producing \emph{local repairs} for a given location of the input program.
 % Finally, we briefly show in \autoref{subsec:repair} how we use the
@@ -13,11 +13,11 @@ producing \emph{local repairs} for a given location of the input program.
 \label{subsec:location-rank}
 
 \paragraph{Error Location Confidence}
-Recall from \autoref{sec:templ-pred} that for a given program location, our
+Recall from \autoref{sec:templ-pred} that for each location in a program's
+type-error slice, our
 $\Model$ generates a confidence score $\Conf$ of that location containing an
-error that needs to be fixed. Each location in the type-error slice is assigned
-a confidence score $\Conf$ from our $\Model$. Furthermore, for each location we
-also generate the repair templates' confidence scores with our $\ModelT$.
+error that needs to be fixed, and our $\ModelT$
+generates the repair templates' confidence scores.
 
 Our synthesis algorithm ranks all the locations based on their
 confidence scores $\Conf$. For each location, it runs through the list
@@ -27,9 +27,9 @@ program that type-checks, the next
 location is considered, until it succeeds.
 
 \paragraph{Multiple Error Locations}
-In practice, however, it is very often that more that one location may need to
-be repaired. Therefore, our previous approach will fail to generate a solution
-in many cases. So we modify our simple algorithm to synthesize programs with
+In practice, however, frequently more than one location needs to
+be repaired. The approach above fails to generate a solution
+in these cases, so we modify it to synthesize programs with
 multiple error locations.
 
 Let the confidence scores $\Conf$ for all locations
@@ -45,7 +45,7 @@ which only considers the confidence scores of single locations, by adding the
 combined scores of tuples, triples, etc. of type-error slice locations. In
 practice we only consider up to \emph{five} locations to be fixed
 simultaneously; any more than that takes too much time to generate and
-has too small a chance of leading to an actual good solution.
+has too small a chance of leading to a good solution.
 %% TODO: maybe show how many changes happened to our dataset and how big is type-error slice on average.
 
 
@@ -58,7 +58,7 @@ guided by an input template. Enumerative synthesis searches all possible
 expressions over a language, starting from an empty program, until a high-level
 specification is reached. In our case, we only try to synthesize a part of the
 program that already captures the intent of the user and therefore our only
-specification is if the repaired program is type-safe. However, we can also
+specification is that the repaired program is type-safe. However, we can also
 extend this specification by allowing our algorithm to search for programs that
 type-check but have the user's desired type signature for the specific program.
 
@@ -91,7 +91,7 @@ After the template $T$ had some changes applied to it, we get an
 \emph{instantiated} template $\tilde{T}$, which then replaces the expression at
 location $L$. If the new program $\tilde{P}$ type-checks, it is inserted into
 the list of generated solutions $R$. The list of candidate solutions $R$ is
-generated lazily in practice and the top-N can be requested from the user
+generated lazily in practice and the top-N can be requested for the user
 depending on the level of feedback that is needed.
 
 

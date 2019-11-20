@@ -169,8 +169,8 @@ member-expressions and any one of them can be viewed as the class
 \emph{representative}. Each representative can then be used as
 a fix template to produce repairs for ill-typed programs.
 
-For example, expressions $\hat{x} \oplus (\hat{y} \oplus \hat{z})$ and $(\hat{x}
-\oplus \hat{y}) \oplus \hat{z}$ are similar and therefore they will be in the
+For example, $\hat{x} \oplus \hat{n}$ and $\hat{n}
+\oplus \hat{x}$ are similar so they are in the
 same class. Either one can be used as the representative and our repair
 algorithm in \autoref{sec:synthesis} will essentially consider both when fixing
 an erroneous program with this template.

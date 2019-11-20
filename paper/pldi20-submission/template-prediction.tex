@@ -35,7 +35,7 @@ algorithm.
 
 \paragraph{Confidences, Data and Labels.}
 As shown in \autoref{fig:api}, we define $\Emap{a}$ as a mapping from
-expressions $e$ to values of type $a$, while $\Tmap{a}$ as a mapping from
+expressions $e$ to values of type $a$, and $\Tmap{a}$ as a mapping from
 templates $\T$ to such values. For example, $\Tmap{\Conf}$ is a mapping from
 templates $\T$ to their confidence scores $\Conf$. $\datasym$ represents feature
 vectors used to train our predictive models, while $\labelsym{\ConfBin}$ are the
@@ -52,7 +52,8 @@ $\predictorsym$s are learned fix-template-predictors returned from our algorithm
 that are used to generate confidence score mappings for input programs $e$.
 Specifically, they return a map $\Emap{(\labelsym{\Conf})}$ that associates each
 subexpression of the input program $e$ with a confidence score
-$\labelsym{\Conf}$.
+$\labelsym{\Conf}$. \BC{here it's ``a confidence score
+$\labelsym{\Conf}$''; just recently it was ``their confidence scores $\Conf$''}
 
 \paragraph{Architecture.}
 First, the $\extractsym$ function takes as input the feature extraction
@@ -77,7 +78,7 @@ program to possible error locations and fix templates.
 \subsection{Feature and Label Extraction}
 \label{sec:templ-pred:extract}
 The machine learning algorithms that we use for predicting fix templates and
-error locations, expect fixed-length \emph{feature vectors} $\datasym$ as their
+error locations expect fixed-length \emph{feature vectors} $\datasym$ as their
 input. However, we want to repair variable-sized programs over \lang. We thus
 use the $\extractsym$ function to convert programs to feature vectors.
 
@@ -85,7 +86,7 @@ Following \citep{Seidel:2017}, we choose to model a program as a \emph{set} of
 feature vectors, where each element corresponds to a subexpression in the
 program. Thus, given an erroneous program $\pbad$ we first split it into its
 constituent subexpressions and then transform each subexpression into a single
-feature vector, \ie $\featuresym\ \pbad \mapsto \Emap{\datasym}$. We show here
+feature vector, \ie $\featuresym\ \pbad \mapsto \Emap{\datasym}$ \BC{is this standard?}. We show here
 the five major feature categories used.
 
 \paragraph{Local syntactic features.}
@@ -132,8 +133,8 @@ feature, as they are both inferred to have a type that mentions $\tlist{\cdot}$.
 
 % TODO: cite the correct paper
 \paragraph{Type error slice.}
-Furthermore, we wish to distinguish between changes that could fix the error,
-and changes that \emph{cannot possibly} fix the error. Thus, we compute a
+We wish to distinguish changes that could fix the error
+from changes that \emph{cannot possibly} fix the error. Thus, we compute a
 minimal type-error \emph{slice} (\eg \citep{Tip2001-qp,Haack2003-vc}) for the
 program (\ie the set of expressions that contribute to the error) and if the
 program contains multiple type-errors, we compute a minimal slice for each
@@ -187,8 +188,7 @@ graph whose nodes are arranged in layers that are fully connected by weighted
 edges. The first layer corresponds to the input features, and the final to the
 output. The output of an internal node is given as the sum of the weighted
 outputs of the previous layer passed to a non-linear function, called the
-activation function, which in recent work is commonly chosen to be the
-\emph{rectified linear unit} (ReLU) \citep{Nair2010-xg}. The number of layers,
+activation function. The number of layers,
 the number of nodes per layer, and the connections between layers constitute the
 \emph{architecture} of a neural network. In this work, we use relatively
 \emph{deep neural networks} (\dnn). Finally, we can train a \dnn $\Model$ as a
@@ -202,9 +202,8 @@ prediction we have to select from more than two \emph{classes}. We again use a
 have $N$ nodes for the $N$ chosen template-classes. For multi-class
 classification problems solved with neural networks, usually a \emph{softmax}
 function is used at output layer \citep{Goodfellow-et-al-2016,Bishop-book-2006}.
-Softmax assigns decimal probabilities to each class that must add up to 1.0.
-This additional constraint helps training converge more quickly than it
-otherwise would.
+Softmax assigns probabilities to each class that must add up to 1.
+This additional constraint speeds up training.
 
 % For an output vector $y = (y_1, \dots, y_N) \in \R^{N}$, the standard softmax
 % function is defined as:
@@ -226,12 +225,12 @@ combined to produce a final list of confidence scores for a new program $p$.
 \input{predict-algo.tex}
 
 \paragraph{The Prediction Algorithm}
-Our algorithm firstly extracts the machine-learning-amenable dataset $D_{ML}$
+Our algorithm first extracts the machine-learning-amenable dataset $D_{ML}$
 from the program pairs dataset $D$. For each program pair in $D$,
 \textsc{Extract} returns a mapping from the erroneous program's subexpressions
 to features and labels. Then, \textsc{InSlice} keeps only the expressions in
 the the type-error slice and evaluates to a list of the respective feature and
-label vectors, which is then added to the $D_{ML}$ dataset. The $D_{ML}$ dataset
+label vectors, which is added to the $D_{ML}$ dataset. This dataset
 is used by the \textsc{Train} function to generate our predictive $Models$, \ie
 $\Model$ and $\ModelT$.
 
