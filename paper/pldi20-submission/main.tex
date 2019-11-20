@@ -1,5 +1,9 @@
 %% For double-blind review submission, w/o CCS and ACM Reference (max submission space)
-\documentclass[sigplan,10pt,review,anonymous]{acmart}\settopmatter{printfolios=true,printccs=false,printacmref=false}
+\documentclass[sigplan,10pt,review,anonymous]{acmart}\settopmatter{printfolios=false,printccs=false,printacmref=false}
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+
 %% For double-blind review submission, w/ CCS and ACM Reference
 %\documentclass[sigplan,review,anonymous]{acmart}\settopmatter{printfolios=true}
 %% For single-blind review submission, w/o CCS and ACM Reference (max submission space)
@@ -13,10 +17,10 @@
 %% Conference information
 %% Supplied to authors by publisher for camera-ready submission;
 %% use defaults for review submission.
-\acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
-\acmYear{2018}
-\acmISBN{} % \acmISBN{978-x-xxxx-xxxx-x/YY/MM}
-\acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
+% \acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
+% \acmYear{2018}
+% \acmISBN{} % \acmISBN{978-x-xxxx-xxxx-x/YY/MM}
+% \acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
 \startPage{1}
 
 %% Copyright information
@@ -140,10 +144,8 @@
 \begin{document}
 
 %% Title information
-\title[\toolname]{\toolname: Repairing Incorrect \\ Programming Assignment Solutions}
-                                        %% [Short Title] is optional;
-                                        %% when present, will be used in
-                                        %% header instead of Full Title.
+% \title[\toolname]{\toolname: Repairing Incorrect \\ Programming Assignment Solutions}
+\title[\toolname]{Error Feedback via Analytic Program Repair}
 % \titlenote{with title note}             %% \titlenote is optional;
 %                                         %% can be repeated if necessary;
 %                                         %% contents suppressed with 'anonymous'
@@ -151,8 +153,6 @@
 % \subtitlenote{with subtitle note}       %% \subtitlenote is optional;
 %                                         %% can be repeated if necessary;
 %                                         %% contents suppressed with 'anonymous'
-
-
 %% Author information
 %% Contents and number of authors suppressed with 'anonymous'.
 %% Each author should be introduced by \author, followed by

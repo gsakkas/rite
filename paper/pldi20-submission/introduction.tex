@@ -26,37 +26,134 @@ While valuable, these approaches at best help localize
 the problem but the student is still left in the dark 
 about how to \emph{fix} their code.
 
-% Why is this hard
-
-In this paper ... new approach based on REPAIR.
-
-Several recent papers have proposed using techniques from synthesis 
+% Repairs as error messages?
+\mypara{Repairs as Feedback}
+%
+Several recent papers have proposed an inspiring new line of 
+attack on the feedback problem: using techniques from synthesis 
 to provide feedback in the form of \emph{repairs} that the student 
-can apply to improve their code. These repairs are found either by 
-symbolically searching a space of candidate programs circumscribed 
-by an expert-defined repair model, or by calculating ``diffs'' from 
-the given solution and a \emph{correct} program that is the ``closest'' 
-to the student's solution.
+can apply to improve their code. 
+%
+These repairs are found either by symbolically searching a space 
+of candidate programs circumscribed by an expert-defined repair 
+model \cite{singh2013,glassman}, or via the observation that 
+\emph{similar programs have similar repairs}, \ie by calculating 
+``diffs'' from the given solution and a \emph{correct} program 
+that is the ``closest'' to the student's solution ~\cite{PLDI18a,PLDI18b}
 
-- unfortunately doesn't apply in our domain: type errors
-    - no repair model
-    - no traces (to use to match)
-    - no programs to cluster with
-        (don't want to restrict to MOOC/classes)
+While this approach are compelling for generating feedback in large
+classes, it has several crucial requirements that render it inapplicable 
+for type error messages.
+%
+First, for type errors, the space of candidate repairs is massive. 
+It is quite unclear whether a small set of repair models \emph{exists} 
+or even if it does, what it \emph{looks like}. More importantly, 
+to scale, it is essential that we remove the requirement that an 
+expert carefully curate some set of candidate repairs.
+%
+Second, the approach requires a corpus of similar programs, 
+whose syntax trees or execution traces can be used to match 
+each incorrect program with a ``correct'' version that is 
+used to provide feedback. Programs with static type errors 
+have no execution traces. 
+%
+More importantly, we desire a means to generate feedback 
+for \emph{new} programs that novices write and, hence 
+cannot rely on matching against some (existing) correct 
+program.
 
-- Key insight: similar errors have similar repairs.
-    - what are repairs? 
-    - how to know what error is similar to? 
+\mypara{Analytic Program Repair}
+%
+In this work, we present a novel strategy called 
+\emph{Analytic Program Repair} that uses supervised 
+learning instead of manually-crafted repair models 
+or matching against a corpus of correct code.
+%
+Our strategy is based on the key insight that 
+\emph{similar errors have similar repairs}.
+%
+Our strategy realizes the above insight by using 
+a training dataset of pairs of ill-typed programs 
+and their fixed versions to: 
+%
+(1)~\emph{learn} a collection of candidate repair templates 
+    by abstracting and partitioning the edits made in the 
+    training set into a representative set of templates;
+%
+(2)~\emph{predict} the appropriate template from a given error, 
+    by training multi-class classifiers on the repairs templates 
+    used in the training set; 
+%
+(3)~\emph{synthesize} a concrete repair from the template 
+   by enumerating and ranking correct (\eg well-typed) 
+   terms matching the predicted template, 
+%
+thereby, generating a fix from a candidate program.
+%
+Crucially, we show how to perform the crucial abstraction 
+from a particular \emph{program} to an abstract \emph{error} 
+by representing programs via \emph{bag-of-abstracted-terms} (BOAT) 
+\ie as numeric vectors of syntactic and semantic features \cite{Seidel2017-ko}. 
+%
+This abstraction lets us train predictors over high-level 
+code features, \ie to learn correlations between features 
+that cause errors and their corresponding repairs, allowing 
+the analytic approach to generalize beyond matching against 
+existing programs.
 
-- RITE:
-    1. repairs? learn family of repair-templates from student data set (generalizable, fine-grained edits, not whole program)
-    2. similar? train multi-labeled classifiers on BOAT; given new program predict location+template
-    3. message? enumerative synthesis to fill in template at location using type-checker as oracle. 
+\mypara{\toolname}
+%
+We have implemented our approach in \toolname: a type error reporting 
+tool for \ocaml programs. We train (and evaluate) \toolname on a set of 
+over 4,500 ill-typed \ocaml programs drawn from two instances of an 
+introductory programming course.
+%
+Given a new ill-typed program, \toolname generates a list of
+potential solutions ranked by likelihood and an \emph{edit-distance}
+metric. 
+%
+We train \toolname on programs from one year and evaluate it on code 
+from the next.
 
-- We have implemented and evaluated RITE in several ways.
+in tsewhich 
     1. accuracy
     2. user-study comparison vs. seminal
     3. XXX
+
+
+% First, what is a repair and when are two repairs similar?
+% Second, what is an error and when are two errors similar?
+% Third, how do we automatically match (similar) errors to (similar) repairs?
+%
+% \mypara{Repairs}
+% \mypara{Errors}
+% \mypara{Predicting Repairs from Errors}
+% \tool converts this insight into an error reporting algorithm by addressing three crucial questions.
+%%* How to \emph{curate} a collection of generic repairs? 
+%%* How to \emph{predict} which generic repair applies to a given error?
+%%* How to \emph{synthesize} a concrete repair that fixes the given error? 
+%%
+%%
+%%We must address two crucial quie
+%%To make this insight actionable, we 
+%%To convert this insight into an er
+%%That is, rather than associating errors and repo
+%%
+%%
+%%generalizes the key observation
+%%
+%%that is inspired by the synthesis approaches, but generalizes their 
+%%
+%%Inspired by the above, 
+%%
+%%
+%%% Our approach
+%%- RITE:
+    %%1. repairs? learn family of repair-templates from student data set (generalizable, fine-grained edits, not whole program)
+    %%2. similar? train multi-labeled classifiers on BOAT; given new program predict location+template
+    %%3. message? enumerative synthesis to fill in template at location using type-checker as oracle. 
+
+
 
 
 
