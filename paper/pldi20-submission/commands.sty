@@ -4,20 +4,21 @@
 \definecolor{green}{rgb}{0,0,1}
 \definecolor{orange}{rgb}{1,0.5,0}
 \definecolor{dvcolor}{rgb}{1,0.5,0.5}
-\def\mynote#1{{\sf $\clubsuit$ #1$\clubsuit$}}
 
 \def\mysection#1{\section{\textbf{#1}}}
 \def\mysubsection#1{\subsection{\textbf{#1}}}
 \def\mysubsubsection#1{\subsubsection{\textbf{#1}}}
 
-% \def\mypara#1{\paragraph{\textbf{#1}}}
-\def\mypara#1{\smallskip\noindent{\emph{\textbf{#1}}}}
+\def\mypara#1{\paragraph{\textbf{#1}}}
+% \def\mypara#1{\smallskip\noindent{\emph{\textbf{#1}}}}
 
-\def\RJ#1{\textcolor{red}{\sf $\clubsuit$RJ: #1$\clubsuit$}}
-\def\GS#1{\textcolor{blue}{\sf $\clubsuit$GS: #1$\clubsuit$}}
-\def\WRW#1{\textcolor{red}{\sf $\clubsuit$WRW: #1$\clubsuit$}}
-\def\BC#1{\textcolor{red}{\sf $\clubsuit$BC: #1$\clubsuit$}}
-\def\ME#1{\textcolor{red}{\sf $\clubsuit$ME: #1$\clubsuit$}}
+% \newcommand\mynote[3]{}
+\newcommand\mynote[3]{\textcolor{#1}{\sf $\clubsuit$#2: #3$\clubsuit$}}
+\def\RJ#1{\mynote{red}{RJ}{#1}} 
+\def\GS#1{\mynote{blue}{GS}{#1}} 
+\def\WRW#1{\mynote{red}{WRW}{#1}} 
+\def\BC#1{\mynote{purple}{BC}{#1}} 
+\def\ME#1{\mynote{purple}{ME}{#1}} 
 
 \newcommand\etc{\textit{etc.}\xspace}
 \newcommand\eg{\textit{e.g.}\xspace}

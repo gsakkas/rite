@@ -131,7 +131,7 @@ relevant templates) that were applied to \SPRING, are also popular in \FALL.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[trim={30 40 100 70},clip,width=\linewidth]{evaluation-conf-matrix.pdf}
+  \includegraphics[trim={30 40 100 70},clip,height=2.2in]{evaluation-conf-matrix.pdf}
   \caption{The confusion matrix of the \emph{top 30} templates. Bolder parts of
   the heatmap show templates that are often mis-predicted with another template.
   The bolder the diagonal is, the more accurate predictions we make.}
@@ -140,18 +140,20 @@ relevant templates) that were applied to \SPRING, are also popular in \FALL.
 
 \mypara{Results: Template ``Confusion''}
 %
-We also compute the \emph{confusion matrix} of the each location's top
-prediction, to present what templates our models usually mix with each other and
-see if they generalize well between different groups of solutions.
+The \emph{confusion matrix} of the each location's top
+prediction shows which templates our models mix up.
 %
-\autoref{fig:conf-matrix} shows the confusion matrix of the top 30 templates
-that were acquired from the training set and were tested on the \FALL dataset.
+\autoref{fig:conf-matrix} shows this matrix for the 
+top 30 templates acquired from the \SPRING training 
+set and were tested on the \FALL dataset.
 %
-We observe that most of the templates are predicted correctly and only a few of
-them are often mis-predicted for another template.
+Note that most templates are predicted correctly 
+and only a few of them are often mis-predicted 
+for another template.
 %
-For example, we see that programs that would require template 20 to be fixed
-almost always are mis-predicted with template 11.
+For example, we see that programs that would 
+require template 20 to be fixed almost always 
+are mis-predicted with template 11.
 
 \GS{show those two templates, both ``let''s with some ``tuple'' in their ASTs}
 
@@ -244,9 +246,8 @@ compiler's error message and a short description of what the original
 author of the program intended it to do.
 %
 From this study, we found that both the edit locations and final
-repairs produced by \toolname were better than those produced by
-\seminal~\citep{Lerner2006-pj, Lerner2007-dt}, a state-of-the-art
-\ocaml repair tool, in a statistically significant manner.
+repairs produced by \toolname were better than 
+\seminal's in a statistically significant manner.
 
 \mypara{User Study Setup}
 %
@@ -357,9 +358,8 @@ semantically incorrect (\ref{subfig:good2}).
 On the other hand, in ~\ref{subfig:bad}, \toolname
 does worse as the \emph{second} parameter should
 be \verb|n-1|. In fact, \toolname's second ranked
-repair is the correct one, but it is incomparable
-to the first in terms of edit distance. \BC{incomparable?
-aren't they in fact equal?}
+repair is the correct one, but it is equal 
+to the first in terms of edit distance. 
 
 \begin{framed}
 \noindent Humans perceive both \toolname's edit locations

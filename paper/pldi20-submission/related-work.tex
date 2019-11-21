@@ -1,7 +1,10 @@
 \section{Related Work}
 \label{sec:related-work}
 
-We consider three main lines of work on providing feedback for errors.
+While there is a vast literature on automatically repairing or patching 
+programs for specific properties (\eg null-dereferences, memory safety),
+we focus on the most closely related work on providing feedback for novice 
+errors.
 
 \mypara{Example-Based Feedback} 
 %
@@ -9,14 +12,14 @@ Recent work has looked at providing \emph{counterexamples}
 that show how a program went wrong, for type errors 
 \cite{Seidel2016-ul} or for general correctness properties 
 where the generated inputs show divergence from a reference 
-implementation or some other correctness oracle~\cite{Song_2019}.
-In contrast, our aim is to provide feedback on how to fix the error.
+implementation or other correctness oracle~\cite{Song_2019}.
+In contrast, we provide feedback on how to fix the error.
 
 \mypara{Fault Localization} Several authors have studied 
 the problem of \emph{fault localization}, \ie winnowing down 
 the set of locations that are relevant for the error, often 
 using slicing \citep{Wand1986-nw,Haack2003-vc,Tip2001-qp,Rahli2015-tt},
-or bayesian methods \citep{Zhang2014-lv}. 
+counterfactual typing \citep{Chen2014-gd} or bayesian methods \citep{Zhang2014-lv}.
 %
 \textsc{Nate}~\citep{Seidel:2017} introduced the BOAT representation, 
 and showed it could be used for accurate localization.
@@ -25,7 +28,7 @@ We aim to go beyond localization, into suggesting concrete
 \emph{changes} that novices can make to understand and fix 
 the problem.
 
-\mypara{Program Repair} 
+\mypara{Repair-model based feedback} 
 %
 \textsc{Seminal} \citep{Lerner2007-dt} \emph{enumerates} minimal fixes 
 using an expert-guided heuristic search. 
@@ -35,8 +38,10 @@ by \cite{singh2013} which additionally performs a \emph{symbolic}
 search using a set of expert provided \emph{sketches} that represent 
 possible repairs. 
 %
-In contrast, \toolname automatically learns a template of repairs 
-from a corpus leading to much higher quality repairs \S~\ref{sec:eval}.
+In contrast, \toolname learns a template of repairs 
+from a corpus yielding higher quality feedback \S~\ref{sec:eval}.
+
+\mypara{Corpus-based feedback}
 %
 \textsc{Clara} \citep{Gulwani_2018} uses code and execution traces 
 to match a given incorrect program with a ``nearby'' correct solution 
@@ -49,11 +54,44 @@ AST vector embeddings to calculate distance metrics (to ``similar''
 or ``nearby'' correct programs) more robustly.
 %
 While the above are data-driven, both \textsc{Clara} and \textsc{Sarfgen} 
-require a ``close'' correct sample in the corpus. 
+assume there is a ``close'' correct sample in the corpus. 
 %
-\toolname has a more general philosophy: \emph{similar errors have similar repairs}.
+In contrast, \toolname has a more general philosophy that 
+\emph{similar errors have similar repairs}: we extract 
+generic fix templates that can be applied to arbitrary 
+programs whose errors (BOAT vectors) are similar.
+%
+The \textsc{Tracer} system \cite{TRACER2018} is closest 
+in philosophy to ours, except that it focuses on single-line 
+compilation errors for C programs, where it shows that 
+NLP-based methods like sequence-to-sequence predicting 
+DNNs can effectively suggest repairs, \eg \verb+scanf("%d", a)+ 
+should be converted to \verb+scanf("%d", %a)+. 
+%
+We have found that \ocaml's relatively simple 
+\emph{syntactic} structure but rich \emph{type} 
+structure make token-level seq-to-seq methods 
+quite imprecise \footnote{the strategy of 
+\emph{deleting} offending statements 
+suffices to ``repair'' C but yields ill-typed 
+\ocaml} necessitating \toolname's higher-level 
+semantic features and (learned) repair templates.
 
 
+%
+% \textsc{Hercules} \citep{Saha_2019} uses version history to  
+% repair multiple program locations by using fault localization 
+% to rank error locations and then generating repairs for each 
+% location. 
+% %
+% However, it utilizes version history of a big codebase to find 
+% such repairs, and uses that history to produce repairs that 
+% modifies multiple program locations. 
+% %
+% \toolname attempts a different approach of multiple location
+% repairing, by considering each candidate error location as independent from one
+% another.
+% 
 %% While \textsc{Sarfgen} is still a data-driven approach it tries to
 %% search for matching programs on the fly, using \toolname's approach can be similarly
 %% seen as a per AST node embedding, which however we use in advance for training
@@ -72,13 +110,3 @@ require a ``close'' correct sample in the corpus.
 %% to the use of Integer Linear Programming, while \toolname's precomputation of
 %% fix-template models makes final repairs more robust.
 
-
-
-\textsc{Hercules} \citep{Saha_2019} is one of the few techniques that perform
-multi-hunk repairing, \ie repairing multiple program locations. It uses fault
-localization to rank error locations and generates repairs for each of them
-them. However, it utilizes version history of a big codebase to find such
-repairs, and uses that history to produce repairs that modifies multiple program
-locations. \toolname attempts a different approach of multiple location
-repairing, by considering each candidate error location as independent from one
-another.

@@ -20,7 +20,7 @@ easier to train precise models to predict fixes.
 \subsection{Representing User Fixes}
 \label{sec:templ-partition:lang}
 
-\paragraph{Repair Template Language.}
+\mypara{Repair Template Language.}
 \autoref{fig:rtl-syntax} describes our Repair Template Language, \repairLang,
 which is a lambda calculus with integers, booleans, pairs, and lists, that
 extends our core ML language \lang (\autoref{fig:ml-syntax}) with several
@@ -46,7 +46,7 @@ replacements of expressions with new candidate expressions at specific program
 locations. Therefore, we use candidate expressions over \repairLang to represent
 fix templates.
 
-\paragraph{Generalizing ASTs.}
+\mypara{Generalizing ASTs.}
 A \emph{Generic Abstract Syntax Tree} (GAST) is a term from \repairLang that
 represents many possible expressions from \lang. GASTs are abstract from
 standard ASTs over the core language \lang using the $\abstrsym$ function that
@@ -55,7 +55,7 @@ expression $e^{RTL}$ over \repairLang, \ie a GAST with all variables, literals
 and operators of $e^{ML}$ abstracted and all subexpressions starting at depth
 greater than $d$ pruned and replaced with holes $\_$.
 
-\paragraph{Example.}
+\mypara{Example.}
 Recall our example program \mbd in \autoref{fig:mulByDigit}.
 %
 The expression |[hd * i]| replaces |(hd * i)| in line 4, and hence, is the
@@ -85,7 +85,7 @@ We do so with an expression-level $\diffsym$~\citep{Lempsink2009-xf} function.
 Recall that we consider fixes to be replacements of expressions, and
 therefore we abstract these extracted changes as our fix templates.
 
-\paragraph{Contextual Repairs.}
+\mypara{Contextual Repairs.}
 %
 Following \cite{Felleisen92} let $\econtext{}$ be the \emph{context} that an
 expression $e$ appears in a program $p$, \ie the program $p$ with expression $e$
@@ -101,7 +101,7 @@ $\pbad = \context{\pbad}{\ebad}$ and $\context{\pbad}{\efix} = \pfix$.
 There may be several such expressions in a program, and $\diffsym$ returns all
 such changes.
 
-\paragraph{Examples.} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
+\mypara{Examples.} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
 $\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} = \eapp{g}{x}$.
 
 If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the context is
@@ -142,7 +142,7 @@ predictor.
 % \label{fig:similar}
 % \end{figure*}
 
-\paragraph{GAST Similarity.}
+\mypara{GAST Similarity.}
 % %
 % \autoref{fig:similar} formalizes a relation that states when
 % an expression $e_1$ is \emph{similar to} $e_2$  (written \simil{e_1}{e_2}).
@@ -157,7 +157,7 @@ one child is an abstract literal, and one child is an abstract variable.
         % $(e_{11}, e_{22})$ and $(e_{12}, e_{21})$ are pair-wise similar.
 
 % TODO: partition is novel? compare to previous work
-\paragraph{Partitioning.}
+\mypara{Partitioning.}
 GAST similarity defines a relation which is reflexive, symmetric, and transitive
 and thus an \emph{equivalence} relation. We can now define \emph{partitioning}
 as the computation of all possible \emph{equivalence classes} of our extracted

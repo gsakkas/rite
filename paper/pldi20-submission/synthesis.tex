@@ -12,7 +12,7 @@ program location.
 \subsection{Ranking Error Locations}
 \label{subsec:location-rank}
 
-\paragraph{Error Location Confidence}
+\mypara{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for each location in a program's
 type-error slice, our $\Model$ generates a confidence score $\Conf$ of that
 location containing an error that needs to be fixed, and our $\ModelT$ generates
@@ -25,7 +25,7 @@ considered in descending order of confidence. If the algorithm fails to
 synthesize a program that type-checks, the next location is considered, until it
 succeeds.
 
-\paragraph{Multiple Error Locations}
+\mypara{Multiple Error Locations}
 In practice, however, frequently more than one location needs to be repaired. We
 extend the above approach to synthesize programs with multiple error locations.
 
@@ -46,7 +46,7 @@ program locations in the ranked list of error locations.
 \subsection{Local Synthesis from Templates}
 \label{subsec:local-synthesis}
 
-\paragraph{Enumerative Program Synthesis}
+\mypara{Enumerative Program Synthesis}
 Our synthesis algorithm is a classic \emph{enumerative} program synthesis method
 guided by an input template. Enumerative synthesis searches all possible
 expressions over a language, starting from an empty program, until a high-level
@@ -65,7 +65,7 @@ for their final repair.
 
 \input{local-repair.tex}
 
-\paragraph{Generating Local Repairs with Templates}
+\mypara{Generating Local Repairs with Templates}
 Using our \textsc{Enumerate} method, we lazily generate local repairs $R$ for
 each subset of locations that is highest in confidence score. The
 \textsc{Enumerate} method starts to fill in a template $T$ for location $L$ of
@@ -92,4 +92,4 @@ depending on the level of feedback that is needed.
 % \subsection{Program Repair}
 % \label{subsec:repair}
 
-% \paragraph{Combining Error Localization and Local Repairs}
+% \mypara{Combining Error Localization and Local Repairs}

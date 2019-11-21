@@ -25,7 +25,7 @@ of a list by an integer. (bottom) The fixed version by the student.}
 \end{figure}
 
 
-\paragraph{The Problem.} Consider the program \mbd shown at the top of
+\mypara{The Problem.} Consider the program \mbd shown at the top of
 \autoref{fig:mulByDigit}, written by a student in an undergraduate Programming
 course. The program is meant to multiply all the numbers in a list with an
 integer digit. The student accidentally misuses the list append operator
@@ -43,7 +43,7 @@ in their programs to automatically and rapidly guide the novice to come up with
 candidate solutions like the one above.
 
 
-\paragraph{Solution: Analytic Program Repair.}
+\mypara{Solution: Analytic Program Repair.}
 %
 One approach is to view the search for candidate repairs
 as a synthesis problem: synthesize a (small) set of edits
@@ -98,7 +98,7 @@ easy for novices to understand them and they are expressive enough to represent
 fixes.
 
 
-\paragraph{Generic Abstract Syntax Trees.}
+\mypara{Generic Abstract Syntax Trees.}
 %
 We represent the different possible candidate expressions via abstract fix
 templates called \emph{Generic Abstract Syntax Trees} (GAST) which each
@@ -143,7 +143,7 @@ repairs.
 Fixes in our dataset are represented as the ASTs of the expressions that changed
 in the ill-typed programs and transformed the program to the correct solution.
 
-\paragraph{Interaction Traces.}
+\mypara{Interaction Traces.}
 Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
 and their fixed versions from \emph{interaction traces}. Usually students write
 several versions of their programs until they reach the correct solution for a
@@ -173,7 +173,7 @@ that is \emph{small enough} to automatically predict which template to apply to
 a given erroneous program, but nevertheless \emph{covers} most of the fixes that
 arise in practice.
 
-\paragraph{Partitioning the Fixes.} We learn a suitable small set of fix
+\mypara{Partitioning the Fixes.} We learn a suitable small set of fix
 templates by \emph{partitioning} all the templates obtained from our dataset,
 and then selecting a single GAST to represent the fix templates from each fix
 template set.
@@ -204,7 +204,7 @@ complexity of predicting the correct fix templates and error locations, we
 separate these problems and encode them into two distinct \emph{supervised
 classification} problems.
 
-\paragraph{Supervised Multi-Class Classification.}
+\mypara{Supervised Multi-Class Classification.}
 We propose using a \emph{supervised multi-class classification} problem for
 predicting fix templates. A \emph{supervised} learning problem is one where,
 given a labeled training set, the task is to learn a function that accurately
@@ -215,7 +215,7 @@ Therefore, we encode the task of learning a function that will map
 subexpressions of ill-typed programs to a small set of fix templates as a
 \emph{multi-class} classification (MCC) problem.
 
-\paragraph{Feature Extraction.} The machine learning models that we will train
+\mypara{Feature Extraction.} The machine learning models that we will train
 to solve our MCC problem expect datasets of labeled \emph{fixed-length vectors}
 as inputs. Therefore, we define a transformation of fix-labeled programs to
 fixed-length vectors. Similarly to \citep{Seidel:2017}, we define a set of
@@ -228,7 +228,7 @@ $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots, f_n(e_i)]$. This
 method is known as a \emph{bag-of-abstracted-terms} (BOAT) representation in
 previous work.
 
-\paragraph{Predicting Templates via MCC.}
+\mypara{Predicting Templates via MCC.}
 Our fix-labeled dataset can be updated so the labels represent the corresponding
 template that fixes each location, drawn from the minimal set of fix templates
 that were acquired through partitioning. We then train a \emph{Deep Neural
@@ -242,7 +242,7 @@ to synthesize repairs until our high-level goal is reached. Finally, exploiting
 recent advances in machine learning, we use deep and dense architectures
 \citep{Schmidhuber_2015} aiming for more accurate fix template predictions.
 
-\paragraph{Error Localization.} We view the problem of finding error locations
+\mypara{Error Localization.} We view the problem of finding error locations
 in a new program as a \emph{binary} classification problem. In contrast with the
 template prediction problem, we want to learn a function that maps a program's
 subexpressions to a binary output representing the presence of an error or not.
@@ -263,7 +263,7 @@ efficiency, our approach exploits the fix template predictions and a set of
 possible error locations to guide program synthesis. We then return a ranked
 list of \emph{minimal} repairs to users as feedback.
 
-\paragraph{Program Synthesis.} Given a set of locations and candidate templates for
+\mypara{Program Synthesis.} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of \emph{program synthesis}.
 For each program location, we search over all possible
 expressions in the language's grammar for a small set of candidate
@@ -271,7 +271,7 @@ expressions that match the fix template and make the program type-check.
 Expressions from the ill-typed program are also used in our synthesis algorithm
 to further prune the search space of candidate expressions.
 
-\paragraph{Synthesis for Multiple Locations.}
+\mypara{Synthesis for Multiple Locations.}
 It is often the case that more than one location needs to be fixed. Therefore,
 we do not only consider the ordered set of single error locations for synthesis,
 but rather its power set. For simplicity, we consider fixing different program
@@ -280,7 +280,7 @@ needs to be fixed is thus the product their individual confidence scores. This
 is unlike recent approaches to multi-hunk program repair (\eg,
 \citep{Saha_2019}), where program modifications depend on each other.
 
-\paragraph{Ranking Fixes.} Finally, we rank each solution by two metrics, the
+\mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work
 \citep{Lerner2007-dt, Wang_2018, Gulwani_2018} has used such metrics to consider
 minimal changes, i.e. changes that are as close as possible to the original
@@ -302,7 +302,7 @@ programs, so novice programmers are presented with more coherent feedback.
   \label{fig:repair}
   \end{figure}
 
-\paragraph{Example.} We see in \autoref{fig:repair} a minimal repair that our
+\mypara{Example.} We see in \autoref{fig:repair} a minimal repair that our
 method could return (|[$v_1$ * $v_2$]| in line 4), using the template discussed
 in \autoref{sec:overview:learn} to synthesize this solution. While this solution
 is not the highest-ranked that our implementation returns (which would be
