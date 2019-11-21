@@ -32,15 +32,15 @@ integer digit. The student accidentally misuses the list append operator
 (\texttt{@}), applying it to a number and a list rather than two lists.
 %
 Novice students who are still building a mental model of how the type checker
-works are often perplexed by the compiler's error message \cite{FIXME}. Hence a
-novice will often take a long time to arrive at a suitable fix, such as the one
-shown at the bottom of \autoref{fig:mulByDigit}, where the append operator is
+works are often perplexed by the compiler's error message \citep{Munson_2016}.
+Hence a novice will often take a long time to arrive at a suitable fix, such as
+the one shown at the bottom of \autoref{fig:mulByDigit}, where \texttt{@} is
 used with a singleton list containing the multiplication of the head \texttt{hd}
 and \texttt{i}.
 %
-Our goal is to use historical data of how previous programmers have fixed
-similar errors in their programs to automatically and rapidly guide the novice
-to come up with candidate solutions like the one above.
+Our goal is to use historical data of how programmers have fixed similar errors
+in their programs to automatically and rapidly guide the novice to come up with
+candidate solutions like the one above.
 
 
 \paragraph{Solution: Analytic Program Repair.}
@@ -94,33 +94,34 @@ Our notion of a fix is defined as a \emph{replacement} of an existing expression
 with a new \emph{candidate} expression at a specific program location. For
 example, the \mbd program is fixed by replacing |(hd * i)| with the candidate
 expression |[hd * i]| on line 4. We focus on AST-level replacements as it is
-easy for novices to understand them and they are expressive enough to represent fixes.
+easy for novices to understand them and they are expressive enough to represent
+fixes.
 
 
 \paragraph{Generic Abstract Syntax Trees.}
 %
 We represent the different possible candidate expressions via abstract fix
-templates called \emph{Generic Abstract Syntax Trees} (GAST) which each correspond to
-many possible candidate expressions.
+templates called \emph{Generic Abstract Syntax Trees} (GAST) which each
+corresponds to many possible candidate expressions.
 %
 GASTs are obtained from concrete ASTs in two steps.
 %
 First, we abstract concrete variable, function, and operator names.
 %
-Next, we prune these GASTs at a certain depth $d$ to keep only the top-level
-changes of the fix. Pruned sub-trees are replaced with \emph{holes}, which can
-represent \emph{any} possible expression in our language.
+Next, we prune GASTs at a certain depth $d$ to keep only the top-level changes
+of the fix. Pruned sub-trees are replaced with \emph{holes}, which can represent
+\emph{any} possible expression in our language.
 
 
 Together, these steps ensure that GASTs only contain information about a fix's
 \emph{structure} rather than the specific changes in variables and functions.
 %
-For example, the candidate expression |[hd * i]| in the \mbd example would be
-represented by the GAST of the expression |[_ $\oplus$ _]|, where variables |hd|
-and |i| are abstracted into holes (e.g. by pruning the GAST at a depth $d=2$)
-and |*| is represented by an abstract binary operator. Our GAST approach
-is somewhat similar to the template approach of FIXME, but we FIXME instead
-of FIXME~\cite{FIXME}.
+For example, the fix |[hd * i]| in the \mbd example would be represented by the
+GAST of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are
+abstracted into holes (e.g. by pruning the GAST at a depth $d=2$) and |*| is
+represented by an abstract binary operator. Our GAST approach is similar to
+\citep{Lerner2007-dt}, where AST-level modifications are used, but our proposed
+GASTs will represent more abstract fix schemas.
 
 
 \subsection{Acquiring a Fix-Labeled Training Set}
@@ -131,7 +132,7 @@ fixed versions~\citep[][]{Lerner2007-dt, Loncaric2016-uk}, or to manually create
 \emph{fix templates} that can yield \emph{repair
 patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
 %
-These approaches are hard to scale up to yield data sets suitable for machine
+These approaches are hard to scale up to yield datasets suitable for machine
 learning. Also, they do not discover the \emph{frequency} in practice of particular
 classes of novice mistakes and their fixes.
 %
@@ -141,31 +142,19 @@ repairs.
 %
 Fixes in our dataset are represented as the ASTs of the expressions that changed
 in the ill-typed programs and transformed the program to the correct solution.
-% and can be acquired via \emph{interaction traces}.
 
 \paragraph{Interaction Traces.}
 Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
 and their fixed versions from \emph{interaction traces}. Usually students write
 several versions of their programs until they reach the correct solution for a
-programming assignment. Previous work has used instrumented compilers to capture
-such sequences (or \emph{traces}) of student programs. \BC{This sentence about
-previous work is confusing - is it what you are doing as well, or is it in contrast?}
-The first type-correct
+programming assignment. An instrumented compiler is used to capture such
+sequences (or \emph{traces}) of student programs. The first type-correct
 solution in this sequence of program attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
-the dataset.
-% In our case, we used an existing dataset
-% ~\citep[][]{yunounderstand, Seidel:2017} of ill-typed \ocaml programs
-% \WRW{notes: this is the first thing you've written that has limited you to
-% OCaml only --- everything before this was generic}
-% \WRW{notes: why are you now talking about datasets in the algorithm
-% overview section? shouldn't this be more like ``we require a dataset that
-% has properties X, Y and Z'' and then later we can say ``for our evaluation,
-% we trained on this ocaml dataset''?}
-% and their fixes that were extracted using the aforementioned method.
-For each program pair, we then produce a \emph{diff} of the abstract syntax
-trees (ASTs), and assign as the dataset's fix labels, the \emph{smallest}
-sub-tree that changed between the correct and ill-typed attempt of the program.
+the dataset. For each program pair, we then produce a \emph{diff} of their
+abstract syntax trees (ASTs), and assign as the dataset's fix labels, the
+\emph{smallest} sub-tree that changed between the correct and ill-typed attempt
+of the program.
 
 
 \subsection{Learning Candidate Fix Templates}
@@ -174,7 +163,7 @@ sub-tree that changed between the correct and ill-typed attempt of the program.
 Each labeled program in our dataset contains a fix, which we abstract to a fix
 template. For example, in the \mbd program from \autoref{fig:mulByDigit} we get
 the fix candidate |[hd * i]| and hence the fix template |[_ $\oplus$ _]|.
-However, a large data set of fix-labeled programs, which may include many
+However, a large dataset of fix-labeled programs, which may include many
 diverse solutions, can introduce a huge set of fix templates, which can be
 inappropriate for predicting the correct one to be used for the final program
 repair.
@@ -185,7 +174,7 @@ a given erroneous program, but nevertheless \emph{covers} most of the fixes that
 arise in practice.
 
 \paragraph{Partitioning the Fixes.} We learn a suitable small set of fix
-templates by \emph{partitioning} all the templates obtained from our data set,
+templates by \emph{partitioning} all the templates obtained from our dataset,
 and then selecting a single GAST to represent the fix templates from each fix
 template set.
 %
@@ -199,9 +188,10 @@ Second, it allows for the principled removal of outliers that arise because
 student submissions often contain non-standard or idiosyncratic solutions that
 we do not wish to use for suggesting fixes.
 
-Unlike previous repair approaches that have used clustering to make fix
-templates (e.g.,~\cite{FIXME}), we partition our set of fix templates into
-\emph{equivalence classes} based on a similarity relation over fix templates.
+Unlike previous repair approaches that have used clustering to group together
+similar programs (e.g.,~\citep{Wang_2018, Gulwani_2018}), we partition our set of
+fix templates into their \emph{equivalence classes} based on a fix similarity
+relation.
 
 
 \subsection{Predicting Templates via Multi-class Classification}
@@ -212,71 +202,66 @@ templates for a given ill-typed program. These models will be used to generate
 candidate expressions as possible program fixes. In order to reduce the
 complexity of predicting the correct fix templates and error locations, we
 separate these problems and encode them into two distinct \emph{supervised
-classification} problems, exploiting recent advances in machine learning.
+classification} problems.
 
 \paragraph{Supervised Multi-Class Classification.}
 We propose using a \emph{supervised multi-class classification} problem for
-predicting fix templates. A \emph{supervised} learning problem is one
-where,
+predicting fix templates. A \emph{supervised} learning problem is one where,
 given a labeled training set, the task is to learn a function that accurately
 maps the inputs to output labels and generalizes to future inputs. In a
 \emph{classification} problem, the function we are trying to learn maps inputs
 to a discrete set of two or more output labels, called \emph{classes}.
-Therefore, learning a function that will map subexpressions of ill-typed
-programs to a small set of fix templates entails a \emph{multi-class}
-classification (MCC) problem~\cite{FIXME}.
+Therefore, we encode the task of learning a function that will map
+subexpressions of ill-typed programs to a small set of fix templates as a
+\emph{multi-class} classification (MCC) problem.
 
-\paragraph{Feature Extraction.} The machine learning models that we will train to
-solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
-inputs. Therefore, we define a transformation of fix-labeled programs to
-fixed-length vectors. Similarly to previous work ~\citep{Seidel:2017}, we define
-a set of feature extraction functions $f_1, \ldots, f_n$, that map program
-subexpressions to a numeric value (or just $\{0, 1\}$ to encode a boolean
-property). Given a set of feature extraction functions, we can represent a
-single program's AST as a set of fixed-length vectors by decomposing a program
-AST $e$ into a set of its constituent subexpressions $\{e_1, \ldots, e_m\}$ and
-then representing each $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots,
-f_n(e_i)]$. This method is known as a \emph{bag-of-abstracted-terms} (BOAT)
-representation in previous work.
+\paragraph{Feature Extraction.} The machine learning models that we will train
+to solve our MCC problem expect datasets of labeled \emph{fixed-length vectors}
+as inputs. Therefore, we define a transformation of fix-labeled programs to
+fixed-length vectors. Similarly to \citep{Seidel:2017}, we define a set of
+feature extraction functions $f_1, \ldots, f_n$, that map program subexpressions
+to a numeric value (or just $\{0, 1\}$ to encode a boolean property). Given a
+set of feature extraction functions, we can represent a single program's AST as
+a set of fixed-length vectors by decomposing the AST $e$ into a set of its
+constituent subexpressions $\{e_1, \ldots, e_m\}$ and then representing each
+$e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots, f_n(e_i)]$. This
+method is known as a \emph{bag-of-abstracted-terms} (BOAT) representation in
+previous work.
 
 \paragraph{Predicting Templates via MCC.}
-Our fix-labeled data set can be updated so the labels represent the
-corresponding template that fixes each location, drawn from the minimal set of
-fix templates that were acquired through partitioning. We then train a
-\emph{Deep Neural Network (DNN)} classifier on the updated template-labeled data
-set, a popular choice for classification problems.
+Our fix-labeled dataset can be updated so the labels represent the corresponding
+template that fixes each location, drawn from the minimal set of fix templates
+that were acquired through partitioning. We then train a \emph{Deep Neural
+Network (DNN)} classifier on the updated template-labeled data set.
 
 Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of
-each class being correct for a given input. This confidence score can be
-used to rank fix-template predictions for new programs and use them in that
-order to synthesize repairs until our high-level goal is reached. Finally, we
-used deep and dense architectures~\cite{FIXME} to give a better confidence
-to each template
-\WRW{notes: do these D\&D architectures give us better precision on
-the confidence value reported, or give us higher confidence overall?},
-aiming for a higher accuracy for template predictions.
+each class being correct for a given input. This confidence score can be used to
+rank fix-template predictions for new programs and use them in descending order
+to synthesize repairs until our high-level goal is reached. Finally, exploiting
+recent advances in machine learning, we use deep and dense architectures
+\citep{Schmidhuber_2015} aiming for more accurate fix template predictions.
 
-\paragraph{Error Localization.} We view the problem of finding error locations in a
-new program as a \emph{binary} classification problem. In contrast with the
+\paragraph{Error Localization.} We view the problem of finding error locations
+in a new program as a \emph{binary} classification problem. In contrast with the
 template prediction problem, we want to learn a function that maps a program's
 subexpressions to a binary output representing the presence of an error or not.
 Therefore, this problem is a equivalent to a MCC with only two classes and thus,
 we use similar deep architectures of neural networks. For each expression in a
-given program, the learned model outputs
-a confidence score representing how likely it is an error location
-that needs to be fixed. We exploit those scores to synthesize candidate
-expressions for each location in descending order of confidence. We use
-this approach, rather than standard fault localization, because FIXME.
+given program, the learned model outputs a confidence score representing how
+likely it is an error location that needs to be fixed. We exploit those scores
+to synthesize candidate expressions for each location in descending order of
+confidence.
+% We use this approach, rather than standard fault localization, because FIXME.
 
 \subsection{Synthesizing Feedback from Predicted Templates}
 \label{sec:overview:synthesis}
 
 Next, we utilize existing program synthesis techniques to \emph{synthesize}
-candidate expressions that will be used to provide feedback to users. For efficiency, our
-approach exploits the fix template predictions and a set of possible error
-locations to guide program synthesis. We then
-return a ranked list of \emph{minimal} repairs to users as feedback.
+candidate expressions that will be used to provide feedback to users. For
+efficiency, our approach exploits the fix template predictions and a set of
+possible error locations to guide program synthesis. We then return a ranked
+list of \emph{minimal} repairs to users as feedback.
 
 \paragraph{Program Synthesis.} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of \emph{program synthesis}.
@@ -287,25 +272,24 @@ Expressions from the ill-typed program are also used in our synthesis algorithm
 to further prune the search space of candidate expressions.
 
 \paragraph{Synthesis for Multiple Locations.}
-It is often the case that more than one location
-needs to be fixed. Therefore, we do not only consider the ordered set
-of single error locations for synthesis, but rather its power set.
-For simplicity we treat the probabilities that different locations need to be fixed
-as independent; the probability we assign that a set of locations needs to be fixed
-is thus the product their individual confidence scores. This is unlike
-recent approaches to multi-hunk program repair, such as
-Hercules~\cite{FIXME}, in that we FIXME.
+It is often the case that more than one location needs to be fixed. Therefore,
+we do not only consider the ordered set of single error locations for synthesis,
+but rather its power set. For simplicity, we consider fixing different program
+locations as independent; the probability we assign that a set of locations
+needs to be fixed is thus the product their individual confidence scores. This
+is unlike recent approaches to multi-hunk program repair (\eg,
+\citep{Saha_2019}), where program modifications depend on each other.
 
 \paragraph{Ranking Fixes.} Finally, we rank each solution by two metrics, the
-\emph{tree-edit distance} and the \emph{string-edit} distance. Previous work has
-used those metrics to consider minimal changes, i.e. changes that are as close
-as possible to the original programs, so novice programmers can better
-understand feedback~\cite{FIXME}. However, different metrics may yield better
-fixes, as we discuss later in Section FIXME. Some more experienced programmers
-might have in mind what \emph{type} they want their functions to be. We thus
-provide the user with the option to give the intended type for the program's
-functions we are trying to repair. In our evaluation, we acquire the intended
-types from the fixed versions of the dataset (see Section FIXME).
+\emph{tree-edit distance} and the \emph{string-edit} distance. Previous work
+\citep{Lerner2007-dt, Wang_2018, Gulwani_2018} has used such metrics to consider
+minimal changes, i.e. changes that are as close as possible to the original
+programs, so novice programmers are presented with more coherent feedback.
+% Additionally, more experienced programmers might have in mind what \emph{type}
+% they want their functions to be. We thus provide the user with the option to
+% give the intended type for the program's functions we are trying to repair. In
+% our evaluation, we acquire the intended types from the fixed versions of the
+% dataset (see \autoref{sec:synthesis}).
 
 \begin{figure}[ht]
   \begin{ecode}
@@ -318,15 +302,14 @@ types from the fixed versions of the dataset (see Section FIXME).
   \label{fig:repair}
   \end{figure}
 
-\paragraph{Example.} In \autoref{fig:repair} we can see a minimal repair that
-our method could return (|[$v_1$ * $v_2$]| in line 4), using the template
-discussed in \autoref{sec:overview:learn} to synthesize this solution. While
-this solution is not the highest-ranked that our implementation returns (which
-would be identical to the human solution), it demonstrates relevant aspects of
-the synthesizer. In particular, this solution is very close to the human
-solution, but it still has some abstracted variables, $v_1$ and $v_2$. Our
-algorithm suggests to the user that they can replace the two abstracted
-variables with two different variables in order to obtain the correct program.
-We hypothesize that such solutions produced by our algorithm can provide
-valuable feedback to novices, and we investigate that claim empirically in
-Section FIXME.
+\paragraph{Example.} We see in \autoref{fig:repair} a minimal repair that our
+method could return (|[$v_1$ * $v_2$]| in line 4), using the template discussed
+in \autoref{sec:overview:learn} to synthesize this solution. While this solution
+is not the highest-ranked that our implementation returns (which would be
+identical to the human solution), it demonstrates relevant aspects of the
+synthesizer. In particular, this solution has some abstracted variables, $v_1$
+and $v_2$. Our algorithm suggests to the user that they can replace the two
+variables with two distinct variables and insert the whole expression into a
+list, in order to obtain the correct program. We hypothesize that such solutions
+produced by our algorithm can provide valuable feedback to novices, and we
+investigate that claim empirically in \autoref{sec:eval:useful}.
