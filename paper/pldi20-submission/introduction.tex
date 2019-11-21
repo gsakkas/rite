@@ -3,7 +3,7 @@
 
 % The problem
 %
-Languages with Hindley-Milner style, unification based inference
+Languages with Hindley-Milner style, unification-based inference
 offer the benefits of static typing with minimal annotation overhead.
 The catch, however, is that programmers must first ascend the steep
 learning curve associated with understanding the \emph{error messages}
@@ -58,7 +58,7 @@ used to provide feedback. Programs with static type errors
 have no execution traces.
 %
 More importantly, we desire a means to generate feedback
-for \emph{new} programs that novices write and, hence
+for \emph{new} programs that novices write, and hence
 cannot rely on matching against some (existing) correct
 program.
 
@@ -82,7 +82,7 @@ and their fixed versions to:
     training set into a representative set of templates;
 %
 (2)~\emph{predict} the appropriate template from a given error,
-    by training multi-class classifiers on the repairs templates
+    by training multi-class classifiers on the repair templates
     used in the training set;
 %
 (3)~\emph{synthesize} a concrete repair from the template
@@ -91,7 +91,7 @@ and their fixed versions to:
 %
 thereby, generating a fix from a candidate program.
 %
-Crucially, we show how to perform the crucial abstraction
+Critically, we show how to perform the crucial abstraction
 from a particular \emph{program} to an abstract \emph{error}
 by representing programs via \emph{bag-of-abstracted-terms} (BOAT)
 \ie as numeric vectors of syntactic and semantic features \cite{Seidel2017-ko}.

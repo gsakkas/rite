@@ -210,34 +210,34 @@
 
 
 \begin{abstract}
-We introduce Analytic Program Repair, a data-driven 
-strategy for providing feedback for type-errors via 
-repairs for the erroneous program. 
+We introduce Analytic Program Repair, a data-driven
+strategy for providing feedback for type-errors via
+repairs for the erroneous program.
 %
-Our strategy is based on 
+Our strategy is based on
 insight that similar errors have similar repairs.
 Thus, we show how to use a training dataset of
-pairs of ill-typed programs  and their fixed versions to: 
+pairs of ill-typed programs  and their fixed versions to:
 %
-(1)~\emph{learn} a collection of candidate repair templates 
-    by abstracting and partitioning the edits made in the 
+(1)~\emph{learn} a collection of candidate repair templates
+    by abstracting and partitioning the edits made in the
     training set into a representative set of templates;
 %
-(2)~\emph{predict} the appropriate template from a given error, 
-    by training multi-class classifiers on the repairs templates 
-    used in the training set; 
+(2)~\emph{predict} the appropriate template from a given error,
+    by training multi-class classifiers on the repair templates
+    used in the training set;
 %
-(3)~\emph{synthesize} a concrete repair from the template 
-   by enumerating and ranking correct (\eg well-typed) 
+(3)~\emph{synthesize} a concrete repair from the template
+   by enumerating and ranking correct (\eg well-typed)
    terms matching the predicted template.
 %
-We have implemented our approach in \toolname: a type error reporting 
-tool for \ocaml programs, and we present an evaluation of the 
+We have implemented our approach in \toolname: a type error reporting
+tool for \ocaml programs. We present an evaluation of the
 \emph{accuracy} and \emph{efficiency} of \toolname on a corpus
-of 4,500 ill-typed \ocaml programs drawn from two instances of an 
+of 4,500 ill-typed \ocaml programs drawn from two instances of an
 introductory programming course, and a user-study of the \emph{quality}
-of the generated error messages that shows the locations and 
-final repair quality to be better than the state-of-the-art tool 
+of the generated error messages that shows the locations and
+final repair quality to be better than the state-of-the-art tool
 in a statistically-significant manner.
 \end{abstract}
 
