@@ -72,7 +72,7 @@ Throughout, we use \SPRING as a training set and \FALL as a test set.
 %
 \toolname's template prediction
 uses a multi-layer neural network \dnn based
-classifier that utilizes three fully-connected
+classifier with three fully-connected
 hidden layers of 512 neurons. The neurons use
 rectified linear units (ReLU) as their activation
 function \citep{Nair2010-xg}.
@@ -101,11 +101,11 @@ the user's actual fix.
 
 \mypara{Baselines}
 %
-We compare \toolname's \dnn based predictor against two baseline
+We compare \toolname's \dnn-based predictor against two baseline
 classifiers: a \random classifier that returns
-for each location it is presented, a template
+templates
 chosen uniformly at random from the 50 templates
-learned from the \SPRING training dataset and
+learned from the \SPRING training dataset, and
 a \popular classifier that returns the most
 popular templates in the training set in
 decreasing order.
@@ -126,7 +126,7 @@ Our \dnn classifier significantly outperforms these naive
 classifiers, ranging from \DnnTopOne\% Top-1 accuracy to
 \DnnTopSix\% Top-6 accuracy.
 %
-Interestingly, with only \dnn's first prediction, one
+In fact, even with only \dnn's first prediction one
 outperforms top 6 predictions of both \random and \popular.
 %
 The \random classifier's low performance is as expected.
@@ -189,7 +189,7 @@ repair template predictions.
 To measure efficiency, we give the synthesizer \emph{60s} to
 compute a repair and timeout otherwise. (In general the procedure
 is undecidable, and we conjecture that a longer timeout will diminish
-the practical usability for novices.
+the practical usability for novices.)
 %
 In \autoref{tab:rite_naive}, we evaluate the efficiecy of \toolname
 by comparing it against a baseline \naive implementation that, given
@@ -202,7 +202,7 @@ column how many returned a type-correct solution.
 %
 We observe that using predicted templates for synthesis allows
 \toolname to generate type-correct repairs for almost 85\% of
-the programs, which is nearly 10 points hire than the \naive
+the programs, which is nearly 10 points higher than the \naive
 baseline. Also, for the programs that are completed within
 the time limit, \toolname needs an average of $8.81$ seconds
 to repair an erroneous program, while \naive takes
