@@ -45,17 +45,17 @@ to come up with candidate solutions like the one above.
 
 \paragraph{Solution: Analytic Program Repair.}
 %
-One approach is to view the search for candidate repairs 
-as a synthesis problem: synthesize a (small) set of edits 
+One approach is to view the search for candidate repairs
+as a synthesis problem: synthesize a (small) set of edits
 to the program that yields a good (\eg type-correct) one.
 %
-To ensure that synthesis is tractable, the search must be 
-carefully restricted to a relatively small, manually constructed 
-``repair model'' that may not include the ``right'' fixes for 
+To ensure that synthesis is tractable, the search must be
+carefully restricted to a relatively small, manually constructed
+``repair model'' that may not include the ``right'' fixes for
 an erroneous program.
 %
-In this work, we present a novel strategy called 
-\emph{Analytic Program Repair} which breaks the 
+In this work, we present a novel strategy called
+\emph{Analytic Program Repair} which breaks the
 problem into three parts:
 %
 First, \emph{learn} a set of widely used \emph{fix templates}.
@@ -64,7 +64,7 @@ Second, \emph{predict}, for each erroneous program, the correct fix template to 
 %
 Third, \emph{synthesize} candidate repairs from the predicted template.
 
-In the remainder of this section, we give a high-level overview 
+In the remainder of this section, we give a high-level overview
 of our approach by describing how to:
 
 \begin{enumerate}
@@ -94,9 +94,7 @@ Our notion of a fix is defined as a \emph{replacement} of an existing expression
 with a new \emph{candidate} expression at a specific program location. For
 example, the \mbd program is fixed by replacing |(hd * i)| with the candidate
 expression |[hd * i]| on line 4. We focus on AST-level replacements as it is
-easy for novices to understand them and they are expressive enough to represent fix
-templates. \BC{are they expressive enough to represent *fixes*? I ultimately
-don't care about templates}
+easy for novices to understand them and they are expressive enough to represent fixes.
 
 
 \paragraph{Generic Abstract Syntax Trees.}
@@ -133,10 +131,9 @@ fixed versions~\citep[][]{Lerner2007-dt, Loncaric2016-uk}, or to manually create
 \emph{fix templates} that can yield \emph{repair
 patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
 %
-This approach is hard to scale up to yield data sets suitable for machine
-learning. Worse, manual inspection misses the \emph{frequency} of particular
-classes of novice mistakes and their fixes. \BC{why? if I'm manually inspecting
-anyway I can totally count how often things happen}
+These approaches are hard to scale up to yield data sets suitable for machine
+learning. Also, they do not discover the \emph{frequency} in practice of particular
+classes of novice mistakes and their fixes.
 %
 In contrast, we show that such fix templates can be \emph{learned} from a large,
 automatically constructed training set of ill-typed programs labeled with their
