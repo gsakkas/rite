@@ -3,18 +3,20 @@
 
 \lstMakeShortInline[mathescape=true]{|}
 
-We have implemented analytic program repair in \toolname: a system for
+We have implemented analytic program repair in \toolname: a system for 
 repairing type errors for a purely functional subset of \ocaml. Next,
-we describe our implementation and an evaluation that addresses three
+we describe our implementation and an evaluation that addresses three 
 questions:
 
 \begin{itemize}
-    \item \textbf{RQ1}: How \emph{accurate} are \toolname's predicted repairs?
-                        (\S~\ref{sec:eval:accuracy})
+    \item \textbf{RQ1}: How \emph{accurate} are \toolname's predicted repairs? 
+                        (\S~\ref{sec:eval:accuracy}) 
     \item \textbf{RQ2}: How \emph{efficiently} can \toolname synthesize fixes?
-                        (\S~\ref{sec:eval:efficiency})
-    \item \textbf{RQ3}: How \emph{useful} are \toolname's error messages?
-                        (\S~\ref{sec:eval:useful})
+                        (\S~\ref{sec:eval:efficiency}) 
+    \item \textbf{RQ3}: How \emph{useful} are \toolname's error messages? 
+                        (\S~\ref{sec:eval:useful}) 
+    \item \textbf{RQ4}: How \emph{precise} is \toolname's template strategy?
+
 \end{itemize}
 
 % \subsection{Implementation} \label{sec:eval:gen_method}
@@ -31,54 +33,52 @@ higher-order functions and (polymorphic) algebraic data types.
 
 \mypara{Feature Extraction}
 %
-\toolname represents programs with BOAT vectors over
-a set of 416 features from each subexpression in a
-program, including:
+\toolname represents programs with BOAT vectors over 
+a set of 416 features from each sub-expression in a 
+program, including: 
+
+45 local syntactic features.
 %
-\begin{itemize}
-\item 45 local syntactic features.
-%
-\item 315 contextual syntactic features. For each subexpression we
-extract the local syntactic features of its first 4
+315 contextual syntactic features. For each subexpression we
+additionally extract the local syntactic features of its first 4
 (left-to-right) children. In addition, we extract those features for its
 ancestors, starting from its parent and going up to two more parent nodes.
     % If an expression does not have a ancestor or children, these features will
     % simply be disabled. If an expression has more than four children, the
     % classifiers will receive no information about the additional children.
     %
-\item 88 typing features. We support |int|s, |float|s, |char|s, |string|s, and
+88 typing features. We support |int|s, |float|s, |char|s, |string|s, and
     the user-defined |expr|. These features are extracted for each
-    subexpression and its context.
-%
-\item 1 feature denoting the size of each subexpression.
-\end{itemize}
+    sub-expression and its context.
+% 
+1 feature denoting the size of each subexpression.
 
 \mypara{Dataset Cleaning}
 %
-We extract fixes as expression replacements over a program pair using \diffsym.
-A disadvantage of using \diffsym s with this dataset is that some students
+We extract fixes as expressions replacements over a program pair using \diffsym.
+A disadvantage of using \diffsym s with this dataset is that some students may have
 made many, potentially unrelated, changes between compilations; at some point
 the ``fix'' becomes a ``rewrite''. These rewrites can lead to
 meaningless fix templates and error locations. We discard such outliers when the
 fraction of subexpressions that have changed in a program is more than one
 standard deviation above the mean, establishing a diff threshold of 40\%. We
-also discard programs that have changes in 5 or more locations; even
-state-of-the-art multi-location repair techniques can't reproduce such fixes
-\citep{Saha_2019}. The discarded pairs account for roughly 32\% of each
+also discard programs that have changes in 5 or more locations. Even
+state-of-the-art multi-location repair techniques can't reproduce such ``fixes''
+\citep{Saha_2019}. The discarded changes account for roughly 32\% of each
 dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL.
 Throughout, we use \SPRING as a training set and \FALL as a test set.
 
 \mypara{\dnn based Classifier}
 %
-\toolname's template prediction
-uses a multi-layer neural network \dnn based
-classifier with three fully-connected
+\toolname's template prediction 
+uses a multi-layer neural network \dnn based 
+classifier with three fully-connected 
 hidden layers of 512 neurons. The neurons use
-rectified linear units (ReLU) as their activation
+rectified linear units (ReLU) as their activation 
 function \citep{Nair2010-xg}.
 %
-The \dnn was trained using \emph{early stopping}
-\cite{Hastie2009-bn}:
+The \dnn was trained using \emph{early stopping} 
+\cite{Hastie2009-bn}: 
 training is stopped when the accuracy on a distinct
 small part of the training set is not improved after
 a certain amount of epochs (5 epochs, in our implementation).
@@ -93,50 +93,50 @@ a variant of stochastic gradient descent that converges faster.
 \label{sec:eval:accuracy}
 
 Most developers will consider around five or six suggestions before
-falling back to manual debugging \citep{Kochhar2016-oc}.
+falling back to manual debugging \citep{Kochhar2016-oc}. 
 %
-Therefore, we consider \toolname's accuracy up to the \emph{top six}
-fix template prediction, \ie predicted fix templates that represent
-the user's actual fix.
+Therefore, we consider \toolname's accuracy up to the \emph{top six} 
+fix template prediction, \ie predicted fix templates that represent 
+the user's actual fix. 
 
 \mypara{Baselines}
 %
-We compare \toolname's \dnn-based predictor against two baseline
-classifiers: a \random classifier that returns
-templates
-chosen uniformly at random from the 50 templates
-learned from the \SPRING training dataset, and
-a \popular classifier that returns the most
-popular templates in the training set in
-decreasing order.
+We compare \toolname's \dnn-based predictor against two baseline 
+classifiers: a \random classifier that returns 
+templates 
+chosen uniformly at random from the 50 templates 
+learned from the \SPRING training dataset, and 
+a \popular classifier that returns the most 
+popular templates in the training set in 
+decreasing order. 
 
 \mypara{Results: Accuracy of Prediction}
 %
 \autoref{fig:accuracy-results} shows the accuracy results of our template
 prediction experiments. The y-axis describes the fraction of \emph{erroneous}
-sub-terms (locations) for which the actual repair was one of the top-K predicted
+sub-terms (locations) for which the actual repair was one of the top-K predicted 
 repairs.
 %
-The naive baseline of selecting templates at random achieves
-\RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while
+The naive baseline of selecting templates at random achieves 
+\RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while 
 the \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
 (\PopularTopSix\% Top-6).
 %
-Our \dnn classifier significantly outperforms these naive
-classifiers, ranging from \DnnTopOne\% Top-1 accuracy to
-\DnnTopSix\% Top-6 accuracy.
+Our \dnn classifier significantly outperforms these naive 
+classifiers, ranging from \DnnTopOne\% Top-1 accuracy to 
+\DnnTopSix\% Top-6 accuracy. 
 %
 In fact, even with only \dnn's first prediction one
 outperforms top 6 predictions of both \random and \popular.
 %
 The \random classifier's low performance is as expected.
 %
-The \popular classifier performs better: some homework assignments
-were shared between \SPRING and \FALL quarters and, while different
+The \popular classifier performs better: some homework assignments 
+were shared between \SPRING and \FALL quarters and, while different 
 groups of students solved these problems for each quarter, the novice
 mistakes that they made seem to have a pattern. Thus, the most
-\emph{popular ``fixes''} (and therefore the relevant templates)
-that were applied to \SPRING, are also popular in \FALL.
+\emph{popular ``fixes''} (and therefore the relevant templates) 
+that were applied to \SPRING, are also popular in \FALL. 
 
 \input{evaluation-accuracy-graph}
 
@@ -151,27 +151,27 @@ that were applied to \SPRING, are also popular in \FALL.
 
 \mypara{Results: Template ``Confusion''}
 %
-We also compute the \emph{confusion matrix} of the each location's
-top prediction, to present what templates our models usually mix
-with each other and see if they generalize well between different
-groups of solutions.
+We also compute the \emph{confusion matrix} of the each location's 
+top prediction, to present what templates our models usually mix 
+with each other and see if they generalize well between different 
+groups of solutions. 
 %
-\autoref{fig:conf-matrix} shows the confusion matrix of the
-top 30 templates that were acquired from the training set
+\autoref{fig:conf-matrix} shows the confusion matrix of the 
+top 30 templates that were acquired from the training set 
 and were tested on the \FALL dataset.
 %
-We observe that most of the templates are predicted correctly
-and only a few of them are often mis-predicted for another template.
+We observe that most of the templates are predicted correctly 
+and only a few of them are often mis-predicted for another template. 
 %
-For example, we see that programs that would require template 20
+For example, we see that programs that would require template 20 
 to be fixed almost always are mis-predicted with template 11.
 
 \GS{show those two templates, both ``let''s with some ``tuple'' in their ASTs}
 
 \begin{framed}
-  \noindent \toolname's learns correlations between program features and repair
+  \noindent \toolname's learns correlations between program features and repair 
   templates, yielding almost \emph{2x higher} accuracy than the baseline;
-  by abstracting programs into features, \toolname is able
+  by abstracting programs into features, \toolname is able 
   to \emph{generalize} across years and different kinds of programs.
 \end{framed}
 
@@ -180,40 +180,40 @@ to be fixed almost always are mis-predicted with template 11.
 \label{sec:eval:efficiency}
 \label{subsec:eval:man_rep_qual_eval}
 
-Next we evaluate the efficiency of \toolname by measuring how many
+Next we evaluate the efficiency of \toolname by measuring how many 
 programs it is able to generate a (well-typed) repair for.
 %
-Recall that the repair synthesis algorithm is guided by the
+Recall that the repair synthesis algorithm is guided by the 
 repair template predictions.
 %
-To measure efficiency, we give the synthesizer \emph{60s} to
-compute a repair and timeout otherwise. (In general the procedure
-is undecidable, and we conjecture that a longer timeout will diminish
+To measure efficiency, we give the synthesizer \emph{60s} to 
+compute a repair and timeout otherwise. (In general the procedure 
+is undecidable, and we conjecture that a longer timeout will diminish 
 the practical usability for novices.)
 %
 In \autoref{tab:rite_naive}, we evaluate the efficiecy of \toolname
-by comparing it against a baseline \naive implementation that, given
-the predicted fix location, attempts to synthesize a repair from the
+by comparing it against a baseline \naive implementation that, given 
+the predicted fix location, attempts to synthesize a repair from the 
 trivial ``hole'' template $\_$.
 
-The first column of \autoref{tab:rite_naive} shows how many
-programs were completed within the time limit, while the second
-column how many returned a type-correct solution.
+The first column of \autoref{tab:rite_naive} shows how many 
+programs were completed within the time limit, while the second 
+column how many returned a type-correct solution. 
 %
-We observe that using predicted templates for synthesis allows
-\toolname to generate type-correct repairs for almost 85\% of
-the programs, which is nearly 10 points higher than the \naive
-baseline. Also, for the programs that are completed within
-the time limit, \toolname needs an average of $8.81$ seconds
-to repair an erroneous program, while \naive takes
+We observe that using predicted templates for synthesis allows 
+\toolname to generate type-correct repairs for almost 85\% of 
+the programs, which is nearly 10 points higher than the \naive 
+baseline. Also, for the programs that are completed within 
+the time limit, \toolname needs an average of $8.81$ seconds 
+to repair an erroneous program, while \naive takes 
 \textbf{33\%} longer.
 
 \begin{framed}
-  \noindent \toolname can generate type-correct repairs
-  for the vast majority of ill-typed programs in under
+  \noindent \toolname can generate type-correct repairs 
+  for the vast majority of ill-typed programs in under 
   \RJ{XXX}.
 \end{framed}
-
+  
 % The 11.85\% of the programs that fail to be repaired within that amount of time
 % fall in the case of the combined failure of our predictive models to give high
 % confidence scores to the correct locations and templates, thus making synthesis
@@ -241,23 +241,23 @@ to repair an erroneous program, while \naive takes
 \subsection{Evaluation of Usefulness}
 \label{sec:eval:useful}
 
-Finally, the ultimate proof of the pudding is in whether the repair-based
+Finally, the ultimate proof of the pudding is in whether the repair-based 
 error messages generated by \toolname were actually useful to novices.
 %
 To assess the quality of \toolname's repairs, we conducted an online human
-study with 29 participants.
+study with 29 participants. 
 %
-Each participant was asked to evaluate the quality of the program fixes
-and their locations against a state-of-the-art baseline
-(\seminal ~\citep{Lerner2007-dt}).
+Each participant was asked to evaluate the quality of the program fixes 
+and their locations against a state-of-the-art baseline 
+(\seminal ~\citep{Lerner2007-dt}). 
 %
 For each program, beyond the two repairs, participants were presented
-with the original ill-typed program, along with the standard \ocaml
-compiler's error message and a short description of what the original
-author of the program intended it to do.
+with the original ill-typed program, along with the standard \ocaml 
+compiler's error message and a short description of what the original 
+author of the program intended it to do. 
 %
-From this study, we found that both the edit locations and final
-repairs produced by \toolname were better than those produced by
+From this study, we found that both the edit locations and final 
+repairs produced by \toolname were better than those produced by 
 \seminal~\citep{Lerner2006-pj, Lerner2007-dt}, a state-of-the-art
 \ocaml repair tool, in a statistically significant manner.
 
@@ -295,29 +295,29 @@ for \toolname and \seminal generated repairs.
 \mypara{Results}
 %
 In a statistically significant manner, humans perceive that
-\toolname's fault localization and final repairs are both
-of higher quality than those produced by \seminal ($p=0.030$
-and $p=0.024$ respectively)~\footnote{All tests for statistical
+\toolname's fault localization and final repairs are both 
+of higher quality than those produced by \seminal ($p=0.030$ 
+and $p=0.024$ respectively)~\footnote{All tests for statistical 
 significance used the Wilcoxon signed-rank test.}.
 %
 Regarding fault localization, we find that humans agreed
-with \toolname-identified edit locations 81.6\% of the time
-but only agreed with those of \seminal only 74.0\% of the time.
+with \toolname-identified edit locations 81.6\% of the time 
+but only agreed with those of \seminal only 74.0\% of the time. 
 %
 % This 10\% increase is important because \ME{You should explain why this matters.}
 %
 As for the final repair, humans also prefer \toolname's patches
-to those produced by \seminal. Specifically, \toolname's repairs
-achieved an average quality rating of 2.41/5 while \seminal's
+to those produced by \seminal. Specifically, \toolname's repairs 
+achieved an average quality rating of 2.41/5 while \seminal's 
 repairs had an average rating of only 2.11/5, a 14\% increase ($p=0.030$),
 showing a statistically significant improvement over \seminal.
 %
-This improvement shown by our data-driven method is especially
-significant because \seminal incorporates several expert-guided
-heuristics for improving the quality of error messages by biasing
-its reports towards simpler and more useful ones.
+This improvement shown by our data-driven method is especially 
+significant because \seminal incorporates several expert-guided 
+heuristics for improving the quality of error messages by biasing 
+its reports towards simpler and more useful ones. 
 %
-Thus, our results demonstrate that data can be an unreasonably
+Thus, our results demonstrate that data can be an unreasonably 
 effective tool in the quest for better error messages.
 
 % Indicate that 15\% better is still very
@@ -453,8 +453,5 @@ does this.
  by \seminal, a state-of-the-art \ocaml repair tool in a
  statistically-significant manner.
 \end{framed}
-
-
-
 
 % FIXME: Maybe add a paragraph here on qualitative results
