@@ -254,7 +254,7 @@ to synthesize candidate expressions for each location in descending order of
 confidence.
 % We use this approach, rather than standard fault localization, because FIXME.
 
-\subsection{Synthesizing Feedback from Predicted Templates}
+\subsection{Synthesizing Feedback from Templates}
 \label{sec:overview:synthesis}
 
 Next, we utilize existing program synthesis techniques to \emph{synthesize}
@@ -268,8 +268,8 @@ those locations, we are trying to solve a problem of \emph{program synthesis}.
 For each program location, we search over all possible
 expressions in the language's grammar for a small set of candidate
 expressions that match the fix template and make the program type-check.
-Expressions from the ill-typed program are also used in our synthesis algorithm
-to further prune the search space of candidate expressions.
+Expressions from the ill-typed program are also used during synthesis 
+to prune the search space of candidate expressions.
 
 \mypara{Synthesis for Multiple Locations.}
 It is often the case that more than one location needs to be fixed. Therefore,
@@ -277,8 +277,8 @@ we do not only consider the ordered set of single error locations for synthesis,
 but rather its power set. For simplicity, we consider fixing different program
 locations as independent; the probability we assign that a set of locations
 needs to be fixed is thus the product their individual confidence scores. This
-is unlike recent approaches to multi-hunk program repair (\eg,
-\citep{Saha_2019}), where program modifications depend on each other.
+is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019} 
+where modifications depend on each other.
 
 \mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work
