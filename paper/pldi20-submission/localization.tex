@@ -49,7 +49,7 @@ convert programs to feature vectors.
 We choose to model a program as a \emph{set} of feature vectors, where each
 element corresponds an expression in the program. Thus, given the |sumList|
 program in \autoref{fig:sumList} we would first split it into its constituent
-sub-expressions and then transform each sub-expression into a single feature
+subexpressions and then transform each subexpression into a single feature
 vector. We group the features into five categories, using \autoref{tab:sumList}
 as a running example of the feature extraction process.
 
@@ -81,7 +81,7 @@ similar to the \emph{n-grams} used in linguistic models
 
 \paragraph{Expression size}
 We also propose a feature representing the \emph{size} of each expression, \ie
-how many sub-expressions does it contain? For example, the \ExprSize feature in
+how many subexpressions does it contain? For example, the \ExprSize feature in
 \autoref{tab:sumList} is set to three for the expression |sumList tl| as it
 contains three expressions: the two variables and the application itself. This
 allows the model to learn that, \eg, expressions closer to the leaves are more
