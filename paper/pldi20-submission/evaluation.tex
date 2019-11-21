@@ -15,7 +15,7 @@ questions:
                         (\S~\ref{sec:eval:efficiency}) 
     \item \textbf{RQ3}: How \emph{useful} are \toolname's error messages? 
                         (\S~\ref{sec:eval:useful}) 
-    \item \textbf{RQ4}: How \emph{precise} is \toolname's template strategy?
+    \item \textbf{RQ4}: How \emph{precise} are \toolname's template-directed fixes?
 
 \end{itemize}
 
@@ -88,7 +88,7 @@ We set the maximum number of epochs to 200.
 We used the \textsc{Adam} optimizer \citep{Kingma2014-ng},
 a variant of stochastic gradient descent that converges faster.
 
-\subsection{Evaluation of Accuracy}
+\subsection{RQ1: Accuracy}
 
 \label{sec:eval:accuracy}
 
@@ -176,7 +176,7 @@ to be fixed almost always are mis-predicted with template 11.
 \end{framed}
 
 
-\subsection{Evaluation of Efficiency}
+\subsection{RQ2: Efficiency}
 \label{sec:eval:efficiency}
 \label{subsec:eval:man_rep_qual_eval}
 
@@ -238,7 +238,7 @@ to repair an erroneous program, while \naive takes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Evaluation of Usefulness}
+\subsection{RQ3: Usefulness}
 \label{sec:eval:useful}
 
 Finally, the ultimate proof of the pudding is in whether the repair-based 
@@ -270,7 +270,7 @@ comprehensible bug descriptions for, at least 5 / 10 stimuli. The study took aro
 25 minutes to complete. For compensation, participants had the option to enter a
 drawing for an Amazon Echo voice assistant. In total, there were
 29 valid participants.
-
+%
 To create the stimuli, a corpus of 21 buggy programs were randomly selected from
 1834 type-correct synthesized programs in our dataset. From this corpus, each
 participant was then shown 10 randomly-selected programs. Along with each buggy
@@ -311,141 +311,67 @@ to those produced by \seminal. Specifically, \toolname's repairs
 achieved an average quality rating of 2.41/5 while \seminal's 
 repairs had an average rating of only 2.11/5, a 14\% increase ($p=0.030$),
 showing a statistically significant improvement over \seminal.
-%
-This improvement shown by our data-driven method is especially 
-significant because \seminal incorporates several expert-guided 
-heuristics for improving the quality of error messages by biasing 
-its reports towards simpler and more useful ones. 
-%
-Thus, our results demonstrate that data can be an unreasonably 
-effective tool in the quest for better error messages.
-
-% Indicate that 15\% better is still very
-% useful for students, perhaps by citing something.
 
 \begin{figure*}
-\begin{subfigure}[t]{.38\textwidth}
-\begin{center}
-\textbf{Programming Task:}
-\end{center}
-\texttt{wwhile(f, b)} should return $x$ where
-there exist values $v_0,...,v_n$ such that:
-$b = v_0$, $x = v_n$, and
-for each $i$ between 0 and $n-2$, we have $f v_i = (v_i+1, true)$
-and $f v_n-1 = (v_n, false)$.
-\begin{center}
-\textbf{Buggy Student Solution:}
-\end{center}
-\begin{compactcode}
-let rec wwhile (f, b) =
-let (b', c') = f b in if c' = true
-then wwhile __(f b')__ else b';;
-\end{compactcode}
-\begin{center}
-\textbf{\toolname Repair:}
-\end{center}
-\begin{compactcode}
-           ...__(f, b')__...
-\end{compactcode}
-\begin{center}
-\textbf{\seminal Repair:}
-\end{center}
-\begin{compactcode}
-     ...__((f b'); [[...]]))__...
-\end{compactcode}
-\caption{Humans perceived \toolname's repair to be
-better than \seminal ($p=0.002$): With 12 responses, \toolname's
-repair had a mean score of 4.5/5 compared to \seminal's
-score of 1.1/5.}
+\begin{subfigure}[t]{.33\textwidth}
+\centering
+\includegraphics[height=1.4in]{comp1.png}
+\caption{\toolname (4.5/5) better than \seminal(1.1/5) with 12 responses $p=0.002$.}
 \label{subfig:good1}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.1\textwidth}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.28\textwidth}
-\begin{center}
-\textbf{Programming Task:}
-\end{center}
-\texttt{clone x n} should return a list of
-\texttt{n} copies of the value \texttt{x}.
-\begin{center}
-\textbf{Buggy Student Solution:}
-\end{center}
-\begin{compactcode}
-let rec clone x n =
-if n <= 0 then []
-else x :: __(clone (n - 1))__;;
-\end{compactcode}
-\begin{center}
-\textbf{\toolname Repair:}
-\end{center}
-\begin{compactcode}
- ...__(clone (n - 1) n))__...
-\end{compactcode}
-\begin{center}
-\textbf{\seminal Repair:}
-\end{center}
-\begin{compactcode}
-...__(clone [[...]] (n - 1))__...
-\end{compactcode}
-\caption{Humans perceived \toolname's repair to be
-worse than \seminal ($p=0.0002$): With 18 responses, \toolname's
-repair had a mean score of 1.5/5 compared to \seminal's
-score of 4.1/5.}
+\end{subfigure}
+\begin{subfigure}[t]{.33\textwidth}
+\centering
+\includegraphics[height=1.4in]{comp2.png}
+\caption{\toolname (1.5/5) worse than \seminal(4.1/5) with 18 responses $p=0.0002$.}
 \label{subfig:bad}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.1\textwidth}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{.28\textwidth}
-\begin{center}
-\textbf{Programming Task:}
-\end{center}
-\texttt{sqsum [x1;...;xn]} should return the
-integer $\texttt{x1}^2 + ... + \texttt{xn}^2$.
-\begin{center}
-\textbf{Buggy Student Solution:}
-\end{center}
-\begin{compactcode}
-let sqsum xs =
-let f a x = a + __(x ** 2)__ in
-let base = 0 in
-List.fold_left f base xs;;
-\end{compactcode}
-\begin{center}
-\textbf{\toolname Repair:}
-\end{center}
-\begin{compactcode}
-       ...__(x * x)__...
-\end{compactcode}
-\begin{center}
-\textbf{\seminal Repair:}
-\end{center}
-\begin{compactcode}
-      ...__(x + 2)__...
-\end{compactcode}
-\caption{Humans perceived \toolname's repair to be
-better than \seminal ($p=0.0003$): With 17 responses, \toolname's
-repair had a mean score of 4.8/5 compared to \seminal's
-score of 1.2/5.}
+\end{subfigure}
+\begin{subfigure}[t]{.29\textwidth}
+\centering
+\includegraphics[height=1.4in]{comp3.png}
+\caption{\toolname (4.8/5) better than \seminal(1.2/5) with 17 responses $p=0.0003$.}
 \label{subfig:good2}
 \end{subfigure}
-\caption{\ref{subfig:good1} and~\ref{subfig:good2} are programs where
-humans perceived \toolname's repair to be better than \seminal's while~\ref{subfig:bad}
-is an example where humans perceived \seminal's repair to be better than \toolname's.}
-\label{fig:examples}
 \end{figure*}
 
-To tease apart this nuanced quality assessment, we consider several case studies where
-there were statistically-significant differences between the human ratings for
-\toolname's and \seminal's repairs. In the programs in subfigures~\ref{subfig:good1}
-and~\ref{subfig:good2}, humans rated \toolname's repair better than \seminal's.
-In both cases, \toolname's found a solution which both typechecks and
-conforms to the problem's semantic specification. \seminal, however, found a
-repair that was either incomplete (\ref{subfig:good1}) or semantically incorrect
-(\ref{subfig:good2}). FIXME: Add what good thing about \toolname caused this.
-On the other hand, in ~\ref{subfig:bad}, humans rated \seminal's repair higher
-than \toolname's. This is likely because... FIXME: Add what limitation of \toolname
-does this.
-\vspace{3mm}
+\mypara{Qualitative Comparison}
+%
+To tease apart this nuanced quality assessment, 
+we consider several case studies where there were 
+statistically-significant differences between 
+the human ratings for \toolname's and \seminal's 
+repairs. 
+%
+The task in Figure~\ref{subfig:good1} is  
+\texttt{wwhile(f, b)} should return $x$ where
+there exist values $v_0,...,v_n$ such that:
+$b = v_0$, $x = v_n$, and for each $i$ between 
+0 and $n-2$, we have $f v_i = (v_i+1, true)$
+and $f v_n-1 = (v_n, false)$.
+%
+The task in Figure~\ref{subfig:bad} is to 
+return a list of \texttt{n} copies of \texttt{x}.
+%
+The task in Figure~\ref{subfig:good2} is to 
+return the sum of the squares of the numbers 
+in the list \texttt{xs}.
+%
+Humans rated \toolname's repairs better 
+for the programs in Fig~\ref{subfig:good1}
+and~\ref{subfig:good2}.
+%
+In both cases, \toolname's found a solution 
+which typechecks and conforms to the problem's 
+semantic specification. 
+%
+\seminal, however, found a repair that was 
+either incomplete (\ref{subfig:good1}) or 
+semantically incorrect (\ref{subfig:good2}). 
+% FIXME: Add what good thing about \toolname caused this.
+On the other hand, in ~\ref{subfig:bad}, \toolname 
+does worse as the \emph{second} parameter should 
+be \verb|n-1|. In fact, \toolname's second ranked 
+repair is the correct one: but it is incomparable 
+to the first in terms of edit distance.
 
 \begin{framed}
 \noindent Humans perceive both \toolname's edit locations
@@ -454,4 +380,55 @@ does this.
  statistically-significant manner.
 \end{framed}
 
-% FIXME: Maybe add a paragraph here on qualitative results
+\subsection{RQ4: Impact of Templates on Quality}
+
+Finally, we seek to evaluate whether \toolname's template-guided 
+approach is really at the heart of its effectiveness. To do so, 
+as in \S~\ref{sec:eval:efficiency}, we performed a user study 
+to compare the results of using \toolname's error messages 
+synthesized from predicted templates to those generated by 
+a \naive synthesizer that returns the first well-typed term 
+(\ie synthesized from the trivial $\_$ template). 
+
+\mypara{User Study Setup}
+%
+For this user study, we reused the corpus of 21 buggy programs 
+randomly chosen in \S~\ref{sec:eval:useful}. For each of the 
+programs generated three messages: using \toolname, using \seminal 
+and using the \naive approach but at the \emph{same location} predicted
+by \toolname. We then randomized and masked the order in which the tools' 
+messages were reported, and asked three experts (authors of this paper)
+to rate the errors as one of Good, Ok or Bad.
+
+\mypara{Results}
+%
+Figure~\ref{fig:comparison} summarizes the results of the rating.
+%
+Recall that each of 20 programs got 3 ratings, so there are a 
+total of 60 ratings per tool
+%
+\toolname dominates with 22 Good, 20 Ok and 18 Bad ratings;
+\seminal follows with only 12 Good, 11 Ok and 37 Bad; while 
+\naive received no Good scores, and 12 Ok scores and a 
+dismal 48 Bad scores.
+%
+On average, with (Bad = 0, Ok = 0.5, Good = 1), 
+\toolname scored 0.53, \seminal 0.30, and \naive 
+just 0.1.
+%
+Our rating agreement kappa is 0.54, which is considered ``moderate agreement''.
+
+\begin{framed}
+  \noindent Repairs generated from predicted 
+  templates were of significantly higher quality 
+  than those expert-biased enumeration (\seminal) 
+  or \naive type-directed enumeration.
+\end{framed}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[height=1.5in]{comparison.png}
+  \caption{Rating the errors generated by \toolname, \seminal and \naive enumeration.}
+  \label{fig:comparison}
+\end{figure}
+
