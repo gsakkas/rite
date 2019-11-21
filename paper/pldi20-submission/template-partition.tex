@@ -32,7 +32,7 @@ syntactic abstraction forms:
     an unknown variable name in \repairLang;
 
     \item \emph{Abstract literal} values $\hat{n}$ can represent \emph{any}
-    integer or floating point number, boolean value or character and string;
+    integer, floating point number, boolean value, character, or string;
 
     \item \emph{Abstract operators} $\oplus$ similarly denote unknown unary or
     binary operators;
@@ -87,9 +87,9 @@ therefore we abstract these extracted changes as our fix templates.
 
 \mypara{Contextual Repairs.}
 %
-Following \cite{Felleisen92} let $\econtext{}$ be the \emph{context} that an
-expression $e$ appears in a program $p$, \ie the program $p$ with expression $e$
-replaced with a hole $\_$.
+Following \cite{Felleisen92} let $\econtext{}$ be the \emph{context} in which an
+expression $e$ appears in a program $p$, \ie the program $p$ with $e$
+replaced by a hole $\_$.
 %
 We write that $p = \context{}{e}$, meaning that if we fill the hole with the
 original expression $e$ we obtain the original program $p$.
@@ -107,7 +107,7 @@ $\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} = \eapp{g}
 If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the context is
 $\econtext{} = \_$, and the fix is the whole expression
 $\eplus{(\eapp{f}{x})}{1}$, thus $\context{}{\eplus{(\eapp{f}{x})}{1}} =
-\eplus{(\eapp{f}{x})}{1}$. (Even though the expression $\eapp{f}{x}$ appears in
+\eplus{(\eapp{f}{x})}{1}$. (Even though $\eapp{f}{x}$ appears in
 both the original and fixed programs, we consider the application expression
 $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
 

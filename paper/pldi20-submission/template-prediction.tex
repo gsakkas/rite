@@ -9,11 +9,11 @@ We do so by defining a function $\predictsym$ which takes as input
 %
 (1)~a feature extraction function $\featuresym$,
 %
-(2) a dataset $\datasetsym$ of program pairs $(\pbad,\ \pfix)$,
+(2) a dataset $\datasetsym$ of program pairs $(\pbad,\ \pfix)$, and
 %
-(3)~a list of fix templates $\T$;
+(3)~a list of fix templates $\T$.
 %
-and returns as output a \emph{fix-template-predictor}. This predictor, given an
+It returns as output a \emph{fix-template-predictor} which, given an
 erroneous program, returns the locations of likely fixes, and the templates to
 be applied at those locations.
 
