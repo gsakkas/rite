@@ -87,7 +87,7 @@ Following \citep{Seidel:2017}, we choose to model a program as a \emph{set} of
 feature vectors, where each element corresponds to a subexpression in the
 program. Thus, given an erroneous program $\pbad$ we first split it into its
 constituent subexpressions and then transform each subexpression into a single
-feature vector, \ie $\featuresym\ \pbad \mapsto \Emap{\datasym}$ \BC{is this standard?}. We show here
+feature vector, \ie $\featuresym\ \pbad :: \Emap{\datasym}$. We show here
 the five major feature categories used.
 
 \paragraph{Local syntactic features.}
@@ -100,9 +100,9 @@ production, and disabled (set to $0$) otherwise.
 The \emph{context} in which an expression occurs can be critical for correctly
 predicting error sources and fix templates. Therefore, we include contextual
 features, which are similar to the local syntactic features but describe the
-parent and children of an expression. For example, the \IsCaseListP feature
-would describe whether an expression's \emph{parent} matches on a list. This
-gives us a notion of the \emph{context} in which an expression occurs, similar
+parent and children of an expression. For example, the \IsNilC feature
+would describe whether an expression's \emph{first child} is []. This
+is similar
 to the \emph{n-grams} used in linguistic models
 \citep{Hindle2012-hf,Gabel2010-el}.
 
@@ -116,21 +116,17 @@ expressions closer to the root.
 The programs we are trying to repair are \emph{untypeable}, but a \emph{partial
 typing} derivation from the type checker could still provide useful information
 to the model. Therefore, we include \emph{typing} features in our
-representation.
-
-A difficulty that arises here is that, due to the parametric type constructors
+representation. Due to the parametric type constructors
 $\tfun{\cdot}{\cdot}$, $\tprod{\cdot}{\cdot}$, and $\tlist{\cdot}$, there is an
 \emph{infinite} set of possible types --- but we must have a \emph{finite} set
-of features. We add features for each type constructor that describes whether a
-given type mentions the abstract type constructor. For example, the type $\tint$
-would only enable the $\tint$ feature, while the type $\tfun{\tint}{\tbool}$
+of features. We add features for each abstract type constructor that describes whether a
+given type uses that constructor. For example, the type
+$\tfun{\tint}{\tfun{\tint}{\tbool}}$
 would enable the $\tfun{\cdot}{\cdot}$, $\tint$, and $\tbool$ features.
 
 We add these features for parent and child expressions to summarize the context,
 but also for the current expression, as the type of an expression is not always
-clear \emph{syntactically}. For example, the expressions |tl| and
-|mulByDigit i tl| in \autoref{fig:mulByDigit} both enable the \emph{list} type
-feature, as they are both inferred to have a type that mentions $\tlist{\cdot}$.
+clear syntactically.
 
 % TODO: cite the correct paper
 \paragraph{Type error slice.}
@@ -236,11 +232,9 @@ is used by the \textsc{Train} function to generate our predictive $Models$, \ie
 $\Model$ and $\ModelT$.
 
 At this point we want to generate a $\predictorsym$ for a new unknown program
-$p$. We perform feature extraction for $p$ with \textsc{Extract}, which normally
-requires a tuple of programs as input, by passing program $p$ twice. This
-results to features that are relevant to the structure of the program. We also
-acquire only the expressions in $p$'s type-error slice with \textsc{InSlice},
-which is given by $Data(p)$.
+$p$. We perform feature extraction for $p$ with \textsc{Extract}, and use
+\textsc{InSlice} to restrict to expressions in $p$'s type-error slice.
+The result is given by $Data(p)$.
 
 \textsc{Rank} is then applied to all subexpressions produced by $Data(p)$ with
 $\textsc{Map}$, which will create a mapping of the type

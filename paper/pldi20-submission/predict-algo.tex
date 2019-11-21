@@ -6,7 +6,7 @@
     \begin{algorithmic}[1]
     \Require{Feature Extraction Functions $F$, Fix Templates $Ts$, Program Pair Dataset $D$}
     \Ensure{Predictor $Pr$}
-    \Procedure{Rank}{$F,\ Ts,\ D$}
+    \Procedure{Predict}{$F,\ Ts,\ D$}
     \State $D_{ML} \gets \emptyset$
     \ForAll{$\pbad \times \pfix \in D$}
       \State $d \gets$ \Call{Extract}{$F,\ Ts,\ \pbad \times \pfix$}
