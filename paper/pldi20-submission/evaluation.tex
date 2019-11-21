@@ -56,15 +56,15 @@ ancestors, starting from its parent and going up to two more parent nodes.
 \mypara{Dataset Cleaning}
 %
 We extract fixes as expression replacements over a program pair using \diffsym.
-A disadvantage of using \diffsym s with this dataset is that students may have
+A disadvantage of using \diffsym s with this dataset is that some students
 made many, potentially unrelated, changes between compilations; at some point
-the ``fix'' becomes a ``rewrite''. These ``rewrites'' can potentially lead to
+the ``fix'' becomes a ``rewrite''. These rewrites can lead to
 meaningless fix templates and error locations. We discard such outliers when the
 fraction of subexpressions that have changed in a program is more than one
 standard deviation above the mean, establishing a diff threshold of 40\%. We
-also discard programs that have changes in 5 or more locations. Even
-state-of-the-art multi-location repair techniques can't reproduce such ``fixes''
-\citep{Saha_2019}. The discarded changes account for roughly 32\% of each
+also discard programs that have changes in 5 or more locations; even
+state-of-the-art multi-location repair techniques can't reproduce such fixes
+\citep{Saha_2019}. The discarded pairs account for roughly 32\% of each
 dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL.
 Throughout, we use \SPRING as a training set and \FALL as a test set.
 
@@ -75,19 +75,18 @@ uses a multi-layer neural network \dnn based
 classifier that utilizes three fully-connected
 hidden layers of 512 neurons. The neurons use
 rectified linear units (ReLU) as their activation
-function.
+function \citep{Nair2010-xg}.
 %
 The \dnn was trained using \emph{early stopping}
-\cite{Hastie2009-bn}, where the training of a neural
-network is stopped when the accuracy on a distinct
+\cite{Hastie2009-bn}:
+training is stopped when the accuracy on a distinct
 small part of the training set is not improved after
-a certain amount of epochs.
+a certain amount of epochs (5 epochs, in our implementation).
+%
+We set the maximum number of epochs to 200.
 %
 We used the \textsc{Adam} optimizer \citep{Kingma2014-ng},
-a variant of stochastic gradient descent that has
-been found to converge faster, was used to train
-our \dnn; and we that amount to 5 \RJ{what amount?}
-and set the maximum number of epochs to 200.
+a variant of stochastic gradient descent that converges faster.
 
 \subsection{Evaluation of Accuracy}
 
@@ -123,7 +122,7 @@ The naive baseline of selecting templates at random achieves
 the \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
 (\PopularTopSix\% Top-6).
 %
-Our \dnn classifier significantly outperforms those naive
+Our \dnn classifier significantly outperforms these naive
 classifiers, ranging from \DnnTopOne\% Top-1 accuracy to
 \DnnTopSix\% Top-6 accuracy.
 %
@@ -159,7 +158,7 @@ groups of solutions.
 %
 \autoref{fig:conf-matrix} shows the confusion matrix of the
 top 30 templates that were acquired from the training set
-and were tested on \FALL dataset.
+and were tested on the \FALL dataset.
 %
 We observe that most of the templates are predicted correctly
 and only a few of them are often mis-predicted for another template.
@@ -198,7 +197,7 @@ the predicted fix location, attempts to synthesize a repair from the
 trivial ``hole'' template $\_$.
 
 The first column of \autoref{tab:rite_naive} shows how many
-programs were completed on the time limit, while the second
+programs were completed within the time limit, while the second
 column how many returned a type-correct solution.
 %
 We observe that using predicted templates for synthesis allows
