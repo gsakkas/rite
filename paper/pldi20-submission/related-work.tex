@@ -1,60 +1,78 @@
 \section{Related Work}
 \label{sec:related-work}
-We distinguish between three main approaches for providing feedback on erroneous
-programs.
 
-\paragraph{Example-Based Feedback.} Inspired by the setting of how programmers
-debug their code, recent research has suggested presenting counterexamples to
-programmers that will help them spot deficiencies in their programs.
-\citep{Cadar_2006, Song_2019, Tillmann_2013} produce feedback as counterexample
-inputs, whose outputs diverge from a reference implementation either via random
-testing or symbolic execution. However, this may not be sufficient for novices,
-who are looking for more informative feedback to make progress towards a correct
-solution. Such an approach is \emph{fault localization}.
+We consider three main lines of work on providing feedback for errors.
 
-\paragraph{Automated Fault Localization.} Given a faulty program,
-\emph{fault localization} is the task where we are searching for
-the term locations that play an important role on the error.
+\mypara{Example-Based Feedback} 
 %
-There has been done a lot of research in the fault localization domain
-~\citep{Seidel:2017,Wand1986-nw,Haack2003-vc,Tip2001-qp}. State-of-the-art fault
-localization techniques provide high precision on finding fault locations and
-thus provide valuable feedback to programmers. \textsc{Nate}
-~\citep{Seidel:2017} is probably the most closely related work to ours.
-\textsc{Nate} introduced the BOAT representation of programs that was applied in
-localizing type-errors using predictive models. We use a similar approach for
-localizing errors in our input programs, however we extend it to extracting and
-learning appropriate fix templates from our training set.
+Recent work has looked at providing \emph{counterexamples} 
+that show how a program went wrong, for type errors 
+\cite{Seidel2016-ul} or for general correctness properties 
+where the generated inputs show divergence from a reference 
+implementation or some other correctness oracle~\cite{Song_2019}.
+In contrast, our aim is to provide feedback on how to fix the error.
 
-\paragraph{Automated Program Repair.} Program repair tries to generate more
-informative feedback by providing complete solutions or \emph{program repairs}.
-\textsc{Clara} \citep{Gulwani_2018} clusters a dataset of correct programs and
-selects a reference program from each cluster. Then \textsc{Clara} matches an
-incorrect student attempt with a cluster representative that has the same
-looping structure and runtime trace values. The matched representative is used
-to extract expressions that can be used to produce repairs. Despite the apparent
-similarities, \toolname partitions similar fix patterns found in our dataset,
-while \textsc{Clara} clusters whole student solutions. Additionally,
-\textsc{Clara} assumes that there is always a matching student solution in the
-dataset, while \toolname extracts generic fix templates can be applied to
-arbitrary programs. \textsc{Clara} also scales poorly in matching programs due
-to the use of Integer Linear Programming, while \toolname's precomputation of
-fix-template models makes final repairs more robust.
+\mypara{Fault Localization} Several authors have studied 
+the problem of \emph{fault localization}, \ie winnowing down 
+the set of locations that are relevant for the error, often 
+using slicing \citep{Wand1986-nw,Haack2003-vc,Tip2001-qp,Rahli2015-tt},
+or bayesian methods \citep{Zhang2014-lv}. 
+%
+\textsc{Nate}~\citep{Seidel:2017} introduced the BOAT representation, 
+and showed it could be used for accurate localization.
+%
+We aim to go beyond localization, into suggesting concrete 
+\emph{changes} that novices can make to understand and fix 
+the problem.
 
-\textsc{Sarfgen} \citep{Wang_2018} is another automated program repair approach
-that focuses on structural and control-flow similarity of programs to produce
-repairs. While \textsc{Sarfgen} is still a data-driven approach it tries to
-search for matching programs on the fly, using AST vector embeddings to
-calculate distance metrics more robustly. \toolname's approach can be similarly
-seen as a per AST node embedding, which however we use in advance for training
-predictive models, thus mitigating any extra cost on runtime.
+\mypara{Program Repair} 
+%
+\textsc{Seminal} \citep{Lerner2007-dt} \emph{enumerates} minimal fixes 
+using an expert-guided heuristic search. 
+%
+The above approach is generalized to general correctness properties 
+by \cite{singh2013} which additionally performs a \emph{symbolic} 
+search using a set of expert provided \emph{sketches} that represent 
+possible repairs. 
+%
+In contrast, \toolname automatically learns a template of repairs 
+from a corpus leading to much higher quality repairs \S~\ref{sec:eval}.
+%
+\textsc{Clara} \citep{Gulwani_2018} uses code and execution traces 
+to match a given incorrect program with a ``nearby'' correct solution 
+obtained by clustering all the correct answers for a particular task.
+The matched representative is used to extract repair expressions. 
+%
+Similarly, \textsc{Sarfgen} \citep{Wang_2018} focuses on structural 
+and control-flow similarity of programs to produce repairs, by using 
+AST vector embeddings to calculate distance metrics (to ``similar'' 
+or ``nearby'' correct programs) more robustly.
+%
+While the above are data-driven, both \textsc{Clara} and \textsc{Sarfgen} 
+require a ``close'' correct sample in the corpus. 
+%
+\toolname has a more general philosophy: \emph{similar errors have similar repairs}.
 
-\textsc{Seminal} \citep{Lerner2007-dt} searches for minimal fixes by enumerating
-candidate expression replacements, until a simplified and robust type-checker
-returns a type-correct solution. Their definition of repair is similar to
-\toolname's, but they produce repairs by performing arbitrary mutations from a
-few hand-selected set of expressions. \toolname learns such a set of expressions
-in an attempt to mirror what novice programmers would follow.
+
+%% While \textsc{Sarfgen} is still a data-driven approach it tries to
+%% search for matching programs on the fly, using \toolname's approach can be similarly
+%% seen as a per AST node embedding, which however we use in advance for training
+%% predictive models, thus mitigating any extra cost on runtime.
+%% 
+%% that can be used to produce repairs. Despite the apparent
+%% similarities, \toolname partitions similar fix patterns found in our dataset,
+%% while \textsc{Clara} clusters whole student solutions. 
+%% 
+%% Additionally, \textsc{Clara} assumes that there is always 
+%% a matching student solution in the dataset, while \toolname 
+%% extracts generic fix templates can be applied to arbitrary 
+%% programs. 
+%% 
+%% \textsc{Clara} also scales poorly in matching programs due
+%% to the use of Integer Linear Programming, while \toolname's precomputation of
+%% fix-template models makes final repairs more robust.
+
+
 
 \textsc{Hercules} \citep{Saha_2019} is one of the few techniques that perform
 multi-hunk repairing, \ie repairing multiple program locations. It uses fault
