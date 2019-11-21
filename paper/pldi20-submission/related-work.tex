@@ -1,11 +1,20 @@
 \section{Related Work}
 \label{sec:related-work}
-We distinguish between two main approaches for providing feedback on erroneous
+We distinguish between three main approaches for providing feedback on erroneous
 programs.
 
-\paragraph{Automated Fault Localization.} Given a faulty program, 
-\emph{fault localization} is the task where we are searching for 
-the term locations that play an important role on the error. 
+\paragraph{Example-Based Feedback.} Inspired by the setting of how programmers
+debug their code, recent research has suggested presenting counterexamples to
+programmers that will help them spot deficiencies in their programs.
+\citep{Cadar_2006, Song_2019, Tillmann_2013} produce feedback as counterexample
+inputs, whose outputs diverge from a reference implementation either via random
+testing or symbolic execution. However, this may not be sufficient for novices,
+who are looking for more informative feedback to make progress towards a correct
+solution. Such an approach is \emph{fault localization}.
+
+\paragraph{Automated Fault Localization.} Given a faulty program,
+\emph{fault localization} is the task where we are searching for
+the term locations that play an important role on the error.
 %
 There has been done a lot of research in the fault localization domain
 ~\citep{Seidel:2017,Wand1986-nw,Haack2003-vc,Tip2001-qp}. State-of-the-art fault
