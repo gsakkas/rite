@@ -5,7 +5,7 @@ Given a candidate set of templates, our next task is to \emph{train} a model
 that, when given an (erroneous) program, can predict which template to use for
 each location in that program.
 %
-We do so by defining a function $\repairsym$ which takes as input
+We do so by defining a function $\predictsym$ which takes as input
 %
 (1)~a feature extraction function $\featuresym$,
 %
@@ -17,7 +17,7 @@ and returns as output a \emph{fix-template-predictor}. This predictor, given an
 erroneous program, returns the locations of likely fixes, and the templates to
 be applied at those locations.
 
-We build $\repairsym$ using three helper functions that carry out each of the
+We build $\predictsym$ using three helper functions that carry out each of the
 high-level steps.
 %
 First, the $\extractsym$ function extracts \emph{features} and \emph{labels}
@@ -25,12 +25,12 @@ from the program pair dataset. Next, these feature vectors are grouped and fed
 into $\trainsym$ which produces two models, $\Model$ and $\ModelT$, that are
 respectively used for error localization and predicting fix templates.
 %
-Finally, $\predictsym$ takes the features for a new (erroneous) program and
+Finally, $\ranksym$ takes the features for a new (erroneous) program and
 queries the trained models to return the likely fix locations and corresponding
 fix-templates.
 
 Next, we describe the key data-types in \autoref{fig:api}, our implementations
-of the three key steps, and how they are combined to yield the $\repairsym$
+of the three key steps, and how they are combined to yield the $\predictsym$
 algorithm.
 
 \paragraph{Confidences, Data and Labels.}
@@ -52,8 +52,9 @@ $\predictorsym$s are learned fix-template-predictors returned from our algorithm
 that are used to generate confidence score mappings for input programs $e$.
 Specifically, they return a map $\Emap{(\labelsym{\Conf})}$ that associates each
 subexpression of the input program $e$ with a confidence score
-$\labelsym{\Conf}$. \BC{here it's ``a confidence score
-$\labelsym{\Conf}$''; just recently it was ``their confidence scores $\Conf$''}
+$\labelsym{\Conf}$.
+% \BC{here it's ``a confidence score $\labelsym{\Conf}$''; just recently it was
+% ``their confidence scores $\Conf$''}
 
 \paragraph{Architecture.}
 First, the $\extractsym$ function takes as input the feature extraction
@@ -68,7 +69,7 @@ for training the two models $\Model$ and $\ModelT$ that are respectively used
 for predicting error locations and fix templates.
 %
 Next, the two trained models $\Model$ and $\ModelT$, along with $\datasym$ from
-a new and previously unseen program, can be fed into $\predictsym$. This
+a new and previously unseen program, can be fed into $\ranksym$. This
 produces a $\predictorsym$, which can be used to map subexpressions of the new
 program to possible error locations and fix templates.
 
@@ -215,12 +216,12 @@ This additional constraint speeds up training.
 
 Our ultimate goal is to be able to pinpoint what parts of an erroneous program
 should be repaired and what fix templates should be utilized for that purpose.
-Therefore, the $\repairsym$ function uses $\predictsym$ to predict all
+Therefore, the $\predictsym$ function uses $\ranksym$ to predict all
 subexpressions' confidence scores $\Conf$ to be an error location and confidence
 scores $\Tmap{\Conf}$ for each of the selected fix templates. In this section we
 show how all the functions in our high-level API in \autoref{fig:api} are
 combined to produce a final list of confidence scores for a new program $p$.
-\autoref{algo:predict-algo} shows our high-level $\repairsym$ algorithm.
+\autoref{algo:predict-algo} shows our high-level $\predictsym$ algorithm.
 
 \input{predict-algo.tex}
 
@@ -241,12 +242,12 @@ results to features that are relevant to the structure of the program. We also
 acquire only the expressions in $p$'s type-error slice with \textsc{InSlice},
 which is given by $Data(p)$.
 
-We then apply \textsc{Predict} to all subexpressions produced by $Data(p)$ with
-$\textsc{Map}$, which will create a map of type $\Emap{(\labelsym{\Conf})}$
-associating expressions with confidence scores. We apply \textsc{Predict} to
-each feature vector that corresponds to an expression in the type-error slice of
-$p$. These vectors are the first elements of $\tilde{p} \in Data(p)$, which are
-of type $\datasym \times \labelsym{\ConfBin}$. Finally, $\predictorsym\ Pr$ is
-returned, which is used by our synthesis algorithm in \autoref{sec:synthesis} to
-correlate subexpressions in $p$ with their confidence scores.
-%% TODO: change repair name
+\textsc{Rank} is then applied to all subexpressions produced by $Data(p)$ with
+$\textsc{Map}$, which will create a mapping of the type
+$\Emap{(\labelsym{\Conf})}$ associating expressions with confidence scores. We
+apply \textsc{Rank} to each feature vector that corresponds to an expression in
+the type-error slice of $p$. These vectors are the first elements of $\tilde{p}
+\in Data(p)$, which are of type $\datasym \times \labelsym{\ConfBin}$. Finally,
+$\predictorsym\ Pr$ is returned, which is used by our synthesis algorithm in
+\autoref{sec:synthesis} to correlate subexpressions in $p$ with their confidence
+scores.

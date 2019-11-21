@@ -43,8 +43,8 @@ syntactic abstraction forms:
 
 Recall from \autoref{sec:overview:templates} that we define fixes as
 replacements of expressions with new candidate expressions at specific program
-locations. Therefore, we express candidate expressions over \repairLang as means
-to represent our fix templates. \BC{what does this mean?}
+locations. Therefore, we use candidate expressions over \repairLang to represent
+fix templates.
 
 \paragraph{Generalizing ASTs.}
 A \emph{Generic Abstract Syntax Tree} (GAST) is a term from \repairLang that
@@ -54,8 +54,6 @@ takes as input an expression $e^{ML}$ over \lang and a depth $d$ and returns an
 expression $e^{RTL}$ over \repairLang, \ie a GAST with all variables, literals
 and operators of $e^{ML}$ abstracted and all subexpressions starting at depth
 greater than $d$ pruned and replaced with holes $\_$.
-
-\input{gast-example.tex}
 
 \paragraph{Example.}
 Recall our example program \mbd in \autoref{fig:mulByDigit}.
@@ -70,6 +68,8 @@ have been abstracted to wildcard expressions $\_$.
 %
 Hence, the \repairLang term |[_ $\oplus$ _]| represents a potential fix template
 for \mbd.
+
+\input{gast-example.tex}
 
 \subsection{Extracting Fix Templates from a Dataset}
 \label{sec:templ-partition:templates}
@@ -104,15 +104,12 @@ such changes.
 \paragraph{Examples.} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
 $\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} = \eapp{g}{x}$.
 
-If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
-context is $\econtext{} = \_$, and the fix
-is the whole expression $\eplus{(\eapp{f}{x})}{1}$, thus
-$\context{}{\eplus{(\eapp{f}{x})}{1}} = \eplus{(\eapp{f}{x})}{1}$.
-(Even though the expression $\eapp{f}{x}$ appears in both the original and fixed programs,
-we consider
-the application expression $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced
-with the $+$ operator.)
-% TODO: maybe talk about the drawback of the last choice
+If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the context is
+$\econtext{} = \_$, and the fix is the whole expression
+$\eplus{(\eapp{f}{x})}{1}$, thus $\context{}{\eplus{(\eapp{f}{x})}{1}} =
+\eplus{(\eapp{f}{x})}{1}$. (Even though the expression $\eapp{f}{x}$ appears in
+both the original and fixed programs, we consider the application expression
+$\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
 
 \subsection{Partitioning the Templates}
 
@@ -161,19 +158,18 @@ one child is an abstract literal, and one child is an abstract variable.
 
 % TODO: partition is novel? compare to previous work
 \paragraph{Partitioning.}
-The GAST similarity relation is reflexive, symmetric, and transitive and thus is an
-\emph{equivalence} relation. We can now define \emph{partitioning} as the
-computation of all possible \emph{equivalence classes} of our extracted fix
-templates \wrt GAST similarity. Each class can consist of several
+GAST similarity defines a relation which is reflexive, symmetric, and transitive
+and thus an \emph{equivalence} relation. We can now define \emph{partitioning}
+as the computation of all possible \emph{equivalence classes} of our extracted
+fix templates \wrt GAST similarity. Each class can consist of several
 member-expressions and any one of them can be viewed as the class
-\emph{representative}. Each representative can then be used as
-a fix template to produce repairs for ill-typed programs.
+\emph{representative}. Each representative can then be used as a fix template to
+produce repairs for ill-typed programs.
 
-For example, $\hat{x} \oplus \hat{n}$ and $\hat{n}
-\oplus \hat{x}$ are similar so they are in the
-same class. Either one can be used as the representative and our repair
-algorithm in \autoref{sec:synthesis} will essentially consider both when fixing
-an erroneous program with this template.
+For example, $\hat{x} \oplus \hat{n}$ and $\hat{n} \oplus \hat{x}$ are similar
+so they are in the same class. Either one can be used as the representative and
+our repair algorithm in \autoref{sec:synthesis} will essentially consider both
+when fixing an erroneous program with this template.
 
 Finally, our partitioning algorithm returns the top $N$ equivalence classes
 based on their member-expressions frequency in the dataset. $N$ is a parameter

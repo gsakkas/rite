@@ -12,15 +12,15 @@ produced by the compiler.
 While \emph{experts} can, usually, readily decipher the errors, and
 view them as invaluable aids to program development and refactoring,
 \emph{novices} are typically left quite befuddled and frustrated,
-without a clear idea of \emph{what} the problem is~\cite{Wand1986-nw}.
+without a clear idea of \emph{what} the problem is~\citep{Wand1986-nw}.
 %
-Owing to the importance of the problem, several authors
-have proposed methods to help debug type errors, typically,
-by \emph{slicing} down the program to the problematic locations~\cite{Haack2003-vc, Rahli2015-tt},
-by \emph{enumerating} possible causes \cite{Lerner2007-dt, Chen2014-gd},
-or by \emph{ranking} the possible locations using MAX-SAT
-\cite{Pavlinovic2014-mr}, Bayesian~\cite{Zhang2014-lv}
-or statistical analysis~\cite{Seidel:2017}.
+Owing to the importance of the problem, several authors have proposed methods to
+help debug type errors, typically, by \emph{slicing} down the program to the
+problematic locations~\citep{Haack2003-vc, Rahli2015-tt}, by \emph{enumerating}
+possible causes \citep{Lerner2007-dt, Chen2014-gd}, or by \emph{ranking} the
+possible locations using MAX-SAT
+\citep{Pavlinovic2014-mr}, Bayesian~\citep{Zhang2014-lv}
+or statistical analysis~\citep{Seidel:2017}.
 %
 While valuable, these approaches at best help localize
 the problem but the student is still left in the dark
@@ -34,12 +34,12 @@ attack on the feedback problem: using techniques from synthesis
 to provide feedback in the form of \emph{repairs} that the student
 can apply to improve their code.
 %
-These repairs are found either by symbolically searching a space
-of candidate programs circumscribed by an expert-defined repair
-model \cite{singh2013,HeadGSSFDH17}, or via the observation that
-\emph{similar programs} have similar repairs, \ie by calculating
-``diffs'' from the given solution and a \emph{correct} program
-that is the ``closest'' to the student's solution ~\cite{Gulwani_2018,Wang_2018}
+These repairs are found either by symbolically searching a space of candidate
+programs circumscribed by an expert-defined repair model
+\citep{singh2013,HeadGSSFDH17}, or via the observation that \emph{similar
+programs} have similar repairs, \ie by calculating ``diffs'' from the given
+solution and a \emph{correct} program that is the ``closest'' to the student's
+solution ~\citep{Gulwani_2018,Wang_2018}
 
 While this approach is compelling for generating feedback in large
 classes, it has several crucial requirements that render it inapplicable
@@ -94,7 +94,7 @@ thereby, generating a fix from a candidate program.
 Critically, we show how to perform the crucial abstraction
 from a particular \emph{program} to an abstract \emph{error}
 by representing programs via \emph{bag-of-abstracted-terms} (BOAT)
-\ie as numeric vectors of syntactic and semantic features \cite{Seidel2017-ko}.
+\ie as numeric vectors of syntactic and semantic features \citep{Seidel2017-ko}.
 %
 This abstraction lets us train predictors over high-level
 code features, \ie to learn correlations between features
@@ -124,14 +124,14 @@ Finally, we measure the \emph{quality} of the generated messages with
 a user study with 29 participants and show that humans and show that
 humans perceive both \toolname's edit locations and final repair quality
 to be better than those produced by \seminal, a state-of-the-art OCaml
-repair tool \cite{Lerner2007} in a statistically-significant manner.
+repair tool \citep{Lerner2007} in a statistically-significant manner.
 %
-This improvement shown by our data-driven method is especially 
-significant because \seminal incorporates several expert-guided 
-heuristics for improving the quality of error messages by biasing 
-its reports towards simpler and more useful ones. 
+This improvement shown by our data-driven method is especially
+significant because \seminal incorporates several expert-guided
+heuristics for improving the quality of error messages by biasing
+its reports towards simpler and more useful ones.
 %
-Thus, our results demonstrate that data can be an unreasonably 
+Thus, our results demonstrate that data can be an unreasonably
 effective tool in the quest for better error messages.
 
 
@@ -163,6 +163,6 @@ effective tool in the quest for better error messages.
 %%
 %%% Our approach
 %%- RITE:
-    %%1. repairs? learn family of repair-templates from student data set (generalizable, fine-grained edits, not whole program)
+    %%1. repairs? learn family of repair-templates from student dataset (generalizable, fine-grained edits, not whole program)
     %%2. similar? train multi-labeled classifiers on BOAT; given new program predict location+template
     %%3. message? enumerative synthesis to fill in template at location using type-checker as oracle.

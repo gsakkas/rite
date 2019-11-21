@@ -1,11 +1,11 @@
 \section{Repair Synthesis from Templates}
 \label{sec:synthesis}
-We use a \emph{enumerative} program synthesis algorithm to fully repair a
+We use an \emph{enumerative} program synthesis algorithm to fully repair a
 program using the predicted templates and locations of our neural network
-models. In \autoref{subsec:location-rank}, we show how the predicted error
-locations are used if \emph{multiple} of them have to be fixed, and in
-\autoref{subsec:local-synthesis}, we present our synthesis algorithm for
-producing \emph{local repairs} for a given location of the input program.
+models. In \autoref{subsec:location-rank}, we show how we fix \emph{multiple}
+error locations in a single program, and in \autoref{subsec:local-synthesis}, we
+present our synthesis algorithm for producing \emph{local repairs} for a given
+program location.
 % Finally, we briefly show in \autoref{subsec:repair} how we use the
 % aforementioned techniques to \emph{fully repair} an ill-typed program.
 
@@ -14,39 +14,33 @@ producing \emph{local repairs} for a given location of the input program.
 
 \paragraph{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for each location in a program's
-type-error slice, our
-$\Model$ generates a confidence score $\Conf$ of that location containing an
-error that needs to be fixed, and our $\ModelT$
-generates the repair templates' confidence scores.
+type-error slice, our $\Model$ generates a confidence score $\Conf$ of that
+location containing an error that needs to be fixed, and our $\ModelT$ generates
+the repair templates' confidence scores.
 
-Our synthesis algorithm ranks all the locations based on their
-confidence scores $\Conf$. For each location, it runs through the list
-of templates (also sorted by score) and tries to repair that location using that
-template. If the algorithm fails to synthesize a
-program that type-checks, the next
-location is considered, until it succeeds.
+Our synthesis algorithm ranks all program locations based on their confidence
+scores $\Conf$. For all locations in descending order of their confidence
+scores, a fix template is used to produce a repair. Fix templates are also
+considered in descending order of confidence. If the algorithm fails to
+synthesize a program that type-checks, the next location is considered, until it
+succeeds.
 
 \paragraph{Multiple Error Locations}
-In practice, however, frequently more than one location needs to
-be repaired. The approach above fails to generate a solution
-in these cases, so we modify it to synthesize programs with
-multiple error locations.
+In practice, however, frequently more than one location needs to be repaired. We
+extend the above approach to synthesize programs with multiple error locations.
 
-Let the confidence scores $\Conf$ for all locations
-in the type error slice from our error localization model $\Model$ be
-$(l_1, c_1), \dots, (l_k, c_k)$, where $l_i$ is a location in the type-error
-slice and $c_i$ its confidence score. We assume for simplicity
-that the probabilities $c_i$ are independent.
-With that assumption, the probability that both locations $l_i$ and $l_j$
-need to be fixed is $c_i \cdot c_j$. The same holds for more that two locations.
-
-Therefore, we extend our simple algorithm of fixing one location $l$ at a time,
-which only considers the confidence scores of single locations, by adding the
-combined scores of tuples, triples, etc. of type-error slice locations. In
-practice we only consider up to \emph{five} locations to be fixed
-simultaneously; any more than that takes too much time to generate and
-has too small a chance of leading to a good solution.
-%% TODO: maybe show how many changes happened to our dataset and how big is type-error slice on average.
+Let the confidence scores $\Conf$ for all locations in the type error slice from
+our error localization model $\Model$ be $(l_1, c_1), \dots, (l_k, c_k)$, where
+$l_i$ is a program location and $c_i$ its confidence score. We assume for
+simplicity that the probabilities $c_i$ are independent. With that assumption,
+the probability that both locations $l_i$ and $l_j$ need to be fixed is $c_i
+\cdot c_j$. The same holds for more that two locations. Therefore, we extend our
+simple algorithm of synthesizing fixes for a single location $l$, by adding the
+combined scores of tuples $(l_i, l_j)$, triples $(l_i, l_j, l_K)$, etc. of
+program locations in the ranked list of error locations.
+% In practice we only consider up to \emph{five} locations to be fixed
+% simultaneously; any more than that takes too much time to generate and has too
+% small a chance of leading to a good solution.
 
 
 \subsection{Local Synthesis from Templates}
