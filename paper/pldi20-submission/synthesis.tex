@@ -13,13 +13,13 @@ repair programs that may also have \emph{multiple} error locations.
 \label{sec:synthesis:local-synthesis}
 
 \mypara{Enumerative Program Synthesis}
-We perform a classic \emph{enumerative} program synthesis that is guided by an
+We perform a classic \emph{enumerative} program synthesis that is guided by a
 fix template. Enumerative synthesis searches all possible expressions over a
 language until a high-level specification is reached. In our case, we initially
 synthesize independent \emph{local repairs} for a program that already captures
 the user's intent. Therefore, the required specification is that the repaired
 program is type-safe. However, a stricter specification can also be used, by
-only synthesizing programs that have the user's desired type signature, in case
+only synthesizing programs that have the user's desired type signature, if
 they provide one.
 
 Given a location $l$, a template $t$ and a maximum depth $d$,
@@ -35,13 +35,12 @@ further optimize the search.
 Using the \textsc{Repair} method (\autoref{algo:local-repair-algo}), we produce
 local repairs $R$ for a given location $L$ of an erroneous program $P$.
 \textsc{Repair} fills in a template $T$ based on the context-free grammar
-$\lang$. It starts from the top-level node of template $T$ and incrementally
-traverses downwards the GAST producing candidate local repairs of maximum depth
-$D$.
+$\lang$. It traverses the GAST of template $T$ from root node
+downward, producing candidate local repairs of maximum depth $D$.
 
 When a hole $\alpha \in T$ is found, the algorithm expands $T$'s GAST one more
 level using $\lang$'s production rules $Q$. The production rules are considered
-in an ranked order based on the subexpressions that already appear in the rest
+in a ranked order based on the subexpressions that already appear in the rest
 of the template $T$ and program location $L$. Each rule is then applied to
 template $T$, returning an \emph{instantiated} template $\hat{T}$, which is
 inserted into the list of candidate local repairs $R$.
@@ -52,7 +51,6 @@ that node, depending on the $\repairLang$ terminal node $\alpha$. For each of
 these template $T$ modifications, we insert an instantiated template $\hat{T}$
 into $R$.
 % $R$ is generated lazily in practice and the top-N can be requested for the user
-% generated lazily in practice and the top-N results can be produced for the user.
 
 \subsection{Ranking Error Locations}
 \label{sec:synthesis:location-rank}
@@ -60,7 +58,7 @@ into $R$.
 \mypara{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for each subexpression in a program's
 type-error slice, our $\Model$ generates a confidence score $\Conf$ for it being
-the error location, and our $\ModelT$ scores for each of the selected fix
+the error location, and our $\ModelT$ generates scores for the fix
 templates.
 
 Our synthesis algorithm ranks all program locations based on their confidence
@@ -68,19 +66,18 @@ scores $\Conf$. For all locations in descending confidence score order, a fix
 template is used to produce a local repair using
 \autoref{algo:local-repair-algo}. Fix templates are also considered in
 descending order of confidence. Then expressions from the returned list of local
-repairs $R$ replace the expression at the given program location, until a
-type-correct program is found. The procedure continues with the next template or
-error location if it fails for the specific ones.
+repairs $R$ replace the expression at the given program location. The procedure
+tries the remaining repairs, templates, and locations
+until a type-correct program is found.
 
 Following \citep{Lerner2007-dt}, we allow our final local repairs to have
 program holes $\_$ or abstracted variable $\hat{x}$ in them. However,
 \autoref{algo:local-repair-algo} will prioritize the synthesis of complete
-solutions. Abstracted terms over $\repairLang$ are expressions that can have any
-type when type-checking concrete solutions, \eg similarly to \ocaml's |raise Exn|.
-
+solutions. Abstract $\repairLang$ terms can have any
+type when type-checking concrete solutions, similarly to \ocaml's |raise Exn|.
 
 \mypara{Multiple Error Locations}
-In practice, frequently more than one program locations need to be repaired. We
+In practice, frequently more than one program location needs to be repaired. We
 thus extend the above approach to fix programs with multiple errors. Let the
 confidence scores $\Conf$ for all locations in the type error slice from our
 error localization model $\Model$ be $(l_1, c_1), \dots, (l_k, c_k)$, where
@@ -90,9 +87,9 @@ that \emph{all} the locations $\{l_i \dots l_j\}$ need to be fixed is the
 product $c_i \cdots c_j$. Therefore, instead of ranking and trying to find
 fixes for single locations $l$, we use \emph{sets} of locations ($\{l_i\},
 \{l_i, l_j\}, \{l_i, l_j, l_k\}$, \etc), ranked by the products of their
-confidence scores. Finally, we use \autoref{algo:local-repair-algo}
-independently for each location and apply all possible combinations of local
-repairs to erroneous, looking again for a type-correct solution.
+confidence scores. For a given set, we use \autoref{algo:local-repair-algo}
+independently for each location in the set and apply all possible combinations
+of local repairs, looking again for a type-correct solution.
 % In practice we only consider up to \emph{five} locations to be fixed
 % simultaneously; any more than that takes too much time to generate and has too
 % small a chance of leading to a good solution.
