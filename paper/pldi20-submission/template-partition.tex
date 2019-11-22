@@ -23,7 +23,7 @@ easier to train precise models to predict fixes.
 \mypara{Repair Template Language.}
 \autoref{fig:rtl-syntax} describes our Repair Template Language, \repairLang,
 which is a lambda calculus with integers, booleans, pairs, and lists, that
-extends our core ML language \lang (\autoref{fig:ml-syntax}) with 
+extends our core ML language \lang (\autoref{fig:ml-syntax}) with
 syntactic abstraction forms:
 
 \begin{enumerate}
@@ -41,7 +41,7 @@ syntactic abstraction forms:
     expression in \repairLang, \ie a program \emph{hole}.
 \end{enumerate}
 
-Recall from \autoref{sec:overview:templates} that we define fixes as
+Recall from \S~\ref{sec:overview:templates} that we define fixes as
 replacements of expressions with new candidate expressions at specific program
 locations. Therefore, we use candidate expressions over \repairLang to represent
 fix templates.
@@ -115,7 +115,7 @@ $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
 
 Programs over \lang force similar fixes, such as changes to variable names, to
 have identical GASTs. Our next step is to define a notion of program fix
-\emph{similarity}. Our definition supports the formation of a small but 
+\emph{similarity}. Our definition supports the formation of a small but
 widely-applicable set of fix templates. This small set is used to train a repair
 predictor.
 

@@ -241,7 +241,7 @@ Neural networks have the advantage of associating each class with a
 each class being correct for a given input. This confidence score can be used to
 rank fix-template predictions for new programs and use them in descending order
 to synthesize repairs until our high-level goal is reached. %FIXME: I might respecify this goal
-Exploiting recent advances in machine learning, we use deep and dense 
+Exploiting recent advances in machine learning, we use deep and dense
 architectures \citep{Schmidhuber_2015} for more accurate fix template predictions.
 
 \mypara{Error Localization.} We view the problem of finding error locations
@@ -260,7 +260,7 @@ confidence.
 \label{sec:overview:synthesis}
 
 Next, we utilize existing program synthesis techniques to \emph{synthesize}
-candidate expressions that will be used to provide feedback to users. 
+candidate expressions that will be used to provide feedback to users.
 Guided by our learned fix-template predictions and a set of
 possible error locations to guide program synthesis, we return a ranked
 list of \emph{minimal} repairs to users as feedback.
@@ -270,7 +270,7 @@ those locations, we are trying to solve a problem of \emph{program synthesis}.
 For each program location, we search over all possible
 expressions in the language's grammar for a small set of candidate
 expressions that match the fix template and make the program type-check.
-Expressions from the ill-typed program are also used during synthesis 
+Expressions from the ill-typed program are also used during synthesis
 to prune the search space of candidate expressions.
 
 \mypara{Synthesis for Multiple Locations.}
@@ -279,7 +279,7 @@ we do not only consider the ordered set of single error locations for synthesis,
 but rather its power set. For simplicity, we consider fixing different program
 locations as independent; the probability we assign that a set of locations
 needs to be fixed is thus the product their individual confidence scores. This
-is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019} 
+is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019}
 where modifications depend on each other.
 
 \mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
@@ -306,7 +306,7 @@ programs, so novice programmers are presented with more coherent feedback.
 
 \mypara{Example.} We see in \autoref{fig:repair} a minimal repair that our
 method could return (|[$v_1$ * $v_2$]| in line 4), using the template discussed
-in \autoref{sec:overview:learn} to synthesize this solution. While this solution
+in \S~\ref{sec:overview:learn} to synthesize this solution. While this solution
 is not the highest-ranked that our implementation returns (which would be
 identical to the human solution), it demonstrates relevant aspects of the
 synthesizer. In particular, this solution has some abstracted variables, $v_1$
@@ -314,4 +314,4 @@ and $v_2$. Our algorithm suggests to the user that they can replace the two
 variables with two distinct variables and insert the whole expression into a
 list, in order to obtain the correct program. We hypothesize that such solutions
 produced by our algorithm can provide valuable feedback to novices, and we
-investigate that claim empirically in \autoref{sec:eval:useful}.
+investigate that claim empirically in \S~\ref{sec:eval:useful}.
