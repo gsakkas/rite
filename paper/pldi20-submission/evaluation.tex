@@ -149,10 +149,12 @@ from the \SPRING training set and were tested on the \FALL dataset.
 Note that most templates are predicted correctly and only a few of them are
 often mis-predicted for another template.
 %
-For example, we see that programs that would require template 20 to be fixed
-almost always are mis-predicted with template 11.
-
-\GS{show those two templates, both ``let''s with some ``tuple'' in their ASTs}
+For example, we see that programs that require template 20
+(\elet{\hat{z}}{\epcases{\hat{t}}{\hat{x}}{\hat{y}}{\hat{a}}}{\_}) to be fixed,
+almost always are mis-predicted with template 11 (\elet{(\hat{x},
+\hat{y})}{\hat{t}}{(\_,\ \_)}). We observe that these templates are still very
+similar, with both of them having a top-level |let| that manipulates tuples
+$\hat{t}$.
 
 \begin{framed}
   \noindent \toolname's learns correlations between program features and repair
@@ -166,38 +168,33 @@ almost always are mis-predicted with template 11.
 \label{sec:eval:efficiency}
 \label{subsec:eval:man_rep_qual_eval}
 
-Next we evaluate the efficiency of \toolname by measuring how many
-programs it is able to generate a (well-typed) repair for.
+Next we evaluate the efficiency of \toolname by measuring how many programs it
+is able to generate a (well-typed) repair for.
 %
-Recall that the repair synthesis algorithm is guided by the
-repair template predictions.
+Recall that the repair synthesis algorithm is guided by the repair template
+predictions.
 %
-To measure efficiency, we give the synthesizer \emph{60s} to
-compute a repair and timeout otherwise. (In general the procedure
-is undecidable, and we conjecture that a longer timeout will diminish
-the practical usability for novices.)
+To measure efficiency, we give the synthesizer \emph{90s} to compute a repair
+and timeout otherwise. (In general the procedure is undecidable, and we
+conjecture that a longer timeout will diminish the practical usability for
+novices.)
 %
-In \autoref{tab:rite_naive}, we evaluate the efficiecy of \toolname
-by comparing it against a baseline \naive implementation that, given
-the predicted fix location, attempts to synthesize a repair from the
-trivial ``hole'' template $\_$.
+We evaluate the efficiency of \toolname by comparing
+it against a baseline \naive implementation that, given the predicted fix
+location, attempts to synthesize a repair from the trivial ``hole'' template
+$\_$.
 
-The first column of \autoref{tab:rite_naive} shows how many
-programs were completed within the time limit, while the second
-column how many returned a type-correct solution.
-%
-We observe that using predicted templates for synthesis allows
-\toolname to generate type-correct repairs for almost 85\% of
-the programs, which is nearly 10 points higher than the \naive
-baseline. Also, for the programs that are completed within
-the time limit, \toolname needs an average of $8.81$ seconds
-to repair an erroneous program, while \naive takes
-\textbf{33\%} longer.
+\autoref{fig:rite_naive} shows the cumulative distribution function of
+\toolname's and \naive's repair rates over their synthesis time. We observe that
+using the predicted templates for synthesis allows \toolname to generate
+type-correct repairs for almost 60\% of the programs in under 10 seconds, which
+is nearly 10 points higher than the \naive baseline. We also observe that
+\toolname manages to repair around 10\% more programs than \naive, almost
+consistently when execution times where higher than 10 seconds.
 
 \begin{framed}
-  \noindent \toolname can generate type-correct repairs
-  for the vast majority of ill-typed programs in under
-  \RJ{XXX}.
+  \noindent \toolname can generate type-correct repairs for the majority of
+  ill-typed programs in under 10 seconds.
 \end{framed}
 
 % The 11.85\% of the programs that fail to be repaired within that amount of time
@@ -221,7 +218,7 @@ to repair an erroneous program, while \naive takes
   \centering
   \includegraphics[height=2.4in]{cdf.png}
   \caption{Test set repair rate over execution time. Results are accumulated into 1 second intervals.}
-  \label{fig:conf-matrix}
+  \label{fig:rite_naive}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

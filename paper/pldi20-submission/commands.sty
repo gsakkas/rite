@@ -14,11 +14,11 @@
 
 % \newcommand\mynote[3]{}
 \newcommand\mynote[3]{\textcolor{#1}{\sf $\clubsuit$#2: #3$\clubsuit$}}
-\def\RJ#1{\mynote{red}{RJ}{#1}} 
-\def\GS#1{\mynote{blue}{GS}{#1}} 
-\def\WRW#1{\mynote{red}{WRW}{#1}} 
-\def\BC#1{\mynote{purple}{BC}{#1}} 
-\def\ME#1{\mynote{purple}{ME}{#1}} 
+\def\RJ#1{\mynote{red}{RJ}{#1}}
+\def\GS#1{\mynote{blue}{GS}{#1}}
+\def\WRW#1{\mynote{red}{WRW}{#1}}
+\def\BC#1{\mynote{purple}{BC}{#1}}
+\def\ME#1{\mynote{purple}{ME}{#1}}
 
 \newcommand\etc{\textit{etc.}\xspace}
 \newcommand\eg{\textit{e.g.}\xspace}
@@ -63,6 +63,7 @@
 \newcommand\thole{\ensuremath{\alpha}\xspace}
 \newcommand\epair[2]{\ensuremath{\langle #1, #2 \rangle}\xspace}
 \newcommand\epcase[4]{\ensuremath{\mathtt{match}\ #1\ \mathtt{with}\ \epair{#2}{#3} \to #4}\xspace}
+\newcommand\epcases[4]{\ensuremath{\mathtt{match}\ #1\ \mathtt{with}\ (#2,\ #3) \to #4}\xspace}
 
 % \newcommand\erec[3]{\ensuremath{\mu #1.\lambda #2. #3}}
 % \newcommand\etabs[2]{\ensuremath{\left[\Lambda #1\right] #2}}
