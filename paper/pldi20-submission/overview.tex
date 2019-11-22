@@ -53,6 +53,8 @@ To ensure that synthesis is tractable, the search must be
 carefully restricted to a relatively small, manually constructed
 ``repair model'' that may not include the ``right'' fixes for
 an erroneous program.
+%FIXME: We are not manually constructing the repair model? I might make this
+% sentence more clear
 %
 In this work, we present a novel strategy called
 \emph{Analytic Program Repair} which breaks the
@@ -93,9 +95,8 @@ of our approach by describing how to:
 Our notion of a fix is defined as a \emph{replacement} of an existing expression
 with a new \emph{candidate} expression at a specific program location. For
 example, the \mbd program is fixed by replacing |(hd * i)| with the candidate
-expression |[hd * i]| on line 4. We focus on AST-level replacements as it is
-easy for novices to understand them and they are expressive enough to represent
-fixes.
+expression |[hd * i]| on line 4. We focus on AST-level replacements as they are
+compact yet expressive enough to represent fixes.
 
 
 \mypara{Generic Abstract Syntax Trees.}
@@ -140,8 +141,8 @@ In contrast, we show that such fix templates can be \emph{learned} from a large,
 automatically constructed training set of ill-typed programs labeled with their
 repairs.
 %
-Fixes in our dataset are represented as the ASTs of the expressions that changed
-in the ill-typed programs and transformed the program to the correct solution.
+Fixes in our dataset are represented as the ASTs of the expressions that students
+changed in the ill-typed program to transform it into the correct solution.
 
 \mypara{Interaction Traces.}
 Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
@@ -198,8 +199,8 @@ relation.
 \label{sec:overview:predict}
 
 Next, we train models that can correctly predict error locations and fix
-templates for a given ill-typed program. These models will be used to generate
-candidate expressions as possible program fixes. In order to reduce the
+templates for a given ill-typed program. We use these models to generate
+candidate expressions as possible program fixes. To reduce the
 complexity of predicting the correct fix templates and error locations, we
 separate these problems and encode them into two distinct \emph{supervised
 classification} problems.
@@ -226,7 +227,7 @@ a set of fixed-length vectors by decomposing the AST $e$ into a set of its
 constituent subexpressions $\{e_1, \ldots, e_m\}$ and then representing each
 $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots, f_n(e_i)]$. This
 method is known as a \emph{bag-of-abstracted-terms} (BOAT) representation in
-previous work.
+previous work. % FIXME: CITE
 
 \mypara{Predicting Templates via MCC.}
 Our fix-labeled dataset can be updated so the labels represent the corresponding
@@ -238,9 +239,9 @@ Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of
 each class being correct for a given input. This confidence score can be used to
 rank fix-template predictions for new programs and use them in descending order
-to synthesize repairs until our high-level goal is reached. Finally, exploiting
-recent advances in machine learning, we use deep and dense architectures
-\citep{Schmidhuber_2015} aiming for more accurate fix template predictions.
+to synthesize repairs until our high-level goal is reached. %FIXME: I might respecify this goal
+Exploiting recent advances in machine learning, we use deep and dense 
+architectures \citep{Schmidhuber_2015} for more accurate fix template predictions.
 
 \mypara{Error Localization.} We view the problem of finding error locations
 in a new program as a \emph{binary} classification problem. In contrast with the
@@ -258,9 +259,9 @@ confidence.
 \label{sec:overview:synthesis}
 
 Next, we utilize existing program synthesis techniques to \emph{synthesize}
-candidate expressions that will be used to provide feedback to users. For
-efficiency, our approach exploits the fix template predictions and a set of
-possible error locations to guide program synthesis. We then return a ranked
+candidate expressions that will be used to provide feedback to users. 
+Guided by our learned fix-template predictions and a set of
+possible error locations to guide program synthesis, we return a ranked
 list of \emph{minimal} repairs to users as feedback.
 
 \mypara{Program Synthesis.} Given a set of locations and candidate templates for
