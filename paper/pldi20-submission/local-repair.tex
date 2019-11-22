@@ -6,26 +6,28 @@
     \begin{algorithmic}[1]
     \Require{Language Grammar \lang, Program $P$, Template $T$, Repair Location $L$, Max Repair Depth $D$}
     \Ensure{Local Repairs $R$}
-    \Procedure{Enumerate}{$\lang, P, T, L, D$}
+    \Procedure{Repair}{$\lang,\,P,\,T,\,L,\,D$}
     \State $R \gets \emptyset$
     \ForAll{$d \in [1 \dots D]$}
-      \State $\tilde{\alpha} \gets$ \Call{NonTerminalsAt}{$T, d$}
-      \ForAll{$\alpha \in$ \Call{RankNonTerminals}{$\tilde{\alpha}, P, L$}}
-        \If{\Call{IsHole}{$\tilde{\alpha}$}}
+      \State $\tilde{\alpha} \gets$ \Call{NonTerminalsAt}{$T,\,d$}
+      \ForAll{$\alpha \in$ \Call{RankNonTerminals}{$\tilde{\alpha},\,P,\,L$}}
+        \If{\Call{IsHole}{$\alpha$}}
           \State $Q \gets$ \Call{GrammarRules}{$\lang$}
-          \State $\tilde{\beta} \gets \{\beta\:|\:(\alpha, \beta) \in Q\}$
-          \ForAll{$\beta \in$ \Call{RankRules}{$\tilde{\beta}, T$}}
-            \State $\hat{T} \gets$ \Call{ApplyRule}{$T, (\alpha, \beta)$}
+          \State $\tilde{\beta} \gets \{\beta \mid (\alpha,\,\beta) \in Q\}$
+          \ForAll{$\beta \in$ \Call{RankRules}{$\tilde{\beta},\,T$}}
+            \State $\hat{T} \gets$ \Call{ApplyRule}{$T,\,(\alpha,\,\beta)$}
+            \State $R \gets R \cup \{\hat{T}\}$
           \EndFor
         \Else
-          \ForAll{$\sigma \in$ \Call{GetTerminals}{$P, \alpha, \lang$}}
-            \State $\hat{T} \gets$ \Call{ReplaceNode}{$T, \alpha, \sigma$}
+          \ForAll{$\sigma \in$ \Call{GetTerminals}{$P,\,L,\,\lang$}}
+            \State $\hat{T} \gets$ \Call{ReplaceNode}{$T,\,\alpha,\,\sigma$}
+            \State $R \gets R \cup \{\hat{T}\}$
           \EndFor
         \EndIf
-        \State $\hat{P} \gets$ \Call{ReplaceExprAt}{$P, L, \hat{T}$}
-        \If{\Call{TypeCheck}{$\hat{P}$}}
-          \State $R \gets R \cup \{\hat{P}\}$
-        \EndIf
+        % \State $\hat{P} \gets$ \Call{ReplaceExprAt}{$P,\,L,\,\hat{T}$}
+        % \If{\Call{TypeCheck}{$\hat{P}$}}
+        %   \State $R \gets R \cup \{\hat{T}\}$
+        % \EndIf
       \EndFor
     \EndFor
     \State \Return{$R$}
