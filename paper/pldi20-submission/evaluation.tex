@@ -16,7 +16,7 @@ questions:
     \item \textbf{RQ3}: How \emph{useful} are \toolname's error messages?
                         (\S~\ref{sec:eval:useful})
     \item \textbf{RQ4}: How \emph{precise} are \toolname's template fixes?
-                        (\S~\ref{sec:eval:template_quality}) 
+                        (\S~\ref{sec:eval:template_quality})
 
 \end{itemize}
 
@@ -38,7 +38,7 @@ higher-order functions and (polymorphic) algebraic data types.
 % WRW notes: the text had 416, but if you sum all of the subparts you get 449
 features from
 each sub-expression in a program: 45 local syntactic, 315
-contextual, 88 typing features, and 1 expression size feature. 
+contextual, 88 typing features, and 1 expression size feature.
 For contextual features, for each subexpression we
 additionally extract the local syntactic features of its first 4
 (left-to-right) children. In addition, we extract those features for its
@@ -172,14 +172,14 @@ $\hat{t}$.
 Next we evaluate the efficiency of \toolname by measuring how many programs it
 is able to generate a (well-typed) repair for.
 %
-Recall that the repair synthesis algorithm is guided by the repair template
-predictions.
-%
 To measure efficiency, we limit the synthesizer to 90 seconds for repair
 computations.
 (In general the procedure is undecidable, and we
 conjecture that a longer timeout will diminish the practical usability for
 novices.)
+%
+Recall that the repair synthesis algorithm is guided by the repair template
+predictions.
 %
 We evaluate the efficiency of \toolname by comparing
 it against a baseline \naive implementation that, given the predicted fix
@@ -191,8 +191,8 @@ $\_$.
 using the predicted templates for synthesis allows \toolname to generate
 type-correct repairs for almost 60\% of the programs in under 10 seconds, which
 is nearly 10 points higher than the \naive baseline. We also observe that
-\toolname manages to repair around 10\% more programs than \naive, almost
-consistently when execution times where higher than 10 seconds.
+\toolname successfully repairs around 10\% more programs than \naive
+for execution times greater than 10 seconds.
 
 \begin{framed}
   \noindent \toolname can generate type-correct repairs for the majority of
@@ -219,7 +219,7 @@ consistently when execution times where higher than 10 seconds.
 \begin{figure}
   \centering
   \includegraphics[height=2.2in]{cdf.pdf}
-  \caption{Test set repair rate for synthesis time limit. Results are accumulated into 1 second intervals.}
+  \caption{The proportion of the test set that can be repaired within a given time.}
   \label{fig:rite_naive}
 \end{figure}
 
@@ -333,7 +333,7 @@ statistically-significant differences between
 the human ratings for \toolname's and \seminal's
 repairs.
 %
-The task in Figure~\ref{subfig:good1} is that 
+The task in Figure~\ref{subfig:good1} is that
 \texttt{wwhile(f, b)} should return $x$ where
 there exist values $v_0,...,v_n$ such that:
 $b = v_0$, $x = v_n$, and for each $i$ between
