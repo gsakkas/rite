@@ -23,7 +23,7 @@ possible locations using MAX-SAT
 or statistical analysis~\citep{Seidel:2017}.
 %
 While valuable, these approaches at best help localize
-the problem but the student is still left in the dark
+the problem but students are still left in the dark
 about how to \emph{fix} their code.
 
 % Repairs as error messages?
@@ -31,7 +31,7 @@ about how to \emph{fix} their code.
 %
 Several recent papers have proposed an inspiring new line of
 attack on the feedback problem: using techniques from synthesis
-to provide feedback in the form of \emph{repairs} that the student
+to provide feedback in the form of \emph{repairs} that students
 can apply to improve their code.
 %
 These repairs are found either by symbolically searching a space of candidate
@@ -106,7 +106,7 @@ existing programs.
 %
 We have implemented our approach in \toolname: a type error reporting
 tool for \ocaml programs. We train (and evaluate) \toolname on a set of
-over 4,500 ill-typed \ocaml programs drawn from two instances of an
+over 4,500 ill-typed \ocaml programs drawn from two years of an
 introductory programming course.
 %
 Given a new ill-typed program, \toolname generates a list of potential
@@ -120,8 +120,8 @@ predicts the right repair template {FIXME} times.
 Second, we measure its \emph{efficiency}: we show that \toolname is able
 to synthesize a concrete repair {FIXME} of the time in XXX seconds.
 %
-Finally, we measure the \emph{quality} of the generated messages with
-a user study with 29 participants and show that humans and show that
+Finally, we measure the \emph{quality} of the generated messages via
+a user study with 29 participants and show that
 humans perceive both \toolname's edit locations and final repair quality
 to be better than those produced by \seminal, a state-of-the-art OCaml
 repair tool \citep{Lerner2007-dt} in a statistically-significant manner.
@@ -131,7 +131,8 @@ significant because \seminal incorporates several expert-guided
 heuristics for improving the quality of error messages by biasing
 its reports towards simpler and more useful ones.
 %
-Thus, our results demonstrate that data can be an unreasonably
+Thus, our results demonstrate that data can be an 
+% WRW thinks this is an odd word choice: unreasonably
 effective tool in the quest for better error messages.
 
 
