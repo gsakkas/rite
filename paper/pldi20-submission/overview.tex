@@ -39,7 +39,7 @@ used with a singleton list containing the multiplication of the head \texttt{hd}
 and \texttt{i}.
 %
 Our goal is to use historical data of how programmers have fixed similar errors
-in their programs to automatically and rapidly guide the novice to come up with
+in their programs to automatically and rapidly guide novices to come up with
 candidate solutions like the one above.
 
 
@@ -50,7 +50,7 @@ as a synthesis problem: synthesize a (small) set of edits
 to the program that yields a good (\eg type-correct) one.
 %
 To ensure that synthesis is tractable, the search must be
-carefully restricted to a relatively small, manually constructed
+carefully restricted to a relatively small, manually-constructed
 ``repair model'' that may not include the ``right'' fixes for
 an erroneous program.
 %FIXME: We are not manually constructing the repair model? I might make this
@@ -119,9 +119,9 @@ Together, these steps ensure that GASTs only contain information about a fix's
 %
 For example, the fix |[hd * i]| in the \mbd example would be represented by the
 GAST of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are
-abstracted into holes (e.g. by pruning the GAST at a depth $d=2$) and |*| is
+abstracted into holes (\eg by pruning the GAST at a depth $d=2$) and |*| is
 represented by an abstract binary operator. Our GAST approach is similar to
-\citep{Lerner2007-dt}, where AST-level modifications are used, but our proposed
+that of Lerner \emph{et al.}~\citep{Lerner2007-dt}, where AST-level modifications are used, but our proposed
 GASTs will represent more abstract fix schemas.
 
 
@@ -130,7 +130,7 @@ GASTs will represent more abstract fix schemas.
 
 Previous work has used experts to create a set of ill-typed programs and their
 fixed versions~\citep[][]{Lerner2007-dt, Loncaric2016-uk}, or to manually create
-\emph{fix templates} that can yield \emph{repair
+\emph{fix templates}~\cite{kim13par} that can yield \emph{repair
 patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
 %
 These approaches are hard to scale up to yield datasets suitable for machine
@@ -145,15 +145,16 @@ Fixes in our dataset are represented as the ASTs of the expressions that student
 changed in the ill-typed program to transform it into the correct solution.
 
 \mypara{Interaction Traces.}
-Following \citep{Seidel:2017} we extract a labeled dataset of erroneous programs
+Following Seidel and Jhala~\citep{Seidel:2017}, we extract a labeled
+dataset of erroneous programs
 and their fixed versions from \emph{interaction traces}. Usually students write
 several versions of their programs until they reach the correct solution for a
 programming assignment. An instrumented compiler is used to capture such
 sequences (or \emph{traces}) of student programs. The first type-correct
-solution in this sequence of program attempts is considered to be the fixed
+solution in this sequence of attempts is considered to be the fixed
 version of all the previous ones and thus a pair for each of them is added to
 the dataset. For each program pair, we then produce a \emph{diff} of their
-abstract syntax trees (ASTs), and assign as the dataset's fix labels, the
+abstract syntax trees (ASTs), and assign as the dataset's fix labels the
 \emph{smallest} sub-tree that changed between the correct and ill-typed attempt
 of the program.
 
@@ -219,7 +220,7 @@ subexpressions of ill-typed programs to a small set of fix templates as a
 \mypara{Feature Extraction.} The machine learning models that we will train
 to solve our MCC problem expect datasets of labeled \emph{fixed-length vectors}
 as inputs. Therefore, we define a transformation of fix-labeled programs to
-fixed-length vectors. Similarly to \citep{Seidel:2017}, we define a set of
+fixed-length vectors. Similarly to Seidel \emph{et al.}~\citep{Seidel:2017}, we define a set of
 feature extraction functions $f_1, \ldots, f_n$, that map program subexpressions
 to a numeric value (or just $\{0, 1\}$ to encode a boolean property). Given a
 set of feature extraction functions, we can represent a single program's AST as
@@ -284,7 +285,7 @@ where modifications depend on each other.
 \mypara{Ranking Fixes.} Finally, we rank each solution by two metrics, the
 \emph{tree-edit distance} and the \emph{string-edit} distance. Previous work
 \citep{Lerner2007-dt, Wang_2018, Gulwani_2018} has used such metrics to consider
-minimal changes, i.e. changes that are as close as possible to the original
+minimal changes, \ie changes that are as close as possible to the original
 programs, so novice programmers are presented with more coherent feedback.
 % Additionally, more experienced programmers might have in mind what \emph{type}
 % they want their functions to be. We thus provide the user with the option to
