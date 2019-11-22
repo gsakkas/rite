@@ -25,8 +25,8 @@ the repair templates' confidence scores.
 % allow it to synthesize a program that type-checks, it considers the next
 % program location (in decreasing order of confidence), until it succeeds.
 Our synthesis algorithm ranks all program locations based on their confidence
-scores $\Conf$. For all locations in descending order of their confidence
-scores, a fix template is used to produce a repair. Fix templates are also
+scores $\Conf$. For all locations in descending confidence
+score order, a fix template is used to produce a repair. Fix templates are also
 considered in descending order of confidence. If the algorithm fails to
 synthesize a program that type-checks, the next location is considered, until it
 succeeds.
@@ -37,11 +37,11 @@ extend the above approach to fix programs with multiple error locations.
 
 Let the confidence scores $\Conf$ for all locations in the type error slice from
 our error localization model $\Model$ be $(l_1, c_1), \dots, (l_k, c_k)$, where
-$l_i$ is a program location and $c_i$ its confidence score. We assume for
-simplicity that the probabilities $c_i$ are independent, so
+$l_i$ is a program location and $c_i$ its confidence score. We assume, for
+simplicity, that the probabilities $c_i$ are independent. Thus
 the probability that \emph{all} the locations $\{l_i \dots l_j\}$ need to be fixed
 is the product $c_i \cdots c_j$. Therefore, instead of
-just ranking and trying to find fixes for single locations $l$,
+ranking and trying to find fixes for single locations $l$,
 we use \emph{sets} of locations ($\{l_i\}, \{l_i, l_j\}, \{l_i, l_j, l_k\}$, \etc),
 ranked by the products of their confidence scores.
 % In practice we only consider up to \emph{five} locations to be fixed
@@ -87,12 +87,12 @@ $\lang$ are used to fill that node, depending on what terminals were used from
 $\repairLang$. For example, $\repairLang$'s operator $\oplus$ can be replaced
 with $+,\:-,\:\etc$
 
-After the template $T$ had some changes applied to it \BC{too vague}, we get an
+After one or more rules have been applied to a 
+template $T$, we obtain an
 \emph{instantiated} template $\hat{T}$, which then replaces the expression at
 location $L$. If the new program $\tilde{P}$ type-checks, it is inserted into
 the list of generated solutions $R$. $R$ is
-generated lazily in practice and the top-N can be requested for the user
-depending on the level of feedback that is needed.
+generated lazily in practice and the top-N results can be produced for the user. 
 
 
 % \subsection{Program Repair}

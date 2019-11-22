@@ -83,7 +83,7 @@ error locations expect fixed-length \emph{feature vectors} $\datasym$ as their
 input. However, we want to repair variable-sized programs over \lang. We thus
 use the $\extractsym$ function to convert programs to feature vectors.
 
-Following \citep{Seidel:2017}, we choose to model a program as a \emph{set} of
+Following Seidel \emph{et al.}~\citep{Seidel:2017}, we choose to model a program as a \emph{set} of
 feature vectors, where each element corresponds to a subexpression in the
 program. Thus, given an erroneous program $\pbad$ we first split it into its
 constituent subexpressions and then transform each subexpression into a single
@@ -167,16 +167,16 @@ Our goal with the $\trainsym$ function is to train two separate
 \emph{classifiers} given a training set $\List{\datasym \times
 \labelsym{\ConfBin}}$ of labeled examples. $\Model$ predicts error locations and
 $\ModelT$ predicts fix templates for a new input program $\pbad$. Critically, we
-require that the error localization classifier outputs a \emph{confidence score}
+require that the error localization classifier output a \emph{confidence score}
 $\Conf$ that represents the probability that the subexpression is the error that
-needs to be fixed. We also require that the fix template classifier outputs a
+needs to be fixed. We also require that the fix template classifier output a
 confidence score $\Conf$ for each of the selected fix templates that measures
 how sure the classifier is that a given template can be used to repair the
 associated location of the input program $\pbad$.
 
 We consider a standard learning algorithm to generate our models: \emph{neural
-networks}. A thorough introduction to neural networks can be found in
-\citep{Hastie2009-bn,Nielsen2015-pu}.
+networks}. A thorough introduction to neural networks is
+beyond the scope of this work~\citep{Hastie2009-bn,Nielsen2015-pu}.
 
 \mypara{Neural Networks}
 The model that we use is a type of neural network called a \emph{multi-layer
