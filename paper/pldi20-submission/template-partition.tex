@@ -87,7 +87,7 @@ therefore we abstract these extracted changes as our fix templates.
 
 \mypara{Contextual Repairs.}
 %
-Following \cite{Felleisen92} let $\econtext{}$ be the \emph{context} in which an
+Following Felleisen \emph{et al.}~\cite{Felleisen92}, let $\econtext{}$ be the \emph{context} in which an
 expression $e$ appears in a program $p$, \ie the program $p$ with $e$
 replaced by a hole $\_$.
 %
@@ -98,7 +98,7 @@ In this fashion, $\diffsym$ finds a \emph{minimal} (in number of nodes)
 expression replacement $\efix$ for an expression $\ebad$ in $\pbad$, such that
 $\pbad = \context{\pbad}{\ebad}$ and $\context{\pbad}{\efix} = \pfix$.
 %
-There may be several such expressions in a program, and $\diffsym$ returns all
+There may be several such expressions, and $\diffsym$ returns all
 such changes.
 
 \mypara{Examples.} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
@@ -115,8 +115,8 @@ $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
 
 Programs over \lang force similar fixes, such as changes to variable names, to
 have identical GASTs. Our next step is to define a notion of program fix
-\emph{similarity}. Our definition supports the formation of a small but widely
-applicable set of fix templates. This small set is used to train a repair
+\emph{similarity}. Our definition supports the formation of a small but 
+widely-applicable set of fix templates. This small set is used to train a repair
 predictor.
 
 \label{subsec:partitioning}
@@ -174,5 +174,5 @@ when fixing an erroneous program with this template.
 Finally, our partitioning algorithm returns the top $N$ equivalence classes
 based on their member-expressions frequency in the dataset. $N$ is a parameter
 of the algorithm and is chosen to be as small as possible while the top $N$
-classes represent a large enough portion of the dataset. We discuss more of its
-value in \autoref{sec:eval}.
+classes represent a large enough portion of the dataset. We discuss the
+appropriate choice of $N$ in \autoref{sec:eval}.
