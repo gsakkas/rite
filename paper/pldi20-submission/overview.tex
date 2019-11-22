@@ -1,8 +1,8 @@
 \section{Overview}
 \label{sec:overview}
 
-We begin with an overview of our approach to suggesting fixes for various faulty
-programs by collectively learning from the processes novice programmers follow
+We begin with an overview of our approach to suggesting fixes for faulty
+programs by learning from the processes novice programmers follow
 to fix errors in their programs.
 
 \begin{figure}[ht]
@@ -117,12 +117,12 @@ of the fix. Pruned sub-trees are replaced with \emph{holes}, which can represent
 Together, these steps ensure that GASTs only contain information about a fix's
 \emph{structure} rather than the specific changes in variables and functions.
 %
-For example, the fix |[hd * i]| in the \mbd example would be represented by the
+For example, the fix |[hd * i]| in the \mbd example is represented by the
 GAST of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are
 abstracted into holes (\eg by pruning the GAST at a depth $d=2$) and |*| is
 represented by an abstract binary operator. Our GAST approach is similar to
 that of Lerner \emph{et al.}~\citep{Lerner2007-dt}, where AST-level modifications are used, but our proposed
-GASTs will represent more abstract fix schemas.
+GASTs represent more abstract fix schemas.
 
 
 \subsection{Acquiring a Fix-Labeled Training Set}
@@ -259,7 +259,7 @@ confidence.
 \subsection{Synthesizing Feedback from Templates}
 \label{sec:overview:synthesis}
 
-Next, we utilize existing program synthesis techniques to \emph{synthesize}
+Next, we use existing program synthesis techniques to \emph{synthesize}
 candidate expressions that will be used to provide feedback to users.
 Guided by our learned fix-template predictions and a set of
 possible error locations to guide program synthesis, we return a ranked

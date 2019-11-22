@@ -141,7 +141,7 @@ are not included in those slices.
 \mypara{Labels.}
 Recall that we use two predictive models, $\Model$ for error localization and
 $\ModelT$ for predicting fix templates. We thus require two sets of
-\emph{labels} associated with each feature vector that are given by
+\emph{labels} associated with each feature vector, given by
 $\labelsym{\ConfBin}$. $\Model$ is trained using the set $\List{\datasym \times
 \ConfBin}$, while $\ModelT$ using the set $\List{\datasym \times
 \Tmap{\ConfBin}}$.
@@ -168,10 +168,10 @@ Our goal with the $\trainsym$ function is to train two separate
 \labelsym{\ConfBin}}$ of labeled examples. $\Model$ predicts error locations and
 $\ModelT$ predicts fix templates for a new input program $\pbad$. Critically, we
 require that the error localization classifier output a \emph{confidence score}
-$\Conf$ that represents the probability that the subexpression is the error that
+$\Conf$ that represents the probability that a subexpression is the error that
 needs to be fixed. We also require that the fix template classifier output a
-confidence score $\Conf$ for each of the selected fix templates that measures
-how sure the classifier is that a given template can be used to repair the
+confidence score $\Conf$ for each fix template that measures
+how sure the classifier is that the template can be used to repair the
 associated location of the input program $\pbad$.
 
 We consider a standard learning algorithm to generate our models: \emph{neural
@@ -183,12 +183,12 @@ The model that we use is a type of neural network called a \emph{multi-layer
 perceptron}. A multi-layer perceptron can be represented as a directed acyclic
 graph whose nodes are arranged in layers that are fully connected by weighted
 edges. The first layer corresponds to the input features, and the final to the
-output. The output of an internal node is given as the sum of the weighted
+output. The output of an internal node is the sum of the weighted
 outputs of the previous layer passed to a non-linear function, called the
 activation function. The number of layers,
 the number of nodes per layer, and the connections between layers constitute the
 \emph{architecture} of a neural network. In this work, we use relatively
-\emph{deep neural networks} (\dnn). Finally, we can train a \dnn $\Model$ as a
+\emph{deep neural networks} (\dnn). We can train a \dnn $\Model$ as a
 binary classifier, which will predict whether a location in a program $\pbad$
 has to be fixed or not.
 
@@ -211,10 +211,10 @@ This additional constraint speeds up training.
 \label{sec:templ-pred:predict}
 
 Our ultimate goal is to be able to pinpoint what parts of an erroneous program
-should be repaired and what fix templates should be utilized for that purpose.
+should be repaired and what fix templates should be used for that purpose.
 Therefore, the $\predictsym$ function uses $\ranksym$ to predict all
 subexpressions' confidence scores $\Conf$ to be an error location and confidence
-scores $\Tmap{\Conf}$ for each of the selected fix templates. In this section we
+scores $\Tmap{\Conf}$ for each fix template. In this section we
 show how all the functions in our high-level API in \autoref{fig:api} are
 combined to produce a final list of confidence scores for a new program $p$.
 \autoref{algo:predict-algo} shows our high-level $\predictsym$ algorithm.

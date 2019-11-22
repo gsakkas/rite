@@ -48,7 +48,7 @@ fix templates.
 
 \mypara{Generalizing ASTs.}
 A \emph{Generic Abstract Syntax Tree} (GAST) is a term from \repairLang that
-represents many possible expressions from \lang. GASTs are abstract from
+represents many possible expressions from \lang. GASTs are abstracted from
 standard ASTs over the core language \lang using the $\abstrsym$ function that
 takes as input an expression $e^{ML}$ over \lang and a depth $d$ and returns an
 expression $e^{RTL}$ over \repairLang, \ie a GAST with all variables, literals
@@ -82,8 +82,8 @@ for each location in $\pbad$ that changed in $\pfix$.
 %
 We do so with an expression-level $\diffsym$~\citep{Lempsink2009-xf} function.
 %
-Recall that we consider fixes to be replacements of expressions, and
-therefore we abstract these extracted changes as our fix templates.
+Recall that our fixes are replacements of expressions, so
+we abstract these extracted changes as our fix templates.
 
 \mypara{Contextual Repairs.}
 %
