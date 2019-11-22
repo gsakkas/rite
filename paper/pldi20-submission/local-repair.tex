@@ -1,6 +1,6 @@
 \begin{algorithm}[t]
     \caption{Local Repair Algorithm}
-    \label{local-repair-algo}
+    \label{algo:local-repair-algo}
     \renewcommand{\algorithmicrequire}{\textbf{Input:}}
     \renewcommand{\algorithmicensure}{\textbf{Output:}}
     \begin{algorithmic}[1]
@@ -12,8 +12,8 @@
       \State $\tilde{\alpha} \gets$ \Call{NonTerminalsAt}{$T, d$}
       \ForAll{$\alpha \in$ \Call{RankNonTerminals}{$\tilde{\alpha}, P, L$}}
         \If{\Call{IsHole}{$\tilde{\alpha}$}}
-          \State $R \gets$ \Call{GrammarRules}{$\lang$}
-          \State $\tilde{\beta} \gets \{\beta\:|\:(\alpha, \beta) \in R\}$
+          \State $Q \gets$ \Call{GrammarRules}{$\lang$}
+          \State $\tilde{\beta} \gets \{\beta\:|\:(\alpha, \beta) \in Q\}$
           \ForAll{$\beta \in$ \Call{RankRules}{$\tilde{\beta}, T$}}
             \State $\hat{T} \gets$ \Call{ApplyRule}{$T, (\alpha, \beta)$}
           \EndFor
