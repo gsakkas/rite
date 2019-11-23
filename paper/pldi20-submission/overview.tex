@@ -49,23 +49,21 @@ One approach is to view the search for candidate repairs
 as a synthesis problem: synthesize a (small) set of edits
 to the program that yields a good (\eg type-correct) one.
 %
-To ensure that synthesis is tractable, the search must be
-carefully restricted to a relatively small, manually-constructed
-``repair model'' that may not include the ``right'' fixes for
-an erroneous program.
-%FIXME: We are not manually constructing the repair model? I might make this
-% sentence more clear
+The key challenge is to ensure that synthesis is \emph{tractable}
+by restricting the repairs to an efficiently searchable space, and 
+yet \emph{precise} so the search does not miss the right fixes 
+for an erroneous program.
 %
 In this work, we present a novel strategy called
-\emph{Analytic Program Repair} which breaks the
-problem into three parts:
+\emph{Analytic Program Repair} which enables tractable 
+and precise search by decomposing the problem into three steps:
 %
 First, \emph{learn} a set of widely used \emph{fix templates}.
 %
 Second, \emph{predict}, for each erroneous program, the correct fix template to apply.
 %
 Third, \emph{synthesize} candidate repairs from the predicted template.
-
+%
 In the remainder of this section, we give a high-level overview
 of our approach by describing how to:
 
