@@ -239,10 +239,10 @@ Network (DNN)} classifier on the updated template-labeled data set.
 Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of
 each class being correct for a given input. This confidence score can be used to
-rank fix-template predictions for new programs and use them in descending order
-to synthesize repairs until our high-level goal is reached. %FIXME: I might respecify this goal
-Exploiting recent advances in machine learning, we use deep and dense
-architectures \citep{Schmidhuber_2015} for more accurate fix template predictions.
+rank fix template predictions for new programs and use them in descending order
+to synthesize repairs. Exploiting recent advances in machine learning, we use
+deep and dense architectures \citep{Schmidhuber_2015} for more accurate fix
+template predictions.
 
 \mypara{Error Localization} We view the problem of finding error locations
 in a new program as a \emph{binary} classification problem. In contrast with the
@@ -254,16 +254,15 @@ given program, the learned model outputs a confidence score representing how
 likely it is an error location that needs to be fixed. We exploit those scores
 to synthesize candidate expressions for each location in descending order of
 confidence.
-% We use this approach, rather than standard fault localization, because FIXME.
 
 \subsection{Synthesizing Feedback from Templates}
 \label{sec:overview:synthesis}
 
 Next, we use existing program synthesis techniques to \emph{synthesize}
-candidate expressions that will be used to provide feedback to users.
-Guided by our learned fix-template predictions and a set of
-possible error locations to guide program synthesis, we return a ranked
-list of \emph{minimal} repairs to users as feedback.
+candidate expressions that will be used to provide feedback to users. Guided by
+our learned fix template predictions and a set of possible error locations to
+guide program synthesis, we return a ranked list of \emph{minimal} repairs to
+users as feedback.
 
 \mypara{Program Synthesis} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of \emph{program synthesis}.
