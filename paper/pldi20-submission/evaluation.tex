@@ -37,7 +37,7 @@ higher-order functions and (polymorphic) algebraic data types.
 \toolname represents programs with BOAT vectors over a set of 449
 % WRW notes: the text had 416, but if you sum all of the subparts you get 449
 features from
-each sub-expression in a program: 45 local syntactic, 315
+each subexpression in a program: 45 local syntactic, 315
 contextual, 88 typing features, and 1 expression size feature.
 For contextual features, for each subexpression we
 additionally extract the local syntactic features of its first 4
@@ -49,7 +49,7 @@ ancestors, starting from its parent and going up to two more parent nodes.
     %
 For typing features, we support |int|s, |float|s, |char|s, |string|s, and
     the user-defined |expr|. These features are extracted for each
-    sub-expression and its context.
+    subexpression and its context.
 %
 % 1 feature denoting the size of each subexpression.
 
@@ -152,7 +152,7 @@ often mis-predicted for another template.
 %
 For example, we see that programs that require template 20
 (\elet{\hat{z}}{\epcases{\hat{t}}{\hat{x}}{\hat{y}}{\hat{a}}}{\_}) to be fixed,
-almost always are mis-predicted with template 11 (\elet{(\hat{x},
+almost always are mis-predicted with template 11 (\elet{(\hat{x},\
 \hat{y})}{\hat{t}}{(\_,\ \_)}). We observe that these templates are still very
 similar, with both of them having a top-level |let| that manipulates tuples
 $\hat{t}$.
@@ -181,18 +181,20 @@ novices.)
 Recall that the repair synthesis algorithm is guided by the repair template
 predictions.
 %
-We evaluate the efficiency of \toolname by comparing
-it against a baseline \naive implementation that, given the predicted fix
-location, attempts to synthesize a repair from the trivial ``hole'' template
-$\_$.
+We evaluate the efficiency of \toolname by comparing it against a baseline
+\naive implementation that, given the predicted fix location, attempts to
+synthesize a repair from the trivial ``hole'' template $\_$.
 
 \autoref{fig:rite_naive} shows the cumulative distribution function of
 \toolname's and \naive's repair rates over their synthesis time. We observe that
 using the predicted templates for synthesis allows \toolname to generate
 type-correct repairs for almost 60\% of the programs in under 10 seconds, which
-is nearly 10 points higher than the \naive baseline. We also observe that
-\toolname successfully repairs around 10\% more programs than \naive
-for execution times greater than 10 seconds.
+is nearly 12 points higher than the \naive baseline. We also observe that
+\toolname successfully repairs around 10\% more programs than \naive for
+execution times greater than 10 seconds. While the \naive approach is still able
+to synthesize well-typed repairs relatively quickly, we will see that these
+repairs are of much lower quality than those generated from the predicted
+templates (\autoref{sec:eval:template_quality}).
 
 \begin{framed}
   \noindent \toolname can generate type-correct repairs for the majority of
@@ -352,7 +354,7 @@ for the programs in Fig~\ref{subfig:good1}
 and~\ref{subfig:good2}.
 %
 In both cases, \toolname's found a solution
-which typechecks and conforms to the problem's
+which type-checks and conforms to the problem's
 semantic specification.
 %
 \seminal, however, found a repair that was

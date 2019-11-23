@@ -114,26 +114,18 @@ solutions ranked by likelihood and an \emph{edit-distance} metric.
 We train \toolname on programs from one year and evaluate in several
 ways.
 %
-First, we measure its \emph{accuracy}: we show that \toolname correctly
-predicts the right repair template {FIXME} times.
+First, we measure its \emph{accuracy}: we show that \toolname correctly predicts
+the right repair template 69\% of the time when considering the top three
+templates and surpasses 80\% when we consider the top six.
 %
-Second, we measure its \emph{efficiency}: we show that \toolname is able
-to synthesize a concrete repair {FIXME} of the time in XXX seconds.
+Second, we measure its \emph{efficiency}: we show that \toolname is able to
+synthesize a concrete repair 70\% of the time in under 20 seconds.
 %
-Finally, we measure the \emph{quality} of the generated messages via
-a user study with 29 participants and show that
-humans perceive both \toolname's edit locations and final repair quality
-to be better than those produced by \seminal, a state-of-the-art OCaml
-repair tool \citep{Lerner2007-dt} in a statistically-significant manner.
-%
-This improvement shown by our data-driven method is especially
-significant because \seminal incorporates several expert-guided
-heuristics for improving the quality of error messages by biasing
-its reports towards simpler and more useful ones.
-%
-Thus, our results demonstrate that data can be an 
-% WRW thinks this is an odd word choice: unreasonably
-effective tool in the quest for better error messages.
+Finally, we measure the \emph{quality} of the generated messages via a user
+study with 29 participants and show that humans perceive both \toolname's edit
+locations and final repair quality to be better than those produced by \seminal,
+a state-of-the-art OCaml repair tool \citep{Lerner2007-dt} in a
+statistically-significant manner.
 
 
 % First, what is a repair and when are two repairs similar?

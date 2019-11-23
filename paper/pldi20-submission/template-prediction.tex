@@ -33,7 +33,7 @@ Next, we describe the key data-types in \autoref{fig:api}, our implementations
 of the three key steps, and how they are combined to yield the $\predictsym$
 algorithm.
 
-\mypara{Confidences, Data and Labels.}
+\mypara{Confidences, Data and Labels}
 As shown in \autoref{fig:api}, we define $\Emap{a}$ as a mapping from
 expressions $e$ to values of type $a$, and $\Tmap{a}$ as a mapping from
 templates $\T$ to such values. For example, $\Tmap{\Conf}$ is a mapping from
@@ -42,7 +42,7 @@ vectors used to train our predictive models, while $\labelsym{\ConfBin}$ are the
 dataset labels for training and $\labelsym{\Conf}$ are the output confidence
 scores. Finally, $\pairsym$ is a program pair $(\pbad,\ \pfix)$.
 
-\mypara{Features and Predictors.}
+\mypara{Features and Predictors}
 We define $\featuresym$ as a function that generates the feature vectors
 $\datasym$ for each subexpression of an input program $e$. Those feature vectors
 are given in the form of a map $\Emap{\datasym}$, which maps all subexpressions
@@ -56,7 +56,7 @@ $\labelsym{\Conf}$.
 % \BC{here it's ``a confidence score $\labelsym{\Conf}$''; just recently it was
 % ``their confidence scores $\Conf$''}
 
-\mypara{Architecture.}
+\mypara{Architecture}
 First, the $\extractsym$ function takes as input the feature extraction
 functions $\featuresym$, a list of templates $\List{\T}$ and a single program
 pair $\pairsym$ and generates a map $\Emap{(\datasym \times
@@ -90,13 +90,13 @@ constituent subexpressions and then transform each subexpression into a single
 feature vector, \ie $\featuresym\ \pbad :: \Emap{\datasym}$. We show here
 the five major feature categories used.
 
-\mypara{Local syntactic features.}
+\mypara{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
 words, for each production rule of $e$ in \autoref{fig:ml-syntax} we introduce a
 feature that is enabled (set to $1$) if the expression was built with that
 production, and disabled (set to $0$) otherwise.
 
-\mypara{Contextual syntactic features.}
+\mypara{Contextual syntactic features}
 The \emph{context} in which an expression occurs can be critical for correctly
 predicting error sources and fix templates. Therefore, we include contextual
 features, which are similar to the local syntactic features but describe the
@@ -106,13 +106,13 @@ is similar
 to the \emph{n-grams} used in linguistic models
 \citep{Hindle2012-hf,Gabel2010-el}.
 
-\mypara{Expression size.}
+\mypara{Expression size}
 We also include a feature representing the \emph{size} of each expression, \ie
 how many subexpressions does it contain? This allows the model to learn that,
 \eg, expressions closer to the leaves are more likely to be fixed than
 expressions closer to the root.
 
-\mypara{Typing features.}
+\mypara{Typing features}
 The programs we are trying to repair are \emph{untypeable}, but a \emph{partial
 typing} derivation from the type checker could still provide useful information
 to the model. Therefore, we include \emph{typing} features in our
@@ -128,8 +128,7 @@ We add these features for parent and child expressions to summarize the context,
 but also for the current expression, as the type of an expression is not always
 clear syntactically.
 
-% TODO: cite the correct paper
-\mypara{Type error slice.}
+\mypara{Type error slice}
 We wish to distinguish changes that could fix the error
 from changes that \emph{cannot possibly} fix the error. Thus, we compute a
 minimal type-error \emph{slice} (\eg \citep{Tip2001-qp,Haack2003-vc}) for the
@@ -138,7 +137,7 @@ program contains multiple type-errors, we compute a minimal slice for each
 error. We then have a post-processing step that discards all expressions that
 are not included in those slices.
 
-\mypara{Labels.}
+\mypara{Labels}
 Recall that we use two predictive models, $\Model$ for error localization and
 $\ModelT$ for predicting fix templates. We thus require two sets of
 \emph{labels} associated with each feature vector, given by
@@ -161,7 +160,7 @@ in \S~\ref{sec:templ-partition:templates}.
 
 \subsection{Training Predictive Models}
 \label{sec:templ-pred:train}
-\lstDeleteShortInline{|} % sigh...
+\lstDeleteShortInline{|}
 
 Our goal with the $\trainsym$ function is to train two separate
 \emph{classifiers} given a training set $\List{\datasym \times
