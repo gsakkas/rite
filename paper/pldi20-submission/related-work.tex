@@ -35,7 +35,7 @@ The above approach is generalized to general correctness properties by
 set of expert provided \emph{sketches} that represent possible repairs.
 %
 In contrast, \toolname learns a template of repairs from a corpus yielding
-higher quality feedback \S~\ref{sec:eval}.
+higher quality feedback (\S~\ref{sec:eval}).
 
 \mypara{Corpus-based feedback}
 %
@@ -46,10 +46,10 @@ representative is used to extract repair expressions.
 %
 Similarly, \textsc{Sarfgen} \citep{Wang_2018} focuses on structural and
 control-flow similarity of programs to produce repairs, by using AST vector
-embeddings to calculate distance metrics (to ``similar'' or ``nearby'' correct
+embeddings to calculate distance metrics (to ``nearby'' correct
 programs) more robustly.
 %
-While the above are data-driven, both \textsc{Clara} and \textsc{Sarfgen} assume
+\textsc{Clara} and \textsc{Sarfgen} are data-driven, but both assume
 there is a ``close'' correct sample in the corpus.
 %
 In contrast, \toolname has a more general philosophy that \emph{similar errors
@@ -59,8 +59,9 @@ arbitrary programs whose errors (BOAT vectors) are similar.
 The \textsc{Tracer} system \cite{TRACER2018} is closest in philosophy to ours,
 except that it focuses on single-line compilation errors for C programs, where
 it shows that NLP-based methods like sequence-to-sequence predicting DNNs can
-effectively suggest repairs, \eg \verb+scanf("%d", a)+ should be converted to
-\verb+scanf("%d", %a)+ but which do not scale up to fixing general type errors.
+effectively suggest repairs, %\eg \verb+scanf("%d", a)+ should be converted to
+%\verb+scanf("%d", %a)+
+but this does not scale up to fixing general type errors.
 %
 We have found that \ocaml's relatively simple
 \emph{syntactic} structure but rich \emph{type}
@@ -101,4 +102,3 @@ features and (learned) repair templates.
 %% \textsc{Clara} also scales poorly in matching programs due
 %% to the use of Integer Linear Programming, while \toolname's precomputation of
 %% fix-template models makes final repairs more robust.
-
