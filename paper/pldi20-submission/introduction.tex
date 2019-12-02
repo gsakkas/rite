@@ -3,28 +3,25 @@
 
 % The problem
 %
-Languages with Hindley-Milner style, unification-based inference
-offer the benefits of static typing with minimal annotation overhead.
-The catch, however, is that programmers must first ascend the steep
-learning curve associated with understanding the \emph{error messages}
-produced by the compiler.
+Languages with Hindley-Milner style, unification-based inference offer the
+benefits of static typing with minimal annotation overhead. The catch, however,
+is that programmers must first ascend the steep learning curve associated with
+understanding the \emph{error messages} produced by the compiler.
 %
-While \emph{experts} can, usually, readily decipher the errors, and
-view them as invaluable aids to program development and refactoring,
-\emph{novices} are typically left quite befuddled and frustrated,
-without a clear idea of \emph{what} the problem is~\citep{Wand1986-nw}.
+While \emph{experts} can, usually, readily decipher the errors, and view them as
+invaluable aids to program development and refactoring, \emph{novices} are
+typically left quite befuddled and frustrated, without a clear idea of
+\emph{what} the problem is~\citep{Wand1986-nw}.
 %
 Owing to the importance of the problem, several authors have proposed methods to
 help debug type errors, typically, by \emph{slicing} down the program to the
 problematic locations~\citep{Haack2003-vc, Rahli2015-tt}, by \emph{enumerating}
 possible causes \citep{Lerner2007-dt, Chen2014-gd}, or by \emph{ranking} the
-possible locations using MAX-SAT
-\citep{Pavlinovic2014-mr}, Bayesian~\citep{Zhang2014-lv}
-or statistical analysis~\citep{Seidel:2017}.
+possible locations using MAX-SAT \citep{Pavlinovic2014-mr},
+Bayesian~\citep{Zhang2014-lv} or statistical analysis~\citep{Seidel:2017}.
 %
-While valuable, these approaches at best help localize
-the problem but students are still left in the dark
-about how to \emph{fix} their code.
+While valuable, these approaches at best help localize the problem but students
+are still left in the dark about how to \emph{fix} their code.
 
 % Repairs as error messages?
 \mypara{Repairs as Feedback}
@@ -64,18 +61,13 @@ program.
 
 \mypara{Analytic Program Repair}
 %
-In this work, we present a novel error repair
-strategy called \emph{Analytic Program Repair}
-that uses supervised learning instead of manually
-crafted repair models or matching against a corpus
-of correct code.
+In this work, we present a novel error repair strategy called \emph{Analytic
+Program Repair} that uses supervised learning instead of manually crafted repair
+models or matching against a corpus of correct code.
 %
-Our strategy is based on the key insight that
-\emph{similar errors} have similar repairs.
-%
-Our strategy realizes the above insight by using
-a training dataset of pairs of ill-typed programs
-and their fixed versions to:
+Our strategy is based on the key insight that \emph{similar errors} have similar
+repairs and realizes this insight by using a training dataset of pairs of
+ill-typed programs and their fixed versions to:
 %
 (1)~\emph{learn} a collection of candidate repair templates
     by abstracting and partitioning the edits made in the
@@ -89,7 +81,7 @@ and their fixed versions to:
    by enumerating and ranking correct (\eg well-typed)
    terms matching the predicted template,
 %
-thereby, generating a fix from a candidate program.
+thereby, generating a fix for a candidate program.
 %
 Critically, we show how to perform the crucial abstraction
 from a particular \emph{program} to an abstract \emph{error}
@@ -119,7 +111,7 @@ the right repair template 69\% of the time when considering the top three
 templates and surpasses 80\% when we consider the top six.
 %
 Second, we measure its \emph{efficiency}: we show that \toolname is able to
-synthesize a concrete repair 70\% of the time in under 20 seconds.
+synthesize a concrete repair within 20 seconds 70\% of the time.
 %
 Finally, we measure the \emph{quality} of the generated messages via a user
 study with 29 participants and show that humans perceive both \toolname's edit

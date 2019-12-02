@@ -83,12 +83,13 @@ error locations expect fixed-length \emph{feature vectors} $\datasym$ as their
 input. However, we want to repair variable-sized programs over \lang. We thus
 use the $\extractsym$ function to convert programs to feature vectors.
 
-Following Seidel \emph{et al.}~\citep{Seidel:2017}, we choose to model a program as a \emph{set} of
-feature vectors, where each element corresponds to a subexpression in the
-program. Thus, given an erroneous program $\pbad$ we first split it into its
-constituent subexpressions and then transform each subexpression into a single
-feature vector, \ie $\featuresym\ \pbad :: \Emap{\datasym}$. We show here
-the five major feature categories used.
+Following Seidel \emph{et al.}~\citep{Seidel:2017}, we choose to model a program
+as a \emph{set} of feature vectors, where each element corresponds to a
+subexpression in the program. Thus, given an erroneous program $\pbad$ we first
+split it into its constituent subexpressions and then transform each
+subexpression into a single feature vector, \ie $\featuresym\ \pbad ::
+\Emap{\datasym}$. We only consider expressions inside a minimal type-error
+\emph{slice}. We show here the five major feature categories used.
 
 \mypara{Local syntactic features}
 These features describe the syntactic category of each expression $e$. In other
@@ -129,13 +130,13 @@ but also for the current expression, as the type of an expression is not always
 clear syntactically.
 
 \mypara{Type error slice}
-We wish to distinguish changes that could fix the error
-from changes that \emph{cannot possibly} fix the error. Thus, we compute a
-minimal type-error \emph{slice} (\eg \citep{Tip2001-qp,Haack2003-vc}) for the
-program (\ie the set of expressions that contribute to the error) and if the
-program contains multiple type-errors, we compute a minimal slice for each
-error. We then have a post-processing step that discards all expressions that
-are not included in those slices.
+We wish to distinguish changes that could fix the error from changes that
+\emph{cannot possibly} fix the error. Thus, we compute a minimal type-error
+\emph{slice} (\eg \citep{Tip2001-qp,Haack2003-vc}) for the program (\ie the set
+of expressions that contribute to the error) and if the program contains
+multiple type-errors, we compute a minimal slice for each error. We then have a
+post-processing step that discards all expressions that are not included in
+those slices.
 
 \mypara{Labels}
 Recall that we use two predictive models, $\Model$ for error localization and
@@ -213,10 +214,10 @@ Our ultimate goal is to be able to pinpoint what parts of an erroneous program
 should be repaired and what fix templates should be used for that purpose.
 Therefore, the $\predictsym$ function uses $\ranksym$ to predict all
 subexpressions' confidence scores $\Conf$ to be an error location and confidence
-scores $\Tmap{\Conf}$ for each fix template. In this section we
-show how all the functions in our high-level API in \autoref{fig:api} are
-combined to produce a final list of confidence scores for a new program $p$.
-\autoref{algo:predict-algo} shows our high-level $\predictsym$ algorithm.
+scores $\Tmap{\Conf}$ for each fix template. We show here how all the functions
+in our high-level API in \autoref{fig:api} are combined to produce a final list
+of confidence scores for a new program $p$. \autoref{algo:predict-algo} presents
+our high-level $\predictsym$ algorithm.
 
 \input{predict-algo.tex}
 

@@ -50,12 +50,12 @@ as a synthesis problem: synthesize a (small) set of edits
 to the program that yields a good (\eg type-correct) one.
 %
 The key challenge is to ensure that synthesis is \emph{tractable}
-by restricting the repairs to an efficiently searchable space, and 
-yet \emph{precise} so the search does not miss the right fixes 
+by restricting the repairs to an efficiently searchable space, and
+yet \emph{precise} so the search does not miss the right fixes
 for an erroneous program.
 %
 In this work, we present a novel strategy called
-\emph{Analytic Program Repair} which enables tractable 
+\emph{Analytic Program Repair} which enables tractable
 and precise search by decomposing the problem into three steps:
 %
 First, \emph{learn} a set of widely used \emph{fix templates}.
@@ -92,16 +92,16 @@ of our approach by describing how to:
 
 Our notion of a fix is defined as a \emph{replacement} of an existing expression
 with a new \emph{candidate} expression at a specific program location. For
-example, the \mbd program is fixed by replacing |(hd * i)| with the candidate
-expression |[hd * i]| on line 4. We focus on AST-level replacements as they are
-compact yet expressive enough to represent fixes.
+example, the \mbd program is fixed by replacing |(hd * i)| with the expression
+|[hd * i]| on line 4. We focus on AST-level replacements as they are compact yet
+expressive enough to represent fixes.
 
 
 \mypara{Generic Abstract Syntax Trees}
 %
 We represent the different possible candidate expressions via abstract fix
 templates called \emph{Generic Abstract Syntax Trees} (GAST) which each
-corresponds to many possible candidate expressions.
+correspond to many possible expressions.
 %
 GASTs are obtained from concrete ASTs in two steps.
 %
@@ -115,12 +115,12 @@ of the fix. Pruned sub-trees are replaced with \emph{holes}, which can represent
 Together, these steps ensure that GASTs only contain information about a fix's
 \emph{structure} rather than the specific changes in variables and functions.
 %
-For example, the fix |[hd * i]| in the \mbd example is represented by the
-GAST of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are
-abstracted into holes (\eg by pruning the GAST at a depth $d=2$) and |*| is
-represented by an abstract binary operator. Our GAST approach is similar to
-that of Lerner \emph{et al.}~\citep{Lerner2007-dt}, where AST-level modifications are used, but our proposed
-GASTs represent more abstract fix schemas.
+For example, the fix |[hd * i]| in the \mbd example is represented by the GAST
+of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are abstracted
+into holes (\eg by pruning the GAST at a depth $d=2$) and |*| is represented by
+an abstract binary operator |$\oplus$|. Our approach is similar to that of
+Lerner \emph{et al.}~\citep{Lerner2007-dt}, where AST-level modifications are
+used, however, our proposed GASTs represent more abstract fix schemas.
 
 
 \subsection{Acquiring a Fix-Labeled Training Set}
@@ -161,12 +161,11 @@ of the program.
 \label{sec:overview:learn}
 
 Each labeled program in our dataset contains a fix, which we abstract to a fix
-template. For example, in the \mbd program from \autoref{fig:mulByDigit} we get
-the fix candidate |[hd * i]| and hence the fix template |[_ $\oplus$ _]|.
-However, a large dataset of fix-labeled programs, which may include many
-diverse solutions, can introduce a huge set of fix templates, which can be
-inappropriate for predicting the correct one to be used for the final program
-repair.
+template. For example, for the \mbd program in \autoref{fig:mulByDigit} we get
+the candidate fix |[hd * i]| and hence the fix template |[_ $\oplus$ _]|.
+However, a large dataset of fix-labeled programs, which may include many diverse
+solutions, can introduce a huge set of fix templates, which can be inappropriate
+for predicting the correct one to be used for the final program repair.
 
 Therefore, the next step in our approach is to learn a set of fix templates
 that is \emph{small enough} to automatically predict which template to apply to
@@ -212,8 +211,8 @@ maps the inputs to output labels and generalizes to future inputs. In a
 \emph{classification} problem, the function we are trying to learn maps inputs
 to a discrete set of two or more output labels, called \emph{classes}.
 Therefore, we encode the task of learning a function that will map
-subexpressions of ill-typed programs to a small set of fix templates as a
-\emph{multi-class} classification (MCC) problem.
+subexpressions of ill-typed programs to a small set of candidate fix templates
+as a \emph{multi-class} classification (MCC) problem.
 
 \mypara{Feature Extraction} The machine learning models that we will train to
 solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
@@ -236,18 +235,18 @@ Network (DNN)} classifier on the updated template-labeled data set.
 
 Neural networks have the advantage of associating each class with a
 \emph{confidence score} that can be interpreted as the model's confidence of
-each class being correct for a given input. This confidence score can be used to
-rank fix template predictions for new programs and use them in descending order
-to synthesize repairs. Exploiting recent advances in machine learning, we use
-deep and dense architectures \citep{Schmidhuber_2015} for more accurate fix
-template predictions.
+each class being correct for a given input. Therefore, confidence scores can be
+used to rank fix template predictions for new programs and use them in
+descending order when synthesizing repairs. Exploiting recent advances in
+machine learning, we use deep and dense architectures \citep{Schmidhuber_2015}
+for more accurate fix template predictions.
 
-\mypara{Error Localization} We view the problem of finding error locations
-in a new program as a \emph{binary} classification problem. In contrast with the
+\mypara{Error Localization} We view the problem of finding error locations in a
+new program as a \emph{binary} classification problem. In contrast with the
 template prediction problem, we want to learn a function that maps a program's
 subexpressions to a binary output representing the presence of an error or not.
-Therefore, this problem is a equivalent to a MCC with only two classes and thus,
-we use similar deep architectures of neural networks. For each expression in a
+Therefore, this problem is equivalent to MCC with only two classes and thus, we
+use similar deep architectures of neural networks. For each expression in a
 given program, the learned model outputs a confidence score representing how
 likely it is an error location that needs to be fixed. We exploit those scores
 to synthesize candidate expressions for each location in descending order of
@@ -256,11 +255,11 @@ confidence.
 \subsection{Synthesizing Feedback from Templates}
 \label{sec:overview:synthesis}
 
-Next, we use existing program synthesis techniques to \emph{synthesize}
-candidate expressions that will be used to provide feedback to users. Guided by
-our learned fix template predictions and a set of possible error locations to
-guide program synthesis, we return a ranked list of \emph{minimal} repairs to
-users as feedback.
+Next, we use classic program \emph{synthesis} techniques to synthesize candidate
+expressions that will be used to provide feedback to users. Additionally,
+synthesis is guided by predicted fix templates and a set of possible error
+locations, and returns a ranked list of \emph{minimal} repairs to users as
+feedback.
 
 \mypara{Program Synthesis} Given a set of locations and candidate templates for
 those locations, we are trying to solve a problem of \emph{program synthesis}.
@@ -275,8 +274,8 @@ It is often the case that more than one location needs to be fixed. Therefore,
 we do not only consider the ordered set of single error locations for synthesis,
 but rather its power set. For simplicity, we consider fixing different program
 locations as independent; the probability we assign that a set of locations
-needs to be fixed is thus the product their individual confidence scores. This
-is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019}
+needs to be fixed is thus the product of their individual confidence scores.
+This is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019}
 where modifications depend on each other.
 
 \mypara{Ranking Fixes} Finally, we rank each solution by two metrics, the
@@ -301,14 +300,14 @@ programs, so novice programmers are presented with more coherent feedback.
   \label{fig:repair}
   \end{figure}
 
-\mypara{Example} We see in \autoref{fig:repair} a minimal repair that our
-method could return (|[$v_1$ * $v_2$]| in line 4), using the template discussed
-in \S~\ref{sec:overview:learn} to synthesize this solution. While this solution
-is not the highest-ranked that our implementation returns (which would be
-identical to the human solution), it demonstrates relevant aspects of the
-synthesizer. In particular, this solution has some abstracted variables, $v_1$
-and $v_2$. Our algorithm suggests to the user that they can replace the two
-variables with two distinct variables and insert the whole expression into a
-list, in order to obtain the correct program. We hypothesize that such solutions
-produced by our algorithm can provide valuable feedback to novices, and we
-investigate that claim empirically in \S~\ref{sec:eval:useful}.
+\mypara{Example} We see in \autoref{fig:repair} a minimal repair that our method
+could return (|[$v_1$ * $v_2$]| in line 4) using the template discussed in
+\S~\ref{sec:overview:learn} to synthesize it. While this solution is not the
+highest-ranked that our implementation returns (which would be identical to the
+human solution), it demonstrates relevant aspects of the synthesizer. In
+particular, this solution has some abstracted variables, $v_1$ and $v_2$. Our
+algorithm suggests to the user that they can replace the two variables with two
+distinct variables and insert the whole expression into a list, in order to
+obtain the correct program. We hypothesize that such solutions produced by our
+algorithm can provide valuable feedback to novices, and we investigate that
+claim empirically in \S~\ref{sec:eval:useful}.

@@ -1,11 +1,11 @@
 \section{Template-Guided Repair Synthesis}
 \label{sec:synthesis}
 We use program synthesis to fully repair a program using predicted fix templates
-and locations from our models. We present in
+and locations from our machine learning models. We present in
 \S~\ref{sec:synthesis:local-synthesis} a synthesis algorithm for producing
 \emph{local repairs} for a given program location. In
-\S~\ref{sec:synthesis:location-rank}, we show how we use local repairs to
-repair programs that may have \emph{multiple} error locations.
+\S~\ref{sec:synthesis:location-rank}, we show how we use local repairs to repair
+programs that may have \emph{multiple} error locations.
 
 \lstMakeShortInline[mathescape=true]{|}
 
@@ -13,19 +13,18 @@ repair programs that may have \emph{multiple} error locations.
 \label{sec:synthesis:local-synthesis}
 
 \mypara{Enumerative Program Synthesis}
-We perform a classic \emph{enumerative} program synthesis that is guided by a
-fix template. Enumerative synthesis searches all possible expressions over a
+We utilize classic \emph{enumerative} program synthesis that is guided by a fix
+template. Enumerative synthesis searches all possible expressions over a
 language until a high-level specification is reached. In our case, we initially
 synthesize independent \emph{local repairs} for a program that already captures
 the user's intent. Therefore, the required specification is that the repaired
-program is type-safe. However, a stricter specification can also be used, by
-only synthesizing programs that have the user's desired type signature, if
-they provide one.
+program is type-safe. However, if the users provide type signatures for their
+programs, they can be used as a stricter specification.
 
 Given a location $l$, a template $t$ and a maximum depth $d$,
 \autoref{algo:local-repair-algo} searches over all possible expressions over
 \lang that will satisfy those goals by generating a local repair that fills
-$t$'s GAST with concrete variables, literals, functions \etc. Our technique can
+$t$'s GAST with concrete variables, literals, functions \etc Our technique can
 also reuse subexpressions $e$ at location $l$ for $t$'s concretization to
 further optimize the search.
 
@@ -57,18 +56,17 @@ into $R$.
 
 \mypara{Error Location Confidence}
 Recall from \autoref{sec:templ-pred} that for each subexpression in a program's
-type-error slice, our $\Model$ generates a confidence score $\Conf$ for it being
-the error location, and our $\ModelT$ generates scores for the fix
-templates.
+type-error slice, $\Model$ generates a confidence score $\Conf$ for it being the
+error location, and $\ModelT$ generates scores for the fix templates.
 
 Our synthesis algorithm ranks all program locations based on their confidence
 scores $\Conf$. For all locations in descending confidence score order, a fix
 template is used to produce a local repair using
-\autoref{algo:local-repair-algo}. Fix templates are also considered in
-descending order of confidence. Then expressions from the returned list of local
-repairs $R$ replace the expression at the given program location. The procedure
-tries the remaining repairs, templates, and locations
-until a type-correct program is found.
+\autoref{algo:local-repair-algo}. Fix templates are considered in descending
+order of confidence. Then expressions from the returned list of local repairs
+$R$ replace the expression at the given program location. The procedure tries
+the remaining repairs, templates, and locations until a type-correct program is
+found.
 
 Following \citep{Lerner2007-dt}, we allow our final local repairs to have
 program holes $\_$ or abstracted variable $\hat{x}$ in them. However,
@@ -79,17 +77,17 @@ type when type-checking concrete solutions, similarly to \ocaml's |raise Exn|.
 \mypara{Multiple Error Locations}
 In practice, frequently more than one program location needs to be repaired. We
 thus extend the above approach to fix programs with multiple errors. Let the
-confidence scores $\Conf$ for all locations in the type error slice from our
+confidence scores $\Conf$ for all locations $L$ in the type error slice from our
 error localization model $\Model$ be $(l_1, c_1), \dots, (l_k, c_k)$, where
 $l_i$ is a program location and $c_i$ its error confidence score. We assume for
 simplicity that the probabilities $c_i$ are independent. Thus the probability
 that \emph{all} the locations $\{l_i \dots l_j\}$ need to be fixed is the
-product $c_i \cdots c_j$. Therefore, instead of ranking and trying to find
-fixes for single locations $l$, we use \emph{sets} of locations ($\{l_i\},
-\{l_i, l_j\}, \{l_i, l_j, l_k\}$, \etc), ranked by the products of their
-confidence scores. For a given set, we use \autoref{algo:local-repair-algo}
-independently for each location in the set and apply all possible combinations
-of local repairs, looking again for a type-correct solution.
+product $c_i \cdots c_j$. Therefore, instead of ranking and trying to find fixes
+for single locations $l$, we use \emph{sets} of locations ($\{l_i\}, \{l_i,
+l_j\}, \{l_i, l_j, l_k\}$, \etc), ranked by the products of their confidence
+scores. For a given set, we use \autoref{algo:local-repair-algo} independently
+for each location in the set and apply all possible combinations of local
+repairs, looking again for a type-correct solution.
 % In practice we only consider up to \emph{five} locations to be fixed
 % simultaneously; any more than that takes too much time to generate and has too
 % small a chance of leading to a good solution.

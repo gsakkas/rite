@@ -12,8 +12,8 @@ However, extracting a single fix template for \emph{each} fix in the program
 pair dataset yields too many templates to perform accurate predictions.
 %
 Hence, we define a \emph{similarity} relation between templates, which we use to
-\emph{partition} the extracted templates into a smaller set, that will make it
-easier to train precise models to predict fixes.
+\emph{partition} the extracted templates into a small bur representative set,
+that will make it easier to train precise models to predict fixes.
 
 \input{syntax.tex}
 
@@ -102,13 +102,12 @@ There may be several such expressions, and $\diffsym$ returns all
 such changes.
 
 \mypara{Examples} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
-$\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} = \eapp{g}{x}$.
-
-If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the context is
-$\econtext{} = \_$, and the fix is the whole expression
+$\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} =
+\eapp{g}{x}$. If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
+context is $\econtext{} = \_$, and the fix is the whole expression
 $\eplus{(\eapp{f}{x})}{1}$, thus $\context{}{\eplus{(\eapp{f}{x})}{1}} =
-\eplus{(\eapp{f}{x})}{1}$. (Even though $\eapp{f}{x}$ appears in
-both the original and fixed programs, we consider the application expression
+\eplus{(\eapp{f}{x})}{1}$. (Even though $\eapp{f}{x}$ appears in both the
+original and fixed programs, we consider the application expression
 $\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
 
 \subsection{Partitioning the Templates}
@@ -147,11 +146,12 @@ predictor.
 % \autoref{fig:similar} formalizes a relation that states when
 % an expression $e_1$ is \emph{similar to} $e_2$  (written \simil{e_1}{e_2}).
 % %
-Two GASTs are \emph{similar} when
-the root nodes are the same and their child subtrees (if any) can be ordered
-such that they are pairwise similar. For example, $x + 3$ and $7 - y$ yield
-\emph{similar} GASTs where the root nodes are both abstract binary operators,
-one child is an abstract literal, and one child is an abstract variable.
+Two GASTs are \emph{similar} when the root nodes are the same and their child
+subtrees (if any) can be ordered such that they are pairwise similar. For
+example, $x + 3$ and $7 - y$ yield the \emph{similar} GASTs $\hat{x} \oplus
+\hat{n}$ and $\hat{n} \oplus \hat{x}$, where the root nodes are both abstract
+binary operators, one child is an abstract literal, and one child is an abstract
+variable.
         % \eg $e_{11} \oplus e_{12}$ and $e_{21} \oplus e_{22}$ are
         % similar \textit{iff} $(e_{11}, e_{21})$ and $(e_{12}, e_{22})$ or
         % $(e_{11}, e_{22})$ and $(e_{12}, e_{21})$ are pair-wise similar.
@@ -165,13 +165,12 @@ member-expressions and any one of them can be viewed as the class
 \emph{representative}. Each representative can then be used as a fix template to
 produce repairs for ill-typed programs.
 
-For example, $\hat{x} \oplus \hat{n}$ and $\hat{n} \oplus \hat{x}$ are similar
-so they are in the same class. Either one can be used as the representative and
-our repair algorithm in \autoref{sec:synthesis} will essentially consider both
-when fixing an erroneous program with this template.
+For example, $\hat{x} \oplus \hat{n}$ and $\hat{n} \oplus \hat{x}$ are in the
+same class and either one can be used as the representative. The repair
+algorithm in \autoref{sec:synthesis} will essentially consider both when fixing
+an erroneous program with this template.
 
 Finally, our partitioning algorithm returns the top $N$ equivalence classes
 based on their member-expressions frequency in the dataset. $N$ is a parameter
 of the algorithm and is chosen to be as small as possible while the top $N$
-classes represent a large enough portion of the dataset. We discuss the
-appropriate choice of $N$ in \autoref{sec:eval}.
+classes represent a large enough portion of the dataset.

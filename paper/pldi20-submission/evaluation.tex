@@ -34,24 +34,14 @@ higher-order functions and (polymorphic) algebraic data types.
 
 \mypara{Feature Extraction}
 %
-\toolname represents programs with BOAT vectors over a set of 449
-% WRW notes: the text had 416, but if you sum all of the subparts you get 449
-features from
-each subexpression in a program: 45 local syntactic, 315
-contextual, 88 typing features, and 1 expression size feature.
-For contextual features, for each subexpression we
-additionally extract the local syntactic features of its first 4
-(left-to-right) children. In addition, we extract those features for its
-ancestors, starting from its parent and going up to two more parent nodes.
-    % If an expression does not have a ancestor or children, these features will
-    % simply be disabled. If an expression has more than four children, the
-    % classifiers will receive no information about the additional children.
-    %
-For typing features, we support |int|s, |float|s, |char|s, |string|s, and
-    the user-defined |expr|. These features are extracted for each
-    subexpression and its context.
-%
-% 1 feature denoting the size of each subexpression.
+\toolname represents programs with BOAT vectors of 449 features from each
+expression in a program: 45 local syntactic, 315 contextual, 88 typing features,
+and 1 expression size feature. For contextual features, for each expression we
+extract the local syntactic features of its first 4 (left-to-right) children. In
+addition, we extract those features for its ancestors, starting from its parent
+and going up to two more parent nodes. For typing features, we support |int|s,
+|float|s, |char|s, |string|s, and the user-defined |expr|. These features are
+extracted for each expression and its context.
 
 \mypara{Dataset Cleaning}
 %
@@ -61,11 +51,11 @@ have made many, potentially unrelated, changes between compilations; at some
 point the ``fix'' becomes a ``rewrite''. These rewrites can lead to meaningless
 fix templates and error locations. We discard such outliers when the fraction of
 subexpressions that have changed in a program is more than one standard
-deviation above the mean, establishing a diff threshold of 40\%. We also discard
-programs that have changes in 5 or more locations, noting that even
+deviation above the mean, establishing a \diffsym threshold of 40\%. We also
+discard programs that have changes in 5 or more locations, noting that even
 state-of-the-art multi-location repair techniques cannot reproduce such
-``fixes'' \citep{Saha_2019}. The discarded changes account for roughly 32\% of each
-dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL.
+``fixes'' \citep{Saha_2019}. The discarded changes account for roughly 32\% of
+each dataset, leaving 2,475 program pairs for \SPRING and 2,177 pairs for \FALL.
 Throughout, we use \SPRING as a training set and \FALL as a test set.
 
 \mypara{\dnn based Classifier}
@@ -92,7 +82,7 @@ Most developers will consider around five or six suggestions before falling back
 to manual debugging \citep{Kochhar2016-oc,Parnin2011-ce}.
 %
 Therefore, we consider \toolname's accuracy up to the \emph{top six} fix
-template prediction, \ie predicted fix templates that represent the user's
+template predictions, \ie predicted fix templates that represent the user's
 actual fix.
 
 \mypara{Baselines}
@@ -102,6 +92,8 @@ We compare \toolname's \dnn-based predictor against two baseline classifiers: a
 templates learned from the \SPRING training dataset, and a \popular classifier
 that returns the most popular templates in the training set in decreasing order.
 
+\input{evaluation-accuracy-graph}
+
 \mypara{Results: Accuracy of Prediction}
 %
 \autoref{fig:accuracy-results} shows the accuracy results of our template
@@ -109,10 +101,9 @@ prediction experiments. The y-axis describes the fraction of \emph{erroneous}
 sub-terms (locations) for which the actual repair was one of the top-K predicted
 repairs.
 %
-The naive baseline of selecting templates at random achieves
-\RandomTopOne\% Top-1 accuracy (\RandomTopSix\% Top-6), while
-the \popular classifier achieves a Top-1 accuracy of \PopularTopOne\%
-(\PopularTopSix\% Top-6).
+The naive baseline of selecting templates at random achieves \RandomTopOne\%
+Top-1 accuracy (\RandomTopSix\% Top-6), while the \popular classifier achieves a
+Top-1 accuracy of \PopularTopOne\% (\PopularTopSix\% Top-6).
 %
 Our \dnn classifier significantly outperforms these naive classifiers, ranging
 from \DnnTopOne\% Top-1 accuracy to \DnnTopSix\% Top-6 accuracy.
@@ -127,17 +118,6 @@ between \SPRING and \FALL quarters and, while different groups of students
 solved these problems for each quarter, the novice mistakes that they made seem
 to have a pattern. Thus, the most \emph{popular ``fixes''} (and therefore the
 relevant templates) from \SPRING were also popular in \FALL.
-
-\input{evaluation-accuracy-graph}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[trim={30 40 100 70},clip,height=2.2in]{evaluation-conf-matrix-no-title.pdf}
-  \caption{The confusion matrix of the \emph{top 30} templates. Bolder parts of
-  the heatmap show templates that are often mis-predicted with another template.
-  The bolder the diagonal is, the more accurate predictions we make.}
-  \label{fig:conf-matrix}
-\end{figure}
 
 \mypara{Results: Template ``Confusion''}
 %
@@ -157,6 +137,15 @@ almost always are mis-predicted with template 11 (\elet{(\hat{x},\
 similar, with both of them having a top-level |let| that manipulates tuples
 $\hat{t}$.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[trim={30 40 100 70},clip,height=2.3in]{evaluation-conf-matrix-no-title.pdf}
+  \caption{The confusion matrix of the \emph{top 30} templates. Bolder parts of
+  the heatmap show templates that are often mis-predicted with another template.
+  The bolder the diagonal is, the more accurate predictions we make.}
+  \label{fig:conf-matrix}
+\end{figure}
+
 \begin{framed}
   \noindent \toolname's learns correlations between program features and repair
   templates, yielding almost \emph{2x higher} accuracy than the baseline. By
@@ -169,35 +158,34 @@ $\hat{t}$.
 \label{sec:eval:efficiency}
 \label{subsec:eval:man_rep_qual_eval}
 
-Next we evaluate the efficiency of \toolname by measuring how many programs it
-is able to generate a (well-typed) repair for.
+Next we evaluate \toolname's efficiency by measuring how many programs it is
+able to generate a (well-typed) repair for.
 %
-We limit the synthesizer to 90 seconds.
-(In general the procedure is undecidable, and we
-conjecture that a longer timeout will diminish the practical usability for
-novices.)
+We limit the synthesizer to 90 seconds. (In general the procedure is
+undecidable, and we conjecture that a longer timeout will diminish the practical
+usability for novices.)
 %
 Recall that the repair synthesis algorithm is guided by the repair template
 predictions.
 %
 We evaluate the efficiency of \toolname by comparing it against a baseline
 \naive implementation that, given the predicted fix location, attempts to
-synthesize a repair from the trivial ``hole'' template $\_$.
+synthesize a repair from the trivial ``hole'' template.
 
 \autoref{fig:rite_naive} shows the cumulative distribution function of
 \toolname's and \naive's repair rates over their synthesis time. We observe that
 using the predicted templates for synthesis allows \toolname to generate
-type-correct repairs for almost 60\% of the programs in under 10 seconds, which
+type-correct repairs for almost 70\% of the programs in under 20 seconds, which
 is nearly 12 points higher than the \naive baseline. We also observe that
-\toolname successfully repairs around 10\% more programs than \naive for
-times greater than 10 seconds. While the \naive approach is still able
-to synthesize well-typed repairs relatively quickly, we will see that these
-repairs are of much lower quality than those generated from the predicted
-templates (\S~\ref{sec:eval:template_quality}).
+\toolname successfully repairs around 10\% more programs than \naive for times
+greater than 20 seconds. While the \naive approach is still able to synthesize
+well-typed repairs relatively quickly, we will see that these repairs are of
+much lower quality than those generated from the predicted templates
+(\S~\ref{sec:eval:template_quality}).
 
 \begin{framed}
-  \noindent \toolname can generate type-correct repairs for the majority of
-  ill-typed programs in under 10 seconds.
+  \noindent \toolname can generate type-correct repairs for the vast majority of
+  ill-typed programs in under 20 seconds.
 \end{framed}
 
 % The 11.85\% of the programs that fail to be repaired within that amount of time
@@ -219,7 +207,7 @@ templates (\S~\ref{sec:eval:template_quality}).
 
 \begin{figure}
   \centering
-  \includegraphics[height=2.2in]{cdf.pdf}
+  \includegraphics[height=2.3in]{cdf.pdf}
   \caption{The proportion of the test set that can be repaired within a given time.}
   \label{fig:rite_naive}
 \end{figure}
@@ -381,18 +369,17 @@ as in \S~\ref{sec:eval:efficiency}, we
 compared the results of using \toolname's error messages
 synthesized from predicted templates to those generated by
 a \naive synthesizer that returns the first well-typed term
-(\ie synthesized from the trivial $\_$ template).
+(\ie synthesized from the trivial ``hole'' template).
 
 \mypara{User Study Setup}
 %
-For this user study, we used the same corpus of 21 buggy programs
-randomly chosen in \S~\ref{sec:eval:useful}. For each of the
-programs we generated three messages: using \toolname, using \seminal,
-and using the \naive approach but at the \emph{same location} predicted
-by \toolname. We then randomized and masked the order in which the tools'
-messages were reported, and asked three experts (authors of this paper who
-had not seen the output of any tool for any of those instances)
-to rate the messages as one of ``Good'', ``Ok'' or ``Bad''.
+For this user study, we used a corpus of 20 buggy programs randomly chosen in
+\S~\ref{sec:eval:useful}. For each of the programs we generated three messages:
+using \toolname, using \seminal, and using the \naive approach but at the
+\emph{same location} predicted by \toolname. We then randomized and masked the
+order in which the tools' messages were reported, and asked three experts
+(authors of this paper who had not seen the output of any tool for any of those
+instances) to rate the messages as one of ``Good'', ``Ok'' or ``Bad''.
 
 \mypara{Results}
 %
