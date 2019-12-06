@@ -74,11 +74,19 @@ main = do
       -> do
         let input = if isNothing fl then Just 42 else fl
         let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds
-        res <- timeout 120 $ mkAllFixes out top_cls funs dcons all_preds' jsons
+        res <- timeout 90 $ mkAllFixes out top_cls funs dcons all_preds' jsons
+        print res
+    "tiny-naive"
+      -> do
+        let top_cls_empty = [([EmptyG], [EmptyG])]
+        let all_preds_empty = zipWith readPredsEmpty predf_ids raw_preds
+        let input = if isNothing fl then Just 42 else fl
+        let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds_empty
+        res <- timeout 90 $ mkAllFixes out top_cls_empty funs dcons all_preds' jsons
         print res
     "synthesis"
       -> do
-        res <- mkFixes out top_cls funs dcons all_preds jsons
+        res <- mkFixesTest out top_cls funs dcons all_preds jsons
         print res
     "progs"
       -> do
@@ -86,7 +94,7 @@ main = do
         print res
     "timed-synth"
       -> do
-        res <- forM all_preds $ \pr -> timeout 30 $ mkFixes out top_cls funs dcons [pr] jsons
+        res <- forM all_preds $ \pr -> timeout 30 $ mkFixesTest out top_cls funs dcons [pr] jsons
         let pur = catMaybes res
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
@@ -104,11 +112,23 @@ main = do
         print $ sum (map fst pur) / genericLength pur
         print $ sum (map snd pur) / genericLength pur
         print $ map (\us -> (head us, length us)) $ group $ sort unfinished
+    "timed-synth-no-templ"
+      -> do
+        let top_cls_empty = [([EmptyG], [EmptyG])]
+        let all_preds_empty = zipWith readPredsEmpty predf_ids raw_preds
+        res <- forM all_preds_empty $ \pr -> timeout 60 $ mkAllFixes out top_cls_empty funs dcons [pr] jsons
+        let pur = catMaybes res
+        let tmpls = map getTemplate all_preds
+        let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
+        print $ genericLength pur * 100 / genericLength res
+        print $ sum (map fst pur) / genericLength pur
+        print $ sum (map snd pur) / genericLength pur
+        print $ map (\us -> (head us, length us)) $ group $ sort unfinished
     _ -> errorWithoutStackTrace "main failed: No such parameter for --mode"
 
 
-mkFixes :: String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO (Double, Double)
-mkFixes out top_cls funs dcons all_preds jsons = do
+mkFixesTest :: String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO (Double, Double)
+mkFixesTest out top_cls funs dcons all_preds jsons = do
   let inp = if length all_preds == 1 then fst (head all_preds) else -1
   let uniqs = concatMap (mkDiffsWithGenericTrs inp) jsons
   let feats = [ (ss, bad, fix, badStr, fixStr, pds, idx)
@@ -197,14 +217,23 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     let good_type pp = sum $ map (\(v, typ) -> if v `elem` tfvars
                                                then (if typ == snd (fromJust (find ((== v).fst) tffuns)) then 0 else 1)
                                                else 2) $ getTypedFuns pp
-    let checked    = take 120 $ concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
-    let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
+    -- Use this for less type-correct programs
+    -- let checked    = take 120 $ concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    -- Use this for more type-correct programs
+    let checked    = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    -- Use this for programs that match the fixed version type
+    -- let checked    = take 120 $ concatMap (take 40 . filter (\p -> good_type p < 1) . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+
+    -- Use this mertic to print programs that match the fixed version type first
+    -- let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
+    -- Use this mertic to disable that
+    let replaced   = take 10 $ sortOn (\p -> (dist p, edit_dist p)) checked
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
     print $ not (null replaced)
 
     let brk  = "\n\n(* -------------------------------------- *)\n"
-    let printable = map (\p -> render (prettyProg p) ++ brk) replaced
+    let printable = map (\p -> render (prettyProg p) ++ brk) $ take 3 replaced
     let fn   = printf "%04d" (i :: Int)
     let path = out </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
@@ -318,6 +347,9 @@ getPredSrcSpan (ss, _, _, _, _, _, _, _, _) = ss
 getRankedPreds :: Preds -> [Int]
 getRankedPreds (_, _, p1, p2, p3, p4, p5, p6, _) = [p1 - 1, p2 - 1, p3 - 1, p4 - 1, p5 - 1, p6 - 1]
 
+setPredsEmpty :: Preds -> Preds
+setPredsEmpty (x, y, _, _, _, _, _, _, z) = (x, y, 1, 1, 1, 1, 1, 1, z)
+
 getCorrectTmpl :: Preds -> Int
 getCorrectTmpl (_, _, _, _, _, _, _, _, i) = i
 
@@ -329,6 +361,12 @@ readPreds idx predf =
   case decode HasHeader predf :: Either String (V.Vector Preds) of
     Left e -> errorWithoutStackTrace ("readPreds: " ++ e)
     Right v -> (read idx :: Int, V.toList v)
+
+readPredsEmpty :: String -> LBSC.ByteString -> (Int, [Preds])
+readPredsEmpty idx predf =
+  case decode HasHeader predf :: Either String (V.Vector Preds) of
+    Left e -> errorWithoutStackTrace ("readPredsEmpty: " ++ e)
+    Right v -> (read idx :: Int, map setPredsEmpty (V.toList v))
 
 getTypedFuns :: Prog -> [(Var, Type)]
 getTypedFuns fix = progTFuns tfix

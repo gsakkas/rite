@@ -108,16 +108,17 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
         vars   = reverse $ nubOrd $ getVarsInScope p pbadss
         lits   = nubOrdOn mkGenericTrees (getLits $ concatMap allSubExprs $ progExprs p ++ someLits)
         rdcons = sortOn (\d -> fromMaybe 1000 $ elemIndex d dcons) $ delete "::" $ concatMap getDCons (concatMap allSubExprs (progExprs p))
-        res    = map (onSrcSpanExpr (const bad_ss)) $ concatMap (synth vars . killSpans) valid
-        ok_res = take 50 $ filter (check pbadss p) $ take 400 res
+        res    = map (onSrcSpanExpr (const bad_ss)) $ concatMap (synth 4 vars . killSpans) valid
+        ok_res = take 40 $ filter (check pbadss p) $ take 400 res
 
-        synth :: [Var] -> Expr -> [Expr]
-        synth vrs tmpl = take 150 results {- ++ filter (\e -> mkGenericTrees e `eq` mkGenericTrees tmpl) subs -} ++ [tmpl]
+        -- d == maximum depth for "Hole" synthesis
+        synth :: Int -> [Var] -> Expr -> [Expr]
+        synth d vrs tmpl = if d > 0 then take 100 results {- ++ filter (\e -> mkGenericTrees e `eq` mkGenericTrees tmpl) subs -} ++ [tmpl] else subs ++ lits
           where
             results = case tmpl of
               Var ms _         -> map (Var ms) vrs
               TypedVar ms _    -> map (Var ms) vrs
-              Lam ms p e menv  -> map (\e' -> Lam ms p e' menv) $ synth (getVarsP p ++ vrs) e
+              Lam ms p e menv  -> map (\e' -> Lam ms p e' menv) $ synth (d - 1) (getVarsP p ++ vrs) e
               App ms v es      -> map (\(f, es') -> if f == "::"
                                                       then ConApp ms "::" (Just (Tuple Nothing es')) Nothing
                                                       else App ms (Var Nothing f) es') all_cs
@@ -129,30 +130,30 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
                           then ConApp ms "::" (Just (Tuple vss es)) Nothing
                           else App ms (Var vss f) es
                   check_funs = filter vld rfuns
-                  insts = map (synth vrs) (nubOrdOn mkGenericTrees es)
+                  insts = map (synth (d - 1) vrs) (nubOrdOn mkGenericTrees es)
                   all_cs = concatMap (\(f, n) -> take 100 $ map (f,) $ concatMap allCombos (perms insts n)) check_funs
               Bop ms v x y     -> map (\(b, x', y') -> Bop ms b x' y') insts
                 where
-                  x_insts = synth vrs x
-                  y_insts = if x == y then x_insts else synth vrs y
+                  x_insts = synth (d - 1) vrs x
+                  y_insts = if x == y then x_insts else synth (d - 1) vrs y
                   bops = nubOrd (getBops all_subs ++ allBops)
                   insts = ((,,) <$> bops <*> x_insts <*> y_insts) ++ ((,,) <$> getBopsRev bops <*> x_insts <*> y_insts)
               Uop ms v x       -> map (\(b, x') -> Uop ms b x') insts
                 where
-                  insts = (,) <$> [Neg, FNeg] <*> synth vrs x
+                  insts = (,) <$> [Neg, FNeg] <*> synth (d - 1) vrs x
               Lit ms l         -> lits
               Let ms r pes e   -> map (\(pes', e') -> Let ms r pes' e') insts
                 where
-                  insts = (,) <$> allCombos (map (\(p, e') -> map (p,) $ synth vrs e') pes) <*> synth (concatMap (getVarsP . fst) pes ++ vrs) e
+                  insts = (,) <$> allCombos (map (\(p, e') -> map (p,) $ synth (d - 1) vrs e') pes) <*> synth (d - 1) (concatMap (getVarsP . fst) pes ++ vrs) e
               Ite ms x y z     -> map (\(x', y', z') -> Ite ms x' y' z') insts
                 where
-                  y_insts = synth vrs y
-                  z_insts = if y == z then y_insts else synth vrs z
-                  insts = (,,) <$> synth vrs x <*> y_insts <*> z_insts
+                  y_insts = synth (d - 1) vrs y
+                  z_insts = if y == z then y_insts else synth (d - 1) vrs z
+                  insts = (,,) <$> synth (d - 1) vrs x <*> y_insts <*> z_insts
               Seq ms x y       -> map (\(x', y') -> Seq ms x' y') insts
                 where
-                  x_insts = synth vrs x
-                  y_insts = if x == y then x_insts else synth vrs y
+                  x_insts = synth (d - 1) vrs x
+                  y_insts = if x == y then x_insts else synth (d - 1) vrs y
                   insts = (,) <$> x_insts <*> y_insts
               Case ms e as     -> map (\(e', as') -> Case ms e' as') insts
                 where
@@ -160,19 +161,30 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
                   es = nubOrdOn mkGenericTrees $ map thd3 as
                   slen = min (length as) (length pats)
                   blen = max (length as) (length pats) + 1
-                  inst = map (\p -> take 100 $ map (p, Nothing,) $ concatMap (synth (getVarsP p ++ vrs)) es)
+                  inst = map (\p -> take 100 $ map (p, Nothing,) $ concatMap (synth (d - 1) (getVarsP p ++ vrs)) es)
                   alls = concatMap (concatMap (allCombos . inst) . perms pats) [slen..blen]
-                  insts = (,) <$> synth vrs e <*> alls
+                  insts = (,) <$> synth (d - 1) vrs e <*> alls
               Tuple ms es      -> map (Tuple ms) insts
                 where
-                  insts = concatMap allCombos $ perms (take 100 $ map (synth vrs) (nubOrdOn mkGenericTrees es)) $ length es
+                  insts = concatMap allCombos $ perms (take 100 $ map (synth (d - 1) vrs) (nubOrdOn mkGenericTrees es)) $ length es
               ConApp ms c me s -> map (\(c', me') -> ConApp ms c' me' s) insts
                 where
-                  insts = (,) <$> rdcons <*> take 100 (mapM (synth vrs) me)
+                  insts = (,) <$> rdcons <*> take 100 (mapM (synth (d - 1) vrs) me)
               List ms es mt    -> map (\es' -> List ms es' mt) $ if null es
                                                                  then es : all_combos [TypedHole (Just $ SrcSpan (-42) (-42) (-42) (-42)) "_list_"]
                                                                  else all_combos es
+              -- Use for simplified holes
               TypedHole ms _   -> nub $ map (Var ms) vrs ++ subs ++ lits
+              -- Use for "full" synthesis
+              -- TypedHole ms _   -> concatMap (synth (d - 1) vrs . (`instantiateExpr` pbadss)) [AppG [EmptyG], AppG [EmptyG, EmptyG]
+              --                       , AppG [EmptyG, EmptyG, EmptyG], BopG EmptyG EmptyG, UopG EmptyG, LitG, LetG NonRec [(VarPatG, EmptyG)] EmptyG
+              --                       , LetG NonRec [(TuplePatG (Set.fromList [VarPatG, VarPatG]), EmptyG)] EmptyG, IteG EmptyG EmptyG EmptyG
+              --                       , SeqG EmptyG EmptyG, CaseG EmptyG [(TuplePatG (Set.fromList [VarPatG, VarPatG]), Nothing, EmptyG)]
+              --                       , CaseG EmptyG [(LitPatG, Nothing, EmptyG)], CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG)]
+              --                       , CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG), (ConPatG (Just VarPatG), Nothing, EmptyG)]
+              --                       , CaseG EmptyG [(ConsPatG VarPatG EmptyPatG, Nothing, EmptyG)], TupleG [EmptyG], TupleG [EmptyG, EmptyG]
+              --                       , TupleG [EmptyG, EmptyG, EmptyG], ConAppG (Just EmptyG), ListG [EmptyG], ListG [EmptyG, EmptyG]
+              --                       , ListG [EmptyG, EmptyG, EmptyG], LamG VarPatG EmptyG, VarG, EmptyG]
               _ -> []
 
             -- All instantiations for all possible parameter combinations
@@ -180,7 +192,7 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
             all_combos es' = concatMap (take 100 . concatMap allCombos . perms insts) [slen..blen]
               where
                 es = nubOrdOn mkGenericTrees es'
-                insts = map (synth vrs) es
+                insts = map (synth (d - 1) vrs) es
                 slen = min (length es') (length es)
                 blen = max (length es') (length es) + 1
 
