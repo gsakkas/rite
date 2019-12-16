@@ -5,7 +5,7 @@ pandas==0.24.2
 pydotplus==2.0.2
 scikit-learn==0.21.2
 scipy==0.18.1
-tensorflow==1.13.1
+tensorflow==1.15.0
 Keras==2.2.4
 Keras-Applications==1.0.7
 Keras-Preprocessing==1.0.9
