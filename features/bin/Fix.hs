@@ -222,7 +222,7 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     -- Use this for more type-correct programs
     let checked    = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
     -- Use this for programs that match the fixed version type
-    -- let checked    = take 120 $ concatMap (take 40 . filter (\p -> good_type p < 1) . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    -- let checked    = concatMap (take 40 . filter (\p -> good_type p < 1) . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
 
     -- Use this mertic to print programs that match the fixed version type first
     -- let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
@@ -233,7 +233,7 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     print $ not (null replaced)
 
     let brk  = "\n\n(* -------------------------------------- *)\n"
-    let printable = map (\p -> render (prettyProg p) ++ brk) $ take 3 replaced
+    let printable = map (\p -> render (prettyProg p) ++ brk) replaced
     let fn   = printf "%04d" (i :: Int)
     let path = out </> fn <.> "ml"
     createDirectoryIfMissing True (takeDirectory path)
