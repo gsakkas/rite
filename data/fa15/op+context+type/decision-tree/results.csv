@@ -1,2 +1,0 @@
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type/decision-tree,fa15,op+context+type,decision-tree,0.685,0.818,0.879,0.647,2365

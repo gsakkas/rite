@@ -1,2 +1,0 @@
-UopG VarG
-(-. pi)

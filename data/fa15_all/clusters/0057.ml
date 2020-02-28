@@ -1,3 +1,0 @@
-ConAppG Nothing
-EMPTY
-()

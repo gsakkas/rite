@@ -1,2 +1,0 @@
-ListG [TupleG [ListG [],ListG []]]
-[([] , [])]
