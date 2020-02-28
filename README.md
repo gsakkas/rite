@@ -1,4 +1,4 @@
-# NATE
+# RITE
 
 ## Getting Started
 
@@ -11,7 +11,7 @@ terminal open in the repository. You just need to activate the python
 virtualenv with
 
 ``` shellsession
-~/nate $ source .venv/bin/activate
+~/rite $ source .venv/bin/activate
 ```
 
 and then you should be able to skip to "Reproducing the evaluation".
@@ -23,22 +23,20 @@ and then you should be able to skip to "Reproducing the evaluation".
 Make sure you clone with `--recursive` as we have a few submodules.
 
 ``` shellsession
-~ $ git clone --recursive https://github.com/ucsd-progsys/nate.git
-~ $ cd nate
+~ $ git clone --recursive https://github.com/gsakkas/rite.git
+~ $ cd rite
 ```
 
 ### Building
 
-This project uses Haskell for feature extraction and Python (2.7) for
+This project uses Haskell for feature extraction and Python (3.5) for
 learning/executing the models.
 
 There are also some required libraries and tools that won't be installed
-automatically: ncurses, graphviz, BLAS, Tk, and Java/Ant (if you want to
-run the SHErrLoc comparison). If you're on Ubuntu, the following command
-should suffice.
+automatically: ncurses, graphviz, BLAS, Tk. If you're on Ubuntu, the following command should suffice.
 
 ``` shellsession
-$ sudo apt-get install ncurses-dev graphviz libopenblas-dev python-tk openjdk-8-jdk ant
+$ sudo apt-get install ncurses-dev graphviz libopenblas-dev python-tk
 ```
 
 We recommend building the Haskell components using the [stack] tool.
@@ -46,7 +44,7 @@ We recommend building the Haskell components using the [stack] tool.
 [stack]: https://docs.haskellstack.org/en/stable/README/
 
 ``` shellsession
-~/nate $ stack setup && stack build
+~/rite $ stack setup && stack build
 ```
 
 For python we recommend using [virtualenv].
@@ -54,9 +52,9 @@ For python we recommend using [virtualenv].
 [virtualenv]: https://virtualenv.pypa.io/en/stable/
 
 ``` shellsession
-~/nate $ virtualenv .venv
-~/nate $ source .venv/bin/activate
-~/nate $ pip install -r requirements.txt
+~/rite $ virtualenv .venv
+~/rite $ source .venv/bin/activate
+~/rite $ pip install -r requirements.txt
 ```
 
 ### Testing
@@ -73,20 +71,23 @@ checking, so it will sometimes abort with a type error before discovering
 an unbound variable.
 
 ``` shellsession
-~/nate $ stack exec -- generate-features \
-           --source features/data/ucsd/data/derived/sp14/pairs.json \
-           --features op \
-           --out data/sp14
-~/nate $ stack exec -- generate-features \
-           --source features/data/ucsd/data/derived/fa15/pairs.json \
-           --features op \
-           --out data/fa15
+~/rite $ stack exec -- generate-features \
+            --features clusters+all \
+            --source features/data/ucsd/data/derived/sp14/pairs.json \
+            --out data/sp14
+~/rite $ stack exec -- generate-features \
+            --features known+clusters+all \
+            --source features/data/ucsd/data/derived/fa15/pairs.json \
+            --out data/fa15 \
+            --clusters data/sp14/clusters/top_clusters.json
 ```
 
 The result will be a set of `.ml` files in the `data/{sp14,fa15}`
-directories, containing the individual programs, and a set of `.csv`
-files in the `data/{sp14,fa15}/op` directories, containing the extracted
-features for each program.
+directories, containing the individual programs, a set of `.csv`
+files in the `data/sp14/clusters+all` and `data/fa15/known+clusters+all`
+directories, containing the extracted features for each program, and
+a set of `.ml` files in the `data/{sp14,fa15}/clusters` containing
+the fix template clusters.
 
 Next, let's train a logistic regression on the sp14 programs and test it
 on the fa15 programs. The specific learning parameters don't particularly
@@ -210,7 +211,7 @@ op+context+type+size/hidden-500,fa15,op+context+type+size,hidden-500,0.701,0.841
 You may also want to compare our models against OCaml, SHErrLoc, and
 Mycroft. We have patched all of these tools slightly to produce source
 locations in a standard format, so you will have to build the included
-versions. 
+versions.
 
 Unfortunately, Mycroft is not available publicly so we are not
 comfortable distributing it ourselves. Please contact the authors for a
@@ -223,7 +224,7 @@ copy if you wish to rerun the Mycroft benchmarks.
 ~/nate $ cd eval/ocaml
 ~/nate/eval/ocaml $ ./configure -prefix $(pwd)/../build
 ~/nate/eval/ocaml $ make world world.opt
-# NOTE: at the moment, ocaml's `make install` seems to 
+# NOTE: at the moment, ocaml's `make install` seems to
 # get stuck in an infinite recursion, just hit Ctrl-C
 # after a few seconds and it should be fine.. Sorry!
 ~/nate/eval/ocaml $ make install
@@ -417,7 +418,7 @@ predict blame.
 More importantly, we see the sequence of decisions made by the tree. Each
 line is as follows
 
-``` 
+```
 <feature> : (= <feature-value>) [> <=] 0.5
 ```
 
@@ -581,7 +582,7 @@ ranked predictions in the one-per-line format described above (see
 pipeline. The CSV files themselves are quite simple and look roughly as
 follows.
 
-``` 
+```
 SourceSpan,L-NoChange,L-DidChange,F-InSlice,F-Feature1,F-Feature2,etc.
 "(1,1)-(2,2)",0,1,1,0,0,...
 "(1,5)-(1,8)",1,0,1,1,0,...
