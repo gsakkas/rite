@@ -109,9 +109,16 @@ main = do
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
         print $ genericLength pur * 100 / genericLength res
-        print $ sum (map fst pur) / genericLength pur
-        print $ sum (map snd pur) / genericLength pur
+        print $ sum (map (fst . fst) pur) / genericLength pur
+        print $ sum (map (snd . fst) pur) / genericLength pur
         print $ map (\us -> (head us, length us)) $ group $ sort unfinished
+        let found_sol = filter (isJust . fst) $ concatMap snd pur
+        print $ genericLength found_sol * 100.0 / genericLength pur
+        print $ avg (map (fromJust . fst) found_sol)
+        print $ avg (map snd found_sol)
+      where
+        avg :: (Real a, Fractional b) => [a] -> b
+        avg xs = realToFrac (sum xs) / genericLength xs
     "timed-synth-no-templ"
       -> do
         let top_cls_empty = [([EmptyG], [EmptyG])]
@@ -121,8 +128,8 @@ main = do
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
         print $ genericLength pur * 100 / genericLength res
-        print $ sum (map fst pur) / genericLength pur
-        print $ sum (map snd pur) / genericLength pur
+        print $ sum (map (fst . fst) pur) / genericLength pur
+        print $ sum (map (snd . fst) pur) / genericLength pur
         print $ map (\us -> (head us, length us)) $ group $ sort unfinished
     _ -> errorWithoutStackTrace "main failed: No such parameter for --mode"
 
@@ -189,7 +196,7 @@ mkFixesTest out top_cls funs dcons all_preds jsons = do
   -- return (genericLength (filter fst3 xx) * 100.0 / genericLength xx, sum (map (fst.snd3) xx) * 100.0 / sum (map (snd.snd3) xx), genericLength (filter thd3 xx) * 100.0 / genericLength xx)
 
 
-mkAllFixes :: String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO (Double, Double)
+mkAllFixes :: String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO ((Double, Double), [(Maybe Int, Integer)])
 mkAllFixes out top_cls funs dcons all_preds jsons = do
   let inp = if length all_preds == 1 then fst (head all_preds) else -1
   let uniqs = concatMap (mkDiffsWithGenericTrs inp) jsons
@@ -220,14 +227,21 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     -- Use this for less type-correct programs
     -- let checked    = take 120 $ concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
     -- Use this for more type-correct programs
-    let checked    = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    let checked = concatMap (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
+    -- Use this for ranking per template
+    -- let checked = map (take 40 . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
     -- Use this for programs that match the fixed version type
     -- let checked    = concatMap (take 40 . filter (\p -> good_type p < 1) . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
 
+    -- Use this mertic to print programs that match the fixed version type and the predicted template first
+    let sorted_ch = sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
+    -- Use this mertic to print programs that match the fixed version type and the predicted template first
+    -- let sorted_ch = concatMap (sortOn (\p -> (good_type p, dist p, edit_dist p))) checked
     -- Use this mertic to print programs that match the fixed version type first
     -- let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
     -- Use this mertic to disable that
-    let replaced   = take 10 $ sortOn (\p -> (dist p, edit_dist p)) checked
+    -- let sorted_ch = sortOn (\p -> (dist p, edit_dist p)) checked
+    let replaced  = take 10 sorted_ch
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
     print $ not (null replaced)
@@ -241,8 +255,11 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
                             ++ [ "", "(* bad", badStr, "*)" ]
                             ++ [ "", "(* student fix", fixStr, "*)" ]
                             ++ [ "", "(* changed spans", "" ] ++ ss_expr ++ [ "*)" ]
-    return (not (null replaced), elem (map exprKind $ concatMap allSubExprs $ progExprs fix) $ map (map exprKind . concatMap allSubExprs . progExprs) replaced)
-  return (genericLength (filter fst xx) * 100.0 / genericLength xx, genericLength (filter snd xx) * 100.0 / genericLength xx)
+    let fixed = map exprKind $ concatMap allSubExprs $ progExprs fix
+    return ((not (null replaced), elem fixed $ map (map exprKind . concatMap allSubExprs . progExprs) replaced),
+            (elemIndex fixed $ map (map exprKind . concatMap allSubExprs . progExprs) sorted_ch, genericLength sorted_ch))
+  return ((genericLength (filter (fst . fst) xx) * 100.0 / genericLength xx, genericLength (filter (snd . fst) xx) * 100.0 / genericLength xx),
+          map snd xx)
   where
     getSolutions :: Prog -> [(SrcSpan, Expr)] -> [[ExprGeneric]] -> Map String [Expr] -> [Preds] -> (Map String [Expr], [[Expr]])
     getSolutions bad alls top_cls mp pds = (fst results, nubOrdOn (map killSpans) $ allCombos $ snd results)

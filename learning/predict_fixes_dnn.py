@@ -52,7 +52,7 @@ test = []
 max_num_cls = 50
 
 # Number of cluster-labels to use
-num_of_cls = 30
+num_of_cls = 50
 
 label_names = ['L-Cluster' + str(i) for i in range(1, num_of_cls + 1)]
 train_file = join(dirname(train_dir), "train_" + str(num_of_cls) + "_tmpls.csv")
