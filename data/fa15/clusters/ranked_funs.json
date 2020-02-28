@@ -1,0 +1,1 @@
+["::","@","List.length","List.combine","^","List.rev","List.map","List.fold_left","fst","snd","List.mem","**","List.append","not","sin","cos","abs_float","List.hd","log","mod_float","abs","sqrt","print_int","exp","List.tl","List.nth","atan","tan","String.length","String.get","string_of_int","int_of_string"]

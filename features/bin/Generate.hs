@@ -116,6 +116,10 @@ main = do
       -> mkClusters False out cls mempty preds_tis jsons
     "clusters+all"
       -> mkClusters False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+    "known+clusters+some"
+      -> do
+        top_cls <- map readClusterFile . lines <$> readFile cfile
+        mkClusters True out cls top_cls preds_tis jsons
     "known+clusters+all"
       -> do
         top_cls <- map readClusterFile . lines <$> readFile cfile

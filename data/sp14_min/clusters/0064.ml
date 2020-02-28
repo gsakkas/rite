@@ -1,0 +1,2 @@
+ListG [TupleG [ListG [],ListG []]]
+[([] , [])]

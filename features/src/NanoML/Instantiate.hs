@@ -27,10 +27,9 @@ incVar = modify $ \e -> e {stVar = 1 + stVar e}
 incFun = modify $ \e -> e {stFun = 1 + stFun e}
 dropSS = modify $ \e -> e {stSS = tail (stSS e)}
 
-var, fun, ufun :: State ExprState String
+var, fun :: State ExprState String
 var = incVar >> gets ((++ "__") . ("__var_" ++) . show . stVar)
 fun = incFun >> gets ((++ "__") . ("__fun_" ++) . show . stFun)
-ufun = incFun >> gets ((++ "__") . ("__ufun_" ++) . show . stFun)
 
 nss :: State ExprState MSrcSpan
 nss = dropSS >> gets (Just . head . stSS)
@@ -42,7 +41,6 @@ instantiateExpr' = \case
   VarG              -> TypedVar <$> nss <*> var
   LamG p e          -> Lam <$> nss <*> instantiatePat' p <*> instantiateExpr' e <*> typevar
   AppG se           -> App <$> nss <*> (TypedHole <$> nss <*> fun) <*> mapM instantiateExpr' se
-  UserAppG se       -> App <$> nss <*> (TypedHole <$> nss <*> ufun) <*> mapM instantiateExpr' se
   BopG e1 e2        -> Bop <$> nss <*> pure BB <*> instantiateExpr' e1 <*> instantiateExpr' e2
   UopG e            -> Uop <$> nss <*> pure Neg <*> instantiateExpr' e
   LitG              -> Lit <$> nss <*> pure (LL "__Lit__")
@@ -106,7 +104,7 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
         all_subs = nubOrd $ map killSpans $ allSubExprs bad
         subs   = sortOn (sizeOfTree . mkGenericTrees) $ filter (\e -> depthOfTree (mkGenericTrees e) 0 < depth) all_subs
         prims  = sortOn (\(v, _) -> fromMaybe 1000 $ elemIndex v funs) $ getPrimFuns p
-        rfuns  = localFunsFirst subs (nubOrd (getFunsInScope p))
+        rfuns  = localFunsFirst subs (nubOrd (getFunsInScope p ++ prims))
         vars   = reverse $ nubOrd $ getVarsInScope p pbadss
         lits   = nubOrdOn mkGenericTrees (getLits $ concatMap allSubExprs $ progExprs p ++ someLits)
         rdcons = sortOn (\d -> fromMaybe 1000 $ elemIndex d dcons) $ delete "::" $ concatMap getDCons (concatMap allSubExprs (progExprs p))
@@ -121,20 +119,6 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
               Var ms _         -> map (Var ms) vrs
               TypedVar ms _    -> map (Var ms) vrs
               Lam ms p e menv  -> map (\e' -> Lam ms p e' menv) $ synth (d - 1) (getVarsP p ++ vrs) e
-              App ms v@(TypedHole ms' f') es
-                | "ufun" `isInfixOf` f' -> map (\(f, es') -> if f == "::"
-                                                      then ConApp ms "::" (Just (Tuple Nothing es')) Nothing
-                                                      else App ms (Var Nothing f) es') all_cs
-                where
-                  -- All instantiations for all possible parameter combinations
-                  vss = getSrcSpanExprMaybe v
-                  vld = check pbadss p . onSrcSpanExpr (const (Just pbadss)) . (`instantiateExpr` pbadss) . mkGenericTrees .
-                        \(f, _) -> if f == "::"
-                          then ConApp ms "::" (Just (Tuple vss es)) Nothing
-                          else App ms (Var vss f) es
-                  check_funs = filter vld rfuns
-                  insts = map (synth (d - 1) vrs) (nubOrdOn mkGenericTrees es)
-                  all_cs = concatMap (\(f, n) -> take 100 $ map (f,) $ concatMap allCombos (perms insts n)) check_funs
               App ms v es      -> map (\(f, es') -> if f == "::"
                                                       then ConApp ms "::" (Just (Tuple Nothing es')) Nothing
                                                       else App ms (Var Nothing f) es') all_cs
@@ -145,7 +129,7 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
                         \(f, _) -> if f == "::"
                           then ConApp ms "::" (Just (Tuple vss es)) Nothing
                           else App ms (Var vss f) es
-                  check_funs = filter vld prims
+                  check_funs = filter vld rfuns
                   insts = map (synth (d - 1) vrs) (nubOrdOn mkGenericTrees es)
                   all_cs = concatMap (\(f, n) -> take 100 $ map (f,) $ concatMap allCombos (perms insts n)) check_funs
               Bop ms v x y     -> map (\(b, x', y') -> Bop ms b x' y') insts

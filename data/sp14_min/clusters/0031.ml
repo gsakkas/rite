@@ -1,0 +1,12 @@
+BopG VarG VarG
+depth - num
+a + x
+x * x
+wList = wReverse
+length2 > length1
+pi *. x
+a * a
+pi *. y
+i + j
+a < b
+a * x

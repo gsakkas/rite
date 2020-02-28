@@ -1842,9 +1842,7 @@ mkGenericTrees :: Expr -> ExprGeneric
 mkGenericTrees = \case
   Var _ _         -> VarG
   Lam _ p e _     -> LamG (mkGenericPats p) (mkGenericTrees e)
-  App _ (Var _ f) es
-    | elem f $ map fst primVars -> AppG $ map mkGenericTrees es
-  App _ _ es      -> UserAppG $ map mkGenericTrees es
+  App _ _ es      -> AppG $ map mkGenericTrees es
   Bop _ _ e1 e2   -> BopG (mkGenericTrees e1) (mkGenericTrees e2)
   Uop _ _ e       -> UopG (mkGenericTrees e)
   Lit _ _         -> LitG
@@ -1895,7 +1893,6 @@ pruneGTree maxd e' = if depth <= maxd then e' else ne
       VarG          -> VarG
       LamG p e'     -> LamG (cutSubPs p (d - 1)) (cutSubTrs e' (d - 1))
       AppG es       -> AppG (map (\e'' -> cutSubTrs e'' (d - 1)) es)
-      UserAppG es   -> UserAppG (map (\e'' -> cutSubTrs e'' (d - 1)) es)
       BopG e1 e2    -> BopG (cutSubTrs e1 (d - 1)) (cutSubTrs e2 (d - 1))
       UopG e'       -> UopG (cutSubTrs e' (d - 1))
       LitG          -> LitG

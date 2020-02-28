@@ -234,13 +234,13 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     -- let checked    = concatMap (take 40 . filter (\p -> good_type p < 1) . filter typeCheck . take 400 . map (foldl replaceSSWithExpr bad)) $ snd results
 
     -- Use this mertic to print programs that match the fixed version type and the predicted template first
-    let sorted_ch = sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
+    -- let sorted_ch = sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
     -- Use this mertic to print programs that match the fixed version type and the predicted template first
     -- let sorted_ch = concatMap (sortOn (\p -> (good_type p, dist p, edit_dist p))) checked
     -- Use this mertic to print programs that match the fixed version type first
     -- let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
     -- Use this mertic to disable that
-    -- let sorted_ch = sortOn (\p -> (dist p, edit_dist p)) checked
+    let sorted_ch = sortOn (\p -> (dist p, edit_dist p)) checked
     let replaced  = take 10 sorted_ch
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss

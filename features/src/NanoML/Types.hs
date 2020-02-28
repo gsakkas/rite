@@ -1006,7 +1006,6 @@ data ExprGeneric
   = VarG
   | LamG !PatGeneric !ExprGeneric
   | AppG ![ExprGeneric]
-  | UserAppG ![ExprGeneric] -- Only user defined functions
   | BopG !ExprGeneric !ExprGeneric
   | UopG !ExprGeneric
   | LitG
@@ -1027,7 +1026,6 @@ eq :: ExprGeneric -> ExprGeneric -> Bool
 VarG            `eq` VarG            = True
 LamG p1 e1      `eq` LamG p2 e2      = p1 `eqP` p2 && e1 `eq` e2
 AppG se1        `eq` AppG se2        = cleanEg se1 `sameSet` cleanEg se2
-UserAppG se1    `eq` UserAppG se2    = cleanEg se1 `sameSet` cleanEg se2
 BopG el1 er1    `eq` BopG el2 er2    = cleanEg [el1, er1] `sameSet` cleanEg [el2, er2]
 UopG e1         `eq` UopG e2         = e1 `eq` e2
 LitG            `eq` LitG            = True
@@ -1074,7 +1072,6 @@ depthOfTree e depth = case e of
   VarG              -> depth + 1
   LamG p e'         -> max (depthOfPat p (depth + 1)) (depthOfTree e' (depth + 1))
   AppG es           -> safeMaximum es depth
-  UserAppG es       -> safeMaximum es depth
   BopG e1 e2        -> max (depthOfTree e1 (depth + 1)) (depthOfTree e2 (depth + 1))
   UopG e'           -> depthOfTree e' (depth + 1)
   LitG              -> depth + 1
@@ -1096,7 +1093,6 @@ sizeOfTree e = case e of
   VarG              -> 1
   LamG p e'         -> 1 + sizeOfPat p + sizeOfTree e'
   AppG es           -> 1 + sum (map sizeOfTree es)
-  UserAppG es       -> 1 + sum (map sizeOfTree es)
   BopG e1 e2        -> 1 + sizeOfTree e1 + sizeOfTree e2
   UopG e'           -> 1 + sizeOfTree e'
   LitG              -> 1
