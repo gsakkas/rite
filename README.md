@@ -5,7 +5,7 @@
 Let's quickly walk through setting up a development environment.
 
 If you don't mind using a VM and things being a bit slower, we've
-[provided] one for you, the user and password are both "rite". The VM
+[provided] one for you, the user and password are both **"rite"**. The VM
 should already have everything you need installed, and will boot with a
 terminal open in the repository. You just need to activate the python
 virtualenv with
@@ -17,7 +17,7 @@ virtualenv with
 and then you should be able to skip to "Reproducing the evaluation
 (Step-by-Step Instructions)".
 
-[provided]: https://www.dropbox.com/s/b8a7nfwi8loiwvp/nate-artifact.ova?dl=0
+[provided]: https://drive.google.com/file/d/1MjGzWiFmdW5lahzOI2RHDHJRJjtaHwba/view?usp=sharing
 
 ### Getting the source
 
